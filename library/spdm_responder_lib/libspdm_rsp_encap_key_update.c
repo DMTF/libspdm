@@ -21,7 +21,7 @@
  **/
 return_status
 libspdm_get_encap_request_key_update(libspdm_context_t *spdm_context,
-                                     uintn *encap_request_size,
+                                     size_t *encap_request_size,
                                      void *encap_request)
 {
     spdm_key_update_request_t *spdm_request;
@@ -126,12 +126,12 @@ libspdm_get_encap_request_key_update(libspdm_context_t *spdm_context,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_process_encap_response_key_update(
-    libspdm_context_t *spdm_context, uintn encap_response_size,
+    libspdm_context_t *spdm_context, size_t encap_response_size,
     const void *encap_response, bool *need_continue)
 {
     spdm_key_update_request_t *spdm_request;
     const spdm_key_update_response_t *spdm_response;
-    uintn spdm_response_size;
+    size_t spdm_response_size;
     uint32_t session_id;
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;

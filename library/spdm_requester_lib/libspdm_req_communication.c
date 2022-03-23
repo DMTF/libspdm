@@ -212,11 +212,11 @@ return_status libspdm_start_session_ex(void *context, bool use_psk,
                                        uint8_t *heartbeat_period,
                                        void *measurement_hash,
                                        const void *requester_random_in,
-                                       uintn requester_random_in_size,
+                                       size_t requester_random_in_size,
                                        void *requester_random,
-                                       uintn *requester_random_size,
+                                       size_t *requester_random_size,
                                        void *responder_random,
-                                       uintn *responder_random_size)
+                                       size_t *responder_random_size)
 {
     return_status status;
     libspdm_context_t *spdm_context;
@@ -384,19 +384,19 @@ return_status libspdm_stop_session(void *context, uint32_t session_id,
  **/
 return_status libspdm_send_receive_data(void *context, const uint32_t *session_id,
                                         bool is_app_message,
-                                        const void *request, uintn request_size,
+                                        const void *request, size_t request_size,
                                         void *response,
-                                        uintn *response_size)
+                                        size_t *response_size)
 {
     return_status status;
     libspdm_context_t *spdm_context;
     spdm_message_header_t *spdm_request;
-    uintn spdm_request_size;
+    size_t spdm_request_size;
     spdm_error_response_t *spdm_response;
-    uintn spdm_response_size;
+    size_t spdm_response_size;
     uint8_t *message;
-    uintn message_size;
-    uintn transport_header_size;
+    size_t message_size;
+    size_t transport_header_size;
 
     spdm_context = context;
     spdm_response = response;

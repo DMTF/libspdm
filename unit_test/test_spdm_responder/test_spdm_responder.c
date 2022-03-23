@@ -13,6 +13,7 @@ int libspdm_responder_algorithms_test_main(void);
 
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 int libspdm_responder_digests_test_main(void);
+int spdm_responder_encap_get_digests_test_main(void);
 int libspdm_responder_certificate_test_main(void);
 int spdm_responder_encap_get_certificate_test_main(void);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
@@ -47,6 +48,8 @@ int libspdm_responder_psk_finish_test_main(void);
 int libspdm_responder_heartbeat_test_main(void);
 int libspdm_responder_key_update_test_main(void);
 int libspdm_responder_end_session_test_main(void);
+int libspdm_responder_encap_key_update_test_main(void);
+int libspdm_responder_encapsulated_response_test_main(void);
 
 int main(void)
 {
@@ -66,6 +69,10 @@ int main(void)
 
     #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
     if (libspdm_responder_digests_test_main() != 0) {
+        return_value = 1;
+    }
+
+    if (spdm_responder_encap_get_digests_test_main() != 0) {
         return_value = 1;
     }
 
@@ -133,6 +140,14 @@ int main(void)
     }
 
     if (libspdm_responder_end_session_test_main() != 0) {
+        return_value = 1;
+    }
+
+    if (libspdm_responder_encap_key_update_test_main() != 0) {
+        return_value = 1;
+    }
+
+    if (libspdm_responder_encapsulated_response_test_main() != 0) {
         return_value = 1;
     }
 

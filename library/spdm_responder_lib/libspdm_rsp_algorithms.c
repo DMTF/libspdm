@@ -184,11 +184,11 @@ uint32_t m_libspdm_other_params_support_priority_table[] = {
  * @return final preferred supported algorithm
  **/
 uint32_t libspdm_prioritize_algorithm(const uint32_t *priority_table,
-                                      uintn priority_table_count,
+                                      size_t priority_table_count,
                                       uint32_t local_algo, uint32_t peer_algo)
 {
     uint32_t common_algo;
-    uintn index;
+    size_t index;
 
     common_algo = (local_algo & peer_algo);
     for (index = 0; index < priority_table_count; index++) {
@@ -218,16 +218,16 @@ uint32_t libspdm_prioritize_algorithm(const uint32_t *priority_table,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_get_response_algorithms(void *context,
-                                              uintn request_size,
+                                              size_t request_size,
                                               const void *request,
-                                              uintn *response_size,
+                                              size_t *response_size,
                                               void *response)
 {
     const spdm_negotiate_algorithms_request_t *spdm_request;
-    uintn spdm_request_size;
+    size_t spdm_request_size;
     libspdm_algorithms_response_mine_t *spdm_response;
     spdm_negotiate_algorithms_common_struct_table_t *struct_table;
-    uintn index;
+    size_t index;
     libspdm_context_t *spdm_context;
     return_status status;
     uint32_t algo_size;
@@ -281,21 +281,21 @@ return_status libspdm_get_response_algorithms(void *context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
     }
-    struct_table = (void *)((uintn)spdm_request +
+    struct_table = (void *)((size_t)spdm_request +
                             sizeof(spdm_negotiate_algorithms_request_t) +
                             sizeof(uint32_t) * spdm_request->ext_asym_count +
                             sizeof(uint32_t) * spdm_request->ext_hash_count);
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
         for (index = 0; index < spdm_request->header.param1; index++) {
-            if ((uintn)spdm_request + request_size <
-                (uintn)struct_table) {
+            if ((size_t)spdm_request + request_size <
+                (size_t)struct_table) {
                 return libspdm_generate_error_response(
                     spdm_context,
                     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                     response_size, response);
             }
-            if ((uintn)spdm_request + request_size -
-                (uintn)struct_table <
+            if ((size_t)spdm_request + request_size -
+                (size_t)struct_table <
                 sizeof(spdm_negotiate_algorithms_common_struct_table_t)) {
                 return libspdm_generate_error_response(
                     spdm_context,
@@ -311,8 +311,8 @@ return_status libspdm_get_response_algorithms(void *context,
                     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                     response_size, response);
             }
-            if ((uintn)spdm_request + request_size -
-                (uintn)struct_table -
+            if ((size_t)spdm_request + request_size -
+                (size_t)struct_table -
                 sizeof(spdm_negotiate_algorithms_common_struct_table_t) <
                 sizeof(uint32_t) * ext_alg_count) {
                 return libspdm_generate_error_response(
@@ -321,7 +321,7 @@ return_status libspdm_get_response_algorithms(void *context,
                     response_size, response);
             }
             struct_table =
-                (void *)((uintn)struct_table +
+                (void *)((size_t)struct_table +
                          sizeof(spdm_negotiate_algorithms_common_struct_table_t) +
                          sizeof(uint32_t) * ext_alg_count);
         }
@@ -343,7 +343,7 @@ return_status libspdm_get_response_algorithms(void *context,
             return RETURN_DEVICE_ERROR;
         }
     }
-    request_size = (uintn)struct_table - (uintn)spdm_request;
+    request_size = (size_t)struct_table - (size_t)spdm_request;
     if (request_size != spdm_request->length) {
         return RETURN_DEVICE_ERROR;
     }
@@ -382,7 +382,7 @@ return_status libspdm_get_response_algorithms(void *context,
         spdm_request->base_hash_algo;
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
         struct_table =
-            (void *)((uintn)spdm_request +
+            (void *)((size_t)spdm_request +
                      sizeof(spdm_negotiate_algorithms_request_t) +
                      sizeof(uint32_t) * spdm_request->ext_asym_count +
                      sizeof(uint32_t) * spdm_request->ext_hash_count);
@@ -414,7 +414,7 @@ return_status libspdm_get_response_algorithms(void *context,
             }
             ext_alg_count = struct_table->alg_count & 0xF;
             struct_table =
-                (void *)((uintn)struct_table +
+                (void *)((size_t)struct_table +
                          sizeof(spdm_negotiate_algorithms_common_struct_table_t) +
                          sizeof(uint32_t) * ext_alg_count);
         }

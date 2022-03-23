@@ -24,7 +24,7 @@
  * @retval     false           The operation failed.
  *
  **/
-bool libspdm_x509_construct_certificate(const uint8_t *cert, uintn cert_size,
+bool libspdm_x509_construct_certificate(const uint8_t *cert, size_t cert_size,
                                         uint8_t **single_x509_cert)
 {
     LIBSPDM_ASSERT(false);
@@ -90,7 +90,7 @@ void libspdm_x509_stack_free(void *x509_stack)
  * @retval      true   Get tag successful
  * @retval      FALSe  Failed to get tag or tag not match
  **/
-bool libspdm_asn1_get_tag(uint8_t **ptr, const uint8_t *end, uintn *length,
+bool libspdm_asn1_get_tag(uint8_t **ptr, const uint8_t *end, size_t *length,
                           uint32_t tag)
 {
     LIBSPDM_ASSERT(false);
@@ -114,9 +114,9 @@ bool libspdm_asn1_get_tag(uint8_t **ptr, const uint8_t *end, uintn *length,
  *                The subject_size will be updated with the required size.
  *
  **/
-bool libspdm_x509_get_subject_name(const uint8_t *cert, uintn cert_size,
+bool libspdm_x509_get_subject_name(const uint8_t *cert, size_t cert_size,
                                    uint8_t *cert_subject,
-                                   uintn *subject_size)
+                                   size_t *subject_size)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -148,9 +148,9 @@ bool libspdm_x509_get_subject_name(const uint8_t *cert, uintn cert_size,
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  *
  **/
-return_status libspdm_x509_get_common_name(const uint8_t *cert, uintn cert_size,
+return_status libspdm_x509_get_common_name(const uint8_t *cert, size_t cert_size,
                                            char *common_name,
-                                           uintn *common_name_size)
+                                           size_t *common_name_size)
 {
     LIBSPDM_ASSERT(false);
     return RETURN_UNSUPPORTED;
@@ -183,9 +183,9 @@ return_status libspdm_x509_get_common_name(const uint8_t *cert, uintn cert_size,
  *
  **/
 return_status
-libspdm_x509_get_organization_name(const uint8_t *cert, uintn cert_size,
+libspdm_x509_get_organization_name(const uint8_t *cert, size_t cert_size,
                                    char *name_buffer,
-                                   uintn *name_buffer_size)
+                                   size_t *name_buffer_size)
 {
     LIBSPDM_ASSERT(false);
     return RETURN_UNSUPPORTED;
@@ -207,7 +207,7 @@ libspdm_x509_get_organization_name(const uint8_t *cert, uintn cert_size,
  * @retval  false  Fail to retrieve RSA public key from X509 certificate.
  *
  **/
-bool libspdm_rsa_get_public_key_from_x509(const uint8_t *cert, uintn cert_size,
+bool libspdm_rsa_get_public_key_from_x509(const uint8_t *cert, size_t cert_size,
                                           void **rsa_context)
 {
     LIBSPDM_ASSERT(false);
@@ -230,7 +230,7 @@ bool libspdm_rsa_get_public_key_from_x509(const uint8_t *cert, uintn cert_size,
  * @retval  false  Fail to retrieve EC public key from X509 certificate.
  *
  **/
-bool libspdm_ec_get_public_key_from_x509(const uint8_t *cert, uintn cert_size,
+bool libspdm_ec_get_public_key_from_x509(const uint8_t *cert, size_t cert_size,
                                          void **ec_context)
 {
     LIBSPDM_ASSERT(false);
@@ -253,7 +253,7 @@ bool libspdm_ec_get_public_key_from_x509(const uint8_t *cert, uintn cert_size,
  * @retval  false  Fail to retrieve Ed public key from X509 certificate.
  *
  **/
-bool libspdm_ecd_get_public_key_from_x509(const uint8_t *cert, uintn cert_size,
+bool libspdm_ecd_get_public_key_from_x509(const uint8_t *cert, size_t cert_size,
                                           void **ecd_context)
 {
     LIBSPDM_ASSERT(false);
@@ -276,7 +276,7 @@ bool libspdm_ecd_get_public_key_from_x509(const uint8_t *cert, uintn cert_size,
  * @retval  false  Fail to retrieve sm2 public key from X509 certificate.
  *
  **/
-bool libspdm_sm2_get_public_key_from_x509(const uint8_t *cert, uintn cert_size,
+bool libspdm_sm2_get_public_key_from_x509(const uint8_t *cert, size_t cert_size,
                                           void **sm2_context)
 {
     LIBSPDM_ASSERT(false);
@@ -299,8 +299,8 @@ bool libspdm_sm2_get_public_key_from_x509(const uint8_t *cert, uintn cert_size,
  *                trusted CA.
  *
  **/
-bool libspdm_x509_verify_cert(const uint8_t *cert, uintn cert_size,
-                              const uint8_t *ca_cert, uintn ca_cert_size)
+bool libspdm_x509_verify_cert(const uint8_t *cert, size_t cert_size,
+                              const uint8_t *ca_cert, size_t ca_cert_size)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -324,8 +324,8 @@ bool libspdm_x509_verify_cert(const uint8_t *cert, uintn cert_size,
  * @retval  false  Invalid certificate or the certificate was not issued by the given
  *                trusted CA.
  **/
-bool libspdm_x509_verify_cert_chain(uint8_t *root_cert, uintn root_cert_length,
-                                    uint8_t *cert_chain, uintn cert_chain_length)
+bool libspdm_x509_verify_cert_chain(uint8_t *root_cert, size_t root_cert_length,
+                                    uint8_t *cert_chain, size_t cert_chain_length)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -350,9 +350,9 @@ bool libspdm_x509_verify_cert_chain(uint8_t *root_cert, uintn root_cert_length,
  * @retval  false  Failed to get certificate from certificate chain.
  **/
 bool libspdm_x509_get_cert_from_cert_chain(uint8_t *cert_chain,
-                                           uintn cert_chain_length,
+                                           size_t cert_chain_length,
                                            const int32_t cert_index, uint8_t **cert,
-                                           uintn *cert_length)
+                                           size_t *cert_length)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -374,8 +374,8 @@ bool libspdm_x509_get_cert_from_cert_chain(uint8_t *cert_chain,
  * @retval  false  Invalid X.509 certificate.
  *
  **/
-bool libspdm_x509_get_tbs_cert(const uint8_t *cert, uintn cert_size,
-                               uint8_t **tbs_cert, uintn *tbs_cert_size)
+bool libspdm_x509_get_tbs_cert(const uint8_t *cert, size_t cert_size,
+                               uint8_t **tbs_cert, size_t *tbs_cert_size)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -397,8 +397,8 @@ bool libspdm_x509_get_tbs_cert(const uint8_t *cert, uintn cert_size,
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  *
  **/
-return_status libspdm_x509_get_version(const uint8_t *cert, uintn cert_size,
-                                       uintn *version)
+return_status libspdm_x509_get_version(const uint8_t *cert, size_t cert_size,
+                                       size_t *version)
 {
     LIBSPDM_ASSERT(false);
     return RETURN_UNSUPPORTED;
@@ -427,9 +427,9 @@ return_status libspdm_x509_get_version(const uint8_t *cert, uintn cert_size,
  *                                 serial_number_size parameter.
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
-return_status libspdm_x509_get_serial_number(const uint8_t *cert, uintn cert_size,
+return_status libspdm_x509_get_serial_number(const uint8_t *cert, size_t cert_size,
                                              uint8_t *serial_number,
-                                             uintn *serial_number_size)
+                                             size_t *serial_number_size)
 {
     LIBSPDM_ASSERT(false);
     return RETURN_UNSUPPORTED;
@@ -454,9 +454,9 @@ return_status libspdm_x509_get_serial_number(const uint8_t *cert, uintn cert_siz
  * @retval  false  This interface is not supported.
  *
  **/
-bool libspdm_x509_get_issuer_name(const uint8_t *cert, uintn cert_size,
+bool libspdm_x509_get_issuer_name(const uint8_t *cert, size_t cert_size,
                                   uint8_t *cert_issuer,
-                                  uintn *issuer_size)
+                                  size_t *issuer_size)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -489,9 +489,9 @@ bool libspdm_x509_get_issuer_name(const uint8_t *cert, uintn cert_size,
  *
  **/
 return_status
-libspdm_x509_get_issuer_common_name(const uint8_t *cert, uintn cert_size,
+libspdm_x509_get_issuer_common_name(const uint8_t *cert, size_t cert_size,
                                     char *common_name,
-                                    uintn *common_name_size)
+                                    size_t *common_name_size)
 {
     LIBSPDM_ASSERT(false);
     return RETURN_UNSUPPORTED;
@@ -524,9 +524,9 @@ libspdm_x509_get_issuer_common_name(const uint8_t *cert, uintn cert_size,
  *
  **/
 return_status
-libspdm_x509_get_issuer_orgnization_name(const uint8_t *cert, uintn cert_size,
+libspdm_x509_get_issuer_orgnization_name(const uint8_t *cert, size_t cert_size,
                                          char *name_buffer,
-                                         uintn *name_buffer_size)
+                                         size_t *name_buffer_size)
 {
     LIBSPDM_ASSERT(false);
     return RETURN_UNSUPPORTED;
@@ -551,8 +551,8 @@ libspdm_x509_get_issuer_orgnization_name(const uint8_t *cert, uintn cert_size,
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
 return_status libspdm_x509_get_signature_algorithm(const uint8_t *cert,
-                                                   uintn cert_size, uint8_t *oid,
-                                                   uintn *oid_size)
+                                                   size_t cert_size, uint8_t *oid,
+                                                   size_t *oid_size)
 {
     LIBSPDM_ASSERT(false);
     return RETURN_UNSUPPORTED;
@@ -578,10 +578,10 @@ return_status libspdm_x509_get_signature_algorithm(const uint8_t *cert,
  *                                 is returned in the extension_data_size parameter.
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
-return_status libspdm_x509_get_extension_data(const uint8_t *cert, uintn cert_size,
-                                              const uint8_t *oid, uintn oid_size,
+return_status libspdm_x509_get_extension_data(const uint8_t *cert, size_t cert_size,
+                                              const uint8_t *oid, size_t oid_size,
                                               uint8_t *extension_data,
-                                              uintn *extension_data_size)
+                                              size_t *extension_data_size)
 {
     LIBSPDM_ASSERT(false);
     return RETURN_UNSUPPORTED;
@@ -608,9 +608,9 @@ return_status libspdm_x509_get_extension_data(const uint8_t *cert, uintn cert_si
  * @retval  false  Invalid certificate, or Validity retrieve failed.
  * @retval  false  This interface is not supported.
  **/
-bool libspdm_x509_get_validity(const uint8_t *cert, uintn cert_size,
-                               uint8_t *from, uintn *from_size, uint8_t *to,
-                               uintn *to_size)
+bool libspdm_x509_get_validity(const uint8_t *cert, size_t cert_size,
+                               uint8_t *from, size_t *from_size, uint8_t *to,
+                               size_t *to_size)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -627,8 +627,8 @@ bool libspdm_x509_get_validity(const uint8_t *cert, uintn cert_size,
  * @retval  false  Invalid certificate, or usage is NULL
  * @retval  false  This interface is not supported.
  **/
-bool libspdm_x509_get_key_usage(const uint8_t *cert, uintn cert_size,
-                                uintn *usage)
+bool libspdm_x509_get_key_usage(const uint8_t *cert, size_t cert_size,
+                                size_t *usage)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -652,8 +652,8 @@ bool libspdm_x509_get_key_usage(const uint8_t *cert, uintn cert_size,
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
 return_status libspdm_x509_get_extended_key_usage(const uint8_t *cert,
-                                                  uintn cert_size, uint8_t *usage,
-                                                  uintn *usage_size)
+                                                  size_t cert_size, uint8_t *usage,
+                                                  size_t *usage_size)
 {
     LIBSPDM_ASSERT(false);
     return RETURN_UNSUPPORTED;
@@ -678,9 +678,9 @@ return_status libspdm_x509_get_extended_key_usage(const uint8_t *cert,
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
 return_status libspdm_x509_get_extended_basic_constraints(const uint8_t *cert,
-                                                          uintn cert_size,
+                                                          size_t cert_size,
                                                           uint8_t *basic_constraints,
-                                                          uintn *basic_constraints_size)
+                                                          size_t *basic_constraints_size)
 {
     LIBSPDM_ASSERT(false);
     return RETURN_UNSUPPORTED;
@@ -710,7 +710,7 @@ return_status libspdm_x509_get_extended_basic_constraints(const uint8_t *cert,
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
 return_status libspdm_x509_set_date_time(char *date_time_str, void *date_time,
-                                         uintn *date_time_size)
+                                         size_t *date_time_size)
 {
     LIBSPDM_ASSERT(false);
     return RETURN_UNSUPPORTED;
@@ -732,7 +732,7 @@ return_status libspdm_x509_set_date_time(char *date_time_str, void *date_time,
  * @retval  1      If date_time1 > date_time2
  * @retval  -1     If date_time1 < date_time2
  **/
-intn libspdm_x509_compare_date_time(const void *date_time1, const void *date_time2)
+int32_t libspdm_x509_compare_date_time(const void *date_time1, const void *date_time2)
 {
     LIBSPDM_ASSERT(false);
     return -3;

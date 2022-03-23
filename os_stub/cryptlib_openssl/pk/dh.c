@@ -25,7 +25,7 @@
  *         If the allocations fails, dh_new() returns NULL.
  *
  **/
-void *libspdm_dh_new_by_nid(uintn nid)
+void *libspdm_dh_new_by_nid(size_t nid)
 {
     switch (nid) {
     case LIBSPDM_CRYPTO_NID_FFDHE2048:
@@ -77,8 +77,8 @@ void libspdm_dh_free(void *dh_context)
  * @retval false  PRNG fails to generate random prime number with prime_length.
  *
  **/
-bool libspdm_dh_generate_parameter(void *dh_context, uintn generator,
-                                   uintn prime_length, uint8_t *prime)
+bool libspdm_dh_generate_parameter(void *dh_context, size_t generator,
+                                   size_t prime_length, uint8_t *prime)
 {
     bool ret_val;
     BIGNUM *bn_p;
@@ -127,8 +127,8 @@ bool libspdm_dh_generate_parameter(void *dh_context, uintn generator,
  * @retval false  value of prime is not a safe prime number.
  *
  **/
-bool libspdm_dh_set_parameter(void *dh_context, uintn generator,
-                              uintn prime_length, const uint8_t *prime)
+bool libspdm_dh_set_parameter(void *dh_context, size_t generator,
+                              size_t prime_length, const uint8_t *prime)
 {
     DH *dh;
     BIGNUM *bn_p;
@@ -193,13 +193,13 @@ error:
  *
  **/
 bool libspdm_dh_generate_key(void *dh_context, uint8_t *public_key,
-                             uintn *public_key_size)
+                             size_t *public_key_size)
 {
     bool ret_val;
     DH *dh;
     BIGNUM *dh_pub_key;
-    intn size;
-    uintn final_pub_key_size;
+    int size;
+    size_t final_pub_key_size;
 
 
     /* Check input parameters.*/
@@ -240,7 +240,7 @@ bool libspdm_dh_generate_key(void *dh_context, uint8_t *public_key,
         if (size <= 0) {
             return false;
         }
-        LIBSPDM_ASSERT((uintn)size <= final_pub_key_size);
+        LIBSPDM_ASSERT((size_t)size <= final_pub_key_size);
 
         if (public_key != NULL) {
             libspdm_zero_mem(public_key, *public_key_size);
@@ -281,13 +281,13 @@ bool libspdm_dh_generate_key(void *dh_context, uint8_t *public_key,
  *
  **/
 bool libspdm_dh_compute_key(void *dh_context, const uint8_t *peer_public_key,
-                            uintn peer_public_key_size, uint8_t *key,
-                            uintn *key_size)
+                            size_t peer_public_key_size, uint8_t *key,
+                            size_t *key_size)
 {
     BIGNUM *bn;
-    intn size;
+    int size;
     DH *dh;
-    uintn final_key_size;
+    size_t final_key_size;
 
 
     /* Check input parameters.*/
@@ -332,7 +332,7 @@ bool libspdm_dh_compute_key(void *dh_context, const uint8_t *peer_public_key,
     if (size < 0) {
         return false;
     }
-    if ((uintn)size != final_key_size) {
+    if ((size_t)size != final_key_size) {
         return false;
     }
 

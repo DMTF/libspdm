@@ -72,7 +72,7 @@ libspdm_get_response_struct_t m_libspdm_get_response_struct[] = {
 libspdm_get_spdm_response_func
 libspdm_get_response_func_via_request_code(uint8_t request_code)
 {
-    uintn index;
+    size_t index;
 
     LIBSPDM_ASSERT(request_code != SPDM_RESPOND_IF_READY);
     for (index = 0; index < sizeof(m_libspdm_get_response_struct) /
@@ -121,14 +121,14 @@ libspdm_get_response_func_via_last_request(libspdm_context_t *spdm_context)
  **/
 return_status libspdm_process_request(void *context, uint32_t **session_id,
                                       bool *is_app_message,
-                                      uintn request_size, const void *request)
+                                      size_t request_size, const void *request)
 {
     libspdm_context_t *spdm_context;
     return_status status;
     libspdm_session_info_t *session_info;
     uint32_t *message_session_id;
     uint8_t *decoded_message_ptr;
-    uintn decoded_message_size;
+    size_t decoded_message_size;
 
     spdm_context = context;
 
@@ -212,7 +212,7 @@ void libspdm_trigger_session_state_callback(libspdm_context_t *spdm_context,
                                             uint32_t session_id,
                                             libspdm_session_state_t session_state)
 {
-    uintn index;
+    size_t index;
 
     for (index = 0; index < LIBSPDM_MAX_SESSION_STATE_CALLBACK_NUM; index++) {
         if (spdm_context->spdm_session_state_callback[index] != 0) {
@@ -264,7 +264,7 @@ void libspdm_trigger_connection_state_callback(libspdm_context_t *spdm_context,
                                                const libspdm_connection_state_t
                                                connection_state)
 {
-    uintn index;
+    size_t index;
 
     for (index = 0; index < LIBSPDM_MAX_CONNECTION_STATE_CALLBACK_NUM;
          index++) {
@@ -314,19 +314,19 @@ void libspdm_set_connection_state(libspdm_context_t *spdm_context,
  **/
 return_status libspdm_build_response(void *context, const uint32_t *session_id,
                                      bool is_app_message,
-                                     uintn *response_size,
+                                     size_t *response_size,
                                      void **response)
 {
     libspdm_context_t *spdm_context;
     uint8_t *my_response;
-    uintn my_response_size;
+    size_t my_response_size;
     return_status status;
     libspdm_get_spdm_response_func get_response_func;
     libspdm_session_info_t *session_info;
     spdm_message_header_t *spdm_request;
     spdm_message_header_t *spdm_response;
     bool result;
-    uintn transport_header_size;
+    size_t transport_header_size;
 
     spdm_context = context;
     status = RETURN_UNSUPPORTED;
@@ -563,7 +563,7 @@ void libspdm_register_get_response_func(
     libspdm_context_t *spdm_context;
 
     spdm_context = context;
-    spdm_context->get_response_func = (uintn)get_response_func;
+    spdm_context->get_response_func = (size_t)get_response_func;
 
     return;
 }
@@ -584,13 +584,13 @@ return_status libspdm_register_session_state_callback_func(
     libspdm_session_state_callback_func spdm_session_state_callback)
 {
     libspdm_context_t *spdm_context;
-    uintn index;
+    size_t index;
 
     spdm_context = context;
     for (index = 0; index < LIBSPDM_MAX_SESSION_STATE_CALLBACK_NUM; index++) {
         if (spdm_context->spdm_session_state_callback[index] == 0) {
             spdm_context->spdm_session_state_callback[index] =
-                (uintn)spdm_session_state_callback;
+                (size_t)spdm_session_state_callback;
             return RETURN_SUCCESS;
         }
     }
@@ -615,14 +615,14 @@ return_status libspdm_register_connection_state_callback_func(
     libspdm_connection_state_callback_func spdm_connection_state_callback)
 {
     libspdm_context_t *spdm_context;
-    uintn index;
+    size_t index;
 
     spdm_context = context;
     for (index = 0; index < LIBSPDM_MAX_CONNECTION_STATE_CALLBACK_NUM;
          index++) {
         if (spdm_context->spdm_connection_state_callback[index] == 0) {
             spdm_context->spdm_connection_state_callback[index] =
-                (uintn)spdm_connection_state_callback;
+                (size_t)spdm_connection_state_callback;
             return RETURN_SUCCESS;
         }
     }

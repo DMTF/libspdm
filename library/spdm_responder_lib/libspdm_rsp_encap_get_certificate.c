@@ -23,7 +23,7 @@
  **/
 return_status
 libspdm_get_encap_request_get_certificate(libspdm_context_t *spdm_context,
-                                          uintn *encap_request_size,
+                                          size_t *encap_request_size,
                                           void *encap_request)
 {
     spdm_get_certificate_request_t *spdm_request;
@@ -86,11 +86,11 @@ libspdm_get_encap_request_get_certificate(libspdm_context_t *spdm_context,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_process_encap_response_certificate(
-    libspdm_context_t *spdm_context, uintn encap_response_size,
+    libspdm_context_t *spdm_context, size_t encap_response_size,
     const void *encap_response, bool *need_continue)
 {
     const spdm_certificate_response_t *spdm_response;
-    uintn spdm_response_size;
+    size_t spdm_response_size;
     bool result;
     return_status status;
     uint16_t request_offset;

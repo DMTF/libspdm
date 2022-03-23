@@ -34,16 +34,7 @@
 #include LIBSPDM_STDBOOL_ALT
 #endif
 
-/* Unsigned value of native width.  (4 bytes on supported 32-bit processor instructions,
- * 8 bytes on supported 64-bit processor instructions)*/
-
-typedef uint32_t uintn __attribute__((aligned(4)));
-
-/* Signed value of native width.  (4 bytes on supported 32-bit processor instructions,
- * 8 bytes on supported 64-bit processor instructions)*/
-
-typedef int32_t intn __attribute__((aligned(4)));
-
+#include <stddef.h>
 
 /* Processor specific defines*/
 
@@ -53,51 +44,13 @@ typedef int32_t intn __attribute__((aligned(4)));
 
 #define MAX_BIT 0x80000000
 
-/* A value of native width with the two highest bits set.*/
-
-#define MAX_2_BITS 0xC0000000
-
-
 /* Maximum legal NIOS2 address*/
 
 #define MAX_ADDRESS 0xFFFFFFFF
 
 
-/* Maximum usable address at boot time (48 bits using 4 KB pages in Supervisor mode)*/
+/* Maximum legal NIOS2 intn and size_t values.*/
 
-#define MAX_ALLOC_ADDRESS MAX_ADDRESS
-
-
-/* Maximum legal NIOS2 intn and uintn values.*/
-
-#define MAX_INTN ((intn)0x7FFFFFFF)
-#define MAX_UINTN ((uintn)0xFFFFFFFF)
-
-
-/* The stack alignment required for NIOS2*/
-
-#define CPU_STACK_ALIGNMENT sizeof(uint64_t)
-
-
-/* Page allocation granularity for NIOS2*/
-
-#define DEFAULT_PAGE_ALLOCATION_GRANULARITY (0x1000)
-#define RUNTIME_PAGE_ALLOCATION_GRANULARITY (0x1000)
-
-/**
- * Return the pointer to the first instruction of a function given a function pointer.
- * On x64 CPU architectures, these two pointer values are the same,
- * so the implementation of this macro is very simple.
- *
- * @param  function_pointer   A pointer to a function.
- *
- * @return The pointer to the first instruction of a function given a function pointer.
- *
- **/
-#define FUNCTION_ENTRY_POINT(function_pointer) (void *)(uintn)(function_pointer)
-
-#ifndef __USER_LABEL_PREFIX__
-#define __USER_LABEL_PREFIX__
-#endif
+#define MAX_INTN 0x7FFFFFFF
 
 #endif

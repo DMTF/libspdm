@@ -24,15 +24,15 @@ return_status libspdm_responder_dispatch_message(void *context)
     return_status status;
     libspdm_context_t *spdm_context;
     uint8_t *request;
-    uintn request_size;
+    size_t request_size;
     uint8_t *response;
-    uintn response_size;
+    size_t response_size;
     uint32_t tmp_session_id;
     uint32_t *session_id;
     uint32_t *session_id_ptr;
     bool is_app_message;
     void *message;
-    uintn message_size;
+    size_t message_size;
 
     spdm_context = context;
 

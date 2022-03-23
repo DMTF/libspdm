@@ -91,12 +91,12 @@ return_status libspdm_validate_crypt_rsa(void)
 {
     void *rsa;
     uint8_t hash_value[LIBSPDM_SHA256_DIGEST_SIZE];
-    uintn hash_size;
+    size_t hash_size;
     void *sha256_ctx;
     uint8_t *signature;
-    uintn sig_size;
+    size_t sig_size;
     bool status;
-    uintn key_size;
+    size_t key_size;
     uint8_t *KeyBuffer;
 
     libspdm_my_print("\nCrypto RSA Engine Testing: ");

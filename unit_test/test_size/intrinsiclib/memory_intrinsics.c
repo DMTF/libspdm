@@ -11,7 +11,7 @@
 #include "hal/base.h"
 #include "hal/library/memlib.h"
 
-typedef uintn size_t;
+typedef size_t size_t;
 
 #if defined(__GNUC__) || defined(__clang__)
 #define GLOBAL_USED __attribute__((used))
@@ -60,7 +60,7 @@ int memcmp(const void *buf1, const void *buf2, size_t count)
     return (int)libspdm_const_compare_mem(buf1, buf2, count);
 }
 
-intn ascii_strcmp(const char *first_string, const char *second_string)
+int ascii_strcmp(const char *first_string, const char *second_string)
 {
     while ((*first_string != '\0') && (*first_string == *second_string)) {
         first_string++;
@@ -75,9 +75,9 @@ int strcmp(const char *s1, const char *s2)
     return (int)ascii_strcmp(s1, s2);
 }
 
-uintn ascii_strlen(const char *string)
+size_t ascii_strlen(const char *string)
 {
-    uintn length;
+    size_t length;
 
     if (string == NULL) {
         return 0;

@@ -59,13 +59,13 @@ uint32_t libspdm_mctp_get_max_random_number_count(void)
  * @retval RETURN_SUCCESS               The message is encoded successfully.
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
-return_status libspdm_mctp_encode_message(const uint32_t *session_id, uintn message_size,
+return_status libspdm_mctp_encode_message(const uint32_t *session_id, size_t message_size,
                                           const void *message,
-                                          uintn *transport_message_size,
+                                          size_t *transport_message_size,
                                           void **transport_message)
 {
-    uintn aligned_message_size;
-    uintn alignment;
+    size_t aligned_message_size;
+    size_t alignment;
     mctp_message_header_t *mctp_message_header;
 
     alignment = MCTP_ALIGNMENT;
@@ -106,11 +106,11 @@ return_status libspdm_mctp_encode_message(const uint32_t *session_id, uintn mess
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
 return_status libspdm_mctp_decode_message(uint32_t **session_id,
-                                          uintn transport_message_size,
+                                          size_t transport_message_size,
                                           const void *transport_message,
-                                          uintn *message_size, void **message)
+                                          size_t *message_size, void **message)
 {
-    uintn alignment;
+    size_t alignment;
     const mctp_message_header_t *mctp_message_header;
 
     alignment = MCTP_ALIGNMENT;

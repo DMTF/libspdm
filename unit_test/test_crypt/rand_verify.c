@@ -23,7 +23,7 @@ uint8_t m_libspdm_random_buffer[LIBSPDM_RANDOM_NUMBER_SIZE] = { 0x0 };
  **/
 return_status libspdm_validate_crypt_prng(void)
 {
-    uintn index;
+    size_t index;
     bool status;
 
     libspdm_my_print(" \nCrypto PRNG Engine Testing:\n");

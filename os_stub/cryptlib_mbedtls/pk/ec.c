@@ -27,7 +27,7 @@
  *         If the allocations fails, libspdm_ec_new_by_nid() returns NULL.
  *
  **/
-void *libspdm_ec_new_by_nid(uintn nid)
+void *libspdm_ec_new_by_nid(size_t nid)
 {
     mbedtls_ecdh_context *ctx;
     mbedtls_ecp_group_id grp_id;
@@ -90,11 +90,11 @@ void libspdm_ec_free(void *ec_context)
  *
  **/
 bool libspdm_ec_set_pub_key(void *ec_context, const uint8_t *public_key,
-                            uintn public_key_size)
+                            size_t public_key_size)
 {
     mbedtls_ecdh_context *ctx;
     int32_t ret;
-    uintn half_size;
+    size_t half_size;
 
     if (ec_context == NULL || public_key == NULL) {
         return false;
@@ -152,13 +152,13 @@ bool libspdm_ec_set_pub_key(void *ec_context, const uint8_t *public_key,
  *
  **/
 bool libspdm_ec_get_pub_key(void *ec_context, uint8_t *public_key,
-                            uintn *public_key_size)
+                            size_t *public_key_size)
 {
     mbedtls_ecdh_context *ctx;
     int32_t ret;
-    uintn half_size;
-    uintn x_size;
-    uintn y_size;
+    size_t half_size;
+    size_t x_size;
+    size_t y_size;
 
     if (ec_context == NULL || public_key_size == NULL) {
         return false;
@@ -256,13 +256,13 @@ bool libspdm_ec_check_key(const void *ec_context)
  *
  **/
 bool libspdm_ec_generate_key(void *ec_context, uint8_t *public,
-                             uintn *public_size)
+                             size_t *public_size)
 {
     mbedtls_ecdh_context *ctx;
     int32_t ret;
-    uintn half_size;
-    uintn x_size;
-    uintn y_size;
+    size_t half_size;
+    size_t x_size;
+    size_t y_size;
 
     if (ec_context == NULL || public_size == NULL) {
         return false;
@@ -348,11 +348,11 @@ bool libspdm_ec_generate_key(void *ec_context, uint8_t *public,
  *
  **/
 bool libspdm_ec_compute_key(void *ec_context, const uint8_t *peer_public,
-                            uintn peer_public_size, uint8_t *key,
-                            uintn *key_size)
+                            size_t peer_public_size, uint8_t *key,
+                            size_t *key_size)
 {
     mbedtls_ecdh_context *ctx;
-    uintn half_size;
+    size_t half_size;
     int32_t ret;
 
     if (ec_context == NULL || peer_public == NULL || key_size == NULL ||
@@ -444,17 +444,17 @@ bool libspdm_ec_compute_key(void *ec_context, const uint8_t *peer_public,
  * @retval  false  sig_size is too small.
  *
  **/
-bool libspdm_ecdsa_sign(void *ec_context, uintn hash_nid,
-                        const uint8_t *message_hash, uintn hash_size,
-                        uint8_t *signature, uintn *sig_size)
+bool libspdm_ecdsa_sign(void *ec_context, size_t hash_nid,
+                        const uint8_t *message_hash, size_t hash_size,
+                        uint8_t *signature, size_t *sig_size)
 {
     int32_t ret;
     mbedtls_ecdh_context *ctx;
     mbedtls_mpi bn_r;
     mbedtls_mpi bn_s;
-    uintn r_size;
-    uintn s_size;
-    uintn half_size;
+    size_t r_size;
+    size_t s_size;
+    size_t half_size;
 
     if (ec_context == NULL || message_hash == NULL) {
         return false;
@@ -478,7 +478,7 @@ bool libspdm_ecdsa_sign(void *ec_context, uintn hash_nid,
     default:
         return false;
     }
-    if (*sig_size < (uintn)(half_size * 2)) {
+    if (*sig_size < (size_t)(half_size * 2)) {
         *sig_size = half_size * 2;
         return false;
     }
@@ -565,15 +565,15 @@ bool libspdm_ecdsa_sign(void *ec_context, uintn hash_nid,
  * @retval  false  Invalid signature or invalid EC context.
  *
  **/
-bool libspdm_ecdsa_verify(void *ec_context, uintn hash_nid,
-                          const uint8_t *message_hash, uintn hash_size,
-                          const uint8_t *signature, uintn sig_size)
+bool libspdm_ecdsa_verify(void *ec_context, size_t hash_nid,
+                          const uint8_t *message_hash, size_t hash_size,
+                          const uint8_t *signature, size_t sig_size)
 {
     int32_t ret;
     mbedtls_ecdh_context *ctx;
     mbedtls_mpi bn_r;
     mbedtls_mpi bn_s;
-    uintn half_size;
+    size_t half_size;
 
     if (ec_context == NULL || message_hash == NULL || signature == NULL) {
         return false;
@@ -597,7 +597,7 @@ bool libspdm_ecdsa_verify(void *ec_context, uintn hash_nid,
     default:
         return false;
     }
-    if (sig_size != (uintn)(half_size * 2)) {
+    if (sig_size != (size_t)(half_size * 2)) {
         return false;
     }
 

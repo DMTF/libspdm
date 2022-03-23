@@ -24,7 +24,7 @@
  **/
 return_status libspdm_responder_handle_response_state(void *context,
                                                       uint8_t request_code,
-                                                      uintn *response_size,
+                                                      size_t *response_size,
                                                       void *response)
 {
     libspdm_context_t *spdm_context;

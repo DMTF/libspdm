@@ -23,18 +23,18 @@
  **/
 return_status libspdm_requester_respond_if_ready(libspdm_context_t *spdm_context,
                                                  const uint32_t *session_id,
-                                                 uintn *response_size,
+                                                 size_t *response_size,
                                                  void **response,
                                                  uint8_t expected_response_code,
-                                                 uintn expected_response_size)
+                                                 size_t expected_response_size)
 {
     return_status status;
     spdm_response_if_ready_request_t *spdm_request;
-    uintn spdm_request_size;
+    size_t spdm_request_size;
     spdm_message_header_t *spdm_response;
     uint8_t *message;
-    uintn message_size;
-    uintn transport_header_size;
+    size_t message_size;
+    size_t transport_header_size;
 
     /* the response might be in response buffer in normal SPDM message
      * or it is in scratch buffer in case of secure SPDM message
@@ -148,11 +148,11 @@ return_status libspdm_handle_simple_error_response(void *context,
  **/
 return_status libspdm_handle_response_not_ready(libspdm_context_t *spdm_context,
                                                 const uint32_t *session_id,
-                                                uintn *response_size,
+                                                size_t *response_size,
                                                 void **response,
                                                 uint8_t original_request_code,
                                                 uint8_t expected_response_code,
-                                                uintn expected_response_size)
+                                                size_t expected_response_size)
 {
     spdm_error_response_t *spdm_response;
     spdm_error_data_response_not_ready_t *extend_error_data;
@@ -214,9 +214,9 @@ return_status libspdm_handle_response_not_ready(libspdm_context_t *spdm_context,
  **/
 return_status libspdm_handle_error_response_main(
     libspdm_context_t *spdm_context, const uint32_t *session_id,
-    uintn *response_size, void **response,
+    size_t *response_size, void **response,
     uint8_t original_request_code, uint8_t expected_response_code,
-    uintn expected_response_size)
+    size_t expected_response_size)
 {
     spdm_message_header_t *spdm_response;
 

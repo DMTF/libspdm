@@ -31,8 +31,8 @@
  * @retval Non-zero          There is mismatched between source_buffer and destination_buffer.
  *
  **/
-intn libspdm_const_compare_mem(const void *destination_buffer,
-                               const void *source_buffer, uintn length)
+int32_t libspdm_const_compare_mem(const void *destination_buffer,
+                                  const void *source_buffer, size_t length)
 {
     const volatile uint8_t *pointer_dst;
     const volatile uint8_t *pointer_src;

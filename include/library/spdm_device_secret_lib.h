@@ -89,7 +89,7 @@ return_status libspdm_measurement_collection(
     uint8_t *content_changed,
     uint8_t *measurements_count,
     void *measurements,
-    uintn *measurements_size);
+    size_t *measurements_size);
 
 /**
  * This function calculates the measurement summary hash.
@@ -118,7 +118,7 @@ libspdm_generate_measurement_summary_hash(
     uint32_t measurement_hash_algo,
     uint8_t measurement_summary_hash_type,
     uint8_t  *measurement_summary_hash,
-    uintn *measurement_summary_hash_size);
+    size_t *measurement_summary_hash_size);
 
 /**
  * Sign an SPDM message data.
@@ -140,8 +140,8 @@ bool libspdm_requester_data_sign(
     uint8_t op_code,
     uint16_t req_base_asym_alg,
     uint32_t base_hash_algo, bool is_data_hash,
-    const uint8_t *message, uintn message_size,
-    uint8_t *signature, uintn *sig_size);
+    const uint8_t *message, size_t message_size,
+    uint8_t *signature, size_t *sig_size);
 
 /**
  * Sign an SPDM message data.
@@ -163,8 +163,8 @@ bool libspdm_responder_data_sign(
     uint8_t op_code,
     uint32_t base_asym_algo,
     uint32_t base_hash_algo, bool is_data_hash,
-    const uint8_t *message, uintn message_size,
-    uint8_t *signature, uintn *sig_size);
+    const uint8_t *message, size_t message_size,
+    uint8_t *signature, size_t *sig_size);
 
 /**
  * Derive HMAC-based Expand key Derivation Function (HKDF) Expand, based upon the negotiated HKDF algorithm.
@@ -183,8 +183,8 @@ bool libspdm_responder_data_sign(
 bool libspdm_psk_handshake_secret_hkdf_expand(
     spdm_version_number_t spdm_version,
     uint32_t base_hash_algo, const uint8_t *psk_hint,
-    uintn psk_hint_size, const uint8_t *info,
-    uintn info_size, uint8_t *out, uintn out_size);
+    size_t psk_hint_size, const uint8_t *info,
+    size_t info_size, uint8_t *out, size_t out_size);
 
 /**
  * Derive HMAC-based Expand key Derivation Function (HKDF) Expand, based upon the negotiated HKDF algorithm.
@@ -204,9 +204,9 @@ bool libspdm_psk_master_secret_hkdf_expand(
     spdm_version_number_t spdm_version,
     uint32_t base_hash_algo,
     const uint8_t *psk_hint,
-    uintn psk_hint_size,
+    size_t psk_hint_size,
     const uint8_t *info,
-    uintn info_size, uint8_t *out,
-    uintn out_size);
+    size_t info_size, uint8_t *out,
+    size_t out_size);
 
 #endif

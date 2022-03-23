@@ -31,16 +31,7 @@
 #include LIBSPDM_STDBOOL_ALT
 #endif
 
-/* Unsigned value of native width.  (4 bytes on supported 32-bit processor instructions,
- * 8 bytes on supported 64-bit processor instructions)*/
-
-typedef uint32_t uintn __attribute__((aligned(4)));
-
-/* Signed value of native width.  (4 bytes on supported 32-bit processor instructions,
- * 8 bytes on supported 64-bit processor instructions)*/
-
-typedef int32_t intn __attribute__((aligned(4)));
-
+#include <stddef.h>
 
 /* Processor specific defines*/
 
@@ -58,6 +49,6 @@ typedef int32_t intn __attribute__((aligned(4)));
 
 /* Maximum legal RISC-V intn values.*/
 
-#define MAX_INTN ((intn)0x7FFFFFFF)
+#define MAX_INTN 0x7FFFFFFF
 
 #endif

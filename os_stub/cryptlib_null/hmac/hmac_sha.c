@@ -49,7 +49,7 @@ void libspdm_hmac_sha256_free(void *hmac_sha256_ctx)
  *
  **/
 bool libspdm_hmac_sha256_set_key(void *hmac_sha256_ctx, const uint8_t *key,
-                                 uintn key_size)
+                                 size_t key_size)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -94,7 +94,7 @@ bool libspdm_hmac_sha256_duplicate(const void *hmac_sha256_ctx,
  *
  **/
 bool libspdm_hmac_sha256_update(void *hmac_sha256_ctx, const void *data,
-                                uintn data_size)
+                                size_t data_size)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -146,8 +146,8 @@ bool libspdm_hmac_sha256_final(void *hmac_sha256_ctx, uint8_t *hmac_value)
  * @retval false  This interface is not supported.
  *
  **/
-bool libspdm_hmac_sha256_all(const void *data, uintn data_size,
-                             const uint8_t *key, uintn key_size,
+bool libspdm_hmac_sha256_all(const void *data, size_t data_size,
+                             const uint8_t *key, size_t key_size,
                              uint8_t *hmac_value)
 {
     LIBSPDM_ASSERT(false);
@@ -195,7 +195,7 @@ void libspdm_hmac_sha384_free(void *hmac_sha384_ctx)
  *
  **/
 bool libspdm_hmac_sha384_set_key(void *hmac_sha384_ctx, const uint8_t *key,
-                                 uintn key_size)
+                                 size_t key_size)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -244,7 +244,7 @@ bool libspdm_hmac_sha384_duplicate(const void *hmac_sha384_ctx,
  *
  **/
 bool libspdm_hmac_sha384_update(void *hmac_sha384_ctx, const void *data,
-                                uintn data_size)
+                                size_t data_size)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -298,8 +298,8 @@ bool libspdm_hmac_sha384_final(void *hmac_sha384_ctx, uint8_t *hmac_value)
  * @retval false  This interface is not supported.
  *
  **/
-bool libspdm_hmac_sha384_all(const void *data, uintn data_size,
-                             const uint8_t *key, uintn key_size,
+bool libspdm_hmac_sha384_all(const void *data, size_t data_size,
+                             const uint8_t *key, size_t key_size,
                              uint8_t *hmac_value)
 {
     LIBSPDM_ASSERT(false);
@@ -347,7 +347,7 @@ void libspdm_hmac_sha512_free(void *hmac_sha512_ctx)
  *
  **/
 bool libspdm_hmac_sha512_set_key(void *hmac_sha512_ctx, const uint8_t *key,
-                                 uintn key_size)
+                                 size_t key_size)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -396,7 +396,7 @@ bool libspdm_hmac_sha512_duplicate(const void *hmac_sha512_ctx,
  *
  **/
 bool libspdm_hmac_sha512_update(void *hmac_sha512_ctx, const void *data,
-                                uintn data_size)
+                                size_t data_size)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -450,8 +450,8 @@ bool libspdm_hmac_sha512_final(void *hmac_sha512_ctx, uint8_t *hmac_value)
  * @retval false  This interface is not supported.
  *
  **/
-bool libspdm_hmac_sha512_all(const void *data, uintn data_size,
-                             const uint8_t *key, uintn key_size,
+bool libspdm_hmac_sha512_all(const void *data, size_t data_size,
+                             const uint8_t *key, size_t key_size,
                              uint8_t *hmac_value)
 {
     LIBSPDM_ASSERT(false);

@@ -30,6 +30,7 @@ SET(src_test_spdm_requester
     encap_challenge_auth.c
     encap_digests.c
     encap_key_update.c
+    encap_request.c
     ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/common.c
     ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/algo.c
     ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/support.c

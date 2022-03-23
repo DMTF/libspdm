@@ -6,12 +6,12 @@
 
 #include "hal/base.h"
 
-void *allocate_pool(uintn AllocationSize)
+void *allocate_pool(size_t AllocationSize)
 {
     return NULL;
 }
 
-void *allocate_zero_pool(uintn AllocationSize)
+void *allocate_zero_pool(size_t AllocationSize)
 {
     return NULL;
 }

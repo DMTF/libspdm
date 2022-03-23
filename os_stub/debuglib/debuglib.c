@@ -31,7 +31,7 @@
 #define LIBSPDM_DEBUG_LEVEL_CONFIG (LIBSPDM_DEBUG_INFO | LIBSPDM_DEBUG_INFO)
 #endif
 
-void libspdm_debug_assert(const char *file_name, uintn line_number,
+void libspdm_debug_assert(const char *file_name, size_t line_number,
                           const char *description)
 {
     printf("LIBSPDM_ASSERT: %s(%d): %s\n", file_name, (int32_t)(uint32_t)line_number,
@@ -39,7 +39,7 @@ void libspdm_debug_assert(const char *file_name, uintn line_number,
 
 #if (LIBSPDM_DEBUG_LIBSPDM_ASSERT_CONFIG == LIBSPDM_DEBUG_LIBSPDM_ASSERT_DEADLOOP)
     {
-        volatile intn ___i = 1;
+        volatile int32_t ___i = 1;
         while (___i)
             ;
     }
@@ -55,7 +55,7 @@ void libspdm_debug_assert(const char *file_name, uintn line_number,
     assert(false);
 }
 
-void libspdm_debug_print(uintn error_level, const char *format, ...)
+void libspdm_debug_print(size_t error_level, const char *format, ...)
 {
     char buffer[LIBSPDM_MAX_DEBUG_MESSAGE_LENGTH];
     va_list marker;

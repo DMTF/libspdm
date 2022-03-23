@@ -14,31 +14,31 @@ static uint8_t m_libspdm_oid_subject_alt_name[] = { 0x55, 0x1D, 0x11 };
  * @retval  RETURN_ABORTED  Validation failed.
  *
  **/
-return_status libspdm_validate_crypt_x509(char *Path, uintn len)
+return_status libspdm_validate_crypt_x509(char *Path, size_t len)
 {
     bool status;
     uint8_t *leaf_cert;
-    uintn leaf_cert_len;
+    size_t leaf_cert_len;
     uint8_t *test_cert;
-    uintn test_cert_len;
+    size_t test_cert_len;
     uint8_t *test_ca_cert;
-    uintn test_ca_cert_len;
+    size_t test_ca_cert_len;
     uint8_t *test_bundle_cert;
-    uintn test_bundle_cert_len;
+    size_t test_bundle_cert_len;
     uint8_t *test_end_cert;
-    uintn test_end_cert_len;
-    uintn subject_size;
+    size_t test_end_cert_len;
+    size_t subject_size;
     uint8_t *subject;
-    uintn common_name_size;
+    size_t common_name_size;
     char common_name[64];
     return_status ret;
-    uintn cert_version;
+    size_t cert_version;
     uint8_t asn1_buffer[1024];
-    uintn asn1_buffer_len;
+    size_t asn1_buffer_len;
     uint8_t end_cert_from[64];
-    uintn end_cert_from_len;
+    size_t end_cert_from_len;
     uint8_t end_cert_to[64];
-    uintn end_cert_to_len;
+    size_t end_cert_to_len;
     uint8_t date_time1[64];
     uint8_t date_time2[64];
     return_status ret_status;

@@ -22,8 +22,8 @@
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
 return_status libspdm_pci_doe_encode_message(const uint32_t *session_id,
-                                             uintn message_size, const void *message,
-                                             uintn *transport_message_size,
+                                             size_t message_size, const void *message,
+                                             size_t *transport_message_size,
                                              void **transport_message);
 
 /**
@@ -41,9 +41,9 @@ return_status libspdm_pci_doe_encode_message(const uint32_t *session_id,
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
 return_status libspdm_pci_doe_decode_message(uint32_t **session_id,
-                                             uintn transport_message_size,
+                                             size_t transport_message_size,
                                              const void *transport_message,
-                                             uintn *message_size,
+                                             size_t *message_size,
                                              void **message);
 
 /**
@@ -77,15 +77,15 @@ return_status libspdm_pci_doe_decode_message(uint32_t **session_id,
  **/
 return_status libspdm_transport_pci_doe_encode_message(
     void *spdm_context, const uint32_t *session_id, bool is_app_message,
-    bool is_requester, uintn message_size, const void *message,
-    uintn *transport_message_size, void **transport_message)
+    bool is_requester, size_t message_size, const void *message,
+    size_t *transport_message_size, void **transport_message)
 {
     return_status status;
     uint8_t *secured_message;
-    uintn secured_message_size;
+    size_t secured_message_size;
     libspdm_secured_message_callbacks_t spdm_secured_message_callbacks;
     void *secured_message_context;
-    uintn transport_header_size;
+    size_t transport_header_size;
 
     spdm_secured_message_callbacks.version =
         SPDM_SECURED_MESSAGE_CALLBACKS_VERSION;
@@ -177,13 +177,13 @@ return_status libspdm_transport_pci_doe_encode_message(
 return_status libspdm_transport_pci_doe_decode_message(
     void *spdm_context, uint32_t **session_id,
     bool *is_app_message, bool is_requester,
-    uintn transport_message_size, const void *transport_message,
-    uintn *message_size, void **message)
+    size_t transport_message_size, const void *transport_message,
+    size_t *message_size, void **message)
 {
     return_status status;
     uint32_t *secured_message_session_id;
     uint8_t *secured_message;
-    uintn secured_message_size;
+    size_t secured_message_size;
     libspdm_secured_message_callbacks_t spdm_secured_message_callbacks;
     void *secured_message_context;
     libspdm_error_struct_t spdm_error;

@@ -26,15 +26,15 @@
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_get_response_key_exchange(void *context,
-                                                uintn request_size,
+                                                size_t request_size,
                                                 const void *request,
-                                                uintn *response_size,
+                                                size_t *response_size,
                                                 void *response)
 {
     const spdm_key_exchange_request_t *spdm_request;
     spdm_key_exchange_response_t *spdm_response;
-    uintn dhe_key_size;
-    uintn measurement_summary_hash_size;
+    size_t dhe_key_size;
+    size_t measurement_summary_hash_size;
     uint32_t signature_size;
     uint32_t hmac_size;
     uint8_t *ptr;
@@ -44,12 +44,12 @@ return_status libspdm_get_response_key_exchange(void *context,
     uint32_t session_id;
     void *dhe_context;
     libspdm_session_info_t *session_info;
-    uintn total_size;
+    size_t total_size;
     libspdm_context_t *spdm_context;
     uint16_t req_session_id;
     uint16_t rsp_session_id;
     return_status status;
-    uintn opaque_key_exchange_rsp_size;
+    size_t opaque_key_exchange_rsp_size;
     uint8_t th1_hash_data[64];
 
     spdm_context = context;
@@ -316,7 +316,7 @@ return_status libspdm_get_response_key_exchange(void *context,
     }
 
     status = libspdm_append_message_k(spdm_context, session_info, false, spdm_response,
-                                      (uintn)ptr - (uintn)spdm_response);
+                                      (size_t)ptr - (size_t)spdm_response);
     if (RETURN_ERROR(status)) {
         libspdm_free_session_id(spdm_context, session_id);
         return libspdm_generate_error_response(spdm_context,

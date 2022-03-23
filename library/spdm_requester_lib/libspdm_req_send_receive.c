@@ -27,18 +27,18 @@
  **/
 return_status libspdm_send_request(void *context, const uint32_t *session_id,
                                    bool is_app_message,
-                                   uintn request_size, const void *request)
+                                   size_t request_size, const void *request)
 {
     libspdm_context_t *spdm_context;
     return_status status;
     uint8_t *message;
-    uintn message_size;
+    size_t message_size;
     uint64_t timeout;
     uint8_t *scratch_buffer;
-    uintn scratch_buffer_size;
-    uintn transport_header_size;
+    size_t scratch_buffer_size;
+    size_t transport_header_size;
     uint8_t *sender_buffer;
-    uintn sender_buffer_size;
+    size_t sender_buffer_size;
 
     spdm_context = context;
 
@@ -110,13 +110,13 @@ return_status libspdm_send_request(void *context, const uint32_t *session_id,
  **/
 return_status libspdm_receive_response(void *context, const uint32_t *session_id,
                                        bool is_app_message,
-                                       uintn *response_size,
+                                       size_t *response_size,
                                        void **response)
 {
     libspdm_context_t *spdm_context;
     return_status status;
     uint8_t *message;
-    uintn message_size;
+    size_t message_size;
     uint32_t *message_session_id;
     bool is_message_app_message;
     uint64_t timeout;
@@ -218,7 +218,7 @@ error:
  **/
 return_status libspdm_send_spdm_request(libspdm_context_t *spdm_context,
                                         const uint32_t *session_id,
-                                        uintn request_size, const void *request)
+                                        size_t request_size, const void *request)
 {
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
@@ -268,7 +268,7 @@ return_status libspdm_send_spdm_request(libspdm_context_t *spdm_context,
  **/
 return_status libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
                                             const uint32_t *session_id,
-                                            uintn *response_size,
+                                            size_t *response_size,
                                             void **response)
 {
     libspdm_session_info_t *session_info;

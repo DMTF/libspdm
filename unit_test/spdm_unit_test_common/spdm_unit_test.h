@@ -62,7 +62,7 @@ typedef struct {
     libspdm_device_receive_message_func receive_message;
     void *spdm_context;
     void *scratch_buffer;
-    uintn scratch_buffer_size;
+    size_t scratch_buffer_size;
     uint32_t case_id;
 } libspdm_test_context_t;
 
@@ -74,13 +74,13 @@ void libspdm_setup_test_context(libspdm_test_context_t *spdm_test_context);
 
 libspdm_test_context_t *libspdm_get_test_context(void);
 
-void libspdm_dump_hex_str(const uint8_t *buffer, uintn buffer_size);
+void libspdm_dump_hex_str(const uint8_t *buffer, size_t buffer_size);
 
-void libspdm_dump_data(const uint8_t *buffer, uintn buffer_size);
+void libspdm_dump_data(const uint8_t *buffer, size_t buffer_size);
 
-void libspdm_dump_hex(const uint8_t *buffer, uintn buffer_size);
+void libspdm_dump_hex(const uint8_t *buffer, size_t buffer_size);
 
 bool libspdm_read_input_file(const char *file_name, void **file_data,
-                             uintn *file_size);
+                             size_t *file_size);
 
 #endif

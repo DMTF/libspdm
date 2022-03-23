@@ -10,7 +10,7 @@
 #include "internal/libspdm_responder_lib.h"
 
 
-uintn libspdm_get_max_buffer_size(void)
+size_t libspdm_get_max_buffer_size(void)
 {
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
@@ -26,10 +26,10 @@ void libspdm_test_responder_end_session(void **State)
 {
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     void *data;
-    uintn data_size;
+    size_t data_size;
     libspdm_session_info_t *session_info;
     uint32_t session_id;
 
@@ -90,7 +90,7 @@ void libspdm_test_responder_end_session(void **State)
     free(data);
 }
 
-void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size)
+void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size)
 {
     void *State;
 

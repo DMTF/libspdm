@@ -93,7 +93,7 @@ GLOBAL_REMOVE_IF_UNREFERENCED uint8_t
 return_status libspdm_validate_crypt_digest(void)
 {
     void *hash_ctx;
-    uintn data_size;
+    size_t data_size;
     uint8_t digest[LIBSPDM_MAX_DIGEST_SIZE];
     bool status;
 

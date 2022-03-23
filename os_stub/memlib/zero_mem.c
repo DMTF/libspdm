@@ -24,7 +24,7 @@
  * @return buffer.
  *
  **/
-void *libspdm_zero_mem(void *buffer, uintn length)
+void *libspdm_zero_mem(void *buffer, size_t length)
 {
     volatile uint8_t *pointer;
 

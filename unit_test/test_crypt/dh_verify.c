@@ -19,13 +19,13 @@ return_status libspdm_validate_crypt_dh(void)
     void *dh2;
     bool status;
     uint8_t ff_public_key1[256];
-    uintn ff_public_key1_length;
+    size_t ff_public_key1_length;
     uint8_t ff_public_key2[256];
-    uintn ff_public_key2_length;
+    size_t ff_public_key2_length;
     uint8_t ff_key1[256];
-    uintn ff_key1_length;
+    size_t ff_key1_length;
     uint8_t ff_key2[256];
-    uintn ff_key2_length;
+    size_t ff_key2_length;
 
     libspdm_my_print("\nCrypto DH Engine Testing:\n");
 

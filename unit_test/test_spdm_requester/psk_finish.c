@@ -14,6 +14,9 @@ static uint8_t m_libspdm_local_psk_hint[32];
 static uint8_t m_libspdm_dummy_key_buffer[LIBSPDM_MAX_AEAD_KEY_SIZE];
 static uint8_t m_libspdm_dummy_salt_buffer[LIBSPDM_MAX_AEAD_IV_SIZE];
 
+static size_t m_libspdm_local_buffer_size;
+static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+
 static void libspdm_secured_message_set_dummy_finished_key(
     void *spdm_secured_message_context)
 {
@@ -24,7 +27,7 @@ static void libspdm_secured_message_set_dummy_finished_key(
 }
 
 void libspdm_secured_message_set_response_handshake_encryption_key(
-    void *spdm_secured_message_context, const void *key, uintn key_size)
+    void *spdm_secured_message_context, const void *key, size_t key_size)
 {
     libspdm_secured_message_context_t *secured_message_context;
 
@@ -38,7 +41,7 @@ void libspdm_secured_message_set_response_handshake_encryption_key(
 
 void libspdm_secured_message_set_response_handshake_salt(
     void *spdm_secured_message_context, const void *salt,
-    uintn salt_size)
+    size_t salt_size)
 {
     libspdm_secured_message_context_t *secured_message_context;
 
@@ -50,7 +53,7 @@ void libspdm_secured_message_set_response_handshake_salt(
 }
 
 return_status libspdm_requester_psk_finish_test_send_message(void *spdm_context,
-                                                             uintn request_size,
+                                                             size_t request_size,
                                                              const void *request,
                                                              uint64_t timeout)
 {
@@ -88,13 +91,50 @@ return_status libspdm_requester_psk_finish_test_send_message(void *spdm_context,
         return RETURN_SUCCESS;
     case 0xF:
         return RETURN_SUCCESS;
+    case 0x10: {
+        return_status status;
+        uint8_t *decoded_message;
+        size_t decoded_message_size;
+        uint32_t session_id;
+        uint32_t *message_session_id;
+        bool is_app_message;
+        libspdm_session_info_t *session_info;
+
+        message_session_id = NULL;
+        session_id = 0xFFFFFFFF;
+        decoded_message = (uint8_t *) &m_libspdm_local_buffer[0];
+        decoded_message_size = sizeof(m_libspdm_local_buffer);
+
+        session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
+        if (session_info == NULL) {
+            return RETURN_DEVICE_ERROR;
+        }
+
+        /* WALKAROUND: If just use single context to encode
+         * message and then decode message */
+        ((libspdm_secured_message_context_t *)(session_info->secured_message_context))
+        ->handshake_secret.request_handshake_sequence_number--;
+        m_libspdm_local_buffer_size = 0;
+        status = libspdm_transport_test_decode_message(
+            spdm_context,
+            &message_session_id, &is_app_message, true, request_size, request,
+            &decoded_message_size, (void **)&decoded_message);
+        if (RETURN_ERROR(status)) {
+            return RETURN_DEVICE_ERROR;
+        }
+        libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
+                         sizeof(m_libspdm_local_buffer) - m_libspdm_local_buffer_size,
+                         decoded_message, decoded_message_size);
+        m_libspdm_local_buffer_size += decoded_message_size;
+    }
+        return RETURN_SUCCESS;
     default:
         return RETURN_DEVICE_ERROR;
     }
 }
 
 return_status libspdm_requester_psk_finish_test_receive_message(
-    void *spdm_context, uintn *response_size,
+    void *spdm_context, size_t *response_size,
     void **response, uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
@@ -106,12 +146,12 @@ return_status libspdm_requester_psk_finish_test_receive_message(
 
     case 0x2: {
         spdm_psk_finish_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         session_id = 0xFFFFFFFF;
         spdm_response_size = sizeof(spdm_psk_finish_response_t);
@@ -149,12 +189,12 @@ return_status libspdm_requester_psk_finish_test_receive_message(
 
     case 0x3: {
         spdm_psk_finish_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         session_id = 0xFFFFFFFF;
         spdm_response_size = sizeof(spdm_psk_finish_response_t);
@@ -191,12 +231,12 @@ return_status libspdm_requester_psk_finish_test_receive_message(
 
     case 0x4: {
         spdm_error_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         spdm_response_size = sizeof(spdm_error_response_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -233,12 +273,12 @@ return_status libspdm_requester_psk_finish_test_receive_message(
 
     case 0x5: {
         spdm_error_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         spdm_response_size = sizeof(spdm_error_response_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -274,15 +314,15 @@ return_status libspdm_requester_psk_finish_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x6: {
-        static uintn sub_index1 = 0;
+        static size_t sub_index1 = 0;
         if (sub_index1 == 0) {
             spdm_error_response_t *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
             uint32_t session_id;
             libspdm_session_info_t *session_info;
             uint8_t *scratch_buffer;
-            uintn scratch_buffer_size;
+            size_t scratch_buffer_size;
 
             spdm_response_size = sizeof(spdm_error_response_t);
             transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -319,12 +359,12 @@ return_status libspdm_requester_psk_finish_test_receive_message(
             .response_handshake_sequence_number--;
         } else if (sub_index1 == 1) {
             spdm_psk_finish_response_t *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
             uint32_t session_id;
             libspdm_session_info_t *session_info;
             uint8_t *scratch_buffer;
-            uintn scratch_buffer_size;
+            size_t scratch_buffer_size;
 
             session_id = 0xFFFFFFFF;
             spdm_response_size = sizeof(spdm_psk_finish_response_t);
@@ -365,12 +405,12 @@ return_status libspdm_requester_psk_finish_test_receive_message(
 
     case 0x7: {
         spdm_error_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         spdm_response_size = sizeof(spdm_error_response_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -407,12 +447,12 @@ return_status libspdm_requester_psk_finish_test_receive_message(
 
     case 0x8: {
         spdm_error_response_data_response_not_ready_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -453,16 +493,16 @@ return_status libspdm_requester_psk_finish_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x9: {
-        static uintn sub_index2 = 0;
+        static size_t sub_index2 = 0;
         if (sub_index2 == 0) {
             spdm_error_response_data_response_not_ready_t
             *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
             uint32_t session_id;
             libspdm_session_info_t *session_info;
             uint8_t *scratch_buffer;
-            uintn scratch_buffer_size;
+            size_t scratch_buffer_size;
 
             spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
             transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -505,12 +545,12 @@ return_status libspdm_requester_psk_finish_test_receive_message(
             .response_handshake_sequence_number--;
         } else if (sub_index2 == 1) {
             spdm_psk_finish_response_t *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
             uint32_t session_id;
             libspdm_session_info_t *session_info;
             uint8_t *scratch_buffer;
-            uintn scratch_buffer_size;
+            size_t scratch_buffer_size;
 
             session_id = 0xFFFFFFFF;
             spdm_response_size = sizeof(spdm_psk_finish_response_t);
@@ -554,12 +594,12 @@ return_status libspdm_requester_psk_finish_test_receive_message(
         static uint16_t error_code = LIBSPDM_ERROR_CODE_RESERVED_00;
 
         spdm_error_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t      *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         session_id = 0xFFFFFFFF;
 
@@ -604,12 +644,12 @@ return_status libspdm_requester_psk_finish_test_receive_message(
         return RETURN_SUCCESS;
     case 0xB: {
         spdm_psk_finish_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         session_id = 0xFFFFFFFF;
         spdm_response_size = sizeof(spdm_psk_finish_response_t);
@@ -647,12 +687,12 @@ return_status libspdm_requester_psk_finish_test_receive_message(
 
     case 0xC: {
         spdm_psk_finish_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         session_id = 0xFFFFFFFF;
         spdm_response_size = sizeof(spdm_psk_finish_response_t);
@@ -690,12 +730,12 @@ return_status libspdm_requester_psk_finish_test_receive_message(
 
     case 0xD: {
         spdm_psk_finish_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         session_id = 0xFFFFFFFF;
         spdm_response_size = sizeof(spdm_psk_finish_response_t);
@@ -733,12 +773,12 @@ return_status libspdm_requester_psk_finish_test_receive_message(
 
     case 0xE: {
         spdm_psk_finish_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         session_id = 0xFFFFFFFF;
         spdm_response_size = sizeof(spdm_psk_finish_response_t);
@@ -776,12 +816,12 @@ return_status libspdm_requester_psk_finish_test_receive_message(
 
     case 0xF: {
         spdm_error_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         uint32_t session_id;
         libspdm_session_info_t *session_info;
         uint8_t *scratch_buffer;
-        uintn scratch_buffer_size;
+        size_t scratch_buffer_size;
 
         session_id = 0xFFFFFFFF;
 
@@ -817,6 +857,53 @@ return_status libspdm_requester_psk_finish_test_receive_message(
     }
         return RETURN_SUCCESS;
 
+    case 0x10: {
+        spdm_psk_finish_response_t *spdm_response;
+        size_t spdm_response_size;
+        size_t transport_header_size;
+        uint32_t session_id;
+        libspdm_session_info_t *session_info;
+        uint8_t *scratch_buffer;
+        size_t scratch_buffer_size;
+
+        session_id = 0xFFFFFFFF;
+        spdm_response_size = sizeof(spdm_psk_finish_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.request_response_code =
+            SPDM_PSK_FINISH_RSP;
+        spdm_response->header.param1 = 0;
+        spdm_response->header.param2 = 0;
+
+        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+         * transport_message is always in sender buffer. */
+        libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+        libspdm_copy_mem (scratch_buffer + transport_header_size,
+                          scratch_buffer_size - transport_header_size,
+                          spdm_response, spdm_response_size);
+        spdm_response = (void *)(scratch_buffer + transport_header_size);
+
+        libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
+                         sizeof(m_libspdm_local_buffer) - m_libspdm_local_buffer_size,
+                         spdm_response, spdm_response_size);
+        m_libspdm_local_buffer_size += spdm_response_size;
+
+        libspdm_transport_test_encode_message(spdm_context, &session_id,
+                                              false, false, spdm_response_size,
+                                              spdm_response, response_size,
+                                              response);
+        session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
+        if (session_info == NULL) {
+            return RETURN_DEVICE_ERROR;
+        }
+        /* WALKAROUND: If just use single context to encode message and then decode message */
+        ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
+        ->handshake_secret.response_handshake_sequence_number--;
+    }
+        return RETURN_SUCCESS;
+
     default:
         return RETURN_DEVICE_ERROR;
     }
@@ -834,9 +921,9 @@ void libspdm_test_requester_psk_finish_case1(void **state)
     libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -909,9 +996,9 @@ void libspdm_test_requester_psk_finish_case2(void **state)
     libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -1011,9 +1098,9 @@ void libspdm_test_requester_psk_finish_case3(void **state)
     libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -1109,9 +1196,9 @@ void libspdm_test_requester_psk_finish_case4(void **state)
     libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -1208,9 +1295,9 @@ void libspdm_test_requester_psk_finish_case5(void **state)
     libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -1308,9 +1395,9 @@ void libspdm_test_requester_psk_finish_case6(void **state)
     libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -1411,9 +1498,9 @@ void libspdm_test_requester_psk_finish_case7(void **state)
     libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -1511,9 +1598,9 @@ void libspdm_test_requester_psk_finish_case8(void **state)
     libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -1611,9 +1698,9 @@ void libspdm_test_requester_psk_finish_case9(void **state)
     libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -1715,9 +1802,9 @@ void libspdm_test_requester_psk_finish_case10(void **state) {
     libspdm_context_t  *spdm_context;
     uint32_t session_id;
     void                 *data;
-    uintn data_size;
+    size_t data_size;
     void                 *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t    *session_info;
     uint16_t error_code;
 
@@ -1811,9 +1898,9 @@ void libspdm_test_requester_psk_finish_case11(void **state)
     libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -1935,9 +2022,9 @@ void libspdm_test_requester_psk_finish_case12(void **state)
     libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -2034,9 +2121,9 @@ void libspdm_test_requester_psk_finish_case13(void **state)
     libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -2134,9 +2221,9 @@ void libspdm_test_requester_psk_finish_case14(void **state)
     libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -2232,9 +2319,9 @@ void libspdm_test_requester_psk_finish_case15(void **state)
     libspdm_context_t *spdm_context;
     uint32_t session_id;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
 
     spdm_test_context = *state;
@@ -2319,6 +2406,108 @@ void libspdm_test_requester_psk_finish_case15(void **state)
     free(data);
 }
 
+/**
+ * Test 16: a request message is successfully sent and a response message is successfully received.
+ * Expected Behavior: requester returns the status RETURN_SUCCESS and a PSK_FINISH_RSP message is
+ * received, buffer F appends the exchanged PSK_FINISH and PSK_FINISH_RSP messages.
+ **/
+void libspdm_test_requester_psk_finish_case16(void **state)
+{
+    return_status status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint32_t session_id;
+    void *data;
+    size_t data_size;
+    void *hash;
+    size_t hash_size;
+    libspdm_session_info_t *session_info;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x10;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, &hash, &hash_size);
+    libspdm_reset_message_a(spdm_context);
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->connection_info.peer_used_cert_chain_buffer_size = data_size;
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+                     data, data_size);
+#endif
+    libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
+    libspdm_copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
+                     LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
+
+    spdm_context->local_context.psk_hint_size = sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
+    spdm_context->local_context.psk_hint = m_libspdm_local_psk_hint;
+
+    session_id = 0xFFFFFFFF;
+    session_info = &spdm_context->session_info[0];
+    libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_secured_message_set_session_state(
+        session_info->secured_message_context,
+        LIBSPDM_SESSION_STATE_HANDSHAKING);
+    libspdm_set_mem(m_libspdm_dummy_key_buffer,
+                    ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
+                    ->aead_key_size, (uint8_t)(0xFF));
+    libspdm_secured_message_set_response_handshake_encryption_key(
+        session_info->secured_message_context, m_libspdm_dummy_key_buffer,
+        ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
+        ->aead_key_size);
+    libspdm_set_mem(m_libspdm_dummy_salt_buffer,
+                    ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
+                    ->aead_iv_size, (uint8_t)(0xFF));
+    libspdm_secured_message_set_response_handshake_salt(
+        session_info->secured_message_context, m_libspdm_dummy_salt_buffer,
+        ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
+        ->aead_iv_size);
+    ((libspdm_secured_message_context_t *)(session_info->secured_message_context))
+    ->handshake_secret.response_handshake_sequence_number = 0;
+    ((libspdm_secured_message_context_t *)(session_info->secured_message_context))
+    ->handshake_secret.request_handshake_sequence_number = 0;
+    libspdm_secured_message_set_dummy_finished_key (session_info->secured_message_context);
+
+    status = libspdm_send_receive_psk_finish(spdm_context, session_id);
+    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(
+        libspdm_secured_message_get_session_state(
+            spdm_context->session_info[0].secured_message_context),
+        LIBSPDM_SESSION_STATE_ESTABLISHED);
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    assert_int_equal(spdm_context->session_info[0].session_transcript.message_f.buffer_size,
+                     m_libspdm_local_buffer_size);
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer (0x%x):\n",
+                   m_libspdm_local_buffer_size));
+    libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
+    assert_memory_equal(spdm_context->session_info[0].session_transcript.message_f.buffer,
+                        m_libspdm_local_buffer, m_libspdm_local_buffer_size);
+#endif
+    free(data);
+}
+
 libspdm_test_context_t m_libspdm_requester_psk_finish_test_context = {
     LIBSPDM_TEST_CONTEXT_SIGNATURE,
     true,
@@ -2359,6 +2548,8 @@ int libspdm_requester_psk_finish_test_main(void)
         cmocka_unit_test(libspdm_test_requester_psk_finish_case14),
         /* Error response: SPDM_ERROR_CODE_DECRYPT_ERROR*/
         cmocka_unit_test(libspdm_test_requester_psk_finish_case15),
+        /* Buffer verification*/
+        cmocka_unit_test(libspdm_test_requester_psk_finish_case16),
     };
 
     libspdm_setup_test_context(&m_libspdm_requester_psk_finish_test_context);

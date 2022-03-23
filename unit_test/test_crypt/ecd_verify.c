@@ -20,8 +20,8 @@ return_status libspdm_validate_crypt_ecd(void)
     uint8_t message[] = "EdDsaTest";
     uint8_t signature1[32 * 2];
     uint8_t signature2[57 * 2];
-    uintn sig1_size;
-    uintn sig2_size;
+    size_t sig1_size;
+    size_t sig2_size;
     bool status;
 
     libspdm_my_print("\nCrypto Ed-DSA Signing Verification Testing:\n");

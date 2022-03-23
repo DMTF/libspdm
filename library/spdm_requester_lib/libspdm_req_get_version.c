@@ -44,13 +44,13 @@ libspdm_return_t libspdm_try_get_version(libspdm_context_t *spdm_context,
     libspdm_return_t status;
     bool result;
     spdm_get_version_request_t *spdm_request;
-    uintn spdm_request_size;
+    size_t spdm_request_size;
     libspdm_version_response_max_t *spdm_response;
-    uintn spdm_response_size;
+    size_t spdm_response_size;
     spdm_version_number_t common_version;
     uint8_t *message;
-    uintn message_size;
-    uintn transport_header_size;
+    size_t message_size;
+    size_t transport_header_size;
 
     libspdm_reset_message_a(spdm_context);
     libspdm_reset_message_b(spdm_context);
@@ -234,7 +234,7 @@ libspdm_return_t libspdm_get_version(libspdm_context_t *spdm_context,
                                      uint8_t *version_number_entry_count,
                                      spdm_version_number_t *version_number_entry)
 {
-    uintn retry;
+    size_t retry;
     libspdm_return_t status;
 
     spdm_context->crypto_request = false;

@@ -8,7 +8,7 @@
 #include "toolchain_harness.h"
 #include "internal/libspdm_responder_lib.h"
 
-uintn libspdm_get_max_buffer_size(void)
+size_t libspdm_get_max_buffer_size(void)
 {
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
@@ -17,7 +17,7 @@ void libspdm_test_responder_version(void **State)
 {
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
     spdm_test_context = *State;
@@ -35,7 +35,7 @@ libspdm_test_context_t m_libspdm_responder_version_test_context = {
     false,
 };
 
-void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size)
+void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size)
 {
     void *State;
 

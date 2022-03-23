@@ -18,12 +18,10 @@
 #define LIBSPDM_MAX_BUFFER_SIZE 64
 #define NULL ((void *)0)
 
-void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size);
+void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size);
 
-uintn libspdm_get_max_buffer_size(void);
+size_t libspdm_get_max_buffer_size(void);
 
-uint8_t libspdm_judge_requster_name(const char *file_name);
-
-uintn libspdm_alignment_size(uintn size, uint8_t req_or_res);
+size_t libspdm_alignment_size(size_t size);
 
 #endif

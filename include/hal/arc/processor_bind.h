@@ -31,6 +31,8 @@
 #include LIBSPDM_STDBOOL_ALT
 #endif
 
+#include <stddef.h>
+
 /* Processor specific defines*/
 
 
@@ -47,6 +49,6 @@
 
 /* Maximum legal arc intn values.*/
 
-#define MAX_INTN ((intn)0x7FFFFFFF)
+#define MAX_INTN 0x7FFFFFFF
 
 #endif

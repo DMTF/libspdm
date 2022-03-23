@@ -68,17 +68,17 @@ libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm_contex
 {
     libspdm_return_t status;
     libspdm_negotiate_algorithms_request_mine_t *spdm_request;
-    uintn spdm_request_size;
+    size_t spdm_request_size;
     libspdm_algorithms_response_max_t *spdm_response;
-    uintn spdm_response_size;
+    size_t spdm_response_size;
     uint32_t algo_size;
-    uintn index;
+    size_t index;
     spdm_negotiate_algorithms_common_struct_table_t *struct_table;
     uint8_t fixed_alg_size;
     uint8_t ext_alg_count;
     uint8_t *message;
-    uintn message_size;
-    uintn transport_header_size;
+    size_t message_size;
+    size_t transport_header_size;
 
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL, SPDM_NEGOTIATE_ALGORITHMS);
 
@@ -211,19 +211,19 @@ libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm_contex
         goto receive_done;
     }
     struct_table =
-        (void *)((uintn)spdm_response +
+        (void *)((size_t)spdm_response +
                  sizeof(spdm_algorithms_response_t) +
                  sizeof(uint32_t) * spdm_response->ext_asym_sel_count +
                  sizeof(uint32_t) * spdm_response->ext_hash_sel_count);
     if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
         for (index = 0; index < spdm_response->header.param1; index++) {
-            if ((uintn)spdm_response + spdm_response_size <
-                (uintn)struct_table) {
+            if ((size_t)spdm_response + spdm_response_size <
+                (size_t)struct_table) {
                 status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
                 goto receive_done;
             }
-            if ((uintn)spdm_response + spdm_response_size -
-                (uintn)struct_table <
+            if ((size_t)spdm_response + spdm_response_size -
+                (size_t)struct_table <
                 sizeof(spdm_negotiate_algorithms_common_struct_table_t)) {
                 status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
                 goto receive_done;
@@ -238,20 +238,20 @@ libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm_contex
                 status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
                 goto receive_done;
             }
-            if ((uintn)spdm_response + spdm_response_size -
-                (uintn)struct_table -
+            if ((size_t)spdm_response + spdm_response_size -
+                (size_t)struct_table -
                 sizeof(spdm_negotiate_algorithms_common_struct_table_t) <
                 sizeof(uint32_t) * ext_alg_count) {
                 status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
                 goto receive_done;
             }
             struct_table =
-                (void *)((uintn)struct_table +
+                (void *)((size_t)struct_table +
                          sizeof(spdm_negotiate_algorithms_common_struct_table_t) +
                          sizeof(uint32_t) * ext_alg_count);
         }
     }
-    spdm_response_size = (uintn)struct_table - (uintn)spdm_response;
+    spdm_response_size = (size_t)struct_table - (size_t)spdm_response;
     if (spdm_response_size != spdm_response->length) {
         status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
@@ -331,7 +331,7 @@ libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm_contex
 
     if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
         struct_table =
-            (void *)((uintn)spdm_response +
+            (void *)((size_t)spdm_response +
                      sizeof(spdm_algorithms_response_t) +
                      sizeof(uint32_t) *
                      spdm_response->ext_asym_sel_count +
@@ -362,7 +362,7 @@ libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm_contex
             }
             ext_alg_count = struct_table->alg_count & 0xF;
             struct_table =
-                (void *)((uintn)struct_table +
+                (void *)((size_t)struct_table +
                          sizeof(spdm_negotiate_algorithms_common_struct_table_t) +
                          sizeof(uint32_t) * ext_alg_count);
         }
@@ -493,7 +493,7 @@ receive_done:
  **/
 libspdm_return_t libspdm_negotiate_algorithms(libspdm_context_t *spdm_context)
 {
-    uintn retry;
+    size_t retry;
     libspdm_return_t status;
 
     spdm_context->crypto_request = false;

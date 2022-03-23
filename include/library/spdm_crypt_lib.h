@@ -87,7 +87,7 @@ typedef bool (*libspdm_hash_duplicate_func)(const void *hash_ctx,
  * @retval false  hash data digest failed.
  **/
 typedef bool (*libspdm_hash_update_func)(void *hash_context, const void *data,
-                                         uintn data_size);
+                                         size_t data_size);
 
 /**
  * Completes computation of the hash digest value.
@@ -121,7 +121,7 @@ typedef bool (*libspdm_hash_final_func)(void *hash_context, uint8_t *hash_value)
  * @retval true   hash computation succeeded.
  * @retval false  hash computation failed.
  **/
-typedef bool (*libspdm_hash_all_func)(const void *data, uintn data_size,
+typedef bool (*libspdm_hash_all_func)(const void *data, size_t data_size,
                                       uint8_t *hash_value);
 
 /**
@@ -154,7 +154,7 @@ typedef void (*libspdm_hmac_free_func)(void *hmac_ctx);
  *
  **/
 typedef bool (*libspdm_hmac_set_key_func)(void *hmac_ctx, const uint8_t *key,
-                                          uintn key_size);
+                                          size_t key_size);
 
 /**
  * Makes a copy of an existing HMAC context.
@@ -191,7 +191,7 @@ typedef bool (*libspdm_hmac_duplicate_func)(const void *hmac_ctx,
  *
  **/
 typedef bool (*libspdm_hmac_update_func)(void *hmac_ctx, const void *data,
-                                         uintn data_size);
+                                         size_t data_size);
 
 /**
  * Completes computation of the HMAC digest value.
@@ -227,8 +227,8 @@ typedef bool (*libspdm_hmac_final_func)(void *hmac_ctx, uint8_t *hmac_value);
  * @retval true   HMAC computation succeeded.
  * @retval false  HMAC computation failed.
  **/
-typedef bool (*libspdm_hmac_all_func)(const void *data, uintn data_size,
-                                      const uint8_t *key, uintn key_size,
+typedef bool (*libspdm_hmac_all_func)(const void *data, size_t data_size,
+                                      const uint8_t *key, size_t key_size,
                                       uint8_t *hmac_value);
 
 /**
@@ -244,9 +244,9 @@ typedef bool (*libspdm_hmac_all_func)(const void *data, uintn data_size,
  * @retval true   Hkdf generated successfully.
  * @retval false  Hkdf generation failed.
  **/
-typedef bool (*libspdm_hkdf_expand_func)(const uint8_t *prk, uintn prk_size,
-                                         const uint8_t *info, uintn info_size,
-                                         uint8_t *out, uintn out_size);
+typedef bool (*libspdm_hkdf_expand_func)(const uint8_t *prk, size_t prk_size,
+                                         const uint8_t *info, size_t info_size,
+                                         uint8_t *out, size_t out_size);
 
 /**
  * Retrieve the asymmetric public key from one DER-encoded X509 certificate.
@@ -260,7 +260,7 @@ typedef bool (*libspdm_hkdf_expand_func)(const uint8_t *prk, uintn prk_size,
  * @retval  false  Fail to retrieve public key from X509 certificate.
  **/
 typedef bool (*libspdm_asym_get_public_key_from_x509_func)(const uint8_t *cert,
-                                                           uintn cert_size,
+                                                           size_t cert_size,
                                                            void **context);
 
 /**
@@ -291,12 +291,12 @@ typedef void (*libspdm_asym_free_func)(void *context);
  * @retval  true   Valid asymmetric signature.
  * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
  **/
-typedef bool (*libspdm_asym_verify_func)(void *context, uintn hash_nid,
-                                         const uint8_t *param, uintn param_size,
+typedef bool (*libspdm_asym_verify_func)(void *context, size_t hash_nid,
+                                         const uint8_t *param, size_t param_size,
                                          const uint8_t *message,
-                                         uintn message_size,
+                                         size_t message_size,
                                          const uint8_t *signature,
-                                         uintn sig_size);
+                                         size_t sig_size);
 
 /**
  * Retrieve the Private key from the password-protected PEM key data.
@@ -311,7 +311,7 @@ typedef bool (*libspdm_asym_verify_func)(void *context, uintn hash_nid,
  * @retval  false  Invalid PEM key data or incorrect password.
  **/
 typedef bool (*libspdm_asym_get_private_key_from_pem_func)(const uint8_t *pem_data,
-                                                           uintn pem_size,
+                                                           size_t pem_size,
                                                            const char *password,
                                                            void **context);
 
@@ -339,11 +339,11 @@ typedef bool (*libspdm_asym_get_private_key_from_pem_func)(const uint8_t *pem_da
  * @retval  false  signature generation failed.
  * @retval  false  sig_size is too small.
  **/
-typedef bool (*libspdm_asym_sign_func)(void *context, uintn hash_nid,
-                                       const uint8_t *param, uintn param_size,
+typedef bool (*libspdm_asym_sign_func)(void *context, size_t hash_nid,
+                                       const uint8_t *param, size_t param_size,
                                        const uint8_t *message,
-                                       uintn message_size, uint8_t *signature,
-                                       uintn *sig_size);
+                                       size_t message_size, uint8_t *signature,
+                                       size_t *sig_size);
 
 /**
  * Allocates and Initializes one Diffie-Hellman Ephemeral (DHE) context for subsequent use.
@@ -352,7 +352,7 @@ typedef bool (*libspdm_asym_sign_func)(void *context, uintn hash_nid,
  *
  * @return  Pointer to the Diffie-Hellman context that has been initialized.
  **/
-typedef void *(*libspdm_dhe_new_by_nid_func)(uintn nid);
+typedef void *(*libspdm_dhe_new_by_nid_func)(size_t nid);
 
 /**
  * Generates DHE public key.
@@ -373,7 +373,7 @@ typedef void *(*libspdm_dhe_new_by_nid_func)(uintn nid);
  **/
 typedef bool (*libspdm_dhe_generate_key_func)(void *context,
                                               uint8_t *public_key,
-                                              uintn *public_key_size);
+                                              size_t *public_key_size);
 
 /**
  * Computes exchanged common key.
@@ -394,8 +394,8 @@ typedef bool (*libspdm_dhe_generate_key_func)(void *context,
  **/
 typedef bool (*libspdm_dhe_compute_key_func)(void *context,
                                              const uint8_t *peer_public,
-                                             uintn peer_public_size,
-                                             uint8_t *key, uintn *key_size);
+                                             size_t peer_public_size,
+                                             uint8_t *key, size_t *key_size);
 
 /**
  * Release the specified DHE context.
@@ -424,10 +424,10 @@ typedef void (*libspdm_dhe_free_func)(void *context);
  * @retval false  AEAD authenticated encryption failed.
  **/
 typedef bool (*libspdm_aead_encrypt_func)(
-    const uint8_t *key, uintn key_size, const uint8_t *iv,
-    uintn iv_size, const uint8_t *a_data, uintn a_data_size,
-    const uint8_t *data_in, uintn data_in_size, uint8_t *tag_out,
-    uintn tag_size, uint8_t *data_out, uintn *data_out_size);
+    const uint8_t *key, size_t key_size, const uint8_t *iv,
+    size_t iv_size, const uint8_t *a_data, size_t a_data_size,
+    const uint8_t *data_in, size_t data_in_size, uint8_t *tag_out,
+    size_t tag_size, uint8_t *data_out, size_t *data_out_size);
 
 /**
  * Performs AEAD authenticated decryption on a data buffer and additional authenticated data (AAD).
@@ -449,10 +449,10 @@ typedef bool (*libspdm_aead_encrypt_func)(
  * @retval false  AEAD authenticated decryption failed.
  **/
 typedef bool (*libspdm_aead_decrypt_func)(
-    const uint8_t *key, uintn key_size, const uint8_t *iv,
-    uintn iv_size, const uint8_t *a_data, uintn a_data_size,
-    const uint8_t *data_in, uintn data_in_size, const uint8_t *tag,
-    uintn tag_size, uint8_t *data_out, uintn *data_out_size);
+    const uint8_t *key, size_t key_size, const uint8_t *iv,
+    size_t iv_size, const uint8_t *a_data, size_t a_data_size,
+    const uint8_t *data_in, size_t data_in_size, const uint8_t *tag,
+    size_t tag_size, uint8_t *data_out, size_t *data_out_size);
 
 /**
  * This function returns the SPDM hash algorithm size.
@@ -527,7 +527,7 @@ bool libspdm_hash_duplicate(uint32_t base_hash_algo,
  * @retval false  hash data digest failed.
  **/
 bool libspdm_hash_update(uint32_t base_hash_algo, void *hash_context,
-                         const void *data, uintn data_size);
+                         const void *data, size_t data_size);
 
 /**
  * Completes computation of the hash digest value.
@@ -584,7 +584,7 @@ void libspdm_hmac_free(uint32_t base_hash_algo, void *hmac_ctx);
  **/
 bool libspdm_hmac_init(uint32_t base_hash_algo,
                        void *hmac_ctx, const uint8_t *key,
-                       uintn key_size);
+                       size_t key_size);
 
 /**
  * Makes a copy of an existing HMAC context.
@@ -621,7 +621,7 @@ bool libspdm_hmac_duplicate(uint32_t base_hash_algo,
  **/
 bool libspdm_hmac_update(uint32_t base_hash_algo,
                          void *hmac_ctx, const void *data,
-                         uintn data_size);
+                         size_t data_size);
 /**
  * Completes computation of the HMAC digest value.
  *
@@ -657,7 +657,7 @@ bool libspdm_hmac_final(uint32_t base_hash_algo,
  * @retval false  hash computation failed.
  **/
 bool libspdm_hash_all(uint32_t base_hash_algo, const void *data,
-                      uintn data_size, uint8_t *hash_value);
+                      size_t data_size, uint8_t *hash_value);
 
 /**
  * This function returns the SPDM measurement hash algorithm size.
@@ -683,7 +683,7 @@ uint32_t libspdm_get_measurement_hash_size(uint32_t measurement_hash_algo);
  * @retval false  hash computation failed.
  **/
 bool libspdm_measurement_hash_all(uint32_t measurement_hash_algo,
-                                  const void *data, uintn data_size,
+                                  const void *data, size_t data_size,
                                   uint8_t *hash_value);
 
 /**
@@ -702,8 +702,8 @@ bool libspdm_measurement_hash_all(uint32_t measurement_hash_algo,
  * @retval false  HMAC computation failed.
  **/
 bool libspdm_hmac_all(uint32_t base_hash_algo, const void *data,
-                      uintn data_size, const uint8_t *key,
-                      uintn key_size, uint8_t *hmac_value);
+                      size_t data_size, const uint8_t *key,
+                      size_t key_size, uint8_t *hmac_value);
 
 /**
  * Derive HMAC-based Expand key Derivation Function (HKDF) Expand, based upon the negotiated HKDF algorithm.
@@ -720,8 +720,8 @@ bool libspdm_hmac_all(uint32_t base_hash_algo, const void *data,
  * @retval false  Hkdf generation failed.
  **/
 bool libspdm_hkdf_expand(uint32_t base_hash_algo, const uint8_t *prk,
-                         uintn prk_size, const uint8_t *info,
-                         uintn info_size, uint8_t *out, uintn out_size);
+                         size_t prk_size, const uint8_t *info,
+                         size_t info_size, uint8_t *out, size_t out_size);
 
 /**
  * This function returns the SPDM asymmetric algorithm size.
@@ -747,7 +747,7 @@ uint32_t libspdm_get_asym_signature_size(uint32_t base_asym_algo);
  **/
 bool libspdm_asym_get_public_key_from_x509(uint32_t base_asym_algo,
                                            const uint8_t *cert,
-                                           uintn cert_size,
+                                           size_t cert_size,
                                            void **context);
 
 /**
@@ -778,8 +778,8 @@ bool libspdm_asym_verify(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint32_t base_asym_algo, uint32_t base_hash_algo,
     void *context, const uint8_t *message,
-    uintn message_size, const uint8_t *signature,
-    uintn sig_size);
+    size_t message_size, const uint8_t *signature,
+    size_t sig_size);
 
 /**
  * Verifies the asymmetric signature,
@@ -800,8 +800,8 @@ bool libspdm_asym_verify_hash(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint32_t base_asym_algo, uint32_t base_hash_algo,
     void *context, const uint8_t *message_hash,
-    uintn hash_size, const uint8_t *signature,
-    uintn sig_size);
+    size_t hash_size, const uint8_t *signature,
+    size_t sig_size);
 
 /**
  * Retrieve the Private key from the password-protected PEM key data.
@@ -818,7 +818,7 @@ bool libspdm_asym_verify_hash(
  **/
 bool libspdm_asym_get_private_key_from_pem(uint32_t base_asym_algo,
                                            const uint8_t *pem_data,
-                                           uintn pem_size,
+                                           size_t pem_size,
                                            const char *password,
                                            void **context);
 
@@ -845,8 +845,8 @@ bool libspdm_asym_sign(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint32_t base_asym_algo, uint32_t base_hash_algo,
     void *context, const uint8_t *message,
-    uintn message_size, uint8_t *signature,
-    uintn *sig_size);
+    size_t message_size, uint8_t *signature,
+    size_t *sig_size);
 
 /**
  * Carries out the signature generation.
@@ -871,8 +871,8 @@ bool libspdm_asym_sign_hash(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint32_t base_asym_algo, uint32_t base_hash_algo,
     void *context, const uint8_t *message_hash,
-    uintn hash_size, uint8_t *signature,
-    uintn *sig_size);
+    size_t hash_size, uint8_t *signature,
+    size_t *sig_size);
 
 /**
  * This function returns the SPDM requester asymmetric algorithm size.
@@ -898,7 +898,7 @@ uint32_t libspdm_get_req_asym_signature_size(uint16_t req_base_asym_alg);
  **/
 bool libspdm_req_asym_get_public_key_from_x509(uint16_t req_base_asym_alg,
                                                const uint8_t *cert,
-                                               uintn cert_size,
+                                               size_t cert_size,
                                                void **context);
 
 /**
@@ -929,8 +929,8 @@ bool libspdm_req_asym_verify(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint16_t req_base_asym_alg,
     uint32_t base_hash_algo, void *context,
-    const uint8_t *message, uintn message_size,
-    const uint8_t *signature, uintn sig_size);
+    const uint8_t *message, size_t message_size,
+    const uint8_t *signature, size_t sig_size);
 
 /**
  * Verifies the asymmetric signature,
@@ -951,8 +951,8 @@ bool libspdm_req_asym_verify_hash(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint16_t req_base_asym_alg,
     uint32_t base_hash_algo, void *context,
-    const uint8_t *message_hash, uintn hash_size,
-    const uint8_t *signature, uintn sig_size);
+    const uint8_t *message_hash, size_t hash_size,
+    const uint8_t *signature, size_t sig_size);
 
 /**
  * Retrieve the Private key from the password-protected PEM key data.
@@ -969,7 +969,7 @@ bool libspdm_req_asym_verify_hash(
  **/
 bool libspdm_req_asym_get_private_key_from_pem(uint16_t req_base_asym_alg,
                                                const uint8_t *pem_data,
-                                               uintn pem_size,
+                                               size_t pem_size,
                                                const char *password,
                                                void **context);
 
@@ -996,8 +996,8 @@ bool libspdm_req_asym_sign(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint16_t req_base_asym_alg,
     uint32_t base_hash_algo, void *context,
-    const uint8_t *message, uintn message_size,
-    uint8_t *signature, uintn *sig_size);
+    const uint8_t *message, size_t message_size,
+    uint8_t *signature, size_t *sig_size);
 
 /**
  * Carries out the signature generation.
@@ -1022,8 +1022,8 @@ bool libspdm_req_asym_sign_hash(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint16_t req_base_asym_alg,
     uint32_t base_hash_algo, void *context,
-    const uint8_t *message_hash, uintn hash_size,
-    uint8_t *signature, uintn *sig_size);
+    const uint8_t *message_hash, size_t hash_size,
+    uint8_t *signature, size_t *sig_size);
 
 /**
  * This function returns the SPDM DHE algorithm key size.
@@ -1078,7 +1078,7 @@ void libspdm_dhe_free(uint16_t dhe_named_group, void *context);
  **/
 bool libspdm_dhe_generate_key(uint16_t dhe_named_group, void *context,
                               uint8_t *public_key,
-                              uintn *public_key_size);
+                              size_t *public_key_size);
 
 /**
  * Computes exchanged common key,
@@ -1101,8 +1101,8 @@ bool libspdm_dhe_generate_key(uint16_t dhe_named_group, void *context,
  **/
 bool libspdm_dhe_compute_key(uint16_t dhe_named_group, void *context,
                              const uint8_t *peer_public,
-                             uintn peer_public_size, uint8_t *key,
-                             uintn *key_size);
+                             size_t peer_public_size, uint8_t *key,
+                             size_t *key_size);
 
 /**
  * This function returns the SPDM AEAD algorithm key size.
@@ -1154,12 +1154,12 @@ uint32_t libspdm_get_aead_tag_size(uint16_t aead_cipher_suite);
  **/
 bool libspdm_aead_encryption(const spdm_version_number_t secured_message_version,
                              uint16_t aead_cipher_suite, const uint8_t *key,
-                             uintn key_size, const uint8_t *iv,
-                             uintn iv_size, const uint8_t *a_data,
-                             uintn a_data_size, const uint8_t *data_in,
-                             uintn data_in_size, uint8_t *tag_out,
-                             uintn tag_size, uint8_t *data_out,
-                             uintn *data_out_size);
+                             size_t key_size, const uint8_t *iv,
+                             size_t iv_size, const uint8_t *a_data,
+                             size_t a_data_size, const uint8_t *data_in,
+                             size_t data_in_size, uint8_t *tag_out,
+                             size_t tag_size, uint8_t *data_out,
+                             size_t *data_out_size);
 
 /**
  * Performs AEAD authenticated decryption on a data buffer and additional authenticated data (AAD),
@@ -1184,12 +1184,12 @@ bool libspdm_aead_encryption(const spdm_version_number_t secured_message_version
  **/
 bool libspdm_aead_decryption(const spdm_version_number_t secured_message_version,
                              uint16_t aead_cipher_suite, const uint8_t *key,
-                             uintn key_size, const uint8_t *iv,
-                             uintn iv_size, const uint8_t *a_data,
-                             uintn a_data_size, const uint8_t *data_in,
-                             uintn data_in_size, const uint8_t *tag,
-                             uintn tag_size, uint8_t *data_out,
-                             uintn *data_out_size);
+                             size_t key_size, const uint8_t *iv,
+                             size_t iv_size, const uint8_t *a_data,
+                             size_t a_data_size, const uint8_t *data_in,
+                             size_t data_in_size, const uint8_t *tag,
+                             size_t tag_size, uint8_t *data_out,
+                             size_t *data_out_size);
 
 /**
  * Generates a random byte stream of the specified size.
@@ -1198,7 +1198,7 @@ bool libspdm_aead_decryption(const spdm_version_number_t secured_message_version
  * @param  size                         size of random bytes to generate.
  * @param  rand                         Pointer to buffer to receive random value.
  **/
-bool libspdm_get_random_number(uintn size, uint8_t *rand);
+bool libspdm_get_random_number(size_t size, uint8_t *rand);
 
 /**
  * Certificate Check for SPDM leaf cert.
@@ -1213,7 +1213,7 @@ bool libspdm_get_random_number(uintn size, uint8_t *rand);
  * @retval  true   Success.
  * @retval  false  Certificate is not valid
  **/
-bool libspdm_x509_certificate_check(const uint8_t *cert, uintn cert_size,
+bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
                                     uint32_t base_asym_algo, uint32_t base_hash_algo,
                                     bool is_device_cert_model);
 
@@ -1227,7 +1227,7 @@ bool libspdm_x509_certificate_check(const uint8_t *cert, uintn cert_size,
  * @retval  true   Certificate is self-signed.
  * @retval  false  Certificate is not self-signed.
  **/
-bool libspdm_is_root_certificate(const uint8_t *cert, uintn cert_size);
+bool libspdm_is_root_certificate(const uint8_t *cert, size_t cert_size);
 
 /**
  * Retrieve the SubjectAltName from SubjectAltName Bytes.
@@ -1257,9 +1257,9 @@ bool libspdm_is_root_certificate(const uint8_t *cert, uintn cert_size);
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
 return_status libspdm_get_dmtf_subject_alt_name_from_bytes(
-    uint8_t *buffer, const intn len, char *name_buffer,
-    uintn *name_buffer_size, uint8_t *oid,
-    uintn *oid_size);
+    uint8_t *buffer, const size_t len, char *name_buffer,
+    size_t *name_buffer_size, uint8_t *oid,
+    size_t *oid_size);
 
 /**
  * Retrieve the SubjectAltName from one X.509 certificate.
@@ -1289,10 +1289,10 @@ return_status libspdm_get_dmtf_subject_alt_name_from_bytes(
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
 return_status
-libspdm_get_dmtf_subject_alt_name(const uint8_t *cert, const intn cert_size,
+libspdm_get_dmtf_subject_alt_name(const uint8_t *cert, const size_t cert_size,
                                   char *name_buffer,
-                                  uintn *name_buffer_size,
-                                  uint8_t *oid, uintn *oid_size);
+                                  size_t *name_buffer_size,
+                                  uint8_t *oid, size_t *oid_size);
 
 /**
  * This function verifies the integrity of certificate chain data without spdm_cert_chain_t header.
@@ -1307,7 +1307,7 @@ libspdm_get_dmtf_subject_alt_name(const uint8_t *cert, const intn cert_size,
  * @retval true  certificate chain data integrity verification pass.
  * @retval false certificate chain data integrity verification fail.
  **/
-bool libspdm_verify_cert_chain_data(uint8_t *cert_chain_data, uintn cert_chain_data_size,
+bool libspdm_verify_cert_chain_data(uint8_t *cert_chain_data, size_t cert_chain_data_size,
                                     uint32_t base_asym_algo, uint32_t base_hash_algo,
                                     bool is_device_cert_model);
 
@@ -1326,7 +1326,7 @@ bool libspdm_verify_cert_chain_data(uint8_t *cert_chain_data, uintn cert_chain_d
  **/
 bool libspdm_verify_certificate_chain_buffer(uint32_t base_hash_algo, uint32_t base_asym_algo,
                                              const void *cert_chain_buffer,
-                                             uintn cert_chain_buffer_size,
+                                             size_t cert_chain_buffer_size,
                                              bool is_device_cert_model);
 
 /**
@@ -1346,6 +1346,6 @@ bool libspdm_verify_certificate_chain_buffer(uint32_t base_hash_algo, uint32_t b
 bool libspdm_get_leaf_cert_public_key_from_cert_chain(uint32_t base_hash_algo,
                                                       uint32_t base_asym_alg,
                                                       uint8_t *cert_chain_data,
-                                                      uintn cert_chain_data_size,
+                                                      size_t cert_chain_data_size,
                                                       void **public_key);
 #endif

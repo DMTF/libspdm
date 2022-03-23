@@ -135,9 +135,9 @@ return_status libspdm_validate_crypt_aead_cipher(void)
 {
     bool status;
     uint8_t OutBuffer[1024];
-    uintn OutBufferSize;
+    size_t OutBufferSize;
     uint8_t OutTag[1024];
-    uintn OutTagSize;
+    size_t OutTagSize;
 
     libspdm_my_print("\nCrypto AEAD Testing: ");
 

@@ -400,13 +400,13 @@
 #define BASE_8EB 0x8000000000000000ULL
 
 /**
- * Return the size of argument that has been aligned to sizeof (uintn).
+ * Return the size of argument that has been aligned to sizeof (size_t).
  *
  * @param  n    The parameter size to be aligned.
  *
  * @return The aligned size.
  **/
-#define _INT_SIZE_OF(n) ((sizeof(n) + sizeof(uintn) - 1) & ~(sizeof(uintn) - 1))
+#define _INT_SIZE_OF(n) ((sizeof(n) + sizeof(size_t) - 1) & ~(sizeof(size_t) - 1))
 
 #if defined(__CC_arm)
 
@@ -452,7 +452,7 @@ typedef char *VA_LIST;
                __alignof(parameter), &parameter)
 #define VA_ARG(marker, TYPE)                                                   \
     (*(TYPE *)((marker += _INT_SIZE_OF(TYPE) +                             \
-                          ((-(intn)marker) & (sizeof(TYPE) - 1))) -        \
+                          ((-(size_t)marker) & (sizeof(TYPE) - 1))) -        \
                _INT_SIZE_OF(TYPE)))
 #define VA_END(marker) (marker = (VA_LIST)0)
 #define VA_COPY(dest, start) ((void)((dest) = (start)))
@@ -472,8 +472,8 @@ typedef __builtin_va_list VA_LIST;
 #define VA_START(marker, parameter) __builtin_va_start(marker, parameter)
 
 #define VA_ARG(marker, TYPE)                                                   \
-    ((sizeof(TYPE) < sizeof(uintn)) ?                                      \
-     (TYPE)(__builtin_va_arg(marker, uintn)) :                     \
+    ((sizeof(TYPE) < sizeof(size_t)) ?                                      \
+     (TYPE)(__builtin_va_arg(marker, size_t)) :                     \
      (TYPE)(__builtin_va_arg(marker, TYPE)))
 
 #define VA_END(marker) __builtin_va_end(marker)
@@ -504,7 +504,7 @@ typedef char *VA_LIST;
  *
  **/
 #define VA_START(marker, parameter)                                            \
-    (marker = (VA_LIST)((uintn) & (parameter) + _INT_SIZE_OF(parameter)))
+    (marker = (VA_LIST)((size_t) &(parameter) + _INT_SIZE_OF(parameter)))
 
 /**
  * Returns an argument of a specified type from a variable argument list and updates
@@ -555,17 +555,17 @@ typedef char *VA_LIST;
 
 /* Pointer to the start of a variable argument list stored in a memory buffer. Same as uint8_t *.*/
 
-typedef uintn *BASE_LIST;
+typedef size_t *BASE_LIST;
 
 /**
- * Returns the size of a data type in sizeof(uintn) units rounded up to the nearest uintn boundary.
+ * Returns the size of a data type in sizeof(size_t) units rounded up to the nearest size_t boundary.
  *
  * @param  TYPE  The date type to determine the size of.
  *
- * @return The size of TYPE in sizeof (uintn) units rounded up to the nearest uintn boundary.
+ * @return The size of TYPE in sizeof (size_t) units rounded up to the nearest size_t boundary.
  **/
 #define _BASE_INT_SIZE_OF(TYPE)                                                \
-    ((sizeof(TYPE) + sizeof(uintn) - 1) / sizeof(uintn))
+    ((sizeof(TYPE) + sizeof(size_t) - 1) / sizeof(size_t))
 
 /**
  * Returns an argument of a specified type from a variable argument list and updates
@@ -601,11 +601,11 @@ typedef uintn *BASE_LIST;
  *
  **/
 #if (defined(__GNUC__) && __GNUC__ >= 4) || defined(__clang__)
-#define OFFSET_OF(TYPE, field) ((uintn) __builtin_offsetof(TYPE, field))
+#define OFFSET_OF(TYPE, field) ((size_t) __builtin_offsetof(TYPE, field))
 #endif
 
 #ifndef OFFSET_OF
-#define OFFSET_OF(TYPE, field) ((uintn) & (((TYPE *)0)->field))
+#define OFFSET_OF(TYPE, field) ((size_t) &(((TYPE *)0)->field))
 #endif
 
 /**
@@ -732,7 +732,7 @@ STATIC_ASSERT(
  *
  **/
 #define ALIGN_POINTER(pointer, alignment)                                      \
-    ((void *)(ALIGN_VALUE((uintn)(pointer), (alignment))))
+    ((void *)(ALIGN_VALUE((size_t)(pointer), (alignment))))
 
 /**
  * Rounds a value up to the next natural boundary for the current CPU.
@@ -746,7 +746,7 @@ STATIC_ASSERT(
  * @return  Rounded value specified by value.
  *
  **/
-#define ALIGN_VARIABLE(value) ALIGN_VALUE((value), sizeof(uintn))
+#define ALIGN_VARIABLE(value) ALIGN_VALUE((value), sizeof(size_t))
 
 #ifndef MAX
 /**
@@ -784,7 +784,7 @@ STATIC_ASSERT(
 
 /* status codes common to all execution phases*/
 
-typedef uintn return_status;
+typedef size_t return_status;
 
 /**
  * Produces a return_status code with the highest bit set.
@@ -819,7 +819,7 @@ typedef uintn return_status;
  * @retval false         The high bit of status_code is clear.
  *
  **/
-#define RETURN_ERROR(status_code) (((intn)(return_status)(status_code)) < 0)
+#define RETURN_ERROR(status_code) (((return_status)(status_code) & MAX_BIT) != 0)
 
 
 /* The operation completed successfully.*/
@@ -1134,7 +1134,7 @@ void *__builtin_return_address(unsigned int level);
  *               caller is responsible for ensuring that Array's type is not
  *               incomplete; that is, Array must have known constant size.
  *
- * @return The number of elements in Array. The result has type uintn.
+ * @return The number of elements in Array. The result has type size_t.
  *
  **/
 #define ARRAY_SIZE(array) (sizeof(array) / sizeof((array)[0]))

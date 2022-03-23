@@ -20,16 +20,16 @@ return_status libspdm_validate_crypt_sm2(void)
     void *Sm2_1;
     void *Sm2_2;
     uint8_t public1[66 * 2];
-    uintn public1_length;
+    size_t public1_length;
     uint8_t public2[66 * 2];
-    uintn public2_length;
+    size_t public2_length;
     uint8_t key1[66];
-    uintn key1_length;
+    size_t key1_length;
     uint8_t key2[66];
-    uintn key2_length;
+    size_t key2_length;
     uint8_t message[] = "Sm2Test";
     uint8_t signature[66 * 2];
-    uintn sig_size;
+    size_t sig_size;
     bool status;
 
     libspdm_my_print("\nCrypto SM2 key Exchange Testing:\n");

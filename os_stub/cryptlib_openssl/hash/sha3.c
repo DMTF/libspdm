@@ -15,9 +15,9 @@ void *hash_md_new(void);
 void hash_md_free(void *md_ctx);
 bool hash_md_init(const EVP_MD *md, void *md_ctx);
 bool hash_md_duplicate(const void *md_ctx, void *new_md_ctx);
-bool hash_md_update(void *md_ctx, const void *data, uintn data_size);
+bool hash_md_update(void *md_ctx, const void *data, size_t data_size);
 bool hash_md_final(void *md_ctx, void *hash_value);
-bool hash_md_hash_all(const EVP_MD *md, const void *data, uintn data_size,
+bool hash_md_hash_all(const EVP_MD *md, const void *data, size_t data_size,
                       uint8_t *hash_value);
 
 /**
@@ -100,7 +100,7 @@ bool libspdm_sha3_256_duplicate(const void *sha3_256_context,
  *
  **/
 bool libspdm_sha3_256_update(void *sha3_256_context, const void *data,
-                             uintn data_size)
+                             size_t data_size)
 {
     return hash_md_update (sha3_256_context, data, data_size);
 }
@@ -148,7 +148,7 @@ bool libspdm_sha3_256_final(void *sha3_256_context, uint8_t *hash_value)
  * @retval false  This interface is not supported.
  *
  **/
-bool libspdm_sha3_256_hash_all(const void *data, uintn data_size,
+bool libspdm_sha3_256_hash_all(const void *data, size_t data_size,
                                uint8_t *hash_value)
 {
     return hash_md_hash_all (EVP_sha3_256(), data, data_size, hash_value);
@@ -234,7 +234,7 @@ bool libspdm_sha3_384_duplicate(const void *sha3_384_context,
  *
  **/
 bool libspdm_sha3_384_update(void *sha3_384_context, const void *data,
-                             uintn data_size)
+                             size_t data_size)
 {
     return hash_md_update (sha3_384_context, data, data_size);
 }
@@ -282,7 +282,7 @@ bool libspdm_sha3_384_final(void *sha3_384_context, uint8_t *hash_value)
  * @retval false  This interface is not supported.
  *
  **/
-bool libspdm_sha3_384_hash_all(const void *data, uintn data_size,
+bool libspdm_sha3_384_hash_all(const void *data, size_t data_size,
                                uint8_t *hash_value)
 {
     return hash_md_hash_all (EVP_sha3_384(), data, data_size, hash_value);
@@ -368,7 +368,7 @@ bool libspdm_sha3_512_duplicate(const void *sha3_512_context,
  *
  **/
 bool libspdm_sha3_512_update(void *sha3_512_context, const void *data,
-                             uintn data_size)
+                             size_t data_size)
 {
     return hash_md_update (sha3_512_context, data, data_size);
 }
@@ -416,7 +416,7 @@ bool libspdm_sha3_512_final(void *sha3_512_context, uint8_t *hash_value)
  * @retval false  This interface is not supported.
  *
  **/
-bool libspdm_sha3_512_hash_all(const void *data, uintn data_size,
+bool libspdm_sha3_512_hash_all(const void *data, size_t data_size,
                                uint8_t *hash_value)
 {
     return hash_md_hash_all (EVP_sha3_512(), data, data_size, hash_value);

@@ -26,22 +26,22 @@
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_get_encap_response_challenge_auth(
-    void *context, uintn request_size, void *request,
-    uintn *response_size, void *response)
+    void *context, size_t request_size, void *request,
+    size_t *response_size, void *response)
 {
     spdm_challenge_request_t *spdm_request;
     spdm_challenge_auth_response_t *spdm_response;
     bool result;
-    uintn signature_size;
+    size_t signature_size;
     uint8_t slot_id;
     uint32_t hash_size;
     uint32_t measurement_summary_hash_size;
     uint8_t *ptr;
-    uintn total_size;
+    size_t total_size;
     libspdm_context_t *spdm_context;
     uint8_t auth_attribute;
     return_status status;
-    uintn response_capacity;
+    size_t response_capacity;
 
     spdm_context = context;
     spdm_request = request;
@@ -146,7 +146,7 @@ return_status libspdm_get_encap_response_challenge_auth(
     }
 
     status = libspdm_append_message_mut_c(spdm_context, spdm_response,
-                                          (uintn)ptr - (uintn)spdm_response);
+                                          (size_t)ptr - (size_t)spdm_response);
     if (RETURN_ERROR(status)) {
         libspdm_reset_message_mut_c(spdm_context);
         return libspdm_generate_encap_error_response(

@@ -45,7 +45,7 @@ spdm_negotiate_algorithms_request_t m_libspdm_negotiate_algorithms_request1 = {
     sizeof(spdm_negotiate_algorithms_request_t),
     SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
 };
-uintn m_libspdm_negotiate_algorithms_request1_size =
+size_t m_libspdm_negotiate_algorithms_request1_size =
     sizeof(m_libspdm_negotiate_algorithms_request1);
 
 spdm_negotiate_algorithms_request_t m_libspdm_negotiate_algorithms_request2 = {
@@ -53,7 +53,7 @@ spdm_negotiate_algorithms_request_t m_libspdm_negotiate_algorithms_request2 = {
     sizeof(spdm_negotiate_algorithms_request_t),
     SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
 };
-uintn m_libspdm_negotiate_algorithms_request2_size = sizeof(spdm_message_header_t);
+size_t m_libspdm_negotiate_algorithms_request2_size = sizeof(spdm_message_header_t);
 
 libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_request3 = {
     {
@@ -89,7 +89,7 @@ libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_requ
         }
     }
 };
-uintn m_libspdm_negotiate_algorithm_request3_size = sizeof(m_libspdm_negotiate_algorithm_request3);
+size_t m_libspdm_negotiate_algorithm_request3_size = sizeof(m_libspdm_negotiate_algorithm_request3);
 
 libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_request4 = {
     {
@@ -125,7 +125,7 @@ libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_requ
         }
     }
 };
-uintn m_libspdm_negotiate_algorithm_request4_size = sizeof(m_libspdm_negotiate_algorithm_request4);
+size_t m_libspdm_negotiate_algorithm_request4_size = sizeof(m_libspdm_negotiate_algorithm_request4);
 
 libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_request5 = {
     {
@@ -161,7 +161,7 @@ libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_requ
         }
     }
 };
-uintn m_libspdm_negotiate_algorithm_request5_size = sizeof(m_libspdm_negotiate_algorithm_request5);
+size_t m_libspdm_negotiate_algorithm_request5_size = sizeof(m_libspdm_negotiate_algorithm_request5);
 
 libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_request6 = {
     {
@@ -197,7 +197,7 @@ libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_requ
         }
     }
 };
-uintn m_libspdm_negotiate_algorithm_request6_size = sizeof(m_libspdm_negotiate_algorithm_request6);
+size_t m_libspdm_negotiate_algorithm_request6_size = sizeof(m_libspdm_negotiate_algorithm_request6);
 
 libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_request7 = {
     {
@@ -233,7 +233,7 @@ libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_requ
         }
     }
 };
-uintn m_libspdm_negotiate_algorithm_request7_size = sizeof(m_libspdm_negotiate_algorithm_request7);
+size_t m_libspdm_negotiate_algorithm_request7_size = sizeof(m_libspdm_negotiate_algorithm_request7);
 
 libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_request8 = {
     {
@@ -269,7 +269,7 @@ libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_requ
         }
     }
 };
-uintn m_libspdm_negotiate_algorithm_request8_size = sizeof(m_libspdm_negotiate_algorithm_request8);
+size_t m_libspdm_negotiate_algorithm_request8_size = sizeof(m_libspdm_negotiate_algorithm_request8);
 
 libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_request9 = {
     {
@@ -305,7 +305,7 @@ libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_requ
         }
     }
 };
-uintn m_libspdm_negotiate_algorithm_request9_size = sizeof(m_libspdm_negotiate_algorithm_request9);
+size_t m_libspdm_negotiate_algorithm_request9_size = sizeof(m_libspdm_negotiate_algorithm_request9);
 
 spdm_negotiate_algorithms_request_t m_libspdm_negotiate_algorithm_request10 = {
     {
@@ -317,7 +317,7 @@ spdm_negotiate_algorithms_request_t m_libspdm_negotiate_algorithm_request10 = {
     0x44,
     SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
 };
-uintn m_libspdm_negotiate_algorithm_request10_size = 0x44;
+size_t m_libspdm_negotiate_algorithm_request10_size = 0x44;
 
 libspdm_negotiate_algorithms_request_spdm11_oversized_t m_libspdm_negotiate_algorithm_request11 = {
     {
@@ -354,7 +354,7 @@ libspdm_negotiate_algorithms_request_spdm11_oversized_t m_libspdm_negotiate_algo
         }
     }
 };
-uintn m_libspdm_negotiate_algorithm_request11_size =
+size_t m_libspdm_negotiate_algorithm_request11_size =
     sizeof(m_libspdm_negotiate_algorithm_request11);
 
 libspdm_negotiate_algorithms_request_spdm11_multiple_tables_t
@@ -433,7 +433,7 @@ libspdm_negotiate_algorithms_request_spdm11_multiple_tables_t
         }
     }
 };
-uintn m_libspdm_negotiate_algorithm_request12_size =
+size_t m_libspdm_negotiate_algorithm_request12_size =
     sizeof(m_libspdm_negotiate_algorithm_request12);
 
 libspdm_negotiate_algorithms_request_spdm11_multiple_tables_t
@@ -513,7 +513,7 @@ libspdm_negotiate_algorithms_request_spdm11_multiple_tables_t
         }
     }
 };
-uintn m_libspdm_negotiate_algorithm_request13_size =
+size_t m_libspdm_negotiate_algorithm_request13_size =
     sizeof(m_libspdm_negotiate_algorithm_request13)-
     sizeof(
         spdm_negotiate_algorithms_common_struct_table_t);
@@ -595,7 +595,7 @@ libspdm_negotiate_algorithms_request_spdm11_multiple_tables_t
         }
     }
 };
-uintn m_libspdm_negotiate_algorithm_request14_size =
+size_t m_libspdm_negotiate_algorithm_request14_size =
     sizeof(m_libspdm_negotiate_algorithm_request14)+
     sizeof(
         spdm_negotiate_algorithms_common_struct_table_t);
@@ -676,7 +676,7 @@ libspdm_negotiate_algorithms_request_spdm11_multiple_tables_t
         }
     }
 };
-uintn m_libspdm_negotiate_algorithm_request15_size =
+size_t m_libspdm_negotiate_algorithm_request15_size =
     sizeof(m_libspdm_negotiate_algorithm_request15);
 
 libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_request16 = {
@@ -714,7 +714,7 @@ libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_requ
         }
     }
 };
-uintn m_libspdm_negotiate_algorithm_request16_size =
+size_t m_libspdm_negotiate_algorithm_request16_size =
     sizeof(m_libspdm_negotiate_algorithm_request16);
 
 void libspdm_test_responder_algorithms_case1(void **state)
@@ -722,7 +722,7 @@ void libspdm_test_responder_algorithms_case1(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_algorithms_response_t *spdm_response;
 
@@ -753,7 +753,7 @@ void libspdm_test_responder_algorithms_case2(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_algorithms_response_t *spdm_response;
 
@@ -787,7 +787,7 @@ void libspdm_test_responder_algorithms_case3(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_algorithms_response_t *spdm_response;
 
@@ -823,7 +823,7 @@ void libspdm_test_responder_algorithms_case4(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_algorithms_response_t *spdm_response;
 
@@ -860,7 +860,7 @@ void libspdm_test_responder_algorithms_case5(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_algorithms_response_t *spdm_response;
     spdm_error_data_response_not_ready_t *error_data;
@@ -903,7 +903,7 @@ void libspdm_test_responder_algorithms_case6(void **state)
     return_status status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_algorithms_response_t *spdm_response;
 
@@ -937,7 +937,7 @@ void libspdm_test_responder_algorithms_case7(void **state) {
     return_status status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     libspdm_algorithms_response_mine_t *spdm_response;
 
@@ -1004,7 +1004,7 @@ void libspdm_test_responder_algorithms_case8(void **state) {
     return_status status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_algorithms_response_t *spdm_response;
 
@@ -1064,7 +1064,7 @@ void libspdm_test_responder_algorithms_case9(void **state) {
     return_status status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_algorithms_response_t *spdm_response;
 
@@ -1124,7 +1124,7 @@ void libspdm_test_responder_algorithms_case10(void **state) {
     return_status status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_algorithms_response_t *spdm_response;
 
@@ -1184,7 +1184,7 @@ void libspdm_test_responder_algorithms_case11(void **state) {
     return_status status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_algorithms_response_t *spdm_response;
 
@@ -1244,7 +1244,7 @@ void libspdm_test_responder_algorithms_case12(void **state) {
     return_status status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_algorithms_response_t *spdm_response;
 
@@ -1304,7 +1304,7 @@ void libspdm_test_responder_algorithms_case13(void **state) {
     return_status status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
     spdm_test_context = *state;
@@ -1358,7 +1358,7 @@ void libspdm_test_responder_algorithms_case14(void **state) {
     return_status status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
     spdm_test_context = *state;
@@ -1386,7 +1386,7 @@ void libspdm_test_responder_algorithms_case15(void **state) {
     return_status status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
     spdm_test_context = *state;
@@ -1437,7 +1437,7 @@ void libspdm_test_responder_algorithms_case16(void **state) {
     return_status status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     libspdm_algorithms_response_mine_t *spdm_response;
 
@@ -1504,7 +1504,7 @@ void libspdm_test_responder_algorithms_case17(void **state) {
     return_status status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     libspdm_algorithms_response_mine_t *spdm_response;
 
@@ -1571,7 +1571,7 @@ void libspdm_test_responder_algorithms_case18(void **state) {
     return_status status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     libspdm_algorithms_response_mine_t *spdm_response;
 
@@ -1628,7 +1628,7 @@ void libspdm_test_responder_algorithms_case19(void **state) {
     return_status status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     libspdm_algorithms_response_mine_t *spdm_response;
 
@@ -1696,7 +1696,7 @@ void libspdm_test_responder_algorithms_case20(void **state) {
     return_status status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     libspdm_algorithms_response_mine_t *spdm_response;
 
@@ -1779,6 +1779,92 @@ void libspdm_test_responder_algorithms_case20(void **state) {
                       spdm_context->connection_info.algorithm.key_schedule);
 }
 
+void libspdm_test_responder_algorithms_case21(void **state) {
+    return_status status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    libspdm_algorithms_response_mine_t *spdm_response;
+    size_t arbitrary_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x15;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->local_context.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
+    spdm_context->local_context.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
+    spdm_context->local_context.algorithm.key_schedule = m_libspdm_use_key_schedule_algo;
+
+    libspdm_reset_message_a(spdm_context);
+
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
+
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP;
+
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
+
+    /*filling A with arbitrary data*/
+    arbitrary_size = 10;
+    libspdm_set_mem(spdm_context->transcript.message_a.buffer, arbitrary_size, (uint8_t) 0xFF);
+    spdm_context->transcript.message_a.buffer_size = arbitrary_size;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_algorithms(
+        spdm_context,
+        m_libspdm_negotiate_algorithm_request12_size, &m_libspdm_negotiate_algorithm_request12,
+        &response_size, response);
+    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(response_size,
+                     sizeof(spdm_algorithms_response_t) +
+                     4*sizeof(spdm_negotiate_algorithms_common_struct_table_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ALGORITHMS);
+    assert_int_equal(spdm_response->header.spdm_version, SPDM_MESSAGE_VERSION_11);
+
+    assert_int_equal(spdm_response->struct_table[0].alg_supported,
+                     spdm_context->local_context.algorithm.dhe_named_group);
+    assert_int_equal(spdm_response->struct_table[1].alg_supported,
+                     spdm_context->local_context.algorithm.aead_cipher_suite);
+    assert_int_equal(spdm_response->struct_table[2].alg_supported,
+                     spdm_context->local_context.algorithm.req_base_asym_alg);
+    assert_int_equal(spdm_response->struct_table[3].alg_supported,
+                     spdm_context->local_context.algorithm.key_schedule);
+
+    assert_int_equal(spdm_context->transcript.message_a.buffer_size,
+                     arbitrary_size + m_libspdm_negotiate_algorithm_request12_size + response_size);
+    assert_memory_equal(spdm_context->transcript.message_a.buffer + arbitrary_size,
+                        &m_libspdm_negotiate_algorithm_request12,
+                        m_libspdm_negotiate_algorithm_request12_size);
+    assert_memory_equal(spdm_context->transcript.message_a.buffer + arbitrary_size +
+                        m_libspdm_negotiate_algorithm_request12_size, response, response_size);
+}
+
 libspdm_test_context_t m_libspdm_responder_algorithms_test_context = {
     LIBSPDM_TEST_CONTEXT_SIGNATURE,
     false,
@@ -1827,6 +1913,8 @@ int libspdm_responder_algorithms_test_main(void)
         cmocka_unit_test(libspdm_test_responder_algorithms_case19),
         /* When support multiple algorithms, then defaults to choose the strongest available algorithm*/
         cmocka_unit_test(libspdm_test_responder_algorithms_case20),
+        /* Buffer verification*/
+        cmocka_unit_test(libspdm_test_responder_algorithms_case21),
     };
 
     m_libspdm_negotiate_algorithms_request1.base_asym_algo = m_libspdm_use_asym_algo;

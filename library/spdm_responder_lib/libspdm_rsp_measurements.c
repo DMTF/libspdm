@@ -24,11 +24,11 @@
 bool libspdm_create_measurement_signature(libspdm_context_t *spdm_context,
                                           libspdm_session_info_t *session_info,
                                           void *response_message,
-                                          uintn response_message_size)
+                                          size_t response_message_size)
 {
     uint8_t *ptr;
-    uintn measurment_sig_size;
-    uintn signature_size;
+    size_t measurment_sig_size;
+    size_t signature_size;
     bool result;
     return_status status;
 
@@ -78,10 +78,10 @@ bool libspdm_create_measurement_signature(libspdm_context_t *spdm_context,
  **/
 bool libspdm_create_measurement_opaque(libspdm_context_t *spdm_context,
                                        void *response_message,
-                                       uintn response_message_size)
+                                       size_t response_message_size)
 {
     uint8_t *ptr;
-    uintn measurment_no_sig_size;
+    size_t measurment_no_sig_size;
 
     measurment_no_sig_size =
         SPDM_NONCE_SIZE + sizeof(uint16_t) +
@@ -128,26 +128,26 @@ bool libspdm_create_measurement_opaque(libspdm_context_t *spdm_context,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_get_response_measurements(void *context,
-                                                uintn request_size,
+                                                size_t request_size,
                                                 const void *request,
-                                                uintn *response_size,
+                                                size_t *response_size,
                                                 void *response)
 {
     uint8_t index;
     const spdm_get_measurements_request_t *spdm_request;
     spdm_measurements_response_t *spdm_response;
-    uintn spdm_response_size;
+    size_t spdm_response_size;
     return_status status;
-    uintn signature_size;
-    uintn measurements_sig_size;
-    uintn measurements_no_sig_size;
+    size_t signature_size;
+    size_t measurements_sig_size;
+    size_t measurements_no_sig_size;
 
     libspdm_context_t *spdm_context;
     uint8_t slot_id_param;
     uint8_t measurements_index;
     uint8_t *measurements;
     uint8_t measurements_count;
-    uintn measurements_size;
+    size_t measurements_size;
     bool ret;
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
@@ -346,8 +346,8 @@ return_status libspdm_get_response_measurements(void *context,
 
     case SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_ALL_MEASUREMENTS:
         LIBSPDM_DEBUG_CODE_BEGIN();
-        uintn debug_measurements_record_size;
-        uintn debug_measurements_block_size;
+        size_t debug_measurements_record_size;
+        size_t debug_measurements_block_size;
         spdm_measurement_block_dmtf_t *debug_measurement_block;
 
         debug_measurements_record_size = 0;
@@ -360,7 +360,7 @@ return_status libspdm_get_response_measurements(void *context,
                 .dmtf_spec_measurement_value_size;
             debug_measurements_record_size += debug_measurements_block_size;
             debug_measurement_block =
-                (void *)((uintn)debug_measurement_block +
+                (void *)((size_t)debug_measurement_block +
                          debug_measurements_block_size);
         }
         LIBSPDM_ASSERT(debug_measurements_record_size == measurements_size);

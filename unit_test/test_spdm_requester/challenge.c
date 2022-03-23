@@ -9,11 +9,11 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 
-static uintn m_libspdm_local_buffer_size;
+static size_t m_libspdm_local_buffer_size;
 static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE];
 
 return_status libspdm_requester_challenge_test_send_message(void *spdm_context,
-                                                            uintn request_size,
+                                                            size_t request_size,
                                                             const void *request,
                                                             uint64_t timeout)
 {
@@ -68,7 +68,7 @@ return_status libspdm_requester_challenge_test_send_message(void *spdm_context,
         m_libspdm_local_buffer_size += (request_size - 1);
         return RETURN_SUCCESS;
     case 0x9: {
-        static uintn sub_index = 0;
+        static size_t sub_index = 0;
         if (sub_index == 0) {
             m_libspdm_local_buffer_size = 0;
             libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer), &ptr[1],
@@ -95,13 +95,31 @@ return_status libspdm_requester_challenge_test_send_message(void *spdm_context,
                          request_size - 1);
         m_libspdm_local_buffer_size += (request_size - 1);
         return RETURN_SUCCESS;
+    case 0x16: {
+        /* arbitrary data must be inserted in the message buffer for computing
+         * the response hash */
+        m_libspdm_local_buffer_size = 0;
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+        libspdm_set_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size], 10, (uint8_t) 0xFF);
+        m_libspdm_local_buffer_size += 10;
+        libspdm_set_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size], 8, (uint8_t) 0xEE);
+        m_libspdm_local_buffer_size += 8;
+        libspdm_set_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size], 12, (uint8_t) 0xDD);
+        m_libspdm_local_buffer_size += 12;
+#endif
+        libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
+                         sizeof(m_libspdm_local_buffer) - m_libspdm_local_buffer_size,
+                         &ptr[1], request_size - 1);
+        m_libspdm_local_buffer_size += (request_size - 1);
+    }
+        return RETURN_SUCCESS;
     default:
         return RETURN_DEVICE_ERROR;
     }
 }
 
 return_status libspdm_requester_challenge_test_receive_message(
-    void *spdm_context, uintn *response_size,
+    void *spdm_context, size_t *response_size,
     void **response, uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
@@ -114,12 +132,12 @@ return_status libspdm_requester_challenge_test_receive_message(
     case 0x2: { /*correct CHALLENGE_AUTH message*/
         spdm_challenge_auth_response_t *spdm_response;
         void *data;
-        uintn data_size;
+        size_t data_size;
         uint8_t *ptr;
         uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
-        uintn sig_size;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t sig_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                         m_libspdm_use_asym_algo, &data,
@@ -168,8 +186,8 @@ return_status libspdm_requester_challenge_test_receive_message(
                          sizeof(m_libspdm_local_buffer) -
                          (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] -
                           m_libspdm_local_buffer),
-                         spdm_response, (uintn)ptr - (uintn)spdm_response);
-        m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
+                         spdm_response, (size_t)ptr - (size_t)spdm_response);
+        m_libspdm_local_buffer_size += ((size_t)ptr - (size_t)spdm_response);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
                        m_libspdm_local_buffer_size));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
@@ -197,12 +215,12 @@ return_status libspdm_requester_challenge_test_receive_message(
     case 0x3: { /*correct CHALLENGE_AUTH message*/
         spdm_challenge_auth_response_t *spdm_response;
         void *data;
-        uintn data_size;
+        size_t data_size;
         uint8_t *ptr;
         uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
-        uintn sig_size;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t sig_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                         m_libspdm_use_asym_algo, &data,
@@ -251,8 +269,8 @@ return_status libspdm_requester_challenge_test_receive_message(
                          sizeof(m_libspdm_local_buffer) -
                          (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] -
                           m_libspdm_local_buffer),
-                         spdm_response, (uintn)ptr - (uintn)spdm_response);
-        m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
+                         spdm_response, (size_t)ptr - (size_t)spdm_response);
+        m_libspdm_local_buffer_size += ((size_t)ptr - (size_t)spdm_response);
         libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_buffer,
                          m_libspdm_local_buffer_size, hash_data);
         sig_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
@@ -273,8 +291,8 @@ return_status libspdm_requester_challenge_test_receive_message(
 
     case 0x4: { /*correct ERROR message (invalid request)*/
         spdm_error_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_error_response_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -294,8 +312,8 @@ return_status libspdm_requester_challenge_test_receive_message(
 
     case 0x5: { /*correct ERROR message (busy)*/
         spdm_error_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_error_response_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -314,11 +332,11 @@ return_status libspdm_requester_challenge_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x6: { /*correct ERROR message (busy) + correct CHALLENGE_AUTH message*/
-        static uintn sub_index1 = 0;
+        static size_t sub_index1 = 0;
         if (sub_index1 == 0) {
             spdm_error_response_t *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
 
             spdm_response_size = sizeof(spdm_error_response_t);
             transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -338,12 +356,12 @@ return_status libspdm_requester_challenge_test_receive_message(
         } else if (sub_index1 == 1) {
             spdm_challenge_auth_response_t *spdm_response;
             void *data;
-            uintn data_size;
+            size_t data_size;
             uint8_t *ptr;
             uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
-            uintn sig_size;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t sig_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
 
             libspdm_read_responder_public_certificate_chain(
                 m_libspdm_use_hash_algo, m_libspdm_use_asym_algo, &data,
@@ -397,9 +415,9 @@ return_status libspdm_requester_challenge_test_receive_message(
                              - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] -
                                 m_libspdm_local_buffer),
                              spdm_response,
-                             (uintn)ptr - (uintn)spdm_response);
+                             (size_t)ptr - (size_t)spdm_response);
             m_libspdm_local_buffer_size +=
-                ((uintn)ptr - (uintn)spdm_response);
+                ((size_t)ptr - (size_t)spdm_response);
             libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_buffer,
                              m_libspdm_local_buffer_size, hash_data);
             sig_size =
@@ -423,8 +441,8 @@ return_status libspdm_requester_challenge_test_receive_message(
 
     case 0x7: { /*correct ERROR message (request resync)*/
         spdm_error_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_error_response_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -444,8 +462,8 @@ return_status libspdm_requester_challenge_test_receive_message(
 
     case 0x8: { /*correct ERROR message (response net ready)*/
         spdm_error_response_data_response_not_ready_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -469,12 +487,12 @@ return_status libspdm_requester_challenge_test_receive_message(
         return RETURN_SUCCESS;
 
     case 0x9: { /*correct ERROR message (response not ready) + correct CHALLENGE_AUTH message*/
-        static uintn sub_index2 = 0;
+        static size_t sub_index2 = 0;
         if (sub_index2 == 0) {
             spdm_error_response_data_response_not_ready_t
             *spdm_response;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
 
             spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
             transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -500,12 +518,12 @@ return_status libspdm_requester_challenge_test_receive_message(
         } else if (sub_index2 == 1) {
             spdm_challenge_auth_response_t *spdm_response;
             void *data;
-            uintn data_size;
+            size_t data_size;
             uint8_t *ptr;
             uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
-            uintn sig_size;
-            uintn spdm_response_size;
-            uintn transport_header_size;
+            size_t sig_size;
+            size_t spdm_response_size;
+            size_t transport_header_size;
 
             libspdm_read_responder_public_certificate_chain(
                 m_libspdm_use_hash_algo, m_libspdm_use_asym_algo, &data,
@@ -559,9 +577,9 @@ return_status libspdm_requester_challenge_test_receive_message(
                              - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] -
                                 m_libspdm_local_buffer),
                              spdm_response,
-                             (uintn)ptr - (uintn)spdm_response);
+                             (size_t)ptr - (size_t)spdm_response);
             m_libspdm_local_buffer_size +=
-                ((uintn)ptr - (uintn)spdm_response);
+                ((size_t)ptr - (size_t)spdm_response);
             libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_buffer,
                              m_libspdm_local_buffer_size, hash_data);
             sig_size =
@@ -587,12 +605,12 @@ return_status libspdm_requester_challenge_test_receive_message(
     {
         spdm_challenge_auth_response_t  *spdm_response;
         void                          *data;
-        uintn data_size;
+        size_t data_size;
         uint8_t                         *Ptr;
         uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
-        uintn sig_size;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t sig_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         libspdm_read_responder_public_certificate_chain (m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo,
@@ -638,8 +656,8 @@ return_status libspdm_requester_challenge_test_receive_message(
                          (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] -
                           m_libspdm_local_buffer),
                          spdm_response,
-                         (uintn)Ptr - (uintn)spdm_response);
-        m_libspdm_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
+                         (size_t)Ptr - (size_t)spdm_response);
+        m_libspdm_local_buffer_size += ((size_t)Ptr - (size_t)spdm_response);
         libspdm_hash_all (m_libspdm_use_hash_algo, m_libspdm_local_buffer,
                           m_libspdm_local_buffer_size, hash_data);
         sig_size = libspdm_get_asym_signature_size (m_libspdm_use_asym_algo);
@@ -658,8 +676,8 @@ return_status libspdm_requester_challenge_test_receive_message(
     case 0xB: /*CHALLENGE_AUTH message smaller than a SPDM header*/
     {
         spdm_challenge_auth_response_t  *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
@@ -679,12 +697,12 @@ return_status libspdm_requester_challenge_test_receive_message(
     {
         spdm_challenge_auth_response_t  *spdm_response;
         void                          *data;
-        uintn data_size;
+        size_t data_size;
         uint8_t                         *Ptr;
         uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
-        uintn sig_size;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t sig_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         libspdm_read_responder_public_certificate_chain (m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo,
@@ -730,8 +748,8 @@ return_status libspdm_requester_challenge_test_receive_message(
                          (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] -
                           m_libspdm_local_buffer),
                          spdm_response,
-                         (uintn)Ptr - (uintn)spdm_response);
-        m_libspdm_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
+                         (size_t)Ptr - (size_t)spdm_response);
+        m_libspdm_local_buffer_size += ((size_t)Ptr - (size_t)spdm_response);
         libspdm_hash_all (m_libspdm_use_hash_algo, m_libspdm_local_buffer,
                           m_libspdm_local_buffer_size, hash_data);
         sig_size = libspdm_get_asym_signature_size (m_libspdm_use_asym_algo);
@@ -751,12 +769,12 @@ return_status libspdm_requester_challenge_test_receive_message(
     {
         spdm_challenge_auth_response_t  *spdm_response;
         void                          *data;
-        uintn data_size;
+        size_t data_size;
         uint8_t                         *Ptr;
         uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
-        uintn sig_size;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t sig_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         libspdm_read_responder_public_certificate_chain (m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo,
@@ -802,8 +820,8 @@ return_status libspdm_requester_challenge_test_receive_message(
                          (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] -
                           m_libspdm_local_buffer),
                          spdm_response,
-                         (uintn)Ptr - (uintn)spdm_response);
-        m_libspdm_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
+                         (size_t)Ptr - (size_t)spdm_response);
+        m_libspdm_local_buffer_size += ((size_t)Ptr - (size_t)spdm_response);
         libspdm_hash_all (m_libspdm_use_hash_algo, m_libspdm_local_buffer,
                           m_libspdm_local_buffer_size, hash_data);
         sig_size = libspdm_get_asym_signature_size (m_libspdm_use_asym_algo);
@@ -823,12 +841,12 @@ return_status libspdm_requester_challenge_test_receive_message(
     {
         spdm_challenge_auth_response_t  *spdm_response;
         void                          *data;
-        uintn data_size;
+        size_t data_size;
         uint8_t                         *Ptr;
         uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
-        uintn sig_size;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t sig_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         libspdm_read_responder_public_certificate_chain (m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo,
@@ -874,8 +892,8 @@ return_status libspdm_requester_challenge_test_receive_message(
                          (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] -
                           m_libspdm_local_buffer),
                          spdm_response,
-                         (uintn)Ptr - (uintn)spdm_response);
-        m_libspdm_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
+                         (size_t)Ptr - (size_t)spdm_response);
+        m_libspdm_local_buffer_size += ((size_t)Ptr - (size_t)spdm_response);
         libspdm_hash_all (m_libspdm_use_hash_algo, m_libspdm_local_buffer,
                           m_libspdm_local_buffer_size, hash_data);
         sig_size = libspdm_get_asym_signature_size (m_libspdm_use_asym_algo);
@@ -895,12 +913,12 @@ return_status libspdm_requester_challenge_test_receive_message(
     {
         spdm_challenge_auth_response_t  *spdm_response;
         void                          *data;
-        uintn data_size;
+        size_t data_size;
         uint8_t                         *Ptr;
         uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
-        uintn sig_size;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t sig_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         libspdm_read_responder_public_certificate_chain (m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo,
@@ -946,8 +964,8 @@ return_status libspdm_requester_challenge_test_receive_message(
                          (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] -
                           m_libspdm_local_buffer),
                          spdm_response,
-                         (uintn)Ptr - (uintn)spdm_response);
-        m_libspdm_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
+                         (size_t)Ptr - (size_t)spdm_response);
+        m_libspdm_local_buffer_size += ((size_t)Ptr - (size_t)spdm_response);
         libspdm_hash_all (m_libspdm_use_hash_algo, m_libspdm_local_buffer,
                           m_libspdm_local_buffer_size, hash_data);
         sig_size = libspdm_get_asym_signature_size (m_libspdm_use_asym_algo);
@@ -967,12 +985,12 @@ return_status libspdm_requester_challenge_test_receive_message(
     {
         spdm_challenge_auth_response_t  *spdm_response;
         void                          *data;
-        uintn data_size;
+        size_t data_size;
         uint8_t                         *Ptr;
         uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
-        uintn sig_size;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t sig_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         libspdm_read_responder_public_certificate_chain (m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo,
@@ -1013,15 +1031,15 @@ return_status libspdm_requester_challenge_test_receive_message(
          * Ptr += libspdm_get_hash_size (m_libspdm_use_hash_algo);*/
         *(uint16_t *)Ptr = 8;
         Ptr += sizeof(uint16_t);
-        libspdm_copy_mem(Ptr, (uintn)(*response) + *response_size - (uintn)Ptr, "openspdm", 8);
+        libspdm_copy_mem(Ptr, (size_t)(*response) + *response_size - (size_t)Ptr, "openspdm", 8);
         Ptr += 8;
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer) -
                          (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] -
                           m_libspdm_local_buffer),
                          spdm_response,
-                         (uintn)Ptr - (uintn)spdm_response);
-        m_libspdm_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
+                         (size_t)Ptr - (size_t)spdm_response);
+        m_libspdm_local_buffer_size += ((size_t)Ptr - (size_t)spdm_response);
         libspdm_hash_all (m_libspdm_use_hash_algo, m_libspdm_local_buffer,
                           m_libspdm_local_buffer_size, hash_data);
         sig_size = libspdm_get_asym_signature_size (m_libspdm_use_asym_algo);
@@ -1041,12 +1059,12 @@ return_status libspdm_requester_challenge_test_receive_message(
     {
         spdm_challenge_auth_response_t  *spdm_response;
         void                          *data;
-        uintn data_size;
+        size_t data_size;
         uint8_t                         *Ptr;
         uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
-        uintn sig_size;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t sig_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         libspdm_read_responder_public_certificate_chain (m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo,
@@ -1092,8 +1110,8 @@ return_status libspdm_requester_challenge_test_receive_message(
                          (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] -
                           m_libspdm_local_buffer),
                          spdm_response,
-                         (uintn)Ptr - (uintn)spdm_response);
-        m_libspdm_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
+                         (size_t)Ptr - (size_t)spdm_response);
+        m_libspdm_local_buffer_size += ((size_t)Ptr - (size_t)spdm_response);
         libspdm_hash_all (m_libspdm_use_hash_algo, m_libspdm_local_buffer,
                           m_libspdm_local_buffer_size, hash_data);
         libspdm_hash_all (m_libspdm_use_hash_algo, hash_data, libspdm_get_hash_size (
@@ -1116,12 +1134,12 @@ return_status libspdm_requester_challenge_test_receive_message(
     {
         spdm_challenge_auth_response_t  *spdm_response;
         void                          *data;
-        uintn data_size;
+        size_t data_size;
         uint8_t                         *Ptr;
         uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
-        uintn sig_size;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t sig_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         libspdm_read_responder_public_certificate_chain (m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo,
@@ -1167,8 +1185,8 @@ return_status libspdm_requester_challenge_test_receive_message(
                          (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] -
                           m_libspdm_local_buffer),
                          spdm_response,
-                         (uintn)Ptr - (uintn)spdm_response);
-        m_libspdm_local_buffer_size += ((uintn)Ptr - (uintn)spdm_response);
+                         (size_t)Ptr - (size_t)spdm_response);
+        m_libspdm_local_buffer_size += ((size_t)Ptr - (size_t)spdm_response);
         libspdm_hash_all (m_libspdm_use_hash_algo, m_libspdm_local_buffer,
                           m_libspdm_local_buffer_size, hash_data);
         sig_size = libspdm_get_asym_signature_size (m_libspdm_use_asym_algo);
@@ -1189,8 +1207,8 @@ return_status libspdm_requester_challenge_test_receive_message(
         static uint16_t error_code = LIBSPDM_ERROR_CODE_RESERVED_00;
 
         spdm_error_response_t *spdm_response;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         if(error_code <= 0xff) {
             spdm_response_size = sizeof(spdm_error_response_t);
@@ -1224,12 +1242,12 @@ return_status libspdm_requester_challenge_test_receive_message(
     {
         spdm_challenge_auth_response_t  *spdm_response;
         void                          *data;
-        uintn data_size;
+        size_t data_size;
         uint8_t                       *ptr;
         uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
-        uintn sig_size;
-        uintn spdm_response_size;
-        uintn transport_header_size;
+        size_t sig_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
         libspdm_read_responder_public_certificate_chain (m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo,
@@ -1273,8 +1291,8 @@ return_status libspdm_requester_challenge_test_receive_message(
                          (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] -
                           m_libspdm_local_buffer),
                          spdm_response,
-                         (uintn)ptr - (uintn)spdm_response);
-        m_libspdm_local_buffer_size += ((uintn)ptr - (uintn)spdm_response);
+                         (size_t)ptr - (size_t)spdm_response);
+        m_libspdm_local_buffer_size += ((size_t)ptr - (size_t)spdm_response);
         libspdm_hash_all (m_libspdm_use_hash_algo, m_libspdm_local_buffer,
                           m_libspdm_local_buffer_size, hash_data);
         sig_size = libspdm_get_asym_signature_size (m_libspdm_use_asym_algo);
@@ -1286,6 +1304,81 @@ return_status libspdm_requester_challenge_test_receive_message(
         ptr += sig_size;
         libspdm_transport_test_encode_message (spdm_context, NULL, false, false, spdm_response_size,
                                                spdm_response, response_size, response);
+    }
+        return RETURN_SUCCESS;
+
+    case 0x16: { /*correct CHALLENGE_AUTH message*/
+        spdm_challenge_auth_response_t *spdm_response;
+        void *data;
+        size_t data_size;
+        uint8_t *ptr;
+        uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
+        size_t sig_size;
+        size_t spdm_response_size;
+        size_t transport_header_size;
+
+        libspdm_read_responder_public_certificate_chain (m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo,
+                                                         &data,
+                                                         &data_size, NULL, NULL);
+        ((libspdm_context_t *)spdm_context)->local_context.local_cert_chain_provision_size[0] =
+            data_size;
+        ((libspdm_context_t *)spdm_context)->local_context.local_cert_chain_provision[0] = data;
+        ((libspdm_context_t *)spdm_context)->connection_info.algorithm.base_asym_algo =
+            m_libspdm_use_asym_algo;
+        ((libspdm_context_t *)spdm_context)->connection_info.algorithm.base_hash_algo =
+            m_libspdm_use_hash_algo;
+        spdm_response_size = sizeof(spdm_challenge_auth_response_t) +
+                             libspdm_get_hash_size(m_libspdm_use_hash_algo) +
+                             SPDM_NONCE_SIZE + 0 + sizeof(uint16_t) + 0 +
+                             libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.request_response_code =SPDM_CHALLENGE_AUTH;
+        spdm_response->header.param1 = 0;
+        spdm_response->header.param2 = (1 << 0);
+        ptr = (void *)(spdm_response + 1);
+        libspdm_hash_all(m_libspdm_use_hash_algo,
+                         ((libspdm_context_t *)spdm_context)
+                         ->local_context.local_cert_chain_provision[0],
+                         ((libspdm_context_t *)spdm_context)
+                         ->local_context.local_cert_chain_provision_size[0],
+                         ptr);
+        free(data);
+        ptr += libspdm_get_hash_size(m_libspdm_use_hash_algo);
+        libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
+        ptr += SPDM_NONCE_SIZE;
+        /* libspdm_zero_mem (ptr, spdm_get_hash_size (m_libspdm_use_hash_algo));
+         * ptr += spdm_get_hash_size (m_libspdm_use_hash_algo);*/
+        *(uint16_t *)ptr = 0;
+        ptr += sizeof(uint16_t);
+        libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
+                         sizeof(m_libspdm_local_buffer) - m_libspdm_local_buffer_size,
+                         spdm_response, (size_t)ptr - (size_t)spdm_response);
+        m_libspdm_local_buffer_size += ((size_t)ptr - (size_t)spdm_response);
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer (0x%x):\n",
+                       m_libspdm_local_buffer_size));
+        libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
+        libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_buffer,
+                         m_libspdm_local_buffer_size, hash_data);
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "HashDataSize (0x%x):\n",
+                       libspdm_get_hash_size(m_libspdm_use_hash_algo)));
+        libspdm_dump_hex(hash_data, libspdm_get_hash_size(m_libspdm_use_hash_algo));
+        sig_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
+        libspdm_responder_data_sign(spdm_response->header.spdm_version <<
+                                    SPDM_VERSION_NUMBER_SHIFT_BIT,
+                                    SPDM_CHALLENGE_AUTH,
+                                    m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
+                                    false, m_libspdm_local_buffer, m_libspdm_local_buffer_size,
+                                    ptr, &sig_size);
+        ptr += sig_size;
+
+        libspdm_transport_test_encode_message(spdm_context, NULL, false,
+                                              false, spdm_response_size,
+                                              spdm_response, response_size,
+                                              response);
     }
         return RETURN_SUCCESS;
 
@@ -1306,9 +1399,9 @@ void libspdm_test_requester_challenge_case1(void **state)
     libspdm_context_t *spdm_context;
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1384,9 +1477,9 @@ void libspdm_test_requester_challenge_case2(void **state)
     libspdm_context_t *spdm_context;
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1460,9 +1553,9 @@ void libspdm_test_requester_challenge_case3(void **state)
     libspdm_context_t *spdm_context;
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1531,9 +1624,9 @@ void libspdm_test_requester_challenge_case4(void **state)
     libspdm_context_t *spdm_context;
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1602,9 +1695,9 @@ void libspdm_test_requester_challenge_case5(void **state)
     libspdm_context_t *spdm_context;
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1673,9 +1766,9 @@ void libspdm_test_requester_challenge_case6(void **state)
     libspdm_context_t *spdm_context;
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1742,9 +1835,9 @@ void libspdm_test_requester_challenge_case7(void **state)
     libspdm_context_t *spdm_context;
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1815,9 +1908,9 @@ void libspdm_test_requester_challenge_case8(void **state)
     libspdm_context_t *spdm_context;
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1887,9 +1980,9 @@ void libspdm_test_requester_challenge_case9(void **state)
     libspdm_context_t *spdm_context;
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1956,9 +2049,9 @@ void libspdm_test_requester_challenge_case10(void **state) {
     libspdm_context_t  *spdm_context;
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
     void                 *data;
-    uintn data_size;
+    size_t data_size;
     void                 *hash;
-    uintn hash_size;
+    size_t hash_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -2019,9 +2112,9 @@ void libspdm_test_requester_challenge_case11(void **state) {
     libspdm_context_t  *spdm_context;
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
     void                 *data;
-    uintn data_size;
+    size_t data_size;
     void                 *hash;
-    uintn hash_size;
+    size_t hash_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -2080,9 +2173,9 @@ void libspdm_test_requester_challenge_case12(void **state) {
     libspdm_context_t  *spdm_context;
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
     void                 *data;
-    uintn data_size;
+    size_t data_size;
     void                 *hash;
-    uintn hash_size;
+    size_t hash_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -2142,9 +2235,9 @@ void libspdm_test_requester_challenge_case13(void **state) {
     libspdm_context_t  *spdm_context;
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
     void                 *data;
-    uintn data_size;
+    size_t data_size;
     void                 *hash;
-    uintn hash_size;
+    size_t hash_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -2203,9 +2296,9 @@ void libspdm_test_requester_challenge_case14(void **state) {
     libspdm_context_t  *spdm_context;
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
     void                 *data;
-    uintn data_size;
+    size_t data_size;
     void                 *hash;
-    uintn hash_size;
+    size_t hash_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -2277,9 +2370,9 @@ void libspdm_test_requester_challenge_case16(void **state) {
     libspdm_context_t  *spdm_context;
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
     void                 *data;
-    uintn data_size;
+    size_t data_size;
     void                 *hash;
-    uintn hash_size;
+    size_t hash_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -2345,9 +2438,9 @@ void libspdm_test_requester_challenge_case17(void **state) {
     libspdm_context_t  *spdm_context;
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
     void                 *data;
-    uintn data_size;
+    size_t data_size;
     void                 *hash;
-    uintn hash_size;
+    size_t hash_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -2413,9 +2506,9 @@ void libspdm_test_requester_challenge_case18(void **state) {
     libspdm_context_t  *spdm_context;
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
     void                 *data;
-    uintn data_size;
+    size_t data_size;
     void                 *hash;
-    uintn hash_size;
+    size_t hash_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -2482,9 +2575,9 @@ void libspdm_test_requester_challenge_case19(void **state) {
     libspdm_context_t  *spdm_context;
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
     void                 *data;
-    uintn data_size;
+    size_t data_size;
     void                 *hash;
-    uintn hash_size;
+    size_t hash_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -2545,9 +2638,9 @@ void libspdm_test_requester_challenge_case20(void **state) {
     libspdm_context_t  *spdm_context;
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
     void                 *data;
-    uintn data_size;
+    size_t data_size;
     void                 *hash;
-    uintn hash_size;
+    size_t hash_size;
     uint16_t error_code;
 
     spdm_test_context = *state;
@@ -2628,9 +2721,9 @@ void libspdm_test_requester_challenge_case21(void **state) {
     libspdm_context_t  *spdm_context;
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
     void                 *data;
-    uintn data_size;
+    size_t data_size;
     void                 *hash;
-    uintn hash_size;
+    size_t hash_size;
     uint8_t slot_id;
     uint8_t slot_mask;
 
@@ -2680,6 +2773,100 @@ void libspdm_test_requester_challenge_case21(void **state) {
     free(data);
 }
 
+/**
+ * Test 22: a request message is successfully sent and a response message is successfully received.
+ * Buffer C already has arbitrary data.
+ * Expected Behavior: requester returns the status RETURN_SUCCESS and a CHALLENGE_AUTH message is
+ * received, buffer C appends the exchanged CHALLENGE and CHALLENGE_AUTH messages.
+ **/
+void libspdm_test_requester_challenge_case22(void **state)
+{
+    return_status status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
+    void *data;
+    size_t data_size;
+    void *hash;
+    size_t hash_size;
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    size_t arbitrary_size;
+    size_t c_arbitrary_size;
+#endif
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x16;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags = 0;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, &hash, &hash_size);
+    libspdm_reset_message_a(spdm_context);
+    libspdm_reset_message_b(spdm_context);
+    libspdm_reset_message_c(spdm_context);
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo =
+        m_libspdm_use_asym_algo;
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    /*filling all buffers with arbitrary data*/
+    libspdm_set_mem(spdm_context->transcript.message_a.buffer, 10, (uint8_t) 0xFF);
+    spdm_context->transcript.message_a.buffer_size = 10;
+    libspdm_set_mem(spdm_context->transcript.message_b.buffer, 8, (uint8_t) 0xEE);
+    spdm_context->transcript.message_b.buffer_size = 8;
+    libspdm_set_mem(spdm_context->transcript.message_c.buffer, 12, (uint8_t) 0xDD);
+    spdm_context->transcript.message_c.buffer_size = 12;
+    arbitrary_size = 10 + 8 + 12;
+    c_arbitrary_size = 12;
+#endif
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->connection_info.peer_used_cert_chain_buffer_size =
+        data_size;
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+                     data, data_size);
+#else
+    libspdm_hash_all(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        data, data_size,
+        spdm_context->connection_info.peer_used_cert_chain_buffer_hash);
+    spdm_context->connection_info.peer_used_cert_chain_buffer_hash_size =
+        libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+    libspdm_get_leaf_cert_public_key_from_cert_chain(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        spdm_context->connection_info.algorithm.base_asym_algo,
+        data, data_size,
+        &spdm_context->connection_info.peer_used_leaf_cert_public_key);
+#endif
+
+    libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
+    status = libspdm_challenge(
+        spdm_context, 0,
+        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
+        measurement_hash, NULL);
+    assert_int_equal(status, RETURN_SUCCESS);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    /* buffer C and m_libspdm_local_buffer contain arbitrary data */
+    assert_int_equal(spdm_context->transcript.message_c.buffer_size - c_arbitrary_size,
+                     m_libspdm_local_buffer_size - arbitrary_size);
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer (0x%x):\n",
+                   m_libspdm_local_buffer_size));
+    libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
+    assert_memory_equal(spdm_context->transcript.message_c.buffer + c_arbitrary_size,
+                        m_libspdm_local_buffer + arbitrary_size, m_libspdm_local_buffer_size);
+#endif
+    free(data);
+}
+
 libspdm_test_context_t m_libspdm_requester_challenge_test_context = {
     LIBSPDM_TEST_CONTEXT_SIGNATURE,
     true,
@@ -2726,6 +2913,8 @@ int libspdm_requester_challenge_test_main(void)
         cmocka_unit_test(libspdm_test_requester_challenge_case19),
         /* Unexpected errors*/
         cmocka_unit_test(libspdm_test_requester_challenge_case20),
+        /* Buffer verification*/
+        cmocka_unit_test(libspdm_test_requester_challenge_case22),
     };
 
     libspdm_setup_test_context(&m_libspdm_requester_challenge_test_context);

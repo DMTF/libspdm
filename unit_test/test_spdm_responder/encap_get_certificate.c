@@ -9,17 +9,17 @@
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
 static void *m_libspdm_local_certificate_chain;
-static uintn m_libspdm_local_certificate_chain_size;
+static size_t m_libspdm_local_certificate_chain_size;
 
 spdm_certificate_response_t m_spdm_get_certificate_response1;
-uintn m_spdm_get_certificate_response1_size;
+size_t m_spdm_get_certificate_response1_size;
 
 spdm_certificate_response_t m_spdm_get_certificate_response2 = {
     {SPDM_MESSAGE_VERSION_10, SPDM_ERROR, SPDM_ERROR_CODE_INVALID_REQUEST, 0},
     0,
     0
 };
-uintn m_spdm_get_certificate_response2_size = sizeof(m_spdm_get_certificate_response2);
+size_t m_spdm_get_certificate_response2_size = sizeof(m_spdm_get_certificate_response2);
 
 
 /**
@@ -32,19 +32,19 @@ void test_spdm_responder_encap_get_certificate_case1(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     uint8_t *root_cert;
-    uintn root_cert_size;
+    size_t root_cert_size;
     bool need_continue;
     spdm_certificate_response_t *spdm_response;
     uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uintn temp_buf_size;
+    size_t temp_buf_size;
     uint16_t portion_length;
     uint16_t remainder_length;
-    static uintn calling_index = 0;
-    uintn spdm_response_size;
+    static size_t calling_index = 0;
+    size_t spdm_response_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -131,11 +131,11 @@ void test_spdm_responder_encap_get_certificate_case2(void **state)
     libspdm_context_t *spdm_context;
 
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     uint8_t *root_cert;
-    uintn root_cert_size;
+    size_t root_cert_size;
     bool need_continue;
 
     spdm_test_context = *state;
@@ -188,19 +188,19 @@ void test_spdm_responder_encap_get_certificate_case3(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     uint8_t *root_cert;
-    uintn root_cert_size;
+    size_t root_cert_size;
     bool need_continue;
     spdm_certificate_response_t *spdm_response;
     uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uintn temp_buf_size;
+    size_t temp_buf_size;
     uint16_t portion_length;
     uint16_t remainder_length;
-    static uintn calling_index = 0;
-    uintn spdm_response_size;
+    static size_t calling_index = 0;
+    size_t spdm_response_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -287,19 +287,19 @@ void test_spdm_responder_encap_get_certificate_case4(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     uint8_t *root_cert;
-    uintn root_cert_size;
+    size_t root_cert_size;
     bool need_continue;
     spdm_certificate_response_t *spdm_response;
     uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uintn temp_buf_size;
+    size_t temp_buf_size;
     uint16_t portion_length;
     uint16_t remainder_length;
-    static uintn calling_index = 0;
-    uintn spdm_response_size;
+    static size_t calling_index = 0;
+    size_t spdm_response_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;

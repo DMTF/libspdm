@@ -22,7 +22,7 @@
  *         If the allocations fails, dh_new() returns NULL.
  *
  **/
-void *libspdm_dh_new_by_nid(uintn nid)
+void *libspdm_dh_new_by_nid(size_t nid)
 {
     LIBSPDM_ASSERT(false);
     return NULL;
@@ -63,8 +63,8 @@ void libspdm_dh_free(void *dh_context)
  * @retval false  PRNG fails to generate random prime number with prime_length.
  *
  **/
-bool libspdm_dh_generate_parameter(void *dh_context, uintn generator,
-                                   uintn prime_length, uint8_t *prime)
+bool libspdm_dh_generate_parameter(void *dh_context, size_t generator,
+                                   size_t prime_length, uint8_t *prime)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -91,8 +91,8 @@ bool libspdm_dh_generate_parameter(void *dh_context, uintn generator,
  * @retval false  value of prime is not a safe prime number.
  *
  **/
-bool libspdm_dh_set_parameter(void *dh_context, uintn generator,
-                              uintn prime_length, const uint8_t *prime)
+bool libspdm_dh_set_parameter(void *dh_context, size_t generator,
+                              size_t prime_length, const uint8_t *prime)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -121,7 +121,7 @@ bool libspdm_dh_set_parameter(void *dh_context, uintn generator,
  *
  **/
 bool libspdm_dh_generate_key(void *dh_context, uint8_t *public_key,
-                             uintn *public_key_size)
+                             size_t *public_key_size)
 {
     LIBSPDM_ASSERT(false);
     return false;
@@ -152,8 +152,8 @@ bool libspdm_dh_generate_key(void *dh_context, uint8_t *public_key,
  *
  **/
 bool libspdm_dh_compute_key(void *dh_context, const uint8_t *peer_public_key,
-                            uintn peer_public_key_size, uint8_t *key,
-                            uintn *key_size)
+                            size_t peer_public_key_size, uint8_t *key,
+                            size_t *key_size)
 {
     LIBSPDM_ASSERT(false);
     return false;

@@ -12,7 +12,7 @@
 #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
 void libspdm_secured_message_set_response_finished_key(void *spdm_secured_message_context,
-                                                       const void *key, uintn key_size)
+                                                       const void *key, size_t key_size)
 {
     libspdm_secured_message_context_t *secured_message_context;
 
@@ -24,27 +24,42 @@ void libspdm_secured_message_set_response_finished_key(void *spdm_secured_messag
     secured_message_context->finished_key_ready = true;
 }
 
-uintn libspdm_get_max_buffer_size(void)
+size_t libspdm_get_max_buffer_size(void)
 {
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
 
-return_status libspdm_device_send_message(void *spdm_context, uintn request_size,
+return_status libspdm_device_send_message(void *spdm_context, size_t request_size,
                                           const void *request, uint64_t timeout)
 {
     return RETURN_SUCCESS;
 }
 
-return_status libspdm_device_receive_message(void *spdm_context, uintn *response_size,
+return_status libspdm_device_receive_message(void *spdm_context, size_t *response_size,
                                              void **response, uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
+    uint8_t *spdm_response;
+    size_t spdm_response_size;
+    uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    size_t test_message_header_size;
 
     spdm_test_context = libspdm_get_test_context();
+    test_message_header_size = libspdm_transport_test_get_header_size(spdm_context);
+    spdm_response = (void *)((uint8_t *)temp_buf + test_message_header_size);
+    spdm_response_size = spdm_test_context->test_buffer_size;
+    if (spdm_response_size > sizeof(temp_buf) - test_message_header_size - LIBSPDM_TEST_ALIGNMENT) {
+        spdm_response_size = sizeof(temp_buf) - test_message_header_size - LIBSPDM_TEST_ALIGNMENT;
+    }
+    libspdm_copy_mem((uint8_t *)temp_buf + test_message_header_size,
+                     sizeof(temp_buf) - test_message_header_size,
+                     (uint8_t *)spdm_test_context->test_buffer,
+                     spdm_response_size);
 
-    libspdm_copy_mem(response, *response_size,
-                     spdm_test_context->test_buffer, spdm_test_context->test_buffer_size);
-    *response_size = spdm_test_context->test_buffer_size;
+    libspdm_transport_test_encode_message(spdm_context, NULL, false, false,
+                                          spdm_response_size,
+                                          spdm_response, response_size, response);
+
     return RETURN_SUCCESS;
 }
 
@@ -57,7 +72,7 @@ typedef struct {
 libspdm_finish_request_mine_t m_libspdm_finish_request1 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_FINISH, 0, 0 },
 };
-uintn m_libspdm_finish_request1_size = sizeof(m_libspdm_finish_request1);
+size_t m_libspdm_finish_request1_size = sizeof(m_libspdm_finish_request1);
 
 void libspdm_test_send_receive_finish_case1(void **State)
 {
@@ -67,9 +82,9 @@ void libspdm_test_send_receive_finish_case1(void **State)
     uint32_t session_id;
     uint8_t req_slot_id_param;
     void *data;
-    uintn data_size;
+    size_t data_size;
     void *hash;
-    uintn hash_size;
+    size_t hash_size;
     libspdm_session_info_t *session_info;
     uint8_t m_dummy_buffer[LIBSPDM_MAX_HASH_SIZE];
 
@@ -153,7 +168,7 @@ libspdm_test_context_t m_libspdm_requester_finish_test_context = {
     libspdm_device_receive_message,
 };
 
-void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size)
+void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size)
 {
     void *State;
 
@@ -168,12 +183,12 @@ void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size)
     libspdm_unit_test_group_teardown(&State);
 }
 #else
-uintn libspdm_get_max_buffer_size(void)
+size_t libspdm_get_max_buffer_size(void)
 {
     return 0;
 }
 
-void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size){
+void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size){
 
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/

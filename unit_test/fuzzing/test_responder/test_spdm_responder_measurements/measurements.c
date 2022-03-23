@@ -13,7 +13,7 @@
 
 #define LIBSPDM_TEST_PSK_HINT_STRING "TestPskHint"
 
-uintn libspdm_get_max_buffer_size(void)
+size_t libspdm_get_max_buffer_size(void)
 {
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
@@ -22,7 +22,7 @@ void libspdm_test_responder_measurements_case1(void **State)
 {
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
     spdm_test_context = *State;
@@ -50,7 +50,7 @@ void libspdm_test_responder_measurements_case2(void **State)
     libspdm_test_context_t *spdm_test_context;
     libspdm_session_info_t *session_info;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint32_t session_id;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     static uint8_t m_local_psk_hint[32];
@@ -95,10 +95,10 @@ void libspdm_test_responder_measurements_case3(void **State)
 {
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     void *data;
-    uintn data_size;
+    size_t data_size;
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
@@ -138,8 +138,8 @@ void libspdm_test_responder_measurements_case4(void **State)
     libspdm_test_context_t *spdm_test_context;
     libspdm_session_info_t *session_info;
     libspdm_context_t *spdm_context;
-    uintn response_size;
-    uintn data_size;
+    size_t response_size;
+    size_t data_size;
     void *data;
     uint32_t session_id;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -199,7 +199,7 @@ libspdm_test_context_t m_libspdm_responder_measurements_test_context = {
     false,
 };
 
-void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size)
+void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size)
 {
     void *State;
 
@@ -230,12 +230,12 @@ void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size)
     libspdm_unit_test_group_teardown(&State);
 }
 #else
-uintn libspdm_get_max_buffer_size(void)
+size_t libspdm_get_max_buffer_size(void)
 {
     return 0;
 }
 
-void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size){
+void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size){
 
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP*/

@@ -11,7 +11,7 @@
  *
  * @return the size in bytes of the SPDM secured message context.
  **/
-uintn libspdm_secured_message_get_context_size(void)
+size_t libspdm_secured_message_get_context_size(void)
 {
     return sizeof(libspdm_secured_message_context_t);
 }
@@ -164,7 +164,7 @@ void libspdm_secured_message_set_algorithms(void *spdm_secured_message_context,
  */
 void libspdm_secured_message_set_psk_hint(void *spdm_secured_message_context,
                                           const void *psk_hint,
-                                          uintn psk_hint_size)
+                                          size_t psk_hint_size)
 {
     libspdm_secured_message_context_t *secured_message_context;
 
@@ -185,7 +185,7 @@ void libspdm_secured_message_set_psk_hint(void *spdm_secured_message_context,
 return_status
 libspdm_secured_message_import_dhe_secret(void *spdm_secured_message_context,
                                           const void *dhe_secret,
-                                          uintn dhe_secret_size)
+                                          size_t dhe_secret_size)
 {
     libspdm_secured_message_context_t *secured_message_context;
 
@@ -211,7 +211,7 @@ libspdm_secured_message_import_dhe_secret(void *spdm_secured_message_context,
  */
 return_status libspdm_secured_message_export_master_secret(
     void *spdm_secured_message_context, void *export_master_secret,
-    uintn *export_master_secret_size)
+    size_t *export_master_secret_size)
 {
     libspdm_secured_message_context_t *secured_message_context;
 
@@ -239,10 +239,10 @@ return_status libspdm_secured_message_export_master_secret(
 return_status
 libspdm_secured_message_export_session_keys(void *spdm_secured_message_context,
                                             void *SessionKeys,
-                                            uintn *SessionKeysSize)
+                                            size_t *SessionKeysSize)
 {
     libspdm_secured_message_context_t *secured_message_context;
-    uintn struct_size;
+    size_t struct_size;
     libspdm_secure_session_keys_struct_t *session_keys_struct;
     uint8_t *ptr;
 
@@ -310,10 +310,10 @@ libspdm_secured_message_export_session_keys(void *spdm_secured_message_context,
 return_status
 libspdm_secured_message_import_session_keys(void *spdm_secured_message_context,
                                             const void *SessionKeys,
-                                            uintn SessionKeysSize)
+                                            size_t SessionKeysSize)
 {
     libspdm_secured_message_context_t *secured_message_context;
-    uintn struct_size;
+    size_t struct_size;
     const libspdm_secure_session_keys_struct_t *session_keys_struct;
     uint8_t *ptr;
 

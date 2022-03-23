@@ -12,7 +12,7 @@
 
 #define LIBSPDM_MY_TEST_TOKEN 0x30
 
-uintn libspdm_get_max_buffer_size(void)
+size_t libspdm_get_max_buffer_size(void)
 {
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
@@ -26,7 +26,7 @@ void libspdm_test_responder_respond_if_ready(void **State)
 {
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uintn response_size;
+    size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     uint8_t local_certificate_chain[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
@@ -36,7 +36,7 @@ void libspdm_test_responder_respond_if_ready(void **State)
     spdm_get_digest_request_t spdm_test_get_digest_request = {
         { SPDM_MESSAGE_VERSION_11, SPDM_GET_DIGESTS, 0, 0 },
     };
-    uintn spdm_test_get_digest_request_size = sizeof(spdm_message_header_t);
+    size_t spdm_test_get_digest_request_size = sizeof(spdm_message_header_t);
 
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
@@ -80,7 +80,7 @@ void libspdm_test_responder_respond_if_ready(void **State)
     #endif
 }
 
-void libspdm_run_test_harness(const void *test_buffer, uintn test_buffer_size)
+void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size)
 {
     void *State;
 

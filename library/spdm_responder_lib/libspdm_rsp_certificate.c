@@ -25,20 +25,20 @@
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 return_status libspdm_get_response_certificate(void *context,
-                                               uintn request_size,
+                                               size_t request_size,
                                                const void *request,
-                                               uintn *response_size,
+                                               size_t *response_size,
                                                void *response)
 {
     const spdm_get_certificate_request_t *spdm_request;
     spdm_certificate_response_t *spdm_response;
     uint16_t offset;
     uint16_t length;
-    uintn remainder_length;
+    size_t remainder_length;
     uint8_t slot_id;
     libspdm_context_t *spdm_context;
     return_status status;
-    uintn response_capacity;
+    size_t response_capacity;
 
     spdm_context = context;
     spdm_request = request;
@@ -109,7 +109,7 @@ return_status libspdm_get_response_certificate(void *context,
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                                                   spdm_request->header.request_response_code);
 
-    if ((uintn)(offset + length) >
+    if ((size_t)(offset + length) >
         spdm_context->local_context
         .local_cert_chain_provision_size[slot_id]) {
         length = (uint16_t)(
