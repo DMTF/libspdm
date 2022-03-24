@@ -76,15 +76,16 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -E env CFLAGS="${{ matrix.configurations }}" cmake -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ..
+          cmake -E env CFLAGS="${{ matrix.configurations }} -DLIBSPDM_DEBUG_LIBSPDM_ASSERT_CONFIG=0" cmake -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ..
           make copy_sample_key
+          make copy_seed
           make -j`nproc`
       - name: Build - Windows
         if: matrix.os == 'windows-latest'
         run: |
           mkdir build
           cd build
-          cmake -E env CFLAGS="${{ matrix.configurations }}" cmake -G"NMake Makefiles" -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ..
+          cmake -E env CFLAGS="${{ matrix.configurations }} -DLIBSPDM_DEBUG_LIBSPDM_ASSERT_CONFIG=0" cmake -G"NMake Makefiles" -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ..
           nmake copy_sample_key
           nmake
 
@@ -96,3 +97,8 @@ jobs:
         run: |
           cd build/bin
           ./test_spdm_responder
+      - name: Test with initial seed
+        if: matrix.os == 'ubuntu-latest' && matrix.arch == 'x64'
+        run: |
+          cd build/bin
+          ./run_initial_seed.sh

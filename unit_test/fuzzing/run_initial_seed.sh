@@ -2,27 +2,6 @@
 
 # this script will run one program one time, with a known good seed, to ensure it can pass the flow without any exception.
 
-export script_path="$(cd "$(dirname $0)";pwd)"
-export libspdm_path=$script_path/../..
-export initial_seeds=$libspdm_path/unit_test/fuzzing/seeds
-
-if [[ $PWD!=$libspdm_path ]];then
-    cd $libspdm_path
-fi
-
-if [ -d "build" ];then
-    rm -rf build
-fi
-
-mkdir build
-cd build
-
-cmake -DARCH=x64 -DTOOLCHAIN=GCC -DTARGET=Release -DCRYPTO=mbedtls ..
-make copy_sample_key
-make -j`nproc`
-cd bin
-cp -r $initial_seeds ./
-
 cmds=(
 test_spdm_transport_mctp_encode_message
 test_spdm_transport_mctp_decode_message
@@ -71,9 +50,28 @@ test_spdm_responder_end_session
 test_spdm_responder_if_ready
 test_x509_certificate_check
 )
+
+flag=0
+fail_list=()
 for ((i=0;i<${#cmds[*]};i++))
 do
     echo ++++++++++ ${cmds[$i]} starting ++++++++++
-	echo ./${cmds[$i]} ./seeds/${cmds[$i]}/*.raw
-	./${cmds[$i]} ./seeds/${cmds[$i]}/*.raw
+    echo ./${cmds[$i]} ./seeds/${cmds[$i]}/*.raw
+    ./${cmds[$i]} ./seeds/${cmds[$i]}/*.raw
+    if [ $? -eq 0 ]; then
+        echo ++++++++++ ${cmds[$i]} success  ++++++++++
+    else
+        echo ++++++++++ ${cmds[$i]} failing  ++++++++++
+        flag=1
+        fail_list[${#fail_list[*]}]=${cmds[$i]}
+    fi
 done
+
+if [ ${flag} -eq 1 ]; then
+    echo The summary of fail test is as following:
+    for ((i=0;i<${#fail_list[*]};i++))
+    do
+        echo ${fail_list[$i]}
+    done
+fi
+exit $flag
