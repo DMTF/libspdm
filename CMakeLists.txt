@@ -561,6 +561,22 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
                        COMMAND xcopy /y /s ${SRC} ${DEST})
 endif()
 
+ADD_CUSTOM_TARGET(copy_seed)
+
+if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+    ADD_CUSTOM_COMMAND(TARGET copy_seed
+                    PRE_BUILD
+                    COMMAND cp -r -f ${LIBSPDM_DIR}/unit_test/fuzzing/seeds ${EXECUTABLE_OUTPUT_PATH}
+                    COMMAND cp -r -f ${LIBSPDM_DIR}/unit_test/fuzzing/run_initial_seed.sh ${EXECUTABLE_OUTPUT_PATH})
+elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
+    STRING(REPLACE "/" "\\" SRC ${LIBSPDM_DIR}/unit_test/fuzzing/seeds)
+    STRING(REPLACE "/" "\\" DEST ${EXECUTABLE_OUTPUT_PATH})
+
+    ADD_CUSTOM_COMMAND(TARGET copy_seed
+                       PRE_BUILD
+                       COMMAND xcopy /y /s ${SRC} ${DEST})
+endif()
+
 if(CRYPTO STREQUAL "mbedtls")
     ADD_SUBDIRECTORY(os_stub/cryptlib_mbedtls)
 elseif(CRYPTO STREQUAL "openssl")
