@@ -126,7 +126,6 @@ void libspdm_test_get_encap_request_challenge_case2(void **State)
     size_t data_size;
 
     spdm_challenge_request_t *spdm_request;
-    spdm_request = malloc(sizeof(spdm_challenge_request_t));
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
