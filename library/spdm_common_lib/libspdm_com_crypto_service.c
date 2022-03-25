@@ -664,7 +664,8 @@ bool libspdm_verify_peer_cert_chain_buffer(libspdm_context_t *spdm_context,
             return false;
         }
         if (libspdm_is_root_certificate(received_root_cert, received_root_cert_size)) {
-            if (libspdm_const_compare_mem(received_root_cert, root_cert, root_cert_size) != 0) {
+            if ((root_cert != NULL) &&
+                (libspdm_const_compare_mem(received_root_cert, root_cert, root_cert_size) != 0)) {
                 LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                                "!!! verify_peer_cert_chain_buffer - FAIL (root cert mismatch) !!!\n"));
                 return false;
