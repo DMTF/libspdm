@@ -104,6 +104,7 @@ libspdm_return_t libspdm_try_get_certificate(void *context, uint8_t slot_id,
     libspdm_init_managed_buffer(&certificate_chain_buffer, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
     length = MIN(length, LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
     remainder_length = 0;
+    total_responder_cert_chain_buffer_length = 0;
 
     spdm_context->error_state = LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
 
