@@ -285,9 +285,9 @@ return_status libspdm_try_send_receive_finish(libspdm_context_t *spdm_context,
         status = RETURN_SECURITY_VIOLATION;
         goto receive_done;
     }
-    status = libspdm_generate_session_data_key(
+    result = libspdm_generate_session_data_key(
         session_info->secured_message_context, th2_hash_data);
-    if (RETURN_ERROR(status)) {
+    if (!result) {
         status = RETURN_SECURITY_VIOLATION;
         goto receive_done;
     }

@@ -36,7 +36,7 @@ return_status libspdm_get_response_key_update(void *context,
     libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
-    return_status status;
+    bool result;
 
     spdm_context = context;
     spdm_request = request;
@@ -113,10 +113,10 @@ return_status libspdm_get_response_key_update(void *context,
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                            "libspdm_create_update_session_data_key[%x] Requester\n",
                            session_id));
-            status = libspdm_create_update_session_data_key(
+            result = libspdm_create_update_session_data_key(
                 session_info->secured_message_context,
                 LIBSPDM_KEY_UPDATE_ACTION_REQUESTER);
-            if (RETURN_ERROR(status)) {
+            if (!result) {
                 return RETURN_UNSUPPORTED;
             }
             break;
@@ -133,28 +133,28 @@ return_status libspdm_get_response_key_update(void *context,
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                            "libspdm_create_update_session_data_key[%x] Requester\n",
                            session_id));
-            status = libspdm_create_update_session_data_key(
+            result = libspdm_create_update_session_data_key(
                 session_info->secured_message_context,
                 LIBSPDM_KEY_UPDATE_ACTION_REQUESTER);
-            if (RETURN_ERROR(status)) {
+            if (!result) {
                 return RETURN_UNSUPPORTED;
             }
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                            "libspdm_create_update_session_data_key[%x] Responder\n",
                            session_id));
-            status = libspdm_create_update_session_data_key(
+            result = libspdm_create_update_session_data_key(
                 session_info->secured_message_context,
                 LIBSPDM_KEY_UPDATE_ACTION_RESPONDER);
-            if (RETURN_ERROR(status)) {
+            if (!result) {
                 return RETURN_UNSUPPORTED;
             }
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                            "libspdm_activate_update_session_data_key[%x] Responder new\n",
                            session_id));
-            status = libspdm_activate_update_session_data_key(
+            result = libspdm_activate_update_session_data_key(
                 session_info->secured_message_context,
                 LIBSPDM_KEY_UPDATE_ACTION_RESPONDER, true);
-            if (RETURN_ERROR(status)) {
+            if (!result) {
                 return RETURN_UNSUPPORTED;
             }
             break;
@@ -170,10 +170,10 @@ return_status libspdm_get_response_key_update(void *context,
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                            "libspdm_activate_update_session_data_key[%x] Requester new\n",
                            session_id));
-            status = libspdm_activate_update_session_data_key(
+            result = libspdm_activate_update_session_data_key(
                 session_info->secured_message_context,
                 LIBSPDM_KEY_UPDATE_ACTION_REQUESTER, true);
-            if (RETURN_ERROR(status)) {
+            if (!result) {
                 return RETURN_UNSUPPORTED;
             }
             break;

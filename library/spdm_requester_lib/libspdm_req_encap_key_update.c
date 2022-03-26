@@ -35,7 +35,7 @@ return_status libspdm_get_encap_response_key_update(void *context,
     libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
-    return_status status;
+    bool result;
 
     spdm_context = context;
     spdm_request = request;
@@ -82,33 +82,33 @@ return_status libspdm_get_encap_response_key_update(void *context,
             response_size, response);
     }
 
-    status = RETURN_SUCCESS;
+    result = true;
     switch (spdm_request->header.param1) {
     case SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY:
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "libspdm_create_update_session_data_key[%x] Responder\n",
                        session_id));
-        status = libspdm_create_update_session_data_key(
+        result = libspdm_create_update_session_data_key(
             session_info->secured_message_context,
             LIBSPDM_KEY_UPDATE_ACTION_RESPONDER);
         break;
     case SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS:
-        status = RETURN_UNSUPPORTED;
+        result = false;
         break;
     case SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY:
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "libspdm_activate_update_session_data_key[%x] Responder new\n",
                        session_id));
-        status = libspdm_activate_update_session_data_key(
+        result = libspdm_activate_update_session_data_key(
             session_info->secured_message_context,
             LIBSPDM_KEY_UPDATE_ACTION_RESPONDER, true);
         break;
     default:
-        status = RETURN_UNSUPPORTED;
+        result = false;
         break;
     }
 
-    if (status != RETURN_SUCCESS) {
+    if (!result) {
         return libspdm_generate_encap_error_response(
             spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
             response_size, response);

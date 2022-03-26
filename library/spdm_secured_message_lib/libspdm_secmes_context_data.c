@@ -182,7 +182,7 @@ void libspdm_secured_message_set_psk_hint(void *spdm_secured_message_context,
  *
  * @retval RETURN_SUCCESS  DHE Secret is imported.
  */
-return_status
+bool
 libspdm_secured_message_import_dhe_secret(void *spdm_secured_message_context,
                                           const void *dhe_secret,
                                           size_t dhe_secret_size)
@@ -191,13 +191,13 @@ libspdm_secured_message_import_dhe_secret(void *spdm_secured_message_context,
 
     secured_message_context = spdm_secured_message_context;
     if (dhe_secret_size > secured_message_context->dhe_key_size) {
-        return RETURN_OUT_OF_RESOURCES;
+        return false;
     }
     secured_message_context->dhe_key_size = dhe_secret_size;
     libspdm_copy_mem(secured_message_context->master_secret.dhe_secret,
                      sizeof(secured_message_context->master_secret.dhe_secret),
                      dhe_secret, dhe_secret_size);
-    return RETURN_SUCCESS;
+    return true;
 }
 
 /**
@@ -209,7 +209,7 @@ libspdm_secured_message_import_dhe_secret(void *spdm_secured_message_context,
  *
  * @retval RETURN_SUCCESS  export_master_secret is exported.
  */
-return_status libspdm_secured_message_export_master_secret(
+bool libspdm_secured_message_export_master_secret(
     void *spdm_secured_message_context, void *export_master_secret,
     size_t *export_master_secret_size)
 {
@@ -218,13 +218,13 @@ return_status libspdm_secured_message_export_master_secret(
     secured_message_context = spdm_secured_message_context;
     if (*export_master_secret_size < secured_message_context->hash_size) {
         *export_master_secret_size = secured_message_context->hash_size;
-        return RETURN_BUFFER_TOO_SMALL;
+        return false;
     }
     libspdm_copy_mem(export_master_secret, *export_master_secret_size,
                      secured_message_context->handshake_secret.export_master_secret,
                      secured_message_context->hash_size);
     *export_master_secret_size = secured_message_context->hash_size;
-    return RETURN_SUCCESS;
+    return true;
 }
 
 /**
@@ -236,7 +236,7 @@ return_status libspdm_secured_message_export_master_secret(
  *
  * @retval RETURN_SUCCESS  SessionKeys are exported.
  */
-return_status
+bool
 libspdm_secured_message_export_session_keys(void *spdm_secured_message_context,
                                             void *SessionKeys,
                                             size_t *SessionKeysSize)
@@ -254,7 +254,7 @@ libspdm_secured_message_export_session_keys(void *spdm_secured_message_context,
 
     if (*SessionKeysSize < struct_size) {
         *SessionKeysSize = struct_size;
-        return RETURN_BUFFER_TOO_SMALL;
+        return false;
     }
 
     session_keys_struct = SessionKeys;
@@ -295,7 +295,7 @@ libspdm_secured_message_export_session_keys(void *spdm_secured_message_context,
                      &secured_message_context->application_secret.response_data_sequence_number,
                      sizeof(uint64_t));
     ptr += sizeof(uint64_t);
-    return RETURN_SUCCESS;
+    return true;
 }
 
 /**
@@ -307,7 +307,7 @@ libspdm_secured_message_export_session_keys(void *spdm_secured_message_context,
  *
  * @retval RETURN_SUCCESS  SessionKeys are imported.
  */
-return_status
+bool
 libspdm_secured_message_import_session_keys(void *spdm_secured_message_context,
                                             const void *SessionKeys,
                                             size_t SessionKeysSize)
@@ -324,7 +324,7 @@ libspdm_secured_message_import_session_keys(void *spdm_secured_message_context,
                   2;
 
     if (SessionKeysSize != struct_size) {
-        return RETURN_INVALID_PARAMETER;
+        return false;
     }
 
     session_keys_struct = SessionKeys;
@@ -334,7 +334,7 @@ libspdm_secured_message_import_session_keys(void *spdm_secured_message_context,
          secured_message_context->aead_key_size) ||
         (session_keys_struct->aead_iv_size !=
          secured_message_context->aead_iv_size)) {
-        return RETURN_INVALID_PARAMETER;
+        return false;
     }
 
     ptr = (void *)(session_keys_struct + 1);
@@ -372,7 +372,7 @@ libspdm_secured_message_import_session_keys(void *spdm_secured_message_context,
                             .response_data_sequence_number),
                      ptr, sizeof(uint64_t));
     ptr += sizeof(uint64_t);
-    return RETURN_SUCCESS;
+    return true;
 }
 
 /**
