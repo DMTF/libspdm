@@ -59,10 +59,10 @@ uint32_t libspdm_mctp_get_max_random_number_count(void)
  * @retval RETURN_SUCCESS               The message is encoded successfully.
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
-return_status libspdm_mctp_encode_message(const uint32_t *session_id, size_t message_size,
-                                          const void *message,
-                                          size_t *transport_message_size,
-                                          void **transport_message)
+libspdm_return_t libspdm_mctp_encode_message(const uint32_t *session_id, size_t message_size,
+                                             const void *message,
+                                             size_t *transport_message_size,
+                                             void **transport_message)
 {
     size_t aligned_message_size;
     size_t alignment;
@@ -81,14 +81,14 @@ return_status libspdm_mctp_encode_message(const uint32_t *session_id, size_t mes
             MCTP_MESSAGE_TYPE_SECURED_MCTP;
         LIBSPDM_ASSERT(*session_id == *(uint32_t *)(message));
         if (*session_id != *(uint32_t *)(message)) {
-            return RETURN_UNSUPPORTED;
+            return LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
     } else {
         mctp_message_header->message_type = MCTP_MESSAGE_TYPE_SPDM;
     }
     libspdm_zero_mem((uint8_t *)message + message_size,
                      aligned_message_size - message_size);
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
 /**
@@ -105,10 +105,10 @@ return_status libspdm_mctp_encode_message(const uint32_t *session_id, size_t mes
  * @retval RETURN_SUCCESS               The message is encoded successfully.
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
-return_status libspdm_mctp_decode_message(uint32_t **session_id,
-                                          size_t transport_message_size,
-                                          const void *transport_message,
-                                          size_t *message_size, void **message)
+libspdm_return_t libspdm_mctp_decode_message(uint32_t **session_id,
+                                             size_t transport_message_size,
+                                             const void *transport_message,
+                                             size_t *message_size, void **message)
 {
     size_t alignment;
     const mctp_message_header_t *mctp_message_header;
@@ -117,7 +117,7 @@ return_status libspdm_mctp_decode_message(uint32_t **session_id,
 
     LIBSPDM_ASSERT(transport_message_size > sizeof(mctp_message_header_t));
     if (transport_message_size <= sizeof(mctp_message_header_t)) {
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_INVALID_MSG_SIZE;
     }
 
     mctp_message_header = transport_message;
@@ -126,11 +126,11 @@ return_status libspdm_mctp_decode_message(uint32_t **session_id,
     case MCTP_MESSAGE_TYPE_SECURED_MCTP:
         LIBSPDM_ASSERT(session_id != NULL);
         if (session_id == NULL) {
-            return RETURN_UNSUPPORTED;
+            return LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
         if (transport_message_size <=
             sizeof(mctp_message_header_t) + sizeof(uint32_t)) {
-            return RETURN_UNSUPPORTED;
+            return LIBSPDM_STATUS_INVALID_MSG_SIZE;
         }
         *session_id = (uint32_t *)((uint8_t *)transport_message +
                                    sizeof(mctp_message_header_t));
@@ -141,7 +141,7 @@ return_status libspdm_mctp_decode_message(uint32_t **session_id,
         }
         break;
     default:
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
 
     LIBSPDM_ASSERT(((transport_message_size - sizeof(mctp_message_header_t)) &
@@ -149,7 +149,7 @@ return_status libspdm_mctp_decode_message(uint32_t **session_id,
 
     *message_size = transport_message_size - sizeof(mctp_message_header_t);
     *message = (uint8_t *)transport_message + sizeof(mctp_message_header_t);
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
 /**

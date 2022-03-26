@@ -21,10 +21,10 @@
  * @retval RETURN_SUCCESS               The message is encoded successfully.
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
-return_status libspdm_pci_doe_encode_message(const uint32_t *session_id,
-                                             size_t message_size, const void *message,
-                                             size_t *transport_message_size,
-                                             void **transport_message);
+libspdm_return_t libspdm_pci_doe_encode_message(const uint32_t *session_id,
+                                                size_t message_size, const void *message,
+                                                size_t *transport_message_size,
+                                                void **transport_message);
 
 /**
  * Decode a transport message to a normal message or secured message.
@@ -40,11 +40,11 @@ return_status libspdm_pci_doe_encode_message(const uint32_t *session_id,
  * @retval RETURN_SUCCESS               The message is encoded successfully.
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
-return_status libspdm_pci_doe_decode_message(uint32_t **session_id,
-                                             size_t transport_message_size,
-                                             const void *transport_message,
-                                             size_t *message_size,
-                                             void **message);
+libspdm_return_t libspdm_pci_doe_decode_message(uint32_t **session_id,
+                                                size_t transport_message_size,
+                                                const void *transport_message,
+                                                size_t *message_size,
+                                                void **message);
 
 /**
  * Encode an SPDM or APP message to a transport layer message.
@@ -75,12 +75,12 @@ return_status libspdm_pci_doe_decode_message(uint32_t **session_id,
  * @retval RETURN_SUCCESS               The message is encoded successfully.
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
-return_status libspdm_transport_pci_doe_encode_message(
+libspdm_return_t libspdm_transport_pci_doe_encode_message(
     void *spdm_context, const uint32_t *session_id, bool is_app_message,
     bool is_requester, size_t message_size, const void *message,
     size_t *transport_message_size, void **transport_message)
 {
-    return_status status;
+    libspdm_return_t status;
     uint8_t *secured_message;
     size_t secured_message_size;
     libspdm_secured_message_callbacks_t spdm_secured_message_callbacks;
@@ -95,7 +95,7 @@ return_status libspdm_transport_pci_doe_encode_message(
         libspdm_pci_doe_get_max_random_number_count;
 
     if (is_app_message) {
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
 
     if (session_id != NULL) {
@@ -103,7 +103,7 @@ return_status libspdm_transport_pci_doe_encode_message(
             libspdm_get_secured_message_context_via_session_id(
                 spdm_context, *session_id);
         if (secured_message_context == NULL) {
-            return RETURN_UNSUPPORTED;
+            return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         }
 
         /* message to secured message*/
@@ -114,7 +114,7 @@ return_status libspdm_transport_pci_doe_encode_message(
             secured_message_context, *session_id, is_requester,
             message_size, message, &secured_message_size,
             secured_message, &spdm_secured_message_callbacks);
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
                            "libspdm_encode_secured_message - %p\n", status));
             return status;
@@ -124,24 +124,24 @@ return_status libspdm_transport_pci_doe_encode_message(
         status = libspdm_pci_doe_encode_message(
             session_id, secured_message_size, secured_message,
             transport_message_size, transport_message);
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "transport_encode_message - %p\n",
                            status));
-            return RETURN_UNSUPPORTED;
+            return status;
         }
     } else {
         /* SPDM message to normal PCI DOE message*/
         status = libspdm_pci_doe_encode_message(NULL, message_size, message,
                                                 transport_message_size,
                                                 transport_message);
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "transport_encode_message - %p\n",
                            status));
-            return RETURN_UNSUPPORTED;
+            return status;
         }
     }
 
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
 /**
@@ -174,13 +174,13 @@ return_status libspdm_transport_pci_doe_encode_message(
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  * @retval RETURN_UNSUPPORTED           The transport_message is unsupported.
  **/
-return_status libspdm_transport_pci_doe_decode_message(
+libspdm_return_t libspdm_transport_pci_doe_decode_message(
     void *spdm_context, uint32_t **session_id,
     bool *is_app_message, bool is_requester,
     size_t transport_message_size, const void *transport_message,
     size_t *message_size, void **message)
 {
-    return_status status;
+    libspdm_return_t status;
     uint32_t *secured_message_session_id;
     uint8_t *secured_message;
     size_t secured_message_size;
@@ -200,7 +200,7 @@ return_status libspdm_transport_pci_doe_decode_message(
         libspdm_pci_doe_get_max_random_number_count;
 
     if ((session_id == NULL) || (is_app_message == NULL)) {
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
     *is_app_message = false;
 
@@ -209,9 +209,9 @@ return_status libspdm_transport_pci_doe_decode_message(
     status = libspdm_pci_doe_decode_message(
         &secured_message_session_id, transport_message_size,
         transport_message, &secured_message_size, (void **)&secured_message);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "transport_decode_message - %p\n", status));
-        return RETURN_UNSUPPORTED;
+        return status;
     }
 
     if (secured_message_session_id != NULL) {
@@ -225,7 +225,7 @@ return_status libspdm_transport_pci_doe_decode_message(
             spdm_error.session_id = *secured_message_session_id;
             libspdm_set_last_spdm_error_struct(spdm_context,
                                                &spdm_error);
-            return RETURN_UNSUPPORTED;
+            return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         }
 
         /* Secured message to message*/
@@ -235,29 +235,29 @@ return_status libspdm_transport_pci_doe_decode_message(
             is_requester, secured_message_size, secured_message,
             message_size, message,
             &spdm_secured_message_callbacks);
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
                            "libspdm_decode_secured_message - %p\n", status));
             libspdm_secured_message_get_last_spdm_error_struct(
                 secured_message_context, &spdm_error);
             libspdm_set_last_spdm_error_struct(spdm_context,
                                                &spdm_error);
-            return RETURN_UNSUPPORTED;
+            return status;
         }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     } else {
         /* get non-secured message*/
         status = libspdm_pci_doe_decode_message(&secured_message_session_id,
                                                 transport_message_size,
                                                 transport_message,
                                                 message_size, message);
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "transport_decode_message - %p\n",
                            status));
-            return RETURN_UNSUPPORTED;
+            return status;
         }
         LIBSPDM_ASSERT(secured_message_session_id == NULL);
         *session_id = NULL;
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     }
 }
