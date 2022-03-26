@@ -38,7 +38,7 @@
  * @retval RETURN_SUCCESS               The message is encoded successfully.
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
-return_status libspdm_transport_pci_doe_encode_message(
+libspdm_return_t libspdm_transport_pci_doe_encode_message(
     void *spdm_context, const uint32_t *session_id, bool is_app_message,
     bool is_requester, size_t message_size, const void *message,
     size_t *transport_message_size, void **transport_message);
@@ -73,7 +73,7 @@ return_status libspdm_transport_pci_doe_encode_message(
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  * @retval RETURN_UNSUPPORTED           The transport_message is unsupported.
  **/
-return_status libspdm_transport_pci_doe_decode_message(
+libspdm_return_t libspdm_transport_pci_doe_decode_message(
     void *spdm_context, uint32_t **session_id,
     bool *is_app_message, bool is_requester,
     size_t transport_message_size, const void *transport_message,

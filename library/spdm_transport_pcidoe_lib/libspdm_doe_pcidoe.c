@@ -59,10 +59,10 @@ uint32_t libspdm_pci_doe_get_max_random_number_count(void)
  * @retval RETURN_SUCCESS               The message is encoded successfully.
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
-return_status libspdm_pci_doe_encode_message(const uint32_t *session_id,
-                                             size_t message_size, const void *message,
-                                             size_t *transport_message_size,
-                                             void **transport_message)
+libspdm_return_t libspdm_pci_doe_encode_message(const uint32_t *session_id,
+                                                size_t message_size, const void *message,
+                                                size_t *transport_message_size,
+                                                void **transport_message)
 {
     size_t aligned_message_size;
     size_t alignment;
@@ -78,7 +78,7 @@ return_status libspdm_pci_doe_encode_message(const uint32_t *session_id,
         aligned_message_size + sizeof(pci_doe_data_object_header_t)) {
         *transport_message_size = aligned_message_size +
                                   sizeof(pci_doe_data_object_header_t);
-        return RETURN_BUFFER_TOO_SMALL;
+        return LIBSPDM_STATUS_BUFFER_TOO_SMALL;
     }
     *transport_message_size =
         aligned_message_size + sizeof(pci_doe_data_object_header_t);
@@ -90,7 +90,7 @@ return_status libspdm_pci_doe_encode_message(const uint32_t *session_id,
             PCI_DOE_DATA_OBJECT_TYPE_SECURED_SPDM;
         LIBSPDM_ASSERT(*session_id == *(uint32_t *)(message));
         if (*session_id != *(uint32_t *)(message)) {
-            return RETURN_UNSUPPORTED;
+            return LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
     } else {
         pci_doe_header->data_object_type =
@@ -98,7 +98,7 @@ return_status libspdm_pci_doe_encode_message(const uint32_t *session_id,
     }
     pci_doe_header->reserved = 0;
     if (*transport_message_size > PCI_DOE_MAX_SIZE_IN_BYTE) {
-        return RETURN_OUT_OF_RESOURCES;
+        return LIBSPDM_STATUS_BUFFER_FULL;
     } else if (*transport_message_size == PCI_DOE_MAX_SIZE_IN_BYTE) {
         pci_doe_header->length = 0;
     } else {
@@ -108,7 +108,7 @@ return_status libspdm_pci_doe_encode_message(const uint32_t *session_id,
 
     libspdm_zero_mem((uint8_t *)message + message_size,
                      aligned_message_size - message_size);
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
 /**
@@ -125,11 +125,11 @@ return_status libspdm_pci_doe_encode_message(const uint32_t *session_id,
  * @retval RETURN_SUCCESS               The message is encoded successfully.
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
-return_status libspdm_pci_doe_decode_message(uint32_t **session_id,
-                                             size_t transport_message_size,
-                                             const void *transport_message,
-                                             size_t *message_size,
-                                             void **message)
+libspdm_return_t libspdm_pci_doe_decode_message(uint32_t **session_id,
+                                                size_t transport_message_size,
+                                                const void *transport_message,
+                                                size_t *message_size,
+                                                void **message)
 {
     size_t alignment;
     const pci_doe_data_object_header_t *pci_doe_header;
@@ -139,23 +139,23 @@ return_status libspdm_pci_doe_decode_message(uint32_t **session_id,
 
     LIBSPDM_ASSERT(transport_message_size > sizeof(pci_doe_data_object_header_t));
     if (transport_message_size <= sizeof(pci_doe_data_object_header_t)) {
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_INVALID_MSG_SIZE;
     }
 
     pci_doe_header = transport_message;
     if (pci_doe_header->vendor_id != PCI_DOE_VENDOR_ID_PCISIG) {
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
 
     switch (pci_doe_header->data_object_type) {
     case PCI_DOE_DATA_OBJECT_TYPE_SECURED_SPDM:
         LIBSPDM_ASSERT(session_id != NULL);
         if (session_id == NULL) {
-            return RETURN_UNSUPPORTED;
+            return LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
         if (transport_message_size <=
             sizeof(pci_doe_data_object_header_t) + sizeof(uint32_t)) {
-            return RETURN_UNSUPPORTED;
+            return LIBSPDM_STATUS_INVALID_MSG_SIZE;
         }
         *session_id = (uint32_t *)((uint8_t *)transport_message +
                                    sizeof(pci_doe_data_object_header_t));
@@ -166,21 +166,21 @@ return_status libspdm_pci_doe_decode_message(uint32_t **session_id,
         }
         break;
     default:
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
 
     if (pci_doe_header->reserved != 0) {
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
     if (pci_doe_header->length >= PCI_DOE_MAX_SIZE_IN_DW) {
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_INVALID_MSG_SIZE;
     } else if (pci_doe_header->length == 0) {
         length = PCI_DOE_MAX_SIZE_IN_BYTE;
     } else {
         length = pci_doe_header->length * sizeof(uint32_t);
     }
     if (length != transport_message_size) {
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_INVALID_MSG_SIZE;
     }
 
     LIBSPDM_ASSERT(((transport_message_size - sizeof(pci_doe_data_object_header_t)) &
@@ -188,7 +188,7 @@ return_status libspdm_pci_doe_decode_message(uint32_t **session_id,
 
     *message_size = transport_message_size - sizeof(pci_doe_data_object_header_t);
     *message = (uint8_t *)transport_message + sizeof(pci_doe_data_object_header_t);
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
 /**
