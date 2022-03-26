@@ -86,11 +86,11 @@ GLOBAL_REMOVE_IF_UNREFERENCED uint8_t
 /**
  * Validate Crypto digest Interfaces.
  *
- * @retval  RETURN_SUCCESS  Validation succeeded.
- * @retval  RETURN_ABORTED  Validation failed.
+ * @retval  true  Validation succeeded.
+ * @retval  false  Validation failed.
  *
  **/
-return_status libspdm_validate_crypt_digest(void)
+bool libspdm_validate_crypt_digest(void)
 {
     void *hash_ctx;
     size_t data_size;
@@ -109,7 +109,7 @@ return_status libspdm_validate_crypt_digest(void)
     hash_ctx = libspdm_sha256_new();
     if (hash_ctx == NULL) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Init... ");
@@ -117,7 +117,7 @@ return_status libspdm_validate_crypt_digest(void)
     if (!status) {
         libspdm_my_print("[Fail]");
         libspdm_sha256_free(hash_ctx);
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Update... ");
@@ -125,7 +125,7 @@ return_status libspdm_validate_crypt_digest(void)
     if (!status) {
         libspdm_my_print("[Fail]");
         libspdm_sha256_free(hash_ctx);
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Finalize... ");
@@ -133,7 +133,7 @@ return_status libspdm_validate_crypt_digest(void)
     if (!status) {
         libspdm_my_print("[Fail]");
         libspdm_sha256_free(hash_ctx);
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_sha256_free(hash_ctx);
@@ -142,7 +142,7 @@ return_status libspdm_validate_crypt_digest(void)
     if (libspdm_const_compare_mem(digest, m_libspdm_sha256_digest,
                                   LIBSPDM_SHA256_DIGEST_SIZE) != 0) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("HashAll... ");
@@ -150,12 +150,12 @@ return_status libspdm_validate_crypt_digest(void)
     status = libspdm_sha256_hash_all(m_libspdm_hash_data, data_size, digest);
     if (!status) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
     if (libspdm_const_compare_mem(digest, m_libspdm_sha256_digest,
                                   LIBSPDM_SHA256_DIGEST_SIZE) != 0) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("[Pass]\n");
@@ -169,7 +169,7 @@ return_status libspdm_validate_crypt_digest(void)
     hash_ctx = libspdm_sha384_new();
     if (hash_ctx == NULL) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Init... ");
@@ -177,7 +177,7 @@ return_status libspdm_validate_crypt_digest(void)
     if (!status) {
         libspdm_my_print("[Fail]");
         libspdm_sha384_free(hash_ctx);
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Update... ");
@@ -185,7 +185,7 @@ return_status libspdm_validate_crypt_digest(void)
     if (!status) {
         libspdm_my_print("[Fail]");
         libspdm_sha384_free(hash_ctx);
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Finalize... ");
@@ -193,7 +193,7 @@ return_status libspdm_validate_crypt_digest(void)
     if (!status) {
         libspdm_my_print("[Fail]");
         libspdm_sha384_free(hash_ctx);
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_sha384_free(hash_ctx);
@@ -202,7 +202,7 @@ return_status libspdm_validate_crypt_digest(void)
     if (libspdm_const_compare_mem(digest, m_libspdm_sha384_digest,
                                   LIBSPDM_SHA384_DIGEST_SIZE) != 0) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("HashAll... ");
@@ -210,12 +210,12 @@ return_status libspdm_validate_crypt_digest(void)
     status = libspdm_sha384_hash_all(m_libspdm_hash_data, data_size, digest);
     if (!status) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
     if (libspdm_const_compare_mem(digest, m_libspdm_sha384_digest,
                                   LIBSPDM_SHA384_DIGEST_SIZE) != 0) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("[Pass]\n");
@@ -229,7 +229,7 @@ return_status libspdm_validate_crypt_digest(void)
     hash_ctx = libspdm_sha512_new();
     if (hash_ctx == NULL) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Init... ");
@@ -237,7 +237,7 @@ return_status libspdm_validate_crypt_digest(void)
     if (!status) {
         libspdm_my_print("[Fail]");
         libspdm_sha512_free(hash_ctx);
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Update... ");
@@ -245,7 +245,7 @@ return_status libspdm_validate_crypt_digest(void)
     if (!status) {
         libspdm_my_print("[Fail]");
         libspdm_sha512_free(hash_ctx);
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Finalize... ");
@@ -253,7 +253,7 @@ return_status libspdm_validate_crypt_digest(void)
     if (!status) {
         libspdm_my_print("[Fail]");
         libspdm_sha512_free(hash_ctx);
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_sha512_free(hash_ctx);
@@ -262,7 +262,7 @@ return_status libspdm_validate_crypt_digest(void)
     if (libspdm_const_compare_mem(digest, m_libspdm_sha512_digest,
                                   LIBSPDM_SHA512_DIGEST_SIZE) != 0) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("HashAll... ");
@@ -270,12 +270,12 @@ return_status libspdm_validate_crypt_digest(void)
     status = libspdm_sha512_hash_all(m_libspdm_hash_data, data_size, digest);
     if (!status) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
     if (libspdm_const_compare_mem(digest, m_libspdm_sha512_digest,
                                   LIBSPDM_SHA512_DIGEST_SIZE) != 0) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("[Pass]\n");
@@ -439,5 +439,5 @@ return_status libspdm_validate_crypt_digest(void)
         libspdm_my_print("[Failed]\n");
     }
 
-    return RETURN_SUCCESS;
+    return true;
 }

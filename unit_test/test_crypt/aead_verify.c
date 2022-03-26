@@ -127,11 +127,11 @@ GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_libspdm_sm4_gcm_tag[] = {
 /**
  * Validate Crypto AEAD Ciphers Interfaces.
  *
- * @retval  RETURN_SUCCESS  Validation succeeded.
- * @retval  RETURN_ABORTED  Validation failed.
+ * @retval  true  Validation succeeded.
+ * @retval  false  Validation failed.
  *
  **/
-return_status libspdm_validate_crypt_aead_cipher(void)
+bool libspdm_validate_crypt_aead_cipher(void)
 {
     bool status;
     uint8_t OutBuffer[1024];
@@ -152,19 +152,19 @@ return_status libspdm_validate_crypt_aead_cipher(void)
                                           OutBuffer, &OutBufferSize);
     if (!status) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
     if (OutBufferSize != sizeof(m_libspdm_gcm_ct)) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
     if (libspdm_const_compare_mem(OutBuffer, m_libspdm_gcm_ct, sizeof(m_libspdm_gcm_ct)) != 0) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
     if (libspdm_const_compare_mem(OutTag, m_libspdm_gcm_tag, sizeof(m_libspdm_gcm_tag)) != 0) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
     libspdm_my_print("[Pass]");
 
@@ -175,15 +175,15 @@ return_status libspdm_validate_crypt_aead_cipher(void)
         m_libspdm_gcm_tag, sizeof(m_libspdm_gcm_tag), OutBuffer, &OutBufferSize);
     if (!status) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
     if (OutBufferSize != sizeof(m_libspdm_gcm_pt)) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
     if (libspdm_const_compare_mem(OutBuffer, m_libspdm_gcm_pt, sizeof(m_libspdm_gcm_pt)) != 0) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("[Pass]");
@@ -199,21 +199,21 @@ return_status libspdm_validate_crypt_aead_cipher(void)
         OutTagSize, OutBuffer, &OutBufferSize);
     if (!status) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
     if (OutBufferSize != sizeof(m_libspdm_chacha20_poly1305_ct)) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
     if (libspdm_const_compare_mem(OutBuffer, m_libspdm_chacha20_poly1305_ct,
                                   sizeof(m_libspdm_chacha20_poly1305_ct)) != 0) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
     if (libspdm_const_compare_mem(OutTag, m_libspdm_chacha20_poly1305_tag,
                                   sizeof(m_libspdm_chacha20_poly1305_tag)) != 0) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
     libspdm_my_print("[Pass]");
 
@@ -227,16 +227,16 @@ return_status libspdm_validate_crypt_aead_cipher(void)
         OutBuffer, &OutBufferSize);
     if (!status) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
     if (OutBufferSize != sizeof(m_libspdm_chacha20_poly1305_pt)) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
     if (libspdm_const_compare_mem(OutBuffer, m_libspdm_chacha20_poly1305_pt,
                                   sizeof(m_libspdm_chacha20_poly1305_pt)) != 0) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("[Pass]");
@@ -296,5 +296,5 @@ return_status libspdm_validate_crypt_aead_cipher(void)
 Exit:
     libspdm_my_print("\n");
 
-    return RETURN_SUCCESS;
+    return true;
 }

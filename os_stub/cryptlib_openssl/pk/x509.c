@@ -369,12 +369,12 @@ done:
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  *
  **/
-static return_status
+bool
 libspdm_internal_x509_get_nid_name(X509_NAME *x509_name, const int32_t request_nid,
                                    char *common_name,
                                    size_t *common_name_size)
 {
-    return_status status;
+    bool status;
     int32_t index;
     int length;
     X509_NAME_ENTRY *entry;
@@ -382,17 +382,17 @@ libspdm_internal_x509_get_nid_name(X509_NAME *x509_name, const int32_t request_n
     uint8_t *utf8_name;
     size_t common_name_capacity;
 
-    status = RETURN_INVALID_PARAMETER;
+    status = false;
     utf8_name = NULL;
 
 
     /* Check input parameters.*/
 
     if (x509_name == NULL || (common_name_size == NULL)) {
-        return status;
+        return false;
     }
     if ((common_name != NULL) && (*common_name_size == 0)) {
-        return status;
+        return false;
     }
 
 
@@ -404,7 +404,7 @@ libspdm_internal_x509_get_nid_name(X509_NAME *x509_name, const int32_t request_n
         /* No request_nid name entry exists in X509_NAME object*/
 
         *common_name_size = 0;
-        status = RETURN_NOT_FOUND;
+        status = false;
         goto done;
     }
 
@@ -414,7 +414,7 @@ libspdm_internal_x509_get_nid_name(X509_NAME *x509_name, const int32_t request_n
         /* Fail to retrieve name entry data*/
 
         *common_name_size = 0;
-        status = RETURN_NOT_FOUND;
+        status = false;
         goto done;
     }
 
@@ -426,13 +426,13 @@ libspdm_internal_x509_get_nid_name(X509_NAME *x509_name, const int32_t request_n
         /* Fail to convert the name string*/
 
         *common_name_size = 0;
-        status = RETURN_INVALID_PARAMETER;
+        status = false;
         goto done;
     }
 
     if (common_name == NULL) {
         *common_name_size = length + 1;
-        status = RETURN_BUFFER_TOO_SMALL;
+        status = false;
     } else {
         common_name_capacity = *common_name_size;
         *common_name_size =
@@ -440,7 +440,7 @@ libspdm_internal_x509_get_nid_name(X509_NAME *x509_name, const int32_t request_n
         libspdm_copy_mem(common_name, common_name_capacity,
                          utf8_name, *common_name_size - 1);
         common_name[*common_name_size - 1] = '\0';
-        status = RETURN_SUCCESS;
+        status = true;
     }
 
 done:
@@ -480,17 +480,16 @@ done:
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  *
  **/
-static return_status
+bool
 libspdm_internal_x509_get_subject_nid_name(const uint8_t *cert, size_t cert_size,
                                            const int32_t request_nid, char *common_name,
                                            size_t *common_name_size)
 {
-    return_status status;
-    bool res;
+    bool status;
     X509 *x509_cert;
     X509_NAME *x509_name;
 
-    status = RETURN_INVALID_PARAMETER;
+    status = false;
     x509_cert = NULL;
 
     if (cert == NULL || cert_size == 0) {
@@ -500,15 +499,16 @@ libspdm_internal_x509_get_subject_nid_name(const uint8_t *cert, size_t cert_size
 
     /* Read DER-encoded X509 Certificate and Construct X509 object.*/
 
-    res = libspdm_x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
-    if ((x509_cert == NULL) || (!res)) {
+    status = libspdm_x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
+    if ((x509_cert == NULL) || (!status)) {
 
         /* Invalid X.509 Certificate*/
 
+        status = false;
         goto done;
     }
 
-    res = false;
+    status = false;
 
 
     /* Retrieve subject name from certificate object.*/
@@ -560,17 +560,16 @@ done:
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  *
  **/
-static return_status
+bool
 libspdm_internal_x509_get_issuer_nid_name(const uint8_t *cert, size_t cert_size,
                                           const int32_t request_nid, char *common_name,
                                           size_t *common_name_size)
 {
-    return_status status;
-    bool res;
+    bool status;
     X509 *x509_cert;
     X509_NAME *x509_name;
 
-    status = RETURN_INVALID_PARAMETER;
+    status = false;
     x509_cert = NULL;
 
     if (cert == NULL || cert_size == 0) {
@@ -580,15 +579,16 @@ libspdm_internal_x509_get_issuer_nid_name(const uint8_t *cert, size_t cert_size,
 
     /* Read DER-encoded X509 Certificate and Construct X509 object.*/
 
-    res = libspdm_x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
-    if ((x509_cert == NULL) || (!res)) {
+    status = libspdm_x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
+    if ((x509_cert == NULL) || (!status)) {
 
         /* Invalid X.509 Certificate*/
 
+        status = false;
         goto done;
     }
 
-    res = false;
+    status = false;
 
 
     /* Retrieve subject name from certificate object.*/
@@ -640,9 +640,9 @@ done:
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  *
  **/
-return_status libspdm_x509_get_common_name(const uint8_t *cert, size_t cert_size,
-                                           char *common_name,
-                                           size_t *common_name_size)
+bool libspdm_x509_get_common_name(const uint8_t *cert, size_t cert_size,
+                                  char *common_name,
+                                  size_t *common_name_size)
 {
     return libspdm_internal_x509_get_subject_nid_name(
         cert, cert_size, NID_commonName, common_name, common_name_size);
@@ -674,7 +674,7 @@ return_status libspdm_x509_get_common_name(const uint8_t *cert, size_t cert_size
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  *
  **/
-return_status
+bool
 libspdm_x509_get_organization_name(const uint8_t *cert, size_t cert_size,
                                    char *name_buffer,
                                    size_t *name_buffer_size)
@@ -701,24 +701,22 @@ libspdm_x509_get_organization_name(const uint8_t *cert, size_t cert_size,
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  *
  **/
-return_status libspdm_x509_get_version(const uint8_t *cert, size_t cert_size,
-                                       size_t *version)
+bool libspdm_x509_get_version(const uint8_t *cert, size_t cert_size,
+                              size_t *version)
 {
-    return_status status;
-    bool res;
+    bool status;
     X509 *x509_cert;
 
     x509_cert = NULL;
-    status = RETURN_SUCCESS;
-    res = libspdm_x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
-    if ((x509_cert == NULL) || (!res)) {
+    status = libspdm_x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
+    if ((x509_cert == NULL) || (!status)) {
 
         /* Invalid X.509 Certificate*/
 
-        status = RETURN_INVALID_PARAMETER;
+        status = false;
     }
 
-    if (!RETURN_ERROR(status)) {
+    if (status) {
         *version = X509_get_version(x509_cert);
     }
 
@@ -751,16 +749,15 @@ return_status libspdm_x509_get_version(const uint8_t *cert, size_t cert_size,
  *                                 serial_number_size parameter.
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
-return_status libspdm_x509_get_serial_number(const uint8_t *cert, size_t cert_size,
-                                             uint8_t *serial_number,
-                                             size_t *serial_number_size)
+bool libspdm_x509_get_serial_number(const uint8_t *cert, size_t cert_size,
+                                    uint8_t *serial_number,
+                                    size_t *serial_number_size)
 {
-    bool res;
     X509 *x509_cert;
     ASN1_INTEGER *asn1_integer;
-    return_status status;
+    bool status;
 
-    status = RETURN_INVALID_PARAMETER;
+    status = false;
 
 
     /* Check input parameters.*/
@@ -774,8 +771,10 @@ return_status libspdm_x509_get_serial_number(const uint8_t *cert, size_t cert_si
 
     /* Read DER-encoded X509 Certificate and Construct X509 object.*/
 
-    res = libspdm_x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
-    if ((x509_cert == NULL) || (!res)) {
+    status = libspdm_x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
+    if ((x509_cert == NULL) || (!status)) {
+        *serial_number_size = 0;
+        status = false;
         goto done;
     }
 
@@ -784,20 +783,21 @@ return_status libspdm_x509_get_serial_number(const uint8_t *cert, size_t cert_si
 
     asn1_integer = X509_get_serialNumber(x509_cert);
     if (asn1_integer == NULL) {
-        status = RETURN_NOT_FOUND;
+        *serial_number_size = 0;
+        status = false;
         goto done;
     }
 
     if (*serial_number_size < (size_t)asn1_integer->length) {
         *serial_number_size = (size_t)asn1_integer->length;
-        status = RETURN_BUFFER_TOO_SMALL;
+        status = false;
         goto done;
     }
 
     if (serial_number != NULL) {
         libspdm_copy_mem(serial_number, *serial_number_size,
                          asn1_integer->data, (size_t)asn1_integer->length);
-        status = RETURN_SUCCESS;
+        status = true;
     }
     *serial_number_size = (size_t)asn1_integer->length;
 
@@ -916,7 +916,7 @@ done:
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  *
  **/
-return_status
+bool
 libspdm_x509_get_issuer_common_name(const uint8_t *cert, size_t cert_size,
                                     char *common_name,
                                     size_t *common_name_size)
@@ -951,7 +951,7 @@ libspdm_x509_get_issuer_common_name(const uint8_t *cert, size_t cert_size,
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  *
  **/
-return_status
+bool
 libspdm_x509_get_issuer_orgnization_name(const uint8_t *cert, size_t cert_size,
                                          char *name_buffer,
                                          size_t *name_buffer_size)
@@ -979,12 +979,11 @@ libspdm_x509_get_issuer_orgnization_name(const uint8_t *cert, size_t cert_size,
  *                                 is returned in the oid_size.
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
-return_status libspdm_x509_get_signature_algorithm(const uint8_t *cert,
-                                                   size_t cert_size, uint8_t *oid,
-                                                   size_t *oid_size)
+bool libspdm_x509_get_signature_algorithm(const uint8_t *cert,
+                                          size_t cert_size, uint8_t *oid,
+                                          size_t *oid_size)
 {
-    bool res;
-    return_status status;
+    bool status;
     X509 *x509_cert;
     int nid;
     ASN1_OBJECT *asn1_obj;
@@ -994,18 +993,18 @@ return_status libspdm_x509_get_signature_algorithm(const uint8_t *cert,
     /* Check input parameters.*/
 
     if (cert == NULL || oid_size == NULL || cert_size == 0) {
-        return RETURN_INVALID_PARAMETER;
+        return false;
     }
 
     x509_cert = NULL;
-    status = RETURN_INVALID_PARAMETER;
+    status = false;
 
 
     /* Read DER-encoded X509 Certificate and Construct X509 object.*/
 
-    res = libspdm_x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
-    if ((x509_cert == NULL) || (!res)) {
-        status = RETURN_INVALID_PARAMETER;
+    status = libspdm_x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
+    if ((x509_cert == NULL) || (!status)) {
+        status = false;
         goto done;
     }
 
@@ -1014,26 +1013,28 @@ return_status libspdm_x509_get_signature_algorithm(const uint8_t *cert,
 
     nid = X509_get_signature_nid(x509_cert);
     if (nid == NID_undef) {
-        status = RETURN_NOT_FOUND;
+        *oid_size = 0;
+        status = false;
         goto done;
     }
     asn1_obj = OBJ_nid2obj(nid);
     if (asn1_obj == NULL) {
-        status = RETURN_NOT_FOUND;
+        *oid_size = 0;
+        status = false;
         goto done;
     }
 
     obj_length = OBJ_length(asn1_obj);
     if (*oid_size < obj_length) {
         *oid_size = obj_length;
-        status = RETURN_BUFFER_TOO_SMALL;
+        status = false;
         goto done;
     }
     if (oid != NULL) {
         libspdm_copy_mem(oid, *oid_size, OBJ_get0_data(asn1_obj), obj_length);
     }
     *oid_size = obj_length;
-    status = RETURN_SUCCESS;
+    status = true;
 
 done:
 
@@ -1171,33 +1172,33 @@ done:
  *                                 date_time_size parameter.
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
-return_status libspdm_x509_set_date_time(char *date_time_str, void *date_time,
-                                         size_t *date_time_size)
+bool libspdm_x509_set_date_time(char *date_time_str, void *date_time,
+                                size_t *date_time_size)
 {
-    return_status status;
+    bool status;
     int32_t ret;
     ASN1_TIME *dt;
     size_t d_size;
 
     dt = NULL;
-    status = RETURN_INVALID_PARAMETER;
+    status = false;
 
     dt = ASN1_TIME_new();
     if (dt == NULL) {
-        status = RETURN_OUT_OF_RESOURCES;
+        status = false;
         goto cleanup;
     }
 
     ret = ASN1_TIME_set_string_X509(dt, date_time_str);
     if (ret != 1) {
-        status = RETURN_INVALID_PARAMETER;
+        status = false;
         goto cleanup;
     }
 
     d_size = sizeof(ASN1_TIME) + dt->length;
     if (*date_time_size < d_size) {
         *date_time_size = d_size;
-        status = RETURN_BUFFER_TOO_SMALL;
+        status = false;
         goto cleanup;
     }
     if (date_time != NULL) {
@@ -1209,7 +1210,7 @@ return_status libspdm_x509_set_date_time(char *date_time_str, void *date_time,
                          dt->data, dt->length);
     }
     *date_time_size = d_size;
-    status = RETURN_SUCCESS;
+    status = true;
 
 cleanup:
     if (dt != NULL) {
@@ -1314,14 +1315,13 @@ done:
  *                                 is returned in the extension_data_size parameter.
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
-return_status libspdm_x509_get_extension_data(const uint8_t *cert, size_t cert_size,
-                                              const uint8_t *oid, size_t oid_size,
-                                              uint8_t *extension_data,
-                                              size_t *extension_data_size)
+bool libspdm_x509_get_extension_data(const uint8_t *cert, size_t cert_size,
+                                     const uint8_t *oid, size_t oid_size,
+                                     uint8_t *extension_data,
+                                     size_t *extension_data_size)
 {
-    return_status status;
+    bool status;
     int i;
-    bool res;
     X509 *x509_cert;
     const STACK_OF(X509_EXTENSION) * extensions;
     ASN1_OBJECT *asn1_obj;
@@ -1330,33 +1330,31 @@ return_status libspdm_x509_get_extension_data(const uint8_t *cert, size_t cert_s
     size_t obj_length;
     size_t oct_length;
 
-    status = RETURN_INVALID_PARAMETER;
-
-
     /* Check input parameters.*/
 
     if (cert == NULL || cert_size == 0 || oid == NULL || oid_size == 0 ||
         extension_data_size == NULL) {
-        return status;
+        return false;
     }
 
     x509_cert = NULL;
-    res = false;
+    status = false;
 
 
     /* Read DER-encoded X509 Certificate and Construct X509 object.*/
 
-    res = libspdm_x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
-    if ((x509_cert == NULL) || (!res)) {
+    status = libspdm_x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
+    if ((x509_cert == NULL) || (!status)) {
+        *extension_data_size = 0;
         goto cleanup;
     }
 
 
     /* Retrieve extensions from certificate object.*/
 
-    status = RETURN_NOT_FOUND;
     extensions = X509_get0_extensions(x509_cert);
     if (sk_X509_EXTENSION_num(extensions) <= 0) {
+        *extension_data_size = 0;
         goto cleanup;
     }
 
@@ -1385,22 +1383,26 @@ return_status libspdm_x509_get_extension_data(const uint8_t *cert, size_t cert_s
 
             /* Extension Found*/
 
-            status = RETURN_SUCCESS;
+            status = true;
             break;
         }
+
+        /* reset to 0 if not found */
+        oct_length = 0;
     }
-    if (status == RETURN_SUCCESS) {
+    if (status) {
         if (*extension_data_size < oct_length) {
             *extension_data_size = oct_length;
-            status = RETURN_BUFFER_TOO_SMALL;
+            status = false;
             goto cleanup;
         }
         if (oid != NULL) {
             libspdm_copy_mem(extension_data, *extension_data_size,
-                             ASN1_STRING_get0_data(asn1_oct), asn1_oct->length);
+                             ASN1_STRING_get0_data(asn1_oct), oct_length);
         }
         *extension_data_size = oct_length;
-        status = RETURN_SUCCESS;
+    } else {
+        *extension_data_size = 0;
     }
 
 cleanup:
@@ -1431,11 +1433,11 @@ cleanup:
  *                                 is returned in the usage_size parameter.
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
-return_status libspdm_x509_get_extended_key_usage(const uint8_t *cert,
-                                                  size_t cert_size, uint8_t *usage,
-                                                  size_t *usage_size)
+bool libspdm_x509_get_extended_key_usage(const uint8_t *cert,
+                                         size_t cert_size, uint8_t *usage,
+                                         size_t *usage_size)
 {
-    return_status status;
+    bool status;
     status = libspdm_x509_get_extension_data(cert, cert_size,
                                              m_libspdm_oid_ext_key_usage,
                                              sizeof(m_libspdm_oid_ext_key_usage), usage,
@@ -1461,15 +1463,15 @@ return_status libspdm_x509_get_extended_key_usage(const uint8_t *cert,
  * @retval RETURN_NOT_FOUND         If no Extension entry match oid.
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
-return_status libspdm_x509_get_extended_basic_constraints(const uint8_t *cert,
-                                                          size_t cert_size,
-                                                          uint8_t *basic_constraints,
-                                                          size_t *basic_constraints_size)
+bool libspdm_x509_get_extended_basic_constraints(const uint8_t *cert,
+                                                 size_t cert_size,
+                                                 uint8_t *basic_constraints,
+                                                 size_t *basic_constraints_size)
 {
-    return_status status;
+    bool status;
 
     if (cert == NULL || cert_size == 0 || basic_constraints_size == NULL) {
-        return RETURN_INVALID_PARAMETER;
+        return false;
     }
     status = libspdm_x509_get_extension_data((uint8_t *)cert, cert_size,
                                              (uint8_t *)m_libspdm_oid_basic_constraints,

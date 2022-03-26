@@ -17,11 +17,11 @@ uint8_t m_libspdm_random_buffer[LIBSPDM_RANDOM_NUMBER_SIZE] = { 0x0 };
 /**
  * Validate Crypto pseudorandom number generator interfaces.
  *
- * @retval  RETURN_SUCCESS  Validation succeeded.
- * @retval  RETURN_ABORTED  Validation failed.
+ * @retval  true  Validation succeeded.
+ * @retval  false  Validation failed.
  *
  **/
-return_status libspdm_validate_crypt_prng(void)
+bool libspdm_validate_crypt_prng(void)
 {
     size_t index;
     bool status;
@@ -33,20 +33,20 @@ return_status libspdm_validate_crypt_prng(void)
     status = libspdm_random_seed(m_libspdm_seed_string, sizeof(m_libspdm_seed_string));
     if (!status) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
 
     for (index = 0; index < 10; index++) {
         status = libspdm_random_bytes(m_libspdm_random_buffer, LIBSPDM_RANDOM_NUMBER_SIZE);
         if (!status) {
             libspdm_my_print("[Fail]");
-            return RETURN_ABORTED;
+            return false;
         }
 
         if (libspdm_const_compare_mem(m_libspdm_previous_random_buffer, m_libspdm_random_buffer,
                                       LIBSPDM_RANDOM_NUMBER_SIZE) == 0) {
             libspdm_my_print("[Fail]");
-            return RETURN_ABORTED;
+            return false;
         }
 
         libspdm_copy_mem(m_libspdm_previous_random_buffer, sizeof(m_libspdm_previous_random_buffer),
@@ -55,5 +55,5 @@ return_status libspdm_validate_crypt_prng(void)
 
     libspdm_my_print("[Pass]\n");
 
-    return RETURN_SUCCESS;
+    return true;
 }

@@ -467,11 +467,11 @@ GLOBAL_REMOVE_IF_UNREFERENCED const char *m_libspdm_payload =
 /**
  * Validate Crypto RSA key Retrieving & signature Interfaces.
  *
- * @retval  RETURN_SUCCESS  Validation succeeded.
- * @retval  RETURN_ABORTED  Validation failed.
+ * @retval  true  Validation succeeded.
+ * @retval  false  Validation failed.
  *
  **/
-return_status libspdm_validate_crypt_rsa_2(void)
+bool libspdm_validate_crypt_rsa_2(void)
 {
     bool status;
     void *rsa_priv_key;
@@ -480,7 +480,7 @@ return_status libspdm_validate_crypt_rsa_2(void)
     size_t sig_size;
     /* uint8_t          *subject;
      * size_t          subject_size;
-     * return_status  return_status;
+     * bool  return_status;
      * char          common_name[64];
      * size_t          common_name_size;*/
 
@@ -495,7 +495,7 @@ return_status libspdm_validate_crypt_rsa_2(void)
                                                   m_libspdm_pem_pass, &rsa_priv_key);
     if (!status) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     } else {
         libspdm_my_print("[Pass]");
     }
@@ -510,7 +510,7 @@ return_status libspdm_validate_crypt_rsa_2(void)
     if (!status) {
         libspdm_my_print("[Fail]");
         libspdm_rsa_free(rsa_priv_key);
-        return RETURN_ABORTED;
+        return false;
     } else {
         libspdm_my_print("[Pass]");
     }
@@ -527,7 +527,7 @@ return_status libspdm_validate_crypt_rsa_2(void)
         libspdm_my_print("[Fail]");
         libspdm_rsa_free(rsa_pub_key);
         libspdm_rsa_free(rsa_priv_key);
-        return RETURN_ABORTED;
+        return false;
     }
 
     signature = allocate_pool(sig_size);
@@ -539,7 +539,7 @@ return_status libspdm_validate_crypt_rsa_2(void)
         free_pool(signature);
         libspdm_rsa_free(rsa_pub_key);
         libspdm_rsa_free(rsa_priv_key);
-        return RETURN_ABORTED;
+        return false;
     } else {
         libspdm_my_print("[Pass]");
     }
@@ -556,7 +556,7 @@ return_status libspdm_validate_crypt_rsa_2(void)
         free_pool(signature);
         libspdm_rsa_free(rsa_pub_key);
         libspdm_rsa_free(rsa_priv_key);
-        return RETURN_ABORTED;
+        return false;
     } else {
         libspdm_my_print("[Pass]");
     }
@@ -575,7 +575,7 @@ return_status libspdm_validate_crypt_rsa_2(void)
      *   libspdm_my_print ("[Fail]");
      *   libspdm_rsa_free  (rsa_pub_key);
      *   libspdm_rsa_free  (rsa_priv_key);
-     *   return RETURN_ABORTED;
+     *   return false;
      * } else {
      *   libspdm_my_print ("[Pass]");
      * }*/
@@ -586,11 +586,11 @@ return_status libspdm_validate_crypt_rsa_2(void)
     /* common_name_size = 64;
      * libspdm_zero_mem (common_name, common_name_size);
      * status = libspdm_x509_get_common_name (m_libspdm_test_cert, sizeof (m_libspdm_test_cert), common_name, &common_name_size);
-     * if (RETURN_ERROR (status)) {
+     * if (!status) {
      *   libspdm_my_print ("\n  - Retrieving Common name - [Fail]");
      *   libspdm_rsa_free  (rsa_pub_key);
      *   libspdm_rsa_free  (rsa_priv_key);
-     *   return RETURN_ABORTED;
+     *   return false;
      * } else {
      *   libspdm_my_print ("\n  - Retrieving Common name = \"%a\" (size = %d)", common_name, common_name_size);
      * }*/
@@ -602,5 +602,5 @@ return_status libspdm_validate_crypt_rsa_2(void)
     libspdm_rsa_free(rsa_priv_key);
     /* free_pool (subject);*/
 
-    return RETURN_SUCCESS;
+    return true;
 }

@@ -9,11 +9,11 @@
 /**
  * Validate Crypto DH Interfaces.
  *
- * @retval  RETURN_SUCCESS  Validation succeeded.
- * @retval  RETURN_ABORTED  Validation failed.
+ * @retval  true  Validation succeeded.
+ * @retval  false  Validation failed.
  *
  **/
-return_status libspdm_validate_crypt_dh(void)
+bool libspdm_validate_crypt_dh(void)
 {
     void *dh1;
     void *dh2;
@@ -40,7 +40,7 @@ return_status libspdm_validate_crypt_dh(void)
     dh1 = libspdm_dh_new_by_nid(LIBSPDM_CRYPTO_NID_FFDHE2048);
     if (dh1 == NULL) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Context2 ... ");
@@ -48,7 +48,7 @@ return_status libspdm_validate_crypt_dh(void)
     if (dh2 == NULL) {
         libspdm_my_print("[Fail]");
         libspdm_dh_free(dh1);
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Generate key1 ... ");
@@ -57,7 +57,7 @@ return_status libspdm_validate_crypt_dh(void)
         libspdm_my_print("[Fail]");
         libspdm_dh_free(dh1);
         libspdm_dh_free(dh2);
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Generate key2 ... ");
@@ -66,7 +66,7 @@ return_status libspdm_validate_crypt_dh(void)
         libspdm_my_print("[Fail]");
         libspdm_dh_free(dh1);
         libspdm_dh_free(dh2);
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Compute key1 ... ");
@@ -76,7 +76,7 @@ return_status libspdm_validate_crypt_dh(void)
         libspdm_my_print("[Fail]");
         libspdm_dh_free(dh1);
         libspdm_dh_free(dh2);
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Compute key2 ... ");
@@ -86,7 +86,7 @@ return_status libspdm_validate_crypt_dh(void)
         libspdm_my_print("[Fail]");
         libspdm_dh_free(dh1);
         libspdm_dh_free(dh2);
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Compare Keys ... ");
@@ -94,19 +94,19 @@ return_status libspdm_validate_crypt_dh(void)
         libspdm_my_print("[Fail]");
         libspdm_dh_free(dh1);
         libspdm_dh_free(dh2);
-        return RETURN_ABORTED;
+        return false;
     }
 
     if (libspdm_const_compare_mem(ff_key1, ff_key2, ff_key1_length) != 0) {
         libspdm_my_print("[Fail]");
         libspdm_dh_free(dh1);
         libspdm_dh_free(dh2);
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("[Pass]\n");
     libspdm_dh_free(dh1);
     libspdm_dh_free(dh2);
 
-    return RETURN_SUCCESS;
+    return true;
 }

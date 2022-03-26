@@ -36,11 +36,11 @@ GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_libspdm_hmac_sha256_digest[] = {
 /**
  * Validate Crypto message Authentication Codes Interfaces.
  *
- * @retval  RETURN_SUCCESS  Validation succeeded.
- * @retval  RETURN_ABORTED  Validation failed.
+ * @retval  true  Validation succeeded.
+ * @retval  false  Validation failed.
  *
  **/
-return_status libspdm_validate_crypt_hmac(void)
+bool libspdm_validate_crypt_hmac(void)
 {
     void *hmac_ctx;
     uint8_t digest[MAX_DIGEST_SIZE];
@@ -56,14 +56,14 @@ return_status libspdm_validate_crypt_hmac(void)
     hmac_ctx = libspdm_hmac_sha256_new();
     if (hmac_ctx == NULL) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
 
     status = libspdm_hmac_sha256_set_key(hmac_ctx, m_libspdm_hmac_sha256_key, 20);
     if (!status) {
         libspdm_my_print("[Fail]");
         free_pool(hmac_ctx);
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Update... ");
@@ -71,7 +71,7 @@ return_status libspdm_validate_crypt_hmac(void)
     if (!status) {
         libspdm_my_print("[Fail]");
         free_pool(hmac_ctx);
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Finalize... ");
@@ -79,7 +79,7 @@ return_status libspdm_validate_crypt_hmac(void)
     if (!status) {
         libspdm_my_print("[Fail]");
         free_pool(hmac_ctx);
-        return RETURN_ABORTED;
+        return false;
     }
 
     free_pool(hmac_ctx);
@@ -89,7 +89,7 @@ return_status libspdm_validate_crypt_hmac(void)
                                   LIBSPDM_SHA256_DIGEST_SIZE) !=
         0) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("[Pass]\n");
@@ -102,14 +102,14 @@ return_status libspdm_validate_crypt_hmac(void)
     hmac_ctx = libspdm_hmac_sha3_256_new();
     if (hmac_ctx == NULL) {
         libspdm_my_print("[Fail]\n");
-        return RETURN_SUCCESS;
+        return true;
     }
 
     status = libspdm_hmac_sha3_256_set_key(hmac_ctx, m_libspdm_hmac_sha256_key, 20);
     if (!status) {
         libspdm_my_print("[Fail]");
         free_pool(hmac_ctx);
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Update... ");
@@ -117,7 +117,7 @@ return_status libspdm_validate_crypt_hmac(void)
     if (!status) {
         libspdm_my_print("[Fail]");
         free_pool(hmac_ctx);
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Finalize... ");
@@ -125,7 +125,7 @@ return_status libspdm_validate_crypt_hmac(void)
     if (!status) {
         libspdm_my_print("[Fail]");
         free_pool(hmac_ctx);
-        return RETURN_ABORTED;
+        return false;
     }
 
     free_pool(hmac_ctx);
@@ -139,14 +139,14 @@ return_status libspdm_validate_crypt_hmac(void)
     hmac_ctx = libspdm_hmac_sm3_256_new();
     if (hmac_ctx == NULL) {
         libspdm_my_print("[Fail]\n");
-        return RETURN_SUCCESS;
+        return true;
     }
 
     status = libspdm_hmac_sm3_256_set_key(hmac_ctx, m_libspdm_hmac_sha256_key, 20);
     if (!status) {
         libspdm_my_print("[Fail]");
         free_pool(hmac_ctx);
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Update... ");
@@ -154,7 +154,7 @@ return_status libspdm_validate_crypt_hmac(void)
     if (!status) {
         libspdm_my_print("[Fail]");
         free_pool(hmac_ctx);
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Finalize... ");
@@ -162,11 +162,11 @@ return_status libspdm_validate_crypt_hmac(void)
     if (!status) {
         libspdm_my_print("[Fail]");
         free_pool(hmac_ctx);
-        return RETURN_ABORTED;
+        return false;
     }
 
     free_pool(hmac_ctx);
     libspdm_my_print("[Pass]\n");
 
-    return RETURN_SUCCESS;
+    return true;
 }

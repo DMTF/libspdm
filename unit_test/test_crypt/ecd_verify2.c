@@ -61,11 +61,11 @@ GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_libspdm_ecd_test_pem_key[] = {
 /**
  * Validate Crypto Ed key Retrieving (from PEM & X509) & signature Interfaces.
  *
- * @retval  RETURN_SUCCESS  Validation succeeded.
- * @retval  RETURN_ABORTED  Validation failed.
+ * @retval  true  Validation succeeded.
+ * @retval  false  Validation failed.
  *
  **/
-return_status libspdm_validate_crypt_ecd_2(void)
+bool libspdm_validate_crypt_ecd_2(void)
 {
     bool status;
     void *ecd_priv_key;
@@ -136,5 +136,5 @@ return_status libspdm_validate_crypt_ecd_2(void)
     libspdm_ecd_free(ecd_pub_key);
 
 Exit:
-    return RETURN_SUCCESS;
+    return true;
 }

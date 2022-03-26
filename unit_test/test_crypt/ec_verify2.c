@@ -94,11 +94,11 @@ GLOBAL_REMOVE_IF_UNREFERENCED const char *m_libspdm_ec_payload =
 /**
  * Validate Crypto EC key Retrieving (from PEM & X509) & signature Interfaces.
  *
- * @retval  RETURN_SUCCESS  Validation succeeded.
- * @retval  RETURN_ABORTED  Validation failed.
+ * @retval  true  Validation succeeded.
+ * @retval  false  Validation failed.
  *
  **/
-return_status libspdm_validate_crypt_ec_2(void)
+bool libspdm_validate_crypt_ec_2(void)
 {
     bool status;
     void *ec_priv_key;
@@ -119,7 +119,7 @@ return_status libspdm_validate_crypt_ec_2(void)
                                                  &ec_priv_key);
     if (!status) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     } else {
         libspdm_my_print("[Pass]");
     }
@@ -133,7 +133,7 @@ return_status libspdm_validate_crypt_ec_2(void)
     if (!status) {
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec_priv_key);
-        return RETURN_ABORTED;
+        return false;
     } else {
         libspdm_my_print("[Pass]");
     }
@@ -150,7 +150,7 @@ return_status libspdm_validate_crypt_ec_2(void)
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec_priv_key);
         libspdm_ec_free(ec_pub_key);
-        return RETURN_ABORTED;
+        return false;
     } else {
         libspdm_my_print("[Pass]");
     }
@@ -162,12 +162,12 @@ return_status libspdm_validate_crypt_ec_2(void)
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec_priv_key);
         libspdm_ec_free(ec_pub_key);
-        return RETURN_ABORTED;
+        return false;
     } else {
         libspdm_my_print("[Pass]\n");
     }
 
     libspdm_ec_free(ec_priv_key);
     libspdm_ec_free(ec_pub_key);
-    return RETURN_SUCCESS;
+    return true;
 }

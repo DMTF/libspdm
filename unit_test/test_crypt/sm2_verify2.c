@@ -84,11 +84,11 @@ GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_libspdm_sm2_test_pem_key[] = {
 /**
  * Validate Crypto sm2 key Retrieving (from PEM & X509) & signature Interfaces.
  *
- * @retval  RETURN_SUCCESS  Validation succeeded.
- * @retval  RETURN_ABORTED  Validation failed.
+ * @retval  true  Validation succeeded.
+ * @retval  false  Validation failed.
  *
  **/
-return_status libspdm_validate_crypt_sm2_2(void)
+bool libspdm_validate_crypt_sm2_2(void)
 {
     bool status;
     void *sm2_priv_key;
@@ -163,5 +163,5 @@ return_status libspdm_validate_crypt_sm2_2(void)
     libspdm_sm2_dsa_free(sm2_pub_key);
 
 Exit:
-    return RETURN_SUCCESS;
+    return true;
 }

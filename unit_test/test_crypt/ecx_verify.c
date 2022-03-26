@@ -9,11 +9,11 @@
 /**
  * Validate Crypto MontgomeryCurve Interfaces.
  *
- * @retval  RETURN_SUCCESS  Validation succeeded.
- * @retval  RETURN_ABORTED  Validation failed.
+ * @retval  true  Validation succeeded.
+ * @retval  false  Validation failed.
  *
  **/
-return_status libspdm_validate_crypt_ecx(void)
+bool libspdm_validate_crypt_ecx(void)
 {
     void *ecx1;
     void *ecx2;
@@ -204,5 +204,5 @@ return_status libspdm_validate_crypt_ecx(void)
     libspdm_ecx_free(ecx2);
 
 Exit:
-    return RETURN_SUCCESS;
+    return true;
 }

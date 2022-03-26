@@ -11,11 +11,11 @@
 /**
  * Validate Crypto sm2 Interfaces.
  *
- * @retval  RETURN_SUCCESS  Validation succeeded.
- * @retval  RETURN_ABORTED  Validation failed.
+ * @retval  true  Validation succeeded.
+ * @retval  false  Validation failed.
  *
  **/
-return_status libspdm_validate_crypt_sm2(void)
+bool libspdm_validate_crypt_sm2(void)
 {
     void *Sm2_1;
     void *Sm2_2;
@@ -270,5 +270,5 @@ return_status libspdm_validate_crypt_sm2(void)
     libspdm_sm2_dsa_free(Sm2_2);
 
 Exit:
-    return RETURN_SUCCESS;
+    return true;
 }
