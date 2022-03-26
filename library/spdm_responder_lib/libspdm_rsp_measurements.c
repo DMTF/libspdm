@@ -311,9 +311,9 @@ return_status libspdm_get_response_measurements(void *context,
         &measurements_size);
 
 
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
 
-        if (status == RETURN_NOT_FOUND) {
+        if (status == LIBSPDM_STATUS_MEAS_INVALID_INDEX) {
             return libspdm_generate_error_response(
                 spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
                 0, response_size, response);

@@ -345,7 +345,7 @@ size_t libspdm_fill_measurement_device_mode_block (
  * The 7 buffer is device mode.
  **/
 
-return_status libspdm_measurement_collection(
+libspdm_return_t libspdm_measurement_collection(
     spdm_version_number_t spdm_version,
     uint8_t measurement_specification,
     uint32_t measurement_hash_algo,
@@ -368,7 +368,7 @@ return_status libspdm_measurement_collection(
 
     if (measurement_specification !=
         SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF) {
-        return RETURN_INVALID_PARAMETER;
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
 
     hash_size = libspdm_get_measurement_hash_size(measurement_hash_algo);
@@ -384,7 +384,7 @@ return_status libspdm_measurement_collection(
     if (measurements_index ==
         SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_TOTAL_NUMBER_OF_MEASUREMENTS) {
         *measurements_count = LIBSPDM_MEASUREMENT_BLOCK_NUMBER;
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     } else if (measurements_index ==
                SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_ALL_MEASUREMENTS) {
 
@@ -413,7 +413,7 @@ return_status libspdm_measurement_collection(
 
         LIBSPDM_ASSERT(total_size_needed <= *measurements_size);
         if (total_size_needed > *measurements_size) {
-            return RETURN_BUFFER_TOO_SMALL;
+            return LIBSPDM_STATUS_BUFFER_TOO_SMALL;
         }
 
         *measurements_size = total_size_needed;
@@ -427,7 +427,7 @@ return_status libspdm_measurement_collection(
                                                                                 index,
                                                                                 measurement_block);
             if (measurement_block_size == 0) {
-                return RETURN_DEVICE_ERROR;
+                return LIBSPDM_STATUS_MEAS_INTERNAL_ERROR;
             }
             measurement_block = (void *)((uint8_t *)measurement_block + measurement_block_size);
         }
@@ -447,7 +447,7 @@ return_status libspdm_measurement_collection(
             measurement_block = (void *)((uint8_t *)measurement_block + measurement_block_size);
         }
 
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     } else {
         /* One Index */
         if (measurements_index <= LIBSPDM_MEASUREMENT_BLOCK_HASH_NUMBER) {
@@ -462,7 +462,7 @@ return_status libspdm_measurement_collection(
             }
             LIBSPDM_ASSERT(total_size_needed <= *measurements_size);
             if (total_size_needed > *measurements_size) {
-                return RETURN_BUFFER_TOO_SMALL;
+                return LIBSPDM_STATUS_BUFFER_TOO_SMALL;
             }
 
             *measurements_count = 1;
@@ -474,7 +474,7 @@ return_status libspdm_measurement_collection(
                                                                                 measurements_index,
                                                                                 measurement_block);
             if (measurement_block_size == 0) {
-                return RETURN_DEVICE_ERROR;
+                return LIBSPDM_STATUS_MEAS_INTERNAL_ERROR;
             }
         } else if (measurements_index == LIBSPDM_MEASUREMENT_INDEX_SVN) {
             total_size_needed =
@@ -482,7 +482,7 @@ return_status libspdm_measurement_collection(
                 sizeof(spdm_measurements_secure_version_number_t);
             LIBSPDM_ASSERT(total_size_needed <= *measurements_size);
             if (total_size_needed > *measurements_size) {
-                return RETURN_BUFFER_TOO_SMALL;
+                return LIBSPDM_STATUS_BUFFER_TOO_SMALL;
             }
 
             *measurements_count = 1;
@@ -491,7 +491,7 @@ return_status libspdm_measurement_collection(
             measurement_block = measurements;
             measurement_block_size = libspdm_fill_measurement_svn_block (measurement_block);
             if (measurement_block_size == 0) {
-                return RETURN_DEVICE_ERROR;
+                return LIBSPDM_STATUS_MEAS_INTERNAL_ERROR;
             }
         } else if (measurements_index ==
                    SPDM_MEASUREMENT_BLOCK_MEASUREMENT_INDEX_MEASUREMENT_MANIFEST) {
@@ -500,7 +500,7 @@ return_status libspdm_measurement_collection(
                 LIBSPDM_MEASUREMENT_MANIFEST_SIZE;
             LIBSPDM_ASSERT(total_size_needed <= *measurements_size);
             if (total_size_needed > *measurements_size) {
-                return RETURN_BUFFER_TOO_SMALL;
+                return LIBSPDM_STATUS_BUFFER_TOO_SMALL;
             }
 
             *measurements_count = 1;
@@ -509,7 +509,7 @@ return_status libspdm_measurement_collection(
             measurement_block = measurements;
             measurement_block_size = libspdm_fill_measurement_manifest_block (measurement_block);
             if (measurement_block_size == 0) {
-                return RETURN_DEVICE_ERROR;
+                return LIBSPDM_STATUS_MEAS_INTERNAL_ERROR;
             }
         } else if (measurements_index == SPDM_MEASUREMENT_BLOCK_MEASUREMENT_INDEX_DEVICE_MODE) {
             total_size_needed =
@@ -517,7 +517,7 @@ return_status libspdm_measurement_collection(
                 sizeof(spdm_measurements_device_mode_t);
             LIBSPDM_ASSERT(total_size_needed <= *measurements_size);
             if (total_size_needed > *measurements_size) {
-                return RETURN_BUFFER_TOO_SMALL;
+                return LIBSPDM_STATUS_BUFFER_TOO_SMALL;
             }
 
             *measurements_count = 1;
@@ -526,11 +526,11 @@ return_status libspdm_measurement_collection(
             measurement_block = measurements;
             measurement_block_size = libspdm_fill_measurement_device_mode_block (measurement_block);
             if (measurement_block_size == 0) {
-                return RETURN_DEVICE_ERROR;
+                return LIBSPDM_STATUS_MEAS_INTERNAL_ERROR;
             }
         } else {
             *measurements_count = 0;
-            return RETURN_NOT_FOUND;
+            return LIBSPDM_STATUS_MEAS_INVALID_INDEX;
         }
     }
 
@@ -545,7 +545,7 @@ return_status libspdm_measurement_collection(
         }
     }
 
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
 /**
@@ -582,7 +582,7 @@ bool libspdm_generate_measurement_summary_hash(
     uint8_t device_measurement[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     uint8_t device_measurement_count;
     size_t device_measurement_size;
-    return_status status;
+    libspdm_return_t status;
     bool result;
 
     switch (measurement_summary_hash_type) {
@@ -605,7 +605,7 @@ bool libspdm_generate_measurement_summary_hash(
             NULL,
             &device_measurement_count, device_measurement,
             &device_measurement_size);
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return false;
         }
 

@@ -19,7 +19,7 @@
 #include "hal/library/memlib.h"
 #include "hal/library/cryptlib.h"
 #include "library/spdm_crypt_lib.h"
-#include "internal/libspdm_return_status.h"
+#include "library/spdm_return_status.h"
 
 /**
  * Collect the device measurement.
@@ -81,7 +81,7 @@
  * @retval RETURN_***                 Any other RETURN_ error from base.h
  *                                   indicating the type of failure
  **/
-return_status libspdm_measurement_collection(
+libspdm_return_t libspdm_measurement_collection(
     spdm_version_number_t spdm_version,
     uint8_t measurement_specification,
     uint32_t measurement_hash_algo,

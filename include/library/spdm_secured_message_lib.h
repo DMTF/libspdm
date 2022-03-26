@@ -21,6 +21,7 @@
 #include "hal/library/cryptlib.h"
 #include "library/spdm_crypt_lib.h"
 #include "library/spdm_device_secret_lib.h"
+#include "internal/libspdm_return_status.h"
 
 typedef enum {
     LIBSPDM_SESSION_TYPE_NONE,
