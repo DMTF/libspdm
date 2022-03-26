@@ -127,17 +127,17 @@ bool libspdm_create_measurement_opaque(libspdm_context_t *spdm_context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_get_response_measurements(void *context,
-                                                size_t request_size,
-                                                const void *request,
-                                                size_t *response_size,
-                                                void *response)
+libspdm_return_t libspdm_get_response_measurements(void *context,
+                                                   size_t request_size,
+                                                   const void *request,
+                                                   size_t *response_size,
+                                                   void *response)
 {
     uint8_t index;
     const spdm_get_measurements_request_t *spdm_request;
     spdm_measurements_response_t *spdm_response;
     size_t spdm_response_size;
-    return_status status;
+    libspdm_return_t status;
     size_t signature_size;
     size_t measurements_sig_size;
     size_t measurements_no_sig_size;
@@ -427,7 +427,9 @@ return_status libspdm_get_response_measurements(void *context,
     } else {
         if(!libspdm_create_measurement_opaque(spdm_context, spdm_response,
                                               spdm_response_size)) {
-            return RETURN_DEVICE_ERROR;
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_UNSPECIFIED, 0,
+                                                   response_size, response);
         }
     }
 
@@ -454,7 +456,7 @@ return_status libspdm_get_response_measurements(void *context,
             status = libspdm_generate_error_response(
                 spdm_context,
                 SPDM_ERROR_CODE_UNSPECIFIED,
-                SPDM_GET_MEASUREMENTS,
+                0,
                 response_size, response);
             libspdm_reset_message_m(spdm_context, session_info);
             return status;
@@ -473,7 +475,7 @@ return_status libspdm_get_response_measurements(void *context,
         }
     }
 
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP*/

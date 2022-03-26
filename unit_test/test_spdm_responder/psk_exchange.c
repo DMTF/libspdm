@@ -40,7 +40,7 @@ size_t m_libspdm_psk_exchange_request2_size = sizeof(spdm_psk_exchange_request_t
 
 void libspdm_test_responder_psk_exchange_case1(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -118,7 +118,7 @@ void libspdm_test_responder_psk_exchange_case1(void **state)
     status = libspdm_get_response_psk_exchange(
         spdm_context, m_libspdm_psk_exchange_request1_size,
         &m_libspdm_psk_exchange_request1, &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(
         libspdm_secured_message_get_session_state(
             spdm_context->session_info[0].secured_message_context),
@@ -136,7 +136,7 @@ void libspdm_test_responder_psk_exchange_case1(void **state)
 
 void libspdm_test_responder_psk_exchange_case2(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -210,7 +210,7 @@ void libspdm_test_responder_psk_exchange_case2(void **state)
     status = libspdm_get_response_psk_exchange(
         spdm_context, m_libspdm_psk_exchange_request2_size,
         &m_libspdm_psk_exchange_request2, &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
@@ -223,7 +223,7 @@ void libspdm_test_responder_psk_exchange_case2(void **state)
 
 void libspdm_test_responder_psk_exchange_case3(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -298,7 +298,7 @@ void libspdm_test_responder_psk_exchange_case3(void **state)
     status = libspdm_get_response_psk_exchange(
         spdm_context, m_libspdm_psk_exchange_request1_size,
         &m_libspdm_psk_exchange_request1, &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
@@ -312,7 +312,7 @@ void libspdm_test_responder_psk_exchange_case3(void **state)
 
 void libspdm_test_responder_psk_exchange_case4(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -387,7 +387,7 @@ void libspdm_test_responder_psk_exchange_case4(void **state)
     status = libspdm_get_response_psk_exchange(
         spdm_context, m_libspdm_psk_exchange_request1_size,
         &m_libspdm_psk_exchange_request1, &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
@@ -402,7 +402,7 @@ void libspdm_test_responder_psk_exchange_case4(void **state)
 
 void libspdm_test_responder_psk_exchange_case5(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -478,7 +478,7 @@ void libspdm_test_responder_psk_exchange_case5(void **state)
     status = libspdm_get_response_psk_exchange(
         spdm_context, m_libspdm_psk_exchange_request1_size,
         &m_libspdm_psk_exchange_request1, &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size,
                      sizeof(spdm_error_response_t) +
                      sizeof(spdm_error_data_response_not_ready_t));
@@ -498,7 +498,7 @@ void libspdm_test_responder_psk_exchange_case5(void **state)
 
 void libspdm_test_responder_psk_exchange_case6(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -573,7 +573,7 @@ void libspdm_test_responder_psk_exchange_case6(void **state)
     status = libspdm_get_response_psk_exchange(
         spdm_context, m_libspdm_psk_exchange_request1_size,
         &m_libspdm_psk_exchange_request1, &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
@@ -586,7 +586,7 @@ void libspdm_test_responder_psk_exchange_case6(void **state)
 
 void libspdm_test_responder_psk_exchange_case7(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -674,7 +674,7 @@ void libspdm_test_responder_psk_exchange_case7(void **state)
     status = libspdm_get_response_psk_exchange(
         spdm_context, m_libspdm_psk_exchange_request1_size,
         &m_libspdm_psk_exchange_request1, &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(
         libspdm_secured_message_get_session_state(
             spdm_context->session_info[0].secured_message_context),
@@ -695,7 +695,7 @@ void libspdm_test_responder_psk_exchange_case7(void **state)
 
 void libspdm_test_responder_psk_exchange_case8(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t current_request_size;
@@ -772,7 +772,7 @@ void libspdm_test_responder_psk_exchange_case8(void **state)
     status = libspdm_get_response_psk_exchange(
         spdm_context, current_request_size, &m_libspdm_psk_exchange_request1,
         &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(libspdm_secured_message_get_session_state(
                          spdm_context->session_info[0].secured_message_context),
                      LIBSPDM_SESSION_STATE_HANDSHAKING);

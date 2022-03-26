@@ -24,11 +24,11 @@
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_get_response_psk_finish(void *context,
-                                              size_t request_size,
-                                              const void *request,
-                                              size_t *response_size,
-                                              void *response)
+libspdm_return_t libspdm_get_response_psk_finish(void *context,
+                                                 size_t request_size,
+                                                 const void *request,
+                                                 size_t *response_size,
+                                                 void *response)
 {
     uint32_t session_id;
     bool result;
@@ -38,7 +38,7 @@ return_status libspdm_get_response_psk_finish(void *context,
     libspdm_session_info_t *session_info;
     uint8_t th2_hash_data[64];
     const spdm_psk_finish_request_t *spdm_request;
-    return_status status;
+    libspdm_return_t status;
     libspdm_session_state_t session_state;
 
     spdm_context = context;
@@ -137,7 +137,7 @@ return_status libspdm_get_response_psk_finish(void *context,
              * return UNSUPPORTED and clear response_size to continue the dispatch without send response
              **/
             *response_size = 0;
-            return RETURN_UNSUPPORTED;
+            return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         }
     }
     status = libspdm_append_message_f(
@@ -177,8 +177,10 @@ return_status libspdm_get_response_psk_finish(void *context,
     result = libspdm_start_watchdog(session_id,
                                     spdm_context->local_context.heartbeat_period * 2);
     if (!result) {
-        return RETURN_DEVICE_ERROR;
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_UNSPECIFIED, 0,
+                                               response_size, response);
     }
 
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }

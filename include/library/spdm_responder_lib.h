@@ -36,7 +36,7 @@
  * @retval RETURN_UNSUPPORTED           Just ignore this message: return UNSUPPORTED and clear response_size.
  *                                      Continue the dispatch without send response.
  **/
-typedef return_status (*libspdm_get_response_func)(
+typedef libspdm_return_t (*libspdm_get_response_func)(
     void *spdm_context, const uint32_t *session_id, bool is_app_message,
     size_t request_size, const void *request, size_t *response_size,
     void *response);
@@ -69,10 +69,10 @@ void libspdm_register_get_response_func(
  * @retval RETURN_SUCCESS               The SPDM request is received successfully.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM request is received from the device.
  **/
-return_status libspdm_process_request(void *spdm_context,
-                                      uint32_t **session_id,
-                                      bool *is_app_message,
-                                      size_t request_size, const void *request);
+libspdm_return_t libspdm_process_request(void *spdm_context,
+                                         uint32_t **session_id,
+                                         bool *is_app_message,
+                                         size_t request_size, const void *request);
 
 /**
  * Build a SPDM response to a device.
@@ -92,10 +92,10 @@ return_status libspdm_process_request(void *spdm_context,
  * @retval RETURN_UNSUPPORTED           Just ignore this message: return UNSUPPORTED and clear response_size.
  *                                      Continue the dispatch without send response.
  **/
-return_status libspdm_build_response(void *spdm_context, const uint32_t *session_id,
-                                     bool is_app_message,
-                                     size_t *response_size,
-                                     void **response);
+libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *session_id,
+                                        bool is_app_message,
+                                        size_t *response_size,
+                                        void **response);
 
 /**
  * This is the main dispatch function in SPDM responder.
@@ -110,7 +110,7 @@ return_status libspdm_build_response(void *spdm_context, const uint32_t *session
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_UNSUPPORTED           One request message is not supported.
  **/
-return_status libspdm_responder_dispatch_message(void *spdm_context);
+libspdm_return_t libspdm_responder_dispatch_message(void *spdm_context);
 
 /**
  * Generate ERROR message.
@@ -129,11 +129,11 @@ return_status libspdm_responder_dispatch_message(void *spdm_context);
  * @retval RETURN_SUCCESS               The error message is generated.
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
-return_status libspdm_generate_error_response(const void *spdm_context,
-                                              uint8_t error_code,
-                                              uint8_t error_data,
-                                              size_t *spdm_response_size,
-                                              void *spdm_response);
+libspdm_return_t libspdm_generate_error_response(const void *spdm_context,
+                                                 uint8_t error_code,
+                                                 uint8_t error_data,
+                                                 size_t *spdm_response_size,
+                                                 void *spdm_response);
 
 /**
  * Generate ERROR message with extended error data.
@@ -154,7 +154,7 @@ return_status libspdm_generate_error_response(const void *spdm_context,
  * @retval RETURN_SUCCESS               The error message is generated.
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
-return_status libspdm_generate_extended_error_response(
+libspdm_return_t libspdm_generate_extended_error_response(
     const void *context, uint8_t error_code, uint8_t error_data,
     size_t extended_error_data_size, const uint8_t *extended_error_data,
     size_t *spdm_response_size, void *spdm_response);
@@ -181,7 +181,7 @@ typedef void (*libspdm_session_state_callback_func)(
  * @retval RETURN_SUCCESS          The callback is registered.
  * @retval RETURN_ALREADY_STARTED  No enough memory to register the callback.
  **/
-return_status libspdm_register_session_state_callback_func(
+libspdm_return_t libspdm_register_session_state_callback_func(
     void *spdm_context,
     libspdm_session_state_callback_func spdm_session_state_callback);
 
@@ -205,7 +205,7 @@ typedef void (*libspdm_connection_state_callback_func)(
  * @retval RETURN_SUCCESS          The callback is registered.
  * @retval RETURN_ALREADY_STARTED  No enough memory to register the callback.
  **/
-return_status libspdm_register_connection_state_callback_func(
+libspdm_return_t libspdm_register_connection_state_callback_func(
     void *spdm_context,
     libspdm_connection_state_callback_func spdm_connection_state_callback);
 

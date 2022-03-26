@@ -22,13 +22,13 @@
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_responder_handle_response_state(void *context,
-                                                      uint8_t request_code,
-                                                      size_t *response_size,
-                                                      void *response)
+libspdm_return_t libspdm_responder_handle_response_state(void *context,
+                                                         uint8_t request_code,
+                                                         size_t *response_size,
+                                                         void *response)
 {
     libspdm_context_t *spdm_context;
-    return_status status;
+    libspdm_return_t status;
 
     spdm_context = context;
     switch (spdm_context->response_state) {
@@ -40,13 +40,13 @@ return_status libspdm_responder_handle_response_state(void *context,
         status = libspdm_generate_error_response(spdm_context,
                                                  SPDM_ERROR_CODE_REQUEST_RESYNCH, 0,
                                                  response_size, response);
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return status;
         }
         /* NOTE: Need to let SPDM_VERSION reset the State*/
         libspdm_set_connection_state(spdm_context,
                                      LIBSPDM_CONNECTION_STATE_NOT_STARTED);
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case LIBSPDM_RESPONSE_STATE_NOT_READY:
         /*do not update ErrorData if a previous request has not been completed*/
         if(request_code != SPDM_RESPOND_IF_READY) {
@@ -73,6 +73,6 @@ return_status libspdm_responder_handle_response_state(void *context,
                                                0, response_size, response);
     /* NOTE: Need let SPDM_ENCAPSULATED_RESPONSE_ACK reset the State*/
     default:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     }
 }

@@ -19,9 +19,9 @@
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_UNSUPPORTED           One request message is not supported.
  **/
-return_status libspdm_responder_dispatch_message(void *context)
+libspdm_return_t libspdm_responder_dispatch_message(void *context)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_context_t *spdm_context;
     uint8_t *request;
     size_t request_size;
@@ -49,7 +49,7 @@ return_status libspdm_responder_dispatch_message(void *context)
     status = libspdm_process_request(spdm_context, &session_id, &is_app_message,
                                      request_size, request);
     libspdm_release_receiver_buffer (spdm_context);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return status;
     }
 
@@ -69,7 +69,7 @@ return_status libspdm_responder_dispatch_message(void *context)
 
     status = libspdm_build_response(spdm_context, session_id_ptr, is_app_message,
                                     &response_size, (void **)&response);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_release_sender_buffer (spdm_context);
         return status;
     }

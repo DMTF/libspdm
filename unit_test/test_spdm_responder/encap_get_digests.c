@@ -18,7 +18,7 @@ static uint8_t m_libspdm_local_certificate_chain[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE
  **/
 void test_spdm_responder_encap_get_digests_case1(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     spdm_digest_response_t *spdm_response;
@@ -68,7 +68,7 @@ void test_spdm_responder_encap_get_digests_case1(void **state)
 
     status = libspdm_process_encap_response_digest(spdm_context, spdm_response_size,
                                                    spdm_response, &need_continue);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 }
 
 /**
@@ -77,7 +77,7 @@ void test_spdm_responder_encap_get_digests_case1(void **state)
  **/
 void test_spdm_responder_encap_get_digests_case2(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     spdm_error_response_t spdm_response;
@@ -112,7 +112,7 @@ void test_spdm_responder_encap_get_digests_case2(void **state)
     status = libspdm_process_encap_response_digest(spdm_context, spdm_response_size,
                                                    &spdm_response, &need_continue);
 
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_UNSUPPORTED_CAP);
 }
 
 /**
@@ -121,7 +121,7 @@ void test_spdm_responder_encap_get_digests_case2(void **state)
  **/
 void test_spdm_responder_encap_get_digests_case3(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     bool need_continue;
@@ -154,7 +154,7 @@ void test_spdm_responder_encap_get_digests_case3(void **state)
 
     status = libspdm_process_encap_response_digest(spdm_context, spdm_response_size,
                                                    spdm_response, &need_continue);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_SIZE);
 }
 
 /**
@@ -163,7 +163,7 @@ void test_spdm_responder_encap_get_digests_case3(void **state)
  **/
 void test_spdm_responder_encap_get_digests_case4(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     bool need_continue;
@@ -207,7 +207,7 @@ void test_spdm_responder_encap_get_digests_case4(void **state)
 
     status = libspdm_process_encap_response_digest(spdm_context, spdm_response_size,
                                                    spdm_response, &need_continue);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
 /**
@@ -217,7 +217,7 @@ void test_spdm_responder_encap_get_digests_case4(void **state)
  **/
 void test_spdm_responder_encap_get_digests_case5(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     spdm_digest_response_t *spdm_response;
@@ -248,7 +248,7 @@ void test_spdm_responder_encap_get_digests_case5(void **state)
     status = libspdm_process_encap_response_digest(spdm_context, spdm_response_size,
                                                    spdm_response, &need_continue);
 
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
 libspdm_test_context_t m_spdm_responder_encap_get_digests_test_context = {

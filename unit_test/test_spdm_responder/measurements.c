@@ -104,7 +104,7 @@ static uint8_t m_libspdm_local_psk_hint[32];
  **/
 void libspdm_test_responder_measurements_case1(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -138,7 +138,7 @@ void libspdm_test_responder_measurements_case1(void **state)
     status = libspdm_get_response_measurements(
         spdm_context, m_libspdm_get_measurements_request1_size,
         &m_libspdm_get_measurements_request1, &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size,
                      sizeof(spdm_measurements_response_t) + SPDM_NONCE_SIZE + sizeof(uint16_t));
     spdm_response = (void *)response;
@@ -161,7 +161,7 @@ void libspdm_test_responder_measurements_case1(void **state)
  **/
 void libspdm_test_responder_measurements_case2(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -195,7 +195,7 @@ void libspdm_test_responder_measurements_case2(void **state)
     status = libspdm_get_response_measurements(
         spdm_context, m_libspdm_get_measurements_request2_size,
         &m_libspdm_get_measurements_request2, &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
@@ -214,7 +214,7 @@ void libspdm_test_responder_measurements_case2(void **state)
  **/
 void libspdm_test_responder_measurements_case3(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -249,7 +249,7 @@ void libspdm_test_responder_measurements_case3(void **state)
     status = libspdm_get_response_measurements(
         spdm_context, m_libspdm_get_measurements_request1_size,
         &m_libspdm_get_measurements_request1, &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
@@ -269,7 +269,7 @@ void libspdm_test_responder_measurements_case3(void **state)
  **/
 void libspdm_test_responder_measurements_case4(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -304,7 +304,7 @@ void libspdm_test_responder_measurements_case4(void **state)
     status = libspdm_get_response_measurements(
         spdm_context, m_libspdm_get_measurements_request1_size,
         &m_libspdm_get_measurements_request1, &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
@@ -325,7 +325,7 @@ void libspdm_test_responder_measurements_case4(void **state)
  **/
 void libspdm_test_responder_measurements_case5(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -361,7 +361,7 @@ void libspdm_test_responder_measurements_case5(void **state)
     status = libspdm_get_response_measurements(
         spdm_context, m_libspdm_get_measurements_request1_size,
         &m_libspdm_get_measurements_request1, &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size,
                      sizeof(spdm_error_response_t) +
                      sizeof(spdm_error_data_response_not_ready_t));
@@ -388,7 +388,7 @@ void libspdm_test_responder_measurements_case5(void **state)
  **/
 void libspdm_test_responder_measurements_case6(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -423,7 +423,7 @@ void libspdm_test_responder_measurements_case6(void **state)
     status = libspdm_get_response_measurements(
         spdm_context, m_libspdm_get_measurements_request1_size,
         &m_libspdm_get_measurements_request1, &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
@@ -442,7 +442,7 @@ void libspdm_test_responder_measurements_case6(void **state)
  **/
 void libspdm_test_responder_measurements_case7(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -479,7 +479,7 @@ void libspdm_test_responder_measurements_case7(void **state)
     status = libspdm_get_response_measurements(
         spdm_context, m_libspdm_get_measurements_request5_size,
         &m_libspdm_get_measurements_request5, &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_measurements_response_t) +
                      measurment_sig_size);
     spdm_response = (void *)response;
@@ -498,7 +498,7 @@ void libspdm_test_responder_measurements_case7(void **state)
  **/
 void libspdm_test_responder_measurements_case8(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -534,7 +534,7 @@ void libspdm_test_responder_measurements_case8(void **state)
     status = libspdm_get_response_measurements(
         spdm_context, m_libspdm_get_measurements_request3_size,
         &m_libspdm_get_measurements_request3, &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size,
                      sizeof(spdm_measurements_response_t) +
                      sizeof(spdm_measurement_block_dmtf_t) +
@@ -555,7 +555,7 @@ void libspdm_test_responder_measurements_case8(void **state)
  **/
 void libspdm_test_responder_measurements_case9(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -589,7 +589,7 @@ void libspdm_test_responder_measurements_case9(void **state)
     status = libspdm_get_response_measurements(
         spdm_context, m_libspdm_get_measurements_request4_size,
         &m_libspdm_get_measurements_request4, &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
@@ -608,7 +608,7 @@ void libspdm_test_responder_measurements_case9(void **state)
  **/
 void libspdm_test_responder_measurements_case10(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -642,7 +642,7 @@ void libspdm_test_responder_measurements_case10(void **state)
     status = libspdm_get_response_measurements(
         spdm_context, m_libspdm_get_measurements_request6_size,
         &m_libspdm_get_measurements_request6, &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size,
                      sizeof(spdm_measurements_response_t) +
                      sizeof(spdm_measurement_block_dmtf_t) +
@@ -669,7 +669,7 @@ void libspdm_test_responder_measurements_case10(void **state)
  **/
 void libspdm_test_responder_measurements_case11(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -706,7 +706,7 @@ void libspdm_test_responder_measurements_case11(void **state)
     status = libspdm_get_response_measurements(
         spdm_context, m_libspdm_get_measurements_request8_size,
         &m_libspdm_get_measurements_request8, &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size,
                      sizeof(spdm_measurements_response_t) +
                      LIBSPDM_MEASUREMENT_BLOCK_HASH_NUMBER *
@@ -736,7 +736,7 @@ void libspdm_test_responder_measurements_case11(void **state)
  **/
 void libspdm_test_responder_measurements_case12(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -770,7 +770,7 @@ void libspdm_test_responder_measurements_case12(void **state)
     status = libspdm_get_response_measurements(
         spdm_context, m_libspdm_get_measurements_request7_size,
         &m_libspdm_get_measurements_request7, &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size,
                      sizeof(spdm_measurements_response_t) +
                      LIBSPDM_MEASUREMENT_BLOCK_HASH_NUMBER *
@@ -813,7 +813,7 @@ void libspdm_test_responder_measurements_case12(void **state)
  **/
 void libspdm_test_responder_measurements_case13(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -862,7 +862,7 @@ void libspdm_test_responder_measurements_case13(void **state)
             spdm_context, TestMsgSizes[i],
             &m_libspdm_get_measurements_request9, &response_size,
             response);
-        assert_int_equal(status, RETURN_SUCCESS);
+        assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
         assert_int_equal(response_size, sizeof(spdm_error_response_t));
         spdm_response = (void *)response;
         assert_int_equal(spdm_response->header.request_response_code,
@@ -883,7 +883,7 @@ void libspdm_test_responder_measurements_case13(void **state)
  **/
 void libspdm_test_responder_measurements_case14(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -932,7 +932,7 @@ void libspdm_test_responder_measurements_case14(void **state)
             spdm_context, TestMsgSizes[i],
             &m_libspdm_get_measurements_request10, &response_size,
             response);
-        assert_int_equal(status, RETURN_SUCCESS);
+        assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
         assert_int_equal(response_size, sizeof(spdm_error_response_t));
         spdm_response = (void *)response;
         assert_int_equal(spdm_response->header.request_response_code,
@@ -953,7 +953,7 @@ void libspdm_test_responder_measurements_case14(void **state)
  **/
 void libspdm_test_responder_measurements_case15(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -989,7 +989,7 @@ void libspdm_test_responder_measurements_case15(void **state)
     status = libspdm_get_response_measurements(
         spdm_context, m_libspdm_get_measurements_request10_size,
         &m_libspdm_get_measurements_request10, &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
@@ -1008,7 +1008,7 @@ void libspdm_test_responder_measurements_case15(void **state)
  **/
 void libspdm_test_responder_measurements_case16(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -1042,7 +1042,7 @@ void libspdm_test_responder_measurements_case16(void **state)
     status = libspdm_get_response_measurements(
         spdm_context, m_libspdm_get_measurements_request9_size,
         &m_libspdm_get_measurements_request10, &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
@@ -1061,7 +1061,7 @@ void libspdm_test_responder_measurements_case16(void **state)
  **/
 void libspdm_test_responder_measurements_case17(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -1096,7 +1096,7 @@ void libspdm_test_responder_measurements_case17(void **state)
     status = libspdm_get_response_measurements(
         spdm_context, m_libspdm_get_measurements_request9_size,
         &m_libspdm_get_measurements_request9, &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
@@ -1117,7 +1117,7 @@ void libspdm_test_responder_measurements_case17(void **state)
  **/
 void libspdm_test_responder_measurements_case18(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -1165,7 +1165,7 @@ void libspdm_test_responder_measurements_case18(void **state)
     status = libspdm_get_response_measurements(
         spdm_context, m_libspdm_get_measurements_request11_size,
         &m_libspdm_get_measurements_request11, &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size,
                      sizeof(spdm_measurements_response_t) +
                      sizeof(spdm_measurement_block_dmtf_t) +
@@ -1191,7 +1191,7 @@ void libspdm_test_responder_measurements_case18(void **state)
  **/
 void libspdm_test_responder_measurements_case19(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -1226,7 +1226,7 @@ void libspdm_test_responder_measurements_case19(void **state)
     status = libspdm_get_response_measurements(
         spdm_context, m_libspdm_get_measurements_request12_size,
         &m_libspdm_get_measurements_request12, &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
@@ -1245,7 +1245,7 @@ void libspdm_test_responder_measurements_case19(void **state)
  **/
 void libspdm_test_responder_measurements_case20(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -1280,7 +1280,7 @@ void libspdm_test_responder_measurements_case20(void **state)
     status = libspdm_get_response_measurements(
         spdm_context, m_libspdm_get_measurements_request11_size,
         &m_libspdm_get_measurements_request11, &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
@@ -1299,7 +1299,7 @@ void libspdm_test_responder_measurements_case20(void **state)
  **/
 void libspdm_test_responder_measurements_case21(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -1332,7 +1332,7 @@ void libspdm_test_responder_measurements_case21(void **state)
     status = libspdm_get_response_measurements(
         spdm_context, m_libspdm_get_measurements_request13_size,
         &m_libspdm_get_measurements_request13, &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
@@ -1352,7 +1352,7 @@ void libspdm_test_responder_measurements_case21(void **state)
  **/
 void libspdm_test_responder_measurements_case22(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -1390,7 +1390,7 @@ void libspdm_test_responder_measurements_case22(void **state)
             spdm_context, m_libspdm_get_measurements_request6_size,
             &m_libspdm_get_measurements_request6, &response_size,
             response);
-        assert_int_equal(status, RETURN_SUCCESS);
+        assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
         spdm_response = (void *)response;
         if (spdm_response->header.request_response_code ==
             SPDM_MEASUREMENTS) {
@@ -1435,7 +1435,7 @@ void libspdm_test_responder_measurements_case22(void **state)
  **/
 void libspdm_test_responder_measurements_case23(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -1490,7 +1490,7 @@ void libspdm_test_responder_measurements_case23(void **state)
     status = libspdm_get_response_measurements(
         spdm_context, m_libspdm_get_measurements_request5_size,
         &m_libspdm_get_measurements_request5, &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_measurements_response_t) +
                      measurment_sig_size);
     spdm_response = (void *)response;
@@ -1512,7 +1512,7 @@ void libspdm_test_responder_measurements_case23(void **state)
  **/
 void libspdm_test_responder_measurements_case24(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -1551,7 +1551,7 @@ void libspdm_test_responder_measurements_case24(void **state)
     status = libspdm_get_response_measurements(
         spdm_context, m_libspdm_get_measurements_request7_size,
         &m_libspdm_get_measurements_request7, &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size,
                      sizeof(spdm_measurements_response_t) + LIBSPDM_MEASUREMENT_BLOCK_HASH_NUMBER*
                      (sizeof(spdm_measurement_block_dmtf_t) +

@@ -25,7 +25,7 @@ static uint8_t m_libspdm_local_certificate_chain[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE
 
 void libspdm_test_get_response_encapsulated_request_case1(void **State)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     spdm_encapsulated_request_response_t *spdm_response_tequester;
     libspdm_context_t *spdm_context;
@@ -72,7 +72,7 @@ void libspdm_test_get_response_encapsulated_request_case1(void **State)
                                                        &response_size,
                                                        response);
 
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size,
                      sizeof(spdm_encapsulated_request_response_t) + sizeof(spdm_digest_response_t));
     spdm_response_tequester = (void *)response;
@@ -86,7 +86,7 @@ void libspdm_test_get_response_encapsulated_request_case1(void **State)
 
 void libspdm_test_get_response_encapsulated_request_case2(void **State)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     spdm_encapsulated_request_response_t *spdm_response_tequester;
     libspdm_context_t *spdm_context;
@@ -130,7 +130,7 @@ void libspdm_test_get_response_encapsulated_request_case2(void **State)
                                                        &response_size,
                                                        response);
 
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size,
                      sizeof(spdm_encapsulated_request_response_t) +
                      sizeof(spdm_certificate_response_t));
@@ -145,7 +145,7 @@ void libspdm_test_get_response_encapsulated_request_case2(void **State)
 
 void libspdm_test_get_response_encapsulated_request_case3(void **State)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     spdm_encapsulated_request_response_t *spdm_response_tequester;
     libspdm_context_t *spdm_context;
@@ -179,7 +179,7 @@ void libspdm_test_get_response_encapsulated_request_case3(void **State)
                                                        &response_size,
                                                        response);
 
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response_tequester = (void *)response;
     assert_int_equal(spdm_response_tequester->header.request_response_code,
@@ -191,7 +191,7 @@ void libspdm_test_get_response_encapsulated_request_case3(void **State)
 
 void libspdm_test_get_response_encapsulated_request_case4(void **State)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     spdm_encapsulated_request_response_t *spdm_response_tequester;
     libspdm_context_t *spdm_context;
@@ -224,7 +224,7 @@ void libspdm_test_get_response_encapsulated_request_case4(void **State)
                                                        &m_libspdm_encapsulated_request_t1,
                                                        &response_size,
                                                        response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response_tequester = (void *)response;
     assert_int_equal(spdm_response_tequester->header.request_response_code,
@@ -237,7 +237,7 @@ void libspdm_test_get_response_encapsulated_request_case4(void **State)
 #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 void libspdm_test_get_response_encapsulated_request_case5(void **State)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     spdm_encapsulated_request_response_t *spdm_response_tequester;
     libspdm_context_t *spdm_context;
@@ -282,7 +282,7 @@ void libspdm_test_get_response_encapsulated_request_case5(void **State)
                                                        &response_size,
                                                        response);
 
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size,
                      sizeof(spdm_encapsulated_request_response_t) +
                      sizeof(spdm_challenge_request_t));
@@ -299,7 +299,7 @@ void libspdm_test_get_response_encapsulated_request_case5(void **State)
 
 void libspdm_test_get_response_encapsulated_request_case6(void **State)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     spdm_encapsulated_request_response_t *spdm_response_tequester;
     libspdm_context_t *spdm_context;
@@ -358,7 +358,7 @@ void libspdm_test_get_response_encapsulated_request_case6(void **State)
                                                        &response_size,
                                                        response);
 
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size,
                      sizeof(spdm_encapsulated_request_response_t) +
                      sizeof(spdm_key_update_response_t));
@@ -373,7 +373,7 @@ void libspdm_test_get_response_encapsulated_request_case6(void **State)
 
 void libspdm_test_get_response_encapsulated_response_ack_case1(void **State)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     spdm_deliver_encapsulated_response_request_t *spdm_response_tequester;
@@ -455,13 +455,13 @@ void libspdm_test_get_response_encapsulated_response_ack_case1(void **State)
                                                             spdm_response_tequester_size,
                                                             spdm_response_tequester, &response_size,
                                                             response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     free(data);
 }
 
 void libspdm_test_get_response_encapsulated_response_ack_case2(void **State)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     spdm_deliver_encapsulated_response_request_t *spdm_response_tequester;
@@ -547,13 +547,13 @@ void libspdm_test_get_response_encapsulated_response_ack_case2(void **State)
                                                             spdm_response_tequester_size,
                                                             spdm_response_tequester, &response_size,
                                                             response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     free(data);
 }
 
 void libspdm_test_get_response_encapsulated_response_ack_case3(void **State)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     spdm_deliver_encapsulated_response_request_t *spdm_response_tequester;
@@ -634,13 +634,13 @@ void libspdm_test_get_response_encapsulated_response_ack_case3(void **State)
                                                             spdm_response_tequester_size,
                                                             spdm_response_tequester, &response_size,
                                                             response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     free(data);
 }
 
 void libspdm_test_get_response_encapsulated_response_ack_case4(void **State)
 {
-    return_status status;
+    libspdm_return_t status;
     spdm_encapsulated_request_response_t *spdm_response_tequester;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -662,7 +662,7 @@ void libspdm_test_get_response_encapsulated_response_ack_case4(void **State)
                                                             m_libspdm_m_deliver_encapsulated_response_request_t1_size,
                                                             &m_libspdm_m_deliver_encapsulated_response_request_t1, &response_size,
                                                             response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response_tequester = (void *)response;
     assert_int_equal(spdm_response_tequester->header.request_response_code,
@@ -674,7 +674,7 @@ void libspdm_test_get_response_encapsulated_response_ack_case4(void **State)
 
 void libspdm_test_get_response_encapsulated_response_ack_case5(void **State)
 {
-    return_status status;
+    libspdm_return_t status;
     spdm_encapsulated_request_response_t *spdm_response_tequester;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -695,7 +695,7 @@ void libspdm_test_get_response_encapsulated_response_ack_case5(void **State)
                                                             m_libspdm_m_deliver_encapsulated_response_request_t1_size,
                                                             &m_libspdm_m_deliver_encapsulated_response_request_t1, &response_size,
                                                             response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response_tequester = (void *)response;
     assert_int_equal(spdm_response_tequester->header.request_response_code,
@@ -707,7 +707,7 @@ void libspdm_test_get_response_encapsulated_response_ack_case5(void **State)
 
 void libspdm_test_get_response_encapsulated_response_ack_case6(void **State)
 {
-    return_status status;
+    libspdm_return_t status;
     spdm_encapsulated_request_response_t *spdm_response_tequester;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -740,7 +740,7 @@ void libspdm_test_get_response_encapsulated_response_ack_case6(void **State)
                                                             m_libspdm_m_deliver_encapsulated_response_request_t1_size,
                                                             &m_libspdm_m_deliver_encapsulated_response_request_t1, &response_size,
                                                             response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response_tequester = (void *)response;
     assert_int_equal(spdm_response_tequester->header.request_response_code,
@@ -752,7 +752,7 @@ void libspdm_test_get_response_encapsulated_response_ack_case6(void **State)
 
 void libspdm_test_get_response_encapsulated_response_ack_case7(void **State)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     spdm_deliver_encapsulated_response_request_t *spdm_response_tequester;
@@ -839,7 +839,7 @@ void libspdm_test_get_response_encapsulated_response_ack_case7(void **State)
                                                             spdm_response_tequester_size,
                                                             spdm_response_tequester, &response_size,
                                                             response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response_tequester = (void *)response;
     assert_int_equal(spdm_response_tequester->header.request_response_code,
