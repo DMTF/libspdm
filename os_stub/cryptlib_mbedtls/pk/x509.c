@@ -248,7 +248,7 @@ cleanup:
     return status;
 }
 
-return_status
+bool
 libspdm_internal_x509_get_nid_name(mbedtls_x509_name *name, const uint8_t *oid,
                                    size_t oid_size, char *common_name,
                                    size_t *common_name_size)
@@ -259,20 +259,21 @@ libspdm_internal_x509_get_nid_name(mbedtls_x509_name *name, const uint8_t *oid,
     if (data != NULL) {
         if (*common_name_size <= data->val.len) {
             *common_name_size = data->val.len + 1;
-            return RETURN_BUFFER_TOO_SMALL;
+            return false;
         }
         if (common_name != NULL) {
             libspdm_copy_mem(common_name, *common_name_size, data->val.p, data->val.len);
             common_name[data->val.len] = '\0';
         }
         *common_name_size = data->val.len + 1;
-        return RETURN_SUCCESS;
+        return true;
     } else {
-        return RETURN_NOT_FOUND;
+        *common_name_size = 0;
+        return false;
     }
 }
 
-return_status
+bool
 libspdm_internal_x509_get_subject_nid_name(const uint8_t *cert, size_t cert_size,
                                            const uint8_t *oid, size_t oid_size,
                                            char *common_name,
@@ -281,13 +282,13 @@ libspdm_internal_x509_get_subject_nid_name(const uint8_t *cert, size_t cert_size
     mbedtls_x509_crt crt;
     int32_t ret;
     mbedtls_x509_name *name;
-    return_status status;
+    bool status;
 
     if (cert == NULL) {
         return false;
     }
 
-    status = RETURN_INVALID_PARAMETER;
+    status = false;
 
     mbedtls_x509_crt_init(&crt);
 
@@ -304,7 +305,7 @@ libspdm_internal_x509_get_subject_nid_name(const uint8_t *cert, size_t cert_size
     return status;
 }
 
-return_status
+bool
 libspdm_internal_x509_get_issuer_nid_name(const uint8_t *cert, size_t cert_size,
                                           const uint8_t *oid, size_t oid_size,
                                           char *common_name,
@@ -313,13 +314,13 @@ libspdm_internal_x509_get_issuer_nid_name(const uint8_t *cert, size_t cert_size,
     mbedtls_x509_crt crt;
     int32_t ret;
     mbedtls_x509_name *name;
-    return_status status;
+    bool status;
 
     if (cert == NULL) {
         return false;
     }
 
-    status = RETURN_INVALID_PARAMETER;
+    status = false;
 
     mbedtls_x509_crt_init(&crt);
 
@@ -362,9 +363,9 @@ libspdm_internal_x509_get_issuer_nid_name(const uint8_t *cert, size_t cert_size,
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  *
  **/
-return_status libspdm_x509_get_common_name(const uint8_t *cert, size_t cert_size,
-                                           char *common_name,
-                                           size_t *common_name_size)
+bool libspdm_x509_get_common_name(const uint8_t *cert, size_t cert_size,
+                                  char *common_name,
+                                  size_t *common_name_size)
 {
     return libspdm_internal_x509_get_subject_nid_name(
         cert, cert_size, (uint8_t *)m_libspdm_oid_common_name,
@@ -397,7 +398,7 @@ return_status libspdm_x509_get_common_name(const uint8_t *cert, size_t cert_size
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  *
  **/
-return_status
+bool
 libspdm_x509_get_organization_name(const uint8_t *cert, size_t cert_size,
                                    char *name_buffer,
                                    size_t *name_buffer_size)
@@ -804,18 +805,18 @@ bool libspdm_x509_get_tbs_cert(const uint8_t *cert, size_t cert_size,
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  *
  **/
-return_status libspdm_x509_get_version(const uint8_t *cert, size_t cert_size,
-                                       size_t *version)
+bool libspdm_x509_get_version(const uint8_t *cert, size_t cert_size,
+                              size_t *version)
 {
     mbedtls_x509_crt crt;
     int32_t ret;
-    return_status status;
+    bool status;
 
     if (cert == NULL) {
-        return RETURN_INVALID_PARAMETER;
+        return false;
     }
 
-    status = RETURN_INVALID_PARAMETER;
+    status = false;
 
     mbedtls_x509_crt_init(&crt);
 
@@ -823,7 +824,7 @@ return_status libspdm_x509_get_version(const uint8_t *cert, size_t cert_size,
 
     if (ret == 0) {
         *version = crt.version - 1;
-        status = RETURN_SUCCESS;
+        status = true;
     }
 
     mbedtls_x509_crt_free(&crt);
@@ -854,19 +855,19 @@ return_status libspdm_x509_get_version(const uint8_t *cert, size_t cert_size,
  *                                 serial_number_size parameter.
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
-return_status libspdm_x509_get_serial_number(const uint8_t *cert, size_t cert_size,
-                                             uint8_t *serial_number,
-                                             size_t *serial_number_size)
+bool libspdm_x509_get_serial_number(const uint8_t *cert, size_t cert_size,
+                                    uint8_t *serial_number,
+                                    size_t *serial_number_size)
 {
     mbedtls_x509_crt crt;
     int32_t ret;
-    return_status status;
+    bool status;
 
     if (cert == NULL) {
-        return RETURN_INVALID_PARAMETER;
+        return false;
     }
 
-    status = RETURN_INVALID_PARAMETER;
+    status = false;
 
     mbedtls_x509_crt_init(&crt);
 
@@ -875,7 +876,7 @@ return_status libspdm_x509_get_serial_number(const uint8_t *cert, size_t cert_si
     if (ret == 0) {
         if (*serial_number_size <= crt.serial.len) {
             *serial_number_size = crt.serial.len + 1;
-            status = RETURN_BUFFER_TOO_SMALL;
+            status = false;
             goto cleanup;
         }
         if (serial_number != NULL) {
@@ -883,7 +884,7 @@ return_status libspdm_x509_get_serial_number(const uint8_t *cert, size_t cert_si
             serial_number[crt.serial.len] = '\0';
         }
         *serial_number_size = crt.serial.len + 1;
-        status = RETURN_SUCCESS;
+        status = true;
     }
 cleanup:
     mbedtls_x509_crt_free(&crt);
@@ -973,7 +974,7 @@ cleanup:
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  *
  **/
-return_status
+bool
 libspdm_x509_get_issuer_common_name(const uint8_t *cert, size_t cert_size,
                                     char *common_name,
                                     size_t *common_name_size)
@@ -1010,7 +1011,7 @@ libspdm_x509_get_issuer_common_name(const uint8_t *cert, size_t cert_size,
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  *
  **/
-return_status
+bool
 libspdm_x509_get_issuer_orgnization_name(const uint8_t *cert, size_t cert_size,
                                          char *name_buffer,
                                          size_t *name_buffer_size)
@@ -1038,19 +1039,19 @@ libspdm_x509_get_issuer_orgnization_name(const uint8_t *cert, size_t cert_size,
  *                                 is returned in the oid_size.
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
-return_status libspdm_x509_get_signature_algorithm(const uint8_t *cert,
-                                                   size_t cert_size, uint8_t *oid,
-                                                   size_t *oid_size)
+bool libspdm_x509_get_signature_algorithm(const uint8_t *cert,
+                                          size_t cert_size, uint8_t *oid,
+                                          size_t *oid_size)
 {
     mbedtls_x509_crt crt;
     int32_t ret;
-    return_status status;
+    bool status;
 
     if (cert == NULL || cert_size == 0 || oid_size == NULL) {
-        return RETURN_INVALID_PARAMETER;
+        return false;
     }
 
-    status = RETURN_INVALID_PARAMETER;
+    status = false;
 
     mbedtls_x509_crt_init(&crt);
 
@@ -1059,14 +1060,14 @@ return_status libspdm_x509_get_signature_algorithm(const uint8_t *cert,
     if (ret == 0) {
         if (*oid_size < crt.sig_oid.len) {
             *oid_size = crt.serial.len;
-            status = RETURN_BUFFER_TOO_SMALL;
+            status = false;
             goto cleanup;
         }
         if (oid != NULL) {
             libspdm_copy_mem(oid, *oid_size, crt.sig_oid.p, crt.sig_oid.len);
         }
         *oid_size = crt.sig_oid.len;
-        status = RETURN_SUCCESS;
+        status = true;
     }
 
 cleanup:
@@ -1086,7 +1087,7 @@ cleanup:
  * @param[out]     find_extension_data_len matched extension data size.
  *
  **/
-static return_status
+static bool
 libspdm_internal_x509_find_extension_data(uint8_t *start, uint8_t *end, const uint8_t *oid,
                                           size_t oid_size, uint8_t **find_extension_data,
                                           size_t *find_extension_data_len)
@@ -1095,12 +1096,12 @@ libspdm_internal_x509_find_extension_data(uint8_t *start, uint8_t *end, const ui
     uint8_t *extension_ptr;
     size_t obj_len;
     int32_t ret;
-    return_status status;
+    bool status;
     size_t find_extension_len;
     size_t header_len;
 
     /*If no Extension entry match oid*/
-    status = RETURN_NOT_FOUND;
+    status = false;
     ptr = start;
 
     ret = 0;
@@ -1144,7 +1145,7 @@ libspdm_internal_x509_find_extension_data(uint8_t *start, uint8_t *end, const ui
         if (ret == 0) {
             *find_extension_data = ptr;
             *find_extension_data_len = obj_len;
-            status = RETURN_SUCCESS;
+            status = true;
             break;
         }
 
@@ -1176,24 +1177,24 @@ libspdm_internal_x509_find_extension_data(uint8_t *start, uint8_t *end, const ui
  *                                 is returned in the extension_data_size parameter.
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
-return_status libspdm_x509_get_extension_data(const uint8_t *cert, size_t cert_size,
-                                              const uint8_t *oid, size_t oid_size,
-                                              uint8_t *extension_data,
-                                              size_t *extension_data_size)
+bool libspdm_x509_get_extension_data(const uint8_t *cert, size_t cert_size,
+                                     const uint8_t *oid, size_t oid_size,
+                                     uint8_t *extension_data,
+                                     size_t *extension_data_size)
 {
     mbedtls_x509_crt crt;
     int32_t ret;
-    return_status status;
+    bool status;
     uint8_t *ptr;
     uint8_t *end;
     size_t obj_len;
 
     if (cert == NULL || cert_size == 0 || oid == NULL || oid_size == 0 ||
         extension_data_size == NULL) {
-        return RETURN_INVALID_PARAMETER;
+        return false;
     }
 
-    status = RETURN_INVALID_PARAMETER;
+    status = false;
 
     mbedtls_x509_crt_init(&crt);
 
@@ -1212,17 +1213,18 @@ return_status libspdm_x509_get_extension_data(const uint8_t *cert, size_t cert_s
             ptr, end, oid, oid_size, &ptr, &obj_len);
     }
 
-    if (status == RETURN_SUCCESS) {
+    if (status) {
         if (*extension_data_size < obj_len) {
             *extension_data_size = obj_len;
-            status = RETURN_BUFFER_TOO_SMALL;
+            status = false;
             goto cleanup;
         }
         if (oid != NULL) {
             libspdm_copy_mem(extension_data, *extension_data_size, ptr, obj_len);
         }
         *extension_data_size = obj_len;
-        status = RETURN_SUCCESS;
+    } else {
+        *extension_data_size = 0;
     }
 
 cleanup:
@@ -1356,14 +1358,14 @@ bool libspdm_x509_get_key_usage(const uint8_t *cert, size_t cert_size,
  *                                 is returned in the usage_size parameter.
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
-return_status libspdm_x509_get_extended_key_usage(const uint8_t *cert,
-                                                  size_t cert_size, uint8_t *usage,
-                                                  size_t *usage_size)
+bool libspdm_x509_get_extended_key_usage(const uint8_t *cert,
+                                         size_t cert_size, uint8_t *usage,
+                                         size_t *usage_size)
 {
-    return_status status;
+    bool status;
 
     if (cert == NULL || cert_size == 0 || usage_size == NULL) {
-        return RETURN_INVALID_PARAMETER;
+        return false;
     }
 
     status = libspdm_x509_get_extension_data((uint8_t *)cert, cert_size,
@@ -1392,15 +1394,15 @@ return_status libspdm_x509_get_extended_key_usage(const uint8_t *cert,
  * @retval RETURN_NOT_FOUND         If no Extension entry match oid.
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
-return_status libspdm_x509_get_extended_basic_constraints(const uint8_t *cert,
-                                                          size_t cert_size,
-                                                          uint8_t *basic_constraints,
-                                                          size_t *basic_constraints_size)
+bool libspdm_x509_get_extended_basic_constraints(const uint8_t *cert,
+                                                 size_t cert_size,
+                                                 uint8_t *basic_constraints,
+                                                 size_t *basic_constraints_size)
 {
-    return_status status;
+    bool status;
 
     if (cert == NULL || cert_size == 0 || basic_constraints_size == NULL) {
-        return RETURN_INVALID_PARAMETER;
+        return false;
     }
 
     status = libspdm_x509_get_extension_data((uint8_t *)cert, cert_size,
@@ -1481,8 +1483,8 @@ static int32_t libspdm_internal_atoi(char *p_start, char *p_end)
  *                                 date_time_size parameter.
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
-return_status libspdm_x509_set_date_time(char *date_time_str, void *date_time,
-                                         size_t *date_time_size)
+bool libspdm_x509_set_date_time(char *date_time_str, void *date_time,
+                                size_t *date_time_size)
 {
     mbedtls_x509_time dt;
 
@@ -1492,7 +1494,7 @@ return_status libspdm_x509_set_date_time(char *date_time_str, void *date_time,
     int32_t hour;
     int32_t minute;
     int32_t second;
-    return_status status;
+    bool status;
     char *p;
 
     p = date_time_str;
@@ -1518,14 +1520,14 @@ return_status libspdm_x509_set_date_time(char *date_time_str, void *date_time,
 
     if (*date_time_size < sizeof(mbedtls_x509_time)) {
         *date_time_size = sizeof(mbedtls_x509_time);
-        status = RETURN_BUFFER_TOO_SMALL;
+        status = false;
         goto cleanup;
     }
     if (date_time != NULL) {
         libspdm_copy_mem(date_time, *date_time_size, &dt, sizeof(mbedtls_x509_time));
     }
     *date_time_size = sizeof(mbedtls_x509_time);
-    status = RETURN_SUCCESS;
+    status = true;
 cleanup:
     return status;
 }

@@ -39,16 +39,16 @@ void libspdm_test_crypt_spdm_get_dmtf_subject_alt_name_from_bytes(void **state)
     char common_name[64];
     size_t dmtf_oid_size;
     uint8_t dmtf_oid[64];
-    return_status ret;
+    bool status;
 
     common_name_size = 64;
     dmtf_oid_size = 64;
     libspdm_zero_mem(common_name, common_name_size);
     libspdm_zero_mem(dmtf_oid, dmtf_oid_size);
-    ret = libspdm_get_dmtf_subject_alt_name_from_bytes(
+    status = libspdm_get_dmtf_subject_alt_name_from_bytes(
         m_libspdm_subject_alt_name_buffer1, sizeof(m_libspdm_subject_alt_name_buffer1),
         common_name, &common_name_size, dmtf_oid, &dmtf_oid_size);
-    assert_int_equal((int)ret, RETURN_SUCCESS);
+    assert_true(status);
     assert_memory_equal(m_libspdm_dmtf_oid, dmtf_oid, sizeof(m_libspdm_dmtf_oid));
     assert_string_equal(common_name, "ACME:WIDGET:1234567890");
 
@@ -56,10 +56,10 @@ void libspdm_test_crypt_spdm_get_dmtf_subject_alt_name_from_bytes(void **state)
     dmtf_oid_size = 64;
     libspdm_zero_mem(common_name, common_name_size);
     libspdm_zero_mem(dmtf_oid, dmtf_oid_size);
-    ret = libspdm_get_dmtf_subject_alt_name_from_bytes(
+    status = libspdm_get_dmtf_subject_alt_name_from_bytes(
         m_libspdm_subject_alt_name_buffer2, sizeof(m_libspdm_subject_alt_name_buffer2),
         common_name, &common_name_size, dmtf_oid, &dmtf_oid_size);
-    assert_int_equal((int)ret, RETURN_SUCCESS);
+    assert_true(status);
     assert_memory_equal(m_libspdm_dmtf_oid, dmtf_oid, sizeof(m_libspdm_dmtf_oid));
     assert_string_equal(common_name, "ACME:WIDGET:1234567890");
 
@@ -67,10 +67,10 @@ void libspdm_test_crypt_spdm_get_dmtf_subject_alt_name_from_bytes(void **state)
     dmtf_oid_size = 64;
     libspdm_zero_mem(common_name, common_name_size);
     libspdm_zero_mem(dmtf_oid, dmtf_oid_size);
-    ret = libspdm_get_dmtf_subject_alt_name_from_bytes(
+    status = libspdm_get_dmtf_subject_alt_name_from_bytes(
         m_libspdm_subject_alt_name_buffer3, sizeof(m_libspdm_subject_alt_name_buffer3),
         common_name, &common_name_size, dmtf_oid, &dmtf_oid_size);
-    assert_int_equal((int)ret, RETURN_SUCCESS);
+    assert_true(status);
     assert_memory_equal(m_libspdm_dmtf_oid, dmtf_oid, sizeof(m_libspdm_dmtf_oid));
     assert_string_equal(common_name, "ACME:WIDGET:1234567890");
 }
@@ -83,7 +83,6 @@ void libspdm_test_crypt_spdm_get_dmtf_subject_alt_name(void **state)
     uint8_t dmtf_oid[64];
     uint8_t *file_buffer;
     size_t file_buffer_size;
-    return_status ret;
     bool status;
 
     status = libspdm_read_input_file("rsa2048/end_requester.cert.der",
@@ -91,10 +90,10 @@ void libspdm_test_crypt_spdm_get_dmtf_subject_alt_name(void **state)
     assert_true(status);
     dmtf_oid_size = 64;
     common_name_size = 64;
-    ret = libspdm_get_dmtf_subject_alt_name(file_buffer, file_buffer_size,
-                                            common_name, &common_name_size,
-                                            dmtf_oid, &dmtf_oid_size);
-    assert_int_equal((int)ret, RETURN_SUCCESS);
+    status = libspdm_get_dmtf_subject_alt_name(file_buffer, file_buffer_size,
+                                               common_name, &common_name_size,
+                                               dmtf_oid, &dmtf_oid_size);
+    assert_true(status);
     assert_memory_equal(m_libspdm_dmtf_oid, dmtf_oid, sizeof(m_libspdm_dmtf_oid));
     assert_string_equal(common_name, "ACME:WIDGET:1234567890");
     free(file_buffer);
@@ -104,10 +103,10 @@ void libspdm_test_crypt_spdm_get_dmtf_subject_alt_name(void **state)
     assert_true(status);
     dmtf_oid_size = 64;
     common_name_size = 64;
-    ret = libspdm_get_dmtf_subject_alt_name(file_buffer, file_buffer_size,
-                                            common_name, &common_name_size,
-                                            dmtf_oid, &dmtf_oid_size);
-    assert_int_equal((int)ret, RETURN_SUCCESS);
+    status = libspdm_get_dmtf_subject_alt_name(file_buffer, file_buffer_size,
+                                               common_name, &common_name_size,
+                                               dmtf_oid, &dmtf_oid_size);
+    assert_true(status);
     assert_memory_equal(m_libspdm_dmtf_oid, dmtf_oid, sizeof(m_libspdm_dmtf_oid));
     assert_string_equal(common_name, "ACME:WIDGET:1234567890");
     free(file_buffer);
@@ -117,10 +116,10 @@ void libspdm_test_crypt_spdm_get_dmtf_subject_alt_name(void **state)
     assert_true(status);
     dmtf_oid_size = 64;
     common_name_size = 64;
-    ret = libspdm_get_dmtf_subject_alt_name(file_buffer, file_buffer_size,
-                                            common_name, &common_name_size,
-                                            dmtf_oid, &dmtf_oid_size);
-    assert_int_equal((int)ret, RETURN_SUCCESS);
+    status = libspdm_get_dmtf_subject_alt_name(file_buffer, file_buffer_size,
+                                               common_name, &common_name_size,
+                                               dmtf_oid, &dmtf_oid_size);
+    assert_true(status);
     assert_memory_equal(m_libspdm_dmtf_oid, dmtf_oid, sizeof(m_libspdm_dmtf_oid));
     assert_string_equal(common_name, "ACME:WIDGET:1234567890");
     free(file_buffer);
@@ -130,10 +129,10 @@ void libspdm_test_crypt_spdm_get_dmtf_subject_alt_name(void **state)
     assert_true(status);
     dmtf_oid_size = 64;
     common_name_size = 64;
-    ret = libspdm_get_dmtf_subject_alt_name(file_buffer, file_buffer_size,
-                                            common_name, &common_name_size,
-                                            dmtf_oid, &dmtf_oid_size);
-    assert_int_equal((int)ret, RETURN_SUCCESS);
+    status = libspdm_get_dmtf_subject_alt_name(file_buffer, file_buffer_size,
+                                               common_name, &common_name_size,
+                                               dmtf_oid, &dmtf_oid_size);
+    assert_true(status);
     assert_memory_equal(m_libspdm_dmtf_oid, dmtf_oid, sizeof(m_libspdm_dmtf_oid));
     assert_string_equal(common_name, "ACME:WIDGET:1234567890");
     free(file_buffer);
@@ -143,10 +142,10 @@ void libspdm_test_crypt_spdm_get_dmtf_subject_alt_name(void **state)
     assert_true(status);
     dmtf_oid_size = 64;
     common_name_size = 64;
-    ret = libspdm_get_dmtf_subject_alt_name(file_buffer, file_buffer_size,
-                                            common_name, &common_name_size,
-                                            dmtf_oid, &dmtf_oid_size);
-    assert_int_equal((int)ret, RETURN_SUCCESS);
+    status = libspdm_get_dmtf_subject_alt_name(file_buffer, file_buffer_size,
+                                               common_name, &common_name_size,
+                                               dmtf_oid, &dmtf_oid_size);
+    assert_true(status);
     assert_memory_equal(m_libspdm_dmtf_oid, dmtf_oid, sizeof(m_libspdm_dmtf_oid));
     assert_string_equal(common_name, "ACME:WIDGET:1234567890");
     free(file_buffer);
@@ -156,10 +155,10 @@ void libspdm_test_crypt_spdm_get_dmtf_subject_alt_name(void **state)
     assert_true(status);
     dmtf_oid_size = 64;
     common_name_size = 64;
-    ret = libspdm_get_dmtf_subject_alt_name(file_buffer, file_buffer_size,
-                                            common_name, &common_name_size,
-                                            dmtf_oid, &dmtf_oid_size);
-    assert_int_equal((int)ret, RETURN_SUCCESS);
+    status = libspdm_get_dmtf_subject_alt_name(file_buffer, file_buffer_size,
+                                               common_name, &common_name_size,
+                                               dmtf_oid, &dmtf_oid_size);
+    assert_true(status);
     assert_memory_equal(m_libspdm_dmtf_oid, dmtf_oid, sizeof(m_libspdm_dmtf_oid));
     assert_string_equal(common_name, "ACME:WIDGET:1234567890");
     free(file_buffer);

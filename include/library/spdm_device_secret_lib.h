@@ -19,6 +19,7 @@
 #include "hal/library/memlib.h"
 #include "hal/library/cryptlib.h"
 #include "library/spdm_crypt_lib.h"
+#include "internal/libspdm_return_status.h"
 
 /**
  * Collect the device measurement.

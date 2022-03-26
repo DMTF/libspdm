@@ -33,145 +33,145 @@ void libspdm_my_print(const char *message);
 /**
  * Validate Crypto digest Interfaces.
  *
- * @retval  RETURN_SUCCESS  Validation succeeded.
- * @retval  RETURN_ABORTED  Validation failed.
+ * @retval  true  Validation succeeded.
+ * @retval  false  Validation failed.
  *
  **/
-return_status libspdm_validate_crypt_digest(void);
+bool libspdm_validate_crypt_digest(void);
 
 /**
  * Validate Crypto message Authentication Codes Interfaces.
  *
- * @retval  RETURN_SUCCESS  Validation succeeded.
- * @retval  RETURN_ABORTED  Validation failed.
+ * @retval  true  Validation succeeded.
+ * @retval  false  Validation failed.
  *
  **/
-return_status libspdm_validate_crypt_hmac(void);
+bool libspdm_validate_crypt_hmac(void);
 
 /**
  * Validate Crypto HMAC Key Derivation Function Interfaces.
  *
- * @retval  RETURN_SUCCESS  Validation succeeded.
- * @retval  RETURN_ABORTED  Validation failed.
+ * @retval  true  Validation succeeded.
+ * @retval  false  Validation failed.
  *
  **/
-return_status libspdm_validate_crypt_hkdf(void);
+bool libspdm_validate_crypt_hkdf(void);
 
 /**
  * Validate Crypto AEAD Ciphers Interfaces.
  *
- * @retval  RETURN_SUCCESS  Validation succeeded.
- * @retval  RETURN_ABORTED  Validation failed.
+ * @retval  true  Validation succeeded.
+ * @retval  false  Validation failed.
  *
  **/
-return_status libspdm_validate_crypt_aead_cipher(void);
+bool libspdm_validate_crypt_aead_cipher(void);
 
 /**
  * Validate Crypto RSA Interfaces.
  *
- * @retval  RETURN_SUCCESS  Validation succeeded.
- * @retval  RETURN_ABORTED  Validation failed.
+ * @retval  true  Validation succeeded.
+ * @retval  false  Validation failed.
  *
  **/
-return_status libspdm_validate_crypt_rsa(void);
+bool libspdm_validate_crypt_rsa(void);
 
 /**
  * Validate Crypto RSA key Retrieving (from PEM & X509) & signature Interfaces.
  *
- * @retval  RETURN_SUCCESS  Validation succeeded.
- * @retval  RETURN_ABORTED  Validation failed.
+ * @retval  true  Validation succeeded.
+ * @retval  false  Validation failed.
  *
  **/
-return_status libspdm_validate_crypt_rsa_2(void);
+bool libspdm_validate_crypt_rsa_2(void);
 
 /**
  * Validate Crypto X509 certificate Verify
  *
- * @retval  RETURN_SUCCESS  Validation succeeded.
- * @retval  RETURN_ABORTED  Validation failed.
+ * @retval  true  Validation succeeded.
+ * @retval  false  Validation failed.
  *
  **/
-return_status libspdm_validate_crypt_x509(char *Path, size_t len);
+bool libspdm_validate_crypt_x509(char *Path, size_t len);
 
 /**
  * Validate Crypto DH Interfaces.
  *
- * @retval  RETURN_SUCCESS  Validation succeeded.
- * @retval  RETURN_ABORTED  Validation failed.
+ * @retval  true  Validation succeeded.
+ * @retval  false  Validation failed.
  *
  **/
-return_status libspdm_validate_crypt_dh(void);
+bool libspdm_validate_crypt_dh(void);
 
 /**
  * Validate Crypto EC Interfaces.
  *
- * @retval  RETURN_SUCCESS  Validation succeeded.
- * @retval  RETURN_ABORTED  Validation failed.
+ * @retval  true  Validation succeeded.
+ * @retval  false  Validation failed.
  *
  **/
-return_status libspdm_validate_crypt_ec(void);
+bool libspdm_validate_crypt_ec(void);
 
 /**
  * Validate Crypto EC key Retrieving (from PEM & X509) & signature Interfaces.
  *
- * @retval  RETURN_SUCCESS  Validation succeeded.
- * @retval  RETURN_ABORTED  Validation failed.
+ * @retval  true  Validation succeeded.
+ * @retval  false  Validation failed.
  *
  **/
-return_status libspdm_validate_crypt_ec_2(void);
+bool libspdm_validate_crypt_ec_2(void);
 
 /**
  * Validate Crypto Ed Interfaces.
  *
- * @retval  RETURN_SUCCESS  Validation succeeded.
- * @retval  RETURN_ABORTED  Validation failed.
+ * @retval  true  Validation succeeded.
+ * @retval  false  Validation failed.
  *
  **/
-return_status libspdm_validate_crypt_ecd(void);
+bool libspdm_validate_crypt_ecd(void);
 
 /**
  * Validate Crypto Ed key Retrieving (from PEM & X509) & signature Interfaces.
  *
- * @retval  RETURN_SUCCESS  Validation succeeded.
- * @retval  RETURN_ABORTED  Validation failed.
+ * @retval  true  Validation succeeded.
+ * @retval  false  Validation failed.
  *
  **/
-return_status libspdm_validate_crypt_ecd_2(void);
+bool libspdm_validate_crypt_ecd_2(void);
 
 /**
  * Validate Crypto MontgomeryCurve Interfaces.
  *
- * @retval  RETURN_SUCCESS  Validation succeeded.
- * @retval  RETURN_ABORTED  Validation failed.
+ * @retval  true  Validation succeeded.
+ * @retval  false  Validation failed.
  *
  **/
-return_status libspdm_validate_crypt_ecx(void);
+bool libspdm_validate_crypt_ecx(void);
 
 /**
  * Validate Crypto sm2 Interfaces.
  *
- * @retval  RETURN_SUCCESS  Validation succeeded.
- * @retval  RETURN_ABORTED  Validation failed.
+ * @retval  true  Validation succeeded.
+ * @retval  false  Validation failed.
  *
  **/
-return_status libspdm_validate_crypt_sm2(void);
+bool libspdm_validate_crypt_sm2(void);
 
 /**
  * Validate Crypto sm2 key Retrieving (from PEM & X509) & signature Interfaces.
  *
- * @retval  RETURN_SUCCESS  Validation succeeded.
- * @retval  RETURN_ABORTED  Validation failed.
+ * @retval  true  Validation succeeded.
+ * @retval  false  Validation failed.
  *
  **/
-return_status libspdm_validate_crypt_sm2_2(void);
+bool libspdm_validate_crypt_sm2_2(void);
 
 /**
  * Validate Crypto pseudorandom number generator interfaces.
  *
- * @retval  RETURN_SUCCESS  Validation succeeded.
- * @retval  RETURN_ABORTED  Validation failed.
+ * @retval  true  Validation succeeded.
+ * @retval  false  Validation failed.
  *
  **/
-return_status libspdm_validate_crypt_prng(void);
+bool libspdm_validate_crypt_prng(void);
 
 #endif

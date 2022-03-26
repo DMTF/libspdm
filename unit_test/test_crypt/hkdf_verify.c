@@ -39,11 +39,11 @@ GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_libspdm_hkdf_sha256_okm[42] = {
 /**
  * Validate Crypto HMAC Key Derivation Function Interfaces.
  *
- * @retval  RETURN_SUCCESS  Validation succeeded.
- * @retval  RETURN_ABORTED  Validation failed.
+ * @retval  true  Validation succeeded.
+ * @retval  false  Validation failed.
  *
  **/
-return_status libspdm_validate_crypt_hkdf(void)
+bool libspdm_validate_crypt_hkdf(void)
 {
     uint8_t prk_out[32];
     uint8_t out[42];
@@ -64,7 +64,7 @@ return_status libspdm_validate_crypt_hkdf(void)
         );
     if (!status) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Check value... ");
@@ -72,7 +72,7 @@ return_status libspdm_validate_crypt_hkdf(void)
                                   sizeof(m_libspdm_hkdf_sha256_prk)) !=
         0) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_zero_mem(out, sizeof(out));
@@ -84,7 +84,7 @@ return_status libspdm_validate_crypt_hkdf(void)
         );
     if (!status) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Check value... ");
@@ -92,7 +92,7 @@ return_status libspdm_validate_crypt_hkdf(void)
                                   sizeof(m_libspdm_hkdf_sha256_okm)) !=
         0) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_zero_mem(out, sizeof(out));
@@ -105,7 +105,7 @@ return_status libspdm_validate_crypt_hkdf(void)
         );
     if (!status) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Check value... ");
@@ -113,7 +113,7 @@ return_status libspdm_validate_crypt_hkdf(void)
                                   sizeof(m_libspdm_hkdf_sha256_okm)) !=
         0) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("[Pass]\n");
@@ -131,7 +131,7 @@ return_status libspdm_validate_crypt_hkdf(void)
         );
     if (!status) {
         libspdm_my_print("[Fail]\n");
-        return RETURN_SUCCESS;
+        return true;
     }
 
     libspdm_zero_mem(out, sizeof(out));
@@ -143,7 +143,7 @@ return_status libspdm_validate_crypt_hkdf(void)
         );
     if (!status) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_zero_mem(out, sizeof(out));
@@ -156,7 +156,7 @@ return_status libspdm_validate_crypt_hkdf(void)
         );
     if (!status) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("[Pass]\n");
@@ -174,7 +174,7 @@ return_status libspdm_validate_crypt_hkdf(void)
         );
     if (!status) {
         libspdm_my_print("[Fail]\n");
-        return RETURN_SUCCESS;
+        return true;
     }
 
     libspdm_zero_mem(out, sizeof(out));
@@ -186,7 +186,7 @@ return_status libspdm_validate_crypt_hkdf(void)
         );
     if (!status) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_zero_mem(out, sizeof(out));
@@ -199,10 +199,10 @@ return_status libspdm_validate_crypt_hkdf(void)
         );
     if (!status) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("[Pass]\n");
 
-    return RETURN_SUCCESS;
+    return true;
 }

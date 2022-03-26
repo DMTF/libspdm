@@ -9,11 +9,11 @@
 /**
  * Validate Crypto Ed Interfaces.
  *
- * @retval  RETURN_SUCCESS  Validation succeeded.
- * @retval  RETURN_ABORTED  Validation failed.
+ * @retval  true  Validation succeeded.
+ * @retval  false  Validation failed.
  *
  **/
-return_status libspdm_validate_crypt_ecd(void)
+bool libspdm_validate_crypt_ecd(void)
 {
     void *ecd1;
     void *ecd2;
@@ -89,5 +89,5 @@ return_status libspdm_validate_crypt_ecd(void)
     libspdm_ecd_free(ecd2);
 
 Exit:
-    return RETURN_SUCCESS;
+    return true;
 }

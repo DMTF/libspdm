@@ -3916,7 +3916,7 @@ static bool libspdm_internal_x509_date_time_check(const uint8_t *from,
                                                   size_t to_size)
 {
     int32_t ret;
-    return_status status;
+    bool status;
     uint8_t f0[64];
     uint8_t t0[64];
     size_t f0_size;
@@ -3926,12 +3926,12 @@ static bool libspdm_internal_x509_date_time_check(const uint8_t *from,
     t0_size = 64;
 
     status = libspdm_x509_set_date_time("19700101000000Z", f0, &f0_size);
-    if (status != RETURN_SUCCESS) {
+    if (!status) {
         return false;
     }
 
     status = libspdm_x509_set_date_time("99991231235959Z", t0, &t0_size);
-    if (status != RETURN_SUCCESS) {
+    if (!status) {
         return false;
     }
 
@@ -4108,7 +4108,6 @@ bool libspdm_verify_cert_signature_algo_OID(const uint8_t *cert, size_t cert_siz
     uint8_t libspdm_signature_algo_oid[LIBSPDM_MAX_SIGNATURE_ALGO_OID_LEN];
     size_t oid_len;
     bool status;
-    return_status ret;
 
     /*work around: skip the sm2*/
     if (base_asym_algo == SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256) {
@@ -4116,7 +4115,7 @@ bool libspdm_verify_cert_signature_algo_OID(const uint8_t *cert, size_t cert_siz
     }
 
     oid_len = libspdm_get_signature_algo_OID_len(base_asym_algo);
-    if(oid_len == false) {
+    if(oid_len == 0) {
         status = false;
         return false;
     }
@@ -4128,9 +4127,9 @@ bool libspdm_verify_cert_signature_algo_OID(const uint8_t *cert, size_t cert_siz
     }
 
     /*get signature algo OID from cert*/
-    ret = libspdm_x509_get_signature_algorithm(cert, cert_size,
-                                               cert_signature_algo_oid, &oid_len);
-    if (ret != RETURN_SUCCESS ||
+    status = libspdm_x509_get_signature_algorithm(cert, cert_size,
+                                                  cert_signature_algo_oid, &oid_len);
+    if (!status ||
         oid_len != libspdm_get_signature_algo_OID_len(base_asym_algo)||
         libspdm_const_compare_mem(cert_signature_algo_oid,
                                   libspdm_signature_algo_oid, oid_len)) {
@@ -4155,29 +4154,25 @@ bool libspdm_verify_cert_signature_algo_OID(const uint8_t *cert, size_t cert_siz
 bool libspdm_verify_leaf_cert_basic_constraints(const uint8_t *cert, size_t cert_size)
 {
     bool status;
-    return_status ret;
     /*basic_constraints from cert*/
     uint8_t cert_basic_constraints[BASIC_CONSTRAINTS_LEN];
     size_t len;
 
     len = BASIC_CONSTRAINTS_LEN;
 
-    ret = libspdm_x509_get_extended_basic_constraints(cert, cert_size,
-                                                      cert_basic_constraints, &len);
+    status = libspdm_x509_get_extended_basic_constraints(cert, cert_size,
+                                                         cert_basic_constraints, &len);
 
-    if (ret == RETURN_NOT_FOUND) {
+    if (len == 0) {
         /* basic constraints is not present in cert */
-        status = true;
-        return status;
-    } else if (ret != RETURN_SUCCESS || len != BASIC_CONSTRAINTS_LEN ||
+        return true;
+    } else if (!status || len != BASIC_CONSTRAINTS_LEN ||
                libspdm_const_compare_mem(cert_basic_constraints,
                                          m_libspdm_basic_constraints, len)) {
-        status = false;
-        return status;
+        return false;
     }
 
-    status = true;
-    return status;
+    return true;
 }
 
 /**
@@ -4194,7 +4189,6 @@ bool libspdm_verify_leaf_cert_eku_spdm_OID(const uint8_t *cert, size_t cert_size
                                            bool is_device_cert_model)
 {
     bool status;
-    return_status ret;
     bool find_sucessful;
     uint8_t spdm_extension[SPDM_EXTENDSION_LEN];
     size_t index;
@@ -4206,18 +4200,16 @@ bool libspdm_verify_leaf_cert_eku_spdm_OID(const uint8_t *cert, size_t cert_size
         return false;
     }
 
-    ret = libspdm_x509_get_extension_data((uint8_t *)cert, cert_size,
-                                          (uint8_t *)m_oid_spdm_extension,
-                                          sizeof(m_oid_spdm_extension),
-                                          spdm_extension,
-                                          &len);
+    status = libspdm_x509_get_extension_data((uint8_t *)cert, cert_size,
+                                             (uint8_t *)m_oid_spdm_extension,
+                                             sizeof(m_oid_spdm_extension),
+                                             spdm_extension,
+                                             &len);
 
-    if(ret == RETURN_NOT_FOUND) {
-        status = true;
-        return status;
-    } else if(ret != RETURN_SUCCESS) {
-        status = false;
-        return status;
+    if(len == 0) {
+        return true;
+    } else if(!status) {
+        return false;
     }
 
     /*find the spdm hardware identity OID*/
@@ -4232,11 +4224,9 @@ bool libspdm_verify_leaf_cert_eku_spdm_OID(const uint8_t *cert, size_t cert_size
 
     if ((find_sucessful) && (!is_device_cert_model)) {
         /* Hardware_identity_OID is found in alias cert model */
-        status = false;
-        return status;
+        return false;
     } else {
-        status = true;
-        return status;
+        return true;
     }
 }
 
@@ -4265,7 +4255,6 @@ bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
     size_t asn1_buffer_len;
     bool status;
     size_t cert_version;
-    return_status ret;
     size_t value;
 #if (LIBSPDM_RSA_SSA_SUPPORT == 1) || (LIBSPDM_RSA_PSS_SUPPORT == 1)
     void *rsa_context;
@@ -4302,9 +4291,8 @@ bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
 
     /* 1. version*/
     cert_version = 0;
-    ret = libspdm_x509_get_version(cert, cert_size, &cert_version);
-    if (RETURN_ERROR(ret)) {
-        status = false;
+    status = libspdm_x509_get_version(cert, cert_size, &cert_version);
+    if (!status) {
         goto cleanup;
     }
     if (cert_version != 2) {
@@ -4314,8 +4302,8 @@ bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
 
     /* 2. serial_number*/
     asn1_buffer_len = 0;
-    ret = libspdm_x509_get_serial_number(cert, cert_size, NULL, &asn1_buffer_len);
-    if (ret != RETURN_BUFFER_TOO_SMALL) {
+    status = libspdm_x509_get_serial_number(cert, cert_size, NULL, &asn1_buffer_len);
+    if (asn1_buffer_len == 0) {
         status = false;
         goto cleanup;
     }
@@ -4330,7 +4318,7 @@ bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
     /* 4. issuer_name*/
     asn1_buffer_len = 0;
     status = libspdm_x509_get_issuer_name(cert, cert_size, NULL, &asn1_buffer_len);
-    if (asn1_buffer_len <= 0) {
+    if (asn1_buffer_len == 0) {
         status = false;
         goto cleanup;
     }
@@ -4338,7 +4326,7 @@ bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
     /* 5. subject_name*/
     asn1_buffer_len = 0;
     status = libspdm_x509_get_subject_name(cert, cert_size, NULL, &asn1_buffer_len);
-    if (asn1_buffer_len <= 0) {
+    if (asn1_buffer_len == 0) {
         status = false;
         goto cleanup;
     }
@@ -4414,11 +4402,12 @@ bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
 
     /* 11. extended_key_usage*/
     value = 0;
-    ret = libspdm_x509_get_extended_key_usage(cert, cert_size, NULL, &value);
-    if (ret != RETURN_BUFFER_TOO_SMALL || value == 0) {
+    status = libspdm_x509_get_extended_key_usage(cert, cert_size, NULL, &value);
+    if (value == 0) {
         status = false;
         goto cleanup;
     }
+    status = true;
 
 cleanup:
 #if (LIBSPDM_RSA_SSA_SUPPORT == 1) || (LIBSPDM_RSA_PSS_SUPPORT == 1)
@@ -4519,7 +4508,7 @@ static uint8_t m_libspdm_oid_subject_alt_name[] = { 0x55, 0x1D, 0x11 };
  *                                 name_buffer_size parameter.
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
-return_status libspdm_get_dmtf_subject_alt_name_from_bytes(
+bool libspdm_get_dmtf_subject_alt_name_from_bytes(
     uint8_t *buffer, const size_t len, char *name_buffer,
     size_t *name_buffer_size, uint8_t *oid,
     size_t *oid_size)
@@ -4537,7 +4526,7 @@ return_status libspdm_get_dmtf_subject_alt_name_from_bytes(
     ret = libspdm_asn1_get_tag(&ptr, ptr + length, &obj_len,
                                LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
     if (!ret) {
-        return RETURN_NOT_FOUND;
+        return false;
     }
 
     ret = libspdm_asn1_get_tag(&ptr, ptr + obj_len, &obj_len,
@@ -4546,12 +4535,12 @@ return_status libspdm_get_dmtf_subject_alt_name_from_bytes(
 
     ret = libspdm_asn1_get_tag(&ptr, ptr + obj_len, &obj_len, LIBSPDM_CRYPTO_ASN1_OID);
     if (!ret) {
-        return RETURN_NOT_FOUND;
+        return false;
     }
     /* CopyData to OID*/
     if (*oid_size < (size_t)obj_len) {
         *oid_size = (size_t)obj_len;
-        return RETURN_BUFFER_TOO_SMALL;
+        return false;
     }
     if (oid != NULL) {
         libspdm_copy_mem(oid, *oid_size, ptr, obj_len);
@@ -4567,12 +4556,12 @@ return_status libspdm_get_dmtf_subject_alt_name_from_bytes(
     ret = libspdm_asn1_get_tag(&ptr, (uint8_t *)(buffer + length), &obj_len,
                                LIBSPDM_CRYPTO_ASN1_UTF8_STRING);
     if (!ret) {
-        return RETURN_NOT_FOUND;
+        return false;
     }
 
     if (*name_buffer_size < (size_t)obj_len + 1) {
         *name_buffer_size = (size_t)obj_len + 1;
-        return RETURN_BUFFER_TOO_SMALL;
+        return false;
     }
 
     if (name_buffer != NULL) {
@@ -4580,7 +4569,7 @@ return_status libspdm_get_dmtf_subject_alt_name_from_bytes(
         *name_buffer_size = obj_len + 1;
         name_buffer[obj_len] = 0;
     }
-    return RETURN_SUCCESS;
+    return true;
 }
 
 /**
@@ -4610,13 +4599,13 @@ return_status libspdm_get_dmtf_subject_alt_name_from_bytes(
  *                                 name_buffer_size parameter.
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
-return_status
+bool
 libspdm_get_dmtf_subject_alt_name(const uint8_t *cert, const size_t cert_size,
                                   char *name_buffer,
                                   size_t *name_buffer_size,
                                   uint8_t *oid, size_t *oid_size)
 {
-    return_status status;
+    bool status;
     size_t extension_data_size;
 
     extension_data_size = 0;
@@ -4624,19 +4613,20 @@ libspdm_get_dmtf_subject_alt_name(const uint8_t *cert, const size_t cert_size,
                                              m_libspdm_oid_subject_alt_name,
                                              sizeof(m_libspdm_oid_subject_alt_name), NULL,
                                              &extension_data_size);
-    if (status != RETURN_BUFFER_TOO_SMALL) {
-        return RETURN_NOT_FOUND;
+    if (status || (extension_data_size == 0)) {
+        *name_buffer_size = 0;
+        return false;
     }
     if (extension_data_size > *name_buffer_size) {
         *name_buffer_size = extension_data_size;
-        return RETURN_BUFFER_TOO_SMALL;
+        return false;
     }
     status =
         libspdm_x509_get_extension_data(cert, cert_size,
                                         m_libspdm_oid_subject_alt_name,
                                         sizeof(m_libspdm_oid_subject_alt_name),
                                         (uint8_t *)name_buffer, name_buffer_size);
-    if (RETURN_ERROR(status)) {
+    if (!status) {
         return status;
     }
 

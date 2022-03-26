@@ -10,11 +10,11 @@ static uint8_t m_libspdm_oid_subject_alt_name[] = { 0x55, 0x1D, 0x11 };
 /**
  * Validate Crypto X509 certificate Verify
  *
- * @retval  RETURN_SUCCESS  Validation succeeded.
- * @retval  RETURN_ABORTED  Validation failed.
+ * @retval  true  Validation succeeded.
+ * @retval  false  Validation failed.
  *
  **/
-return_status libspdm_validate_crypt_x509(char *Path, size_t len)
+bool libspdm_validate_crypt_x509(char *Path, size_t len)
 {
     bool status;
     uint8_t *leaf_cert;
@@ -31,7 +31,6 @@ return_status libspdm_validate_crypt_x509(char *Path, size_t len)
     uint8_t *subject;
     size_t common_name_size;
     char common_name[64];
-    return_status ret;
     size_t cert_version;
     uint8_t asn1_buffer[1024];
     size_t asn1_buffer_len;
@@ -41,10 +40,8 @@ return_status libspdm_validate_crypt_x509(char *Path, size_t len)
     size_t end_cert_to_len;
     uint8_t date_time1[64];
     uint8_t date_time2[64];
-    return_status ret_status;
     char file_name_buffer[1024];
 
-    ret_status = RETURN_ABORTED;
     test_cert = NULL;
     test_ca_cert = NULL;
     test_bundle_cert = NULL;
@@ -210,9 +207,9 @@ return_status libspdm_validate_crypt_x509(char *Path, size_t len)
 
     common_name_size = 64;
     libspdm_zero_mem(common_name, common_name_size);
-    ret = libspdm_x509_get_common_name(test_cert, test_cert_len, common_name,
-                                       &common_name_size);
-    if (RETURN_ERROR(ret)) {
+    status = libspdm_x509_get_common_name(test_cert, test_cert_len, common_name,
+                                          &common_name_size);
+    if (!status) {
         libspdm_my_print("\n  - Retrieving Common name - [Fail]");
         goto cleanup;
     } else {
@@ -227,9 +224,9 @@ return_status libspdm_validate_crypt_x509(char *Path, size_t len)
 
     common_name_size = 64;
     libspdm_zero_mem(common_name, common_name_size);
-    ret = libspdm_x509_get_organization_name(test_cert, test_cert_len, common_name,
-                                             &common_name_size);
-    if (ret != RETURN_NOT_FOUND) {
+    status = libspdm_x509_get_organization_name(test_cert, test_cert_len, common_name,
+                                                &common_name_size);
+    if (status || common_name_size != 0) {
         libspdm_my_print("\n  - Retrieving Oraganization name - [Fail]");
         goto cleanup;
     } else {
@@ -240,8 +237,8 @@ return_status libspdm_validate_crypt_x509(char *Path, size_t len)
     /* Get version from X509 Certificate*/
 
     cert_version = 0;
-    ret = libspdm_x509_get_version(test_cert, test_cert_len, &cert_version);
-    if (RETURN_ERROR(ret)) {
+    status = libspdm_x509_get_version(test_cert, test_cert_len, &cert_version);
+    if (!status) {
         libspdm_my_print("\n  - Retrieving version - [Fail]");
         goto cleanup;
     } else {
@@ -255,9 +252,9 @@ return_status libspdm_validate_crypt_x509(char *Path, size_t len)
 
     asn1_buffer_len = 1024;
     libspdm_zero_mem(asn1_buffer, asn1_buffer_len);
-    ret = libspdm_x509_get_serial_number(test_cert, test_cert_len, asn1_buffer,
-                                         &asn1_buffer_len);
-    if (RETURN_ERROR(ret)) {
+    status = libspdm_x509_get_serial_number(test_cert, test_cert_len, asn1_buffer,
+                                            &asn1_buffer_len);
+    if (!status) {
         libspdm_my_print("\n  - Retrieving serial_number - [Fail]");
         goto cleanup;
     } else {
@@ -289,9 +286,9 @@ return_status libspdm_validate_crypt_x509(char *Path, size_t len)
 
     common_name_size = 64;
     libspdm_zero_mem(common_name, common_name_size);
-    ret = libspdm_x509_get_issuer_common_name(test_cert, test_cert_len, common_name,
-                                              &common_name_size);
-    if (RETURN_ERROR(ret)) {
+    status = libspdm_x509_get_issuer_common_name(test_cert, test_cert_len, common_name,
+                                                 &common_name_size);
+    if (!status) {
         libspdm_my_print("\n  - Retrieving Issuer Common name - [Fail]");
         goto cleanup;
     } else {
@@ -306,9 +303,9 @@ return_status libspdm_validate_crypt_x509(char *Path, size_t len)
 
     common_name_size = 64;
     libspdm_zero_mem(common_name, common_name_size);
-    ret = libspdm_x509_get_issuer_orgnization_name(test_cert, test_cert_len,
-                                                   common_name, &common_name_size);
-    if (ret != RETURN_NOT_FOUND) {
+    status = libspdm_x509_get_issuer_orgnization_name(test_cert, test_cert_len,
+                                                      common_name, &common_name_size);
+    if (status || common_name_size != 0) {
         libspdm_my_print("\n  - Retrieving Issuer Oraganization name - [Fail]");
         goto cleanup;
     } else {
@@ -320,11 +317,11 @@ return_status libspdm_validate_crypt_x509(char *Path, size_t len)
 
     asn1_buffer_len = 1024;
     libspdm_zero_mem(asn1_buffer, asn1_buffer_len);
-    ret = libspdm_x509_get_extension_data(test_end_cert, test_end_cert_len,
-                                          m_libspdm_oid_subject_alt_name,
-                                          sizeof(m_libspdm_oid_subject_alt_name),
-                                          asn1_buffer, &asn1_buffer_len);
-    if (RETURN_ERROR(ret)) {
+    status = libspdm_x509_get_extension_data(test_end_cert, test_end_cert_len,
+                                             m_libspdm_oid_subject_alt_name,
+                                             sizeof(m_libspdm_oid_subject_alt_name),
+                                             asn1_buffer, &asn1_buffer_len);
+    if (!status) {
         libspdm_my_print("\n  - Retrieving  SubjectAltName otherName - [Fail]");
         goto cleanup;
     } else {
@@ -350,9 +347,9 @@ return_status libspdm_validate_crypt_x509(char *Path, size_t len)
     }
 
     asn1_buffer_len = 64;
-    ret = libspdm_x509_set_date_time("19700101000000Z", date_time1,
-                                     &asn1_buffer_len);
-    if ((ret == RETURN_SUCCESS) && (asn1_buffer_len != 0)) {
+    status = libspdm_x509_set_date_time("19700101000000Z", date_time1,
+                                        &asn1_buffer_len);
+    if (status && (asn1_buffer_len != 0)) {
         libspdm_my_print("\n  - Set date_time - [Pass]");
     } else {
         libspdm_my_print("\n  - Set date_time - [Fail]");
@@ -360,9 +357,9 @@ return_status libspdm_validate_crypt_x509(char *Path, size_t len)
     }
 
     asn1_buffer_len = 64;
-    ret = libspdm_x509_set_date_time("19700201000000Z", date_time2,
-                                     &asn1_buffer_len);
-    if ((ret == RETURN_SUCCESS) && (asn1_buffer_len != 0)) {
+    status = libspdm_x509_set_date_time("19700201000000Z", date_time2,
+                                        &asn1_buffer_len);
+    if (status && (asn1_buffer_len != 0)) {
         libspdm_my_print("\n  - Set date_time - [Pass]");
     } else {
         libspdm_my_print("\n  - Set date_time - [Fail]");
@@ -377,7 +374,7 @@ return_status libspdm_validate_crypt_x509(char *Path, size_t len)
     }
 
     libspdm_my_print("\n");
-    ret_status = RETURN_SUCCESS;
+    status = true;
 
 cleanup:
     if (test_cert != NULL) {
@@ -392,5 +389,5 @@ cleanup:
     if (test_end_cert != NULL) {
         free(test_end_cert);
     }
-    return ret_status;
+    return status;
 }

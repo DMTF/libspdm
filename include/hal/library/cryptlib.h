@@ -2483,9 +2483,9 @@ bool libspdm_x509_get_subject_name(const uint8_t *cert, size_t cert_size,
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  *
  **/
-return_status libspdm_x509_get_common_name(const uint8_t *cert, size_t cert_size,
-                                           char *common_name,
-                                           size_t *common_name_size);
+bool libspdm_x509_get_common_name(const uint8_t *cert, size_t cert_size,
+                                  char *common_name,
+                                  size_t *common_name_size);
 
 /**
  * Retrieve the organization name (O) string from one X.509 certificate.
@@ -2513,7 +2513,7 @@ return_status libspdm_x509_get_common_name(const uint8_t *cert, size_t cert_size
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  *
  **/
-return_status
+bool
 libspdm_x509_get_organization_name(const uint8_t *cert, size_t cert_size,
                                    char *name_buffer,
                                    size_t *name_buffer_size);
@@ -2534,8 +2534,8 @@ libspdm_x509_get_organization_name(const uint8_t *cert, size_t cert_size,
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  *
  **/
-return_status libspdm_x509_get_version(const uint8_t *cert, size_t cert_size,
-                                       size_t *version);
+bool libspdm_x509_get_version(const uint8_t *cert, size_t cert_size,
+                              size_t *version);
 
 /**
  * Retrieve the serialNumber from one X.509 certificate.
@@ -2560,9 +2560,9 @@ return_status libspdm_x509_get_version(const uint8_t *cert, size_t cert_size,
  *                                 serial_number_size parameter.
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
-return_status libspdm_x509_get_serial_number(const uint8_t *cert, size_t cert_size,
-                                             uint8_t *serial_number,
-                                             size_t *serial_number_size);
+bool libspdm_x509_get_serial_number(const uint8_t *cert, size_t cert_size,
+                                    uint8_t *serial_number,
+                                    size_t *serial_number_size);
 
 /**
  * Retrieve the issuer bytes from one X.509 certificate.
@@ -2613,7 +2613,7 @@ bool libspdm_x509_get_issuer_name(const uint8_t *cert, size_t cert_size,
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  *
  **/
-return_status
+bool
 libspdm_x509_get_issuer_common_name(const uint8_t *cert, size_t cert_size,
                                     char *common_name,
                                     size_t *common_name_size);
@@ -2644,7 +2644,7 @@ libspdm_x509_get_issuer_common_name(const uint8_t *cert, size_t cert_size,
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  *
  **/
-return_status
+bool
 libspdm_x509_get_issuer_orgnization_name(const uint8_t *cert, size_t cert_size,
                                          char *name_buffer,
                                          size_t *name_buffer_size);
@@ -2667,9 +2667,9 @@ libspdm_x509_get_issuer_orgnization_name(const uint8_t *cert, size_t cert_size,
  *                                 is returned in the oid_size.
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
-return_status libspdm_x509_get_signature_algorithm(const uint8_t *cert,
-                                                   size_t cert_size, uint8_t *oid,
-                                                   size_t *oid_size);
+bool libspdm_x509_get_signature_algorithm(const uint8_t *cert,
+                                          size_t cert_size, uint8_t *oid,
+                                          size_t *oid_size);
 
 /**
  * Retrieve Extension data from one X.509 certificate.
@@ -2691,10 +2691,10 @@ return_status libspdm_x509_get_signature_algorithm(const uint8_t *cert,
  *                                 is returned in the extension_data_size parameter.
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
-return_status libspdm_x509_get_extension_data(const uint8_t *cert, size_t cert_size,
-                                              const uint8_t *oid, size_t oid_size,
-                                              uint8_t *extension_data,
-                                              size_t *extension_data_size);
+bool libspdm_x509_get_extension_data(const uint8_t *cert, size_t cert_size,
+                                     const uint8_t *oid, size_t oid_size,
+                                     uint8_t *extension_data,
+                                     size_t *extension_data_size);
 
 /**
  * Retrieve the Validity from one X.509 certificate
@@ -2744,8 +2744,8 @@ bool libspdm_x509_get_validity(const uint8_t *cert, size_t cert_size,
  *                                 date_time_size parameter.
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
-return_status libspdm_x509_set_date_time(char *date_time_str, void *date_time,
-                                         size_t *date_time_size);
+bool libspdm_x509_set_date_time(char *date_time_str, void *date_time,
+                                size_t *date_time_size);
 
 /**
  * Compare date_time1 object and date_time2 object.
@@ -2796,9 +2796,9 @@ bool libspdm_x509_get_key_usage(const uint8_t *cert, size_t cert_size,
  *                                 is returned in the usage_size parameter.
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
-return_status libspdm_x509_get_extended_key_usage(const uint8_t *cert,
-                                                  size_t cert_size, uint8_t *usage,
-                                                  size_t *usage_size);
+bool libspdm_x509_get_extended_key_usage(const uint8_t *cert,
+                                         size_t cert_size, uint8_t *usage,
+                                         size_t *usage_size);
 
 /**
  * Retrieve the basic constraints from one X.509 certificate.
@@ -2818,10 +2818,10 @@ return_status libspdm_x509_get_extended_key_usage(const uint8_t *cert,
  * @retval RETURN_NOT_FOUND         If no Extension entry match oid.
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
-return_status libspdm_x509_get_extended_basic_constraints(const uint8_t *cert,
-                                                          size_t cert_size,
-                                                          uint8_t *basic_constraints,
-                                                          size_t *basic_constraints_size);
+bool libspdm_x509_get_extended_basic_constraints(const uint8_t *cert,
+                                                 size_t cert_size,
+                                                 uint8_t *basic_constraints,
+                                                 size_t *basic_constraints_size);
 
 /**
  * Verify one X509 certificate was issued by the trusted CA.

@@ -9,11 +9,11 @@
 /**
  * Validate Crypto EC Interfaces.
  *
- * @retval  RETURN_SUCCESS  Validation succeeded.
- * @retval  RETURN_ABORTED  Validation failed.
+ * @retval  true  Validation succeeded.
+ * @retval  false  Validation failed.
  *
  **/
-return_status libspdm_validate_crypt_ec(void)
+bool libspdm_validate_crypt_ec(void)
 {
     void *ec1;
     void *ec2;
@@ -48,7 +48,7 @@ return_status libspdm_validate_crypt_ec(void)
     ec1 = libspdm_ec_new_by_nid(LIBSPDM_CRYPTO_NID_SECP384R1);
     if (ec1 == NULL) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Context2 ... ");
@@ -56,7 +56,7 @@ return_status libspdm_validate_crypt_ec(void)
     if (ec2 == NULL) {
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
-        return RETURN_ABORTED;
+        return false;
     }
 
 
@@ -68,7 +68,7 @@ return_status libspdm_validate_crypt_ec(void)
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
         libspdm_ec_free(ec2);
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Generate key2 ... ");
@@ -77,7 +77,7 @@ return_status libspdm_validate_crypt_ec(void)
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
         libspdm_ec_free(ec2);
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Compute key1 ... ");
@@ -87,7 +87,7 @@ return_status libspdm_validate_crypt_ec(void)
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
         libspdm_ec_free(ec2);
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Compute key2 ... ");
@@ -97,7 +97,7 @@ return_status libspdm_validate_crypt_ec(void)
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
         libspdm_ec_free(ec2);
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Compare Keys ... ");
@@ -105,14 +105,14 @@ return_status libspdm_validate_crypt_ec(void)
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
         libspdm_ec_free(ec2);
-        return RETURN_ABORTED;
+        return false;
     }
 
     if (libspdm_const_compare_mem(key1, key2, key1_length) != 0) {
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
         libspdm_ec_free(ec2);
-        return RETURN_ABORTED;
+        return false;
     } else {
         libspdm_my_print("[Pass]\n");
     }
@@ -135,7 +135,7 @@ return_status libspdm_validate_crypt_ec(void)
     ec1 = libspdm_ec_new_by_nid(LIBSPDM_CRYPTO_NID_SECP521R1);
     if (ec1 == NULL) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Context2 ... ");
@@ -143,7 +143,7 @@ return_status libspdm_validate_crypt_ec(void)
     if (ec2 == NULL) {
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
-        return RETURN_ABORTED;
+        return false;
     }
 
 
@@ -155,7 +155,7 @@ return_status libspdm_validate_crypt_ec(void)
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
         libspdm_ec_free(ec2);
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Generate key2 ... ");
@@ -164,7 +164,7 @@ return_status libspdm_validate_crypt_ec(void)
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
         libspdm_ec_free(ec2);
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Compute key1 ... ");
@@ -174,7 +174,7 @@ return_status libspdm_validate_crypt_ec(void)
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
         libspdm_ec_free(ec2);
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Compute key2 ... ");
@@ -184,7 +184,7 @@ return_status libspdm_validate_crypt_ec(void)
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
         libspdm_ec_free(ec2);
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Compare Keys ... ");
@@ -192,14 +192,14 @@ return_status libspdm_validate_crypt_ec(void)
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
         libspdm_ec_free(ec2);
-        return RETURN_ABORTED;
+        return false;
     }
 
     if (libspdm_const_compare_mem(key1, key2, key1_length) != 0) {
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
         libspdm_ec_free(ec2);
-        return RETURN_ABORTED;
+        return false;
     } else {
         libspdm_my_print("[Pass]\n");
     }
@@ -216,7 +216,7 @@ return_status libspdm_validate_crypt_ec(void)
     ec1 = libspdm_ec_new_by_nid(LIBSPDM_CRYPTO_NID_SECP256R1);
     if (ec1 == NULL) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Context2 ... ");
@@ -224,7 +224,7 @@ return_status libspdm_validate_crypt_ec(void)
     if (ec2 == NULL) {
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Compute key1 ... ");
@@ -233,7 +233,7 @@ return_status libspdm_validate_crypt_ec(void)
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
         libspdm_ec_free(ec2);
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Compute key2 ... ");
@@ -242,7 +242,7 @@ return_status libspdm_validate_crypt_ec(void)
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
         libspdm_ec_free(ec2);
-        return RETURN_ABORTED;
+        return false;
     }
 
 
@@ -257,7 +257,7 @@ return_status libspdm_validate_crypt_ec(void)
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
         libspdm_ec_free(ec2);
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("EC-DSA Verification ... ");
@@ -267,7 +267,7 @@ return_status libspdm_validate_crypt_ec(void)
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
         libspdm_ec_free(ec2);
-        return RETURN_ABORTED;
+        return false;
     } else {
         libspdm_my_print("[Pass]\n");
     }
@@ -281,7 +281,7 @@ return_status libspdm_validate_crypt_ec(void)
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
         libspdm_ec_free(ec2);
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("EC-DSA Verification ... ");
@@ -291,7 +291,7 @@ return_status libspdm_validate_crypt_ec(void)
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
         libspdm_ec_free(ec2);
-        return RETURN_ABORTED;
+        return false;
     } else {
         libspdm_my_print("[Pass]\n");
     }
@@ -309,7 +309,7 @@ return_status libspdm_validate_crypt_ec(void)
     ec1 = libspdm_ec_new_by_nid(LIBSPDM_CRYPTO_NID_SECP256R1);
     if (ec1 == NULL) {
         libspdm_my_print("[Fail]");
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Context2 ... ");
@@ -317,7 +317,7 @@ return_status libspdm_validate_crypt_ec(void)
     if (ec2 == NULL) {
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Compute key in Context1 ... ");
@@ -326,7 +326,7 @@ return_status libspdm_validate_crypt_ec(void)
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
         libspdm_ec_free(ec2);
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Export key in Context1 ... ");
@@ -335,7 +335,7 @@ return_status libspdm_validate_crypt_ec(void)
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
         libspdm_ec_free(ec2);
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("Import key in Context2 ... ");
@@ -344,7 +344,7 @@ return_status libspdm_validate_crypt_ec(void)
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
         libspdm_ec_free(ec2);
-        return RETURN_ABORTED;
+        return false;
     }
 
 
@@ -359,7 +359,7 @@ return_status libspdm_validate_crypt_ec(void)
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
         libspdm_ec_free(ec2);
-        return RETURN_ABORTED;
+        return false;
     }
 
     libspdm_my_print("EC-DSA Verification in Context2 ... ");
@@ -369,7 +369,7 @@ return_status libspdm_validate_crypt_ec(void)
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
         libspdm_ec_free(ec2);
-        return RETURN_ABORTED;
+        return false;
     } else {
         libspdm_my_print("[Pass]\n");
     }
@@ -377,5 +377,5 @@ return_status libspdm_validate_crypt_ec(void)
     libspdm_ec_free(ec1);
     libspdm_ec_free(ec2);
 
-    return RETURN_SUCCESS;
+    return true;
 }
