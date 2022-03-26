@@ -119,9 +119,9 @@ libspdm_get_response_func_via_last_request(libspdm_context_t *spdm_context)
  * @retval RETURN_SUCCESS               The SPDM request is received successfully.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM request is received from the device.
  **/
-return_status libspdm_process_request(void *context, uint32_t **session_id,
-                                      bool *is_app_message,
-                                      size_t request_size, const void *request)
+libspdm_return_t libspdm_process_request(void *context, uint32_t **session_id,
+                                         bool *is_app_message,
+                                         size_t request_size, const void *request)
 {
     libspdm_context_t *spdm_context;
     return_status status;
@@ -133,10 +133,10 @@ return_status libspdm_process_request(void *context, uint32_t **session_id,
     spdm_context = context;
 
     if (request == NULL) {
-        return RETURN_INVALID_PARAMETER;
+        return LIBSPDM_STATUS_INVALID_PARAMETER;
     }
     if (request_size == 0) {
-        return RETURN_INVALID_PARAMETER;
+        return LIBSPDM_STATUS_INVALID_PARAMETER;
     }
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmReceiveRequest[.] ...\n"));
@@ -149,7 +149,7 @@ return_status libspdm_process_request(void *context, uint32_t **session_id,
         spdm_context, &message_session_id, is_app_message, true,
         request_size, request, &decoded_message_size,
         (void **)&decoded_message_ptr);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "transport_decode_message : %p\n", status));
         if (spdm_context->last_spdm_error.error_code != 0) {
 
@@ -158,7 +158,7 @@ return_status libspdm_process_request(void *context, uint32_t **session_id,
 
             *session_id = &spdm_context->last_spdm_error.session_id;
             *is_app_message = false;
-            return RETURN_SUCCESS;
+            return LIBSPDM_STATUS_SUCCESS;
         }
         return status;
     }
@@ -175,7 +175,7 @@ return_status libspdm_process_request(void *context, uint32_t **session_id,
 
         if (spdm_context->last_spdm_request_size <
             sizeof(spdm_message_header_t)) {
-            return RETURN_UNSUPPORTED;
+            return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         }
     }
 
@@ -185,7 +185,7 @@ return_status libspdm_process_request(void *context, uint32_t **session_id,
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, *message_session_id);
         if (session_info == NULL) {
-            return RETURN_UNSUPPORTED;
+            return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         }
         spdm_context->last_spdm_request_session_id =
             *message_session_id;
@@ -198,7 +198,7 @@ return_status libspdm_process_request(void *context, uint32_t **session_id,
     libspdm_internal_dump_hex((uint8_t *)spdm_context->last_spdm_request,
                               spdm_context->last_spdm_request_size);
 
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
 /**
@@ -312,10 +312,10 @@ void libspdm_set_connection_state(libspdm_context_t *spdm_context,
  * @retval RETURN_UNSUPPORTED           Just ignore this message: return UNSUPPORTED and clear response_size.
  *                                      Continue the dispatch without send response.
  **/
-return_status libspdm_build_response(void *context, const uint32_t *session_id,
-                                     bool is_app_message,
-                                     size_t *response_size,
-                                     void **response)
+libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_id,
+                                        bool is_app_message,
+                                        size_t *response_size,
+                                        void **response)
 {
     libspdm_context_t *spdm_context;
     uint8_t *my_response;
@@ -329,7 +329,7 @@ return_status libspdm_build_response(void *context, const uint32_t *session_id,
     size_t transport_header_size;
 
     spdm_context = context;
-    status = RETURN_UNSUPPORTED;
+    status = LIBSPDM_STATUS_UNSUPPORTED_CAP;
 
     /* For secure message, setup my_response to scratch buffer
      * For non-secure message, setup my_response to sender buffer*/
@@ -359,7 +359,7 @@ return_status libspdm_build_response(void *context, const uint32_t *session_id,
                  * return UNSUPPORTED and clear response_size to continue the dispatch without send response
                  **/
                 *response_size = 0;
-                status = RETURN_UNSUPPORTED;
+                status = LIBSPDM_STATUS_UNSUPPORTED_CAP;
             }
             break;
         case SPDM_ERROR_CODE_INVALID_SESSION:
@@ -369,14 +369,14 @@ return_status libspdm_build_response(void *context, const uint32_t *session_id,
              * return UNSUPPORTED and clear response_size to continue the dispatch without send response
              **/
             *response_size = 0;
-            status = RETURN_UNSUPPORTED;
+            status = LIBSPDM_STATUS_UNSUPPORTED_CAP;
             break;
         default:
             LIBSPDM_ASSERT(false);
-            status = RETURN_UNSUPPORTED;
+            status = LIBSPDM_STATUS_UNSUPPORTED_CAP;
         }
 
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return status;
         }
 
@@ -388,7 +388,7 @@ return_status libspdm_build_response(void *context, const uint32_t *session_id,
         status = spdm_context->transport_encode_message(
             spdm_context, session_id, false, false,
             my_response_size, my_response, response_size, response);
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "transport_encode_message : %p\n",
                            status));
             return status;
@@ -396,7 +396,7 @@ return_status libspdm_build_response(void *context, const uint32_t *session_id,
 
         libspdm_zero_mem(&spdm_context->last_spdm_error,
                          sizeof(spdm_context->last_spdm_error));
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     }
 
     if (session_id != NULL) {
@@ -404,18 +404,18 @@ return_status libspdm_build_response(void *context, const uint32_t *session_id,
             spdm_context, *session_id);
         if (session_info == NULL) {
             LIBSPDM_ASSERT(false);
-            return RETURN_UNSUPPORTED;
+            return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         }
     }
 
     if (*response == NULL) {
-        return RETURN_INVALID_PARAMETER;
+        return LIBSPDM_STATUS_INVALID_PARAMETER;
     }
     if (response_size == NULL) {
-        return RETURN_INVALID_PARAMETER;
+        return LIBSPDM_STATUS_INVALID_PARAMETER;
     }
     if (*response_size == 0) {
-        return RETURN_INVALID_PARAMETER;
+        return LIBSPDM_STATUS_INVALID_PARAMETER;
     }
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmSendResponse[%x] ...\n",
@@ -423,7 +423,7 @@ return_status libspdm_build_response(void *context, const uint32_t *session_id,
 
     spdm_request = (void *)spdm_context->last_spdm_request;
     if (spdm_context->last_spdm_request_size == 0) {
-        return RETURN_NOT_READY;
+        return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
 
     get_response_func = NULL;
@@ -447,7 +447,7 @@ return_status libspdm_build_response(void *context, const uint32_t *session_id,
                 spdm_context->last_spdm_request,
                 &my_response_size, my_response);
         } else {
-            status = RETURN_NOT_FOUND;
+            status = LIBSPDM_STATUS_UNSUPPORTED_CAP;
         }
     }
 
@@ -457,7 +457,7 @@ return_status libspdm_build_response(void *context, const uint32_t *session_id,
             spdm_context, SPDM_ERROR_CODE_LARGE_RESPONSE,
             spdm_request->request_response_code, &my_response_size,
             my_response);
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return status;
         }
     }
@@ -465,17 +465,17 @@ return_status libspdm_build_response(void *context, const uint32_t *session_id,
     /* if return the status: Responder drop the response
      * just ignore this message
      * return UNSUPPORTED and clear response_size to continue the dispatch without send response.*/
-    if((my_response_size == 0) && (status == RETURN_UNSUPPORTED)) {
+    if((my_response_size == 0) && (status == LIBSPDM_STATUS_UNSUPPORTED_CAP)) {
         *response_size = 0;
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
 
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         status = libspdm_generate_error_response(
             spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
             spdm_request->request_response_code, &my_response_size,
             my_response);
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return status;
         }
     }
@@ -487,7 +487,7 @@ return_status libspdm_build_response(void *context, const uint32_t *session_id,
     status = spdm_context->transport_encode_message(
         spdm_context, session_id, is_app_message, false,
         my_response_size, my_response, response_size, response);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "transport_encode_message : %p\n", status));
         return status;
     }
@@ -514,7 +514,8 @@ return_status libspdm_build_response(void *context, const uint32_t *session_id,
                                       LIBSPDM_SESSION_STATE_NOT_STARTED);
             result = libspdm_stop_watchdog(*session_id);
             if (!result) {
-                return RETURN_DEVICE_ERROR;
+                LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "libspdm_stop_watchdog error\n"));
+                /* No need return error for internal watchdog error */
             }
             libspdm_free_session_id(spdm_context, *session_id);
             break;
@@ -522,7 +523,8 @@ return_status libspdm_build_response(void *context, const uint32_t *session_id,
             /* reset watchdog in any session messages. */
             result = libspdm_reset_watchdog(*session_id);
             if (!result) {
-                return RETURN_DEVICE_ERROR;
+                LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "libspdm_reset_watchdog error\n"));
+                /* No need return error for internal watchdog error */
             }
             break;
         }
@@ -545,7 +547,7 @@ return_status libspdm_build_response(void *context, const uint32_t *session_id,
         }
     }
 
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
 /**
@@ -579,7 +581,7 @@ void libspdm_register_get_response_func(
  * @retval RETURN_SUCCESS          The callback is registered.
  * @retval RETURN_ALREADY_STARTED  No enough memory to register the callback.
  **/
-return_status libspdm_register_session_state_callback_func(
+libspdm_return_t libspdm_register_session_state_callback_func(
     void *context,
     libspdm_session_state_callback_func spdm_session_state_callback)
 {
@@ -591,12 +593,12 @@ return_status libspdm_register_session_state_callback_func(
         if (spdm_context->spdm_session_state_callback[index] == 0) {
             spdm_context->spdm_session_state_callback[index] =
                 (size_t)spdm_session_state_callback;
-            return RETURN_SUCCESS;
+            return LIBSPDM_STATUS_SUCCESS;
         }
     }
     LIBSPDM_ASSERT(false);
 
-    return RETURN_ALREADY_STARTED;
+    return LIBSPDM_STATUS_BUFFER_FULL;
 }
 
 /**
@@ -610,7 +612,7 @@ return_status libspdm_register_session_state_callback_func(
  * @retval RETURN_SUCCESS          The callback is registered.
  * @retval RETURN_ALREADY_STARTED  No enough memory to register the callback.
  **/
-return_status libspdm_register_connection_state_callback_func(
+libspdm_return_t libspdm_register_connection_state_callback_func(
     void *context,
     libspdm_connection_state_callback_func spdm_connection_state_callback)
 {
@@ -623,10 +625,10 @@ return_status libspdm_register_connection_state_callback_func(
         if (spdm_context->spdm_connection_state_callback[index] == 0) {
             spdm_context->spdm_connection_state_callback[index] =
                 (size_t)spdm_connection_state_callback;
-            return RETURN_SUCCESS;
+            return LIBSPDM_STATUS_SUCCESS;
         }
     }
     LIBSPDM_ASSERT(false);
 
-    return RETURN_ALREADY_STARTED;
+    return LIBSPDM_STATUS_BUFFER_FULL;
 }

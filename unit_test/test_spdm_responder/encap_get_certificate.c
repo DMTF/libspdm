@@ -28,7 +28,7 @@ size_t m_spdm_get_certificate_response2_size = sizeof(m_spdm_get_certificate_res
  **/
 void test_spdm_responder_encap_get_certificate_case1(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     void *data;
@@ -115,7 +115,7 @@ void test_spdm_responder_encap_get_certificate_case1(void **state)
     status = libspdm_process_encap_response_certificate(spdm_context, spdm_response_size,
                                                         spdm_response,
                                                         &need_continue);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     free(data);
 }
 
@@ -126,7 +126,7 @@ void test_spdm_responder_encap_get_certificate_case1(void **state)
  **/
 void test_spdm_responder_encap_get_certificate_case2(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
 
@@ -169,7 +169,7 @@ void test_spdm_responder_encap_get_certificate_case2(void **state)
                                                         m_spdm_get_certificate_response2_size,
                                                         &m_spdm_get_certificate_response2,
                                                         &need_continue);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_UNSUPPORTED_CAP);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
 #endif
@@ -184,7 +184,7 @@ void test_spdm_responder_encap_get_certificate_case2(void **state)
  **/
 void test_spdm_responder_encap_get_certificate_case3(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     void *data;
@@ -273,7 +273,7 @@ void test_spdm_responder_encap_get_certificate_case3(void **state)
     status = libspdm_process_encap_response_certificate(spdm_context, spdm_response_size,
                                                         spdm_response,
                                                         &need_continue);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     free(data);
 }
 
@@ -283,7 +283,7 @@ void test_spdm_responder_encap_get_certificate_case3(void **state)
  **/
 void test_spdm_responder_encap_get_certificate_case4(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     void *data;
@@ -369,7 +369,7 @@ void test_spdm_responder_encap_get_certificate_case4(void **state)
     status = libspdm_process_encap_response_certificate(spdm_context, spdm_response_size,
                                                         spdm_response,
                                                         &need_continue);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     free(data);
 }
 

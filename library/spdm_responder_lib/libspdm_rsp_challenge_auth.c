@@ -26,11 +26,11 @@
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_get_response_challenge_auth(void *context,
-                                                  size_t request_size,
-                                                  const void *request,
-                                                  size_t *response_size,
-                                                  void *response)
+libspdm_return_t libspdm_get_response_challenge_auth(void *context,
+                                                     size_t request_size,
+                                                     const void *request,
+                                                     size_t *response_size,
+                                                     void *response)
 {
     const spdm_challenge_request_t *spdm_request;
     spdm_challenge_auth_response_t *spdm_response;
@@ -43,7 +43,7 @@ return_status libspdm_get_response_challenge_auth(void *context,
     size_t total_size;
     libspdm_context_t *spdm_context;
     uint8_t auth_attribute;
-    return_status status;
+    libspdm_return_t status;
     size_t response_capacity;
 
     spdm_context = context;
@@ -244,7 +244,7 @@ return_status libspdm_get_response_challenge_auth(void *context,
                                      LIBSPDM_CONNECTION_STATE_AUTHENTICATED);
     }
 
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/

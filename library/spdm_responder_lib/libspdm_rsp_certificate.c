@@ -24,11 +24,11 @@
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_get_response_certificate(void *context,
-                                               size_t request_size,
-                                               const void *request,
-                                               size_t *response_size,
-                                               void *response)
+libspdm_return_t libspdm_get_response_certificate(void *context,
+                                                  size_t request_size,
+                                                  const void *request,
+                                                  size_t *response_size,
+                                                  void *response)
 {
     const spdm_get_certificate_request_t *spdm_request;
     spdm_certificate_response_t *spdm_response;
@@ -37,7 +37,7 @@ return_status libspdm_get_response_certificate(void *context,
     size_t remainder_length;
     uint8_t slot_id;
     libspdm_context_t *spdm_context;
-    return_status status;
+    libspdm_return_t status;
     size_t response_capacity;
 
     spdm_context = context;
@@ -160,7 +160,7 @@ return_status libspdm_get_response_certificate(void *context,
     libspdm_set_connection_state(spdm_context,
                                  LIBSPDM_CONNECTION_STATE_AFTER_CERTIFICATE);
 
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
 

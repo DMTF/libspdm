@@ -55,7 +55,7 @@ uint8_t m_opaque_challenge_auth_rsp[9] = "openspdm";
  **/
 void libspdm_test_responder_challenge_auth_case1(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -103,7 +103,7 @@ void libspdm_test_responder_challenge_auth_case1(void **state)
     status = libspdm_get_response_challenge_auth(
         spdm_context, m_libspdm_challenge_request1_size,
         &m_libspdm_challenge_request1, &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size,
                      sizeof(spdm_challenge_auth_response_t) +
                      libspdm_get_hash_size(m_libspdm_use_hash_algo) +
@@ -128,7 +128,7 @@ void libspdm_test_responder_challenge_auth_case1(void **state)
  **/
 void libspdm_test_responder_challenge_auth_case2(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -172,7 +172,7 @@ void libspdm_test_responder_challenge_auth_case2(void **state)
     status = libspdm_get_response_challenge_auth(
         spdm_context, m_libspdm_challenge_request2_size,
         &m_libspdm_challenge_request2, &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
@@ -191,7 +191,7 @@ void libspdm_test_responder_challenge_auth_case2(void **state)
  **/
 void libspdm_test_responder_challenge_auth_case3(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -236,7 +236,7 @@ void libspdm_test_responder_challenge_auth_case3(void **state)
     status = libspdm_get_response_challenge_auth(
         spdm_context, m_libspdm_challenge_request1_size,
         &m_libspdm_challenge_request1, &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
@@ -256,7 +256,7 @@ void libspdm_test_responder_challenge_auth_case3(void **state)
  **/
 void libspdm_test_responder_challenge_auth_case4(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -301,7 +301,7 @@ void libspdm_test_responder_challenge_auth_case4(void **state)
     status = libspdm_get_response_challenge_auth(
         spdm_context, m_libspdm_challenge_request1_size,
         &m_libspdm_challenge_request1, &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
@@ -322,7 +322,7 @@ void libspdm_test_responder_challenge_auth_case4(void **state)
  **/
 void libspdm_test_responder_challenge_auth_case5(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -368,7 +368,7 @@ void libspdm_test_responder_challenge_auth_case5(void **state)
     status = libspdm_get_response_challenge_auth(
         spdm_context, m_libspdm_challenge_request1_size,
         &m_libspdm_challenge_request1, &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size,
                      sizeof(spdm_error_response_t) +
                      sizeof(spdm_error_data_response_not_ready_t));
@@ -395,7 +395,7 @@ void libspdm_test_responder_challenge_auth_case5(void **state)
  **/
 void libspdm_test_responder_challenge_auth_case6(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -440,7 +440,7 @@ void libspdm_test_responder_challenge_auth_case6(void **state)
     status = libspdm_get_response_challenge_auth(
         spdm_context, m_libspdm_challenge_request1_size,
         &m_libspdm_challenge_request1, &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
@@ -458,7 +458,7 @@ void libspdm_test_responder_challenge_auth_case6(void **state)
  * CHALLENGE_AUTH response message.
  **/
 void libspdm_test_responder_challenge_auth_case7(void **state) {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
     size_t response_size;
@@ -496,7 +496,7 @@ void libspdm_test_responder_challenge_auth_case7(void **state) {
     status = libspdm_get_response_challenge_auth (spdm_context, m_libspdm_challenge_request1_size,
                                                   &m_libspdm_challenge_request1, &response_size,
                                                   response);
-    assert_int_equal (status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal (response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal (spdm_response->header.request_response_code, SPDM_ERROR);
@@ -512,7 +512,7 @@ void libspdm_test_responder_challenge_auth_case7(void **state) {
  * indicating the UnexpectedRequest.
  **/
 void libspdm_test_responder_challenge_auth_case8(void **state) {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
     size_t response_size;
@@ -550,7 +550,7 @@ void libspdm_test_responder_challenge_auth_case8(void **state) {
     status = libspdm_get_response_challenge_auth (spdm_context, m_libspdm_challenge_request3_size,
                                                   &m_libspdm_challenge_request3, &response_size,
                                                   response);
-    assert_int_equal (status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal (response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal (spdm_response->header.request_response_code, SPDM_ERROR);
@@ -566,7 +566,7 @@ void libspdm_test_responder_challenge_auth_case8(void **state) {
  * CHALLENGE_AUTH response message.
  **/
 void libspdm_test_responder_challenge_auth_case9(void **state) {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
     size_t response_size;
@@ -604,7 +604,7 @@ void libspdm_test_responder_challenge_auth_case9(void **state) {
     status = libspdm_get_response_challenge_auth (spdm_context, m_libspdm_challenge_request4_size,
                                                   &m_libspdm_challenge_request4, &response_size,
                                                   response);
-    assert_int_equal (status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal (response_size, sizeof(spdm_challenge_auth_response_t) + libspdm_get_hash_size (
                           m_libspdm_use_hash_algo) + SPDM_NONCE_SIZE + 0 + sizeof(uint16_t) + 0 + libspdm_get_asym_signature_size (
                           m_libspdm_use_asym_algo));
@@ -622,7 +622,7 @@ void libspdm_test_responder_challenge_auth_case9(void **state) {
  * indicating the UnexpectedRequest.
  **/
 void libspdm_test_responder_challenge_auth_case10(void **state) {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
     size_t response_size;
@@ -660,7 +660,7 @@ void libspdm_test_responder_challenge_auth_case10(void **state) {
     status = libspdm_get_response_challenge_auth (spdm_context, m_libspdm_challenge_request3_size,
                                                   &m_libspdm_challenge_request3, &response_size,
                                                   response);
-    assert_int_equal (status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal (response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal (spdm_response->header.request_response_code, SPDM_ERROR);
@@ -676,7 +676,7 @@ void libspdm_test_responder_challenge_auth_case10(void **state) {
  * CHALLENGE_AUTH response message.
  **/
 void libspdm_test_responder_challenge_auth_case11(void **state) {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
     size_t response_size;
@@ -715,7 +715,7 @@ void libspdm_test_responder_challenge_auth_case11(void **state) {
     status = libspdm_get_response_challenge_auth (spdm_context, m_libspdm_challenge_request1_size,
                                                   &m_libspdm_challenge_request1, &response_size,
                                                   response);
-    assert_int_equal (status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal (response_size, sizeof(spdm_challenge_auth_response_t) + libspdm_get_hash_size (
                           m_libspdm_use_hash_algo) + SPDM_NONCE_SIZE + 0 + sizeof(uint16_t) + 8 + libspdm_get_asym_signature_size (
                           m_libspdm_use_asym_algo));
@@ -733,7 +733,7 @@ void libspdm_test_responder_challenge_auth_case11(void **state) {
  * CHALLENGE_AUTH response message.
  **/
 void libspdm_test_responder_challenge_auth_case12(void **state) {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
     size_t response_size;
@@ -772,7 +772,7 @@ void libspdm_test_responder_challenge_auth_case12(void **state) {
     status = libspdm_get_response_challenge_auth (spdm_context, m_libspdm_challenge_request5_size,
                                                   &m_libspdm_challenge_request5, &response_size,
                                                   response);
-    assert_int_equal (status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal (response_size, sizeof(spdm_challenge_auth_response_t) + libspdm_get_hash_size (
                           m_libspdm_use_hash_algo) + SPDM_NONCE_SIZE +
                       libspdm_get_hash_size (m_libspdm_use_hash_algo) +
@@ -792,7 +792,7 @@ void libspdm_test_responder_challenge_auth_case12(void **state) {
  * CHALLENGE_AUTH response message.
  **/
 void libspdm_test_responder_challenge_auth_case13(void **state) {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
     size_t response_size;
@@ -831,7 +831,7 @@ void libspdm_test_responder_challenge_auth_case13(void **state) {
     status = libspdm_get_response_challenge_auth (spdm_context, m_libspdm_challenge_request6_size,
                                                   &m_libspdm_challenge_request6, &response_size,
                                                   response);
-    assert_int_equal (status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal (response_size, sizeof(spdm_challenge_auth_response_t) + libspdm_get_hash_size (
                           m_libspdm_use_hash_algo) + SPDM_NONCE_SIZE +
                       libspdm_get_hash_size (m_libspdm_use_hash_algo) +
@@ -852,7 +852,7 @@ void libspdm_test_responder_challenge_auth_case13(void **state) {
  * ERROR message indicating the UnsupportedRequest.
  **/
 void libspdm_test_responder_challenge_auth_case14(void **state) {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
     size_t response_size;
@@ -891,7 +891,7 @@ void libspdm_test_responder_challenge_auth_case14(void **state) {
     status = libspdm_get_response_challenge_auth (spdm_context, m_libspdm_challenge_request6_size,
                                                   &m_libspdm_challenge_request6, &response_size,
                                                   response);
-    assert_int_equal (status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal (response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal (spdm_response->header.request_response_code, SPDM_ERROR);
@@ -909,7 +909,7 @@ void libspdm_test_responder_challenge_auth_case14(void **state) {
  **/
 void libspdm_test_responder_challenge_auth_case15(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -964,7 +964,7 @@ void libspdm_test_responder_challenge_auth_case15(void **state)
     status = libspdm_get_response_challenge_auth(
         spdm_context, m_libspdm_challenge_request1_size,
         &m_libspdm_challenge_request1, &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size,
                      sizeof(spdm_challenge_auth_response_t) +
                      libspdm_get_hash_size(m_libspdm_use_hash_algo) +

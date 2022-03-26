@@ -47,7 +47,7 @@ static void libspdm_set_standard_key_update_test_state(libspdm_context_t *spdm_c
  **/
 void libspdm_test_responder_encap_key_update_case1(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint32_t session_id;
@@ -81,7 +81,7 @@ void libspdm_test_responder_encap_key_update_case1(void **state)
     status = libspdm_process_encap_response_key_update(spdm_context, spdm_response_size,
                                                        &spdm_response, &need_continue);
 
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(need_continue, true);
 }
 
@@ -92,7 +92,7 @@ void libspdm_test_responder_encap_key_update_case1(void **state)
  **/
 void libspdm_test_responder_encap_key_update_case2(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint32_t session_id;
@@ -126,7 +126,7 @@ void libspdm_test_responder_encap_key_update_case2(void **state)
     status = libspdm_process_encap_response_key_update(spdm_context, spdm_response_size,
                                                        &spdm_response, &need_continue);
 
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(need_continue, false);
 }
 /**
@@ -136,7 +136,7 @@ void libspdm_test_responder_encap_key_update_case2(void **state)
  **/
 void libspdm_test_responder_encap_key_update_case3(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint32_t session_id;
@@ -162,7 +162,7 @@ void libspdm_test_responder_encap_key_update_case3(void **state)
 
     status = libspdm_process_encap_response_key_update(spdm_context, spdm_response_size,
                                                        &spdm_response, &need_continue);
-    assert_int_equal(status, RETURN_UNSUPPORTED);
+    assert_int_equal(status, LIBSPDM_STATUS_UNSUPPORTED_CAP);
 }
 
 /**
@@ -172,7 +172,7 @@ void libspdm_test_responder_encap_key_update_case3(void **state)
  **/
 void libspdm_test_responder_encap_key_update_case4(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint32_t session_id;
@@ -199,7 +199,7 @@ void libspdm_test_responder_encap_key_update_case4(void **state)
     status = libspdm_process_encap_response_key_update(spdm_context, spdm_response_size,
                                                        &spdm_response, &need_continue);
 
-    assert_int_equal(status, RETURN_SECURITY_VIOLATION);
+    assert_int_equal(status, LIBSPDM_STATUS_UNSUPPORTED_CAP);
 }
 
 /**
@@ -208,7 +208,7 @@ void libspdm_test_responder_encap_key_update_case4(void **state)
  **/
 void libspdm_test_responder_encap_key_update_case5(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint32_t session_id;
@@ -241,7 +241,7 @@ void libspdm_test_responder_encap_key_update_case5(void **state)
     status = libspdm_process_encap_response_key_update(spdm_context, spdm_response_size,
                                                        &spdm_response, &need_continue);
 
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
 libspdm_test_context_t m_libspdm_responder_encap_key_update_test_context = {

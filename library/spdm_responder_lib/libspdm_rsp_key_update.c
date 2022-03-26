@@ -23,11 +23,11 @@
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_get_response_key_update(void *context,
-                                              size_t request_size,
-                                              const void *request,
-                                              size_t *response_size,
-                                              void *response)
+libspdm_return_t libspdm_get_response_key_update(void *context,
+                                                 size_t request_size,
+                                                 const void *request,
+                                                 size_t *response_size,
+                                                 void *response)
 {
     uint32_t session_id;
     spdm_key_update_response_t *spdm_response;
@@ -117,7 +117,7 @@ return_status libspdm_get_response_key_update(void *context,
                 session_info->secured_message_context,
                 LIBSPDM_KEY_UPDATE_ACTION_REQUESTER);
             if (!result) {
-                return RETURN_UNSUPPORTED;
+                return LIBSPDM_STATUS_UNSUPPORTED_CAP;
             }
             break;
         case SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS:
@@ -137,7 +137,7 @@ return_status libspdm_get_response_key_update(void *context,
                 session_info->secured_message_context,
                 LIBSPDM_KEY_UPDATE_ACTION_REQUESTER);
             if (!result) {
-                return RETURN_UNSUPPORTED;
+                return LIBSPDM_STATUS_UNSUPPORTED_CAP;
             }
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                            "libspdm_create_update_session_data_key[%x] Responder\n",
@@ -146,7 +146,7 @@ return_status libspdm_get_response_key_update(void *context,
                 session_info->secured_message_context,
                 LIBSPDM_KEY_UPDATE_ACTION_RESPONDER);
             if (!result) {
-                return RETURN_UNSUPPORTED;
+                return LIBSPDM_STATUS_UNSUPPORTED_CAP;
             }
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                            "libspdm_activate_update_session_data_key[%x] Responder new\n",
@@ -155,7 +155,7 @@ return_status libspdm_get_response_key_update(void *context,
                 session_info->secured_message_context,
                 LIBSPDM_KEY_UPDATE_ACTION_RESPONDER, true);
             if (!result) {
-                return RETURN_UNSUPPORTED;
+                return LIBSPDM_STATUS_UNSUPPORTED_CAP;
             }
             break;
         case SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY:
@@ -174,7 +174,7 @@ return_status libspdm_get_response_key_update(void *context,
                 session_info->secured_message_context,
                 LIBSPDM_KEY_UPDATE_ACTION_REQUESTER, true);
             if (!result) {
-                return RETURN_UNSUPPORTED;
+                return LIBSPDM_STATUS_UNSUPPORTED_CAP;
             }
             break;
         default:
@@ -201,5 +201,5 @@ return_status libspdm_get_response_key_update(void *context,
     spdm_response->header.param1 = spdm_request->header.param1;
     spdm_response->header.param2 = spdm_request->header.param2;
 
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }

@@ -19,7 +19,7 @@
  * @retval RETURN_SUCCESS               The encapsulated request is returned.
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
-typedef return_status (*libspdm_get_encap_request_func)(
+typedef libspdm_return_t (*libspdm_get_encap_request_func)(
     libspdm_context_t *spdm_context, size_t *encap_request_size,
     void *encap_request);
 
@@ -35,7 +35,7 @@ typedef return_status (*libspdm_get_encap_request_func)(
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-typedef return_status (*libspdm_process_encap_response_func)(
+typedef libspdm_return_t (*libspdm_process_encap_response_func)(
     libspdm_context_t *spdm_context, size_t encap_response_size,
     const void *encap_response, bool *need_continue);
 
@@ -115,12 +115,12 @@ void libspdm_encap_move_to_next_op_code(libspdm_context_t *spdm_context)
  * @retval RETURN_SUCCESS               The SPDM encapsulated request is generated successfully.
  * @retval RETURN_UNSUPPORTED           Do not know how to process the request.
  **/
-return_status libspdm_process_encapsulated_response(
+libspdm_return_t libspdm_process_encapsulated_response(
     libspdm_context_t *spdm_context, size_t encap_response_size,
     const void *encap_response, size_t *encap_request_size,
     void *encap_request)
 {
-    return_status status;
+    libspdm_return_t status;
     bool need_continue;
     libspdm_encap_response_struct_t *encap_response_struct;
 
@@ -132,16 +132,16 @@ return_status libspdm_process_encapsulated_response(
             spdm_context->encap_context.current_request_op_code);
         LIBSPDM_ASSERT(encap_response_struct != NULL);
         if (encap_response_struct == NULL) {
-            return RETURN_UNSUPPORTED;
+            return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         }
         LIBSPDM_ASSERT(encap_response_struct->process_encap_response != NULL);
         if (encap_response_struct->process_encap_response == NULL) {
-            return RETURN_UNSUPPORTED;
+            return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         }
         status = encap_response_struct->process_encap_response(
             spdm_context, encap_response_size, encap_response,
             &need_continue);
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return status;
         }
     }
@@ -157,7 +157,7 @@ return_status libspdm_process_encapsulated_response(
         /* No more work to do - stop*/
         *encap_request_size = 0;
         spdm_context->encap_context.current_request_op_code = 0;
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     }
 
     /* Process the next request*/
@@ -165,11 +165,11 @@ return_status libspdm_process_encapsulated_response(
         spdm_context->encap_context.current_request_op_code);
     LIBSPDM_ASSERT(encap_response_struct != NULL);
     if (encap_response_struct == NULL) {
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
     LIBSPDM_ASSERT(encap_response_struct->get_encap_request != NULL);
     if (encap_response_struct->get_encap_request == NULL) {
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
     status = encap_response_struct->get_encap_request(
         spdm_context, encap_request_size, encap_request);
@@ -337,7 +337,7 @@ void libspdm_init_key_update_encap_state(void *context)
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_get_response_encapsulated_request(
+libspdm_return_t libspdm_get_response_encapsulated_request(
     void *context, size_t request_size, const void *request,
     size_t *response_size, void *response)
 {
@@ -345,7 +345,7 @@ return_status libspdm_get_response_encapsulated_request(
     libspdm_context_t *spdm_context;
     void *encap_request;
     size_t encap_request_size;
-    return_status status;
+    libspdm_return_t status;
     const spdm_get_encapsulated_request_request_t *spdm_request;
 
     spdm_context = context;
@@ -398,7 +398,7 @@ return_status libspdm_get_response_encapsulated_request(
 
     status = libspdm_process_encapsulated_response(
         context, 0, NULL, &encap_request_size, encap_request);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
         return libspdm_generate_error_response(
             spdm_context, SPDM_ERROR_CODE_INVALID_RESPONSE_CODE, 0,
@@ -412,7 +412,7 @@ return_status libspdm_get_response_encapsulated_request(
         spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
     }
 
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
 /**
@@ -432,7 +432,7 @@ return_status libspdm_get_response_encapsulated_request(
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_get_response_encapsulated_response_ack(
+libspdm_return_t libspdm_get_response_encapsulated_response_ack(
     void *context, size_t request_size, const void *request,
     size_t *response_size, void *response)
 {
@@ -444,7 +444,7 @@ return_status libspdm_get_response_encapsulated_response_ack(
     size_t encap_response_size;
     void *encap_request;
     size_t encap_request_size;
-    return_status status;
+    libspdm_return_t status;
     size_t ack_header_size;
 
     spdm_context = context;
@@ -526,7 +526,7 @@ return_status libspdm_get_response_encapsulated_response_ack(
     status = libspdm_process_encapsulated_response(
         context, encap_response_size, encap_response,
         &encap_request_size, encap_request);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
         return libspdm_generate_error_response(
             spdm_context, SPDM_ERROR_CODE_INVALID_RESPONSE_CODE, 0,
@@ -553,7 +553,7 @@ return_status libspdm_get_response_encapsulated_response_ack(
         spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
     }
 
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
 /**
@@ -564,12 +564,12 @@ return_status libspdm_get_response_encapsulated_response_ack(
  *
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status libspdm_handle_encap_error_response_main(
+libspdm_return_t libspdm_handle_encap_error_response_main(
     libspdm_context_t *spdm_context, uint8_t error_code)
 {
 
     /* According to "Timing Specification for SPDM messages", RESPONSE_NOT_READY is only for responder.
      * RESPONSE_NOT_READY should not be sent by requester. No need to check it.*/
 
-    return RETURN_DEVICE_ERROR;
+    return LIBSPDM_STATUS_UNSUPPORTED_CAP;
 }

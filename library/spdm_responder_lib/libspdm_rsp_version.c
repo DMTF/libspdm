@@ -32,15 +32,15 @@ typedef struct {
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_get_response_version(void *context, size_t request_size,
-                                           const void *request,
-                                           size_t *response_size,
-                                           void *response)
+libspdm_return_t libspdm_get_response_version(void *context, size_t request_size,
+                                              const void *request,
+                                              size_t *response_size,
+                                              void *response)
 {
     const spdm_get_version_request_t *spdm_request;
     libspdm_version_response_mine_t *spdm_response;
     libspdm_context_t *spdm_context;
-    return_status status;
+    libspdm_return_t status;
 
     spdm_context = context;
     spdm_request = request;
@@ -126,5 +126,5 @@ return_status libspdm_get_response_version(void *context, size_t request_size,
     libspdm_set_connection_state(spdm_context,
                                  LIBSPDM_CONNECTION_STATE_AFTER_VERSION);
 
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }

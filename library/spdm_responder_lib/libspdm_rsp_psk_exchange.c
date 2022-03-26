@@ -25,11 +25,11 @@
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_get_response_psk_exchange(void *context,
-                                                size_t request_size,
-                                                const void *request,
-                                                size_t *response_size,
-                                                void *response)
+libspdm_return_t libspdm_get_response_psk_exchange(void *context,
+                                                   size_t request_size,
+                                                   const void *request,
+                                                   size_t *response_size,
+                                                   void *response)
 {
     const spdm_psk_exchange_request_t *spdm_request;
     spdm_psk_exchange_response_t *spdm_response;
@@ -44,7 +44,7 @@ return_status libspdm_get_response_psk_exchange(void *context,
     libspdm_context_t *spdm_context;
     uint16_t req_session_id;
     uint16_t rsp_session_id;
-    return_status status;
+    libspdm_return_t status;
     size_t opaque_psk_exchange_rsp_size;
     uint8_t th1_hash_data[64];
     uint8_t th2_hash_data[64];
@@ -265,7 +265,9 @@ return_status libspdm_get_response_psk_exchange(void *context,
 
     if (context_length != 0) {
         if(!libspdm_get_random_number(context_length, ptr)) {
-            return RETURN_DEVICE_ERROR;
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_UNSPECIFIED, 0,
+                                                   response_size, response);
         }
         ptr += context_length;
     }
@@ -361,7 +363,7 @@ return_status libspdm_get_response_psk_exchange(void *context,
                                   LIBSPDM_SESSION_STATE_ESTABLISHED);
     }
 
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
 #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/

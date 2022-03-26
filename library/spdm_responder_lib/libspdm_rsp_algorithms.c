@@ -217,11 +217,11 @@ uint32_t libspdm_prioritize_algorithm(const uint32_t *priority_table,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_get_response_algorithms(void *context,
-                                              size_t request_size,
-                                              const void *request,
-                                              size_t *response_size,
-                                              void *response)
+libspdm_return_t libspdm_get_response_algorithms(void *context,
+                                                 size_t request_size,
+                                                 const void *request,
+                                                 size_t *response_size,
+                                                 void *response)
 {
     const spdm_negotiate_algorithms_request_t *spdm_request;
     size_t spdm_request_size;
@@ -229,7 +229,7 @@ return_status libspdm_get_response_algorithms(void *context,
     spdm_negotiate_algorithms_common_struct_table_t *struct_table;
     size_t index;
     libspdm_context_t *spdm_context;
-    return_status status;
+    libspdm_return_t status;
     uint32_t algo_size;
     uint8_t fixed_alg_size;
     uint8_t ext_alg_count;
@@ -330,22 +330,37 @@ return_status libspdm_get_response_algorithms(void *context,
     /* Algorithm count check and message size check*/
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
         if (ext_alg_total_count > SPDM_NEGOTIATE_ALGORITHMS_REQUEST_MAX_EXT_ALG_COUNT_VERSION_11) {
-            return RETURN_DEVICE_ERROR;
+            return libspdm_generate_error_response(
+                spdm_context,
+                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                response_size, response);
         }
         if (spdm_request->length > SPDM_NEGOTIATE_ALGORITHMS_REQUEST_MAX_LENGTH_VERSION_11) {
-            return RETURN_DEVICE_ERROR;
+            return libspdm_generate_error_response(
+                spdm_context,
+                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                response_size, response);
         }
     } else {
         if (ext_alg_total_count > SPDM_NEGOTIATE_ALGORITHMS_REQUEST_MAX_EXT_ALG_COUNT_VERSION_10) {
-            return RETURN_DEVICE_ERROR;
+            return libspdm_generate_error_response(
+                spdm_context,
+                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                response_size, response);
         }
         if (spdm_request->length > SPDM_NEGOTIATE_ALGORITHMS_REQUEST_MAX_LENGTH_VERSION_10) {
-            return RETURN_DEVICE_ERROR;
+            return libspdm_generate_error_response(
+                spdm_context,
+                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                response_size, response);
         }
     }
     request_size = (size_t)struct_table - (size_t)spdm_request;
     if (request_size != spdm_request->length) {
-        return RETURN_DEVICE_ERROR;
+        return libspdm_generate_error_response(
+            spdm_context,
+            SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+            response_size, response);
     }
     spdm_request_size = request_size;
 
@@ -606,13 +621,19 @@ return_status libspdm_get_response_algorithms(void *context,
             if (spdm_context->connection_info.algorithm
                 .key_schedule !=
                 SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH) {
-                return RETURN_SECURITY_VIOLATION;
+                return libspdm_generate_error_response(
+                    spdm_context,
+                    SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                    response_size, response);
             }
             if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
                 if ((spdm_context->connection_info.algorithm.other_params_support &
                      SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_MASK) !=
                     SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1) {
-                    return RETURN_SECURITY_VIOLATION;
+                    return libspdm_generate_error_response(
+                        spdm_context,
+                        SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                        response_size, response);
                 }
             }
         }
@@ -642,5 +663,5 @@ return_status libspdm_get_response_algorithms(void *context,
     libspdm_set_connection_state(spdm_context,
                                  LIBSPDM_CONNECTION_STATE_NEGOTIATED);
 
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }

@@ -60,6 +60,10 @@ typedef size_t libspdm_return_t;
 
 /* Core errors. */
 
+/* The function input parameter is invalid. */
+#define LIBSPDM_STATUS_INVALID_PARAMETER \
+    LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CORE, 0x0001)
+
 /* Unable to complete operation due to unsupported capabilities by either the caller, the peer,
  * or both. */
 #define LIBSPDM_STATUS_UNSUPPORTED_CAP \

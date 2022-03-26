@@ -25,11 +25,11 @@
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_get_response_key_exchange(void *context,
-                                                size_t request_size,
-                                                const void *request,
-                                                size_t *response_size,
-                                                void *response)
+libspdm_return_t libspdm_get_response_key_exchange(void *context,
+                                                   size_t request_size,
+                                                   const void *request,
+                                                   size_t *response_size,
+                                                   void *response)
 {
     const spdm_key_exchange_request_t *spdm_request;
     spdm_key_exchange_response_t *spdm_response;
@@ -48,7 +48,7 @@ return_status libspdm_get_response_key_exchange(void *context,
     libspdm_context_t *spdm_context;
     uint16_t req_session_id;
     uint16_t rsp_session_id;
-    return_status status;
+    libspdm_return_t status;
     size_t opaque_key_exchange_rsp_size;
     uint8_t th1_hash_data[64];
 
@@ -226,7 +226,9 @@ return_status libspdm_get_response_key_exchange(void *context,
 
     if(!libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                                   spdm_response->random_data)) {
-        return RETURN_DEVICE_ERROR;
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_UNSPECIFIED, 0,
+                                               response_size, response);
     }
 
     ptr = (void *)(spdm_response + 1);
@@ -329,7 +331,7 @@ return_status libspdm_get_response_key_exchange(void *context,
         libspdm_free_session_id(spdm_context, session_id);
         return libspdm_generate_error_response(
             spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
-            SPDM_KEY_EXCHANGE_RSP, response_size, response);
+            0, response_size, response);
     }
 
     status = libspdm_append_message_k(spdm_context, session_info, false, ptr, signature_size);
@@ -392,7 +394,7 @@ return_status libspdm_get_response_key_exchange(void *context,
     libspdm_set_session_state(spdm_context, session_id,
                               LIBSPDM_SESSION_STATE_HANDSHAKING);
 
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
 #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
