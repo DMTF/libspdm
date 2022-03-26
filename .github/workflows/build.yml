@@ -97,6 +97,10 @@ jobs:
         run: |
           cd build/bin
           ./test_spdm_responder
+      - name: Test_spdm_common
+        run: |
+          cd build/bin
+          ./test_spdm_common
       - name: Test with initial seed
         if: matrix.os == 'ubuntu-latest' && matrix.arch == 'x64'
         run: |
