@@ -46,10 +46,10 @@ void libspdm_internal_dump_hex(const uint8_t *data, size_t size);
  * @retval RETURN_SUCCESS               The binary libspdm_bin_concat data is generated.
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
-return_status libspdm_bin_concat(const char *label, size_t label_size,
-                                 const uint8_t *context, uint16_t length,
-                                 size_t hash_size, uint8_t *out_bin,
-                                 size_t *out_bin_size)
+bool libspdm_bin_concat(const char *label, size_t label_size,
+                        const uint8_t *context, uint16_t length,
+                        size_t hash_size, uint8_t *out_bin,
+                        size_t *out_bin_size)
 {
     size_t final_size;
 
@@ -59,7 +59,7 @@ return_status libspdm_bin_concat(const char *label, size_t label_size,
     }
     if (*out_bin_size < final_size) {
         *out_bin_size = final_size;
-        return RETURN_BUFFER_TOO_SMALL;
+        return false;
     }
 
     *out_bin_size = final_size;
@@ -81,7 +81,7 @@ return_status libspdm_bin_concat(const char *label, size_t label_size,
                          context, hash_size);
     }
 
-    return RETURN_SUCCESS;
+    return true;
 }
 
 /**
@@ -94,12 +94,11 @@ return_status libspdm_bin_concat(const char *label, size_t label_size,
  *
  * @retval RETURN_SUCCESS  SPDM AEAD key and IV for a session is generated.
  **/
-return_status libspdm_generate_aead_key_and_iv(
+bool libspdm_generate_aead_key_and_iv(
     libspdm_secured_message_context_t *secured_message_context,
     const uint8_t *major_secret, uint8_t *key, uint8_t *iv)
 {
-    return_status status;
-    bool ret_val;
+    bool status;
     size_t hash_size;
     size_t key_length;
     size_t iv_length;
@@ -116,13 +115,13 @@ return_status libspdm_generate_aead_key_and_iv(
     status = libspdm_bin_concat(SPDM_BIN_STR_5_LABEL, sizeof(SPDM_BIN_STR_5_LABEL) - 1,
                                 NULL, (uint16_t)key_length, hash_size, bin_str5,
                                 &bin_str5_size);
-    LIBSPDM_ASSERT_RETURN_ERROR(status);
+    LIBSPDM_ASSERT(status);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "bin_str5 (0x%x):\n", bin_str5_size));
     libspdm_internal_dump_hex(bin_str5, bin_str5_size);
-    ret_val = libspdm_hkdf_expand(secured_message_context->base_hash_algo,
-                                  major_secret, hash_size, bin_str5,
-                                  bin_str5_size, key, key_length);
-    LIBSPDM_ASSERT(ret_val);
+    status = libspdm_hkdf_expand(secured_message_context->base_hash_algo,
+                                 major_secret, hash_size, bin_str5,
+                                 bin_str5_size, key, key_length);
+    LIBSPDM_ASSERT(status);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "key (0x%x) - ", key_length));
     libspdm_internal_dump_data(key, key_length);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
@@ -131,18 +130,18 @@ return_status libspdm_generate_aead_key_and_iv(
     status = libspdm_bin_concat(SPDM_BIN_STR_6_LABEL, sizeof(SPDM_BIN_STR_6_LABEL) - 1,
                                 NULL, (uint16_t)iv_length, hash_size, bin_str6,
                                 &bin_str6_size);
-    LIBSPDM_ASSERT_RETURN_ERROR(status);
+    LIBSPDM_ASSERT(status);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "bin_str6 (0x%x):\n", bin_str6_size));
     libspdm_internal_dump_hex(bin_str6, bin_str6_size);
-    ret_val = libspdm_hkdf_expand(secured_message_context->base_hash_algo,
-                                  major_secret, hash_size, bin_str6,
-                                  bin_str6_size, iv, iv_length);
-    LIBSPDM_ASSERT(ret_val);
+    status = libspdm_hkdf_expand(secured_message_context->base_hash_algo,
+                                 major_secret, hash_size, bin_str6,
+                                 bin_str6_size, iv, iv_length);
+    LIBSPDM_ASSERT(status);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "iv (0x%x) - ", iv_length));
     libspdm_internal_dump_data(iv, iv_length);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
-    return RETURN_SUCCESS;
+    return true;
 }
 
 /**
@@ -154,12 +153,11 @@ return_status libspdm_generate_aead_key_and_iv(
  *
  * @retval RETURN_SUCCESS  SPDM finished_key for a session is generated.
  **/
-return_status libspdm_generate_finished_key(
+bool libspdm_generate_finished_key(
     libspdm_secured_message_context_t *secured_message_context,
     const uint8_t *handshake_secret, uint8_t *finished_key)
 {
-    return_status status;
-    bool ret_val;
+    bool status;
     size_t hash_size;
     uint8_t bin_str7[128];
     size_t bin_str7_size;
@@ -170,18 +168,18 @@ return_status libspdm_generate_finished_key(
     status = libspdm_bin_concat(SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
                                 NULL, (uint16_t)hash_size, hash_size, bin_str7,
                                 &bin_str7_size);
-    LIBSPDM_ASSERT_RETURN_ERROR(status);
+    LIBSPDM_ASSERT(status);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "bin_str7 (0x%x):\n", bin_str7_size));
     libspdm_internal_dump_hex(bin_str7, bin_str7_size);
-    ret_val = libspdm_hkdf_expand(secured_message_context->base_hash_algo,
-                                  handshake_secret, hash_size, bin_str7,
-                                  bin_str7_size, finished_key, hash_size);
-    LIBSPDM_ASSERT(ret_val);
+    status = libspdm_hkdf_expand(secured_message_context->base_hash_algo,
+                                 handshake_secret, hash_size, bin_str7,
+                                 bin_str7_size, finished_key, hash_size);
+    LIBSPDM_ASSERT(status);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "finished_key (0x%x) - ", hash_size));
     libspdm_internal_dump_data(finished_key, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
-    return RETURN_SUCCESS;
+    return true;
 }
 
 /**
@@ -192,12 +190,11 @@ return_status libspdm_generate_finished_key(
  *
  * @retval RETURN_SUCCESS  SPDM HandshakeKey for a session is generated.
  **/
-return_status
+bool
 libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
                                        const uint8_t *th1_hash_data)
 {
-    return_status status;
-    bool ret_val;
+    bool status;
     size_t hash_size;
     uint8_t bin_str0[128];
     size_t bin_str0_size;
@@ -215,7 +212,7 @@ libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
     status = libspdm_bin_concat(SPDM_BIN_STR_0_LABEL, sizeof(SPDM_BIN_STR_0_LABEL) - 1,
                                 NULL, (uint16_t)hash_size, hash_size, bin_str0,
                                 &bin_str0_size);
-    LIBSPDM_ASSERT_RETURN_ERROR(status);
+    LIBSPDM_ASSERT(status);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "bin_str0 (0x%x):\n", bin_str0_size));
     libspdm_internal_dump_hex(bin_str0, bin_str0_size);
 
@@ -227,13 +224,13 @@ libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
             secured_message_context->master_secret.dhe_secret,
             secured_message_context->dhe_key_size);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
-        ret_val = libspdm_hmac_all(
+        status = libspdm_hmac_all(
             secured_message_context->base_hash_algo,
             m_zero_filled_buffer, hash_size,
             secured_message_context->master_secret.dhe_secret,
             secured_message_context->dhe_key_size,
             secured_message_context->master_secret.handshake_secret);
-        LIBSPDM_ASSERT(ret_val);
+        LIBSPDM_ASSERT(status);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "handshake_secret (0x%x) - ", hash_size));
         libspdm_internal_dump_data(
             secured_message_context->master_secret.handshake_secret,
@@ -245,11 +242,11 @@ libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
     status = libspdm_bin_concat(SPDM_BIN_STR_1_LABEL, sizeof(SPDM_BIN_STR_1_LABEL) - 1,
                                 th1_hash_data, (uint16_t)hash_size, hash_size,
                                 bin_str1, &bin_str1_size);
-    LIBSPDM_ASSERT_RETURN_ERROR(status);
+    LIBSPDM_ASSERT(status);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "bin_str1 (0x%x):\n", bin_str1_size));
     libspdm_internal_dump_hex(bin_str1, bin_str1_size);
     if (secured_message_context->use_psk) {
-        ret_val = libspdm_psk_handshake_secret_hkdf_expand(
+        status = libspdm_psk_handshake_secret_hkdf_expand(
             secured_message_context->version,
             secured_message_context->base_hash_algo,
             secured_message_context->psk_hint,
@@ -258,11 +255,11 @@ libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
             secured_message_context->handshake_secret
             .request_handshake_secret,
             hash_size);
-        if (!ret_val) {
-            return RETURN_UNSUPPORTED;
+        if (!status) {
+            return false;
         }
     } else {
-        ret_val = libspdm_hkdf_expand(
+        status = libspdm_hkdf_expand(
             secured_message_context->base_hash_algo,
             secured_message_context->master_secret.handshake_secret,
             hash_size, bin_str1, bin_str1_size,
@@ -270,7 +267,7 @@ libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
             .request_handshake_secret,
             hash_size);
     }
-    LIBSPDM_ASSERT(ret_val);
+    LIBSPDM_ASSERT(status);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "request_handshake_secret (0x%x) - ", hash_size));
     libspdm_internal_dump_data(secured_message_context->handshake_secret
                                .request_handshake_secret,
@@ -280,11 +277,11 @@ libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
     status = libspdm_bin_concat(SPDM_BIN_STR_2_LABEL, sizeof(SPDM_BIN_STR_2_LABEL) - 1,
                                 th1_hash_data, (uint16_t)hash_size, hash_size,
                                 bin_str2, &bin_str2_size);
-    LIBSPDM_ASSERT_RETURN_ERROR(status);
+    LIBSPDM_ASSERT(status);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "bin_str2 (0x%x):\n", bin_str2_size));
     libspdm_internal_dump_hex(bin_str2, bin_str2_size);
     if (secured_message_context->use_psk) {
-        ret_val = libspdm_psk_handshake_secret_hkdf_expand(
+        status = libspdm_psk_handshake_secret_hkdf_expand(
             secured_message_context->version,
             secured_message_context->base_hash_algo,
             secured_message_context->psk_hint,
@@ -293,11 +290,11 @@ libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
             secured_message_context->handshake_secret
             .response_handshake_secret,
             hash_size);
-        if (!ret_val) {
-            return RETURN_UNSUPPORTED;
+        if (!status) {
+            return false;
         }
     } else {
-        ret_val = libspdm_hkdf_expand(
+        status = libspdm_hkdf_expand(
             secured_message_context->base_hash_algo,
             secured_message_context->master_secret.handshake_secret,
             hash_size, bin_str2, bin_str2_size,
@@ -305,7 +302,7 @@ libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
             .response_handshake_secret,
             hash_size);
     }
-    LIBSPDM_ASSERT(ret_val);
+    LIBSPDM_ASSERT(status);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "response_handshake_secret (0x%x) - ", hash_size));
     libspdm_internal_dump_data(secured_message_context->handshake_secret
                                .response_handshake_secret,
@@ -317,7 +314,7 @@ libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
         secured_message_context->handshake_secret
         .request_handshake_secret,
         secured_message_context->handshake_secret.request_finished_key);
-    if (RETURN_ERROR(status)) {
+    if (!status) {
         return status;
     }
 
@@ -326,7 +323,7 @@ libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
         secured_message_context->handshake_secret
         .response_handshake_secret,
         secured_message_context->handshake_secret.response_finished_key);
-    if (RETURN_ERROR(status)) {
+    if (!status) {
         return status;
     }
 
@@ -337,7 +334,7 @@ libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
                                               .request_handshake_encryption_key,
                                               secured_message_context->handshake_secret
                                               .request_handshake_salt);
-    if (RETURN_ERROR(status)) {
+    if (!status) {
         return status;
     }
     secured_message_context->handshake_secret
@@ -351,7 +348,7 @@ libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
         .response_handshake_encryption_key,
         secured_message_context->handshake_secret
         .response_handshake_salt);
-    if (RETURN_ERROR(status)) {
+    if (!status) {
         return status;
     }
     secured_message_context->handshake_secret
@@ -361,7 +358,7 @@ libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
                      LIBSPDM_MAX_DHE_KEY_SIZE);
 
     secured_message_context->finished_key_ready = true;
-    return RETURN_SUCCESS;
+    return true;
 }
 
 /**
@@ -372,12 +369,11 @@ libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
  *
  * @retval RETURN_SUCCESS  SPDM DataKey for a session is generated.
  **/
-return_status
+bool
 libspdm_generate_session_data_key(void *spdm_secured_message_context,
                                   const uint8_t *th2_hash_data)
 {
-    return_status status;
-    bool ret_val;
+    bool status;
     size_t hash_size;
     uint8_t salt1[64];
     uint8_t bin_str0[128];
@@ -402,21 +398,21 @@ libspdm_generate_session_data_key(void *spdm_secured_message_context,
                                     sizeof(SPDM_BIN_STR_0_LABEL) - 1, NULL,
                                     (uint16_t)hash_size, hash_size, bin_str0,
                                     &bin_str0_size);
-        LIBSPDM_ASSERT_RETURN_ERROR(status);
-        ret_val = libspdm_hkdf_expand(
+        LIBSPDM_ASSERT(status);
+        status = libspdm_hkdf_expand(
             secured_message_context->base_hash_algo,
             secured_message_context->master_secret.handshake_secret,
             hash_size, bin_str0, bin_str0_size, salt1, hash_size);
-        LIBSPDM_ASSERT(ret_val);
+        LIBSPDM_ASSERT(status);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "salt1 (0x%x) - ", hash_size));
         libspdm_internal_dump_data(salt1, hash_size);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
-        ret_val = libspdm_hmac_all(
+        status = libspdm_hmac_all(
             secured_message_context->base_hash_algo,
             m_zero_filled_buffer, hash_size, salt1, hash_size,
             secured_message_context->master_secret.master_secret);
-        LIBSPDM_ASSERT(ret_val);
+        LIBSPDM_ASSERT(status);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "master_secret (0x%x) - ", hash_size));
         libspdm_internal_dump_data(
             secured_message_context->master_secret.master_secret,
@@ -428,11 +424,11 @@ libspdm_generate_session_data_key(void *spdm_secured_message_context,
     status = libspdm_bin_concat(SPDM_BIN_STR_3_LABEL, sizeof(SPDM_BIN_STR_3_LABEL) - 1,
                                 th2_hash_data, (uint16_t)hash_size, hash_size,
                                 bin_str3, &bin_str3_size);
-    LIBSPDM_ASSERT_RETURN_ERROR(status);
+    LIBSPDM_ASSERT(status);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "bin_str3 (0x%x):\n", bin_str3_size));
     libspdm_internal_dump_hex(bin_str3, bin_str3_size);
     if (secured_message_context->use_psk) {
-        ret_val = libspdm_psk_master_secret_hkdf_expand(
+        status = libspdm_psk_master_secret_hkdf_expand(
             secured_message_context->version,
             secured_message_context->base_hash_algo,
             secured_message_context->psk_hint,
@@ -441,11 +437,11 @@ libspdm_generate_session_data_key(void *spdm_secured_message_context,
             secured_message_context->application_secret
             .request_data_secret,
             hash_size);
-        if (!ret_val) {
-            return RETURN_UNSUPPORTED;
+        if (!status) {
+            return false;
         }
     } else {
-        ret_val = libspdm_hkdf_expand(
+        status = libspdm_hkdf_expand(
             secured_message_context->base_hash_algo,
             secured_message_context->master_secret.master_secret,
             hash_size, bin_str3, bin_str3_size,
@@ -453,7 +449,7 @@ libspdm_generate_session_data_key(void *spdm_secured_message_context,
             .request_data_secret,
             hash_size);
     }
-    LIBSPDM_ASSERT(ret_val);
+    LIBSPDM_ASSERT(status);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "request_data_secret (0x%x) - ", hash_size));
     libspdm_internal_dump_data(
         secured_message_context->application_secret.request_data_secret,
@@ -463,11 +459,11 @@ libspdm_generate_session_data_key(void *spdm_secured_message_context,
     status = libspdm_bin_concat(SPDM_BIN_STR_4_LABEL, sizeof(SPDM_BIN_STR_4_LABEL) - 1,
                                 th2_hash_data, (uint16_t)hash_size, hash_size,
                                 bin_str4, &bin_str4_size);
-    LIBSPDM_ASSERT_RETURN_ERROR(status);
+    LIBSPDM_ASSERT(status);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "bin_str4 (0x%x):\n", bin_str4_size));
     libspdm_internal_dump_hex(bin_str4, bin_str4_size);
     if (secured_message_context->use_psk) {
-        ret_val = libspdm_psk_master_secret_hkdf_expand(
+        status = libspdm_psk_master_secret_hkdf_expand(
             secured_message_context->version,
             secured_message_context->base_hash_algo,
             secured_message_context->psk_hint,
@@ -476,11 +472,11 @@ libspdm_generate_session_data_key(void *spdm_secured_message_context,
             secured_message_context->application_secret
             .response_data_secret,
             hash_size);
-        if (!ret_val) {
-            return RETURN_UNSUPPORTED;
+        if (!status) {
+            return false;
         }
     } else {
-        ret_val = libspdm_hkdf_expand(
+        status = libspdm_hkdf_expand(
             secured_message_context->base_hash_algo,
             secured_message_context->master_secret.master_secret,
             hash_size, bin_str4, bin_str4_size,
@@ -488,7 +484,7 @@ libspdm_generate_session_data_key(void *spdm_secured_message_context,
             .response_data_secret,
             hash_size);
     }
-    LIBSPDM_ASSERT(ret_val);
+    LIBSPDM_ASSERT(status);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "response_data_secret (0x%x) - ", hash_size));
     libspdm_internal_dump_data(
         secured_message_context->application_secret.response_data_secret,
@@ -499,11 +495,11 @@ libspdm_generate_session_data_key(void *spdm_secured_message_context,
     status = libspdm_bin_concat(SPDM_BIN_STR_8_LABEL, sizeof(SPDM_BIN_STR_8_LABEL) - 1,
                                 th2_hash_data, (uint16_t)hash_size, hash_size,
                                 bin_str8, &bin_str8_size);
-    LIBSPDM_ASSERT_RETURN_ERROR(status);
+    LIBSPDM_ASSERT(status);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "bin_str8 (0x%x):\n", bin_str8_size));
     libspdm_internal_dump_hex(bin_str8, bin_str8_size);
     if (secured_message_context->use_psk) {
-        ret_val = libspdm_psk_master_secret_hkdf_expand(
+        status = libspdm_psk_master_secret_hkdf_expand(
             secured_message_context->version,
             secured_message_context->base_hash_algo,
             secured_message_context->psk_hint,
@@ -512,11 +508,11 @@ libspdm_generate_session_data_key(void *spdm_secured_message_context,
             secured_message_context->handshake_secret
             .export_master_secret,
             hash_size);
-        if (!ret_val) {
-            return RETURN_UNSUPPORTED;
+        if (!status) {
+            return false;
         }
     } else {
-        ret_val = libspdm_hkdf_expand(
+        status = libspdm_hkdf_expand(
             secured_message_context->base_hash_algo,
             secured_message_context->master_secret.master_secret,
             hash_size, bin_str8, bin_str8_size,
@@ -524,7 +520,7 @@ libspdm_generate_session_data_key(void *spdm_secured_message_context,
             .export_master_secret,
             hash_size);
     }
-    LIBSPDM_ASSERT(ret_val);
+    LIBSPDM_ASSERT(status);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "export_master_secret (0x%x) - ", hash_size));
     libspdm_internal_dump_data(
         secured_message_context->handshake_secret.export_master_secret,
@@ -537,7 +533,7 @@ libspdm_generate_session_data_key(void *spdm_secured_message_context,
         secured_message_context->application_secret
         .request_data_encryption_key,
         secured_message_context->application_secret.request_data_salt);
-    if (RETURN_ERROR(status)) {
+    if (!status) {
         return status;
     }
     secured_message_context->application_secret
@@ -549,13 +545,13 @@ libspdm_generate_session_data_key(void *spdm_secured_message_context,
         secured_message_context->application_secret
         .response_data_encryption_key,
         secured_message_context->application_secret.response_data_salt);
-    if (RETURN_ERROR(status)) {
+    if (!status) {
         return status;
     }
     secured_message_context->application_secret
     .response_data_sequence_number = 0;
 
-    return RETURN_SUCCESS;
+    return true;
 }
 
 /**
@@ -566,12 +562,11 @@ libspdm_generate_session_data_key(void *spdm_secured_message_context,
  *
  * @retval RETURN_SUCCESS  SPDM DataKey update is created.
  **/
-return_status
+bool
 libspdm_create_update_session_data_key(void *spdm_secured_message_context,
                                        libspdm_key_update_action_t action)
 {
-    return_status status;
-    bool ret_val;
+    bool status;
     size_t hash_size;
     uint8_t bin_str9[128];
     size_t bin_str9_size;
@@ -585,8 +580,8 @@ libspdm_create_update_session_data_key(void *spdm_secured_message_context,
     status = libspdm_bin_concat(SPDM_BIN_STR_9_LABEL, sizeof(SPDM_BIN_STR_9_LABEL) - 1,
                                 NULL, (uint16_t)hash_size, hash_size, bin_str9,
                                 &bin_str9_size);
-    LIBSPDM_ASSERT_RETURN_ERROR(status);
-    if (RETURN_ERROR(status)) {
+    LIBSPDM_ASSERT(status);
+    if (!status) {
         return status;
     }
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "bin_str9 (0x%x):\n", bin_str9_size));
@@ -619,7 +614,7 @@ libspdm_create_update_session_data_key(void *spdm_secured_message_context,
             secured_message_context->application_secret
             .request_data_sequence_number;
 
-        ret_val = libspdm_hkdf_expand(
+        status = libspdm_hkdf_expand(
             secured_message_context->base_hash_algo,
             secured_message_context->application_secret
             .request_data_secret,
@@ -627,9 +622,9 @@ libspdm_create_update_session_data_key(void *spdm_secured_message_context,
             secured_message_context->application_secret
             .request_data_secret,
             hash_size);
-        LIBSPDM_ASSERT(ret_val);
-        if (!ret_val) {
-            return RETURN_DEVICE_ERROR;
+        LIBSPDM_ASSERT(status);
+        if (!status) {
+            return false;
         }
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "RequestDataSecretUpdate (0x%x) - ",
                        hash_size));
@@ -646,7 +641,7 @@ libspdm_create_update_session_data_key(void *spdm_secured_message_context,
             .request_data_encryption_key,
             secured_message_context->application_secret
             .request_data_salt);
-        if (RETURN_ERROR(status)) {
+        if (!status) {
             return status;
         }
         secured_message_context->application_secret
@@ -680,7 +675,7 @@ libspdm_create_update_session_data_key(void *spdm_secured_message_context,
             secured_message_context->application_secret
             .response_data_sequence_number;
 
-        ret_val = libspdm_hkdf_expand(
+        status = libspdm_hkdf_expand(
             secured_message_context->base_hash_algo,
             secured_message_context->application_secret
             .response_data_secret,
@@ -688,9 +683,9 @@ libspdm_create_update_session_data_key(void *spdm_secured_message_context,
             secured_message_context->application_secret
             .response_data_secret,
             hash_size);
-        LIBSPDM_ASSERT(ret_val);
-        if (!ret_val) {
-            return RETURN_DEVICE_ERROR;
+        LIBSPDM_ASSERT(status);
+        if (!status) {
+            return false;
         }
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ResponseDataSecretUpdate (0x%x) - ",
                        hash_size));
@@ -707,7 +702,7 @@ libspdm_create_update_session_data_key(void *spdm_secured_message_context,
             .response_data_encryption_key,
             secured_message_context->application_secret
             .response_data_salt);
-        if (RETURN_ERROR(status)) {
+        if (!status) {
             return status;
         }
         secured_message_context->application_secret
@@ -715,10 +710,10 @@ libspdm_create_update_session_data_key(void *spdm_secured_message_context,
 
         secured_message_context->responder_backup_valid = true;
     } else {
-        return RETURN_INVALID_PARAMETER;
+        return false;
     }
 
-    return RETURN_SUCCESS;
+    return true;
 }
 
 /**
@@ -750,7 +745,7 @@ void libspdm_clear_handshake_secret(void *spdm_secured_message_context)
  *
  * @retval RETURN_SUCCESS  SPDM DataKey update is activated.
  **/
-return_status
+bool
 libspdm_activate_update_session_data_key(void *spdm_secured_message_context,
                                          libspdm_key_update_action_t action,
                                          bool use_new_key)
@@ -853,7 +848,7 @@ libspdm_activate_update_session_data_key(void *spdm_secured_message_context,
         secured_message_context->responder_backup_valid = false;
     }
 
-    return RETURN_SUCCESS;
+    return true;
 }
 
 /**

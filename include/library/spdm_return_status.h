@@ -111,9 +111,13 @@ typedef size_t libspdm_return_t;
 #define LIBSPDM_STATUS_CRYPTO_ERROR \
     LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CRYPTO, 0x0000)
 
-/* Verification of the provided signature digest or signature failed. */
+/* Verification of the provided signature digest, signature, or AEAD tag failed. */
 #define LIBSPDM_STATUS_VERIF_FAIL \
     LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CRYPTO, 0x0001)
+
+/* AEAD sequence number overflow. */
+#define LIBSPDM_STATUS_SEQUENCE_NUMBER_OVERFLOW \
+    LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CRYPTO, 0x0002)
 
 /* Certificate parsing errors. */
 
@@ -146,6 +150,6 @@ typedef size_t libspdm_return_t;
 
 /* Unable to produce random number due to lack of entropy. */
 #define LIBSPDM_STATUS_LOW_ENTROPY \
-    LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPSM_SOURCE_RNG, 0x0000)
+    LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_RNG, 0x0000)
 
 #endif

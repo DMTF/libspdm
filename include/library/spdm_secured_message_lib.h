@@ -21,7 +21,7 @@
 #include "hal/library/cryptlib.h"
 #include "library/spdm_crypt_lib.h"
 #include "library/spdm_device_secret_lib.h"
-#include "internal/libspdm_return_status.h"
+#include "library/spdm_return_status.h"
 
 typedef enum {
     LIBSPDM_SESSION_TYPE_NONE,
@@ -152,7 +152,7 @@ void libspdm_secured_message_set_psk_hint(void *spdm_secured_message_context,
  *
  * @retval RETURN_SUCCESS  DHE Secret is imported.
  */
-return_status
+bool
 libspdm_secured_message_import_dhe_secret(void *spdm_secured_message_context,
                                           const void *dhe_secret,
                                           size_t dhe_secret_size);
@@ -166,7 +166,7 @@ libspdm_secured_message_import_dhe_secret(void *spdm_secured_message_context,
  *
  * @retval RETURN_SUCCESS  export_master_secret is exported.
  */
-return_status libspdm_secured_message_export_master_secret(
+bool libspdm_secured_message_export_master_secret(
     void *spdm_secured_message_context, void *export_master_secret,
     size_t *export_master_secret_size);
 
@@ -195,7 +195,7 @@ typedef struct {
  *
  * @retval RETURN_SUCCESS  SessionKeys are exported.
  */
-return_status
+bool
 libspdm_secured_message_export_session_keys(void *spdm_secured_message_context,
                                             void *SessionKeys,
                                             size_t *SessionKeysSize);
@@ -209,7 +209,7 @@ libspdm_secured_message_export_session_keys(void *spdm_secured_message_context,
  *
  * @retval RETURN_SUCCESS  SessionKeys are imported.
  */
-return_status
+bool
 libspdm_secured_message_import_session_keys(void *spdm_secured_message_context,
                                             const void *SessionKeys,
                                             size_t SessionKeysSize);
@@ -490,10 +490,10 @@ bool libspdm_hmac_all_with_response_finished_key(
  * @retval RETURN_SUCCESS               The binary libspdm_bin_concat data is generated.
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
-return_status libspdm_bin_concat(const char *label, size_t label_size,
-                                 const uint8_t *context, uint16_t length,
-                                 size_t hash_size, uint8_t *out_bin,
-                                 size_t *out_bin_size);
+bool libspdm_bin_concat(const char *label, size_t label_size,
+                        const uint8_t *context, uint16_t length,
+                        size_t hash_size, uint8_t *out_bin,
+                        size_t *out_bin_size);
 
 /**
  * This function generates SPDM HandshakeKey for a session.
@@ -503,7 +503,7 @@ return_status libspdm_bin_concat(const char *label, size_t label_size,
  *
  * @retval RETURN_SUCCESS  SPDM HandshakeKey for a session is generated.
  **/
-return_status
+bool
 libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
                                        const uint8_t *th1_hash_data);
 
@@ -515,7 +515,7 @@ libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
  *
  * @retval RETURN_SUCCESS  SPDM DataKey for a session is generated.
  **/
-return_status
+bool
 libspdm_generate_session_data_key(void *spdm_secured_message_context,
                                   const uint8_t *th2_hash_data);
 
@@ -533,7 +533,7 @@ typedef enum {
  *
  * @retval RETURN_SUCCESS  SPDM DataKey update is created.
  **/
-return_status
+bool
 libspdm_create_update_session_data_key(void *spdm_secured_message_context,
                                        libspdm_key_update_action_t action);
 
@@ -546,7 +546,7 @@ libspdm_create_update_session_data_key(void *spdm_secured_message_context,
  *
  * @retval RETURN_SUCCESS  SPDM DataKey update is activated.
  **/
-return_status
+bool
 libspdm_activate_update_session_data_key(void *spdm_secured_message_context,
                                          libspdm_key_update_action_t action,
                                          bool use_new_key);
@@ -606,7 +606,7 @@ typedef struct {
  * @retval RETURN_SUCCESS               The application message is encoded successfully.
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
-return_status libspdm_encode_secured_message(
+libspdm_return_t libspdm_encode_secured_message(
     void *spdm_secured_message_context, uint32_t session_id,
     bool is_requester, size_t app_message_size,
     const void *app_message, size_t *secured_message_size,
@@ -631,7 +631,7 @@ return_status libspdm_encode_secured_message(
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  * @retval RETURN_UNSUPPORTED           The secured_message is unsupported.
  **/
-return_status libspdm_decode_secured_message(
+libspdm_return_t libspdm_decode_secured_message(
     void *spdm_secured_message_context, uint32_t session_id,
     bool is_requester, size_t secured_message_size,
     const void *secured_message, size_t *app_message_size,

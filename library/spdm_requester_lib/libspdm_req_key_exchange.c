@@ -480,9 +480,9 @@ return_status libspdm_try_send_receive_key_exchange(
         libspdm_free_session_id(spdm_context, *session_id);
         return RETURN_SECURITY_VIOLATION;
     }
-    status = libspdm_generate_session_handshake_key(
+    result = libspdm_generate_session_handshake_key(
         session_info->secured_message_context, th1_hash_data);
-    if (RETURN_ERROR(status)) {
+    if (!result) {
         libspdm_free_session_id(spdm_context, *session_id);
         status = RETURN_SECURITY_VIOLATION;
         goto receive_done;

@@ -21,7 +21,7 @@
  * @retval RETURN_SUCCESS               The application message is encoded successfully.
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
-return_status libspdm_encode_secured_message(
+libspdm_return_t libspdm_encode_secured_message(
     void *spdm_secured_message_context, uint32_t session_id,
     bool is_requester, size_t app_message_size,
     const void *app_message, size_t *secured_message_size,
@@ -125,12 +125,12 @@ return_status libspdm_encode_secured_message(
         break;
     default:
         LIBSPDM_ASSERT(false);
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
         break;
     }
 
     if (sequence_number == (uint64_t)-1) {
-        return RETURN_OUT_OF_RESOURCES;
+        return LIBSPDM_STATUS_SEQUENCE_NUMBER_OVERFLOW;
     }
 
     *(uint64_t *)salt = *(uint64_t *)salt ^ sequence_number;
@@ -166,7 +166,7 @@ return_status libspdm_encode_secured_message(
         break;
     default:
         LIBSPDM_ASSERT(false);
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
 
     record_header_size = sizeof(spdm_secured_message_a_data_header1_t) +
@@ -182,7 +182,7 @@ return_status libspdm_encode_secured_message(
             result = libspdm_get_random_number(sizeof(rand_count),
                                                (uint8_t *)&rand_count);
             if (!result) {
-                return RETURN_DEVICE_ERROR;
+                return LIBSPDM_STATUS_LOW_ENTROPY;
             }
             rand_count = (uint8_t)((rand_count % max_rand_count) + 1);
         } else {
@@ -199,7 +199,7 @@ return_status libspdm_encode_secured_message(
         LIBSPDM_ASSERT(*secured_message_size >= total_secured_message_size);
         if (*secured_message_size < total_secured_message_size) {
             *secured_message_size = total_secured_message_size;
-            return RETURN_BUFFER_TOO_SMALL;
+            return LIBSPDM_STATUS_BUFFER_TOO_SMALL;
         }
         *secured_message_size = total_secured_message_size;
         record_header1 = (void *)secured_message;
@@ -225,7 +225,7 @@ return_status libspdm_encode_secured_message(
                                            sizeof(spdm_secured_message_cipher_header_t) +
                                            app_message_size);
         if (!result) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_LOW_ENTROPY;
         }
         libspdm_zero_mem((uint8_t *)enc_msg_header + plain_text_size,
                          aead_pad_size);
@@ -251,7 +251,7 @@ return_status libspdm_encode_secured_message(
         LIBSPDM_ASSERT(*secured_message_size >= total_secured_message_size);
         if (*secured_message_size < total_secured_message_size) {
             *secured_message_size = total_secured_message_size;
-            return RETURN_BUFFER_TOO_SMALL;
+            return LIBSPDM_STATUS_BUFFER_TOO_SMALL;
         }
         *secured_message_size = total_secured_message_size;
         record_header1 = (void *)secured_message;
@@ -285,12 +285,12 @@ return_status libspdm_encode_secured_message(
 
     default:
         LIBSPDM_ASSERT(false);
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
     if (!result) {
-        return RETURN_OUT_OF_RESOURCES;
+        return LIBSPDM_STATUS_CRYPTO_ERROR;
     }
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
 /**
@@ -309,7 +309,7 @@ return_status libspdm_encode_secured_message(
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  * @retval RETURN_UNSUPPORTED           The secured_message is unsupported.
  **/
-return_status libspdm_decode_secured_message(
+libspdm_return_t libspdm_decode_secured_message(
     void *spdm_secured_message_context, uint32_t session_id,
     bool is_requester, size_t secured_message_size,
     const void *secured_message, size_t *app_message_size,
@@ -339,7 +339,7 @@ return_status libspdm_decode_secured_message(
     libspdm_session_type_t session_type;
     libspdm_session_state_t session_state;
     libspdm_error_struct_t spdm_error;
-    return_status status;
+    libspdm_return_t status;
 
     spdm_error.error_code = 0;
     spdm_error.session_id = 0;
@@ -419,13 +419,13 @@ return_status libspdm_decode_secured_message(
         break;
     default:
         LIBSPDM_ASSERT(false);
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
 
     if (sequence_number == (uint64_t)-1) {
         libspdm_secured_message_set_last_spdm_error_struct(
             spdm_secured_message_context, &spdm_error);
-        return RETURN_SECURITY_VIOLATION;
+        return LIBSPDM_STATUS_SEQUENCE_NUMBER_OVERFLOW;
     }
 
     *(uint64_t *)salt = *(uint64_t *)salt ^ sequence_number;
@@ -461,7 +461,7 @@ return_status libspdm_decode_secured_message(
         break;
     default:
         LIBSPDM_ASSERT(false);
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
 
     record_header_size = sizeof(spdm_secured_message_a_data_header1_t) +
@@ -473,7 +473,7 @@ return_status libspdm_decode_secured_message(
         if (secured_message_size < record_header_size + aead_tag_size) {
             libspdm_secured_message_set_last_spdm_error_struct(
                 spdm_secured_message_context, &spdm_error);
-            return RETURN_SECURITY_VIOLATION;
+            return LIBSPDM_STATUS_INVALID_MSG_SIZE;
         }
         record_header1 = (void *)secured_message;
         record_header2 =
@@ -483,28 +483,28 @@ return_status libspdm_decode_secured_message(
         if (record_header1->session_id != session_id) {
             libspdm_secured_message_set_last_spdm_error_struct(
                 spdm_secured_message_context, &spdm_error);
-            return RETURN_SECURITY_VIOLATION;
+            return LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
         if (libspdm_const_compare_mem(record_header1 + 1, &sequence_num_in_header,
                                       sequence_num_in_header_size) != 0) {
             libspdm_secured_message_set_last_spdm_error_struct(
                 spdm_secured_message_context, &spdm_error);
-            return RETURN_SECURITY_VIOLATION;
+            return LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
         if (record_header2->length >
             secured_message_size - record_header_size) {
             libspdm_secured_message_set_last_spdm_error_struct(
                 spdm_secured_message_context, &spdm_error);
-            return RETURN_SECURITY_VIOLATION;
+            return LIBSPDM_STATUS_INVALID_MSG_SIZE;
         }
         if (record_header2->length < aead_tag_size) {
             libspdm_secured_message_set_last_spdm_error_struct(
                 spdm_secured_message_context, &spdm_error);
-            return RETURN_SECURITY_VIOLATION;
+            return LIBSPDM_STATUS_INVALID_MSG_SIZE;
         }
         cipher_text_size = (record_header2->length - aead_tag_size);
         if (cipher_text_size > *app_message_size) {
-            return RETURN_OUT_OF_RESOURCES;
+            return LIBSPDM_STATUS_BUFFER_TOO_SMALL;
         }
         libspdm_zero_mem(*app_message, *app_message_size);
         enc_msg_header = (void *)(record_header2 + 1);
@@ -527,19 +527,19 @@ return_status libspdm_decode_secured_message(
 
             if ((is_requester && secured_message_context->requester_backup_valid) ||
                 ((!is_requester) && secured_message_context->responder_backup_valid)) {
-                status = libspdm_activate_update_session_data_key(
+                result = libspdm_activate_update_session_data_key(
                     secured_message_context,
                     is_requester ? LIBSPDM_KEY_UPDATE_ACTION_REQUESTER : LIBSPDM_KEY_UPDATE_ACTION_RESPONDER,
                     false);
-                if (RETURN_ERROR(status)) {
-                    return status;
+                if (!result) {
+                    return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
                 }
                 status = libspdm_decode_secured_message(
                     spdm_secured_message_context, session_id,
                     is_requester, secured_message_size,
                     secured_message, app_message_size,
                     app_message, spdm_secured_message_callbacks);
-                if (RETURN_ERROR(status)) {
+                if (LIBSPDM_STATUS_IS_ERROR(status)) {
                     return status;
                 }
 
@@ -548,19 +548,24 @@ return_status libspdm_decode_secured_message(
                  * Then later the responder will return SUCCESS, the requester need activate new key.
                  * So we need restore the environment by libspdm_create_update_session_data_key() again.*/
 
-                return libspdm_create_update_session_data_key (secured_message_context,
-                                                               is_requester ? LIBSPDM_KEY_UPDATE_ACTION_REQUESTER : LIBSPDM_KEY_UPDATE_ACTION_RESPONDER);
+                result = libspdm_create_update_session_data_key (
+                    secured_message_context,
+                    is_requester ? LIBSPDM_KEY_UPDATE_ACTION_REQUESTER : LIBSPDM_KEY_UPDATE_ACTION_RESPONDER);
+                if (!result) {
+                    return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
+                }
+                return LIBSPDM_STATUS_SUCCESS;
             }
 
             libspdm_secured_message_set_last_spdm_error_struct(
                 spdm_secured_message_context, &spdm_error);
-            return RETURN_SECURITY_VIOLATION;
+            return LIBSPDM_STATUS_CRYPTO_ERROR;
         }
         plain_text_size = enc_msg_header->application_data_length;
         if (plain_text_size > cipher_text_size) {
             libspdm_secured_message_set_last_spdm_error_struct(
                 spdm_secured_message_context, &spdm_error);
-            return RETURN_SECURITY_VIOLATION;
+            return LIBSPDM_STATUS_INVALID_MSG_SIZE;
         }
 
         LIBSPDM_ASSERT(*app_message_size >= plain_text_size);
@@ -572,7 +577,7 @@ return_status libspdm_decode_secured_message(
         if (secured_message_size < record_header_size + aead_tag_size) {
             libspdm_secured_message_set_last_spdm_error_struct(
                 spdm_secured_message_context, &spdm_error);
-            return RETURN_SECURITY_VIOLATION;
+            return LIBSPDM_STATUS_INVALID_MSG_SIZE;
         }
         record_header1 = (void *)secured_message;
         record_header2 =
@@ -582,24 +587,24 @@ return_status libspdm_decode_secured_message(
         if (record_header1->session_id != session_id) {
             libspdm_secured_message_set_last_spdm_error_struct(
                 spdm_secured_message_context, &spdm_error);
-            return RETURN_SECURITY_VIOLATION;
+            return LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
         if (libspdm_const_compare_mem(record_header1 + 1, &sequence_num_in_header,
                                       sequence_num_in_header_size) != 0) {
             libspdm_secured_message_set_last_spdm_error_struct(
                 spdm_secured_message_context, &spdm_error);
-            return RETURN_SECURITY_VIOLATION;
+            return LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
         if (record_header2->length >
             secured_message_size - record_header_size) {
             libspdm_secured_message_set_last_spdm_error_struct(
                 spdm_secured_message_context, &spdm_error);
-            return RETURN_SECURITY_VIOLATION;
+            return LIBSPDM_STATUS_INVALID_MSG_SIZE;
         }
         if (record_header2->length < aead_tag_size) {
             libspdm_secured_message_set_last_spdm_error_struct(
                 spdm_secured_message_context, &spdm_error);
-            return RETURN_SECURITY_VIOLATION;
+            return LIBSPDM_STATUS_INVALID_MSG_SIZE;
         }
         a_data = (uint8_t *)record_header1;
         tag = (uint8_t *)record_header1 + record_header_size +
@@ -618,19 +623,19 @@ return_status libspdm_decode_secured_message(
 
             if ((is_requester && secured_message_context->requester_backup_valid) ||
                 ((!is_requester) && secured_message_context->responder_backup_valid)) {
-                status = libspdm_activate_update_session_data_key(
+                result = libspdm_activate_update_session_data_key(
                     secured_message_context,
                     is_requester ? LIBSPDM_KEY_UPDATE_ACTION_REQUESTER : LIBSPDM_KEY_UPDATE_ACTION_RESPONDER,
                     false);
-                if (RETURN_ERROR(status)) {
-                    return status;
+                if (!result) {
+                    return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
                 }
                 status = libspdm_decode_secured_message(
                     spdm_secured_message_context, session_id,
                     is_requester, secured_message_size,
                     secured_message, app_message_size,
                     app_message, spdm_secured_message_callbacks);
-                if (RETURN_ERROR(status)) {
+                if (LIBSPDM_STATUS_IS_ERROR(status)) {
                     return status;
                 }
 
@@ -639,13 +644,18 @@ return_status libspdm_decode_secured_message(
                  * Then later the responder will return SUCCESS, the requester need activate new key.
                  * So we need restore the environment by libspdm_create_update_session_data_key() again.*/
 
-                return libspdm_create_update_session_data_key (secured_message_context,
-                                                               is_requester ? LIBSPDM_KEY_UPDATE_ACTION_REQUESTER : LIBSPDM_KEY_UPDATE_ACTION_RESPONDER);
+                result = libspdm_create_update_session_data_key (
+                    secured_message_context,
+                    is_requester ? LIBSPDM_KEY_UPDATE_ACTION_REQUESTER : LIBSPDM_KEY_UPDATE_ACTION_RESPONDER);
+                if (!result) {
+                    return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
+                }
+                return LIBSPDM_STATUS_SUCCESS;
             }
 
             libspdm_secured_message_set_last_spdm_error_struct(
                 spdm_secured_message_context, &spdm_error);
-            return RETURN_SECURITY_VIOLATION;
+            return LIBSPDM_STATUS_CRYPTO_ERROR;
         }
 
         plain_text_size = record_header2->length - aead_tag_size;
@@ -656,8 +666,8 @@ return_status libspdm_decode_secured_message(
 
     default:
         LIBSPDM_ASSERT(false);
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
 
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }

@@ -303,9 +303,9 @@ return_status libspdm_get_response_psk_exchange(void *context,
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,
                                                response_size, response);
     }
-    status = libspdm_generate_session_handshake_key(
+    result = libspdm_generate_session_handshake_key(
         session_info->secured_message_context, th1_hash_data);
-    if (RETURN_ERROR(status)) {
+    if (!result) {
         libspdm_free_session_id(spdm_context, session_id);
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,
@@ -349,9 +349,9 @@ return_status libspdm_get_response_psk_exchange(void *context,
                 spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
                 0, response_size, response);
         }
-        status = libspdm_generate_session_data_key(
+        result = libspdm_generate_session_data_key(
             session_info->secured_message_context, th2_hash_data);
-        if (RETURN_ERROR(status)) {
+        if (!result) {
             return libspdm_generate_error_response(
                 spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
                 0, response_size, response);

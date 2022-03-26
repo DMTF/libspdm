@@ -360,9 +360,9 @@ return_status libspdm_try_send_receive_psk_exchange(
         status = RETURN_SECURITY_VIOLATION;
         goto receive_done;
     }
-    status = libspdm_generate_session_handshake_key(
+    result = libspdm_generate_session_handshake_key(
         session_info->secured_message_context, th1_hash_data);
-    if (RETURN_ERROR(status)) {
+    if (!result) {
         libspdm_free_session_id(spdm_context, *session_id);
         status = RETURN_SECURITY_VIOLATION;
         goto receive_done;
@@ -414,9 +414,9 @@ return_status libspdm_try_send_receive_psk_exchange(
             status = RETURN_SECURITY_VIOLATION;
             goto receive_done;
         }
-        status = libspdm_generate_session_data_key(
+        result = libspdm_generate_session_data_key(
             session_info->secured_message_context, th2_hash_data);
-        if (RETURN_ERROR(status)) {
+        if (!result) {
             libspdm_free_session_id(spdm_context, *session_id);
             status = RETURN_SECURITY_VIOLATION;
             goto receive_done;
