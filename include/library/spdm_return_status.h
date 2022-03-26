@@ -101,6 +101,10 @@ typedef size_t libspdm_return_t;
 #define LIBSPDM_STATUS_BUFFER_FULL \
     LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CORE, 0x000b)
 
+/* Unable to return data because caller does not provide big enough buffer. */
+#define LIBSPDM_STATUS_BUFFER_TOO_SMALL \
+    LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CORE, 0x000c)
+
 /* Cryptography errors. */
 
 /* Generic failure originating from the cryptography module. */
@@ -127,6 +131,16 @@ typedef size_t libspdm_return_t;
 /* Unable to receive message from peer. */
 #define LIBSPDM_STATUS_RECEIVE_FAIL \
     LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPSM_SOURCE_TRANSPORT, 0x0001)
+
+/* measurement collection errors. */
+
+/* Unable to collect measurement because of invalid index. */
+#define LIBSPDM_STATUS_MEAS_INVALID_INDEX \
+    LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_MEAS_COLLECT, 0x0000)
+
+/* Unable to collect measurement because of internal error. */
+#define LIBSPDM_STATUS_MEAS_INTERNAL_ERROR \
+    LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_MEAS_COLLECT, 0x0001)
 
 /* Random number generation errors. */
 

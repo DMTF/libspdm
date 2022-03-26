@@ -26,7 +26,7 @@
  * @retval RETURN_SUCCESS             Successfully returned measurement_count and optionally measurements, measurements_size.
  * @retval RETURN_***                 Any other RETURN_error code indicating the type of measurement collection failure.
  **/
-return_status libspdm_measurement_collection(
+libspdm_return_t libspdm_measurement_collection(
     spdm_version_number_t spdm_version,
     uint8_t measurement_specification,
     uint32_t measurement_hash_algo,
@@ -37,7 +37,7 @@ return_status libspdm_measurement_collection(
     void *device_measurement,
     size_t *device_measurement_size)
 {
-    return RETURN_UNSUPPORTED;
+    return LIBSPDM_STATUS_UNSUPPORTED_CAP;
 }
 
 /**
