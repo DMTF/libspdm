@@ -21,7 +21,7 @@
 #include "library/spdm_crypt_lib.h"
 #include "library/spdm_secured_message_lib.h"
 #include "library/spdm_device_secret_lib.h"
-#include "internal/libspdm_return_status.h"
+#include "library/spdm_return_status.h"
 
 /* Connection: When a host sends messgages to a device, they create a connection.
  *             The host can and only can create one connection with one device.
@@ -220,10 +220,10 @@ typedef enum {
  * @retval RETURN_ACCESS_DENIED         The data_type cannot be set.
  * @retval RETURN_NOT_READY             data is not ready to set.
  **/
-return_status libspdm_set_data(void *spdm_context,
-                               libspdm_data_type_t data_type,
-                               const libspdm_data_parameter_t *parameter, void *data,
-                               size_t data_size);
+libspdm_return_t libspdm_set_data(void *spdm_context,
+                                  libspdm_data_type_t data_type,
+                                  const libspdm_data_parameter_t *parameter, void *data,
+                                  size_t data_size);
 
 /**
  * Get an SPDM context data.
@@ -244,10 +244,10 @@ return_status libspdm_set_data(void *spdm_context,
  * @retval RETURN_NOT_READY             The data is not ready to return.
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
-return_status libspdm_get_data(void *spdm_context,
-                               libspdm_data_type_t data_type,
-                               const libspdm_data_parameter_t *parameter,
-                               void *data, size_t *data_size);
+libspdm_return_t libspdm_get_data(void *spdm_context,
+                                  libspdm_data_type_t data_type,
+                                  const libspdm_data_parameter_t *parameter,
+                                  void *data, size_t *data_size);
 
 /**
  * Get the last error of an SPDM context.
@@ -286,7 +286,7 @@ void libspdm_set_last_spdm_error_struct(void *spdm_context,
  * @retval RETURN_SUCCESS       context is initialized.
  * @retval RETURN_DEVICE_ERROR  context initialization failed.
  */
-return_status libspdm_init_context(void *context);
+libspdm_return_t libspdm_init_context(void *context);
 
 /**
  * Reset an SPDM context.
@@ -335,10 +335,10 @@ size_t libspdm_get_context_size(void);
  * @retval RETURN_TIMEOUT              A timeout occurred while waiting for the SPDM message
  *                                     to execute.
  **/
-typedef return_status (*libspdm_device_send_message_func)(void *spdm_context,
-                                                          size_t message_size,
-                                                          const void *message,
-                                                          uint64_t timeout);
+typedef libspdm_return_t (*libspdm_device_send_message_func)(void *spdm_context,
+                                                             size_t message_size,
+                                                             const void *message,
+                                                             uint64_t timeout);
 
 /**
  * Receive an SPDM transport layer message from a device.
@@ -374,7 +374,7 @@ typedef return_status (*libspdm_device_send_message_func)(void *spdm_context,
  * @retval RETURN_TIMEOUT              A timeout occurred while waiting for the SPDM message
  *                                     to execute.
  **/
-typedef return_status (*libspdm_device_receive_message_func)(
+typedef libspdm_return_t (*libspdm_device_receive_message_func)(
     void *spdm_context, size_t *message_size, void **message,
     uint64_t timeout);
 
@@ -428,7 +428,7 @@ void libspdm_register_device_io_func(
  *
  * @retval RETURN_SUCCESS               The sender buffer is acquired.
  **/
-typedef return_status (*libspdm_device_acquire_sender_buffer_func)(
+typedef libspdm_return_t (*libspdm_device_acquire_sender_buffer_func)(
     void *context, size_t *max_msg_size, void **msg_buf_ptr);
 
 /**
@@ -479,7 +479,7 @@ typedef void (*libspdm_device_release_sender_buffer_func)(
  *
  * @retval RETURN_SUCCESS               The receiver buffer is acquired.
  **/
-typedef return_status (*libspdm_device_acquire_receiver_buffer_func)(
+typedef libspdm_return_t (*libspdm_device_acquire_receiver_buffer_func)(
     void *context, size_t *max_msg_size, void **msg_buf_ptr);
 
 /**
@@ -540,7 +540,7 @@ void libspdm_register_device_buffer_func(
  * @retval RETURN_SUCCESS               The message is encoded successfully.
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
-typedef return_status (*libspdm_transport_encode_message_func)(
+typedef libspdm_return_t (*libspdm_transport_encode_message_func)(
     void *spdm_context, const uint32_t *session_id, bool is_app_message,
     bool is_requester, size_t message_size,
     const void *message, size_t *transport_message_size,
@@ -576,7 +576,7 @@ typedef return_status (*libspdm_transport_encode_message_func)(
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  * @retval RETURN_UNSUPPORTED           The transport_message is unsupported.
  **/
-typedef return_status (*libspdm_transport_decode_message_func)(
+typedef libspdm_return_t (*libspdm_transport_decode_message_func)(
     void *spdm_context, uint32_t **session_id,
     bool *is_app_message, bool is_requester,
     size_t transport_message_size, const void *transport_message,
@@ -679,7 +679,7 @@ void libspdm_get_scratch_buffer (
  * @retval RETURN_SUCCESS                The cert chain verification pass.
  * @retval RETURN_SECURIY_VIOLATION      The cert chain verification fail.
  **/
-typedef return_status (*libspdm_verify_spdm_cert_chain_func)(
+typedef bool (*libspdm_verify_spdm_cert_chain_func)(
     void *spdm_context, uint8_t slot_id,
     size_t cert_chain_size, const void *cert_chain,
     void **trust_anchor,
@@ -774,8 +774,8 @@ void libspdm_reset_message_f(void *context, void *spdm_session_info);
  * @return RETURN_SUCCESS          message is appended.
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
-return_status libspdm_append_message_a(void *spdm_context, const void *message,
-                                       size_t message_size);
+libspdm_return_t libspdm_append_message_a(void *spdm_context, const void *message,
+                                          size_t message_size);
 
 /**
  * Append message B cache in SPDM context.
@@ -787,8 +787,8 @@ return_status libspdm_append_message_a(void *spdm_context, const void *message,
  * @return RETURN_SUCCESS          message is appended.
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
-return_status libspdm_append_message_b(void *spdm_context, const void *message,
-                                       size_t message_size);
+libspdm_return_t libspdm_append_message_b(void *spdm_context, const void *message,
+                                          size_t message_size);
 
 /**
  * Append message C cache in SPDM context.
@@ -800,8 +800,8 @@ return_status libspdm_append_message_b(void *spdm_context, const void *message,
  * @return RETURN_SUCCESS          message is appended.
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
-return_status libspdm_append_message_c(void *spdm_context, const void *message,
-                                       size_t message_size);
+libspdm_return_t libspdm_append_message_c(void *spdm_context, const void *message,
+                                          size_t message_size);
 
 /**
  * Append message MutB cache in SPDM context.
@@ -813,8 +813,8 @@ return_status libspdm_append_message_c(void *spdm_context, const void *message,
  * @return RETURN_SUCCESS          message is appended.
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
-return_status libspdm_append_message_mut_b(void *spdm_context, const void *message,
-                                           size_t message_size);
+libspdm_return_t libspdm_append_message_mut_b(void *spdm_context, const void *message,
+                                              size_t message_size);
 
 /**
  * Append message MutC cache in SPDM context.
@@ -826,8 +826,8 @@ return_status libspdm_append_message_mut_b(void *spdm_context, const void *messa
  * @return RETURN_SUCCESS          message is appended.
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
-return_status libspdm_append_message_mut_c(void *spdm_context, const void *message,
-                                           size_t message_size);
+libspdm_return_t libspdm_append_message_mut_c(void *spdm_context, const void *message,
+                                              size_t message_size);
 
 /**
  * Append message M cache in SPDM context.
@@ -842,8 +842,8 @@ return_status libspdm_append_message_mut_c(void *spdm_context, const void *messa
  * @return RETURN_SUCCESS          message is appended.
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
-return_status libspdm_append_message_m(void *context, void *session_info,
-                                       const void *message, size_t message_size);
+libspdm_return_t libspdm_append_message_m(void *context, void *session_info,
+                                          const void *message, size_t message_size);
 
 /**
  * Append message K cache in SPDM context.
@@ -857,9 +857,9 @@ return_status libspdm_append_message_m(void *context, void *session_info,
  * @return RETURN_SUCCESS          message is appended.
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
-return_status libspdm_append_message_k(void *context, void *spdm_session_info,
-                                       bool is_requester, const void *message,
-                                       size_t message_size);
+libspdm_return_t libspdm_append_message_k(void *context, void *spdm_session_info,
+                                          bool is_requester, const void *message,
+                                          size_t message_size);
 
 /**
  * Append message F cache in SPDM context.
@@ -873,9 +873,9 @@ return_status libspdm_append_message_k(void *context, void *spdm_session_info,
  * @return RETURN_SUCCESS          message is appended.
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
-return_status libspdm_append_message_f(void *context, void *spdm_session_info,
-                                       bool is_requester, const void *message,
-                                       size_t message_size);
+libspdm_return_t libspdm_append_message_f(void *context, void *spdm_session_info,
+                                          bool is_requester, const void *message,
+                                          size_t message_size);
 
 /**
  * This function gets the session info via session ID.
@@ -1055,10 +1055,10 @@ bool libspdm_calculate_th_hmac_for_finish_req(void *spdm_context,
  *
  * @retval RETURN_SUCCESS  th1 hash is calculated.
  */
-return_status libspdm_calculate_th1_hash(void *spdm_context,
-                                         void *spdm_session_info,
-                                         bool is_requester,
-                                         uint8_t *th1_hash_data);
+bool libspdm_calculate_th1_hash(void *spdm_context,
+                                void *spdm_session_info,
+                                bool is_requester,
+                                uint8_t *th1_hash_data);
 
 /*
  * This function calculates th2 hash.
@@ -1070,10 +1070,10 @@ return_status libspdm_calculate_th1_hash(void *spdm_context,
  *
  * @retval RETURN_SUCCESS  th2 hash is calculated.
  */
-return_status libspdm_calculate_th2_hash(void *spdm_context,
-                                         void *spdm_session_info,
-                                         bool is_requester,
-                                         uint8_t *th2_hash_data);
+bool libspdm_calculate_th2_hash(void *spdm_context,
+                                void *spdm_session_info,
+                                bool is_requester,
+                                uint8_t *th2_hash_data);
 
 /**
  * This function returns peer certificate chain buffer including spdm_cert_chain_t header.

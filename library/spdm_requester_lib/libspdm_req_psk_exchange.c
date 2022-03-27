@@ -199,7 +199,7 @@ return_status libspdm_try_send_receive_psk_exchange(
 
     status = libspdm_build_opaque_data_supported_version_data(
         spdm_context, &opaque_psk_exchange_req_size, ptr);
-    LIBSPDM_ASSERT_RETURN_ERROR(status);
+    LIBSPDM_ASSERT(status == LIBSPDM_STATUS_SUCCESS);
     ptr += opaque_psk_exchange_req_size;
 
     spdm_request_size = (size_t)ptr - (size_t)spdm_request;
@@ -290,7 +290,7 @@ return_status libspdm_try_send_receive_psk_exchange(
           measurement_summary_hash_size + spdm_response->context_length;
     status = libspdm_process_opaque_data_version_selection_data(
         spdm_context, spdm_response->opaque_length, ptr);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_free_session_id(spdm_context, *session_id);
         status = RETURN_UNSUPPORTED;
         goto receive_done;
@@ -337,7 +337,7 @@ return_status libspdm_try_send_receive_psk_exchange(
 
     status = libspdm_append_message_k(spdm_context, session_info, true, spdm_request,
                                       spdm_request_size);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_free_session_id(spdm_context, *session_id);
         status = RETURN_SECURITY_VIOLATION;
         goto receive_done;
@@ -345,7 +345,7 @@ return_status libspdm_try_send_receive_psk_exchange(
 
     status = libspdm_append_message_k(spdm_context, session_info, true, spdm_response,
                                       spdm_response_size - hmac_size);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_free_session_id(spdm_context, *session_id);
         status = RETURN_SECURITY_VIOLATION;
         goto receive_done;
@@ -353,9 +353,9 @@ return_status libspdm_try_send_receive_psk_exchange(
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_generate_session_handshake_key[%x]\n",
                    *session_id));
-    status = libspdm_calculate_th1_hash(spdm_context, session_info, true,
+    result = libspdm_calculate_th1_hash(spdm_context, session_info, true,
                                         th1_hash_data);
-    if (RETURN_ERROR(status)) {
+    if (!result) {
         libspdm_free_session_id(spdm_context, *session_id);
         status = RETURN_SECURITY_VIOLATION;
         goto receive_done;
@@ -382,7 +382,7 @@ return_status libspdm_try_send_receive_psk_exchange(
     }
 
     status = libspdm_append_message_k(spdm_context, session_info, true, verify_data, hmac_size);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_free_session_id(spdm_context, *session_id);
         status = RETURN_SECURITY_VIOLATION;
         goto receive_done;
@@ -407,9 +407,9 @@ return_status libspdm_try_send_receive_psk_exchange(
 
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_generate_session_data_key[%x]\n",
                        session_id));
-        status = libspdm_calculate_th2_hash(spdm_context, session_info,
+        result = libspdm_calculate_th2_hash(spdm_context, session_info,
                                             true, th2_hash_data);
-        if (RETURN_ERROR(status)) {
+        if (!result) {
             libspdm_free_session_id(spdm_context, *session_id);
             status = RETURN_SECURITY_VIOLATION;
             goto receive_done;

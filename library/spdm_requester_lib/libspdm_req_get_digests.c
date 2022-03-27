@@ -170,13 +170,13 @@ libspdm_return_t libspdm_try_get_digest(void *context, uint8_t *slot_mask,
     /* Cache data*/
 
     status = libspdm_append_message_b(spdm_context, spdm_request, spdm_request_size);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         status = LIBSPDM_STATUS_BUFFER_FULL;
         goto receive_done;
     }
 
     status = libspdm_append_message_b(spdm_context, spdm_response, spdm_response_size);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         status = LIBSPDM_STATUS_BUFFER_FULL;
         goto receive_done;
     }

@@ -139,7 +139,7 @@ return_status libspdm_get_encap_response_challenge_auth(
 
     status = libspdm_append_message_mut_c(spdm_context, spdm_request,
                                           request_size);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return libspdm_generate_encap_error_response(
             spdm_context, SPDM_ERROR_CODE_UNSPECIFIED, 0,
             response_size, response);
@@ -147,7 +147,7 @@ return_status libspdm_get_encap_response_challenge_auth(
 
     status = libspdm_append_message_mut_c(spdm_context, spdm_response,
                                           (size_t)ptr - (size_t)spdm_response);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_reset_message_mut_c(spdm_context);
         return libspdm_generate_encap_error_response(
             spdm_context, SPDM_ERROR_CODE_UNSPECIFIED, 0,

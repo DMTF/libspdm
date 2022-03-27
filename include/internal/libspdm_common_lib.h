@@ -9,7 +9,7 @@
 
 #include "library/spdm_common_lib.h"
 #include "library/spdm_secured_message_lib.h"
-#include "internal/libspdm_return_status.h"
+#include "library/spdm_return_status.h"
 
 #define INVALID_SESSION_ID 0
 
@@ -432,8 +432,8 @@ void libspdm_internal_dump_hex(const uint8_t *data, size_t size);
  * @retval RETURN_SUCCESS               The new data buffer is appended to the managed buffer.
  * @retval RETURN_BUFFER_TOO_SMALL      The managed buffer is too small to be appended.
  **/
-return_status libspdm_append_managed_buffer(void *managed_buffer,
-                                            const void *buffer, size_t buffer_size);
+libspdm_return_t libspdm_append_managed_buffer(void *managed_buffer,
+                                               const void *buffer, size_t buffer_size);
 
 /**
  * Reset the managed buffer.
@@ -985,7 +985,7 @@ size_t libspdm_get_opaque_data_supported_version_data_size(
  * @retval RETURN_SUCCESS               The opaque data supported version is built successfully.
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
-return_status
+libspdm_return_t
 libspdm_build_opaque_data_supported_version_data(libspdm_context_t *spdm_context,
                                                  size_t *data_out_size,
                                                  void *data_out);
@@ -1001,7 +1001,7 @@ libspdm_build_opaque_data_supported_version_data(libspdm_context_t *spdm_context
  * @retval RETURN_SUCCESS               The opaque data version selection is processed successfully.
  * @retval RETURN_UNSUPPORTED           The data_in is NOT opaque data version selection.
  **/
-return_status
+libspdm_return_t
 libspdm_process_opaque_data_version_selection_data(libspdm_context_t *spdm_context,
                                                    size_t data_in_size,
                                                    void *data_in);
@@ -1030,7 +1030,7 @@ size_t libspdm_get_opaque_data_version_selection_data_size(
  * @retval RETURN_SUCCESS               The opaque data version selection is built successfully.
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
-return_status
+libspdm_return_t
 libspdm_build_opaque_data_version_selection_data(const libspdm_context_t *spdm_context,
                                                  size_t *data_out_size,
                                                  void *data_out);
@@ -1046,7 +1046,7 @@ libspdm_build_opaque_data_version_selection_data(const libspdm_context_t *spdm_c
  * @retval RETURN_SUCCESS               The opaque data supported version is processed successfully.
  * @retval RETURN_UNSUPPORTED           The data_in is NOT opaque data supported version.
  **/
-return_status
+libspdm_return_t
 libspdm_process_opaque_data_supported_version_data(libspdm_context_t *spdm_context,
                                                    size_t data_in_size,
                                                    void *data_in);
@@ -1097,7 +1097,7 @@ bool libspdm_negotiate_connection_version(spdm_version_number_t *common_version,
  *
  * @retval RETURN_SUCCESS               The sender buffer is acquired.
  **/
-return_status libspdm_acquire_sender_buffer (
+libspdm_return_t libspdm_acquire_sender_buffer (
     libspdm_context_t *spdm_context, size_t *max_msg_size, void **msg_buf_ptr);
 
 /**
@@ -1132,7 +1132,7 @@ void libspdm_get_sender_buffer (
  *
  * @retval RETURN_SUCCESS               The receiver buffer is acquired.
  **/
-return_status libspdm_acquire_receiver_buffer (
+libspdm_return_t libspdm_acquire_receiver_buffer (
     libspdm_context_t *spdm_context, size_t *max_msg_size, void **msg_buf_ptr);
 
 /**

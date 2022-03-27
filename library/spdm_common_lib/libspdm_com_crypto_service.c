@@ -162,7 +162,7 @@ bool libspdm_calculate_m1m2(void *context, bool is_mut,
                             void *m1m2_buffer)
 {
     libspdm_context_t *spdm_context;
-    return_status status;
+    libspdm_return_t status;
     uint32_t hash_size;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     libspdm_large_managed_buffer_t m1m2;
@@ -188,7 +188,7 @@ bool libspdm_calculate_m1m2(void *context, bool is_mut,
                 &spdm_context->transcript.message_mut_b),
             libspdm_get_managed_buffer_size(
                 &spdm_context->transcript.message_mut_b));
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return false;
         }
 
@@ -204,7 +204,7 @@ bool libspdm_calculate_m1m2(void *context, bool is_mut,
                 &spdm_context->transcript.message_mut_c),
             libspdm_get_managed_buffer_size(
                 &spdm_context->transcript.message_mut_c));
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return false;
         }
 
@@ -232,7 +232,7 @@ bool libspdm_calculate_m1m2(void *context, bool is_mut,
             libspdm_get_managed_buffer(&spdm_context->transcript.message_a),
             libspdm_get_managed_buffer_size(
                 &spdm_context->transcript.message_a));
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return false;
         }
 
@@ -246,7 +246,7 @@ bool libspdm_calculate_m1m2(void *context, bool is_mut,
             libspdm_get_managed_buffer(&spdm_context->transcript.message_b),
             libspdm_get_managed_buffer_size(
                 &spdm_context->transcript.message_b));
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return false;
         }
 
@@ -260,7 +260,7 @@ bool libspdm_calculate_m1m2(void *context, bool is_mut,
             libspdm_get_managed_buffer(&spdm_context->transcript.message_c),
             libspdm_get_managed_buffer_size(
                 &spdm_context->transcript.message_c));
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return false;
         }
 
@@ -352,7 +352,7 @@ bool libspdm_calculate_l1l2(void *context, void *session_info,
                             size_t *l1l2_buffer_size, void *l1l2_buffer)
 {
     libspdm_context_t *spdm_context;
-    return_status status;
+    libspdm_return_t status;
     libspdm_session_info_t *spdm_session_info;
     uint32_t hash_size;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
@@ -382,7 +382,7 @@ bool libspdm_calculate_l1l2(void *context, void *session_info,
             libspdm_get_managed_buffer(&spdm_context->transcript.message_a),
             libspdm_get_managed_buffer_size(
                 &spdm_context->transcript.message_a));
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return false;
         }
     }
@@ -408,7 +408,7 @@ bool libspdm_calculate_l1l2(void *context, void *session_info,
             libspdm_get_managed_buffer_size(
                 &spdm_session_info->session_transcript.message_m));
     }
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return false;
     }
 

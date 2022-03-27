@@ -19,8 +19,8 @@ size_t libspdm_get_max_buffer_size(void)
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
 
-return_status libspdm_device_send_message(void *spdm_context, size_t request_size,
-                                          const void *request, uint64_t timeout)
+libspdm_return_t libspdm_device_send_message(void *spdm_context, size_t request_size,
+                                             const void *request, uint64_t timeout)
 {
     uint8_t *ptr;
 
@@ -30,11 +30,11 @@ return_status libspdm_device_send_message(void *spdm_context, size_t request_siz
                      request_size - 1);
     m_libspdm_local_buffer_size += (request_size - 1);
 
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
-return_status libspdm_device_receive_message(void *spdm_context, size_t *response_size,
-                                             void **response, uint64_t timeout)
+libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *response_size,
+                                                void **response, uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
     spdm_challenge_auth_response_t *spdm_response;
@@ -112,7 +112,7 @@ return_status libspdm_device_receive_message(void *spdm_context, size_t *respons
                                           spdm_response,
                                           response_size, response);
 
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
 void libspdm_test_requester_challenge_case1(void **State)

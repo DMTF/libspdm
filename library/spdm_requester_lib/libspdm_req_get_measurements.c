@@ -334,7 +334,7 @@ return_status libspdm_try_get_measurement(void *context, const uint32_t *session
 
         status = libspdm_append_message_m(spdm_context, session_info, spdm_request,
                                           spdm_request_size);
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             status = RETURN_SECURITY_VIOLATION;
             goto receive_done;
         }
@@ -342,7 +342,7 @@ return_status libspdm_try_get_measurement(void *context, const uint32_t *session
         status = libspdm_append_message_m(spdm_context, session_info, spdm_response,
                                           spdm_response_size -
                                           signature_size);
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             libspdm_reset_message_m(spdm_context, session_info);
             status = RETURN_SECURITY_VIOLATION;
             goto receive_done;
@@ -409,14 +409,14 @@ return_status libspdm_try_get_measurement(void *context, const uint32_t *session
 
         status = libspdm_append_message_m(spdm_context, session_info, spdm_request,
                                           spdm_request_size);
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             status = RETURN_SECURITY_VIOLATION;
             goto receive_done;
         }
 
         status = libspdm_append_message_m(spdm_context, session_info, spdm_response,
                                           spdm_response_size);
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             libspdm_reset_message_m(spdm_context, session_info);
             status = RETURN_SECURITY_VIOLATION;
             goto receive_done;

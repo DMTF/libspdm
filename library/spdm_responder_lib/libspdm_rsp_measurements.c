@@ -30,7 +30,7 @@ bool libspdm_create_measurement_signature(libspdm_context_t *spdm_context,
     size_t measurment_sig_size;
     size_t signature_size;
     bool result;
-    return_status status;
+    libspdm_return_t status;
 
     signature_size = libspdm_get_asym_signature_size(
         spdm_context->connection_info.algorithm.base_asym_algo);
@@ -61,7 +61,7 @@ bool libspdm_create_measurement_signature(libspdm_context_t *spdm_context,
 
     status = libspdm_append_message_m(spdm_context, session_info, response_message,
                                       response_message_size - signature_size);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return false;
     }
 
@@ -439,7 +439,7 @@ libspdm_return_t libspdm_get_response_measurements(void *context,
     status = libspdm_append_message_m(
         spdm_context, session_info, spdm_request,
         request_size);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,
                                                response_size, response);
@@ -466,7 +466,7 @@ libspdm_return_t libspdm_get_response_measurements(void *context,
     } else {
         status = libspdm_append_message_m(spdm_context, session_info, spdm_response,
                                           *response_size);
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             status = libspdm_generate_error_response(
                 spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
                 0, response_size, response);

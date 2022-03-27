@@ -28,7 +28,7 @@ bool libspdm_calculate_th_for_exchange(
     libspdm_session_info_t *session_info;
     uint8_t cert_chain_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
     uint32_t hash_size;
-    return_status status;
+    libspdm_return_t status;
     libspdm_large_managed_buffer_t th_curr;
     bool result;
     size_t th_data_buffer_capacity;
@@ -50,7 +50,7 @@ bool libspdm_calculate_th_for_exchange(
         &th_curr,
         libspdm_get_managed_buffer(&spdm_context->transcript.message_a),
         libspdm_get_managed_buffer_size(&spdm_context->transcript.message_a));
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return false;
     }
 
@@ -66,7 +66,7 @@ bool libspdm_calculate_th_for_exchange(
         }
         status = libspdm_append_managed_buffer(&th_curr, cert_chain_buffer_hash,
                                                hash_size);
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return false;
         }
     }
@@ -81,7 +81,7 @@ bool libspdm_calculate_th_for_exchange(
         libspdm_get_managed_buffer(&session_info->session_transcript.message_k),
         libspdm_get_managed_buffer_size(
             &session_info->session_transcript.message_k));
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return false;
     }
 
@@ -166,7 +166,7 @@ bool libspdm_calculate_th_hmac_for_exchange_rsp(
     void *secured_message_context;
     uint32_t hash_size;
     void *hmac_context_th;
-    return_status status;
+    libspdm_return_t status;
     bool result;
 
     spdm_context = context;
@@ -181,7 +181,7 @@ bool libspdm_calculate_th_hmac_for_exchange_rsp(
     if (session_info->session_transcript.hmac_rsp_context_th == NULL) {
         /* trigger message_k to initialize hmac context after finished_key is ready.*/
         status = libspdm_append_message_k (context, spdm_session_info, is_requester, NULL, 0);
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return false;
         }
         LIBSPDM_ASSERT(session_info->session_transcript.hmac_rsp_context_th != NULL);
@@ -241,7 +241,7 @@ bool libspdm_calculate_th_for_finish(void *context,
     uint8_t cert_chain_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
     uint8_t mut_cert_chain_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
     uint32_t hash_size;
-    return_status status;
+    libspdm_return_t status;
     libspdm_large_managed_buffer_t th_curr;
     bool result;
     size_t th_data_buffer_capacity;
@@ -263,7 +263,7 @@ bool libspdm_calculate_th_for_finish(void *context,
         &th_curr,
         libspdm_get_managed_buffer(&spdm_context->transcript.message_a),
         libspdm_get_managed_buffer_size(&spdm_context->transcript.message_a));
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return false;
     }
 
@@ -279,7 +279,7 @@ bool libspdm_calculate_th_for_finish(void *context,
         }
         status = libspdm_append_managed_buffer(&th_curr, cert_chain_buffer_hash,
                                                hash_size);
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return false;
         }
     }
@@ -294,7 +294,7 @@ bool libspdm_calculate_th_for_finish(void *context,
         libspdm_get_managed_buffer(&session_info->session_transcript.message_k),
         libspdm_get_managed_buffer_size(
             &session_info->session_transcript.message_k));
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return false;
     }
 
@@ -311,7 +311,7 @@ bool libspdm_calculate_th_for_finish(void *context,
         }
         status = libspdm_append_managed_buffer(&th_curr, mut_cert_chain_buffer_hash,
                                                hash_size);
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return false;
         }
     }
@@ -326,7 +326,7 @@ bool libspdm_calculate_th_for_finish(void *context,
         libspdm_get_managed_buffer(&session_info->session_transcript.message_f),
         libspdm_get_managed_buffer_size(
             &session_info->session_transcript.message_f));
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return false;
     }
 
@@ -1715,10 +1715,10 @@ bool libspdm_verify_psk_finish_req_hmac(libspdm_context_t *spdm_context,
  *
  * @retval RETURN_SUCCESS  th1 hash is calculated.
  */
-return_status libspdm_calculate_th1_hash(void *context,
-                                         void *spdm_session_info,
-                                         bool is_requester,
-                                         uint8_t *th1_hash_data)
+bool libspdm_calculate_th1_hash(void *context,
+                                void *spdm_session_info,
+                                bool is_requester,
+                                uint8_t *th1_hash_data)
 {
     libspdm_context_t *spdm_context;
     size_t hash_size;
@@ -1752,7 +1752,7 @@ return_status libspdm_calculate_th1_hash(void *context,
                 &cert_chain_buffer_size);
         }
         if (!result) {
-            return RETURN_UNSUPPORTED;
+            return false;
         }
     } else {
         cert_chain_buffer = NULL;
@@ -1764,7 +1764,7 @@ return_status libspdm_calculate_th1_hash(void *context,
         spdm_context, session_info, cert_chain_buffer,
         cert_chain_buffer_size, &th_curr_data_size, th_curr_data);
     if (!result) {
-        return RETURN_SECURITY_VIOLATION;
+        return false;
     }
 
     result = libspdm_hash_all(spdm_context->connection_info.algorithm.base_hash_algo,
@@ -1783,7 +1783,7 @@ return_status libspdm_calculate_th1_hash(void *context,
     libspdm_internal_dump_data(th1_hash_data, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
-    return RETURN_SUCCESS;
+    return true;
 }
 
 /*
@@ -1796,10 +1796,10 @@ return_status libspdm_calculate_th1_hash(void *context,
  *
  * @retval RETURN_SUCCESS  th2 hash is calculated.
  */
-return_status libspdm_calculate_th2_hash(void *context,
-                                         void *spdm_session_info,
-                                         bool is_requester,
-                                         uint8_t *th2_hash_data)
+bool libspdm_calculate_th2_hash(void *context,
+                                void *spdm_session_info,
+                                bool is_requester,
+                                uint8_t *th2_hash_data)
 {
     libspdm_context_t *spdm_context;
     size_t hash_size;
@@ -1835,7 +1835,7 @@ return_status libspdm_calculate_th2_hash(void *context,
                 &cert_chain_buffer_size);
         }
         if (!result) {
-            return RETURN_UNSUPPORTED;
+            return false;
         }
         if (session_info->mut_auth_requested) {
             if (is_requester) {
@@ -1850,7 +1850,7 @@ return_status libspdm_calculate_th2_hash(void *context,
                     &mut_cert_chain_buffer_size);
             }
             if (!result) {
-                return RETURN_UNSUPPORTED;
+                return false;
             }
         } else {
             mut_cert_chain_buffer = NULL;
@@ -1869,7 +1869,7 @@ return_status libspdm_calculate_th2_hash(void *context,
         cert_chain_buffer_size, mut_cert_chain_buffer,
         mut_cert_chain_buffer_size, &th_curr_data_size, th_curr_data);
     if (!result) {
-        return RETURN_SECURITY_VIOLATION;
+        return false;
     }
 
     result = libspdm_hash_all(spdm_context->connection_info.algorithm.base_hash_algo,
@@ -1888,5 +1888,5 @@ return_status libspdm_calculate_th2_hash(void *context,
     libspdm_internal_dump_data(th2_hash_data, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
-    return RETURN_SUCCESS;
+    return true;
 }

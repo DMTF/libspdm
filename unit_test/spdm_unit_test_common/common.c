@@ -12,7 +12,7 @@ bool m_send_receive_buffer_acquired = false;
 uint8_t m_send_receive_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 size_t m_send_receive_buffer_size;
 
-return_status spdm_device_acquire_sender_buffer (
+libspdm_return_t spdm_device_acquire_sender_buffer (
     void *context, size_t *max_msg_size, void **msg_buf_ptr)
 {
     LIBSPDM_ASSERT (!m_send_receive_buffer_acquired);
@@ -20,7 +20,7 @@ return_status spdm_device_acquire_sender_buffer (
     *msg_buf_ptr = m_send_receive_buffer;
     libspdm_zero_mem (m_send_receive_buffer, sizeof(m_send_receive_buffer));
     m_send_receive_buffer_acquired = true;
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
 void spdm_device_release_sender_buffer (
@@ -32,7 +32,7 @@ void spdm_device_release_sender_buffer (
     return;
 }
 
-return_status spdm_device_acquire_receiver_buffer (
+libspdm_return_t spdm_device_acquire_receiver_buffer (
     void *context, size_t *max_msg_size, void **msg_buf_ptr)
 {
     LIBSPDM_ASSERT (!m_send_receive_buffer_acquired);
@@ -40,7 +40,7 @@ return_status spdm_device_acquire_receiver_buffer (
     *msg_buf_ptr = m_send_receive_buffer;
     libspdm_zero_mem (m_send_receive_buffer, sizeof(m_send_receive_buffer));
     m_send_receive_buffer_acquired = true;
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
 void spdm_device_release_receiver_buffer (
