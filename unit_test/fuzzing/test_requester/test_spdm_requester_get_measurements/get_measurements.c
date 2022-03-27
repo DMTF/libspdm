@@ -126,7 +126,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
 
 void libspdm_test_requester_get_measurement_case1(void **State)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint8_t number_of_block;
@@ -186,7 +186,7 @@ void libspdm_test_requester_get_measurement_case1(void **State)
                                      &number_of_block,
                                      &measurement_record_length, measurement_record);
     free(data);
-    if (RETURN_NO_RESPONSE != status)
+    if (LIBSPDM_STATUS_BUSY_PEER != status)
     {
         libspdm_reset_message_m(spdm_context, NULL);
     }
@@ -199,7 +199,7 @@ void libspdm_test_requester_get_measurement_case1(void **State)
 
 void libspdm_test_requester_get_measurement_case2(void **State)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint8_t number_of_block;
@@ -256,7 +256,7 @@ void libspdm_test_requester_get_measurement_case2(void **State)
                                         &measurement_record_length, measurement_record, NULL, NULL,
                                         NULL);
     free(data);
-    if (RETURN_NO_RESPONSE != status)
+    if (LIBSPDM_STATUS_BUSY_PEER != status)
     {
         libspdm_reset_message_m(spdm_context, NULL);
     }
@@ -269,7 +269,7 @@ void libspdm_test_requester_get_measurement_case2(void **State)
 
 void libspdm_test_requester_get_measurement_case3(void **State)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
@@ -345,7 +345,7 @@ void libspdm_test_requester_get_measurement_case3(void **State)
                                      measurement_record);
     libspdm_test_message_header = 0;
     free(data);
-    if (RETURN_NO_RESPONSE != status)
+    if (LIBSPDM_STATUS_BUSY_PEER != status)
     {
         libspdm_reset_message_m(spdm_context, NULL);
     }
@@ -358,7 +358,7 @@ void libspdm_test_requester_get_measurement_case3(void **State)
 
 void libspdm_test_requester_get_measurement_case4(void **State)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint8_t number_of_block;
@@ -415,7 +415,7 @@ void libspdm_test_requester_get_measurement_case4(void **State)
                                      NULL, &number_of_block, &measurement_record_length,
                                      measurement_record);
     free(data);
-    if (RETURN_NO_RESPONSE != status)
+    if (LIBSPDM_STATUS_BUSY_PEER != status)
     {
         libspdm_reset_message_m(spdm_context, NULL);
     }

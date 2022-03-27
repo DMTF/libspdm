@@ -8,7 +8,6 @@
 #define __SPDM_REQUESTER_LIB_H__
 
 #include "library/spdm_common_lib.h"
-#include "internal/libspdm_return_status.h"
 
 /**
  * Send an SPDM or an APP request to a device.

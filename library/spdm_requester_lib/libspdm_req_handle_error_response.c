@@ -21,14 +21,14 @@
  * @retval RETURN_SUCCESS               The RESPOND_IF_READY is sent and an expected SPDM response is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status libspdm_requester_respond_if_ready(libspdm_context_t *spdm_context,
-                                                 const uint32_t *session_id,
-                                                 size_t *response_size,
-                                                 void **response,
-                                                 uint8_t expected_response_code,
-                                                 size_t expected_response_size)
+libspdm_return_t libspdm_requester_respond_if_ready(libspdm_context_t *spdm_context,
+                                                    const uint32_t *session_id,
+                                                    size_t *response_size,
+                                                    void **response,
+                                                    uint8_t expected_response_code,
+                                                    size_t expected_response_size)
 {
-    return_status status;
+    libspdm_return_t status;
     spdm_response_if_ready_request_t *spdm_request;
     size_t spdm_request_size;
     spdm_message_header_t *spdm_response;
@@ -79,19 +79,23 @@ return_status libspdm_requester_respond_if_ready(libspdm_context_t *spdm_context
     }
     spdm_response = (void *)(*response);
     if (*response_size < sizeof(spdm_message_header_t)) {
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_INVALID_MSG_SIZE;
     }
     if (spdm_response->spdm_version != spdm_request->header.spdm_version) {
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+    }
+    if (spdm_response->request_response_code == SPDM_ERROR) {
+        status = libspdm_handle_simple_error_response(spdm_context, spdm_response->param1);
+        return status;
     }
     if (spdm_response->request_response_code != expected_response_code) {
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
     /* For response like SPDM_ALGORITHMS, we just can expect the max response size*/
     if (*response_size > expected_response_size) {
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_INVALID_MSG_SIZE;
     }
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
 /**
@@ -103,8 +107,8 @@ return_status libspdm_requester_respond_if_ready(libspdm_context_t *spdm_context
  * @retval RETURN_NO_RESPONSE           If the error code is BUSY.
  * @retval RETURN_DEVICE_ERROR          If the error code is REQUEST_RESYNCH or others.
  **/
-return_status libspdm_handle_simple_error_response(void *context,
-                                                   uint8_t error_code)
+libspdm_return_t libspdm_handle_simple_error_response(void *context,
+                                                      uint8_t error_code)
 {
     libspdm_context_t *spdm_context;
 
@@ -115,11 +119,11 @@ return_status libspdm_handle_simple_error_response(void *context,
      * Use libspdm_handle_error_response_main to handle NOT_READY message in long latency command.*/
 
     if (error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) {
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_ERROR_PEER;
     }
 
     if (error_code == SPDM_ERROR_CODE_BUSY) {
-        return RETURN_NO_RESPONSE;
+        return LIBSPDM_STATUS_BUSY_PEER;
     }
 
     if (error_code == SPDM_ERROR_CODE_REQUEST_RESYNCH) {
@@ -128,7 +132,7 @@ return_status libspdm_handle_simple_error_response(void *context,
         return LIBSPDM_STATUS_RESYNCH_PEER;
     }
 
-    return RETURN_DEVICE_ERROR;
+    return LIBSPDM_STATUS_ERROR_PEER;
 }
 
 /**
@@ -146,20 +150,20 @@ return_status libspdm_handle_simple_error_response(void *context,
  * @retval RETURN_SUCCESS               The RESPOND_IF_READY is sent and an expected SPDM response is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status libspdm_handle_response_not_ready(libspdm_context_t *spdm_context,
-                                                const uint32_t *session_id,
-                                                size_t *response_size,
-                                                void **response,
-                                                uint8_t original_request_code,
-                                                uint8_t expected_response_code,
-                                                size_t expected_response_size)
+libspdm_return_t libspdm_handle_response_not_ready(libspdm_context_t *spdm_context,
+                                                   const uint32_t *session_id,
+                                                   size_t *response_size,
+                                                   void **response,
+                                                   uint8_t original_request_code,
+                                                   uint8_t expected_response_code,
+                                                   size_t expected_response_size)
 {
     spdm_error_response_t *spdm_response;
     spdm_error_data_response_not_ready_t *extend_error_data;
 
     if(*response_size != sizeof(spdm_error_response_t) +
        sizeof(spdm_error_data_response_not_ready_t)) {
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_INVALID_MSG_SIZE;
     }
 
     spdm_response = *response;
@@ -169,7 +173,7 @@ return_status libspdm_handle_response_not_ready(libspdm_context_t *spdm_context,
     LIBSPDM_ASSERT(spdm_response->header.param1 ==
                    SPDM_ERROR_CODE_RESPONSE_NOT_READY);
     if (extend_error_data->request_code != original_request_code) {
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
 
     spdm_context->error_data.rd_exponent = extend_error_data->rd_exponent;
@@ -212,7 +216,7 @@ return_status libspdm_handle_response_not_ready(libspdm_context_t *spdm_context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    The error code is DECRYPT_ERROR and session_id is NOT NULL.
  **/
-return_status libspdm_handle_error_response_main(
+libspdm_return_t libspdm_handle_error_response_main(
     libspdm_context_t *spdm_context, const uint32_t *session_id,
     size_t *response_size, void **response,
     uint8_t original_request_code, uint8_t expected_response_code,

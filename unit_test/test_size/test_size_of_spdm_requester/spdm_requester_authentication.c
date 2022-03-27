@@ -26,27 +26,27 @@
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status
+libspdm_return_t
 spdm_authentication(void *context, uint8_t *slot_mask,
                     void *total_digest_buffer, uint8_t slot_id,
                     size_t *cert_chain_size, void *cert_chain,
                     uint8_t measurement_hash_type, void *measurement_hash,
                     uint8_t *auth_slot_mask)
 {
-    return_status status;
+    libspdm_return_t status;
 
-    status = RETURN_SUCCESS;
+    status = LIBSPDM_STATUS_SUCCESS;
 
     #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
     status = libspdm_get_digest(context, slot_mask, total_digest_buffer);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return status;
     }
 
     if (slot_id != 0xFF) {
         status = libspdm_get_certificate(context, slot_id, cert_chain_size,
                                          cert_chain);
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return status;
         }
     }
@@ -55,7 +55,7 @@ spdm_authentication(void *context, uint8_t *slot_mask,
     #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
     status = libspdm_challenge(context, slot_id, measurement_hash_type,
                                measurement_hash, auth_slot_mask);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return status;
     }
     #endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/
@@ -67,9 +67,9 @@ spdm_authentication(void *context, uint8_t *slot_mask,
  *
  * @param[in]  spdm_context            The SPDM context for the device.
  **/
-return_status do_authentication_via_spdm(void *spdm_context)
+libspdm_return_t do_authentication_via_spdm(void *spdm_context)
 {
-    return_status status;
+    libspdm_return_t status;
     uint8_t slot_mask;
     uint8_t total_digest_buffer[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
@@ -86,8 +86,8 @@ return_status do_authentication_via_spdm(void *spdm_context)
         &cert_chain_size, cert_chain,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
         measurement_hash, &auth_slot_mask);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return status;
     }
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }

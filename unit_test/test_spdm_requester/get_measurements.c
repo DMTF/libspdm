@@ -2675,7 +2675,7 @@ libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         /* WALKAROUND: If just use single context to encode message and then decode message */
         ((libspdm_secured_message_context_t
@@ -4381,7 +4381,7 @@ void libspdm_test_requester_get_measurements_case22(void **state)
                                          &measurement_record_length,
                                          measurement_record);
         /* It may fail due to transcript.message_m overflow*/
-        if (status == RETURN_SUCCESS) {
+        if (status == LIBSPDM_STATUS_SUCCESS) {
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
             assert_int_equal(
                 spdm_context->transcript.message_m.buffer_size,
@@ -5088,7 +5088,7 @@ void libspdm_test_requester_get_measurements_case31(void **state)
                                      0, NULL, &number_of_block,
                                      &measurement_record_length,
                                      measurement_record);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_m.buffer_size,
                      sizeof(spdm_message_header_t) +

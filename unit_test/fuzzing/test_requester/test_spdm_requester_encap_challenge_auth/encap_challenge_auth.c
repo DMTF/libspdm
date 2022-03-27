@@ -18,7 +18,7 @@ size_t libspdm_get_max_buffer_size(void)
 
 void libspdm_test_requester_encap_challenge(void **State)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t request_size;
@@ -65,7 +65,7 @@ void libspdm_test_requester_encap_challenge(void **State)
                                                        (uint8_t *)spdm_test_context->test_buffer,
                                                        &response_size, response);
     free(data);
-    if (RETURN_NO_RESPONSE != status)
+    if (LIBSPDM_STATUS_BUSY_PEER != status)
     {
         libspdm_reset_message_mut_c(spdm_context);
     }

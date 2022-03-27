@@ -172,22 +172,8 @@ libspdm_return_t libspdm_try_get_certificate(void *context, uint8_t slot_id,
                 (void **)&spdm_response, SPDM_GET_CERTIFICATE,
                 SPDM_CERTIFICATE,
                 sizeof(libspdm_certificate_response_max_t));
-
-            /* TODO: Replace this with LIBSPDM_RET_ON_ERR once libspdm_handle_simple_error_response
-             * uses the new error codes. */
-            if (status == RETURN_DEVICE_ERROR) {
+            if (LIBSPDM_STATUS_IS_ERROR(status)) {
                 libspdm_release_receiver_buffer (spdm_context);
-                status = LIBSPDM_STATUS_ERROR_PEER;
-                goto done;
-            }
-            else if (status == RETURN_NO_RESPONSE) {
-                libspdm_release_receiver_buffer (spdm_context);
-                status = LIBSPDM_STATUS_BUSY_PEER;
-                goto done;
-            }
-            else if (status == LIBSPDM_STATUS_RESYNCH_PEER) {
-                libspdm_release_receiver_buffer (spdm_context);
-                status = LIBSPDM_STATUS_RESYNCH_PEER;
                 goto done;
             }
         } else if (spdm_response->header.request_response_code !=

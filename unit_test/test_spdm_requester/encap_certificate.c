@@ -45,7 +45,7 @@ size_t m_spdm_get_certificate_request3_size =
  **/
 void libspdm_test_requester_encap_certificate_case1(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -104,7 +104,7 @@ void libspdm_test_requester_encap_certificate_case1(void **state)
  **/
 void libspdm_test_requester_encap_certificate_case2(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -149,7 +149,7 @@ void libspdm_test_requester_encap_certificate_case2(void **state)
  **/
 void libspdm_test_requester_encap_certificate_case3(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -228,7 +228,7 @@ void libspdm_test_requester_encap_certificate_case3(void **state)
  **/
 void libspdm_test_requester_encap_certificate_case4(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -323,7 +323,7 @@ void libspdm_test_requester_encap_certificate_case4(void **state)
  **/
 void libspdm_test_requester_encap_certificate_case5(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -431,7 +431,7 @@ void libspdm_test_requester_encap_certificate_case5(void **state)
  **/
 void libspdm_test_requester_encap_certificate_case6(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;

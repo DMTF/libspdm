@@ -1575,7 +1575,7 @@ void libspdm_test_requester_get_capabilities_case31(void **state)
 
 void libspdm_test_requester_get_capabilities_case32(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t arbitrary_size;

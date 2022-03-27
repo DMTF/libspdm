@@ -1144,7 +1144,7 @@ void libspdm_test_requester_get_digests_case12(void **state)
 
     libspdm_zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
     status = libspdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_SIZE);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_b.buffer_size,
                      sizeof(spdm_get_digest_request_t));
@@ -1252,7 +1252,7 @@ void libspdm_test_requester_get_digests_case15(void **state)
 
     libspdm_zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
     status = libspdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_BUFFER_FULL);
 }
 
 /**
@@ -1424,7 +1424,7 @@ void libspdm_test_requester_get_digests_case20(void **state)
 
     libspdm_zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
     status = libspdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_SIZE);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_b.buffer_size,
                      sizeof(spdm_get_digest_request_t));
@@ -1460,7 +1460,7 @@ void libspdm_test_requester_get_digests_case21(void **state)
 
     libspdm_zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
     status = libspdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_SIZE);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_b.buffer_size,
                      sizeof(spdm_get_digest_request_t));
@@ -1502,8 +1502,6 @@ void libspdm_test_requester_get_digests_case22(void **state) {
 
         libspdm_zero_mem (total_digest_buffer, sizeof(total_digest_buffer));
         status = libspdm_get_digest (spdm_context, &slot_mask, &total_digest_buffer);
-        /* assert_int_equal (status, RETURN_DEVICE_ERROR);
-         * assert_int_equal (spdm_context->transcript.message_b.buffer_size, 0);*/
         LIBSPDM_ASSERT_INT_EQUAL_CASE (status, LIBSPDM_STATUS_ERROR_PEER, error_code);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
         LIBSPDM_ASSERT_INT_EQUAL_CASE (spdm_context->transcript.message_b.buffer_size, 0,

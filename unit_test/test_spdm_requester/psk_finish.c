@@ -178,7 +178,7 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         /* WALKAROUND: If just use single context to encode message and then decode message */
         ((libspdm_secured_message_context_t
@@ -221,7 +221,7 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
@@ -263,7 +263,7 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
@@ -305,7 +305,7 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
@@ -351,7 +351,7 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
             session_info = libspdm_get_session_info_via_session_id(
                 spdm_context, session_id);
             if (session_info == NULL) {
-                return RETURN_DEVICE_ERROR;
+                return LIBSPDM_STATUS_RECEIVE_FAIL;
             }
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
@@ -393,7 +393,7 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
             session_info = libspdm_get_session_info_via_session_id(
                 spdm_context, session_id);
             if (session_info == NULL) {
-                return RETURN_DEVICE_ERROR;
+                return LIBSPDM_STATUS_RECEIVE_FAIL;
             }
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
@@ -437,7 +437,7 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
@@ -484,7 +484,7 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
@@ -537,7 +537,7 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
             session_info = libspdm_get_session_info_via_session_id(
                 spdm_context, session_id);
             if (session_info == NULL) {
-                return RETURN_DEVICE_ERROR;
+                return LIBSPDM_STATUS_RECEIVE_FAIL;
             }
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
@@ -579,7 +579,7 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
             session_info = libspdm_get_session_info_via_session_id(
                 spdm_context, session_id);
             if (session_info == NULL) {
-                return RETURN_DEVICE_ERROR;
+                return LIBSPDM_STATUS_RECEIVE_FAIL;
             }
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
@@ -676,7 +676,7 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         /* WALKAROUND: If just use single context to encode message and then decode message */
         ((libspdm_secured_message_context_t
@@ -719,7 +719,7 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         /* WALKAROUND: If just use single context to encode message and then decode message */
         ((libspdm_secured_message_context_t
@@ -762,7 +762,7 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         /* WALKAROUND: If just use single context to encode message and then decode message */
         ((libspdm_secured_message_context_t
@@ -805,7 +805,7 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         /* WALKAROUND: If just use single context to encode message and then decode message */
         ((libspdm_secured_message_context_t
@@ -849,7 +849,7 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))

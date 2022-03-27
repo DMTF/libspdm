@@ -117,7 +117,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
 
 void libspdm_test_requester_challenge_case1(void **State)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
@@ -167,7 +167,7 @@ void libspdm_test_requester_challenge_case1(void **State)
     status = libspdm_challenge(spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
                                measurement_hash, NULL);
     free(data);
-    if (RETURN_NO_RESPONSE != status)
+    if (LIBSPDM_STATUS_BUSY_PEER != status)
     {
         libspdm_reset_message_c(spdm_context);
     }
@@ -180,7 +180,7 @@ void libspdm_test_requester_challenge_case1(void **State)
 
 void libspdm_test_requester_challenge_ex_case1(void **State)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
@@ -235,7 +235,7 @@ void libspdm_test_requester_challenge_ex_case1(void **State)
                                   measurement_hash, NULL, requester_nonce_in, requester_nonce,
                                   responder_nonce);
     free(data);
-    if (RETURN_NO_RESPONSE != status)
+    if (LIBSPDM_STATUS_BUSY_PEER != status)
     {
         libspdm_reset_message_c(spdm_context);
     }

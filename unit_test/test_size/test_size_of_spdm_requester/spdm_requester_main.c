@@ -13,7 +13,7 @@
 void spdm_dispatch(void)
 {
     void *spdm_context;
-    return_status status;
+    libspdm_return_t status;
 
     spdm_context = spdm_client_init();
     if (spdm_context == NULL) {
@@ -21,7 +21,7 @@ void spdm_dispatch(void)
     }
 
     status = do_authentication_via_spdm(spdm_context);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return;
     }
 

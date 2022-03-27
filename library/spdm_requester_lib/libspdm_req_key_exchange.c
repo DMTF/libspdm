@@ -231,34 +231,20 @@ libspdm_return_t libspdm_try_send_receive_key_exchange(
             (void **)&spdm_response, SPDM_KEY_EXCHANGE,
             SPDM_KEY_EXCHANGE_RSP,
             sizeof(libspdm_key_exchange_response_max_t));
-
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             libspdm_secured_message_dhe_free(
                 spdm_context->connection_info.algorithm
                 .dhe_named_group,
                 dhe_context);
-        }
-        /* TODO: Replace this with LIBSPDM_RET_ON_ERR once libspdm_handle_simple_error_response
-         * uses the new error codes. */
-        if (status == RETURN_DEVICE_ERROR) {
-            status = LIBSPDM_STATUS_ERROR_PEER;
             goto receive_done;
         }
-        else if (status == RETURN_NO_RESPONSE) {
-            status = LIBSPDM_STATUS_BUSY_PEER;
-            goto receive_done;
-        }
-        else if (status == LIBSPDM_STATUS_RESYNCH_PEER) {
-            status = LIBSPDM_STATUS_RESYNCH_PEER;
-            goto receive_done;
-        }
-
     } else if (spdm_response->header.request_response_code !=
                SPDM_KEY_EXCHANGE_RSP) {
         libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
             dhe_context);
-        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+        goto receive_done;
     }
     if (spdm_response_size < sizeof(spdm_key_exchange_response_t)) {
         libspdm_secured_message_dhe_free(
