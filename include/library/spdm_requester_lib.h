@@ -221,10 +221,10 @@ libspdm_return_t libspdm_get_certificate_choose_length_ex(void *context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_challenge(void *spdm_context, uint8_t slot_id,
-                                uint8_t measurement_hash_type,
-                                void *measurement_hash,
-                                uint8_t *slot_mask);
+libspdm_return_t libspdm_challenge(void *spdm_context, uint8_t slot_id,
+                                   uint8_t measurement_hash_type,
+                                   void *measurement_hash,
+                                   uint8_t *slot_mask);
 
 /**
  * This function sends CHALLENGE
@@ -248,13 +248,13 @@ return_status libspdm_challenge(void *spdm_context, uint8_t slot_id,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_challenge_ex(void *context, uint8_t slot_id,
-                                   uint8_t measurement_hash_type,
-                                   void *measurement_hash,
-                                   uint8_t *slot_mask,
-                                   const void *requester_nonce_in,
-                                   void *requester_nonce,
-                                   void *responder_nonce);
+libspdm_return_t libspdm_challenge_ex(void *context, uint8_t slot_id,
+                                      uint8_t measurement_hash_type,
+                                      void *measurement_hash,
+                                      uint8_t *slot_mask,
+                                      const void *requester_nonce_in,
+                                      void *requester_nonce,
+                                      void *responder_nonce);
 
 /**
  * This function sends GET_MEASUREMENT
@@ -279,14 +279,14 @@ return_status libspdm_challenge_ex(void *context, uint8_t slot_id,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_get_measurement(void *spdm_context, const uint32_t *session_id,
-                                      uint8_t request_attribute,
-                                      uint8_t measurement_operation,
-                                      uint8_t slot_id,
-                                      uint8_t *content_changed,
-                                      uint8_t *number_of_blocks,
-                                      uint32_t *measurement_record_length,
-                                      void *measurement_record);
+libspdm_return_t libspdm_get_measurement(void *spdm_context, const uint32_t *session_id,
+                                         uint8_t request_attribute,
+                                         uint8_t measurement_operation,
+                                         uint8_t slot_id,
+                                         uint8_t *content_changed,
+                                         uint8_t *number_of_blocks,
+                                         uint32_t *measurement_record_length,
+                                         void *measurement_record);
 
 /**
  * This function sends GET_MEASUREMENT
@@ -314,17 +314,17 @@ return_status libspdm_get_measurement(void *spdm_context, const uint32_t *sessio
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_get_measurement_ex(void *context, const uint32_t *session_id,
-                                         uint8_t request_attribute,
-                                         uint8_t measurement_operation,
-                                         uint8_t slot_id,
-                                         uint8_t *content_changed,
-                                         uint8_t *number_of_blocks,
-                                         uint32_t *measurement_record_length,
-                                         void *measurement_record,
-                                         const void *requester_nonce_in,
-                                         void *requester_nonce,
-                                         void *responder_nonce);
+libspdm_return_t libspdm_get_measurement_ex(void *context, const uint32_t *session_id,
+                                            uint8_t request_attribute,
+                                            uint8_t measurement_operation,
+                                            uint8_t slot_id,
+                                            uint8_t *content_changed,
+                                            uint8_t *number_of_blocks,
+                                            uint32_t *measurement_record_length,
+                                            void *measurement_record,
+                                            const void *requester_nonce_in,
+                                            void *requester_nonce,
+                                            void *responder_nonce);
 
 /**
  * This function sends KEY_EXCHANGE/FINISH or PSK_EXCHANGE/PSK_FINISH
