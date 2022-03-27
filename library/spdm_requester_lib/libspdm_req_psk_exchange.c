@@ -205,7 +205,7 @@ return_status libspdm_try_send_receive_psk_exchange(
     spdm_request_size = (size_t)ptr - (size_t)spdm_request;
     status = libspdm_send_spdm_request(spdm_context, NULL, spdm_request_size,
                                        spdm_request);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_release_sender_buffer (spdm_context);
         return status;
     }
@@ -222,7 +222,7 @@ return_status libspdm_try_send_receive_psk_exchange(
     libspdm_zero_mem(spdm_response, spdm_response_size);
     status = libspdm_receive_spdm_response(
         spdm_context, NULL, &spdm_response_size, (void **)&spdm_response);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         goto receive_done;
     }
     if (spdm_response_size < sizeof(spdm_message_header_t)) {

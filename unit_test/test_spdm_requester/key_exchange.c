@@ -72,7 +72,7 @@ return_status libspdm_requester_key_exchange_test_send_message(
     header_size = sizeof(libspdm_test_message_header_t);
     switch (spdm_test_context->case_id) {
     case 0x1:
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_SEND_FAIL;
     case 0x2:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_key_exchange_request_size(
@@ -4345,6 +4345,8 @@ void libspdm_test_requester_key_exchange_case1(void **state)
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, &hash, &hash_size);
@@ -4385,7 +4387,7 @@ void libspdm_test_requester_key_exchange_case1(void **state)
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
         &session_id, &heartbeat_period, &slot_id_param,
         measurement_hash);
-    assert_int_equal(status, RETURN_UNSUPPORTED);
+    assert_int_equal(status, LIBSPDM_STATUS_SEND_FAIL);
     free(data);
 }
 

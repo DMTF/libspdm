@@ -20,7 +20,7 @@ return_status libspdm_requester_encap_request_test_send_message(void *spdm_conte
     switch (spdm_test_context->case_id)
     {
     case 0x1:
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_SEND_FAIL;
     case 0x2:
         return RETURN_SUCCESS;
     case 0x3:
@@ -521,7 +521,7 @@ void libspdm_test_requester_encap_request_case1(void **State)
 
     libspdm_register_get_encap_response_func(spdm_context, libspdm_get_encap_response_digest);
     status = libspdm_encapsulated_request(spdm_context, NULL, 0, NULL);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_SEND_FAIL);
     free(data);
 }
 

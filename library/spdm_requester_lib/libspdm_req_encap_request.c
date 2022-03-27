@@ -253,7 +253,7 @@ return_status libspdm_encapsulated_request(libspdm_context_t *spdm_context,
         status = libspdm_send_spdm_request(
             spdm_context, session_id, spdm_request_size,
             spdm_request);
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             libspdm_release_sender_buffer (spdm_context);
             return status;
         }
@@ -272,7 +272,7 @@ return_status libspdm_encapsulated_request(libspdm_context_t *spdm_context,
             spdm_context, session_id, &spdm_response_size,
             (void **)&spdm_response);
         libspdm_encapsulated_request_response = (void *)spdm_response;
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             libspdm_release_receiver_buffer (spdm_context);
             return status;
         }
@@ -359,7 +359,7 @@ return_status libspdm_encapsulated_request(libspdm_context_t *spdm_context,
         status = libspdm_send_spdm_request(
             spdm_context, session_id, spdm_request_size,
             spdm_request);
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             libspdm_release_sender_buffer (spdm_context);
             return status;
         }
@@ -379,7 +379,7 @@ return_status libspdm_encapsulated_request(libspdm_context_t *spdm_context,
             spdm_context, session_id, &spdm_response_size,
             (void **)&spdm_response);
         spdm_encapsulated_response_ack_response = (void *)spdm_response;
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             libspdm_release_receiver_buffer (spdm_context);
             return status;
         }

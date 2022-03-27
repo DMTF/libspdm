@@ -79,7 +79,7 @@ return_status libspdm_requester_get_measurements_test_send_message(
     header_size = sizeof(libspdm_test_message_header_t);
     switch (spdm_test_context->case_id) {
     case 0x1:
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_SEND_FAIL;
     case 0x2:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_measurement_request_size(
@@ -2802,7 +2802,7 @@ void libspdm_test_requester_get_measurements_case1(void **state)
                                      0, NULL, &number_of_block,
                                      &measurement_record_length,
                                      measurement_record);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_SEND_FAIL);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif

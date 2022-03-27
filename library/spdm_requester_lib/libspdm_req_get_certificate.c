@@ -131,7 +131,7 @@ libspdm_return_t libspdm_try_get_certificate(void *context, uint8_t slot_id,
                        spdm_request->offset, spdm_request->length));
 
         status = libspdm_send_spdm_request(spdm_context, NULL, spdm_request_size, spdm_request);
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             libspdm_release_sender_buffer (spdm_context);
             status = LIBSPDM_STATUS_SEND_FAIL;
             goto done;
@@ -150,7 +150,7 @@ libspdm_return_t libspdm_try_get_certificate(void *context, uint8_t slot_id,
         status = libspdm_receive_spdm_response(spdm_context, NULL,
                                                &spdm_response_size,
                                                (void **)&spdm_response);
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             libspdm_release_receiver_buffer (spdm_context);
             status = LIBSPDM_STATUS_RECEIVE_FAIL;
             goto done;
