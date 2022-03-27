@@ -84,14 +84,14 @@ libspdm_get_encap_response_func_via_request_code(uint8_t request_response_code)
  * @retval RETURN_SUCCESS               The SPDM response is processed successfully.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is sent to the device.
  **/
-return_status libspdm_process_encapsulated_request(libspdm_context_t *spdm_context,
-                                                   size_t encap_request_size,
-                                                   void *encap_request,
-                                                   size_t *encap_response_size,
-                                                   void *encap_response)
+libspdm_return_t libspdm_process_encapsulated_request(libspdm_context_t *spdm_context,
+                                                      size_t encap_request_size,
+                                                      void *encap_request,
+                                                      size_t *encap_response_size,
+                                                      void *encap_response)
 {
     libspdm_get_encap_response_func get_encap_response_func;
-    return_status status;
+    libspdm_return_t status;
     spdm_message_header_t *spdm_requester;
 
     spdm_requester = encap_request;
@@ -114,16 +114,16 @@ return_status libspdm_process_encapsulated_request(libspdm_context_t *spdm_conte
             spdm_context, encap_request_size, encap_request,
             encap_response_size, encap_response);
     } else {
-        status = RETURN_NOT_FOUND;
+        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
-    if (status != RETURN_SUCCESS) {
+    if (status != LIBSPDM_STATUS_SUCCESS) {
         return libspdm_generate_encap_error_response(
             spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
             spdm_requester->request_response_code,
             encap_response_size, encap_response);
     }
 
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
 /**
@@ -142,12 +142,12 @@ return_status libspdm_process_encapsulated_request(libspdm_context_t *spdm_conte
  * @retval RETURN_SUCCESS               The SPDM Encapsulated requests are sent and the responses are received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status libspdm_encapsulated_request(libspdm_context_t *spdm_context,
-                                           const uint32_t *session_id,
-                                           uint8_t mut_auth_requested,
-                                           uint8_t *req_slot_id_param)
+libspdm_return_t libspdm_encapsulated_request(libspdm_context_t *spdm_context,
+                                              const uint32_t *session_id,
+                                              uint8_t mut_auth_requested,
+                                              uint8_t *req_slot_id_param)
 {
-    return_status status;
+    libspdm_return_t status;
     uint8_t *spdm_request;
     size_t spdm_request_size;
     spdm_get_encapsulated_request_request_t
@@ -179,7 +179,7 @@ return_status libspdm_encapsulated_request(libspdm_context_t *spdm_context,
             spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP)) {
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
 
     if (session_id != NULL) {
@@ -187,7 +187,7 @@ return_status libspdm_encapsulated_request(libspdm_context_t *spdm_context,
             spdm_context, *session_id);
         if (session_info == NULL) {
             LIBSPDM_ASSERT(false);
-            return RETURN_UNSUPPORTED;
+            return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
         }
         LIBSPDM_ASSERT((mut_auth_requested == 0) ||
                        (mut_auth_requested ==
@@ -280,24 +280,24 @@ return_status libspdm_encapsulated_request(libspdm_context_t *spdm_context,
             .request_response_code !=
             SPDM_ENCAPSULATED_REQUEST) {
             libspdm_release_receiver_buffer (spdm_context);
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
         if (libspdm_encapsulated_request_response->header.spdm_version !=
             spdm_get_encapsulated_request_request->header.spdm_version) {
             libspdm_release_receiver_buffer (spdm_context);
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
         if (spdm_response_size <
             sizeof(spdm_encapsulated_request_response_t)) {
             libspdm_release_receiver_buffer (spdm_context);
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_INVALID_MSG_SIZE;
         }
         if (spdm_response_size ==
             sizeof(spdm_encapsulated_request_response_t)) {
 
             /* Done*/
             libspdm_release_receiver_buffer (spdm_context);
-            return RETURN_SUCCESS;
+            return LIBSPDM_STATUS_SUCCESS;
         }
         request_id = libspdm_encapsulated_request_response->header.param1;
 
@@ -348,9 +348,9 @@ return_status libspdm_encapsulated_request(libspdm_context_t *spdm_context,
             spdm_context, encapsulated_request_size,
             encapsulated_request, &encapsulated_response_size,
             encapsulated_response);
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             libspdm_release_sender_buffer (spdm_context);
-            return RETURN_DEVICE_ERROR;
+            return status;
         }
 
         spdm_request_size =
@@ -387,12 +387,12 @@ return_status libspdm_encapsulated_request(libspdm_context_t *spdm_context,
             .request_response_code !=
             SPDM_ENCAPSULATED_RESPONSE_ACK) {
             libspdm_release_receiver_buffer (spdm_context);
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
         if (spdm_encapsulated_response_ack_response->header.spdm_version !=
             spdm_deliver_encapsulated_response_request->header.spdm_version) {
             libspdm_release_receiver_buffer (spdm_context);
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
         if (spdm_encapsulated_response_ack_response->header.spdm_version >=
             SPDM_MESSAGE_VERSION_12) {
@@ -402,7 +402,7 @@ return_status libspdm_encapsulated_request(libspdm_context_t *spdm_context,
         }
         if (spdm_response_size < ack_header_size) {
             libspdm_release_receiver_buffer (spdm_context);
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_INVALID_MSG_SIZE;
         }
 
         if (spdm_encapsulated_response_ack_response->header.spdm_version >=
@@ -410,7 +410,7 @@ return_status libspdm_encapsulated_request(libspdm_context_t *spdm_context,
             if (spdm_encapsulated_response_ack_response->ack_request_id !=
                 spdm_deliver_encapsulated_response_request->header.param1) {
                 libspdm_release_receiver_buffer (spdm_context);
-                return RETURN_DEVICE_ERROR;
+                return LIBSPDM_STATUS_INVALID_MSG_FIELD;
             }
         }
 
@@ -418,10 +418,10 @@ return_status libspdm_encapsulated_request(libspdm_context_t *spdm_context,
         case SPDM_ENCAPSULATED_RESPONSE_ACK_RESPONSE_PAYLOAD_TYPE_ABSENT:
             if (spdm_response_size == ack_header_size) {
                 libspdm_release_receiver_buffer (spdm_context);
-                return RETURN_SUCCESS;
+                return LIBSPDM_STATUS_SUCCESS;
             } else {
                 libspdm_release_receiver_buffer (spdm_context);
-                return RETURN_DEVICE_ERROR;
+                return LIBSPDM_STATUS_INVALID_MSG_SIZE;
             }
             break;
         case SPDM_ENCAPSULATED_RESPONSE_ACK_RESPONSE_PAYLOAD_TYPE_PRESENT:
@@ -436,19 +436,19 @@ return_status libspdm_encapsulated_request(libspdm_context_t *spdm_context,
                         spdm_context->local_context
                         .slot_count) {
                         libspdm_release_receiver_buffer (spdm_context);
-                        return RETURN_DEVICE_ERROR;
+                        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
                     }
                 }
                 libspdm_release_receiver_buffer (spdm_context);
-                return RETURN_SUCCESS;
+                return LIBSPDM_STATUS_SUCCESS;
             } else {
                 libspdm_release_receiver_buffer (spdm_context);
-                return RETURN_DEVICE_ERROR;
+                return LIBSPDM_STATUS_INVALID_MSG_SIZE;
             }
             break;
         default:
             libspdm_release_receiver_buffer (spdm_context);
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
         request_id =
             spdm_encapsulated_response_ack_response->header.param1;
@@ -468,7 +468,7 @@ return_status libspdm_encapsulated_request(libspdm_context_t *spdm_context,
         libspdm_release_receiver_buffer (spdm_context);
     }
 
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
 /**
@@ -485,8 +485,8 @@ return_status libspdm_encapsulated_request(libspdm_context_t *spdm_context,
  * @retval RETURN_SUCCESS               The SPDM Encapsulated requests are sent and the responses are received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status libspdm_send_receive_encap_request(void *spdm_context,
-                                                 const uint32_t *session_id)
+libspdm_return_t libspdm_send_receive_encap_request(void *spdm_context,
+                                                    const uint32_t *session_id)
 {
     return libspdm_encapsulated_request(spdm_context, session_id, 0, NULL);
 }

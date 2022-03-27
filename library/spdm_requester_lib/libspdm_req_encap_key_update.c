@@ -23,11 +23,11 @@
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_get_encap_response_key_update(void *context,
-                                                    size_t request_size,
-                                                    void *request,
-                                                    size_t *response_size,
-                                                    void *response)
+libspdm_return_t libspdm_get_encap_response_key_update(void *context,
+                                                       size_t request_size,
+                                                       void *request,
+                                                       size_t *response_size,
+                                                       void *response)
 {
     uint32_t session_id;
     spdm_key_update_response_t *spdm_response;
@@ -127,5 +127,5 @@ return_status libspdm_get_encap_response_key_update(void *context,
     spdm_response->header.param1 = spdm_request->header.param1;
     spdm_response->header.param2 = spdm_request->header.param2;
 
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }

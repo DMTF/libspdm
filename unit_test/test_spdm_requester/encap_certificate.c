@@ -80,7 +80,7 @@ void libspdm_test_requester_encap_certificate_case1(void **state)
         spdm_context, m_spdm_get_certificate_request1_size,
         &m_spdm_get_certificate_request1, &response_size, response);
 
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_certificate_response_t) +
                      LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
     spdm_response = (void *)response;
@@ -132,7 +132,7 @@ void libspdm_test_requester_encap_certificate_case2(void **state)
     status = libspdm_get_encap_response_certificate(
         spdm_context, m_spdm_get_certificate_request2_size,
         &m_spdm_get_certificate_request2, &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
@@ -207,7 +207,7 @@ void libspdm_test_requester_encap_certificate_case3(void **state)
         status = libspdm_get_encap_response_certificate(
             spdm_context, m_spdm_get_certificate_request3_size,
             &m_spdm_get_certificate_request3, &response_size, response);
-        assert_int_equal(status, RETURN_SUCCESS);
+        assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
         assert_int_equal(response_size,
                          sizeof(spdm_certificate_response_t) + expected_chunk_size);
         spdm_response = (void *)response;
@@ -287,7 +287,7 @@ void libspdm_test_requester_encap_certificate_case4(void **state)
         status = libspdm_get_encap_response_certificate(
             spdm_context, m_spdm_get_certificate_request3_size,
             &m_spdm_get_certificate_request3, &response_size, response);
-        assert_int_equal(status, RETURN_SUCCESS);
+        assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
         if (m_spdm_get_certificate_request3.offset >= data_size)
         {
@@ -379,7 +379,7 @@ void libspdm_test_requester_encap_certificate_case5(void **state)
         status = libspdm_get_encap_response_certificate(
             spdm_context, m_spdm_get_certificate_request3_size,
             &m_spdm_get_certificate_request3, &response_size, response);
-        assert_int_equal(status, RETURN_SUCCESS);
+        assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
         /* Expected received length is limited by LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN
          * and by the remaining length*/
@@ -477,7 +477,7 @@ void libspdm_test_requester_encap_certificate_case6(void **state)
         status = libspdm_get_encap_response_certificate(
             spdm_context, m_spdm_get_certificate_request3_size,
             &m_spdm_get_certificate_request3, &response_size, response);
-        assert_int_equal(status, RETURN_SUCCESS);
+        assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
         spdm_response = (void *)response;
         /* It may fail because the spdm does not support too many messages.
          * assert_int_equal (spdm_response->header.request_response_code,
