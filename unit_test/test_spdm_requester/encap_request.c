@@ -9,10 +9,10 @@
 
 static uint8_t m_libspdm_local_certificate_chain[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
-return_status libspdm_requester_encap_request_test_send_message(void *spdm_context,
-                                                                size_t request_size,
-                                                                const void *request,
-                                                                uint64_t timeout)
+libspdm_return_t libspdm_requester_encap_request_test_send_message(void *spdm_context,
+                                                                   size_t request_size,
+                                                                   const void *request,
+                                                                   uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
 
@@ -22,27 +22,27 @@ return_status libspdm_requester_encap_request_test_send_message(void *spdm_conte
     case 0x1:
         return LIBSPDM_STATUS_SEND_FAIL;
     case 0x2:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x3:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x4:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x5:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x6:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x7:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x8:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x9:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     default:
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_SEND_FAIL;
     }
 }
 
-return_status libspdm_requester_encap_request_test_receive_message(
+libspdm_return_t libspdm_requester_encap_request_test_receive_message(
     void *spdm_context, size_t *response_size,
     void **response, uint64_t timeout)
 {
@@ -54,7 +54,7 @@ return_status libspdm_requester_encap_request_test_receive_message(
     switch (spdm_test_context->case_id)
     {
     case 0x1:
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_RECEIVE_FAIL;
 
     case 0x2:
     {
@@ -114,7 +114,7 @@ return_status libspdm_requester_encap_request_test_receive_message(
                                               temp_buf, response_size,
                                               response);
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x3:
     {
         spdm_digest_response_t *spdm_response;
@@ -173,7 +173,7 @@ return_status libspdm_requester_encap_request_test_receive_message(
                                               temp_buf, response_size,
                                               response);
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x4:
     {
         spdm_digest_response_t *spdm_response;
@@ -195,7 +195,7 @@ return_status libspdm_requester_encap_request_test_receive_message(
                                               temp_buf, response_size,
                                               response);
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x5:
     {
         spdm_digest_response_t *spdm_response;
@@ -253,7 +253,7 @@ return_status libspdm_requester_encap_request_test_receive_message(
                                                   response);
         }
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x6:
     {
         spdm_digest_response_t *spdm_response;
@@ -310,7 +310,7 @@ return_status libspdm_requester_encap_request_test_receive_message(
                                               temp_buf, response_size,
                                               response);
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x7:
     {
         spdm_digest_response_t *spdm_response;
@@ -369,7 +369,7 @@ return_status libspdm_requester_encap_request_test_receive_message(
                                               temp_buf, response_size,
                                               response);
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x8:
     {
         spdm_get_certificate_request_t *spdm_response;
@@ -418,7 +418,7 @@ return_status libspdm_requester_encap_request_test_receive_message(
                                               temp_buf, response_size,
                                               response);
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x9:
     {
@@ -467,15 +467,15 @@ return_status libspdm_requester_encap_request_test_receive_message(
                                               temp_buf, response_size,
                                               response);
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     default:
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_RECEIVE_FAIL;
     }
 }
 
 void libspdm_test_requester_encap_request_case1(void **State)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     void *data;
@@ -528,7 +528,7 @@ void libspdm_test_requester_encap_request_case1(void **State)
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 void libspdm_test_requester_encap_request_case2(void **State)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     void *data;
@@ -573,13 +573,13 @@ void libspdm_test_requester_encap_request_case2(void **State)
 
     libspdm_register_get_encap_response_func(spdm_context, libspdm_get_encap_response_digest);
     status = libspdm_encapsulated_request(spdm_context, NULL, 0, NULL);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     free(data);
 }
 
 void libspdm_test_requester_encap_request_case3(void **State)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     void *data;
@@ -624,13 +624,13 @@ void libspdm_test_requester_encap_request_case3(void **State)
 
     libspdm_register_get_encap_response_func(spdm_context, libspdm_get_encap_response_digest);
     status = libspdm_encapsulated_request(spdm_context, NULL, 0, NULL);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_SIZE);
     free(data);
 }
 
 void libspdm_test_requester_encap_request_case4(void **State)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     void *data;
@@ -675,13 +675,13 @@ void libspdm_test_requester_encap_request_case4(void **State)
 
     libspdm_register_get_encap_response_func(spdm_context, libspdm_get_encap_response_digest);
     status = libspdm_encapsulated_request(spdm_context, NULL, 0, NULL);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     free(data);
 }
 
 void libspdm_test_requester_encap_request_case5(void **State)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     void *data;
@@ -726,13 +726,13 @@ void libspdm_test_requester_encap_request_case5(void **State)
 
     libspdm_register_get_encap_response_func(spdm_context, libspdm_get_encap_response_digest);
     status = libspdm_encapsulated_request(spdm_context, NULL, 0, NULL);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     free(data);
 }
 
 void libspdm_test_requester_encap_request_case6(void **State)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     void *data;
@@ -777,13 +777,13 @@ void libspdm_test_requester_encap_request_case6(void **State)
 
     libspdm_register_get_encap_response_func(spdm_context, libspdm_get_encap_response_digest);
     status = libspdm_encapsulated_request(spdm_context, NULL, 0, NULL);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_SIZE);
     free(data);
 }
 
 void libspdm_test_requester_encap_request_case7(void **State)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     void *data;
@@ -828,13 +828,13 @@ void libspdm_test_requester_encap_request_case7(void **State)
 
     libspdm_register_get_encap_response_func(spdm_context, libspdm_get_encap_response_digest);
     status = libspdm_encapsulated_request(spdm_context, NULL, 0, NULL);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     free(data);
 }
 
 void libspdm_test_requester_encap_request_case8(void **State)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     void *data;
@@ -884,14 +884,14 @@ void libspdm_test_requester_encap_request_case8(void **State)
 
     libspdm_register_get_encap_response_func(spdm_context, libspdm_get_encap_response_certificate);
     status = libspdm_encapsulated_request(spdm_context, NULL, 0, NULL);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     free(data);
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
 void libspdm_test_requester_encap_request_case9(void **State)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     void *data;
@@ -943,7 +943,7 @@ void libspdm_test_requester_encap_request_case9(void **State)
 
     libspdm_register_get_encap_response_func(spdm_context, libspdm_get_encap_response_key_update);
     status = libspdm_encapsulated_request(spdm_context, NULL, 0, NULL);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     free(data);
 }
 

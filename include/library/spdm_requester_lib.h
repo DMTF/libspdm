@@ -499,8 +499,8 @@ libspdm_return_t libspdm_key_update(void *spdm_context, uint32_t session_id,
  * @retval RETURN_SUCCESS               The SPDM Encapsulated requests are sent and the responses are received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status libspdm_send_receive_encap_request(void *spdm_context,
-                                                 const uint32_t *session_id);
+libspdm_return_t libspdm_send_receive_encap_request(void *spdm_context,
+                                                    const uint32_t *session_id);
 
 /**
  * Process the encapsulated request and return the encapsulated response.
@@ -519,7 +519,7 @@ return_status libspdm_send_receive_encap_request(void *spdm_context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-typedef return_status (*libspdm_get_encap_response_func)(
+typedef libspdm_return_t (*libspdm_get_encap_response_func)(
     void *spdm_context, size_t spdm_request_size,
     void *spdm_request, size_t *spdm_response_size,
     void *spdm_response);
@@ -554,7 +554,7 @@ void libspdm_register_get_encap_response_func(void *spdm_context,
  * @retval RETURN_SUCCESS               The error message is generated.
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
-return_status libspdm_generate_encap_error_response(
+libspdm_return_t libspdm_generate_encap_error_response(
     const void *spdm_context, uint8_t error_code, uint8_t error_data,
     size_t *spdm_response_size, void *spdm_response);
 
@@ -577,7 +577,7 @@ return_status libspdm_generate_encap_error_response(
  * @retval RETURN_SUCCESS               The error message is generated.
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
-return_status libspdm_generate_encap_extended_error_response(
+libspdm_return_t libspdm_generate_encap_extended_error_response(
     const void *spdm_context, uint8_t error_code, uint8_t error_data,
     size_t extended_error_data_size, const uint8_t *extended_error_data,
     size_t *spdm_response_size, void *spdm_response);

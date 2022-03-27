@@ -275,10 +275,10 @@ libspdm_return_t libspdm_send_receive_end_session(libspdm_context_t *spdm_contex
  * @retval RETURN_SUCCESS               The SPDM Encapsulated requests are sent and the responses are received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status libspdm_encapsulated_request(libspdm_context_t *spdm_context,
-                                           const uint32_t *session_id,
-                                           uint8_t mut_auth_requested,
-                                           uint8_t *req_slot_id_param);
+libspdm_return_t libspdm_encapsulated_request(libspdm_context_t *spdm_context,
+                                              const uint32_t *session_id,
+                                              uint8_t mut_auth_requested,
+                                              uint8_t *req_slot_id_param);
 
 /**
  * Process the SPDM encapsulated GET_DIGESTS request and return the response.
@@ -297,11 +297,11 @@ return_status libspdm_encapsulated_request(libspdm_context_t *spdm_context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_get_encap_response_digest(void *context,
-                                                size_t request_size,
-                                                void *request,
-                                                size_t *response_size,
-                                                void *response);
+libspdm_return_t libspdm_get_encap_response_digest(void *context,
+                                                   size_t request_size,
+                                                   void *request,
+                                                   size_t *response_size,
+                                                   void *response);
 
 /**
  * Process the SPDM encapsulated GET_CERTIFICATE request and return the response.
@@ -322,11 +322,11 @@ return_status libspdm_get_encap_response_digest(void *context,
  **/
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
-return_status libspdm_get_encap_response_certificate(void *context,
-                                                     size_t request_size,
-                                                     void *request,
-                                                     size_t *response_size,
-                                                     void *response);
+libspdm_return_t libspdm_get_encap_response_certificate(void *context,
+                                                        size_t request_size,
+                                                        void *request,
+                                                        size_t *response_size,
+                                                        void *response);
 
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
@@ -347,7 +347,7 @@ return_status libspdm_get_encap_response_certificate(void *context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_get_encap_response_challenge_auth(
+libspdm_return_t libspdm_get_encap_response_challenge_auth(
     void *context, size_t request_size, void *request,
     size_t *response_size, void *response);
 
@@ -368,11 +368,11 @@ return_status libspdm_get_encap_response_challenge_auth(
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_get_encap_response_key_update(void *context,
-                                                    size_t request_size,
-                                                    void *request,
-                                                    size_t *response_size,
-                                                    void *response);
+libspdm_return_t libspdm_get_encap_response_key_update(void *context,
+                                                       size_t request_size,
+                                                       void *request,
+                                                       size_t *response_size,
+                                                       void *response);
 
 /**
  * Send an SPDM request to a device.

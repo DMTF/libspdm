@@ -25,11 +25,11 @@
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_get_encap_response_digest(void *context,
-                                                size_t request_size,
-                                                void *request,
-                                                size_t *response_size,
-                                                void *response)
+libspdm_return_t libspdm_get_encap_response_digest(void *context,
+                                                   size_t request_size,
+                                                   void *request,
+                                                   size_t *response_size,
+                                                   void *response)
 {
     spdm_get_digest_request_t *spdm_request;
     spdm_digest_response_t *spdm_response;
@@ -37,7 +37,7 @@ return_status libspdm_get_encap_response_digest(void *context,
     uint32_t hash_size;
     uint8_t *digest;
     libspdm_context_t *spdm_context;
-    return_status status;
+    libspdm_return_t status;
     bool result;
 
     spdm_context = context;
@@ -119,7 +119,7 @@ return_status libspdm_get_encap_response_digest(void *context,
             response_size, response);
     }
 
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/

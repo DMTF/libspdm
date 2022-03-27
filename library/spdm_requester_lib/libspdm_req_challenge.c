@@ -323,7 +323,7 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "libspdm_challenge - libspdm_encapsulated_request - %p\n",
                        status));
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             libspdm_reset_message_c(spdm_context);
             spdm_context->error_state =
                 LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE;

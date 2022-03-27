@@ -219,7 +219,7 @@ void test_libspdm_requester_encap_key_update_case1(void **state)
                                                    &m_spdm_key_update_request1,
                                                    &response_size, response);
 
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_key_update_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
@@ -284,7 +284,7 @@ void test_libspdm_requester_encap_key_update_case2(void **state)
                                                    &m_spdm_key_update_request2,
                                                    &response_size, response);
 
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
@@ -360,7 +360,7 @@ void test_libspdm_requester_encap_key_update_case3(void **state)
                                                    &m_spdm_key_update_request1,
                                                    &response_size, response);
 
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_key_update_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
@@ -438,7 +438,7 @@ void test_libspdm_requester_encap_key_update_case4(void **state)
                                                    &m_spdm_key_update_request1,
                                                    &response_size, response);
 
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
@@ -506,7 +506,7 @@ void test_libspdm_requester_encap_key_update_case5(void **state)
                                                    m_spdm_key_update_request1_size,
                                                    &m_spdm_key_update_request1,
                                                    &response_size, response);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
@@ -555,7 +555,7 @@ void test_libspdm_requester_encap_key_update_case6(void **state)
                                                    &m_spdm_key_update_request3,
                                                    &response_size, response);
 
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
@@ -614,7 +614,7 @@ void test_libspdm_requester_encap_key_update_case7(void **state)
                                                    &m_spdm_key_update_request4,
                                                    &response_size, response);
 
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
@@ -682,7 +682,7 @@ void test_libspdm_requester_encap_key_update_case8(void **state)
                                                    &m_spdm_key_update_request5,
                                                    &response_size, response);
 
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_key_update_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
@@ -746,7 +746,7 @@ void test_libspdm_requester_encap_key_update_case9(void **state)
                                                    &m_spdm_key_update_request10,
                                                    &response_size, response);
 
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
