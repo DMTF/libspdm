@@ -55,7 +55,7 @@ typedef struct {
  * @retval RETURN_SUCCESS               The KEY_EXCHANGE is sent and the KEY_EXCHANGE_RSP is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status libspdm_try_send_receive_key_exchange(
+libspdm_return_t libspdm_try_send_receive_key_exchange(
     libspdm_context_t *spdm_context, uint8_t measurement_hash_type,
     uint8_t slot_id, uint8_t session_policy, uint32_t *session_id,
     uint8_t *heartbeat_period,
@@ -65,7 +65,7 @@ return_status libspdm_try_send_receive_key_exchange(
     void *responder_random)
 {
     bool result;
-    return_status status;
+    libspdm_return_t status;
     libspdm_key_exchange_request_mine_t *spdm_request;
     size_t spdm_request_size;
     libspdm_key_exchange_response_max_t *spdm_response;
@@ -95,18 +95,18 @@ return_status libspdm_try_send_receive_key_exchange(
             spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP)) {
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                                                   SPDM_KEY_EXCHANGE);
     if (spdm_context->connection_info.connection_state <
         LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
 
     if ((slot_id == 0xFF) &&
         (spdm_context->local_context.peer_cert_chain_provision_size == 0)) {
-        return RETURN_INVALID_PARAMETER;
+        return LIBSPDM_STATUS_INVALID_PARAMETER;
     }
 
     spdm_context->error_state = LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
@@ -124,7 +124,7 @@ return_status libspdm_try_send_receive_key_exchange(
     if (requester_random_in == NULL) {
         if(!libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, spdm_request->random_data)) {
             libspdm_release_sender_buffer (spdm_context);
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_LOW_ENTROPY;
         }
     } else {
         libspdm_copy_mem(spdm_request->random_data, sizeof(spdm_request->random_data),
@@ -156,7 +156,7 @@ return_status libspdm_try_send_receive_key_exchange(
         spdm_context->connection_info.algorithm.dhe_named_group, true);
     if (dhe_context == NULL) {
         libspdm_release_sender_buffer (spdm_context);
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_CRYPTO_ERROR;
     }
 
     result = libspdm_secured_message_dhe_generate_key(
@@ -167,7 +167,7 @@ return_status libspdm_try_send_receive_key_exchange(
             spdm_context->connection_info.algorithm.dhe_named_group,
             dhe_context);
         libspdm_release_sender_buffer (spdm_context);
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_CRYPTO_ERROR;
     }
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ClientKey (0x%x):\n", dhe_key_size));
     libspdm_internal_dump_hex(ptr, dhe_key_size);
@@ -215,14 +215,14 @@ return_status libspdm_try_send_receive_key_exchange(
         libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
             dhe_context);
-        status = RETURN_DEVICE_ERROR;
+        status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
     }
     if (spdm_response->header.spdm_version != spdm_request->header.spdm_version) {
         libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
             dhe_context);
-        status = RETURN_DEVICE_ERROR;
+        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
     if (spdm_response->header.request_response_code == SPDM_ERROR) {
@@ -231,25 +231,40 @@ return_status libspdm_try_send_receive_key_exchange(
             (void **)&spdm_response, SPDM_KEY_EXCHANGE,
             SPDM_KEY_EXCHANGE_RSP,
             sizeof(libspdm_key_exchange_response_max_t));
+
         if (RETURN_ERROR(status)) {
             libspdm_secured_message_dhe_free(
                 spdm_context->connection_info.algorithm
                 .dhe_named_group,
                 dhe_context);
+        }
+        /* TODO: Replace this with LIBSPDM_RET_ON_ERR once libspdm_handle_simple_error_response
+         * uses the new error codes. */
+        if (status == RETURN_DEVICE_ERROR) {
+            status = LIBSPDM_STATUS_ERROR_PEER;
             goto receive_done;
         }
+        else if (status == RETURN_NO_RESPONSE) {
+            status = LIBSPDM_STATUS_BUSY_PEER;
+            goto receive_done;
+        }
+        else if (status == LIBSPDM_STATUS_RESYNCH_PEER) {
+            status = LIBSPDM_STATUS_RESYNCH_PEER;
+            goto receive_done;
+        }
+
     } else if (spdm_response->header.request_response_code !=
                SPDM_KEY_EXCHANGE_RSP) {
         libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
             dhe_context);
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
     if (spdm_response_size < sizeof(spdm_key_exchange_response_t)) {
         libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
             dhe_context);
-        status = RETURN_DEVICE_ERROR;
+        status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
     }
 
@@ -262,7 +277,7 @@ return_status libspdm_try_send_receive_key_exchange(
                 spdm_context->connection_info.algorithm
                 .dhe_named_group,
                 dhe_context);
-            status = RETURN_DEVICE_ERROR;
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             goto receive_done;
         }
     }
@@ -280,7 +295,7 @@ return_status libspdm_try_send_receive_key_exchange(
                 spdm_context->connection_info.algorithm
                 .dhe_named_group,
                 dhe_context);
-            status = RETURN_DEVICE_ERROR;
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             goto receive_done;
         }
         if ((*req_slot_id_param != 0xF) &&
@@ -290,7 +305,7 @@ return_status libspdm_try_send_receive_key_exchange(
                 spdm_context->connection_info.algorithm
                 .dhe_named_group,
                 dhe_context);
-            status = RETURN_DEVICE_ERROR;
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             goto receive_done;
         }
     } else {
@@ -299,7 +314,7 @@ return_status libspdm_try_send_receive_key_exchange(
                 spdm_context->connection_info.algorithm
                 .dhe_named_group,
                 dhe_context);
-            status = RETURN_DEVICE_ERROR;
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             goto receive_done;
         }
     }
@@ -310,7 +325,7 @@ return_status libspdm_try_send_receive_key_exchange(
         libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
             dhe_context);
-        status = RETURN_DEVICE_ERROR;
+        status = LIBSPDM_STATUS_SESSION_NUMBER_EXCEED;
         goto receive_done;
     }
 
@@ -336,7 +351,7 @@ return_status libspdm_try_send_receive_key_exchange(
         libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
             dhe_context);
-        status = RETURN_DEVICE_ERROR;
+        status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
     }
 
@@ -370,7 +385,7 @@ return_status libspdm_try_send_receive_key_exchange(
         libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
             dhe_context);
-        status = RETURN_SECURITY_VIOLATION;
+        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
     ptr += sizeof(uint16_t);
@@ -382,7 +397,7 @@ return_status libspdm_try_send_receive_key_exchange(
         libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
             dhe_context);
-        status = RETURN_DEVICE_ERROR;
+        status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
     }
     status = libspdm_process_opaque_data_version_selection_data(
@@ -392,7 +407,7 @@ return_status libspdm_try_send_receive_key_exchange(
         libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
             dhe_context);
-        status = RETURN_UNSUPPORTED;
+        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
 
@@ -413,7 +428,7 @@ return_status libspdm_try_send_receive_key_exchange(
         libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
             dhe_context);
-        status = RETURN_SECURITY_VIOLATION;
+        status = LIBSPDM_STATUS_BUFFER_FULL;
         goto receive_done;
     }
 
@@ -425,7 +440,7 @@ return_status libspdm_try_send_receive_key_exchange(
         libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
             dhe_context);
-        status = RETURN_SECURITY_VIOLATION;
+        status = LIBSPDM_STATUS_BUFFER_FULL;
         goto receive_done;
     }
 
@@ -442,7 +457,7 @@ return_status libspdm_try_send_receive_key_exchange(
             dhe_context);
         spdm_context->error_state =
             LIBSPDM_STATUS_ERROR_KEY_EXCHANGE_FAILURE;
-        status = RETURN_SECURITY_VIOLATION;
+        status = LIBSPDM_STATUS_VERIF_FAIL;
         goto receive_done;
     }
 
@@ -452,7 +467,7 @@ return_status libspdm_try_send_receive_key_exchange(
         libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
             dhe_context);
-        status = RETURN_SECURITY_VIOLATION;
+        status = LIBSPDM_STATUS_BUFFER_FULL;
         goto receive_done;
     }
 
@@ -468,7 +483,7 @@ return_status libspdm_try_send_receive_key_exchange(
         dhe_context);
     if (!result) {
         libspdm_free_session_id(spdm_context, *session_id);
-        status = RETURN_SECURITY_VIOLATION;
+        status = LIBSPDM_STATUS_CRYPTO_ERROR;
         goto receive_done;
     }
 
@@ -478,13 +493,13 @@ return_status libspdm_try_send_receive_key_exchange(
                                         th1_hash_data);
     if (!result) {
         libspdm_free_session_id(spdm_context, *session_id);
-        return RETURN_SECURITY_VIOLATION;
+        return LIBSPDM_STATUS_CRYPTO_ERROR;
     }
     result = libspdm_generate_session_handshake_key(
         session_info->secured_message_context, th1_hash_data);
     if (!result) {
         libspdm_free_session_id(spdm_context, *session_id);
-        status = RETURN_SECURITY_VIOLATION;
+        status = LIBSPDM_STATUS_CRYPTO_ERROR;
         goto receive_done;
     }
 
@@ -501,7 +516,7 @@ return_status libspdm_try_send_receive_key_exchange(
             libspdm_free_session_id(spdm_context, *session_id);
             spdm_context->error_state =
                 LIBSPDM_STATUS_ERROR_KEY_EXCHANGE_FAILURE;
-            status = RETURN_SECURITY_VIOLATION;
+            status = LIBSPDM_STATUS_VERIF_FAIL;
             goto receive_done;
         }
         ptr += hmac_size;
@@ -510,7 +525,7 @@ return_status libspdm_try_send_receive_key_exchange(
                                           hmac_size);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             libspdm_free_session_id(spdm_context, *session_id);
-            status = RETURN_SECURITY_VIOLATION;
+            status = LIBSPDM_STATUS_BUFFER_FULL;
             goto receive_done;
         }
     }
@@ -526,7 +541,7 @@ return_status libspdm_try_send_receive_key_exchange(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_HANDSHAKING);
     spdm_context->error_state = LIBSPDM_STATUS_SUCCESS;
-    status = RETURN_SUCCESS;
+    status = LIBSPDM_STATUS_SUCCESS;
 
 receive_done:
     libspdm_release_receiver_buffer (spdm_context);
@@ -548,14 +563,14 @@ receive_done:
  * @retval RETURN_SUCCESS               The KEY_EXCHANGE is sent and the KEY_EXCHANGE_RSP is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status libspdm_send_receive_key_exchange(
+libspdm_return_t libspdm_send_receive_key_exchange(
     libspdm_context_t *spdm_context, uint8_t measurement_hash_type,
     uint8_t slot_id, uint8_t session_policy, uint32_t *session_id,
     uint8_t *heartbeat_period,
     uint8_t *req_slot_id_param, void *measurement_hash)
 {
     size_t retry;
-    return_status status;
+    libspdm_return_t status;
 
     spdm_context->crypto_request = true;
     retry = spdm_context->retry_times;
@@ -564,7 +579,7 @@ return_status libspdm_send_receive_key_exchange(
             spdm_context, measurement_hash_type, slot_id, session_policy,
             session_id, heartbeat_period, req_slot_id_param,
             measurement_hash, NULL, NULL, NULL);
-        if (RETURN_NO_RESPONSE != status) {
+        if (LIBSPDM_STATUS_BUSY_PEER != status) {
             return status;
         }
     } while (retry-- != 0);
@@ -590,7 +605,7 @@ return_status libspdm_send_receive_key_exchange(
  * @retval RETURN_SUCCESS               The KEY_EXCHANGE is sent and the KEY_EXCHANGE_RSP is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status libspdm_send_receive_key_exchange_ex(
+libspdm_return_t libspdm_send_receive_key_exchange_ex(
     libspdm_context_t *spdm_context, uint8_t measurement_hash_type,
     uint8_t slot_id, uint8_t session_policy, uint32_t *session_id,
     uint8_t *heartbeat_period,
@@ -600,7 +615,7 @@ return_status libspdm_send_receive_key_exchange_ex(
     void *responder_random)
 {
     size_t retry;
-    return_status status;
+    libspdm_return_t status;
 
     spdm_context->crypto_request = true;
     retry = spdm_context->retry_times;
@@ -610,7 +625,7 @@ return_status libspdm_send_receive_key_exchange_ex(
             session_id, heartbeat_period, req_slot_id_param,
             measurement_hash, requester_random_in,
             requester_random, responder_random);
-        if (RETURN_NO_RESPONSE != status) {
+        if (LIBSPDM_STATUS_BUSY_PEER != status) {
             return status;
         }
     } while (retry-- != 0);

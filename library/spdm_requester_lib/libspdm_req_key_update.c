@@ -32,10 +32,10 @@ typedef struct {
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_try_key_update(void *context, uint32_t session_id,
-                                     bool single_direction, bool *key_updated)
+libspdm_return_t libspdm_try_key_update(void *context, uint32_t session_id,
+                                        bool single_direction, bool *key_updated)
 {
-    return_status status;
+    libspdm_return_t status;
     bool result;
     spdm_key_update_request_t *spdm_request;
     size_t spdm_request_size;
@@ -53,23 +53,23 @@ return_status libspdm_try_key_update(void *context, uint32_t session_id,
             spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_UPD_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_UPD_CAP)) {
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
 
     if (spdm_context->connection_info.connection_state <
         LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
     session_info =
         libspdm_get_session_info_via_session_id(spdm_context, session_id);
     if (session_info == NULL) {
         LIBSPDM_ASSERT(false);
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
     session_state = libspdm_secured_message_get_session_state(
         session_info->secured_message_context);
     if (session_state != LIBSPDM_SESSION_STATE_ESTABLISHED) {
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
 
     libspdm_reset_message_buffer_via_request_code(spdm_context, session_info,
@@ -98,7 +98,7 @@ return_status libspdm_try_key_update(void *context, uint32_t session_id,
         if(!libspdm_get_random_number(sizeof(spdm_request->header.param2),
                                       &spdm_request->header.param2)) {
             libspdm_release_sender_buffer (spdm_context);
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_LOW_ENTROPY;
         }
         spdm_request_size = sizeof(spdm_key_update_request_t);
 
@@ -112,7 +112,7 @@ return_status libspdm_try_key_update(void *context, uint32_t session_id,
                 LIBSPDM_KEY_UPDATE_ACTION_RESPONDER);
             if (!result) {
                 libspdm_release_sender_buffer (spdm_context);
-                return RETURN_DEVICE_ERROR;
+                return LIBSPDM_STATUS_CRYPTO_ERROR;
             }
         }
 
@@ -137,8 +137,41 @@ return_status libspdm_try_key_update(void *context, uint32_t session_id,
         status = libspdm_receive_spdm_response(
             spdm_context, &session_id, &spdm_response_size, (void **)&spdm_response);
 
-        if (LIBSPDM_STATUS_IS_ERROR(status) ||
-            spdm_response_size < sizeof(spdm_message_header_t)) {
+        if (!LIBSPDM_STATUS_IS_ERROR(status)) {
+            if (spdm_response_size < sizeof(spdm_message_header_t)) {
+                status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+            } else if (spdm_response->header.spdm_version != spdm_request->header.spdm_version) {
+                status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+            } else if (spdm_response->header.request_response_code == SPDM_ERROR) {
+                status = libspdm_handle_error_response_main(
+                    spdm_context, &session_id,
+                    &spdm_response_size, (void **)&spdm_response,
+                    SPDM_KEY_UPDATE, SPDM_KEY_UPDATE_ACK,
+                    sizeof(libspdm_key_update_response_mine_t));
+
+                /* TODO: Replace this with LIBSPDM_RET_ON_ERR once libspdm_handle_simple_error_response
+                 * uses the new error codes. */
+                if (status == RETURN_DEVICE_ERROR) {
+                    status = LIBSPDM_STATUS_ERROR_PEER;
+                }
+                else if (status == RETURN_NO_RESPONSE) {
+                    status = LIBSPDM_STATUS_BUSY_PEER;
+                }
+                else if (status == LIBSPDM_STATUS_RESYNCH_PEER) {
+                    status = LIBSPDM_STATUS_RESYNCH_PEER;
+                }
+                else if (status == LIBSPDM_STATUS_SESSION_MSG_ERROR) {
+                    status = LIBSPDM_STATUS_SESSION_MSG_ERROR;
+                }
+            } else if ((spdm_response->header.request_response_code !=
+                        SPDM_KEY_UPDATE_ACK) ||
+                       (spdm_response->header.param1 != spdm_request->header.param1) ||
+                       (spdm_response->header.param2 != spdm_request->header.param2)) {
+                status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+            }
+        }
+
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             if (!single_direction) {
                 LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                                "libspdm_activate_update_session_data_key[%x] Responder old\n",
@@ -148,60 +181,11 @@ return_status libspdm_try_key_update(void *context, uint32_t session_id,
                     LIBSPDM_KEY_UPDATE_ACTION_RESPONDER, false);
                 if (!result) {
                     libspdm_release_receiver_buffer (spdm_context);
-                    return RETURN_DEVICE_ERROR;
+                    return LIBSPDM_STATUS_CRYPTO_ERROR;
                 }
             }
             libspdm_release_receiver_buffer (spdm_context);
             return status;
-        }
-
-        if (spdm_response->header.spdm_version != spdm_request->header.spdm_version) {
-            libspdm_release_receiver_buffer (spdm_context);
-            return RETURN_DEVICE_ERROR;
-        }
-        if (spdm_response->header.request_response_code == SPDM_ERROR) {
-            status = libspdm_handle_error_response_main(
-                spdm_context, &session_id,
-                &spdm_response_size, (void **)&spdm_response,
-                SPDM_KEY_UPDATE, SPDM_KEY_UPDATE_ACK,
-                sizeof(libspdm_key_update_response_mine_t));
-            if (RETURN_ERROR(status)) {
-                if (!single_direction) {
-                    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                                   "libspdm_activate_update_session_data_key[%x] Responder old\n",
-                                   session_id));
-                    result = libspdm_activate_update_session_data_key(
-                        session_info->secured_message_context,
-                        LIBSPDM_KEY_UPDATE_ACTION_RESPONDER, false);
-                    /* Try and return most relevant error*/
-                    if (!result) {
-                        libspdm_release_receiver_buffer (spdm_context);
-                        return RETURN_DEVICE_ERROR;
-                    }
-                }
-                libspdm_release_receiver_buffer (spdm_context);
-                return status;
-            }
-        }
-
-        if ((spdm_response->header.request_response_code !=
-             SPDM_KEY_UPDATE_ACK) ||
-            (spdm_response->header.param1 != spdm_request->header.param1) ||
-            (spdm_response->header.param2 != spdm_request->header.param2)) {
-            if (!single_direction) {
-                LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                               "libspdm_activate_update_session_data_key[%x] Responder old\n",
-                               session_id));
-                result = libspdm_activate_update_session_data_key(
-                    session_info->secured_message_context,
-                    LIBSPDM_KEY_UPDATE_ACTION_RESPONDER, false);
-                if (!result) {
-                    libspdm_release_receiver_buffer (spdm_context);
-                    return RETURN_DEVICE_ERROR;
-                }
-            }
-            libspdm_release_receiver_buffer (spdm_context);
-            return RETURN_DEVICE_ERROR;
         }
 
         if (!single_direction) {
@@ -213,7 +197,7 @@ return_status libspdm_try_key_update(void *context, uint32_t session_id,
                 LIBSPDM_KEY_UPDATE_ACTION_RESPONDER, true);
             if (!result) {
                 libspdm_release_receiver_buffer (spdm_context);
-                return RETURN_DEVICE_ERROR;
+                return LIBSPDM_STATUS_CRYPTO_ERROR;
             }
         }
 
@@ -225,7 +209,7 @@ return_status libspdm_try_key_update(void *context, uint32_t session_id,
             LIBSPDM_KEY_UPDATE_ACTION_REQUESTER);
         if (!result) {
             libspdm_release_receiver_buffer (spdm_context);
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_CRYPTO_ERROR;
         }
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "libspdm_activate_update_session_data_key[%x] Requester new\n",
@@ -235,7 +219,7 @@ return_status libspdm_try_key_update(void *context, uint32_t session_id,
             LIBSPDM_KEY_UPDATE_ACTION_REQUESTER, true);
         if (!result) {
             libspdm_release_receiver_buffer (spdm_context);
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_CRYPTO_ERROR;
         }
 
         libspdm_release_receiver_buffer (spdm_context);
@@ -260,7 +244,7 @@ return_status libspdm_try_key_update(void *context, uint32_t session_id,
     if(!libspdm_get_random_number(sizeof(spdm_request->header.param2),
                                   &spdm_request->header.param2)) {
         libspdm_release_sender_buffer (spdm_context);
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_LOW_ENTROPY;
     }
     spdm_request_size = sizeof(spdm_key_update_request_t);
 
@@ -286,15 +270,16 @@ return_status libspdm_try_key_update(void *context, uint32_t session_id,
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_release_receiver_buffer (spdm_context);
         return status;
-    } else if (spdm_response_size < sizeof(spdm_message_header_t)) {
+    }
+    if (spdm_response_size < sizeof(spdm_message_header_t)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmVerifyKey[%x] Failed\n", session_id));
         libspdm_release_receiver_buffer (spdm_context);
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_INVALID_MSG_SIZE;
     }
 
     if (spdm_response->header.spdm_version != spdm_request->header.spdm_version) {
         libspdm_release_receiver_buffer (spdm_context);
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
     if (spdm_response->header.request_response_code == SPDM_ERROR) {
         status = libspdm_handle_error_response_main(
@@ -302,7 +287,22 @@ return_status libspdm_try_key_update(void *context, uint32_t session_id,
             &spdm_response_size, (void **)&spdm_response,
             SPDM_KEY_UPDATE, SPDM_KEY_UPDATE_ACK,
             sizeof(libspdm_key_update_response_mine_t));
-        if (RETURN_ERROR(status)) {
+
+        /* TODO: Replace this with LIBSPDM_RET_ON_ERR once libspdm_handle_simple_error_response
+         * uses the new error codes. */
+        if (status == RETURN_DEVICE_ERROR) {
+            status = LIBSPDM_STATUS_ERROR_PEER;
+        }
+        else if (status == RETURN_NO_RESPONSE) {
+            status = LIBSPDM_STATUS_BUSY_PEER;
+        }
+        else if (status == LIBSPDM_STATUS_RESYNCH_PEER) {
+            status = LIBSPDM_STATUS_RESYNCH_PEER;
+        }
+        else if (status == LIBSPDM_STATUS_SESSION_MSG_ERROR) {
+            status = LIBSPDM_STATUS_SESSION_MSG_ERROR;
+        }
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmVerifyKey[%x] Failed\n", session_id));
             libspdm_release_receiver_buffer (spdm_context);
             return status;
@@ -315,20 +315,20 @@ return_status libspdm_try_key_update(void *context, uint32_t session_id,
         (spdm_response->header.param2 != spdm_request->header.param2)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmVerifyKey[%x] Failed\n", session_id));
         libspdm_release_receiver_buffer (spdm_context);
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmVerifyKey[%x] Success\n", session_id));
 
     libspdm_release_receiver_buffer (spdm_context);
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
-return_status libspdm_key_update(void *context, uint32_t session_id,
-                                 bool single_direction)
+libspdm_return_t libspdm_key_update(void *context, uint32_t session_id,
+                                    bool single_direction)
 {
     libspdm_context_t *spdm_context;
     size_t retry;
-    return_status status;
+    libspdm_return_t status;
     bool key_updated;
 
     spdm_context = context;
@@ -338,7 +338,7 @@ return_status libspdm_key_update(void *context, uint32_t session_id,
     do {
         status = libspdm_try_key_update(context, session_id,
                                         single_direction, &key_updated);
-        if (RETURN_NO_RESPONSE != status) {
+        if (LIBSPDM_STATUS_BUSY_PEER != status) {
             return status;
         }
     } while (retry-- != 0);

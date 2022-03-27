@@ -37,10 +37,10 @@ void libspdm_secured_message_set_response_data_salt(
                      salt, secured_message_context->aead_iv_size);
 }
 
-return_status libspdm_requester_heartbeat_test_send_message(void *spdm_context,
-                                                            size_t request_size,
-                                                            const void *request,
-                                                            uint64_t timeout)
+libspdm_return_t libspdm_requester_heartbeat_test_send_message(void *spdm_context,
+                                                               size_t request_size,
+                                                               const void *request,
+                                                               uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
 
@@ -49,33 +49,33 @@ return_status libspdm_requester_heartbeat_test_send_message(void *spdm_context,
     case 0x1:
         return LIBSPDM_STATUS_SEND_FAIL;
     case 0x2:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x3:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x4:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x5:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x6:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x7:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x8:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x9:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0xA:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0xB:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0xC:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     default:
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_SEND_FAIL;
     }
 }
 
-return_status libspdm_requester_heartbeat_test_receive_message(
+libspdm_return_t libspdm_requester_heartbeat_test_receive_message(
     void *spdm_context, size_t *response_size,
     void **response, uint64_t timeout)
 {
@@ -84,7 +84,7 @@ return_status libspdm_requester_heartbeat_test_receive_message(
     spdm_test_context = libspdm_get_test_context();
     switch (spdm_test_context->case_id) {
     case 0x1:
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_RECEIVE_FAIL;
 
     case 0x2: {
         spdm_heartbeat_response_t *spdm_response;
@@ -120,14 +120,14 @@ return_status libspdm_requester_heartbeat_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         /* WALKAROUND: If just use single context to encode message and then decode message */
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x3: {
         spdm_heartbeat_response_t *spdm_response;
@@ -163,13 +163,13 @@ return_status libspdm_requester_heartbeat_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x4: {
         spdm_error_response_t *spdm_response;
@@ -205,13 +205,13 @@ return_status libspdm_requester_heartbeat_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x5: {
         spdm_error_response_t *spdm_response;
@@ -247,13 +247,13 @@ return_status libspdm_requester_heartbeat_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x6: {
         static size_t sub_index1 = 0;
@@ -293,7 +293,7 @@ return_status libspdm_requester_heartbeat_test_receive_message(
             session_info = libspdm_get_session_info_via_session_id(
                 spdm_context, session_id);
             if (session_info == NULL) {
-                return RETURN_DEVICE_ERROR;
+                return LIBSPDM_STATUS_RECEIVE_FAIL;
             }
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
@@ -335,7 +335,7 @@ return_status libspdm_requester_heartbeat_test_receive_message(
             session_info = libspdm_get_session_info_via_session_id(
                 spdm_context, session_id);
             if (session_info == NULL) {
-                return RETURN_DEVICE_ERROR;
+                return LIBSPDM_STATUS_RECEIVE_FAIL;
             }
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
@@ -343,7 +343,7 @@ return_status libspdm_requester_heartbeat_test_receive_message(
             .response_data_sequence_number--;
         }
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x7: {
         spdm_error_response_t *spdm_response;
@@ -379,13 +379,13 @@ return_status libspdm_requester_heartbeat_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x8: {
         spdm_error_response_data_response_not_ready_t *spdm_response;
@@ -426,13 +426,13 @@ return_status libspdm_requester_heartbeat_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x9: {
         static size_t sub_index2 = 0;
@@ -479,7 +479,7 @@ return_status libspdm_requester_heartbeat_test_receive_message(
             session_info = libspdm_get_session_info_via_session_id(
                 spdm_context, session_id);
             if (session_info == NULL) {
-                return RETURN_DEVICE_ERROR;
+                return LIBSPDM_STATUS_RECEIVE_FAIL;
             }
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
@@ -521,7 +521,7 @@ return_status libspdm_requester_heartbeat_test_receive_message(
             session_info = libspdm_get_session_info_via_session_id(
                 spdm_context, session_id);
             if (session_info == NULL) {
-                return RETURN_DEVICE_ERROR;
+                return LIBSPDM_STATUS_RECEIVE_FAIL;
             }
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
@@ -529,7 +529,7 @@ return_status libspdm_requester_heartbeat_test_receive_message(
             .response_data_sequence_number--;
         }
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0xA:
     {
@@ -583,7 +583,7 @@ return_status libspdm_requester_heartbeat_test_receive_message(
             error_code = LIBSPDM_ERROR_CODE_RESERVED_FD;
         }
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0xB: {
         spdm_heartbeat_response_t *spdm_response;
         size_t spdm_response_size;
@@ -618,14 +618,14 @@ return_status libspdm_requester_heartbeat_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         /* WALKAROUND: If just use single context to encode message and then decode message */
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0xC: {
         spdm_error_response_t *spdm_response;
@@ -661,22 +661,22 @@ return_status libspdm_requester_heartbeat_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     default:
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_RECEIVE_FAIL;
     }
 }
 
 void libspdm_test_requester_heartbeat_case1(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint32_t session_id;
@@ -745,7 +745,7 @@ void libspdm_test_requester_heartbeat_case1(void **state)
 
 void libspdm_test_requester_heartbeat_case2(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint32_t session_id;
@@ -831,13 +831,13 @@ void libspdm_test_requester_heartbeat_case2(void **state)
     ->application_secret.response_data_sequence_number = 0;
 
     status = libspdm_heartbeat(spdm_context, session_id);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     free(data);
 }
 
 void libspdm_test_requester_heartbeat_case3(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint32_t session_id;
@@ -923,13 +923,13 @@ void libspdm_test_requester_heartbeat_case3(void **state)
     ->application_secret.response_data_sequence_number = 0;
 
     status = libspdm_heartbeat(spdm_context, session_id);
-    assert_int_equal(status, RETURN_UNSUPPORTED);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_STATE_LOCAL);
     free(data);
 }
 
 void libspdm_test_requester_heartbeat_case4(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint32_t session_id;
@@ -1015,13 +1015,13 @@ void libspdm_test_requester_heartbeat_case4(void **state)
     ->application_secret.response_data_sequence_number = 0;
 
     status = libspdm_heartbeat(spdm_context, session_id);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
     free(data);
 }
 
 void libspdm_test_requester_heartbeat_case5(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint32_t session_id;
@@ -1107,13 +1107,13 @@ void libspdm_test_requester_heartbeat_case5(void **state)
     ->application_secret.response_data_sequence_number = 0;
 
     status = libspdm_heartbeat(spdm_context, session_id);
-    assert_int_equal(status, RETURN_NO_RESPONSE);
+    assert_int_equal(status, LIBSPDM_STATUS_BUSY_PEER);
     free(data);
 }
 
 void libspdm_test_requester_heartbeat_case6(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint32_t session_id;
@@ -1199,13 +1199,13 @@ void libspdm_test_requester_heartbeat_case6(void **state)
     ->application_secret.response_data_sequence_number = 0;
 
     status = libspdm_heartbeat(spdm_context, session_id);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     free(data);
 }
 
 void libspdm_test_requester_heartbeat_case7(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint32_t session_id;
@@ -1299,7 +1299,7 @@ void libspdm_test_requester_heartbeat_case7(void **state)
 
 void libspdm_test_requester_heartbeat_case8(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint32_t session_id;
@@ -1385,13 +1385,13 @@ void libspdm_test_requester_heartbeat_case8(void **state)
     ->application_secret.response_data_sequence_number = 0;
 
     status = libspdm_heartbeat(spdm_context, session_id);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
     free(data);
 }
 
 void libspdm_test_requester_heartbeat_case9(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint32_t session_id;
@@ -1477,12 +1477,12 @@ void libspdm_test_requester_heartbeat_case9(void **state)
     ->application_secret.response_data_sequence_number = 0;
 
     status = libspdm_heartbeat(spdm_context, session_id);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     free(data);
 }
 
 void libspdm_test_requester_heartbeat_case10(void **state) {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
     uint32_t session_id;
@@ -1555,11 +1555,10 @@ void libspdm_test_requester_heartbeat_case10(void **state) {
         application_secret.response_data_sequence_number = 0;
 
         status = libspdm_heartbeat (spdm_context, session_id);
-        /* assert_int_equal (status, RETURN_DEVICE_ERROR);*/
         if(error_code != SPDM_ERROR_CODE_DECRYPT_ERROR) {
-            LIBSPDM_ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
+            LIBSPDM_ASSERT_INT_EQUAL_CASE (status, LIBSPDM_STATUS_ERROR_PEER, error_code);
         } else {
-            LIBSPDM_ASSERT_INT_EQUAL_CASE (status, RETURN_SECURITY_VIOLATION, error_code);
+            LIBSPDM_ASSERT_INT_EQUAL_CASE (status, LIBSPDM_STATUS_SESSION_MSG_ERROR, error_code);
         }
 
         error_code++;
@@ -1579,7 +1578,7 @@ void libspdm_test_requester_heartbeat_case10(void **state) {
 
 void libspdm_test_requester_heartbeat_case11(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint32_t session_id;
@@ -1677,7 +1676,7 @@ void libspdm_test_requester_heartbeat_case11(void **state)
 #endif
 
     status = libspdm_heartbeat(spdm_context, session_id);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(session_info->session_transcript.message_m.buffer_size, 0);
     assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
@@ -1694,7 +1693,7 @@ void libspdm_test_requester_heartbeat_case11(void **state)
  **/
 void libspdm_test_requester_heartbeat_case12(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint32_t session_id;
@@ -1780,7 +1779,7 @@ void libspdm_test_requester_heartbeat_case12(void **state)
     ->application_secret.response_data_sequence_number = 0;
 
     status = libspdm_heartbeat(spdm_context, session_id);
-    assert_int_equal(status, RETURN_SECURITY_VIOLATION);
+    assert_int_equal(status, LIBSPDM_STATUS_SESSION_MSG_ERROR);
     assert_int_equal(spdm_context->session_info->session_id, INVALID_SESSION_ID);
 
     free(data);

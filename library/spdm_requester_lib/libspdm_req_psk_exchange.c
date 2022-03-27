@@ -59,7 +59,7 @@ typedef struct {
  * @retval RETURN_SUCCESS               The PSK_EXCHANGE is sent and the PSK_EXCHANGE_RSP is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status libspdm_try_send_receive_psk_exchange(
+libspdm_return_t libspdm_try_send_receive_psk_exchange(
     libspdm_context_t *spdm_context, uint8_t measurement_hash_type,
     uint8_t session_policy,
     uint32_t *session_id, uint8_t *heartbeat_period,
@@ -72,7 +72,7 @@ return_status libspdm_try_send_receive_psk_exchange(
     size_t *responder_context_size)
 {
     bool result;
-    return_status status;
+    libspdm_return_t status;
     libspdm_psk_exchange_request_mine_t *spdm_request;
     size_t spdm_request_size;
     libspdm_psk_exchange_response_max_t *spdm_response;
@@ -99,13 +99,13 @@ return_status libspdm_try_send_receive_psk_exchange(
             spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP)) {
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                                                   SPDM_PSK_EXCHANGE);
     if (spdm_context->connection_info.connection_state <
         LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
 
     {
@@ -116,23 +116,23 @@ return_status libspdm_try_send_receive_psk_exchange(
             if (spdm_context->connection_info.algorithm
                 .measurement_spec !=
                 SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF) {
-                return RETURN_DEVICE_ERROR;
+                return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
             }
             algo_size = libspdm_get_measurement_hash_size(
                 spdm_context->connection_info.algorithm
                 .measurement_hash_algo);
             if (algo_size == 0) {
-                return RETURN_DEVICE_ERROR;
+                return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
             }
         }
         algo_size = libspdm_get_hash_size(
             spdm_context->connection_info.algorithm.base_hash_algo);
         if (algo_size == 0) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
         }
         if (spdm_context->connection_info.algorithm.key_schedule !=
             SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
         }
     }
 
@@ -178,7 +178,7 @@ return_status libspdm_try_send_receive_psk_exchange(
 
     if (requester_context_in == NULL) {
         if(!libspdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr)) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_LOW_ENTROPY;
         }
     } else {
         libspdm_copy_mem(ptr, sizeof(spdm_request->context),
@@ -226,11 +226,11 @@ return_status libspdm_try_send_receive_psk_exchange(
         goto receive_done;
     }
     if (spdm_response_size < sizeof(spdm_message_header_t)) {
-        status = RETURN_DEVICE_ERROR;
+        status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
     }
     if (spdm_response->header.spdm_version != spdm_request->header.spdm_version) {
-        status = RETURN_DEVICE_ERROR;
+        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
     if (spdm_response->header.request_response_code == SPDM_ERROR) {
@@ -239,16 +239,28 @@ return_status libspdm_try_send_receive_psk_exchange(
             (void **)&spdm_response, SPDM_PSK_EXCHANGE,
             SPDM_PSK_EXCHANGE_RSP,
             sizeof(libspdm_psk_exchange_response_max_t));
-        if (RETURN_ERROR(status)) {
+
+        /* TODO: Replace this with LIBSPDM_RET_ON_ERR once libspdm_handle_simple_error_response
+         * uses the new error codes. */
+        if (status == RETURN_DEVICE_ERROR) {
+            status = LIBSPDM_STATUS_ERROR_PEER;
+            goto receive_done;
+        }
+        else if (status == RETURN_NO_RESPONSE) {
+            status = LIBSPDM_STATUS_BUSY_PEER;
+            goto receive_done;
+        }
+        else if (status == LIBSPDM_STATUS_RESYNCH_PEER) {
+            status = LIBSPDM_STATUS_RESYNCH_PEER;
             goto receive_done;
         }
     } else if (spdm_response->header.request_response_code !=
                SPDM_PSK_EXCHANGE_RSP) {
-        status = RETURN_DEVICE_ERROR;
+        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
     if (spdm_response_size < sizeof(spdm_psk_exchange_response_t)) {
-        status = RETURN_DEVICE_ERROR;
+        status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
     }
 
@@ -257,7 +269,7 @@ return_status libspdm_try_send_receive_psk_exchange(
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP)) {
         if (spdm_response->header.param1 != 0) {
-            status = RETURN_DEVICE_ERROR;
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             goto receive_done;
         }
     }
@@ -268,7 +280,7 @@ return_status libspdm_try_send_receive_psk_exchange(
     *session_id = (req_session_id << 16) | rsp_session_id;
     session_info = libspdm_assign_session_id(spdm_context, *session_id, true);
     if (session_info == NULL) {
-        status = RETURN_DEVICE_ERROR;
+        status = LIBSPDM_STATUS_SESSION_NUMBER_EXCEED;
         goto receive_done;
     }
 
@@ -282,7 +294,7 @@ return_status libspdm_try_send_receive_psk_exchange(
         spdm_response->context_length + spdm_response->opaque_length +
         measurement_summary_hash_size + hmac_size) {
         libspdm_free_session_id(spdm_context, *session_id);
-        status = RETURN_DEVICE_ERROR;
+        status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
     }
 
@@ -292,7 +304,7 @@ return_status libspdm_try_send_receive_psk_exchange(
         spdm_context, spdm_response->opaque_length, ptr);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_free_session_id(spdm_context, *session_id);
-        status = RETURN_UNSUPPORTED;
+        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
 
@@ -313,7 +325,7 @@ return_status libspdm_try_send_receive_psk_exchange(
 
     if ( spdm_response->opaque_length > SPDM_MAX_OPAQUE_DATA_SIZE) {
         libspdm_free_session_id(spdm_context, *session_id);
-        status = RETURN_SECURITY_VIOLATION;
+        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ServerContextData (0x%x) - ",
@@ -339,7 +351,7 @@ return_status libspdm_try_send_receive_psk_exchange(
                                       spdm_request_size);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_free_session_id(spdm_context, *session_id);
-        status = RETURN_SECURITY_VIOLATION;
+        status = LIBSPDM_STATUS_BUFFER_FULL;
         goto receive_done;
     }
 
@@ -347,7 +359,7 @@ return_status libspdm_try_send_receive_psk_exchange(
                                       spdm_response_size - hmac_size);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_free_session_id(spdm_context, *session_id);
-        status = RETURN_SECURITY_VIOLATION;
+        status = LIBSPDM_STATUS_BUFFER_FULL;
         goto receive_done;
     }
 
@@ -357,14 +369,14 @@ return_status libspdm_try_send_receive_psk_exchange(
                                         th1_hash_data);
     if (!result) {
         libspdm_free_session_id(spdm_context, *session_id);
-        status = RETURN_SECURITY_VIOLATION;
+        status = LIBSPDM_STATUS_CRYPTO_ERROR;
         goto receive_done;
     }
     result = libspdm_generate_session_handshake_key(
         session_info->secured_message_context, th1_hash_data);
     if (!result) {
         libspdm_free_session_id(spdm_context, *session_id);
-        status = RETURN_SECURITY_VIOLATION;
+        status = LIBSPDM_STATUS_CRYPTO_ERROR;
         goto receive_done;
     }
 
@@ -377,14 +389,14 @@ return_status libspdm_try_send_receive_psk_exchange(
         libspdm_free_session_id(spdm_context, *session_id);
         spdm_context->error_state =
             LIBSPDM_STATUS_ERROR_KEY_EXCHANGE_FAILURE;
-        status = RETURN_SECURITY_VIOLATION;
+        status = LIBSPDM_STATUS_VERIF_FAIL;
         goto receive_done;
     }
 
     status = libspdm_append_message_k(spdm_context, session_info, true, verify_data, hmac_size);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_free_session_id(spdm_context, *session_id);
-        status = RETURN_SECURITY_VIOLATION;
+        status = LIBSPDM_STATUS_BUFFER_FULL;
         goto receive_done;
     }
 
@@ -411,14 +423,14 @@ return_status libspdm_try_send_receive_psk_exchange(
                                             true, th2_hash_data);
         if (!result) {
             libspdm_free_session_id(spdm_context, *session_id);
-            status = RETURN_SECURITY_VIOLATION;
+            status = LIBSPDM_STATUS_CRYPTO_ERROR;
             goto receive_done;
         }
         result = libspdm_generate_session_data_key(
             session_info->secured_message_context, th2_hash_data);
         if (!result) {
             libspdm_free_session_id(spdm_context, *session_id);
-            status = RETURN_SECURITY_VIOLATION;
+            status = LIBSPDM_STATUS_CRYPTO_ERROR;
             goto receive_done;
         }
 
@@ -427,7 +439,7 @@ return_status libspdm_try_send_receive_psk_exchange(
             LIBSPDM_SESSION_STATE_ESTABLISHED);
     }
 
-    status = RETURN_SUCCESS;
+    status = LIBSPDM_STATUS_SUCCESS;
 
 receive_done:
     libspdm_release_receiver_buffer (spdm_context);
@@ -447,15 +459,15 @@ receive_done:
  * @retval RETURN_SUCCESS               The PSK_EXCHANGE is sent and the PSK_EXCHANGE_RSP is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status libspdm_send_receive_psk_exchange(libspdm_context_t *spdm_context,
-                                                uint8_t measurement_hash_type,
-                                                uint8_t session_policy,
-                                                uint32_t *session_id,
-                                                uint8_t *heartbeat_period,
-                                                void *measurement_hash)
+libspdm_return_t libspdm_send_receive_psk_exchange(libspdm_context_t *spdm_context,
+                                                   uint8_t measurement_hash_type,
+                                                   uint8_t session_policy,
+                                                   uint32_t *session_id,
+                                                   uint8_t *heartbeat_period,
+                                                   void *measurement_hash)
 {
     size_t retry;
-    return_status status;
+    libspdm_return_t status;
 
     spdm_context->crypto_request = true;
     retry = spdm_context->retry_times;
@@ -464,7 +476,7 @@ return_status libspdm_send_receive_psk_exchange(libspdm_context_t *spdm_context,
             spdm_context, measurement_hash_type, session_policy, session_id,
             heartbeat_period, measurement_hash,
             NULL, 0, NULL, NULL, NULL, NULL);
-        if (RETURN_NO_RESPONSE != status) {
+        if (LIBSPDM_STATUS_BUSY_PEER != status) {
             return status;
         }
     } while (retry-- != 0);
@@ -496,21 +508,21 @@ return_status libspdm_send_receive_psk_exchange(libspdm_context_t *spdm_context,
  * @retval RETURN_SUCCESS               The PSK_EXCHANGE is sent and the PSK_EXCHANGE_RSP is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status libspdm_send_receive_psk_exchange_ex(libspdm_context_t *spdm_context,
-                                                   uint8_t measurement_hash_type,
-                                                   uint8_t session_policy,
-                                                   uint32_t *session_id,
-                                                   uint8_t *heartbeat_period,
-                                                   void *measurement_hash,
-                                                   const void *requester_context_in,
-                                                   size_t requester_context_in_size,
-                                                   void *requester_context,
-                                                   size_t *requester_context_size,
-                                                   void *responder_context,
-                                                   size_t *responder_context_size)
+libspdm_return_t libspdm_send_receive_psk_exchange_ex(libspdm_context_t *spdm_context,
+                                                      uint8_t measurement_hash_type,
+                                                      uint8_t session_policy,
+                                                      uint32_t *session_id,
+                                                      uint8_t *heartbeat_period,
+                                                      void *measurement_hash,
+                                                      const void *requester_context_in,
+                                                      size_t requester_context_in_size,
+                                                      void *requester_context,
+                                                      size_t *requester_context_size,
+                                                      void *responder_context,
+                                                      size_t *responder_context_size)
 {
     size_t retry;
-    return_status status;
+    libspdm_return_t status;
 
     spdm_context->crypto_request = true;
     retry = spdm_context->retry_times;
@@ -521,7 +533,7 @@ return_status libspdm_send_receive_psk_exchange_ex(libspdm_context_t *spdm_conte
             requester_context_in, requester_context_in_size,
             requester_context, requester_context_size,
             responder_context, responder_context_size);
-        if (RETURN_NO_RESPONSE != status) {
+        if (LIBSPDM_STATUS_BUSY_PEER != status) {
             return status;
         }
     } while (retry-- != 0);

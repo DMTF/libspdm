@@ -109,6 +109,14 @@ typedef size_t libspdm_return_t;
 #define LIBSPDM_STATUS_BUFFER_TOO_SMALL \
     LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CORE, 0x000c)
 
+/* Unable to allocate more session. */
+#define LIBSPDM_STATUS_SESSION_NUMBER_EXCEED \
+    LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CORE, 0x000d)
+
+/* Decrypt error from peer. */
+#define LIBSPDM_STATUS_SESSION_MSG_ERROR \
+    LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CORE, 0x000e)
+
 /* Cryptography errors. */
 
 /* Generic failure originating from the cryptography module. */

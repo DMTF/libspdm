@@ -164,7 +164,7 @@ libspdm_return_t libspdm_process_encap_response_key_update(
     if (spdm_response->header.request_response_code == SPDM_ERROR) {
         if (spdm_response->header.param1 == SPDM_ERROR_CODE_DECRYPT_ERROR) {
             libspdm_free_session_id(spdm_context, session_id);
-            return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+            return LIBSPDM_STATUS_SESSION_MSG_ERROR;
         }
     }
 

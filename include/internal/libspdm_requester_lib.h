@@ -111,7 +111,7 @@ libspdm_return_t libspdm_negotiate_algorithms(libspdm_context_t *spdm_context);
  **/
 #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
-return_status libspdm_send_receive_key_exchange(
+libspdm_return_t libspdm_send_receive_key_exchange(
     libspdm_context_t *spdm_context, uint8_t measurement_hash_type,
     uint8_t slot_id, uint8_t session_policy, uint32_t *session_id,
     uint8_t *heartbeat_period,
@@ -139,7 +139,7 @@ return_status libspdm_send_receive_key_exchange(
  **/
 #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
-return_status libspdm_send_receive_key_exchange_ex(
+libspdm_return_t libspdm_send_receive_key_exchange_ex(
     libspdm_context_t *spdm_context, uint8_t measurement_hash_type,
     uint8_t slot_id, uint8_t session_policy, uint32_t *session_id,
     uint8_t *heartbeat_period,
@@ -160,9 +160,9 @@ return_status libspdm_send_receive_key_exchange_ex(
  * @retval RETURN_SUCCESS               The FINISH is sent and the FINISH_RSP is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status libspdm_send_receive_finish(libspdm_context_t *spdm_context,
-                                          uint32_t session_id,
-                                          uint8_t req_slot_id_param);
+libspdm_return_t libspdm_send_receive_finish(libspdm_context_t *spdm_context,
+                                             uint32_t session_id,
+                                             uint8_t req_slot_id_param);
 
 /**
  * This function sends PSK_EXCHANGE and receives PSK_EXCHANGE_RSP for SPDM PSK exchange.
@@ -179,12 +179,12 @@ return_status libspdm_send_receive_finish(libspdm_context_t *spdm_context,
  **/
 #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
-return_status libspdm_send_receive_psk_exchange(libspdm_context_t *spdm_context,
-                                                uint8_t measurement_hash_type,
-                                                uint8_t session_policy,
-                                                uint32_t *session_id,
-                                                uint8_t *heartbeat_period,
-                                                void *measurement_hash);
+libspdm_return_t libspdm_send_receive_psk_exchange(libspdm_context_t *spdm_context,
+                                                   uint8_t measurement_hash_type,
+                                                   uint8_t session_policy,
+                                                   uint32_t *session_id,
+                                                   uint8_t *heartbeat_period,
+                                                   void *measurement_hash);
 
 #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
 
@@ -214,18 +214,18 @@ return_status libspdm_send_receive_psk_exchange(libspdm_context_t *spdm_context,
  **/
 #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
-return_status libspdm_send_receive_psk_exchange_ex(libspdm_context_t *spdm_context,
-                                                   uint8_t measurement_hash_type,
-                                                   uint8_t session_policy,
-                                                   uint32_t *session_id,
-                                                   uint8_t *heartbeat_period,
-                                                   void *measurement_hash,
-                                                   const void *requester_context_in,
-                                                   size_t requester_context_in_size,
-                                                   void *requester_context,
-                                                   size_t *requester_context_size,
-                                                   void *responder_context,
-                                                   size_t *responder_context_size);
+libspdm_return_t libspdm_send_receive_psk_exchange_ex(libspdm_context_t *spdm_context,
+                                                      uint8_t measurement_hash_type,
+                                                      uint8_t session_policy,
+                                                      uint32_t *session_id,
+                                                      uint8_t *heartbeat_period,
+                                                      void *measurement_hash,
+                                                      const void *requester_context_in,
+                                                      size_t requester_context_in_size,
+                                                      void *requester_context,
+                                                      size_t *requester_context_size,
+                                                      void *responder_context,
+                                                      size_t *responder_context_size);
 
 #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
 
@@ -240,8 +240,8 @@ return_status libspdm_send_receive_psk_exchange_ex(libspdm_context_t *spdm_conte
  **/
 #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
-return_status libspdm_send_receive_psk_finish(libspdm_context_t *spdm_context,
-                                              uint32_t session_id);
+libspdm_return_t libspdm_send_receive_psk_finish(libspdm_context_t *spdm_context,
+                                                 uint32_t session_id);
 
 #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
 
@@ -255,9 +255,9 @@ return_status libspdm_send_receive_psk_finish(libspdm_context_t *spdm_context,
  * @retval RETURN_SUCCESS               The END_SESSION is sent and the END_SESSION_ACK is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status libspdm_send_receive_end_session(libspdm_context_t *spdm_context,
-                                               uint32_t session_id,
-                                               uint8_t end_session_attributes);
+libspdm_return_t libspdm_send_receive_end_session(libspdm_context_t *spdm_context,
+                                                  uint32_t session_id,
+                                                  uint8_t end_session_attributes);
 
 /**
  * This function executes a series of SPDM encapsulated requests and receives SPDM encapsulated responses.

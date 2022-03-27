@@ -67,7 +67,7 @@ libspdm_return_t libspdm_requester_get_version_test_send_message(
     }
         return LIBSPDM_STATUS_SUCCESS;
     default:
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_SEND_FAIL;
     }
 }
 
@@ -80,7 +80,7 @@ libspdm_return_t libspdm_requester_get_version_test_receive_message(
     spdm_test_context = libspdm_get_test_context();
     switch (spdm_test_context->case_id) {
     case 0x1:
-        return LIBSPDM_STATUS_SUCCESS;
+        return LIBSPDM_STATUS_RECEIVE_FAIL;
 
     case 0x2: {
         libspdm_version_response_mine_t *spdm_response;
@@ -475,7 +475,7 @@ libspdm_return_t libspdm_requester_get_version_test_receive_message(
         return LIBSPDM_STATUS_SUCCESS;
 
     default:
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_RECEIVE_FAIL;
     }
 }
 

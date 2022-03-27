@@ -2688,7 +2688,6 @@ void libspdm_test_requester_challenge_case20(void **state) {
         status = libspdm_challenge (spdm_context, 0,
                                     SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
                                     measurement_hash, NULL);
-        /* assert_int_equal (status, RETURN_DEVICE_ERROR);*/
         LIBSPDM_ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
         /* assert_int_equal (spdm_context->transcript.message_c.buffer_size, 0);*/
