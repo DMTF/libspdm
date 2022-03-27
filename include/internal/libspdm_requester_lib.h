@@ -10,7 +10,6 @@
 #include "library/spdm_requester_lib.h"
 #include "library/spdm_secured_message_lib.h"
 #include "internal/libspdm_common_lib.h"
-#include "internal/libspdm_return_status.h"
 
 /**
  * This function handles simple error code.
@@ -21,8 +20,8 @@
  * @retval RETURN_NO_RESPONSE           If the error code is BUSY.
  * @retval RETURN_DEVICE_ERROR          If the error code is REQUEST_RESYNCH or others.
  **/
-return_status libspdm_handle_simple_error_response(void *context,
-                                                   uint8_t error_code);
+libspdm_return_t libspdm_handle_simple_error_response(void *context,
+                                                      uint8_t error_code);
 
 /**
  * This function handles the error response.
@@ -52,7 +51,7 @@ return_status libspdm_handle_simple_error_response(void *context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    The error code is DECRYPT_ERROR and session_id is NOT NULL.
  **/
-return_status libspdm_handle_error_response_main(
+libspdm_return_t libspdm_handle_error_response_main(
     libspdm_context_t *spdm_context, const uint32_t *session_id,
     size_t *response_size, void **response,
     uint8_t original_request_code, uint8_t expected_response_code,

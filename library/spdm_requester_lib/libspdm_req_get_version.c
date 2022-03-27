@@ -105,19 +105,7 @@ libspdm_return_t libspdm_try_get_version(libspdm_context_t *spdm_context,
     }
     if (spdm_response->header.request_response_code == SPDM_ERROR) {
         status = libspdm_handle_simple_error_response(spdm_context, spdm_response->header.param1);
-
-        /* TODO: Replace this with LIBSPDM_RET_ON_ERR once libspdm_handle_simple_error_response
-         * uses the new error codes. */
-        if (status == RETURN_DEVICE_ERROR) {
-            status = LIBSPDM_STATUS_ERROR_PEER;
-            goto receive_done;
-        }
-        else if (status == RETURN_NO_RESPONSE) {
-            status = LIBSPDM_STATUS_BUSY_PEER;
-            goto receive_done;
-        }
-        else if (status == LIBSPDM_STATUS_RESYNCH_PEER) {
-            status = LIBSPDM_STATUS_RESYNCH_PEER;
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             goto receive_done;
         }
     } else if (spdm_response->header.request_response_code != SPDM_VERSION) {
@@ -184,7 +172,7 @@ libspdm_return_t libspdm_try_get_version(libspdm_context_t *spdm_context,
         if (*version_number_entry_count < spdm_response->version_number_entry_count) {
             *version_number_entry_count = spdm_response->version_number_entry_count;
             libspdm_reset_message_a(spdm_context);
-            status = RETURN_BUFFER_TOO_SMALL;
+            status = LIBSPDM_STATUS_BUFFER_TOO_SMALL;
             goto receive_done;
         } else {
             *version_number_entry_count = spdm_response->version_number_entry_count;

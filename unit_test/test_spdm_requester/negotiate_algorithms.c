@@ -2152,7 +2152,7 @@ void libspdm_test_requester_negotiate_algorithms_case31(void **state) {
 }
 
 void libspdm_test_requester_negotiate_algorithms_case32(void **state) {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT

@@ -101,7 +101,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
 
 void libspdm_test_requester_psk_finish_case1(void **State)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint32_t session_id;
@@ -175,7 +175,7 @@ void libspdm_test_requester_psk_finish_case1(void **State)
     libspdm_secured_message_set_dummy_finished_key(session_info->secured_message_context);
     status = libspdm_send_receive_psk_finish(spdm_context, session_id);
     free(data);
-    if (RETURN_NO_RESPONSE != status)
+    if (LIBSPDM_STATUS_BUSY_PEER != status)
     {
         libspdm_reset_message_f(spdm_context, session_info);
         libspdm_reset_message_k(spdm_context, session_info);

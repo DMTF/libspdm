@@ -35,7 +35,7 @@ size_t m_spdm_challenge_request3_size = sizeof(m_spdm_challenge_request3);
  **/
 void test_libspdm_requester_encap_challenge_auth_case1(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -122,7 +122,7 @@ void test_libspdm_requester_encap_challenge_auth_case1(void **state)
  **/
 void test_libspdm_requester_encap_challenge_auth_case2(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -185,7 +185,7 @@ void test_libspdm_requester_encap_challenge_auth_case2(void **state)
  **/
 void test_libspdm_requester_encap_challenge_auth_case3(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -239,7 +239,7 @@ void test_libspdm_requester_encap_challenge_auth_case3(void **state)
  **/
 void test_libspdm_requester_encap_challenge_auth_case4(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
@@ -293,7 +293,7 @@ void test_libspdm_requester_encap_challenge_auth_case4(void **state)
  **/
 void test_libspdm_requester_encap_challenge_auth_case5(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;

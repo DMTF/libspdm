@@ -223,19 +223,7 @@ libspdm_return_t libspdm_try_get_measurement(void *context, const uint32_t *sess
             &spdm_response_size, (void **)&spdm_response,
             SPDM_GET_MEASUREMENTS, SPDM_MEASUREMENTS,
             sizeof(libspdm_measurements_response_max_t));
-
-        /* TODO: Replace this with LIBSPDM_RET_ON_ERR once libspdm_handle_simple_error_response
-         * uses the new error codes. */
-        if (status == RETURN_DEVICE_ERROR) {
-            status = LIBSPDM_STATUS_ERROR_PEER;
-            goto receive_done;
-        }
-        else if (status == RETURN_NO_RESPONSE) {
-            status = LIBSPDM_STATUS_BUSY_PEER;
-            goto receive_done;
-        }
-        else if (status == LIBSPDM_STATUS_RESYNCH_PEER) {
-            status = LIBSPDM_STATUS_RESYNCH_PEER;
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             goto receive_done;
         }
     } else if (spdm_response->header.request_response_code !=

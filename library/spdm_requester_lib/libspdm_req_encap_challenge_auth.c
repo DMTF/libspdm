@@ -118,7 +118,7 @@ libspdm_return_t libspdm_get_encap_response_challenge_auth(
     ptr += hash_size;
 
     if(!libspdm_get_random_number(SPDM_NONCE_SIZE, ptr)) {
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_LOW_ENTROPY;
     }
     ptr += SPDM_NONCE_SIZE;
 

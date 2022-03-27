@@ -26,7 +26,7 @@ libspdm_return_t libspdm_requester_receive_message(const void *spdm_context,
 void *spdm_client_init(void)
 {
     void *spdm_context;
-    return_status status;
+    libspdm_return_t status;
     libspdm_data_parameter_t parameter;
     uint8_t data8;
     uint16_t data16;
@@ -91,7 +91,7 @@ void *spdm_client_init(void)
                      sizeof(data16));
 
     status = libspdm_init_connection(spdm_context, false);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "libspdm_init_connection - %r\n", status));
         free_pool(spdm_context);
         return NULL;

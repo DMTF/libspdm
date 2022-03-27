@@ -148,21 +148,6 @@ libspdm_return_t libspdm_try_key_update(void *context, uint32_t session_id,
                     &spdm_response_size, (void **)&spdm_response,
                     SPDM_KEY_UPDATE, SPDM_KEY_UPDATE_ACK,
                     sizeof(libspdm_key_update_response_mine_t));
-
-                /* TODO: Replace this with LIBSPDM_RET_ON_ERR once libspdm_handle_simple_error_response
-                 * uses the new error codes. */
-                if (status == RETURN_DEVICE_ERROR) {
-                    status = LIBSPDM_STATUS_ERROR_PEER;
-                }
-                else if (status == RETURN_NO_RESPONSE) {
-                    status = LIBSPDM_STATUS_BUSY_PEER;
-                }
-                else if (status == LIBSPDM_STATUS_RESYNCH_PEER) {
-                    status = LIBSPDM_STATUS_RESYNCH_PEER;
-                }
-                else if (status == LIBSPDM_STATUS_SESSION_MSG_ERROR) {
-                    status = LIBSPDM_STATUS_SESSION_MSG_ERROR;
-                }
             } else if ((spdm_response->header.request_response_code !=
                         SPDM_KEY_UPDATE_ACK) ||
                        (spdm_response->header.param1 != spdm_request->header.param1) ||
@@ -287,21 +272,6 @@ libspdm_return_t libspdm_try_key_update(void *context, uint32_t session_id,
             &spdm_response_size, (void **)&spdm_response,
             SPDM_KEY_UPDATE, SPDM_KEY_UPDATE_ACK,
             sizeof(libspdm_key_update_response_mine_t));
-
-        /* TODO: Replace this with LIBSPDM_RET_ON_ERR once libspdm_handle_simple_error_response
-         * uses the new error codes. */
-        if (status == RETURN_DEVICE_ERROR) {
-            status = LIBSPDM_STATUS_ERROR_PEER;
-        }
-        else if (status == RETURN_NO_RESPONSE) {
-            status = LIBSPDM_STATUS_BUSY_PEER;
-        }
-        else if (status == LIBSPDM_STATUS_RESYNCH_PEER) {
-            status = LIBSPDM_STATUS_RESYNCH_PEER;
-        }
-        else if (status == LIBSPDM_STATUS_SESSION_MSG_ERROR) {
-            status = LIBSPDM_STATUS_SESSION_MSG_ERROR;
-        }
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmVerifyKey[%x] Failed\n", session_id));
             libspdm_release_receiver_buffer (spdm_context);

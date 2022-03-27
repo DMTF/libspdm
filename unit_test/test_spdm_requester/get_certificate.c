@@ -86,7 +86,7 @@ bool libspdm_libspdm_read_responder_public_certificate_chain_expiration(
     return true;
 }
 
-return_status libspdm_requester_get_certificate_test_send_message(
+libspdm_return_t libspdm_requester_get_certificate_test_send_message(
     void *spdm_context, size_t request_size, const void *request,
     uint64_t timeout)
 {
@@ -160,7 +160,7 @@ return_status libspdm_requester_get_certificate_test_send_message(
     }
 }
 
-return_status libspdm_requester_get_certificate_test_receive_message(
+libspdm_return_t libspdm_requester_get_certificate_test_receive_message(
     void *spdm_context, size_t *response_size,
     void **response, uint64_t timeout)
 {
@@ -3155,7 +3155,7 @@ void libspdm_test_requester_get_certificate_case23(void **state)
  **/
 void libspdm_test_requester_get_certificate_case24(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t cert_chain_size;

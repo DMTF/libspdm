@@ -76,7 +76,7 @@ size_t m_libspdm_finish_request1_size = sizeof(m_libspdm_finish_request1);
 
 void libspdm_test_send_receive_finish_case1(void **State)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint32_t session_id;
@@ -149,7 +149,7 @@ void libspdm_test_send_receive_finish_case1(void **State)
     status = libspdm_send_receive_finish(spdm_context, session_id, req_slot_id_param);
 
     free(data);
-    if (RETURN_NO_RESPONSE != status)
+    if (LIBSPDM_STATUS_BUSY_PEER != status)
     {
         libspdm_reset_message_f(spdm_context, session_info);
         libspdm_reset_message_k(spdm_context, session_info);
