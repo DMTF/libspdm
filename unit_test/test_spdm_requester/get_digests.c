@@ -1035,7 +1035,7 @@ void libspdm_test_requester_get_digests_case8(void **state)
 
     libspdm_zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
     status = libspdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
-    assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
+    assert_int_equal(status, LIBSPDM_STATUS_NOT_READY_PEER);
 }
 
 /**

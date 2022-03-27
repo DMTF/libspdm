@@ -4885,7 +4885,7 @@ void libspdm_test_requester_key_exchange_case8(void **state)
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
         &session_id, &heartbeat_period, &slot_id_param,
         measurement_hash);
-    assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
+    assert_int_equal(status, LIBSPDM_STATUS_NOT_READY_PEER);
     free(data);
 }
 

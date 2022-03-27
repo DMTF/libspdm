@@ -624,7 +624,7 @@ void libspdm_test_requester_get_version_case8(void **state)
     spdm_test_context->case_id = 0x8;
 
     status = libspdm_get_version(spdm_context, NULL, NULL);
-    assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
+    assert_int_equal(status, LIBSPDM_STATUS_NOT_READY_PEER);
 }
 
 /**

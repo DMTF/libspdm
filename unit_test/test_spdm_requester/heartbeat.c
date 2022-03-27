@@ -1385,7 +1385,7 @@ void libspdm_test_requester_heartbeat_case8(void **state)
     ->application_secret.response_data_sequence_number = 0;
 
     status = libspdm_heartbeat(spdm_context, session_id);
-    assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
+    assert_int_equal(status, LIBSPDM_STATUS_NOT_READY_PEER);
     free(data);
 }
 

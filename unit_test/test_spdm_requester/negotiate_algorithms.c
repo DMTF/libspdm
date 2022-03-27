@@ -1432,7 +1432,7 @@ void libspdm_test_requester_negotiate_algorithms_case8(void **state)
     libspdm_reset_message_a(spdm_context);
 
     status = libspdm_negotiate_algorithms(spdm_context);
-    assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
+    assert_int_equal(status, LIBSPDM_STATUS_NOT_READY_PEER);
 }
 
 void libspdm_test_requester_negotiate_algorithms_case9(void **state)
