@@ -25,9 +25,9 @@
  * @retval RETURN_SUCCESS               The SPDM request is sent successfully.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM request is sent to the device.
  **/
-return_status libspdm_send_request(void *context, const uint32_t *session_id,
-                                   bool is_app_message,
-                                   size_t request_size, const void *request)
+libspdm_return_t libspdm_send_request(void *context, const uint32_t *session_id,
+                                      bool is_app_message,
+                                      size_t request_size, const void *request)
 {
     libspdm_context_t *spdm_context;
     libspdm_return_t status;
@@ -108,10 +108,10 @@ return_status libspdm_send_request(void *context, const uint32_t *session_id,
  * @retval RETURN_SUCCESS               The SPDM response is received successfully.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is received from the device.
  **/
-return_status libspdm_receive_response(void *context, const uint32_t *session_id,
-                                       bool is_app_message,
-                                       size_t *response_size,
-                                       void **response)
+libspdm_return_t libspdm_receive_response(void *context, const uint32_t *session_id,
+                                          bool is_app_message,
+                                          size_t *response_size,
+                                          void **response)
 {
     libspdm_context_t *spdm_context;
     libspdm_return_t status;
@@ -216,16 +216,16 @@ error:
  * @retval RETURN_SUCCESS               The SPDM request is sent successfully.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM request is sent to the device.
  **/
-return_status libspdm_send_spdm_request(libspdm_context_t *spdm_context,
-                                        const uint32_t *session_id,
-                                        size_t request_size, const void *request)
+libspdm_return_t libspdm_send_spdm_request(libspdm_context_t *spdm_context,
+                                           const uint32_t *session_id,
+                                           size_t request_size, const void *request)
 {
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
 
     if ((spdm_context->connection_info.capability.data_transfer_size != 0) &&
         (request_size > spdm_context->connection_info.capability.data_transfer_size)) {
-        return RETURN_BAD_BUFFER_SIZE;
+        return LIBSPDM_STATUS_SEND_FAIL;
     }
 
     if ((session_id != NULL) &&
@@ -237,7 +237,7 @@ return_status libspdm_send_spdm_request(libspdm_context_t *spdm_context,
             spdm_context, *session_id);
         LIBSPDM_ASSERT(session_info != NULL);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
         }
         session_state = libspdm_secured_message_get_session_state(
             session_info->secured_message_context);
@@ -266,10 +266,10 @@ return_status libspdm_send_spdm_request(libspdm_context_t *spdm_context,
  * @retval RETURN_SUCCESS               The SPDM response is received successfully.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is received from the device.
  **/
-return_status libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
-                                            const uint32_t *session_id,
-                                            size_t *response_size,
-                                            void **response)
+libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
+                                               const uint32_t *session_id,
+                                               size_t *response_size,
+                                               void **response)
 {
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
@@ -283,7 +283,7 @@ return_status libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
             spdm_context, *session_id);
         LIBSPDM_ASSERT(session_info != NULL);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
         }
         session_state = libspdm_secured_message_get_session_state(
             session_info->secured_message_context);

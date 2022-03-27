@@ -40,7 +40,7 @@ return_status libspdm_requester_finish_test_send_message(void *spdm_context,
     ptr = (uint8_t *)request;
     switch (spdm_test_context->case_id) {
     case 0x1:
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_SEND_FAIL;
     case 0x2:
         m_libspdm_local_buffer_size = 0;
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer), &ptr[1],
@@ -1563,7 +1563,7 @@ void libspdm_test_requester_finish_case1(void **state)
     req_slot_id_param = 0;
     status = libspdm_send_receive_finish(spdm_context, session_id,
                                          req_slot_id_param);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_SEND_FAIL);
     free(data);
 }
 

@@ -66,9 +66,9 @@ return_status libspdm_handle_error_response_main(
  * @retval RETURN_SUCCESS               The GET_VERSION is sent and the VERSION is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status libspdm_get_version(libspdm_context_t *spdm_context,
-                                  uint8_t *version_number_entry_count,
-                                  spdm_version_number_t *version_number_entry);
+libspdm_return_t libspdm_get_version(libspdm_context_t *spdm_context,
+                                     uint8_t *version_number_entry_count,
+                                     spdm_version_number_t *version_number_entry);
 
 /**
  * This function sends GET_CAPABILITIES and receives CAPABILITIES.
@@ -82,7 +82,7 @@ return_status libspdm_get_version(libspdm_context_t *spdm_context,
  * @retval RETURN_SUCCESS               The GET_CAPABILITIES is sent and the CAPABILITIES is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status libspdm_get_capabilities(libspdm_context_t *spdm_context);
+libspdm_return_t libspdm_get_capabilities(libspdm_context_t *spdm_context);
 
 /**
  * This function sends NEGOTIATE_ALGORITHMS and receives ALGORITHMS.
@@ -92,7 +92,7 @@ return_status libspdm_get_capabilities(libspdm_context_t *spdm_context);
  * @retval RETURN_SUCCESS               The NEGOTIATE_ALGORITHMS is sent and the ALGORITHMS is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status libspdm_negotiate_algorithms(libspdm_context_t *spdm_context);
+libspdm_return_t libspdm_negotiate_algorithms(libspdm_context_t *spdm_context);
 
 /**
  * This function sends KEY_EXCHANGE and receives KEY_EXCHANGE_RSP for SPDM key exchange.
@@ -391,9 +391,9 @@ return_status libspdm_get_encap_response_key_update(void *context,
  * @retval RETURN_SUCCESS               The SPDM request is sent successfully.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM request is sent to the device.
  **/
-return_status libspdm_send_spdm_request(libspdm_context_t *spdm_context,
-                                        const uint32_t *session_id,
-                                        size_t request_size, const void *request);
+libspdm_return_t libspdm_send_spdm_request(libspdm_context_t *spdm_context,
+                                           const uint32_t *session_id,
+                                           size_t request_size, const void *request);
 
 /**
  * Receive an SPDM response from a device.
@@ -412,9 +412,9 @@ return_status libspdm_send_spdm_request(libspdm_context_t *spdm_context,
  * @retval RETURN_SUCCESS               The SPDM response is received successfully.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is received from the device.
  **/
-return_status libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
-                                            const uint32_t *session_id,
-                                            size_t *response_size,
-                                            void **response);
+libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
+                                               const uint32_t *session_id,
+                                               size_t *response_size,
+                                               void **response);
 
 #endif

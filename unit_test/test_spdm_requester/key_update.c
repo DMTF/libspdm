@@ -137,7 +137,7 @@ return_status libspdm_requester_key_update_test_send_message(
     spdm_test_context = libspdm_get_test_context();
     switch (spdm_test_context->case_id) {
     case 0x1:
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_SEND_FAIL;
     case 0x2: {
         return_status status;
         uint8_t *decoded_message;
@@ -3589,7 +3589,7 @@ void libspdm_test_requester_key_update_case1(void **state)
     status = libspdm_key_update(
         spdm_context, session_id, true);
 
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_SEND_FAIL);
 }
 
 /**

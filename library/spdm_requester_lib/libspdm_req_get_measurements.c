@@ -188,7 +188,7 @@ return_status libspdm_try_get_measurement(void *context, const uint32_t *session
     }
     status = libspdm_send_spdm_request(spdm_context, session_id,
                                        spdm_request_size, spdm_request);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_release_sender_buffer (spdm_context);
         return status;
     }
@@ -205,7 +205,7 @@ return_status libspdm_try_get_measurement(void *context, const uint32_t *session
     libspdm_zero_mem(spdm_response, spdm_response_size);
     status = libspdm_receive_spdm_response(
         spdm_context, session_id, &spdm_response_size, (void **)&spdm_response);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         goto receive_done;
     }
     if (spdm_response_size < sizeof(spdm_message_header_t)) {

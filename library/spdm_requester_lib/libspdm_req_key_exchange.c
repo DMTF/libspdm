@@ -185,7 +185,7 @@ return_status libspdm_try_send_receive_key_exchange(
     spdm_request_size = (size_t)ptr - (size_t)spdm_request;
     status = libspdm_send_spdm_request(spdm_context, NULL, spdm_request_size,
                                        spdm_request);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
             dhe_context);
@@ -205,7 +205,7 @@ return_status libspdm_try_send_receive_key_exchange(
     libspdm_zero_mem(spdm_response, spdm_response_size);
     status = libspdm_receive_spdm_response(
         spdm_context, NULL, &spdm_response_size, (void **)&spdm_response);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
             dhe_context);

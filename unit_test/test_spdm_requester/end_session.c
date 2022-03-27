@@ -46,7 +46,7 @@ return_status libspdm_requester_end_session_test_send_message(
     spdm_test_context = libspdm_get_test_context();
     switch (spdm_test_context->case_id) {
     case 0x1:
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_SEND_FAIL;
     case 0x2:
         return RETURN_SUCCESS;
     case 0x3:
@@ -737,7 +737,7 @@ void libspdm_test_requester_end_session_case1(void **state)
         LIBSPDM_SESSION_STATE_ESTABLISHED);
 
     status = libspdm_send_receive_end_session(spdm_context, session_id, 0);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_SEND_FAIL);
     free(data);
 }
 

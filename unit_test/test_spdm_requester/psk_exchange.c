@@ -61,7 +61,7 @@ return_status libspdm_requester_psk_exchange_test_send_message(
     header_size = sizeof(libspdm_test_message_header_t);
     switch (spdm_test_context->case_id) {
     case 0x1:
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_SEND_FAIL;
     case 0x2:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_psk_exchange_request_size(
@@ -1164,7 +1164,7 @@ void libspdm_test_requester_psk_exchange_case1(void **state)
         spdm_context,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_SEND_FAIL);
     free(data);
 }
 

@@ -56,7 +56,7 @@ return_status libspdm_requester_respond_if_ready(libspdm_context_t *spdm_context
     spdm_request_size = sizeof(spdm_response_if_ready_request_t);
     status = libspdm_send_spdm_request(spdm_context, session_id,
                                        spdm_request_size, spdm_request);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_release_sender_buffer (spdm_context);
         /* need acquire response buffer, so that the caller can release it */
         libspdm_acquire_receiver_buffer (spdm_context, response_size, response);
@@ -74,7 +74,7 @@ return_status libspdm_requester_respond_if_ready(libspdm_context_t *spdm_context
     libspdm_zero_mem(*response, *response_size);
     status = libspdm_receive_spdm_response(spdm_context, session_id,
                                            response_size, response);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return status;
     }
     spdm_response = (void *)(*response);

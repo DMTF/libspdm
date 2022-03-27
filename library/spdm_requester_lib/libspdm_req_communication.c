@@ -18,10 +18,10 @@
  * @retval RETURN_SUCCESS               The connection is initialized successfully.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-return_status libspdm_init_connection(void *context,
-                                      bool get_version_only)
+libspdm_return_t libspdm_init_connection(void *context,
+                                         bool get_version_only)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_context_t *spdm_context;
 
     spdm_context = context;

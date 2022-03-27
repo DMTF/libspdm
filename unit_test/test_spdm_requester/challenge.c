@@ -24,7 +24,7 @@ return_status libspdm_requester_challenge_test_send_message(void *spdm_context,
     ptr = (uint8_t *)request;
     switch (spdm_test_context->case_id) {
     case 0x1:
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_SEND_FAIL;
     case 0x2:
         m_libspdm_local_buffer_size = 0;
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer), &ptr[1],
@@ -1450,7 +1450,7 @@ void libspdm_test_requester_challenge_case1(void **state)
         spdm_context, 0,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
         measurement_hash, NULL);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_SEND_FAIL);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_c.buffer_size, 0);
 #endif
