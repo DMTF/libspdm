@@ -44,15 +44,15 @@ typedef struct {
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_try_challenge(void *context, uint8_t slot_id,
-                                    uint8_t measurement_hash_type,
-                                    void *measurement_hash,
-                                    uint8_t *slot_mask,
-                                    const void *requester_nonce_in,
-                                    void *requester_nonce,
-                                    void *responder_nonce)
+libspdm_return_t libspdm_try_challenge(void *context, uint8_t slot_id,
+                                       uint8_t measurement_hash_type,
+                                       void *measurement_hash,
+                                       uint8_t *slot_mask,
+                                       const void *requester_nonce_in,
+                                       void *requester_nonce,
+                                       void *responder_nonce)
 {
-    return_status status;
+    libspdm_return_t status;
     bool result;
     spdm_challenge_request_t *spdm_request;
     size_t spdm_request_size;
@@ -82,16 +82,16 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
     if (!libspdm_is_capabilities_flag_supported(
             spdm_context, true, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP)) {
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
     if (spdm_context->connection_info.connection_state <
         LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
 
     if ((slot_id == 0xFF) &&
         (spdm_context->local_context.peer_cert_chain_provision_size == 0)) {
-        return RETURN_INVALID_PARAMETER;
+        return LIBSPDM_STATUS_INVALID_PARAMETER;
     }
 
     spdm_context->error_state = LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
@@ -110,7 +110,7 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
     if (requester_nonce_in == NULL) {
         if(!libspdm_get_random_number(SPDM_NONCE_SIZE, spdm_request->nonce)) {
             libspdm_release_sender_buffer (spdm_context);
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_LOW_ENTROPY;
         }
     } else {
         libspdm_copy_mem(spdm_request->nonce, sizeof(spdm_request->nonce),
@@ -147,11 +147,11 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
         goto receive_done;
     }
     if (spdm_response_size < sizeof(spdm_message_header_t)) {
-        status = RETURN_DEVICE_ERROR;
+        status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
     }
     if (spdm_response->header.spdm_version != spdm_request->header.spdm_version) {
-        status = RETURN_DEVICE_ERROR;
+        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
     if (spdm_response->header.request_response_code == SPDM_ERROR) {
@@ -160,26 +160,38 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
             &spdm_response_size,
             (void **)&spdm_response, SPDM_CHALLENGE, SPDM_CHALLENGE_AUTH,
             sizeof(libspdm_challenge_auth_response_max_t));
-        if (RETURN_ERROR(status)) {
+
+        /* TODO: Replace this with LIBSPDM_RET_ON_ERR once libspdm_handle_simple_error_response
+         * uses the new error codes. */
+        if (status == RETURN_DEVICE_ERROR) {
+            status = LIBSPDM_STATUS_ERROR_PEER;
+            goto receive_done;
+        }
+        else if (status == RETURN_NO_RESPONSE) {
+            status = LIBSPDM_STATUS_BUSY_PEER;
+            goto receive_done;
+        }
+        else if (status == LIBSPDM_STATUS_RESYNCH_PEER) {
+            status = LIBSPDM_STATUS_RESYNCH_PEER;
             goto receive_done;
         }
     } else if (spdm_response->header.request_response_code !=
                SPDM_CHALLENGE_AUTH) {
-        status = RETURN_DEVICE_ERROR;
+        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
     if (spdm_response_size < sizeof(spdm_challenge_auth_response_t)) {
-        status = RETURN_DEVICE_ERROR;
+        status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
     }
     auth_attribute = spdm_response->header.param1;
     if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_11 && slot_id == 0xFF) {
         if ((auth_attribute & SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_SLOT_ID_MASK) != 0xF) {
-            status = RETURN_DEVICE_ERROR;
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             goto receive_done;
         }
         if (spdm_response->header.param2 != 0) {
-            status = RETURN_DEVICE_ERROR;
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             goto receive_done;
         }
     } else {
@@ -187,11 +199,11 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
              (auth_attribute & SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_SLOT_ID_MASK) != slot_id) ||
             (spdm_response->header.spdm_version == SPDM_MESSAGE_VERSION_10 &&
              auth_attribute != slot_id)) {
-            status = RETURN_DEVICE_ERROR;
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             goto receive_done;
         }
         if ((spdm_response->header.param2 & (1 << slot_id)) == 0) {
-            status = RETURN_DEVICE_ERROR;
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             goto receive_done;
         }
     }
@@ -200,7 +212,7 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
                 spdm_context, true,
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP)) {
-            status = RETURN_DEVICE_ERROR;
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             goto receive_done;
         }
     }
@@ -215,7 +227,7 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
         hash_size + SPDM_NONCE_SIZE +
         measurement_summary_hash_size +
         sizeof(uint16_t)) {
-        status = RETURN_DEVICE_ERROR;
+        status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
     }
 
@@ -231,7 +243,7 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
     if (!result) {
         spdm_context->error_state =
             LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
-        status = RETURN_SECURITY_VIOLATION;
+        status = LIBSPDM_STATUS_VERIF_FAIL;
         goto receive_done;
     }
 
@@ -254,7 +266,7 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
 
     opaque_length = *(uint16_t *)ptr;
     if (opaque_length > SPDM_MAX_OPAQUE_DATA_SIZE) {
-        status = RETURN_SECURITY_VIOLATION;
+        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
     ptr += sizeof(uint16_t);
@@ -264,14 +276,14 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
     status = libspdm_append_message_c(spdm_context, spdm_request,
                                       spdm_request_size);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        status = RETURN_SECURITY_VIOLATION;
+        status = LIBSPDM_STATUS_BUFFER_FULL;
         goto receive_done;
     }
     if (spdm_response_size <
         sizeof(spdm_challenge_auth_response_t) + hash_size +
         SPDM_NONCE_SIZE + measurement_summary_hash_size +
         sizeof(uint16_t) + opaque_length + signature_size) {
-        status = RETURN_SECURITY_VIOLATION;
+        status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
     }
     spdm_response_size = sizeof(spdm_challenge_auth_response_t) +
@@ -282,7 +294,7 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
                                       spdm_response_size - signature_size);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_reset_message_c(spdm_context);
-        status = RETURN_SECURITY_VIOLATION;
+        status = LIBSPDM_STATUS_BUFFER_FULL;
         goto receive_done;
     }
 
@@ -300,7 +312,7 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
         libspdm_reset_message_c(spdm_context);
         spdm_context->error_state =
             LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
-        status = RETURN_SECURITY_VIOLATION;
+        status = LIBSPDM_STATUS_VERIF_FAIL;
         goto receive_done;
     }
 
@@ -327,16 +339,16 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
             libspdm_reset_message_c(spdm_context);
             spdm_context->error_state =
                 LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
-            return RETURN_SECURITY_VIOLATION;
+            return status;
         }
         spdm_context->connection_info.connection_state =
             LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     }
 
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
-    status = RETURN_SUCCESS;
+    status = LIBSPDM_STATUS_SUCCESS;
 
 receive_done:
     libspdm_release_receiver_buffer (spdm_context);
@@ -362,14 +374,14 @@ receive_done:
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_challenge(void *context, uint8_t slot_id,
-                                uint8_t measurement_hash_type,
-                                void *measurement_hash,
-                                uint8_t *slot_mask)
+libspdm_return_t libspdm_challenge(void *context, uint8_t slot_id,
+                                   uint8_t measurement_hash_type,
+                                   void *measurement_hash,
+                                   uint8_t *slot_mask)
 {
     libspdm_context_t *spdm_context;
     size_t retry;
-    return_status status;
+    libspdm_return_t status;
 
     spdm_context = context;
     spdm_context->crypto_request = true;
@@ -378,7 +390,7 @@ return_status libspdm_challenge(void *context, uint8_t slot_id,
         status = libspdm_try_challenge(spdm_context, slot_id,
                                        measurement_hash_type,
                                        measurement_hash, slot_mask, NULL, NULL, NULL);
-        if (RETURN_NO_RESPONSE != status) {
+        if (LIBSPDM_STATUS_BUSY_PEER != status) {
             return status;
         }
     } while (retry-- != 0);
@@ -408,17 +420,17 @@ return_status libspdm_challenge(void *context, uint8_t slot_id,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_challenge_ex(void *context, uint8_t slot_id,
-                                   uint8_t measurement_hash_type,
-                                   void *measurement_hash,
-                                   uint8_t *slot_mask,
-                                   const void *requester_nonce_in,
-                                   void *requester_nonce,
-                                   void *responder_nonce)
+libspdm_return_t libspdm_challenge_ex(void *context, uint8_t slot_id,
+                                      uint8_t measurement_hash_type,
+                                      void *measurement_hash,
+                                      uint8_t *slot_mask,
+                                      const void *requester_nonce_in,
+                                      void *requester_nonce,
+                                      void *responder_nonce)
 {
     libspdm_context_t *spdm_context;
     size_t retry;
-    return_status status;
+    libspdm_return_t status;
 
     spdm_context = context;
     spdm_context->crypto_request = true;
@@ -430,7 +442,7 @@ return_status libspdm_challenge_ex(void *context, uint8_t slot_id,
                                        slot_mask,
                                        requester_nonce_in,
                                        requester_nonce, responder_nonce);
-        if (RETURN_NO_RESPONSE != status) {
+        if (LIBSPDM_STATUS_BUSY_PEER != status) {
             return status;
         }
     } while (retry-- != 0);
