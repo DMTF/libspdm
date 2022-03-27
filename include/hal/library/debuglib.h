@@ -143,32 +143,6 @@ void libspdm_debug_assert(const char *file_name, size_t line_number,
 #endif
 
 /**
- * Macro that calls libspdm_debug_assert() if a return_status evaluates to an error code.
- *
- * If MDEPKG_NDEBUG is not defined and the DEBUG_PROPERTY_DEBUG_ASSERT_ENABLED
- * bit of PcdDebugProperyMask is set, then this macro evaluates the
- * return_status value specified by status_parameter.  If status_parameter is an
- * error code, then libspdm_debug_assert() is called passing in the source filename,
- * source line number, and status_parameter.
- *
- * @param  status_parameter  return_status value to evaluate.
- *
- **/
-#if !defined(MDEPKG_NDEBUG)
-#define LIBSPDM_ASSERT_RETURN_ERROR(status_parameter)                                  \
-    do {                                                                   \
-        if (RETURN_ERROR(status_parameter)) {                          \
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,                                    \
-                           "\nLIBSPDM_ASSERT_RETURN_ERROR (status = %p)\n",        \
-                           status_parameter));                             \
-            _LIBSPDM_ASSERT(!RETURN_ERROR(status_parameter));              \
-        }                                                              \
-    } while (false)
-#else
-#define LIBSPDM_ASSERT_RETURN_ERROR(status_parameter)
-#endif
-
-/**
  * Macro that marks the beginning of debug source code.
  *
  * If the DEBUG_PROPERTY_DEBUG_CODE_ENABLED bit of PcdDebugProperyMask is set,
