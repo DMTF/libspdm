@@ -167,4 +167,101 @@
 #define LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP 1
 #endif
 
+/*
+ * MinDataTransferSize = 42
+ *
+ * H = HashLen = HmacLen = [32, 64]
+ * S = SigLen = [64, 512]
+ * D = ExchangeDataLen = [64, 512]
+ * R = RequesterContextLen >= 32
+ * R = ResponderContextLen >= 0
+ * O = OpaqueDataLen <= 1024
+ *
+ * Max Chunk No = 1, if (message size <= 42)
+ * Max Chunk No = [(message size + 4) / 30] roundup, if (message size > 42)
+ *
+ * +==========================+==========================================+=========+
+ * |  Command                 |   Size                                   |MaxChunk |
+ * +==========================+==========================================+=========+
+ * | GET_VERSION              | 4                                        | 1       |
+ * | VERSION {1.0, 1.1, 1.2}  | 6 + 2 * 3 = 12                           | 1       |
+ * +--------------------------+------------------------------------------+---------+
+ * | GET_CAPABILITIES 1.2     | 20                                       | 1       |
+ * | CAPABILITIES 1.2         | 20                                       | 1       |
+ * +--------------------------+------------------------------------------+---------+
+ * | ERROR                    | 4                                        | 1       |
+ * | ERROR(ResponseTooLarge)  | 4 + 4 = 8                                | 1       |
+ * | ERROR(LargeResponse)     | 4 + 1 = 5                                | 1       |
+ * | ERROR(ResponseNotReady)  | 4 + 4 = 8                                | 1       |
+ * +--------------------------+------------------------------------------+---------+
+ * | CHUNK_SEND header        | 12 + L0 (0 or 4)                         | 1       |
+ * | CHUNK_RESPONSE header    | 12 + L0 (0 or 4)                         | 1       |
+ * +==========================+==========================================+=========+
+ * | NEGOTIATE_ALGORITHMS 1.2 | 32 + 4 * 4 = 48                          | 2       |
+ * | ALGORITHMS 1.2           | 36 + 4 * 4 = 52                          | 2       |
+ * +--------------------------+------------------------------------------+---------+
+ * | GET_DIGESTS 1.2          | 4                                        | 1       |
+ * | DIGESTS 1.2              | 4 + H * SlotNum = [36, 516]              | [1, 18] |
+ * +--------------------------+------------------------------------------+---------+
+ * | GET_CERTIFICATE 1.2      | 8                                        | 1       |
+ * | CERTIFICATE 1.2          | 8 + PortionLen                           | [1, ]   |
+ * +--------------------------+------------------------------------------+---------+
+ * | CHALLENGE 1.2            | 40                                       | 1       |
+ * | CHALLENGE_AUTH 1.2       | 38 + H * 2 + S [+ O] = [166, 678]        | [6, 23] |
+ * +--------------------------+------------------------------------------+---------+
+ * | GET_MEASUREMENTS 1.2     | 5 + Nounce (0 or 32)                     | 1       |
+ * | MEASUREMENTS 1.2         | 42 + MeasRecLen (+ S) [+ O] = [106, 554] | [4, 19] |
+ * +--------------------------+------------------------------------------+---------+
+ * | KEY_EXCHANGE 1.2         | 42 + D [+ O] = [106, 554]                | [4, 19] |
+ * | KEY_EXCHANGE_RSP 1.2     | 42 + D + H + S (+ H) [+ O] = [234, 1194] | [8, 40] |
+ * +--------------------------+------------------------------------------+---------+
+ * | FINISH 1.2               | 4 (+ S) + H = [100, 580]                 | [4, 20] |
+ * | FINISH_RSP 1.2           | 4 (+ H) = [36, 69]                       | [1, 3]  |
+ * +--------------------------+------------------------------------------+---------+
+ * | PSK_EXCHANGE 1.2         | 12 [+ PSKHint] + R [+ O] = 44            | 2       |
+ * | PSK_EXCHANGE_RSP 1.2     | 12 + R + H (+ H) [+ O] = [108, 172]      | [4, 6]  |
+ * +--------------------------+------------------------------------------+---------+
+ * | PSK_FINISH 1.2           | 4 + H = [36, 68]                         | [1, 3]  |
+ * | PSK_FINISH_RSP 1.2       | 4                                        | 1       |
+ * +--------------------------+------------------------------------------+---------+
+ * | GET_CSR 1.2              | 8 + RequesterInfoLen [+ O]               | [1, ]   |
+ * | CSR 1.2                  | 8 + CSRLength                            | [1, ]   |
+ * +--------------------------+------------------------------------------+---------+
+ * | SET_CERTIFICATE 1.2      | 4 + CertChainLen                         | [1, ]   |
+ * | SET_CERTIFICATE_RSP 1.2  | 4                                        | 1       |
+ * +==========================+==========================================+=========+
+ */
+
+/* Maximum size of a large SPDM message.
+ * If chunk is unsupported, it must be same as LIBSPDM_DATA_TRANSFER_SIZE.
+ * If chunk is supported, it must be larger than LIBSPDM_DATA_TRANSFER_SIZE.
+ * It matches MaxSPDMmsgSize in SPDM specification. */
+#ifndef LIBSPDM_MAX_SPDM_MSG_SIZE
+#define LIBSPDM_MAX_SPDM_MSG_SIZE LIBSPDM_MAX_MESSAGE_BUFFER_SIZE
+#endif
+
+/* Maximum size of a single SPDM message.
+ * It matches DataTransferSize in SPDM specification. */
+#ifndef LIBSPDM_DATA_TRANSFER_SIZE
+#define LIBSPDM_DATA_TRANSFER_SIZE LIBSPDM_MAX_MESSAGE_BUFFER_SIZE
+#endif
+
+/* Required sender/receive buffer in device io.
+ * NOTE: This is transport specific. Below configuration is just an example.
+ * +-------+--------+---------------------------+------+------+---+--------+-----+
+ * | TYPE  |TransHdr|      EncryptionHeader     |AppHdr|Random|MAC|AlignPad|FINAL|
+ * |       |        |SessionId|SeqNum|Len|AppLen|      |      |   |        |     |
+ * +-------+--------+---------------------------+------+------+---+--------+-----+
+ * | MCTP  |    1   |    4    |   2  | 2 |   2  |   1  |  32  | 12|   0    |  56 |
+ * |PCI_DOE|    8   |    4    |   0  | 2 |   2  |   0  |   0  | 12|   3    |  31 |
+ * +-------+--------+---------------------------+------+------+---+--------+-----+
+ */
+#ifndef LIBSPDM_TRANSPORT_ADDITIONAL_SIZE
+#define LIBSPDM_TRANSPORT_ADDITIONAL_SIZE    64
+#endif
+#ifndef LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE
+#define LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE (LIBSPDM_DATA_TRANSFER_SIZE + \
+                                            LIBSPDM_TRANSPORT_ADDITIONAL_SIZE)
+#endif
+
 #endif

@@ -21,15 +21,16 @@
  * | ApplicationData |-----------------------------------------------------
  * +-----------------+                                                     |
  *                                                                         V
- * +---------------------------------+--------------------------=-------+-------+------+---+
- * |SPDM_SECURED_MESSAGE_ADATA_HEADER|spdm_secured_message_cipher_header_t|AppData|Random|MAC|
- * | session_id | SeqNum (O) | length |       application_data_length      |       |  (O) |   |
+ * +---------------------------------+----------------------------------+-------+------+---+
+ * |SPDM_SECURED_MESSAGE_ADATA_HEADER|SPDM_SECURED_MESSAGE_CIPHER_HEADER|AppData|Random|MAC|
+ * | SessionId | SeqNum (O) | Length |       ApplicationDataLength      |       |  (O) |   |
  * +---------------------------------+----------------------------------+-------+------+---+
  * |                                 |                                                 |   |
  *  --------------------------------- ------------------------------------------------- ---
  *                  |                                         |                          |
  *                  V                                         V                          V
- *            AssociatedData                            encrypted_data                 AeadTag*/
+ *            AssociatedData                            EncryptedData                 AeadTag
+ */
 
 /* (O) means Optional or Transport Layer Specific.*/
 
@@ -41,13 +42,14 @@
  *                                      V
  * +---------------------------------+-------+---+
  * |SPDM_SECURED_MESSAGE_ADATA_HEADER|AppData|MAC|
- * | session_id | SeqNum (T) | length |       |   |
+ * | SessionId | SeqNum (T) | length |       |   |
  * +---------------------------------+-------+---+
  * |                                         |   |
  *  ----------------------------------------- ---
  *                      |                     |
  *                      V                     V
- *                AssociatedData           AeadTag*/
+ *                AssociatedData           AeadTag
+ */
 
 
 typedef struct {
