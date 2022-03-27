@@ -3931,7 +3931,7 @@ void libspdm_test_requester_key_update_case8(void **state)
     status = libspdm_key_update(
         spdm_context, session_id, true);
 
-    assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
+    assert_int_equal(status, LIBSPDM_STATUS_NOT_READY_PEER);
     assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
@@ -4675,7 +4675,7 @@ void libspdm_test_requester_key_update_case21(void **state)
     status = libspdm_key_update(
         spdm_context, session_id, true);
 
-    assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
+    assert_int_equal(status, LIBSPDM_STATUS_NOT_READY_PEER);
     assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,

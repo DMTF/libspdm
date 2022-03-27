@@ -1959,7 +1959,7 @@ void libspdm_test_requester_challenge_case8(void **state)
         spdm_context, 0,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
         measurement_hash, NULL);
-    assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
+    assert_int_equal(status, LIBSPDM_STATUS_NOT_READY_PEER);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal (spdm_context->transcript.message_c.buffer_size, 0);
 #endif

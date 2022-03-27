@@ -1680,7 +1680,7 @@ void libspdm_test_requester_psk_finish_case8(void **state)
     libspdm_secured_message_set_dummy_finished_key (session_info->secured_message_context);
 
     status = libspdm_send_receive_psk_finish(spdm_context, session_id);
-    assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
+    assert_int_equal(status, LIBSPDM_STATUS_NOT_READY_PEER);
     free(data);
 }
 

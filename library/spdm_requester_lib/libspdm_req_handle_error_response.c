@@ -114,12 +114,8 @@ libspdm_return_t libspdm_handle_simple_error_response(void *context,
 
     spdm_context = context;
 
-
-    /* NOT_READY is treated as error here.
-     * Use libspdm_handle_error_response_main to handle NOT_READY message in long latency command.*/
-
     if (error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) {
-        return LIBSPDM_STATUS_ERROR_PEER;
+        return LIBSPDM_STATUS_NOT_READY_PEER;
     }
 
     if (error_code == SPDM_ERROR_CODE_BUSY) {

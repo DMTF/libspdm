@@ -2228,7 +2228,7 @@ void libspdm_test_requester_finish_case8(void **state)
     req_slot_id_param = 0;
     status = libspdm_send_receive_finish(spdm_context, session_id,
                                          req_slot_id_param);
-    assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
+    assert_int_equal(status, LIBSPDM_STATUS_NOT_READY_PEER);
     free(data);
 }
 
