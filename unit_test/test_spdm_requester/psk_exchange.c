@@ -49,7 +49,7 @@ size_t libspdm_test_get_psk_exchange_request_size(const void *spdm_context,
     return message_size;
 }
 
-return_status libspdm_requester_psk_exchange_test_send_message(
+libspdm_return_t libspdm_requester_psk_exchange_test_send_message(
     void *spdm_context, size_t request_size, const void *request,
     uint64_t timeout)
 {
@@ -70,7 +70,7 @@ return_status libspdm_requester_psk_exchange_test_send_message(
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
                          (uint8_t *)request + header_size, message_size);
         m_libspdm_local_buffer_size += message_size;
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x3:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_psk_exchange_request_size(
@@ -79,7 +79,7 @@ return_status libspdm_requester_psk_exchange_test_send_message(
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
                          (uint8_t *)request + header_size, message_size);
         m_libspdm_local_buffer_size += message_size;
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x4:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_psk_exchange_request_size(
@@ -88,7 +88,7 @@ return_status libspdm_requester_psk_exchange_test_send_message(
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
                          (uint8_t *)request + header_size, message_size);
         m_libspdm_local_buffer_size += message_size;
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x5:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_psk_exchange_request_size(
@@ -97,7 +97,7 @@ return_status libspdm_requester_psk_exchange_test_send_message(
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
                          (uint8_t *)request + header_size, message_size);
         m_libspdm_local_buffer_size += message_size;
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x6:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_psk_exchange_request_size(
@@ -106,7 +106,7 @@ return_status libspdm_requester_psk_exchange_test_send_message(
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
                          (uint8_t *)request + header_size, message_size);
         m_libspdm_local_buffer_size += message_size;
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x7:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_psk_exchange_request_size(
@@ -115,7 +115,7 @@ return_status libspdm_requester_psk_exchange_test_send_message(
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
                          (uint8_t *)request + header_size, message_size);
         m_libspdm_local_buffer_size += message_size;
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x8:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_psk_exchange_request_size(
@@ -124,7 +124,7 @@ return_status libspdm_requester_psk_exchange_test_send_message(
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
                          (uint8_t *)request + header_size, message_size);
         m_libspdm_local_buffer_size += message_size;
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x9: {
         static size_t sub_index = 0;
         if (sub_index == 0) {
@@ -138,7 +138,7 @@ return_status libspdm_requester_psk_exchange_test_send_message(
             sub_index++;
         }
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0xA:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_psk_exchange_request_size(
@@ -147,7 +147,7 @@ return_status libspdm_requester_psk_exchange_test_send_message(
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
                          (uint8_t *)request + header_size, message_size);
         m_libspdm_local_buffer_size += message_size;
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0xB:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_psk_exchange_request_size(
@@ -156,7 +156,7 @@ return_status libspdm_requester_psk_exchange_test_send_message(
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
                          (uint8_t *)request + header_size, message_size);
         m_libspdm_local_buffer_size += message_size;
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0xC:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_psk_exchange_request_size(
@@ -164,13 +164,13 @@ return_status libspdm_requester_psk_exchange_test_send_message(
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
                          (uint8_t *)request + header_size, message_size);
         m_libspdm_local_buffer_size += message_size;
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     default:
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_SEND_FAIL;
     }
 }
 
-return_status libspdm_requester_psk_exchange_test_receive_message(
+libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
     void *spdm_context, size_t *response_size,
     void **response, uint64_t timeout)
 {
@@ -179,7 +179,7 @@ return_status libspdm_requester_psk_exchange_test_receive_message(
     spdm_test_context = libspdm_get_test_context();
     switch (spdm_test_context->case_id) {
     case 0x1:
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_RECEIVE_FAIL;
 
     case 0x2: {
         spdm_psk_exchange_response_t *spdm_response;
@@ -302,7 +302,7 @@ return_status libspdm_requester_psk_exchange_test_receive_message(
                                               spdm_response, response_size,
                                               response);
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x3: {
         spdm_psk_exchange_response_t *spdm_response;
@@ -423,7 +423,7 @@ return_status libspdm_requester_psk_exchange_test_receive_message(
                                               spdm_response, response_size,
                                               response);
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x4: {
         spdm_error_response_t *spdm_response;
@@ -444,7 +444,7 @@ return_status libspdm_requester_psk_exchange_test_receive_message(
                                               spdm_response,
                                               response_size, response);
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x5: {
         spdm_error_response_t *spdm_response;
@@ -465,7 +465,7 @@ return_status libspdm_requester_psk_exchange_test_receive_message(
                                               spdm_response,
                                               response_size, response);
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x6: {
         static size_t sub_index1 = 0;
@@ -621,7 +621,7 @@ return_status libspdm_requester_psk_exchange_test_receive_message(
                 spdm_response, response_size, response);
         }
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x7: {
         spdm_error_response_t *spdm_response;
@@ -642,7 +642,7 @@ return_status libspdm_requester_psk_exchange_test_receive_message(
                                               spdm_response,
                                               response_size, response);
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x8: {
         spdm_error_response_data_response_not_ready_t *spdm_response;
@@ -669,7 +669,7 @@ return_status libspdm_requester_psk_exchange_test_receive_message(
                                               spdm_response,
                                               response_size, response);
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x9: {
         static size_t sub_index2 = 0;
@@ -832,7 +832,7 @@ return_status libspdm_requester_psk_exchange_test_receive_message(
                 spdm_response, response_size, response);
         }
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0xA:
     {
@@ -869,7 +869,7 @@ return_status libspdm_requester_psk_exchange_test_receive_message(
             error_code = LIBSPDM_ERROR_CODE_RESERVED_FD;
         }
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0xB: {
         spdm_psk_exchange_response_t *spdm_response;
@@ -990,7 +990,7 @@ return_status libspdm_requester_psk_exchange_test_receive_message(
                                               spdm_response, response_size,
                                               response);
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0xC: {
         spdm_psk_exchange_response_t *spdm_response;
@@ -1101,16 +1101,16 @@ return_status libspdm_requester_psk_exchange_test_receive_message(
                                               spdm_response, response_size,
                                               response);
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     default:
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_RECEIVE_FAIL;
     }
 }
 
 void libspdm_test_requester_psk_exchange_case1(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint32_t session_id;
@@ -1170,7 +1170,7 @@ void libspdm_test_requester_psk_exchange_case1(void **state)
 
 void libspdm_test_requester_psk_exchange_case2(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint32_t session_id;
@@ -1227,7 +1227,7 @@ void libspdm_test_requester_psk_exchange_case2(void **state)
         spdm_context,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(session_id, 0xFFFFFFFF);
     assert_int_equal(
         libspdm_secured_message_get_session_state(
@@ -1238,7 +1238,7 @@ void libspdm_test_requester_psk_exchange_case2(void **state)
 
 void libspdm_test_requester_psk_exchange_case3(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint32_t session_id;
@@ -1292,13 +1292,13 @@ void libspdm_test_requester_psk_exchange_case3(void **state)
         spdm_context,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
-    assert_int_equal(status, RETURN_UNSUPPORTED);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_STATE_LOCAL);
     free(data);
 }
 
 void libspdm_test_requester_psk_exchange_case4(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint32_t session_id;
@@ -1352,13 +1352,13 @@ void libspdm_test_requester_psk_exchange_case4(void **state)
         spdm_context,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
     free(data);
 }
 
 void libspdm_test_requester_psk_exchange_case5(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint32_t session_id;
@@ -1412,13 +1412,13 @@ void libspdm_test_requester_psk_exchange_case5(void **state)
         spdm_context,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
-    assert_int_equal(status, RETURN_NO_RESPONSE);
+    assert_int_equal(status, LIBSPDM_STATUS_BUSY_PEER);
     free(data);
 }
 
 void libspdm_test_requester_psk_exchange_case6(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint32_t session_id;
@@ -1472,7 +1472,7 @@ void libspdm_test_requester_psk_exchange_case6(void **state)
         spdm_context,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(session_id, 0xFFFEFFFE);
     assert_int_equal(
         libspdm_secured_message_get_session_state(
@@ -1483,7 +1483,7 @@ void libspdm_test_requester_psk_exchange_case6(void **state)
 
 void libspdm_test_requester_psk_exchange_case7(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint32_t session_id;
@@ -1545,7 +1545,7 @@ void libspdm_test_requester_psk_exchange_case7(void **state)
 
 void libspdm_test_requester_psk_exchange_case8(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint32_t session_id;
@@ -1599,13 +1599,13 @@ void libspdm_test_requester_psk_exchange_case8(void **state)
         spdm_context,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
     free(data);
 }
 
 void libspdm_test_requester_psk_exchange_case9(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint32_t session_id;
@@ -1659,7 +1659,7 @@ void libspdm_test_requester_psk_exchange_case9(void **state)
         spdm_context,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(session_id, 0xFFFDFFFD);
     assert_int_equal(
         libspdm_secured_message_get_session_state(
@@ -1669,7 +1669,7 @@ void libspdm_test_requester_psk_exchange_case9(void **state)
 }
 
 void libspdm_test_requester_psk_exchange_case10(void **state) {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
     uint32_t session_id;
@@ -1720,8 +1720,7 @@ void libspdm_test_requester_psk_exchange_case10(void **state) {
                                                     0,
                                                     &session_id, &heartbeat_period,
                                                     measurement_hash);
-        /* assert_int_equal (status, RETURN_DEVICE_ERROR);*/
-        LIBSPDM_ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
+        LIBSPDM_ASSERT_INT_EQUAL_CASE (status, LIBSPDM_STATUS_ERROR_PEER, error_code);
 
         error_code++;
         if(error_code == SPDM_ERROR_CODE_BUSY) { /*busy is treated in cases 5 and 6*/
@@ -1740,7 +1739,7 @@ void libspdm_test_requester_psk_exchange_case10(void **state) {
 
 void libspdm_test_requester_psk_exchange_case11(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint32_t session_id;
@@ -1806,7 +1805,7 @@ void libspdm_test_requester_psk_exchange_case11(void **state)
         spdm_context,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(session_id, 0xFFFFFFFF);
     assert_int_equal(
         libspdm_secured_message_get_session_state(
@@ -1825,7 +1824,7 @@ void libspdm_test_requester_psk_exchange_case11(void **state)
 
 void libspdm_test_requester_psk_exchange_case12(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint32_t session_id;
@@ -1878,7 +1877,7 @@ void libspdm_test_requester_psk_exchange_case12(void **state)
         spdm_context,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(session_id, 0xFFFFFFFF);
     assert_int_equal(
         libspdm_secured_message_get_session_state(

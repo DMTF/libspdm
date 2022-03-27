@@ -5238,7 +5238,6 @@ void libspdm_test_requester_get_measurements_case33(void **state) {
         status = libspdm_get_measurement (spdm_context, NULL, request_attribute, 1, 0, NULL,
                                           &number_of_block, &measurement_record_length,
                                           measurement_record);
-        /* assert_int_equal (status, RETURN_DEVICE_ERROR);*/
         LIBSPDM_ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
         /* assert_int_equal (spdm_context->transcript.message_m.buffer_size, 0);*/

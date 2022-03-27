@@ -199,7 +199,7 @@ void libspdm_test_responder_encap_key_update_case4(void **state)
     status = libspdm_process_encap_response_key_update(spdm_context, spdm_response_size,
                                                        &spdm_response, &need_continue);
 
-    assert_int_equal(status, LIBSPDM_STATUS_UNSUPPORTED_CAP);
+    assert_int_equal(status, LIBSPDM_STATUS_SESSION_MSG_ERROR);
 }
 
 /**

@@ -226,7 +226,7 @@ return_status libspdm_handle_error_response_main(
     if ((spdm_response->param1 == SPDM_ERROR_CODE_DECRYPT_ERROR) &&
         (session_id != NULL)) {
         libspdm_free_session_id(spdm_context, *session_id);
-        return RETURN_SECURITY_VIOLATION;
+        return LIBSPDM_STATUS_SESSION_MSG_ERROR;
     } else if(spdm_response->param1 == SPDM_ERROR_CODE_RESPONSE_NOT_READY) {
         return libspdm_handle_response_not_ready(spdm_context, session_id,
                                                  response_size, response,

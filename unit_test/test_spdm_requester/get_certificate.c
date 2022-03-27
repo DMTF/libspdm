@@ -156,7 +156,7 @@ return_status libspdm_requester_get_certificate_test_send_message(
     case 0x18:
         return LIBSPDM_STATUS_SUCCESS;
     default:
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_SEND_FAIL;
     }
 }
 
@@ -169,7 +169,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
     spdm_test_context = libspdm_get_test_context();
     switch (spdm_test_context->case_id) {
     case 0x1:
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_RECEIVE_FAIL;
 
     case 0x2: {
         spdm_certificate_response_t *spdm_response;
@@ -187,7 +187,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
                 &m_libspdm_local_certificate_chain_size, NULL, NULL);
         }
         if (m_libspdm_local_certificate_chain == NULL) {
-            return RETURN_OUT_OF_RESOURCES;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         count = (m_libspdm_local_certificate_chain_size +
                  LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN + 1) /
@@ -253,7 +253,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
                 &m_libspdm_local_certificate_chain_size, NULL, NULL);
         }
         if (m_libspdm_local_certificate_chain == NULL) {
-            return RETURN_OUT_OF_RESOURCES;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         count = (m_libspdm_local_certificate_chain_size +
                  LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN + 1) /
@@ -384,7 +384,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
                     NULL);
             }
             if (m_libspdm_local_certificate_chain == NULL) {
-                return RETURN_OUT_OF_RESOURCES;
+                return LIBSPDM_STATUS_RECEIVE_FAIL;
             }
             count = (m_libspdm_local_certificate_chain_size +
                      LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN + 1) /
@@ -532,7 +532,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
                     NULL);
             }
             if (m_libspdm_local_certificate_chain == NULL) {
-                return RETURN_OUT_OF_RESOURCES;
+                return LIBSPDM_STATUS_RECEIVE_FAIL;
             }
             count = (m_libspdm_local_certificate_chain_size +
                      LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN + 1) /
@@ -602,7 +602,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
                 &m_libspdm_local_certificate_chain_size, NULL, NULL);
         }
         if (m_libspdm_local_certificate_chain == NULL) {
-            return RETURN_OUT_OF_RESOURCES;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         count = (m_libspdm_local_certificate_chain_size +
                  LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN + 1) /
@@ -673,7 +673,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
                 &m_libspdm_local_certificate_chain,
                 &m_libspdm_local_certificate_chain_size, NULL, NULL);
             if (m_libspdm_local_certificate_chain == NULL) {
-                return RETURN_OUT_OF_RESOURCES;
+                return LIBSPDM_STATUS_RECEIVE_FAIL;
             }
 
             /* load certificate*/
@@ -689,7 +689,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
                     &leaf_cert_buffer_size)) {
                 LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                                "!!! VerifyCertificateChain - FAIL (get leaf certificate failed)!!!\n"));
-                return RETURN_DEVICE_ERROR;
+                return LIBSPDM_STATUS_RECEIVE_FAIL;
             }
             /* tamper certificate signature on purpose
              * arbitrarily change the last byte of the certificate signature*/
@@ -759,7 +759,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
                 &m_libspdm_local_certificate_chain_size, NULL, NULL);
         }
         if (m_libspdm_local_certificate_chain == NULL) {
-            return RETURN_OUT_OF_RESOURCES;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         count = (m_libspdm_local_certificate_chain_size +
                  LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN + 1) /
@@ -825,7 +825,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
                 &m_libspdm_local_certificate_chain_size, NULL, NULL);
         }
         if (m_libspdm_local_certificate_chain == NULL) {
-            return RETURN_OUT_OF_RESOURCES;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         count = (m_libspdm_local_certificate_chain_size +
                  LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN + 1) /
@@ -895,7 +895,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
                 &m_libspdm_local_certificate_chain_size, NULL, NULL);
         }
         if (m_libspdm_local_certificate_chain == NULL) {
-            return RETURN_OUT_OF_RESOURCES;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         count = (m_libspdm_local_certificate_chain_size + get_cert_length + 1) /
                 get_cert_length;
@@ -961,7 +961,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
                 &m_libspdm_local_certificate_chain_size, NULL, NULL);
         }
         if (m_libspdm_local_certificate_chain == NULL) {
-            return RETURN_OUT_OF_RESOURCES;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         count = (m_libspdm_local_certificate_chain_size +
                  LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN + 1) /
@@ -1073,7 +1073,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
                 &m_libspdm_local_certificate_chain,
                 &m_libspdm_local_certificate_chain_size, NULL, NULL);
             if (m_libspdm_local_certificate_chain == NULL) {
-                return RETURN_OUT_OF_RESOURCES;
+                return LIBSPDM_STATUS_RECEIVE_FAIL;
             }
             /* read root certificate size*/
             libspdm_read_responder_root_public_certificate(
@@ -1097,7 +1097,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
                     &leaf_cert_buffer_size)) {
                 LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                                "!!! VerifyCertificateChain - FAIL (get leaf certificate failed)!!!\n"));
-                return RETURN_DEVICE_ERROR;
+                return LIBSPDM_STATUS_RECEIVE_FAIL;
             }
         }
         libspdm_copy_mem(cert_chain_without_root,
@@ -1184,7 +1184,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
                 &m_libspdm_local_certificate_chain,
                 &m_libspdm_local_certificate_chain_size, NULL, NULL);
             if (m_libspdm_local_certificate_chain == NULL) {
-                return RETURN_OUT_OF_RESOURCES;
+                return LIBSPDM_STATUS_RECEIVE_FAIL;
             }
             /* read root certificate size*/
             libspdm_read_responder_root_public_certificate(
@@ -1208,7 +1208,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
                     &leaf_cert_buffer_size)) {
                 LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                                "!!! VerifyCertificateChain - FAIL (get leaf certificate failed)!!!\n"));
-                return RETURN_DEVICE_ERROR;
+                return LIBSPDM_STATUS_RECEIVE_FAIL;
             }
             /* tamper certificate signature on purpose
              * arbitrarily change the last byte of the certificate signature*/
@@ -1288,7 +1288,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
                 &m_libspdm_local_certificate_chain_size, NULL, NULL);
         }
         if (m_libspdm_local_certificate_chain == NULL) {
-            return RETURN_OUT_OF_RESOURCES;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         count = (m_libspdm_local_certificate_chain_size +
                  LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN + 1) /
@@ -1354,7 +1354,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
                 &m_libspdm_local_certificate_chain_size, NULL, NULL);
         }
         if (m_libspdm_local_certificate_chain == NULL) {
-            return RETURN_OUT_OF_RESOURCES;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         count = (m_libspdm_local_certificate_chain_size +
                  LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN + 1) /
@@ -1420,7 +1420,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
                 &m_libspdm_local_certificate_chain_size, NULL, NULL);
         }
         if (m_libspdm_local_certificate_chain == NULL) {
-            return RETURN_OUT_OF_RESOURCES;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         count = (m_libspdm_local_certificate_chain_size +
                  LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN + 1) /
@@ -1486,7 +1486,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
                 &m_libspdm_local_certificate_chain_size, NULL, NULL);
         }
         if (m_libspdm_local_certificate_chain == NULL) {
-            return RETURN_OUT_OF_RESOURCES;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         count = (m_libspdm_local_certificate_chain_size +
                  LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN + 1) /
@@ -1554,7 +1554,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
                 &m_libspdm_local_certificate_chain_size, NULL, NULL);
         }
         if (m_libspdm_local_certificate_chain == NULL) {
-            return RETURN_OUT_OF_RESOURCES;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         count = (m_libspdm_local_certificate_chain_size + LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN + 1) /
                 LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
@@ -1606,7 +1606,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
             m_libspdm_local_certificate_chain_size = 0;
         }
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x18: {
         spdm_certificate_response_t *spdm_response;
@@ -1624,7 +1624,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
                 &m_libspdm_local_certificate_chain_size, NULL, NULL);
         }
         if (m_libspdm_local_certificate_chain == NULL) {
-            return RETURN_OUT_OF_RESOURCES;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         count = (m_libspdm_local_certificate_chain_size +
                  LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN + 1) /
@@ -1675,7 +1675,7 @@ return_status libspdm_requester_get_certificate_test_receive_message(
         return LIBSPDM_STATUS_SUCCESS;
 
     default:
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_RECEIVE_FAIL;
     }
 }
 
@@ -2700,7 +2700,6 @@ void libspdm_test_requester_get_certificate_case16(void **state) {
         cert_chain_size = sizeof(cert_chain);
         libspdm_zero_mem (cert_chain, sizeof(cert_chain));
         status = libspdm_get_certificate (spdm_context, 0, &cert_chain_size, cert_chain);
-        /* assert_int_equal (status, RETURN_DEVICE_ERROR);*/
         LIBSPDM_ASSERT_INT_EQUAL_CASE (status, LIBSPDM_STATUS_ERROR_PEER, error_code);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
         /* assert_int_equal (spdm_context->transcript.message_b.buffer_size, 0);*/

@@ -14,7 +14,7 @@
 
 return_status do_authentication_via_spdm(void *spdm_context);
 
-return_status do_session_via_spdm(void *spdm_context);
+libspdm_return_t do_session_via_spdm(void *spdm_context);
 
 void *spdm_client_init(void);
 

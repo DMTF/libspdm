@@ -107,7 +107,7 @@ libspdm_return_t libspdm_requester_negotiate_algorithms_test_send_message(
     }
         return LIBSPDM_STATUS_SUCCESS;
     default:
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_SEND_FAIL;
     }
 }
 
@@ -120,7 +120,7 @@ libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_message(
     spdm_test_context = libspdm_get_test_context();
     switch (spdm_test_context->case_id) {
     case 0x1:
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_RECEIVE_FAIL;
 
     case 0x2: {
         spdm_algorithms_response_t *spdm_response;
@@ -1220,7 +1220,7 @@ libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_message(
         return LIBSPDM_STATUS_SUCCESS;
 
     default:
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_RECEIVE_FAIL;
     }
 }
 

@@ -26,9 +26,9 @@ typedef struct {
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_try_heartbeat(void *context, uint32_t session_id)
+libspdm_return_t libspdm_try_heartbeat(void *context, uint32_t session_id)
 {
-    return_status status;
+    libspdm_return_t status;
     spdm_heartbeat_request_t *spdm_request;
     size_t spdm_request_size;
     libspdm_heartbeat_response_mine_t *spdm_response;
@@ -45,23 +45,23 @@ return_status libspdm_try_heartbeat(void *context, uint32_t session_id)
             spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP)) {
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
 
     if (spdm_context->connection_info.connection_state <
         LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
     session_info =
         libspdm_get_session_info_via_session_id(spdm_context, session_id);
     if (session_info == NULL) {
         LIBSPDM_ASSERT(false);
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
     session_state = libspdm_secured_message_get_session_state(
         session_info->secured_message_context);
     if (session_state != LIBSPDM_SESSION_STATE_ESTABLISHED) {
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
 
     transport_header_size = spdm_context->transport_get_header_size(spdm_context);
@@ -101,11 +101,11 @@ return_status libspdm_try_heartbeat(void *context, uint32_t session_id)
         goto receive_done;
     }
     if (spdm_response_size < sizeof(spdm_message_header_t)) {
-        status = RETURN_DEVICE_ERROR;
+        status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
     }
     if (spdm_response->header.spdm_version != spdm_request->header.spdm_version) {
-        status = RETURN_DEVICE_ERROR;
+        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
     if (spdm_response->header.request_response_code == SPDM_ERROR) {
@@ -113,29 +113,45 @@ return_status libspdm_try_heartbeat(void *context, uint32_t session_id)
             spdm_context, &session_id, &spdm_response_size,
             (void **)&spdm_response, SPDM_HEARTBEAT, SPDM_HEARTBEAT_ACK,
             sizeof(libspdm_heartbeat_response_mine_t));
-        if (RETURN_ERROR(status)) {
+
+        /* TODO: Replace this with LIBSPDM_RET_ON_ERR once libspdm_handle_simple_error_response
+         * uses the new error codes. */
+        if (status == RETURN_DEVICE_ERROR) {
+            status = LIBSPDM_STATUS_ERROR_PEER;
+            goto receive_done;
+        }
+        else if (status == RETURN_NO_RESPONSE) {
+            status = LIBSPDM_STATUS_BUSY_PEER;
+            goto receive_done;
+        }
+        else if (status == LIBSPDM_STATUS_RESYNCH_PEER) {
+            status = LIBSPDM_STATUS_RESYNCH_PEER;
+            goto receive_done;
+        }
+        else if (status == LIBSPDM_STATUS_SESSION_MSG_ERROR) {
+            status = LIBSPDM_STATUS_SESSION_MSG_ERROR;
             goto receive_done;
         }
     } else if (spdm_response->header.request_response_code !=
                SPDM_HEARTBEAT_ACK) {
-        status = RETURN_DEVICE_ERROR;
+        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
     if (spdm_response_size != sizeof(spdm_heartbeat_response_t)) {
-        status = RETURN_DEVICE_ERROR;
+        status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
     }
-    status = RETURN_SUCCESS;
+    status = LIBSPDM_STATUS_SUCCESS;
 
 receive_done:
     libspdm_release_receiver_buffer (spdm_context);
     return status;
 }
 
-return_status libspdm_heartbeat(void *context, uint32_t session_id)
+libspdm_return_t libspdm_heartbeat(void *context, uint32_t session_id)
 {
     size_t retry;
-    return_status status;
+    libspdm_return_t status;
     libspdm_context_t *spdm_context;
 
     spdm_context = context;
@@ -143,7 +159,7 @@ return_status libspdm_heartbeat(void *context, uint32_t session_id)
     retry = spdm_context->retry_times;
     do {
         status = libspdm_try_heartbeat(spdm_context, session_id);
-        if (RETURN_NO_RESPONSE != status) {
+        if (LIBSPDM_STATUS_BUSY_PEER != status) {
             return status;
         }
     } while (retry-- != 0);

@@ -128,7 +128,7 @@ static void libspdm_compute_secret_update(size_t hash_size,
                         m_bin_str9_size, out_secret, out_secret_size);
 }
 
-return_status libspdm_requester_key_update_test_send_message(
+libspdm_return_t libspdm_requester_key_update_test_send_message(
     void *spdm_context, size_t request_size, const void *request,
     uint64_t timeout)
 {
@@ -139,7 +139,7 @@ return_status libspdm_requester_key_update_test_send_message(
     case 0x1:
         return LIBSPDM_STATUS_SEND_FAIL;
     case 0x2: {
-        return_status status;
+        libspdm_return_t status;
         uint8_t *decoded_message;
         size_t decoded_message_size;
         uint32_t session_id;
@@ -153,7 +153,7 @@ return_status libspdm_requester_key_update_test_send_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_SEND_FAIL;
         }
 
         /* WALKAROUND: If just use single context to encode
@@ -166,19 +166,19 @@ return_status libspdm_requester_key_update_test_send_message(
                                                        request_size,
                                                        request, &decoded_message_size,
                                                        (void **)&decoded_message);
-        if (RETURN_ERROR(status)) {
-            return RETURN_DEVICE_ERROR;
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
+            return LIBSPDM_STATUS_SEND_FAIL;
         }
 
         m_libspdm_last_token = ((spdm_key_update_request_t
                                  *) decoded_message)->header.param2;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x3: {
         static size_t sub_index = 0;
 
         if(sub_index > 0) {
-            return_status status;
+            libspdm_return_t status;
             uint8_t *decoded_message;
             size_t decoded_message_size;
             uint32_t session_id;
@@ -192,7 +192,7 @@ return_status libspdm_requester_key_update_test_send_message(
             session_info = libspdm_get_session_info_via_session_id(
                 spdm_context, session_id);
             if (session_info == NULL) {
-                return RETURN_DEVICE_ERROR;
+                return LIBSPDM_STATUS_SEND_FAIL;
             }
 
             /* WALKAROUND: If just use single context to encode
@@ -206,8 +206,8 @@ return_status libspdm_requester_key_update_test_send_message(
                                                            request_size,
                                                            request, &decoded_message_size,
                                                            (void **)&decoded_message);
-            if (RETURN_ERROR(status)) {
-                return RETURN_DEVICE_ERROR;
+            if (LIBSPDM_STATUS_IS_ERROR(status)) {
+                return LIBSPDM_STATUS_SEND_FAIL;
             }
 
             m_libspdm_last_token = ((spdm_key_update_request_t
@@ -216,12 +216,12 @@ return_status libspdm_requester_key_update_test_send_message(
 
         sub_index++;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x4: {
         static size_t sub_index = 0;
 
         if(sub_index > 0) {
-            return_status status;
+            libspdm_return_t status;
             uint8_t *decoded_message;
             size_t decoded_message_size;
             uint32_t session_id;
@@ -235,7 +235,7 @@ return_status libspdm_requester_key_update_test_send_message(
             session_info = libspdm_get_session_info_via_session_id(
                 spdm_context, session_id);
             if (session_info == NULL) {
-                return RETURN_DEVICE_ERROR;
+                return LIBSPDM_STATUS_SEND_FAIL;
             }
 
             /* WALKAROUND: If just use single context to encode
@@ -249,8 +249,8 @@ return_status libspdm_requester_key_update_test_send_message(
                                                            request_size,
                                                            request, &decoded_message_size,
                                                            (void **)&decoded_message);
-            if (RETURN_ERROR(status)) {
-                return RETURN_DEVICE_ERROR;
+            if (LIBSPDM_STATUS_IS_ERROR(status)) {
+                return LIBSPDM_STATUS_SEND_FAIL;
             }
 
             m_libspdm_last_token = ((spdm_key_update_request_t
@@ -259,12 +259,12 @@ return_status libspdm_requester_key_update_test_send_message(
 
         sub_index++;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x5: {
         static size_t sub_index = 0;
 
         if(sub_index > 0) {
-            return_status status;
+            libspdm_return_t status;
             uint8_t *decoded_message;
             size_t decoded_message_size;
             uint32_t session_id;
@@ -278,7 +278,7 @@ return_status libspdm_requester_key_update_test_send_message(
             session_info = libspdm_get_session_info_via_session_id(
                 spdm_context, session_id);
             if (session_info == NULL) {
-                return RETURN_DEVICE_ERROR;
+                return LIBSPDM_STATUS_SEND_FAIL;
             }
 
             /* WALKAROUND: If just use single context to encode
@@ -292,8 +292,8 @@ return_status libspdm_requester_key_update_test_send_message(
                                                            request_size,
                                                            request, &decoded_message_size,
                                                            (void **)&decoded_message);
-            if (RETURN_ERROR(status)) {
-                return RETURN_DEVICE_ERROR;
+            if (LIBSPDM_STATUS_IS_ERROR(status)) {
+                return LIBSPDM_STATUS_SEND_FAIL;
             }
 
             m_libspdm_last_token = ((spdm_key_update_request_t
@@ -302,12 +302,12 @@ return_status libspdm_requester_key_update_test_send_message(
 
         sub_index++;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x6: {
         static size_t sub_index = 0;
 
         if(sub_index > 0) {
-            return_status status;
+            libspdm_return_t status;
             uint8_t *decoded_message;
             size_t decoded_message_size;
             uint32_t session_id;
@@ -321,7 +321,7 @@ return_status libspdm_requester_key_update_test_send_message(
             session_info = libspdm_get_session_info_via_session_id(
                 spdm_context, session_id);
             if (session_info == NULL) {
-                return RETURN_DEVICE_ERROR;
+                return LIBSPDM_STATUS_SEND_FAIL;
             }
 
             /* WALKAROUND: If just use single context to encode
@@ -335,8 +335,8 @@ return_status libspdm_requester_key_update_test_send_message(
                                                            request_size,
                                                            request, &decoded_message_size,
                                                            (void **)&decoded_message);
-            if (RETURN_ERROR(status)) {
-                return RETURN_DEVICE_ERROR;
+            if (LIBSPDM_STATUS_IS_ERROR(status)) {
+                return LIBSPDM_STATUS_SEND_FAIL;
             }
 
             m_libspdm_last_token = ((spdm_key_update_request_t
@@ -345,15 +345,15 @@ return_status libspdm_requester_key_update_test_send_message(
 
         sub_index++;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x7:
     case 0x8:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x9: {
         static size_t sub_index = 0;
 
         if(sub_index != 1) {
-            return_status status;
+            libspdm_return_t status;
             uint8_t *decoded_message;
             size_t decoded_message_size;
             uint32_t session_id;
@@ -367,7 +367,7 @@ return_status libspdm_requester_key_update_test_send_message(
             session_info = libspdm_get_session_info_via_session_id(
                 spdm_context, session_id);
             if (session_info == NULL) {
-                return RETURN_DEVICE_ERROR;
+                return LIBSPDM_STATUS_SEND_FAIL;
             }
 
             /* WALKAROUND: If just use single context to encode
@@ -381,8 +381,8 @@ return_status libspdm_requester_key_update_test_send_message(
                                                            request_size,
                                                            request, &decoded_message_size,
                                                            (void **)&decoded_message);
-            if (RETURN_ERROR(status)) {
-                return RETURN_DEVICE_ERROR;
+            if (LIBSPDM_STATUS_IS_ERROR(status)) {
+                return LIBSPDM_STATUS_SEND_FAIL;
             }
 
             m_libspdm_last_token = ((spdm_key_update_request_t
@@ -391,9 +391,9 @@ return_status libspdm_requester_key_update_test_send_message(
 
         sub_index++;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0xA:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0xB:
     case 0xC:
     case 0xD:
@@ -405,7 +405,7 @@ return_status libspdm_requester_key_update_test_send_message(
     case 0x13:
     case 0x14:
     case 0x15: {
-        return_status status;
+        libspdm_return_t status;
         uint8_t *decoded_message;
         size_t decoded_message_size;
         uint32_t session_id;
@@ -419,7 +419,7 @@ return_status libspdm_requester_key_update_test_send_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_SEND_FAIL;
         }
 
         /* WALKAROUND: If just use single context to encode
@@ -432,19 +432,19 @@ return_status libspdm_requester_key_update_test_send_message(
                                                        request_size,
                                                        request, &decoded_message_size,
                                                        (void **)&decoded_message);
-        if (RETURN_ERROR(status)) {
-            return RETURN_DEVICE_ERROR;
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
+            return LIBSPDM_STATUS_SEND_FAIL;
         }
 
         m_libspdm_last_token = ((spdm_key_update_request_t
                                  *) decoded_message)->header.param2;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x16: {
         static size_t sub_index = 0;
 
         if(sub_index < 2) {
-            return_status status;
+            libspdm_return_t status;
             uint8_t *decoded_message;
             size_t decoded_message_size;
             uint32_t session_id;
@@ -458,7 +458,7 @@ return_status libspdm_requester_key_update_test_send_message(
             session_info = libspdm_get_session_info_via_session_id(
                 spdm_context, session_id);
             if (session_info == NULL) {
-                return RETURN_DEVICE_ERROR;
+                return LIBSPDM_STATUS_SEND_FAIL;
             }
 
             /* WALKAROUND: If just use single context to encode
@@ -472,8 +472,8 @@ return_status libspdm_requester_key_update_test_send_message(
                                                            request_size,
                                                            request, &decoded_message_size,
                                                            (void **)&decoded_message);
-            if (RETURN_ERROR(status)) {
-                return RETURN_DEVICE_ERROR;
+            if (LIBSPDM_STATUS_IS_ERROR(status)) {
+                return LIBSPDM_STATUS_SEND_FAIL;
             }
 
             m_libspdm_last_token = ((spdm_key_update_request_t
@@ -482,14 +482,14 @@ return_status libspdm_requester_key_update_test_send_message(
 
         sub_index++;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x17: {
         static size_t sub_index = 0;
 
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "send message: %d\n", sub_index));
 
         if(sub_index%2 == 0) {
-            return_status status;
+            libspdm_return_t status;
             uint8_t *decoded_message;
             size_t decoded_message_size;
             uint32_t session_id;
@@ -503,7 +503,7 @@ return_status libspdm_requester_key_update_test_send_message(
             session_info = libspdm_get_session_info_via_session_id(
                 spdm_context, session_id);
             if (session_info == NULL) {
-                return RETURN_DEVICE_ERROR;
+                return LIBSPDM_STATUS_SEND_FAIL;
             }
 
             /* WALKAROUND: If just use single context to encode
@@ -517,8 +517,8 @@ return_status libspdm_requester_key_update_test_send_message(
                                                            request_size,
                                                            request, &decoded_message_size,
                                                            (void **)&decoded_message);
-            if (RETURN_ERROR(status)) {
-                return RETURN_DEVICE_ERROR;
+            if (LIBSPDM_STATUS_IS_ERROR(status)) {
+                return LIBSPDM_STATUS_SEND_FAIL;
             }
 
             m_libspdm_last_token = ((spdm_key_update_request_t
@@ -529,11 +529,11 @@ return_status libspdm_requester_key_update_test_send_message(
 
         sub_index++;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x18:
     case 0x19:
     case 0x1A: {
-        return_status status;
+        libspdm_return_t status;
         uint8_t *decoded_message;
         size_t decoded_message_size;
         uint32_t session_id;
@@ -547,7 +547,7 @@ return_status libspdm_requester_key_update_test_send_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_SEND_FAIL;
         }
 
         /* WALKAROUND: If just use single context to encode
@@ -560,16 +560,16 @@ return_status libspdm_requester_key_update_test_send_message(
                                                        request_size,
                                                        request, &decoded_message_size,
                                                        (void **)&decoded_message);
-        if (RETURN_ERROR(status)) {
-            return RETURN_DEVICE_ERROR;
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
+            return LIBSPDM_STATUS_SEND_FAIL;
         }
 
         m_libspdm_last_token = ((spdm_key_update_request_t
                                  *) decoded_message)->header.param2;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x1B: {
-        return_status status;
+        libspdm_return_t status;
         uint8_t *decoded_message;
         size_t decoded_message_size;
         uint32_t session_id;
@@ -583,7 +583,7 @@ return_status libspdm_requester_key_update_test_send_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_SEND_FAIL;
         }
 
         /* WALKAROUND: If just use single context to encode
@@ -596,19 +596,19 @@ return_status libspdm_requester_key_update_test_send_message(
                                                        request_size,
                                                        request, &decoded_message_size,
                                                        (void **)&decoded_message);
-        if (RETURN_ERROR(status)) {
-            return RETURN_DEVICE_ERROR;
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
+            return LIBSPDM_STATUS_SEND_FAIL;
         }
 
         m_libspdm_last_token = ((spdm_key_update_request_t
                                  *) decoded_message)->header.param2;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x1C: {
         static size_t sub_index = 0;
 
         if(sub_index > 0) {
-            return_status status;
+            libspdm_return_t status;
             uint8_t *decoded_message;
             size_t decoded_message_size;
             uint32_t session_id;
@@ -622,7 +622,7 @@ return_status libspdm_requester_key_update_test_send_message(
             session_info = libspdm_get_session_info_via_session_id(
                 spdm_context, session_id);
             if (session_info == NULL) {
-                return RETURN_DEVICE_ERROR;
+                return LIBSPDM_STATUS_SEND_FAIL;
             }
 
             /* WALKAROUND: If just use single context to encode
@@ -636,8 +636,8 @@ return_status libspdm_requester_key_update_test_send_message(
                                                            request_size,
                                                            request, &decoded_message_size,
                                                            (void **)&decoded_message);
-            if (RETURN_ERROR(status)) {
-                return RETURN_DEVICE_ERROR;
+            if (LIBSPDM_STATUS_IS_ERROR(status)) {
+                return LIBSPDM_STATUS_SEND_FAIL;
             }
 
             m_libspdm_last_token = ((spdm_key_update_request_t
@@ -646,12 +646,12 @@ return_status libspdm_requester_key_update_test_send_message(
 
         sub_index++;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x1D: {
         static size_t sub_index = 0;
 
         if(sub_index > 0) {
-            return_status status;
+            libspdm_return_t status;
             uint8_t *decoded_message;
             size_t decoded_message_size;
             uint32_t session_id;
@@ -665,7 +665,7 @@ return_status libspdm_requester_key_update_test_send_message(
             session_info = libspdm_get_session_info_via_session_id(
                 spdm_context, session_id);
             if (session_info == NULL) {
-                return RETURN_DEVICE_ERROR;
+                return LIBSPDM_STATUS_SEND_FAIL;
             }
 
             /* WALKAROUND: If just use single context to encode
@@ -679,8 +679,8 @@ return_status libspdm_requester_key_update_test_send_message(
                                                            request_size,
                                                            request, &decoded_message_size,
                                                            (void **)&decoded_message);
-            if (RETURN_ERROR(status)) {
-                return RETURN_DEVICE_ERROR;
+            if (LIBSPDM_STATUS_IS_ERROR(status)) {
+                return LIBSPDM_STATUS_SEND_FAIL;
             }
 
             m_libspdm_last_token = ((spdm_key_update_request_t
@@ -689,12 +689,12 @@ return_status libspdm_requester_key_update_test_send_message(
 
         sub_index++;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x1E: {
         static size_t sub_index = 0;
 
         if(sub_index > 0) {
-            return_status status;
+            libspdm_return_t status;
             uint8_t *decoded_message;
             size_t decoded_message_size;
             uint32_t session_id;
@@ -708,7 +708,7 @@ return_status libspdm_requester_key_update_test_send_message(
             session_info = libspdm_get_session_info_via_session_id(
                 spdm_context, session_id);
             if (session_info == NULL) {
-                return RETURN_DEVICE_ERROR;
+                return LIBSPDM_STATUS_SEND_FAIL;
             }
 
             /* WALKAROUND: If just use single context to encode
@@ -722,8 +722,8 @@ return_status libspdm_requester_key_update_test_send_message(
                                                            request_size,
                                                            request, &decoded_message_size,
                                                            (void **)&decoded_message);
-            if (RETURN_ERROR(status)) {
-                return RETURN_DEVICE_ERROR;
+            if (LIBSPDM_STATUS_IS_ERROR(status)) {
+                return LIBSPDM_STATUS_SEND_FAIL;
             }
 
             m_libspdm_last_token = ((spdm_key_update_request_t
@@ -732,15 +732,15 @@ return_status libspdm_requester_key_update_test_send_message(
 
         sub_index++;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x1F:
     case 0x20:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x21: {
         static size_t sub_index = 0;
 
         if(sub_index != 1) {
-            return_status status;
+            libspdm_return_t status;
             uint8_t *decoded_message;
             size_t decoded_message_size;
             uint32_t session_id;
@@ -754,7 +754,7 @@ return_status libspdm_requester_key_update_test_send_message(
             session_info = libspdm_get_session_info_via_session_id(
                 spdm_context, session_id);
             if (session_info == NULL) {
-                return RETURN_DEVICE_ERROR;
+                return LIBSPDM_STATUS_SEND_FAIL;
             }
 
             /* WALKAROUND: If just use single context to encode
@@ -768,8 +768,8 @@ return_status libspdm_requester_key_update_test_send_message(
                                                            request_size,
                                                            request, &decoded_message_size,
                                                            (void **)&decoded_message);
-            if (RETURN_ERROR(status)) {
-                return RETURN_DEVICE_ERROR;
+            if (LIBSPDM_STATUS_IS_ERROR(status)) {
+                return LIBSPDM_STATUS_SEND_FAIL;
             }
 
             m_libspdm_last_token = ((spdm_key_update_request_t
@@ -778,17 +778,17 @@ return_status libspdm_requester_key_update_test_send_message(
 
         sub_index++;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x22:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     case 0x23:
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     default:
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_SEND_FAIL;
     }
 }
 
-return_status libspdm_requester_key_update_test_receive_message(
+libspdm_return_t libspdm_requester_key_update_test_receive_message(
     void *spdm_context, size_t *response_size,
     void **response, uint64_t timeout)
 {
@@ -797,7 +797,7 @@ return_status libspdm_requester_key_update_test_receive_message(
     spdm_test_context = libspdm_get_test_context();
     switch (spdm_test_context->case_id) {
     case 0x1:
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_RECEIVE_FAIL;
 
     case 0x2: {
         static size_t sub_index = 0;
@@ -819,7 +819,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -853,7 +853,7 @@ return_status libspdm_requester_key_update_test_receive_message(
 
         sub_index++;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x3: {
         static size_t sub_index = 0;
@@ -875,7 +875,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -909,7 +909,7 @@ return_status libspdm_requester_key_update_test_receive_message(
 
         sub_index++;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x4: {
         spdm_error_response_t *spdm_response;
@@ -928,7 +928,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -952,7 +952,7 @@ return_status libspdm_requester_key_update_test_receive_message(
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x5: {
         spdm_error_response_t *spdm_response;
@@ -971,7 +971,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -995,7 +995,7 @@ return_status libspdm_requester_key_update_test_receive_message(
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x6: {
         static size_t sub_index = 0;
@@ -1007,7 +1007,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         if (sub_index == 0) {
@@ -1118,7 +1118,7 @@ return_status libspdm_requester_key_update_test_receive_message(
 
         sub_index++;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x7: {
         spdm_error_response_t *spdm_response;
@@ -1137,7 +1137,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -1161,7 +1161,7 @@ return_status libspdm_requester_key_update_test_receive_message(
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x8: {
         spdm_error_response_data_response_not_ready_t *spdm_response;
@@ -1180,7 +1180,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -1209,7 +1209,7 @@ return_status libspdm_requester_key_update_test_receive_message(
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x9: {
         static size_t sub_index = 0;
@@ -1221,7 +1221,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         if (sub_index == 0) {
@@ -1339,7 +1339,7 @@ return_status libspdm_requester_key_update_test_receive_message(
 
         sub_index++;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0xA: {
         static uint16_t error_code = LIBSPDM_ERROR_CODE_RESERVED_00;
@@ -1361,7 +1361,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         if(error_code <= 0xff) {
@@ -1408,7 +1408,7 @@ return_status libspdm_requester_key_update_test_receive_message(
             error_code = LIBSPDM_ERROR_CODE_RESERVED_FD;
         }
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0xB: {
         static size_t sub_index = 0;
@@ -1430,7 +1430,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -1464,7 +1464,7 @@ return_status libspdm_requester_key_update_test_receive_message(
 
         sub_index++;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0xC: {
         static size_t sub_index = 0;
@@ -1486,7 +1486,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -1521,7 +1521,7 @@ return_status libspdm_requester_key_update_test_receive_message(
 
         sub_index++;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0xD: {
         static size_t sub_index = 0;
@@ -1543,7 +1543,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -1577,7 +1577,7 @@ return_status libspdm_requester_key_update_test_receive_message(
 
         sub_index++;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0xE: {
         static size_t sub_index = 0;
@@ -1599,7 +1599,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -1633,7 +1633,7 @@ return_status libspdm_requester_key_update_test_receive_message(
 
         sub_index++;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0xF: {
         static size_t sub_index = 0;
@@ -1655,7 +1655,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -1690,7 +1690,7 @@ return_status libspdm_requester_key_update_test_receive_message(
 
         sub_index++;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x10: {
         static size_t sub_index = 0;
@@ -1712,7 +1712,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -1747,7 +1747,7 @@ return_status libspdm_requester_key_update_test_receive_message(
 
         sub_index++;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x11: {
         static size_t sub_index = 0;
@@ -1759,7 +1759,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         if (sub_index == 0) {
@@ -1835,7 +1835,7 @@ return_status libspdm_requester_key_update_test_receive_message(
 
         sub_index++;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x12: {
         static size_t sub_index = 0;
@@ -1847,7 +1847,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         if (sub_index == 0) {
@@ -1923,7 +1923,7 @@ return_status libspdm_requester_key_update_test_receive_message(
 
         sub_index++;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x13: {
         static size_t sub_index = 0;
@@ -1935,7 +1935,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         if (sub_index == 0) {
@@ -2048,7 +2048,7 @@ return_status libspdm_requester_key_update_test_receive_message(
 
         sub_index++;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x14: {
         static size_t sub_index = 0;
@@ -2060,7 +2060,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         if (sub_index == 0) {
@@ -2136,7 +2136,7 @@ return_status libspdm_requester_key_update_test_receive_message(
 
         sub_index++;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x15: {
         static size_t sub_index = 0;
@@ -2148,7 +2148,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         if (sub_index == 0) {
@@ -2229,7 +2229,7 @@ return_status libspdm_requester_key_update_test_receive_message(
 
         sub_index++;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x16: {
         static size_t sub_index = 0;
@@ -2241,7 +2241,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         if (sub_index == 0) {
@@ -2358,7 +2358,7 @@ return_status libspdm_requester_key_update_test_receive_message(
 
         sub_index++;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x17: {
         static size_t sub_index = 0;
@@ -2371,7 +2371,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         if(error_code <= 0xff) {
@@ -2468,7 +2468,7 @@ return_status libspdm_requester_key_update_test_receive_message(
 
         sub_index++;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x18: {
         static size_t sub_index = 0;
@@ -2490,7 +2490,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -2529,7 +2529,7 @@ return_status libspdm_requester_key_update_test_receive_message(
 
         sub_index++;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x19: {
         static size_t sub_index = 0;
@@ -2551,7 +2551,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -2586,7 +2586,7 @@ return_status libspdm_requester_key_update_test_receive_message(
 
         sub_index++;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x1A: {
         static size_t sub_index = 0;
@@ -2608,7 +2608,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -2643,7 +2643,7 @@ return_status libspdm_requester_key_update_test_receive_message(
 
         sub_index++;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x1B: {
         static size_t sub_index = 0;
@@ -2665,7 +2665,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -2702,7 +2702,7 @@ return_status libspdm_requester_key_update_test_receive_message(
 
         sub_index++;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x1C: {
         spdm_error_response_t *spdm_response;
@@ -2726,7 +2726,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         secured_message_context = session_info->secured_message_context;
 
@@ -2788,7 +2788,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         secured_message_context->application_secret
         .response_data_sequence_number = curr_rsp_sequence_number;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x1D: {
         spdm_error_response_t *spdm_response;
@@ -2812,7 +2812,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         secured_message_context = session_info->secured_message_context;
 
@@ -2877,7 +2877,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         secured_message_context->application_secret
         .response_data_sequence_number = curr_rsp_sequence_number;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x1E: {
         static size_t sub_index = 0;
@@ -2891,7 +2891,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         secured_message_context = session_info->secured_message_context;
 
@@ -3042,7 +3042,7 @@ return_status libspdm_requester_key_update_test_receive_message(
 
         sub_index++;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x1F: {
         spdm_error_response_t *spdm_response;
@@ -3066,7 +3066,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         secured_message_context = session_info->secured_message_context;
 
@@ -3128,7 +3128,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         secured_message_context->application_secret
         .response_data_sequence_number = curr_rsp_sequence_number;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x20: {
         spdm_error_response_data_response_not_ready_t *spdm_response;
@@ -3152,7 +3152,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         secured_message_context = session_info->secured_message_context;
 
@@ -3219,7 +3219,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         secured_message_context->application_secret
         .response_data_sequence_number = curr_rsp_sequence_number;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x21: {
         static size_t sub_index = 0;
@@ -3233,7 +3233,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         secured_message_context = session_info->secured_message_context;
 
@@ -3391,7 +3391,7 @@ return_status libspdm_requester_key_update_test_receive_message(
 
         sub_index++;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x22: {
         static uint16_t error_code = LIBSPDM_ERROR_CODE_RESERVED_00;
@@ -3418,7 +3418,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         secured_message_context = session_info->secured_message_context;
 
@@ -3503,7 +3503,7 @@ return_status libspdm_requester_key_update_test_receive_message(
             error_code = LIBSPDM_ERROR_CODE_RESERVED_FD;
         }
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     case 0x23: {
         spdm_error_response_t *spdm_response;
@@ -3522,7 +3522,7 @@ return_status libspdm_requester_key_update_test_receive_message(
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -3546,10 +3546,10 @@ return_status libspdm_requester_key_update_test_receive_message(
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
     }
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
 
     default:
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_RECEIVE_FAIL;
     }
 }
 
@@ -3561,7 +3561,7 @@ return_status libspdm_requester_key_update_test_receive_message(
  **/
 void libspdm_test_requester_key_update_case1(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t         *spdm_context;
     uint32_t session_id;
@@ -3600,7 +3600,7 @@ void libspdm_test_requester_key_update_case1(void **state)
  **/
 void libspdm_test_requester_key_update_case2(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t         *spdm_context;
     uint32_t session_id;
@@ -3635,7 +3635,7 @@ void libspdm_test_requester_key_update_case2(void **state)
     status = libspdm_key_update(
         spdm_context, session_id, true);
 
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
@@ -3655,7 +3655,7 @@ void libspdm_test_requester_key_update_case2(void **state)
  **/
 void libspdm_test_requester_key_update_case3(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t         *spdm_context;
     uint32_t session_id;
@@ -3687,7 +3687,7 @@ void libspdm_test_requester_key_update_case3(void **state)
     status = libspdm_key_update(
         spdm_context, session_id, true);
 
-    assert_int_equal(status, RETURN_UNSUPPORTED);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_STATE_LOCAL);
 }
 
 /**
@@ -3698,7 +3698,7 @@ void libspdm_test_requester_key_update_case3(void **state)
  **/
 void libspdm_test_requester_key_update_case4(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t         *spdm_context;
     uint32_t session_id;
@@ -3728,7 +3728,7 @@ void libspdm_test_requester_key_update_case4(void **state)
     status = libspdm_key_update(
         spdm_context, session_id, true);
 
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
     assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
@@ -3749,7 +3749,7 @@ void libspdm_test_requester_key_update_case4(void **state)
  **/
 void libspdm_test_requester_key_update_case5(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t         *spdm_context;
     uint32_t session_id;
@@ -3779,7 +3779,7 @@ void libspdm_test_requester_key_update_case5(void **state)
     status = libspdm_key_update(
         spdm_context, session_id, true);
 
-    assert_int_equal(status, RETURN_NO_RESPONSE);
+    assert_int_equal(status, LIBSPDM_STATUS_BUSY_PEER);
     assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
@@ -3802,7 +3802,7 @@ void libspdm_test_requester_key_update_case5(void **state)
  **/
 void libspdm_test_requester_key_update_case6(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t         *spdm_context;
     uint32_t session_id;
@@ -3837,7 +3837,7 @@ void libspdm_test_requester_key_update_case6(void **state)
     status = libspdm_key_update(
         spdm_context, session_id, true);
 
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
@@ -3859,7 +3859,7 @@ void libspdm_test_requester_key_update_case6(void **state)
  **/
 void libspdm_test_requester_key_update_case7(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t         *spdm_context;
     uint32_t session_id;
@@ -3901,7 +3901,7 @@ void libspdm_test_requester_key_update_case7(void **state)
  **/
 void libspdm_test_requester_key_update_case8(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t         *spdm_context;
     uint32_t session_id;
@@ -3931,7 +3931,7 @@ void libspdm_test_requester_key_update_case8(void **state)
     status = libspdm_key_update(
         spdm_context, session_id, true);
 
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
     assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
@@ -3954,7 +3954,7 @@ void libspdm_test_requester_key_update_case8(void **state)
  **/
 void libspdm_test_requester_key_update_case9(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t         *spdm_context;
     uint32_t session_id;
@@ -3989,7 +3989,7 @@ void libspdm_test_requester_key_update_case9(void **state)
     status = libspdm_key_update(
         spdm_context, session_id, true);
 
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
@@ -4014,7 +4014,7 @@ void libspdm_test_requester_key_update_case9(void **state)
  **/
 void libspdm_test_requester_key_update_case10(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t         *spdm_context;
     uint32_t session_id;
@@ -4051,8 +4051,7 @@ void libspdm_test_requester_key_update_case10(void **state)
         status = libspdm_key_update(
             spdm_context, session_id, true);
 
-        /* assert_int_equal (status, RETURN_DEVICE_ERROR);*/
-        LIBSPDM_ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
+        LIBSPDM_ASSERT_INT_EQUAL_CASE (status, LIBSPDM_STATUS_ERROR_PEER, error_code);
         assert_memory_equal(((libspdm_secured_message_context_t
                               *)(session_info->secured_message_context))
                             ->application_secret.request_data_secret,
@@ -4082,7 +4081,7 @@ void libspdm_test_requester_key_update_case10(void **state)
 
 void libspdm_test_requester_key_update_case11(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t         *spdm_context;
     uint32_t session_id;
@@ -4129,7 +4128,7 @@ void libspdm_test_requester_key_update_case11(void **state)
     status = libspdm_key_update(
         spdm_context, session_id, true);
 
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
@@ -4158,7 +4157,7 @@ void libspdm_test_requester_key_update_case11(void **state)
  **/
 void libspdm_test_requester_key_update_case12(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t         *spdm_context;
     uint32_t session_id;
@@ -4194,7 +4193,7 @@ void libspdm_test_requester_key_update_case12(void **state)
     status = libspdm_key_update(
         spdm_context, session_id, true);
 
-    assert_int_equal(status, RETURN_UNSUPPORTED);
+    assert_int_equal(status, LIBSPDM_STATUS_UNSUPPORTED_CAP);
     assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
@@ -4215,7 +4214,7 @@ void libspdm_test_requester_key_update_case12(void **state)
  **/
 void libspdm_test_requester_key_update_case13(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t         *spdm_context;
     uint32_t session_id;
@@ -4245,7 +4244,7 @@ void libspdm_test_requester_key_update_case13(void **state)
     status = libspdm_key_update(
         spdm_context, session_id, true);
 
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
@@ -4267,7 +4266,7 @@ void libspdm_test_requester_key_update_case13(void **state)
  **/
 void libspdm_test_requester_key_update_case14(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t         *spdm_context;
     uint32_t session_id;
@@ -4302,7 +4301,7 @@ void libspdm_test_requester_key_update_case14(void **state)
     status = libspdm_key_update(
         spdm_context, session_id, true);
 
-    assert_int_equal(status, RETURN_UNSUPPORTED);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_STATE_LOCAL);
     assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
@@ -4324,7 +4323,7 @@ void libspdm_test_requester_key_update_case14(void **state)
  **/
 void libspdm_test_requester_key_update_case15(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t         *spdm_context;
     uint32_t session_id;
@@ -4354,7 +4353,7 @@ void libspdm_test_requester_key_update_case15(void **state)
     status = libspdm_key_update(
         spdm_context, session_id, true);
 
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
@@ -4376,7 +4375,7 @@ void libspdm_test_requester_key_update_case15(void **state)
  **/
 void libspdm_test_requester_key_update_case16(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t         *spdm_context;
     uint32_t session_id;
@@ -4406,7 +4405,7 @@ void libspdm_test_requester_key_update_case16(void **state)
     status = libspdm_key_update(
         spdm_context, session_id, true);
 
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
@@ -4427,7 +4426,7 @@ void libspdm_test_requester_key_update_case16(void **state)
  **/
 void libspdm_test_requester_key_update_case17(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t         *spdm_context;
     uint32_t session_id;
@@ -4462,7 +4461,7 @@ void libspdm_test_requester_key_update_case17(void **state)
     status = libspdm_key_update(
         spdm_context, session_id, true);
 
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
     assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
@@ -4484,7 +4483,7 @@ void libspdm_test_requester_key_update_case17(void **state)
  **/
 void libspdm_test_requester_key_update_case18(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t         *spdm_context;
     uint32_t session_id;
@@ -4519,7 +4518,7 @@ void libspdm_test_requester_key_update_case18(void **state)
     status = libspdm_key_update(
         spdm_context, session_id, true);
 
-    assert_int_equal(status, RETURN_NO_RESPONSE);
+    assert_int_equal(status, LIBSPDM_STATUS_BUSY_PEER);
     assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
@@ -4542,7 +4541,7 @@ void libspdm_test_requester_key_update_case18(void **state)
  **/
 void libspdm_test_requester_key_update_case19(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t         *spdm_context;
     uint32_t session_id;
@@ -4577,7 +4576,7 @@ void libspdm_test_requester_key_update_case19(void **state)
     status = libspdm_key_update(
         spdm_context, session_id, true);
 
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
@@ -4599,7 +4598,7 @@ void libspdm_test_requester_key_update_case19(void **state)
  **/
 void libspdm_test_requester_key_update_case20(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t         *spdm_context;
     uint32_t session_id;
@@ -4641,7 +4640,7 @@ void libspdm_test_requester_key_update_case20(void **state)
  **/
 void libspdm_test_requester_key_update_case21(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t         *spdm_context;
     uint32_t session_id;
@@ -4676,7 +4675,7 @@ void libspdm_test_requester_key_update_case21(void **state)
     status = libspdm_key_update(
         spdm_context, session_id, true);
 
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
     assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
@@ -4698,7 +4697,7 @@ void libspdm_test_requester_key_update_case21(void **state)
  **/
 void libspdm_test_requester_key_update_case22(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t         *spdm_context;
     uint32_t session_id;
@@ -4733,7 +4732,7 @@ void libspdm_test_requester_key_update_case22(void **state)
     status = libspdm_key_update(
         spdm_context, session_id, true);
 
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
@@ -4758,7 +4757,7 @@ void libspdm_test_requester_key_update_case22(void **state)
  **/
 void libspdm_test_requester_key_update_case23(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t         *spdm_context;
     uint32_t session_id;
@@ -4800,8 +4799,7 @@ void libspdm_test_requester_key_update_case23(void **state)
         status = libspdm_key_update(
             spdm_context, session_id, true);
 
-        /* assert_int_equal (status, RETURN_DEVICE_ERROR);*/
-        LIBSPDM_ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
+        LIBSPDM_ASSERT_INT_EQUAL_CASE (status, LIBSPDM_STATUS_ERROR_PEER, error_code);
         assert_memory_equal(((libspdm_secured_message_context_t
                               *)(session_info->secured_message_context))
                             ->application_secret.request_data_secret,
@@ -4837,7 +4835,7 @@ void libspdm_test_requester_key_update_case23(void **state)
  **/
 void libspdm_test_requester_key_update_case24(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t         *spdm_context;
     uint32_t session_id;
@@ -4872,7 +4870,7 @@ void libspdm_test_requester_key_update_case24(void **state)
     status = libspdm_key_update(
         spdm_context, session_id, true);
 
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
@@ -4894,7 +4892,7 @@ void libspdm_test_requester_key_update_case24(void **state)
  **/
 void libspdm_test_requester_key_update_case25(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t         *spdm_context;
     uint32_t session_id;
@@ -4929,7 +4927,7 @@ void libspdm_test_requester_key_update_case25(void **state)
     status = libspdm_key_update(
         spdm_context, session_id, true);
 
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
@@ -4951,7 +4949,7 @@ void libspdm_test_requester_key_update_case25(void **state)
  **/
 void libspdm_test_requester_key_update_case26(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t         *spdm_context;
     uint32_t session_id;
@@ -4986,7 +4984,7 @@ void libspdm_test_requester_key_update_case26(void **state)
     status = libspdm_key_update(
         spdm_context, session_id, true);
 
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
@@ -5007,7 +5005,7 @@ void libspdm_test_requester_key_update_case26(void **state)
  **/
 void libspdm_test_requester_key_update_case27(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t         *spdm_context;
     uint32_t session_id;
@@ -5046,7 +5044,7 @@ void libspdm_test_requester_key_update_case27(void **state)
     status = libspdm_key_update(
         spdm_context, session_id, false);
 
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
@@ -5067,7 +5065,7 @@ void libspdm_test_requester_key_update_case27(void **state)
  **/
 void libspdm_test_requester_key_update_case28(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t         *spdm_context;
     uint32_t session_id;
@@ -5112,7 +5110,7 @@ void libspdm_test_requester_key_update_case28(void **state)
     status = libspdm_key_update(
         spdm_context, session_id, false);
 
-    assert_int_equal(status, RETURN_DEVICE_ERROR);
+    assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
     assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
@@ -5134,7 +5132,7 @@ void libspdm_test_requester_key_update_case28(void **state)
  **/
 void libspdm_test_requester_key_update_case29(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t         *spdm_context;
     uint32_t session_id;
@@ -5179,7 +5177,7 @@ void libspdm_test_requester_key_update_case29(void **state)
     status = libspdm_key_update(
         spdm_context, session_id, false);
 
-    assert_int_equal(status, RETURN_NO_RESPONSE);
+    assert_int_equal(status, LIBSPDM_STATUS_BUSY_PEER);
     assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
@@ -5202,7 +5200,7 @@ void libspdm_test_requester_key_update_case29(void **state)
  **/
 void libspdm_test_requester_key_update_case30(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t         *spdm_context;
     uint32_t session_id;
@@ -5256,7 +5254,7 @@ void libspdm_test_requester_key_update_case30(void **state)
     status = libspdm_key_update(
         spdm_context, session_id, false);
 
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
@@ -5278,7 +5276,7 @@ void libspdm_test_requester_key_update_case30(void **state)
  **/
 void libspdm_test_requester_key_update_case31(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t         *spdm_context;
     uint32_t session_id;
@@ -5335,7 +5333,7 @@ void libspdm_test_requester_key_update_case31(void **state)
  **/
 void libspdm_test_requester_key_update_case32(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t         *spdm_context;
     uint32_t session_id;
@@ -5406,7 +5404,7 @@ void libspdm_test_requester_key_update_case32(void **state)
  **/
 void libspdm_test_requester_key_update_case33(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t         *spdm_context;
     uint32_t session_id;
@@ -5460,7 +5458,7 @@ void libspdm_test_requester_key_update_case33(void **state)
     status = libspdm_key_update(
         spdm_context, session_id, false);
 
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
@@ -5485,7 +5483,7 @@ void libspdm_test_requester_key_update_case33(void **state)
  **/
 void libspdm_test_requester_key_update_case34(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t         *spdm_context;
     uint32_t session_id;
@@ -5537,8 +5535,7 @@ void libspdm_test_requester_key_update_case34(void **state)
         status = libspdm_key_update(
             spdm_context, session_id, false);
 
-        /* assert_int_equal (status, RETURN_DEVICE_ERROR);*/
-        LIBSPDM_ASSERT_INT_EQUAL_CASE (status, RETURN_DEVICE_ERROR, error_code);
+        LIBSPDM_ASSERT_INT_EQUAL_CASE (status, LIBSPDM_STATUS_ERROR_PEER, error_code);
         assert_memory_equal(((libspdm_secured_message_context_t
                               *)(session_info->secured_message_context))
                             ->application_secret.request_data_secret,
@@ -5572,7 +5569,7 @@ void libspdm_test_requester_key_update_case34(void **state)
  **/
 void libspdm_test_requester_key_update_case35(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t         *spdm_context;
     uint32_t session_id;
@@ -5600,7 +5597,7 @@ void libspdm_test_requester_key_update_case35(void **state)
 
     status = libspdm_key_update(spdm_context, session_id, true);
 
-    assert_int_equal(status, RETURN_SECURITY_VIOLATION);
+    assert_int_equal(status, LIBSPDM_STATUS_SESSION_MSG_ERROR);
     assert_int_equal(spdm_context->session_info->session_id, INVALID_SESSION_ID);
 }
 

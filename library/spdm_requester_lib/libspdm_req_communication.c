@@ -27,21 +27,21 @@ libspdm_return_t libspdm_init_connection(void *context,
     spdm_context = context;
 
     status = libspdm_get_version(spdm_context, NULL, NULL);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return status;
     }
 
     if (!get_version_only) {
         status = libspdm_get_capabilities(spdm_context);
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return status;
         }
         status = libspdm_negotiate_algorithms(spdm_context);
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return status;
         }
     }
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
 /**
@@ -65,15 +65,15 @@ libspdm_return_t libspdm_init_connection(void *context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_start_session(void *context, bool use_psk,
-                                    uint8_t measurement_hash_type,
-                                    uint8_t slot_id,
-                                    uint8_t session_policy,
-                                    uint32_t *session_id,
-                                    uint8_t *heartbeat_period,
-                                    void *measurement_hash)
+libspdm_return_t libspdm_start_session(void *context, bool use_psk,
+                                       uint8_t measurement_hash_type,
+                                       uint8_t slot_id,
+                                       uint8_t session_policy,
+                                       uint32_t *session_id,
+                                       uint8_t *heartbeat_period,
+                                       void *measurement_hash)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_context_t *spdm_context;
 
     #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
@@ -82,7 +82,7 @@ return_status libspdm_start_session(void *context, bool use_psk,
     #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
 
     spdm_context = context;
-    status = RETURN_UNSUPPORTED;
+    status = LIBSPDM_STATUS_UNSUPPORTED_CAP;
 
     if (!use_psk) {
     #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
@@ -90,7 +90,7 @@ return_status libspdm_start_session(void *context, bool use_psk,
             spdm_context, measurement_hash_type, slot_id, session_policy,
             session_id, heartbeat_period, &req_slot_id_param,
             measurement_hash);
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                            "libspdm_start_session - libspdm_send_receive_key_exchange - %p\n",
                            status));
@@ -101,7 +101,7 @@ return_status libspdm_start_session(void *context, bool use_psk,
             spdm_context, *session_id);
         if (session_info == NULL) {
             LIBSPDM_ASSERT(false);
-            return RETURN_UNSUPPORTED;
+            return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
         }
 
         switch (session_info->mut_auth_requested) {
@@ -118,7 +118,7 @@ return_status libspdm_start_session(void *context, bool use_psk,
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                            "libspdm_start_session - libspdm_encapsulated_request - %p\n",
                            status));
-            if (RETURN_ERROR(status)) {
+            if (LIBSPDM_STATUS_IS_ERROR(status)) {
                 return status;
             }
             break;
@@ -126,7 +126,7 @@ return_status libspdm_start_session(void *context, bool use_psk,
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                            "libspdm_start_session - unknown mut_auth_requested - 0x%x\n",
                            session_info->mut_auth_requested));
-            return RETURN_UNSUPPORTED;
+            return LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
 
         if (req_slot_id_param == 0xF) {
@@ -139,14 +139,14 @@ return_status libspdm_start_session(void *context, bool use_psk,
                        status));
     #else /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
         LIBSPDM_ASSERT(false);
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
     } else {
     #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
         status = libspdm_send_receive_psk_exchange(
             spdm_context, measurement_hash_type, session_policy, session_id,
             heartbeat_period, measurement_hash);
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                            "libspdm_start_session - libspdm_send_receive_psk_exchange - %p\n",
                            status));
@@ -204,21 +204,21 @@ return_status libspdm_start_session(void *context, bool use_psk,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_start_session_ex(void *context, bool use_psk,
-                                       uint8_t measurement_hash_type,
-                                       uint8_t slot_id,
-                                       uint8_t session_policy,
-                                       uint32_t *session_id,
-                                       uint8_t *heartbeat_period,
-                                       void *measurement_hash,
-                                       const void *requester_random_in,
-                                       size_t requester_random_in_size,
-                                       void *requester_random,
-                                       size_t *requester_random_size,
-                                       void *responder_random,
-                                       size_t *responder_random_size)
+libspdm_return_t libspdm_start_session_ex(void *context, bool use_psk,
+                                          uint8_t measurement_hash_type,
+                                          uint8_t slot_id,
+                                          uint8_t session_policy,
+                                          uint32_t *session_id,
+                                          uint8_t *heartbeat_period,
+                                          void *measurement_hash,
+                                          const void *requester_random_in,
+                                          size_t requester_random_in_size,
+                                          void *requester_random,
+                                          size_t *requester_random_size,
+                                          void *responder_random,
+                                          size_t *responder_random_size)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_context_t *spdm_context;
 
     #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
@@ -227,7 +227,7 @@ return_status libspdm_start_session_ex(void *context, bool use_psk,
     #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
 
     spdm_context = context;
-    status = RETURN_UNSUPPORTED;
+    status = LIBSPDM_STATUS_UNSUPPORTED_CAP;
 
     if (!use_psk) {
     #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
@@ -242,7 +242,7 @@ return_status libspdm_start_session_ex(void *context, bool use_psk,
             session_id, heartbeat_period, &req_slot_id_param,
             measurement_hash, requester_random_in,
             requester_random, responder_random);
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                            "libspdm_start_session - libspdm_send_receive_key_exchange - %p\n",
                            status));
@@ -253,7 +253,7 @@ return_status libspdm_start_session_ex(void *context, bool use_psk,
             spdm_context, *session_id);
         if (session_info == NULL) {
             LIBSPDM_ASSERT(false);
-            return RETURN_UNSUPPORTED;
+            return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
         }
 
         switch (session_info->mut_auth_requested) {
@@ -270,7 +270,7 @@ return_status libspdm_start_session_ex(void *context, bool use_psk,
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                            "libspdm_start_session - libspdm_encapsulated_request - %p\n",
                            status));
-            if (RETURN_ERROR(status)) {
+            if (LIBSPDM_STATUS_IS_ERROR(status)) {
                 return status;
             }
             break;
@@ -278,7 +278,7 @@ return_status libspdm_start_session_ex(void *context, bool use_psk,
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                            "libspdm_start_session - unknown mut_auth_requested - 0x%x\n",
                            session_info->mut_auth_requested));
-            return RETURN_UNSUPPORTED;
+            return LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
 
         if (req_slot_id_param == 0xF) {
@@ -291,7 +291,7 @@ return_status libspdm_start_session_ex(void *context, bool use_psk,
                        status));
     #else /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
         LIBSPDM_ASSERT(false);
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
     } else {
     #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
@@ -301,7 +301,7 @@ return_status libspdm_start_session_ex(void *context, bool use_psk,
             requester_random_in, requester_random_in_size,
             requester_random, requester_random_size,
             responder_random, responder_random_size);
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                            "libspdm_start_session - libspdm_send_receive_psk_exchange - %p\n",
                            status));
@@ -320,7 +320,7 @@ return_status libspdm_start_session_ex(void *context, bool use_psk,
         }
     #else /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
         LIBSPDM_ASSERT(false);
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
     }
     #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
@@ -340,10 +340,10 @@ return_status libspdm_start_session_ex(void *context, bool use_psk,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_stop_session(void *context, uint32_t session_id,
-                                   uint8_t end_session_attributes)
+libspdm_return_t libspdm_stop_session(void *context, uint32_t session_id,
+                                      uint8_t end_session_attributes)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_context_t *spdm_context;
 
     spdm_context = context;
@@ -382,13 +382,13 @@ return_status libspdm_stop_session(void *context, uint32_t session_id,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_send_receive_data(void *context, const uint32_t *session_id,
-                                        bool is_app_message,
-                                        const void *request, size_t request_size,
-                                        void *response,
-                                        size_t *response_size)
+libspdm_return_t libspdm_send_receive_data(void *context, const uint32_t *session_id,
+                                           bool is_app_message,
+                                           const void *request, size_t request_size,
+                                           void *response,
+                                           size_t *response_size)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_context_t *spdm_context;
     spdm_message_header_t *spdm_request;
     size_t spdm_request_size;
@@ -411,9 +411,9 @@ return_status libspdm_send_receive_data(void *context, const uint32_t *session_i
 
     status = libspdm_send_request(spdm_context, session_id, is_app_message,
                                   spdm_request_size, spdm_request);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_release_sender_buffer (spdm_context);
-        return RETURN_DEVICE_ERROR;
+        return status;
     }
     libspdm_release_sender_buffer (spdm_context);
 
@@ -426,9 +426,9 @@ return_status libspdm_send_receive_data(void *context, const uint32_t *session_i
 
     status = libspdm_receive_response(spdm_context, session_id, is_app_message,
                                       &spdm_response_size, (void **)&spdm_response);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_release_receiver_buffer (spdm_context);
-        return RETURN_DEVICE_ERROR;
+        return status;
     }
 
     if (spdm_response->header.request_response_code == SPDM_ERROR) {
@@ -436,7 +436,7 @@ return_status libspdm_send_receive_data(void *context, const uint32_t *session_i
             (session_id != NULL)) {
             libspdm_free_session_id(spdm_context, *session_id);
             libspdm_release_receiver_buffer (spdm_context);
-            return RETURN_SECURITY_VIOLATION;
+            return LIBSPDM_STATUS_SESSION_MSG_ERROR;
         }
     }
 
@@ -446,10 +446,10 @@ return_status libspdm_send_receive_data(void *context, const uint32_t *session_i
     } else {
         *response_size = spdm_response_size;
         libspdm_release_receiver_buffer (spdm_context);
-        return RETURN_BUFFER_TOO_SMALL;
+        return LIBSPDM_STATUS_BUFFER_TOO_SMALL;
     }
 
     libspdm_release_receiver_buffer (spdm_context);
 
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }

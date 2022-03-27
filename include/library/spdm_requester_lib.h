@@ -347,13 +347,13 @@ return_status libspdm_get_measurement_ex(void *context, const uint32_t *session_
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_start_session(void *spdm_context, bool use_psk,
-                                    uint8_t measurement_hash_type,
-                                    uint8_t slot_id,
-                                    uint8_t session_policy,
-                                    uint32_t *session_id,
-                                    uint8_t *heartbeat_period,
-                                    void *measurement_hash);
+libspdm_return_t libspdm_start_session(void *spdm_context, bool use_psk,
+                                       uint8_t measurement_hash_type,
+                                       uint8_t slot_id,
+                                       uint8_t session_policy,
+                                       uint32_t *session_id,
+                                       uint8_t *heartbeat_period,
+                                       void *measurement_hash);
 
 /**
  * This function sends KEY_EXCHANGE/FINISH or PSK_EXCHANGE/PSK_FINISH
@@ -391,19 +391,19 @@ return_status libspdm_start_session(void *spdm_context, bool use_psk,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_start_session_ex(void *spdm_context, bool use_psk,
-                                       uint8_t measurement_hash_type,
-                                       uint8_t slot_id,
-                                       uint8_t session_policy,
-                                       uint32_t *session_id,
-                                       uint8_t *heartbeat_period,
-                                       void *measurement_hash,
-                                       const void *requester_random_in,
-                                       size_t requester_random_in_size,
-                                       void *requester_random,
-                                       size_t *requester_random_size,
-                                       void *responder_random,
-                                       size_t *responder_random_size);
+libspdm_return_t libspdm_start_session_ex(void *spdm_context, bool use_psk,
+                                          uint8_t measurement_hash_type,
+                                          uint8_t slot_id,
+                                          uint8_t session_policy,
+                                          uint32_t *session_id,
+                                          uint8_t *heartbeat_period,
+                                          void *measurement_hash,
+                                          const void *requester_random_in,
+                                          size_t requester_random_in_size,
+                                          void *requester_random,
+                                          size_t *requester_random_size,
+                                          void *responder_random,
+                                          size_t *responder_random_size);
 
 /**
  * This function sends END_SESSION
@@ -417,8 +417,8 @@ return_status libspdm_start_session_ex(void *spdm_context, bool use_psk,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_stop_session(void *spdm_context, uint32_t session_id,
-                                   uint8_t end_session_attributes);
+libspdm_return_t libspdm_stop_session(void *spdm_context, uint32_t session_id,
+                                      uint8_t end_session_attributes);
 
 /**
  * Send and receive an SPDM or APP message.
@@ -447,12 +447,12 @@ return_status libspdm_stop_session(void *spdm_context, uint32_t session_id,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_send_receive_data(void *spdm_context,
-                                        const uint32_t *session_id,
-                                        bool is_app_message,
-                                        const void *request, size_t request_size,
-                                        void *response,
-                                        size_t *response_size);
+libspdm_return_t libspdm_send_receive_data(void *spdm_context,
+                                           const uint32_t *session_id,
+                                           bool is_app_message,
+                                           const void *request, size_t request_size,
+                                           void *response,
+                                           size_t *response_size);
 
 /**
  * This function sends HEARTBEAT
@@ -465,7 +465,7 @@ return_status libspdm_send_receive_data(void *spdm_context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_heartbeat(void *spdm_context, uint32_t session_id);
+libspdm_return_t libspdm_heartbeat(void *spdm_context, uint32_t session_id);
 
 /**
  * This function sends KEY_UPDATE
@@ -482,8 +482,8 @@ return_status libspdm_heartbeat(void *spdm_context, uint32_t session_id);
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-return_status libspdm_key_update(void *spdm_context, uint32_t session_id,
-                                 bool single_direction);
+libspdm_return_t libspdm_key_update(void *spdm_context, uint32_t session_id,
+                                    bool single_direction);
 
 /**
  * This function executes a series of SPDM encapsulated requests and receives SPDM encapsulated responses.
