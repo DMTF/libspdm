@@ -13,6 +13,10 @@
 
 #define INVALID_SESSION_ID 0
 
+/* Required scratch buffer size for libspdm internal usage.
+ * It maybe used to hold the encrypted/decrypted message and/or last sent/received message. */
+#define LIBSPDM_SCRATCH_BUFFER_SIZE (LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE)
+
 typedef struct {
     uint8_t spdm_version_count;
     spdm_version_number_t spdm_version[SPDM_MAX_VERSION_COUNT];

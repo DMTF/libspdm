@@ -2069,7 +2069,7 @@ void libspdm_register_transport_layer_func(
 size_t libspdm_get_sizeof_required_scratch_buffer (
     void *context)
 {
-    return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+    return LIBSPDM_SCRATCH_BUFFER_SIZE;
 }
 
 /**
@@ -2090,7 +2090,7 @@ void libspdm_set_scratch_buffer (
     libspdm_context_t *spdm_context;
 
     spdm_context = context;
-    LIBSPDM_ASSERT (scratch_buffer_size >= LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+    LIBSPDM_ASSERT (scratch_buffer_size >= LIBSPDM_SCRATCH_BUFFER_SIZE);
     spdm_context->scratch_buffer = scratch_buffer;
     spdm_context->scratch_buffer_size = scratch_buffer_size;
 }
@@ -2112,7 +2112,7 @@ void libspdm_get_scratch_buffer (
 
     spdm_context = context;
     LIBSPDM_ASSERT (spdm_context->scratch_buffer != NULL);
-    LIBSPDM_ASSERT (spdm_context->scratch_buffer_size >= LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+    LIBSPDM_ASSERT (spdm_context->scratch_buffer_size >= LIBSPDM_SCRATCH_BUFFER_SIZE);
     *scratch_buffer = spdm_context->scratch_buffer;
     *scratch_buffer_size = spdm_context->scratch_buffer_size;
 }
@@ -2332,8 +2332,8 @@ libspdm_return_t libspdm_init_context(void *context)
         sizeof(spdm_context->encap_context.certificate_chain_buffer.buffer);
 
     /* From the config.h, need different value for CHUNK - TBD*/
-    spdm_context->local_context.capability.data_transfer_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
-    spdm_context->local_context.capability.max_spdm_msg_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+    spdm_context->local_context.capability.data_transfer_size = LIBSPDM_DATA_TRANSFER_SIZE;
+    spdm_context->local_context.capability.max_spdm_msg_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
 
 #if !LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_hash_size = 0;
