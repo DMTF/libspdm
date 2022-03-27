@@ -215,7 +215,7 @@ libspdm_return_t libspdm_get_response_challenge_auth(void *context,
 
     status = libspdm_append_message_c(spdm_context, spdm_request,
                                       request_size);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,
                                                response_size, response);
@@ -223,7 +223,7 @@ libspdm_return_t libspdm_get_response_challenge_auth(void *context,
 
     status = libspdm_append_message_c(spdm_context, spdm_response,
                                       (size_t)ptr - (size_t)spdm_response);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_reset_message_c(spdm_context);
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,

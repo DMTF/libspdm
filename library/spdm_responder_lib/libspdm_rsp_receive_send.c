@@ -124,7 +124,7 @@ libspdm_return_t libspdm_process_request(void *context, uint32_t **session_id,
                                          size_t request_size, const void *request)
 {
     libspdm_context_t *spdm_context;
-    return_status status;
+    libspdm_return_t status;
     libspdm_session_info_t *session_info;
     uint32_t *message_session_id;
     uint8_t *decoded_message_ptr;
@@ -320,7 +320,7 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
     libspdm_context_t *spdm_context;
     uint8_t *my_response;
     size_t my_response_size;
-    return_status status;
+    libspdm_return_t status;
     libspdm_get_spdm_response_func get_response_func;
     libspdm_session_info_t *session_info;
     spdm_message_header_t *spdm_request;

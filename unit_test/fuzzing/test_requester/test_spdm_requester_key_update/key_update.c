@@ -111,14 +111,14 @@ size_t libspdm_get_max_buffer_size(void)
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
 
-return_status libspdm_device_send_message(void *spdm_context, size_t request_size,
-                                          const void *request, uint64_t timeout)
+libspdm_return_t libspdm_device_send_message(void *spdm_context, size_t request_size,
+                                             const void *request, uint64_t timeout)
 {
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
-return_status libspdm_device_receive_message(void *spdm_context, size_t *response_size,
-                                             void **response, uint64_t timeout)
+libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *response_size,
+                                                void **response, uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
     uint8_t *spdm_response;
@@ -132,7 +132,7 @@ return_status libspdm_device_receive_message(void *spdm_context, size_t *respons
     session_id = 0xFFFFFFFF;
     session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
     if (session_info == NULL) {
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_RECEIVE_FAIL;
     }
 
     spdm_test_context = libspdm_get_test_context();
@@ -152,7 +152,7 @@ return_status libspdm_device_receive_message(void *spdm_context, size_t *respons
     } else if (spdm_response_size > sub_index * sizeof(spdm_key_update_response_t)) {
         spdm_response_size = spdm_response_size - sub_index * sizeof(spdm_key_update_response_t);
     } else {
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_RECEIVE_FAIL;
     }
     libspdm_copy_mem((uint8_t *)temp_buf + test_message_header_size,
                      sizeof(temp_buf) - test_message_header_size,
@@ -166,7 +166,7 @@ return_status libspdm_device_receive_message(void *spdm_context, size_t *respons
 
     session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
     if (session_info == NULL) {
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_RECEIVE_FAIL;
     }
     /* WALKAROUND: If just use single context to encode message and then decode message */
     ((libspdm_secured_message_context_t *)(session_info->secured_message_context))
@@ -176,7 +176,7 @@ return_status libspdm_device_receive_message(void *spdm_context, size_t *respons
         sub_index = 0;
     }
     sub_index++;
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
 void libspdm_test_requester_key_update_case1(void **State)

@@ -234,14 +234,14 @@ libspdm_return_t libspdm_try_get_certificate(void *context, uint8_t slot_id,
         /* Cache data*/
 
         status = libspdm_append_message_b(spdm_context, spdm_request, spdm_request_size);
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             libspdm_release_receiver_buffer (spdm_context);
             status = LIBSPDM_STATUS_BUFFER_FULL;
             goto done;
         }
         status = libspdm_append_message_b(spdm_context, spdm_response,
                                           spdm_response_size);
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             libspdm_release_receiver_buffer (spdm_context);
             status = LIBSPDM_STATUS_BUFFER_FULL;
             goto done;
@@ -254,7 +254,7 @@ libspdm_return_t libspdm_try_get_certificate(void *context, uint8_t slot_id,
         status = libspdm_append_managed_buffer(&certificate_chain_buffer,
                                                spdm_response->cert_chain,
                                                spdm_response->portion_length);
-        if (RETURN_ERROR(status)) {
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
             libspdm_release_receiver_buffer (spdm_context);
             status = LIBSPDM_STATUS_BUFFER_FULL;
             goto done;
@@ -265,11 +265,11 @@ libspdm_return_t libspdm_try_get_certificate(void *context, uint8_t slot_id,
     } while (remainder_length != 0);
 
     if (spdm_context->local_context.verify_peer_spdm_cert_chain != NULL) {
-        status = spdm_context->local_context.verify_peer_spdm_cert_chain (
+        result = spdm_context->local_context.verify_peer_spdm_cert_chain (
             spdm_context, slot_id, libspdm_get_managed_buffer_size(&certificate_chain_buffer),
             libspdm_get_managed_buffer(&certificate_chain_buffer),
             trust_anchor, trust_anchor_size);
-        if (RETURN_ERROR(status)) {
+        if (!result) {
             spdm_context->error_state = LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
             status = LIBSPDM_STATUS_VERIF_FAIL;
             goto done;

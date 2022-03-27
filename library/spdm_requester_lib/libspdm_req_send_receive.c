@@ -30,7 +30,7 @@ return_status libspdm_send_request(void *context, const uint32_t *session_id,
                                    size_t request_size, const void *request)
 {
     libspdm_context_t *spdm_context;
-    return_status status;
+    libspdm_return_t status;
     uint8_t *message;
     size_t message_size;
     uint64_t timeout;
@@ -74,7 +74,7 @@ return_status libspdm_send_request(void *context, const uint32_t *session_id,
     status = spdm_context->transport_encode_message(
         spdm_context, session_id, is_app_message, true, request_size,
         request, &message_size, (void **)&message);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "transport_encode_message status - %p\n",
                        status));
         return status;
@@ -84,7 +84,7 @@ return_status libspdm_send_request(void *context, const uint32_t *session_id,
 
     status = spdm_context->send_message(spdm_context, message_size, message,
                                         timeout);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_send_spdm_request[%x] status - %p\n",
                        (session_id != NULL) ? *session_id : 0x0, status));
     }
@@ -114,7 +114,7 @@ return_status libspdm_receive_response(void *context, const uint32_t *session_id
                                        void **response)
 {
     libspdm_context_t *spdm_context;
-    return_status status;
+    libspdm_return_t status;
     uint8_t *message;
     size_t message_size;
     uint32_t *message_session_id;
@@ -137,7 +137,7 @@ return_status libspdm_receive_response(void *context, const uint32_t *session_id
     message_size = *response_size;
     status = spdm_context->receive_message(spdm_context, &message_size,
                                            (void **)&message, timeout);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "libspdm_receive_spdm_response[%x] status - %p\n",
                        (session_id != NULL) ? *session_id : 0x0, status));
@@ -184,7 +184,7 @@ return_status libspdm_receive_response(void *context, const uint32_t *session_id
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_receive_spdm_response[%x] (0x%x): \n",
                    (session_id != NULL) ? *session_id : 0x0, *response_size));
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "libspdm_receive_spdm_response[%x] status - %p\n",
                        (session_id != NULL) ? *session_id : 0x0, status));
@@ -195,9 +195,9 @@ return_status libspdm_receive_response(void *context, const uint32_t *session_id
 
 error:
     if (spdm_context->last_spdm_error.error_code == SPDM_ERROR_CODE_DECRYPT_ERROR) {
-        return RETURN_SECURITY_VIOLATION;
+        return LIBSPDM_STATUS_CRYPTO_ERROR;
     } else {
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_RECEIVE_FAIL;
     }
 }
 

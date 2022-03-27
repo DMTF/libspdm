@@ -13,14 +13,14 @@ size_t libspdm_get_max_buffer_size(void)
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
 
-return_status libspdm_device_send_message(void *spdm_context, size_t request_size,
-                                          const void *request, uint64_t timeout)
+libspdm_return_t libspdm_device_send_message(void *spdm_context, size_t request_size,
+                                             const void *request, uint64_t timeout)
 {
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
-return_status libspdm_device_receive_message(void *spdm_context, size_t *response_size,
-                                             void **response, uint64_t timeout)
+libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *response_size,
+                                                void **response, uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
     uint8_t *spdm_response;
@@ -44,7 +44,7 @@ return_status libspdm_device_receive_message(void *spdm_context, size_t *respons
                                           spdm_response_size,
                                           spdm_response, response_size, response);
 
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
 void libspdm_test_requester_negotiate_algorithms_case1(void **State)

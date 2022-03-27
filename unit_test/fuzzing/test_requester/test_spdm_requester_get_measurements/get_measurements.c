@@ -61,8 +61,8 @@ size_t libspdm_test_get_measurement_request_size(const void *spdm_context, const
     return message_size;
 }
 
-return_status libspdm_device_send_message(void *spdm_context, size_t request_size,
-                                          const void *request, uint64_t timeout)
+libspdm_return_t libspdm_device_send_message(void *spdm_context, size_t request_size,
+                                             const void *request, uint64_t timeout)
 {
     size_t header_size;
     size_t message_size;
@@ -74,11 +74,11 @@ return_status libspdm_device_send_message(void *spdm_context, size_t request_siz
     libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
                      (uint8_t *)request + header_size, message_size);
     m_libspdm_local_buffer_size += message_size;
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
-return_status libspdm_device_receive_message(void *spdm_context, size_t *response_size,
-                                             void **response, uint64_t timeout)
+libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *response_size,
+                                                void **response, uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
     uint8_t *spdm_response;
@@ -110,7 +110,7 @@ return_status libspdm_device_receive_message(void *spdm_context, size_t *respons
 
         session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
         if (session_info == NULL) {
-            return RETURN_DEVICE_ERROR;
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         /* WALKAROUND: If just use single context to encode message and then decode message */
         ((libspdm_secured_message_context_t *)(session_info->secured_message_context))
@@ -121,7 +121,7 @@ return_status libspdm_device_receive_message(void *spdm_context, size_t *respons
                                               spdm_response, response_size, response);
     }
 
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
 void libspdm_test_requester_get_measurement_case1(void **State)

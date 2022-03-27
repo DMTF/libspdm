@@ -129,7 +129,7 @@ return_status libspdm_get_encap_response_certificate(void *context,
 
     status = libspdm_append_message_mut_b(spdm_context, spdm_request,
                                           request_size);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return libspdm_generate_encap_error_response(
             spdm_context, SPDM_ERROR_CODE_UNSPECIFIED, 0,
             response_size, response);
@@ -137,7 +137,7 @@ return_status libspdm_get_encap_response_certificate(void *context,
 
     status = libspdm_append_message_mut_b(spdm_context, spdm_response,
                                           *response_size);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return libspdm_generate_encap_error_response(
             spdm_context, SPDM_ERROR_CODE_UNSPECIFIED, 0,
             response_size, response);

@@ -11,12 +11,12 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
-return_status libspdm_test_verify_spdm_cert_chain(void *spdm_context, uint8_t slot_id,
-                                                  size_t cert_chain_size, const void *cert_chain,
-                                                  void **trust_anchor,
-                                                  size_t *trust_anchor_size)
+bool libspdm_test_verify_spdm_cert_chain(void *spdm_context, uint8_t slot_id,
+                                         size_t cert_chain_size, const void *cert_chain,
+                                         void **trust_anchor,
+                                         size_t *trust_anchor_size)
 {
-    return RETURN_SUCCESS;
+    return true;
 }
 
 size_t libspdm_get_max_buffer_size(void)
@@ -24,17 +24,17 @@ size_t libspdm_get_max_buffer_size(void)
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 }
 
-return_status libspdm_device_send_message(void *spdm_context, size_t request_size,
-                                          const void *request, uint64_t timeout)
+libspdm_return_t libspdm_device_send_message(void *spdm_context, size_t request_size,
+                                             const void *request, uint64_t timeout)
 {
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
 #define FUZZING_LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN 0x408
 size_t calling_index = 0;
 
-return_status libspdm_device_receive_message(void *spdm_context, size_t *response_size,
-                                             void **response, uint64_t timeout)
+libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *response_size,
+                                                void **response, uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
     uint8_t *spdm_response;
@@ -55,7 +55,7 @@ return_status libspdm_device_receive_message(void *spdm_context, size_t *respons
         spdm_response_size = spdm_response_size - calling_index *
                              FUZZING_LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
     } else {
-        return RETURN_DEVICE_ERROR;
+        return LIBSPDM_STATUS_RECEIVE_FAIL;
     }
 
     libspdm_copy_mem((uint8_t *)temp_buf + test_message_header_size,
@@ -69,7 +69,7 @@ return_status libspdm_device_receive_message(void *spdm_context, size_t *respons
                                           spdm_response, response_size, response);
     calling_index++;
 
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
 void libspdm_test_requester_get_certificate_case1(void **State)

@@ -6,21 +6,21 @@
 
 #include "spdm_requester.h"
 
-return_status libspdm_requester_send_message(const void *spdm_context,
-                                             size_t message_size, const void *message,
-                                             uint64_t timeout)
-{
-    /* Dummy*/
-    return RETURN_SUCCESS;
-}
-
-return_status libspdm_requester_receive_message(const void *spdm_context,
-                                                size_t *message_size,
-                                                void *message,
+libspdm_return_t libspdm_requester_send_message(const void *spdm_context,
+                                                size_t message_size, const void *message,
                                                 uint64_t timeout)
 {
     /* Dummy*/
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
+}
+
+libspdm_return_t libspdm_requester_receive_message(const void *spdm_context,
+                                                   size_t *message_size,
+                                                   void *message,
+                                                   uint64_t timeout)
+{
+    /* Dummy*/
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
 void *spdm_client_init(void)

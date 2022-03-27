@@ -106,7 +106,7 @@ libspdm_return_t libspdm_get_response_psk_finish(void *context,
 
     status = libspdm_append_message_f(spdm_context, session_info, false, request,
                                       request_size - hmac_size);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,
                                                response_size, response);
@@ -144,7 +144,7 @@ libspdm_return_t libspdm_get_response_psk_finish(void *context,
         spdm_context, session_info, false,
         (uint8_t *)request + request_size - hmac_size,
         hmac_size);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,
                                                response_size, response);
@@ -152,16 +152,16 @@ libspdm_return_t libspdm_get_response_psk_finish(void *context,
 
     status = libspdm_append_message_f(spdm_context, session_info, false, spdm_response,
                                       *response_size);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,
                                                response_size, response);
     }
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_generate_session_data_key[%x]\n", session_id));
-    status = libspdm_calculate_th2_hash(spdm_context, session_info, false,
+    result = libspdm_calculate_th2_hash(spdm_context, session_info, false,
                                         th2_hash_data);
-    if (RETURN_ERROR(status)) {
+    if (!result) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,
                                                response_size, response);

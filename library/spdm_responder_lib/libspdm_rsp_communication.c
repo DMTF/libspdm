@@ -42,7 +42,7 @@ libspdm_return_t libspdm_responder_dispatch_message(void *context)
     request_size = message_size;
     status = spdm_context->receive_message(spdm_context, &request_size,
                                            (void **)&request, 0);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_release_receiver_buffer (spdm_context);
         return status;
     }

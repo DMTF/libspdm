@@ -95,7 +95,7 @@ return_status libspdm_try_send_receive_psk_finish(libspdm_context_t *spdm_contex
 
     status = libspdm_append_message_f(spdm_context, session_info, true, (uint8_t *)spdm_request,
                                       spdm_request_size - hmac_size);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_release_sender_buffer (spdm_context);
         status = RETURN_SECURITY_VIOLATION;
         goto error;
@@ -113,7 +113,7 @@ return_status libspdm_try_send_receive_psk_finish(libspdm_context_t *spdm_contex
                                       (uint8_t *)spdm_request +
                                       spdm_request_size - hmac_size,
                                       hmac_size);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_release_sender_buffer (spdm_context);
         status = RETURN_SECURITY_VIOLATION;
         goto error;
@@ -178,15 +178,15 @@ return_status libspdm_try_send_receive_psk_finish(libspdm_context_t *spdm_contex
 
     status = libspdm_append_message_f(spdm_context, session_info, true, spdm_response,
                                       spdm_response_size);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         status = RETURN_SECURITY_VIOLATION;
         goto receive_done;
     }
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_generate_session_data_key[%x]\n", session_id));
-    status = libspdm_calculate_th2_hash(spdm_context, session_info, true,
+    result = libspdm_calculate_th2_hash(spdm_context, session_info, true,
                                         th2_hash_data);
-    if (RETURN_ERROR(status)) {
+    if (!result) {
         status = RETURN_SECURITY_VIOLATION;
         goto receive_done;
     }

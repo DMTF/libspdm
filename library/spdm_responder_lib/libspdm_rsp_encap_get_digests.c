@@ -55,7 +55,7 @@ libspdm_get_encap_request_get_digest(libspdm_context_t *spdm_context,
 
     status = libspdm_append_message_mut_b(spdm_context, spdm_request,
                                           *encap_request_size);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return LIBSPDM_STATUS_BUFFER_FULL;
     }
 
@@ -139,7 +139,7 @@ libspdm_return_t libspdm_process_encap_response_digest(
 
     status = libspdm_append_message_mut_b(spdm_context, spdm_response,
                                           spdm_response_size);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return LIBSPDM_STATUS_BUFFER_FULL;
     }
 

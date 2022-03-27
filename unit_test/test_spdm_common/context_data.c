@@ -15,7 +15,7 @@ static uint32_t libspdm_opaque_data = 0xDEADBEEF;
  **/
 static void libspdm_test_common_context_data_case1(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     void *data = (void *)&libspdm_opaque_data;
@@ -28,12 +28,12 @@ static void libspdm_test_common_context_data_case1(void **state)
 
     status = libspdm_set_data(spdm_context, LIBSPDM_DATA_APP_CONTEXT_DATA,
                               NULL, &data, sizeof(data));
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
     data_return_size = sizeof(return_data);
     status = libspdm_get_data(spdm_context, LIBSPDM_DATA_APP_CONTEXT_DATA,
                               NULL, &return_data, &data_return_size);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
     assert_memory_equal(data, return_data, sizeof(data));
     assert_int_equal(data_return_size, sizeof(void*));
@@ -48,7 +48,7 @@ static void libspdm_test_common_context_data_case1(void **state)
  **/
 static void libspdm_test_common_context_data_case2(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     void *data = (void *)&libspdm_opaque_data;
@@ -68,7 +68,7 @@ static void libspdm_test_common_context_data_case2(void **state)
     data_return_size = sizeof(current_return_data);
     status = libspdm_get_data(spdm_context, LIBSPDM_DATA_APP_CONTEXT_DATA,
                               NULL, &current_return_data, &data_return_size);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(data_return_size, sizeof(void*));
 
     /* Ensure nothing has changed between subsequent calls to get data */
@@ -80,12 +80,12 @@ static void libspdm_test_common_context_data_case2(void **state)
      */
     status = libspdm_set_data(spdm_context, LIBSPDM_DATA_APP_CONTEXT_DATA,
                               NULL, &data, 500);
-    assert_int_equal(status, RETURN_INVALID_PARAMETER);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_PARAMETER);
 
     data_return_size = sizeof(return_data);
     status = libspdm_get_data(spdm_context, LIBSPDM_DATA_APP_CONTEXT_DATA,
                               NULL, &return_data, &data_return_size);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_ptr_equal(return_data, current_return_data);
     assert_int_equal(data_return_size, sizeof(void*));
 
@@ -99,7 +99,7 @@ static void libspdm_test_common_context_data_case2(void **state)
  **/
 static void libspdm_test_common_context_data_case3(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     void *data = NULL;
@@ -119,7 +119,7 @@ static void libspdm_test_common_context_data_case3(void **state)
     data_return_size = sizeof(current_return_data);
     status = libspdm_get_data(spdm_context, LIBSPDM_DATA_APP_CONTEXT_DATA,
                               NULL, &current_return_data, &data_return_size);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(data_return_size, sizeof(void*));
 
     /* Ensure nothing has changed between subsequent calls to get data */
@@ -132,12 +132,12 @@ static void libspdm_test_common_context_data_case3(void **state)
      */
     status = libspdm_set_data(spdm_context, LIBSPDM_DATA_APP_CONTEXT_DATA,
                               NULL, &data, sizeof(void *));
-    assert_int_equal(status, RETURN_INVALID_PARAMETER);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_PARAMETER);
 
     data_return_size = sizeof(return_data);
     status = libspdm_get_data(spdm_context, LIBSPDM_DATA_APP_CONTEXT_DATA,
                               NULL, &return_data, &data_return_size);
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_ptr_equal(return_data, current_return_data);
     assert_int_equal(data_return_size, sizeof(void*));
 
@@ -152,7 +152,7 @@ static void libspdm_test_common_context_data_case3(void **state)
  **/
 static void libspdm_test_common_context_data_case4(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     void *data = (void *)&libspdm_opaque_data;
@@ -168,7 +168,7 @@ static void libspdm_test_common_context_data_case4(void **state)
      */
     status = libspdm_set_data(spdm_context, LIBSPDM_DATA_APP_CONTEXT_DATA,
                               NULL, &data, sizeof(void *));
-    assert_int_equal(status, RETURN_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
     /*
      * Fail get data due to insufficient buffer for return value. returned
@@ -177,7 +177,7 @@ static void libspdm_test_common_context_data_case4(void **state)
     data_return_size = sizeof(void*) - 1;
     status = libspdm_get_data(spdm_context, LIBSPDM_DATA_APP_CONTEXT_DATA,
                               NULL, &return_data, &data_return_size);
-    assert_int_equal(status, RETURN_BUFFER_TOO_SMALL);
+    assert_int_equal(status, LIBSPDM_STATUS_BUFFER_TOO_SMALL);
     assert_int_equal(data_return_size, sizeof(void*));
 
     /* check that nothing changed at the data location */
@@ -534,7 +534,7 @@ void libspdm_test_verify_peer_cert_chain_buffer_case8(void **state)
  **/
 static void libspdm_test_set_data_case9(void **state)
 {
-    return_status status;
+    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
 
@@ -566,7 +566,7 @@ static void libspdm_test_set_data_case9(void **state)
     }
     status = libspdm_set_data(spdm_context, LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT,
                               NULL, root_cert, root_cert_size);
-    assert_int_equal (status, RETURN_SUCCESS);
+    assert_int_equal (status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal (spdm_context->local_context.peer_root_cert_provision_size[0], root_cert_size);
     assert_ptr_equal (spdm_context->local_context.peer_root_cert_provision[0], root_cert);
 
@@ -577,7 +577,7 @@ static void libspdm_test_set_data_case9(void **state)
     }
     status = libspdm_set_data(spdm_context, LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT,
                               NULL, root_cert, root_cert_size);
-    assert_int_equal (status, RETURN_OUT_OF_RESOURCES);
+    assert_int_equal (status, LIBSPDM_STATUS_BUFFER_FULL);
 
     free(data);
 }

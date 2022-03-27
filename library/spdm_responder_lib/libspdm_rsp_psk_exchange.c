@@ -179,7 +179,7 @@ libspdm_return_t libspdm_get_response_psk_exchange(void *context,
           spdm_request->psk_hint_length + spdm_request->context_length;
     status = libspdm_process_opaque_data_supported_version_data(
         spdm_context, spdm_request->opaque_length, ptr);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
@@ -274,12 +274,12 @@ libspdm_return_t libspdm_get_response_psk_exchange(void *context,
 
     status = libspdm_build_opaque_data_version_selection_data(
         spdm_context, &opaque_psk_exchange_rsp_size, ptr);
-    LIBSPDM_ASSERT_RETURN_ERROR(status);
+    LIBSPDM_ASSERT(status == LIBSPDM_STATUS_SUCCESS);
     ptr += opaque_psk_exchange_rsp_size;
 
 
     status = libspdm_append_message_k(spdm_context, session_info, false, request, request_size);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_free_session_id(spdm_context, session_id);
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,
@@ -288,7 +288,7 @@ libspdm_return_t libspdm_get_response_psk_exchange(void *context,
 
     status = libspdm_append_message_k(spdm_context, session_info, false, spdm_response,
                                       (size_t)ptr - (size_t)spdm_response);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_free_session_id(spdm_context, session_id);
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,
@@ -297,9 +297,9 @@ libspdm_return_t libspdm_get_response_psk_exchange(void *context,
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_generate_session_handshake_key[%x]\n",
                    session_id));
-    status = libspdm_calculate_th1_hash(spdm_context, session_info, false,
+    result = libspdm_calculate_th1_hash(spdm_context, session_info, false,
                                         th1_hash_data);
-    if (RETURN_ERROR(status)) {
+    if (!result) {
         libspdm_free_session_id(spdm_context, session_id);
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,
@@ -323,7 +323,7 @@ libspdm_return_t libspdm_get_response_psk_exchange(void *context,
             0, response_size, response);
     }
     status = libspdm_append_message_k(spdm_context, session_info, false, ptr, hmac_size);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_free_session_id(spdm_context, session_id);
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,
@@ -344,9 +344,9 @@ libspdm_return_t libspdm_get_response_psk_exchange(void *context,
 
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_generate_session_data_key[%x]\n",
                        session_id));
-        status = libspdm_calculate_th2_hash(spdm_context, session_info,
+        result = libspdm_calculate_th2_hash(spdm_context, session_info,
                                             false, th2_hash_data);
-        if (RETURN_ERROR(status)) {
+        if (!result) {
             return libspdm_generate_error_response(
                 spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
                 0, response_size, response);

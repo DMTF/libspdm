@@ -263,7 +263,7 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
 
     status = libspdm_append_message_c(spdm_context, spdm_request,
                                       spdm_request_size);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         status = RETURN_SECURITY_VIOLATION;
         goto receive_done;
     }
@@ -280,7 +280,7 @@ return_status libspdm_try_challenge(void *context, uint8_t slot_id,
                          opaque_length + signature_size;
     status = libspdm_append_message_c(spdm_context, spdm_response,
                                       spdm_response_size - signature_size);
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_reset_message_c(spdm_context);
         status = RETURN_SECURITY_VIOLATION;
         goto receive_done;

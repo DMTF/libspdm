@@ -260,15 +260,13 @@ libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm_contex
     /* Cache data*/
 
     status = libspdm_append_message_a(spdm_context, spdm_request, spdm_request_size);
-    /* TODO: Replace with LIBSPDM_RET_ON_ERR. */
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         status = LIBSPDM_STATUS_BUFFER_FULL;
         goto receive_done;
     }
 
     status = libspdm_append_message_a(spdm_context, spdm_response, spdm_response_size);
-    /* TODO: Replace with LIBSPDM_RET_ON_ERR. */
-    if (RETURN_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         status = LIBSPDM_STATUS_BUFFER_FULL;
         goto receive_done;
     }

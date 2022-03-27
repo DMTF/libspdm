@@ -99,18 +99,18 @@ void libspdm_write_uint24(uint8_t *buffer, uint32_t value)
  * @retval RETURN_SUCCESS               The new data buffer is appended to the managed buffer.
  * @retval RETURN_BUFFER_TOO_SMALL      The managed buffer is too small to be appended.
  **/
-return_status libspdm_append_managed_buffer(void *m_buffer, const void *buffer,
-                                            size_t buffer_size)
+libspdm_return_t libspdm_append_managed_buffer(void *m_buffer, const void *buffer,
+                                               size_t buffer_size)
 {
     libspdm_managed_buffer_t *managed_buffer;
 
     managed_buffer = m_buffer;
 
     if (buffer_size == 0) {
-        return RETURN_SUCCESS;
+        return LIBSPDM_STATUS_SUCCESS;
     }
     if (buffer == NULL) {
-        return RETURN_INVALID_PARAMETER;
+        return LIBSPDM_STATUS_INVALID_PARAMETER;
     }
     LIBSPDM_ASSERT(buffer != NULL);
     LIBSPDM_ASSERT(buffer_size != 0);
@@ -129,7 +129,7 @@ return_status libspdm_append_managed_buffer(void *m_buffer, const void *buffer,
                        (uint32_t)buffer_size,
                        (uint32_t)(managed_buffer->max_buffer_size -
                                   managed_buffer->buffer_size)));
-        return RETURN_BUFFER_TOO_SMALL;
+        return LIBSPDM_STATUS_BUFFER_FULL;
     }
     LIBSPDM_ASSERT(buffer_size <=
                    managed_buffer->max_buffer_size - managed_buffer->buffer_size);
@@ -138,7 +138,7 @@ return_status libspdm_append_managed_buffer(void *m_buffer, const void *buffer,
                      buffer_size,
                      buffer, buffer_size);
     managed_buffer->buffer_size += buffer_size;
-    return RETURN_SUCCESS;
+    return LIBSPDM_STATUS_SUCCESS;
 }
 
 /**
