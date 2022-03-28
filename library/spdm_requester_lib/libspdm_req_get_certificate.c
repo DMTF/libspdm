@@ -106,8 +106,6 @@ libspdm_return_t libspdm_try_get_certificate(void *context, uint8_t slot_id,
     remainder_length = 0;
     total_responder_cert_chain_buffer_length = 0;
 
-    spdm_context->error_state = LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
-
     transport_header_size = spdm_context->transport_get_header_size(spdm_context);
 
     do {
@@ -256,7 +254,6 @@ libspdm_return_t libspdm_try_get_certificate(void *context, uint8_t slot_id,
             libspdm_get_managed_buffer(&certificate_chain_buffer),
             trust_anchor, trust_anchor_size);
         if (!result) {
-            spdm_context->error_state = LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
             status = LIBSPDM_STATUS_VERIF_FAIL;
             goto done;
         }
@@ -266,7 +263,6 @@ libspdm_return_t libspdm_try_get_certificate(void *context, uint8_t slot_id,
             libspdm_get_managed_buffer_size(&certificate_chain_buffer),
             trust_anchor, trust_anchor_size, true);
         if (!result) {
-            spdm_context->error_state = LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
             status = LIBSPDM_STATUS_VERIF_FAIL;
             goto done;
         }
@@ -286,7 +282,6 @@ libspdm_return_t libspdm_try_get_certificate(void *context, uint8_t slot_id,
         libspdm_get_managed_buffer_size(&certificate_chain_buffer),
         spdm_context->connection_info.peer_used_cert_chain_buffer_hash);
     if (!result) {
-        spdm_context->error_state = LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
         status = LIBSPDM_STATUS_CRYPTO_ERROR;
         goto done;
     }
@@ -301,13 +296,10 @@ libspdm_return_t libspdm_try_get_certificate(void *context, uint8_t slot_id,
         libspdm_get_managed_buffer_size(&certificate_chain_buffer),
         &spdm_context->connection_info.peer_used_leaf_cert_public_key);
     if (!result) {
-        spdm_context->error_state = LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
         status = LIBSPDM_STATUS_INVALID_CERT;
         goto done;
     }
 #endif
-
-    spdm_context->error_state = LIBSPDM_STATUS_SUCCESS;
 
     if (cert_chain_size != NULL) {
         if (*cert_chain_size <

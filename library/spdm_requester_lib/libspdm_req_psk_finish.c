@@ -76,8 +76,6 @@ libspdm_return_t libspdm_try_send_receive_psk_finish(libspdm_context_t *spdm_con
         goto error;
     }
 
-    spdm_context->error_state = LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
-
     transport_header_size = spdm_context->transport_get_header_size(spdm_context);
     libspdm_acquire_sender_buffer (spdm_context, &message_size, (void **)&message);
     LIBSPDM_ASSERT (message_size >= transport_header_size);
@@ -200,7 +198,6 @@ libspdm_return_t libspdm_try_send_receive_psk_finish(libspdm_context_t *spdm_con
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
-    spdm_context->error_state = LIBSPDM_STATUS_SUCCESS;
 
     libspdm_release_receiver_buffer (spdm_context);
     return LIBSPDM_STATUS_SUCCESS;

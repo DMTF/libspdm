@@ -1323,7 +1323,6 @@ void libspdm_test_requester_get_digests_case17(void **state)
     libspdm_zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
     status = libspdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
     assert_int_equal(status, LIBSPDM_STATUS_VERIF_FAIL);
-    assert_int_equal(spdm_context->error_state, LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE);
 }
 
 /**
@@ -1391,8 +1390,6 @@ void libspdm_test_requester_get_digests_case19(void **state)
     libspdm_zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
     status = libspdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
     assert_int_equal(status, LIBSPDM_STATUS_VERIF_FAIL);
-    assert_int_equal(spdm_context->error_state,
-                     LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE);
 }
 
 /**

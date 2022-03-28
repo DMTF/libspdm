@@ -56,8 +56,6 @@ libspdm_return_t libspdm_try_send_receive_end_session(libspdm_context_t *spdm_co
         return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
 
-    spdm_context->error_state = LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
-
     if (!libspdm_is_capabilities_flag_supported(
             spdm_context, true, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CACHE_CAP)) {
@@ -135,7 +133,6 @@ libspdm_return_t libspdm_try_send_receive_end_session(libspdm_context_t *spdm_co
         LIBSPDM_SESSION_STATE_NOT_STARTED);
     libspdm_free_session_id(spdm_context, session_id);
 
-    spdm_context->error_state = LIBSPDM_STATUS_SUCCESS;
     status = LIBSPDM_STATUS_SUCCESS;
 
 receive_done:

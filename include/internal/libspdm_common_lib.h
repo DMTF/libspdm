@@ -265,7 +265,6 @@ typedef struct {
 
 #define LIBSPDM_MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT 3
 typedef struct {
-    uint32_t error_state;
     /* Valid OpCode: GET_DIEGST/GET_CERTIFICATE/CHALLENGE/KEY_UPDATE
      * The last one is 0x00, as terminator.*/
     uint8_t request_op_code_sequence[LIBSPDM_MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT +
@@ -306,10 +305,6 @@ typedef struct {
     libspdm_transport_encode_message_func transport_encode_message;
     libspdm_transport_decode_message_func transport_decode_message;
     libspdm_transport_get_header_size_func transport_get_header_size;
-
-    /* command status*/
-
-    uint32_t error_state;
 
     /* Cached plain text command
      * If the command is cipher text, decrypt then cache it.*/
