@@ -123,8 +123,6 @@ libspdm_return_t libspdm_receive_response(void *context, const uint32_t *session
 
     spdm_context = context;
 
-    LIBSPDM_ASSERT(*response_size <= LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
-
     if (spdm_context->crypto_request) {
         timeout = spdm_context->local_context.capability.rtt +
                   (2 << spdm_context->local_context.capability.ct_exponent);
