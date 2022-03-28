@@ -90,28 +90,23 @@ static void libspdm_set_standard_key_update_test_secrets(
     .request_data_sequence_number = 0;
 }
 
-static void libspdm_compute_secret_update(size_t hash_size,
+static void libspdm_compute_secret_update(spdm_version_number_t spdm_version,
+                                          size_t hash_size,
                                           const uint8_t *in_secret,
                                           uint8_t *out_secret,
                                           size_t out_secret_size)
 {
-    uint8_t m_bin_str9[128];
-    size_t m_bin_str9_size;
-    uint16_t length;
+    uint8_t bin_str9[128];
+    size_t bin_str9_size;
 
-    length = (uint16_t)hash_size;
-    libspdm_copy_mem(m_bin_str9, sizeof(m_bin_str9), &length, sizeof(uint16_t));
-    libspdm_copy_mem(m_bin_str9 + sizeof(uint16_t), sizeof(m_bin_str9) - sizeof(uint16_t),
-                     SPDM_BIN_CONCAT_LABEL, sizeof(SPDM_BIN_CONCAT_LABEL) - 1);
-    libspdm_copy_mem(m_bin_str9 + sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1,
-                     sizeof(m_bin_str9) - (sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1),
-                     SPDM_BIN_STR_9_LABEL, sizeof(SPDM_BIN_STR_9_LABEL));
-    m_bin_str9_size = sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1 +
-                      sizeof(SPDM_BIN_STR_9_LABEL) - 1;
-    /*context is NULL for key update*/
+    bin_str9_size = sizeof(bin_str9);
+    libspdm_bin_concat(spdm_version,
+                       SPDM_BIN_STR_9_LABEL, sizeof(SPDM_BIN_STR_9_LABEL) - 1,
+                       NULL, (uint16_t)hash_size, hash_size, bin_str9,
+                       &bin_str9_size);
 
-    libspdm_hkdf_expand(m_libspdm_use_hash_algo, in_secret, hash_size, m_bin_str9,
-                        m_bin_str9_size, out_secret, out_secret_size);
+    libspdm_hkdf_expand(m_libspdm_use_hash_algo, in_secret, hash_size, bin_str9,
+                        bin_str9_size, out_secret, out_secret_size);
 }
 
 size_t libspdm_get_max_buffer_size(void)
@@ -148,7 +143,8 @@ void libspdm_test_responder_key_update(void **State)
         session_info->secured_message_context, m_rsp_secret_buffer,
         (uint8_t)(0xFF), m_req_secret_buffer, (uint8_t)(0xEE));
 
-    libspdm_compute_secret_update(secured_message_context->hash_size,
+    libspdm_compute_secret_update(spdm_context->connection_info.version,
+                                  secured_message_context->hash_size,
                                   m_req_secret_buffer, m_req_secret_buffer,
                                   secured_message_context->hash_size);
 
