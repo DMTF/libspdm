@@ -1361,6 +1361,9 @@ bool libspdm_x509_get_extension_data(const uint8_t *cert, size_t cert_size,
 
     /* Traverse extensions*/
 
+    status = false;
+    asn1_oct = NULL;
+    oct_length = 0;
     for (i = 0; i < sk_X509_EXTENSION_num(extensions); i++) {
         ext = sk_X509_EXTENSION_value(extensions, (int)i);
         if (ext == NULL) {
@@ -1396,7 +1399,7 @@ bool libspdm_x509_get_extension_data(const uint8_t *cert, size_t cert_size,
             status = false;
             goto cleanup;
         }
-        if (oid != NULL) {
+        if (asn1_oct != NULL) {
             libspdm_copy_mem(extension_data, *extension_data_size,
                              ASN1_STRING_get0_data(asn1_oct), oct_length);
         }
