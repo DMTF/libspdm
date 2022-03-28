@@ -273,7 +273,8 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr), hash_data);
         free(data);
         bin_str2_size = sizeof(bin_str2);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_2_LABEL, sizeof(LIBSPDM_BIN_STR_2_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           LIBSPDM_BIN_STR_2_LABEL, sizeof(LIBSPDM_BIN_STR_2_LABEL) - 1,
                            hash_data, (uint16_t)hash_size, hash_size,
                            bin_str2, &bin_str2_size);
         libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
@@ -286,7 +287,8 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
                 bin_str2_size,
                 response_handshake_secret, hash_size);
         bin_str7_size = sizeof(bin_str7);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_7_LABEL, sizeof(LIBSPDM_BIN_STR_7_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           LIBSPDM_BIN_STR_7_LABEL, sizeof(LIBSPDM_BIN_STR_7_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str7,
                            &bin_str7_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
@@ -394,7 +396,8 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr), hash_data);
         free(data);
         bin_str2_size = sizeof(bin_str2);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_2_LABEL, sizeof(LIBSPDM_BIN_STR_2_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           LIBSPDM_BIN_STR_2_LABEL, sizeof(LIBSPDM_BIN_STR_2_LABEL) - 1,
                            hash_data, (uint16_t)hash_size, hash_size,
                            bin_str2, &bin_str2_size);
         libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
@@ -407,7 +410,8 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
                 bin_str2_size,
                 response_handshake_secret, hash_size);
         bin_str7_size = sizeof(bin_str7);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_7_LABEL, sizeof(LIBSPDM_BIN_STR_7_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           LIBSPDM_BIN_STR_7_LABEL, sizeof(LIBSPDM_BIN_STR_7_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str7,
                            &bin_str7_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
@@ -588,7 +592,8 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
                              hash_data);
             free(data);
             bin_str2_size = sizeof(bin_str2);
-            libspdm_bin_concat(LIBSPDM_BIN_STR_2_LABEL,
+            libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                               LIBSPDM_BIN_STR_2_LABEL,
                                sizeof(LIBSPDM_BIN_STR_2_LABEL) - 1, hash_data,
                                (uint16_t)hash_size, hash_size, bin_str2,
                                &bin_str2_size);
@@ -602,7 +607,8 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
                     bin_str2_size, response_handshake_secret,
                     hash_size);
             bin_str7_size = sizeof(bin_str7);
-            libspdm_bin_concat(LIBSPDM_BIN_STR_7_LABEL,
+            libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                               LIBSPDM_BIN_STR_7_LABEL,
                                sizeof(LIBSPDM_BIN_STR_7_LABEL) - 1, NULL,
                                (uint16_t)hash_size, hash_size, bin_str7,
                                &bin_str7_size);
@@ -799,7 +805,8 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
                              hash_data);
             free(data);
             bin_str2_size = sizeof(bin_str2);
-            libspdm_bin_concat(LIBSPDM_BIN_STR_2_LABEL,
+            libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                               LIBSPDM_BIN_STR_2_LABEL,
                                sizeof(LIBSPDM_BIN_STR_2_LABEL) - 1, hash_data,
                                (uint16_t)hash_size, hash_size, bin_str2,
                                &bin_str2_size);
@@ -813,7 +820,8 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
                     bin_str2_size, response_handshake_secret,
                     hash_size);
             bin_str7_size = sizeof(bin_str7);
-            libspdm_bin_concat(LIBSPDM_BIN_STR_7_LABEL,
+            libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                               LIBSPDM_BIN_STR_7_LABEL,
                                sizeof(LIBSPDM_BIN_STR_7_LABEL) - 1, NULL,
                                (uint16_t)hash_size, hash_size, bin_str7,
                                &bin_str7_size);
@@ -961,7 +969,8 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr), hash_data);
         free(data);
         bin_str2_size = sizeof(bin_str2);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_2_LABEL, sizeof(LIBSPDM_BIN_STR_2_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           LIBSPDM_BIN_STR_2_LABEL, sizeof(LIBSPDM_BIN_STR_2_LABEL) - 1,
                            hash_data, (uint16_t)hash_size, hash_size,
                            bin_str2, &bin_str2_size);
         libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
@@ -974,7 +983,8 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
                 bin_str2_size,
                 response_handshake_secret, hash_size);
         bin_str7_size = sizeof(bin_str7);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_7_LABEL, sizeof(LIBSPDM_BIN_STR_7_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           LIBSPDM_BIN_STR_7_LABEL, sizeof(LIBSPDM_BIN_STR_7_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str7,
                            &bin_str7_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
@@ -1070,7 +1080,8 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr), hash_data);
         free(data);
         bin_str2_size = sizeof(bin_str2);
-        libspdm_bin_concat(SPDM_BIN_STR_2_LABEL, sizeof(SPDM_BIN_STR_2_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_2_LABEL, sizeof(SPDM_BIN_STR_2_LABEL) - 1,
                            hash_data, (uint16_t)hash_size, hash_size,
                            bin_str2, &bin_str2_size);
         libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
@@ -1082,7 +1093,8 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
                 sizeof(LIBSPDM_TEST_PSK_HINT_STRING), bin_str2, bin_str2_size,
                 response_handshake_secret, hash_size);
         bin_str7_size = sizeof(bin_str7);
-        libspdm_bin_concat(SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str7, &bin_str7_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
                             hash_size, bin_str7, bin_str7_size,

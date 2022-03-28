@@ -56,24 +56,20 @@ static void libspdm_set_standard_key_update_test_state(libspdm_context_t *spdm_c
     free(data);
 }
 
-static void libspdm_compute_secret_update(size_t hash_size, const uint8_t *in_secret,
+static void libspdm_compute_secret_update(spdm_version_number_t spdm_version,
+                                          size_t hash_size, const uint8_t *in_secret,
                                           uint8_t *out_secret, size_t out_secret_size)
 {
-    uint8_t m_bin_str9[128];
-    size_t m_bin_str9_size;
-    uint16_t length;
+    uint8_t bin_str9[128];
+    size_t bin_str9_size;
 
-    length = (uint16_t)hash_size;
-    libspdm_copy_mem(m_bin_str9, sizeof(m_bin_str9), &length, sizeof(uint16_t));
-    libspdm_copy_mem(m_bin_str9 + sizeof(uint16_t), sizeof(m_bin_str9) - sizeof(uint16_t),
-                     SPDM_BIN_CONCAT_LABEL, sizeof(SPDM_BIN_CONCAT_LABEL) - 1);
-    libspdm_copy_mem(m_bin_str9 + sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1,
-                     sizeof(m_bin_str9) - (sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1),
-                     SPDM_BIN_STR_9_LABEL, sizeof(SPDM_BIN_STR_9_LABEL));
-    m_bin_str9_size =
-        sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1 + sizeof(SPDM_BIN_STR_9_LABEL) - 1;
+    bin_str9_size = sizeof(bin_str9);
+    libspdm_bin_concat(spdm_version,
+                       SPDM_BIN_STR_9_LABEL, sizeof(SPDM_BIN_STR_9_LABEL) - 1,
+                       NULL, (uint16_t)hash_size, hash_size, bin_str9,
+                       &bin_str9_size);
 
-    libspdm_hkdf_expand(m_libspdm_use_hash_algo, in_secret, hash_size, m_bin_str9, m_bin_str9_size,
+    libspdm_hkdf_expand(m_libspdm_use_hash_algo, in_secret, hash_size, bin_str9, bin_str9_size,
                         out_secret, out_secret_size);
 }
 
@@ -204,6 +200,7 @@ void libspdm_test_requester_key_update_case1(void **State)
 
     /*request side updated*/
     libspdm_compute_secret_update(
+        spdm_context->connection_info.version,
         ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->hash_size,
         m_req_secret_buffer, m_req_secret_buffer, sizeof(m_req_secret_buffer));
     /*response side *not* updated*/
@@ -235,10 +232,12 @@ void libspdm_test_requester_key_update_case2(void **state)
 
     /*request side updated*/
     libspdm_compute_secret_update(
+        spdm_context->connection_info.version,
         ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->hash_size,
         m_req_secret_buffer, m_req_secret_buffer, sizeof(m_req_secret_buffer));
     /*response side updated*/
     libspdm_compute_secret_update(
+        spdm_context->connection_info.version,
         ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->hash_size,
         m_rsp_secret_buffer, m_rsp_secret_buffer, sizeof(m_rsp_secret_buffer));
 

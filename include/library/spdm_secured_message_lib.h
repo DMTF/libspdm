@@ -490,7 +490,8 @@ bool libspdm_hmac_all_with_response_finished_key(
  * @retval RETURN_SUCCESS               The binary libspdm_bin_concat data is generated.
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
-bool libspdm_bin_concat(const char *label, size_t label_size,
+bool libspdm_bin_concat(spdm_version_number_t spdm_version,
+                        const char *label, size_t label_size,
                         const uint8_t *context, uint16_t length,
                         size_t hash_size, uint8_t *out_bin,
                         size_t *out_bin_size);

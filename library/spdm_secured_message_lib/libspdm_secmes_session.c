@@ -46,14 +46,15 @@ void libspdm_internal_dump_hex(const uint8_t *data, size_t size);
  * @retval RETURN_SUCCESS               The binary libspdm_bin_concat data is generated.
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
-bool libspdm_bin_concat(const char *label, size_t label_size,
+bool libspdm_bin_concat(spdm_version_number_t spdm_version,
+                        const char *label, size_t label_size,
                         const uint8_t *context, uint16_t length,
                         size_t hash_size, uint8_t *out_bin,
                         size_t *out_bin_size)
 {
     size_t final_size;
 
-    final_size = sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1 + label_size;
+    final_size = sizeof(uint16_t) + sizeof(SPDM_VERSION_1_1_BIN_CONCAT_LABEL) - 1 + label_size;
     if (context != NULL) {
         final_size += hash_size;
     }
@@ -67,17 +68,22 @@ bool libspdm_bin_concat(const char *label, size_t label_size,
     libspdm_copy_mem(out_bin, *out_bin_size, &length, sizeof(uint16_t));
     libspdm_copy_mem(out_bin + sizeof(uint16_t),
                      *out_bin_size - sizeof(uint16_t),
-                     SPDM_BIN_CONCAT_LABEL,
-                     sizeof(SPDM_BIN_CONCAT_LABEL) - 1);
-    libspdm_copy_mem(out_bin + sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1,
-                     *out_bin_size - (sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) - 1),
+                     SPDM_VERSION_1_1_BIN_CONCAT_LABEL,
+                     sizeof(SPDM_VERSION_1_1_BIN_CONCAT_LABEL) - 1);
+    /* patch the version*/
+    out_bin[6] = (char)('0' + ((spdm_version >> 12) & 0xF));
+    out_bin[8] = (char)('0' + ((spdm_version >> 8) & 0xF));
+    libspdm_copy_mem(out_bin + sizeof(uint16_t) + sizeof(SPDM_VERSION_1_1_BIN_CONCAT_LABEL) - 1,
+                     *out_bin_size -
+                     (sizeof(uint16_t) + sizeof(SPDM_VERSION_1_1_BIN_CONCAT_LABEL) - 1),
                      label,
                      label_size);
     if (context != NULL) {
-        libspdm_copy_mem(out_bin + sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) -
+        libspdm_copy_mem(out_bin + sizeof(uint16_t) + sizeof(SPDM_VERSION_1_1_BIN_CONCAT_LABEL) -
                          1 + label_size,
-                         *out_bin_size - (sizeof(uint16_t) + sizeof(SPDM_BIN_CONCAT_LABEL) -
-                                          1 + label_size),
+                         *out_bin_size -
+                         (sizeof(uint16_t) + sizeof(SPDM_VERSION_1_1_BIN_CONCAT_LABEL) -
+                          1 + label_size),
                          context, hash_size);
     }
 
@@ -112,7 +118,8 @@ bool libspdm_generate_aead_key_and_iv(
     iv_length = secured_message_context->aead_iv_size;
 
     bin_str5_size = sizeof(bin_str5);
-    status = libspdm_bin_concat(SPDM_BIN_STR_5_LABEL, sizeof(SPDM_BIN_STR_5_LABEL) - 1,
+    status = libspdm_bin_concat(secured_message_context->version,
+                                SPDM_BIN_STR_5_LABEL, sizeof(SPDM_BIN_STR_5_LABEL) - 1,
                                 NULL, (uint16_t)key_length, hash_size, bin_str5,
                                 &bin_str5_size);
     LIBSPDM_ASSERT(status);
@@ -127,7 +134,8 @@ bool libspdm_generate_aead_key_and_iv(
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
     bin_str6_size = sizeof(bin_str6);
-    status = libspdm_bin_concat(SPDM_BIN_STR_6_LABEL, sizeof(SPDM_BIN_STR_6_LABEL) - 1,
+    status = libspdm_bin_concat(secured_message_context->version,
+                                SPDM_BIN_STR_6_LABEL, sizeof(SPDM_BIN_STR_6_LABEL) - 1,
                                 NULL, (uint16_t)iv_length, hash_size, bin_str6,
                                 &bin_str6_size);
     LIBSPDM_ASSERT(status);
@@ -165,7 +173,8 @@ bool libspdm_generate_finished_key(
     hash_size = secured_message_context->hash_size;
 
     bin_str7_size = sizeof(bin_str7);
-    status = libspdm_bin_concat(SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
+    status = libspdm_bin_concat(secured_message_context->version,
+                                SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
                                 NULL, (uint16_t)hash_size, hash_size, bin_str7,
                                 &bin_str7_size);
     LIBSPDM_ASSERT(status);
@@ -209,7 +218,8 @@ libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
     hash_size = secured_message_context->hash_size;
 
     bin_str0_size = sizeof(bin_str0);
-    status = libspdm_bin_concat(SPDM_BIN_STR_0_LABEL, sizeof(SPDM_BIN_STR_0_LABEL) - 1,
+    status = libspdm_bin_concat(secured_message_context->version,
+                                SPDM_BIN_STR_0_LABEL, sizeof(SPDM_BIN_STR_0_LABEL) - 1,
                                 NULL, (uint16_t)hash_size, hash_size, bin_str0,
                                 &bin_str0_size);
     LIBSPDM_ASSERT(status);
@@ -239,7 +249,8 @@ libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
     }
 
     bin_str1_size = sizeof(bin_str1);
-    status = libspdm_bin_concat(SPDM_BIN_STR_1_LABEL, sizeof(SPDM_BIN_STR_1_LABEL) - 1,
+    status = libspdm_bin_concat(secured_message_context->version,
+                                SPDM_BIN_STR_1_LABEL, sizeof(SPDM_BIN_STR_1_LABEL) - 1,
                                 th1_hash_data, (uint16_t)hash_size, hash_size,
                                 bin_str1, &bin_str1_size);
     LIBSPDM_ASSERT(status);
@@ -274,7 +285,8 @@ libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
                                hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     bin_str2_size = sizeof(bin_str2);
-    status = libspdm_bin_concat(SPDM_BIN_STR_2_LABEL, sizeof(SPDM_BIN_STR_2_LABEL) - 1,
+    status = libspdm_bin_concat(secured_message_context->version,
+                                SPDM_BIN_STR_2_LABEL, sizeof(SPDM_BIN_STR_2_LABEL) - 1,
                                 th1_hash_data, (uint16_t)hash_size, hash_size,
                                 bin_str2, &bin_str2_size);
     LIBSPDM_ASSERT(status);
@@ -394,7 +406,8 @@ libspdm_generate_session_data_key(void *spdm_secured_message_context,
         /* No master_secret generation for PSK.*/
     } else {
         bin_str0_size = sizeof(bin_str0);
-        status = libspdm_bin_concat(SPDM_BIN_STR_0_LABEL,
+        status = libspdm_bin_concat(secured_message_context->version,
+                                    SPDM_BIN_STR_0_LABEL,
                                     sizeof(SPDM_BIN_STR_0_LABEL) - 1, NULL,
                                     (uint16_t)hash_size, hash_size, bin_str0,
                                     &bin_str0_size);
@@ -421,7 +434,8 @@ libspdm_generate_session_data_key(void *spdm_secured_message_context,
     }
 
     bin_str3_size = sizeof(bin_str3);
-    status = libspdm_bin_concat(SPDM_BIN_STR_3_LABEL, sizeof(SPDM_BIN_STR_3_LABEL) - 1,
+    status = libspdm_bin_concat(secured_message_context->version,
+                                SPDM_BIN_STR_3_LABEL, sizeof(SPDM_BIN_STR_3_LABEL) - 1,
                                 th2_hash_data, (uint16_t)hash_size, hash_size,
                                 bin_str3, &bin_str3_size);
     LIBSPDM_ASSERT(status);
@@ -456,7 +470,8 @@ libspdm_generate_session_data_key(void *spdm_secured_message_context,
         hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     bin_str4_size = sizeof(bin_str4);
-    status = libspdm_bin_concat(SPDM_BIN_STR_4_LABEL, sizeof(SPDM_BIN_STR_4_LABEL) - 1,
+    status = libspdm_bin_concat(secured_message_context->version,
+                                SPDM_BIN_STR_4_LABEL, sizeof(SPDM_BIN_STR_4_LABEL) - 1,
                                 th2_hash_data, (uint16_t)hash_size, hash_size,
                                 bin_str4, &bin_str4_size);
     LIBSPDM_ASSERT(status);
@@ -492,7 +507,8 @@ libspdm_generate_session_data_key(void *spdm_secured_message_context,
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
     bin_str8_size = sizeof(bin_str8);
-    status = libspdm_bin_concat(SPDM_BIN_STR_8_LABEL, sizeof(SPDM_BIN_STR_8_LABEL) - 1,
+    status = libspdm_bin_concat(secured_message_context->version,
+                                SPDM_BIN_STR_8_LABEL, sizeof(SPDM_BIN_STR_8_LABEL) - 1,
                                 th2_hash_data, (uint16_t)hash_size, hash_size,
                                 bin_str8, &bin_str8_size);
     LIBSPDM_ASSERT(status);
@@ -577,7 +593,8 @@ libspdm_create_update_session_data_key(void *spdm_secured_message_context,
     hash_size = secured_message_context->hash_size;
 
     bin_str9_size = sizeof(bin_str9);
-    status = libspdm_bin_concat(SPDM_BIN_STR_9_LABEL, sizeof(SPDM_BIN_STR_9_LABEL) - 1,
+    status = libspdm_bin_concat(secured_message_context->version,
+                                SPDM_BIN_STR_9_LABEL, sizeof(SPDM_BIN_STR_9_LABEL) - 1,
                                 NULL, (uint16_t)hash_size, hash_size, bin_str9,
                                 &bin_str9_size);
     LIBSPDM_ASSERT(status);

@@ -9,10 +9,6 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
-#define LIBSPDM_BIN_CONCAT_LABEL "spdm1.1 "
-#define LIBSPDM_BIN_STR_0_LABEL "derived"
-#define LIBSPDM_BIN_STR_2_LABEL "rsp hs data"
-
 static size_t m_libspdm_local_buffer_size;
 static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
@@ -480,20 +476,23 @@ libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr),
                          THCurrHashData);
         bin_str0_size = sizeof(bin_str0);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_0_LABEL, sizeof(LIBSPDM_BIN_STR_0_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_0_LABEL, sizeof(SPDM_BIN_STR_0_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str0,
                            &bin_str0_size);
         libspdm_hmac_all(m_libspdm_use_hash_algo, m_libspdm_zero_filled_buffer, hash_size,
                          final_key, final_key_size, handshake_secret);
         bin_str2_size = sizeof(bin_str2);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_2_LABEL, sizeof(LIBSPDM_BIN_STR_2_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_2_LABEL, sizeof(SPDM_BIN_STR_2_LABEL) - 1,
                            THCurrHashData, (uint16_t)hash_size, hash_size,
                            bin_str2, &bin_str2_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, handshake_secret, hash_size,
                             bin_str2, bin_str2_size,
                             response_handshake_secret, hash_size);
         bin_str7_size = sizeof(bin_str7);
-        libspdm_bin_concat(SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str7,
                            &bin_str7_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
@@ -643,20 +642,23 @@ libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr),
                          THCurrHashData);
         bin_str0_size = sizeof(bin_str0);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_0_LABEL, sizeof(LIBSPDM_BIN_STR_0_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_0_LABEL, sizeof(SPDM_BIN_STR_0_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str0,
                            &bin_str0_size);
         libspdm_hmac_all(m_libspdm_use_hash_algo, m_libspdm_zero_filled_buffer, hash_size,
                          final_key, final_key_size, handshake_secret);
         bin_str2_size = sizeof(bin_str2);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_2_LABEL, sizeof(LIBSPDM_BIN_STR_2_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_2_LABEL, sizeof(SPDM_BIN_STR_2_LABEL) - 1,
                            THCurrHashData, (uint16_t)hash_size, hash_size,
                            bin_str2, &bin_str2_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, handshake_secret, hash_size,
                             bin_str2, bin_str2_size,
                             response_handshake_secret, hash_size);
         bin_str7_size = sizeof(bin_str7);
-        libspdm_bin_concat(SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str7,
                            &bin_str7_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
@@ -880,23 +882,26 @@ libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                              libspdm_get_managed_buffer_size(&th_curr),
                              THCurrHashData);
             bin_str0_size = sizeof(bin_str0);
-            libspdm_bin_concat(LIBSPDM_BIN_STR_0_LABEL,
-                               sizeof(LIBSPDM_BIN_STR_0_LABEL) - 1, NULL,
+            libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                               SPDM_BIN_STR_0_LABEL,
+                               sizeof(SPDM_BIN_STR_0_LABEL) - 1, NULL,
                                (uint16_t)hash_size, hash_size, bin_str0,
                                &bin_str0_size);
             libspdm_hmac_all(m_libspdm_use_hash_algo, m_libspdm_zero_filled_buffer,
                              hash_size, final_key, final_key_size,
                              handshake_secret);
             bin_str2_size = sizeof(bin_str2);
-            libspdm_bin_concat(LIBSPDM_BIN_STR_2_LABEL,
-                               sizeof(LIBSPDM_BIN_STR_2_LABEL) - 1,
+            libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                               SPDM_BIN_STR_2_LABEL,
+                               sizeof(SPDM_BIN_STR_2_LABEL) - 1,
                                THCurrHashData, (uint16_t)hash_size,
                                hash_size, bin_str2, &bin_str2_size);
             libspdm_hkdf_expand(m_libspdm_use_hash_algo, handshake_secret,
                                 hash_size, bin_str2, bin_str2_size,
                                 response_handshake_secret, hash_size);
             bin_str7_size = sizeof(bin_str7);
-            libspdm_bin_concat(SPDM_BIN_STR_7_LABEL,
+            libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                               SPDM_BIN_STR_7_LABEL,
                                sizeof(SPDM_BIN_STR_7_LABEL) - 1, NULL,
                                (uint16_t)hash_size, hash_size, bin_str7,
                                &bin_str7_size);
@@ -1136,23 +1141,26 @@ libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                              libspdm_get_managed_buffer_size(&th_curr),
                              THCurrHashData);
             bin_str0_size = sizeof(bin_str0);
-            libspdm_bin_concat(LIBSPDM_BIN_STR_0_LABEL,
-                               sizeof(LIBSPDM_BIN_STR_0_LABEL) - 1, NULL,
+            libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                               SPDM_BIN_STR_0_LABEL,
+                               sizeof(SPDM_BIN_STR_0_LABEL) - 1, NULL,
                                (uint16_t)hash_size, hash_size, bin_str0,
                                &bin_str0_size);
             libspdm_hmac_all(m_libspdm_use_hash_algo, m_libspdm_zero_filled_buffer,
                              hash_size, final_key, final_key_size,
                              handshake_secret);
             bin_str2_size = sizeof(bin_str2);
-            libspdm_bin_concat(LIBSPDM_BIN_STR_2_LABEL,
-                               sizeof(LIBSPDM_BIN_STR_2_LABEL) - 1,
+            libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                               SPDM_BIN_STR_2_LABEL,
+                               sizeof(SPDM_BIN_STR_2_LABEL) - 1,
                                THCurrHashData, (uint16_t)hash_size,
                                hash_size, bin_str2, &bin_str2_size);
             libspdm_hkdf_expand(m_libspdm_use_hash_algo, handshake_secret,
                                 hash_size, bin_str2, bin_str2_size,
                                 response_handshake_secret, hash_size);
             bin_str7_size = sizeof(bin_str7);
-            libspdm_bin_concat(SPDM_BIN_STR_7_LABEL,
+            libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                               SPDM_BIN_STR_7_LABEL,
                                sizeof(SPDM_BIN_STR_7_LABEL) - 1, NULL,
                                (uint16_t)hash_size, hash_size, bin_str7,
                                &bin_str7_size);
@@ -1341,20 +1349,23 @@ libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr),
                          THCurrHashData);
         bin_str0_size = sizeof(bin_str0);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_0_LABEL, sizeof(LIBSPDM_BIN_STR_0_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_0_LABEL, sizeof(SPDM_BIN_STR_0_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str0,
                            &bin_str0_size);
         libspdm_hmac_all(m_libspdm_use_hash_algo, m_libspdm_zero_filled_buffer, hash_size,
                          final_key, final_key_size, handshake_secret);
         bin_str2_size = sizeof(bin_str2);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_2_LABEL, sizeof(LIBSPDM_BIN_STR_2_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_2_LABEL, sizeof(SPDM_BIN_STR_2_LABEL) - 1,
                            THCurrHashData, (uint16_t)hash_size, hash_size,
                            bin_str2, &bin_str2_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, handshake_secret, hash_size,
                             bin_str2, bin_str2_size,
                             response_handshake_secret, hash_size);
         bin_str7_size = sizeof(bin_str7);
-        libspdm_bin_concat(SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str7,
                            &bin_str7_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
@@ -1513,20 +1524,23 @@ libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr),
                          THCurrHashData);
         bin_str0_size = sizeof(bin_str0);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_0_LABEL, sizeof(LIBSPDM_BIN_STR_0_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_0_LABEL, sizeof(SPDM_BIN_STR_0_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str0,
                            &bin_str0_size);
         libspdm_hmac_all(m_libspdm_use_hash_algo, m_libspdm_zero_filled_buffer, hash_size,
                          final_key, final_key_size, handshake_secret);
         bin_str2_size = sizeof(bin_str2);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_2_LABEL, sizeof(LIBSPDM_BIN_STR_2_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_2_LABEL, sizeof(SPDM_BIN_STR_2_LABEL) - 1,
                            THCurrHashData, (uint16_t)hash_size, hash_size,
                            bin_str2, &bin_str2_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, handshake_secret, hash_size,
                             bin_str2, bin_str2_size,
                             response_handshake_secret, hash_size);
         bin_str7_size = sizeof(bin_str7);
-        libspdm_bin_concat(SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str7,
                            &bin_str7_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
@@ -1685,20 +1699,23 @@ libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr),
                          THCurrHashData);
         bin_str0_size = sizeof(bin_str0);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_0_LABEL, sizeof(LIBSPDM_BIN_STR_0_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_0_LABEL, sizeof(SPDM_BIN_STR_0_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str0,
                            &bin_str0_size);
         libspdm_hmac_all(m_libspdm_use_hash_algo, m_libspdm_zero_filled_buffer, hash_size,
                          final_key, final_key_size, handshake_secret);
         bin_str2_size = sizeof(bin_str2);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_2_LABEL, sizeof(LIBSPDM_BIN_STR_2_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_2_LABEL, sizeof(SPDM_BIN_STR_2_LABEL) - 1,
                            THCurrHashData, (uint16_t)hash_size, hash_size,
                            bin_str2, &bin_str2_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, handshake_secret, hash_size,
                             bin_str2, bin_str2_size,
                             response_handshake_secret, hash_size);
         bin_str7_size = sizeof(bin_str7);
-        libspdm_bin_concat(SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str7,
                            &bin_str7_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
@@ -1858,20 +1875,23 @@ libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr),
                          THCurrHashData);
         bin_str0_size = sizeof(bin_str0);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_0_LABEL, sizeof(LIBSPDM_BIN_STR_0_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_0_LABEL, sizeof(SPDM_BIN_STR_0_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str0,
                            &bin_str0_size);
         libspdm_hmac_all(m_libspdm_use_hash_algo, m_libspdm_zero_filled_buffer, hash_size,
                          final_key, final_key_size, handshake_secret);
         bin_str2_size = sizeof(bin_str2);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_2_LABEL, sizeof(LIBSPDM_BIN_STR_2_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_2_LABEL, sizeof(SPDM_BIN_STR_2_LABEL) - 1,
                            THCurrHashData, (uint16_t)hash_size, hash_size,
                            bin_str2, &bin_str2_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, handshake_secret, hash_size,
                             bin_str2, bin_str2_size,
                             response_handshake_secret, hash_size);
         bin_str7_size = sizeof(bin_str7);
-        libspdm_bin_concat(SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str7,
                            &bin_str7_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
@@ -2022,20 +2042,23 @@ libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr),
                          THCurrHashData);
         bin_str0_size = sizeof(bin_str0);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_0_LABEL, sizeof(LIBSPDM_BIN_STR_0_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_0_LABEL, sizeof(SPDM_BIN_STR_0_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str0,
                            &bin_str0_size);
         libspdm_hmac_all(m_libspdm_use_hash_algo, m_libspdm_zero_filled_buffer, hash_size,
                          final_key, final_key_size, handshake_secret);
         bin_str2_size = sizeof(bin_str2);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_2_LABEL, sizeof(LIBSPDM_BIN_STR_2_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_2_LABEL, sizeof(SPDM_BIN_STR_2_LABEL) - 1,
                            THCurrHashData, (uint16_t)hash_size, hash_size,
                            bin_str2, &bin_str2_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, handshake_secret, hash_size,
                             bin_str2, bin_str2_size,
                             response_handshake_secret, hash_size);
         bin_str7_size = sizeof(bin_str7);
-        libspdm_bin_concat(SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str7,
                            &bin_str7_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
@@ -2186,20 +2209,23 @@ libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr),
                          THCurrHashData);
         bin_str0_size = sizeof(bin_str0);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_0_LABEL, sizeof(LIBSPDM_BIN_STR_0_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_0_LABEL, sizeof(SPDM_BIN_STR_0_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str0,
                            &bin_str0_size);
         libspdm_hmac_all(m_libspdm_use_hash_algo, m_libspdm_zero_filled_buffer, hash_size,
                          final_key, final_key_size, handshake_secret);
         bin_str2_size = sizeof(bin_str2);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_2_LABEL, sizeof(LIBSPDM_BIN_STR_2_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_2_LABEL, sizeof(SPDM_BIN_STR_2_LABEL) - 1,
                            THCurrHashData, (uint16_t)hash_size, hash_size,
                            bin_str2, &bin_str2_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, handshake_secret, hash_size,
                             bin_str2, bin_str2_size,
                             response_handshake_secret, hash_size);
         bin_str7_size = sizeof(bin_str7);
-        libspdm_bin_concat(SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str7,
                            &bin_str7_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
@@ -2359,20 +2385,23 @@ libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr),
                          THCurrHashData);
         bin_str0_size = sizeof(bin_str0);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_0_LABEL, sizeof(LIBSPDM_BIN_STR_0_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_0_LABEL, sizeof(SPDM_BIN_STR_0_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str0,
                            &bin_str0_size);
         libspdm_hmac_all(m_libspdm_use_hash_algo, m_libspdm_zero_filled_buffer, hash_size,
                          final_key, final_key_size, handshake_secret);
         bin_str2_size = sizeof(bin_str2);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_2_LABEL, sizeof(LIBSPDM_BIN_STR_2_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_2_LABEL, sizeof(SPDM_BIN_STR_2_LABEL) - 1,
                            THCurrHashData, (uint16_t)hash_size, hash_size,
                            bin_str2, &bin_str2_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, handshake_secret, hash_size,
                             bin_str2, bin_str2_size,
                             response_handshake_secret, hash_size);
         bin_str7_size = sizeof(bin_str7);
-        libspdm_bin_concat(SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str7,
                            &bin_str7_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
@@ -2526,20 +2555,23 @@ libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr),
                          THCurrHashData);
         bin_str0_size = sizeof(bin_str0);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_0_LABEL, sizeof(LIBSPDM_BIN_STR_0_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_0_LABEL, sizeof(SPDM_BIN_STR_0_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str0,
                            &bin_str0_size);
         libspdm_hmac_all(m_libspdm_use_hash_algo, m_libspdm_zero_filled_buffer, hash_size,
                          final_key, final_key_size, handshake_secret);
         bin_str2_size = sizeof(bin_str2);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_2_LABEL, sizeof(LIBSPDM_BIN_STR_2_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_2_LABEL, sizeof(SPDM_BIN_STR_2_LABEL) - 1,
                            THCurrHashData, (uint16_t)hash_size, hash_size,
                            bin_str2, &bin_str2_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, handshake_secret, hash_size,
                             bin_str2, bin_str2_size,
                             response_handshake_secret, hash_size);
         bin_str7_size = sizeof(bin_str7);
-        libspdm_bin_concat(SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str7,
                            &bin_str7_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
@@ -2817,20 +2849,23 @@ libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr),
                          THCurrHashData);
         bin_str0_size = sizeof(bin_str0);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_0_LABEL, sizeof(LIBSPDM_BIN_STR_0_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_0_LABEL, sizeof(SPDM_BIN_STR_0_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str0,
                            &bin_str0_size);
         libspdm_hmac_all(m_libspdm_use_hash_algo, m_libspdm_zero_filled_buffer, hash_size,
                          final_key, final_key_size, handshake_secret);
         bin_str2_size = sizeof(bin_str2);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_2_LABEL, sizeof(LIBSPDM_BIN_STR_2_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_2_LABEL, sizeof(SPDM_BIN_STR_2_LABEL) - 1,
                            THCurrHashData, (uint16_t)hash_size, hash_size,
                            bin_str2, &bin_str2_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, handshake_secret, hash_size,
                             bin_str2, bin_str2_size,
                             response_handshake_secret, hash_size);
         bin_str7_size = sizeof(bin_str7);
-        libspdm_bin_concat(SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str7,
                            &bin_str7_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
@@ -2981,20 +3016,23 @@ libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr),
                          THCurrHashData);
         bin_str0_size = sizeof(bin_str0);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_0_LABEL, sizeof(LIBSPDM_BIN_STR_0_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_0_LABEL, sizeof(SPDM_BIN_STR_0_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str0,
                            &bin_str0_size);
         libspdm_hmac_all(m_libspdm_use_hash_algo, m_libspdm_zero_filled_buffer, hash_size,
                          final_key, final_key_size, handshake_secret);
         bin_str2_size = sizeof(bin_str2);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_2_LABEL, sizeof(LIBSPDM_BIN_STR_2_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_2_LABEL, sizeof(SPDM_BIN_STR_2_LABEL) - 1,
                            THCurrHashData, (uint16_t)hash_size, hash_size,
                            bin_str2, &bin_str2_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, handshake_secret, hash_size,
                             bin_str2, bin_str2_size,
                             response_handshake_secret, hash_size);
         bin_str7_size = sizeof(bin_str7);
-        libspdm_bin_concat(SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str7,
                            &bin_str7_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
@@ -3145,20 +3183,23 @@ libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr),
                          THCurrHashData);
         bin_str0_size = sizeof(bin_str0);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_0_LABEL, sizeof(LIBSPDM_BIN_STR_0_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_0_LABEL, sizeof(SPDM_BIN_STR_0_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str0,
                            &bin_str0_size);
         libspdm_hmac_all(m_libspdm_use_hash_algo, m_libspdm_zero_filled_buffer, hash_size,
                          final_key, final_key_size, handshake_secret);
         bin_str2_size = sizeof(bin_str2);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_2_LABEL, sizeof(LIBSPDM_BIN_STR_2_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_2_LABEL, sizeof(SPDM_BIN_STR_2_LABEL) - 1,
                            THCurrHashData, (uint16_t)hash_size, hash_size,
                            bin_str2, &bin_str2_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, handshake_secret, hash_size,
                             bin_str2, bin_str2_size,
                             response_handshake_secret, hash_size);
         bin_str7_size = sizeof(bin_str7);
-        libspdm_bin_concat(SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str7,
                            &bin_str7_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
@@ -3310,20 +3351,23 @@ libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr),
                          THCurrHashData);
         bin_str0_size = sizeof(bin_str0);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_0_LABEL, sizeof(LIBSPDM_BIN_STR_0_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_0_LABEL, sizeof(SPDM_BIN_STR_0_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str0,
                            &bin_str0_size);
         libspdm_hmac_all(m_libspdm_use_hash_algo, m_libspdm_zero_filled_buffer, hash_size,
                          final_key, final_key_size, handshake_secret);
         bin_str2_size = sizeof(bin_str2);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_2_LABEL, sizeof(LIBSPDM_BIN_STR_2_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_2_LABEL, sizeof(SPDM_BIN_STR_2_LABEL) - 1,
                            THCurrHashData, (uint16_t)hash_size, hash_size,
                            bin_str2, &bin_str2_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, handshake_secret, hash_size,
                             bin_str2, bin_str2_size,
                             response_handshake_secret, hash_size);
         bin_str7_size = sizeof(bin_str7);
-        libspdm_bin_concat(SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str7,
                            &bin_str7_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
@@ -3475,20 +3519,23 @@ libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr),
                          THCurrHashData);
         bin_str0_size = sizeof(bin_str0);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_0_LABEL, sizeof(LIBSPDM_BIN_STR_0_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_0_LABEL, sizeof(SPDM_BIN_STR_0_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str0,
                            &bin_str0_size);
         libspdm_hmac_all(m_libspdm_use_hash_algo, m_libspdm_zero_filled_buffer, hash_size,
                          final_key, final_key_size, handshake_secret);
         bin_str2_size = sizeof(bin_str2);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_2_LABEL, sizeof(LIBSPDM_BIN_STR_2_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_2_LABEL, sizeof(SPDM_BIN_STR_2_LABEL) - 1,
                            THCurrHashData, (uint16_t)hash_size, hash_size,
                            bin_str2, &bin_str2_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, handshake_secret, hash_size,
                             bin_str2, bin_str2_size,
                             response_handshake_secret, hash_size);
         bin_str7_size = sizeof(bin_str7);
-        libspdm_bin_concat(SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str7,
                            &bin_str7_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
@@ -3640,20 +3687,23 @@ libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr),
                          THCurrHashData);
         bin_str0_size = sizeof(bin_str0);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_0_LABEL, sizeof(LIBSPDM_BIN_STR_0_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_0_LABEL, sizeof(SPDM_BIN_STR_0_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str0,
                            &bin_str0_size);
         libspdm_hmac_all(m_libspdm_use_hash_algo, m_libspdm_zero_filled_buffer, hash_size,
                          final_key, final_key_size, handshake_secret);
         bin_str2_size = sizeof(bin_str2);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_2_LABEL, sizeof(LIBSPDM_BIN_STR_2_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_2_LABEL, sizeof(SPDM_BIN_STR_2_LABEL) - 1,
                            THCurrHashData, (uint16_t)hash_size, hash_size,
                            bin_str2, &bin_str2_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, handshake_secret, hash_size,
                             bin_str2, bin_str2_size,
                             response_handshake_secret, hash_size);
         bin_str7_size = sizeof(bin_str7);
-        libspdm_bin_concat(SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str7,
                            &bin_str7_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
@@ -3806,20 +3856,23 @@ libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr),
                          THCurrHashData);
         bin_str0_size = sizeof(bin_str0);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_0_LABEL, sizeof(LIBSPDM_BIN_STR_0_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_0_LABEL, sizeof(SPDM_BIN_STR_0_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str0,
                            &bin_str0_size);
         libspdm_hmac_all(m_libspdm_use_hash_algo, m_libspdm_zero_filled_buffer, hash_size,
                          final_key, final_key_size, handshake_secret);
         bin_str2_size = sizeof(bin_str2);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_2_LABEL, sizeof(LIBSPDM_BIN_STR_2_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_2_LABEL, sizeof(SPDM_BIN_STR_2_LABEL) - 1,
                            THCurrHashData, (uint16_t)hash_size, hash_size,
                            bin_str2, &bin_str2_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, handshake_secret, hash_size,
                             bin_str2, bin_str2_size,
                             response_handshake_secret, hash_size);
         bin_str7_size = sizeof(bin_str7);
-        libspdm_bin_concat(SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str7,
                            &bin_str7_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
@@ -3972,20 +4025,23 @@ libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr),
                          THCurrHashData);
         bin_str0_size = sizeof(bin_str0);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_0_LABEL, sizeof(LIBSPDM_BIN_STR_0_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_0_LABEL, sizeof(SPDM_BIN_STR_0_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str0,
                            &bin_str0_size);
         libspdm_hmac_all(m_libspdm_use_hash_algo, m_libspdm_zero_filled_buffer, hash_size,
                          final_key, final_key_size, handshake_secret);
         bin_str2_size = sizeof(bin_str2);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_2_LABEL, sizeof(LIBSPDM_BIN_STR_2_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_2_LABEL, sizeof(SPDM_BIN_STR_2_LABEL) - 1,
                            THCurrHashData, (uint16_t)hash_size, hash_size,
                            bin_str2, &bin_str2_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, handshake_secret, hash_size,
                             bin_str2, bin_str2_size,
                             response_handshake_secret, hash_size);
         bin_str7_size = sizeof(bin_str7);
-        libspdm_bin_concat(SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str7,
                            &bin_str7_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
@@ -4138,20 +4194,23 @@ libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr),
                          THCurrHashData);
         bin_str0_size = sizeof(bin_str0);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_0_LABEL, sizeof(LIBSPDM_BIN_STR_0_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_0_LABEL, sizeof(SPDM_BIN_STR_0_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str0,
                            &bin_str0_size);
         libspdm_hmac_all(m_libspdm_use_hash_algo, m_libspdm_zero_filled_buffer, hash_size,
                          final_key, final_key_size, handshake_secret);
         bin_str2_size = sizeof(bin_str2);
-        libspdm_bin_concat(LIBSPDM_BIN_STR_2_LABEL, sizeof(LIBSPDM_BIN_STR_2_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_2_LABEL, sizeof(SPDM_BIN_STR_2_LABEL) - 1,
                            THCurrHashData, (uint16_t)hash_size, hash_size,
                            bin_str2, &bin_str2_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, handshake_secret, hash_size,
                             bin_str2, bin_str2_size,
                             response_handshake_secret, hash_size);
         bin_str7_size = sizeof(bin_str7);
-        libspdm_bin_concat(SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str7,
                            &bin_str7_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
@@ -4283,19 +4342,22 @@ libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         libspdm_hash_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
                          libspdm_get_managed_buffer_size(&th_curr), THCurrHashData);
         bin_str0_size = sizeof(bin_str0);
-        libspdm_bin_concat(SPDM_BIN_STR_0_LABEL, sizeof(SPDM_BIN_STR_0_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_0_LABEL, sizeof(SPDM_BIN_STR_0_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str0, &bin_str0_size);
         libspdm_hmac_all(m_libspdm_use_hash_algo, m_libspdm_zero_filled_buffer, hash_size,
                          final_key, final_key_size, handshake_secret);
         bin_str2_size = sizeof(bin_str2);
-        libspdm_bin_concat(SPDM_BIN_STR_2_LABEL, sizeof(SPDM_BIN_STR_2_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_2_LABEL, sizeof(SPDM_BIN_STR_2_LABEL) - 1,
                            THCurrHashData, (uint16_t)hash_size, hash_size,
                            bin_str2, &bin_str2_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, handshake_secret, hash_size,
                             bin_str2, bin_str2_size,
                             response_handshake_secret, hash_size);
         bin_str7_size = sizeof(bin_str7);
-        libspdm_bin_concat(SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
+        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
+                           SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
                            NULL, (uint16_t)hash_size, hash_size, bin_str7,
                            &bin_str7_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
