@@ -108,9 +108,6 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
     uint8_t auth_attribute;
     libspdm_return_t status;
 
-    spdm_context->encap_context.error_state =
-        LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
-
     spdm_response = encap_response;
     spdm_response_size = encap_response_size;
 
@@ -176,8 +173,6 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
     result = libspdm_verify_certificate_chain_hash(spdm_context,
                                                    cert_chain_hash, hash_size);
     if (!result) {
-        spdm_context->encap_context.error_state =
-            LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
         return LIBSPDM_STATUS_INVALID_CERT;
     }
 
@@ -228,12 +223,9 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
     result = libspdm_verify_challenge_auth_signature(
         spdm_context, false, signature, signature_size);
     if (!result) {
-        spdm_context->encap_context.error_state =
-            LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
         return LIBSPDM_STATUS_VERIF_FAIL;
     }
 
-    spdm_context->encap_context.error_state = LIBSPDM_STATUS_SUCCESS;
     libspdm_set_connection_state(spdm_context,
                                  LIBSPDM_CONNECTION_STATE_AUTHENTICATED);
 

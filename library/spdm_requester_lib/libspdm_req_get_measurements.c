@@ -125,8 +125,6 @@ libspdm_return_t libspdm_try_get_measurement(void *context, const uint32_t *sess
         return LIBSPDM_STATUS_INVALID_PARAMETER;
     }
 
-    spdm_context->error_state = LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
-
     if (libspdm_is_capabilities_flag_supported(
             spdm_context, true, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_NO_SIG) &&
@@ -361,8 +359,6 @@ libspdm_return_t libspdm_try_get_measurement(void *context, const uint32_t *sess
         result = libspdm_verify_measurement_signature(
             spdm_context, session_info, signature, signature_size);
         if (!result) {
-            spdm_context->error_state =
-                LIBSPDM_STATUS_ERROR_MEASUREMENT_AUTH_FAILURE;
             libspdm_reset_message_m(spdm_context, session_info);
             status = LIBSPDM_STATUS_VERIF_FAIL;
             goto receive_done;
@@ -520,7 +516,6 @@ libspdm_return_t libspdm_try_get_measurement(void *context, const uint32_t *sess
                          measurement_record_data_length);
     }
 
-    spdm_context->error_state = LIBSPDM_STATUS_SUCCESS;
     status = LIBSPDM_STATUS_SUCCESS;
 
 receive_done:

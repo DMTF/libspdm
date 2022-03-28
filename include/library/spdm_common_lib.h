@@ -250,15 +250,6 @@ libspdm_return_t libspdm_get_data(void *spdm_context,
                                   void *data, size_t *data_size);
 
 /**
- * Get the last error of an SPDM context.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- *
- * @return Last error of an SPDM context.
- */
-uint32_t libspdm_get_last_error(void *spdm_context);
-
-/**
  * Get the last SPDM error struct of an SPDM context.
  *
  * @param  spdm_context                  A pointer to the SPDM context.

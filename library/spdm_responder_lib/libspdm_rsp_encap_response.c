@@ -185,7 +185,6 @@ libspdm_return_t libspdm_process_encapsulated_response(
 void libspdm_init_mut_auth_encap_state(libspdm_context_t *spdm_context,
                                        uint8_t mut_auth_requested)
 {
-    spdm_context->encap_context.error_state = 0;
     spdm_context->encap_context.current_request_op_code = 0x00;
     if (mut_auth_requested ==
         SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS) {
@@ -242,7 +241,6 @@ void libspdm_init_mut_auth_encap_state(libspdm_context_t *spdm_context,
  **/
 void libspdm_init_basic_mut_auth_encap_state(libspdm_context_t *spdm_context)
 {
-    spdm_context->encap_context.error_state = 0;
     spdm_context->encap_context.current_request_op_code = 0x00;
     spdm_context->encap_context.request_id = 0;
     spdm_context->encap_context.last_encap_request_size = 0;
@@ -301,7 +299,6 @@ void libspdm_init_key_update_encap_state(void *context)
 
     spdm_context = context;
 
-    spdm_context->encap_context.error_state = 0;
     spdm_context->encap_context.current_request_op_code = 0x00;
     spdm_context->encap_context.request_id = 0;
     spdm_context->encap_context.last_encap_request_size = 0;

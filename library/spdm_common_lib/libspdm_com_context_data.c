@@ -417,7 +417,6 @@ libspdm_return_t libspdm_set_data(void *context, libspdm_data_type_t data_type,
         }
         spdm_context->local_context.basic_mut_auth_requested =
             mut_auth_requested;
-        spdm_context->encap_context.error_state = 0;
         spdm_context->encap_context.request_id = 0;
         spdm_context->encap_context.req_slot_id =
             parameter->additional_data[0];
@@ -438,7 +437,6 @@ libspdm_return_t libspdm_set_data(void *context, libspdm_data_type_t data_type,
         }
         spdm_context->local_context.mut_auth_requested =
             mut_auth_requested;
-        spdm_context->encap_context.error_state = 0;
         spdm_context->encap_context.request_id = 0;
         spdm_context->encap_context.req_slot_id =
             parameter->additional_data[0];
@@ -2229,21 +2227,6 @@ void libspdm_get_receiver_buffer (
 {
     *receiver_buffer = spdm_context->receiver_buffer;
     *receiver_buffer_size = spdm_context->receiver_buffer_size;
-}
-
-/**
- * Get the last error of an SPDM context.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- *
- * @return Last error of an SPDM context.
- */
-uint32_t libspdm_get_last_error(void *context)
-{
-    libspdm_context_t *spdm_context;
-
-    spdm_context = context;
-    return spdm_context->error_state;
 }
 
 /**

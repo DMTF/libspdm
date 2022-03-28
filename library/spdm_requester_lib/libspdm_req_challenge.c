@@ -94,8 +94,6 @@ libspdm_return_t libspdm_try_challenge(void *context, uint8_t slot_id,
         return LIBSPDM_STATUS_INVALID_PARAMETER;
     }
 
-    spdm_context->error_state = LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
-
     transport_header_size = spdm_context->transport_get_header_size(spdm_context);
     libspdm_acquire_sender_buffer (spdm_context, &message_size, (void **)&message);
     LIBSPDM_ASSERT (message_size >= transport_header_size);
@@ -229,8 +227,6 @@ libspdm_return_t libspdm_try_challenge(void *context, uint8_t slot_id,
     result = libspdm_verify_certificate_chain_hash(spdm_context,
                                                    cert_chain_hash, hash_size);
     if (!result) {
-        spdm_context->error_state =
-            LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
         status = LIBSPDM_STATUS_VERIF_FAIL;
         goto receive_done;
     }
@@ -298,13 +294,9 @@ libspdm_return_t libspdm_try_challenge(void *context, uint8_t slot_id,
         spdm_context, true, signature, signature_size);
     if (!result) {
         libspdm_reset_message_c(spdm_context);
-        spdm_context->error_state =
-            LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
         status = LIBSPDM_STATUS_VERIF_FAIL;
         goto receive_done;
     }
-
-    spdm_context->error_state = LIBSPDM_STATUS_SUCCESS;
 
     if (measurement_hash != NULL) {
         libspdm_copy_mem(measurement_hash, measurement_summary_hash_size,
@@ -325,8 +317,6 @@ libspdm_return_t libspdm_try_challenge(void *context, uint8_t slot_id,
                        status));
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             libspdm_reset_message_c(spdm_context);
-            spdm_context->error_state =
-                LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
             return status;
         }
         spdm_context->connection_info.connection_state =

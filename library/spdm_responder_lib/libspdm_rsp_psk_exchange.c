@@ -124,19 +124,6 @@ libspdm_return_t libspdm_get_response_psk_exchange(void *context,
         }
     }
 
-    if (libspdm_is_capabilities_flag_supported(
-            spdm_context, false,
-            SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP,
-            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP)) {
-        if (spdm_context->encap_context.error_state !=
-            LIBSPDM_STATUS_SUCCESS) {
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                           "libspdm_get_response_psk_exchange fail due to Mutual Auth fail\n"));
-            return libspdm_generate_error_response(
-                spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
-                0, response_size, response);
-        }
-    }
     if (!libspdm_is_capabilities_flag_supported(
             spdm_context, false,
             0, SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP) &&

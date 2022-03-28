@@ -95,9 +95,6 @@ libspdm_return_t libspdm_process_encap_response_certificate(
     libspdm_return_t status;
     uint16_t request_offset;
 
-    spdm_context->encap_context.error_state =
-        LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES;
-
     spdm_response = encap_response;
     spdm_response_size = encap_response_size;
 
@@ -183,8 +180,6 @@ libspdm_return_t libspdm_process_encap_response_certificate(
                 &spdm_context->encap_context.certificate_chain_buffer),
             NULL, NULL);
         if (!result) {
-            spdm_context->encap_context.error_state =
-                LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
             return LIBSPDM_STATUS_VERIF_FAIL;
         }
     } else {
@@ -196,8 +191,6 @@ libspdm_return_t libspdm_process_encap_response_certificate(
                 &spdm_context->encap_context.certificate_chain_buffer),
             NULL, NULL, false);
         if (!result) {
-            spdm_context->encap_context.error_state =
-                LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
             return LIBSPDM_STATUS_VERIF_FAIL;
         }
     }
@@ -221,8 +214,6 @@ libspdm_return_t libspdm_process_encap_response_certificate(
             &spdm_context->encap_context.certificate_chain_buffer),
         spdm_context->connection_info.peer_used_cert_chain_buffer_hash);
     if (!result) {
-        spdm_context->encap_context.error_state =
-            LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
         return LIBSPDM_STATUS_CRYPTO_ERROR;
     }
     spdm_context->connection_info.peer_used_cert_chain_buffer_hash_size =
@@ -237,13 +228,9 @@ libspdm_return_t libspdm_process_encap_response_certificate(
             &spdm_context->encap_context.certificate_chain_buffer),
         &spdm_context->connection_info.peer_used_leaf_cert_public_key);
     if (!result) {
-        spdm_context->encap_context.error_state =
-            LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE;
         return LIBSPDM_STATUS_INVALID_CERT;
     }
 #endif
-
-    spdm_context->encap_context.error_state = LIBSPDM_STATUS_SUCCESS;
 
     return LIBSPDM_STATUS_SUCCESS;
 }
