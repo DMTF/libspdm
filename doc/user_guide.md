@@ -30,20 +30,43 @@ Please refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF
 
 1. Initialize SPDM context
 
-   1.1, allocate buffer for the spdm_context and initialize it.
+   1.1, allocate buffer for the spdm_context, initialize it, and setup scratch_buffer.
+   The spdm_context may include the decrypted secured message or session key.
+   The scratch buffer may include the decrypted secured message.
+   The spdm_context and scratch buffer shall be zeroed before freed or reused.
 
    ```
    spdm_context = (void *)malloc (libspdm_get_context_size());
    libspdm_init_context (spdm_context);
+
+   scratch_buffer_size = libspdm_get_sizeof_required_scratch_buffer(m_spdm_context);
+   LIBSPDM_ASSERT (scratch_buffer_size == LIBSPDM_SCRATCH_BUFFER_SIZE);
+   scratch_buffer = (void *)malloc(scratch_buffer_size);
+   libspdm_set_scratch_buffer (spdm_context, m_scratch_buffer, scratch_buffer_size);
    ```
 
-   1.2, register the device io functions and transport layer functions.
+   1.2, register the device io functions, transport layer functions, and device buffer functions.
    The libspdm provides the default [spdm_transport_mctp_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_mctp_lib.h) and [spdm_transport_pcidoe_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_pcidoe_lib.h).
    The SPDM device driver need provide device IO send/receive function.
+   The final sent and received message will be in the sender buffer and receiver buffer.
+   Please refer to [design](https://github.com/DMTF/libspdm/blob/main/doc/design.md) for the usage of those APIs.
 
    ```
-   libspdm_register_device_io_func (spdm_context, spdm_device_send_message, spdm_device_receive_message);
-   libspdm_register_transport_layer_func (spdm_context, spdm_transport_mctp_encode_message, libspdm_transport_mctp_decode_message);
+   libspdm_register_device_io_func (
+     spdm_context,
+     spdm_device_send_message,
+     spdm_device_receive_message);
+   libspdm_register_transport_layer_func (
+     spdm_context,
+     spdm_transport_mctp_encode_message,
+     libspdm_transport_mctp_decode_message,
+     libspdm_transport_mctp_get_header_size);
+   libspdm_register_device_buffer_func (
+     spdm_context,
+     spdm_device_acquire_sender_buffer,
+     spdm_device_release_sender_buffer,
+     spdm_device_acquire_receiver_buffer,
+     spdm_device_release_receiver_buffer);
    ```
 
    1.3, set capabilities and choose algorithms, based upon need.
@@ -64,7 +87,7 @@ Please refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF
    1.4, if responder verification is required, deploy the peer public root hash or peer public certificate chain.
    ```
    parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
-   if (!DeployCertChain) {
+   if (!deploy_cert_chain) {
      libspdm_set_data (spdm_context, LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert, peer_root_cert_size);
    } else {
      libspdm_set_data (spdm_context, LIBSPDM_DATA_PEER_PUBLIC_CERT_CHAIN, &parameter, peer_cert_chain, peer_cert_chain_size);
@@ -73,7 +96,7 @@ Please refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF
    If there are many peer root certs to set, you can set the peer root certs in order. Note: the max number of peer root certs is LIBSPDM_MAX_ROOT_CERT_SUPPORT.
    ```
    parameter.location = SPDM_DATA_LOCATION_LOCAL;
-   if (!DeployCertChain) {
+   if (!deploy_cert_chain) {
      spdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert1, peer_root_cert_size1);
      spdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert2, peer_root_cert_size2);
      spdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert3, peer_root_cert_size3);
@@ -233,20 +256,43 @@ Please refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF
 
 1. Initialize SPDM context (similar to SPDM requester)
 
-   1.1, allocate buffer for the spdm_context and initialize it.
+   1.1, allocate buffer for the spdm_context, initialize it, and setup scratch_buffer.
+   The spdm_context may include the decrypted secured message or session key.
+   The scratch buffer may include the decrypted secured message.
+   The spdm_context and scratch buffer shall be zeroed before freed or reused.
 
    ```
    spdm_context = (void *)malloc (spdm_get_context_size());
    libspdm_init_context (spdm_context);
+
+   scratch_buffer_size = libspdm_get_sizeof_required_scratch_buffer(m_spdm_context);
+   LIBSPDM_ASSERT (scratch_buffer_size == LIBSPDM_SCRATCH_BUFFER_SIZE);
+   scratch_buffer = (void *)malloc(scratch_buffer_size);
+   libspdm_set_scratch_buffer (spdm_context, m_scratch_buffer, scratch_buffer_size);
    ```
 
-   1.2, register the device io functions and transport layer functions.
+   1.2, register the device io functions, transport layer functions, and device buffer functions.
    The libspdm provides the default [spdm_transport_mctp_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_mctp_lib.h) and [spdm_transport_pcidoe_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_pcidoe_lib.h).
    The SPDM device driver need provide device IO send/receive function.
+   The final sent and received message will be in the sender buffer and receiver buffer.
+   Please refer to [design](https://github.com/DMTF/libspdm/blob/main/doc/design.md) for the usage of those APIs.
 
    ```
-   libspdm_register_device_io_func (spdm_context, spdm_device_send_message, spdm_device_receive_message);
-   libspdm_register_transport_layer_func (spdm_context, spdm_transport_mctp_encode_message, spdm_transport_mctp_decode_message);
+   libspdm_register_device_io_func (
+     spdm_context,
+     spdm_device_send_message,
+     spdm_device_receive_message);
+   libspdm_register_transport_layer_func (
+     spdm_context,
+     spdm_transport_mctp_encode_message,
+     libspdm_transport_mctp_decode_message,
+     libspdm_transport_mctp_get_header_size);
+   libspdm_register_device_buffer_func (
+     spdm_context,
+     spdm_device_acquire_sender_buffer,
+     spdm_device_release_sender_buffer,
+     spdm_device_acquire_receiver_buffer,
+     spdm_device_release_receiver_buffer);
    ```
 
    1.3, set capabilities and choose algorithms, based upon need.
@@ -277,7 +323,7 @@ Please refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF
    1.5, if mutual authentication (requester verification) is required, deploy the peer public root hash or peer public certificate chain.
    ```
    parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
-   if (!DeployCertChain) {
+   if (!deploy_cert_chain) {
      libspdm_set_data (spdm_context, LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert, peer_root_cert_size);
    } else {
      libspdm_set_data (spdm_context, LIBSPDM_DATA_PEER_PUBLIC_CERT_CHAIN, &parameter, peer_cert_chain, peer_cert_chain_size);
@@ -286,7 +332,7 @@ Please refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF
    If there are many peer root certs to set, you can set the peer root certs in order. Note: the max number of peer root certs is LIBSPDM_MAX_ROOT_CERT_SUPPORT.
    ```
    parameter.location = SPDM_DATA_LOCATION_LOCAL;
-   if (!DeployCertChain) {
+   if (!deploy_cert_chain) {
      spdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert1, peer_root_cert_size1);
      spdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert2, peer_root_cert_size2);
      spdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert3, peer_root_cert_size3);

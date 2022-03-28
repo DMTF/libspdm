@@ -73,32 +73,157 @@
 
    This library provides SPDM related crypto function. It is based upon [cryptlib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/cryptlib.h).
 
-7) SpdmTransportLib
+7) transport layer encode/decode
 
 7.1) [spdm_transport_mctp_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_mctp_lib.h) (follows DSP0275 and DSP0276)
 
    This library encodes and decodes MCTP message header.
 
-   SPDM requester/responder need to register spdm_transport_encode_message_func
-   and spdm_transport_decode_message_func to the spdm_requester_lib/spdm_responder_lib.
+   SPDM requester/responder need to register libspdm_transport_encode_message_func,
+   libspdm_transport_decode_message_func and libspdm_transport_get_header_size_func
+   to the spdm_requester_lib/spdm_responder_lib.
 
-   These two APIs encode and decode transport layer messages to or from a SPDM device.
+   These APIs encode and decode transport layer messages to or from a SPDM device.
 
 7.2) [spdm_transport_pcidoe_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_pcidoe_lib.h) (follows PCI DOE)
 
    This library encodes and decodes PCI DOE message header.
 
-   SPDM requester/responder need to register spdm_transport_encode_message_func
-   and spdm_transport_decode_message_func to the spdm_requester_lib/spdm_responder_lib.
+   SPDM requester/responder need to register libspdm_transport_encode_message_func,
+   libspdm_transport_decode_message_func and libspdm_transport_get_header_size_func
+   to the spdm_requester_lib/spdm_responder_lib.
 
-   These two APIs encode and decode transport layer messages to or from a SPDM device.
+   These APIs encode and decode transport layer messages to or from a SPDM device.
 
-8) spdm_device_send_message_func and spdm_device_receive_message_func
+8) device IO
 
-   SPDM requester/responder need to register spdm_device_send_message_func
-   and spdm_device_receive_message_func to the spdm_requester_lib/spdm_responder_lib.
+   SPDM requester/responder need to register libspdm_device_send_message_func
+   and libspdm_device_receive_message_func to the spdm_requester_lib/spdm_responder_lib.
+
+   SPDM requester/responder need to register libspdm_device_acquire_sender_buffer_func,
+   libspdm_device_release_sender_buffer_func, libspdm_device_acquire_receiver_buffer_func,
+   and libspdm_device_release_receiver_buffer_func to the spdm_requester_lib/spdm_responder_lib.
 
    These APIs send and receive transport layer messages to or from a SPDM device.
+
+   The size of sender/receiver buffer is `LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE`.
+   The size of scratch buffer is `LIBSPDM_SCRATCH_BUFFER_SIZE`.
+   Please refer to [spdm_lib_config.h](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_lib_config.h).
+
+   ```
+   The sender flow is:
+
+     libspdm_device_acquire_sender_buffer_func (&sender_buffer, &sender_buffer_size);
+     max_header_size = libspdm_transport_get_header_size_func();
+     spdm_message_buffer = sender_buffer + max_header_size;
+     /* build SPDM request/response in spdm_message_buffer */
+     libspdm_transport_encode_message_func (spdm_message_buffer, spdm_message_buffer_size,
+         &transport_message_buffer, &transport_message_buffer_size);
+     libspdm_device_send_message_func (transport_message_buffer, transport_message_buffer_size);
+     libspdm_device_release_sender_buffer_func (sender_buffer);
+
+   The buffer usage of sender buffer is:
+
+     ===== : SPDM message (max_header_size must be reserved before message)
+
+     |<---                       sender_buffer_size                      --->|
+        |<---                transport_message_buffer_size            --->|
+        |<-max_header_size->|<-spdm_message_buffer_size->|
+     +--+-------------------+============================+----------------+--+
+     |  | transport header  |         SPDM message       | transport tail |  |
+     +--+-------------------+============================+----------------+--+
+     ^  ^                   ^
+     |  |                   | spdm_message_buffer
+     |  | transport_message_buffer
+     | sender_buffer
+
+   For secured message, the scratch_buffer is used to store plain text, the final cipher text will be in sender_buffer.
+
+     ===== : SPDM message (max_header_size must be reserved before message, for sender_buffer and scratch_buffer)
+     ***** : encrypted data
+     $$$$$ : additional authenticated data (AAD)
+     &&&&& : message authentication code (MAC) / TAG
+
+     |<---                       sender_buffer_size                           --->|
+        |<---                transport_message_buffer_size                 --->|
+     +--+--------+$$$$$$$$$$$$$$$$$$$$+***************************+&&&+--------+--+
+     |  |TransHdr|      EncryptionHeader     |AppHdr| SPDM |Random|MAC|AlignPad|  |
+     |  |        |SessionId|SeqNum|Len|AppLen|      |      |      |   |        |  |
+     +--+--------+$$$$$$$$$$$$$$$$$$$$+***************************+&&&+--------+--+
+     ^  ^
+     |  | transport_message_buffer
+     | sender_buffer
+
+     |<---                       scratch_buffer_size                          --->|
+                                      |<---  plain text size  --->|
+                                      |<-max_hdr_s->|<spdm>|
+     +--------------------------------+-------------+======+------+---------------+
+     |                                |EncHdr|AppHdr| SPDM |Random|               |
+     |                                |AppLen|      |      |      |               |
+     +--------------------------------+-------------+======+------+---------------+
+     ^                                ^             ^
+     |                                |             | spdm_message_buffer
+     |                                | plain text
+     | scratch_buffer
+
+   ```
+
+   ```
+   The receiver flow is:
+
+     libspdm_device_acquire_receiver_buffer_func (&receiver_buffer, &receiver_buffer_size);
+     transport_message_buffer = receiver_buffer;
+     libspdm_device_receive_message_func (&transport_message_buffer, &transport_message_buffer_size);
+     libspdm_transport_decode_message_func (transport_message_buffer, transport_message_buffer_size,
+         &spdm_message_buffer, &spdm_message_buffer_size);
+     /* process SPDM request/response in spdm_message_buffer */
+     libspdm_device_release_receiver_buffer_func (receiver_buffer);
+
+   The buffer usage of sender buffer is:
+
+     ===== : SPDM message
+
+     |<---                       receiver_buffer_size                    --->|
+        |<---                transport_message_buffer_size            --->|
+                            |<-spdm_message_buffer_size->|
+     +--+-------------------+============================+----------------+--+
+     |  | transport header  |         SPDM message       | transport tail |  |
+     +--+-------------------+============================+----------------+--+
+     ^  ^                   ^
+     |  |                   | spdm_message_buffer
+     |  | transport_message_buffer
+     | receiver_buffer
+
+   For secured message, the scratch_buffer will be used to store plain text, the cipher text is in receiver_buffer.
+
+     ===== : SPDM message
+     ***** : encrypted data
+     $$$$$ : additional authenticated data (AAD)
+     &&&&& : message authentication code (MAC) / TAG
+
+     |<---                       receiver_buffer_size                         --->|
+        |<---                transport_message_buffer_size                 --->|
+     +--+--------+$$$$$$$$$$$$$$$$$$$$+***************************+&&&+--------+--+
+     |  |TransHdr|      EncryptionHeader     |AppHdr| SPDM |Random|MAC|AlignPad|  |
+     |  |        |SessionId|SeqNum|Len|AppLen|      |      |      |   |        |  |
+     +--+--------+$$$$$$$$$$$$$$$$$$$$+***************************+&&&+--------+--+
+     ^  ^
+     |  | transport_message_buffer
+     | receiver_buffer
+
+     |<---                       scratch_buffer_size                          --->|
+                                      |<---  plain text size  --->|
+                                                    |<spdm>|
+     +--------------------------------+-------------+======+------+---------------+
+     |                                |EncHdr|AppHdr| SPDM |Random|               |
+     |                                |AppLen|      |      |      |               |
+     +--------------------------------+-------------+======+------+---------------+
+     ^                                ^             ^
+     |                                |             | spdm_message_buffer
+     |                                | plain text
+     | scratch_buffer
+
+   ```
 
 9) [spdm_lib_config.h](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_lib_config.h) provides the configuration to the libspdm library.
 
