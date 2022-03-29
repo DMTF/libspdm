@@ -264,4 +264,14 @@
                                             LIBSPDM_TRANSPORT_ADDITIONAL_SIZE)
 #endif
 
+
+/* Required scratch buffer size for libspdm internal usage.
+ * It maybe used to hold the encrypted/decrypted message and/or last sent/received message.
+ *
+ * The value is NOT configurable.
+ * The value MAY be chnaged in different libspdm version.
+ * It is exposed here, just in case the libspdm consumer wants to configure the setting at build time.
+ */
+#define LIBSPDM_SCRATCH_BUFFER_SIZE (LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE)
+
 #endif
