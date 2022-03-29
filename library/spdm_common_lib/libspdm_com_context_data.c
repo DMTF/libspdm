@@ -1203,6 +1203,24 @@ libspdm_return_t libspdm_append_message_mut_b(void *context, const void *message
                 spdm_context->transcript.digest_context_mut_m1m2 = NULL;
                 return LIBSPDM_STATUS_CRYPTO_ERROR;
             }
+            if ((spdm_context->connection_info.version >> SPDM_VERSION_NUMBER_SHIFT_BIT) >
+                SPDM_MESSAGE_VERSION_11) {
+
+                /* Need append VCA since 1.2 script*/
+
+                result = libspdm_hash_update (
+                    spdm_context->connection_info.algorithm.base_hash_algo,
+                    spdm_context->transcript.digest_context_mut_m1m2,
+                    libspdm_get_managed_buffer(&spdm_context->transcript.message_a),
+                    libspdm_get_managed_buffer_size(&spdm_context->transcript.
+                                                    message_a));
+                if (!result) {
+                    libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
+                                       spdm_context->transcript.digest_context_mut_m1m2);
+                    spdm_context->transcript.digest_context_mut_m1m2 = NULL;
+                    return LIBSPDM_STATUS_CRYPTO_ERROR;
+                }
+            }
         }
 
         result = libspdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
@@ -1253,6 +1271,24 @@ libspdm_return_t libspdm_append_message_mut_c(void *context, const void *message
                                    spdm_context->transcript.digest_context_mut_m1m2);
                 spdm_context->transcript.digest_context_mut_m1m2 = NULL;
                 return LIBSPDM_STATUS_CRYPTO_ERROR;
+            }
+            if ((spdm_context->connection_info.version >> SPDM_VERSION_NUMBER_SHIFT_BIT) >
+                SPDM_MESSAGE_VERSION_11) {
+
+                /* Need append VCA since 1.2 script*/
+
+                result = libspdm_hash_update (
+                    spdm_context->connection_info.algorithm.base_hash_algo,
+                    spdm_context->transcript.digest_context_mut_m1m2,
+                    libspdm_get_managed_buffer(&spdm_context->transcript.message_a),
+                    libspdm_get_managed_buffer_size(&spdm_context->transcript.
+                                                    message_a));
+                if (!result) {
+                    libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
+                                       spdm_context->transcript.digest_context_mut_m1m2);
+                    spdm_context->transcript.digest_context_mut_m1m2 = NULL;
+                    return LIBSPDM_STATUS_CRYPTO_ERROR;
+                }
             }
         }
 
