@@ -112,7 +112,7 @@
 
    ```
    The sender flow is:
-
+   {
      libspdm_device_acquire_sender_buffer_func (&sender_buffer, &sender_buffer_size);
      max_header_size = libspdm_transport_get_header_size_func();
      spdm_message_buffer = sender_buffer + max_header_size;
@@ -121,6 +121,7 @@
          &transport_message_buffer, &transport_message_buffer_size);
      libspdm_device_send_message_func (transport_message_buffer, transport_message_buffer_size);
      libspdm_device_release_sender_buffer_func (sender_buffer);
+   }
 
    The buffer usage of sender buffer is:
 
@@ -139,38 +140,59 @@
 
    For secured message, the scratch_buffer is used to store plain text, the final cipher text will be in sender_buffer.
 
+   libspdm_transport_encode_message_func(spdm_message_buffer, &transport_message_buffer)
+   {
+     /* spdm_message_buffer is inside of scratch_buffer.
+      * transport_message_buffer is inside of sender_buffer. */
+
+     xxx_encode_spdm_message_to_app (spdm_message_buffer, spdm_message_buffer_size,
+         &app_message_buffer, &app_message_buffer_size);
+     max_header_size = libspdm_transport_get_header_size_func();
+     secured_message_buffer = transport_message_buffer + max_header_size;
+     libspdm_encode_secured_message (app_message_buffer, app_message_buffer_size,
+         secured_message_buffer, &secured_message_buffer_size);
+     xxx_encode_secured_message_to_transport (secured_message_buffer, secured_message_buffer_size,
+         &transport_message_buffer, &transport_message_buffer_size);
+   }
+
+   The buffer usage of sender_buffer and scratch_buffer is:
+
      ===== : SPDM message (max_header_size must be reserved before message, for sender_buffer and scratch_buffer)
      ***** : encrypted data
      $$$$$ : additional authenticated data (AAD)
      &&&&& : message authentication code (MAC) / TAG
 
-     |<---                       sender_buffer_size                           --->|
-        |<---                transport_message_buffer_size                 --->|
-     +--+--------+$$$$$$$$$$$$$$$$$$$$+***************************+&&&+--------+--+
-     |  |TransHdr|      EncryptionHeader     |AppHdr| SPDM |Random|MAC|AlignPad|  |
-     |  |        |SessionId|SeqNum|Len|AppLen|      |      |      |   |        |  |
-     +--+--------+$$$$$$$$$$$$$$$$$$$$+***************************+&&&+--------+--+
-     ^  ^
+     |<---                            sender_buffer_size                           --->|
+        |<---                     transport_message_buffer_size                 --->|
+        |<-max_hdr_s->|<---       secured_message_buffer_size          --->|
+     +--+-------------+$$$$$$$$$$$$$$$$$$$$+***************************+&&&+--------+--+
+     |  |  TransHdr   |      EncryptionHeader     |AppHdr| SPDM |Random|MAC|AlignPad|  |
+     |  |             |SessionId|SeqNum|Len|AppLen|      |      |      |   |        |  |
+     +--+-------------+$$$$$$$$$$$$$$$$$$$$+***************************+&&&+--------+--+
+     ^  ^             ^
+     |  |             | secured_message_buffer
      |  | transport_message_buffer
      | sender_buffer
 
-     |<---                       scratch_buffer_size                          --->|
-                                      |<---  plain text size  --->|
-                                      |<-max_hdr_s->|<spdm>|
-     +--------------------------------+-------------+======+------+---------------+
-     |                                |EncHdr|AppHdr| SPDM |Random|               |
-     |                                |AppLen|      |      |      |               |
-     +--------------------------------+-------------+======+------+---------------+
-     ^                                ^             ^
-     |                                |             | spdm_message_buffer
-     |                                | plain text
+     |<---                            scratch_buffer_size                          --->|
+                                           |<---  plain text size  --->|
+                                                  |<-app_msg_s->|
+                                           |<-max_hdr_s->|<spdm>|
+     +-------------------------------------+-------------+======+------+---------------+
+     |                                     |EncHdr|AppHdr| SPDM |Random|               |
+     |                                     |AppLen|      |      |      |               |
+     +-------------------------------------+-------------+======+------+---------------+
+     ^                                     ^      ^      ^
+     |                                     |      |      | spdm_message_buffer
+     |                                     |      | app_message_buffer
+     |                                     | plain text
      | scratch_buffer
 
    ```
 
    ```
    The receiver flow is:
-
+   {
      libspdm_device_acquire_receiver_buffer_func (&receiver_buffer, &receiver_buffer_size);
      transport_message_buffer = receiver_buffer;
      libspdm_device_receive_message_func (&transport_message_buffer, &transport_message_buffer_size);
@@ -178,6 +200,7 @@
          &spdm_message_buffer, &spdm_message_buffer_size);
      /* process SPDM request/response in spdm_message_buffer */
      libspdm_device_release_receiver_buffer_func (receiver_buffer);
+   }
 
    The buffer usage of sender buffer is:
 
@@ -196,31 +219,51 @@
 
    For secured message, the scratch_buffer will be used to store plain text, the cipher text is in receiver_buffer.
 
+   libspdm_transport_decode_message_func(transport_message_buffer, &spdm_message_buffer)
+   {
+     /* transport_message_buffer is inside of receiver_buffer.
+      * spdm_message_buffer is inside of scratch_buffer. */
+
+     xxx_decode_secured_message_from_transport (transport_message_buffer, transport_message_buffer_size,
+         &secured_message_buffer, &secured_message_buffer_size);
+     app_message_buffer = spdm_message_buffer
+     libspdm_decode_secured_message (secured_message_buffer, secured_message_buffer_size,
+         &app_message_buffer, &app_message_buffer_size);
+     xxx_decode_spdm_message_from_app (app_message_buffer, app_message_buffer_size,
+         &spdm_message_buffer, &spdm_message_buffer_size);
+   }
+
+   The buffer usage of receiver_buffer and scratch_buffer is:
+
      ===== : SPDM message
      ***** : encrypted data
      $$$$$ : additional authenticated data (AAD)
      &&&&& : message authentication code (MAC) / TAG
 
-     |<---                       receiver_buffer_size                         --->|
-        |<---                transport_message_buffer_size                 --->|
-     +--+--------+$$$$$$$$$$$$$$$$$$$$+***************************+&&&+--------+--+
-     |  |TransHdr|      EncryptionHeader     |AppHdr| SPDM |Random|MAC|AlignPad|  |
-     |  |        |SessionId|SeqNum|Len|AppLen|      |      |      |   |        |  |
-     +--+--------+$$$$$$$$$$$$$$$$$$$$+***************************+&&&+--------+--+
-     ^  ^
+     |<---                            receiver_buffer_size                         --->|
+        |<---                     transport_message_buffer_size                 --->|
+                      |<---       secured_message_buffer_size          --->|
+     +--+-------------+$$$$$$$$$$$$$$$$$$$$+***************************+&&&+--------+--+
+     |  |  TransHdr   |      EncryptionHeader     |AppHdr| SPDM |Random|MAC|AlignPad|  |
+     |  |             |SessionId|SeqNum|Len|AppLen|      |      |      |   |        |  |
+     +--+-------------+$$$$$$$$$$$$$$$$$$$$+***************************+&&&+--------+--+
+     ^  ^             ^
+     |  |             | secured_message_buffer
      |  | transport_message_buffer
      | receiver_buffer
 
-     |<---                       scratch_buffer_size                          --->|
-                                      |<---  plain text size  --->|
-                                                    |<spdm>|
-     +--------------------------------+-------------+======+------+---------------+
-     |                                |EncHdr|AppHdr| SPDM |Random|               |
-     |                                |AppLen|      |      |      |               |
-     +--------------------------------+-------------+======+------+---------------+
-     ^                                ^             ^
-     |                                |             | spdm_message_buffer
-     |                                | plain text
+     |<---                            scratch_buffer_size                          --->|
+                                           |<---  plain text size  --->|
+                                                  |<-app_msg_s->|
+                                                         |<spdm>|
+     +-------------------------------------+-------------+======+------+---------------+
+     |                                     |EncHdr|AppHdr| SPDM |Random|               |
+     |                                     |AppLen|      |      |      |               |
+     +-------------------------------------+-------------+======+------+---------------+
+     ^                                     ^      ^      ^
+     |                                     |      |      | spdm_message_buffer
+     |                                     |      | app_message_buffer
+     |                                     | plain text
      | scratch_buffer
 
    ```
