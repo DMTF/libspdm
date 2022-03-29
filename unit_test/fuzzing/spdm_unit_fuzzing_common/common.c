@@ -106,6 +106,7 @@ size_t libspdm_unit_test_group_teardown(void **State)
 
     spdm_test_context = *State;
     free(spdm_test_context->spdm_context);
+    free(spdm_test_context->scratch_buffer);
     spdm_test_context->spdm_context = NULL;
     return 0;
 }
