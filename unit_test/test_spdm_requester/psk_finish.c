@@ -115,6 +115,7 @@ libspdm_return_t libspdm_requester_psk_finish_test_send_message(void *spdm_conte
         ((libspdm_secured_message_context_t *)(session_info->secured_message_context))
         ->handshake_secret.request_handshake_sequence_number--;
         m_libspdm_local_buffer_size = 0;
+        libspdm_get_scratch_buffer (spdm_context, (void **)&decoded_message, &decoded_message_size);
         status = libspdm_transport_test_decode_message(
             spdm_context,
             &message_session_id, &is_app_message, true, request_size, request,

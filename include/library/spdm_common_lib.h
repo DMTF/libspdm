@@ -559,7 +559,7 @@ typedef libspdm_return_t (*libspdm_transport_encode_message_func)(
  *                                      For normal message or secured message, it shall point to acquired receiver buffer.
  * @param  message_size                  size in bytes of the message data buffer.
  * @param  message                      A pointer to a destination buffer to store the message.
- *                                      On input, it shall be msg_buf_ptr from receiver buffer.
+ *                                      On input, it shall point to the scratch buffer in spdm_context.
  *                                      On output, for normal message, it will point to the original receiver buffer.
  *                                      On output, for secured message, it will point to the scratch buffer in spdm_context.
  *
