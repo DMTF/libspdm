@@ -4,7 +4,7 @@ This document provides the general information on how to write an SPDM requester
 
 ## SPDM requester user guide
 
-Please refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/SPDM-Emu/blob/main/spdm_emu/spdm_emu/spdm_requester_emu/spdm_requester.c)
+Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-emu/blob/main/spdm_emu/spdm_requester_emu/spdm_requester_spdm.c)
 
 0. Choose proper SPDM libraries.
 
