@@ -14,8 +14,12 @@
  * @param  is_requester                  Indicates if it is a requester message.
  * @param  app_message_size               size in bytes of the application message data buffer.
  * @param  app_message                   A pointer to a source buffer to store the application message.
+ *                                       It shall point to the scratch buffer in spdm_context.
+ *                                         Before app_message, there is room for spdm_secured_message_cipher_header_t.
+ *                                         After (app_message + app_message_size), there is room for random bytes.
  * @param  secured_message_size           size in bytes of the secured message data buffer.
  * @param  secured_message               A pointer to a destination buffer to store the secured message.
+ *                                       It shall point to the acquired sender buffer.
  * @param  spdm_secured_message_callbacks  A pointer to a secured message callback functions structure.
  *
  * @retval RETURN_SUCCESS               The application message is encoded successfully.
@@ -301,8 +305,12 @@ libspdm_return_t libspdm_encode_secured_message(
  * @param  is_requester                  Indicates if it is a requester message.
  * @param  secured_message_size           size in bytes of the secured message data buffer.
  * @param  secured_message               A pointer to a source buffer to store the secured message.
+ *                                       It shall point to the acquired receiver buffer.
  * @param  app_message_size               size in bytes of the application message data buffer.
  * @param  app_message                   A pointer to a destination buffer to store the application message.
+ *                                       It shall point to the scratch buffer in spdm_context.
+ *                                       On input, the app_message pointer shall point to a big enough buffer to hold the decrypted message
+ *                                       On output, the app_message pointer shall be inside of [app_message, app_message + app_message_size]
  * @param  spdm_secured_message_callbacks  A pointer to a secured message callback functions structure.
  *
  * @retval RETURN_SUCCESS               The application message is decoded successfully.
