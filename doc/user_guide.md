@@ -228,7 +228,7 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
 
 ## SPDM responder user guide
 
-Please refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/SPDM-Emu/blob/main/spdm_emu/spdm_emu/spdm_responder_emu/spdm_responder.c)
+Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-emu/blob/main/spdm_emu/spdm_responder_emu/spdm_responder_spdm.c)
 
 0. Choose proper SPDM libraries.
 
