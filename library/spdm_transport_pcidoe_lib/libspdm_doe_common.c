@@ -166,7 +166,7 @@ libspdm_return_t libspdm_transport_pci_doe_encode_message(
  *                                      For normal message or secured message, it shall point to acquired receiver buffer.
  * @param  message_size                  size in bytes of the message data buffer.
  * @param  message                      A pointer to a destination buffer to store the message.
- *                                      On input, it shall be msg_buf_ptr from receiver buffer.
+ *                                      On input, it shall point to the scratch buffer in spdm_context.
  *                                      On output, for normal message, it will point to the original receiver buffer.
  *                                      On output, for secured message, it will point to the scratch buffer in spdm_context.
  *
@@ -229,7 +229,6 @@ libspdm_return_t libspdm_transport_pci_doe_decode_message(
         }
 
         /* Secured message to message*/
-        libspdm_get_scratch_buffer (spdm_context, message, message_size);
         status = libspdm_decode_secured_message(
             secured_message_context, *secured_message_session_id,
             is_requester, secured_message_size, secured_message,

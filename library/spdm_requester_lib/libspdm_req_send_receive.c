@@ -104,6 +104,8 @@ libspdm_return_t libspdm_send_request(void *context, const uint32_t *session_id,
  * @param  response                     A pointer to a destination buffer to store the response.
  *                                     The caller is responsible for having
  *                                     either implicit or explicit ownership of the buffer.
+ *                                      For normal message, response pointer still point to original transport_message.
+ *                                      For secured message, response pointer will point to the scratch buffer in spdm_context.
  *
  * @retval RETURN_SUCCESS               The SPDM response is received successfully.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is received from the device.
@@ -144,6 +146,11 @@ libspdm_return_t libspdm_receive_response(void *context, const uint32_t *session
 
     message_session_id = NULL;
     is_message_app_message = false;
+
+    /* always use scratch buffer to response.
+     * if it is secured message, this scratch buffer will be used.
+     * if it is normal message, the response ptr will point to receiver buffer. */
+    libspdm_get_scratch_buffer (spdm_context, response, response_size);
     status = spdm_context->transport_decode_message(
         spdm_context, &message_session_id, &is_message_app_message,
         false, message_size, message, response_size, response);

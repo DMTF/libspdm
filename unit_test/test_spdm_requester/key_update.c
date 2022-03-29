@@ -155,6 +155,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.request_data_sequence_number--;
+        libspdm_get_scratch_buffer (spdm_context, (void **)&decoded_message, &decoded_message_size);
         status = libspdm_transport_test_decode_message(spdm_context,
                                                        &message_session_id, &is_app_message, true,
                                                        request_size,
@@ -194,6 +195,8 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
+            libspdm_get_scratch_buffer (spdm_context, (void **)&decoded_message,
+                                        &decoded_message_size);
             status = libspdm_transport_test_decode_message(spdm_context,
                                                            &message_session_id, &is_app_message,
                                                            true,
@@ -237,6 +240,8 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
+            libspdm_get_scratch_buffer (spdm_context, (void **)&decoded_message,
+                                        &decoded_message_size);
             status = libspdm_transport_test_decode_message(spdm_context,
                                                            &message_session_id, &is_app_message,
                                                            true,
@@ -280,6 +285,8 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
+            libspdm_get_scratch_buffer (spdm_context, (void **)&decoded_message,
+                                        &decoded_message_size);
             status = libspdm_transport_test_decode_message(spdm_context,
                                                            &message_session_id, &is_app_message,
                                                            true,
@@ -323,6 +330,8 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
+            libspdm_get_scratch_buffer (spdm_context, (void **)&decoded_message,
+                                        &decoded_message_size);
             status = libspdm_transport_test_decode_message(spdm_context,
                                                            &message_session_id, &is_app_message,
                                                            true,
@@ -369,6 +378,8 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
+            libspdm_get_scratch_buffer (spdm_context, (void **)&decoded_message,
+                                        &decoded_message_size);
             status = libspdm_transport_test_decode_message(spdm_context,
                                                            &message_session_id, &is_app_message,
                                                            true,
@@ -421,6 +432,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.request_data_sequence_number--;
+        libspdm_get_scratch_buffer (spdm_context, (void **)&decoded_message, &decoded_message_size);
         status = libspdm_transport_test_decode_message(spdm_context,
                                                        &message_session_id, &is_app_message, true,
                                                        request_size,
@@ -460,6 +472,8 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
+            libspdm_get_scratch_buffer (spdm_context, (void **)&decoded_message,
+                                        &decoded_message_size);
             status = libspdm_transport_test_decode_message(spdm_context,
                                                            &message_session_id, &is_app_message,
                                                            true,
@@ -505,6 +519,8 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
+            libspdm_get_scratch_buffer (spdm_context, (void **)&decoded_message,
+                                        &decoded_message_size);
             status = libspdm_transport_test_decode_message(spdm_context,
                                                            &message_session_id, &is_app_message,
                                                            true,
@@ -549,6 +565,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.request_data_sequence_number--;
+        libspdm_get_scratch_buffer (spdm_context, (void **)&decoded_message, &decoded_message_size);
         status = libspdm_transport_test_decode_message(spdm_context,
                                                        &message_session_id, &is_app_message, true,
                                                        request_size,
@@ -585,6 +602,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.request_data_sequence_number--;
+        libspdm_get_scratch_buffer (spdm_context, (void **)&decoded_message, &decoded_message_size);
         status = libspdm_transport_test_decode_message(spdm_context,
                                                        &message_session_id, &is_app_message, true,
                                                        request_size,
@@ -624,6 +642,8 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
+            libspdm_get_scratch_buffer (spdm_context, (void **)&decoded_message,
+                                        &decoded_message_size);
             status = libspdm_transport_test_decode_message(spdm_context,
                                                            &message_session_id, &is_app_message,
                                                            true,
@@ -667,6 +687,8 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
+            libspdm_get_scratch_buffer (spdm_context, (void **)&decoded_message,
+                                        &decoded_message_size);
             status = libspdm_transport_test_decode_message(spdm_context,
                                                            &message_session_id, &is_app_message,
                                                            true,
@@ -710,6 +732,8 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
+            libspdm_get_scratch_buffer (spdm_context, (void **)&decoded_message,
+                                        &decoded_message_size);
             status = libspdm_transport_test_decode_message(spdm_context,
                                                            &message_session_id, &is_app_message,
                                                            true,
@@ -756,6 +780,8 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
+            libspdm_get_scratch_buffer (spdm_context, (void **)&decoded_message,
+                                        &decoded_message_size);
             status = libspdm_transport_test_decode_message(spdm_context,
                                                            &message_session_id, &is_app_message,
                                                            true,

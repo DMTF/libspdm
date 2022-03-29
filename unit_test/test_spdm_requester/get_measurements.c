@@ -385,6 +385,7 @@ libspdm_return_t libspdm_requester_get_measurements_test_send_message(
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Request (0x%x):\n",
                        request_size));
         libspdm_dump_hex(request, request_size);
+        libspdm_get_scratch_buffer (spdm_context, (void **)&app_message, &app_message_size);
         libspdm_transport_test_decode_message(
             spdm_context, &session_id, &is_app_message,
             false, request_size, (uint8_t *)request,
