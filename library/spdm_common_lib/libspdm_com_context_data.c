@@ -526,6 +526,9 @@ libspdm_return_t libspdm_get_data(void *context, libspdm_data_type_t data_type,
     void *target_data;
     uint32_t session_id;
     libspdm_session_info_t *session_info;
+    size_t digest_size;
+    size_t digest_count;
+    size_t index;
 
     if (!context || !data || !data_size || data_type >= LIBSPDM_DATA_MAX) {
         return LIBSPDM_STATUS_INVALID_PARAMETER;
@@ -686,6 +689,21 @@ libspdm_return_t libspdm_get_data(void *context, libspdm_data_type_t data_type,
     case LIBSPDM_DATA_RESPONSE_STATE:
         target_data_size = sizeof(uint32_t);
         target_data = &spdm_context->response_state;
+        break;
+    case LIBSPDM_DATA_PEER_SLOT_MASK:
+        target_data_size = sizeof(uint8_t);
+        target_data = &spdm_context->connection_info.peer_digest_slot_mask;
+        break;
+    case LIBSPDM_DATA_PEER_TOTAL_DIGEST_BUFFER:
+        digest_count = 0;
+        for (index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
+            if (spdm_context->connection_info.peer_digest_slot_mask & (1 << index)) {
+                digest_count++;
+            }
+        }
+        digest_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+        target_data_size = digest_size * digest_count;
+        target_data = spdm_context->connection_info.peer_total_digest_buffer;
         break;
     case LIBSPDM_DATA_SESSION_USE_PSK:
         target_data_size = sizeof(bool);

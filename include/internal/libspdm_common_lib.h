@@ -102,6 +102,10 @@ typedef struct {
     libspdm_device_algorithm_t algorithm;
     spdm_version_number_t secured_message_version;
 
+    /* Peer digests buffer */
+    uint8_t peer_digest_slot_mask;
+    uint8_t peer_total_digest_buffer[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
+
     /* Peer CertificateChain */
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     uint8_t peer_used_cert_chain_buffer[LIBSPDM_MAX_CERT_CHAIN_SIZE];
