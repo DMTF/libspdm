@@ -60,7 +60,7 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/os_stub/openssl3lib/openssl/providers/common/include
                     ${LIBSPDM_DIR}/os_stub/openssl3lib/openssl/providers/implementations/include
                     ${LIBSPDM_DIR}/os_stub/openssl3lib/openssl/providers/implementations/ciphers
-                    
+
 )
 
 SET(src_openssllib
@@ -838,7 +838,13 @@ SET(src_openssllib
     openssl/providers/common/der/der_ec_sig.c
 
 
-
+    ## my add for sm2
+    openssl/providers/implementations/signature/sm2_sig.c
+    openssl/providers/implementations/asymciphers/sm2_enc.c
+    openssl/crypto/sm2/sm2_key.c
+    openssl/crypto/sm2/sm2_sign.c
+    openssl/providers/common/der/der_sm2_sig.c
+    openssl/crypto/sm2/sm2_crypt.c
 
 )
 

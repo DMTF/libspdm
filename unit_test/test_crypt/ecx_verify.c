@@ -15,7 +15,6 @@
  **/
 return_status libspdm_validate_crypt_ecx(void)
 {
-    //libspdm_my_print("\n skip Crypto Montgomery Curve key Exchange Testing:\n");
     void *ecx1;
     void *ecx2;
     uint8_t public1[56];

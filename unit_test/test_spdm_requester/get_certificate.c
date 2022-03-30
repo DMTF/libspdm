@@ -2463,7 +2463,7 @@ void libspdm_test_requester_get_certificate_case15(void **state)
 
     libspdm_read_responder_public_certificate_chain_by_size(
         /*MAXUINT16_CERT signature_algo is SHA256RSA */
-        m_libspdm_use_hash_algo, SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
+        SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256, SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
         LIBSPDM_TEST_CERT_MAXUINT16, &data, &data_size, &hash, &hash_size);
     libspdm_x509_get_cert_from_cert_chain((uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
                                           data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,

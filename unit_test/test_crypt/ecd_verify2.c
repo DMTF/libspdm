@@ -67,7 +67,6 @@ GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_libspdm_ecd_test_pem_key[] = {
  **/
 return_status libspdm_validate_crypt_ecd_2(void)
 {
-       //libspdm_my_print("\n skip Crypto Ed key Retrieving Testing: ");
     bool status;
     void *ecd_priv_key;
     void *ecd_pub_key;

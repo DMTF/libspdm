@@ -215,7 +215,6 @@ done:
     return status;
 }
 
-
 /**
  * Retrieve the Ed Private key from the password-protected PEM key data.
  *
@@ -325,6 +324,67 @@ bool libspdm_sm2_get_private_key_from_pem(const uint8_t *pem_data,
                                           const char *password,
                                           void **sm2_context)
 {
-    LIBSPDM_ASSERT(false);
-    return false;
+    bool status;
+    BIO *pem_bio;
+    EVP_PKEY *pkey;
+    //int32_t result;
+    EC_KEY *ec_key;
+    int32_t openssl_nid;
+
+
+    /* Check input parameters.*/
+
+    if (pem_data == NULL || sm2_context == NULL || pem_size > INT_MAX) {
+        return false;
+    }
+
+    /* Add possible block-cipher descriptor for PEM data decryption.
+     * NOTE: Only support SM4 for the encrypted PEM.*/
+
+    /*if (EVP_add_cipher (EVP_sm4_cbc ()) == 0) {
+     *  return false;
+     *}*/
+
+    status = false;
+
+    /* Read encrypted PEM data.*/
+    pem_bio = BIO_new(BIO_s_mem());
+    if (pem_bio == NULL) {
+        goto done;
+    }
+
+    if (BIO_write(pem_bio, pem_data, (int)pem_size) <= 0) {
+        goto done;
+    }
+
+
+    /* Retrieve sm2 Private key from encrypted PEM data.*/
+
+    pkey = PEM_read_bio_PrivateKey(pem_bio, NULL,
+                                   (pem_password_cb *)&PasswordCallback,
+                                   (void *)password);
+    if (pkey == NULL) {
+        goto done;
+    }
+    ec_key = EVP_PKEY_get0_EC_KEY(pkey);
+    openssl_nid = EC_GROUP_get_curve_name(EC_KEY_get0_group(ec_key));
+    if (openssl_nid != NID_sm2) {
+        goto done;
+    }
+
+    // result = EVP_PKEY_set_alias_type(pkey, EVP_PKEY_SM2);
+    // if (result == 0) {
+    //     goto done;
+    // }
+
+    *sm2_context = pkey;
+    status = true;
+
+done:
+
+    /* Release Resources.*/
+
+    BIO_free(pem_bio);
+
+    return status;
 }

@@ -15,9 +15,6 @@
  **/
 return_status libspdm_validate_crypt_ec(void)
 {
-    // libspdm_my_print("\n skip  validate_crypt_ec");
-    // return RETURN_SUCCESS;
-
     void *ec1;
     void *ec2;
     uint8_t public1[66 * 2];

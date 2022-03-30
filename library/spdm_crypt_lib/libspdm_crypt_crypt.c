@@ -71,6 +71,10 @@ static uint8_t m_libspdm_hardware_identity_oid[] =
 #define SIGN_ALGO_ED25519_OID {0x2B, 0x65, 0x70}
 #define SIGN_ALGO_ED448_OID   {0x2B, 0x65, 0x71}
 
+/* SM2withSM3 OID: 1.2.156.10197.1.501 */
+#define SIGN_ALGO_SM2SM3_OID  \
+    {0x2A, 0x81, 0x1C, 0xCF, 0x55, 0x01, 0x83, 0x75}
+
 /**
  * This function returns the SPDM hash algorithm size.
  *
@@ -1926,8 +1930,9 @@ bool libspdm_asym_func_need_hash(uint32_t base_asym_algo)
         return true;
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
         return false;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
+        return true;
     default:
         LIBSPDM_ASSERT(false);
         break;
@@ -2106,8 +2111,7 @@ bool libspdm_asym_verify(
 
         switch (base_asym_algo) {
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
-            param = "";
-            param_size = 0;
+            param = libspdm_get_signing_context_string (spdm_version, op_code, false, &param_size);
             break;
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519:
             hash_nid = LIBSPDM_CRYPTO_NID_NULL;
@@ -2205,11 +2209,9 @@ bool libspdm_asym_verify_hash(
     if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11) {
 
         /* Need use SPDM 1.2 signing*/
-
         switch (base_asym_algo) {
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
-            param = "";
-            param_size = 0;
+            param = libspdm_get_signing_context_string (spdm_version, op_code, false, &param_size);
             break;
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519:
             hash_nid = LIBSPDM_CRYPTO_NID_NULL;
@@ -2515,8 +2517,7 @@ bool libspdm_asym_sign(
 
         switch (base_asym_algo) {
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
-            param = "";
-            param_size = 0;
+            param = libspdm_get_signing_context_string (spdm_version, op_code, false, &param_size);
             break;
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519:
             hash_nid = LIBSPDM_CRYPTO_NID_NULL;
@@ -2621,8 +2622,7 @@ bool libspdm_asym_sign_hash(
 
         switch (base_asym_algo) {
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
-            param = "";
-            param_size = 0;
+            param = libspdm_get_signing_context_string (spdm_version, op_code, false, &param_size);
             break;
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519:
             hash_nid = LIBSPDM_CRYPTO_NID_NULL;
@@ -2831,8 +2831,7 @@ bool libspdm_req_asym_verify(
 
         switch (req_base_asym_alg) {
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
-            param = "";
-            param_size = 0;
+            param = libspdm_get_signing_context_string (spdm_version, op_code, true, &param_size);
             break;
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519:
             hash_nid = LIBSPDM_CRYPTO_NID_NULL;
@@ -2933,8 +2932,7 @@ bool libspdm_req_asym_verify_hash(
 
         switch (req_base_asym_alg) {
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
-            param = "";
-            param_size = 0;
+            param = libspdm_get_signing_context_string (spdm_version, op_code, true, &param_size);
             break;
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519:
             hash_nid = LIBSPDM_CRYPTO_NID_NULL;
@@ -3095,8 +3093,7 @@ bool libspdm_req_asym_sign(
 
         switch (req_base_asym_alg) {
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
-            param = "";
-            param_size = 0;
+            param = libspdm_get_signing_context_string (spdm_version, op_code, true, &param_size);
             break;
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519:
             hash_nid = LIBSPDM_CRYPTO_NID_NULL;
@@ -3201,8 +3198,7 @@ bool libspdm_req_asym_sign_hash(
 
         switch (req_base_asym_alg) {
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
-            param = "";
-            param_size = 0;
+            param = libspdm_get_signing_context_string (spdm_version, op_code, true, &param_size);
             break;
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519:
             hash_nid = LIBSPDM_CRYPTO_NID_NULL;
@@ -4061,9 +4057,10 @@ bool libspdm_get_signature_algo_OID(uint32_t base_asym_algo, uint32_t base_hash_
         }
         break;
 
-    /*sm2 oid  TBD*/
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
-        return true;
+        uint8_t signature_algo_oid_sm2sm3[] = SIGN_ALGO_SM2SM3_OID;
+        libspdm_copy_mem(oid, oid_len, signature_algo_oid_sm2sm3, oid_len);
+        break;
 
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519: {
         uint8_t signature_algo_oid_ed25519[] = SIGN_ALGO_ED25519_OID;
@@ -4106,11 +4103,6 @@ bool libspdm_verify_cert_signature_algo_OID(const uint8_t *cert, uintn cert_size
     uintn oid_len;
     bool status;
     return_status ret;
-
-    /*work around: skip the sm2*/
-    if (base_asym_algo == SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256) {
-        return true;
-    }
 
     oid_len = libspdm_get_signature_algo_OID_len(base_asym_algo);
     if(oid_len == false) {

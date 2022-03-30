@@ -72,7 +72,6 @@ return_status libspdm_cryptest_main(void)
         return status;
     }
 
-    // skip ecp
     status = libspdm_validate_crypt_x509("ecp256", sizeof("ecp256"));
     if (RETURN_ERROR(status)) {
         return status;

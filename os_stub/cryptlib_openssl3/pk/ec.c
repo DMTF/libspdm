@@ -767,7 +767,6 @@ bool libspdm_ecdsa_verify(void *ec_context, uintn hash_nid,
         return false;
     }
     ECDSA_SIG_set0(ecdsa_sig, bn_r, bn_s);
-
     result = ECDSA_do_verify(message_hash, (uint32_t)hash_size, ecdsa_sig,
                              (EC_KEY *)ec_context);
 

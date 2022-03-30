@@ -15,7 +15,6 @@
  **/
 return_status libspdm_validate_crypt_ecd(void)
 {
-       //libspdm_my_print("\n skip Crypto Ed-DSA Signing Verification Testing:\n");
     void *ecd1;
     void *ecd2;
     uint8_t message[] = "EdDsaTest";

@@ -14,6 +14,7 @@
 
 #include "prov/der_ecx.h"
 #include "prov/der_ec.h"
+#include "prov/der_sm2.h"
 /* Well known OIDs precompiled */
 
 /*
@@ -163,6 +164,10 @@ const unsigned char ossl_der_oid_id_KMACWithSHAKE256[DER_OID_SZ_id_KMACWithSHAKE
 
 
 
+
+
+/////////////////////////my add
+
 const unsigned char ossl_der_oid_id_X25519[DER_OID_SZ_id_X25519] = {
     DER_OID_V_id_X25519
 };
@@ -247,4 +252,13 @@ const unsigned char ossl_der_oid_id_ecdsa_with_sha3_384[DER_OID_SZ_id_ecdsa_with
  */
 const unsigned char ossl_der_oid_id_ecdsa_with_sha3_512[DER_OID_SZ_id_ecdsa_with_sha3_512] = {
     DER_OID_V_id_ecdsa_with_sha3_512
+};
+
+
+
+/*
+ * sm2-with-SM3 OBJECT IDENTIFIER ::= { sm-scheme 501 }
+ */
+const unsigned char ossl_der_oid_sm2_with_SM3[DER_OID_SZ_sm2_with_SM3] = {
+    DER_OID_V_sm2_with_SM3
 };
