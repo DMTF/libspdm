@@ -184,6 +184,12 @@ libspdm_return_t libspdm_try_get_digest(void *context, uint8_t *slot_mask,
                          spdm_response->digest, digest_size * digest_count);
     }
 
+    spdm_context->connection_info.peer_digest_slot_mask = spdm_response->header.param2;
+    libspdm_copy_mem(
+        spdm_context->connection_info.peer_total_digest_buffer,
+        sizeof(spdm_context->connection_info.peer_total_digest_buffer),
+        spdm_response->digest, digest_size * digest_count);
+
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     status = LIBSPDM_STATUS_SUCCESS;
 
