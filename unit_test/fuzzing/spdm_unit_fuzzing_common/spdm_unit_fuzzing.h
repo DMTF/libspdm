@@ -15,7 +15,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#undef NULL
 #include "hal/base.h"
 #include "hal/library/memlib.h"
 #include "library/spdm_requester_lib.h"
@@ -34,10 +33,10 @@ extern uint16_t m_libspdm_use_dhe_algo;
 extern uint16_t m_libspdm_use_aead_algo;
 extern uint16_t m_libspdm_use_key_schedule_algo;
 
-#define LIBSPDM_TEST_CONTEXT_SIGNATURE SIGNATURE_32('S', 'T', 'C', 'S')
+#define LIBSPDM_TEST_CONTEXT_VERSION 0x1
 
 typedef struct {
-    uint32_t signature;
+    uint32_t version;
     bool is_requester;
     libspdm_device_send_message_func send_message;
     libspdm_device_receive_message_func receive_message;

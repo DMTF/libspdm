@@ -16,9 +16,9 @@
 
 /* Extra header to record the memory buffer size from malloc routine.*/
 
-#define CRYPTMEM_HEAD_SIGNATURE SIGNATURE_32('c', 'm', 'h', 'd')
+#define CRYPTMEM_HEAD_VERSION 0x1
 typedef struct {
-    uint32_t signature;
+    uint32_t version;
     uint32_t reserved;
     size_t size;
 } CRYPTMEM_HEAD;
@@ -47,7 +47,7 @@ void *my_calloc(size_t num, size_t size)
 
         /* Record the memory brief information*/
 
-        pool_hdr->signature = CRYPTMEM_HEAD_SIGNATURE;
+        pool_hdr->version = CRYPTMEM_HEAD_VERSION;
         pool_hdr->size = size;
 
         return (void *)(pool_hdr + 1);
@@ -70,7 +70,7 @@ void my_free(void *ptr)
 
     if (ptr != NULL) {
         pool_hdr = (CRYPTMEM_HEAD *)ptr - 1;
-        LIBSPDM_ASSERT(pool_hdr->signature == CRYPTMEM_HEAD_SIGNATURE);
+        LIBSPDM_ASSERT(pool_hdr->version == CRYPTMEM_HEAD_VERSION);
         free_pool(pool_hdr);
     }
 }

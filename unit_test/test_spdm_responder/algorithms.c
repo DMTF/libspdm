@@ -305,7 +305,7 @@ libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_requ
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE,
             0x20,
-            BIT5
+            0x00000020
         }
     }
 };
@@ -2176,7 +2176,7 @@ void libspdm_test_responder_algorithms_case23(void **state)
 }
 
 libspdm_test_context_t m_libspdm_responder_algorithms_test_context = {
-    LIBSPDM_TEST_CONTEXT_SIGNATURE,
+    LIBSPDM_TEST_CONTEXT_VERSION,
     false,
 };
 

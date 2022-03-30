@@ -45,16 +45,16 @@
 
 #define CONFIG_HEADER_BN_H
 
-#if defined(MDE_CPU_X64) || defined(MDE_CPU_AARCH64) ||                        \
-    defined(MDE_CPU_IA64) || defined(MDE_CPU_RISCV64)
+#if defined(LIBSPDM_CPU_X64) || defined(LIBSPDM_CPU_AARCH64) ||                        \
+    defined(LIBSPDM_CPU_IA64) || defined(LIBSPDM_CPU_RISCV64)
 
 /* With GCC we would normally use SIXTY_FOUR_BIT_LONG, but MSVC needs
  * SIXTY_FOUR_BIT, because 'long' is 32-bit and only 'long long' is
  * 64-bit. Since using 'long long' works fine on GCC too, just do that.*/
 
 #define SIXTY_FOUR_BIT
-#elif defined(MDE_CPU_IA32) || defined(MDE_CPU_ARM) || defined(MDE_CPU_EBC) || \
-    defined(MDE_CPU_RISCV32) || defined(MDE_CPU_ARC)
+#elif defined(LIBSPDM_CPU_IA32) || defined(LIBSPDM_CPU_ARM) || defined(LIBSPDM_CPU_EBC) || \
+    defined(LIBSPDM_CPU_RISCV32) || defined(LIBSPDM_CPU_ARC)
 #define THIRTY_TWO_BIT
 #else
 #error Unknown target architecture
@@ -64,10 +64,10 @@
 /* Map all va_xxxx elements to VA_xxx defined in MdePkg/include/base.h*/
 
 #if !defined(__CC_arm) /* if va_list is not already defined*/
-#define va_list VA_LIST
-#define va_arg VA_ARG
-#define va_start VA_START
-#define va_end VA_END
+#define va_list LIBSPDM_VA_LIST
+#define va_arg LIBSPDM_VA_ARG
+#define va_start LIBSPDM_VA_START
+#define va_end LIBSPDM_VA_END
 #else /* __CC_arm*/
 #define va_start(marker, parameter) __va_start(marker, parameter)
 #define va_arg(marker, TYPE) __va_arg(marker, TYPE)

@@ -18,7 +18,6 @@
 #include <assert.h>
 #include <string.h>
 
-#undef NULL
 #include <base.h>
 #include "library/memlib.h"
 #include "spdm_device_secret_lib_internal.h"

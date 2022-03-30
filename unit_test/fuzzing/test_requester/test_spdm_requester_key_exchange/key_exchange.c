@@ -15,7 +15,7 @@ static size_t m_libspdm_local_buffer_size;
 static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 static uint8_t m_libspdm_test_case_id;
 
-static GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_libspdm_zero_filled_buffer[64];
+static LIBSPDM_GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_libspdm_zero_filled_buffer[64];
 
 size_t libspdm_test_get_key_exchange_request_size(const void *spdm_context, const void *buffer,
                                                   size_t buffer_size)
@@ -457,7 +457,7 @@ void libspdm_test_requester_key_exchange_ex_case1(void **State)
 }
 
 libspdm_test_context_t m_libspdm_requester_key_exchange_test_context = {
-    LIBSPDM_TEST_CONTEXT_SIGNATURE,
+    LIBSPDM_TEST_CONTEXT_VERSION,
     true,
     libspdm_device_send_message,
     libspdm_device_receive_message,

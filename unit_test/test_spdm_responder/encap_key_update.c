@@ -245,7 +245,7 @@ void libspdm_test_responder_encap_key_update_case5(void **state)
 }
 
 libspdm_test_context_t m_libspdm_responder_encap_key_update_test_context = {
-    LIBSPDM_TEST_CONTEXT_SIGNATURE,
+    LIBSPDM_TEST_CONTEXT_VERSION,
     false,
 };
 

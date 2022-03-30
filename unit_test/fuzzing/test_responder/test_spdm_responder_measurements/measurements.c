@@ -195,7 +195,7 @@ void libspdm_test_responder_measurements_case4(void **State)
 }
 
 libspdm_test_context_t m_libspdm_responder_measurements_test_context = {
-    LIBSPDM_TEST_CONTEXT_SIGNATURE,
+    LIBSPDM_TEST_CONTEXT_VERSION,
     false,
 };
 

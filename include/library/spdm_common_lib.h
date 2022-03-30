@@ -34,19 +34,6 @@
  *          A session can be unique identified by a session ID, returned from the device.
  *          The message exchange in a session is cipher text.*/
 
-/* #define LIBSPDM_STATUS_SUCCESS 0 */
-#define LIBSPDM_STATUS_ERROR BIT31
-#define LIBSPDM_STATUS_ERROR_DEVICE_NO_CAPABILITIES (LIBSPDM_STATUS_ERROR + 0x10)
-#define LIBSPDM_STATUS_ERROR_DEVICE_ERROR (LIBSPDM_STATUS_ERROR + 0x11)
-#define LIBSPDM_STATUS_ERROR_TCG_EXTEND_TPM_PCR (LIBSPDM_STATUS_ERROR + 0x20)
-#define LIBSPDM_STATUS_ERROR_MEASUREMENT_AUTH_FAILURE (LIBSPDM_STATUS_ERROR + 0x21)
-#define LIBSPDM_STATUS_ERROR_CHALLENGE_FAILURE (LIBSPDM_STATUS_ERROR + 0x30)
-#define LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE (LIBSPDM_STATUS_ERROR + 0x31)
-#define LIBSPDM_STATUS_ERROR_NO_CERT_PROVISION (LIBSPDM_STATUS_ERROR + 0x32)
-#define LIBSPDM_STATUS_ERROR_KEY_EXCHANGE_FAILURE (LIBSPDM_STATUS_ERROR + 0x40)
-#define LIBSPDM_STATUS_ERROR_NO_MUTUAL_AUTH (LIBSPDM_STATUS_ERROR + 0x41)
-
-
 typedef enum {
 
     /* SPDM parameter*/
@@ -118,9 +105,9 @@ typedef enum {
     LIBSPDM_DATA_APP_CONTEXT_DATA,
 
     /**
-     * The LIBSPDM_DATA_HANDLE_ERROR_RETURN_POLICY BIT0 control to generate SPDM_ERROR_CODE_DECRYPT_ERROR response or drop the request silently.
-     * If the BIT0 is not set, generate SPDM_ERROR_CODE_DECRYPT_ERROR response.
-     * If the BIT0 set, drop the request silently.
+     * The LIBSPDM_DATA_HANDLE_ERROR_RETURN_POLICY 0x00000001 control to generate SPDM_ERROR_CODE_DECRYPT_ERROR response or drop the request silently.
+     * If the 0x00000001 is not set, generate SPDM_ERROR_CODE_DECRYPT_ERROR response.
+     * If the 0x00000001 set, drop the request silently.
      **/
     LIBSPDM_DATA_HANDLE_ERROR_RETURN_POLICY,
 
@@ -128,6 +115,13 @@ typedef enum {
 
     LIBSPDM_DATA_MAX
 } libspdm_data_type_t;
+
+/**
+ * It controls to generate SPDM_ERROR_CODE_DECRYPT_ERROR response or drop the request silently.
+ * If the 0x1 is not set, generate SPDM_ERROR_CODE_DECRYPT_ERROR response.
+ * If the 0x1 set, drop the request silently.
+ **/
+#define LIBSPDM_DATA_HANDLE_ERROR_RETURN_POLICY_DROP_ON_DECRYPT_ERROR 0x1
 
 typedef enum {
     LIBSPDM_DATA_LOCATION_LOCAL,

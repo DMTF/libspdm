@@ -991,7 +991,7 @@ void libspdm_test_responder_challenge_auth_case15(void **state)
 }
 
 libspdm_test_context_t m_libspdm_responder_challenge_auth_test_context = {
-    LIBSPDM_TEST_CONTEXT_SIGNATURE,
+    LIBSPDM_TEST_CONTEXT_VERSION,
     false,
 };
 

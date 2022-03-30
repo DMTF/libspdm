@@ -14,12 +14,12 @@
 
 /* data string for HMAC validation*/
 
-GLOBAL_REMOVE_IF_UNREFERENCED const char *m_libspdm_hmac_data = "Hi There";
+LIBSPDM_GLOBAL_REMOVE_IF_UNREFERENCED const char *m_libspdm_hmac_data = "Hi There";
 
 
 /* key value for HMAC-SHA-256 validation. (from "4. Test Vectors" of IETF RFC4231)*/
 
-GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_libspdm_hmac_sha256_key[20] = {
+LIBSPDM_GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_libspdm_hmac_sha256_key[20] = {
     0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b,
     0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b
 };
@@ -27,7 +27,7 @@ GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_libspdm_hmac_sha256_key[20] = {
 
 /* result for HMAC-SHA-256 ("Hi There"). (from "4. Test Vectors" of IETF RFC4231)*/
 
-GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_libspdm_hmac_sha256_digest[] = {
+LIBSPDM_GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_libspdm_hmac_sha256_digest[] = {
     0xb0, 0x34, 0x4c, 0x61, 0xd8, 0xdb, 0x38, 0x53, 0x5c, 0xa8, 0xaf,
     0xce, 0xaf, 0x0b, 0xf1, 0x2b, 0x88, 0x1d, 0xc2, 0x00, 0xc9, 0x83,
     0x3d, 0xa7, 0x26, 0xe9, 0x37, 0x6c, 0x2e, 0x32, 0xcf, 0xf7

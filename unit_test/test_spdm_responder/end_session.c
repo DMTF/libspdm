@@ -617,7 +617,7 @@ void libspdm_test_responder_end_session_case7(void **state)
 }
 
 libspdm_test_context_t m_libspdm_responder_end_session_test_context = {
-    LIBSPDM_TEST_CONTEXT_SIGNATURE,
+    LIBSPDM_TEST_CONTEXT_VERSION,
     false,
 };
 

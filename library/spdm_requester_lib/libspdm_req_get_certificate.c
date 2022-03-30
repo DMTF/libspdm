@@ -102,7 +102,7 @@ libspdm_return_t libspdm_try_get_certificate(void *context, uint8_t slot_id,
     }
 
     libspdm_init_managed_buffer(&certificate_chain_buffer, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
-    length = MIN(length, LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
+    length = LIBSPDM_MIN(length, LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
     remainder_length = 0;
     total_responder_cert_chain_buffer_length = 0;
 
@@ -122,7 +122,7 @@ libspdm_return_t libspdm_try_get_certificate(void *context, uint8_t slot_id,
         if (spdm_request->offset == 0) {
             spdm_request->length = length;
         } else {
-            spdm_request->length = MIN(length, remainder_length);
+            spdm_request->length = LIBSPDM_MIN(length, remainder_length);
         }
         spdm_request_size = sizeof(spdm_get_certificate_request_t);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "request (offset 0x%x, size 0x%x):\n",

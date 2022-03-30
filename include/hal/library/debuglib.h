@@ -114,7 +114,6 @@ void libspdm_debug_assert(const char *file_name, size_t line_number,
     do {                                                                   \
         if (!(expression)) {                                           \
             _LIBSPDM_ASSERT(expression);                                   \
-            ANALYZER_UNREACHABLE();                                \
         }                                                              \
     } while (false)
 #else

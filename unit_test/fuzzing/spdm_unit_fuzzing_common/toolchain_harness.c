@@ -4,7 +4,6 @@
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
-#undef NULL
 #include "hal/base.h"
 #include "hal/library/memlib.h"
 #include "toolchain_harness.h"

@@ -14,7 +14,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
-#undef NULL
 
 #include "hal/base.h"
 

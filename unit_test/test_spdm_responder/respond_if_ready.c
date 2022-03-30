@@ -1395,7 +1395,7 @@ void libspdm_test_responder_respond_if_ready_case14(void **state) {
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
 libspdm_test_context_t m_libspdm_responder_respond_if_ready_test_context = {
-    LIBSPDM_TEST_CONTEXT_SIGNATURE,
+    LIBSPDM_TEST_CONTEXT_VERSION,
     false,
 };
 

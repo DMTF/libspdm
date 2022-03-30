@@ -6,7 +6,7 @@
 
 #include "internal/libspdm_secured_message_lib.h"
 
-GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_zero_filled_buffer[64];
+LIBSPDM_GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_zero_filled_buffer[64];
 
 /**
  * This function dump raw data.
