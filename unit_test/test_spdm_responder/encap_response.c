@@ -962,7 +962,7 @@ void libspdm_test_get_response_encapsulated_response_ack_case8(void **State)
 }
 
 libspdm_test_context_t m_libspdm_response_encapsulated_request_test_context = {
-    LIBSPDM_TEST_CONTEXT_SIGNATURE,
+    LIBSPDM_TEST_CONTEXT_VERSION,
     false,
 };
 

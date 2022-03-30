@@ -168,7 +168,8 @@ libspdm_return_t libspdm_get_response_finish(void *context, size_t request_size,
             (uint8_t *)request + sizeof(spdm_finish_request_t),
             signature_size);
         if (!result) {
-            if((spdm_context->handle_error_return_policy & BIT0) == 0) {
+            if((spdm_context->handle_error_return_policy &
+                LIBSPDM_DATA_HANDLE_ERROR_RETURN_POLICY_DROP_ON_DECRYPT_ERROR) == 0) {
                 return libspdm_generate_error_response(
                     spdm_context, SPDM_ERROR_CODE_DECRYPT_ERROR, 0,
                     response_size, response);
@@ -198,7 +199,8 @@ libspdm_return_t libspdm_get_response_finish(void *context, size_t request_size,
         sizeof(spdm_finish_request_t),
         hmac_size);
     if (!result) {
-        if((spdm_context->handle_error_return_policy & BIT0) == 0) {
+        if((spdm_context->handle_error_return_policy &
+            LIBSPDM_DATA_HANDLE_ERROR_RETURN_POLICY_DROP_ON_DECRYPT_ERROR) == 0) {
             return libspdm_generate_error_response(
                 spdm_context, SPDM_ERROR_CODE_DECRYPT_ERROR, 0,
                 response_size, response);

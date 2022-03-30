@@ -162,7 +162,7 @@ void libspdm_test_send_receive_finish_case1(void **State)
 }
 
 libspdm_test_context_t m_libspdm_requester_finish_test_context = {
-    LIBSPDM_TEST_CONTEXT_SIGNATURE,
+    LIBSPDM_TEST_CONTEXT_VERSION,
     true,
     libspdm_device_send_message,
     libspdm_device_receive_message,

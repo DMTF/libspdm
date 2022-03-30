@@ -309,7 +309,7 @@ void libspdm_test_responder_algorithms_case10(void **State)
 }
 
 libspdm_test_context_t libspdm_test_responder_context = {
-    LIBSPDM_TEST_CONTEXT_SIGNATURE,
+    LIBSPDM_TEST_CONTEXT_VERSION,
     false,
 };
 

@@ -246,7 +246,7 @@ void libspdm_test_requester_challenge_ex_case1(void **State)
 #endif
 }
 libspdm_test_context_t m_libspdm_requester_challenge_test_context = {
-    LIBSPDM_TEST_CONTEXT_SIGNATURE,
+    LIBSPDM_TEST_CONTEXT_VERSION,
     true,
     libspdm_device_send_message,
     libspdm_device_receive_message,

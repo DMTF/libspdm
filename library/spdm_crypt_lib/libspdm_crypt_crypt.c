@@ -1649,7 +1649,7 @@ libspdm_get_signing_context_string (
     /* It is introduced in SPDM 1.2*/
     LIBSPDM_ASSERT((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11);
 
-    for (index = 0; index < ARRAY_SIZE(m_libspdm_signing_context_str_table); index++) {
+    for (index = 0; index < LIBSPDM_ARRAY_SIZE(m_libspdm_signing_context_str_table); index++) {
         if (m_libspdm_signing_context_str_table[index].is_requester == is_requester &&
             m_libspdm_signing_context_str_table[index].op_code == op_code) {
             *context_size = m_libspdm_signing_context_str_table[index].context_size;
@@ -1697,7 +1697,7 @@ libspdm_create_signing_context (
         context_str[15] = (char)('*');
         context_str += SPDM_VERSION_1_2_SIGNING_PREFIX_CONTEXT_SIZE;
     }
-    for (index = 0; index < ARRAY_SIZE(m_libspdm_signing_context_str_table); index++) {
+    for (index = 0; index < LIBSPDM_ARRAY_SIZE(m_libspdm_signing_context_str_table); index++) {
         if (m_libspdm_signing_context_str_table[index].is_requester == is_requester &&
             m_libspdm_signing_context_str_table[index].op_code == op_code) {
             libspdm_zero_mem (
@@ -4658,7 +4658,7 @@ bool libspdm_verify_cert_chain_data(uint8_t *cert_chain_data, size_t cert_chain_
     size_t leaf_cert_buffer_size;
 
     if (cert_chain_data_size >
-        MAX_UINT16 - (sizeof(spdm_cert_chain_t) + LIBSPDM_MAX_HASH_SIZE)) {
+        0xFFFF - (sizeof(spdm_cert_chain_t) + LIBSPDM_MAX_HASH_SIZE)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "!!! VerifyCertificateChainData - FAIL (chain size too large) !!!\n"));
         return false;

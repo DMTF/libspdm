@@ -354,7 +354,8 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
         switch (spdm_context->last_spdm_error.error_code) {
         case SPDM_ERROR_CODE_DECRYPT_ERROR:
             /* session ID is valid. Use it to encrypt the error message.*/
-            if((spdm_context->handle_error_return_policy & BIT0) == 0) {
+            if((spdm_context->handle_error_return_policy &
+                LIBSPDM_DATA_HANDLE_ERROR_RETURN_POLICY_DROP_ON_DECRYPT_ERROR) == 0) {
                 status = libspdm_generate_error_response(
                     spdm_context, SPDM_ERROR_CODE_DECRYPT_ERROR, 0,
                     &my_response_size, my_response);

@@ -115,7 +115,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
 }
 
 libspdm_test_context_t m_libspdm_requester_encap_request_test_context = {
-    LIBSPDM_TEST_CONTEXT_SIGNATURE,
+    LIBSPDM_TEST_CONTEXT_VERSION,
     true,
     libspdm_device_send_message,
     libspdm_device_receive_message,

@@ -67,7 +67,7 @@ void libspdm_test_encode_secured_message(void **State)
 }
 
 libspdm_test_context_t m_libspdm_transport_mctp_test_context = {
-    LIBSPDM_TEST_CONTEXT_SIGNATURE,
+    LIBSPDM_TEST_CONTEXT_VERSION,
     false,
 };
 

@@ -17,7 +17,6 @@
 #include <assert.h>
 #include <string.h>
 
-#undef NULL
 #include "hal/base.h"
 #include "hal/library/memlib.h"
 #include "library/spdm_requester_lib.h"
@@ -53,10 +52,10 @@ extern uint8_t m_libspdm_use_tcb_hash_value[LIBSPDM_MAX_HASH_SIZE];
         assert_int_equal(value, expected); \
 };
 
-#define LIBSPDM_TEST_CONTEXT_SIGNATURE SIGNATURE_32('S', 'T', 'C', 'S')
+#define LIBSPDM_TEST_CONTEXT_VERSION 0x1
 
 typedef struct {
-    uint32_t signature;
+    uint32_t version;
     bool is_requester;
     libspdm_device_send_message_func send_message;
     libspdm_device_receive_message_func receive_message;

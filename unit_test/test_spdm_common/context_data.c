@@ -583,7 +583,7 @@ static void libspdm_test_set_data_case9(void **state)
 }
 
 static libspdm_test_context_t m_libspdm_common_context_data_test_context = {
-    LIBSPDM_TEST_CONTEXT_SIGNATURE,
+    LIBSPDM_TEST_CONTEXT_VERSION,
     true,
     NULL,
     NULL,

@@ -68,7 +68,7 @@ libspdm_get_encap_struct_via_op_code(uint8_t request_op_code)
 {
     size_t index;
 
-    for (index = 0; index < ARRAY_SIZE(m_libspdm_encap_response_struct); index++) {
+    for (index = 0; index < LIBSPDM_ARRAY_SIZE(m_libspdm_encap_response_struct); index++) {
         if (m_libspdm_encap_response_struct[index].request_op_code ==
             request_op_code) {
             return &m_libspdm_encap_response_struct[index];

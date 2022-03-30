@@ -252,7 +252,7 @@ void test_spdm_responder_encap_get_digests_case5(void **state)
 }
 
 libspdm_test_context_t m_spdm_responder_encap_get_digests_test_context = {
-    LIBSPDM_TEST_CONTEXT_SIGNATURE,
+    LIBSPDM_TEST_CONTEXT_VERSION,
     false,
 };
 

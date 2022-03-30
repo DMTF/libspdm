@@ -26,8 +26,34 @@ extern "C" {
 #error OPENSSL_ALGORITHM_DEFINES no longer supported
 #endif
 
+/*
+ * Align the definition in crt_support.h.
+ * Either may be included at first.
+ */
+
+#if defined(LIBSPDM_CPU_X64) || defined(LIBSPDM_CPU_AARCH64) ||                        \
+    defined(LIBSPDM_CPU_IA64) || defined(LIBSPDM_CPU_RISCV64)
+
+/* With GCC we would normally use SIXTY_FOUR_BIT_LONG, but MSVC needs
+ * SIXTY_FOUR_BIT, because 'long' is 32-bit and only 'long long' is
+ * 64-bit. Since using 'long long' works fine on GCC too, just do that.*/
+
+#define SIXTY_FOUR_BIT
+#elif defined(LIBSPDM_CPU_IA32) || defined(LIBSPDM_CPU_ARM) || defined(LIBSPDM_CPU_EBC) || \
+    defined(LIBSPDM_CPU_RISCV32) || defined(LIBSPDM_CPU_ARC)
+#define THIRTY_TWO_BIT
+#else
+#error Unknown target architecture
+#endif
+
+#ifdef SIXTY_FOUR_BIT
+#define MAX_INTN 0x7FFFFFFFFFFFFFFFULL
+#else
+#define MAX_INTN 0x7FFFFFFF
+#endif
+
 typedef size_t UINTN;
-#if (MAX_BIT == 0x8000000000000000ULL)
+#ifdef SIXTY_FOUR_BIT
 typedef int64_t INTN;
 #else
 typedef int32_t INTN;

@@ -900,7 +900,7 @@ void libspdm_test_responder_psk_exchange_case9(void **state)
 }
 
 libspdm_test_context_t m_libspdm_responder_psk_exchange_test_context = {
-    LIBSPDM_TEST_CONTEXT_SIGNATURE,
+    LIBSPDM_TEST_CONTEXT_VERSION,
     false,
 };
 

@@ -18,7 +18,6 @@
 #include <assert.h>
 #include <string.h>
 
-#undef NULL
 #include <base.h>
 #include "library/memlib.h"
 #include "spdm_device_secret_lib_internal.h"
@@ -504,13 +503,13 @@ bool libspdm_read_responder_root_public_certificate_by_size(
     case LIBSPDM_TEST_CERT_SMALL:
         file = "long_chains/Shorter1024B_ca.cert.der";
         break;
-    case LIBSPDM_TEST_CERT_MAXINT16: /* data_size slightly smaller than MAX_INT16*/
+    case LIBSPDM_TEST_CERT_MAXINT16: /* data_size slightly smaller than 0x7FFF*/
         file = "long_chains/ShorterMAXINT16_ca.cert.der";
         break;
-    case LIBSPDM_TEST_CERT_MAXUINT16: /* data_size slightly smaller than MAX_UINT16*/
+    case LIBSPDM_TEST_CERT_MAXUINT16: /* data_size slightly smaller than 0xFFFF*/
         file = "long_chains/ShorterMAXUINT16_ca.cert.der";
         break;
-    case LIBSPDM_LIBSPDM_TEST_CERT_MAXUINT16_LARGER: /* data_size larger than MAX_UINT16*/
+    case LIBSPDM_LIBSPDM_TEST_CERT_MAXUINT16_LARGER: /* data_size larger than 0xFFFF*/
         file = "long_chains/LongerMAXUINT16_ca.cert.der";
         break;
     default:
@@ -588,13 +587,13 @@ bool libspdm_read_responder_public_certificate_chain_by_size(
     case LIBSPDM_TEST_CERT_SMALL: /* data_size smaller than 1024 Bytes*/
         file = "long_chains/Shorter1024B_bundle_responder.certchain.der";
         break;
-    case LIBSPDM_TEST_CERT_MAXINT16: /* data_size slightly smaller than MAX_INT16*/
+    case LIBSPDM_TEST_CERT_MAXINT16: /* data_size slightly smaller than 0x7FFF*/
         file = "long_chains/ShorterMAXINT16_bundle_responder.certchain.der";
         break;
-    case LIBSPDM_TEST_CERT_MAXUINT16: /* data_size slightly smaller than MAX_UINT16*/
+    case LIBSPDM_TEST_CERT_MAXUINT16: /* data_size slightly smaller than 0xFFFF*/
         file = "long_chains/ShorterMAXUINT16_bundle_responder.certchain.der";
         break;
-    case LIBSPDM_LIBSPDM_TEST_CERT_MAXUINT16_LARGER: /* data_size larger than MAX_UINT16*/
+    case LIBSPDM_LIBSPDM_TEST_CERT_MAXUINT16_LARGER: /* data_size larger than 0xFFFF*/
         file = "long_chains/LongerMAXUINT16_bundle_responder.certchain.der";
         break;
     default:

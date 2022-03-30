@@ -18,7 +18,7 @@ size_t libspdm_get_max_buffer_size(void)
 static uint8_t m_libspdm_local_psk_hint[32];
 
 libspdm_test_context_t m_libspdm_responder_end_session_test_context = {
-    LIBSPDM_TEST_CONTEXT_SIGNATURE,
+    LIBSPDM_TEST_CONTEXT_VERSION,
     false,
 };
 

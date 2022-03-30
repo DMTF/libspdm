@@ -73,7 +73,7 @@ bool libspdm_x509_construct_certificate(const uint8_t *cert, size_t cert_size,
  * @param[in, out]  x509_stack  On input, pointer to an existing or NULL X509 stack object.
  *                            On output, pointer to the X509 stack object with new
  *                            inserted X509 certificate.
- * @param[in]       args       VA_LIST marker for the variable argument list.
+ * @param[in]       args       LIBSPDM_VA_LIST marker for the variable argument list.
  *                            A list of DER-encoded single certificate data followed
  *                            by certificate size. A NULL terminates the list. The
  *                            pairs are the arguments to libspdm_x509_construct_certificate().
@@ -84,7 +84,7 @@ bool libspdm_x509_construct_certificate(const uint8_t *cert, size_t cert_size,
  *
  **/
 bool libspdm_x509_construct_certificate_stack_v(uint8_t **x509_stack,
-                                                VA_LIST args)
+                                                LIBSPDM_VA_LIST args)
 {
     uint8_t *cert;
     size_t cert_size;
@@ -117,12 +117,12 @@ bool libspdm_x509_construct_certificate_stack_v(uint8_t **x509_stack,
 
         /* If cert is NULL, then it is the end of the list.*/
 
-        cert = VA_ARG(args, uint8_t *);
+        cert = LIBSPDM_VA_ARG(args, uint8_t *);
         if (cert == NULL) {
             break;
         }
 
-        cert_size = VA_ARG(args, size_t);
+        cert_size = LIBSPDM_VA_ARG(args, size_t);
         if (cert_size == 0) {
             break;
         }
@@ -173,12 +173,12 @@ bool libspdm_x509_construct_certificate_stack_v(uint8_t **x509_stack,
  **/
 bool libspdm_x509_construct_certificate_stack(uint8_t **x509_stack, ...)
 {
-    VA_LIST args;
+    LIBSPDM_VA_LIST args;
     bool result;
 
-    VA_START(args, x509_stack);
+    LIBSPDM_VA_START(args, x509_stack);
     result = libspdm_x509_construct_certificate_stack_v(x509_stack, args);
-    VA_END(args);
+    LIBSPDM_VA_END(args);
     return result;
 }
 
@@ -436,7 +436,7 @@ libspdm_internal_x509_get_nid_name(X509_NAME *x509_name, const int32_t request_n
     } else {
         common_name_capacity = *common_name_size;
         *common_name_size =
-            MIN((size_t)length, *common_name_size - 1) + 1;
+            LIBSPDM_MIN((size_t)length, *common_name_size - 1) + 1;
         libspdm_copy_mem(common_name, common_name_capacity,
                          utf8_name, *common_name_size - 1);
         common_name[*common_name_size - 1] = '\0';

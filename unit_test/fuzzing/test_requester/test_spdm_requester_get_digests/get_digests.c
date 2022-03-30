@@ -87,7 +87,7 @@ void libspdm_test_requester_get_digests(void **State)
 }
 
 libspdm_test_context_t m_libspdm_requester_get_diges_test_context = {
-    LIBSPDM_TEST_CONTEXT_SIGNATURE,
+    LIBSPDM_TEST_CONTEXT_VERSION,
     true,
     libspdm_device_send_message,
     libspdm_device_receive_message,

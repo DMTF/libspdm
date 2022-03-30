@@ -1545,7 +1545,7 @@ libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
         spdm_response->header.request_response_code = SPDM_MEASUREMENTS;
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
-        spdm_response->number_of_blocks = MAX_UINT8;
+        spdm_response->number_of_blocks = 0xFF;
         libspdm_write_uint24(spdm_response->measurement_record_length,
                              (uint32_t)(LIBSPDM_LARGE_MEASUREMENT_SIZE));
         measurment_block = (void *)(spdm_response + 1);
@@ -1558,10 +1558,10 @@ libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
             .measurement_specification =
                 SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
             measurment_block->measurement_block_common_header
-            .measurement_size = MAX_UINT16;
+            .measurement_size = 0xFFFF;
             spdm_response_size += (size_t)(
                 sizeof(spdm_measurement_block_common_header_t) +
-                MAX_UINT16);
+                0xFFFF);
         }
 
         spdm_response = (void *)((uint8_t *)(*response) + transport_header_size);
@@ -1614,7 +1614,7 @@ libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
                         1);
         measurment_block->measurement_block_common_header.index = 1;
         measurment_block->measurement_block_common_header
-        .measurement_specification = BIT0 | BIT1;
+        .measurement_specification = 0x00000001 | 0x00000002;
         measurment_block->measurement_block_common_header
         .measurement_size =
             (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
@@ -1663,7 +1663,7 @@ libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
                         1);
         measurment_block->measurement_block_common_header.index = 1;
         measurment_block->measurement_block_common_header
-        .measurement_specification = BIT2 | BIT1;
+        .measurement_specification = 0x00000004 | 0x00000002;
         measurment_block->measurement_block_common_header
         .measurement_size =
             (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
@@ -2370,7 +2370,7 @@ libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
         spdm_measurement_block_dmtf_t *measurment_block;
         size_t spdm_response_size;
         size_t transport_header_size;
-        uint16_t opaque_size_test = MAX_UINT16;
+        uint16_t opaque_size_test = 0xFFFF;
         uint16_t opaque_informed_size = SPDM_MAX_OPAQUE_DATA_SIZE / 2;
 
         ((libspdm_context_t *)spdm_context)
@@ -2434,7 +2434,7 @@ libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
         spdm_measurement_block_dmtf_t *measurment_block;
         size_t spdm_response_size;
         size_t transport_header_size;
-        uint16_t opaque_size_test = MAX_UINT16;
+        uint16_t opaque_size_test = 0xFFFF;
 
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.measurement_hash_algo =
@@ -5234,7 +5234,7 @@ void libspdm_test_requester_get_measurements_case31(void **state)
                      sizeof(spdm_measurement_block_dmtf_t) +
                      libspdm_get_measurement_hash_size(
                          m_libspdm_use_measurement_hash_algo) +
-                     sizeof(uint16_t) + MAX_UINT16);
+                     sizeof(uint16_t) + 0xFFFF);
 #endif
     free(data);
 }
@@ -5734,7 +5734,7 @@ void libspdm_test_requester_get_measurements_case37(void **state)
 }
 
 libspdm_test_context_t m_libspdm_requester_get_measurements_test_context = {
-    LIBSPDM_TEST_CONTEXT_SIGNATURE,
+    LIBSPDM_TEST_CONTEXT_VERSION,
     true,
     libspdm_requester_get_measurements_test_send_message,
     libspdm_requester_get_measurements_test_receive_message,
@@ -5801,7 +5801,7 @@ int libspdm_requester_get_measurements_test_main(void)
         cmocka_unit_test(libspdm_test_requester_get_measurements_case28),
         /* response to get one measurement with opaque data without signature, opaque data is 1 byte longer than announced*/
         cmocka_unit_test(libspdm_test_requester_get_measurements_case29),
-        /* response to get one measurement with opaque data without signature, opaque data has MAX_UINT16, but opaque data size is valid
+        /* response to get one measurement with opaque data without signature, opaque data has 0xFFFF, but opaque data size is valid
          * cmocka_unit_test(libspdm_test_requester_get_measurements_case30),    test triggers runtime assert because the transmitted packet is larger than the 4096-byte buffer
          * error: get one measurement with opaque data too large, without signature
          * cmocka_unit_test(libspdm_test_requester_get_measurements_case31),    test triggers runtime assert because the transmitted packet is larger than the 4096-byte buffer

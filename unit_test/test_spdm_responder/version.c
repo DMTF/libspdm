@@ -357,7 +357,7 @@ void libspdm_test_responder_version_case8(void **state)
 }
 
 libspdm_test_context_t m_libspdm_responder_version_test_context = {
-    LIBSPDM_TEST_CONTEXT_SIGNATURE,
+    LIBSPDM_TEST_CONTEXT_VERSION,
     false,
 };
 

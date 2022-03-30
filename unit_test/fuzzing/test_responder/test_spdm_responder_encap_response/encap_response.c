@@ -17,7 +17,7 @@ size_t libspdm_get_max_buffer_size(void)
 }
 
 libspdm_test_context_t m_libspdm_response_encapsulated_request_test_context = {
-    LIBSPDM_TEST_CONTEXT_SIGNATURE,
+    LIBSPDM_TEST_CONTEXT_VERSION,
     false,
 };
 

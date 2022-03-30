@@ -340,7 +340,7 @@ void test_libspdm_requester_encap_challenge_auth_case5(void **state)
 }
 
 libspdm_test_context_t m_spdm_requester_challenge_auth_test_context = {
-    LIBSPDM_TEST_CONTEXT_SIGNATURE,
+    LIBSPDM_TEST_CONTEXT_VERSION,
     false,
 };
 

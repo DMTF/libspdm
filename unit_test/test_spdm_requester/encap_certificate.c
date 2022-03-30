@@ -161,12 +161,12 @@ void libspdm_test_requester_encap_certificate_case3(void **state)
     /* Testing Lengths at the boundary of maximum integer values*/
     uint16_t test_lenghts[] = {
         0,
-        MAX_INT8,
-        (uint16_t)(MAX_INT8 + 1),
-        MAX_UINT8,
-        MAX_INT16,
-        (uint16_t)(MAX_INT16 + 1),
-        MAX_UINT16,
+        0x7F,
+        (uint16_t)(0x7F + 1),
+        0xFF,
+        0x7FFF,
+        (uint16_t)(0x7FFF + 1),
+        0xFFFF,
     };
     uint16_t expected_chunk_size;
 
@@ -195,8 +195,8 @@ void libspdm_test_requester_encap_certificate_case3(void **state)
         m_spdm_get_certificate_request3.length = test_lenghts[i];
         /* Expected received length is limited by LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN
          * (implementation specific?)*/
-        expected_chunk_size = MIN(m_spdm_get_certificate_request3.length,
-                                  LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
+        expected_chunk_size = LIBSPDM_MIN(m_spdm_get_certificate_request3.length,
+                                          LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
 
         /* reseting an internal buffer to avoid overflow and prevent tests to
          * succeed*/
@@ -244,12 +244,12 @@ void libspdm_test_requester_encap_certificate_case4(void **state)
                                0,
                                +1,
                                0,
-                               MAX_INT8,
-                               (uint16_t)(MAX_INT8 + 1),
-                               MAX_UINT8,
-                               MAX_INT16,
-                               (uint16_t)(MAX_INT16 + 1),
-                               MAX_UINT16,
+                               0x7F,
+                               (uint16_t)(0x7F + 1),
+                               0xFF,
+                               0x7FFF,
+                               (uint16_t)(0x7FFF + 1),
+                               0xFFFF,
                                (uint16_t)(-1)};
 
     /* Setting up the spdm_context and loading a sample certificate chain*/
@@ -362,7 +362,7 @@ void libspdm_test_requester_encap_certificate_case5(void **state)
         spdm_context->local_context.slot_count = 1;
 
         m_spdm_get_certificate_request3.offset =
-            (uint16_t)(MIN(data_size - 1, MAX_UINT16));
+            (uint16_t)(LIBSPDM_MIN(data_size - 1, 0xFFFF));
         TEST_DEBUG_PRINT("data_size: %u\n", data_size);
         TEST_DEBUG_PRINT("m_spdm_get_certificate_request3.offset: %u\n",
                          m_spdm_get_certificate_request3.offset);
@@ -384,10 +384,10 @@ void libspdm_test_requester_encap_certificate_case5(void **state)
         /* Expected received length is limited by LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN
          * and by the remaining length*/
         expected_chunk_size =
-            (uint16_t)(MIN(m_spdm_get_certificate_request3.length,
-                           data_size - m_spdm_get_certificate_request3.offset));
+            (uint16_t)(LIBSPDM_MIN(m_spdm_get_certificate_request3.length,
+                                   data_size - m_spdm_get_certificate_request3.offset));
         expected_chunk_size =
-            MIN(expected_chunk_size, LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
+            LIBSPDM_MIN(expected_chunk_size, LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
         /* Expected certificate length left*/
         expected_remainder =
             (uint16_t)(data_size - m_spdm_get_certificate_request3.offset -
@@ -396,7 +396,7 @@ void libspdm_test_requester_encap_certificate_case5(void **state)
         TEST_DEBUG_PRINT("expected_chunk_size %u\n", expected_chunk_size);
         TEST_DEBUG_PRINT("expected_remainder %u\n", expected_remainder);
 
-        if (expected_remainder > MAX_UINT16 || expected_chunk_size > MAX_UINT16)
+        if (expected_remainder > 0xFFFF || expected_chunk_size > 0xFFFF)
         {
             spdm_responseError = (void *)response;
             assert_int_equal(spdm_responseError->header.request_response_code,
@@ -519,7 +519,7 @@ void libspdm_test_requester_encap_certificate_case6(void **state)
 }
 
 libspdm_test_context_t m_libspdm_requester_encap_certificate_test_context = {
-    LIBSPDM_TEST_CONTEXT_SIGNATURE,
+    LIBSPDM_TEST_CONTEXT_VERSION,
     false,
 };
 

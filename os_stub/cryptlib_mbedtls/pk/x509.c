@@ -67,7 +67,7 @@ bool libspdm_x509_construct_certificate(const uint8_t *cert, size_t cert_size,
 }
 
 static bool libspdm_x509_construct_certificate_stack_v(uint8_t **x509_stack,
-                                                       VA_LIST args)
+                                                       LIBSPDM_VA_LIST args)
 {
     uint8_t *cert;
     size_t cert_size;
@@ -93,12 +93,12 @@ static bool libspdm_x509_construct_certificate_stack_v(uint8_t **x509_stack,
 
         /* If cert is NULL, then it is the end of the list.*/
 
-        cert = VA_ARG(args, uint8_t *);
+        cert = LIBSPDM_VA_ARG(args, uint8_t *);
         if (cert == NULL) {
             break;
         }
 
-        cert_size = VA_ARG(args, size_t);
+        cert_size = LIBSPDM_VA_ARG(args, size_t);
         if (cert_size == 0) {
             break;
         }
@@ -130,12 +130,12 @@ static bool libspdm_x509_construct_certificate_stack_v(uint8_t **x509_stack,
  **/
 bool libspdm_x509_construct_certificate_stack(uint8_t **x509_stack, ...)
 {
-    VA_LIST args;
+    LIBSPDM_VA_LIST args;
     bool result;
 
-    VA_START(args, x509_stack);
+    LIBSPDM_VA_START(args, x509_stack);
     result = libspdm_x509_construct_certificate_stack_v(x509_stack, args);
-    VA_END(args);
+    LIBSPDM_VA_END(args);
     return result;
 }
 

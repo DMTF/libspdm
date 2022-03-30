@@ -28,7 +28,7 @@ void libspdm_test_x509_certificate_check(void **State)
 }
 
 libspdm_test_context_t m_spdm_x509_certificate_check_test_context = {
-    LIBSPDM_TEST_CONTEXT_SIGNATURE,
+    LIBSPDM_TEST_CONTEXT_VERSION,
     false,
 };
 

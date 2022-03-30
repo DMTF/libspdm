@@ -15,7 +15,7 @@
 
 /* public Modulus of RSA key*/
 
-GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_libspdm_rsa_n[] = {
+LIBSPDM_GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_libspdm_rsa_n[] = {
     0xBB, 0xF8, 0x2F, 0x09, 0x06, 0x82, 0xCE, 0x9C, 0x23, 0x38, 0xAC, 0x2B,
     0x9D, 0xA8, 0x71, 0xF7, 0x36, 0x8D, 0x07, 0xEE, 0xD4, 0x10, 0x43, 0xA4,
     0x40, 0xD6, 0xB6, 0xF0, 0x74, 0x54, 0xF5, 0x1F, 0xB8, 0xDF, 0xBA, 0xAF,
@@ -32,12 +32,12 @@ GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_libspdm_rsa_n[] = {
 
 /* public Exponent of RSA key*/
 
-GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_libspdm_rsa_e[] = { 0x11 };
+LIBSPDM_GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_libspdm_rsa_e[] = { 0x11 };
 
 
 /* Private Exponent of RSA key*/
 
-GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_libspdm_rsa_d[] = {
+LIBSPDM_GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_libspdm_rsa_d[] = {
     0xA5, 0xDA, 0xFC, 0x53, 0x41, 0xFA, 0xF2, 0x89, 0xC4, 0xB9, 0x88, 0xDB,
     0x30, 0xC1, 0xCD, 0xF8, 0x3F, 0x31, 0x25, 0x1E, 0x06, 0x68, 0xB4, 0x27,
     0x84, 0x81, 0x38, 0x01, 0x57, 0x96, 0x41, 0xB2, 0x94, 0x10, 0xB3, 0xC7,
@@ -54,13 +54,13 @@ GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_libspdm_rsa_d[] = {
 
 /* Known Answer Test (KAT) data for RSA PKCS#1 Signing*/
 
-GLOBAL_REMOVE_IF_UNREFERENCED const char m_libspdm_rsa_sign_data[] =
+LIBSPDM_GLOBAL_REMOVE_IF_UNREFERENCED const char m_libspdm_rsa_sign_data[] =
     "OpenSSL FIPS 140-2 public key RSA KAT";
 
 
 /* Known signature for the above message, under SHA-1 digest*/
 
-GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_libspdm_rsa_pkcs1_signature[] = {
+LIBSPDM_GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_libspdm_rsa_pkcs1_signature[] = {
     0x71, 0xEE, 0x1A, 0xC0, 0xFE, 0x01, 0x93, 0x54, 0x79, 0x5C, 0xF2, 0x4C,
     0x4A, 0xFD, 0x1A, 0x05, 0x8F, 0x64, 0xB1, 0x6D, 0x61, 0x33, 0x8D, 0x9B,
     0xE7, 0xFD, 0x60, 0xA3, 0x83, 0xB5, 0xA3, 0x51, 0x55, 0x77, 0x90, 0xCF,
@@ -77,8 +77,8 @@ GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_libspdm_rsa_pkcs1_signature[] = {
 
 /* Default public key 0x10001 = 65537*/
 
-GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_libspdm_default_public_key[] = { 0x01, 0x00,
-                                                                         0x01 };
+LIBSPDM_GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_libspdm_default_public_key[] = { 0x01, 0x00,
+                                                                                 0x01 };
 
 /**
  * Validate Crypto RSA Interfaces.

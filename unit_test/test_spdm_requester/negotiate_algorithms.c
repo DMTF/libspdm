@@ -977,7 +977,7 @@ libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_message(
         spdm_response->struct_table[3].alg_type =
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE;
         spdm_response->struct_table[3].alg_count = 0x20;
-        spdm_response->struct_table[3].alg_supported = BIT5;
+        spdm_response->struct_table[3].alg_supported = 0x00000020;
 
         libspdm_transport_test_encode_message (spdm_context, NULL, false, false,
                                                spdm_response_size,
@@ -1164,7 +1164,7 @@ libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_message(
         spdm_response->struct_table[3].alg_type =
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE;
         spdm_response->struct_table[3].alg_count = 0x20;
-        spdm_response->struct_table[3].alg_supported = m_libspdm_use_key_schedule_algo | BIT5;
+        spdm_response->struct_table[3].alg_supported = m_libspdm_use_key_schedule_algo | 0x00000020;
 
         libspdm_transport_test_encode_message (spdm_context, NULL, false, false,
                                                spdm_response_size,
@@ -2418,7 +2418,7 @@ void libspdm_test_requester_negotiate_algorithms_case34(void **state) {
 }
 
 libspdm_test_context_t m_libspdm_requester_negotiate_algorithms_test_context = {
-    LIBSPDM_TEST_CONTEXT_SIGNATURE,
+    LIBSPDM_TEST_CONTEXT_VERSION,
     true,
     libspdm_requester_negotiate_algorithms_test_send_message,
     libspdm_requester_negotiate_algorithm_test_receive_message,

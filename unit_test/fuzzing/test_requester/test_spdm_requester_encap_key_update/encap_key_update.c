@@ -136,7 +136,7 @@ void libspdm_test_requester_encap_key_update(void **State)
 }
 
 libspdm_test_context_t m_libspdm_requester_encap_key_update_test_context = {
-    LIBSPDM_TEST_CONTEXT_SIGNATURE,
+    LIBSPDM_TEST_CONTEXT_VERSION,
     false,
 };
 
