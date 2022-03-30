@@ -6,21 +6,67 @@
 
 #include "spdm_responder.h"
 
-libspdm_return_t libspdm_responder_send_message(const void *spdm_context,
-                                                size_t message_size, const void *message,
+libspdm_return_t spdm_responder_send_message(const void *spdm_context,
+                                             size_t message_size, const void *message,
+                                             uint64_t timeout)
+{
+    /* Dummy*/
+    return LIBSPDM_STATUS_SUCCESS;
+}
+
+libspdm_return_t spdm_responder_receive_message(const void *spdm_context,
+                                                size_t *message_size,
+                                                void *message,
                                                 uint64_t timeout)
 {
     /* Dummy*/
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-libspdm_return_t libspdm_responder_receive_message(const void *spdm_context,
-                                                   size_t *message_size,
-                                                   void *message,
-                                                   uint64_t timeout)
+uint8_t m_scratch_buffer[LIBSPDM_SCRATCH_BUFFER_SIZE];
+
+bool m_send_receive_buffer_acquired = false;
+uint8_t m_send_receive_buffer[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
+size_t m_send_receive_buffer_size;
+
+libspdm_return_t spdm_device_acquire_sender_buffer (
+    void *context, size_t *max_msg_size, void **msg_buf_ptr)
 {
-    /* Dummy*/
+    LIBSPDM_ASSERT (!m_send_receive_buffer_acquired);
+    *max_msg_size = sizeof(m_send_receive_buffer);
+    *msg_buf_ptr = m_send_receive_buffer;
+    libspdm_zero_mem (m_send_receive_buffer, sizeof(m_send_receive_buffer));
+    m_send_receive_buffer_acquired = true;
     return LIBSPDM_STATUS_SUCCESS;
+}
+
+void spdm_device_release_sender_buffer (
+    void *context, const void *msg_buf_ptr)
+{
+    LIBSPDM_ASSERT (m_send_receive_buffer_acquired);
+    LIBSPDM_ASSERT (msg_buf_ptr == m_send_receive_buffer);
+    m_send_receive_buffer_acquired = false;
+    return;
+}
+
+libspdm_return_t spdm_device_acquire_receiver_buffer (
+    void *context, size_t *max_msg_size, void **msg_buf_ptr)
+{
+    LIBSPDM_ASSERT (!m_send_receive_buffer_acquired);
+    *max_msg_size = sizeof(m_send_receive_buffer);
+    *msg_buf_ptr = m_send_receive_buffer;
+    libspdm_zero_mem (m_send_receive_buffer, sizeof(m_send_receive_buffer));
+    m_send_receive_buffer_acquired = true;
+    return LIBSPDM_STATUS_SUCCESS;
+}
+
+void spdm_device_release_receiver_buffer (
+    void *context, const void *msg_buf_ptr)
+{
+    LIBSPDM_ASSERT (m_send_receive_buffer_acquired);
+    LIBSPDM_ASSERT (msg_buf_ptr == m_send_receive_buffer);
+    m_send_receive_buffer_acquired = false;
+    return;
 }
 
 void *spdm_server_init(void)
@@ -39,12 +85,20 @@ void *spdm_server_init(void)
         return NULL;
     }
     libspdm_init_context(spdm_context);
-    libspdm_register_device_io_func(spdm_context, libspdm_responder_send_message,
-                                    libspdm_responder_receive_message);
+
+    libspdm_set_scratch_buffer (spdm_context, m_scratch_buffer, sizeof(m_scratch_buffer));
+
+    libspdm_register_device_io_func(spdm_context, spdm_responder_send_message,
+                                    spdm_responder_receive_message);
     libspdm_register_transport_layer_func(spdm_context,
                                           libspdm_transport_mctp_encode_message,
                                           libspdm_transport_mctp_decode_message,
                                           libspdm_transport_mctp_get_header_size);
+    libspdm_register_device_buffer_func(spdm_context,
+                                        spdm_device_acquire_sender_buffer,
+                                        spdm_device_release_sender_buffer,
+                                        spdm_device_acquire_receiver_buffer,
+                                        spdm_device_release_receiver_buffer);
 
     has_rsp_pub_cert = false;
     has_rsp_priv_key = false;
