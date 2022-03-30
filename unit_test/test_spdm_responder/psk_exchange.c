@@ -38,6 +38,12 @@ libspdm_psk_exchange_request_mine_t m_libspdm_psk_exchange_request2 = {
 };
 size_t m_libspdm_psk_exchange_request2_size = sizeof(spdm_psk_exchange_request_t);
 
+libspdm_psk_exchange_request_mine_t m_libspdm_psk_exchange_request3 = {
+    { SPDM_MESSAGE_VERSION_12, SPDM_PSK_EXCHANGE,
+      SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0 },
+};
+size_t m_libspdm_psk_exchange_request3_size = sizeof(m_libspdm_psk_exchange_request3);
+
 void libspdm_test_responder_psk_exchange_case1(void **state)
 {
     libspdm_return_t status;
@@ -791,6 +797,108 @@ void libspdm_test_responder_psk_exchange_case8(void **state)
     free(data1);
 }
 
+void libspdm_test_responder_psk_exchange_case9(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    spdm_psk_exchange_response_t *spdm_response;
+    void *data1;
+    size_t data_size1;
+    uint8_t *ptr;
+    size_t opaque_psk_exchange_req_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x9;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.measurement_spec =
+        m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group =
+        m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite =
+        m_libspdm_use_aead_algo;
+    spdm_context->connection_info.algorithm.key_schedule =
+        m_libspdm_use_key_schedule_algo;
+    libspdm_session_info_init(spdm_context,
+                              spdm_context->session_info,
+                              INVALID_SESSION_ID, false);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data1,
+                                                    &data_size1, NULL, NULL);
+    spdm_context->local_context.local_cert_chain_provision[0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0] =
+        data_size1;
+    spdm_context->connection_info.local_used_cert_chain_buffer = data1;
+    spdm_context->connection_info.local_used_cert_chain_buffer_size =
+        data_size1;
+    spdm_context->local_context.slot_count = 1;
+    libspdm_reset_message_a(spdm_context);
+    libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
+    libspdm_copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
+                     LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
+    spdm_context->local_context.psk_hint_size =
+        sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
+    spdm_context->local_context.psk_hint = m_libspdm_local_psk_hint;
+
+    m_libspdm_psk_exchange_request3.psk_hint_length =
+        (uint16_t)spdm_context->local_context.psk_hint_size;
+    m_libspdm_psk_exchange_request3.context_length = LIBSPDM_PSK_CONTEXT_LENGTH;
+    opaque_psk_exchange_req_size =
+        libspdm_get_opaque_data_supported_version_data_size(spdm_context);
+    m_libspdm_psk_exchange_request3.opaque_length =
+        (uint16_t)opaque_psk_exchange_req_size;
+    m_libspdm_psk_exchange_request3.req_session_id = 0xFFFF;
+    ptr = m_libspdm_psk_exchange_request3.psk_hint;
+    libspdm_copy_mem(ptr, sizeof(m_libspdm_psk_exchange_request3.psk_hint),
+                     spdm_context->local_context.psk_hint,
+                     spdm_context->local_context.psk_hint_size);
+    ptr += m_libspdm_psk_exchange_request3.psk_hint_length;
+    libspdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
+    ptr += m_libspdm_psk_exchange_request3.context_length;
+    libspdm_build_opaque_data_supported_version_data(
+        spdm_context, &opaque_psk_exchange_req_size, ptr);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->transcript.message_m.buffer_size =
+        spdm_context->transcript.message_m.max_buffer_size;
+#endif
+    ptr += opaque_psk_exchange_req_size;
+    response_size = sizeof(response);
+    status = libspdm_get_response_psk_exchange(
+        spdm_context, m_libspdm_psk_exchange_request3_size,
+        &m_libspdm_psk_exchange_request3, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(
+        libspdm_secured_message_get_session_state(
+            spdm_context->session_info[0].secured_message_context),
+        LIBSPDM_SESSION_STATE_HANDSHAKING);
+    assert_int_equal(spdm_context->session_info[0].session_policy, 0);
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.spdm_version,
+                     SPDM_MESSAGE_VERSION_12);
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_PSK_EXCHANGE_RSP);
+    assert_int_equal(spdm_response->rsp_session_id, 0xFFFF);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    assert_int_equal(spdm_context->transcript.message_m.buffer_size,
+                     0);
+#endif
+    free(data1);
+}
+
 libspdm_test_context_t m_libspdm_responder_psk_exchange_test_context = {
     LIBSPDM_TEST_CONTEXT_SIGNATURE,
     false,
@@ -815,6 +923,8 @@ int libspdm_responder_psk_exchange_test_main(void)
         cmocka_unit_test(libspdm_test_responder_psk_exchange_case7),
         /* Buffer verification*/
         cmocka_unit_test(libspdm_test_responder_psk_exchange_case8),
+        /* Successful response V1.2*/
+        cmocka_unit_test(libspdm_test_responder_psk_exchange_case9),
     };
 
     libspdm_setup_test_context(&m_libspdm_responder_psk_exchange_test_context);

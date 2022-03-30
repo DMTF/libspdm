@@ -424,6 +424,21 @@ size_t m_libspdm_get_capabilities_request18_size =
     sizeof(m_libspdm_get_capabilities_request18.data_transfer_size) -
     sizeof(m_libspdm_get_capabilities_request18.max_spdm_msg_size);
 
+spdm_get_capabilities_request_t m_libspdm_get_capabilities_request19 = {
+    {
+        SPDM_MESSAGE_VERSION_12,
+        SPDM_GET_CAPABILITIES,
+    }, /*header*/
+    0x00, /*reserved*/
+    0x01, /*ct_exponent*/
+    0x0000, /*reserved, 2 bytes*/
+    (SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP|
+     SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP),
+    LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
+    LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
+};
+size_t m_libspdm_get_capabilities_request19_size = sizeof(m_libspdm_get_capabilities_request19);
+
 void libspdm_test_responder_capabilities_case1(void **state)
 {
     libspdm_return_t status;
@@ -1173,6 +1188,39 @@ void libspdm_test_responder_capabilities_case23(void **state)
                         response, response_size);
 }
 
+void libspdm_test_responder_capabilities_case24(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    spdm_capabilities_response_t *spdm_response;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x18;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_capabilities(
+        spdm_context, m_libspdm_get_capabilities_request19_size,
+        &m_libspdm_get_capabilities_request19, &response_size, response);
+    assert_int_equal(spdm_context->connection_info.capability.max_spdm_msg_size,
+                     m_libspdm_get_capabilities_request19.max_spdm_msg_size);
+    assert_int_equal(spdm_context->connection_info.capability.data_transfer_size,
+                     m_libspdm_get_capabilities_request19.data_transfer_size);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_capabilities_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.spdm_version, SPDM_MESSAGE_VERSION_12);
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_CAPABILITIES);
+    assert_int_equal(spdm_response->data_transfer_size, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+    assert_int_equal(spdm_response->max_spdm_msg_size, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+}
+
 libspdm_test_context_t m_libspdm_responder_capabilities_test_context = {
     LIBSPDM_TEST_CONTEXT_SIGNATURE,
     false,
@@ -1227,6 +1275,8 @@ int libspdm_responder_capabilities_test_main(void)
         cmocka_unit_test(libspdm_test_responder_capabilities_case22),
         /* Buffer verification*/
         cmocka_unit_test(libspdm_test_responder_capabilities_case23),
+        /* V1.2 Success case, all possible flags set*/
+        cmocka_unit_test(libspdm_test_responder_capabilities_case24),
     };
 
     libspdm_setup_test_context(&m_libspdm_responder_capabilities_test_context);
