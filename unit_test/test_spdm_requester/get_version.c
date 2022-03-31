@@ -66,6 +66,10 @@ libspdm_return_t libspdm_requester_get_version_test_send_message(
         m_libspdm_local_buffer_size += (request_size - 1);
     }
         return LIBSPDM_STATUS_SUCCESS;
+    case 0x11:
+        return LIBSPDM_STATUS_SUCCESS;
+    case 0x12:
+        return LIBSPDM_STATUS_SUCCESS;
     default:
         return LIBSPDM_STATUS_SEND_FAIL;
     }
@@ -474,6 +478,53 @@ libspdm_return_t libspdm_requester_get_version_test_receive_message(
     }
         return LIBSPDM_STATUS_SUCCESS;
 
+    case 0x11: {
+        spdm_message_header_t *spdm_response;
+        size_t spdm_response_size;
+        size_t transport_header_size;
+
+        spdm_response_size = sizeof(spdm_message_header_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        libspdm_zero_mem(spdm_response, spdm_response_size);
+        spdm_response->spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response->request_response_code = SPDM_VERSION;
+        spdm_response->param1 = 0;
+        spdm_response->param2 = 0;
+
+        libspdm_transport_test_encode_message(spdm_context, NULL, false,
+                                              false, spdm_response_size,
+                                              spdm_response,
+                                              response_size, response);
+
+    }
+        return LIBSPDM_STATUS_SUCCESS;
+
+    case 0x12: {
+        spdm_version_response_t *spdm_response;
+        size_t spdm_response_size;
+        size_t transport_header_size;
+
+        spdm_response_size = sizeof(spdm_version_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        libspdm_zero_mem(spdm_response, spdm_response_size);
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response->header.request_response_code = SPDM_VERSION;
+        spdm_response->header.param1 = 0;
+        spdm_response->header.param2 = 0;
+        spdm_response->version_number_entry_count = LIBSPDM_MAX_VERSION_COUNT;
+
+        libspdm_transport_test_encode_message(spdm_context, NULL, false,
+                                              false, spdm_response_size,
+                                              spdm_response,
+                                              response_size, response);
+
+    }
+        return LIBSPDM_STATUS_SUCCESS;
+
     default:
         return LIBSPDM_STATUS_RECEIVE_FAIL;
     }
@@ -819,6 +870,42 @@ void libspdm_test_requester_get_version_case16(void **state)
 #endif
 }
 
+/**
+ * Test 17: when no VERSION message is received, and the client returns a device error.
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_INVALID_MSG_FIELD.
+ **/
+void libspdm_test_requester_get_version_case17(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x11;
+
+    status = libspdm_get_version(spdm_context, NULL, NULL);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_SIZE);
+}
+
+/**
+ * Test 17: when no VERSION message is received, and the client returns a device error.
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_INVALID_MSG_FIELD.
+ **/
+void libspdm_test_requester_get_version_case18(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x12;
+
+    status = libspdm_get_version(spdm_context, NULL, NULL);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_SIZE);
+}
+
 libspdm_test_context_t m_libspdm_requester_get_version_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     true,
@@ -856,6 +943,9 @@ int libspdm_requester_get_version_test_main(void)
         cmocka_unit_test(libspdm_test_requester_get_version_case15),
         /* Buffer verification*/
         cmocka_unit_test(libspdm_test_requester_get_version_case16),
+        /* The size of the VERSION response is invalid */
+        cmocka_unit_test(libspdm_test_requester_get_version_case17),
+        cmocka_unit_test(libspdm_test_requester_get_version_case18),
     };
 
     libspdm_setup_test_context(&m_libspdm_requester_get_version_test_context);
