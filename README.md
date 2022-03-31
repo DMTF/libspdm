@@ -16,13 +16,9 @@
 
    [DSP0276](https://www.dmtf.org/dsp/DSP0276)  Secured MCTP Messages over MCTP Binding Specification (version [1.0.0](https://www.dmtf.org/sites/default/files/standards/documents/DSP0276_1.0.0.pdf))
 
-   PCI DOE / IDE follow :
+   PCIE follows :
 
-   PCI  Data Object Exchange (DOE) [ECN](https://members.pcisig.com/wg/PCI-SIG/document/14143)
-
-   PCI  Component Measurement and Authentication (CMA) [ECN](https://members.pcisig.com/wg/PCI-SIG/document/14236)
-
-   PCI  Integrity and Data Encryption (IDE) [ECN](https://members.pcisig.com/wg/PCI-SIG/document/15149)
+   PCI Express Base Specification Revision 6.0 [PCIE](https://members.pcisig.com/wg/PCI-SIG/document/16609)
 
 2) Includes libraries that can be used to construct an SPDM Requester and an SPDM Responder.
 
@@ -123,7 +119,7 @@
 
    libspdm uses submodules for mbedtls, openssl, and cmocka.
 
-   To get a fully buildable repo, use `git submodule update --init`.
+   To get a fully buildable repository, use `git submodule update --init`.
    If there is an update for submodules, use `git submodule update`.
 
 ### Windows Builds
