@@ -26,10 +26,11 @@
 
 2) Includes libraries that can be used to construct an SPDM Requester and an SPDM Responder.
 
-3) Programming Context:
+3) Programming Context
+
    The core libraries in `libspdm/library/` require only the C99 freestanding headers and so are suitable for embedded and systems programming. Any functionality beyond the freestanding headers is provided by `libspdm/os_stub` or by the library's integrator. The core libraries do not contain any statically allocated variables. The core libraries do not dynamically allocate memory.
 
-4) Implemented requests and responses:
+4) Implemented Requests and Responses
 
    SPDM 1.0: GET_VERSION, GET_CAPABILITY, NEGOTIATE_ALGORITHM, GET_DIGEST, GET_CERTIFICATE, CHALLENGE, GET_MEASUREMENT
 
@@ -37,7 +38,7 @@
 
    SPDM 1.2: GET_CSR - TBD, SET_CERTIFICATE - TBD, CHUNK message - TBD
 
-5) Cryptographic algorithm support:
+5) Cryptographic Algorithm Support
 
    The SPDM library requires [cryptolib API](https://github.com/DMTF/libspdm/blob/main/include/hal/library/cryptlib.h), including random number generation, symmetric cryptography, asymmetric cryptography, hash, and message authentication code.
 
@@ -50,7 +51,7 @@
    An [OpenSSL](https://www.openssl.org/) wrapper is included in [cryptlib_openssl](https://github.com/DMTF/libspdm/tree/main/os_stub/openssllib).
    NOTE: SM2-KeyExchange and SM4_GCM are not supported.
 
-6) Execution context:
+6) Execution Context
 
    Support to build an OS application for spdm_requester_emu and spdm_responder_emu to trace communication between Requester and Responder.
 
@@ -66,15 +67,15 @@
 
    Free and Open Source Developers European Meeting 2021 - [openspdm](https://fosdem.org/2021/schedule/event/firmware_uoifaaffsdc/)
 
-2) libspdm library threat model:
+2) libspdm Library Threat Model:
 
    The user guide can be found at [threat_model](https://github.com/DMTF/libspdm/blob/main/doc/threat_model.md)
 
-3) libspdm library design:
+3) libspdm Library Design:
 
    The detailed design can be found at [design](https://github.com/DMTF/libspdm/blob/main/doc/design.md)
 
-4) libspdm user guide:
+4) libspdm User Guide:
 
    The user guide can be found at [user_guide](https://github.com/DMTF/libspdm/blob/main/doc/user_guide.md)
 
