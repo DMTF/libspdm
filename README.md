@@ -18,7 +18,7 @@
 
    PCIE follows :
 
-   PCI Express Base Specification Revision 6.0 (version [1.0](https://members.pcisig.com/wg/PCI-SIG/document/16609)
+   PCI Express Base Specification Revision 6.0 (version [1.0](https://members.pcisig.com/wg/PCI-SIG/document/16609))
 
 2) Includes libraries that can be used to construct an SPDM Requester and an SPDM Responder.
 
