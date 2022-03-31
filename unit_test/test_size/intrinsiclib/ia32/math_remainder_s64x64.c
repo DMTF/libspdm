@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021 DMTF. All rights reserved.
+ *  Copyright 2021-2022 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -20,7 +20,7 @@ __declspec(naked) void __cdecl _allrem(void)
      *            div_s64x64_remainder (
      *      const      int64_t     dividend,
      *      const      int64_t     divisor,
-     *          int64_t     *remainder 
+     *          int64_t     *remainder
      *      )*/
 
     _asm {
