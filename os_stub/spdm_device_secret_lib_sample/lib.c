@@ -799,8 +799,10 @@ bool libspdm_responder_data_sign(
 uint8_t m_libspdm_my_zero_filled_buffer[64];
 uint8_t m_libspdm_bin_str0[0x11] = {
     0x00, 0x00, /* length - to be filled*/
-    0x73, 0x70, 0x64, 0x6d, 0x31, 0x2e, 0x31, 0x20, /* version: 'spdm1.1 '*/
-    0x64, 0x65, 0x72, 0x69, 0x76, 0x65, 0x64, /* label: 'derived'*/
+    /* SPDM_VERSION_1_1_BIN_CONCAT_LABEL */
+    0x73, 0x70, 0x64, 0x6d, 0x31, 0x2e, 0x31, 0x20,
+    /* SPDM_BIN_STR_0_LABEL */
+    0x64, 0x65, 0x72, 0x69, 0x76, 0x65, 0x64,
 };
 
 /**
@@ -916,6 +918,9 @@ bool libspdm_psk_master_secret_hkdf_expand(
     }
 
     *(uint16_t *)m_libspdm_bin_str0 = (uint16_t)hash_size;
+    /* patch the version*/
+    m_libspdm_bin_str0[6] = (char)('0' + ((spdm_version >> 12) & 0xF));
+    m_libspdm_bin_str0[8] = (char)('0' + ((spdm_version >> 8) & 0xF));
     result = libspdm_hkdf_expand(base_hash_algo, handshake_secret, hash_size,
                                  m_libspdm_bin_str0, sizeof(m_libspdm_bin_str0), salt1,
                                  hash_size);

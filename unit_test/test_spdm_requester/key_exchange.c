@@ -9,10 +9,6 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
-#define LIBSPDM_BIN_CONCAT_LABEL "spdm1.1 "
-#define LIBSPDM_BIN_STR_0_LABEL "derived"
-#define LIBSPDM_BIN_STR_2_LABEL "rsp hs data"
-
 static size_t m_libspdm_local_buffer_size;
 static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
