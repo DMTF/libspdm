@@ -29,6 +29,7 @@ jobs:
           - GCC
           - VS2015
           - VS2019
+          - LIBFUZZER
         configurations:
           - "-DLIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT=0"
           - "-DLIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT=1"
@@ -41,6 +42,8 @@ jobs:
             arch: ia32
           - os: windows-latest
             toolchain: GCC
+          - os: windows-latest
+            toolchain: LIBFUZZER
           - crypto: openssl
             arch: ia32
     steps:
@@ -74,6 +77,8 @@ jobs:
       - name: Build - Linux
         if: matrix.os == 'ubuntu-latest'
         run: |
+          sudo apt-get update
+          sudo apt-get install llvm
           mkdir build
           cd build
           cmake -E env CFLAGS="${{ matrix.configurations }} -DLIBSPDM_DEBUG_LIBSPDM_ASSERT_CONFIG=0" cmake -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ..
@@ -90,14 +95,17 @@ jobs:
           nmake
 
       - name: Test Requester
+        if: matrix.toolchain != 'LIBFUZZER'
         run: |
           cd build/bin
           ./test_spdm_requester
       - name: Test Responder
+        if: matrix.toolchain != 'LIBFUZZER'
         run: |
           cd build/bin
           ./test_spdm_responder
       - name: Test_spdm_common
+        if: matrix.toolchain != 'LIBFUZZER'
         run: |
           cd build/bin
           ./test_spdm_common
