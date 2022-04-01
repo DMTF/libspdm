@@ -175,7 +175,7 @@ void libspdm_test_requester_psk_finish_case1(void **State)
     libspdm_secured_message_set_dummy_finished_key(session_info->secured_message_context);
     status = libspdm_send_receive_psk_finish(spdm_context, session_id);
     free(data);
-    if (LIBSPDM_STATUS_BUSY_PEER != status)
+    if (LIBSPDM_STATUS_SUCCESS == status)
     {
         libspdm_reset_message_f(spdm_context, session_info);
         libspdm_reset_message_k(spdm_context, session_info);

@@ -114,7 +114,7 @@ void libspdm_test_requester_get_certificate_case1(void **State)
 
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size, cert_chain);
     free(data);
-    if (LIBSPDM_STATUS_BUSY_PEER != status)
+    if (LIBSPDM_STATUS_SUCCESS == status)
     {
         libspdm_reset_message_b(spdm_context);
     }
@@ -163,7 +163,7 @@ void libspdm_test_requester_get_certificate_case2(void **State)
 
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size, cert_chain);
     free(data);
-    if (LIBSPDM_STATUS_BUSY_PEER != status)
+    if (LIBSPDM_STATUS_SUCCESS == status)
     {
         libspdm_reset_message_b(spdm_context);
     }
@@ -211,7 +211,7 @@ void libspdm_test_requester_get_certificate_ex_case1(void **State)
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size, cert_chain);
     free(data);
-    if (LIBSPDM_STATUS_BUSY_PEER != status)
+    if (LIBSPDM_STATUS_SUCCESS == status)
     {
         libspdm_reset_message_b(spdm_context);
     }
