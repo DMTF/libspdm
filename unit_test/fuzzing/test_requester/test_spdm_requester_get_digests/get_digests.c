@@ -80,7 +80,7 @@ void libspdm_test_requester_get_digests(void **State)
     libspdm_reset_message_b(spdm_context);
     libspdm_zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
     status = libspdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
-    if (LIBSPDM_STATUS_BUSY_PEER != status)
+    if (LIBSPDM_STATUS_SUCCESS == status)
     {
         libspdm_reset_message_b(spdm_context);
     }

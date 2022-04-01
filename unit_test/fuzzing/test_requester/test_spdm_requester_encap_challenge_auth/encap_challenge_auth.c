@@ -65,7 +65,7 @@ void libspdm_test_requester_encap_challenge(void **State)
                                                        (uint8_t *)spdm_test_context->test_buffer,
                                                        &response_size, response);
     free(data);
-    if (LIBSPDM_STATUS_BUSY_PEER != status)
+    if (LIBSPDM_STATUS_SUCCESS == status)
     {
         libspdm_reset_message_mut_c(spdm_context);
     }

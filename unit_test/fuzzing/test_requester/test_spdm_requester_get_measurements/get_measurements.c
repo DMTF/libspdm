@@ -186,7 +186,7 @@ void libspdm_test_requester_get_measurement_case1(void **State)
                                      &number_of_block,
                                      &measurement_record_length, measurement_record);
     free(data);
-    if (LIBSPDM_STATUS_BUSY_PEER != status)
+    if (LIBSPDM_STATUS_SUCCESS == status)
     {
         libspdm_reset_message_m(spdm_context, NULL);
     }
@@ -256,7 +256,7 @@ void libspdm_test_requester_get_measurement_case2(void **State)
                                         &measurement_record_length, measurement_record, NULL, NULL,
                                         NULL);
     free(data);
-    if (LIBSPDM_STATUS_BUSY_PEER != status)
+    if (LIBSPDM_STATUS_SUCCESS == status)
     {
         libspdm_reset_message_m(spdm_context, NULL);
     }
@@ -345,7 +345,7 @@ void libspdm_test_requester_get_measurement_case3(void **State)
                                      measurement_record);
     libspdm_test_message_header = 0;
     free(data);
-    if (LIBSPDM_STATUS_BUSY_PEER != status)
+    if (LIBSPDM_STATUS_SUCCESS == status)
     {
         libspdm_reset_message_m(spdm_context, NULL);
     }
@@ -415,7 +415,7 @@ void libspdm_test_requester_get_measurement_case4(void **State)
                                      NULL, &number_of_block, &measurement_record_length,
                                      measurement_record);
     free(data);
-    if (LIBSPDM_STATUS_BUSY_PEER != status)
+    if (LIBSPDM_STATUS_SUCCESS == status)
     {
         libspdm_reset_message_m(spdm_context, NULL);
     }

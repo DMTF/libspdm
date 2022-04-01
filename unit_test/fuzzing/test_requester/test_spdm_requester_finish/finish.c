@@ -149,7 +149,7 @@ void libspdm_test_send_receive_finish_case1(void **State)
     status = libspdm_send_receive_finish(spdm_context, session_id, req_slot_id_param);
 
     free(data);
-    if (LIBSPDM_STATUS_BUSY_PEER != status)
+    if (LIBSPDM_STATUS_SUCCESS == status)
     {
         libspdm_reset_message_f(spdm_context, session_info);
         libspdm_reset_message_k(spdm_context, session_info);

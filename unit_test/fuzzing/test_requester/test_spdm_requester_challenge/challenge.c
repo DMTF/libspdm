@@ -167,7 +167,7 @@ void libspdm_test_requester_challenge_case1(void **State)
     status = libspdm_challenge(spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
                                measurement_hash, NULL);
     free(data);
-    if (LIBSPDM_STATUS_BUSY_PEER != status)
+    if (LIBSPDM_STATUS_SUCCESS == status)
     {
         libspdm_reset_message_c(spdm_context);
     }
@@ -235,7 +235,7 @@ void libspdm_test_requester_challenge_ex_case1(void **State)
                                   measurement_hash, NULL, requester_nonce_in, requester_nonce,
                                   responder_nonce);
     free(data);
-    if (LIBSPDM_STATUS_BUSY_PEER != status)
+    if (LIBSPDM_STATUS_SUCCESS == status)
     {
         libspdm_reset_message_c(spdm_context);
     }
