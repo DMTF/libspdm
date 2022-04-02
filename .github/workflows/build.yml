@@ -24,6 +24,7 @@ jobs:
           - x64
           - ia32
         target:
+          - Debug
           - Release
         toolchain:
           - GCC
