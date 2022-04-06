@@ -775,13 +775,17 @@ bool libspdm_sm2_dsa_sign(const void *sm2_context, uintn hash_nid,
         EVP_MD_CTX_free(ctx);
         return false;
     }
-    result = EVP_PKEY_CTX_set1_id(pkey_ctx, id_a,
-                                  id_a_size);
-    if (result <= 0) {
-        EVP_MD_CTX_free(ctx);
-        EVP_PKEY_CTX_free(pkey_ctx);
-        return false;
+
+    if (id_a_size != 0) {
+        result = EVP_PKEY_CTX_set1_id(pkey_ctx, id_a,
+                                      id_a_size);
+        if (result <= 0) {
+            EVP_MD_CTX_free(ctx);
+            EVP_PKEY_CTX_free(pkey_ctx);
+            return false;
+        }
     }
+
     EVP_MD_CTX_set_pkey_ctx(ctx, pkey_ctx);
 
     result = EVP_DigestSignInit(ctx, NULL, EVP_sm3(), NULL, pkey);
@@ -884,13 +888,17 @@ bool libspdm_sm2_dsa_verify(const void *sm2_context, uintn hash_nid,
         EVP_MD_CTX_free(ctx);
         return false;
     }
-    result = EVP_PKEY_CTX_set1_id(pkey_ctx, id_a,
-                                  id_a_size);
-    if (result <= 0) {
-        EVP_MD_CTX_free(ctx);
-        EVP_PKEY_CTX_free(pkey_ctx);
-        return false;
+
+    if (id_a_size != 0) {
+        result = EVP_PKEY_CTX_set1_id(pkey_ctx, id_a,
+                                      id_a_size);
+        if (result <= 0) {
+            EVP_MD_CTX_free(ctx);
+            EVP_PKEY_CTX_free(pkey_ctx);
+            return false;
+        }
     }
+
     EVP_MD_CTX_set_pkey_ctx(ctx, pkey_ctx);
 
     result = EVP_DigestVerifyInit(ctx, NULL, EVP_sm3(), NULL, pkey);
