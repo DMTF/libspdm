@@ -1651,7 +1651,6 @@ bool libspdm_ecd_get_public_key_from_x509(const uint8_t *cert, uintn cert_size,
     X509 *x509_cert;
     int32_t type;
 
-
     /* Check input parameters.*/
 
     if (cert == NULL || ecd_context == NULL) {
@@ -1720,9 +1719,7 @@ bool libspdm_sm2_get_public_key_from_x509(const uint8_t *cert, uintn cert_size,
     bool res;
     EVP_PKEY *pkey;
     X509 *x509_cert;
-    //int32_t result;
-    //EC_KEY *ec_key;
-    //int32_t openssl_nid;
+    int result;
 
     /* Check input parameters.*/
 
@@ -1752,18 +1749,10 @@ bool libspdm_sm2_get_public_key_from_x509(const uint8_t *cert, uintn cert_size,
         goto done;
     }
 
-    //ec_key = EVP_PKEY_get0_EC_KEY(pkey);
-    //     if (ec_key == NULL) {
-    //     goto done;
-    // }
-    // openssl_nid = EC_GROUP_get_curve_name(EC_KEY_get0_group(ec_key));
-    // if (openssl_nid != NID_sm2) {
-    //     goto done;
-    // }
-    // result = EVP_PKEY_set_alias_type(pkey, EVP_PKEY_SM2);
-    // if (result == 0) {
-    //     goto done;
-    // }
+    result = EVP_PKEY_is_a(pkey,"SM2");
+        if (result == 0) {
+        goto done;
+    }
 
     *sm2_context = pkey;
     res = true;

@@ -839,7 +839,7 @@ bool libspdm_sm2_dsa_verify(const void *sm2_context, uintn hash_nid,
     EVP_PKEY_CTX *pkey_ctx;
     EVP_PKEY *pkey;
     EVP_MD_CTX *ctx;
-    //uintn half_size;
+    uintn half_size;
     int32_t result;
     uint8_t der_signature[32 * 2 + 8];
     uintn der_sig_size;
@@ -853,16 +853,15 @@ bool libspdm_sm2_dsa_verify(const void *sm2_context, uintn hash_nid,
     }
 
     pkey = (EVP_PKEY *)sm2_context;
-    // switch (EVP_PKEY_id(pkey)) {
-    // case EVP_PKEY_SM2:
-    //     half_size = 32;
-    //     break;
-    // default:
-    //     return false;
-    // }
-    // if (sig_size != (uintn)(half_size * 2)) {
-    //     return false;
-    // }
+
+    if (EVP_PKEY_is_a(pkey, "SM2")) {
+        half_size = 32;
+    } else {
+        return false;
+    }
+    if (sig_size != (uintn)(half_size * 2)) {
+        return false;
+    }
 
     switch (hash_nid) {
     case LIBSPDM_CRYPTO_NID_SM3_256:
