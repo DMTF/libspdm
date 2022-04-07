@@ -102,13 +102,11 @@ void libspdm_test_get_encap_request_get_certificate_case2(void **State)
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     libspdm_reset_message_b(spdm_context);
 
-    libspdm_get_encap_request_get_certificate(spdm_context, &encap_request_size, spdm_request);
+    libspdm_get_encap_request_get_certificate(spdm_context, &encap_request_size,
+                                              spdm_request);
+    libspdm_reset_message_mut_b(spdm_context);
     free(spdm_request);
     free(data);
-    #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    #else
-    free(spdm_context->transcript.digest_context_mut_m1m2);
-    #endif
 }
 
 void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size)

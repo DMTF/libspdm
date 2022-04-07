@@ -54,14 +54,13 @@ void libspdm_test_get_response_encapsulated_request_case1(void **State)
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     libspdm_reset_message_b(spdm_context);
     response_size = sizeof(response);
-    libspdm_get_response_encapsulated_request(spdm_context, spdm_test_context->test_buffer_size,
-                                              spdm_test_context->test_buffer, &response_size,
+    libspdm_get_response_encapsulated_request(spdm_context,
+                                              spdm_test_context->test_buffer_size,
+                                              spdm_test_context->test_buffer,
+                                              &response_size,
                                               response);
+    libspdm_reset_message_mut_c(spdm_context);
     free(data);
-    #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    #else
-    free(spdm_context->transcript.digest_context_mut_m1m2);
-    #endif
 }
 
 void libspdm_test_get_response_encapsulated_request_case2(void **State)
@@ -91,9 +90,12 @@ void libspdm_test_get_response_encapsulated_request_case2(void **State)
     spdm_context->local_context.slot_count = 1;
 
     response_size = sizeof(response);
-    libspdm_get_response_encapsulated_request(spdm_context, spdm_test_context->test_buffer_size,
-                                              spdm_test_context->test_buffer, &response_size,
+    libspdm_get_response_encapsulated_request(spdm_context,
+                                              spdm_test_context->test_buffer_size,
+                                              spdm_test_context->test_buffer,
+                                              &response_size,
                                               response);
+    libspdm_reset_message_mut_c(spdm_context);
 }
 
 void libspdm_test_get_response_encapsulated_request_case3(void **State)
@@ -123,9 +125,12 @@ void libspdm_test_get_response_encapsulated_request_case3(void **State)
     spdm_context->local_context.slot_count = 1;
 
     response_size = sizeof(response);
-    libspdm_get_response_encapsulated_request(spdm_context, spdm_test_context->test_buffer_size,
-                                              spdm_test_context->test_buffer, &response_size,
+    libspdm_get_response_encapsulated_request(spdm_context,
+                                              spdm_test_context->test_buffer_size,
+                                              spdm_test_context->test_buffer,
+                                              &response_size,
                                               response);
+    libspdm_reset_message_mut_c(spdm_context);
 }
 
 void libspdm_test_get_response_encapsulated_request_case4(void **State)
@@ -155,9 +160,12 @@ void libspdm_test_get_response_encapsulated_request_case4(void **State)
     spdm_context->local_context.slot_count = 1;
 
     response_size = sizeof(response);
-    libspdm_get_response_encapsulated_request(spdm_context, spdm_test_context->test_buffer_size,
-                                              spdm_test_context->test_buffer, &response_size,
+    libspdm_get_response_encapsulated_request(spdm_context,
+                                              spdm_test_context->test_buffer_size,
+                                              spdm_test_context->test_buffer,
+                                              &response_size,
                                               response);
+    libspdm_reset_message_mut_c(spdm_context);
 }
 
 void libspdm_test_get_response_encapsulated_request_case5(void **State)
@@ -177,9 +185,12 @@ void libspdm_test_get_response_encapsulated_request_case5(void **State)
     spdm_context->encap_context.current_request_op_code = 0;
 
     response_size = sizeof(response);
-    libspdm_get_response_encapsulated_request(spdm_context, spdm_test_context->test_buffer_size,
-                                              spdm_test_context->test_buffer, &response_size,
+    libspdm_get_response_encapsulated_request(spdm_context,
+                                              spdm_test_context->test_buffer_size,
+                                              spdm_test_context->test_buffer,
+                                              &response_size,
                                               response);
+    libspdm_reset_message_mut_c(spdm_context);
 }
 
 void libspdm_test_get_response_encapsulated_response_ack_case1(void **State)
