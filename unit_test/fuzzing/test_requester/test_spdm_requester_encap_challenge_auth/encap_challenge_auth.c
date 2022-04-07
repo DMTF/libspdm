@@ -18,7 +18,6 @@ size_t libspdm_get_max_buffer_size(void)
 
 void libspdm_test_requester_encap_challenge(void **State)
 {
-    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t request_size;
@@ -61,14 +60,11 @@ void libspdm_test_requester_encap_challenge(void **State)
     }
 
     response_size = sizeof(response);
-    status = libspdm_get_encap_response_challenge_auth(spdm_context, request_size,
-                                                       (uint8_t *)spdm_test_context->test_buffer,
-                                                       &response_size, response);
+    libspdm_get_encap_response_challenge_auth(spdm_context, request_size,
+                                              (uint8_t *)spdm_test_context->test_buffer,
+                                              &response_size, response);
     free(data);
-    if (LIBSPDM_STATUS_SUCCESS == status)
-    {
-        libspdm_reset_message_mut_c(spdm_context);
-    }
+    libspdm_reset_message_mut_c(spdm_context);
 }
 
 libspdm_test_context_t m_libspdm_requester_encap_challenge_test_context = {

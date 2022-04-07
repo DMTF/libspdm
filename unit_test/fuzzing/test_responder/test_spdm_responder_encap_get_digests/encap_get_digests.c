@@ -45,6 +45,7 @@ void libspdm_test_responder_encap_get_digests_case1(void **State)
 
 void libspdm_test_get_encap_request_get_digest_case2(void **State)
 {
+
     libspdm_test_context_t *spdm_test_context;
     spdm_get_digest_request_t *spdm_request;
     libspdm_context_t *spdm_context;
@@ -77,12 +78,9 @@ void libspdm_test_get_encap_request_get_digest_case2(void **State)
     libspdm_reset_message_b(spdm_context);
 
     libspdm_get_encap_request_get_digest(spdm_context, &encap_request_size, spdm_request);
+    libspdm_reset_message_mut_c(spdm_context);
     free(spdm_request);
     free(data);
-    #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    #else
-    free(spdm_context->transcript.digest_context_mut_m1m2);
-    #endif
 }
 
 void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size)

@@ -117,7 +117,6 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
 
 void libspdm_test_requester_challenge_case1(void **State)
 {
-    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
@@ -164,13 +163,10 @@ void libspdm_test_requester_challenge_case1(void **State)
 #endif
 
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
-    status = libspdm_challenge(spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
-                               measurement_hash, NULL);
+    libspdm_challenge(spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
+                      measurement_hash, NULL);
     free(data);
-    if (LIBSPDM_STATUS_SUCCESS == status)
-    {
-        libspdm_reset_message_c(spdm_context);
-    }
+    libspdm_reset_message_c(spdm_context);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 #else
     libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
@@ -180,7 +176,6 @@ void libspdm_test_requester_challenge_case1(void **State)
 
 void libspdm_test_requester_challenge_ex_case1(void **State)
 {
-    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
@@ -230,15 +225,12 @@ void libspdm_test_requester_challenge_ex_case1(void **State)
 #endif
 
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
-    status = libspdm_challenge_ex(spdm_context, 0,
-                                  SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
-                                  measurement_hash, NULL, requester_nonce_in, requester_nonce,
-                                  responder_nonce);
+    libspdm_challenge_ex(spdm_context, 0,
+                         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
+                         measurement_hash, NULL, requester_nonce_in, requester_nonce,
+                         responder_nonce);
     free(data);
-    if (LIBSPDM_STATUS_SUCCESS == status)
-    {
-        libspdm_reset_message_c(spdm_context);
-    }
+    libspdm_reset_message_c(spdm_context);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 #else
     libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,

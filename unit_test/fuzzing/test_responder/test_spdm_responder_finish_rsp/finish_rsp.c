@@ -43,9 +43,7 @@ typedef struct
 
 void libspdm_test_responder_finish_case1(void **State)
 {
-    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
-    spdm_finish_response_t *spdm_response;
     libspdm_context_t *spdm_context;
     size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -130,23 +128,15 @@ void libspdm_test_responder_finish_case1(void **State)
                      ptr);
     spdm_test_finish_request_size = sizeof(spdm_finish_request_t) + hmac_size;
     response_size = sizeof(response);
-    status = libspdm_get_response_finish(spdm_context, spdm_test_finish_request_size,
-                                         spdm_test_finish_request,
-                                         &response_size, response);
-    spdm_response = (spdm_finish_response_t*)response;
-    if (status == LIBSPDM_STATUS_SUCCESS &&
-        spdm_response->header.request_response_code != SPDM_ERROR)
-    {
-        libspdm_reset_message_k(spdm_context, spdm_context->session_info);
-    }
+    libspdm_get_response_finish(spdm_context, spdm_test_finish_request_size,
+                                spdm_test_finish_request,
+                                &response_size, response);
     free(data1);
 }
 
 void libspdm_test_responder_finish_case2(void **State)
 {
-    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
-    spdm_finish_response_t *spdm_response;
     libspdm_context_t *spdm_context;
     size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -159,21 +149,13 @@ void libspdm_test_responder_finish_case2(void **State)
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NOT_READY;
 
     response_size = sizeof(response);
-    status = libspdm_get_response_finish(spdm_context, spdm_test_context->test_buffer_size,
-                                         spdm_test_context->test_buffer, &response_size, response);
-    spdm_response = (spdm_finish_response_t*)response;
-    if (status == LIBSPDM_STATUS_SUCCESS &&
-        spdm_response->header.request_response_code != SPDM_ERROR)
-    {
-        libspdm_reset_message_k(spdm_context, spdm_context->session_info);
-    }
+    libspdm_get_response_finish(spdm_context, spdm_test_context->test_buffer_size,
+                                spdm_test_context->test_buffer, &response_size, response);
 }
 
 void libspdm_test_responder_finish_case3(void **State)
 {
-    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
-    spdm_finish_response_t *spdm_response;
     libspdm_context_t *spdm_context;
     size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -188,21 +170,13 @@ void libspdm_test_responder_finish_case3(void **State)
     spdm_context->local_context.capability.flags = 0;
 
     response_size = sizeof(response);
-    status = libspdm_get_response_finish(spdm_context, spdm_test_context->test_buffer_size,
-                                         spdm_test_context->test_buffer, &response_size, response);
-    spdm_response = (spdm_finish_response_t*)response;
-    if (status == LIBSPDM_STATUS_SUCCESS &&
-        spdm_response->header.request_response_code != SPDM_ERROR)
-    {
-        libspdm_reset_message_k(spdm_context, spdm_context->session_info);
-    }
+    libspdm_get_response_finish(spdm_context, spdm_test_context->test_buffer_size,
+                                spdm_test_context->test_buffer, &response_size, response);
 }
 
 void libspdm_test_responder_finish_case4(void **State)
 {
-    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
-    spdm_finish_response_t *spdm_response;
     libspdm_context_t *spdm_context;
     size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -218,21 +192,13 @@ void libspdm_test_responder_finish_case4(void **State)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     response_size = sizeof(response);
-    status = libspdm_get_response_finish(spdm_context, spdm_test_context->test_buffer_size,
-                                         spdm_test_context->test_buffer, &response_size, response);
-    spdm_response = (spdm_finish_response_t*)response;
-    if (status == LIBSPDM_STATUS_SUCCESS &&
-        spdm_response->header.request_response_code != SPDM_ERROR)
-    {
-        libspdm_reset_message_k(spdm_context, spdm_context->session_info);
-    }
+    libspdm_get_response_finish(spdm_context, spdm_test_context->test_buffer_size,
+                                spdm_test_context->test_buffer, &response_size, response);
 }
 
 void libspdm_test_responder_finish_case5(void **State)
 {
-    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
-    spdm_finish_response_t *spdm_response;
     libspdm_context_t *spdm_context;
     size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -250,21 +216,13 @@ void libspdm_test_responder_finish_case5(void **State)
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
 
     response_size = sizeof(response);
-    status = libspdm_get_response_finish(spdm_context, spdm_test_context->test_buffer_size,
-                                         spdm_test_context->test_buffer, &response_size, response);
-    spdm_response = (spdm_finish_response_t*)response;
-    if (status == LIBSPDM_STATUS_SUCCESS &&
-        spdm_response->header.request_response_code != SPDM_ERROR)
-    {
-        libspdm_reset_message_k(spdm_context, spdm_context->session_info);
-    }
+    libspdm_get_response_finish(spdm_context, spdm_test_context->test_buffer_size,
+                                spdm_test_context->test_buffer, &response_size, response);
 }
 
 void libspdm_test_responder_finish_case6(void **State)
 {
-    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
-    spdm_finish_response_t *spdm_response;
     libspdm_context_t *spdm_context;
     size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -286,21 +244,13 @@ void libspdm_test_responder_finish_case6(void **State)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->last_spdm_request_session_id_valid = !false;
     response_size = sizeof(response);
-    status = libspdm_get_response_finish(spdm_context, spdm_test_context->test_buffer_size,
-                                         spdm_test_context->test_buffer, &response_size, response);
-    spdm_response = (spdm_finish_response_t*)response;
-    if (status == LIBSPDM_STATUS_SUCCESS &&
-        spdm_response->header.request_response_code != SPDM_ERROR)
-    {
-        libspdm_reset_message_k(spdm_context, spdm_context->session_info);
-    }
+    libspdm_get_response_finish(spdm_context, spdm_test_context->test_buffer_size,
+                                spdm_test_context->test_buffer, &response_size, response);
 }
 
 void libspdm_test_responder_finish_case7(void **State)
 {
-    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
-    spdm_finish_response_t *spdm_response;
     libspdm_context_t *spdm_context;
     size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -358,22 +308,14 @@ void libspdm_test_responder_finish_case7(void **State)
                                                      dummy_buffer, hash_size);
 
     response_size = sizeof(response);
-    status = libspdm_get_response_finish(spdm_context, spdm_test_context->test_buffer_size,
-                                         spdm_test_context->test_buffer, &response_size, response);
-    spdm_response = (spdm_finish_response_t*)response;
-    if (status == LIBSPDM_STATUS_SUCCESS &&
-        spdm_response->header.request_response_code != SPDM_ERROR)
-    {
-        libspdm_reset_message_k(spdm_context, spdm_context->session_info);
-    }
+    libspdm_get_response_finish(spdm_context, spdm_test_context->test_buffer_size,
+                                spdm_test_context->test_buffer, &response_size, response);
     free(data1);
 }
 
 void libspdm_test_responder_finish_case8(void **State)
 {
-    libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
-    spdm_finish_response_t *spdm_response;
     libspdm_context_t *spdm_context;
     size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -494,15 +436,11 @@ void libspdm_test_responder_finish_case8(void **State)
     spdm_test_finish_request_size =
         sizeof(spdm_finish_request_t) + req_asym_signature_size + hmac_size;
     response_size = sizeof(response);
-    status = libspdm_get_response_finish(spdm_context, spdm_test_finish_request_size,
-                                         spdm_test_finish_request,
-                                         &response_size, response);
-    spdm_response = (spdm_finish_response_t*)response;
-    if (status == LIBSPDM_STATUS_SUCCESS &&
-        spdm_response->header.request_response_code != SPDM_ERROR)
-    {
-        libspdm_reset_message_k(spdm_context, spdm_context->session_info);
-    }
+    libspdm_get_response_finish(spdm_context, spdm_test_finish_request_size,
+                                spdm_test_finish_request,
+                                &response_size, response);
+
+    libspdm_reset_message_k(spdm_context, spdm_context->session_info);
     free(data1);
     free(data2);
 }

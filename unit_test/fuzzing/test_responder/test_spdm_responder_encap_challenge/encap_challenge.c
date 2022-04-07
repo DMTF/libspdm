@@ -80,11 +80,6 @@ void libspdm_test_responder_encap_challenge_case1(void **State)
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
     spdm_context->local_context.local_cert_chain_provision[0] = data;
 
-    spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-    spdm_response->header.request_response_code = SPDM_CHALLENGE_AUTH;
-    spdm_response->header.param1 = 0;
-    spdm_response->header.param2 = (1 << 0);
-
     ptr = (void *)(spdm_response + 1);
     libspdm_hash_all(m_libspdm_use_hash_algo,
                      (spdm_context)->local_context.local_cert_chain_provision[0],
@@ -149,12 +144,9 @@ void libspdm_test_get_encap_request_challenge_case2(void **State)
     libspdm_reset_message_c(spdm_context);
 
     libspdm_get_encap_request_challenge(spdm_context, &encap_request_size, spdm_request);
+    libspdm_reset_message_mut_c(spdm_context);
     free(spdm_request);
     free(data);
-    #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    #else
-    free(spdm_context->transcript.digest_context_mut_m1m2);
-    #endif
 }
 
 void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size)
