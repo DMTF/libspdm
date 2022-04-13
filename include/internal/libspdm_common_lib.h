@@ -392,6 +392,10 @@ typedef struct {
     /* See LIBSPDM_DATA_HANDLE_ERROR_RETURN_POLICY_*. */
 
     uint8_t handle_error_return_policy;
+
+    /* Control whether responder device requires a reset to complete the GET_CSR/SET_CERT request.*/
+
+    bool need_reset_to_set_cert;
 } libspdm_context_t;
 
 /**

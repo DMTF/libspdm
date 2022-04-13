@@ -167,6 +167,10 @@
 #define LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP 1
 #endif
 
+#ifndef LIBSPDM_ENABLE_SET_CERTIFICATE_CAP
+#define LIBSPDM_ENABLE_SET_CERTIFICATE_CAP 1
+#endif
+
 /*
  * MinDataTransferSize = 42
  *

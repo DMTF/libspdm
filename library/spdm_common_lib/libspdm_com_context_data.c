@@ -490,6 +490,12 @@ libspdm_return_t libspdm_set_data(void *context, libspdm_data_type_t data_type,
         }
         spdm_context->handle_error_return_policy = *(uint8_t *)data;
         break;
+    case LIBSPDM_DATA_NEED_RESET:
+        if (data_size != sizeof(bool)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        spdm_context->need_reset_to_set_cert = *(bool *)data;
+        break;
     default:
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         break;
@@ -728,6 +734,10 @@ libspdm_return_t libspdm_get_data(void *context, libspdm_data_type_t data_type,
     case LIBSPDM_DATA_HANDLE_ERROR_RETURN_POLICY:
         target_data_size = sizeof(uint8_t);
         target_data = &spdm_context->handle_error_return_policy;
+        break;
+    case LIBSPDM_DATA_NEED_RESET:
+        target_data_size = sizeof(bool);
+        target_data = &spdm_context->need_reset_to_set_cert;
         break;
     default:
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
