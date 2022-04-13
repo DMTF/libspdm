@@ -52,6 +52,8 @@ int libspdm_responder_end_session_test_main(void);
 int libspdm_responder_encap_key_update_test_main(void);
 int libspdm_responder_encapsulated_response_test_main(void);
 
+int libspdm_responder_set_certificate_rsp_test_main(void);
+
 int main(void)
 {
     int return_value = 0;
@@ -152,6 +154,10 @@ int main(void)
     }
 
     if (libspdm_responder_encapsulated_response_test_main() != 0) {
+        return_value = 1;
+    }
+
+    if (libspdm_responder_set_certificate_rsp_test_main() != 0) {
         return_value = 1;
     }
 

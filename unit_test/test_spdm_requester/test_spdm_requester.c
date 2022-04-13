@@ -43,6 +43,8 @@ int libspdm_requester_encap_key_update_test_main(void);
 int libspdm_requester_end_session_test_main(void);
 int libspdm_requester_encap_request_test_main(void);
 
+int libspdm_requester_set_certificate_test_main(void);
+
 int main(void)
 {
     int return_value = 0;
@@ -129,5 +131,10 @@ int main(void)
     if (libspdm_requester_encap_request_test_main() != 0) {
         return_value = 1;
     }
+
+    if (libspdm_requester_set_certificate_test_main() != 0) {
+        return_value = 1;
+    }
+
     return return_value;
 }
