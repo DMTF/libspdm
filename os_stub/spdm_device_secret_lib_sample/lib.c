@@ -942,3 +942,52 @@ bool libspdm_psk_master_secret_hkdf_expand(
 
     return result;
 }
+
+/**
+ * This function sends SET_CERTIFICATE
+ * to set certificate from the device.
+ *
+ *
+ * @param[in]  slot_id                      The number of slot for the certificate chain.
+ * @param[in]  cert_chain                   The pointer for the certificate chain to set.
+ * @param[in]  cert_chain_size              The size of the certificate chain to set.
+ *
+ * @retval true                         Set certificate to NV successfully.
+ * @retval false                        Set certificate to NV unsuccessfully.
+ **/
+bool libspdm_write_certificate_to_nvm(uint8_t slot_id, const void * cert_chain,
+                                      size_t cert_chain_size)
+{
+    FILE *fp_out;
+    char file_name[] = {'s','l','o','t','_','i','d','_',(char)(slot_id+'0'),'\0'};
+
+    const uint8_t *root_cert_buffer;
+    size_t root_cert_buffer_size;
+
+    /*verify cert chain*/
+    if (!libspdm_x509_get_cert_from_cert_chain(
+            cert_chain, cert_chain_size, 0, &root_cert_buffer,
+            &root_cert_buffer_size)) {
+        return false;
+    }
+    if (!libspdm_x509_verify_cert_chain(root_cert_buffer, root_cert_buffer_size,
+                                        cert_chain, cert_chain_size)) {
+        return false;
+    }
+
+    /*write to NV memory*/
+    if ((fp_out = fopen(file_name, "w+b")) == NULL) {
+        printf("Unable to open file %s\n", file_name);
+        return false;
+    }
+
+    if ((fwrite(cert_chain, 1, cert_chain_size, fp_out)) != cert_chain_size) {
+        printf("Write output file error %s\n", file_name);
+        fclose(fp_out);
+        return false;
+    }
+
+    fclose(fp_out);
+
+    return true;
+}

@@ -46,6 +46,7 @@
 #define SPDM_ENCAPSULATED_REQUEST 0x6A
 #define SPDM_ENCAPSULATED_RESPONSE_ACK 0x6B
 #define SPDM_END_SESSION_ACK 0x6C
+#define SPDM_SET_CERTIFICATE_RSP 0x6E
 
 /* SPDM request code (1.0)*/
 
@@ -70,7 +71,7 @@
 #define SPDM_GET_ENCAPSULATED_REQUEST 0xEA
 #define SPDM_DELIVER_ENCAPSULATED_RESPONSE 0xEB
 #define SPDM_END_SESSION 0xEC
-
+#define SPDM_SET_CERTIFICATE 0xEE
 
 /* SPDM message header*/
 
@@ -980,6 +981,24 @@ typedef struct {
     /* param1 == RSVD
      * param2 == RSVD*/
 } spdm_end_session_response_t;
+
+
+/* SPDM SET_CERTIFICATE request*/
+
+typedef struct {
+    spdm_message_header_t header;
+    /* param1 == BIT[0:3]=slot_id, BIT[4:7]=RSVD
+     * param2 == RSVD
+     * void * cert_chain*/
+} spdm_set_certificate_request_t;
+
+/* SPDM SET_CERTIFICATE_RSP response*/
+
+typedef struct {
+    spdm_message_header_t header;
+    /* param1 == BIT[0:3]=slot_id, BIT[4:7]=RSVD
+     * param2 == RSVD*/
+} spdm_set_certificate_response_t;
 
 #pragma pack()
 

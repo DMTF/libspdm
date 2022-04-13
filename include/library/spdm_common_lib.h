@@ -111,6 +111,13 @@ typedef enum {
      **/
     LIBSPDM_DATA_HANDLE_ERROR_RETURN_POLICY,
 
+    /**
+     * The LIBSPDM_DATA_NEED_RESET control whether responder device requires a reset to complete the GET_CSR/SET_CERT request.
+     * If the LIBSPDM_DATA_NEED_RESET is not set, the responder device doesn't need reset.
+     * If the LIBSPDM_DATA_NEED_RESET sets, the responder device needs reset.
+     **/
+    LIBSPDM_DATA_NEED_RESET,
+
     /* MAX*/
 
     LIBSPDM_DATA_MAX

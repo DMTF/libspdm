@@ -211,3 +211,18 @@ bool libspdm_psk_master_secret_hkdf_expand(
     size_t out_size);
 
 #endif
+
+/**
+ * This function sends SET_CERTIFICATE
+ * to set certificate from the device.
+ *
+ *
+ * @param[in]  slot_id                      The number of slot for the certificate chain.
+ * @param[in]  cert_chain                   The pointer for the certificate chain to set.
+ * @param[in]  cert_chain_size              The size of the certificate chain to set.
+ *
+ * @retval true                         Set certificate to NV successfully.
+ * @retval false                        Set certificate to NV unsuccessfully.
+ **/
+bool libspdm_write_certificate_to_nvm(uint8_t slot_id, const void * cert_chain,
+                                      size_t cert_chain_size);
