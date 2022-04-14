@@ -60,6 +60,11 @@ libspdm_get_response_struct_t m_libspdm_get_response_struct[] = {
     { SPDM_HEARTBEAT, libspdm_get_response_heartbeat },
     { SPDM_KEY_UPDATE, libspdm_get_response_key_update },
     #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
+
+
+    #if LIBSPDM_ENABLE_SET_CERTIFICATE_CAP
+    { SPDM_SET_CERTIFICATE, libspdm_get_response_set_certificate },
+    #endif
 };
 
 /**
