@@ -2514,16 +2514,30 @@ bool libspdm_negotiate_connection_version(spdm_version_number_t *common_version,
                                           spdm_version_number_t *res_ver_set,
                                           size_t res_ver_num)
 {
+    spdm_version_number_t req_version_list[LIBSPDM_MAX_VERSION_COUNT];
+    spdm_version_number_t res_version_list[LIBSPDM_MAX_VERSION_COUNT];
     size_t req_index;
     size_t res_index;
+
+    if (req_ver_num > LIBSPDM_MAX_VERSION_COUNT || res_ver_num > LIBSPDM_MAX_VERSION_COUNT) {
+        return false;
+    }
 
     if (req_ver_set == NULL || req_ver_num == 0 || res_ver_set == NULL || res_ver_num == 0) {
         return false;
     }
 
+    libspdm_zero_mem(req_version_list, sizeof(spdm_version_number_t) * LIBSPDM_MAX_VERSION_COUNT);
+    libspdm_zero_mem(res_version_list, sizeof(spdm_version_number_t) * LIBSPDM_MAX_VERSION_COUNT);
+
+    libspdm_copy_mem(req_version_list, sizeof(spdm_version_number_t) * LIBSPDM_MAX_VERSION_COUNT,
+                     req_ver_set, sizeof(spdm_version_number_t) * req_ver_num);
+    libspdm_copy_mem(res_version_list, sizeof(spdm_version_number_t) * LIBSPDM_MAX_VERSION_COUNT,
+                     res_ver_set, sizeof(spdm_version_number_t) * res_ver_num);
+
     /* Sort SPDMversion in descending order. */
-    libspdm_version_number_sort(req_ver_set, req_ver_num);
-    libspdm_version_number_sort(res_ver_set, res_ver_num);
+    libspdm_version_number_sort(req_version_list, req_ver_num);
+    libspdm_version_number_sort(res_version_list, res_ver_num);
 
     /**
      * Find highest same version and make req_index point to it.
@@ -2531,9 +2545,9 @@ bool libspdm_negotiate_connection_version(spdm_version_number_t *common_version,
      **/
     for (res_index = 0; res_index < res_ver_num; res_index++) {
         for (req_index = 0; req_index < req_ver_num; req_index++) {
-            if (libspdm_get_version_from_version_number(req_ver_set[req_index]) ==
-                libspdm_get_version_from_version_number(res_ver_set[res_index])) {
-                *common_version = req_ver_set[req_index];
+            if (libspdm_get_version_from_version_number(req_version_list[req_index]) ==
+                libspdm_get_version_from_version_number(res_version_list[res_index])) {
+                *common_version = req_version_list[req_index];
                 return true;
             }
         }
