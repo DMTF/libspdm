@@ -150,8 +150,6 @@ libspdm_return_t libspdm_try_get_version(libspdm_context_t *spdm_context,
         goto receive_done;
     }
 
-    /* libspdm_negotiate_connection_version will change the spdm_response.
-     * It must be done after append_message_a.*/
     result = libspdm_negotiate_connection_version(&common_version,
                                                   spdm_context->local_context.version.spdm_version,
                                                   spdm_context->local_context.version.spdm_version_count,
