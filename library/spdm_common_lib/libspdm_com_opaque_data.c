@@ -38,11 +38,11 @@ size_t libspdm_get_opaque_data_version_selection_data_size(
 }
 
 /**
- * Return the size in bytes of opaque data supproted version.
+ * Return the size in bytes of opaque data supported version.
  *
  * This function should be called in KEY_EXCHANGE/PSK_EXCHANGE request generation.
  *
- * @return the size in bytes of opaque data supproted version.
+ * @return the size in bytes of opaque data supported version.
  **/
 size_t libspdm_get_opaque_data_supported_version_data_size(
     libspdm_context_t *spdm_context)
@@ -58,16 +58,48 @@ size_t libspdm_get_opaque_data_supported_version_data_size(
         size = sizeof(spdm_general_opaque_data_table_header_t) +
                sizeof(secured_message_opaque_element_table_header_t) +
                sizeof(secured_message_opaque_element_supported_version_t) +
-               sizeof(spdm_version_number_t);
+               sizeof(spdm_version_number_t) *
+               spdm_context->local_context.secured_message_version.spdm_version_count;
     } else {
         size = sizeof(secured_message_general_opaque_data_table_header_t) +
                sizeof(secured_message_opaque_element_table_header_t) +
                sizeof(secured_message_opaque_element_supported_version_t) +
-               sizeof(spdm_version_number_t);
+               sizeof(spdm_version_number_t) *
+               spdm_context->local_context.secured_message_version.spdm_version_count;
     }
     /* Add Padding*/
     return (size + 3) & ~3;
 }
+
+/**
+ * Return the size in bytes of opaque data supported version.
+ *
+ * This function should be called in libspdm_process_opaque_data_supported_version_data.
+ *
+ * @param  version_count                 Secure version count.
+ *
+ * @return the size in bytes of opaque data supported version.
+ **/
+size_t libspdm_get_untrusted_opaque_data_supported_version_data_size(
+    libspdm_context_t *spdm_context, uint8_t version_count)
+{
+    size_t size;
+
+    if (libspdm_get_connection_version (spdm_context) >= SPDM_MESSAGE_VERSION_12) {
+        size = sizeof(spdm_general_opaque_data_table_header_t) +
+               sizeof(secured_message_opaque_element_table_header_t) +
+               sizeof(secured_message_opaque_element_supported_version_t) +
+               sizeof(spdm_version_number_t) * version_count;
+    } else {
+        size = sizeof(secured_message_general_opaque_data_table_header_t) +
+               sizeof(secured_message_opaque_element_table_header_t) +
+               sizeof(secured_message_opaque_element_supported_version_t) +
+               sizeof(spdm_version_number_t) * version_count;
+    }
+    /* Add Padding*/
+    return (size + 3) & ~3;
+}
+
 
 /**
  * Build opaque data supported version.
@@ -134,7 +166,8 @@ libspdm_build_opaque_data_supported_version_data(libspdm_context_t *spdm_context
     opaque_element_table_header->vendor_len = 0;
     opaque_element_table_header->opaque_element_data_len =
         sizeof(secured_message_opaque_element_supported_version_t) +
-        sizeof(spdm_version_number_t);
+        sizeof(spdm_version_number_t) *
+        spdm_context->local_context.secured_message_version.spdm_version_count;
 
     opaque_element_support_version =
         (void *)(opaque_element_table_header + 1);
@@ -185,6 +218,7 @@ libspdm_process_opaque_data_supported_version_data(libspdm_context_t *spdm_conte
     *opaque_element_support_version;
     spdm_version_number_t *versions_list;
     spdm_version_number_t common_version;
+    uint8_t version_count;
     bool result;
 
     if (spdm_context->local_context.secured_message_version
@@ -192,10 +226,11 @@ libspdm_process_opaque_data_supported_version_data(libspdm_context_t *spdm_conte
         return LIBSPDM_STATUS_SUCCESS;
     }
 
-    if (data_in_size !=
-        libspdm_get_opaque_data_supported_version_data_size(spdm_context)) {
-        return LIBSPDM_STATUS_INVALID_MSG_SIZE;
+    if (data_in_size < libspdm_get_untrusted_opaque_data_supported_version_data_size(spdm_context,
+                                                                                     1)) {
+        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
+
     if (libspdm_get_connection_version (spdm_context) >= SPDM_MESSAGE_VERSION_12) {
         spdm_general_opaque_data_table_header = data_in;
         if (spdm_general_opaque_data_table_header->total_elements != 1) {
@@ -215,13 +250,7 @@ libspdm_process_opaque_data_supported_version_data(libspdm_context_t *spdm_conte
         opaque_element_table_header =
             (void *)(general_opaque_data_table_header + 1);
     }
-    if ((opaque_element_table_header->id != SPDM_REGISTRY_ID_DMTF) ||
-        (opaque_element_table_header->vendor_len != 0) ||
-        (opaque_element_table_header->opaque_element_data_len !=
-         sizeof(secured_message_opaque_element_supported_version_t) +
-         sizeof(spdm_version_number_t))) {
-        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
-    }
+
     opaque_element_support_version =
         (void *)(opaque_element_table_header + 1);
     if ((opaque_element_support_version->sm_data_version !=
@@ -231,13 +260,30 @@ libspdm_process_opaque_data_supported_version_data(libspdm_context_t *spdm_conte
         (opaque_element_support_version->version_count == 0)) {
         return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
+
+    version_count = opaque_element_support_version->version_count;
+
+    if ((opaque_element_table_header->id != SPDM_REGISTRY_ID_DMTF) ||
+        (opaque_element_table_header->vendor_len != 0) ||
+        (opaque_element_table_header->opaque_element_data_len !=
+         sizeof(secured_message_opaque_element_supported_version_t) +
+         sizeof(spdm_version_number_t) * version_count)) {
+        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+    }
+
+    if (data_in_size !=
+        libspdm_get_untrusted_opaque_data_supported_version_data_size(spdm_context,
+                                                                      version_count)) {
+        return LIBSPDM_STATUS_INVALID_MSG_SIZE;
+    }
+
     versions_list = (void *)(opaque_element_support_version + 1);
 
     result = libspdm_negotiate_connection_version(&common_version,
                                                   spdm_context->local_context.secured_message_version.spdm_version,
                                                   spdm_context->local_context.secured_message_version.spdm_version_count,
                                                   versions_list,
-                                                  opaque_element_support_version->version_count);
+                                                  version_count);
     if (!result) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
