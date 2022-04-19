@@ -90,7 +90,7 @@
     - Change LLVM install path to C:/LLVM.
     - LLVM13 works good for clang and [libfuzzer](https://llvm.org/docs/LibFuzzer.html) build. Other versions are not validated for clang build.
     - Because the libfuzzer lib path is hard coded in CMakeLists, other versions may fail for libfuzzer build.
-2) [cmake](https://cmake.org/) (Version [3.17.2](https://github.com/Kitware/CMake/releases/tag/v3.17.2) is known to work. Newer versions may fail).
+2) [CMake](https://cmake.org/) (Version [3.17.2](https://github.com/Kitware/CMake/releases/tag/v3.17.2) is known to work. Newer versions may fail).
 
 ### Build Tools for Linux
 
@@ -100,7 +100,7 @@
 
     b) [LLVM](https://llvm.org/) (above LLVM10), install steps: `sudo apt-get install llvm-10` then `sudo apt-get install clang-10`. Use `llvm-ar -version` and `clang -v` to confirm the LLVM version. If LLVM installation fails or LLVM installation version is low, you can update Linux version to fix the issue.
 
-2) [cmake](https://cmake.org/).
+2) [CMake](https://cmake.org/).
 
 
 ### Cryptography Library
@@ -137,7 +137,7 @@
    nmake
    ```
 
-   Example cmake commands:
+   Example CMake commands:
 
    ```
    cmake -G"NMake Makefiles" -DARCH=x64 -DTOOLCHAIN=VS2019 -DTARGET=Debug -DCRYPTO=mbedtls ..
@@ -156,6 +156,12 @@
    ```
 
    Note ia32 build is not supported for CLANG build on Windows.
+   
+   CMake can also generate Visual Studio project files. For example:
+   
+   ```
+   cmake -G"Visual Studio 16 2019" -DARCH=x64 -DTOOLCHAIN=VS2019 -DTARGET=Release -DCRYPTO=mbedtls ..
+   ```
 
 ### Linux Builds
    If ia32 builds run on a 64-bit Linux machine, then install `sudo apt-get install gcc-multilib`.
@@ -170,7 +176,7 @@
    make copy_sample_key
    make
    ```
-Example cmake commands:
+Example CMake commands:
    ```
    cmake -DARCH=ia32 -DTOOLCHAIN=GCC -DTARGET=Debug -DCRYPTO=openssl ..
    ```
