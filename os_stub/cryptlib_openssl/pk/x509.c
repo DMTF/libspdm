@@ -2001,16 +2001,16 @@ bool libspdm_x509_get_tbs_cert(const uint8_t *cert, size_t cert_size,
  * @retval  false  Invalid certificate or the certificate was not issued by the given
  *                trusted CA.
  **/
-bool libspdm_x509_verify_cert_chain(uint8_t *root_cert, size_t root_cert_length,
-                                    uint8_t *cert_chain, size_t cert_chain_length)
+bool libspdm_x509_verify_cert_chain(const uint8_t *root_cert, size_t root_cert_length,
+                                    const uint8_t *cert_chain, size_t cert_chain_length)
 {
-    uint8_t *tmp_ptr;
+    const uint8_t *tmp_ptr;
     size_t length;
     uint32_t asn1_tag;
     uint32_t obj_class;
-    uint8_t *current_cert;
+    const uint8_t *current_cert;
     size_t current_cert_len;
-    uint8_t *preceding_cert;
+    const uint8_t *preceding_cert;
     size_t preceding_cert_len;
     bool verify_flag;
     int32_t ret;
@@ -2081,16 +2081,16 @@ bool libspdm_x509_verify_cert_chain(uint8_t *root_cert, size_t root_cert_length,
  * @retval  true   Success.
  * @retval  false  Failed to get certificate from certificate chain.
  **/
-bool libspdm_x509_get_cert_from_cert_chain(uint8_t *cert_chain,
+bool libspdm_x509_get_cert_from_cert_chain(const uint8_t *cert_chain,
                                            size_t cert_chain_length,
-                                           const int32_t cert_index, uint8_t **cert,
+                                           const int32_t cert_index, const uint8_t **cert,
                                            size_t *cert_length)
 {
     size_t asn1_len;
     int32_t current_index;
     size_t current_cert_len;
-    uint8_t *current_cert;
-    uint8_t *tmp_ptr;
+    const uint8_t *current_cert;
+    const uint8_t *tmp_ptr;
     int32_t ret;
     uint32_t asn1_tag;
     uint32_t obj_class;

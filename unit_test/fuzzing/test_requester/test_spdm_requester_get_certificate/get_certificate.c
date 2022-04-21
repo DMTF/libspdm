@@ -13,7 +13,7 @@
 
 bool libspdm_test_verify_spdm_cert_chain(void *spdm_context, uint8_t slot_id,
                                          size_t cert_chain_size, const void *cert_chain,
-                                         void **trust_anchor,
+                                         const void **trust_anchor,
                                          size_t *trust_anchor_size)
 {
     return true;
@@ -60,7 +60,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
 
     libspdm_copy_mem((uint8_t *)temp_buf + test_message_header_size,
                      sizeof(temp_buf) - test_message_header_size,
-                     (uint8_t *)spdm_test_context->test_buffer +
+                     (const uint8_t *)spdm_test_context->test_buffer +
                      FUZZING_LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
                      spdm_response_size);
 
@@ -82,7 +82,7 @@ void libspdm_test_requester_get_certificate_case1(void **State)
     size_t data_size;
     void *hash;
     size_t hash_size;
-    uint8_t *root_cert;
+    const uint8_t *root_cert;
     size_t root_cert_size;
     calling_index = 0;
 
@@ -126,7 +126,7 @@ void libspdm_test_requester_get_certificate_case2(void **State)
     size_t data_size;
     void *hash;
     size_t hash_size;
-    uint8_t *root_cert;
+    const uint8_t *root_cert;
     size_t root_cert_size;
     calling_index = 0;
 
@@ -171,7 +171,7 @@ void libspdm_test_requester_get_certificate_ex_case1(void **State)
     size_t data_size;
     void *hash;
     size_t hash_size;
-    uint8_t *root_cert;
+    const uint8_t *root_cert;
     size_t root_cert_size;
     calling_index = 0;
 
@@ -212,13 +212,13 @@ libspdm_test_context_t m_libspdm_requester_get_certificate_test_context = {
     libspdm_device_receive_message,
 };
 
-void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size)
+void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
 {
     void *State;
 
     libspdm_setup_test_context(&m_libspdm_requester_get_certificate_test_context);
 
-    m_libspdm_requester_get_certificate_test_context.test_buffer = (void *)test_buffer;
+    m_libspdm_requester_get_certificate_test_context.test_buffer = test_buffer;
     m_libspdm_requester_get_certificate_test_context.test_buffer_size = test_buffer_size;
 
     /* Successful response*/
@@ -241,7 +241,7 @@ size_t libspdm_get_max_buffer_size(void)
     return 0;
 }
 
-void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size){
+void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size){
 
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/

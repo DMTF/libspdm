@@ -38,3 +38,4 @@ SET(src_cryptlib_openssl
 )
 
 ADD_LIBRARY(cryptlib_openssl STATIC ${src_cryptlib_openssl})
+TARGET_COMPILE_OPTIONS(cryptlib_openssl PRIVATE -Wno-cast-qual)

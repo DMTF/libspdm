@@ -143,10 +143,10 @@ void libspdm_session_info_init(libspdm_context_t *spdm_context,
  *
  * @return session info.
  **/
-void *libspdm_get_session_info_via_session_id(const void *context,
+void *libspdm_get_session_info_via_session_id(void *context,
                                               uint32_t session_id)
 {
-    const libspdm_context_t *spdm_context;
+    libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
     size_t index;
 
@@ -179,7 +179,7 @@ void *libspdm_get_session_info_via_session_id(const void *context,
  *
  * @return secured message context.
  **/
-void *libspdm_get_secured_message_context_via_session_id(const void *spdm_context,
+void *libspdm_get_secured_message_context_via_session_id(void *spdm_context,
                                                          uint32_t session_id)
 {
     libspdm_session_info_t *session_info;

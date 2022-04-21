@@ -60,7 +60,7 @@ uint32_t libspdm_pci_doe_get_max_random_number_count(void)
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
 libspdm_return_t libspdm_pci_doe_encode_message(const uint32_t *session_id,
-                                                size_t message_size, const void *message,
+                                                size_t message_size, void *message,
                                                 size_t *transport_message_size,
                                                 void **transport_message)
 {
@@ -127,7 +127,7 @@ libspdm_return_t libspdm_pci_doe_encode_message(const uint32_t *session_id,
  **/
 libspdm_return_t libspdm_pci_doe_decode_message(uint32_t **session_id,
                                                 size_t transport_message_size,
-                                                const void *transport_message,
+                                                void *transport_message,
                                                 size_t *message_size,
                                                 void **message)
 {

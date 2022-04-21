@@ -80,12 +80,12 @@ libspdm_test_context_t libspdm_test_responder_context = {
     false,
 };
 
-void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size)
+void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
 {
     void *State;
     libspdm_setup_test_context(&libspdm_test_responder_context);
 
-    libspdm_test_responder_context.test_buffer = (void *)test_buffer;
+    libspdm_test_responder_context.test_buffer = test_buffer;
     libspdm_test_responder_context.test_buffer_size = test_buffer_size;
 
     libspdm_unit_test_group_setup(&State);

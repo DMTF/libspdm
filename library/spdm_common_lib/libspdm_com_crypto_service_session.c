@@ -524,7 +524,7 @@ libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context,
                                             uint8_t *signature)
 {
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
-    uint8_t *cert_chain_buffer;
+    const uint8_t *cert_chain_buffer;
     size_t cert_chain_buffer_size;
     bool result;
     size_t signature_size;
@@ -540,7 +540,7 @@ libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context,
         spdm_context->connection_info.algorithm.base_hash_algo);
 
     result = libspdm_get_local_cert_chain_buffer(
-        spdm_context, (void **)&cert_chain_buffer, &cert_chain_buffer_size);
+        spdm_context, (const void **)&cert_chain_buffer, &cert_chain_buffer_size);
     if (!result) {
         return false;
     }
@@ -676,9 +676,9 @@ bool libspdm_verify_key_exchange_rsp_signature(
     size_t hash_size;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     bool result;
-    uint8_t *cert_chain_data;
+    const uint8_t *cert_chain_data;
     size_t cert_chain_data_size;
-    uint8_t *cert_buffer;
+    const uint8_t *cert_buffer;
     size_t cert_buffer_size;
     void *context;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -769,7 +769,7 @@ bool libspdm_verify_key_exchange_rsp_signature(
     } else {
         /* Get leaf cert from cert chain*/
         result = libspdm_get_peer_cert_chain_data(
-            spdm_context, (void **)&cert_chain_data, &cert_chain_data_size);
+            spdm_context, (const void **)&cert_chain_data, &cert_chain_data_size);
         if (!result) {
             return false;
         }
@@ -1072,9 +1072,9 @@ bool libspdm_verify_finish_req_signature(libspdm_context_t *spdm_context,
     size_t hash_size;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     bool result;
-    uint8_t *mut_cert_chain_data;
+    const uint8_t *mut_cert_chain_data;
     size_t mut_cert_chain_data_size;
-    uint8_t *mut_cert_buffer;
+    const uint8_t *mut_cert_buffer;
     size_t mut_cert_buffer_size;
     void *context;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -1178,7 +1178,7 @@ bool libspdm_verify_finish_req_signature(libspdm_context_t *spdm_context,
     } else {
         /* Get leaf cert from cert chain*/
         result = libspdm_get_peer_cert_chain_data(spdm_context,
-                                                  (void **)&mut_cert_chain_data,
+                                                  (const void **)&mut_cert_chain_data,
                                                   &mut_cert_chain_data_size);
         if (!result) {
             return false;

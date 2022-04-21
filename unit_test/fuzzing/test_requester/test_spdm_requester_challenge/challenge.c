@@ -22,9 +22,9 @@ size_t libspdm_get_max_buffer_size(void)
 libspdm_return_t libspdm_device_send_message(void *spdm_context, size_t request_size,
                                              const void *request, uint64_t timeout)
 {
-    uint8_t *ptr;
+    const uint8_t *ptr;
 
-    ptr = (uint8_t *)request;
+    ptr = (const uint8_t *)request;
     m_libspdm_local_buffer_size = 0;
     libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer), &ptr[1],
                      request_size - 1);
@@ -244,7 +244,7 @@ libspdm_test_context_t m_libspdm_requester_challenge_test_context = {
     libspdm_device_receive_message,
 };
 
-void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size)
+void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
 {
     void *State;
 
@@ -268,7 +268,7 @@ size_t libspdm_get_max_buffer_size(void)
     return 0;
 }
 
-void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size){
+void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size){
 
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/

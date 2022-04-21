@@ -59,6 +59,6 @@ void *allocate_zero_pool(size_t AllocationSize);
  * @param  buffer                Pointer to the buffer to free.
  *
  **/
-void free_pool(const void *buffer);
+void free_pool(void *buffer);
 
 #endif

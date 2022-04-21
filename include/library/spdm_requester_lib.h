@@ -29,7 +29,7 @@
  **/
 libspdm_return_t libspdm_send_request(void *spdm_context, const uint32_t *session_id,
                                       bool is_app_message,
-                                      size_t request_size, const void *request);
+                                      size_t request_size, void *request);
 
 /**
  * Receive an SPDM or an APP response from a device.
@@ -140,7 +140,7 @@ libspdm_return_t libspdm_get_certificate(void *spdm_context, uint8_t slot_id,
 libspdm_return_t libspdm_get_certificate_ex(void *context, uint8_t slot_id,
                                             size_t *cert_chain_size,
                                             void *cert_chain,
-                                            void **trust_anchor,
+                                            const void **trust_anchor,
                                             size_t *trust_anchor_size);
 
 /**
@@ -198,7 +198,7 @@ libspdm_return_t libspdm_get_certificate_choose_length_ex(void *context,
                                                           uint16_t length,
                                                           size_t *cert_chain_size,
                                                           void *cert_chain,
-                                                          void **trust_anchor,
+                                                          const void **trust_anchor,
                                                           size_t *trust_anchor_size);
 
 /**

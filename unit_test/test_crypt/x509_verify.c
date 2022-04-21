@@ -17,7 +17,7 @@ static uint8_t m_libspdm_oid_subject_alt_name[] = { 0x55, 0x1D, 0x11 };
 bool libspdm_validate_crypt_x509(char *Path, size_t len)
 {
     bool status;
-    uint8_t *leaf_cert;
+    const uint8_t *leaf_cert;
     size_t leaf_cert_len;
     uint8_t *test_cert;
     size_t test_cert_len;
@@ -104,8 +104,8 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
     /* X509 Certificate Chain Verification.*/
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "- X509 Certificate Chain Verification ... "));
-    status = libspdm_x509_verify_cert_chain((uint8_t *)test_ca_cert, test_ca_cert_len,
-                                            (uint8_t *)test_bundle_cert,
+    status = libspdm_x509_verify_cert_chain((const uint8_t *)test_ca_cert, test_ca_cert_len,
+                                            (const uint8_t *)test_bundle_cert,
                                             test_bundle_cert_len);
     if (!status) {
         libspdm_my_print("[Fail]\n");

@@ -615,7 +615,7 @@ typedef struct {
 libspdm_return_t libspdm_encode_secured_message(
     void *spdm_secured_message_context, uint32_t session_id,
     bool is_requester, size_t app_message_size,
-    const void *app_message, size_t *secured_message_size,
+    void *app_message, size_t *secured_message_size,
     void *secured_message,
     const libspdm_secured_message_callbacks_t *spdm_secured_message_callbacks);
 
@@ -642,7 +642,7 @@ libspdm_return_t libspdm_encode_secured_message(
 libspdm_return_t libspdm_decode_secured_message(
     void *spdm_secured_message_context, uint32_t session_id,
     bool is_requester, size_t secured_message_size,
-    const void *secured_message, size_t *app_message_size,
+    void *secured_message, size_t *app_message_size,
     void **app_message,
     const libspdm_secured_message_callbacks_t *spdm_secured_message_callbacks);
 

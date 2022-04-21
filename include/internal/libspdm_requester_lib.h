@@ -392,7 +392,7 @@ libspdm_return_t libspdm_get_encap_response_key_update(void *context,
  **/
 libspdm_return_t libspdm_send_spdm_request(libspdm_context_t *spdm_context,
                                            const uint32_t *session_id,
-                                           size_t request_size, const void *request);
+                                           size_t request_size, void *request);
 
 /**
  * Receive an SPDM response from a device.

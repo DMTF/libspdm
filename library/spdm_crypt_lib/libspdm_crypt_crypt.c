@@ -4200,8 +4200,8 @@ bool libspdm_verify_leaf_cert_eku_spdm_OID(const uint8_t *cert, size_t cert_size
         return false;
     }
 
-    status = libspdm_x509_get_extension_data((uint8_t *)cert, cert_size,
-                                             (uint8_t *)m_oid_spdm_extension,
+    status = libspdm_x509_get_extension_data(cert, cert_size,
+                                             (const uint8_t *)m_oid_spdm_extension,
                                              sizeof(m_oid_spdm_extension),
                                              spdm_extension,
                                              &len);
@@ -4652,9 +4652,9 @@ bool libspdm_verify_cert_chain_data(uint8_t *cert_chain_data, size_t cert_chain_
                                     uint32_t base_asym_algo, uint32_t base_hash_algo,
                                     bool is_device_cert_model)
 {
-    uint8_t *root_cert_buffer;
+    const uint8_t *root_cert_buffer;
     size_t root_cert_buffer_size;
-    uint8_t *leaf_cert_buffer;
+    const uint8_t *leaf_cert_buffer;
     size_t leaf_cert_buffer_size;
 
     if (cert_chain_data_size >
@@ -4716,13 +4716,13 @@ bool libspdm_verify_certificate_chain_buffer(uint32_t base_hash_algo, uint32_t b
                                              size_t cert_chain_buffer_size,
                                              bool is_device_cert_model)
 {
-    uint8_t *cert_chain_data;
+    const uint8_t *cert_chain_data;
     size_t cert_chain_data_size;
-    uint8_t *first_cert_buffer;
+    const uint8_t *first_cert_buffer;
     size_t first_cert_buffer_size;
     size_t hash_size;
     uint8_t calc_root_cert_hash[LIBSPDM_MAX_HASH_SIZE];
-    uint8_t *leaf_cert_buffer;
+    const uint8_t *leaf_cert_buffer;
     size_t leaf_cert_buffer_size;
     bool result;
 
@@ -4740,7 +4740,7 @@ bool libspdm_verify_certificate_chain_buffer(uint32_t base_hash_algo, uint32_t b
         return false;
     }
 
-    cert_chain_data = (uint8_t *)cert_chain_buffer +
+    cert_chain_data = (const uint8_t *)cert_chain_buffer +
                       sizeof(spdm_cert_chain_t) + hash_size;
     cert_chain_data_size =
         cert_chain_buffer_size - sizeof(spdm_cert_chain_t) - hash_size;
@@ -4760,7 +4760,7 @@ bool libspdm_verify_certificate_chain_buffer(uint32_t base_hash_algo, uint32_t b
                            "!!! VerifyCertificateChainBuffer - FAIL (hash calculation fail) !!!\n"));
             return false;
         }
-        if (libspdm_const_compare_mem((uint8_t *)cert_chain_buffer + sizeof(spdm_cert_chain_t),
+        if (libspdm_const_compare_mem((const uint8_t *)cert_chain_buffer + sizeof(spdm_cert_chain_t),
                                       calc_root_cert_hash, hash_size) != 0) {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                            "!!! VerifyCertificateChainBuffer - FAIL (cert root hash mismatch) !!!\n"));
@@ -4822,7 +4822,7 @@ bool libspdm_get_leaf_cert_public_key_from_cert_chain(uint32_t base_hash_algo,
                                                       void **public_key)
 {
     size_t hash_size;
-    uint8_t *cert_buffer;
+    const uint8_t *cert_buffer;
     size_t cert_buffer_size;
     bool result;
 

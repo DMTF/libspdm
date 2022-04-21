@@ -12,7 +12,7 @@
 #include <openssl/hmac.h>
 
 void *hmac_md_new(void);
-void hmac_md_free(const void *hmac_md_ctx);
+void hmac_md_free(void *hmac_md_ctx);
 bool hmac_md_set_key(const EVP_MD *md, void *hmac_md_ctx,
                      const uint8_t *key, size_t key_size);
 bool hmac_md_duplicate(const void *hmac_md_ctx, void *new_hmac_md_ctx);

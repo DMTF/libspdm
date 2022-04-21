@@ -95,15 +95,15 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
     bool result;
     const spdm_challenge_auth_response_t *spdm_response;
     size_t spdm_response_size;
-    uint8_t *ptr;
-    void *cert_chain_hash;
+    const uint8_t *ptr;
+    const void *cert_chain_hash;
     size_t hash_size;
     size_t measurement_summary_hash_size;
-    void *nonce;
-    void *measurement_summary_hash;
+    const void *nonce;
+    const void *measurement_summary_hash;
     uint16_t opaque_length;
-    void *opaque;
-    void *signature;
+    const void *opaque;
+    const void *signature;
     size_t signature_size;
     uint8_t auth_attribute;
     libspdm_return_t status;
@@ -163,7 +163,7 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
         return LIBSPDM_STATUS_INVALID_MSG_SIZE;
     }
 
-    ptr = (void *)(spdm_response + 1);
+    ptr = (const void *)(spdm_response + 1);
 
     cert_chain_hash = ptr;
     ptr += hash_size;
@@ -190,7 +190,7 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
                                measurement_summary_hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
-    opaque_length = *(uint16_t *)ptr;
+    opaque_length = *(const uint16_t *)ptr;
     if (opaque_length > SPDM_MAX_OPAQUE_DATA_SIZE) {
         return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }

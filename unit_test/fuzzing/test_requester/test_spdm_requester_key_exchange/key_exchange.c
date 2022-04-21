@@ -71,9 +71,9 @@ libspdm_return_t libspdm_device_send_message(void *spdm_context, size_t request_
     header_size = sizeof(libspdm_test_message_header_t);
     m_libspdm_local_buffer_size = 0;
     message_size = libspdm_test_get_key_exchange_request_size(
-        spdm_context, (uint8_t *)request + header_size, request_size - header_size);
+        spdm_context, (const uint8_t *)request + header_size, request_size - header_size);
     libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
-                     (uint8_t *)request + header_size, message_size);
+                     (const uint8_t *)request + header_size, message_size);
     m_libspdm_local_buffer_size += message_size;
     return LIBSPDM_STATUS_SUCCESS;
 }
@@ -463,7 +463,7 @@ libspdm_test_context_t m_libspdm_requester_key_exchange_test_context = {
     libspdm_device_receive_message,
 };
 
-void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size)
+void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
 {
     void *State;
 
@@ -491,7 +491,7 @@ size_t libspdm_get_max_buffer_size(void)
     return 0;
 }
 
-void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size){
+void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size){
 
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/

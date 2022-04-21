@@ -72,64 +72,64 @@ libspdm_return_t libspdm_requester_key_exchange_test_send_message(
     case 0x2:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_key_exchange_request_size(
-            spdm_context, (uint8_t *)request + header_size,
+            spdm_context, (const uint8_t *)request + header_size,
             request_size - header_size);
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
-                         (uint8_t *)request + header_size, message_size);
+                         (const uint8_t *)request + header_size, message_size);
         m_libspdm_local_buffer_size += message_size;
         return LIBSPDM_STATUS_SUCCESS;
     case 0x3:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_key_exchange_request_size(
-            spdm_context, (uint8_t *)request + header_size,
+            spdm_context, (const uint8_t *)request + header_size,
             request_size - header_size);
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
-                         (uint8_t *)request + header_size, message_size);
+                         (const uint8_t *)request + header_size, message_size);
         m_libspdm_local_buffer_size += message_size;
         return LIBSPDM_STATUS_SUCCESS;
     case 0x4:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_key_exchange_request_size(
-            spdm_context, (uint8_t *)request + header_size,
+            spdm_context, (const uint8_t *)request + header_size,
             request_size - header_size);
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
-                         (uint8_t *)request + header_size, message_size);
+                         (const uint8_t *)request + header_size, message_size);
         m_libspdm_local_buffer_size += message_size;
         return LIBSPDM_STATUS_SUCCESS;
     case 0x5:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_key_exchange_request_size(
-            spdm_context, (uint8_t *)request + header_size,
+            spdm_context, (const uint8_t *)request + header_size,
             request_size - header_size);
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
-                         (uint8_t *)request + header_size, message_size);
+                         (const uint8_t *)request + header_size, message_size);
         m_libspdm_local_buffer_size += message_size;
         return LIBSPDM_STATUS_SUCCESS;
     case 0x6:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_key_exchange_request_size(
-            spdm_context, (uint8_t *)request + header_size,
+            spdm_context, (const uint8_t *)request + header_size,
             request_size - header_size);
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
-                         (uint8_t *)request + header_size, message_size);
+                         (const uint8_t *)request + header_size, message_size);
         m_libspdm_local_buffer_size += message_size;
         return LIBSPDM_STATUS_SUCCESS;
     case 0x7:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_key_exchange_request_size(
-            spdm_context, (uint8_t *)request + header_size,
+            spdm_context, (const uint8_t *)request + header_size,
             request_size - header_size);
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
-                         (uint8_t *)request + header_size, message_size);
+                         (const uint8_t *)request + header_size, message_size);
         m_libspdm_local_buffer_size += message_size;
         return LIBSPDM_STATUS_SUCCESS;
     case 0x8:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_key_exchange_request_size(
-            spdm_context, (uint8_t *)request + header_size,
+            spdm_context, (const uint8_t *)request + header_size,
             request_size - header_size);
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
-                         (uint8_t *)request + header_size, message_size);
+                         (const uint8_t *)request + header_size, message_size);
         m_libspdm_local_buffer_size += message_size;
         return LIBSPDM_STATUS_SUCCESS;
     case 0x9: {
@@ -137,10 +137,10 @@ libspdm_return_t libspdm_requester_key_exchange_test_send_message(
         if (sub_index == 0) {
             m_libspdm_local_buffer_size = 0;
             message_size = libspdm_test_get_key_exchange_request_size(
-                spdm_context, (uint8_t *)request + header_size,
+                spdm_context, (const uint8_t *)request + header_size,
                 request_size - header_size);
             libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
-                             (uint8_t *)request + header_size, message_size);
+                             (const uint8_t *)request + header_size, message_size);
             m_libspdm_local_buffer_size += message_size;
             sub_index++;
         }
@@ -149,190 +149,190 @@ libspdm_return_t libspdm_requester_key_exchange_test_send_message(
     case 0xA:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_key_exchange_request_size(
-            spdm_context, (uint8_t *)request + header_size,
+            spdm_context, (const uint8_t *)request + header_size,
             request_size - header_size);
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
-                         (uint8_t *)request + header_size, message_size);
+                         (const uint8_t *)request + header_size, message_size);
         m_libspdm_local_buffer_size += message_size;
         return LIBSPDM_STATUS_SUCCESS;
     case 0xB:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_key_exchange_request_size(
-            spdm_context, (uint8_t *)request + header_size,
+            spdm_context, (const uint8_t *)request + header_size,
             request_size - header_size);
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
-                         (uint8_t *)request + header_size, message_size);
+                         (const uint8_t *)request + header_size, message_size);
         m_libspdm_local_buffer_size += message_size;
         return LIBSPDM_STATUS_SUCCESS;
     case 0xC:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_key_exchange_request_size(
-            spdm_context, (uint8_t *)request + header_size,
+            spdm_context, (const uint8_t *)request + header_size,
             request_size - header_size);
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
-                         (uint8_t *)request + header_size, message_size);
+                         (const uint8_t *)request + header_size, message_size);
         m_libspdm_local_buffer_size += message_size;
         return LIBSPDM_STATUS_SUCCESS;
     case 0xD:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_key_exchange_request_size(
-            spdm_context, (uint8_t *)request + header_size,
+            spdm_context, (const uint8_t *)request + header_size,
             request_size - header_size);
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
-                         (uint8_t *)request + header_size, message_size);
+                         (const uint8_t *)request + header_size, message_size);
         m_libspdm_local_buffer_size += message_size;
         return LIBSPDM_STATUS_SUCCESS;
     case 0xE:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_key_exchange_request_size(
-            spdm_context, (uint8_t *)request + header_size,
+            spdm_context, (const uint8_t *)request + header_size,
             request_size - header_size);
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
-                         (uint8_t *)request + header_size, message_size);
+                         (const uint8_t *)request + header_size, message_size);
         m_libspdm_local_buffer_size += message_size;
         return LIBSPDM_STATUS_SUCCESS;
     case 0xF:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_key_exchange_request_size(
-            spdm_context, (uint8_t *)request + header_size,
+            spdm_context, (const uint8_t *)request + header_size,
             request_size - header_size);
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
-                         (uint8_t *)request + header_size, message_size);
+                         (const uint8_t *)request + header_size, message_size);
         m_libspdm_local_buffer_size += message_size;
         return LIBSPDM_STATUS_SUCCESS;
     case 0x10:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_key_exchange_request_size(
-            spdm_context, (uint8_t *)request + header_size,
+            spdm_context, (const uint8_t *)request + header_size,
             request_size - header_size);
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
-                         (uint8_t *)request + header_size, message_size);
+                         (const uint8_t *)request + header_size, message_size);
         m_libspdm_local_buffer_size += message_size;
         return LIBSPDM_STATUS_SUCCESS;
     case 0x11:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_key_exchange_request_size(
-            spdm_context, (uint8_t *)request + header_size,
+            spdm_context, (const uint8_t *)request + header_size,
             request_size - header_size);
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
-                         (uint8_t *)request + header_size, message_size);
+                         (const uint8_t *)request + header_size, message_size);
         m_libspdm_local_buffer_size += message_size;
         return LIBSPDM_STATUS_SUCCESS;
     case 0x12:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_key_exchange_request_size(
-            spdm_context, (uint8_t *)request + header_size,
+            spdm_context, (const uint8_t *)request + header_size,
             request_size - header_size);
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
-                         (uint8_t *)request + header_size, message_size);
+                         (const uint8_t *)request + header_size, message_size);
         m_libspdm_local_buffer_size += message_size;
         return LIBSPDM_STATUS_SUCCESS;
     case 0x13:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_key_exchange_request_size(
-            spdm_context, (uint8_t *)request + header_size,
+            spdm_context, (const uint8_t *)request + header_size,
             request_size - header_size);
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
-                         (uint8_t *)request + header_size, message_size);
+                         (const uint8_t *)request + header_size, message_size);
         m_libspdm_local_buffer_size += message_size;
         return LIBSPDM_STATUS_SUCCESS;
     case 0x14:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_key_exchange_request_size(
-            spdm_context, (uint8_t *)request + header_size,
+            spdm_context, (const uint8_t *)request + header_size,
             request_size - header_size);
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
-                         (uint8_t *)request + header_size, message_size);
+                         (const uint8_t *)request + header_size, message_size);
         m_libspdm_local_buffer_size += message_size;
         return LIBSPDM_STATUS_SUCCESS;
     case 0x15:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_key_exchange_request_size(
-            spdm_context, (uint8_t *)request + header_size,
+            spdm_context, (const uint8_t *)request + header_size,
             request_size - header_size);
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
-                         (uint8_t *)request + header_size, message_size);
+                         (const uint8_t *)request + header_size, message_size);
         m_libspdm_local_buffer_size += message_size;
         return LIBSPDM_STATUS_SUCCESS;
     case 0x16:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_key_exchange_request_size(
-            spdm_context, (uint8_t *)request + header_size,
+            spdm_context, (const uint8_t *)request + header_size,
             request_size - header_size);
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
-                         (uint8_t *)request + header_size, message_size);
+                         (const uint8_t *)request + header_size, message_size);
         m_libspdm_local_buffer_size += message_size;
         return LIBSPDM_STATUS_SUCCESS;
     case 0x17:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_key_exchange_request_size(
-            spdm_context, (uint8_t *)request + header_size,
+            spdm_context, (const uint8_t *)request + header_size,
             request_size - header_size);
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
-                         (uint8_t *)request + header_size, message_size);
+                         (const uint8_t *)request + header_size, message_size);
         m_libspdm_local_buffer_size += message_size;
         return LIBSPDM_STATUS_SUCCESS;
     case 0x18:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_key_exchange_request_size(
-            spdm_context, (uint8_t *)request + header_size,
+            spdm_context, (const uint8_t *)request + header_size,
             request_size - header_size);
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
-                         (uint8_t *)request + header_size, message_size);
+                         (const uint8_t *)request + header_size, message_size);
         m_libspdm_local_buffer_size += message_size;
         return LIBSPDM_STATUS_SUCCESS;
     case 0x19:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_key_exchange_request_size(
-            spdm_context, (uint8_t *)request + header_size,
+            spdm_context, (const uint8_t *)request + header_size,
             request_size - header_size);
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
-                         (uint8_t *)request + header_size, message_size);
+                         (const uint8_t *)request + header_size, message_size);
         m_libspdm_local_buffer_size += message_size;
         return LIBSPDM_STATUS_SUCCESS;
     case 0x1A:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_key_exchange_request_size(
-            spdm_context, (uint8_t *)request + header_size,
+            spdm_context, (const uint8_t *)request + header_size,
             request_size - header_size);
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
-                         (uint8_t *)request + header_size, message_size);
+                         (const uint8_t *)request + header_size, message_size);
         m_libspdm_local_buffer_size += message_size;
         return LIBSPDM_STATUS_SUCCESS;
     case 0x1B:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_key_exchange_request_size(
-            spdm_context, (uint8_t *)request + header_size,
+            spdm_context, (const uint8_t *)request + header_size,
             request_size - header_size);
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
-                         (uint8_t *)request + header_size, message_size);
+                         (const uint8_t *)request + header_size, message_size);
         m_libspdm_local_buffer_size += message_size;
         return LIBSPDM_STATUS_SUCCESS;
     case 0x1C:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_key_exchange_request_size(
-            spdm_context, (uint8_t *)request + header_size,
+            spdm_context, (const uint8_t *)request + header_size,
             request_size - header_size);
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
-                         (uint8_t *)request + header_size, message_size);
+                         (const uint8_t *)request + header_size, message_size);
         m_libspdm_local_buffer_size += message_size;
         return LIBSPDM_STATUS_SUCCESS;
     case 0x1D:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_key_exchange_request_size(
-            spdm_context, (uint8_t *)request + header_size,
+            spdm_context, (const uint8_t *)request + header_size,
             request_size - header_size);
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
-                         (uint8_t *)request + header_size,  message_size);
+                         (const uint8_t *)request + header_size,  message_size);
         m_libspdm_local_buffer_size += message_size;
         return LIBSPDM_STATUS_SUCCESS;
     case 0x1E:
         m_libspdm_local_buffer_size = 0;
         message_size = libspdm_test_get_key_exchange_request_size(
-            spdm_context, (uint8_t *)request + header_size,
+            spdm_context, (const uint8_t *)request + header_size,
             request_size - header_size);
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
-                         (uint8_t *)request + header_size, message_size);
+                         (const uint8_t *)request + header_size, message_size);
         m_libspdm_local_buffer_size += message_size;
         return LIBSPDM_STATUS_SUCCESS;
     default:

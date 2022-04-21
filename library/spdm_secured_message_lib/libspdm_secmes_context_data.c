@@ -315,7 +315,7 @@ libspdm_secured_message_import_session_keys(void *spdm_secured_message_context,
     libspdm_secured_message_context_t *secured_message_context;
     size_t struct_size;
     const libspdm_secure_session_keys_struct_t *session_keys_struct;
-    uint8_t *ptr;
+    const uint8_t *ptr;
 
     secured_message_context = spdm_secured_message_context;
     struct_size = sizeof(libspdm_secure_session_keys_struct_t) +
@@ -337,7 +337,7 @@ libspdm_secured_message_import_session_keys(void *spdm_secured_message_context,
         return false;
     }
 
-    ptr = (void *)(session_keys_struct + 1);
+    ptr = (const void *)(session_keys_struct + 1);
     libspdm_copy_mem(secured_message_context->application_secret
                      .request_data_encryption_key,
                      sizeof(secured_message_context->application_secret

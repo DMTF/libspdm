@@ -124,7 +124,7 @@ libspdm_return_t libspdm_get_response_psk_finish(void *context,
 
     result = libspdm_verify_psk_finish_req_hmac(
         spdm_context, session_info,
-        (uint8_t *)request + sizeof(spdm_psk_finish_request_t),
+        (const uint8_t *)request + sizeof(spdm_psk_finish_request_t),
         hmac_size);
     if (!result) {
         if((spdm_context->handle_error_return_policy &
@@ -143,7 +143,7 @@ libspdm_return_t libspdm_get_response_psk_finish(void *context,
     }
     status = libspdm_append_message_f(
         spdm_context, session_info, false,
-        (uint8_t *)request + request_size - hmac_size,
+        (const uint8_t *)request + request_size - hmac_size,
         hmac_size);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return libspdm_generate_error_response(spdm_context,

@@ -530,7 +530,7 @@ void libspdm_register_device_buffer_func(
 typedef libspdm_return_t (*libspdm_transport_encode_message_func)(
     void *spdm_context, const uint32_t *session_id, bool is_app_message,
     bool is_requester, size_t message_size,
-    const void *message, size_t *transport_message_size,
+    void *message, size_t *transport_message_size,
     void **transport_message);
 
 /**
@@ -669,7 +669,7 @@ void libspdm_get_scratch_buffer (
 typedef bool (*libspdm_verify_spdm_cert_chain_func)(
     void *spdm_context, uint8_t slot_id,
     size_t cert_chain_size, const void *cert_chain,
-    void **trust_anchor,
+    const void **trust_anchor,
     size_t *trust_anchor_size);
 
 /**
@@ -872,7 +872,7 @@ libspdm_return_t libspdm_append_message_f(void *context, void *spdm_session_info
  *
  * @return session info.
  **/
-void *libspdm_get_session_info_via_session_id(const void *spdm_context,
+void *libspdm_get_session_info_via_session_id(void *spdm_context,
                                               uint32_t session_id);
 
 /**
@@ -883,7 +883,7 @@ void *libspdm_get_session_info_via_session_id(const void *spdm_context,
  *
  * @return secured message context.
  **/
-void *libspdm_get_secured_message_context_via_session_id(const void *spdm_context,
+void *libspdm_get_secured_message_context_via_session_id(void *spdm_context,
                                                          uint32_t session_id);
 
 /**
@@ -1073,7 +1073,7 @@ bool libspdm_calculate_th2_hash(void *spdm_context,
  * @retval false Peer certificate chain buffer including spdm_cert_chain_t header is not found.
  **/
 bool libspdm_get_peer_cert_chain_buffer(void *spdm_context,
-                                        void **cert_chain_buffer,
+                                        const void **cert_chain_buffer,
                                         size_t *cert_chain_buffer_size);
 
 /**
@@ -1087,7 +1087,7 @@ bool libspdm_get_peer_cert_chain_buffer(void *spdm_context,
  * @retval false Peer certificate chain data without spdm_cert_chain_t header is not found.
  **/
 bool libspdm_get_peer_cert_chain_data(void *spdm_context,
-                                      void **cert_chain_data,
+                                      const void **cert_chain_data,
                                       size_t *cert_chain_data_size);
 
 /**
@@ -1101,7 +1101,7 @@ bool libspdm_get_peer_cert_chain_data(void *spdm_context,
  * @retval false Local used certificate chain buffer including spdm_cert_chain_t header is not found.
  **/
 bool libspdm_get_local_cert_chain_buffer(void *spdm_context,
-                                         void **cert_chain_buffer,
+                                         const void **cert_chain_buffer,
                                          size_t *cert_chain_buffer_size);
 
 /**
@@ -1115,7 +1115,7 @@ bool libspdm_get_local_cert_chain_buffer(void *spdm_context,
  * @retval false Local used certificate chain data without spdm_cert_chain_t header is not found.
  **/
 bool libspdm_get_local_cert_chain_data(void *spdm_context,
-                                       void **cert_chain_data,
+                                       const void **cert_chain_data,
                                        size_t *cert_chain_data_size);
 
 /**
