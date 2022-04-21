@@ -72,7 +72,7 @@ void libspdm_register_get_response_func(
 libspdm_return_t libspdm_process_request(void *spdm_context,
                                          uint32_t **session_id,
                                          bool *is_app_message,
-                                         size_t request_size, const void *request);
+                                         size_t request_size, void *request);
 
 /**
  * Build a SPDM response to a device.

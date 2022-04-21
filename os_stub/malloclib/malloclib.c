@@ -27,7 +27,7 @@ void *allocate_zero_pool(size_t AllocationSize)
     return buffer;
 }
 
-void free_pool(const void *buffer)
+void free_pool(void *buffer)
 {
-    free((void *)buffer);
+    free(buffer);
 }

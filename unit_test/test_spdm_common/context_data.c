@@ -196,10 +196,10 @@ void libspdm_test_verify_peer_cert_chain_buffer_case5(void **state)
     size_t data_size;
     void *hash;
     size_t hash_size;
-    uint8_t *root_cert;
+    const uint8_t *root_cert;
     size_t root_cert_size;
 
-    void *trust_anchor;
+    const void *trust_anchor;
     size_t trust_anchor_size;
     bool result;
     uint8_t root_cert_index;
@@ -252,18 +252,18 @@ void libspdm_test_verify_peer_cert_chain_buffer_case6(void **state)
     size_t data_size;
     void *hash;
     size_t hash_size;
-    uint8_t *root_cert;
+    const uint8_t *root_cert;
     size_t root_cert_size;
 
     void *data_test;
     size_t data_size_test;
     void *hash_test;
     size_t hash_size_test;
-    uint8_t *root_cert_test;
+    const uint8_t *root_cert_test;
     size_t root_cert_size_test;
     uint32_t m_libspdm_use_asym_algo_test =SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048;
 
-    void *trust_anchor;
+    const void *trust_anchor;
     size_t trust_anchor_size;
     bool result;
     uint8_t root_cert_index;
@@ -338,18 +338,18 @@ void libspdm_test_verify_peer_cert_chain_buffer_case7(void **state)
     size_t data_size;
     void *hash;
     size_t hash_size;
-    uint8_t *root_cert;
+    const uint8_t *root_cert;
     size_t root_cert_size;
 
     void *data_test;
     size_t data_size_test;
     void *hash_test;
     size_t hash_size_test;
-    uint8_t *root_cert_test;
+    const uint8_t *root_cert_test;
     size_t root_cert_size_test;
     uint32_t m_libspdm_use_asym_algo_test =SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048;
 
-    void *trust_anchor;
+    const void *trust_anchor;
     size_t trust_anchor_size;
     bool result;
     uint8_t root_cert_index;
@@ -441,18 +441,18 @@ void libspdm_test_verify_peer_cert_chain_buffer_case8(void **state)
     size_t data_size;
     void *hash;
     size_t hash_size;
-    uint8_t *root_cert;
+    const uint8_t *root_cert;
     size_t root_cert_size;
 
     void *data_test;
     size_t data_size_test;
     void *hash_test;
     size_t hash_size_test;
-    uint8_t *root_cert_test;
+    const uint8_t *root_cert_test;
     size_t root_cert_size_test;
     uint32_t m_libspdm_use_asym_algo_test =SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048;
 
-    void *trust_anchor;
+    const void *trust_anchor;
     size_t trust_anchor_size;
     bool result;
     uint8_t root_cert_index;
@@ -542,7 +542,8 @@ static void libspdm_test_set_data_case9(void **state)
     size_t data_size;
     void *hash;
     size_t hash_size;
-    uint8_t *root_cert;
+    const uint8_t *root_cert;
+    uint8_t root_cert_buffer[LIBSPDM_MAX_CERT_CHAIN_SIZE];
     size_t root_cert_size;
 
     uint8_t root_cert_index;
@@ -558,6 +559,7 @@ static void libspdm_test_set_data_case9(void **state)
     libspdm_x509_get_cert_from_cert_chain((uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
                                           data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
                                           &root_cert, &root_cert_size);
+    memcpy(root_cert_buffer, root_cert, root_cert_size);
 
     /*case: there is null root cert*/
     for (root_cert_index = 0; root_cert_index < LIBSPDM_MAX_ROOT_CERT_SUPPORT; root_cert_index++) {
@@ -565,18 +567,18 @@ static void libspdm_test_set_data_case9(void **state)
         spdm_context->local_context.peer_root_cert_provision[root_cert_index] = NULL;
     }
     status = libspdm_set_data(spdm_context, LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT,
-                              NULL, root_cert, root_cert_size);
+                              NULL, root_cert_buffer, root_cert_size);
     assert_int_equal (status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal (spdm_context->local_context.peer_root_cert_provision_size[0], root_cert_size);
-    assert_ptr_equal (spdm_context->local_context.peer_root_cert_provision[0], root_cert);
+    assert_ptr_equal (spdm_context->local_context.peer_root_cert_provision[0], root_cert_buffer);
 
     /*case: there is full root cert*/
     for (root_cert_index = 0; root_cert_index < LIBSPDM_MAX_ROOT_CERT_SUPPORT; root_cert_index++) {
         spdm_context->local_context.peer_root_cert_provision_size[root_cert_index] = root_cert_size;
-        spdm_context->local_context.peer_root_cert_provision[root_cert_index] = root_cert;
+        spdm_context->local_context.peer_root_cert_provision[root_cert_index] = root_cert_buffer;
     }
     status = libspdm_set_data(spdm_context, LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT,
-                              NULL, root_cert, root_cert_size);
+                              NULL, root_cert_buffer, root_cert_size);
     assert_int_equal (status, LIBSPDM_STATUS_BUFFER_FULL);
 
     free(data);

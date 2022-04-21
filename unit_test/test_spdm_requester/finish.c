@@ -34,10 +34,10 @@ libspdm_return_t libspdm_requester_finish_test_send_message(void *spdm_context,
                                                             uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
-    uint8_t *ptr;
+    const uint8_t *ptr;
 
     spdm_test_context = libspdm_get_test_context();
-    ptr = (uint8_t *)request;
+    ptr = (const uint8_t *)request;
     switch (spdm_test_context->case_id) {
     case 0x1:
         return LIBSPDM_STATUS_SEND_FAIL;

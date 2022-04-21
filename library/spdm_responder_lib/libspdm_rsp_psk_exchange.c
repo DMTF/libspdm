@@ -38,6 +38,7 @@ libspdm_return_t libspdm_get_response_psk_exchange(void *context,
     uint32_t session_id;
     size_t measurement_summary_hash_size;
     uint32_t hmac_size;
+    const uint8_t *cptr;
     uint8_t *ptr;
     libspdm_session_info_t *session_info;
     size_t total_size;
@@ -162,10 +163,10 @@ libspdm_return_t libspdm_get_response_psk_exchange(void *context,
                    spdm_request->context_length +
                    spdm_request->opaque_length;
 
-    ptr = (uint8_t *)request + sizeof(spdm_psk_exchange_request_t) +
-          spdm_request->psk_hint_length + spdm_request->context_length;
+    cptr = (const uint8_t *)request + sizeof(spdm_psk_exchange_request_t) +
+           spdm_request->psk_hint_length + spdm_request->context_length;
     status = libspdm_process_opaque_data_supported_version_data(
-        spdm_context, spdm_request->opaque_length, ptr);
+        spdm_context, spdm_request->opaque_length, cptr);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,

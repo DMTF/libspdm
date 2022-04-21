@@ -35,7 +35,7 @@ void test_spdm_responder_encap_get_certificate_case1(void **state)
     size_t data_size;
     void *hash;
     size_t hash_size;
-    uint8_t *root_cert;
+    const uint8_t *root_cert;
     size_t root_cert_size;
     bool need_continue;
     spdm_certificate_response_t *spdm_response;
@@ -134,7 +134,7 @@ void test_spdm_responder_encap_get_certificate_case2(void **state)
     size_t data_size;
     void *hash;
     size_t hash_size;
-    uint8_t *root_cert;
+    const uint8_t *root_cert;
     size_t root_cert_size;
     bool need_continue;
 
@@ -191,7 +191,7 @@ void test_spdm_responder_encap_get_certificate_case3(void **state)
     size_t data_size;
     void *hash;
     size_t hash_size;
-    uint8_t *root_cert;
+    const uint8_t *root_cert;
     size_t root_cert_size;
     bool need_continue;
     spdm_certificate_response_t *spdm_response;
@@ -290,7 +290,7 @@ void test_spdm_responder_encap_get_certificate_case4(void **state)
     size_t data_size;
     void *hash;
     size_t hash_size;
-    uint8_t *root_cert;
+    const uint8_t *root_cert;
     size_t root_cert_size;
     bool need_continue;
     spdm_certificate_response_t *spdm_response;

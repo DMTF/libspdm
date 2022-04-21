@@ -206,17 +206,17 @@ libspdm_build_opaque_data_supported_version_data(libspdm_context_t *spdm_context
 libspdm_return_t
 libspdm_process_opaque_data_supported_version_data(libspdm_context_t *spdm_context,
                                                    size_t data_in_size,
-                                                   void *data_in)
+                                                   const void *data_in)
 {
-    secured_message_general_opaque_data_table_header_t
+    const secured_message_general_opaque_data_table_header_t
     *general_opaque_data_table_header;
-    spdm_general_opaque_data_table_header_t
+    const spdm_general_opaque_data_table_header_t
     *spdm_general_opaque_data_table_header;
-    secured_message_opaque_element_table_header_t
+    const secured_message_opaque_element_table_header_t
     *opaque_element_table_header;
-    secured_message_opaque_element_supported_version_t
+    const secured_message_opaque_element_supported_version_t
     *opaque_element_support_version;
-    spdm_version_number_t *versions_list;
+    const spdm_version_number_t *versions_list;
     spdm_version_number_t common_version;
     uint8_t version_count;
     bool result;
@@ -237,7 +237,7 @@ libspdm_process_opaque_data_supported_version_data(libspdm_context_t *spdm_conte
             return LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
         opaque_element_table_header =
-            (void *)(spdm_general_opaque_data_table_header + 1);
+            (const void *)(spdm_general_opaque_data_table_header + 1);
     } else {
         general_opaque_data_table_header = data_in;
         if ((general_opaque_data_table_header->spec_id !=
@@ -248,11 +248,11 @@ libspdm_process_opaque_data_supported_version_data(libspdm_context_t *spdm_conte
             return LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
         opaque_element_table_header =
-            (void *)(general_opaque_data_table_header + 1);
+            (const void *)(general_opaque_data_table_header + 1);
     }
 
     opaque_element_support_version =
-        (void *)(opaque_element_table_header + 1);
+        (const void *)(opaque_element_table_header + 1);
     if ((opaque_element_support_version->sm_data_version !=
          SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_DATA_VERSION) ||
         (opaque_element_support_version->sm_data_id !=
@@ -277,7 +277,7 @@ libspdm_process_opaque_data_supported_version_data(libspdm_context_t *spdm_conte
         return LIBSPDM_STATUS_INVALID_MSG_SIZE;
     }
 
-    versions_list = (void *)(opaque_element_support_version + 1);
+    versions_list = (const void *)(opaque_element_support_version + 1);
 
     result = libspdm_negotiate_connection_version(&common_version,
                                                   spdm_context->local_context.secured_message_version.spdm_version,

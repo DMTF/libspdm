@@ -121,7 +121,7 @@ libspdm_get_response_func_via_last_request(libspdm_context_t *spdm_context)
  **/
 libspdm_return_t libspdm_process_request(void *context, uint32_t **session_id,
                                          bool *is_app_message,
-                                         size_t request_size, const void *request)
+                                         size_t request_size, void *request)
 {
     libspdm_context_t *spdm_context;
     libspdm_return_t status;

@@ -90,7 +90,7 @@ void libspdm_test_responder_end_session(void **State)
     free(data);
 }
 
-void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size)
+void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
 {
     void *State;
 

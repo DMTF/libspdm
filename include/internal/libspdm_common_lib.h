@@ -50,7 +50,7 @@ typedef struct {
 
     /* My Certificate*/
 
-    void *local_cert_chain_provision[SPDM_MAX_SLOT_COUNT];
+    const void *local_cert_chain_provision[SPDM_MAX_SLOT_COUNT];
     size_t local_cert_chain_provision_size[SPDM_MAX_SLOT_COUNT];
     uint8_t slot_count;
     /* My provisioned certificate (for slot_id - 0xFF, default 0)*/
@@ -58,14 +58,14 @@ typedef struct {
 
     /* Peer Root Certificate*/
 
-    void *peer_root_cert_provision[LIBSPDM_MAX_ROOT_CERT_SUPPORT];
+    const void *peer_root_cert_provision[LIBSPDM_MAX_ROOT_CERT_SUPPORT];
     size_t peer_root_cert_provision_size[LIBSPDM_MAX_ROOT_CERT_SUPPORT];
 
     /* Peer CertificateChain
      * Whether it contains the root certificate or not,
      * it should be equal to the one returned from peer by get_certificate*/
 
-    void *peer_cert_chain_provision;
+    const void *peer_cert_chain_provision;
     size_t peer_cert_chain_provision_size;
     /* Peer Cert verify*/
     libspdm_verify_spdm_cert_chain_func verify_peer_spdm_cert_chain;
@@ -73,7 +73,7 @@ typedef struct {
     /* PSK provision locally*/
 
     size_t psk_hint_size;
-    void *psk_hint;
+    const void *psk_hint;
 
     /* opaque_data provision locally*/
 
@@ -119,7 +119,7 @@ typedef struct {
 
     /* Local Used CertificateChain (for responder, or requester in mut auth)*/
 
-    uint8_t *local_used_cert_chain_buffer;
+    const uint8_t *local_used_cert_chain_buffer;
     size_t local_used_cert_chain_buffer_size;
 } libspdm_connection_info_t;
 
@@ -630,7 +630,7 @@ bool libspdm_generate_cert_chain_hash(libspdm_context_t *spdm_context,
  * @retval false digest verification fail.
  **/
 bool libspdm_verify_peer_digests(libspdm_context_t *spdm_context,
-                                 void *digest, size_t digest_count);
+                                 const void *digest, size_t digest_count);
 
 /**
  * This function verifies peer certificate chain buffer including spdm_cert_chain_t header.
@@ -648,7 +648,7 @@ bool libspdm_verify_peer_digests(libspdm_context_t *spdm_context,
 bool libspdm_verify_peer_cert_chain_buffer(libspdm_context_t *spdm_context,
                                            const void *cert_chain_buffer,
                                            size_t cert_chain_buffer_size,
-                                           void **trust_anchor,
+                                           const void **trust_anchor,
                                            size_t *trust_anchor_size,
                                            bool is_requester);
 
@@ -1045,7 +1045,7 @@ libspdm_build_opaque_data_version_selection_data(const libspdm_context_t *spdm_c
 libspdm_return_t
 libspdm_process_opaque_data_supported_version_data(libspdm_context_t *spdm_context,
                                                    size_t data_in_size,
-                                                   void *data_in);
+                                                   const void *data_in);
 
 /**
  * Return the SPDMversion field of the version number struct.
@@ -1081,7 +1081,7 @@ void libspdm_version_number_sort(spdm_version_number_t *ver_set, size_t ver_num)
 bool libspdm_negotiate_connection_version(spdm_version_number_t *common_version,
                                           spdm_version_number_t *req_ver_set,
                                           size_t req_ver_num,
-                                          spdm_version_number_t *res_ver_set,
+                                          const spdm_version_number_t *res_ver_set,
                                           size_t res_ver_num);
 
 /**

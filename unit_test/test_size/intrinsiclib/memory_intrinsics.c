@@ -92,13 +92,13 @@ unsigned int strlen(char *s)
     return (unsigned int)ascii_strlen(s);
 }
 
-char *ascii_strstr(const char *string, const char *search_string)
+char *ascii_strstr(char *string, const char *search_string)
 {
-    const char *first_match;
+    char *first_match;
     const char *search_string_tmp;
 
     if (*search_string == '\0') {
-        return (char *)string;
+        return string;
     }
 
     while (*string != '\0') {
@@ -111,7 +111,7 @@ char *ascii_strstr(const char *string, const char *search_string)
         }
 
         if (*search_string_tmp == '\0') {
-            return (char *)first_match;
+            return first_match;
         }
 
         if (*string == '\0') {

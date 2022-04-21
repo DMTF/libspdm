@@ -42,7 +42,7 @@ libspdm_test_context_t m_libspdm_transport_mctp_test_context = {
     false,
 };
 
-void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size)
+void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
 {
     void *State;
 

@@ -66,7 +66,7 @@ libspdm_return_t libspdm_set_data(void *context, libspdm_data_type_t data_type,
         if (parameter->location != LIBSPDM_DATA_LOCATION_SESSION) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
-        session_id = *(uint32_t *)parameter->additional_data;
+        session_id = *(const uint32_t *)parameter->additional_data;
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
@@ -540,7 +540,7 @@ libspdm_return_t libspdm_get_data(void *context, libspdm_data_type_t data_type,
         if (parameter->location != LIBSPDM_DATA_LOCATION_SESSION) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
-        session_id = *(uint32_t *)parameter->additional_data;
+        session_id = *(const uint32_t *)parameter->additional_data;
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
         if (session_info == NULL) {
@@ -1494,7 +1494,8 @@ libspdm_return_t libspdm_append_message_k(void *context, void *session_info,
                         result = true;
                     } else {
                         result = libspdm_get_peer_cert_chain_buffer(
-                            spdm_context, (void **)&cert_chain_buffer, &cert_chain_buffer_size);
+                            spdm_context, (const void **)&cert_chain_buffer,
+                            &cert_chain_buffer_size);
                         if (!result) {
                             return LIBSPDM_STATUS_INVALID_STATE_PEER;
                         }
@@ -1511,7 +1512,7 @@ libspdm_return_t libspdm_append_message_k(void *context, void *session_info,
                     }
                 } else {
                     result = libspdm_get_local_cert_chain_buffer(
-                        spdm_context, (void **)&cert_chain_buffer, &cert_chain_buffer_size);
+                        spdm_context, (const void **)&cert_chain_buffer, &cert_chain_buffer_size);
 
                     if (!result) {
                         return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
@@ -1739,7 +1740,7 @@ libspdm_return_t libspdm_append_message_f(void *context, void *session_info,
     {
         libspdm_context_t *spdm_context;
         void *secured_message_context;
-        uint8_t *mut_cert_chain_buffer;
+        const uint8_t *mut_cert_chain_buffer;
         size_t mut_cert_chain_buffer_size;
         bool result;
         uint8_t mut_cert_chain_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
@@ -1773,7 +1774,7 @@ libspdm_return_t libspdm_append_message_f(void *context, void *session_info,
                 if (is_requester) {
                     result = libspdm_get_local_cert_chain_buffer(
                         spdm_context,
-                        (void **)&mut_cert_chain_buffer,
+                        (const void **)&mut_cert_chain_buffer,
                         &mut_cert_chain_buffer_size);
                     if (!result) {
                         return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
@@ -1799,7 +1800,7 @@ libspdm_return_t libspdm_append_message_f(void *context, void *session_info,
                     } else {
                         result = libspdm_get_peer_cert_chain_buffer(
                             spdm_context,
-                            (void **)&mut_cert_chain_buffer,
+                            (const void **)&mut_cert_chain_buffer,
                             &mut_cert_chain_buffer_size);
                         if (!result) {
                             return LIBSPDM_STATUS_INVALID_STATE_PEER;
@@ -2511,7 +2512,7 @@ void libspdm_version_number_sort(spdm_version_number_t *ver_set, size_t ver_num)
 bool libspdm_negotiate_connection_version(spdm_version_number_t *common_version,
                                           spdm_version_number_t *req_ver_set,
                                           size_t req_ver_num,
-                                          spdm_version_number_t *res_ver_set,
+                                          const spdm_version_number_t *res_ver_set,
                                           size_t res_ver_num)
 {
     spdm_version_number_t req_version_list[LIBSPDM_MAX_VERSION_COUNT];

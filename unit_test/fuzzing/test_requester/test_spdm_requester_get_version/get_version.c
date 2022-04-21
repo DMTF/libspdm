@@ -40,7 +40,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context,
     }
     libspdm_copy_mem((uint8_t *)temp_buf + test_message_header_size,
                      sizeof(temp_buf) - test_message_header_size,
-                     (uint8_t *)spdm_test_context->test_buffer,
+                     spdm_test_context->test_buffer,
                      spdm_response_size);
 
     libspdm_transport_test_encode_message(spdm_context, NULL, false, false,
@@ -68,13 +68,13 @@ libspdm_test_context_t m_libspdm_requester_get_version_test_context = {
     libspdm_device_receive_message,
 };
 
-void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size)
+void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
 {
     void *State;
 
     libspdm_setup_test_context(&m_libspdm_requester_get_version_test_context);
 
-    m_libspdm_requester_get_version_test_context.test_buffer = (void *)test_buffer;
+    m_libspdm_requester_get_version_test_context.test_buffer = test_buffer;
     m_libspdm_requester_get_version_test_context.test_buffer_size =
         test_buffer_size;
 

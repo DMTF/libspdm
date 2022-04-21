@@ -44,3 +44,8 @@ SET(src_cryptlib_mbedtls
 )
 
 ADD_LIBRARY(cryptlib_mbedtls STATIC ${src_cryptlib_mbedtls})
+if(CMAKE_SYSTEM_NAME MATCHES "Windows")
+    if((TOOLCHAIN STREQUAL "CBMC") OR (TOOLCHAIN STREQUAL "VS2015") OR (TOOLCHAIN STREQUAL "VS2019"))
+        TARGET_COMPILE_OPTIONS(cryptlib_mbedtls PRIVATE /wd4090)
+    endif()
+endif()

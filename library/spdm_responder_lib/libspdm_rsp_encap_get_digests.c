@@ -87,7 +87,7 @@ libspdm_return_t libspdm_process_encap_response_digest(
     bool result;
     const spdm_digest_response_t *spdm_response;
     size_t spdm_response_size;
-    uint8_t *digest;
+    const uint8_t *digest;
     size_t digest_size;
     size_t digest_count;
     size_t index;
@@ -143,7 +143,7 @@ libspdm_return_t libspdm_process_encap_response_digest(
         return LIBSPDM_STATUS_BUFFER_FULL;
     }
 
-    digest = (void *)(spdm_response + 1);
+    digest = (const void *)(spdm_response + 1);
     for (index = 0; index < digest_count; index++) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "digest (0x%x) - ", index));
         libspdm_internal_dump_data(&digest[digest_size * index], digest_size);

@@ -43,7 +43,7 @@ typedef struct {
     void *spdm_context;
     void *scratch_buffer;
     size_t scratch_buffer_size;
-    const void *test_buffer;
+    void *test_buffer;
     size_t test_buffer_size;
 } libspdm_test_context_t;
 
