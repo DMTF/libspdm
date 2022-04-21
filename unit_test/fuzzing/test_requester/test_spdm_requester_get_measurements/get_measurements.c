@@ -70,9 +70,9 @@ libspdm_return_t libspdm_device_send_message(void *spdm_context, size_t request_
     m_libspdm_local_buffer_size = 0;
     header_size = sizeof(libspdm_test_message_header_t);
     message_size = libspdm_test_get_measurement_request_size(
-        spdm_context, (uint8_t *)request + header_size, request_size - header_size);
+        spdm_context, (const uint8_t *)request + header_size, request_size - header_size);
     libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
-                     (uint8_t *)request + header_size, message_size);
+                     (const uint8_t *)request + header_size, message_size);
     m_libspdm_local_buffer_size += message_size;
     return LIBSPDM_STATUS_SUCCESS;
 }
@@ -98,7 +98,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
     }
     libspdm_copy_mem((uint8_t *)temp_buf + test_message_header_size,
                      sizeof(temp_buf) - test_message_header_size,
-                     (uint8_t *)spdm_test_context->test_buffer,
+                     spdm_test_context->test_buffer,
                      spdm_response_size);
 
     if (libspdm_test_message_header == LIBSPDM_TEST_MESSAGE_TYPE_SECURED_TEST) {
@@ -417,13 +417,13 @@ libspdm_test_context_t m_libspdm_requester_get_measurements_test_context = {
     libspdm_device_receive_message,
 };
 
-void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size)
+void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
 {
     void *State;
 
     libspdm_setup_test_context(&m_libspdm_requester_get_measurements_test_context);
 
-    m_libspdm_requester_get_measurements_test_context.test_buffer = (void *)test_buffer;
+    m_libspdm_requester_get_measurements_test_context.test_buffer = test_buffer;
     m_libspdm_requester_get_measurements_test_context.test_buffer_size = test_buffer_size;
 
     /* Successful response to get measurement with signature*/
@@ -452,7 +452,7 @@ size_t libspdm_get_max_buffer_size(void)
     return 0;
 }
 
-void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size){
+void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size){
 
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP*/

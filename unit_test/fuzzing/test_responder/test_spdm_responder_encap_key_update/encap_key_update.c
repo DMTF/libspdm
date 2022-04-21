@@ -234,7 +234,7 @@ void libspdm_test_get_encap_request_key_update_case2(void **State)
     free(data);
 }
 
-void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size)
+void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
 {
     void *State;
 

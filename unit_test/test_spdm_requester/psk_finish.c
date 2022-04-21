@@ -99,6 +99,7 @@ libspdm_return_t libspdm_requester_psk_finish_test_send_message(void *spdm_conte
         uint32_t *message_session_id;
         bool is_app_message;
         libspdm_session_info_t *session_info;
+        uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
         message_session_id = NULL;
         session_id = 0xFFFFFFFF;
@@ -110,15 +111,15 @@ libspdm_return_t libspdm_requester_psk_finish_test_send_message(void *spdm_conte
             return LIBSPDM_STATUS_SEND_FAIL;
         }
 
-        /* WALKAROUND: If just use single context to encode
-         * message and then decode message */
+        memcpy(message_buffer, request, request_size);
+
         ((libspdm_secured_message_context_t *)(session_info->secured_message_context))
         ->handshake_secret.request_handshake_sequence_number--;
         m_libspdm_local_buffer_size = 0;
         libspdm_get_scratch_buffer (spdm_context, (void **)&decoded_message, &decoded_message_size);
         status = libspdm_transport_test_decode_message(
             spdm_context,
-            &message_session_id, &is_app_message, true, request_size, request,
+            &message_session_id, &is_app_message, true, request_size, message_buffer,
             &decoded_message_size, (void **)&decoded_message);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return LIBSPDM_STATUS_SEND_FAIL;

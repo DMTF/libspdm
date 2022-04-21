@@ -236,7 +236,7 @@ bool libspdm_read_responder_public_certificate_chain(
     spdm_cert_chain_t *cert_chain;
     size_t cert_chain_size;
     char *file;
-    uint8_t *root_cert;
+    const uint8_t *root_cert;
     size_t root_cert_len;
     size_t digest_size;
     bool is_device_cert_model;
@@ -362,7 +362,7 @@ bool libspdm_read_requester_public_certificate_chain(
     spdm_cert_chain_t *cert_chain;
     size_t cert_chain_size;
     char *file;
-    uint8_t *root_cert;
+    const uint8_t *root_cert;
     size_t root_cert_len;
     size_t digest_size;
     bool is_device_cert_model;
@@ -566,7 +566,7 @@ bool libspdm_read_responder_public_certificate_chain_by_size(
     spdm_cert_chain_t *cert_chain;
     size_t cert_chain_size;
     char *file;
-    uint8_t *root_cert;
+    const uint8_t *root_cert;
     size_t root_cert_len;
     size_t digest_size;
     bool is_device_cert_model;

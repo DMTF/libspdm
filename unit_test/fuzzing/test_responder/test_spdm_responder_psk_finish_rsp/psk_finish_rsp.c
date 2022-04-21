@@ -184,7 +184,7 @@ void libspdm_test_responder_psk_finish_rsp_case2(void **State)
     free(data1);
 }
 
-void libspdm_run_test_harness(const void *test_buffer, size_t test_buffer_size)
+void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
 {
     void *State;
 

@@ -32,7 +32,7 @@ void *hmac_md_new(void)
  * @param[in]  hmac_md_ctx  Pointer to the HMAC_CTX context to be released.
  *
  **/
-void hmac_md_free(const void *hmac_md_ctx)
+void hmac_md_free(void *hmac_md_ctx)
 {
 
     /* Free OpenSSL HMAC_CTX context*/

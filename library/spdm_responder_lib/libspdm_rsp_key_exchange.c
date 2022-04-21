@@ -37,6 +37,7 @@ libspdm_return_t libspdm_get_response_key_exchange(void *context,
     size_t measurement_summary_hash_size;
     uint32_t signature_size;
     uint32_t hmac_size;
+    const uint8_t *cptr;
     uint8_t *ptr;
     uint16_t opaque_data_length;
     bool result;
@@ -124,8 +125,8 @@ libspdm_return_t libspdm_get_response_key_exchange(void *context,
                                                response_size, response);
     }
     opaque_data_length =
-        *(uint16_t *)((uint8_t *)request +
-                      sizeof(spdm_key_exchange_request_t) + dhe_key_size);
+        *(const uint16_t *)((const uint8_t *)request +
+                            sizeof(spdm_key_exchange_request_t) + dhe_key_size);
     if (request_size < sizeof(spdm_key_exchange_request_t) + dhe_key_size +
         sizeof(uint16_t) + opaque_data_length) {
         return libspdm_generate_error_response(spdm_context,
@@ -135,10 +136,10 @@ libspdm_return_t libspdm_get_response_key_exchange(void *context,
     request_size = sizeof(spdm_key_exchange_request_t) + dhe_key_size +
                    sizeof(uint16_t) + opaque_data_length;
 
-    ptr = (uint8_t *)request + sizeof(spdm_key_exchange_request_t) +
-          dhe_key_size + sizeof(uint16_t);
+    cptr = (const uint8_t *)request + sizeof(spdm_key_exchange_request_t) +
+           dhe_key_size + sizeof(uint16_t);
     status = libspdm_process_opaque_data_supported_version_data(
-        spdm_context, opaque_data_length, ptr);
+        spdm_context, opaque_data_length, cptr);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
@@ -238,14 +239,14 @@ libspdm_return_t libspdm_get_response_key_exchange(void *context,
     libspdm_internal_dump_hex(ptr, dhe_key_size);
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Calc peer_key (0x%x):\n", dhe_key_size));
-    libspdm_internal_dump_hex((uint8_t *)request +
+    libspdm_internal_dump_hex((const uint8_t *)request +
                               sizeof(spdm_key_exchange_request_t),
                               dhe_key_size);
 
     result = libspdm_secured_message_dhe_compute_key(
         spdm_context->connection_info.algorithm.dhe_named_group,
         dhe_context,
-        (uint8_t *)request + sizeof(spdm_key_exchange_request_t),
+        (const uint8_t *)request + sizeof(spdm_key_exchange_request_t),
         dhe_key_size, session_info->secured_message_context);
     libspdm_secured_message_dhe_free(
         spdm_context->connection_info.algorithm.dhe_named_group,

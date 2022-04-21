@@ -151,7 +151,7 @@ bool hmac_md_duplicate(const mbedtls_md_type_t md_type, const void *hmac_md_ctx,
      * There are not any standard function in mbedtls to clone a complete hmac context.*/
     libspdm_copy_mem(((mbedtls_md_context_t *)new_hmac_md_ctx)->hmac_ctx,
                      hmac_md_get_blocksize(md_type) * 2,
-                     ((mbedtls_md_context_t *)hmac_md_ctx)->hmac_ctx,
+                     ((const mbedtls_md_context_t *)hmac_md_ctx)->hmac_ctx,
                      hmac_md_get_blocksize(md_type) * 2);
     return true;
 }

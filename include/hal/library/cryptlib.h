@@ -2862,8 +2862,8 @@ bool libspdm_x509_verify_cert(const uint8_t *cert, size_t cert_size,
  * @retval  false  Invalid certificate or the certificate was not issued by the given
  *                trusted CA.
  **/
-bool libspdm_x509_verify_cert_chain(uint8_t *root_cert, size_t root_cert_length,
-                                    uint8_t *cert_chain,
+bool libspdm_x509_verify_cert_chain(const uint8_t *root_cert, size_t root_cert_length,
+                                    const uint8_t *cert_chain,
                                     size_t cert_chain_length);
 
 /**
@@ -2885,9 +2885,9 @@ bool libspdm_x509_verify_cert_chain(uint8_t *root_cert, size_t root_cert_length,
  * @retval  true   Success.
  * @retval  false  Failed to get certificate from certificate chain.
  **/
-bool libspdm_x509_get_cert_from_cert_chain(uint8_t *cert_chain,
+bool libspdm_x509_get_cert_from_cert_chain(const uint8_t *cert_chain,
                                            size_t cert_chain_length,
-                                           const int32_t cert_index, uint8_t **cert,
+                                           const int32_t cert_index, const uint8_t **cert,
                                            size_t *cert_length);
 
 /**

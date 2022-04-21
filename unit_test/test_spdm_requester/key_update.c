@@ -140,6 +140,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
         uint32_t              *message_session_id;
         bool is_app_message;
         libspdm_session_info_t *session_info;
+        uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
         message_session_id = NULL;
         session_id = 0xFFFFFFFF;
@@ -150,8 +151,8 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             return LIBSPDM_STATUS_SEND_FAIL;
         }
 
-        /* WALKAROUND: If just use single context to encode
-         * message and then decode message */
+        memcpy(message_buffer, request, request_size);
+
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.request_data_sequence_number--;
@@ -159,7 +160,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
         status = libspdm_transport_test_decode_message(spdm_context,
                                                        &message_session_id, &is_app_message, true,
                                                        request_size,
-                                                       request, &decoded_message_size,
+                                                       message_buffer, &decoded_message_size,
                                                        (void **)&decoded_message);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return LIBSPDM_STATUS_SEND_FAIL;
@@ -180,6 +181,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             uint32_t              *message_session_id;
             bool is_app_message;
             libspdm_session_info_t *session_info;
+            uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
@@ -190,8 +192,8 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
                 return LIBSPDM_STATUS_SEND_FAIL;
             }
 
-            /* WALKAROUND: If just use single context to encode
-             * message and then decode message */
+            memcpy(message_buffer, request, request_size);
+
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
@@ -201,7 +203,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
                                                            &message_session_id, &is_app_message,
                                                            true,
                                                            request_size,
-                                                           request, &decoded_message_size,
+                                                           message_buffer, &decoded_message_size,
                                                            (void **)&decoded_message);
             if (LIBSPDM_STATUS_IS_ERROR(status)) {
                 return LIBSPDM_STATUS_SEND_FAIL;
@@ -225,6 +227,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             uint32_t              *message_session_id;
             bool is_app_message;
             libspdm_session_info_t *session_info;
+            uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
@@ -235,8 +238,8 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
                 return LIBSPDM_STATUS_SEND_FAIL;
             }
 
-            /* WALKAROUND: If just use single context to encode
-             * message and then decode message */
+            memcpy(message_buffer, request, request_size);
+
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
@@ -246,7 +249,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
                                                            &message_session_id, &is_app_message,
                                                            true,
                                                            request_size,
-                                                           request, &decoded_message_size,
+                                                           message_buffer, &decoded_message_size,
                                                            (void **)&decoded_message);
             if (LIBSPDM_STATUS_IS_ERROR(status)) {
                 return LIBSPDM_STATUS_SEND_FAIL;
@@ -270,6 +273,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             uint32_t              *message_session_id;
             bool is_app_message;
             libspdm_session_info_t *session_info;
+            uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
@@ -280,8 +284,8 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
                 return LIBSPDM_STATUS_SEND_FAIL;
             }
 
-            /* WALKAROUND: If just use single context to encode
-             * message and then decode message */
+            memcpy(message_buffer, request, request_size);
+
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
@@ -291,7 +295,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
                                                            &message_session_id, &is_app_message,
                                                            true,
                                                            request_size,
-                                                           request, &decoded_message_size,
+                                                           message_buffer, &decoded_message_size,
                                                            (void **)&decoded_message);
             if (LIBSPDM_STATUS_IS_ERROR(status)) {
                 return LIBSPDM_STATUS_SEND_FAIL;
@@ -315,6 +319,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             uint32_t              *message_session_id;
             bool is_app_message;
             libspdm_session_info_t *session_info;
+            uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
@@ -325,8 +330,8 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
                 return LIBSPDM_STATUS_SEND_FAIL;
             }
 
-            /* WALKAROUND: If just use single context to encode
-             * message and then decode message */
+            memcpy(message_buffer, request, request_size);
+
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
@@ -336,7 +341,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
                                                            &message_session_id, &is_app_message,
                                                            true,
                                                            request_size,
-                                                           request, &decoded_message_size,
+                                                           message_buffer, &decoded_message_size,
                                                            (void **)&decoded_message);
             if (LIBSPDM_STATUS_IS_ERROR(status)) {
                 return LIBSPDM_STATUS_SEND_FAIL;
@@ -363,6 +368,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             uint32_t *message_session_id;
             bool is_app_message;
             libspdm_session_info_t    *session_info;
+            uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
@@ -373,8 +379,8 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
                 return LIBSPDM_STATUS_SEND_FAIL;
             }
 
-            /* WALKAROUND: If just use single context to encode
-             * message and then decode message */
+            memcpy(message_buffer, request, request_size);
+
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
@@ -384,7 +390,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
                                                            &message_session_id, &is_app_message,
                                                            true,
                                                            request_size,
-                                                           request, &decoded_message_size,
+                                                           message_buffer, &decoded_message_size,
                                                            (void **)&decoded_message);
             if (LIBSPDM_STATUS_IS_ERROR(status)) {
                 return LIBSPDM_STATUS_SEND_FAIL;
@@ -417,6 +423,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
         uint32_t              *message_session_id;
         bool is_app_message;
         libspdm_session_info_t *session_info;
+        uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
         message_session_id = NULL;
         session_id = 0xFFFFFFFF;
@@ -427,8 +434,8 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             return LIBSPDM_STATUS_SEND_FAIL;
         }
 
-        /* WALKAROUND: If just use single context to encode
-         * message and then decode message */
+        memcpy(message_buffer, request, request_size);
+
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.request_data_sequence_number--;
@@ -436,7 +443,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
         status = libspdm_transport_test_decode_message(spdm_context,
                                                        &message_session_id, &is_app_message, true,
                                                        request_size,
-                                                       request, &decoded_message_size,
+                                                       message_buffer, &decoded_message_size,
                                                        (void **)&decoded_message);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return LIBSPDM_STATUS_SEND_FAIL;
@@ -457,6 +464,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             uint32_t *message_session_id;
             bool is_app_message;
             libspdm_session_info_t    *session_info;
+            uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
@@ -467,8 +475,8 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
                 return LIBSPDM_STATUS_SEND_FAIL;
             }
 
-            /* WALKAROUND: If just use single context to encode
-             * message and then decode message */
+            memcpy(message_buffer, request, request_size);
+
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
@@ -478,7 +486,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
                                                            &message_session_id, &is_app_message,
                                                            true,
                                                            request_size,
-                                                           request, &decoded_message_size,
+                                                           message_buffer, &decoded_message_size,
                                                            (void **)&decoded_message);
             if (LIBSPDM_STATUS_IS_ERROR(status)) {
                 return LIBSPDM_STATUS_SEND_FAIL;
@@ -504,6 +512,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             uint32_t *message_session_id;
             bool is_app_message;
             libspdm_session_info_t    *session_info;
+            uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
@@ -514,8 +523,8 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
                 return LIBSPDM_STATUS_SEND_FAIL;
             }
 
-            /* WALKAROUND: If just use single context to encode
-             * message and then decode message */
+            memcpy(message_buffer, request, request_size);
+
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
@@ -525,7 +534,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
                                                            &message_session_id, &is_app_message,
                                                            true,
                                                            request_size,
-                                                           request, &decoded_message_size,
+                                                           message_buffer, &decoded_message_size,
                                                            (void **)&decoded_message);
             if (LIBSPDM_STATUS_IS_ERROR(status)) {
                 return LIBSPDM_STATUS_SEND_FAIL;
@@ -550,6 +559,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
         uint32_t              *message_session_id;
         bool is_app_message;
         libspdm_session_info_t *session_info;
+        uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
         message_session_id = NULL;
         session_id = 0xFFFFFFFF;
@@ -560,8 +570,8 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             return LIBSPDM_STATUS_SEND_FAIL;
         }
 
-        /* WALKAROUND: If just use single context to encode
-         * message and then decode message */
+        memcpy(message_buffer, request, request_size);
+
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.request_data_sequence_number--;
@@ -569,7 +579,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
         status = libspdm_transport_test_decode_message(spdm_context,
                                                        &message_session_id, &is_app_message, true,
                                                        request_size,
-                                                       request, &decoded_message_size,
+                                                       message_buffer, &decoded_message_size,
                                                        (void **)&decoded_message);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return LIBSPDM_STATUS_SEND_FAIL;
@@ -587,6 +597,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
         uint32_t              *message_session_id;
         bool is_app_message;
         libspdm_session_info_t *session_info;
+        uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
         message_session_id = NULL;
         session_id = 0xFFFFFFFF;
@@ -597,8 +608,8 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             return LIBSPDM_STATUS_SEND_FAIL;
         }
 
-        /* WALKAROUND: If just use single context to encode
-         * message and then decode message */
+        memcpy(message_buffer, request, request_size);
+
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.request_data_sequence_number--;
@@ -606,7 +617,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
         status = libspdm_transport_test_decode_message(spdm_context,
                                                        &message_session_id, &is_app_message, true,
                                                        request_size,
-                                                       request, &decoded_message_size,
+                                                       message_buffer, &decoded_message_size,
                                                        (void **)&decoded_message);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return LIBSPDM_STATUS_SEND_FAIL;
@@ -627,6 +638,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             uint32_t              *message_session_id;
             bool is_app_message;
             libspdm_session_info_t *session_info;
+            uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
@@ -637,8 +649,8 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
                 return LIBSPDM_STATUS_SEND_FAIL;
             }
 
-            /* WALKAROUND: If just use single context to encode
-             * message and then decode message */
+            memcpy(message_buffer, request, request_size);
+
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
@@ -648,7 +660,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
                                                            &message_session_id, &is_app_message,
                                                            true,
                                                            request_size,
-                                                           request, &decoded_message_size,
+                                                           message_buffer, &decoded_message_size,
                                                            (void **)&decoded_message);
             if (LIBSPDM_STATUS_IS_ERROR(status)) {
                 return LIBSPDM_STATUS_SEND_FAIL;
@@ -672,6 +684,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             uint32_t              *message_session_id;
             bool is_app_message;
             libspdm_session_info_t *session_info;
+            uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
@@ -682,8 +695,8 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
                 return LIBSPDM_STATUS_SEND_FAIL;
             }
 
-            /* WALKAROUND: If just use single context to encode
-             * message and then decode message */
+            memcpy(message_buffer, request, request_size);
+
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
@@ -693,7 +706,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
                                                            &message_session_id, &is_app_message,
                                                            true,
                                                            request_size,
-                                                           request, &decoded_message_size,
+                                                           message_buffer, &decoded_message_size,
                                                            (void **)&decoded_message);
             if (LIBSPDM_STATUS_IS_ERROR(status)) {
                 return LIBSPDM_STATUS_SEND_FAIL;
@@ -717,6 +730,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             uint32_t              *message_session_id;
             bool is_app_message;
             libspdm_session_info_t *session_info;
+            uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
@@ -727,8 +741,8 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
                 return LIBSPDM_STATUS_SEND_FAIL;
             }
 
-            /* WALKAROUND: If just use single context to encode
-             * message and then decode message */
+            memcpy(message_buffer, request, request_size);
+
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
@@ -738,7 +752,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
                                                            &message_session_id, &is_app_message,
                                                            true,
                                                            request_size,
-                                                           request, &decoded_message_size,
+                                                           message_buffer, &decoded_message_size,
                                                            (void **)&decoded_message);
             if (LIBSPDM_STATUS_IS_ERROR(status)) {
                 return LIBSPDM_STATUS_SEND_FAIL;
@@ -765,6 +779,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             uint32_t *message_session_id;
             bool is_app_message;
             libspdm_session_info_t    *session_info;
+            uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
@@ -775,8 +790,8 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
                 return LIBSPDM_STATUS_SEND_FAIL;
             }
 
-            /* WALKAROUND: If just use single context to encode
-             * message and then decode message */
+            memcpy(message_buffer, request, request_size);
+
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
@@ -786,7 +801,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
                                                            &message_session_id, &is_app_message,
                                                            true,
                                                            request_size,
-                                                           request, &decoded_message_size,
+                                                           message_buffer, &decoded_message_size,
                                                            (void **)&decoded_message);
             if (LIBSPDM_STATUS_IS_ERROR(status)) {
                 return LIBSPDM_STATUS_SEND_FAIL;

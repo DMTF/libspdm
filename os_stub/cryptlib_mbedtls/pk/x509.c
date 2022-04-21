@@ -368,7 +368,7 @@ bool libspdm_x509_get_common_name(const uint8_t *cert, size_t cert_size,
                                   size_t *common_name_size)
 {
     return libspdm_internal_x509_get_subject_nid_name(
-        cert, cert_size, (uint8_t *)m_libspdm_oid_common_name,
+        cert, cert_size, (const uint8_t *)m_libspdm_oid_common_name,
         sizeof(m_libspdm_oid_common_name), common_name, common_name_size);
 }
 
@@ -404,7 +404,7 @@ libspdm_x509_get_organization_name(const uint8_t *cert, size_t cert_size,
                                    size_t *name_buffer_size)
 {
     return libspdm_internal_x509_get_subject_nid_name(
-        cert, cert_size, (uint8_t *)m_libspdm_oid_organization_name,
+        cert, cert_size, m_libspdm_oid_organization_name,
         sizeof(m_libspdm_oid_organization_name), name_buffer, name_buffer_size);
 }
 
@@ -628,15 +628,15 @@ bool libspdm_x509_verify_cert(const uint8_t *cert, size_t cert_size,
  * @retval  false  Invalid certificate or the certificate was not issued by the given
  *                trusted CA.
  **/
-bool libspdm_x509_verify_cert_chain(uint8_t *root_cert, size_t root_cert_length,
-                                    uint8_t *cert_chain, size_t cert_chain_length)
+bool libspdm_x509_verify_cert_chain(const uint8_t *root_cert, size_t root_cert_length,
+                                    const uint8_t *cert_chain, size_t cert_chain_length)
 {
     size_t asn1_len;
     size_t preceding_cert_len;
-    uint8_t *preceding_cert;
+    const uint8_t *preceding_cert;
     size_t current_cert_len;
-    uint8_t *current_cert;
-    uint8_t *tmp_ptr;
+    const uint8_t *current_cert;
+    const uint8_t *tmp_ptr;
     uint32_t ret;
     bool verify_flag;
 
@@ -702,16 +702,16 @@ bool libspdm_x509_verify_cert_chain(uint8_t *root_cert, size_t root_cert_length,
  * @retval  true   Success.
  * @retval  false  Failed to get certificate from certificate chain.
  **/
-bool libspdm_x509_get_cert_from_cert_chain(uint8_t *cert_chain,
+bool libspdm_x509_get_cert_from_cert_chain(const uint8_t *cert_chain,
                                            size_t cert_chain_length,
-                                           const int32_t cert_index, uint8_t **cert,
+                                           const int32_t cert_index, const uint8_t **cert,
                                            size_t *cert_length)
 {
     size_t asn1_len;
     int32_t current_index;
     size_t current_cert_len;
-    uint8_t *current_cert;
-    uint8_t *tmp_ptr;
+    const uint8_t *current_cert;
+    const uint8_t *tmp_ptr;
     int32_t ret;
 
 
@@ -980,7 +980,7 @@ libspdm_x509_get_issuer_common_name(const uint8_t *cert, size_t cert_size,
                                     size_t *common_name_size)
 {
     return libspdm_internal_x509_get_issuer_nid_name(cert, cert_size,
-                                                     (uint8_t *)m_libspdm_oid_common_name,
+                                                     m_libspdm_oid_common_name,
                                                      sizeof(m_libspdm_oid_common_name),
                                                      common_name, common_name_size);
 }
@@ -1017,7 +1017,7 @@ libspdm_x509_get_issuer_orgnization_name(const uint8_t *cert, size_t cert_size,
                                          size_t *name_buffer_size)
 {
     return libspdm_internal_x509_get_issuer_nid_name(
-        cert, cert_size, (uint8_t *)m_libspdm_oid_organization_name,
+        cert, cert_size, m_libspdm_oid_organization_name,
         sizeof(m_libspdm_oid_organization_name), name_buffer, name_buffer_size);
 }
 
@@ -1368,8 +1368,8 @@ bool libspdm_x509_get_extended_key_usage(const uint8_t *cert,
         return false;
     }
 
-    status = libspdm_x509_get_extension_data((uint8_t *)cert, cert_size,
-                                             (uint8_t *)m_libspdm_oid_ext_key_usage,
+    status = libspdm_x509_get_extension_data(cert, cert_size,
+                                             m_libspdm_oid_ext_key_usage,
                                              sizeof(m_libspdm_oid_ext_key_usage), usage,
                                              usage_size);
 
@@ -1405,8 +1405,8 @@ bool libspdm_x509_get_extended_basic_constraints(const uint8_t *cert,
         return false;
     }
 
-    status = libspdm_x509_get_extension_data((uint8_t *)cert, cert_size,
-                                             (uint8_t *)m_libspdm_oid_basic_constraints,
+    status = libspdm_x509_get_extension_data(cert, cert_size,
+                                             m_libspdm_oid_basic_constraints,
                                              sizeof(m_libspdm_oid_basic_constraints),
                                              basic_constraints,
                                              basic_constraints_size);
@@ -1557,8 +1557,8 @@ int32_t libspdm_x509_compare_date_time(const void *date_time1, const void *date_
         0) {
         return 0;
     }
-    if (libspdm_internal_x509_check_time((mbedtls_x509_time *)date_time1,
-                                         (mbedtls_x509_time *)date_time2) == 0) {
+    if (libspdm_internal_x509_check_time((const mbedtls_x509_time *)date_time1,
+                                         (const mbedtls_x509_time *)date_time2) == 0) {
         return -1;
     } else {
         return 1;

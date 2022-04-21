@@ -40,7 +40,7 @@
  **/
 libspdm_return_t libspdm_transport_pci_doe_encode_message(
     void *spdm_context, const uint32_t *session_id, bool is_app_message,
-    bool is_requester, size_t message_size, const void *message,
+    bool is_requester, size_t message_size, void *message,
     size_t *transport_message_size, void **transport_message);
 
 /**
@@ -76,7 +76,7 @@ libspdm_return_t libspdm_transport_pci_doe_encode_message(
 libspdm_return_t libspdm_transport_pci_doe_decode_message(
     void *spdm_context, uint32_t **session_id,
     bool *is_app_message, bool is_requester,
-    size_t transport_message_size, const void *transport_message,
+    size_t transport_message_size, void *transport_message,
     size_t *message_size, void **message);
 
 /**

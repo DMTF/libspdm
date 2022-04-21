@@ -98,7 +98,7 @@ libspdm_return_t libspdm_requester_negotiate_algorithms_test_send_message(
     case 0x1F:
         return LIBSPDM_STATUS_SUCCESS;
     case 0x20: {
-        uint8_t *ptr = (uint8_t *)request;
+        const uint8_t *ptr = (const uint8_t *)request;
 
         m_libspdm_local_buffer_size = 0;
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),

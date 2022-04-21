@@ -17,7 +17,7 @@
  * @retval false Peer certificate chain buffer including spdm_cert_chain_t header is not found.
  **/
 bool libspdm_get_peer_cert_chain_buffer(void *context,
-                                        void **cert_chain_buffer,
+                                        const void **cert_chain_buffer,
                                         size_t *cert_chain_buffer_size)
 {
     libspdm_context_t *spdm_context;
@@ -56,7 +56,7 @@ bool libspdm_get_peer_cert_chain_buffer(void *context,
  * @retval false Peer certificate chain data without spdm_cert_chain_t header is not found.
  **/
 bool libspdm_get_peer_cert_chain_data(void *context,
-                                      void **cert_chain_data,
+                                      const void **cert_chain_data,
                                       size_t *cert_chain_data_size)
 {
     libspdm_context_t *spdm_context;
@@ -74,7 +74,7 @@ bool libspdm_get_peer_cert_chain_data(void *context,
     hash_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
 
-    *cert_chain_data = (uint8_t *)*cert_chain_data +
+    *cert_chain_data = (const uint8_t *)*cert_chain_data +
                        sizeof(spdm_cert_chain_t) + hash_size;
     *cert_chain_data_size =
         *cert_chain_data_size - (sizeof(spdm_cert_chain_t) + hash_size);
@@ -92,7 +92,7 @@ bool libspdm_get_peer_cert_chain_data(void *context,
  * @retval false Local used certificate chain buffer including spdm_cert_chain_t header is not found.
  **/
 bool libspdm_get_local_cert_chain_buffer(void *context,
-                                         void **cert_chain_buffer,
+                                         const void **cert_chain_buffer,
                                          size_t *cert_chain_buffer_size)
 {
     libspdm_context_t *spdm_context;
@@ -121,7 +121,7 @@ bool libspdm_get_local_cert_chain_buffer(void *context,
  * @retval false Local used certificate chain data without spdm_cert_chain_t header is not found.
  **/
 bool libspdm_get_local_cert_chain_data(void *context,
-                                       void **cert_chain_data,
+                                       const void **cert_chain_data,
                                        size_t *cert_chain_data_size)
 {
     libspdm_context_t *spdm_context;
@@ -139,7 +139,7 @@ bool libspdm_get_local_cert_chain_data(void *context,
     hash_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
 
-    *cert_chain_data = (uint8_t *)*cert_chain_data +
+    *cert_chain_data = (const uint8_t *)*cert_chain_data +
                        sizeof(spdm_cert_chain_t) + hash_size;
     *cert_chain_data_size =
         *cert_chain_data_size - (sizeof(spdm_cert_chain_t) + hash_size);
@@ -517,12 +517,13 @@ bool libspdm_generate_cert_chain_hash(libspdm_context_t *spdm_context,
  * @retval true  digest verification pass.
  * @retval false digest verification fail.
  **/
-bool libspdm_verify_peer_digests(libspdm_context_t *spdm_context, void *digest, size_t digest_count)
+bool libspdm_verify_peer_digests(libspdm_context_t *spdm_context, const void *digest,
+                                 size_t digest_count)
 {
     size_t hash_size;
-    uint8_t *hash_buffer;
+    const uint8_t *hash_buffer;
     uint8_t cert_chain_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-    uint8_t *cert_chain_buffer;
+    const uint8_t *cert_chain_buffer;
     size_t cert_chain_buffer_size;
     size_t index;
     bool result;
@@ -577,17 +578,17 @@ bool libspdm_verify_peer_digests(libspdm_context_t *spdm_context, void *digest, 
 bool libspdm_verify_peer_cert_chain_buffer(libspdm_context_t *spdm_context,
                                            const void *cert_chain_buffer,
                                            size_t cert_chain_buffer_size,
-                                           void **trust_anchor,
+                                           const void **trust_anchor,
                                            size_t *trust_anchor_size,
                                            bool is_requester)
 {
-    uint8_t *cert_chain_data;
+    const uint8_t *cert_chain_data;
     size_t cert_chain_data_size;
-    uint8_t *root_cert;
+    const uint8_t *root_cert;
     size_t root_cert_size;
     uint8_t root_cert_hash[LIBSPDM_MAX_HASH_SIZE];
     size_t root_cert_hash_size;
-    uint8_t *received_root_cert;
+    const uint8_t *received_root_cert;
     size_t received_root_cert_size;
     bool result;
     uint8_t root_cert_index;
@@ -637,7 +638,8 @@ bool libspdm_verify_peer_cert_chain_buffer(libspdm_context_t *spdm_context,
                 return false;
             }
 
-            if (libspdm_const_compare_mem((uint8_t *)cert_chain_buffer + sizeof(spdm_cert_chain_t),
+            if (libspdm_const_compare_mem((const uint8_t *)cert_chain_buffer +
+                                          sizeof(spdm_cert_chain_t),
                                           root_cert_hash, root_cert_hash_size) == 0) {
                 break;
             } else if ((root_cert_index < (LIBSPDM_MAX_ROOT_CERT_SUPPORT - 1)) &&
@@ -655,7 +657,7 @@ bool libspdm_verify_peer_cert_chain_buffer(libspdm_context_t *spdm_context,
         }
 
         result = libspdm_x509_get_cert_from_cert_chain(
-            (uint8_t *)cert_chain_buffer + sizeof(spdm_cert_chain_t) + root_cert_hash_size,
+            (const uint8_t *)cert_chain_buffer + sizeof(spdm_cert_chain_t) + root_cert_hash_size,
             cert_chain_buffer_size - sizeof(spdm_cert_chain_t) - root_cert_hash_size,
             0, &received_root_cert, &received_root_cert_size);
         if (!result) {
@@ -813,13 +815,13 @@ bool libspdm_verify_certificate_chain_hash(libspdm_context_t *spdm_context,
 {
     size_t hash_size;
     uint8_t cert_chain_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-    uint8_t *cert_chain_buffer;
+    const uint8_t *cert_chain_buffer;
     size_t cert_chain_buffer_size;
     bool result;
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     result = libspdm_get_peer_cert_chain_buffer(spdm_context,
-                                                (void **)&cert_chain_buffer,
+                                                (const void **)&cert_chain_buffer,
                                                 &cert_chain_buffer_size);
     if (!result) {
         return false;
@@ -867,7 +869,7 @@ bool libspdm_verify_certificate_chain_hash(libspdm_context_t *spdm_context,
 
     } else {
         result = libspdm_get_peer_cert_chain_buffer(spdm_context,
-                                                    (void **)&cert_chain_buffer,
+                                                    (const void **)&cert_chain_buffer,
                                                     &cert_chain_buffer_size);
         if (!result) {
             return false;
@@ -919,10 +921,10 @@ bool libspdm_verify_challenge_auth_signature(libspdm_context_t *spdm_context,
                                              size_t sign_data_size)
 {
     bool result;
-    uint8_t *cert_buffer;
+    const uint8_t *cert_buffer;
     size_t cert_buffer_size;
     void *context;
-    uint8_t *cert_chain_data;
+    const uint8_t *cert_chain_data;
     size_t cert_chain_data_size;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     uint8_t m1m2_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -947,7 +949,7 @@ bool libspdm_verify_challenge_auth_signature(libspdm_context_t *spdm_context,
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     result = libspdm_get_peer_cert_chain_data(
-        spdm_context, (void **)&cert_chain_data, &cert_chain_data_size);
+        spdm_context, (const void **)&cert_chain_data, &cert_chain_data_size);
     if (!result) {
         return false;
     }
@@ -1035,7 +1037,7 @@ bool libspdm_verify_challenge_auth_signature(libspdm_context_t *spdm_context,
     }
 
     result = libspdm_get_peer_cert_chain_data(
-        spdm_context, (void **)&cert_chain_data, &cert_chain_data_size);
+        spdm_context, (const void **)&cert_chain_data, &cert_chain_data_size);
     if (!result) {
         return false;
     }
@@ -1212,10 +1214,10 @@ bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
                                           size_t sign_data_size)
 {
     bool result;
-    uint8_t *cert_buffer;
+    const uint8_t *cert_buffer;
     size_t cert_buffer_size;
     void *context;
-    uint8_t *cert_chain_data;
+    const uint8_t *cert_chain_data;
     size_t cert_chain_data_size;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     uint8_t l1l2_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -1240,7 +1242,7 @@ bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     result = libspdm_get_peer_cert_chain_data(
-        spdm_context, (void **)&cert_chain_data, &cert_chain_data_size);
+        spdm_context, (const void **)&cert_chain_data, &cert_chain_data_size);
     if (!result) {
         return false;
     }
@@ -1286,7 +1288,7 @@ bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
     }
 
     result = libspdm_get_peer_cert_chain_data(
-        spdm_context, (void **)&cert_chain_data, &cert_chain_data_size);
+        spdm_context, (const void **)&cert_chain_data, &cert_chain_data_size);
     if (!result) {
         return false;
     }

@@ -27,7 +27,7 @@
  **/
 libspdm_return_t libspdm_send_request(void *context, const uint32_t *session_id,
                                       bool is_app_message,
-                                      size_t request_size, const void *request)
+                                      size_t request_size, void *request)
 {
     libspdm_context_t *spdm_context;
     libspdm_return_t status;
@@ -62,7 +62,7 @@ libspdm_return_t libspdm_send_request(void *context, const uint32_t *session_id,
     }
 
     /* backup it to last_spdm_request, because the caller wants to compare it with response */
-    if (((spdm_message_header_t *)request)->request_response_code != SPDM_RESPOND_IF_READY) {
+    if (((const spdm_message_header_t *)request)->request_response_code != SPDM_RESPOND_IF_READY) {
         libspdm_copy_mem (spdm_context->last_spdm_request,
                           sizeof(spdm_context->last_spdm_request),
                           request,
@@ -223,7 +223,7 @@ error:
  **/
 libspdm_return_t libspdm_send_spdm_request(libspdm_context_t *spdm_context,
                                            const uint32_t *session_id,
-                                           size_t request_size, const void *request)
+                                           size_t request_size, void *request)
 {
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
