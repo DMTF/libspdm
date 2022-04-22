@@ -239,7 +239,7 @@ typedef struct {
     libspdm_large_managed_buffer_t message_m;
 #else
     /* the message_k must be plan text because we do not know the finished_key yet.*/
-    libspdm_medium_managed_buffer_t temp_message_k;
+    libspdm_large_managed_buffer_t temp_message_k;
     bool message_f_initialized;
     bool finished_key_ready;
     void                   *digest_context_th;
