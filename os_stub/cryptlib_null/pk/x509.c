@@ -359,6 +359,18 @@ bool libspdm_x509_get_cert_from_cert_chain(const uint8_t *cert_chain,
 }
 
 /**
+ * Gen and verify RSA CSR.
+ *
+ * @retval  true   Success.
+ * @retval  false  Failed to gen and verify RSA CSR.
+ **/
+bool libspdm_gen_and_verify_x509_csr(void)
+{
+    LIBSPDM_ASSERT(false);
+    return false;
+}
+
+/**
  * Retrieve the TBSCertificate from one given X.509 certificate.
  *
  * @param[in]      cert         Pointer to the given DER-encoded X509 certificate.

@@ -14,6 +14,10 @@
 #include <openssl/asn1.h>
 #include <openssl/rsa.h>
 
+#include <openssl/bn.h>
+#include <openssl/pem.h>
+#include <openssl/bio.h>
+
 
 /* OID*/
 
@@ -2155,4 +2159,110 @@ bool libspdm_x509_get_cert_from_cert_chain(const uint8_t *cert_chain,
     }
 
     return false;
+}
+
+/**
+ * Gen and verify RSA CSR.
+ *
+ * @retval  true   Success.
+ * @retval  false  Failed to gen and verify RSA CSR.
+ **/
+bool libspdm_gen_and_verify_x509_csr(void)
+{
+    int ret = 0;
+    RSA *r = NULL;
+    BIGNUM *bne = NULL;
+
+    int nVersion = 1;
+    int bits = 2048;
+    unsigned long e = RSA_F4;
+
+    X509_REQ *x509_req = NULL;
+    X509_NAME *x509_name = NULL;
+    EVP_PKEY *pKey = NULL;
+
+    const char *szOrganization = "DMTF";
+    const char *szCommon = "PMCI";
+
+    /*1. generate rsa private key*/
+    bne = BN_new();
+    ret = BN_set_word(bne,e);
+    if (ret != 1) {
+        goto free_all;
+    }
+
+    r = RSA_new();
+    ret = RSA_generate_key_ex(r, bits, bne, NULL);
+    if(ret != 1) {
+        goto free_all;
+    }
+
+    /*2. set version of x509 req*/
+    x509_req = X509_REQ_new();
+    ret = X509_REQ_set_version(x509_req, nVersion);
+    if (ret != 1) {
+        goto free_all;
+    }
+
+    /*3. set subject of x509 req*/
+    x509_name = X509_REQ_get_subject_name(x509_req);
+
+    ret = X509_NAME_add_entry_by_txt(x509_name,"O", MBSTRING_ASC,
+                                     (const unsigned char*)szOrganization, -1, -1, 0);
+    if (ret != 1) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"set subject O error\n"));
+        goto free_all;
+    }
+    ret = X509_NAME_add_entry_by_txt(x509_name,"CN", MBSTRING_ASC,
+                                     (const unsigned char*)szCommon, -1, -1, 0);
+    if (ret != 1) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"set subject CN error\n"));
+        goto free_all;
+    }
+
+    /*4. set public key of x509 req*/
+    pKey = EVP_PKEY_new();
+    EVP_PKEY_assign_RSA(pKey, r);
+    r = NULL;
+
+    ret = X509_REQ_set_pubkey(x509_req, pKey);
+    if (ret != 1) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"set public key error\n"));
+        goto free_all;
+    }
+
+    /*5. set sign key of x509 req*/
+    ret = X509_REQ_sign(x509_req, pKey, EVP_sha256());
+    if (ret <= 0) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"sign csr error\n"));
+        goto free_all;
+    }
+
+    /*6. verify use generated public key*/
+    ret = X509_REQ_verify(x509_req, pKey);
+    if (ret <= 0) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"verify csr use generate pkey error\n"));
+        goto free_all;
+    }
+
+    /*7. get public key and verify*/
+    if ((pKey = X509_REQ_get0_pubkey(x509_req)) == NULL) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"get public key error\n"));
+        goto free_all;
+    }
+
+    ret = X509_REQ_verify(x509_req, pKey);
+    if (ret <= 0) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"verify csr use get pkey error\n"));
+        goto free_all;
+    }
+
+    /*8. free*/
+free_all:
+    X509_REQ_free(x509_req);
+
+    EVP_PKEY_free(pKey);
+    BN_free(bne);
+
+    return (ret == 1);
 }

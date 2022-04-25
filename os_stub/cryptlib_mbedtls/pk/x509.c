@@ -15,7 +15,9 @@
 #include <mbedtls/ecp.h>
 #include <mbedtls/ecdh.h>
 #include <mbedtls/ecdsa.h>
-
+#include <mbedtls/x509_csr.h>
+#include <mbedtls/entropy.h>
+#include <mbedtls/ctr_drbg.h>
 
 /* OID*/
 
@@ -765,6 +767,95 @@ bool libspdm_x509_get_cert_from_cert_chain(const uint8_t *cert_chain,
     }
 
     return false;
+}
+
+/**
+ * Gen and verify RSA CSR.
+ *
+ * @retval  true   Success.
+ * @retval  false  Failed to gen and verify RSA CSR.
+ **/
+bool libspdm_gen_and_verify_x509_csr(void)
+{
+    int ret = 1;
+
+    mbedtls_pk_context key;
+    mbedtls_x509write_csr req;
+    mbedtls_entropy_context entropy;
+    mbedtls_ctr_drbg_context ctr_drbg;
+
+    int MBEDTLS_KEY_SIZE = 2048;
+    unsigned long e = 0x10001;
+    const char *subject_name = "C=NL,O=PolarSSL,CN=PolarSSL Server 1";
+    const char *pers = "csr example";
+
+    /*1. Init */
+    mbedtls_x509write_csr_init(&req);
+    mbedtls_pk_init(&key);
+    mbedtls_ctr_drbg_init(&ctr_drbg);
+    mbedtls_entropy_init(&entropy);
+
+    /*2. Seed the PRNG*/
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Seeding the random number generator..." ));
+
+    ret = mbedtls_ctr_drbg_seed(&ctr_drbg, mbedtls_entropy_func, &entropy,
+                                (const unsigned char *) pers,
+                                sizeof(pers) - 1);
+    if (ret != 0) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                       "failed\n ! mbedtls_ctr_drbg_seed returned %d", ret));
+        goto exit;
+    }
+
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, " ok\n" ));
+
+    /*2. Set the md alg*/
+    mbedtls_x509write_csr_set_md_alg(&req, MBEDTLS_MD_SHA256);
+
+    /*3.Set the subject name*/
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Setting subject name..." ));
+
+    ret = mbedtls_x509write_csr_set_subject_name( &req, subject_name);
+    if (ret != 0) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                       "failed\n ! mbedtls_x509write_csr_set_subject_name returned %d", ret));
+        goto exit;
+    }
+
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, " ok\n" ));
+
+    /*4. Gen the RSA key*/
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Generating the private key ..." ));
+
+    ret = mbedtls_pk_setup(&key, mbedtls_pk_info_from_type(MBEDTLS_PK_RSA));
+    if (ret != 0) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                       "failed\n ! mbedtls_pk_set_up returned %d", ret));
+        goto exit;
+    }
+
+    ret = mbedtls_rsa_gen_key(mbedtls_pk_rsa(key), mbedtls_ctr_drbg_random,
+                              &ctr_drbg, MBEDTLS_KEY_SIZE, e);
+    if (ret != 0) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                       "failed\n ! mbedtls_rsa_gen_key returned %d", ret));
+        goto exit;
+    }
+
+    /*5. Set the RSA key*/
+    mbedtls_x509write_csr_set_key(&req, &key);
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, " ok\n" ));
+
+    /*6. Verify CSR*/
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "There is no verify csr for mbedtls\n" ));
+
+exit:
+    mbedtls_x509write_csr_free(&req);
+    mbedtls_pk_free(&key);
+    mbedtls_ctr_drbg_free(&ctr_drbg);
+    mbedtls_entropy_free(&entropy);
+
+    return(ret == 0);
 }
 
 /**
