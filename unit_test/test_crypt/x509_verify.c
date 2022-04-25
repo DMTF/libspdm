@@ -391,3 +391,25 @@ cleanup:
     }
     return status;
 }
+
+/**
+ * Gen and verify RSA CSR.
+ *
+ * @retval  true   Success.
+ * @retval  false  Failed to gen and verify RSA CSR.
+ **/
+bool libspdm_validate_crypt_x509_csr(void)
+{
+    bool ret;
+
+    libspdm_my_print("\nGen and verify CSR \n");
+
+    ret = libspdm_gen_and_verify_x509_csr();
+    if (!ret) {
+        libspdm_my_print("Gen and verify CSR fail !!!\n");
+        return ret;
+    }
+
+    libspdm_my_print("Gen and verify CSR successful !!!\n");
+    return ret;
+}

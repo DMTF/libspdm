@@ -2891,6 +2891,14 @@ bool libspdm_x509_get_cert_from_cert_chain(const uint8_t *cert_chain,
                                            size_t *cert_length);
 
 /**
+ * Gen and verify RSA CSR.
+ *
+ * @retval  true   Success.
+ * @retval  false  Failed to gen and verify RSA CSR.
+ **/
+bool libspdm_gen_and_verify_x509_csr(void);
+
+/**
  * Construct a X509 object from DER-encoded certificate data.
  *
  * If cert is NULL, then return false.

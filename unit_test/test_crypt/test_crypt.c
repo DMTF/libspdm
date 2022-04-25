@@ -133,6 +133,11 @@ void libspdm_cryptest_main(void)
         return;
     }
 
+    status = libspdm_validate_crypt_x509_csr();
+    if (!status) {
+        return;
+    }
+
     return;
 }
 
