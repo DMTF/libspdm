@@ -125,8 +125,8 @@ else()
 endif()
 
 if(ENABLE_BINARY_BUILD STREQUAL "1")
-    if(NOT CRYPTO STREQUAL "Openssl")
-        MESSAGE(FATAL_ERROR "enabling binary build not supported for non-Openssl")
+    if(NOT CRYPTO STREQUAL "openssl")
+        MESSAGE(FATAL_ERROR "enabling binary build not supported for non-openssl")
     endif()
 
     if(NOT COMPILED_LIBCRYPTO_PATH)
