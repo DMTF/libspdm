@@ -60,6 +60,8 @@ libspdm_return_t libspdm_responder_dispatch_message(void *context)
     } else {
         session_id_ptr = NULL;
     }
+    /* release buffer after use session_id, before acquire buffer */
+    libspdm_release_receiver_buffer (spdm_context);
 
     /* build and send response message */
     libspdm_acquire_sender_buffer (spdm_context, &message_size, (void **)&message);
@@ -70,7 +72,6 @@ libspdm_return_t libspdm_responder_dispatch_message(void *context)
     status = libspdm_build_response(spdm_context, session_id_ptr, is_app_message,
                                     &response_size, (void **)&response);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        libspdm_release_receiver_buffer (spdm_context);
         libspdm_release_sender_buffer (spdm_context);
         return status;
     }
@@ -78,7 +79,6 @@ libspdm_return_t libspdm_responder_dispatch_message(void *context)
     status = spdm_context->send_message(spdm_context, response_size,
                                         response, 0);
 
-    libspdm_release_receiver_buffer (spdm_context);
     libspdm_release_sender_buffer (spdm_context);
 
     return status;
