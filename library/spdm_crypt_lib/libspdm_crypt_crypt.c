@@ -127,6 +127,46 @@ size_t libspdm_get_hash_nid(uint32_t base_hash_algo)
 }
 
 /**
+ * Return asym NID, based upon the negotiated asym algorithm.
+ *
+ * @param  base_asym_algo                  SPDM base_asym_algo
+ *
+ * @return asym NID
+ **/
+size_t libspdm_get_aysm_nid(uint32_t base_asym_algo)
+{
+    switch (base_asym_algo)
+    {
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
+        return LIBSPDM_CRYPTO_NID_RSASSA2048;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
+        return LIBSPDM_CRYPTO_NID_RSASSA3072;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
+        return LIBSPDM_CRYPTO_NID_RSASSA4096;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048:
+        return LIBSPDM_CRYPTO_NID_RSAPSS2048;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
+        return LIBSPDM_CRYPTO_NID_RSAPSS3072;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
+        return LIBSPDM_CRYPTO_NID_RSAPSS4096;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
+        return LIBSPDM_CRYPTO_NID_ECDSA_NIST_P256;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
+        return LIBSPDM_CRYPTO_NID_ECDSA_NIST_P384;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
+        return LIBSPDM_CRYPTO_NID_ECDSA_NIST_P521;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519:
+        return LIBSPDM_CRYPTO_NID_EDDSA_ED25519;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
+        return LIBSPDM_CRYPTO_NID_EDDSA_ED448;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
+        return LIBSPDM_CRYPTO_NID_SM2_DSA_P256;
+    default:
+        return LIBSPDM_CRYPTO_NID_NULL;
+    }
+}
+
+/**
  * Return hash new function, based upon the negotiated hash algorithm.
  *
  * @param  base_hash_algo                  SPDM base_hash_algo

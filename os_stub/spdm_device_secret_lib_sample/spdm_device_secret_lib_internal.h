@@ -30,7 +30,6 @@
 #define LIBSPDM_LIBSPDM_TEST_CERT_MAXUINT16_LARGER 3
 #define LIBSPDM_TEST_CERT_SMALL 4
 
-
 /* public cert*/
 
 bool libspdm_read_responder_public_certificate_chain(
@@ -79,6 +78,9 @@ bool libspdm_read_responder_root_public_certificate_by_size(
 
 bool libspdm_read_input_file(const char *file_name, void **file_data,
                              size_t *file_size);
+
+bool libspdm_write_output_file(const char *file_name, const void *file_data,
+                               size_t file_size);
 
 void libspdm_dump_hex_str(const uint8_t *buffer, size_t buffer_size);
 

@@ -770,95 +770,6 @@ bool libspdm_x509_get_cert_from_cert_chain(const uint8_t *cert_chain,
 }
 
 /**
- * Gen and verify RSA CSR.
- *
- * @retval  true   Success.
- * @retval  false  Failed to gen and verify RSA CSR.
- **/
-bool libspdm_gen_and_verify_x509_csr(void)
-{
-    int ret = 1;
-
-    mbedtls_pk_context key;
-    mbedtls_x509write_csr req;
-    mbedtls_entropy_context entropy;
-    mbedtls_ctr_drbg_context ctr_drbg;
-
-    int MBEDTLS_KEY_SIZE = 2048;
-    unsigned long e = 0x10001;
-    const char *subject_name = "C=NL,O=PolarSSL,CN=PolarSSL Server 1";
-    const char *pers = "csr example";
-
-    /*1. Init */
-    mbedtls_x509write_csr_init(&req);
-    mbedtls_pk_init(&key);
-    mbedtls_ctr_drbg_init(&ctr_drbg);
-    mbedtls_entropy_init(&entropy);
-
-    /*2. Seed the PRNG*/
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Seeding the random number generator..." ));
-
-    ret = mbedtls_ctr_drbg_seed(&ctr_drbg, mbedtls_entropy_func, &entropy,
-                                (const unsigned char *) pers,
-                                sizeof(pers) - 1);
-    if (ret != 0) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                       "failed\n ! mbedtls_ctr_drbg_seed returned %d", ret));
-        goto exit;
-    }
-
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, " ok\n" ));
-
-    /*2. Set the md alg*/
-    mbedtls_x509write_csr_set_md_alg(&req, MBEDTLS_MD_SHA256);
-
-    /*3.Set the subject name*/
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Setting subject name..." ));
-
-    ret = mbedtls_x509write_csr_set_subject_name( &req, subject_name);
-    if (ret != 0) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                       "failed\n ! mbedtls_x509write_csr_set_subject_name returned %d", ret));
-        goto exit;
-    }
-
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, " ok\n" ));
-
-    /*4. Gen the RSA key*/
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Generating the private key ..." ));
-
-    ret = mbedtls_pk_setup(&key, mbedtls_pk_info_from_type(MBEDTLS_PK_RSA));
-    if (ret != 0) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                       "failed\n ! mbedtls_pk_set_up returned %d", ret));
-        goto exit;
-    }
-
-    ret = mbedtls_rsa_gen_key(mbedtls_pk_rsa(key), mbedtls_ctr_drbg_random,
-                              &ctr_drbg, MBEDTLS_KEY_SIZE, e);
-    if (ret != 0) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                       "failed\n ! mbedtls_rsa_gen_key returned %d", ret));
-        goto exit;
-    }
-
-    /*5. Set the RSA key*/
-    mbedtls_x509write_csr_set_key(&req, &key);
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, " ok\n" ));
-
-    /*6. Verify CSR*/
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "There is no verify csr for mbedtls\n" ));
-
-exit:
-    mbedtls_x509write_csr_free(&req);
-    mbedtls_pk_free(&key);
-    mbedtls_ctr_drbg_free(&ctr_drbg);
-    mbedtls_entropy_free(&entropy);
-
-    return(ret == 0);
-}
-
-/**
  * Retrieve the TBSCertificate from one given X.509 certificate.
  *
  * @param[in]      cert         Pointer to the given DER-encoded X509 certificate.
@@ -1654,4 +1565,133 @@ int32_t libspdm_x509_compare_date_time(const void *date_time1, const void *date_
     } else {
         return 1;
     }
+}
+
+/**
+ * Gen CSR
+ *
+ * @param[in]      hash_nid              hash algo for sign
+ * @param[in]      asym_nid              asym algo for sign
+ *
+ * @param[out]     csr_len               CSR len for DER format
+ * @param[in]      csr_pointer           For input, csr_pointer is address to store CSR.
+ * @param[out]     csr_pointer           For input, csr_pointer is address for stored CSR.
+ * @param[in]      csr_buffer_size       The size of store CSR buffer.
+ *
+ * @param[in]      requester_info        requester info to gen CSR
+ * @param[in]      requester_info_length The len of requester info
+ *
+ * @param[in]      context               Pointer to asymmetric context
+ *
+ * @retval  true   Success.
+ * @retval  false  Failed to gen CSR.
+ **/
+bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid, size_t *csr_len,
+                          uint8_t **csr_pointer, size_t csr_buffer_size,
+                          uint8_t *requester_info, size_t requester_info_length,
+                          void *context)
+{
+    int ret;
+    char *subject_name;
+
+    mbedtls_x509write_csr req;
+    mbedtls_md_type_t md_alg;
+    mbedtls_pk_context key;
+
+    /* requester info parse TBD*/
+    if (requester_info_length != 0) {
+    }
+
+    /* Init */
+    mbedtls_x509write_csr_init(&req);
+    mbedtls_pk_init(&key);
+
+    ret = 1;
+    subject_name = NULL;
+    switch (asym_nid)
+    {
+    case LIBSPDM_CRYPTO_NID_RSASSA2048:
+    case LIBSPDM_CRYPTO_NID_RSAPSS2048:
+    case LIBSPDM_CRYPTO_NID_RSASSA3072:
+    case LIBSPDM_CRYPTO_NID_RSAPSS3072:
+    case LIBSPDM_CRYPTO_NID_RSASSA4096:
+    case LIBSPDM_CRYPTO_NID_RSAPSS4096:
+        ret = mbedtls_pk_setup(&key, mbedtls_pk_info_from_type(MBEDTLS_PK_RSA));
+        if (ret != 0) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"failed\n ! mbedtls_pk_setup %d", ret));
+            goto free_all;
+        }
+        ret = mbedtls_rsa_copy(mbedtls_pk_rsa(key), (mbedtls_rsa_context *)context);
+        if (ret != 0) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"failed\n ! mbedtls_rsa_copy %d", ret));
+            goto free_all;
+        }
+        break;
+    case LIBSPDM_CRYPTO_NID_ECDSA_NIST_P256:
+    case LIBSPDM_CRYPTO_NID_ECDSA_NIST_P384:
+    case LIBSPDM_CRYPTO_NID_ECDSA_NIST_P521:
+        ret = mbedtls_pk_setup(&key, mbedtls_pk_info_from_type(MBEDTLS_PK_ECKEY));
+        if (ret != 0) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"failed\n ! mbedtls_pk_setup %d", ret));
+            goto free_all;
+        }
+        /*mbedtls_ecdh_context include mbedtls_ecdsa_context,can be treated as mbedtls_ecdsa_context*/
+        ret = mbedtls_ecdsa_from_keypair(mbedtls_pk_ec(key), (mbedtls_ecdsa_context *)context);
+        if (ret != 0) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"failed\n ! mbedtls_ecdsa_from_keypair %d", ret));
+            goto free_all;
+        }
+        break;
+    default:
+        goto free_all;
+    }
+
+    switch (hash_nid)
+    {
+    case LIBSPDM_CRYPTO_NID_SHA256:
+        md_alg = MBEDTLS_MD_SHA256;
+        break;
+    case LIBSPDM_CRYPTO_NID_SHA384:
+        md_alg = MBEDTLS_MD_SHA384;
+        break;
+    case LIBSPDM_CRYPTO_NID_SHA512:
+        md_alg = MBEDTLS_MD_SHA512;
+        break;
+    default:
+        ret = 1;
+        goto free_all;
+    }
+
+    /* Set the md alg */
+    mbedtls_x509write_csr_set_md_alg(&req, md_alg);
+
+    /* Set the subject name */
+    if (subject_name != NULL) {
+        ret = mbedtls_x509write_csr_set_subject_name(&req, subject_name);
+        if (ret != 0) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "failed\n ! mbedtls_x509write_csr_set_subject_name returned %d", ret));
+            goto free_all;
+        }
+    }
+
+    /* Set key */
+    mbedtls_x509write_csr_set_key(&req, &key);
+
+    /*data is written at the end of the buffer*/
+    *csr_len = mbedtls_x509write_csr_der(&req, *csr_pointer, csr_buffer_size, NULL, NULL);
+    if (*csr_len <= 0) {
+        ret = 1;
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"mbedtls_x509write_csr_der failed \n"));
+        goto free_all;
+    }
+
+    /*change csr_pointer to start location*/
+    *csr_pointer = *csr_pointer + csr_buffer_size - *csr_len;
+
+free_all:
+    mbedtls_x509write_csr_free(&req);
+    mbedtls_pk_free(&key);
+
+    return(ret == 0);
 }

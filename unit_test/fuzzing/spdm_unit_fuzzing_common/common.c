@@ -147,6 +147,27 @@ bool libspdm_read_input_file(const char *file_name, void **file_data,
     return true;
 }
 
+bool libspdm_write_output_file(const char *file_name, const void *file_data,
+                               size_t file_size)
+{
+    FILE *fp_out;
+
+    if ((fp_out = fopen(file_name, "w+b")) == NULL) {
+        printf("Unable to open file %s\n", file_name);
+        return false;
+    }
+
+    if ((fwrite(file_data, 1, file_size, fp_out)) != file_size) {
+        printf("Write output file error %s\n", file_name);
+        fclose(fp_out);
+        return false;
+    }
+
+    fclose(fp_out);
+
+    return true;
+}
+
 void libspdm_dump_hex_str(const uint8_t *buffer, size_t buffer_size)
 {
     size_t index;

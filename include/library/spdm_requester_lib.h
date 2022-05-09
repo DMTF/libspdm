@@ -711,6 +711,28 @@ libspdm_return_t libspdm_generate_encap_extended_error_response(
 
 #endif
 
+/**
+ * This function sends GET_CSR
+ * to get csr from the device.
+ *
+ * @param  context                      A pointer to the SPDM context.
+ * @param  cert_chain                   The pointer for the certificate chain to set.
+ *                                      The cert chain is a full SPDM certificate chain, including Length and Root Cert Hash.
+ * @param  cert_chain_size              The size of the certificate chain to set.
+ * @param  session_id                   Indicates if it is a secured message protected via SPDM session.
+ *                                      If session_id is NULL, it is a normal message.
+ *                                      If session_id is NOT NULL, it is a secured message.
+ *
+ * @retval RETURN_SUCCESS               The measurement is got successfully.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ **/
+libspdm_return_t libspdm_get_csr(void * context,
+                                 void * requester_info, uint16_t requester_info_length,
+                                 void * opaque_data, uint16_t opaque_data_length,
+                                 const uint32_t *session_id,
+                                 void * csr, size_t csr_max_len);
+
 #if LIBSPDM_ENABLE_SET_CERTIFICATE_CAP
 /**
  * This function try to send SET_CERTIFICATE

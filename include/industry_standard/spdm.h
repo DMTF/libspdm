@@ -48,6 +48,10 @@
 #define SPDM_END_SESSION_ACK 0x6C
 #define SPDM_SET_CERTIFICATE_RSP 0x6E
 
+/* SPDM response code (1.2)*/
+
+#define SPDM_CSR 0x6D
+
 /* SPDM request code (1.0)*/
 
 #define SPDM_GET_DIGESTS 0x81
@@ -71,6 +75,9 @@
 #define SPDM_GET_ENCAPSULATED_REQUEST 0xEA
 #define SPDM_DELIVER_ENCAPSULATED_RESPONSE 0xEB
 #define SPDM_END_SESSION 0xEC
+
+/* SPDM request code (1.2)*/
+#define SPDM_GET_CSR 0xED
 #define SPDM_SET_CERTIFICATE 0xEE
 
 /* SPDM message header*/
@@ -1000,6 +1007,27 @@ typedef struct {
     /* param1 == BIT[0:3]=slot_id, BIT[4:7]=RSVD
      * param2 == RSVD*/
 } spdm_set_certificate_response_t;
+
+
+/* SPDM GET_CSR request*/
+
+typedef struct {
+    spdm_message_header_t header;
+    /* param1 == RSVD
+     * param2 == RSVD*/
+    uint16_t requester_info_length;
+    uint16_t opaque_data_length;
+} spdm_get_csr_request_t;
+
+/* SPDM CSR response*/
+
+typedef struct {
+    spdm_message_header_t header;
+    /* param1 == RSVD
+     * param2 == RSVD*/
+    size_t csr_length;
+    uint16_t reserved;
+} spdm_csr_response_t;
 
 #pragma pack()
 
