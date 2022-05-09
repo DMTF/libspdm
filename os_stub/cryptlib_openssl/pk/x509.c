@@ -18,9 +18,7 @@
 #include <openssl/pem.h>
 #include <openssl/bio.h>
 
-
 /* OID*/
-
 #define OID_EXT_KEY_USAGE     { 0x55, 0x1D, 0x25 }
 #define OID_BASIC_CONSTRAINTS { 0x55, 0x1D, 0x13 }
 
@@ -2162,107 +2160,176 @@ bool libspdm_x509_get_cert_from_cert_chain(const uint8_t *cert_chain,
 }
 
 /**
- * Gen and verify RSA CSR.
+ * Gen CSR
+ *
+ * @param[in]      hash_nid              hash algo for sign
+ * @param[in]      asym_nid              asym algo for sign
+ *
+ * @param[out]     csr_len               CSR len for DER format
+ * @param[in]      csr_pointer           For input, csr_pointer is address to store CSR.
+ * @param[out]     csr_pointer           For input, csr_pointer is address for stored CSR.
+ * @param[in]      csr_buffer_size       The size of store CSR buffer.
+ *
+ * @param[in]      requester_info        requester info to gen CSR
+ * @param[in]      requester_info_length The len of requester info
+ *
+ * @param[in]      context               Pointer to asymmetric context
  *
  * @retval  true   Success.
- * @retval  false  Failed to gen and verify RSA CSR.
+ * @retval  false  Failed to gen CSR.
  **/
-bool libspdm_gen_and_verify_x509_csr(void)
+bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid, size_t *csr_len,
+                          uint8_t **csr_pointer, size_t csr_buffer_size,
+                          uint8_t *requester_info, size_t requester_info_length,
+                          void *context)
 {
-    int ret = 0;
-    RSA *r = NULL;
-    BIGNUM *bne = NULL;
 
-    int nVersion = 1;
-    int bits = 2048;
-    unsigned long e = RSA_F4;
+    /*X509_REQ_INFO *req_info;
+     * req_info = (X509_REQ_INFO *)requester_info;*/
+
+    int ret;
+    int version;
+    char *orgnization;
+    char *common;
 
     X509_REQ *x509_req = NULL;
     X509_NAME *x509_name = NULL;
-    EVP_PKEY *pKey = NULL;
+    EVP_PKEY *private_key;
+    const EVP_MD *md = NULL;
 
-    const char *szOrganization = "DMTF";
-    const char *szCommon = "PMCI";
+    uint8_t *csr_p;
+    ret = 0;
+    version = 0;
+    orgnization = NULL;
+    common = NULL;
 
-    /*1. generate rsa private key*/
-    bne = BN_new();
-    ret = BN_set_word(bne,e);
-    if (ret != 1) {
-        goto free_all;
-    }
+    x509_req = NULL;
+    x509_name = NULL;
+    md = NULL;
 
-    r = RSA_new();
-    ret = RSA_generate_key_ex(r, bits, bne, NULL);
-    if(ret != 1) {
-        goto free_all;
-    }
+    csr_p = *csr_pointer;
 
-    /*2. set version of x509 req*/
     x509_req = X509_REQ_new();
-    ret = X509_REQ_set_version(x509_req, nVersion);
-    if (ret != 1) {
+    if (x509_req == NULL) {
+        return false;
+    }
+
+    private_key = EVP_PKEY_new();
+    if (private_key == NULL) {
+        X509_REQ_free(x509_req);
+        return false;
+    }
+
+    switch (asym_nid)
+    {
+    case LIBSPDM_CRYPTO_NID_RSASSA2048:
+    case LIBSPDM_CRYPTO_NID_RSAPSS2048:
+    case LIBSPDM_CRYPTO_NID_RSASSA3072:
+    case LIBSPDM_CRYPTO_NID_RSAPSS3072:
+    case LIBSPDM_CRYPTO_NID_RSASSA4096:
+    case LIBSPDM_CRYPTO_NID_RSAPSS4096:
+        ret = EVP_PKEY_set1_RSA(private_key, (RSA *)context);
+        if (ret != 1) {
+            goto free_all;
+        }
+        break;
+    case LIBSPDM_CRYPTO_NID_ECDSA_NIST_P256:
+    case LIBSPDM_CRYPTO_NID_ECDSA_NIST_P384:
+    case LIBSPDM_CRYPTO_NID_ECDSA_NIST_P521:
+        ret = EVP_PKEY_set1_EC_KEY(private_key, (EC_KEY *)context);
+        if (ret != 1) {
+            goto free_all;
+        }
+        break;
+    default:
         goto free_all;
     }
 
-    /*3. set subject of x509 req*/
+    /* requester info parse TBD*/
+    if (requester_info_length != 0) {
+    }
+
+    /*set version of x509 req*/
+    ret = X509_REQ_set_version(x509_req, version);
+    if (ret != 1) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"set version error\n"));
+        goto free_all;
+    }
+
+    /*set subject of x509 req*/
     x509_name = X509_REQ_get_subject_name(x509_req);
 
-    ret = X509_NAME_add_entry_by_txt(x509_name,"O", MBSTRING_ASC,
-                                     (const unsigned char*)szOrganization, -1, -1, 0);
-    if (ret != 1) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"set subject O error\n"));
-        goto free_all;
-    }
-    ret = X509_NAME_add_entry_by_txt(x509_name,"CN", MBSTRING_ASC,
-                                     (const unsigned char*)szCommon, -1, -1, 0);
-    if (ret != 1) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"set subject CN error\n"));
-        goto free_all;
+    if (orgnization != NULL) {
+        ret = X509_NAME_add_entry_by_txt(x509_name,"O", MBSTRING_ASC,
+                                         (const unsigned char*)orgnization, -1, -1, 0);
+        if (ret != 1) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"set subject O error\n"));
+            goto free_all;
+        }
     }
 
-    /*4. set public key of x509 req*/
-    pKey = EVP_PKEY_new();
-    EVP_PKEY_assign_RSA(pKey, r);
-    r = NULL;
+    if (common != NULL) {
+        ret = X509_NAME_add_entry_by_txt(x509_name,"CN", MBSTRING_ASC,
+                                         (const unsigned char*)common, -1, -1, 0);
+        if (ret != 1) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"set subject CN error\n"));
+            goto free_all;
+        }
+    }
 
-    ret = X509_REQ_set_pubkey(x509_req, pKey);
+    /*set public key for x509 req: the public key is from private key*/
+    ret = X509_REQ_set_pubkey(x509_req, private_key);
     if (ret != 1) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"set public key error\n"));
         goto free_all;
     }
 
-    /*5. set sign key of x509 req*/
-    ret = X509_REQ_sign(x509_req, pKey, EVP_sha256());
+    /*get hash algo*/
+    switch (hash_nid) {
+    case LIBSPDM_CRYPTO_NID_SHA256:
+        md = EVP_sha256();
+        break;
+    case LIBSPDM_CRYPTO_NID_SHA384:
+        md = EVP_sha384();
+        break;
+    case LIBSPDM_CRYPTO_NID_SHA512:
+        md = EVP_sha512();
+        break;
+    case LIBSPDM_CRYPTO_NID_SHA3_256:
+        md = EVP_sha3_256();
+        break;
+    case LIBSPDM_CRYPTO_NID_SHA3_384:
+        md = EVP_sha3_384();
+        break;
+    case LIBSPDM_CRYPTO_NID_SHA3_512:
+        md = EVP_sha3_512();
+        break;
+    case LIBSPDM_CRYPTO_NID_SM3_256:
+        md = EVP_sm3();
+        break;
+    default:
+        ret = 0;
+        goto free_all;
+    }
+
+    /*sign for x509 req*/
+    ret = X509_REQ_sign(x509_req, private_key, md);
     if (ret <= 0) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"sign csr error\n"));
         goto free_all;
     }
 
-    /*6. verify use generated public key*/
-    ret = X509_REQ_verify(x509_req, pKey);
-    if (ret <= 0) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"verify csr use generate pkey error\n"));
+    *csr_len = i2d_X509_REQ(x509_req, &csr_p);
+    if (*csr_len <= 0) {
+        ret = 0;
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"i2d_X509_REQ error\n"));
         goto free_all;
     }
 
-    /*7. get public key and verify*/
-    if ((pKey = X509_REQ_get0_pubkey(x509_req)) == NULL) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"get public key error\n"));
-        goto free_all;
-    }
-
-    ret = X509_REQ_verify(x509_req, pKey);
-    if (ret <= 0) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"verify csr use get pkey error\n"));
-        goto free_all;
-    }
-
-    /*8. free*/
+    /*free*/
 free_all:
     X509_REQ_free(x509_req);
+    EVP_PKEY_free(private_key);
 
-    EVP_PKEY_free(pKey);
-    BN_free(bne);
-
-    return (ret == 1);
+    return (ret != 0);
 }

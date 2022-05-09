@@ -4,8 +4,69 @@
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 #include "test_crypt.h"
+#include "industry_standard/spdm.h"
+#include "spdm_device_secret_lib_sample/spdm_device_secret_lib_internal.h"
+#include "library/spdm_device_secret_lib.h"
 
 static uint8_t m_libspdm_oid_subject_alt_name[] = { 0x55, 0x1D, 0x11 };
+
+/**
+ * save the CSR
+ *
+ * @param[out] csr_len               CSR len for DER format
+ * @param[in]  csr_pointer           csr_pointer is address to store CSR.
+ * @param[in]  base_asym_algo        To distinguish file
+ *
+ * @retval true                      successfully.
+ * @retval false                     unsuccessfully.
+ **/
+bool libspdm_write_csr_to_file(const void * csr_pointer, size_t csr_len, uint32_t base_asym_algo)
+{
+    FILE *fp_out;
+    char* file_name;
+
+    switch (base_asym_algo) {
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048:
+        file_name = "rsa2048_csr";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
+        file_name = "rsa3072_csr";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
+        file_name = "rsa4096_csr";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
+        file_name = "ecc256_csr";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
+        file_name = "ecc384_csr";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
+        file_name = "ecc521_csr";
+        break;
+    default:
+        return false;
+    }
+
+    if ((fp_out = fopen(file_name, "w+b")) == NULL) {
+        printf("Unable to open file %s\n", file_name);
+        return false;
+    }
+
+    if ((fwrite(csr_pointer, 1, csr_len, fp_out)) != csr_len) {
+        printf("Write output file error %s\n", file_name);
+        fclose(fp_out);
+        return false;
+    }
+
+    fclose(fp_out);
+
+    return true;
+}
+
 
 /**
  * Validate Crypto X509 certificate Verify
@@ -393,7 +454,7 @@ cleanup:
 }
 
 /**
- * Gen and verify RSA CSR.
+ * Gen and verify CSR.
  *
  * @retval  true   Success.
  * @retval  false  Failed to gen and verify RSA CSR.
@@ -402,14 +463,63 @@ bool libspdm_validate_crypt_x509_csr(void)
 {
     bool ret;
 
-    libspdm_my_print("\nGen and verify CSR \n");
+    libspdm_my_print("\nGen CSR test:\n");
+    /*read private key to gen RSA CSR*/
+    uint8_t rsa_csr_pointer[LIBSPDM_MAX_CSR_SIZE] = {0};
+    size_t rsa_csr_len;
+    uint8_t *rsa_csr = rsa_csr_pointer;
 
-    ret = libspdm_gen_and_verify_x509_csr();
+    bool need_reset = false;
+
+    libspdm_my_print("Gen and save RSA CSR!!!\n");
+    ret = libspdm_gen_csr(SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384,
+                          SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072,
+                          &need_reset, &rsa_csr_len, &rsa_csr, LIBSPDM_MAX_CSR_SIZE,
+                          NULL, 0);
     if (!ret) {
-        libspdm_my_print("Gen and verify CSR fail !!!\n");
+        libspdm_my_print("Gen RSA CSR fail !!!\n");
         return ret;
     }
 
-    libspdm_my_print("Gen and verify CSR successful !!!\n");
+    ret = libspdm_write_csr_to_file(rsa_csr, rsa_csr_len,
+                                    SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072);
+    if (!ret) {
+        libspdm_my_print("Save RSA CSR fail !!!\n");
+        return ret;
+    }
+    libspdm_my_print("Gen and save RSA CSR successful !!!\n");
+
+    /*read private key to gen ECC CSR*/
+    uint8_t ecc_csr_pointer[LIBSPDM_MAX_CSR_SIZE];
+    size_t ecc_csr_len;
+    uint8_t *ecc_csr = ecc_csr_pointer;
+
+    libspdm_my_print("\nGen and save ECC CSR!!!\n");
+    ret = libspdm_gen_csr(SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384,
+                          SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384,
+                          &need_reset, &ecc_csr_len, &ecc_csr, LIBSPDM_MAX_CSR_SIZE,
+                          NULL, 0);
+    if (!ret) {
+        libspdm_my_print("Gen ECC CSR fail !!!\n");
+        return ret;
+    }
+
+    ret = libspdm_write_csr_to_file(ecc_csr, ecc_csr_len,
+                                    SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384);
+    if (!ret) {
+        libspdm_my_print("Save ECC CSR fail !!!\n");
+        return ret;
+    }
+    libspdm_my_print("Gen and save ECC CSR successful !!!\n");
+
     return ret;
+}
+
+void libspdm_dump_hex_str(const uint8_t *buffer, size_t buffer_size)
+{
+    size_t index;
+
+    for (index = 0; index < buffer_size; index++) {
+        printf("%02x", buffer[index]);
+    }
 }

@@ -464,6 +464,24 @@ typedef bool (*libspdm_aead_decrypt_func)(
 uint32_t libspdm_get_hash_size(uint32_t base_hash_algo);
 
 /**
+ * Return cipher ID, based upon the negotiated hash algorithm.
+ *
+ * @param  base_hash_algo                  SPDM base_hash_algo
+ *
+ * @return hash cipher ID
+ **/
+size_t libspdm_get_hash_nid(uint32_t base_hash_algo);
+
+/**
+ * Return asym NID, based upon the negotiated asym algorithm.
+ *
+ * @param  base_asym_algo                  SPDM base_asym_algo
+ *
+ * @return asym NID
+ **/
+size_t libspdm_get_aysm_nid(uint32_t base_asym_algo);
+
+/**
  * Allocates and initializes one HASH_CTX context for subsequent hash use.
  *
  * @param  base_hash_algo                 SPDM base_hash_algo

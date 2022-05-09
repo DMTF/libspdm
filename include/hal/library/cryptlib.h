@@ -2891,14 +2891,6 @@ bool libspdm_x509_get_cert_from_cert_chain(const uint8_t *cert_chain,
                                            size_t *cert_length);
 
 /**
- * Gen and verify RSA CSR.
- *
- * @retval  true   Success.
- * @retval  false  Failed to gen and verify RSA CSR.
- **/
-bool libspdm_gen_and_verify_x509_csr(void);
-
-/**
  * Construct a X509 object from DER-encoded certificate data.
  *
  * If cert is NULL, then return false.
@@ -4292,3 +4284,27 @@ bool libspdm_hkdf_sm3_256_expand(const uint8_t *prk, size_t prk_size,
                                  uint8_t *out, size_t out_size);
 
 #endif /* __BASE_CRYPT_LIB_H__*/
+
+/**
+ * Gen CSR
+ *
+ * @param[in]      hash_nid              hash algo for sign
+ * @param[in]      asym_nid              asym algo for sign
+ *
+ * @param[out]     csr_len               CSR len for DER format
+ * @param[in]      csr_pointer           For input, csr_pointer is address to store CSR.
+ * @param[out]     csr_pointer           For input, csr_pointer is address for stored CSR.
+ * @param[in]      csr_buffer_size       The size of store CSR buffer.
+ *
+ * @param[in]      requester_info        requester info to gen CSR
+ * @param[in]      requester_info_length The len of requester info
+ *
+ * @param[in]      context               Pointer to asymmetric context
+ *
+ * @retval  true   Success.
+ * @retval  false  Failed to gen CSR.
+ **/
+bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid, size_t *csr_len,
+                          uint8_t **csr_pointer, size_t csr_buffer_size,
+                          uint8_t *requester_info, size_t requester_info_length,
+                          void *context);

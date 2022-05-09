@@ -112,6 +112,206 @@ bool libspdm_read_requester_private_key(uint16_t req_base_asym_alg,
     return res;
 }
 
+bool libspdm_read_cached_requester_info(uint32_t base_asym_algo,
+                                        uint8_t **req_info, size_t *req_info_length)
+{
+    bool res;
+    char *file;
+
+    if (base_asym_algo == 0) {
+        return false;
+    }
+
+    switch (base_asym_algo) {
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048:
+        file = "rsa2048_req_info";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
+        file = "rsa3072_req_info";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
+        file = "rsa4096_req_info";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
+        file = "ecp256_req_info";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
+        file = "ecp384_req_info";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
+        file = "ecp521_req_info";
+        break;
+    default:
+        LIBSPDM_ASSERT(false);
+        return false;
+    }
+
+    res = libspdm_read_input_file(file, (void **)req_info, req_info_length);
+    return res;
+}
+
+bool libspdm_cache_requester_info(uint32_t base_asym_algo,
+                                  uint8_t *req_info, size_t req_info_length)
+{
+    bool res;
+    char *file;
+
+    if (base_asym_algo == 0) {
+        return false;
+    }
+
+    switch (base_asym_algo) {
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048:
+        file = "rsa2048_req_info";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
+        file = "rsa3072_req_info";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
+        file = "rsa4096_req_info";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
+        file = "ecp256_req_info";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
+        file = "ecp384_req_info";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
+        file = "ecp521_req_info";
+        break;
+    default:
+        LIBSPDM_ASSERT(false);
+        return false;
+    }
+
+    res = libspdm_write_output_file(file, req_info, req_info_length);
+
+    return res;
+}
+
+bool libspdm_read_cached_csr(uint32_t base_asym_algo, uint8_t **csr_pointer, size_t *csr_len)
+{
+    bool res;
+    char *file;
+
+    if (base_asym_algo == 0) {
+        return false;
+    }
+
+    switch (base_asym_algo) {
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048:
+        file = "rsa2048_csr";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
+        file = "rsa3072_csr";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
+        file = "rsa4096_csr";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
+        file = "ecp256_csr";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
+        file = "ecp384_csr";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
+        file = "ecp521_csr";
+        break;
+    default:
+        LIBSPDM_ASSERT(false);
+        return false;
+    }
+
+    res = libspdm_read_input_file(file, (void **)csr_pointer, csr_len);
+    return res;
+}
+
+/**
+ * Gen CSR
+ *
+ * @param[in]      base_hash_algo        hash algo for sign
+ * @param[in]      base_asym_algo        asym public key to set
+ * @param[in]      need_reset            device need reset for gen csr
+ *
+ * @param[out]     csr_len               CSR len for DER format
+ * @param[in]      csr_pointer           For input, csr_pointer is address to store CSR.
+ * @param[out]     csr_pointer           For input, csr_pointer is address for stored CSR.
+ * @param[in]      csr_buffer_size       The size of store CSR buffer.
+ *
+ * @param[in]      requester_info        requester info to gen CSR
+ * @param[in]      requester_info_length The len of requester info
+ *
+ * @retval  true   Success.
+ * @retval  false  Failed to gen CSR.
+ **/
+bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *need_reset,
+                     size_t *csr_len, uint8_t **csr_pointer, size_t csr_buffer_size,
+                     uint8_t *requester_info, size_t requester_info_length)
+{
+    bool result;
+    void *prikey;
+    size_t prikey_size;
+    size_t hash_nid;
+    size_t asym_nid;
+    void *context;
+
+    uint8_t *cached_req_info;
+    size_t cached_req_info_length;
+
+    /*device gen csr need reset*/
+    if (*need_reset) {
+        result = libspdm_read_cached_requester_info(base_asym_algo,
+                                                    &cached_req_info, &cached_req_info_length);
+
+        /*get the cahed requester info and csr*/
+        if ((result) &&
+            (cached_req_info_length == requester_info_length) &&
+            (libspdm_const_compare_mem(cached_req_info, requester_info, requester_info_length)) &&
+            (libspdm_read_cached_csr(base_asym_algo, csr_pointer, csr_len))) {
+            /*device don't need reset this time*/
+            *need_reset = false;
+            return true;
+        } else {
+            /*device need reset this time: cache the req_info */
+            result = libspdm_cache_requester_info(base_asym_algo,
+                                                  requester_info, requester_info_length);
+            if (!result) {
+                return result;
+            }
+        }
+    }
+
+    result = libspdm_read_responder_private_key(
+        base_asym_algo, &prikey, &prikey_size);
+    if (!result) {
+        return false;
+    }
+
+    result = libspdm_asym_get_private_key_from_pem(
+        base_asym_algo, prikey, prikey_size, NULL, &context);
+    if (!result) {
+        return false;
+    }
+
+    hash_nid = libspdm_get_hash_nid(base_hash_algo);
+    asym_nid = libspdm_get_aysm_nid(base_asym_algo);
+
+    result = libspdm_gen_x509_csr(hash_nid, asym_nid, csr_len, csr_pointer, csr_buffer_size,
+                                  requester_info, requester_info_length,
+                                  context);
+
+    return result;
+}
+
 /**
  * Fill image hash measurement block.
  *
