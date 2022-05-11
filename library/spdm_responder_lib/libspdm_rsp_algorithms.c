@@ -389,8 +389,12 @@ libspdm_return_t libspdm_get_response_algorithms(void *context,
 
     spdm_context->connection_info.algorithm.measurement_spec =
         spdm_request->measurement_specification;
-    spdm_context->connection_info.algorithm.measurement_hash_algo =
-        spdm_context->local_context.algorithm.measurement_hash_algo;
+    if (spdm_request->measurement_specification != 0) {
+        spdm_context->connection_info.algorithm.measurement_hash_algo =
+            spdm_context->local_context.algorithm.measurement_hash_algo;
+    } else {
+        spdm_context->connection_info.algorithm.measurement_hash_algo = 0;
+    }
     spdm_context->connection_info.algorithm.base_asym_algo =
         spdm_request->base_asym_algo;
     spdm_context->connection_info.algorithm.base_hash_algo =
@@ -513,7 +517,8 @@ libspdm_return_t libspdm_get_response_algorithms(void *context,
 
     if (libspdm_is_capabilities_flag_supported(
             spdm_context, false, 0,
-            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP) &&
+        (spdm_request->measurement_specification != 0)) {
         if (spdm_context->connection_info.algorithm.measurement_spec !=
             SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF) {
             return libspdm_generate_error_response(

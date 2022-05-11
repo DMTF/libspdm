@@ -82,13 +82,16 @@ libspdm_return_t libspdm_get_response_key_exchange(void *context,
                                                0, response_size, response);
     }
 
-    if (!libspdm_is_capabilities_flag_supported(
-            spdm_context, false,
-            0, SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP) &&
-        spdm_request->header.param1 > 0) {
-        return libspdm_generate_error_response(
-            spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
-            SPDM_KEY_EXCHANGE, response_size, response);
+    if (spdm_request->header.param1 > 0) {
+        if (!libspdm_is_capabilities_flag_supported(
+                spdm_context, false,
+                0, SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP) ||
+            (spdm_context->connection_info.algorithm.measurement_spec == 0) ||
+            (spdm_context->connection_info.algorithm.measurement_hash_algo == 0) ) {
+            return libspdm_generate_error_response(
+                spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
+                SPDM_KEY_EXCHANGE, response_size, response);
+        }
     }
 
     slot_id = spdm_request->header.param2;
