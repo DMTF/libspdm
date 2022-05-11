@@ -959,10 +959,12 @@ bool libspdm_write_certificate_to_nvm(uint8_t slot_id, const void * cert_chain,
                                       size_t cert_chain_size)
 {
     FILE *fp_out;
-    char file_name[] = {'s','l','o','t','_','i','d','_',(char)(slot_id+'0'),'\0'};
+    char file_name[] = {'s','l','o','t','_','i','d','_','0','\0'};
 
     const uint8_t *root_cert_buffer;
     size_t root_cert_buffer_size;
+
+    file_name[strlen(file_name) - 1] = (char)(slot_id+'0');
 
     /*verify cert chain*/
     if (!libspdm_x509_get_cert_from_cert_chain(
