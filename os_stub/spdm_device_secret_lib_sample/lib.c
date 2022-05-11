@@ -362,11 +362,9 @@ libspdm_return_t libspdm_measurement_collection(
     bool use_bit_stream;
     size_t measurement_block_size;
 
-    LIBSPDM_ASSERT(measurement_specification ==
-                   SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF);
-
-    if (measurement_specification !=
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF) {
+    if ((measurement_specification !=
+         SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF) ||
+        (measurement_hash_algo == 0)) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
 

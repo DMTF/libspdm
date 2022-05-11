@@ -175,6 +175,12 @@ libspdm_return_t libspdm_get_response_measurements(void *context,
             spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
             SPDM_GET_MEASUREMENTS, response_size, response);
     }
+    if ((spdm_context->connection_info.algorithm.measurement_spec == 0) ||
+        (spdm_context->connection_info.algorithm.measurement_hash_algo == 0) ) {
+        return libspdm_generate_error_response(
+            spdm_context, SPDM_ERROR_CODE_UNEXPECTED_REQUEST,
+            0, response_size, response);
+    }
     if (!spdm_context->last_spdm_request_session_id_valid) {
         if (spdm_context->connection_info.connection_state <
             LIBSPDM_CONNECTION_STATE_AUTHENTICATED) {
