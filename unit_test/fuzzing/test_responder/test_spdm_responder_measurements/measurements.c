@@ -43,6 +43,7 @@ void libspdm_test_responder_measurements_case1(void **State)
     response_size = sizeof(response);
     libspdm_get_response_measurements(spdm_context, spdm_test_context->test_buffer_size,
                                       spdm_test_context->test_buffer, &response_size, response);
+    libspdm_reset_message_m(spdm_context, NULL);
 }
 
 void libspdm_test_responder_measurements_case2(void **State)
@@ -89,6 +90,7 @@ void libspdm_test_responder_measurements_case2(void **State)
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
     libspdm_get_response_measurements(spdm_context, spdm_test_context->test_buffer_size,
                                       spdm_test_context->test_buffer, &response_size, response);
+    libspdm_reset_message_m(spdm_context, NULL);
 }
 
 void libspdm_test_responder_measurements_case3(void **State)
@@ -130,6 +132,7 @@ void libspdm_test_responder_measurements_case3(void **State)
 
     libspdm_get_response_measurements(spdm_context, spdm_test_context->test_buffer_size,
                                       spdm_test_context->test_buffer, &response_size, response);
+    libspdm_reset_message_m(spdm_context, NULL);
     free(data);
 }
 
@@ -191,6 +194,7 @@ void libspdm_test_responder_measurements_case4(void **State)
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
     libspdm_get_response_measurements(spdm_context, spdm_test_context->test_buffer_size,
                                       spdm_test_context->test_buffer, &response_size, response);
+    libspdm_reset_message_m(spdm_context, NULL);
     free(data);
 }
 

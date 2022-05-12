@@ -97,6 +97,10 @@ void libspdm_test_responder_psk_finish_rsp_case1(void **State)
     response_size = sizeof(response);
     libspdm_get_response_psk_finish(spdm_context, spdm_test_context->test_buffer_size,
                                     spdm_test_context->test_buffer, &response_size, response);
+    if (spdm_context->session_info[0].session_id != INVALID_SESSION_ID) {
+        libspdm_reset_message_f(spdm_context, spdm_context->session_info);
+        libspdm_reset_message_k(spdm_context, spdm_context->session_info);
+    }
     free(data1);
 }
 
@@ -181,6 +185,10 @@ void libspdm_test_responder_psk_finish_rsp_case2(void **State)
     response_size = sizeof(response);
     libspdm_get_response_psk_finish(spdm_context, spdm_test_psk_finish_request_size,
                                     spdm_test_psk_finish_request, &response_size, response);
+    if (spdm_context->session_info[0].session_id != INVALID_SESSION_ID) {
+        libspdm_reset_message_f(spdm_context, spdm_context->session_info);
+        libspdm_reset_message_k(spdm_context, spdm_context->session_info);
+    }
     free(data1);
 }
 

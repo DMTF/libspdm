@@ -41,6 +41,7 @@ void libspdm_test_responder_encap_get_digests_case1(void **State)
 
     libspdm_process_encap_response_digest(spdm_context, spdm_test_context->test_buffer_size,
                                           spdm_test_context->test_buffer, &need_continue);
+    libspdm_reset_message_mut_c(spdm_context);
 }
 
 void libspdm_test_get_encap_request_get_digest_case2(void **State)

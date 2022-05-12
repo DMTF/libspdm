@@ -66,6 +66,7 @@ void libspdm_test_responder_encap_get_certificate_case1(void **State)
 
     libspdm_process_encap_response_certificate(spdm_context, spdm_response_size, spdm_response,
                                                &need_continue);
+    libspdm_reset_message_mut_b(spdm_context);
     free(data);
 }
 

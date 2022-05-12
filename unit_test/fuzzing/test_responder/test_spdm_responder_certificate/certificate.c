@@ -54,6 +54,7 @@ void libspdm_test_responder_certificate_case1(void **State)
                                      spdm_test_context->test_buffer_size,
                                      spdm_test_context->test_buffer,
                                      &response_size, response);
+    libspdm_reset_message_b(spdm_context);
     free(data);
 }
 
@@ -91,6 +92,7 @@ void libspdm_test_responder_certificate_case2(void **State)
                                      spdm_test_context->test_buffer_size,
                                      spdm_test_context->test_buffer,
                                      &response_size, response);
+    libspdm_reset_message_b(spdm_context);
     free(data);
 }
 
@@ -172,6 +174,7 @@ void libspdm_test_responder_certificate_case5(void **State)
                                      spdm_test_context->test_buffer_size,
                                      spdm_test_context->test_buffer,
                                      &response_size, response);
+    libspdm_reset_message_b(spdm_context);
     free(data);
 }
 

@@ -45,6 +45,7 @@ void libspdm_test_requester_encap_digests(void **State)
     libspdm_get_encap_response_digest(spdm_context, request_size,
                                       (uint8_t *)spdm_test_context->test_buffer,
                                       &response_size, response);
+    libspdm_reset_message_mut_b(spdm_context);
 }
 
 libspdm_test_context_t m_libspdm_requester_encap_digests_test_context = {
