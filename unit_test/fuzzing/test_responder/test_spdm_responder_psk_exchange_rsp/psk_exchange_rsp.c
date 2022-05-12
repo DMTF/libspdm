@@ -108,8 +108,9 @@ void libspdm_test_responder_psk_exchange_case1(void **State)
     libspdm_get_response_psk_exchange(
         spdm_context, spdm_test_psk_exchange_request_size,
         spdm_test_psk_exchange_request, &response_size, response);
-
-    libspdm_reset_message_k(spdm_context, spdm_context->session_info);
+    if (spdm_context->session_info[0].session_id != INVALID_SESSION_ID) {
+        libspdm_reset_message_k(spdm_context, spdm_context->session_info);
+    }
     free(data);
 }
 
@@ -160,7 +161,9 @@ void libspdm_test_responder_psk_exchange_case2(void **State)
         spdm_context,  spdm_test_context->test_buffer_size,
         spdm_test_context->test_buffer, &response_size, response);
 
-    libspdm_reset_message_k(spdm_context, spdm_context->session_info);
+    if (spdm_context->session_info[0].session_id != INVALID_SESSION_ID) {
+        libspdm_reset_message_k(spdm_context, spdm_context->session_info);
+    }
     free(data);
 }
 
@@ -321,7 +324,9 @@ void libspdm_test_responder_psk_exchange_case4(void **State)
                                       spdm_test_psk_exchange_request, &response_size,
                                       response);
 
-    libspdm_reset_message_k(spdm_context, spdm_context->session_info);
+    if (spdm_context->session_info[0].session_id != INVALID_SESSION_ID) {
+        libspdm_reset_message_k(spdm_context, spdm_context->session_info);
+    }
     free(data);
 }
 
@@ -405,7 +410,9 @@ void libspdm_test_responder_psk_exchange_case5(void **State)
                                       spdm_test_psk_exchange_request, &response_size,
                                       response);
 
-    libspdm_reset_message_k(spdm_context, spdm_context->session_info);
+    if (spdm_context->session_info[0].session_id != INVALID_SESSION_ID) {
+        libspdm_reset_message_k(spdm_context, spdm_context->session_info);
+    }
     free(data);
 }
 

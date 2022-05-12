@@ -92,6 +92,9 @@ void libspdm_test_responder_key_exchange_case1(void **State)
 
     libspdm_get_response_key_exchange(spdm_context, spdm_test_key_exchange_request_size,
                                       spdm_test_key_exchange_request, &response_size, response);
+    if (spdm_context->session_info[0].session_id != INVALID_SESSION_ID) {
+        libspdm_reset_message_k(spdm_context, spdm_context->session_info);
+    }
     free(data);
 }
 
@@ -155,6 +158,9 @@ void libspdm_test_responder_key_exchange_case2(void **State)
 
     libspdm_get_response_key_exchange(spdm_context, spdm_test_key_exchange_request_size,
                                       spdm_test_key_exchange_request, &response_size, response);
+    if (spdm_context->session_info[0].session_id != INVALID_SESSION_ID) {
+        libspdm_reset_message_k(spdm_context, spdm_context->session_info);
+    }
     free(data);
 }
 
@@ -201,6 +207,9 @@ void libspdm_test_responder_key_exchange_case3(void **State)
 
     libspdm_get_response_key_exchange(spdm_context, spdm_test_key_exchange_request_size,
                                       spdm_test_key_exchange_request, &response_size, response);
+    if (spdm_context->session_info[0].session_id != INVALID_SESSION_ID) {
+        libspdm_reset_message_k(spdm_context, spdm_context->session_info);
+    }
     free(data);
 }
 
@@ -271,6 +280,9 @@ void libspdm_test_responder_key_exchange_case4(void **State)
 
     libspdm_get_response_key_exchange(spdm_context, spdm_test_key_exchange_request_size,
                                       spdm_test_key_exchange_request, &response_size, response);
+    if (spdm_context->session_info[0].session_id != INVALID_SESSION_ID) {
+        libspdm_reset_message_k(spdm_context, spdm_context->session_info);
+    }
     free(data);
 }
 
@@ -339,6 +351,9 @@ void libspdm_test_responder_key_exchange_case5(void **State)
 
     libspdm_get_response_key_exchange(spdm_context, spdm_test_key_exchange_request_size,
                                       spdm_test_key_exchange_request, &response_size, response);
+    if (spdm_context->session_info[0].session_id != INVALID_SESSION_ID) {
+        libspdm_reset_message_k(spdm_context, spdm_context->session_info);
+    }
     free(data);
 }
 
@@ -401,6 +416,9 @@ void libspdm_test_responder_key_exchange_case6(void **State)
 
     libspdm_get_response_key_exchange(spdm_context, spdm_test_key_exchange_request_size,
                                       spdm_test_key_exchange_request, &response_size, response);
+    if (spdm_context->session_info[0].session_id != INVALID_SESSION_ID) {
+        libspdm_reset_message_k(spdm_context, spdm_context->session_info);
+    }
     free(data);
 }
 

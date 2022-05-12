@@ -232,6 +232,7 @@ void libspdm_test_get_response_encapsulated_response_ack_case1(void **State)
                                                    spdm_test_context->test_buffer_size,
                                                    spdm_test_context->test_buffer, &response_size,
                                                    response);
+    libspdm_reset_message_mut_b(spdm_context);
     free(data);
 }
 
@@ -305,6 +306,7 @@ void libspdm_test_get_response_encapsulated_response_ack_case3(void **State)
                                                    spdm_test_context->test_buffer_size,
                                                    spdm_test_context->test_buffer, &response_size,
                                                    response);
+    libspdm_reset_message_mut_b(spdm_context);
     free(data);
 }
 

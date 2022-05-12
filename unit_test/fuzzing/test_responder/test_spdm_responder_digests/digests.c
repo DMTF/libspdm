@@ -44,6 +44,7 @@ void libspdm_test_responder_digests_case1(void **State)
                                  spdm_test_context->test_buffer_size,
                                  spdm_test_context->test_buffer,
                                  &response_size, response);
+    libspdm_reset_message_b(spdm_context);
 }
 
 void libspdm_test_responder_digests_case2(void **State)
@@ -67,6 +68,7 @@ void libspdm_test_responder_digests_case2(void **State)
                                  spdm_test_context->test_buffer_size,
                                  spdm_test_context->test_buffer,
                                  &response_size, response);
+    libspdm_reset_message_b(spdm_context);
 }
 
 void libspdm_test_responder_digests_case3(void **State)
@@ -89,6 +91,7 @@ void libspdm_test_responder_digests_case3(void **State)
                                  spdm_test_context->test_buffer_size,
                                  spdm_test_context->test_buffer,
                                  &response_size, response);
+    libspdm_reset_message_b(spdm_context);
 }
 
 void libspdm_test_responder_digests_case4(void **State)
@@ -112,6 +115,7 @@ void libspdm_test_responder_digests_case4(void **State)
                                  spdm_test_context->test_buffer_size,
                                  spdm_test_context->test_buffer,
                                  &response_size, response);
+    libspdm_reset_message_b(spdm_context);
 }
 
 libspdm_test_context_t m_libspdm_responder_digests_test_context = {
