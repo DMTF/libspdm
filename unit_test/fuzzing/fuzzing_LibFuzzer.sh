@@ -118,6 +118,8 @@ test_spdm_responder_key_update
 test_spdm_responder_end_session
 test_spdm_responder_if_ready
 test_x509_certificate_check
+test_spdm_responder_set_certificate
+test_spdm_requester_set_certificate
 )
 object_parameters=()
 cp -r $fuzzing_seeds ./
