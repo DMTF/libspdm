@@ -2877,7 +2877,7 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         secured_message_context->application_secret
         .response_data_sequence_number = m_libspdm_last_rsp_sequence_number;
 
-        /* once the sequence number is used, it should be increased for next BUSY nessage.*/
+        /* once the sequence number is used, it should be increased for next BUSY message.*/
         m_libspdm_last_rsp_sequence_number++;
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -3216,6 +3216,9 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
                          secured_message_context->aead_iv_size);
         secured_message_context->application_secret
         .response_data_sequence_number = m_libspdm_last_rsp_sequence_number;
+
+        /* once the sequence number is used, it should be increased for next NOT_READY message.*/
+        m_libspdm_last_rsp_sequence_number++;
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response->header.request_response_code = SPDM_ERROR;
@@ -5429,11 +5432,8 @@ void libspdm_test_requester_key_update_case32(void **state)
 
     status = libspdm_key_update(
         spdm_context, session_id, false);
-    /* BUGBUG: we get LIBSPDM_STATUS_INVALID_MSG_FIELD here, because of sequence number mismatch
-     * in libspdm_decode_secured_message() when parsing response from SPDM_RESPOND_IF_READY.
-     * This is NOT expected. Need investigate later.
-     * The expected behavior is to get NOT_READY message and return error. */
-    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+
+    assert_int_equal(status, LIBSPDM_STATUS_NOT_READY_PEER);
     assert_memory_equal(((libspdm_secured_message_context_t
                           *)(session_info->secured_message_context))
                         ->application_secret.request_data_secret,
