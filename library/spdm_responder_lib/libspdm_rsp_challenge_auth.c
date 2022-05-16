@@ -248,6 +248,9 @@ libspdm_return_t libspdm_get_response_challenge_auth(void *context,
                                      LIBSPDM_CONNECTION_STATE_AUTHENTICATED);
     }
 
+    libspdm_reset_message_b(spdm_context);
+    libspdm_reset_message_c(spdm_context);
+
     return LIBSPDM_STATUS_SUCCESS;
 }
 

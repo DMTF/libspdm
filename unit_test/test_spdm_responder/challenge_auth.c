@@ -917,9 +917,6 @@ void libspdm_test_responder_challenge_auth_case15(void **state)
     spdm_challenge_auth_response_t *spdm_response;
     void *data1;
     size_t data_size1;
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    size_t signature_size;
-#endif
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -954,9 +951,6 @@ void libspdm_test_responder_challenge_auth_case15(void **state)
     spdm_context->transcript.message_b.buffer_size = 8;
     libspdm_set_mem(spdm_context->transcript.message_c.buffer, 12, (uint8_t) 0xDD);
     spdm_context->transcript.message_c.buffer_size = 12;
-
-    signature_size = libspdm_get_asym_signature_size(
-        spdm_context->connection_info.algorithm.base_asym_algo);
 #endif
 
     response_size = sizeof(response);
@@ -977,15 +971,6 @@ void libspdm_test_responder_challenge_auth_case15(void **state)
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_a.buffer_size, 10);
-    assert_int_equal(spdm_context->transcript.message_b.buffer_size, 8);
-    assert_int_equal(spdm_context->transcript.message_c.buffer_size, 12 +
-                     m_libspdm_challenge_request1_size + response_size - signature_size);
-
-    assert_memory_equal(spdm_context->transcript.message_c.buffer + 12,
-                        &m_libspdm_challenge_request1, m_libspdm_challenge_request1_size);
-    assert_memory_equal(spdm_context->transcript.message_c.buffer + 12 +
-                        m_libspdm_challenge_request1_size,
-                        response, response_size - signature_size);
 #endif
     free(data1);
 }
