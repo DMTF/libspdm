@@ -215,6 +215,13 @@ libspdm_return_t libspdm_try_get_capabilities(libspdm_context_t *spdm_context)
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
+    if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+        if ((spdm_response->data_transfer_size < SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12) ||
+            (spdm_response->data_transfer_size > spdm_response->max_spdm_msg_size)) {
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+            goto receive_done;
+        }
+    }
 
     /* Cache data*/
 
