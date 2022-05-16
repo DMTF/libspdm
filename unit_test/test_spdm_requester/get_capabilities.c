@@ -966,6 +966,8 @@ libspdm_return_t libspdm_requester_get_capabilities_test_receive_message(
         spdm_response->header.param2 = 0;
         spdm_response->ct_exponent = 0;
         spdm_response->flags = LIBSPDM_DEFAULT_CAPABILITY_FLAG;
+        spdm_response->data_transfer_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+        spdm_response->max_spdm_msg_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, spdm_response_size,
