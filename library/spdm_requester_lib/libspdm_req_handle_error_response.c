@@ -186,9 +186,9 @@ libspdm_return_t libspdm_handle_response_not_ready(libspdm_context_t *spdm_conte
 
 
 libspdm_return_t libspdm_handle_large_response(libspdm_context_t* spdm_context,
-    const uint32_t* session_id,
-    size_t* response_size,
-    void** response)
+                                               const uint32_t* session_id,
+                                               size_t* response_size,
+                                               void** response)
 {
     libspdm_return_t status;
     uint8_t chunk_handle;
@@ -204,13 +204,13 @@ libspdm_return_t libspdm_handle_large_response(libspdm_context_t* spdm_context,
     size_t max_response_size;
 
     void*    scratch_buffer;
-    size_t   scratch_buffer_size;
+    size_t scratch_buffer_size;
     uint16_t chunk_seq_no;
     uint8_t* chunk_ptr;
     uint8_t* large_response;
-    size_t   large_response_capacity;
-    size_t   large_response_size;
-    size_t   large_response_size_so_far;
+    size_t large_response_capacity;
+    size_t large_response_size;
+    size_t large_response_size_so_far;
 
     if (*response_size < sizeof(spdm_error_response_t) +
         sizeof(spdm_error_data_large_response_t)) {
@@ -242,7 +242,9 @@ libspdm_return_t libspdm_handle_large_response(libspdm_context_t* spdm_context,
     libspdm_zero_mem(*response, *response_size);
 
     libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
-    LIBSPDM_ASSERT(scratch_buffer_size >= LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE + LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+    LIBSPDM_ASSERT(
+        scratch_buffer_size >=
+        LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE + LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
 
     /* The first LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE bytes of the scratch
      * buffer may be used for other purposes. Use only after that section. */
@@ -262,7 +264,7 @@ libspdm_return_t libspdm_handle_large_response(libspdm_context_t* spdm_context,
         spdm_request_size = sizeof(spdm_chunk_get_request_t);
 
         status = libspdm_send_spdm_request(spdm_context, session_id,
-            spdm_request_size, spdm_request);
+                                           spdm_request_size, spdm_request);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             break;
         }
@@ -271,7 +273,7 @@ libspdm_return_t libspdm_handle_large_response(libspdm_context_t* spdm_context,
 
         libspdm_zero_mem(*response, *response_size);
         status = libspdm_receive_spdm_response(spdm_context, session_id,
-            response_size, response);
+                                               response_size, response);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             break;
         }
@@ -293,7 +295,7 @@ libspdm_return_t libspdm_handle_large_response(libspdm_context_t* spdm_context,
                 break;
             }
             if (large_response_size > max_response_size
-             || large_response_size > large_response_capacity) {
+                || large_response_size > large_response_capacity) {
                 status = LIBSPDM_STATUS_BUFFER_TOO_SMALL;
                 break;
             }
@@ -316,7 +318,7 @@ libspdm_return_t libspdm_handle_large_response(libspdm_context_t* spdm_context,
         }
         if (spdm_response->header.request_response_code == SPDM_ERROR) {
             status = libspdm_handle_simple_error_response(spdm_context,
-                spdm_response->header.param1);
+                                                          spdm_response->header.param1);
             break;
         }
         if (spdm_response->header.request_response_code != SPDM_CHUNK_RESPONSE) {
@@ -329,14 +331,14 @@ libspdm_return_t libspdm_handle_large_response(libspdm_context_t* spdm_context,
         }
 
         libspdm_copy_mem(large_response + large_response_size_so_far,
-            large_response_size - large_response_size_so_far,
-            chunk_ptr, spdm_response->chunk_size);
+                         large_response_size - large_response_size_so_far,
+                         chunk_ptr, spdm_response->chunk_size);
 
         large_response_size_so_far += spdm_response->chunk_size;
         chunk_seq_no++;
 
     } while (LIBSPDM_STATUS_IS_SUCCESS(status)
-        && large_response_size_so_far < large_response_size);
+             && large_response_size_so_far < large_response_size);
 
     libspdm_release_sender_buffer(spdm_context);
 

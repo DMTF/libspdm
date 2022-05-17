@@ -283,12 +283,12 @@ typedef struct {
     bool     chunk_in_use;
 
 #if LIBSPDM_ENABLE_CHUNK_CAP
-    uint8_t  chunk_handle;
+    uint8_t chunk_handle;
     uint16_t chunk_seq_no;
-    size_t   chunk_bytes_transferred;
+    size_t chunk_bytes_transferred;
 
-    void*    large_message;
-    size_t   large_message_size;
+    void* large_message;
+    size_t large_message_size;
 #endif /* LIBSPDM_ENABLE_CHUNK_CAP */
 
 } libspdm_chunk_info_t;

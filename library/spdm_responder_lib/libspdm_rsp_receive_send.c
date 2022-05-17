@@ -453,15 +453,15 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
         /* If responder is expecting chunk_get or chunk_send requests
          * and does not get them, fail the request. */
         if ((spdm_context->chunk_context.get.chunk_in_use
-                && get_response_func != libspdm_get_response_chunk_get)
+             && get_response_func != libspdm_get_response_chunk_get)
             || (spdm_context->chunk_context.send.chunk_in_use
                 && get_response_func != libspdm_get_response_chunk_send)) {
 
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                          "Responder did not receive expected chunk request.\n"));
+                           "Responder did not receive expected chunk request.\n"));
             return libspdm_generate_error_response(spdm_context,
-                SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
-                &my_response_size, my_response);
+                                                   SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
+                                                   &my_response_size, my_response);
         }
         #endif /* LIBSPDM_ENABLE_CHUNK_CAP*/
 
@@ -497,15 +497,15 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
          * previous large responses, they will be lost. */
         if (get_info->chunk_in_use) {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
-                          "Warning: Overwriting previous unrequested chunk_get info.\n"));
+                           "Warning: Overwriting previous unrequested chunk_get info.\n"));
         }
 
         libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
         LIBSPDM_ASSERT(scratch_buffer_size >= LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE
-                           + LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+                       + LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
 
         /* The first LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE bytes of the scratch
-           buffer may be used for other purposes. Use only after that section. */
+         * buffer may be used for other purposes. Use only after that section. */
 
         scratch_buffer = (((uint8_t*) scratch_buffer) + LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE);
         scratch_buffer_size = scratch_buffer_size - LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE;
@@ -514,7 +514,7 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
 
             get_info->chunk_in_use = true;
             /* Increment chunk_handle here as opposed to end of chunk_get handler
-               in case requester never issues chunk_get. */
+             * in case requester never issues chunk_get. */
             get_info->chunk_handle++;
             get_info->chunk_seq_no = 0;
             get_info->chunk_bytes_transferred = 0;
@@ -536,7 +536,7 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
         #endif /* LIBSPDM_ENABLE_CHUNK_CAP */
         {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
-                "Warning: Could not save chunk. Scratch buffer too small.\n"));
+                           "Warning: Could not save chunk. Scratch buffer too small.\n"));
 
             status = libspdm_generate_error_response(spdm_context,
                                                      SPDM_ERROR_CODE_LARGE_RESPONSE,

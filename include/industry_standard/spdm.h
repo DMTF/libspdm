@@ -1053,7 +1053,7 @@ typedef struct {
 typedef struct {
     spdm_message_header_t header;
     /* param1 - Reserved
-     * param2 - Handle */
+    * param2 - Handle */
     uint16_t chunk_seq_no;
 } spdm_chunk_get_request_t;
 

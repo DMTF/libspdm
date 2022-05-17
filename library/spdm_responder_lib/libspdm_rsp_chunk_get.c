@@ -3,21 +3,21 @@
 #if LIBSPDM_ENABLE_CHUNK_CAP
 
 libspdm_return_t libspdm_get_response_chunk_get(void* context,
-    size_t request_size,
-    const void* request,
-    size_t* response_size,
-    void* response)
+                                                size_t request_size,
+                                                const void* request,
+                                                size_t* response_size,
+                                                void* response)
 {
     libspdm_context_t* spdm_context;
     libspdm_chunk_info_t* get_info;
 
-    spdm_chunk_get_request_t* spdm_request;
+    const spdm_chunk_get_request_t* spdm_request;
     spdm_chunk_response_response_t* spdm_response;
 
     uint8_t* spdm_chunk;
 
     spdm_context = (libspdm_context_t*) context;
-    spdm_request = (spdm_chunk_get_request_t*) request;
+    spdm_request = (const spdm_chunk_get_request_t*) request;
     spdm_response = (spdm_chunk_response_response_t*) response;
     get_info = &spdm_context->chunk_context.get;
 
@@ -26,8 +26,8 @@ libspdm_return_t libspdm_get_response_chunk_get(void* context,
 
     if (spdm_request->header.spdm_version != libspdm_get_connection_version(spdm_context)) {
         return libspdm_generate_error_response(spdm_context,
-            SPDM_ERROR_CODE_VERSION_MISMATCH, 0,
-            response_size, response);
+                                               SPDM_ERROR_CODE_VERSION_MISMATCH, 0,
+                                               response_size, response);
     }
     if (spdm_context->response_state != LIBSPDM_RESPONSE_STATE_NORMAL) {
         return libspdm_responder_handle_response_state(
@@ -38,32 +38,31 @@ libspdm_return_t libspdm_get_response_chunk_get(void* context,
     if (spdm_context->connection_info.connection_state <
         LIBSPDM_CONNECTION_STATE_NOT_STARTED) {
         return libspdm_generate_error_response(spdm_context,
-            SPDM_ERROR_CODE_UNEXPECTED_REQUEST,
-            0, response_size, response);
+                                               SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,                                response_size, response);
     }
 
     if (request_size < sizeof(spdm_chunk_get_request_t)) {
         return libspdm_generate_error_response(spdm_context,
-            SPDM_ERROR_CODE_INVALID_REQUEST,
-            0, response_size, response);
+                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                               response_size, response);
     }
 
     if (get_info->chunk_in_use == false) {
         return libspdm_generate_error_response(spdm_context,
-            SPDM_ERROR_CODE_UNEXPECTED_REQUEST,
-            0, response_size, response);
+                                               SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
+                                               response_size, response);
     }
 
     if (spdm_request->header.param2 != get_info->chunk_handle) {
         return libspdm_generate_error_response(spdm_context,
-            SPDM_ERROR_CODE_INVALID_REQUEST,
-            0, response_size, response);
+                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                               response_size, response);
     }
 
     if (spdm_request->chunk_seq_no != get_info->chunk_seq_no) {
         return libspdm_generate_error_response(spdm_context,
-            SPDM_ERROR_CODE_INVALID_REQUEST,
-            0, response_size, response);
+                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                               response_size, response);
     }
 
     libspdm_zero_mem(response, *response_size);
@@ -95,23 +94,23 @@ libspdm_return_t libspdm_get_response_chunk_get(void* context,
         spdm_chunk += sizeof(uint32_t);
 
         *response_size = spdm_context->transport_get_header_size(spdm_context)
-                             + sizeof(spdm_chunk_response_response_t)
-                             + sizeof(uint32_t)
-                             + spdm_response->chunk_size;
+                         + sizeof(spdm_chunk_response_response_t)
+                         + sizeof(uint32_t)
+                         + spdm_response->chunk_size;
     }
     else {
         spdm_response->chunk_size =
             LIBSPDM_MIN(spdm_context->local_context.capability.data_transfer_size
-                            - spdm_context->transport_get_header_size(spdm_context)
-                            - sizeof(spdm_chunk_response_response_t),
+                        - spdm_context->transport_get_header_size(spdm_context)
+                        - sizeof(spdm_chunk_response_response_t),
                         (uint32_t) (get_info->large_message_size
-                            - get_info->chunk_bytes_transferred));
+                                    - get_info->chunk_bytes_transferred));
 
         spdm_chunk = (uint8_t*) (spdm_response + 1);
 
         *response_size = spdm_context->transport_get_header_size(spdm_context)
-                             + sizeof(spdm_chunk_response_response_t)
-                             + spdm_response->chunk_size;
+                         + sizeof(spdm_chunk_response_response_t)
+                         + spdm_response->chunk_size;
     }
 
     libspdm_copy_mem(spdm_chunk, spdm_response->chunk_size,
