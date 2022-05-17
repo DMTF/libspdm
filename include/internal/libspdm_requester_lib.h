@@ -58,42 +58,6 @@ libspdm_return_t libspdm_handle_error_response_main(
     size_t expected_response_size);
 
 /**
- * This function sends GET_VERSION and receives VERSION.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- *
- * @retval RETURN_SUCCESS               The GET_VERSION is sent and the VERSION is received.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- **/
-libspdm_return_t libspdm_get_version(libspdm_context_t *spdm_context,
-                                     uint8_t *version_number_entry_count,
-                                     spdm_version_number_t *version_number_entry);
-
-/**
- * This function sends GET_CAPABILITIES and receives CAPABILITIES.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  RequesterCTExponent          RequesterCTExponent to the GET_CAPABILITIES request.
- * @param  RequesterFlags               RequesterFlags to the GET_CAPABILITIES request.
- * @param  ResponderCTExponent          ResponderCTExponent from the CAPABILITIES response.
- * @param  ResponderFlags               ResponderFlags from the CAPABILITIES response.
- *
- * @retval RETURN_SUCCESS               The GET_CAPABILITIES is sent and the CAPABILITIES is received.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- **/
-libspdm_return_t libspdm_get_capabilities(libspdm_context_t *spdm_context);
-
-/**
- * This function sends NEGOTIATE_ALGORITHMS and receives ALGORITHMS.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- *
- * @retval RETURN_SUCCESS               The NEGOTIATE_ALGORITHMS is sent and the ALGORITHMS is received.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- **/
-libspdm_return_t libspdm_negotiate_algorithms(libspdm_context_t *spdm_context);
-
-/**
  * This function sends KEY_EXCHANGE and receives KEY_EXCHANGE_RSP for SPDM key exchange.
  *
  * @param  spdm_context                  A pointer to the SPDM context.

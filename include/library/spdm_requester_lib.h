@@ -72,6 +72,38 @@ libspdm_return_t libspdm_init_connection(void *spdm_context,
                                          bool get_version_only);
 
 /**
+ * This function sends GET_VERSION and receives VERSION.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ *
+ * @retval RETURN_SUCCESS               The GET_VERSION is sent and the VERSION is received.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ **/
+libspdm_return_t libspdm_get_version(void *spdm_context,
+                                     uint8_t *version_number_entry_count,
+                                     spdm_version_number_t *version_number_entry);
+
+/**
+ * This function sends GET_CAPABILITIES and receives CAPABILITIES.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ *
+ * @retval RETURN_SUCCESS               The GET_CAPABILITIES is sent and the CAPABILITIES is received.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ **/
+libspdm_return_t libspdm_get_capabilities(void *spdm_context);
+
+/**
+ * This function sends NEGOTIATE_ALGORITHMS and receives ALGORITHMS.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ *
+ * @retval RETURN_SUCCESS               The NEGOTIATE_ALGORITHMS is sent and the ALGORITHMS is received.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ **/
+libspdm_return_t libspdm_negotiate_algorithms(void *spdm_context);
+
+/**
  * This function sends GET_DIGEST
  * to get all digest of the certificate chains from device.
  *

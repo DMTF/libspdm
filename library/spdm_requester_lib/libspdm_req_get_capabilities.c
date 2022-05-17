@@ -275,11 +275,13 @@ receive_done:
  * @retval LIBSPDM_STATUS_BUFFER_FULL
  *         The buffer used to store transcripts is exhausted.
  **/
-libspdm_return_t libspdm_get_capabilities(libspdm_context_t *spdm_context)
+libspdm_return_t libspdm_get_capabilities(void *context)
 {
     size_t retry;
     libspdm_return_t status;
+    libspdm_context_t *spdm_context;
 
+    spdm_context = context;
     spdm_context->crypto_request = false;
     retry = spdm_context->retry_times;
     do {

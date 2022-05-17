@@ -477,11 +477,13 @@ receive_done:
  *         The Requester and Responder could not agree on mutual algorithms.
  *         Note: This return value may be removed in the future.
  **/
-libspdm_return_t libspdm_negotiate_algorithms(libspdm_context_t *spdm_context)
+libspdm_return_t libspdm_negotiate_algorithms(void *context)
 {
     size_t retry;
     libspdm_return_t status;
+    libspdm_context_t *spdm_context;
 
+    spdm_context = context;
     spdm_context->crypto_request = false;
     retry = spdm_context->retry_times;
     do {

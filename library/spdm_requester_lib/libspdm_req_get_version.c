@@ -216,13 +216,15 @@ receive_done:
  * @retval LIBSPDM_STATUS_NEGOTIATION_FAIL
  *         The Requester and Responder do not support a common SPDM version.
  **/
-libspdm_return_t libspdm_get_version(libspdm_context_t *spdm_context,
+libspdm_return_t libspdm_get_version(void *context,
                                      uint8_t *version_number_entry_count,
                                      spdm_version_number_t *version_number_entry)
 {
     size_t retry;
     libspdm_return_t status;
+    libspdm_context_t *spdm_context;
 
+    spdm_context = context;
     spdm_context->crypto_request = false;
     retry = spdm_context->retry_times;
     do {
