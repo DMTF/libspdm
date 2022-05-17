@@ -22,8 +22,8 @@
 #include "library/memlib.h"
 #include "spdm_device_secret_lib_internal.h"
 
-bool libspdm_read_responder_private_certificate(uint32_t base_asym_algo,
-                                                void **data, size_t *size)
+bool libspdm_read_responder_private_key(uint32_t base_asym_algo,
+                                        void **data, size_t *size)
 {
     bool res;
     char *file;
@@ -67,8 +67,8 @@ bool libspdm_read_responder_private_certificate(uint32_t base_asym_algo,
     return res;
 }
 
-bool libspdm_read_requester_private_certificate(uint16_t req_base_asym_alg,
-                                                void **data, size_t *size)
+bool libspdm_read_requester_private_key(uint16_t req_base_asym_alg,
+                                        void **data, size_t *size)
 {
     bool res;
     char *file;
@@ -715,7 +715,7 @@ bool libspdm_requester_data_sign(
     size_t private_pem_size;
     bool result;
 
-    result = libspdm_read_requester_private_certificate(
+    result = libspdm_read_requester_private_key(
         req_base_asym_alg, &private_pem, &private_pem_size);
     if (!result) {
         return false;
@@ -769,7 +769,7 @@ bool libspdm_responder_data_sign(
     size_t private_pem_size;
     bool result;
 
-    result = libspdm_read_responder_private_certificate(
+    result = libspdm_read_responder_private_key(
         base_asym_algo, &private_pem, &private_pem_size);
     if (!result) {
         return false;
