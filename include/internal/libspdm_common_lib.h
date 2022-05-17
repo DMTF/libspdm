@@ -280,7 +280,7 @@ typedef struct {
 } libspdm_encap_context_t;
 
 typedef struct {
-    bool     chunk_in_use;
+    bool chunk_in_use;
 
 #if LIBSPDM_ENABLE_CHUNK_CAP
     uint8_t chunk_handle;

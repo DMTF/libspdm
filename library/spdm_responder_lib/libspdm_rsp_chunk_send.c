@@ -8,7 +8,8 @@ libspdm_return_t libspdm_get_response_chunk_send(void* context,
                                                  size_t* response_size,
                                                  void* response)
 {
-    return 0;
+    LIBSPDM_ASSERT(false);
+    return LIBSPDM_STATUS_UNSUPPORTED_CAP;
 }
 
 #endif /* LIBSPDM_ENABLE_CHUNK_CAP */

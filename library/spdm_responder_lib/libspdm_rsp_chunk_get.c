@@ -38,7 +38,8 @@ libspdm_return_t libspdm_get_response_chunk_get(void* context,
     if (spdm_context->connection_info.connection_state <
         LIBSPDM_CONNECTION_STATE_NOT_STARTED) {
         return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,                                response_size, response);
+                                               SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
+                                               response_size, response);
     }
 
     if (request_size < sizeof(spdm_chunk_get_request_t)) {
