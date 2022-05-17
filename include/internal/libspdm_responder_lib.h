@@ -685,12 +685,12 @@ libspdm_return_t libspdm_get_response_set_certificate(void *context, size_t requ
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  request_size                  size in bytes of the request data.
- * @param  request                      A pointer to the request data.
+ * @param  request                       A pointer to the request data.
  * @param  response_size                 size in bytes of the response data.
- *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
- * @param  response                     A pointer to the response data.
+ *                                       On input, it means the size in bytes of response data buffer.
+ *                                       On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
+ *                                       and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ * @param  response                      A pointer to the response data.
  *
  * @retval RETURN_SUCCESS               The request is processed and the response is returned.
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
@@ -708,12 +708,12 @@ libspdm_return_t libspdm_get_response_chunk_get(void* context,
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  request_size                  size in bytes of the request data.
- * @param  request                      A pointer to the request data.
+ * @param  request                       A pointer to the request data.
  * @param  response_size                 size in bytes of the response data.
- *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
- * @param  response                     A pointer to the response data.
+ *                                       On input, it means the size in bytes of response data buffer.
+ *                                       On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
+ *                                       and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ * @param  response                      A pointer to the response data.
  *
  * @retval RETURN_SUCCESS               The request is processed and the response is returned.
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
