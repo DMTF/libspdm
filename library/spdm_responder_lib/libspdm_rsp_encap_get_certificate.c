@@ -94,6 +94,7 @@ libspdm_return_t libspdm_process_encap_response_certificate(
     bool result;
     libspdm_return_t status;
     uint16_t request_offset;
+    uint8_t slot_id;
 
     spdm_response = encap_response;
     spdm_response_size = encap_response_size;
@@ -195,12 +196,15 @@ libspdm_return_t libspdm_process_encap_response_certificate(
         }
     }
 
+    spdm_context->connection_info.peer_used_cert_chain_slot_id =
+        spdm_context->encap_context.req_slot_id;
+    slot_id = spdm_context->encap_context.req_slot_id;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain_buffer_size =
+    spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer_size =
         libspdm_get_managed_buffer_size(
             &spdm_context->encap_context.certificate_chain_buffer);
-    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
-                     sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer),
                      libspdm_get_managed_buffer(
                          &spdm_context->encap_context.certificate_chain_buffer),
                      libspdm_get_managed_buffer_size(
@@ -212,11 +216,11 @@ libspdm_return_t libspdm_process_encap_response_certificate(
             &spdm_context->encap_context.certificate_chain_buffer),
         libspdm_get_managed_buffer_size(
             &spdm_context->encap_context.certificate_chain_buffer),
-        spdm_context->connection_info.peer_used_cert_chain_buffer_hash);
+        spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer_hash);
     if (!result) {
         return LIBSPDM_STATUS_CRYPTO_ERROR;
     }
-    spdm_context->connection_info.peer_used_cert_chain_buffer_hash_size =
+    spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer_hash_size =
         libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
 
     result = libspdm_get_leaf_cert_public_key_from_cert_chain(
@@ -226,7 +230,7 @@ libspdm_return_t libspdm_process_encap_response_certificate(
             &spdm_context->encap_context.certificate_chain_buffer),
         libspdm_get_managed_buffer_size(
             &spdm_context->encap_context.certificate_chain_buffer),
-        &spdm_context->connection_info.peer_used_leaf_cert_public_key);
+        &spdm_context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key);
     if (!result) {
         return LIBSPDM_STATUS_INVALID_CERT;
     }

@@ -40,6 +40,18 @@ typedef struct {
 } libspdm_device_algorithm_t;
 
 typedef struct {
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    uint8_t buffer[LIBSPDM_MAX_CERT_CHAIN_SIZE];
+    size_t buffer_size;
+#else
+    uint8_t buffer_hash[LIBSPDM_MAX_HASH_SIZE];
+    uint32_t buffer_hash_size;
+    /* leaf cert public key of the peer */
+    void *leaf_cert_public_key;
+#endif
+} libspdm_peer_used_cert_chain_t;
+
+typedef struct {
 
     /* Local device info*/
 
@@ -107,15 +119,8 @@ typedef struct {
     uint8_t peer_total_digest_buffer[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
 
     /* Peer CertificateChain */
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    uint8_t peer_used_cert_chain_buffer[LIBSPDM_MAX_CERT_CHAIN_SIZE];
-    size_t peer_used_cert_chain_buffer_size;
-#else
-    uint8_t peer_used_cert_chain_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-    uint32_t peer_used_cert_chain_buffer_hash_size;
-    /* leaf cert public key of the peer */
-    void *peer_used_leaf_cert_public_key;
-#endif
+    libspdm_peer_used_cert_chain_t peer_used_cert_chain[SPDM_MAX_SLOT_COUNT];
+    uint8_t peer_used_cert_chain_slot_id;
 
     /* Local Used CertificateChain (for responder, or requester in mut auth)*/
 
