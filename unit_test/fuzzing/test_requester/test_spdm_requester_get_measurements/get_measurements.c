@@ -158,23 +158,23 @@ void libspdm_test_requester_get_measurement_case1(void **State)
     spdm_context->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain_buffer_size =
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
-    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
-                     sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
                      data, data_size);
 #else
     libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
         data, data_size,
-        spdm_context->connection_info.peer_used_cert_chain_buffer_hash);
-    spdm_context->connection_info.peer_used_cert_chain_buffer_hash_size =
+        spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash);
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size =
         libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
     libspdm_get_leaf_cert_public_key_from_cert_chain(
         spdm_context->connection_info.algorithm.base_hash_algo,
         spdm_context->connection_info.algorithm.base_asym_algo,
         data, data_size,
-        &spdm_context->connection_info.peer_used_leaf_cert_public_key);
+        &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
 
     request_attribute =
@@ -186,10 +186,9 @@ void libspdm_test_requester_get_measurement_case1(void **State)
                             &measurement_record_length, measurement_record);
     free(data);
     libspdm_reset_message_m(spdm_context, NULL);
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-#else
+#if !LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
-                      spdm_context->connection_info.peer_used_leaf_cert_public_key);
+                      spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
 }
 
@@ -224,23 +223,23 @@ void libspdm_test_requester_get_measurement_case2(void **State)
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain_buffer_size =
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
-    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
-                     sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
                      data, data_size);
 #else
     libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
         data, data_size,
-        spdm_context->connection_info.peer_used_cert_chain_buffer_hash);
-    spdm_context->connection_info.peer_used_cert_chain_buffer_hash_size =
+        spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash);
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size =
         libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
     libspdm_get_leaf_cert_public_key_from_cert_chain(
         spdm_context->connection_info.algorithm.base_hash_algo,
         spdm_context->connection_info.algorithm.base_asym_algo,
         data, data_size,
-        &spdm_context->connection_info.peer_used_leaf_cert_public_key);
+        &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
 
     request_attribute = SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_RAW_BIT_STREAM_REQUESTED;
@@ -252,10 +251,9 @@ void libspdm_test_requester_get_measurement_case2(void **State)
                                NULL);
     free(data);
     libspdm_reset_message_m(spdm_context, NULL);
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-#else
+#if !LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
-                      spdm_context->connection_info.peer_used_leaf_cert_public_key);
+                      spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
 }
 
@@ -310,24 +308,25 @@ void libspdm_test_requester_get_measurement_case3(void **State)
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain_buffer_size =
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
-    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
-                     sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
                      data, data_size);
 #else
     libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
         data, data_size,
-        spdm_context->connection_info.peer_used_cert_chain_buffer_hash);
-    spdm_context->connection_info.peer_used_cert_chain_buffer_hash_size =
+        spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash);
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size =
         libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
     libspdm_get_leaf_cert_public_key_from_cert_chain(
         spdm_context->connection_info.algorithm.base_hash_algo,
         spdm_context->connection_info.algorithm.base_asym_algo,
         data, data_size,
-        &spdm_context->connection_info.peer_used_leaf_cert_public_key);
+        &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
+
     request_attribute = SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_RAW_BIT_STREAM_REQUESTED;
 
     measurement_record_length = sizeof(measurement_record);
@@ -337,10 +336,9 @@ void libspdm_test_requester_get_measurement_case3(void **State)
     libspdm_test_message_header = 0;
     free(data);
     libspdm_reset_message_m(spdm_context, NULL);
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-#else
+#if !LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
-                      spdm_context->connection_info.peer_used_leaf_cert_public_key);
+                      spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
 }
 
@@ -376,24 +374,25 @@ void libspdm_test_requester_get_measurement_case4(void **State)
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain_buffer_size =
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
-    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
-                     sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
                      data, data_size);
 #else
     libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
         data, data_size,
-        spdm_context->connection_info.peer_used_cert_chain_buffer_hash);
-    spdm_context->connection_info.peer_used_cert_chain_buffer_hash_size =
+        spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash);
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size =
         libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
     libspdm_get_leaf_cert_public_key_from_cert_chain(
         spdm_context->connection_info.algorithm.base_hash_algo,
         spdm_context->connection_info.algorithm.base_asym_algo,
         data, data_size,
-        &spdm_context->connection_info.peer_used_leaf_cert_public_key);
+        &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
+
     request_attribute = 0;
 
     measurement_record_length = sizeof(measurement_record);
@@ -403,10 +402,9 @@ void libspdm_test_requester_get_measurement_case4(void **State)
                             measurement_record);
     free(data);
     libspdm_reset_message_m(spdm_context, NULL);
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-#else
+#if !LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
-                      spdm_context->connection_info.peer_used_leaf_cert_public_key);
+                      spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
 }
 
