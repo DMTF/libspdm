@@ -686,6 +686,8 @@ bool libspdm_verify_key_exchange_rsp_signature(
     size_t cert_chain_buffer_size;
     uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     size_t th_curr_data_size;
+#else
+    uint8_t slot_id;
 #endif
 
     hash_size = libspdm_get_hash_size(
@@ -759,12 +761,13 @@ bool libspdm_verify_key_exchange_rsp_signature(
     libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
                       context);
 #else
-    if (spdm_context->connection_info.peer_used_leaf_cert_public_key != NULL) {
+    slot_id = spdm_context->connection_info.peer_used_cert_chain_slot_id;
+    if (spdm_context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key != NULL) {
         result = libspdm_asym_verify_hash(
             spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
             spdm_context->connection_info.algorithm.base_asym_algo,
             spdm_context->connection_info.algorithm.base_hash_algo,
-            spdm_context->connection_info.peer_used_leaf_cert_public_key,
+            spdm_context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key,
             hash_data, hash_size, sign_data, sign_data_size);
     } else {
         /* Get leaf cert from cert chain*/
@@ -1084,6 +1087,8 @@ bool libspdm_verify_finish_req_signature(libspdm_context_t *spdm_context,
     size_t mut_cert_chain_buffer_size;
     uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     size_t th_curr_data_size;
+#else
+    uint8_t slot_id;
 #endif
 
     hash_size = libspdm_get_hash_size(
@@ -1168,12 +1173,13 @@ bool libspdm_verify_finish_req_signature(libspdm_context_t *spdm_context,
         spdm_context->connection_info.algorithm.req_base_asym_alg,
         context);
 #else
-    if (spdm_context->connection_info.peer_used_leaf_cert_public_key != NULL) {
+    slot_id = spdm_context->connection_info.peer_used_cert_chain_slot_id;
+    if (spdm_context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key != NULL) {
         result = libspdm_req_asym_verify_hash(
             spdm_context->connection_info.version, SPDM_FINISH,
             spdm_context->connection_info.algorithm.req_base_asym_alg,
             spdm_context->connection_info.algorithm.base_hash_algo,
-            spdm_context->connection_info.peer_used_leaf_cert_public_key,
+            spdm_context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key,
             hash_data, hash_size, sign_data, sign_data_size);
     } else {
         /* Get leaf cert from cert chain*/

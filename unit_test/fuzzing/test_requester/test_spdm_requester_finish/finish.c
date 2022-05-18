@@ -107,24 +107,25 @@ void libspdm_test_send_receive_finish_case1(void **State)
     spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain_buffer_size =
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
-    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
-                     sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
                      data, data_size);
 #else
     libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
         data, data_size,
-        spdm_context->connection_info.peer_used_cert_chain_buffer_hash);
-    spdm_context->connection_info.peer_used_cert_chain_buffer_hash_size =
+        spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash);
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size =
         libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
     libspdm_get_leaf_cert_public_key_from_cert_chain(
         spdm_context->connection_info.algorithm.base_hash_algo,
         spdm_context->connection_info.algorithm.base_asym_algo,
         data, data_size,
-        &spdm_context->connection_info.peer_used_leaf_cert_public_key);
+        &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
+    spdm_context->connection_info.peer_used_cert_chain_slot_id = 0;
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
@@ -151,10 +152,9 @@ void libspdm_test_send_receive_finish_case1(void **State)
     free(data);
     libspdm_reset_message_f(spdm_context, session_info);
     libspdm_reset_message_k(spdm_context, session_info);
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-#else
+#if !LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
-                      spdm_context->connection_info.peer_used_leaf_cert_public_key);
+                      spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
 }
 

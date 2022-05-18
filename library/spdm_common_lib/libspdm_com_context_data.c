@@ -356,50 +356,59 @@ libspdm_return_t libspdm_set_data(void *context, libspdm_data_type_t data_type,
             data;
         break;
     case LIBSPDM_DATA_PEER_USED_CERT_CHAIN_BUFFER:
+        slot_id = parameter->additional_data[0];
+        if (slot_id >= spdm_context->local_context.slot_count) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
         if (data_size > LIBSPDM_MAX_CERT_CHAIN_SIZE) {
             return LIBSPDM_STATUS_BUFFER_FULL;
         }
+        spdm_context->connection_info.peer_used_cert_chain_slot_id = slot_id;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-        spdm_context->connection_info.peer_used_cert_chain_buffer_size =
+        spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer_size =
             data_size;
-        libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
-                         sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+        libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer,
+                         sizeof(spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer),
                          data, data_size);
 #else
         status = libspdm_hash_all(
             spdm_context->connection_info.algorithm.base_hash_algo,
             data, data_size,
-            spdm_context->connection_info.peer_used_cert_chain_buffer_hash);
+            spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer_hash);
         if (!status) {
             return LIBSPDM_STATUS_CRYPTO_ERROR;
         }
 
-        spdm_context->connection_info.peer_used_cert_chain_buffer_hash_size =
+        spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer_hash_size =
             libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
 
         status = false;
 #if (LIBSPDM_RSA_SSA_SUPPORT == 1) || (LIBSPDM_RSA_PSS_SUPPORT == 1)
         if (!status) {
             status = libspdm_rsa_get_public_key_from_x509(data, data_size,
-                                                          &spdm_context->connection_info.peer_used_leaf_cert_public_key);
+                                                          &spdm_context->connection_info.peer_used_cert_chain[
+                                                              slot_id].leaf_cert_public_key);
         }
 #endif
 #if LIBSPDM_ECDSA_SUPPORT == 1
         if (!status) {
             status = libspdm_ec_get_public_key_from_x509(data, data_size,
-                                                         &spdm_context->connection_info.peer_used_leaf_cert_public_key);
+                                                         &spdm_context->connection_info.peer_used_cert_chain[
+                                                             slot_id].leaf_cert_public_key);
         }
 #endif
 #if (LIBSPDM_EDDSA_ED25519_SUPPORT == 1) || (LIBSPDM_EDDSA_ED448_SUPPORT == 1)
         if (!status) {
             status = libspdm_ecd_get_public_key_from_x509(data, data_size,
-                                                          &spdm_context->connection_info.peer_used_leaf_cert_public_key);
+                                                          &spdm_context->connection_info.peer_used_cert_chain[
+                                                              slot_id].leaf_cert_public_key);
         }
 #endif
 #if LIBSPDM_SM2_DSA_SUPPORT == 1
         if (!status) {
             status = libspdm_sm2_get_public_key_from_x509(data, data_size,
-                                                          &spdm_context->connection_info.peer_used_leaf_cert_public_key);
+                                                          &spdm_context->connection_info.peer_used_cert_chain[
+                                                              slot_id].leaf_cert_public_key);
         }
 #endif
         if (!status) {
@@ -1493,20 +1502,24 @@ libspdm_return_t libspdm_append_message_k(void *context, void *session_info,
         uint32_t hash_size;
         bool finished_key_ready;
         libspdm_return_t status;
+        uint8_t slot_id;
 
         spdm_context = context;
         secured_message_context = spdm_session_info->secured_message_context;
         finished_key_ready = libspdm_secured_message_is_finished_key_ready(secured_message_context);
+        slot_id = spdm_context->connection_info.peer_used_cert_chain_slot_id;
 
         if (spdm_session_info->session_transcript.digest_context_th == NULL) {
             if (!spdm_session_info->use_psk) {
                 if (is_requester) {
-                    if(spdm_context->connection_info.peer_used_cert_chain_buffer_hash_size != 0) {
+                    if(spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer_hash_size
+                       != 0) {
                         hash_size =
-                            spdm_context->connection_info.peer_used_cert_chain_buffer_hash_size;
+                            spdm_context->connection_info.peer_used_cert_chain[slot_id].
+                            buffer_hash_size;
                         libspdm_copy_mem(cert_chain_buffer_hash,
                                          sizeof(cert_chain_buffer_hash),
-                                         spdm_context->connection_info.peer_used_cert_chain_buffer_hash,
+                                         spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer_hash,
                                          hash_size);
                         result = true;
                     } else {
@@ -1764,11 +1777,13 @@ libspdm_return_t libspdm_append_message_f(void *context, void *session_info,
         uint32_t hash_size;
         bool finished_key_ready;
         libspdm_return_t status;
+        uint8_t slot_id;
 
         spdm_context = context;
         secured_message_context = spdm_session_info->secured_message_context;
         finished_key_ready = libspdm_secured_message_is_finished_key_ready(secured_message_context);
         LIBSPDM_ASSERT (finished_key_ready);
+        slot_id = spdm_context->connection_info.peer_used_cert_chain_slot_id;
 
         if (!spdm_session_info->session_transcript.message_f_initialized) {
 
@@ -1806,12 +1821,14 @@ libspdm_return_t libspdm_append_message_f(void *context, void *session_info,
                         return LIBSPDM_STATUS_CRYPTO_ERROR;
                     }
                 } else {
-                    if (spdm_context->connection_info.peer_used_cert_chain_buffer_hash_size != 0) {
+                    if (spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer_hash_size
+                        != 0) {
                         hash_size =
-                            spdm_context->connection_info.peer_used_cert_chain_buffer_hash_size;
+                            spdm_context->connection_info.peer_used_cert_chain[slot_id].
+                            buffer_hash_size;
                         libspdm_copy_mem(mut_cert_chain_buffer_hash,
                                          sizeof(mut_cert_chain_buffer_hash),
-                                         spdm_context->connection_info.peer_used_cert_chain_buffer_hash,
+                                         spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer_hash,
                                          hash_size);
                         result = true;
                     } else {
@@ -2389,11 +2406,6 @@ libspdm_return_t libspdm_init_context(void *context)
     /* From the config.h, need different value for CHUNK - TBD*/
     spdm_context->local_context.capability.data_transfer_size = LIBSPDM_DATA_TRANSFER_SIZE;
     spdm_context->local_context.capability.max_spdm_msg_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
-
-#if !LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain_buffer_hash_size = 0;
-    spdm_context->connection_info.peer_used_leaf_cert_public_key = NULL;
-#endif
 
     secured_message_context = (void *)((size_t)(spdm_context + 1));
     SecuredMessageContextSize = libspdm_secured_message_get_context_size();

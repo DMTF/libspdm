@@ -406,10 +406,10 @@ void libspdm_test_responder_finish_case8(void **State)
     spdm_context->local_context.peer_cert_chain_provision = data2;
     spdm_context->local_context.peer_cert_chain_provision_size = data_size2;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
-                     sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
                      data2, data_size2);
-    spdm_context->connection_info.peer_used_cert_chain_buffer_size = data_size2;
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = data_size2;
 #endif
     session_id = 0xFFFFFEE;
     spdm_context->latest_session_id = session_id;

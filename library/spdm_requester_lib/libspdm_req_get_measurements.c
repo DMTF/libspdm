@@ -141,6 +141,7 @@ libspdm_return_t libspdm_try_get_measurement(void *context, const uint32_t *sess
         signature_size = 0;
     }
 
+    spdm_context->connection_info.peer_used_cert_chain_slot_id = slot_id_param;
     transport_header_size = spdm_context->transport_get_header_size(spdm_context);
     status = libspdm_acquire_sender_buffer (spdm_context, &message_size, (void **)&message);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
