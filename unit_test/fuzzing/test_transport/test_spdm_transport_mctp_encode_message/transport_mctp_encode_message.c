@@ -10,6 +10,8 @@
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
 
+#define MCTP_ALIGNMENT 1
+
 size_t libspdm_get_max_buffer_size(void)
 {
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
@@ -24,6 +26,8 @@ void libspdm_test_transport_mctp_encode_message(void **State)
     bool is_app_message;
     bool is_requester;
     size_t record_header_max_size;
+    size_t aligned_message_size;
+    size_t alignment;
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
@@ -39,8 +43,9 @@ void libspdm_test_transport_mctp_encode_message(void **State)
                              32; /* MCTP_MAX_RANDOM_NUMBER_COUNT */
     LIBSPDM_ASSERT(spdm_test_context->test_buffer_size > record_header_max_size);
 
-    transport_message_size = spdm_test_context->test_buffer_size - record_header_max_size;
-
+    alignment = MCTP_ALIGNMENT;
+    aligned_message_size = (spdm_test_context->test_buffer_size + (alignment - 1)) & ~(alignment - 1);
+    transport_message_size = aligned_message_size;
     libspdm_transport_mctp_encode_message(spdm_context, NULL, is_app_message, is_requester,
                                           spdm_test_context->test_buffer_size - record_header_max_size,
                                           (uint8_t *)spdm_test_context->test_buffer + record_header_max_size,
@@ -76,11 +81,6 @@ void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
     if (buffer_size < record_header_max_size + aead_tag_max_size) {
         /* buffer too small */
         return;
-    }
-    if (buffer_size >
-        LIBSPDM_MAX_MESSAGE_BUFFER_SIZE - record_header_max_size - aead_tag_max_size) {
-        buffer_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE - record_header_max_size -
-                      aead_tag_max_size;
     }
 
     m_libspdm_transport_mctp_test_context.test_buffer = test_buffer;

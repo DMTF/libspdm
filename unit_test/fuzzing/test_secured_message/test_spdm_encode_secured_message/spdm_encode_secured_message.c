@@ -56,14 +56,15 @@ void libspdm_test_encode_secured_message(void **State)
                              sizeof(spdm_secured_message_cipher_header_t) +
                              32; /* MCTP_MAX_RANDOM_NUMBER_COUNT */
     LIBSPDM_ASSERT(spdm_test_context->test_buffer_size > record_header_max_size);
-
-    secured_message_size = spdm_test_context->test_buffer_size - record_header_max_size;
+    secured_message_size = spdm_test_context->test_buffer_size;
+    secured_message = (void *)malloc(secured_message_size);
 
     libspdm_encode_secured_message(secured_message_context, session_id, is_requester,
                                    spdm_test_context->test_buffer_size - record_header_max_size,
                                    (uint8_t *)spdm_test_context->test_buffer + record_header_max_size,
-                                   &secured_message_size, (void **)&secured_message,
+                                   &secured_message_size, secured_message,
                                    &spdm_secured_message_callbacks);
+    free(secured_message);
 }
 
 libspdm_test_context_t m_libspdm_transport_mctp_test_context = {
@@ -92,11 +93,6 @@ void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
     if (buffer_size < record_header_max_size + aead_tag_max_size) {
         /* buffer too small */
         return;
-    }
-    if (buffer_size >
-        LIBSPDM_MAX_MESSAGE_BUFFER_SIZE - record_header_max_size - aead_tag_max_size) {
-        buffer_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE - record_header_max_size -
-                      aead_tag_max_size;
     }
 
     m_libspdm_transport_mctp_test_context.test_buffer = test_buffer;
