@@ -376,7 +376,7 @@ void libspdm_test_responder_certificate_case7(void **state)
 
     /* Testing Lengths at the boundary of maximum integer values*/
     uint16_t test_lenghts[] = {
-        0,        0x7F,     (uint16_t)(0x7F + 1),
+        1,        0x7F,     (uint16_t)(0x7F + 1),
         0xFF,  0x7FFF,     (uint16_t)(0x7FFF + 1),
         0xFFFF, (uint16_t)(-1)
     };
@@ -484,8 +484,8 @@ void libspdm_test_responder_certificate_case8(void **state)
         data_size;
     spdm_context->local_context.slot_count = 1;
 
-    /* This tests considers only length = 0, other tests vary length value*/
-    m_libspdm_get_certificate_request3.length = 0;
+    /* This tests considers only length = 1, other tests vary length value*/
+    m_libspdm_get_certificate_request3.length = 1;
     /* Setting up offset values at the boundary of certificate length*/
     test_offsets[0] = (uint16_t)(test_offsets[0] + data_size);
     test_offsets[1] = (uint16_t)(test_offsets[1] + data_size);
@@ -513,17 +513,17 @@ void libspdm_test_responder_certificate_case8(void **state)
             assert_int_equal(spdm_responseError->header.param1,
                              SPDM_ERROR_CODE_INVALID_REQUEST);
         } else {
-            /* Otherwise it should work properly, considering length = 0*/
+            /* Otherwise it should work properly, considering length = 1*/
             assert_int_equal(response_size,
-                             sizeof(spdm_certificate_response_t));
+                             sizeof(spdm_certificate_response_t) + 1);
             spdm_response = (void *)response;
             assert_int_equal(
                 spdm_response->header.request_response_code,
                 SPDM_CERTIFICATE);
             assert_int_equal(spdm_response->header.param1, 0);
-            assert_int_equal(spdm_response->portion_length, 0);
+            assert_int_equal(spdm_response->portion_length, 1);
             assert_int_equal(
-                spdm_response->remainder_length,
+                spdm_response->remainder_length + 1,
                 (uint16_t)(
                     data_size -
                     m_libspdm_get_certificate_request3.offset));
@@ -555,7 +555,6 @@ void libspdm_test_responder_certificate_case9(void **state)
         0,
         +1, /* reserved for sizes around the certificate chain size*/
         (uint16_t)(-1),
-        0,
         +1,
         (uint16_t)(0x7F - 1),
         0x7F,
