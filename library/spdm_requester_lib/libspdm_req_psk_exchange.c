@@ -153,6 +153,10 @@ libspdm_return_t libspdm_try_send_receive_psk_exchange(
     } else {
         spdm_request->header.param2 = 0;
     }
+    spdm_context->connection_info.psk_hint =
+        spdm_context->local_context.psk_hint;
+    spdm_context->connection_info.psk_hint_size =
+        spdm_context->local_context.psk_hint_size;
     spdm_request->psk_hint_length =
         (uint16_t)spdm_context->local_context.psk_hint_size;
     if (requester_context_in == NULL) {
