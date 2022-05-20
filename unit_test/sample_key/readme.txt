@@ -294,3 +294,130 @@ openssl asn1parse -in Shorter1024B_end_responder.cert -out Shorter1024B_end_resp
 cat Shorter1024B_ca.cert.der Shorter1024B_end_requester.cert.der > Shorter1024B_bundle_requester.certchain.der
 cat Shorter1024B_ca.cert.der Shorter1024B_end_responder.cert.der > Shorter1024B_bundle_responder.certchain.der
 popd
+
+
+==== More cert_chain to gen ====
+
+NOTE: The bundle_requester.certchain1.der and bundle_requester.certchain.der have same leaf cert key.
+As same as bundle_responder.certchain1.der.
+Gen new ca1.key; use old inter.key and end.key.
+
+=== ecc256 Certificate Chains ===
+openssl req -nodes -x509 -days 3650 -newkey ec:param.pem -keyout ca1.key -out ca1.cert -sha256 -subj "/CN=intel test ECP256 CA"
+openssl pkey -in ca1.key -outform der -out ca1.key.der
+openssl x509 -req -in inter.req -out inter1.cert -CA ca1.cert -CAkey ca1.key -sha256 -days 3650 -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
+openssl x509 -req -in end_requester.req -out end_requester1.cert -CA inter1.cert -CAkey inter.key -sha256  -days 3650 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
+openssl x509 -req -in end_responder.req -out end_responder1.cert -CA inter1.cert -CAkey inter.key -sha256 -days 3650 -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
+openssl asn1parse -in ca1.cert -out ca1.cert.der
+openssl asn1parse -in inter1.cert -out inter1.cert.der
+openssl asn1parse -in end_requester1.cert -out end_requester1.cert.der
+openssl asn1parse -in end_responder1.cert -out end_responder1.cert.der
+cat ca1.cert.der inter1.cert.der end_requester1.cert.der > bundle_requester.certchain1.der
+cat ca1.cert.der inter1.cert.der end_responder1.cert.der > bundle_responder.certchain1.der
+
+=== ecc384 Certificate Chains ===
+openssl req -nodes -x509 -days 3650 -newkey ec:param.pem -keyout ca1.key -out ca1.cert -sha384 -subj "/CN=intel test ECP384 CA"
+openssl pkey -in ca1.key -outform der -out ca1.key.der
+openssl x509 -req -in inter.req -out inter1.cert -CA ca1.cert -CAkey ca1.key -sha384 -days 3650 -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
+openssl x509 -req -in end_requester.req -out end_requester1.cert -CA inter1.cert -CAkey inter.key -sha384  -days 3650 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
+openssl x509 -req -in end_responder.req -out end_responder1.cert -CA inter1.cert -CAkey inter.key -sha384 -days 3650 -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
+openssl asn1parse -in ca1.cert -out ca1.cert.der
+openssl asn1parse -in inter1.cert -out inter1.cert.der
+openssl asn1parse -in end_requester1.cert -out end_requester1.cert.der
+openssl asn1parse -in end_responder1.cert -out end_responder1.cert.der
+cat ca1.cert.der inter1.cert.der end_requester1.cert.der > bundle_requester.certchain1.der
+cat ca1.cert.der inter1.cert.der end_responder1.cert.der > bundle_responder.certchain1.der
+
+=== ecc521 Certificate Chains ===
+openssl req -nodes -x509 -days 3650 -newkey ec:param.pem -keyout ca1.key -out ca1.cert -sha512 -subj "/CN=intel test ECP521 CA"
+openssl pkey -in ca1.key -outform der -out ca1.key.der
+openssl x509 -req -in inter.req -out inter1.cert -CA ca1.cert -CAkey ca1.key -sha512 -days 3650 -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
+openssl x509 -req -in end_requester.req -out end_requester1.cert -CA inter1.cert -CAkey inter.key -sha512  -days 3650 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
+openssl x509 -req -in end_responder.req -out end_responder1.cert -CA inter1.cert -CAkey inter.key -sha512 -days 3650 -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
+openssl asn1parse -in ca1.cert -out ca1.cert.der
+openssl asn1parse -in inter1.cert -out inter1.cert.der
+openssl asn1parse -in end_requester1.cert -out end_requester1.cert.der
+openssl asn1parse -in end_responder1.cert -out end_responder1.cert.der
+cat ca1.cert.der inter1.cert.der end_requester1.cert.der > bundle_requester.certchain1.der
+cat ca1.cert.der inter1.cert.der end_responder1.cert.der > bundle_responder.certchain1.der
+
+=== rsa2048 Certificate Chains ===
+openssl req -nodes -x509 -days 3650 -newkey rsa:2048 -keyout ca1.key -out ca1.cert -sha256 -subj "//CN=intel test RSA CA"
+openssl pkey -in ca1.key -outform der -out ca1.key.der
+openssl x509 -req -in inter.req -out inter1.cert -CA ca1.cert -CAkey ca1.key -sha256 -days 3650 -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
+openssl x509 -req -in end_requester.req -out end_requester1.cert -CA inter1.cert -CAkey inter.key -sha256  -days 3650 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
+openssl x509 -req -in end_responder.req -out end_responder1.cert -CA inter1.cert -CAkey inter.key -sha256 -days 3650 -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
+openssl asn1parse -in ca1.cert -out ca1.cert.der
+openssl asn1parse -in inter1.cert -out inter1.cert.der
+openssl asn1parse -in end_requester1.cert -out end_requester1.cert.der
+openssl asn1parse -in end_responder1.cert -out end_responder1.cert.der
+cat ca1.cert.der inter1.cert.der end_requester1.cert.der > bundle_requester.certchain1.der
+cat ca1.cert.der inter1.cert.der end_responder1.cert.der > bundle_responder.certchain1.der
+
+=== rsa3072 Certificate Chains ===
+openssl req -nodes -x509 -days 3650 -newkey rsa:3072 -keyout ca1.key -out ca1.cert -sha384 -subj "//CN=intel test RSA CA"
+openssl pkey -in ca1.key -outform der -out ca1.key.der
+openssl x509 -req -in inter.req -out inter1.cert -CA ca1.cert -CAkey ca1.key -sha384 -days 3650 -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
+openssl x509 -req -in end_requester.req -out end_requester1.cert -CA inter1.cert -CAkey inter.key -sha384  -days 3650 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
+openssl x509 -req -in end_responder.req -out end_responder1.cert -CA inter1.cert -CAkey inter.key -sha384 -days 3650 -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
+openssl asn1parse -in ca1.cert -out ca1.cert.der
+openssl asn1parse -in inter1.cert -out inter1.cert.der
+openssl asn1parse -in end_requester1.cert -out end_requester1.cert.der
+openssl asn1parse -in end_responder1.cert -out end_responder1.cert.der
+cat ca1.cert.der inter1.cert.der end_requester1.cert.der > bundle_requester.certchain1.der
+cat ca1.cert.der inter1.cert.der end_responder1.cert.der > bundle_responder.certchain1.der
+
+=== rsa4096 Certificate Chains ===
+openssl req -nodes -x509 -days 3650 -newkey rsa:4096 -keyout ca1.key -out ca1.cert -sha512 -subj "//CN=intel test RSA CA"
+openssl pkey -in ca1.key -outform der -out ca1.key.der
+openssl x509 -req -in inter.req -out inter1.cert -CA ca1.cert -CAkey ca1.key -sha512 -days 3650 -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
+openssl x509 -req -in end_requester.req -out end_requester1.cert -CA inter1.cert -CAkey inter.key -sha512  -days 3650 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
+openssl x509 -req -in end_responder.req -out end_responder1.cert -CA inter1.cert -CAkey inter.key -sha512 -days 3650 -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
+openssl asn1parse -in ca1.cert -out ca1.cert.der
+openssl asn1parse -in inter1.cert -out inter1.cert.der
+openssl asn1parse -in end_requester1.cert -out end_requester1.cert.der
+openssl asn1parse -in end_responder1.cert -out end_responder1.cert.der
+cat ca1.cert.der inter1.cert.der end_requester1.cert.der > bundle_requester.certchain1.der
+cat ca1.cert.der inter1.cert.der end_responder1.cert.der > bundle_responder.certchain1.der
+
+=== ed25519 Certificate Chains ===
+openssl genpkey -algorithm ed25519 -out ca1.key
+openssl req -nodes -x509 -days 3650 -key ca1.key -out ca1.cert -subj "/CN=intel test ED25519 CA"
+openssl pkey -in ca1.key -outform der -out ca1.key.der
+openssl x509 -req -in inter.req -out inter1.cert -CA ca1.cert -CAkey ca1.key -days 3650 -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
+openssl x509 -req -in end_requester.req -out end_requester1.cert -CA inter1.cert -CAkey inter.key -days 3650 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
+openssl x509 -req -in end_responder.req -out end_responder1.cert -CA inter1.cert -CAkey inter.key -days 3650 -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
+openssl asn1parse -in ca1.cert -out ca1.cert.der
+openssl asn1parse -in inter1.cert -out inter1.cert.der
+openssl asn1parse -in end_requester1.cert -out end_requester1.cert.der
+openssl asn1parse -in end_responder1.cert -out end_responder1.cert.der
+cat ca1.cert.der inter1.cert.der end_requester1.cert.der > bundle_requester.certchain1.der
+cat ca1.cert.der inter1.cert.der end_responder1.cert.der > bundle_responder.certchain1.der
+
+=== ed448 Certificate Chains ===
+openssl genpkey -algorithm ed448 -out ca1.key
+openssl req -nodes -x509 -days 3650 -key ca1.key -out ca1.cert -subj "/CN=intel test ED448 CA"
+openssl pkey -in ca1.key -outform der -out ca1.key.der
+openssl x509 -req -in inter.req -out inter1.cert -CA ca1.cert -CAkey ca1.key -days 3650 -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
+openssl x509 -req -in end_requester.req -out end_requester1.cert -CA inter1.cert -CAkey inter.key -days 3650 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
+openssl x509 -req -in end_responder.req -out end_responder1.cert -CA inter1.cert -CAkey inter.key -days 3650 -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
+openssl asn1parse -in ca1.cert -out ca1.cert.der
+openssl asn1parse -in inter1.cert -out inter1.cert.der
+openssl asn1parse -in end_requester1.cert -out end_requester1.cert.der
+openssl asn1parse -in end_responder1.cert -out end_responder1.cert.der
+cat ca1.cert.der inter1.cert.der end_requester1.cert.der > bundle_requester.certchain1.der
+cat ca1.cert.der inter1.cert.der end_responder1.cert.der > bundle_responder.certchain1.der
+
+=== sm2 Certificate Chains ===
+openssl ecparam -genkey -name SM2 -out ca1.key
+openssl req -nodes -x509 -days 3650 -key ca1.key -out ca1.cert -sha256 -subj "//CN=intel test SM2 CA"
+openssl pkey -in ca1.key -outform der -out ca1.key.der
+openssl x509 -req -in inter.req -out inter1.cert -CA ca1.cert -CAkey ca1.key -sha256 -days 3650 -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
+openssl x509 -req -in end_requester.req -out end_requester1.cert -CA inter1.cert -CAkey inter.key -sha256  -days 3650 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
+openssl x509 -req -in end_responder.req -out end_responder1.cert -CA inter1.cert -CAkey inter.key -sha256 -days 3650 -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
+openssl asn1parse -in ca1.cert -out ca1.cert.der
+openssl asn1parse -in inter1.cert -out inter1.cert.der
+openssl asn1parse -in end_requester1.cert -out end_requester1.cert.der
+openssl asn1parse -in end_responder1.cert -out end_responder1.cert.der
+cat ca1.cert.der inter1.cert.der end_requester1.cert.der > bundle_requester.certchain1.der
+cat ca1.cert.der inter1.cert.der end_responder1.cert.der > bundle_responder.certchain1.der
