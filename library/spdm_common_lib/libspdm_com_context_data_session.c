@@ -120,8 +120,8 @@ void libspdm_session_info_init(libspdm_context_t *spdm_context,
         spdm_context->connection_info.algorithm.key_schedule);
     libspdm_secured_message_set_psk_hint(
         session_info->secured_message_context,
-        spdm_context->local_context.psk_hint,
-        spdm_context->local_context.psk_hint_size);
+        spdm_context->connection_info.psk_hint,
+        spdm_context->connection_info.psk_hint_size);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     session_info->session_transcript.message_k.max_buffer_size =
         sizeof(session_info->session_transcript.message_k.buffer);

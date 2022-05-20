@@ -121,6 +121,10 @@ typedef struct {
 
     const uint8_t *local_used_cert_chain_buffer;
     size_t local_used_cert_chain_buffer_size;
+
+    /* PSK hint */
+    size_t psk_hint_size;
+    const void *psk_hint;
 } libspdm_connection_info_t;
 
 typedef struct {

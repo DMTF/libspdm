@@ -198,6 +198,15 @@ libspdm_return_t libspdm_get_response_psk_exchange(void *context,
     spdm_response->header.request_response_code = SPDM_PSK_EXCHANGE_RSP;
     spdm_response->header.param1 = spdm_context->local_context.heartbeat_period;
 
+    if (spdm_request->psk_hint_length == 0) {
+        spdm_context->connection_info.psk_hint_size = 0;
+        spdm_context->connection_info.psk_hint = NULL;
+    } else {
+        spdm_context->connection_info.psk_hint_size = spdm_request->psk_hint_length;
+        spdm_context->connection_info.psk_hint = (const uint8_t *)request +
+                                                 sizeof(spdm_psk_exchange_request_t);
+    }
+
     req_session_id = spdm_request->req_session_id;
     rsp_session_id = libspdm_allocate_rsp_session_id(spdm_context);
     if (rsp_session_id == (INVALID_SESSION_ID & 0xFFFF)) {
