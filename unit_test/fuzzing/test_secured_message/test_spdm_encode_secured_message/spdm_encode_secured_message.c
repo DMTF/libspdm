@@ -20,7 +20,7 @@ void libspdm_test_encode_secured_message(void **State)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t secured_message_size;
-    uint8_t *secured_message;
+    uint8_t secured_message[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     libspdm_secured_message_callbacks_t spdm_secured_message_callbacks;
     libspdm_session_info_t *session_info;
     bool is_requester;
@@ -57,12 +57,12 @@ void libspdm_test_encode_secured_message(void **State)
                              32; /* MCTP_MAX_RANDOM_NUMBER_COUNT */
     LIBSPDM_ASSERT(spdm_test_context->test_buffer_size > record_header_max_size);
 
-    secured_message_size = spdm_test_context->test_buffer_size - record_header_max_size;
+    secured_message_size = sizeof(secured_message);
 
     libspdm_encode_secured_message(secured_message_context, session_id, is_requester,
                                    spdm_test_context->test_buffer_size - record_header_max_size,
                                    (uint8_t *)spdm_test_context->test_buffer + record_header_max_size,
-                                   &secured_message_size, (void **)&secured_message,
+                                   &secured_message_size, secured_message,
                                    &spdm_secured_message_callbacks);
 }
 
