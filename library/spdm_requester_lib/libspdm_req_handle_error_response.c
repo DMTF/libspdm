@@ -43,7 +43,10 @@ libspdm_return_t libspdm_requester_respond_if_ready(libspdm_context_t *spdm_cont
 
     /* now we can get sender buffer */
     transport_header_size = spdm_context->transport_get_header_size(spdm_context);
-    libspdm_acquire_sender_buffer (spdm_context, &message_size, (void **)&message);
+    status = libspdm_acquire_sender_buffer (spdm_context, &message_size, (void **)&message);
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
+        return status;
+    }
     LIBSPDM_ASSERT (message_size >= transport_header_size);
     spdm_request = (void *)(message + transport_header_size);
     spdm_request_size = message_size - transport_header_size;
@@ -59,7 +62,7 @@ libspdm_return_t libspdm_requester_respond_if_ready(libspdm_context_t *spdm_cont
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_release_sender_buffer (spdm_context);
         /* need acquire response buffer, so that the caller can release it */
-        libspdm_acquire_receiver_buffer (spdm_context, response_size, response);
+        status = libspdm_acquire_receiver_buffer (spdm_context, response_size, response);
         return status;
     }
     libspdm_release_sender_buffer (spdm_context);
@@ -68,7 +71,10 @@ libspdm_return_t libspdm_requester_respond_if_ready(libspdm_context_t *spdm_cont
     /* receive
      * do not release response buffer in case of error, because caller will release it*/
 
-    libspdm_acquire_receiver_buffer (spdm_context, response_size, response);
+    status = libspdm_acquire_receiver_buffer (spdm_context, response_size, response);
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
+        return status;
+    }
     LIBSPDM_ASSERT (*response_size >= transport_header_size);
 
     libspdm_zero_mem(*response, *response_size);
