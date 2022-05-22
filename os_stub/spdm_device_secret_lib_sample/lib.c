@@ -647,13 +647,8 @@ bool libspdm_generate_measurement_summary_hash(
                 ->measurement_block_common_header
                 .measurement_size;
             /* filter unneeded data*/
-            if (((measurement_summary_hash_type ==
-                  SPDM_CHALLENGE_REQUEST_ALL_MEASUREMENTS_HASH) &&
-                 ((cached_measurment_block
-                   ->measurement_block_dmtf_header
-                   .dmtf_spec_measurement_value_type &
-                   SPDM_MEASUREMENT_BLOCK_MEASUREMENT_TYPE_MASK) <
-                  SPDM_MEASUREMENT_BLOCK_MEASUREMENT_TYPE_MEASUREMENT_MANIFEST)) ||
+            if ((measurement_summary_hash_type ==
+                 SPDM_CHALLENGE_REQUEST_ALL_MEASUREMENTS_HASH) ||
                 ((cached_measurment_block
                   ->measurement_block_dmtf_header
                   .dmtf_spec_measurement_value_type &
