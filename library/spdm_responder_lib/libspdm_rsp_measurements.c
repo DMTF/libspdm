@@ -181,23 +181,16 @@ libspdm_return_t libspdm_get_response_measurements(void *context,
             spdm_context, SPDM_ERROR_CODE_UNEXPECTED_REQUEST,
             0, response_size, response);
     }
+    if (spdm_context->connection_info.connection_state <
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
+        return libspdm_generate_error_response(
+            spdm_context,
+            SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
+            response_size, response);
+    }
     if (!spdm_context->last_spdm_request_session_id_valid) {
-        if (spdm_context->connection_info.connection_state <
-            LIBSPDM_CONNECTION_STATE_AUTHENTICATED) {
-            return libspdm_generate_error_response(
-                spdm_context,
-                SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
-                response_size, response);
-        }
         session_info = NULL;
     } else {
-        if (spdm_context->connection_info.connection_state <
-            LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
-            return libspdm_generate_error_response(
-                spdm_context,
-                SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
-                response_size, response);
-        }
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context,
             spdm_context->last_spdm_request_session_id);
