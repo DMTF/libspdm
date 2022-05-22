@@ -61,7 +61,7 @@ libspdm_return_t libspdm_get_response_digests(void *context, size_t request_size
             spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
             SPDM_GET_DIGESTS, response_size, response);
     }
-    if (spdm_context->connection_info.connection_state !=
+    if (spdm_context->connection_info.connection_state <
         LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNEXPECTED_REQUEST,
