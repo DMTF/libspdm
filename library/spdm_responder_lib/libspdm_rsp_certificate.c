@@ -54,12 +54,8 @@ libspdm_return_t libspdm_get_response_certificate(void *context,
             spdm_request->header.request_response_code,
             response_size, response);
     }
-    if ((spdm_context->connection_info.connection_state !=
-         LIBSPDM_CONNECTION_STATE_NEGOTIATED) &&
-        (spdm_context->connection_info.connection_state !=
-         LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS) &&
-        (spdm_context->connection_info.connection_state !=
-         LIBSPDM_CONNECTION_STATE_AFTER_CERTIFICATE)) {
+    if (spdm_context->connection_info.connection_state <
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNEXPECTED_REQUEST,
                                                0, response_size, response);
