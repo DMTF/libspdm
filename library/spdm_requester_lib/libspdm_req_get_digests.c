@@ -69,7 +69,7 @@ libspdm_return_t libspdm_try_get_digest(void *context, uint8_t *slot_mask,
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL, SPDM_GET_DIGESTS);
-    if (spdm_context->connection_info.connection_state != LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
+    if (spdm_context->connection_info.connection_state < LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
 
