@@ -2430,7 +2430,18 @@ void libspdm_reset_context(void *context)
     size_t index;
 
     spdm_context = context;
+
     /*Clear all info about last connection*/
+
+    /*need clear session info to free context before algo is zeroed.*/
+    for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index++)
+    {
+        libspdm_session_info_init(spdm_context,
+                                  &spdm_context->session_info[index],
+                                  INVALID_SESSION_ID,
+                                  false);
+    }
+
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NOT_STARTED;
     libspdm_zero_mem(&spdm_context->connection_info.version, sizeof(spdm_version_number_t));
@@ -2450,13 +2461,6 @@ void libspdm_reset_context(void *context)
     spdm_context->last_spdm_request_size = 0;
     spdm_context->encap_context.certificate_chain_buffer.max_buffer_size =
         sizeof(spdm_context->encap_context.certificate_chain_buffer.buffer);
-    for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index++)
-    {
-        libspdm_session_info_init(spdm_context,
-                                  &spdm_context->session_info[index],
-                                  INVALID_SESSION_ID,
-                                  false);
-    }
 }
 /**
  * Return the size in bytes of the SPDM context.
