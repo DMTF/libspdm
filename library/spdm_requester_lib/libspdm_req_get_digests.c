@@ -109,6 +109,23 @@ libspdm_return_t libspdm_try_get_digest(void *context, uint8_t *slot_mask,
         status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
     }
+    if (spdm_response->header.request_response_code == SPDM_ERROR
+        && spdm_response->header.param1 == SPDM_ERROR_CODE_LARGE_RESPONSE) {
+
+        status = libspdm_handle_error_large_response(
+            spdm_context, NULL,
+            &spdm_response_size, (void*) spdm_response, message_size);
+
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
+            status = LIBSPDM_STATUS_RECEIVE_FAIL;
+            goto receive_done;
+        }
+
+        if (spdm_response_size < sizeof(spdm_message_header_t)) {
+            status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+            goto receive_done;
+        }
+    }
     if (spdm_response->header.spdm_version != spdm_request->header.spdm_version) {
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;

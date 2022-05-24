@@ -57,6 +57,13 @@ libspdm_return_t libspdm_handle_error_response_main(
     uint8_t original_request_code, uint8_t expected_response_code,
     size_t expected_response_size);
 
+libspdm_return_t libspdm_handle_error_large_response(
+    libspdm_context_t* spdm_context,
+    const uint32_t* session_id,
+    size_t* inout_response_size,
+    void* inout_response,
+    size_t  response_capacity);
+
 /**
  * This function sends GET_VERSION and receives VERSION.
  *
@@ -390,9 +397,13 @@ libspdm_return_t libspdm_get_encap_response_key_update(void *context,
  * @retval RETURN_SUCCESS               The SPDM request is sent successfully.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM request is sent to the device.
  **/
-libspdm_return_t libspdm_send_spdm_request(libspdm_context_t *spdm_context,
-                                           const uint32_t *session_id,
-                                           size_t request_size, void *request);
+libspdm_return_t libspdm_send_spdm_request(libspdm_context_t* spdm_context,
+                                           const uint32_t* session_id,
+                                           size_t request_size, void* request);
+
+libspdm_return_t libspdm_send_spdm_request_chunk(libspdm_context_t *spdm_context,
+                                                 const uint32_t *session_id,
+                                                 size_t request_size, void *request);
 
 /**
  * Receive an SPDM response from a device.
@@ -416,4 +427,8 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
                                                size_t *response_size,
                                                void **response);
 
+libspdm_return_t libspdm_receive_spdm_response_chunk(libspdm_context_t* spdm_context,
+                                                     const uint32_t* session_id,
+                                                     size_t* response_size,
+                                                     void** response);
 #endif
