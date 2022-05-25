@@ -751,6 +751,13 @@ bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
     result = libspdm_calculate_m1m2_hash(spdm_context, is_requester,
                                          &m1m2_hash_size, &m1m2_hash);
 #endif
+    if (is_requester) {
+        libspdm_reset_message_mut_b(spdm_context);
+        libspdm_reset_message_mut_c(spdm_context);
+    } else {
+        libspdm_reset_message_b(spdm_context);
+        libspdm_reset_message_c(spdm_context);
+    }
     if (!result) {
         return false;
     }
@@ -943,6 +950,13 @@ bool libspdm_verify_challenge_auth_signature(libspdm_context_t *spdm_context,
     result = libspdm_calculate_m1m2_hash(spdm_context, !is_requester,
                                          &m1m2_hash_size, &m1m2_hash);
 #endif
+    if (is_requester) {
+        libspdm_reset_message_b(spdm_context);
+        libspdm_reset_message_c(spdm_context);
+    } else {
+        libspdm_reset_message_mut_b(spdm_context);
+        libspdm_reset_message_mut_c(spdm_context);
+    }
     if (!result) {
         return false;
     }
@@ -1173,6 +1187,7 @@ bool libspdm_generate_measurement_signature(libspdm_context_t *spdm_context,
     result = libspdm_calculate_l1l2_hash(spdm_context, session_info, &l1l2_hash_size,
                                          l1l2_hash);
 #endif
+    libspdm_reset_message_m(spdm_context, session_info);
     if (!result) {
         return false;
     }
@@ -1236,6 +1251,7 @@ bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
     result = libspdm_calculate_l1l2_hash(spdm_context, session_info, &l1l2_hash_size,
                                          l1l2_hash);
 #endif
+    libspdm_reset_message_m(spdm_context, session_info);
     if (!result) {
         return false;
     }

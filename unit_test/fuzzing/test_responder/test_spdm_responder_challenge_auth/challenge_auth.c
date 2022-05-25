@@ -57,7 +57,6 @@ void libspdm_test_responder_challenge_case1(void **State)
 
     libspdm_get_response_challenge_auth(spdm_context, spdm_test_context->test_buffer_size,
                                         spdm_test_context->test_buffer, &response_size, response);
-    libspdm_reset_message_b(spdm_context);
     free(data);
 }
 
@@ -97,7 +96,6 @@ void libspdm_test_responder_challenge_case2(void **State)
 
     libspdm_get_response_challenge_auth(spdm_context, spdm_test_context->test_buffer_size,
                                         spdm_test_context->test_buffer, &response_size, response);
-    libspdm_reset_message_b(spdm_context);
     free(data);
 }
 
@@ -138,7 +136,6 @@ void libspdm_test_responder_challenge_case3(void **State)
 
     libspdm_get_response_challenge_auth(spdm_context, spdm_test_context->test_buffer_size,
                                         spdm_test_context->test_buffer, &response_size, response);
-    libspdm_reset_message_b(spdm_context);
     free(data);
 }
 
@@ -181,7 +178,6 @@ void libspdm_test_responder_challenge_case4(void **State)
     libspdm_reset_message_c(spdm_context);
     libspdm_get_response_challenge_auth(spdm_context, spdm_test_context->test_buffer_size,
                                         spdm_test_context->test_buffer, &response_size, response);
-    libspdm_reset_message_b(spdm_context);
     free(data);
 }
 
@@ -223,7 +219,6 @@ void libspdm_test_responder_challenge_case5(void **State)
 
     libspdm_get_response_challenge_auth(spdm_context, spdm_test_context->test_buffer_size,
                                         spdm_test_context->test_buffer, &response_size, response);
-    libspdm_reset_message_b(spdm_context);
     free(data);
 }
 
@@ -267,7 +262,6 @@ void libspdm_test_responder_challenge_case6(void **State)
     libspdm_reset_message_c(spdm_context);
     libspdm_get_response_challenge_auth(spdm_context, spdm_test_context->test_buffer_size,
                                         spdm_test_context->test_buffer, &response_size, response);
-    libspdm_reset_message_b(spdm_context);
     free(data);
 }
 

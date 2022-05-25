@@ -2788,10 +2788,6 @@ void libspdm_test_requester_challenge_case22(void **state)
     size_t data_size;
     void *hash;
     size_t hash_size;
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    size_t arbitrary_size;
-    size_t c_arbitrary_size;
-#endif
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -2820,8 +2816,6 @@ void libspdm_test_requester_challenge_case22(void **state)
     spdm_context->transcript.message_b.buffer_size = 8;
     libspdm_set_mem(spdm_context->transcript.message_c.buffer, 12, (uint8_t) 0xDD);
     spdm_context->transcript.message_c.buffer_size = 12;
-    arbitrary_size = 10 + 8 + 12;
-    c_arbitrary_size = 12;
 #endif
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
@@ -2854,14 +2848,9 @@ void libspdm_test_requester_challenge_case22(void **state)
         measurement_hash, NULL);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    /* buffer C and m_libspdm_local_buffer contain arbitrary data */
-    assert_int_equal(spdm_context->transcript.message_c.buffer_size - c_arbitrary_size,
-                     m_libspdm_local_buffer_size - arbitrary_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer (0x%x):\n",
                    m_libspdm_local_buffer_size));
     libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
-    assert_memory_equal(spdm_context->transcript.message_c.buffer + c_arbitrary_size,
-                        m_libspdm_local_buffer + arbitrary_size, m_libspdm_local_buffer_size);
 #endif
     free(data);
 }
