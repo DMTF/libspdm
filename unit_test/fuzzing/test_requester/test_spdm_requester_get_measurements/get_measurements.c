@@ -185,7 +185,6 @@ void libspdm_test_requester_get_measurement_case1(void **State)
                             &number_of_block,
                             &measurement_record_length, measurement_record);
     free(data);
-    libspdm_reset_message_m(spdm_context, NULL);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 #else
     libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
@@ -251,7 +250,6 @@ void libspdm_test_requester_get_measurement_case2(void **State)
                                &measurement_record_length, measurement_record, NULL, NULL,
                                NULL);
     free(data);
-    libspdm_reset_message_m(spdm_context, NULL);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 #else
     libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
@@ -336,7 +334,6 @@ void libspdm_test_requester_get_measurement_case3(void **State)
                             measurement_record);
     libspdm_test_message_header = 0;
     free(data);
-    libspdm_reset_message_m(spdm_context, NULL);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 #else
     libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
@@ -402,7 +399,6 @@ void libspdm_test_requester_get_measurement_case4(void **State)
                             NULL, &number_of_block, &measurement_record_length,
                             measurement_record);
     free(data);
-    libspdm_reset_message_m(spdm_context, NULL);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 #else
     libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
