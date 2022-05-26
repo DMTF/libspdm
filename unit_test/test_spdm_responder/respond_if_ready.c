@@ -967,8 +967,8 @@ void libspdm_test_responder_respond_if_ready_case8(void **state) {
     libspdm_zero_mem (local_psk_hint, 32);
     libspdm_copy_mem(&local_psk_hint[0], sizeof(local_psk_hint),
                      LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
-    spdm_context->connection_info.psk_hint_size = sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
-    spdm_context->connection_info.psk_hint = local_psk_hint;
+    spdm_context->local_context.psk_hint_size = sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
+    spdm_context->local_context.psk_hint = local_psk_hint;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
