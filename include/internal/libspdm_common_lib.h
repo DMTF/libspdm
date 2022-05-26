@@ -548,68 +548,6 @@ libspdm_is_capabilities_flag_supported(const libspdm_context_t *spdm_context,
                                        uint32_t requester_capabilities_flag,
                                        uint32_t responder_capabilities_flag);
 
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-/*
- * This function calculates m1m2.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  is_mut                        Indicate if this is from mutual authentication.
- * @param  m1m2_buffer_size               size in bytes of the m1m2
- * @param  m1m2_buffer                   The buffer to store the m1m2
- *
- * @retval RETURN_SUCCESS  m1m2 is calculated.
- */
-bool libspdm_calculate_m1m2(void *context, bool is_mut,
-                            size_t *m1m2_buffer_size,
-                            void *m1m2_buffer);
-#else
-/*
- * This function calculates m1m2 hash.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  is_mut                        Indicate if this is from mutual authentication.
- * @param  m1m2_hash_size               size in bytes of the m1m2 hash
- * @param  m1m2_hash                   The buffer to store the m1m2 hash
- *
- * @retval RETURN_SUCCESS  m1m2 is calculated.
- */
-bool libspdm_calculate_m1m2_hash(void *context, bool is_mut,
-                                 size_t *m1m2_hash_size,
-                                 void *m1m2_hash);
-#endif
-
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-/*
- * This function calculates l1l2.
- * If session_info is NULL, this function will use M cache of SPDM context,
- * else will use M cache of SPDM session context.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  A pointer to the SPDM session context.
- * @param  l1l2_buffer_size               size in bytes of the l1l2
- * @param  l1l2_buffer                   The buffer to store the l1l2
- *
- * @retval RETURN_SUCCESS  l1l2 is calculated.
- */
-bool libspdm_calculate_l1l2(void *context, void *session_info,
-                            size_t *l1l2_buffer_size, void *l1l2_buffer);
-#else
-/*
- * This function calculates l1l2 hash.
- * If session_info is NULL, this function will use M cache of SPDM context,
- * else will use M cache of SPDM session context.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  A pointer to the SPDM session context.
- * @param  l1l2_hash_size               size in bytes of the l1l2 hash
- * @param  l1l2_hash                   The buffer to store the l1l2 hash
- *
- * @retval RETURN_SUCCESS  l1l2 is calculated.
- */
-bool libspdm_calculate_l1l2_hash(void *context, void *session_info,
-                                 size_t *l1l2_hash_size, void *l1l2_hash);
-#endif
-
 /**
  * This function generates the certificate chain hash.
  *
