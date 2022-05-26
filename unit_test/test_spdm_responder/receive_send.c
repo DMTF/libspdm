@@ -150,4 +150,3 @@ int libspdm_responder_receive_send_test_main(void)
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }
-
