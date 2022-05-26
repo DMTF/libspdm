@@ -279,6 +279,25 @@ typedef struct {
     libspdm_large_managed_buffer_t certificate_chain_buffer;
 } libspdm_encap_context_t;
 
+typedef struct {
+    bool chunk_in_use;
+
+#if LIBSPDM_ENABLE_CHUNK_CAP
+    uint8_t chunk_handle;
+    uint16_t chunk_seq_no;
+    size_t chunk_bytes_transferred;
+
+    void* large_message;
+    size_t large_message_size;
+#endif /* LIBSPDM_ENABLE_CHUNK_CAP */
+
+} libspdm_chunk_info_t;
+
+typedef struct {
+    libspdm_chunk_info_t send;
+    libspdm_chunk_info_t get;
+} libspdm_chunk_context_t;
+
 #define libspdm_context_struct_version 0x2
 
 typedef struct {
@@ -396,6 +415,9 @@ typedef struct {
     /* Control whether responder device requires a reset to complete the GET_CSR/SET_CERT request.*/
 
     bool need_reset_to_set_cert;
+
+    /* Chunk specific context */
+    libspdm_chunk_context_t chunk_context;
 } libspdm_context_t;
 
 /**

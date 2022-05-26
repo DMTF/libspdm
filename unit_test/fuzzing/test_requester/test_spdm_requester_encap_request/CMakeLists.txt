@@ -28,6 +28,7 @@ SET(test_spdm_requester_encap_request_LIBRARY
     spdm_common_lib
     ${CRYPTO_LIB_PATHS}
     rnglib
+    platform_lib
     cryptlib_${CRYPTO}
     malloclib
     spdm_crypt_lib

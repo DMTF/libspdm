@@ -48,6 +48,9 @@
 #define SPDM_END_SESSION_ACK 0x6C
 #define SPDM_SET_CERTIFICATE_RSP 0x6E
 
+#define SPDM_CHUNK_SEND_ACK 0x05
+#define SPDM_CHUNK_RESPONSE 0x06
+
 /* SPDM request code (1.0)*/
 
 #define SPDM_GET_DIGESTS 0x81
@@ -72,6 +75,9 @@
 #define SPDM_DELIVER_ENCAPSULATED_RESPONSE 0xEB
 #define SPDM_END_SESSION 0xEC
 #define SPDM_SET_CERTIFICATE 0xEE
+
+#define SPDM_CHUNK_SEND 0x85
+#define SPDM_CHUNK_GET 0x86
 
 /* SPDM message header*/
 
@@ -677,6 +683,19 @@ typedef struct {
 } spdm_error_response_data_response_not_ready_t;
 
 
+/* SPDM LargeResponse extended data*/
+
+typedef struct {
+    uint8_t handle;
+} spdm_error_data_large_response_t;
+
+typedef struct {
+    spdm_message_header_t header;
+    /* param1 == Error Code
+     * param2 == Error data*/
+    spdm_error_data_large_response_t extend_error_data;
+} spdm_error_response_large_response_t;
+
 /* SPDM RESPONSE_IF_READY request*/
 
 typedef struct {
@@ -999,6 +1018,61 @@ typedef struct {
     /* param1 == BIT[0:3]=slot_id, BIT[4:7]=RSVD
      * param2 == RSVD*/
 } spdm_set_certificate_response_t;
+
+
+/* SPDM CHUNK_SEND request */
+
+typedef struct {
+    spdm_message_header_t header;
+    /* param1 - Request Attributes
+     * param2 - Handle */
+    uint16_t chunk_seq_no;
+    uint16_t reserved;
+    uint32_t chunk_size;
+
+    /* uint32_t large_message_size;
+     * uint8_t  spdm_chunk[chunk_size]; */
+} spdm_chunk_send_request_t;
+
+#define SPDM_CHUNK_SEND_REQUEST_ATTRIBUTE_LAST_CHUNK (1 << 0)
+
+/* SPDM CHUNK_SEND_ACK response */
+
+typedef struct {
+    spdm_message_header_t header;
+    /* param1 - Response Attributes
+     * param2 - Handle */
+    uint16_t chunk_seq_no;
+    /* uint8_t response_to_large_request[variable] */
+} spdm_chunk_send_ack_response_t;
+
+#define SPDM_CHUNK_SEND_ACK_RESPONSE_ATTRIBUTE_EARLY_ERROR_DETECTED (1 << 0)
+
+/* SPDM CHUNK_GET request */
+
+typedef struct {
+    spdm_message_header_t header;
+    /* param1 - Reserved
+    * param2 - Handle */
+    uint16_t chunk_seq_no;
+} spdm_chunk_get_request_t;
+
+/* SPDM CHUNK_RESPONSE response */
+
+typedef struct {
+    spdm_message_header_t header;
+    /* param1 - Response Attributes
+     * param2 - Handle */
+    uint16_t chunk_seq_no;
+    uint16_t reserved;
+    uint32_t chunk_size;
+
+    /* uint32_t large_message_size;
+     * uint8_t  spdm_chunk[chunk_size]; */
+} spdm_chunk_response_response_t;
+
+#define SPDM_CHUNK_GET_RESPONSE_ATTRIBUTE_LAST_CHUNK (1 << 0)
+
 
 #pragma pack()
 

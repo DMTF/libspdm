@@ -58,6 +58,29 @@ libspdm_return_t libspdm_handle_error_response_main(
     size_t expected_response_size);
 
 /**
+ * This function handles the error response handling for large responses.
+ * Will retrieve the large response in chunks if supported and necessary.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_id                    Indicates if it is a secured message protected via SPDM session.
+ *                                       If session_id is NULL, it is a normal message.
+ *                                       If session_id is NOT NULL, it is a secured message.
+ * @param  inout_response_size           The size of the response.
+ *                                       On input, expected to be the size of an error response.
+ *                                       On output, the large response size after being retrieved in chunks.
+ * @param  response                      The error response on input. Large response on output.
+ * @param  response_capacity             The maximum capacity of the response buffer.
+ *
+ * @retval libspdm_return_t              An error value or success.
+ **/
+libspdm_return_t libspdm_handle_error_large_response(
+    libspdm_context_t* spdm_context,
+    const uint32_t* session_id,
+    size_t* inout_response_size,
+    void* inout_response,
+    size_t response_capacity);
+
+/**
  * This function sends GET_VERSION and receives VERSION.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
@@ -399,20 +422,22 @@ libspdm_return_t libspdm_send_spdm_request(libspdm_context_t *spdm_context,
  *
  * @param  spdm_context                  The SPDM context for the device.
  * @param  session_id                    Indicate if the response is a secured message.
- *                                     If session_id is NULL, it is a normal message.
- *                                     If session_id is NOT NULL, it is a secured message.
+ *                                       If session_id is NULL, it is a normal message.
+ *                                       If session_id is NOT NULL, it is a secured message.
+ * @param  support_large_response        Perform large response handling if necessary.
  * @param  response_size                 size in bytes of the response data buffer.
- * @param  response                     A pointer to a destination buffer to store the response.
- *                                     The caller is responsible for having
- *                                     either implicit or explicit ownership of the buffer.
- *                                      For normal message, response pointer still point to original transport_message.
- *                                      For secured message, response pointer will point to the scratch buffer in spdm_context.
+ * @param  response                      A pointer to a destination buffer to store the response.
+ *                                       The caller is responsible for having
+ *                                       either implicit or explicit ownership of the buffer.
+ *                                       For normal message, response pointer still point to original transport_message.
+ *                                       For secured message, response pointer will point to the scratch buffer in spdm_context.
  *
  * @retval RETURN_SUCCESS               The SPDM response is received successfully.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is received from the device.
  **/
 libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
                                                const uint32_t *session_id,
+                                               bool support_large_response,
                                                size_t *response_size,
                                                void **response);
 

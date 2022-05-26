@@ -219,7 +219,9 @@ libspdm_return_t libspdm_try_send_receive_psk_exchange(
 
     libspdm_zero_mem(spdm_response, spdm_response_size);
     status = libspdm_receive_spdm_response(
-        spdm_context, NULL, &spdm_response_size, (void **)&spdm_response);
+        spdm_context, NULL, false,
+        &spdm_response_size, (void **)&spdm_response);
+
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         goto receive_done;
     }

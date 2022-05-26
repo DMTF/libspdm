@@ -165,8 +165,10 @@ libspdm_return_t libspdm_try_get_capabilities(libspdm_context_t *spdm_context)
     spdm_response_size = message_size;
 
     libspdm_zero_mem(spdm_response, spdm_response_size);
-    status = libspdm_receive_spdm_response(spdm_context, NULL, &spdm_response_size,
-                                           (void **)&spdm_response);
+    status = libspdm_receive_spdm_response(
+        spdm_context, NULL, false,
+        &spdm_response_size, (void **)&spdm_response);
+
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         goto receive_done;
     }
