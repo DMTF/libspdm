@@ -9,10 +9,10 @@
 
 #define CHUNK_GET_UNIT_TEST_OVERRIDE_DATA_TRANSFER_SIZE (64)
 
- /**
-  * Test 1: Test Responder Receive Send flow triggers chunk get mode
-  * if response buffer is larger than requester data_transfer_size.
-  **/
+/**
+ * Test 1: Test Responder Receive Send flow triggers chunk get mode
+ * if response buffer is larger than requester data_transfer_size.
+ **/
 void libspdm_test_responder_receive_send_rsp_case1(void** state)
 {
     libspdm_return_t status;
@@ -35,14 +35,14 @@ void libspdm_test_responder_receive_send_rsp_case1(void** state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 1;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
-        SPDM_VERSION_NUMBER_SHIFT_BIT;
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
 
     spdm_context->local_context.capability.flags |=
         (SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP
-        | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP);
+         | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP);
 
     libspdm_read_responder_public_certificate_chain(
         m_libspdm_use_hash_algo,
@@ -63,7 +63,8 @@ void libspdm_test_responder_receive_send_rsp_case1(void** state)
     #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain_buffer_size =
         data_size;
-    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
+    libspdm_copy_mem(
+        spdm_context->connection_info.peer_used_cert_chain_buffer,
         sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
         data, data_size);
     #else
@@ -109,8 +110,8 @@ void libspdm_test_responder_receive_send_rsp_case1(void** state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     transport_header_size = spdm_context->transport_get_header_size(spdm_context);
 
-    /* Verify responder returned error large response with chunk_handle == 1 */
-    /* and responder is in chunking mode (get.chunk_in_use). */
+    /* Verify responder returned error large response with chunk_handle == 1
+     * and responder is in chunking mode (get.chunk_in_use). */
     spdm_response = (spdm_error_response_t*) ((uint8_t*)message + transport_header_size);
     assert_int_equal(spdm_response->header.spdm_version, SPDM_MESSAGE_VERSION_12);
     assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
@@ -127,7 +128,7 @@ void libspdm_test_responder_receive_send_rsp_case1(void** state)
     #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     #else
     libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
-        spdm_context->connection_info.peer_used_leaf_cert_public_key);
+                      spdm_context->connection_info.peer_used_leaf_cert_public_key);
     #endif
 }
 
@@ -146,7 +147,7 @@ int libspdm_responder_receive_send_test_main(void)
     libspdm_setup_test_context(&m_libspdm_responder_receive_send_test_context);
 
     return cmocka_run_group_tests(spdm_responder_receive_send_tests,
-        libspdm_unit_test_group_setup,
-        libspdm_unit_test_group_teardown);
+                                  libspdm_unit_test_group_setup,
+                                  libspdm_unit_test_group_teardown);
 }
 

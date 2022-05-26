@@ -190,9 +190,9 @@ libspdm_return_t libspdm_handle_response_not_ready(libspdm_context_t *spdm_conte
 libspdm_return_t libspdm_handle_error_large_response(
     libspdm_context_t* spdm_context,
     const uint32_t* session_id,
-    size_t *inout_response_size,
+    size_t* inout_response_size,
     void*   inout_response,
-    size_t  response_capacity)
+    size_t response_capacity)
 {
     libspdm_return_t status;
     uint8_t chunk_handle;
@@ -207,7 +207,7 @@ libspdm_return_t libspdm_handle_error_large_response(
     size_t transport_header_size;
 
     uint8_t* scratch_buffer;
-    size_t   scratch_buffer_size;
+    size_t scratch_buffer_size;
     uint16_t chunk_seq_no;
     uint8_t* chunk_ptr;
     uint8_t* large_response;
@@ -222,9 +222,9 @@ libspdm_return_t libspdm_handle_error_large_response(
 
     /* Fail if requester or responder does not support chunk cap */
     if (!libspdm_is_capabilities_flag_supported(
-        spdm_context, true,
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP,
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP)) {
+            spdm_context, true,
+            SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP,
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP)) {
         return LIBSPDM_STATUS_ERROR_PEER;
     }
 
@@ -269,7 +269,7 @@ libspdm_return_t libspdm_handle_error_large_response(
                        "CHUNK_GET Handle %d SeqNo %d\n", chunk_handle, chunk_seq_no));
 
         status = libspdm_send_spdm_request(spdm_context, session_id,
-                                                 spdm_request_size, spdm_request);
+                                           spdm_request_size, spdm_request);
         spdm_request = NULL;
         spdm_request_size = 0;
         if (LIBSPDM_STATUS_IS_ERROR(status)) {

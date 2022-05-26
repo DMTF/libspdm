@@ -492,9 +492,10 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
         #if LIBSPDM_ENABLE_CHUNK_CAP
 
         if (!libspdm_is_capabilities_flag_supported(
-            spdm_context, false, 0,
-            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP)) {
-            status = libspdm_generate_error_response(spdm_context,
+                spdm_context, false, 0,
+                SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP)) {
+            status = libspdm_generate_error_response(
+                spdm_context,
                 SPDM_ERROR_CODE_LARGE_RESPONSE,
                 spdm_request->request_response_code,
                 &my_response_size, my_response);

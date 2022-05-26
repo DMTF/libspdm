@@ -31,7 +31,7 @@ void libspdm_test_responder_chunk_get_rsp_case1(void** state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 1;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
-        SPDM_VERSION_NUMBER_SHIFT_BIT;
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
@@ -82,7 +82,7 @@ void libspdm_test_responder_chunk_get_rsp_case2(void** state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 2;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
-        SPDM_VERSION_NUMBER_SHIFT_BIT;
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
@@ -140,7 +140,7 @@ void libspdm_test_responder_chunk_get_rsp_case3(void** state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 3;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
-        SPDM_VERSION_NUMBER_SHIFT_BIT;
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     /* Set bad connection_state */
     spdm_context->connection_info.connection_state =
@@ -196,7 +196,7 @@ void libspdm_test_responder_chunk_get_rsp_case4(void** state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 4;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
-        SPDM_VERSION_NUMBER_SHIFT_BIT;
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
@@ -251,7 +251,7 @@ void libspdm_test_responder_chunk_get_rsp_case5(void** state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 5;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
-        SPDM_VERSION_NUMBER_SHIFT_BIT;
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
@@ -303,7 +303,7 @@ void libspdm_test_responder_chunk_get_rsp_case6(void** state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 6;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
-        SPDM_VERSION_NUMBER_SHIFT_BIT;
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
@@ -362,7 +362,7 @@ void libspdm_test_responder_chunk_get_rsp_case7(void** state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 7;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
-        SPDM_VERSION_NUMBER_SHIFT_BIT;
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
@@ -432,7 +432,7 @@ void libspdm_test_responder_chunk_get_rsp_case8(void** state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 8;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
-        SPDM_VERSION_NUMBER_SHIFT_BIT;
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
@@ -502,7 +502,7 @@ void libspdm_test_responder_chunk_get_rsp_case9(void** state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 9;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
-        SPDM_VERSION_NUMBER_SHIFT_BIT;
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
@@ -516,7 +516,7 @@ void libspdm_test_responder_chunk_get_rsp_case9(void** state)
 
     libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
     LIBSPDM_ASSERT(scratch_buffer_size >= LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE
-        + LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+                   + LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
 
     scratch_buffer = (((uint8_t*) scratch_buffer) + LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE);
     scratch_buffer_size = scratch_buffer_size - LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE;
@@ -568,7 +568,7 @@ void libspdm_test_responder_chunk_get_rsp_case10(void** state)
     void* scratch_buffer;
     size_t scratch_buffer_size;
 
-    uint8_t  chunk_handle;
+    uint8_t chunk_handle;
     uint32_t data_transfer_size;
     uint32_t first_chunk_size;
     uint32_t second_chunk_size;
@@ -582,7 +582,7 @@ void libspdm_test_responder_chunk_get_rsp_case10(void** state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 10;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
-        SPDM_VERSION_NUMBER_SHIFT_BIT;
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
@@ -596,7 +596,7 @@ void libspdm_test_responder_chunk_get_rsp_case10(void** state)
 
     libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
     LIBSPDM_ASSERT(scratch_buffer_size >= LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE
-        + LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+                   + LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
 
     scratch_buffer = (((uint8_t*) scratch_buffer) + LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE);
     scratch_buffer_size = scratch_buffer_size - LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE;
@@ -604,7 +604,7 @@ void libspdm_test_responder_chunk_get_rsp_case10(void** state)
 
     /* Fill 1st chunk with 1, 2nd chunk with 2, 3rd chunk with 3 */
     first_chunk_size = data_transfer_size -
-        (sizeof(spdm_chunk_response_response_t) + sizeof(uint32_t));
+                       (sizeof(spdm_chunk_response_response_t) + sizeof(uint32_t));
     second_chunk_size = data_transfer_size - sizeof(spdm_chunk_response_response_t);
     third_chunk_size = data_transfer_size - sizeof(spdm_chunk_response_response_t);
     total_chunk_size = first_chunk_size + second_chunk_size + third_chunk_size;
@@ -672,7 +672,7 @@ void libspdm_test_responder_chunk_get_rsp_case11(void** state)
     void* scratch_buffer;
     size_t scratch_buffer_size;
 
-    uint8_t  chunk_handle;
+    uint8_t chunk_handle;
     uint16_t chunk_seq_no;
     uint32_t data_transfer_size;
     uint32_t first_chunk_size;
@@ -686,7 +686,7 @@ void libspdm_test_responder_chunk_get_rsp_case11(void** state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 11;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
-        SPDM_VERSION_NUMBER_SHIFT_BIT;
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
@@ -708,7 +708,7 @@ void libspdm_test_responder_chunk_get_rsp_case11(void** state)
 
     /* Fill 1st chunk with 1, 2nd chunk with 2, 3rd chunk with 3 */
     first_chunk_size = data_transfer_size -
-        (sizeof(spdm_chunk_response_response_t) + sizeof(uint32_t));
+                       (sizeof(spdm_chunk_response_response_t) + sizeof(uint32_t));
     second_chunk_size = data_transfer_size - sizeof(spdm_chunk_response_response_t);
     third_chunk_size = data_transfer_size - sizeof(spdm_chunk_response_response_t);
     total_chunk_size = first_chunk_size + second_chunk_size + third_chunk_size;
@@ -774,7 +774,7 @@ void libspdm_test_responder_chunk_get_rsp_case12(void** state)
     void* scratch_buffer;
     size_t scratch_buffer_size;
 
-    uint8_t  chunk_handle;
+    uint8_t chunk_handle;
     uint16_t chunk_seq_no;
     uint32_t data_transfer_size;
     uint32_t first_chunk_size;
@@ -810,7 +810,7 @@ void libspdm_test_responder_chunk_get_rsp_case12(void** state)
 
     /* Fill 1st chunk with 1, 2nd chunk with 2, 3rd chunk with 3 */
     first_chunk_size = data_transfer_size -
-        (sizeof(spdm_chunk_response_response_t) + sizeof(uint32_t));
+                       (sizeof(spdm_chunk_response_response_t) + sizeof(uint32_t));
     second_chunk_size = data_transfer_size - sizeof(spdm_chunk_response_response_t);
     third_chunk_size = data_transfer_size - sizeof(spdm_chunk_response_response_t);
     total_chunk_size = first_chunk_size + second_chunk_size + third_chunk_size;
@@ -892,7 +892,7 @@ void libspdm_test_responder_chunk_get_rsp_case13(void** state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 12;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
-        SPDM_VERSION_NUMBER_SHIFT_BIT;
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
@@ -906,7 +906,7 @@ void libspdm_test_responder_chunk_get_rsp_case13(void** state)
 
     libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
     LIBSPDM_ASSERT(scratch_buffer_size >= LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE
-        + LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+                   + LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
 
     scratch_buffer = (((uint8_t*) scratch_buffer) + LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE);
     scratch_buffer_size = scratch_buffer_size - LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE;
@@ -914,7 +914,7 @@ void libspdm_test_responder_chunk_get_rsp_case13(void** state)
 
     /* Fill 1st chunk with 1, 2nd chunk with 2, 3rd chunk with 3, 4th chunk with 4 */
     first_chunk_size = data_transfer_size -
-        (sizeof(spdm_chunk_response_response_t) + sizeof(uint32_t));
+                       (sizeof(spdm_chunk_response_response_t) + sizeof(uint32_t));
     second_chunk_size = data_transfer_size - sizeof(spdm_chunk_response_response_t);
     third_chunk_size = data_transfer_size - sizeof(spdm_chunk_response_response_t);
     fourth_chunk_size = 1;
@@ -1012,8 +1012,8 @@ int libspdm_responder_chunk_get_rsp_test_main(void)
     libspdm_setup_test_context(&m_libspdm_responder_chunk_get_rsp_test_context);
 
     return cmocka_run_group_tests(spdm_responder_chunk_get_tests,
-        libspdm_unit_test_group_setup,
-        libspdm_unit_test_group_teardown);
+                                  libspdm_unit_test_group_setup,
+                                  libspdm_unit_test_group_teardown);
 }
 
 #endif /* LIBSPDM_ENABLE_CHUNK_CAP*/
