@@ -11,12 +11,12 @@
 
 #define CHUNK_GET_UNIT_TEST_OVERRIDE_DATA_TRANSFER_SIZE (64)
 
- /**
-  * Test 1: Responder receives a CHUNK_GET request when it is not expecting it.
-  * Responder does not have response CHUNK cap set.
-  * Expected Behavior: Returns ERROR response message
-  * with SPDM_ERROR_CODE_UNEXPECTED_REQUEST error code.
-  **/
+/**
+ * Test 1: Responder receives a CHUNK_GET request when it is not expecting it.
+ * Responder does not have response CHUNK cap set.
+ * Expected Behavior: Returns ERROR response message
+ * with SPDM_ERROR_CODE_UNEXPECTED_REQUEST error code.
+ **/
 void libspdm_test_responder_chunk_get_rsp_case1(void** state)
 {
     libspdm_return_t status;
@@ -788,7 +788,7 @@ void libspdm_test_responder_chunk_get_rsp_case12(void** state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 12;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
-        SPDM_VERSION_NUMBER_SHIFT_BIT;
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
@@ -876,7 +876,7 @@ void libspdm_test_responder_chunk_get_rsp_case13(void** state)
     void* scratch_buffer;
     size_t scratch_buffer_size;
 
-    uint8_t  chunk_handle;
+    uint8_t chunk_handle;
     uint16_t chunk_seq_no;
     uint32_t data_transfer_size;
     uint32_t first_chunk_size;

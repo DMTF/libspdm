@@ -101,8 +101,8 @@ void libspdm_requester_chunk_get_test_case2_build_measurements_response(
 
     *response_size = sizeof(spdm_measurements_response_t) +
                      2 * (sizeof(spdm_measurement_block_dmtf_t) +
-                         libspdm_get_measurement_hash_size(
-                             m_libspdm_use_measurement_hash_algo)) +
+                          libspdm_get_measurement_hash_size(
+                              m_libspdm_use_measurement_hash_algo)) +
                      SPDM_NONCE_SIZE + sizeof(uint16_t);
 
     meas_rsp = (spdm_measurements_response_t*)((uint8_t*) response);
@@ -119,21 +119,21 @@ void libspdm_requester_chunk_get_test_case2_build_measurements_response(
     libspdm_set_mem(
         measurment_block,
         2 * (sizeof(spdm_measurement_block_dmtf_t) +
-            libspdm_get_measurement_hash_size(
-                m_libspdm_use_measurement_hash_algo)),
+             libspdm_get_measurement_hash_size(
+                 m_libspdm_use_measurement_hash_algo)),
         1);
     measurment_block->measurement_block_common_header.index = 1;
     measurment_block->measurement_block_common_header.measurement_specification =
         SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
     measurment_block->measurement_block_common_header.measurement_size =
         (uint16_t) (sizeof(spdm_measurement_block_dmtf_header_t) +
-            libspdm_get_measurement_hash_size(
-                m_libspdm_use_measurement_hash_algo));
+                    libspdm_get_measurement_hash_size(
+                        m_libspdm_use_measurement_hash_algo));
     measurment_block =
         (void*) (((uint8_t*) measurment_block) +
                  (sizeof(spdm_measurement_block_dmtf_t) +
-                      libspdm_get_measurement_hash_size(
-                          m_libspdm_use_measurement_hash_algo)));
+                  libspdm_get_measurement_hash_size(
+                      m_libspdm_use_measurement_hash_algo)));
     measurment_block->measurement_block_common_header.index = 2;
     measurment_block->measurement_block_common_header.measurement_specification =
         SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
@@ -705,8 +705,8 @@ void libspdm_test_requester_chunk_get_case2(void** state)
                      sizeof(spdm_message_header_t) +
                      sizeof(spdm_measurements_response_t) +
                      2 * (sizeof(spdm_measurement_block_dmtf_t) +
-                         libspdm_get_measurement_hash_size(
-                             m_libspdm_use_measurement_hash_algo)) +
+                          libspdm_get_measurement_hash_size(
+                              m_libspdm_use_measurement_hash_algo)) +
                      sizeof(uint16_t) + SPDM_NONCE_SIZE);
     #endif
     free(data);
@@ -835,7 +835,7 @@ void libspdm_test_requester_chunk_get_case4(void** state)
     libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_certificate_chain_test_case_4,
                      LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, digest);
     assert_memory_equal(total_digest_buffer, my_total_digest_buffer,
-        sizeof(my_total_digest_buffer));
+                        sizeof(my_total_digest_buffer));
 
     data_return_size = sizeof(uint8_t);
     status = libspdm_get_data(spdm_context, LIBSPDM_DATA_PEER_SLOT_MASK,
@@ -849,7 +849,7 @@ void libspdm_test_requester_chunk_get_case4(void** state)
                               NULL, total_digest_buffer, &data_return_size);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(data_return_size, libspdm_get_hash_size(
-                        m_libspdm_use_hash_algo) * SPDM_MAX_SLOT_COUNT);
+                         m_libspdm_use_hash_algo) * SPDM_MAX_SLOT_COUNT);
     assert_memory_equal(total_digest_buffer, my_total_digest_buffer,
                         sizeof(my_total_digest_buffer));
 
@@ -899,6 +899,7 @@ void libspdm_test_requester_chunk_get_case5(void** state)
     assert_int_equal(
         spdm_context->transcript.message_a.buffer_size,
         sizeof(spdm_negotiate_algorithms_request_t) +
+        4 * sizeof(spdm_negotiate_algorithms_common_struct_table_t) +
         sizeof(spdm_algorithms_response_t));
     #endif
 }
