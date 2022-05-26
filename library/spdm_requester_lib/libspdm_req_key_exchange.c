@@ -202,7 +202,9 @@ libspdm_return_t libspdm_try_send_receive_key_exchange(
 
     libspdm_zero_mem(spdm_response, spdm_response_size);
     status = libspdm_receive_spdm_response(
-        spdm_context, NULL, &spdm_response_size, (void **)&spdm_response);
+        spdm_context, NULL, true,
+        &spdm_response_size, (void **)&spdm_response);
+
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group,
@@ -215,30 +217,6 @@ libspdm_return_t libspdm_try_send_receive_key_exchange(
             dhe_context);
         status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
-    }
-
-    if (spdm_response->header.request_response_code == SPDM_ERROR
-        && spdm_response->header.param1 == SPDM_ERROR_CODE_LARGE_RESPONSE) {
-
-        status = libspdm_handle_error_large_response(
-            spdm_context, NULL,
-            &spdm_response_size, (void*) spdm_response, message_size);
-
-        if (LIBSPDM_STATUS_IS_ERROR(status)) {
-            libspdm_secured_message_dhe_free(
-                spdm_context->connection_info.algorithm.dhe_named_group,
-                dhe_context);
-            status = LIBSPDM_STATUS_RECEIVE_FAIL;
-            goto receive_done;
-        }
-
-        if (spdm_response_size < sizeof(spdm_message_header_t)) {
-            libspdm_secured_message_dhe_free(
-                spdm_context->connection_info.algorithm.dhe_named_group,
-                dhe_context);
-            status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
-            goto receive_done;
-        }
     }
 
     if (spdm_response->header.spdm_version != spdm_request->header.spdm_version) {

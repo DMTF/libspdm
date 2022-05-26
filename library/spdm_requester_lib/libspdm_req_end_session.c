@@ -96,7 +96,9 @@ libspdm_return_t libspdm_try_send_receive_end_session(libspdm_context_t *spdm_co
 
     libspdm_zero_mem(spdm_response, spdm_response_size);
     status = libspdm_receive_spdm_response(
-        spdm_context, &session_id, &spdm_response_size, (void **)&spdm_response);
+        spdm_context, &session_id, false,
+        &spdm_response_size, (void **)&spdm_response);
+
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         goto receive_done;
     }
@@ -104,25 +106,6 @@ libspdm_return_t libspdm_try_send_receive_end_session(libspdm_context_t *spdm_co
         status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
     }
-
-    if (spdm_response->header.request_response_code == SPDM_ERROR
-        && spdm_response->header.param1 == SPDM_ERROR_CODE_LARGE_RESPONSE) {
-
-        status = libspdm_handle_error_large_response(
-            spdm_context, &session_id,
-            &spdm_response_size, (void*) spdm_response, message_size);
-
-        if (LIBSPDM_STATUS_IS_ERROR(status)) {
-            status = LIBSPDM_STATUS_RECEIVE_FAIL;
-            goto receive_done;
-        }
-
-        if (spdm_response_size < sizeof(spdm_message_header_t)) {
-            status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
-            goto receive_done;
-        }
-    }
-
     if (spdm_response->header.spdm_version != spdm_request->header.spdm_version) {
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;

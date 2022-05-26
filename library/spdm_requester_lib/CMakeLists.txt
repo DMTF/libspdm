@@ -28,7 +28,6 @@ SET(src_spdm_requester_lib
     libspdm_req_psk_exchange.c
     libspdm_req_psk_finish.c
     libspdm_req_send_receive.c
-    libspdm_req_send_receive_chunk.c
     libspdm_req_set_certificate.c
 )
 

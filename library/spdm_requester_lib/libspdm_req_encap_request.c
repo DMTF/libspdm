@@ -269,13 +269,19 @@ libspdm_return_t libspdm_encapsulated_request(libspdm_context_t *spdm_context,
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
         status = libspdm_receive_spdm_response(
-            spdm_context, session_id, &spdm_response_size,
-            (void **)&spdm_response);
+            spdm_context, session_id, true,
+            &spdm_response_size, (void **)&spdm_response);
         libspdm_encapsulated_request_response = (void *)spdm_response;
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             libspdm_release_receiver_buffer (spdm_context);
             return status;
         }
+
+        if (spdm_response_size < sizeof(spdm_message_header_t)) {
+            libspdm_release_receiver_buffer(spdm_context);
+            return LIBSPDM_STATUS_INVALID_MSG_SIZE;
+        }
+
         if (libspdm_encapsulated_request_response->header
             .request_response_code !=
             SPDM_ENCAPSULATED_REQUEST) {
@@ -374,15 +380,21 @@ libspdm_return_t libspdm_encapsulated_request(libspdm_context_t *spdm_context,
         spdm_response_size = message_size;
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
-
         status = libspdm_receive_spdm_response(
-            spdm_context, session_id, &spdm_response_size,
-            (void **)&spdm_response);
-        spdm_encapsulated_response_ack_response = (void *)spdm_response;
+            spdm_context, session_id, true,
+            &spdm_response_size, (void **)&spdm_response);
+
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             libspdm_release_receiver_buffer (spdm_context);
             return status;
         }
+
+        if (spdm_response_size < sizeof(spdm_message_header_t)) {
+            libspdm_release_receiver_buffer(spdm_context);
+            return LIBSPDM_STATUS_INVALID_MSG_SIZE;
+        }
+
+        spdm_encapsulated_response_ack_response = (void *)spdm_response;
         if (spdm_encapsulated_response_ack_response->header
             .request_response_code !=
             SPDM_ENCAPSULATED_RESPONSE_ACK) {

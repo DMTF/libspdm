@@ -444,9 +444,6 @@ void libspdm_internal_dump_data(const uint8_t *data, size_t size);
  **/
 void libspdm_internal_dump_hex(const uint8_t *data, size_t size);
 
-
-void libspdm_trace_message(void* message, size_t message_size);
-
 /**
  * Append a new data buffer to the managed buffer.
  *

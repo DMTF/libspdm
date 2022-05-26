@@ -33,6 +33,7 @@ SET(src_test_spdm_responder
     encap_challenge.c
     encap_response.c
     set_certificate_rsp.c
+    receive_send.c
     chunk_get.c
     ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/common.c
     ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/algo.c

@@ -135,7 +135,8 @@ libspdm_return_t libspdm_try_key_update(void *context, uint32_t session_id,
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
         status = libspdm_receive_spdm_response(
-            spdm_context, &session_id, &spdm_response_size, (void **)&spdm_response);
+            spdm_context, &session_id, false,
+            &spdm_response_size, (void **)&spdm_response);
 
         if (!LIBSPDM_STATUS_IS_ERROR(status)) {
             if (spdm_response_size < sizeof(spdm_message_header_t)) {
@@ -251,7 +252,9 @@ libspdm_return_t libspdm_try_key_update(void *context, uint32_t session_id,
 
     libspdm_zero_mem(spdm_response, spdm_response_size);
     status = libspdm_receive_spdm_response(
-        spdm_context, &session_id, &spdm_response_size, (void **)&spdm_response);
+        spdm_context, &session_id, false,
+        &spdm_response_size, (void **)&spdm_response);
+
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_release_receiver_buffer (spdm_context);
         return status;

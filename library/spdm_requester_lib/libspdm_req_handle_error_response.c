@@ -72,8 +72,10 @@ libspdm_return_t libspdm_requester_respond_if_ready(libspdm_context_t *spdm_cont
     LIBSPDM_ASSERT (*response_size >= transport_header_size);
 
     libspdm_zero_mem(*response, *response_size);
-    status = libspdm_receive_spdm_response(spdm_context, session_id,
-                                           response_size, response);
+    status = libspdm_receive_spdm_response(
+        spdm_context, session_id, false,
+        response_size, response);
+
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return status;
     }
@@ -219,13 +221,12 @@ libspdm_return_t libspdm_handle_error_large_response(
     }
 
     /* Fail if requester or responder does not support chunk cap */
-    /*
     if (!libspdm_is_capabilities_flag_supported(
         spdm_context, true,
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP,
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP)) {
         return LIBSPDM_STATUS_ERROR_PEER;
-    } */
+    }
 
     error_response = inout_response;
     extend_error_data =
@@ -267,7 +268,7 @@ libspdm_return_t libspdm_handle_error_large_response(
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
                        "CHUNK_GET Handle %d SeqNo %d\n", chunk_handle, chunk_seq_no));
 
-        status = libspdm_send_spdm_request_chunk(spdm_context, session_id,
+        status = libspdm_send_spdm_request(spdm_context, session_id,
                                                  spdm_request_size, spdm_request);
         spdm_request = NULL;
         spdm_request_size = 0;
@@ -279,8 +280,10 @@ libspdm_return_t libspdm_handle_error_large_response(
         void* response = message;
         size_t response_size = message_size;
 
-        status = libspdm_receive_spdm_response_chunk(spdm_context, session_id,
-                                                     &response_size, &response);
+        status = libspdm_receive_spdm_response(
+            spdm_context, session_id, false,
+            &response_size, &response);
+
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             break;
         }

@@ -401,34 +401,28 @@ libspdm_return_t libspdm_send_spdm_request(libspdm_context_t* spdm_context,
                                            const uint32_t* session_id,
                                            size_t request_size, void* request);
 
-libspdm_return_t libspdm_send_spdm_request_chunk(libspdm_context_t *spdm_context,
-                                                 const uint32_t *session_id,
-                                                 size_t request_size, void *request);
-
 /**
  * Receive an SPDM response from a device.
  *
  * @param  spdm_context                  The SPDM context for the device.
  * @param  session_id                    Indicate if the response is a secured message.
- *                                     If session_id is NULL, it is a normal message.
- *                                     If session_id is NOT NULL, it is a secured message.
+ *                                       If session_id is NULL, it is a normal message.
+ *                                       If session_id is NOT NULL, it is a secured message.
+ * @param  support_large_response        Perform large response handling if necessary.
  * @param  response_size                 size in bytes of the response data buffer.
- * @param  response                     A pointer to a destination buffer to store the response.
- *                                     The caller is responsible for having
- *                                     either implicit or explicit ownership of the buffer.
- *                                      For normal message, response pointer still point to original transport_message.
- *                                      For secured message, response pointer will point to the scratch buffer in spdm_context.
+ * @param  response                      A pointer to a destination buffer to store the response.
+ *                                       The caller is responsible for having
+ *                                       either implicit or explicit ownership of the buffer.
+ *                                       For normal message, response pointer still point to original transport_message.
+ *                                       For secured message, response pointer will point to the scratch buffer in spdm_context.
  *
  * @retval RETURN_SUCCESS               The SPDM response is received successfully.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is received from the device.
  **/
 libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
                                                const uint32_t *session_id,
+                                               bool support_large_response,
                                                size_t *response_size,
                                                void **response);
 
-libspdm_return_t libspdm_receive_spdm_response_chunk(libspdm_context_t* spdm_context,
-                                                     const uint32_t* session_id,
-                                                     size_t* response_size,
-                                                     void** response);
 #endif

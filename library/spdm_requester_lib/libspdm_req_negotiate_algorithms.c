@@ -152,16 +152,18 @@ libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm_contex
     spdm_response_size = message_size;
 
     libspdm_zero_mem(spdm_response, spdm_response_size);
-    status = libspdm_receive_spdm_response(spdm_context, NULL, &spdm_response_size,
-                                           (void **)&spdm_response);
+    status = libspdm_receive_spdm_response(
+        spdm_context, NULL, true,
+        &spdm_response_size, (void **)&spdm_response);
+
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         goto receive_done;
     }
-
     if (spdm_response_size < sizeof(spdm_message_header_t)) {
         status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
     }
+
     if (spdm_response->header.spdm_version != spdm_request->header.spdm_version) {
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
