@@ -347,7 +347,7 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
             spdm_response->request_response_code == SPDM_ENCAPSULATED_REQUEST ||
             spdm_response->request_response_code == SPDM_ENCAPSULATED_RESPONSE_ACK ||
             spdm_response->request_response_code == SPDM_CHUNK_SEND_ACK
-        );
+            );
     }
 
 receive_done:
