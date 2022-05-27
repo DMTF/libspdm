@@ -171,6 +171,11 @@
 #define LIBSPDM_ENABLE_SET_CERTIFICATE_CAP 1
 #endif
 
+#ifndef LIBSPDM_ENABLE_CHUNK_CAP
+#define LIBSPDM_ENABLE_CHUNK_CAP 1
+#endif
+
+
 /*
  * MinDataTransferSize = 42
  *
@@ -270,12 +275,33 @@
 
 
 /* Required scratch buffer size for libspdm internal usage.
- * It maybe used to hold the encrypted/decrypted message and/or last sent/received message.
+ * It may be used to hold the encrypted/decrypted message and/or last sent/received message.
+ * It may be used to hold the large request/response and intermediate send/receive buffer
+ * in case of chunking.
+ *
+ * If chunking is not supported, it may be just LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE.
+ * If chunking is supported, it should be at least LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE
+ * + LIBSPDM_MAX_SPDM_MSG_SIZE + LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE.
  *
  * The value is NOT configurable.
- * The value MAY be chnaged in different libspdm version.
+ * The value MAY be changed in different libspdm version.
  * It is exposed here, just in case the libspdm consumer wants to configure the setting at build time.
  */
+#if LIBSPDM_ENABLE_CHUNK_CAP
+#define LIBSPDM_SCRATCH_BUFFER_SIZE (LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE + \
+                                     LIBSPDM_MAX_SPDM_MSG_SIZE +          \
+                                     LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE \
+                                     )
+
+#define LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_OFFSET \
+    (LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE)
+
+#define LIBSPDM_SCRATCH_BUFFER_SENDER_RECEIVER_OFFSET  \
+    (LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE + \
+     LIBSPDM_MAX_SPDM_MSG_SIZE)
+
+#else
 #define LIBSPDM_SCRATCH_BUFFER_SIZE (LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE)
+#endif
 
 #endif

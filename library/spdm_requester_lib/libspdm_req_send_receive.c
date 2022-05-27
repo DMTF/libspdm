@@ -62,7 +62,8 @@ libspdm_return_t libspdm_send_request(void *context, const uint32_t *session_id,
     }
 
     /* backup it to last_spdm_request, because the caller wants to compare it with response */
-    if (((const spdm_message_header_t *)request)->request_response_code != SPDM_RESPOND_IF_READY) {
+    if (((const spdm_message_header_t *)request)->request_response_code != SPDM_RESPOND_IF_READY
+        && ((const spdm_message_header_t *)request)->request_response_code != SPDM_CHUNK_GET) {
         libspdm_copy_mem (spdm_context->last_spdm_request,
                           sizeof(spdm_context->last_spdm_request),
                           request,
@@ -276,8 +277,11 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
                                                size_t *response_size,
                                                void **response)
 {
+    libspdm_return_t status;
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
+    spdm_message_header_t* spdm_response;
+    size_t response_capacity;
 
     if ((session_id != NULL) &&
         libspdm_is_capabilities_flag_supported(
@@ -298,6 +302,55 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
         }
     }
 
-    return libspdm_receive_response(spdm_context, session_id, false,
-                                    response_size, response);
+    response_capacity = *response_size;
+    status = libspdm_receive_response(spdm_context, session_id, false,
+                                      response_size, response);
+
+    spdm_response = (spdm_message_header_t*) (*response);
+
+    if (*response_size < sizeof(spdm_message_header_t)) {
+        status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+        goto receive_done;
+    }
+
+    if (spdm_response->request_response_code == SPDM_ERROR
+        && spdm_response->param1 == SPDM_ERROR_CODE_LARGE_RESPONSE) {
+
+        status = libspdm_handle_error_large_response(
+            spdm_context, NULL,
+            response_size, (void*) spdm_response, response_capacity);
+
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
+            status = LIBSPDM_STATUS_RECEIVE_FAIL;
+            goto receive_done;
+        }
+
+        if (*response_size < sizeof(spdm_message_header_t)) {
+            status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+            goto receive_done;
+        }
+
+        /* These are the expected possible large response types.
+         * Anything else is potentially an unexpected error.
+         * If this assert pops, evaluate if the type should be added here
+         * according to the spec, or if it an error by the responder. */
+        LIBSPDM_ASSERT(
+            spdm_response->request_response_code == SPDM_DIGESTS ||
+            spdm_response->request_response_code == SPDM_CERTIFICATE ||
+            spdm_response->request_response_code == SPDM_CHALLENGE_AUTH ||
+            spdm_response->request_response_code == SPDM_MEASUREMENTS ||
+            spdm_response->request_response_code == SPDM_VENDOR_DEFINED_RESPONSE ||
+            spdm_response->request_response_code == SPDM_ALGORITHMS ||
+            spdm_response->request_response_code == SPDM_KEY_EXCHANGE_RSP ||
+            spdm_response->request_response_code == SPDM_FINISH_RSP ||
+            spdm_response->request_response_code == SPDM_PSK_EXCHANGE_RSP ||
+            spdm_response->request_response_code == SPDM_ENCAPSULATED_REQUEST ||
+            spdm_response->request_response_code == SPDM_ENCAPSULATED_RESPONSE_ACK ||
+            spdm_response->request_response_code == SPDM_CHUNK_SEND_ACK
+        );
+    }
+
+receive_done:
+
+    return status;
 }
