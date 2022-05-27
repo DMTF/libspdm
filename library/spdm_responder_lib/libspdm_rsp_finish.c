@@ -79,7 +79,7 @@ libspdm_return_t libspdm_get_response_finish(void *context, size_t request_size,
         /* No handshake in clear, then it must be in a session.*/
         if (!spdm_context->last_spdm_request_session_id_valid) {
             return libspdm_generate_error_response(
-                context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                context, SPDM_ERROR_CODE_SESSION_REQUIRED, 0,
                 response_size, response);
         }
     } else {
