@@ -45,7 +45,8 @@ typedef struct {
  *         the Responder.
  *         Note: This return value may be removed in the future.
  **/
-libspdm_return_t libspdm_try_get_digest(void *context, uint8_t *slot_mask,
+libspdm_return_t libspdm_try_get_digest(void *context, const uint32_t *session_id,
+                                        uint8_t *slot_mask,
                                         void *total_digest_buffer)
 {
     bool result;
@@ -61,6 +62,8 @@ libspdm_return_t libspdm_try_get_digest(void *context, uint8_t *slot_mask,
     uint8_t *message;
     size_t message_size;
     size_t transport_header_size;
+    libspdm_session_info_t *session_info;
+    libspdm_session_state_t session_state;
 
     spdm_context = context;
     if (!libspdm_is_capabilities_flag_supported(
@@ -68,10 +71,26 @@ libspdm_return_t libspdm_try_get_digest(void *context, uint8_t *slot_mask,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP)) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
-    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL, SPDM_GET_DIGESTS);
-    if (spdm_context->connection_info.connection_state < LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
+
+    if (spdm_context->connection_info.connection_state <
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
+    session_info = NULL;
+    if (session_id != NULL) {
+        session_info = libspdm_get_session_info_via_session_id(
+            spdm_context, *session_id);
+        if (session_info == NULL) {
+            LIBSPDM_ASSERT(false);
+            return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
+        }
+        session_state = libspdm_secured_message_get_session_state(
+            session_info->secured_message_context);
+        if (session_state != LIBSPDM_SESSION_STATE_ESTABLISHED) {
+            return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
+        }
+    }
+    libspdm_reset_message_buffer_via_request_code(spdm_context, session_info, SPDM_GET_DIGESTS);
 
     transport_header_size = spdm_context->transport_get_header_size(spdm_context);
     status = libspdm_acquire_sender_buffer (spdm_context, &message_size, (void **)&message);
@@ -87,7 +106,7 @@ libspdm_return_t libspdm_try_get_digest(void *context, uint8_t *slot_mask,
     spdm_request->header.param1 = 0;
     spdm_request->header.param2 = 0;
     spdm_request_size = sizeof(spdm_get_digest_request_t);
-    status = libspdm_send_spdm_request(spdm_context, NULL, spdm_request_size, spdm_request);
+    status = libspdm_send_spdm_request(spdm_context, session_id, spdm_request_size, spdm_request);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_release_sender_buffer (spdm_context);
         return status;
@@ -107,7 +126,7 @@ libspdm_return_t libspdm_try_get_digest(void *context, uint8_t *slot_mask,
 
     libspdm_zero_mem(spdm_response, spdm_response_size);
     status = libspdm_receive_spdm_response(
-        spdm_context, NULL, &spdm_response_size, (void **)&spdm_response);
+        spdm_context, session_id, &spdm_response_size, (void **)&spdm_response);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         goto receive_done;
     }
@@ -121,7 +140,7 @@ libspdm_return_t libspdm_try_get_digest(void *context, uint8_t *slot_mask,
     }
     if (spdm_response->header.request_response_code == SPDM_ERROR) {
         status = libspdm_handle_error_response_main(
-            spdm_context, NULL,
+            spdm_context, session_id,
             &spdm_response_size,
             (void **)&spdm_response, SPDM_GET_DIGESTS, SPDM_DIGESTS,
             sizeof(libspdm_digests_response_max_t));
@@ -161,16 +180,18 @@ libspdm_return_t libspdm_try_get_digest(void *context, uint8_t *slot_mask,
 
     /* Cache data*/
 
-    status = libspdm_append_message_b(spdm_context, spdm_request, spdm_request_size);
-    if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        status = LIBSPDM_STATUS_BUFFER_FULL;
-        goto receive_done;
-    }
+    if (session_id == NULL) {
+        status = libspdm_append_message_b(spdm_context, spdm_request, spdm_request_size);
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
+            status = LIBSPDM_STATUS_BUFFER_FULL;
+            goto receive_done;
+        }
 
-    status = libspdm_append_message_b(spdm_context, spdm_response, spdm_response_size);
-    if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        status = LIBSPDM_STATUS_BUFFER_FULL;
-        goto receive_done;
+        status = libspdm_append_message_b(spdm_context, spdm_response, spdm_response_size);
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
+            status = LIBSPDM_STATUS_BUFFER_FULL;
+            goto receive_done;
+        }
     }
 
     for (index = 0; index < digest_count; index++) {
@@ -254,7 +275,7 @@ libspdm_return_t libspdm_get_digest(void *context, uint8_t *slot_mask, void *tot
     spdm_context->crypto_request = true;
     retry = spdm_context->retry_times;
     do {
-        status = libspdm_try_get_digest(spdm_context, slot_mask, total_digest_buffer);
+        status = libspdm_try_get_digest(spdm_context, NULL, slot_mask, total_digest_buffer);
         if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
         }
@@ -263,4 +284,62 @@ libspdm_return_t libspdm_get_digest(void *context, uint8_t *slot_mask, void *tot
     return status;
 }
 
+/**
+ * This function sends GET_DIGESTS and receives DIGESTS. It may retry GET_DIGESTS multiple times
+ * if the Responder replies with a Busy error.
+ *
+ * If the peer certificate chain is deployed,
+ * this function also verifies the digest with the certificate chain.
+ *
+ * TotalDigestSize = sizeof(digest) * count in slot_mask
+ *
+ * @param  context             A pointer to the SPDM context.
+ * @param  session_id         Indicates if it is a secured message protected via SPDM session.
+ *                           If session_id is NULL, it is a normal message.
+ *                           If session_id is NOT NULL, it is a secured message.
+ * @param  slot_mask           Bitmask of the slots that contain certificates.
+ * @param  total_digest_buffer A pointer to a destination buffer to store the digests.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS
+ *         GET_DIGETS was sent and DIGESTS was received.
+ * @retval LIBSPDM_STATUS_INVALID_STATE_LOCAL
+ *         Cannot send GET_DIGESTS due to Requester's state.
+ * @retval LIBSPDM_STATUS_UNSUPPORTED_CAP
+ *         Cannot send GET_DIGESTS because the Requester's and/or Responder's CERT_CAP = 0.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE
+ *         The size of the DIGESTS response is invalid.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD
+ *         The DIGESTS response contains one or more invalid fields.
+ * @retval LIBSPDM_STATUS_ERROR_PEER
+ *         The Responder returned an unexpected error.
+ * @retval LIBSPDM_STATUS_BUSY_PEER
+ *         The Responder continually returned Busy error messages.
+ * @retval LIBSPDM_STATUS_RESYNCH_PEER
+ *         The Responder returned a RequestResynch error message.
+ * @retval LIBSPDM_STATUS_BUFFER_FULL
+ *         The buffer used to store transcripts is exhausted.
+ * @retval LIBSPDM_STATUS_VERIF_FAIL
+ *         The digest of the stored certificate chain does not match the digest returned by
+ *         the Responder.
+ *         Note: This return value may be removed in the future.
+ **/
+libspdm_return_t libspdm_get_digest_in_session(void *context, const uint32_t *session_id,
+                                               uint8_t *slot_mask, void *total_digest_buffer)
+{
+    libspdm_context_t *spdm_context;
+    size_t retry;
+    libspdm_return_t status;
+
+    spdm_context = context;
+    spdm_context->crypto_request = true;
+    retry = spdm_context->retry_times;
+    do {
+        status = libspdm_try_get_digest(spdm_context, session_id, slot_mask, total_digest_buffer);
+        if (status != LIBSPDM_STATUS_BUSY_PEER) {
+            return status;
+        }
+    } while (retry-- != 0);
+
+    return status;
+}
 #endif /*LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
