@@ -424,7 +424,6 @@ libspdm_return_t libspdm_send_spdm_request(libspdm_context_t *spdm_context,
  * @param  session_id                    Indicate if the response is a secured message.
  *                                       If session_id is NULL, it is a normal message.
  *                                       If session_id is NOT NULL, it is a secured message.
- * @param  support_large_response        Perform large response handling if necessary.
  * @param  response_size                 size in bytes of the response data buffer.
  * @param  response                      A pointer to a destination buffer to store the response.
  *                                       The caller is responsible for having
@@ -437,7 +436,6 @@ libspdm_return_t libspdm_send_spdm_request(libspdm_context_t *spdm_context,
  **/
 libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
                                                const uint32_t *session_id,
-                                               bool support_large_response,
                                                size_t *response_size,
                                                void **response);
 

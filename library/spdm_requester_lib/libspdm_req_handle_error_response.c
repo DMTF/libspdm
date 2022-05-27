@@ -73,7 +73,7 @@ libspdm_return_t libspdm_requester_respond_if_ready(libspdm_context_t *spdm_cont
 
     libspdm_zero_mem(*response, *response_size);
     status = libspdm_receive_spdm_response(
-        spdm_context, session_id, false,
+        spdm_context, session_id,
         response_size, response);
 
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
@@ -281,7 +281,7 @@ libspdm_return_t libspdm_handle_error_large_response(
         size_t response_size = message_size;
 
         status = libspdm_receive_spdm_response(
-            spdm_context, session_id, false,
+            spdm_context, session_id,
             &response_size, &response);
 
         if (LIBSPDM_STATUS_IS_ERROR(status)) {

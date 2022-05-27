@@ -9,7 +9,7 @@
 
 #if LIBSPDM_ENABLE_CHUNK_CAP
 
-#define CHUNK_GET_UNIT_TEST_OVERRIDE_DATA_TRANSFER_SIZE (64)
+#define CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE (44)
 
 /**
  * Test 1: Responder receives a CHUNK_GET request when it is not expecting it.
@@ -39,7 +39,7 @@ void libspdm_test_responder_chunk_get_rsp_case1(void** state)
         m_libspdm_use_hash_algo;
 
     spdm_context->connection_info.capability.data_transfer_size =
-        CHUNK_GET_UNIT_TEST_OVERRIDE_DATA_TRANSFER_SIZE;
+        CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
 
     libspdm_zero_mem(&spdm_request, sizeof(spdm_request));
     spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_12;
@@ -90,7 +90,7 @@ void libspdm_test_responder_chunk_get_rsp_case2(void** state)
         m_libspdm_use_hash_algo;
 
     spdm_context->local_context.capability.data_transfer_size =
-        CHUNK_GET_UNIT_TEST_OVERRIDE_DATA_TRANSFER_SIZE;
+        CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
 
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
@@ -149,7 +149,7 @@ void libspdm_test_responder_chunk_get_rsp_case3(void** state)
         m_libspdm_use_hash_algo;
 
     spdm_context->local_context.capability.data_transfer_size =
-        CHUNK_GET_UNIT_TEST_OVERRIDE_DATA_TRANSFER_SIZE;
+        CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
@@ -204,7 +204,7 @@ void libspdm_test_responder_chunk_get_rsp_case4(void** state)
         m_libspdm_use_hash_algo;
 
     spdm_context->local_context.capability.data_transfer_size =
-        CHUNK_GET_UNIT_TEST_OVERRIDE_DATA_TRANSFER_SIZE;
+        CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
 
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
@@ -259,7 +259,7 @@ void libspdm_test_responder_chunk_get_rsp_case5(void** state)
         m_libspdm_use_hash_algo;
 
     spdm_context->local_context.capability.data_transfer_size =
-        CHUNK_GET_UNIT_TEST_OVERRIDE_DATA_TRANSFER_SIZE;
+        CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
 
@@ -311,7 +311,7 @@ void libspdm_test_responder_chunk_get_rsp_case6(void** state)
         m_libspdm_use_hash_algo;
 
     spdm_context->local_context.capability.data_transfer_size =
-        CHUNK_GET_UNIT_TEST_OVERRIDE_DATA_TRANSFER_SIZE;
+        CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
 
@@ -370,7 +370,7 @@ void libspdm_test_responder_chunk_get_rsp_case7(void** state)
         m_libspdm_use_hash_algo;
 
     spdm_context->local_context.capability.data_transfer_size =
-        CHUNK_GET_UNIT_TEST_OVERRIDE_DATA_TRANSFER_SIZE;
+        CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
 
@@ -440,7 +440,7 @@ void libspdm_test_responder_chunk_get_rsp_case8(void** state)
         m_libspdm_use_hash_algo;
 
     spdm_context->local_context.capability.data_transfer_size =
-        CHUNK_GET_UNIT_TEST_OVERRIDE_DATA_TRANSFER_SIZE;
+        CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
 
@@ -510,7 +510,7 @@ void libspdm_test_responder_chunk_get_rsp_case9(void** state)
         m_libspdm_use_hash_algo;
 
     spdm_context->local_context.capability.data_transfer_size =
-        CHUNK_GET_UNIT_TEST_OVERRIDE_DATA_TRANSFER_SIZE;
+        CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
 
@@ -589,7 +589,7 @@ void libspdm_test_responder_chunk_get_rsp_case10(void** state)
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
 
-    data_transfer_size = CHUNK_GET_UNIT_TEST_OVERRIDE_DATA_TRANSFER_SIZE;
+    data_transfer_size = CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
     spdm_context->local_context.capability.data_transfer_size = data_transfer_size;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
@@ -693,7 +693,7 @@ void libspdm_test_responder_chunk_get_rsp_case11(void** state)
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
 
-    data_transfer_size = CHUNK_GET_UNIT_TEST_OVERRIDE_DATA_TRANSFER_SIZE;
+    data_transfer_size = CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
     spdm_context->local_context.capability.data_transfer_size = data_transfer_size;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
@@ -795,7 +795,7 @@ void libspdm_test_responder_chunk_get_rsp_case12(void** state)
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
 
-    data_transfer_size = CHUNK_GET_UNIT_TEST_OVERRIDE_DATA_TRANSFER_SIZE;
+    data_transfer_size = CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
     spdm_context->local_context.capability.data_transfer_size = data_transfer_size;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
@@ -899,7 +899,7 @@ void libspdm_test_responder_chunk_get_rsp_case13(void** state)
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
 
-    data_transfer_size = CHUNK_GET_UNIT_TEST_OVERRIDE_DATA_TRANSFER_SIZE;
+    data_transfer_size = CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
     spdm_context->local_context.capability.data_transfer_size = data_transfer_size;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;

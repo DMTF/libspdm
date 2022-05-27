@@ -274,7 +274,6 @@ libspdm_return_t libspdm_send_spdm_request(libspdm_context_t *spdm_context,
  **/
 libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
                                                const uint32_t *session_id,
-                                               bool support_large_response,
                                                size_t *response_size,
                                                void **response)
 {
@@ -314,8 +313,7 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
         goto receive_done;
     }
 
-    if (support_large_response
-        && spdm_response->request_response_code == SPDM_ERROR
+    if (spdm_response->request_response_code == SPDM_ERROR
         && spdm_response->param1 == SPDM_ERROR_CODE_LARGE_RESPONSE) {
 
         status = libspdm_handle_error_large_response(
@@ -331,6 +329,25 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
             status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
             goto receive_done;
         }
+
+        /* These are the expected possible large response types.
+         * Anything else is potentially an unexpected error.
+         * If this assert pops, evaluate if the type should be added here
+         * according to the spec, or if it an error by the responder. */
+        LIBSPDM_ASSERT(
+            spdm_response->request_response_code == SPDM_DIGESTS ||
+            spdm_response->request_response_code == SPDM_CERTIFICATE ||
+            spdm_response->request_response_code == SPDM_CHALLENGE_AUTH ||
+            spdm_response->request_response_code == SPDM_MEASUREMENTS ||
+            spdm_response->request_response_code == SPDM_VENDOR_DEFINED_RESPONSE ||
+            spdm_response->request_response_code == SPDM_ALGORITHMS ||
+            spdm_response->request_response_code == SPDM_KEY_EXCHANGE_RSP ||
+            spdm_response->request_response_code == SPDM_FINISH_RSP ||
+            spdm_response->request_response_code == SPDM_PSK_EXCHANGE_RSP ||
+            spdm_response->request_response_code == SPDM_ENCAPSULATED_REQUEST ||
+            spdm_response->request_response_code == SPDM_ENCAPSULATED_RESPONSE_ACK ||
+            spdm_response->request_response_code == SPDM_CHUNK_SEND_ACK
+        );
     }
 
 receive_done:

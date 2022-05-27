@@ -23,7 +23,7 @@ static uint8_t m_libspdm_local_certificate_chain_test_case_4[LIBSPDM_MAX_MESSAGE
 /* Override the LIBSPDM_DATA_TRANSFER_SIZE just for the unit tests in this file.
  * All other unit tests have the default data transfer size due to the specific
  * unit tests requests and responses hardcode for each test case. */
-#define LIBSPDM_UNIT_TEST_DATA_TRANSFER_SIZE (64)
+#define CHUNK_GET_REQUESTER_UNIT_TEST_DATA_TRANSFER_SIZE (44)
 
 /* Loading the target expiration certificate chain and saving root certificate hash
  * "rsa3072_Expiration/bundle_responder.certchain.der"*/
@@ -386,7 +386,7 @@ libspdm_return_t libspdm_requester_chunk_get_test_receive_message(
         chunk_rsp->header.param2 = chunk_handle;
 
         chunk_copy_to = (uint8_t*) (chunk_rsp + 1);
-        chunk_copy_size = LIBSPDM_UNIT_TEST_DATA_TRANSFER_SIZE
+        chunk_copy_size = CHUNK_GET_REQUESTER_UNIT_TEST_DATA_TRANSFER_SIZE
                           - sizeof(spdm_chunk_response_response_t);
 
         if (sub_rsp_copied == 0) {
@@ -487,7 +487,7 @@ libspdm_return_t libspdm_requester_chunk_get_test_receive_message(
         chunk_rsp->header.param2 = chunk_handle;
 
         chunk_copy_to = (uint8_t*) (chunk_rsp + 1);
-        chunk_copy_size = LIBSPDM_UNIT_TEST_DATA_TRANSFER_SIZE
+        chunk_copy_size = CHUNK_GET_REQUESTER_UNIT_TEST_DATA_TRANSFER_SIZE
                           - sizeof(spdm_chunk_response_response_t);
 
         if (sub_rsp_copied == 0) {
@@ -581,7 +581,7 @@ void libspdm_test_requester_chunk_get_case1(void** state)
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
     spdm_context->local_context.capability.data_transfer_size
-        = LIBSPDM_UNIT_TEST_DATA_TRANSFER_SIZE;
+        = CHUNK_GET_REQUESTER_UNIT_TEST_DATA_TRANSFER_SIZE;
 
     libspdm_read_responder_public_certificate_chain(
         m_libspdm_use_hash_algo,
@@ -658,7 +658,7 @@ void libspdm_test_requester_chunk_get_case2(void** state)
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
     spdm_context->local_context.capability.data_transfer_size
-        = LIBSPDM_UNIT_TEST_DATA_TRANSFER_SIZE;
+        = CHUNK_GET_REQUESTER_UNIT_TEST_DATA_TRANSFER_SIZE;
 
     libspdm_read_responder_public_certificate_chain(
         m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
@@ -737,7 +737,7 @@ void libspdm_test_requester_chunk_get_case3(void** state)
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
     spdm_context->local_context.capability.data_transfer_size
-        = LIBSPDM_UNIT_TEST_DATA_TRANSFER_SIZE;
+        = CHUNK_GET_REQUESTER_UNIT_TEST_DATA_TRANSFER_SIZE;
 
     libspdm_read_responder_public_certificate_chain(
         m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
@@ -808,7 +808,7 @@ void libspdm_test_requester_chunk_get_case4(void** state)
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
     spdm_context->local_context.capability.data_transfer_size
-        = LIBSPDM_UNIT_TEST_DATA_TRANSFER_SIZE;
+        = CHUNK_GET_REQUESTER_UNIT_TEST_DATA_TRANSFER_SIZE;
 
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->local_context.peer_cert_chain_provision =
@@ -885,7 +885,7 @@ void libspdm_test_requester_chunk_get_case5(void** state)
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
     spdm_context->local_context.capability.data_transfer_size
-        = LIBSPDM_UNIT_TEST_DATA_TRANSFER_SIZE;
+        = CHUNK_GET_REQUESTER_UNIT_TEST_DATA_TRANSFER_SIZE;
 
     spdm_context->local_context.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
