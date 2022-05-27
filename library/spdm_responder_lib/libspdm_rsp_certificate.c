@@ -39,6 +39,8 @@ libspdm_return_t libspdm_get_response_certificate(void *context,
     libspdm_context_t *spdm_context;
     libspdm_return_t status;
     size_t response_capacity;
+    libspdm_session_info_t *session_info;
+    libspdm_session_state_t session_state;
 
     spdm_context = context;
     spdm_request = request;
@@ -59,6 +61,26 @@ libspdm_return_t libspdm_get_response_certificate(void *context,
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNEXPECTED_REQUEST,
                                                0, response_size, response);
+    }
+    session_info = NULL;
+    if (spdm_context->last_spdm_request_session_id_valid) {
+        session_info = libspdm_get_session_info_via_session_id(
+            spdm_context,
+            spdm_context->last_spdm_request_session_id);
+        if (session_info == NULL) {
+            return libspdm_generate_error_response(
+                spdm_context,
+                SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
+                response_size, response);
+        }
+        session_state = libspdm_secured_message_get_session_state(
+            session_info->secured_message_context);
+        if (session_state != LIBSPDM_SESSION_STATE_ESTABLISHED) {
+            return libspdm_generate_error_response(
+                spdm_context,
+                SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
+                response_size, response);
+        }
     }
     if (!libspdm_is_capabilities_flag_supported(
             spdm_context, false, 0,
@@ -107,7 +129,7 @@ libspdm_return_t libspdm_get_response_certificate(void *context,
                                                response_size, response);
     }
 
-    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
+    libspdm_reset_message_buffer_via_request_code(spdm_context, session_info,
                                                   spdm_request->header.request_response_code);
 
     if ((size_t)(offset + length) >
@@ -142,20 +164,22 @@ libspdm_return_t libspdm_get_response_certificate(void *context,
 
     /* Cache*/
 
-    status = libspdm_append_message_b(spdm_context, spdm_request,
-                                      request_size);
-    if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_UNSPECIFIED, 0,
-                                               response_size, response);
-    }
+    if (session_info == NULL) {
+        status = libspdm_append_message_b(spdm_context, spdm_request,
+                                          request_size);
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_UNSPECIFIED, 0,
+                                                   response_size, response);
+        }
 
-    status = libspdm_append_message_b(spdm_context, spdm_response,
-                                      *response_size);
-    if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_UNSPECIFIED, 0,
-                                               response_size, response);
+        status = libspdm_append_message_b(spdm_context, spdm_response,
+                                          *response_size);
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_UNSPECIFIED, 0,
+                                                   response_size, response);
+        }
     }
 
     if (spdm_context->connection_info.connection_state <

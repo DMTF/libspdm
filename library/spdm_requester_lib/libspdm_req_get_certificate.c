@@ -61,7 +61,8 @@ typedef struct {
  * @retval LIBSPDM_STATUS_CRYPTO_ERROR
  *         A generic cryptography error occurred.
  **/
-libspdm_return_t libspdm_try_get_certificate(void *context, uint8_t slot_id,
+libspdm_return_t libspdm_try_get_certificate(void *context, const uint32_t *session_id,
+                                             uint8_t slot_id,
                                              uint16_t length,
                                              size_t *cert_chain_size,
                                              void *cert_chain,
@@ -82,6 +83,8 @@ libspdm_return_t libspdm_try_get_certificate(void *context, uint8_t slot_id,
     uint8_t *message;
     size_t message_size;
     size_t transport_header_size;
+    libspdm_session_info_t *session_info;
+    libspdm_session_state_t session_state;
 
     LIBSPDM_ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
 
@@ -91,11 +94,27 @@ libspdm_return_t libspdm_try_get_certificate(void *context, uint8_t slot_id,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP)) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
-    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL, SPDM_GET_CERTIFICATE);
+
     if (spdm_context->connection_info.connection_state <
         LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
+
+    session_info = NULL;
+    if (session_id != NULL) {
+        session_info = libspdm_get_session_info_via_session_id(
+            spdm_context, *session_id);
+        if (session_info == NULL) {
+            LIBSPDM_ASSERT(false);
+            return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
+        }
+        session_state = libspdm_secured_message_get_session_state(
+            session_info->secured_message_context);
+        if (session_state != LIBSPDM_SESSION_STATE_ESTABLISHED) {
+            return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
+        }
+    }
+    libspdm_reset_message_buffer_via_request_code(spdm_context, session_info, SPDM_GET_CERTIFICATE);
 
     libspdm_init_managed_buffer(&certificate_chain_buffer, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
     length = LIBSPDM_MIN(length, LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
@@ -127,7 +146,8 @@ libspdm_return_t libspdm_try_get_certificate(void *context, uint8_t slot_id,
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "request (offset 0x%x, size 0x%x):\n",
                        spdm_request->offset, spdm_request->length));
 
-        status = libspdm_send_spdm_request(spdm_context, NULL, spdm_request_size, spdm_request);
+        status =
+            libspdm_send_spdm_request(spdm_context, session_id, spdm_request_size, spdm_request);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             libspdm_release_sender_buffer (spdm_context);
             status = LIBSPDM_STATUS_SEND_FAIL;
@@ -147,7 +167,7 @@ libspdm_return_t libspdm_try_get_certificate(void *context, uint8_t slot_id,
         spdm_response_size = message_size;
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
-        status = libspdm_receive_spdm_response(spdm_context, NULL,
+        status = libspdm_receive_spdm_response(spdm_context, session_id,
                                                &spdm_response_size,
                                                (void **)&spdm_response);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
@@ -167,7 +187,7 @@ libspdm_return_t libspdm_try_get_certificate(void *context, uint8_t slot_id,
         }
         if (spdm_response->header.request_response_code == SPDM_ERROR) {
             status = libspdm_handle_error_response_main(
-                spdm_context, NULL,
+                spdm_context, session_id,
                 &spdm_response_size,
                 (void **)&spdm_response, SPDM_GET_CERTIFICATE,
                 SPDM_CERTIFICATE,
@@ -219,18 +239,20 @@ libspdm_return_t libspdm_try_get_certificate(void *context, uint8_t slot_id,
 
         /* Cache data*/
 
-        status = libspdm_append_message_b(spdm_context, spdm_request, spdm_request_size);
-        if (LIBSPDM_STATUS_IS_ERROR(status)) {
-            libspdm_release_receiver_buffer (spdm_context);
-            status = LIBSPDM_STATUS_BUFFER_FULL;
-            goto done;
-        }
-        status = libspdm_append_message_b(spdm_context, spdm_response,
-                                          spdm_response_size);
-        if (LIBSPDM_STATUS_IS_ERROR(status)) {
-            libspdm_release_receiver_buffer (spdm_context);
-            status = LIBSPDM_STATUS_BUFFER_FULL;
-            goto done;
+        if (session_id == NULL) {
+            status = libspdm_append_message_b(spdm_context, spdm_request, spdm_request_size);
+            if (LIBSPDM_STATUS_IS_ERROR(status)) {
+                libspdm_release_receiver_buffer (spdm_context);
+                status = LIBSPDM_STATUS_BUFFER_FULL;
+                goto done;
+            }
+            status = libspdm_append_message_b(spdm_context, spdm_response,
+                                              spdm_response_size);
+            if (LIBSPDM_STATUS_IS_ERROR(status)) {
+                libspdm_release_receiver_buffer (spdm_context);
+                status = LIBSPDM_STATUS_BUFFER_FULL;
+                goto done;
+            }
         }
 
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Certificate (offset 0x%x, size 0x%x):\n",
@@ -448,6 +470,69 @@ libspdm_return_t libspdm_get_certificate_ex(void *context, uint8_t slot_id,
  * If the peer root certificate hash is deployed,
  * this function also verifies the digest with the root hash in the certificate chain.
  *
+ * @param  spdm_context      A pointer to the SPDM context.
+ * @param  session_id         Indicates if it is a secured message protected via SPDM session.
+ *                           If session_id is NULL, it is a normal message.
+ *                           If session_id is NOT NULL, it is a secured message.
+ * @param  slot_id           The number of slot for the certificate chain.
+ * @param  cert_chain_size   On input, indicate the size in bytes of the destination buffer to store
+ *                           the digest buffer.
+ *                           On output, indicate the size in bytes of the certificate chain.
+ * @param  cert_chain        A pointer to a destination buffer to store the certificate chain.
+ * @param  trust_anchor      A buffer to hold the trust_anchor which is used to validate the peer
+ *                           certificate, if not NULL.
+ * @param  trust_anchor_size A buffer to hold the trust_anchor_size, if not NULL.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS
+ *         GET_CERTIFICATE was sent and CERTIFICATE was received.
+ * @retval LIBSPDM_STATUS_INVALID_STATE_LOCAL
+ *         Cannot send GET_CERTIFICATE due to Requester's state.
+ * @retval LIBSPDM_STATUS_UNSUPPORTED_CAP
+ *         Cannot send GET_CERTIFICATE because the Requester's and/or Responder's CERT_CAP = 0.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE
+ *         The size of the CERTIFICATE response is invalid.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD
+ *         The CERTIFICATE response contains one or more invalid fields.
+ * @retval LIBSPDM_STATUS_ERROR_PEER
+ *         The Responder returned an unexpected error.
+ * @retval LIBSPDM_STATUS_BUSY_PEER
+ *         The Responder continually returned Busy error messages.
+ * @retval LIBSPDM_STATUS_RESYNCH_PEER
+ *         The Responder returned a RequestResynch error message.
+ * @retval LIBSPDM_STATUS_BUFFER_FULL
+ *         The buffer used to store transcripts is exhausted.
+ * @retval LIBSPDM_STATUS_VERIF_FAIL
+ *         Verification of the certificate chain failed.
+ * @retval LIBSPDM_STATUS_INVALID_CERT
+ *         The certificate is unable to be parsed or contains invalid field values.
+ * @retval LIBSPDM_STATUS_CRYPTO_ERROR
+ *         A generic cryptography error occurred.
+ **/
+libspdm_return_t libspdm_get_certificate_in_session(void *context, const uint32_t *session_id,
+                                                    uint8_t slot_id,
+                                                    size_t *cert_chain_size,
+                                                    void *cert_chain,
+                                                    const void **trust_anchor,
+                                                    size_t *trust_anchor_size)
+{
+    return libspdm_get_certificate_choose_length_in_session(context,
+                                                            session_id,
+                                                            slot_id,
+                                                            LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN,
+                                                            cert_chain_size, cert_chain,
+                                                            trust_anchor, trust_anchor_size);
+}
+
+/**
+ * This function sends GET_CERTIFICATE and receives CERTIFICATE. It may retry GET_CERTIFICATE
+ * multiple times if the Responder replies with a Busy error.
+ *
+ * This function verify the integrity of the certificate chain.
+ * root_hash -> Root certificate -> Intermediate certificate -> Leaf certificate.
+ *
+ * If the peer root certificate hash is deployed,
+ * this function also verifies the digest with the root hash in the certificate chain.
+ *
  * @param  spdm_context    A pointer to the SPDM context.
  * @param  slot_id         The number of slot for the certificate chain.
  * @param  cert_chain_size On input, indicate the size in bytes of the destination buffer to store
@@ -494,7 +579,7 @@ libspdm_return_t libspdm_get_certificate_choose_length(void *context,
     spdm_context->crypto_request = true;
     retry = spdm_context->retry_times;
     do {
-        status = libspdm_try_get_certificate(spdm_context, slot_id, length,
+        status = libspdm_try_get_certificate(spdm_context, NULL, slot_id, length,
                                              cert_chain_size, cert_chain, NULL, NULL);
         if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
@@ -565,7 +650,80 @@ libspdm_return_t libspdm_get_certificate_choose_length_ex(void *context,
     spdm_context->crypto_request = true;
     retry = spdm_context->retry_times;
     do {
-        status = libspdm_try_get_certificate(spdm_context, slot_id, length,
+        status = libspdm_try_get_certificate(spdm_context, NULL, slot_id, length,
+                                             cert_chain_size, cert_chain, trust_anchor,
+                                             trust_anchor_size);
+        if (status != LIBSPDM_STATUS_BUSY_PEER) {
+            return status;
+        }
+    } while (retry-- != 0);
+
+    return status;
+}
+
+/**
+ * This function sends GET_CERTIFICATE and receives CERTIFICATE. It may retry GET_CERTIFICATE
+ * multiple times if the Responder replies with a Busy error.
+ *
+ * This function verify the integrity of the certificate chain.
+ * root_hash -> Root certificate -> Intermediate certificate -> Leaf certificate.
+ *
+ * If the peer root certificate hash is deployed,
+ * this function also verifies the digest with the root hash in the certificate chain.
+ *
+ * @param  spdm_context    A pointer to the SPDM context.
+ * @param  slot_id         The number of slot for the certificate chain.
+ * @param  cert_chain_size On input, indicate the size in bytes of the destination buffer to store
+ *                         the digest buffer.
+ *                         On output, indicate the size in bytes of the certificate chain.
+ * @param  cert_chain      A pointer to a destination buffer to store the certificate chain.
+ * @param  trust_anchor      A buffer to hold the trust_anchor which is used to validate the peer
+ *                           certificate, if not NULL.
+ * @param  trust_anchor_size A buffer to hold the trust_anchor_size, if not NULL.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS
+ *         GET_CERTIFICATE was sent and CERTIFICATE was received.
+ * @retval LIBSPDM_STATUS_INVALID_STATE_LOCAL
+ *         Cannot send GET_CERTIFICATE due to Requester's state.
+ * @retval LIBSPDM_STATUS_UNSUPPORTED_CAP
+ *         Cannot send GET_CERTIFICATE because the Requester's and/or Responder's CERT_CAP = 0.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE
+ *         The size of the CERTIFICATE response is invalid.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD
+ *         The CERTIFICATE response contains one or more invalid fields.
+ * @retval LIBSPDM_STATUS_ERROR_PEER
+ *         The Responder returned an unexpected error.
+ * @retval LIBSPDM_STATUS_BUSY_PEER
+ *         The Responder continually returned Busy error messages.
+ * @retval LIBSPDM_STATUS_RESYNCH_PEER
+ *         The Responder returned a RequestResynch error message.
+ * @retval LIBSPDM_STATUS_BUFFER_FULL
+ *         The buffer used to store transcripts is exhausted.
+ * @retval LIBSPDM_STATUS_VERIF_FAIL
+ *         Verification of the certificate chain failed.
+ * @retval LIBSPDM_STATUS_INVALID_CERT
+ *         The certificate is unable to be parsed or contains invalid field values.
+ * @retval LIBSPDM_STATUS_CRYPTO_ERROR
+ *         A generic cryptography error occurred.
+ **/
+libspdm_return_t libspdm_get_certificate_choose_length_in_session(void *context,
+                                                                  const uint32_t *session_id,
+                                                                  uint8_t slot_id,
+                                                                  uint16_t length,
+                                                                  size_t *cert_chain_size,
+                                                                  void *cert_chain,
+                                                                  const void **trust_anchor,
+                                                                  size_t *trust_anchor_size)
+{
+    libspdm_context_t *spdm_context;
+    size_t retry;
+    libspdm_return_t status;
+
+    spdm_context = context;
+    spdm_context->crypto_request = true;
+    retry = spdm_context->retry_times;
+    do {
+        status = libspdm_try_get_certificate(spdm_context, session_id, slot_id, length,
                                              cert_chain_size, cert_chain, trust_anchor,
                                              trust_anchor_size);
         if (status != LIBSPDM_STATUS_BUSY_PEER) {

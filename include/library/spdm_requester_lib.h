@@ -92,6 +92,48 @@ libspdm_return_t libspdm_get_digest(void *spdm_context, uint8_t *slot_mask,
                                     void *total_digest_buffer);
 
 /**
+ * This function sends GET_DIGESTS and receives DIGESTS. It may retry GET_DIGESTS multiple times
+ * if the Responder replies with a Busy error.
+ *
+ * If the peer certificate chain is deployed,
+ * this function also verifies the digest with the certificate chain.
+ *
+ * TotalDigestSize = sizeof(digest) * count in slot_mask
+ *
+ * @param  context             A pointer to the SPDM context.
+ * @param  session_id         Indicates if it is a secured message protected via SPDM session.
+ *                           If session_id is NULL, it is a normal message.
+ *                           If session_id is NOT NULL, it is a secured message.
+ * @param  slot_mask           Bitmask of the slots that contain certificates.
+ * @param  total_digest_buffer A pointer to a destination buffer to store the digests.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS
+ *         GET_DIGETS was sent and DIGESTS was received.
+ * @retval LIBSPDM_STATUS_INVALID_STATE_LOCAL
+ *         Cannot send GET_DIGESTS due to Requester's state.
+ * @retval LIBSPDM_STATUS_UNSUPPORTED_CAP
+ *         Cannot send GET_DIGESTS because the Requester's and/or Responder's CERT_CAP = 0.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE
+ *         The size of the DIGESTS response is invalid.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD
+ *         The DIGESTS response contains one or more invalid fields.
+ * @retval LIBSPDM_STATUS_ERROR_PEER
+ *         The Responder returned an unexpected error.
+ * @retval LIBSPDM_STATUS_BUSY_PEER
+ *         The Responder continually returned Busy error messages.
+ * @retval LIBSPDM_STATUS_RESYNCH_PEER
+ *         The Responder returned a RequestResynch error message.
+ * @retval LIBSPDM_STATUS_BUFFER_FULL
+ *         The buffer used to store transcripts is exhausted.
+ * @retval LIBSPDM_STATUS_VERIF_FAIL
+ *         The digest of the stored certificate chain does not match the digest returned by
+ *         the Responder.
+ *         Note: This return value may be removed in the future.
+ **/
+libspdm_return_t libspdm_get_digest_in_session(void *context, const uint32_t *session_id,
+                                               uint8_t *slot_mask, void *total_digest_buffer);
+
+/**
  * This function sends GET_CERTIFICATE
  * to get certificate chain in one slot from device.
  *
@@ -154,6 +196,38 @@ libspdm_return_t libspdm_get_certificate_ex(void *context, uint8_t slot_id,
  * this function also verifies the digest with the root hash in the certificate chain.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_id                    Indicates if it is a secured message protected via SPDM session.
+ *                                     If session_id is NULL, it is a normal message.
+ *                                     If session_id is NOT NULL, it is a secured message.
+ * @param  slot_id                      The number of slot for the certificate chain.
+ * @param  cert_chain_size                On input, indicate the size in bytes of the destination buffer to store the digest buffer.
+ *                                     On output, indicate the size in bytes of the certificate chain.
+ * @param  cert_chain                    A pointer to a destination buffer to store the certificate chain.
+ * @param  trust_anchor                  A buffer to hold the trust_anchor which is used to validate the peer certificate, if not NULL.
+ * @param  trust_anchor_size             A buffer to hold the trust_anchor_size, if not NULL.
+ *
+ * @retval RETURN_SUCCESS               The certificate chain is got successfully.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ **/
+libspdm_return_t libspdm_get_certificate_in_session(void *context, const uint32_t *session_id,
+                                                    uint8_t slot_id,
+                                                    size_t *cert_chain_size,
+                                                    void *cert_chain,
+                                                    const void **trust_anchor,
+                                                    size_t *trust_anchor_size);
+
+/**
+ * This function sends GET_CERTIFICATE
+ * to get certificate chain in one slot from device.
+ *
+ * This function verify the integrity of the certificate chain.
+ * root_hash -> Root certificate -> Intermediate certificate -> Leaf certificate.
+ *
+ * If the peer root certificate hash is deployed,
+ * this function also verifies the digest with the root hash in the certificate chain.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
  * @param  slot_id                      The number of slot for the certificate chain.
  * @param  length                       LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN.
  * @param  cert_chain_size                On input, indicate the size in bytes of the destination buffer to store the digest buffer.
@@ -200,6 +274,60 @@ libspdm_return_t libspdm_get_certificate_choose_length_ex(void *context,
                                                           void *cert_chain,
                                                           const void **trust_anchor,
                                                           size_t *trust_anchor_size);
+
+/**
+ * This function sends GET_CERTIFICATE and receives CERTIFICATE. It may retry GET_CERTIFICATE
+ * multiple times if the Responder replies with a Busy error.
+ *
+ * This function verify the integrity of the certificate chain.
+ * root_hash -> Root certificate -> Intermediate certificate -> Leaf certificate.
+ *
+ * If the peer root certificate hash is deployed,
+ * this function also verifies the digest with the root hash in the certificate chain.
+ *
+ * @param  spdm_context    A pointer to the SPDM context.
+ * @param  slot_id         The number of slot for the certificate chain.
+ * @param  cert_chain_size On input, indicate the size in bytes of the destination buffer to store
+ *                         the digest buffer.
+ *                         On output, indicate the size in bytes of the certificate chain.
+ * @param  cert_chain      A pointer to a destination buffer to store the certificate chain.
+ * @param  trust_anchor      A buffer to hold the trust_anchor which is used to validate the peer
+ *                           certificate, if not NULL.
+ * @param  trust_anchor_size A buffer to hold the trust_anchor_size, if not NULL.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS
+ *         GET_CERTIFICATE was sent and CERTIFICATE was received.
+ * @retval LIBSPDM_STATUS_INVALID_STATE_LOCAL
+ *         Cannot send GET_CERTIFICATE due to Requester's state.
+ * @retval LIBSPDM_STATUS_UNSUPPORTED_CAP
+ *         Cannot send GET_CERTIFICATE because the Requester's and/or Responder's CERT_CAP = 0.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE
+ *         The size of the CERTIFICATE response is invalid.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD
+ *         The CERTIFICATE response contains one or more invalid fields.
+ * @retval LIBSPDM_STATUS_ERROR_PEER
+ *         The Responder returned an unexpected error.
+ * @retval LIBSPDM_STATUS_BUSY_PEER
+ *         The Responder continually returned Busy error messages.
+ * @retval LIBSPDM_STATUS_RESYNCH_PEER
+ *         The Responder returned a RequestResynch error message.
+ * @retval LIBSPDM_STATUS_BUFFER_FULL
+ *         The buffer used to store transcripts is exhausted.
+ * @retval LIBSPDM_STATUS_VERIF_FAIL
+ *         Verification of the certificate chain failed.
+ * @retval LIBSPDM_STATUS_INVALID_CERT
+ *         The certificate is unable to be parsed or contains invalid field values.
+ * @retval LIBSPDM_STATUS_CRYPTO_ERROR
+ *         A generic cryptography error occurred.
+ **/
+libspdm_return_t libspdm_get_certificate_choose_length_in_session(void *context,
+                                                                  const uint32_t *session_id,
+                                                                  uint8_t slot_id,
+                                                                  uint16_t length,
+                                                                  size_t *cert_chain_size,
+                                                                  void *cert_chain,
+                                                                  const void **trust_anchor,
+                                                                  size_t *trust_anchor_size);
 
 /**
  * This function sends CHALLENGE

@@ -1064,6 +1064,79 @@ void libspdm_test_responder_certificate_case13(void **state)
     free(data);
 }
 
+/**
+ * Test 14: request the first LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN bytes of the certificate chain in a session
+ * Expected Behavior: generate a correctly formed Certficate message, including its portion_length and remainder_length fields
+ **/
+void libspdm_test_responder_certificate_case14(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    spdm_certificate_response_t *spdm_response;
+    void *data;
+    size_t data_size;
+    libspdm_session_info_t *session_info;
+    uint32_t session_id;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xE;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+
+    session_id = 0xFFFFFFFF;
+    spdm_context->latest_session_id = session_id;
+    spdm_context->last_spdm_request_session_id_valid = true;
+    spdm_context->last_spdm_request_session_id = session_id;
+    session_info = &spdm_context->session_info[0];
+    libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_secured_message_set_session_state(
+        session_info->secured_message_context,
+        LIBSPDM_SESSION_STATE_ESTABLISHED);
+
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, NULL, NULL);
+    spdm_context->local_context.local_cert_chain_provision[0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0] =
+        data_size;
+    spdm_context->local_context.slot_count = 1;
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    session_info->session_transcript.message_m.buffer_size =
+        session_info->session_transcript.message_m.max_buffer_size;
+#endif
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_certificate(
+        spdm_context, m_libspdm_get_certificate_request1_size,
+        &m_libspdm_get_certificate_request1, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_certificate_response_t) +
+                     LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_CERTIFICATE);
+    assert_int_equal(spdm_response->header.param1, 0);
+    assert_int_equal(spdm_response->portion_length,
+                     LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
+    assert_int_equal(spdm_response->remainder_length,
+                     data_size - LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    assert_int_equal(session_info->session_transcript.message_m.buffer_size,
+                     0);
+#endif
+    free(data);
+}
+
 libspdm_test_context_t m_libspdm_responder_certificate_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     false,
@@ -1098,7 +1171,8 @@ int libspdm_responder_certificate_test_main(void)
         cmocka_unit_test(libspdm_test_responder_certificate_case12),
         /* Buffer verification*/
         cmocka_unit_test(libspdm_test_responder_certificate_case13),
-
+        /* Success Case in a session*/
+        cmocka_unit_test(libspdm_test_responder_certificate_case14),
     };
 
     libspdm_setup_test_context(&m_libspdm_responder_certificate_test_context);
