@@ -43,6 +43,7 @@ libspdm_return_t libspdm_get_response_csr(void *context, size_t request_size,
     uint16_t opaque_data_length;
     uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
     uint8_t requester_info[LIBSPDM_MAX_REQUSET_INFO_SIZE];
+    bool need_reset;
 
     spdm_context = context;
     spdm_request = request;
@@ -113,9 +114,15 @@ libspdm_return_t libspdm_get_response_csr(void *context, size_t request_size,
                      (const void*)((const uint8_t*)(spdm_request + 1) + opaque_data_length),
                      requester_info_length);
 
-    bool need_reset;
     need_reset = spdm_context->need_reset_to_get_csr;
 
+    result = libspdm_verify_req_info(requester_info, requester_info_length);
+    if (!result) {
+        return libspdm_generate_error_response(
+            spdm_context,
+            SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+            response_size, response);
+    }
 
     result = libspdm_gen_csr(spdm_context->connection_info.algorithm.base_hash_algo,
                              spdm_context->connection_info.algorithm.base_asym_algo,

@@ -1568,6 +1568,123 @@ int32_t libspdm_x509_compare_date_time(const void *date_time1, const void *date_
 }
 
 /**
+ * Set all attributes object form req_info to CSR
+ *
+ * @param[in]      req                   CSR to set attributes
+ * @param[in]      req_info              requester info to gen CSR
+ * @param[in]      req_info_len          The len of requester info
+ *
+ * @retval  true   Success Set.
+ * @retval  false  Set failed.
+ **/
+bool libspdm_set_attribute_for_req(mbedtls_x509write_csr *req, uint8_t *req_info,
+                                   size_t req_info_len)
+{
+    uint8_t *ptr;
+    int32_t length;
+    size_t obj_len;
+    bool ret;
+    uint8_t *end;
+    uint8_t *ptr_old;
+
+    uint8_t *oid;
+    size_t oid_len;
+    uint8_t *val;
+    size_t val_len;
+
+    length = (int32_t)req_info_len;
+    ptr = req_info;
+    obj_len = 0;
+    end = ptr + length;
+    ret = false;
+
+    if (req_info == NULL) {
+        return false;
+    }
+
+    /*req_info sequence, all ret is ok because the req_info has been verified before*/
+    ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                               LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+
+    /*integer:version*/
+    ret = libspdm_asn1_get_tag(&ptr, end, &obj_len, LIBSPDM_CRYPTO_ASN1_INTEGER);
+    ptr += obj_len;
+
+    /*sequence:subject name*/
+    ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                               LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+    ptr += obj_len;
+
+    /*sequence:subject pkinfo*/
+    ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                               LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+    ptr += obj_len;
+
+
+    /*[0]: attributes*/
+    ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                               LIBSPDM_CRYPTO_ASN1_CONTEXT_SPECIFIC |
+                               LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+    /*there is no attributes*/
+    if (ptr == end) {
+        return true;
+    }
+
+    /*there is some attributes object: 1,2 ...*/
+    while (ret)
+    {
+        ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                                   LIBSPDM_CRYPTO_ASN1_SEQUENCE |
+                                   LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+        if (ret) {
+            /*save old positon*/
+            ptr_old = ptr;
+
+            /*move to the next sequence*/
+            ptr += obj_len;
+
+            /*get attributes oid*/
+            ret = libspdm_asn1_get_tag(&ptr_old, end, &obj_len, LIBSPDM_CRYPTO_ASN1_OID);
+            if (!ret) {
+                return false;
+            }
+            oid = ptr_old;
+            oid_len = obj_len;
+
+            ptr_old += obj_len;
+            /*get attributes val*/
+            ret = libspdm_asn1_get_tag(&ptr_old, end, &obj_len,
+                                       LIBSPDM_CRYPTO_ASN1_SET |
+                                       LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+            if (!ret) {
+                return false;
+            }
+            ret = libspdm_asn1_get_tag(&ptr_old, end, &obj_len, LIBSPDM_CRYPTO_ASN1_UTF8_STRING);
+            if (!ret) {
+                return false;
+            }
+            val = ptr_old;
+            val_len = obj_len;
+
+            /*set attributes*/
+            ret = mbedtls_x509write_csr_set_extension(req, oid, oid_len, val, val_len);
+            if (ret) {
+                return false;
+            }
+
+        } else {
+            break;
+        }
+    }
+
+    if (ptr == end) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/**
  * Gen CSR
  *
  * @param[in]      hash_nid              hash algo for sign
@@ -1582,6 +1699,15 @@ int32_t libspdm_x509_compare_date_time(const void *date_time1, const void *date_
  * @param[in]      requester_info_length The len of requester info
  *
  * @param[in]      context               Pointer to asymmetric context
+ * @param[in]      subject_name          Subject name: should be break with ',' in the middle
+ *                                       example: "C=AA,CN=BB"
+ * Subject names should contain a comma-separated list of OID types and values:
+ * The valid OID type name is in:
+ * {"CN", "commonName", "C", "countryName", "O", "organizationName","L",
+ * "OU", "organizationalUnitName", "ST", "stateOrProvinceName", "emailAddress",
+ * "serialNumber", "postalAddress", "postalCode", "dnQualifier", "title",
+ * "SN","givenName","GN", "initials", "pseudonym", "generationQualifier", "domainComponent", "DC"}.
+ * Note: The object of C and countryName should be CSR Supported Country Codes
  *
  * @retval  true   Success.
  * @retval  false  Failed to gen CSR.
@@ -1589,25 +1715,20 @@ int32_t libspdm_x509_compare_date_time(const void *date_time1, const void *date_
 bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid, size_t *csr_len,
                           uint8_t **csr_pointer, size_t csr_buffer_size,
                           uint8_t *requester_info, size_t requester_info_length,
-                          void *context)
+                          void *context, char *subject_name)
 {
     int ret;
-    char *subject_name;
+    bool result;
 
     mbedtls_x509write_csr req;
     mbedtls_md_type_t md_alg;
     mbedtls_pk_context key;
-
-    /* requester info parse TBD*/
-    if (requester_info_length != 0) {
-    }
 
     /* Init */
     mbedtls_x509write_csr_init(&req);
     mbedtls_pk_init(&key);
 
     ret = 1;
-    subject_name = NULL;
     switch (asym_nid)
     {
     case LIBSPDM_CRYPTO_NID_RSASSA2048:
@@ -1660,6 +1781,15 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid, size_t *csr_len,
     default:
         ret = 1;
         goto free_all;
+    }
+
+    /* requester info parse*/
+    if (requester_info_length != 0) {
+        result = libspdm_set_attribute_for_req(&req, requester_info, requester_info_length);
+        if (!result) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"set_attribute failed !\n"));
+            return false;
+        }
     }
 
     /* Set the md alg */

@@ -18,6 +18,9 @@
 #include <openssl/pem.h>
 #include <openssl/bio.h>
 
+/*buffer size to store subject object*/
+#define MAX_SBUJECT_NAME_LEN 0x100
+
 /* OID*/
 #define OID_EXT_KEY_USAGE     { 0x55, 0x1D, 0x25 }
 #define OID_BASIC_CONSTRAINTS { 0x55, 0x1D, 0x13 }
@@ -244,7 +247,7 @@ void libspdm_x509_stack_free(void *x509_stack)
 bool libspdm_asn1_get_tag(uint8_t **ptr, const uint8_t *end, size_t *length,
                           uint32_t tag)
 {
-    uint8_t *ptr_old;
+    const uint8_t *ptr_old;
     int32_t obj_tag;
     int32_t obj_class;
     long obj_length;
@@ -269,7 +272,7 @@ bool libspdm_asn1_get_tag(uint8_t **ptr, const uint8_t *end, size_t *length,
 
         /* if doesn't match tag, restore ptr to origin ptr*/
 
-        *ptr = ptr_old;
+        *ptr = (uint8_t *)ptr_old;
         return false;
     }
 }
@@ -2159,6 +2162,230 @@ bool libspdm_x509_get_cert_from_cert_chain(const uint8_t *cert_chain,
     return false;
 }
 
+size_t libspdm_get_str_len(char *dst)
+{
+    char *p = dst;
+
+    if (dst == NULL) {
+        return 0;
+    }
+
+    while (*p != '\0')
+    {
+        p++;
+    }
+
+    return p - dst;
+}
+
+char *libspdm_strstr(char *src, char *dst)
+{
+    size_t index;
+
+    if ((src == NULL) || (dst == NULL)) {
+        return NULL;
+    }
+
+    if (libspdm_get_str_len(src) < libspdm_get_str_len(dst)) {
+        return NULL;
+    }
+
+    for (index = 0; index < libspdm_get_str_len(src) - libspdm_get_str_len(dst); index++) {
+        if ((*(src + index) == *dst) &&
+            (libspdm_const_compare_mem(src + index, dst, libspdm_get_str_len(dst)) == 0)) {
+            return (src + index);
+        }
+    }
+
+    return NULL;
+}
+
+bool libspdm_set_subject_name(X509_NAME *x509_name, char *subject_name)
+{
+    int ret;
+    uint8_t index;
+    char *char_start;
+    char *char_end;
+    char temp[MAX_SBUJECT_NAME_LEN];
+    char *end_case = ",";
+
+    ret = 0;
+    char_start = NULL;
+    char_end = NULL;
+
+    /* X.509 DN attributes from RFC 5280, Appendix A.1. */
+    char *subject_set[] = {
+        "CN", "commonName", "C", "countryName", "O", "organizationName","L", "OU",
+        "organizationalUnitName", "ST", "stateOrProvinceName", "emailAddress", "serialNumber",
+        "postalAddress", "postalCode", "dnQualifier", "title", "SN","givenName","GN",
+        "initials", "pseudonym", "generationQualifier", "domainComponent", "DC"
+    };
+
+
+    for (index = 0; index < sizeof(subject_set)/sizeof(subject_set[0]); index++)
+    {
+
+        char_start = libspdm_strstr(subject_name, subject_set[index]);
+
+        /* find object in subject_set and the next is '=' */
+        if ((char_start != NULL) &&
+            (*(char_start + libspdm_get_str_len(subject_set[index])) == '=')) {
+
+            char_start += (libspdm_get_str_len(subject_set[index]) + 1);
+            /*end with ','*/
+            char_end = libspdm_strstr(char_start, end_case);
+            if (char_end != NULL) {
+                libspdm_copy_mem(temp, MAX_SBUJECT_NAME_LEN, char_start, char_end - char_start);
+                temp[char_end - char_start] = '\0';
+            } else {
+                /*end with '\0'*/
+                char_end = subject_name + libspdm_get_str_len(subject_name);
+                libspdm_copy_mem(temp, MAX_SBUJECT_NAME_LEN, char_start, char_end - char_start);
+                temp[char_end - char_start] = '\0';
+            }
+
+            ret = X509_NAME_add_entry_by_txt(x509_name, subject_set[index], MBSTRING_ASC,
+                                             (const unsigned char*)temp, -1, -1, 0);
+            if (ret != 1) {
+                LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"set subject error\n"));
+                return false;
+            }
+        }
+        char_start = NULL;
+    }
+
+    return true;
+}
+
+/**
+ * Set all attributes object form req_info to CSR
+ *
+ * @param[in]      req                   CSR to set attributes
+ * @param[in]      req_info              requester info to gen CSR
+ * @param[in]      req_info_len          The len of requester info
+ *
+ * @retval  true   Success Set.
+ * @retval  false  Set failed.
+ **/
+bool libspdm_set_attribute_for_req(X509_REQ *req, uint8_t *req_info, size_t req_info_len)
+{
+    uint8_t *ptr;
+    int32_t length;
+    size_t obj_len;
+    bool ret;
+    uint8_t *end;
+    uint8_t *ptr_old;
+
+    uint8_t *oid;
+    size_t oid_len;
+    uint8_t *val;
+    size_t val_len;
+    size_t nid;
+    ASN1_OBJECT *oid_asn1_obj;
+    const unsigned char *oid_for_d2i;
+
+    length = (int32_t)req_info_len;
+    ptr = req_info;
+    obj_len = 0;
+    end = ptr + length;
+    ret = false;
+
+    if (req_info == NULL) {
+        return false;
+    }
+
+    /*req_info sequence, all ret is ok because the req_info has been verified before*/
+    ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                               LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+
+    /*integer:version*/
+    ret = libspdm_asn1_get_tag(&ptr, end, &obj_len, LIBSPDM_CRYPTO_ASN1_INTEGER);
+    ptr += obj_len;
+
+    /*sequence:subject name*/
+    ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                               LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+    ptr += obj_len;
+
+    /*sequence:subject pkinfo*/
+    ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                               LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+    ptr += obj_len;
+
+    /*[0]: attributes*/
+    ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                               LIBSPDM_CRYPTO_ASN1_CONTEXT_SPECIFIC |
+                               LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+    /*there is no attributes*/
+    if (ptr == end) {
+        return true;
+    }
+
+    /*there is some attributes object: 1,2 ...*/
+    while (ret)
+    {
+        ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                                   LIBSPDM_CRYPTO_ASN1_SEQUENCE |
+                                   LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+        if (ret) {
+            /*save old positon*/
+            ptr_old = ptr;
+
+            /*move to the next sequence*/
+            ptr += obj_len;
+
+            /*get attributes oid*/
+            ret = libspdm_asn1_get_tag(&ptr_old, end, &obj_len, LIBSPDM_CRYPTO_ASN1_OID);
+            if (!ret) {
+                return false;
+            }
+
+            /*the whole oid include: LIBSPDM_CRYPTO_ASN1_OID and obj_len*/
+            oid = ptr_old - 2;
+            oid_len = obj_len + 2;
+
+            ptr_old += obj_len;
+            /*get attributes val*/
+            ret = libspdm_asn1_get_tag(&ptr_old, end, &obj_len,
+                                       LIBSPDM_CRYPTO_ASN1_SET |
+                                       LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+            if (!ret) {
+                return false;
+            }
+            ret = libspdm_asn1_get_tag(&ptr_old, end, &obj_len, LIBSPDM_CRYPTO_ASN1_UTF8_STRING);
+            if (!ret) {
+                return false;
+            }
+            val = ptr_old;
+            val_len = obj_len;
+
+            /*transfer oid to nid*/
+            oid_for_d2i = oid;
+            oid_asn1_obj = d2i_ASN1_OBJECT(NULL, &oid_for_d2i, oid_len);
+            nid = OBJ_obj2nid(oid_asn1_obj);
+            ASN1_OBJECT_free(oid_asn1_obj);
+
+            /*set attributes*/
+            ret = X509_REQ_add1_attr_by_NID(req, nid,
+                                            V_ASN1_UTF8STRING,
+                                            (const unsigned char *)val,
+                                            val_len);
+            if (ret == 0) {
+                return false;
+            }
+
+        } else {
+            break;
+        }
+    }
+
+    if (ptr == end) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 /**
  * Gen CSR
  *
@@ -2174,6 +2401,15 @@ bool libspdm_x509_get_cert_from_cert_chain(const uint8_t *cert_chain,
  * @param[in]      requester_info_length The len of requester info
  *
  * @param[in]      context               Pointer to asymmetric context
+ * @param[in]      subject_name          Subject name: should be break with ',' in the middle
+ *                                       example: "C=AA,CN=BB"
+ * Subject names should contain a comma-separated list of OID types and values:
+ * The valid OID type name is in:
+ * {"CN", "commonName", "C", "countryName", "O", "organizationName","L",
+ * "OU", "organizationalUnitName", "ST", "stateOrProvinceName", "emailAddress",
+ * "serialNumber", "postalAddress", "postalCode", "dnQualifier", "title",
+ * "SN","givenName","GN", "initials", "pseudonym", "generationQualifier", "domainComponent", "DC"}.
+ * Note: The object of C and countryName should be CSR Supported Country Codes
  *
  * @retval  true   Success.
  * @retval  false  Failed to gen CSR.
@@ -2181,32 +2417,23 @@ bool libspdm_x509_get_cert_from_cert_chain(const uint8_t *cert_chain,
 bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid, size_t *csr_len,
                           uint8_t **csr_pointer, size_t csr_buffer_size,
                           uint8_t *requester_info, size_t requester_info_length,
-                          void *context)
+                          void *context, char *subject_name)
 {
-
-    /*X509_REQ_INFO *req_info;
-     * req_info = (X509_REQ_INFO *)requester_info;*/
-
     int ret;
     int version;
-    char *orgnization;
-    char *common;
 
-    X509_REQ *x509_req = NULL;
-    X509_NAME *x509_name = NULL;
+    X509_REQ *x509_req;
+    X509_NAME *x509_name;
     EVP_PKEY *private_key;
-    const EVP_MD *md = NULL;
-
+    const EVP_MD *md;
     uint8_t *csr_p;
+
     ret = 0;
     version = 0;
-    orgnization = NULL;
-    common = NULL;
 
     x509_req = NULL;
     x509_name = NULL;
     md = NULL;
-
     csr_p = *csr_pointer;
 
     x509_req = X509_REQ_new();
@@ -2245,8 +2472,12 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid, size_t *csr_len,
         goto free_all;
     }
 
-    /* requester info parse TBD*/
+    /* requester info parse*/
     if (requester_info_length != 0) {
+        ret = libspdm_set_attribute_for_req(x509_req, requester_info, requester_info_length);
+        if (ret == 0) {
+            return false;
+        }
     }
 
     /*set version of x509 req*/
@@ -2259,20 +2490,9 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid, size_t *csr_len,
     /*set subject of x509 req*/
     x509_name = X509_REQ_get_subject_name(x509_req);
 
-    if (orgnization != NULL) {
-        ret = X509_NAME_add_entry_by_txt(x509_name,"O", MBSTRING_ASC,
-                                         (const unsigned char*)orgnization, -1, -1, 0);
+    if (subject_name != NULL) {
+        ret = libspdm_set_subject_name(x509_name, subject_name);
         if (ret != 1) {
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"set subject O error\n"));
-            goto free_all;
-        }
-    }
-
-    if (common != NULL) {
-        ret = X509_NAME_add_entry_by_txt(x509_name,"CN", MBSTRING_ASC,
-                                         (const unsigned char*)common, -1, -1, 0);
-        if (ret != 1) {
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"set subject CN error\n"));
             goto free_all;
         }
     }

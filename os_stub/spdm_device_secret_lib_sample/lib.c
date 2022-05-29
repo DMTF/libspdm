@@ -305,9 +305,11 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
     hash_nid = libspdm_get_hash_nid(base_hash_algo);
     asym_nid = libspdm_get_aysm_nid(base_asym_algo);
 
+    char *subject_name = "C=NL,O=PolarSSL,CN=PolarSSL Server 1";
+
     result = libspdm_gen_x509_csr(hash_nid, asym_nid, csr_len, csr_pointer, csr_buffer_size,
                                   requester_info, requester_info_length,
-                                  context);
+                                  context, subject_name);
 
     return result;
 }
