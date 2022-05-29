@@ -4573,7 +4573,8 @@ bool libspdm_get_dmtf_subject_alt_name_from_bytes(
                                LIBSPDM_CRYPTO_ASN1_CONTEXT_SPECIFIC |
                                LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
 
-    ret = libspdm_asn1_get_tag(&ptr, ptr + obj_len, &obj_len, LIBSPDM_CRYPTO_ASN1_OID);
+    ret = libspdm_asn1_get_tag(&ptr, ptr + obj_len, &obj_len,
+                               LIBSPDM_CRYPTO_ASN1_OID);
     if (!ret) {
         return false;
     }
@@ -4890,4 +4891,101 @@ bool libspdm_get_leaf_cert_public_key_from_cert_chain(uint32_t base_hash_algo,
     }
 
     return true;
+}
+
+/**
+ * Verify req info format refer to PKCS#10
+ *
+ * @param[in]      req_info              requester info to gen CSR
+ * @param[in]      req_info_len          The len of requester info
+ *
+ * @retval  true    Vaild req info, have three situations:
+ *                                  1: no req_info
+ *                                  2: good format req_info without attributes
+ *                                  3: good format req_info with good format attributes
+ * @retval  false   Invaild req info.
+ **/
+bool libspdm_verify_req_info(uint8_t *req_info, uint16_t req_info_len)
+{
+    bool ret;
+    uint8_t *ptr;
+    int32_t length;
+    size_t obj_len;
+    uint8_t *end;
+
+    length = (int32_t)req_info_len;
+    ptr = req_info;
+    obj_len = 0;
+    end = ptr + length;
+    ret = true;
+
+    if (req_info_len == 0) {
+        return true;
+    }
+
+    /*req_info sequence*/
+    ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                               LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+    if (!ret) {
+        return false;
+    }
+
+    /*integer:version*/
+    ret = libspdm_asn1_get_tag(&ptr, end, &obj_len, LIBSPDM_CRYPTO_ASN1_INTEGER);
+    if (!ret) {
+        return false;
+    } else {
+        ptr += obj_len;
+    }
+
+    /*sequence:subject name*/
+    ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                               LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+    if (!ret) {
+        return false;
+    } else {
+        ptr += obj_len;
+    }
+
+    /*sequence:subject pkinfo*/
+    ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                               LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+    if (!ret) {
+        return false;
+    } else {
+        ptr += obj_len;
+    }
+
+    /*[0]: attributes*/
+    ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                               LIBSPDM_CRYPTO_ASN1_CONTEXT_SPECIFIC |
+                               LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+    /*req_info format error, don't have attributes tag*/
+    if (!ret) {
+        return false;
+    }
+
+    /*there is no attributes object*/
+    if (ptr == end) {
+        return true;
+    }
+
+    /*there is some attributes object: 0,1,2 ...*/
+    while (ret)
+    {
+        ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                                   LIBSPDM_CRYPTO_ASN1_SEQUENCE |
+                                   LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+        if (ret) {
+            ptr += obj_len;
+        } else {
+            break;
+        }
+    }
+
+    if (ptr == end) {
+        return true;
+    } else {
+        return false;
+    }
 }

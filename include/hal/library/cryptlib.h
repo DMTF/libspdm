@@ -4300,6 +4300,15 @@ bool libspdm_hkdf_sm3_256_expand(const uint8_t *prk, size_t prk_size,
  * @param[in]      requester_info_length The len of requester info
  *
  * @param[in]      context               Pointer to asymmetric context
+ * @param[in]      subject_name          Subject name: should be break with ',' in the middle
+ *                                       example: "C=AA,CN=BB"
+ * Subject names should contain a comma-separated list of OID types and values:
+ * The valid OID type name is in:
+ * {"CN", "commonName", "C", "countryName", "O", "organizationName","L",
+ * "OU", "organizationalUnitName", "ST", "stateOrProvinceName", "emailAddress",
+ * "serialNumber", "postalAddress", "postalCode", "dnQualifier", "title",
+ * "SN","givenName","GN", "initials", "pseudonym", "generationQualifier", "domainComponent", "DC"}.
+ * Note: The object of C and countryName should be CSR Supported Country Codes
  *
  * @retval  true   Success.
  * @retval  false  Failed to gen CSR.
@@ -4307,4 +4316,4 @@ bool libspdm_hkdf_sm3_256_expand(const uint8_t *prk, size_t prk_size,
 bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid, size_t *csr_len,
                           uint8_t **csr_pointer, size_t csr_buffer_size,
                           uint8_t *requester_info, size_t requester_info_length,
-                          void *context);
+                          void *context, char *subject_name);
