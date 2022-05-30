@@ -158,8 +158,11 @@ libspdm_return_t libspdm_get_response_certificate(void *context,
                                                response_size, response);
     }
 
-    libspdm_set_connection_state(spdm_context,
-                                 LIBSPDM_CONNECTION_STATE_AFTER_CERTIFICATE);
+    if (spdm_context->connection_info.connection_state <
+        LIBSPDM_CONNECTION_STATE_AFTER_CERTIFICATE) {
+        libspdm_set_connection_state(spdm_context,
+                                     LIBSPDM_CONNECTION_STATE_AFTER_CERTIFICATE);
+    }
 
     return LIBSPDM_STATUS_SUCCESS;
 }

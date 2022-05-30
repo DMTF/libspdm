@@ -245,7 +245,11 @@ libspdm_return_t libspdm_try_get_certificate(void *context, uint8_t slot_id,
             status = LIBSPDM_STATUS_BUFFER_FULL;
             goto done;
         }
-        spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CERTIFICATE;
+        if (spdm_context->connection_info.connection_state <
+            LIBSPDM_CONNECTION_STATE_AFTER_CERTIFICATE) {
+            spdm_context->connection_info.connection_state =
+                LIBSPDM_CONNECTION_STATE_AFTER_CERTIFICATE;
+        }
 
         libspdm_release_receiver_buffer (spdm_context);
     } while (remainder_length != 0);
