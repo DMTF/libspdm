@@ -810,7 +810,7 @@ libspdm_return_t libspdm_requester_get_digests_test_receive_message(
                 return LIBSPDM_STATUS_RECEIVE_FAIL;
             }
             count = (m_libspdm_local_certificate_chain_size +
-                     LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN + 1) /
+                     LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN - 1) /
                     LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
             if (calling_index != count - 1) {
                 portion_length = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
