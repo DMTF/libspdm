@@ -252,6 +252,11 @@ bool libspdm_asn1_get_tag(uint8_t **ptr, const uint8_t *end, size_t *length,
 
     ptr_old = *ptr;
 
+    /*when there is no object, retrun false*/
+    if ((*ptr) == end) {
+        return false;
+    }
+
     ASN1_get_object((const uint8_t **)ptr, &obj_length, &obj_tag, &obj_class,
                     (int32_t)(end - (*ptr)));
     if (obj_tag == (int32_t)(tag & LIBSPDM_CRYPTO_ASN1_TAG_VALUE_MASK) &&
