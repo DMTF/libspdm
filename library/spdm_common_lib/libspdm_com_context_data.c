@@ -1045,11 +1045,7 @@ void libspdm_reset_message_buffer_via_request_code(void *context, void *session_
         }
         break;
     case SPDM_GET_DIGESTS:
-    case SPDM_GET_CERTIFICATE:
-        if (spdm_context->connection_info.connection_state ==
-            LIBSPDM_CONNECTION_STATE_AUTHENTICATED) {
-            libspdm_reset_message_b(spdm_context);
-        }
+        libspdm_reset_message_b(spdm_context);
         break;
     default:
         break;

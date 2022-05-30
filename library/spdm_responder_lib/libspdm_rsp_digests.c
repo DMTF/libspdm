@@ -143,8 +143,11 @@ libspdm_return_t libspdm_get_response_digests(void *context, size_t request_size
                                                response_size, response);
     }
 
-    libspdm_set_connection_state(spdm_context,
-                                 LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS);
+    if (spdm_context->connection_info.connection_state <
+        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS) {
+        libspdm_set_connection_state(spdm_context,
+                                     LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS);
+    }
 
     return LIBSPDM_STATUS_SUCCESS;
 }
