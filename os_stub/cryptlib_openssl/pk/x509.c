@@ -252,7 +252,7 @@ bool libspdm_asn1_get_tag(uint8_t **ptr, const uint8_t *end, size_t *length,
 
     ptr_old = *ptr;
 
-    /*when there is no object, retrun false*/
+    /*when there is no object, return false*/
     if ((*ptr) == end) {
         return false;
     }
