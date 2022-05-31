@@ -292,11 +292,35 @@ libspdm_return_t libspdm_handle_error_large_response(
             break;
         }
         spdm_response = (void*) (response);
-
+        if (spdm_response->header.spdm_version != libspdm_get_connection_version(spdm_context)) {
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+            break;
+        }
+        if (spdm_response->header.request_response_code == SPDM_ERROR) {
+            status = libspdm_handle_simple_error_response(spdm_context,
+                spdm_response->header.param1);
+            break;
+        }
+        if (spdm_response->header.request_response_code != SPDM_CHUNK_RESPONSE) {
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+            break;
+        }
         if (chunk_seq_no == 0) {
 
             if (response_size
                 < (sizeof(spdm_chunk_response_response_t) + sizeof(uint32_t))) {
+                status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+                break;
+            }
+            if (response_size < SPDM_MIN_DATA_TRANSFER_SIZE) {
+                status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+                break;
+            }
+
+            if (spdm_response->chunk_size
+                < SPDM_MIN_DATA_TRANSFER_SIZE
+                - sizeof(spdm_chunk_response_response_t)
+                - sizeof(uint32_t)) {
                 status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
                 break;
             }
@@ -323,21 +347,23 @@ libspdm_return_t libspdm_handle_error_large_response(
                 break;
             }
 
+            if (!(spdm_response->header.param1 & SPDM_CHUNK_GET_RESPONSE_ATTRIBUTE_LAST_CHUNK))
+            {
+                if (response_size < SPDM_MIN_DATA_TRANSFER_SIZE) {
+                    status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+                    break;
+                }
+                if (spdm_response->chunk_size
+                    < SPDM_MIN_DATA_TRANSFER_SIZE
+                    - sizeof(spdm_chunk_response_response_t)) {
+                    status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+                    break;
+                }
+            }
+
             chunk_ptr = (uint8_t*) (spdm_response + 1);
         }
-        if (spdm_response->header.spdm_version != libspdm_get_connection_version(spdm_context)) {
-            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-            break;
-        }
-        if (spdm_response->header.request_response_code == SPDM_ERROR) {
-            status = libspdm_handle_simple_error_response(spdm_context,
-                                                          spdm_response->header.param1);
-            break;
-        }
-        if (spdm_response->header.request_response_code != SPDM_CHUNK_RESPONSE) {
-            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-            break;
-        }
+
         if (spdm_response->chunk_seq_no != chunk_seq_no) {
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             break;
@@ -352,13 +378,15 @@ libspdm_return_t libspdm_handle_error_large_response(
         chunk_seq_no++;
 
     } while (LIBSPDM_STATUS_IS_SUCCESS(status)
-             && large_response_size_so_far < large_response_size);
+             && large_response_size_so_far < large_response_size
+             && !(spdm_response->header.param1 & SPDM_CHUNK_GET_RESPONSE_ATTRIBUTE_LAST_CHUNK));
 
 
-    if (LIBSPDM_STATUS_IS_SUCCESS(status)
-        && large_response_size_so_far == large_response_size) {
-
-        if (large_response_size <= response_capacity)
+    if (LIBSPDM_STATUS_IS_SUCCESS(status)) {
+        if (large_response_size_so_far != large_response_size) {
+            status = LIBSPDM_STATUS_ERROR_PEER;
+        }
+        else if (large_response_size <= response_capacity)
         {
             libspdm_copy_mem(inout_response, response_capacity,
                              large_response, large_response_size);
@@ -366,9 +394,6 @@ libspdm_return_t libspdm_handle_error_large_response(
 
             libspdm_internal_dump_hex(large_response, large_response_size);
         }
-    }
-    else {
-        status = LIBSPDM_STATUS_ERROR_PEER;
     }
 
     return status;

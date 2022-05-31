@@ -52,7 +52,13 @@ libspdm_return_t libspdm_get_response_chunk_get(
             response_size, response);
     }
 
-    /* TBD: Do we need to limit this command to 1.2? */
+    if (spdm_request->header.spdm_version < SPDM_MESSAGE_VERSION_12) {
+        return libspdm_generate_error_response(
+            spdm_context,
+            SPDM_ERROR_CODE_UNSUPPORTED_REQUEST, 0,
+            response_size, response);
+    }
+
     if (spdm_request->header.spdm_version
         != libspdm_get_connection_version(spdm_context)) {
         return libspdm_generate_error_response(

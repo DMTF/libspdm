@@ -453,9 +453,11 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
         /* If responder is expecting chunk_get or chunk_send requests
          * and does not get them, fail the request. */
         if ((spdm_context->chunk_context.get.chunk_in_use
-             && get_response_func != libspdm_get_response_chunk_get)
+             && get_response_func != libspdm_get_response_chunk_get
+             && get_response_func != libspdm_get_response_version)
             || (spdm_context->chunk_context.send.chunk_in_use
-                && get_response_func != libspdm_get_response_chunk_send)) {
+                && get_response_func != libspdm_get_response_chunk_send
+                && get_response_func != libspdm_get_response_version)) {
 
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                            "Responder did not receive expected chunk request.\n"));
