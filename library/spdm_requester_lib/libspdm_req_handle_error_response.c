@@ -192,10 +192,10 @@ libspdm_return_t libspdm_handle_response_not_ready(libspdm_context_t *spdm_conte
 
 
 libspdm_return_t libspdm_handle_error_large_response(
-    libspdm_context_t* spdm_context,
-    const uint32_t* session_id,
-    size_t* inout_response_size,
-    void*   inout_response,
+    libspdm_context_t *spdm_context,
+    const uint32_t *session_id,
+    size_t *inout_response_size,
+    void *inout_response,
     size_t response_capacity)
 {
     libspdm_return_t status;

@@ -341,9 +341,12 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
     spdm_message_header_t *spdm_response;
     bool result;
     size_t transport_header_size;
+
+    #if LIBSPDM_ENABLE_CHUNK_CAP
     libspdm_chunk_info_t* get_info;
     void* scratch_buffer;
     size_t scratch_buffer_size;
+    #endif // LIBSPDM_ENABLE_CHUNK_CAP
 
     spdm_context = context;
     status = LIBSPDM_STATUS_UNSUPPORTED_CAP;
@@ -451,19 +454,28 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
 
         #if LIBSPDM_ENABLE_CHUNK_CAP
         /* If responder is expecting chunk_get or chunk_send requests
-         * and does not get them, fail the request. */
-        if ((spdm_context->chunk_context.get.chunk_in_use
-             && get_response_func != libspdm_get_response_chunk_get
-             && get_response_func != libspdm_get_response_version)
-            || (spdm_context->chunk_context.send.chunk_in_use
-                && get_response_func != libspdm_get_response_chunk_send
-                && get_response_func != libspdm_get_response_version)) {
+         * and gets other requests instead, drop out of chunking mode */
+        if (spdm_context->chunk_context.get.chunk_in_use
+            && get_response_func != libspdm_get_response_chunk_get) {
 
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                           "Responder did not receive expected chunk request.\n"));
-            return libspdm_generate_error_response(spdm_context,
-                                                   SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
-                                                   &my_response_size, my_response);
+            spdm_context->chunk_context.get.chunk_in_use = false;
+            spdm_context->chunk_context.get.chunk_handle++; /* implicit wrap - around to 0. */
+            spdm_context->chunk_context.get.chunk_seq_no = 0;
+
+            spdm_context->chunk_context.get.large_message = NULL;
+            spdm_context->chunk_context.get.large_message_size = 0;
+            spdm_context->chunk_context.get.chunk_bytes_transferred = 0;
+        }
+        if (spdm_context->chunk_context.send.chunk_in_use
+            && get_response_func != libspdm_get_response_chunk_send) {
+
+            spdm_context->chunk_context.send.chunk_in_use = false;
+            spdm_context->chunk_context.send.chunk_handle = 0;
+            spdm_context->chunk_context.send.chunk_seq_no = 0;
+
+            spdm_context->chunk_context.send.large_message = NULL;
+            spdm_context->chunk_context.send.large_message_size = 0;
+            spdm_context->chunk_context.send.chunk_bytes_transferred = 0;
         }
         #endif /* LIBSPDM_ENABLE_CHUNK_CAP*/
 
