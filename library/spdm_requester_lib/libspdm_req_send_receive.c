@@ -280,8 +280,11 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
     libspdm_return_t status;
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
+
+    #if LIBSPDM_ENABLE_CHUNK_CAP
     spdm_message_header_t* spdm_response;
     size_t response_capacity;
+    #endif /* LIBSPDM_ENABLE_CHUNK_CAP */
 
     if ((session_id != NULL) &&
         libspdm_is_capabilities_flag_supported(
@@ -302,6 +305,10 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
         }
     }
 
+    #if !LIBSPDM_ENABLE_CHUNK_CAP
+    status = libspdm_receive_response(spdm_context, session_id, false,
+                                      response_size, response);
+    #else /* LIBSPDM_ENABLE_CHUNK_CAP */
     response_capacity = *response_size;
     status = libspdm_receive_response(spdm_context, session_id, false,
                                       response_size, response);
@@ -351,6 +358,7 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
     }
 
 receive_done:
+    #endif /* LIBSPDM_ENABLE_CHUNK_CAP */
 
     return status;
 }

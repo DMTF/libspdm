@@ -346,7 +346,7 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
     libspdm_chunk_info_t* get_info;
     void* scratch_buffer;
     size_t scratch_buffer_size;
-    #endif // LIBSPDM_ENABLE_CHUNK_CAP
+    #endif /* LIBSPDM_ENABLE_CHUNK_CAP */
 
     spdm_context = context;
     status = LIBSPDM_STATUS_UNSUPPORTED_CAP;
