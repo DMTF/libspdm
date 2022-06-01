@@ -39,7 +39,8 @@ void libspdm_test_transport_pci_doe_encode_message(void **State)
                              0; /* PCI_DOE_MAX_RANDOM_NUMBER_COUNT */
     LIBSPDM_ASSERT(spdm_test_context->test_buffer_size > record_header_max_size);
 
-    transport_message_size = spdm_test_context->test_buffer_size - record_header_max_size;
+    transport_message_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+    transport_message = spdm_test_context->test_buffer;
 
     libspdm_transport_pci_doe_encode_message(spdm_context, NULL, is_app_message, is_requester,
                                              spdm_test_context->test_buffer_size - record_header_max_size,
@@ -75,11 +76,6 @@ void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
     if (buffer_size < record_header_max_size + aead_tag_max_size) {
         /* buffer too small */
         return;
-    }
-    if (buffer_size >
-        LIBSPDM_MAX_MESSAGE_BUFFER_SIZE - record_header_max_size - aead_tag_max_size) {
-        buffer_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE - record_header_max_size -
-                      aead_tag_max_size;
     }
 
     m_libspdm_transport_pci_doe_test_context.test_buffer = test_buffer;
