@@ -148,6 +148,7 @@ typedef struct {
     uint32_t max_spdm_msg_size;
 } spdm_get_capabilities_request_t;
 
+#define SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12  42
 
 /* SPDM GET_CAPABILITIES response*/
 

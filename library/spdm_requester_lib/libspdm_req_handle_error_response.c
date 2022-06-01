@@ -312,13 +312,13 @@ libspdm_return_t libspdm_handle_error_large_response(
                 status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
                 break;
             }
-            if (response_size < SPDM_MIN_DATA_TRANSFER_SIZE) {
+            if (response_size < SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12) {
                 status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
                 break;
             }
 
             if (spdm_response->chunk_size
-                < SPDM_MIN_DATA_TRANSFER_SIZE
+                < SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12
                 - sizeof(spdm_chunk_response_response_t)
                 - sizeof(uint32_t)) {
                 status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
@@ -349,12 +349,12 @@ libspdm_return_t libspdm_handle_error_large_response(
 
             if (!(spdm_response->header.param1 & SPDM_CHUNK_GET_RESPONSE_ATTRIBUTE_LAST_CHUNK))
             {
-                if (response_size < SPDM_MIN_DATA_TRANSFER_SIZE) {
+                if (response_size < SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12) {
                     status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
                     break;
                 }
                 if (spdm_response->chunk_size
-                    < SPDM_MIN_DATA_TRANSFER_SIZE
+                    < SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12
                     - sizeof(spdm_chunk_response_response_t)) {
                     status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
                     break;
@@ -384,7 +384,7 @@ libspdm_return_t libspdm_handle_error_large_response(
 
     if (LIBSPDM_STATUS_IS_SUCCESS(status)) {
         if (large_response_size_so_far != large_response_size) {
-            status = LIBSPDM_STATUS_ERROR_PEER;
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
         else if (large_response_size <= response_capacity)
         {
