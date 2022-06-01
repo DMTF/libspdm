@@ -148,8 +148,6 @@ typedef struct {
     uint32_t max_spdm_msg_size;
 } spdm_get_capabilities_request_t;
 
-#define SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12  42
-
 /* SPDM GET_CAPABILITIES response*/
 
 typedef struct {
@@ -1078,8 +1076,6 @@ typedef struct {
 } spdm_chunk_response_response_t;
 
 #define SPDM_CHUNK_GET_RESPONSE_ATTRIBUTE_LAST_CHUNK (1 << 0)
-
-#define SPDM_MIN_DATA_TRANSFER_SIZE (44)
 
 #pragma pack()
 
