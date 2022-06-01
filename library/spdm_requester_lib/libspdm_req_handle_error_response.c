@@ -298,7 +298,7 @@ libspdm_return_t libspdm_handle_error_large_response(
         }
         if (spdm_response->header.request_response_code == SPDM_ERROR) {
             status = libspdm_handle_simple_error_response(spdm_context,
-                spdm_response->header.param1);
+                                                          spdm_response->header.param1);
             break;
         }
         if (spdm_response->header.request_response_code != SPDM_CHUNK_RESPONSE) {
