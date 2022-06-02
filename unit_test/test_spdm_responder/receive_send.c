@@ -17,6 +17,7 @@
  **/
 void libspdm_test_responder_receive_send_rsp_case1(void** state)
 {
+    /* This test case is partially copied from test_requester_get_measurement_case4 */
     libspdm_return_t status;
     libspdm_test_context_t* spdm_test_context;
     libspdm_context_t* spdm_context;
@@ -63,25 +64,25 @@ void libspdm_test_responder_receive_send_rsp_case1(void** state)
         m_libspdm_use_asym_algo;
 
     #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain_buffer_size =
-        data_size;
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = data_size;
     libspdm_copy_mem(
-        spdm_context->connection_info.peer_used_cert_chain_buffer,
-        sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
+        spdm_context->connection_info.peer_used_cert_chain[0].buffer,
+        sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
         data, data_size);
     #else
     libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
         data, data_size,
-        spdm_context->connection_info.peer_used_cert_chain_buffer_hash);
-    spdm_context->connection_info.peer_used_cert_chain_buffer_hash_size =
+        spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash);
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size =
         libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
     libspdm_get_leaf_cert_public_key_from_cert_chain(
         spdm_context->connection_info.algorithm.base_hash_algo,
         spdm_context->connection_info.algorithm.base_asym_algo,
         data, data_size,
-        &spdm_context->connection_info.peer_used_leaf_cert_public_key);
+        &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
     #endif
+
     spdm_context->local_context.slot_count = 1;
     spdm_context->connection_info.capability.data_transfer_size =
         CHUNK_GET_UNIT_TEST_OVERRIDE_DATA_TRANSFER_SIZE;
@@ -130,7 +131,7 @@ void libspdm_test_responder_receive_send_rsp_case1(void** state)
     #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     #else
     libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
-                      spdm_context->connection_info.peer_used_leaf_cert_public_key);
+                      spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
     #endif
 }
 
