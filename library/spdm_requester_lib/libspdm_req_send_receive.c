@@ -328,7 +328,6 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
             response_size, (void*) spdm_response, response_capacity);
 
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
-            status = LIBSPDM_STATUS_RECEIVE_FAIL;
             goto receive_done;
         }
 
