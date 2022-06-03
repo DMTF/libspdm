@@ -101,6 +101,9 @@ void libspdm_test_requester_get_csr_case1(void **state)
     libspdm_context_t *spdm_context;
 
     uint8_t csr_form_get[LIBSPDM_MAX_CSR_SIZE] = {0};
+    size_t csr_len;
+
+    csr_len = LIBSPDM_MAX_CSR_SIZE;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -111,8 +114,8 @@ void libspdm_test_requester_get_csr_case1(void **state)
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
 
-    status = libspdm_get_csr(spdm_context, NULL, 0, NULL, 0, NULL, csr_form_get,
-                             LIBSPDM_MAX_CSR_SIZE);
+    status = libspdm_get_csr(spdm_context, NULL, 0, NULL, 0, NULL, (void *)&csr_form_get,
+                             &csr_len);
 
     assert_int_equal(status, LIBSPDM_STATUS_SEND_FAIL);
 }
@@ -128,6 +131,9 @@ void libspdm_test_requester_get_csr_case2(void **state)
     libspdm_context_t *spdm_context;
 
     uint8_t csr_form_get[LIBSPDM_MAX_CSR_SIZE] = {0};
+    size_t csr_len;
+
+    csr_len = LIBSPDM_MAX_CSR_SIZE;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -138,10 +144,11 @@ void libspdm_test_requester_get_csr_case2(void **state)
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
 
-    status = libspdm_get_csr(spdm_context, NULL, 0, NULL, 0, NULL, csr_form_get,
-                             LIBSPDM_MAX_CSR_SIZE);
+    status = libspdm_get_csr(spdm_context, NULL, 0, NULL, 0, NULL, (void *)&csr_form_get,
+                             &csr_len);
 
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(csr_len, global_csr_len);
     assert_memory_equal(csr_form_get, csr_data_pointer, global_csr_len);
 }
 
