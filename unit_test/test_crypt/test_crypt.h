@@ -93,6 +93,14 @@ bool libspdm_validate_crypt_rsa_2(void);
 bool libspdm_validate_crypt_x509(char *Path, size_t len);
 
 /**
+ * Gen and verify RSA CSR.
+ *
+ * @retval  true   Success.
+ * @retval  false  Failed to gen and verify RSA CSR.
+ **/
+bool libspdm_validate_crypt_x509_csr(void);
+
+/**
  * Validate Crypto DH Interfaces.
  *
  * @retval  true  Validation succeeded.

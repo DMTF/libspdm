@@ -53,6 +53,10 @@
 #define SPDM_CHUNK_SEND_ACK 0x05
 #define SPDM_CHUNK_RESPONSE 0x06
 
+/* SPDM response code (1.2)*/
+
+#define SPDM_CSR 0x6D
+
 /* SPDM request code (1.0)*/
 
 #define SPDM_GET_DIGESTS 0x81
@@ -79,6 +83,7 @@
 
 /* SPDM request code (1.2)*/
 
+#define SPDM_GET_CSR 0xED
 #define SPDM_SET_CERTIFICATE 0xEE
 #define SPDM_CHUNK_SEND 0x85
 #define SPDM_CHUNK_GET 0x86
@@ -1023,6 +1028,25 @@ typedef struct {
      * param2 == RSVD*/
 } spdm_set_certificate_response_t;
 
+/* SPDM GET_CSR request*/
+
+typedef struct {
+    spdm_message_header_t header;
+    /* param1 == RSVD
+     * param2 == RSVD*/
+    uint16_t requester_info_length;
+    uint16_t opaque_data_length;
+} spdm_get_csr_request_t;
+
+/* SPDM CSR response*/
+
+typedef struct {
+    spdm_message_header_t header;
+    /* param1 == RSVD
+     * param2 == RSVD*/
+    size_t csr_length;
+    uint16_t reserved;
+} spdm_csr_response_t;
 
 /* SPDM CHUNK_SEND request */
 

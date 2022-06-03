@@ -464,6 +464,24 @@ typedef bool (*libspdm_aead_decrypt_func)(
 uint32_t libspdm_get_hash_size(uint32_t base_hash_algo);
 
 /**
+ * Return cipher ID, based upon the negotiated hash algorithm.
+ *
+ * @param  base_hash_algo                  SPDM base_hash_algo
+ *
+ * @return hash cipher ID
+ **/
+size_t libspdm_get_hash_nid(uint32_t base_hash_algo);
+
+/**
+ * Return asym NID, based upon the negotiated asym algorithm.
+ *
+ * @param  base_asym_algo                  SPDM base_asym_algo
+ *
+ * @return asym NID
+ **/
+size_t libspdm_get_aysm_nid(uint32_t base_asym_algo);
+
+/**
  * Allocates and initializes one HASH_CTX context for subsequent hash use.
  *
  * @param  base_hash_algo                 SPDM base_hash_algo
@@ -1348,4 +1366,19 @@ bool libspdm_get_leaf_cert_public_key_from_cert_chain(uint32_t base_hash_algo,
                                                       uint8_t *cert_chain_data,
                                                       size_t cert_chain_data_size,
                                                       void **public_key);
+
+/**
+ * Verify req info format refer to PKCS#10
+ *
+ * @param[in]      req_info              requester info to gen CSR
+ * @param[in]      req_info_len          The len of requester info
+ *
+ * @retval  true    Vaild req info, have three situations:
+ *                                  1: no req_info
+ *                                  2: good format req_info without attributes
+ *                                  3: good format req_info with good format attributes
+ * @retval  false   Invaild req info.
+ **/
+bool libspdm_verify_req_info(uint8_t *req_info, uint16_t req_info_len);
+
 #endif

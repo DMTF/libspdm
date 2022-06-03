@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.8.12)
 
 INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/include/hal/${ARCH}
+                    ${LIBSPDM_DIR}/os_stub
 )
 
 SET(src_spdm_responder_lib
@@ -30,6 +31,7 @@ SET(src_spdm_responder_lib
     libspdm_rsp_respond_if_ready.c
     libspdm_rsp_version.c
     libspdm_rsp_set_certificate.c
+    libspdm_rsp_csr.c
     libspdm_rsp_chunk_send.c
     libspdm_rsp_chunk_get.c
 )

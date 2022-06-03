@@ -99,6 +99,7 @@ typedef struct {
     bool basic_mut_auth_requested;
     uint8_t mut_auth_requested;
     uint8_t heartbeat_period;
+
 } libspdm_local_context_t;
 
 typedef struct {
@@ -409,7 +410,6 @@ typedef struct {
 
     void *app_context_data_ptr;
 
-
     /* Register for the last KEY_UPDATE token and operation (responder only)*/
 
     uint8_t last_update_request[4];
@@ -418,15 +418,19 @@ typedef struct {
 
     uint8_t handle_error_return_policy;
 
-    /* Control whether responder device requires a reset to complete the GET_CSR/SET_CERT request.*/
+    /* Control whether responder device requires a reset to complete the SET_CERT request.*/
 
     bool need_reset_to_set_cert;
+
+    /* Control whether responder device requires a reset to complete the GET_CSR request.*/
+
+    bool need_reset_to_get_csr;
 
 #if LIBSPDM_ENABLE_CHUNK_CAP
     /* Chunk specific context */
     libspdm_chunk_context_t chunk_context;
 #endif /*LIBSPDM_ENABLE_CHUNK_CAP*/
-
+  
 } libspdm_context_t;
 
 /**

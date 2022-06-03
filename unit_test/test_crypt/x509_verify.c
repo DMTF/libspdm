@@ -4,8 +4,104 @@
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 #include "test_crypt.h"
+#include "industry_standard/spdm.h"
+#include "spdm_device_secret_lib_sample/spdm_device_secret_lib_internal.h"
+#include "library/spdm_device_secret_lib.h"
 
 static uint8_t m_libspdm_oid_subject_alt_name[] = { 0x55, 0x1D, 0x11 };
+
+/*ECC 256 req_info(include right req_info attribute)*/
+static uint8_t right_req_info[] = {
+    0x30, 0x81, 0xBF, 0x02, 0x01, 0x00, 0x30, 0x45, 0x31, 0x0B, 0x30, 0x09,
+    0x06, 0x03, 0x55, 0x04, 0x06, 0x13, 0x02, 0x41, 0x55, 0x31, 0x13, 0x30, 0x11, 0x06, 0x03, 0x55,
+    0x04, 0x08, 0x0C, 0x0A, 0x53, 0x6F, 0x6D, 0x65, 0x2D, 0x53, 0x74, 0x61, 0x74, 0x65, 0x31, 0x21,
+    0x30, 0x1F, 0x06, 0x03, 0x55, 0x04, 0x0A, 0x0C, 0x18, 0x49, 0x6E, 0x74, 0x65, 0x72, 0x6E, 0x65,
+    0x74, 0x20, 0x57, 0x69, 0x64, 0x67, 0x69, 0x74, 0x73, 0x20, 0x50, 0x74, 0x79, 0x20, 0x4C, 0x74,
+    0x64, 0x30, 0x59, 0x30, 0x13, 0x06, 0x07, 0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x02, 0x01, 0x06, 0x08,
+    0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x03, 0x01, 0x07, 0x03, 0x42, 0x00, 0x04, 0xDB, 0xC2, 0xB2, 0xB7,
+    0x83, 0x3C, 0xC8, 0x85, 0xE4, 0x3D, 0xE1, 0xF3, 0xBA, 0xE2, 0xF2, 0x90, 0x8E, 0x30, 0x25, 0x14,
+    0xE1, 0xF7, 0xA9, 0x82, 0x29, 0xDB, 0x9D, 0x76, 0x2F, 0x80, 0x11, 0x32, 0xEE, 0xAB, 0xE2, 0x68,
+    0xD1, 0x22, 0xE7, 0xBD, 0xB4, 0x71, 0x27, 0xC8, 0x79, 0xFB, 0xDC, 0x7C, 0x9E, 0x33, 0xA6, 0x67,
+    0xC2, 0x10, 0x47, 0x36, 0x32, 0xC5, 0xA1, 0xAA, 0x6B, 0x2B, 0xAA, 0xC9, 0xA0, 0x18, 0x30, 0x16,
+    0x06, 0x09, 0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x09, 0x07, 0x31, 0x09, 0x0C, 0x07, 0x74,
+    0x65, 0x73, 0x74, 0x31, 0x32, 0x33
+};
+
+/*ECC 256 req_info(include wrong req_info attribute, oid is wrong)*/
+static uint8_t wrong_req_info[] = {
+    0x30, 0x81, 0xBF, 0x02, 0x01, 0x00, 0x30, 0x45, 0x31, 0x0B, 0x30, 0x09,
+    0x06, 0x03, 0x55, 0x04, 0x06, 0x13, 0x02, 0x41, 0x55, 0x31, 0x13, 0x30, 0x11, 0x06, 0x03, 0x55,
+    0x04, 0x08, 0x0C, 0x0A, 0x53, 0x6F, 0x6D, 0x65, 0x2D, 0x53, 0x74, 0x61, 0x74, 0x65, 0x31, 0x21,
+    0x30, 0x1F, 0x06, 0x03, 0x55, 0x04, 0x0A, 0x0C, 0x18, 0x49, 0x6E, 0x74, 0x65, 0x72, 0x6E, 0x65,
+    0x74, 0x20, 0x57, 0x69, 0x64, 0x67, 0x69, 0x74, 0x73, 0x20, 0x50, 0x74, 0x79, 0x20, 0x4C, 0x74,
+    0x64, 0x30, 0x59, 0x30, 0x13, 0x06, 0x07, 0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x02, 0x01, 0x06, 0x08,
+    0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x03, 0x01, 0x07, 0x03, 0x42, 0x00, 0x04, 0xDB, 0xC2, 0xB2, 0xB7,
+    0x83, 0x3C, 0xC8, 0x85, 0xE4, 0x3D, 0xE1, 0xF3, 0xBA, 0xE2, 0xF2, 0x90, 0x8E, 0x30, 0x25, 0x14,
+    0xE1, 0xF7, 0xA9, 0x82, 0x29, 0xDB, 0x9D, 0x76, 0x2F, 0x80, 0x11, 0x32, 0xEE, 0xAB, 0xE2, 0x68,
+    0xD1, 0x22, 0xE7, 0xBD, 0xB4, 0x71, 0x27, 0xC8, 0x79, 0xFB, 0xDC, 0x7C, 0x9E, 0x33, 0xA6, 0x67,
+    0xC2, 0x10, 0x47, 0x36, 0x32, 0xC5, 0xA1, 0xAA, 0x6B, 0x2B, 0xAA, 0xC9, 0xA0, 0x18, 0x30, 0x16,
+    0x06, 0x09, 0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D,       0x09, 0x07, 0x31, 0x09, 0x0C, 0x07, 0x74,
+    0x65, 0x73, 0x74, 0x31, 0x32, 0x33
+};
+
+
+/**
+ * save the CSR
+ *
+ * @param[out] csr_len               CSR len for DER format
+ * @param[in]  csr_pointer           csr_pointer is address to store CSR.
+ * @param[in]  base_asym_algo        To distinguish file
+ *
+ * @retval true                      successfully.
+ * @retval false                     unsuccessfully.
+ **/
+bool libspdm_write_csr_to_file(const void * csr_pointer, size_t csr_len, uint32_t base_asym_algo)
+{
+    FILE *fp_out;
+    char* file_name;
+
+    switch (base_asym_algo) {
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048:
+        file_name = "rsa2048_csr";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
+        file_name = "rsa3072_csr";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
+        file_name = "rsa4096_csr";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
+        file_name = "ecc256_csr";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
+        file_name = "ecc384_csr";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
+        file_name = "ecc521_csr";
+        break;
+    default:
+        return false;
+    }
+
+    if ((fp_out = fopen(file_name, "w+b")) == NULL) {
+        printf("Unable to open file %s\n", file_name);
+        return false;
+    }
+
+    if ((fwrite(csr_pointer, 1, csr_len, fp_out)) != csr_len) {
+        printf("Write output file error %s\n", file_name);
+        fclose(fp_out);
+        return false;
+    }
+
+    fclose(fp_out);
+
+    return true;
+}
+
 
 /**
  * Validate Crypto X509 certificate Verify
@@ -390,4 +486,113 @@ cleanup:
         free(test_end_cert);
     }
     return status;
+}
+
+/**
+ * Gen and verify CSR.
+ *
+ * @retval  true   Success.
+ * @retval  false  Failed to gen and verify RSA CSR.
+ **/
+bool libspdm_validate_crypt_x509_csr(void)
+{
+    bool ret;
+
+    libspdm_my_print("\nGen CSR test:\n");
+    /*read private key to gen RSA CSR*/
+    uint8_t rsa_csr_pointer[LIBSPDM_MAX_CSR_SIZE] = {0};
+    size_t rsa_csr_len;
+    uint8_t *rsa_csr = rsa_csr_pointer;
+
+    bool need_reset = false;
+
+    libspdm_my_print("Gen and save RSA CSR!!!\n");
+    ret = libspdm_gen_csr(SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384,
+                          SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072,
+                          &need_reset, &rsa_csr_len, &rsa_csr, LIBSPDM_MAX_CSR_SIZE,
+                          NULL, 0);
+    if (!ret) {
+        libspdm_my_print("Gen RSA CSR fail !!!\n");
+        return ret;
+    }
+
+    ret = libspdm_write_csr_to_file(rsa_csr, rsa_csr_len,
+                                    SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072);
+    if (!ret) {
+        libspdm_my_print("Save RSA CSR fail !!!\n");
+        return ret;
+    }
+    libspdm_my_print("Gen and save RSA CSR successful !!!\n");
+
+    /*read private key to gen ECC CSR*/
+    uint8_t ecc_csr_pointer[LIBSPDM_MAX_CSR_SIZE];
+    size_t ecc_csr_len;
+    uint8_t *ecc_csr = ecc_csr_pointer;
+
+    libspdm_my_print("\nGen and save ECC CSR!!!\n");
+    ret = libspdm_gen_csr(SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384,
+                          SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384,
+                          &need_reset, &ecc_csr_len, &ecc_csr, LIBSPDM_MAX_CSR_SIZE,
+                          NULL, 0);
+    if (!ret) {
+        libspdm_my_print("Gen ECC CSR fail !!!\n");
+        return ret;
+    }
+
+    ret = libspdm_write_csr_to_file(ecc_csr, ecc_csr_len,
+                                    SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384);
+    if (!ret) {
+        libspdm_my_print("Save ECC CSR fail !!!\n");
+        return ret;
+    }
+    libspdm_my_print("Gen and save ECC CSR successful !!!\n");
+
+    /*read private key to gen ECC 256 CSR*/
+    uint8_t ecc256_csr_pointer[LIBSPDM_MAX_CSR_SIZE];
+    size_t ecc256_csr_len;
+    uint8_t *ecc256_csr = ecc256_csr_pointer;
+
+    libspdm_my_print("\nGen and save ECC_256 CSR with right_req_info!!!\n");
+    ret = libspdm_gen_csr(SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                          SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+                          &need_reset, &ecc256_csr_len, &ecc256_csr, LIBSPDM_MAX_CSR_SIZE,
+                          right_req_info, sizeof(right_req_info));
+    if (!ret) {
+        libspdm_my_print("Gen ECC_256 CSR with right_req_info fail !!!\n");
+        return ret;
+    }
+
+    ret = libspdm_write_csr_to_file(ecc256_csr, ecc256_csr_len,
+                                    SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256);
+    if (!ret) {
+        libspdm_my_print("Save ECC_256 CSR with right_req_info fail !!!\n");
+        return ret;
+    }
+    libspdm_my_print("Gen and save ECC_256 CSR with right_req_info successful !!!\n");
+
+    libspdm_my_print("\nTest req_info verify function!!!\n");
+    ret = libspdm_verify_req_info(right_req_info, sizeof(right_req_info));
+    if (ret) {
+        libspdm_my_print("Test right req_info verify function  successful !!!\n");
+    } else {
+        return true;
+    }
+
+    ret = libspdm_verify_req_info(wrong_req_info, sizeof(wrong_req_info));
+    if (!ret) {
+        libspdm_my_print("Test wrong req_info verify function  successful !!!\n");
+    } else {
+        return false;
+    }
+
+    return ret;
+}
+
+void libspdm_dump_hex_str(const uint8_t *buffer, size_t buffer_size)
+{
+    size_t index;
+
+    for (index = 0; index < buffer_size; index++) {
+        printf("%02x", buffer[index]);
+    }
 }

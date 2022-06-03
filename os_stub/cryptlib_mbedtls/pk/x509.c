@@ -15,7 +15,9 @@
 #include <mbedtls/ecp.h>
 #include <mbedtls/ecdh.h>
 #include <mbedtls/ecdsa.h>
-
+#include <mbedtls/x509_csr.h>
+#include <mbedtls/entropy.h>
+#include <mbedtls/ctr_drbg.h>
 
 /* OID*/
 
@@ -1563,4 +1565,263 @@ int32_t libspdm_x509_compare_date_time(const void *date_time1, const void *date_
     } else {
         return 1;
     }
+}
+
+/**
+ * Set all attributes object form req_info to CSR
+ *
+ * @param[in]      req                   CSR to set attributes
+ * @param[in]      req_info              requester info to gen CSR
+ * @param[in]      req_info_len          The len of requester info
+ *
+ * @retval  true   Success Set.
+ * @retval  false  Set failed.
+ **/
+bool libspdm_set_attribute_for_req(mbedtls_x509write_csr *req, uint8_t *req_info,
+                                   size_t req_info_len)
+{
+    uint8_t *ptr;
+    int32_t length;
+    size_t obj_len;
+    bool ret;
+    uint8_t *end;
+    uint8_t *ptr_old;
+
+    uint8_t *oid;
+    size_t oid_len;
+    uint8_t *val;
+    size_t val_len;
+
+    length = (int32_t)req_info_len;
+    ptr = req_info;
+    obj_len = 0;
+    end = ptr + length;
+    ret = false;
+
+    if (req_info == NULL) {
+        return false;
+    }
+
+    /*req_info sequence, all ret is ok because the req_info has been verified before*/
+    ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                               LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+
+    /*integer:version*/
+    ret = libspdm_asn1_get_tag(&ptr, end, &obj_len, LIBSPDM_CRYPTO_ASN1_INTEGER);
+    ptr += obj_len;
+
+    /*sequence:subject name*/
+    ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                               LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+    ptr += obj_len;
+
+    /*sequence:subject pkinfo*/
+    ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                               LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+    ptr += obj_len;
+
+
+    /*[0]: attributes*/
+    ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                               LIBSPDM_CRYPTO_ASN1_CONTEXT_SPECIFIC |
+                               LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+    /*there is no attributes*/
+    if (ptr == end) {
+        return true;
+    }
+
+    /*there is some attributes object: 1,2 ...*/
+    while (ret)
+    {
+        ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                                   LIBSPDM_CRYPTO_ASN1_SEQUENCE |
+                                   LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+        if (ret) {
+            /*save old positon*/
+            ptr_old = ptr;
+
+            /*move to the next sequence*/
+            ptr += obj_len;
+
+            /*get attributes oid*/
+            ret = libspdm_asn1_get_tag(&ptr_old, end, &obj_len, LIBSPDM_CRYPTO_ASN1_OID);
+            if (!ret) {
+                return false;
+            }
+            oid = ptr_old;
+            oid_len = obj_len;
+
+            ptr_old += obj_len;
+            /*get attributes val*/
+            ret = libspdm_asn1_get_tag(&ptr_old, end, &obj_len,
+                                       LIBSPDM_CRYPTO_ASN1_SET |
+                                       LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+            if (!ret) {
+                return false;
+            }
+            ret = libspdm_asn1_get_tag(&ptr_old, end, &obj_len, LIBSPDM_CRYPTO_ASN1_UTF8_STRING);
+            if (!ret) {
+                return false;
+            }
+            val = ptr_old;
+            val_len = obj_len;
+
+            /*set attributes*/
+            ret = mbedtls_x509write_csr_set_extension(req, oid, oid_len, val, val_len);
+            if (ret) {
+                return false;
+            }
+
+        } else {
+            break;
+        }
+    }
+
+    if (ptr == end) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/**
+ * Gen CSR
+ *
+ * @param[in]      hash_nid              hash algo for sign
+ * @param[in]      asym_nid              asym algo for sign
+ *
+ * @param[out]     csr_len               CSR len for DER format
+ * @param[in]      csr_pointer           For input, csr_pointer is address to store CSR.
+ * @param[out]     csr_pointer           For input, csr_pointer is address for stored CSR.
+ * @param[in]      csr_buffer_size       The size of store CSR buffer.
+ *
+ * @param[in]      requester_info        requester info to gen CSR
+ * @param[in]      requester_info_length The len of requester info
+ *
+ * @param[in]      context               Pointer to asymmetric context
+ * @param[in]      subject_name          Subject name: should be break with ',' in the middle
+ *                                       example: "C=AA,CN=BB"
+ * Subject names should contain a comma-separated list of OID types and values:
+ * The valid OID type name is in:
+ * {"CN", "commonName", "C", "countryName", "O", "organizationName","L",
+ * "OU", "organizationalUnitName", "ST", "stateOrProvinceName", "emailAddress",
+ * "serialNumber", "postalAddress", "postalCode", "dnQualifier", "title",
+ * "SN","givenName","GN", "initials", "pseudonym", "generationQualifier", "domainComponent", "DC"}.
+ * Note: The object of C and countryName should be CSR Supported Country Codes
+ *
+ * @retval  true   Success.
+ * @retval  false  Failed to gen CSR.
+ **/
+bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid, size_t *csr_len,
+                          uint8_t **csr_pointer, size_t csr_buffer_size,
+                          uint8_t *requester_info, size_t requester_info_length,
+                          void *context, char *subject_name)
+{
+    int ret;
+    bool result;
+
+    mbedtls_x509write_csr req;
+    mbedtls_md_type_t md_alg;
+    mbedtls_pk_context key;
+
+    /* Init */
+    mbedtls_x509write_csr_init(&req);
+    mbedtls_pk_init(&key);
+
+    ret = 1;
+    switch (asym_nid)
+    {
+    case LIBSPDM_CRYPTO_NID_RSASSA2048:
+    case LIBSPDM_CRYPTO_NID_RSAPSS2048:
+    case LIBSPDM_CRYPTO_NID_RSASSA3072:
+    case LIBSPDM_CRYPTO_NID_RSAPSS3072:
+    case LIBSPDM_CRYPTO_NID_RSASSA4096:
+    case LIBSPDM_CRYPTO_NID_RSAPSS4096:
+        ret = mbedtls_pk_setup(&key, mbedtls_pk_info_from_type(MBEDTLS_PK_RSA));
+        if (ret != 0) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"failed\n ! mbedtls_pk_setup %d", ret));
+            goto free_all;
+        }
+        ret = mbedtls_rsa_copy(mbedtls_pk_rsa(key), (mbedtls_rsa_context *)context);
+        if (ret != 0) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"failed\n ! mbedtls_rsa_copy %d", ret));
+            goto free_all;
+        }
+        break;
+    case LIBSPDM_CRYPTO_NID_ECDSA_NIST_P256:
+    case LIBSPDM_CRYPTO_NID_ECDSA_NIST_P384:
+    case LIBSPDM_CRYPTO_NID_ECDSA_NIST_P521:
+        ret = mbedtls_pk_setup(&key, mbedtls_pk_info_from_type(MBEDTLS_PK_ECKEY));
+        if (ret != 0) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"failed\n ! mbedtls_pk_setup %d", ret));
+            goto free_all;
+        }
+        /*mbedtls_ecdh_context include mbedtls_ecdsa_context,can be treated as mbedtls_ecdsa_context*/
+        ret = mbedtls_ecdsa_from_keypair(mbedtls_pk_ec(key), (mbedtls_ecdsa_context *)context);
+        if (ret != 0) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"failed\n ! mbedtls_ecdsa_from_keypair %d", ret));
+            goto free_all;
+        }
+        break;
+    default:
+        goto free_all;
+    }
+
+    switch (hash_nid)
+    {
+    case LIBSPDM_CRYPTO_NID_SHA256:
+        md_alg = MBEDTLS_MD_SHA256;
+        break;
+    case LIBSPDM_CRYPTO_NID_SHA384:
+        md_alg = MBEDTLS_MD_SHA384;
+        break;
+    case LIBSPDM_CRYPTO_NID_SHA512:
+        md_alg = MBEDTLS_MD_SHA512;
+        break;
+    default:
+        ret = 1;
+        goto free_all;
+    }
+
+    /* requester info parse*/
+    if (requester_info_length != 0) {
+        result = libspdm_set_attribute_for_req(&req, requester_info, requester_info_length);
+        if (!result) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"set_attribute failed !\n"));
+            return false;
+        }
+    }
+
+    /* Set the md alg */
+    mbedtls_x509write_csr_set_md_alg(&req, md_alg);
+
+    /* Set the subject name */
+    if (subject_name != NULL) {
+        ret = mbedtls_x509write_csr_set_subject_name(&req, subject_name);
+        if (ret != 0) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "failed\n ! mbedtls_x509write_csr_set_subject_name returned %d", ret));
+            goto free_all;
+        }
+    }
+
+    /* Set key */
+    mbedtls_x509write_csr_set_key(&req, &key);
+
+    /*data is written at the end of the buffer*/
+    *csr_len = mbedtls_x509write_csr_der(&req, *csr_pointer, csr_buffer_size, NULL, NULL);
+    if (*csr_len <= 0) {
+        ret = 1;
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"mbedtls_x509write_csr_der failed \n"));
+        goto free_all;
+    }
+
+    /*change csr_pointer to start location*/
+    *csr_pointer = *csr_pointer + csr_buffer_size - *csr_len;
+
+free_all:
+    mbedtls_x509write_csr_free(&req);
+    mbedtls_pk_free(&key);
+
+    return(ret == 0);
 }
