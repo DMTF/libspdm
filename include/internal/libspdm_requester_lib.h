@@ -58,6 +58,29 @@ libspdm_return_t libspdm_handle_error_response_main(
     size_t expected_response_size);
 
 /**
+ * This function handles the error response handling for large responses.
+ * Will retrieve the large response in chunks if supported and necessary.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_id                    Indicates if it is a secured message protected via SPDM session.
+ *                                       If session_id is NULL, it is a normal message.
+ *                                       If session_id is NOT NULL, it is a secured message.
+ * @param  inout_response_size           The size of the response.
+ *                                       On input, expected to be the size of an error response.
+ *                                       On output, the large response size after being retrieved in chunks.
+ * @param  response                      The error response on input. Large response on output.
+ * @param  response_capacity             The maximum capacity of the response buffer.
+ *
+ * @retval libspdm_return_t              An error value or success.
+ **/
+libspdm_return_t libspdm_handle_error_large_response(
+    libspdm_context_t* spdm_context,
+    const uint32_t* session_id,
+    size_t* inout_response_size,
+    void* inout_response,
+    size_t response_capacity);
+
+/**
  * This function sends GET_VERSION and receives VERSION.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
