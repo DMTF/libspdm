@@ -430,7 +430,7 @@ typedef struct {
     /* Chunk specific context */
     libspdm_chunk_context_t chunk_context;
 #endif /*LIBSPDM_ENABLE_CHUNK_CAP*/
-  
+
 } libspdm_context_t;
 
 /**

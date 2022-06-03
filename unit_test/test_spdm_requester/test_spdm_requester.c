@@ -140,7 +140,7 @@ int main(void)
     if (libspdm_requester_set_certificate_test_main() != 0) {
         return_value = 1;
     }
-  
+
     if (libspdm_requester_get_csr_test_main() != 0) {
         return_value = 1;
     }
