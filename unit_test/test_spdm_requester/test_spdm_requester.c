@@ -46,6 +46,10 @@ int libspdm_requester_encap_request_test_main(void);
 int libspdm_requester_set_certificate_test_main(void);
 int libspdm_requester_get_csr_test_main(void);
 
+#if LIBSPDM_ENABLE_CHUNK_CAP
+int libspdm_requester_chunk_get_test_main(void);
+#endif /* LIBSPDM_ENABLE_CHUNK_CAP */
+
 int main(void)
 {
     int return_value = 0;
@@ -140,6 +144,12 @@ int main(void)
     if (libspdm_requester_get_csr_test_main() != 0) {
         return_value = 1;
     }
+
+    #if LIBSPDM_ENABLE_CHUNK_CAP
+    if (libspdm_requester_chunk_get_test_main() != 0) {
+        return_value = 1;
+    }
+    #endif /* LIBSPDM_ENABLE_CHUNK_CAP */
 
     return return_value;
 }

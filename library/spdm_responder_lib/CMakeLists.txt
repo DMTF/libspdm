@@ -32,6 +32,8 @@ SET(src_spdm_responder_lib
     libspdm_rsp_version.c
     libspdm_rsp_set_certificate.c
     libspdm_rsp_csr.c
+    libspdm_rsp_chunk_send.c
+    libspdm_rsp_chunk_get.c
 )
 
 ADD_LIBRARY(spdm_responder_lib STATIC ${src_spdm_responder_lib})
