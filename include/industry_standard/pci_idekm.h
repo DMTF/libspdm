@@ -51,6 +51,10 @@ typedef struct {
     /*IDE Extended capability*/
 } pci_ide_km_query_resp_t;
 
+#define PCI_IDE_KM_LINK_IDE_REG_BLOCK_MAX_COUNT 8
+#define PCI_IDE_KM_SELECTIVE_IDE_REG_BLOCK_MAX_COUNT 255
+#define PCI_IDE_KM_SELECTIVE_IDE_ADDRESS_ASSOCIATION_REG_BLOCK_MAX_COUNT 15
+
 
 /* IDE_KM KEY_PROG*/
 
@@ -65,6 +69,18 @@ typedef struct {
      * IFV(invocation field of the IV) 2 DW*/
 } pci_ide_km_key_prog_t;
 
+#define PCI_IDE_KM_KEY_SET_MASK 0x01
+#define PCI_IDE_KM_KEY_SET_K0 0x00
+#define PCI_IDE_KM_KEY_SET_K1 0x01
+
+#define PCI_IDE_KM_KEY_DIRECTION_MASK 0x02
+#define PCI_IDE_KM_KEY_DIRECTION_RX 0x00
+#define PCI_IDE_KM_KEY_DIRECTION_TX 0x02
+
+#define PCI_IDE_KM_KEY_SUB_STREAM_MASK 0xF0
+#define PCI_IDE_KM_KEY_SUB_STREAM_PR 0x00
+#define PCI_IDE_KM_KEY_SUB_STREAM_NPR 0x10
+#define PCI_IDE_KM_KEY_SUB_STREAM_CPL 0x20
 
 /* IDE_KM KP_ACK*/
 
@@ -72,11 +88,16 @@ typedef struct {
     pci_ide_km_header_t header;
     uint8_t reserved[2];
     uint8_t stream_id;
-    uint8_t reserved2;
+    uint8_t status;
     uint8_t key_sub_stream;
     uint8_t port_index;
 } pci_ide_km_kp_ack_t;
 
+#define PCI_IDE_KM_KP_ACK_STATUS_SUCCESS 0x00
+#define PCI_IDE_KM_KP_ACK_STATUS_INCORRECT_LENGTH 0x01
+#define PCI_IDE_KM_KP_ACK_STATUS_UNSUPPORTED_PORT_INDEX 0x02
+#define PCI_IDE_KM_KP_ACK_STATUS_UNSUPPORTED_VALUE 0x03
+#define PCI_IDE_KM_KP_ACK_STATUS_UNSPECIFIED_FAILURE 0x04
 
 /* IDE_KM K_SET_GO*/
 
