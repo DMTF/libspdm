@@ -91,6 +91,7 @@ void libspdm_test_responder_key_exchange_case1(void **state)
     size_t dhe_key_size;
     void *dhe_context;
     size_t opaque_key_exchange_req_size;
+    uint32_t session_id;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -125,6 +126,8 @@ void libspdm_test_responder_key_exchange_case1(void **state)
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
 
+    spdm_context->local_context.secured_message_version.spdm_version_count = 1;
+
     libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                               m_libspdm_key_exchange_request1.random_data);
     m_libspdm_key_exchange_request1.req_session_id = 0xFFFF;
@@ -156,6 +159,10 @@ void libspdm_test_responder_key_exchange_case1(void **state)
     assert_int_equal(spdm_response->header.request_response_code,
                      SPDM_KEY_EXCHANGE_RSP);
     assert_int_equal(spdm_response->rsp_session_id, 0xFFFF);
+
+    session_id = (m_libspdm_key_exchange_request1.req_session_id << 16) |
+                 spdm_response->rsp_session_id;
+    libspdm_free_session_id(spdm_context, session_id);
     free(data1);
 }
 
@@ -806,6 +813,7 @@ void libspdm_test_responder_key_exchange_case9(void **state)
     size_t dhe_key_size;
     void *dhe_context;
     size_t opaque_key_exchange_req_size;
+    uint32_t session_id;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -897,6 +905,11 @@ void libspdm_test_responder_key_exchange_case9(void **state)
         dhe_key_size,
         measurement_hash,
         measurement_summary_hash_size);
+
+    session_id = (m_libspdm_key_exchange_request1.req_session_id << 16) |
+                 spdm_response->rsp_session_id;
+    libspdm_free_session_id(spdm_context, session_id);
+
     free(data1);
 }
 
@@ -1478,7 +1491,7 @@ void libspdm_test_responder_key_exchange_case17(void **state)
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
-    spdm_test_context->case_id = 0x1;
+    spdm_test_context->case_id = 0x11;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
@@ -1499,6 +1512,9 @@ void libspdm_test_responder_key_exchange_case17(void **state)
         m_libspdm_use_aead_algo;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    spdm_context->local_context.secured_message_version.spdm_version_count = 1;
+
     libspdm_session_info_init(spdm_context,
                               spdm_context->session_info,
                               INVALID_SESSION_ID, false);
