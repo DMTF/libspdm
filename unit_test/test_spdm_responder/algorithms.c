@@ -2331,7 +2331,7 @@ int libspdm_responder_algorithms_test_main(void)
         cmocka_unit_test(libspdm_test_responder_algorithms_case20),
         /* Buffer verification*/
         cmocka_unit_test(libspdm_test_responder_algorithms_case21),
-        /* Success case V1.1*/
+        /* Success case V1.2*/
         cmocka_unit_test(libspdm_test_responder_algorithms_case22),
         /* No match for other_params_support*/
         cmocka_unit_test(libspdm_test_responder_algorithms_case23),
