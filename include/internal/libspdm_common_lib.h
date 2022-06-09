@@ -528,6 +528,17 @@ void libspdm_session_info_init(libspdm_context_t *spdm_context,
                                uint32_t session_id, bool use_psk);
 
 /**
+ * Set the psk_hint to a session info.
+ *
+ * @param  session_info                  A pointer to a session info.
+ * @param  psk_hint                      Indicate the PSK hint.
+ * @param  psk_hint_size                  The size in bytes of the PSK hint.
+ */
+void libspdm_session_info_set_psk_hint(libspdm_session_info_t *session_info,
+                                       const void *psk_hint,
+                                       size_t psk_hint_size);
+
+/**
  * This function allocates half of session ID for a requester.
  *
  * @param  spdm_context                  A pointer to the SPDM context.

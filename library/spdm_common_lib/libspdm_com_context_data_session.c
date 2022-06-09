@@ -118,10 +118,6 @@ void libspdm_session_info_init(libspdm_context_t *spdm_context,
         spdm_context->connection_info.algorithm.dhe_named_group,
         spdm_context->connection_info.algorithm.aead_cipher_suite,
         spdm_context->connection_info.algorithm.key_schedule);
-    libspdm_secured_message_set_psk_hint(
-        session_info->secured_message_context,
-        spdm_context->local_context.psk_hint,
-        spdm_context->local_context.psk_hint_size);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     session_info->session_transcript.message_k.max_buffer_size =
         sizeof(session_info->session_transcript.message_k.buffer);
@@ -133,6 +129,23 @@ void libspdm_session_info_init(libspdm_context_t *spdm_context,
     session_info->session_transcript.temp_message_k.max_buffer_size =
         sizeof(session_info->session_transcript.temp_message_k.buffer);
 #endif
+}
+
+/**
+ * Set the psk_hint to a session info.
+ *
+ * @param  session_info                  A pointer to a session info.
+ * @param  psk_hint                      Indicate the PSK hint.
+ * @param  psk_hint_size                  The size in bytes of the PSK hint.
+ */
+void libspdm_session_info_set_psk_hint(libspdm_session_info_t *session_info,
+                                       const void *psk_hint,
+                                       size_t psk_hint_size)
+{
+    libspdm_secured_message_set_psk_hint(
+        session_info->secured_message_context,
+        psk_hint,
+        psk_hint_size);
 }
 
 /**

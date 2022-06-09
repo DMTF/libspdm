@@ -976,6 +976,9 @@ void libspdm_test_responder_respond_if_ready_case8(void **state) {
     spdm_context->last_spdm_request_session_id = session_id;
     session_info = &spdm_context->session_info[0];
     libspdm_session_info_init (spdm_context, session_info, session_id, true);
+    libspdm_session_info_set_psk_hint(session_info,
+                                      LIBSPDM_TEST_PSK_HINT_STRING,
+                                      sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
     hash_size = libspdm_get_hash_size (m_libspdm_use_hash_algo);
     libspdm_set_mem (dummy_buffer, hash_size, (uint8_t)(0xFF));
     libspdm_secured_message_set_request_finished_key (session_info->secured_message_context,

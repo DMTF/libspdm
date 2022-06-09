@@ -50,6 +50,8 @@ libspdm_return_t libspdm_get_response_psk_exchange(void *context,
     uint8_t th2_hash_data[64];
     uint32_t algo_size;
     uint16_t context_length;
+    const void *psk_hint;
+    size_t psk_hint_size;
 
     spdm_context = context;
     spdm_request = request;
@@ -203,6 +205,14 @@ libspdm_return_t libspdm_get_response_psk_exchange(void *context,
             spdm_context, SPDM_ERROR_CODE_SESSION_LIMIT_EXCEEDED, 0,
             response_size, response);
     }
+    if (spdm_request->psk_hint_length == 0) {
+        psk_hint_size = 0;
+        psk_hint = NULL;
+    } else {
+        psk_hint_size = spdm_request->psk_hint_length;
+        psk_hint = (const uint8_t *)request +
+                   sizeof(spdm_psk_exchange_request_t);
+    }
     session_id = (req_session_id << 16) | rsp_session_id;
     session_info = libspdm_assign_session_id(spdm_context, session_id, true);
     if (session_info == NULL) {
@@ -210,6 +220,7 @@ libspdm_return_t libspdm_get_response_psk_exchange(void *context,
             spdm_context, SPDM_ERROR_CODE_SESSION_LIMIT_EXCEEDED, 0,
             response_size, response);
     }
+    libspdm_session_info_set_psk_hint(session_info, psk_hint, psk_hint_size);
 
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                                                   spdm_request->header.request_response_code);
