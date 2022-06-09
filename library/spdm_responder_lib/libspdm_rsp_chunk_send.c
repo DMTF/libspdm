@@ -1,37 +1,37 @@
 /**
-    Copyright Notice:
-    Copyright 2021 DMTF. All rights reserved.
-    License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
-**/
+ *  Copyright Notice:
+ *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
 
 #include "internal/libspdm_responder_lib.h"
 
 #if LIBSPDM_ENABLE_CHUNK_CAP
 
 /**
-  Process the SPDM CHUNK_SEND request and return the response.
-
-  @param  spdm_context                  A pointer to the SPDM context.
-  @param  request_size                  size in bytes of the request data.
-  @param  request                      A pointer to the request data.
-  @param  response_size                 size in bytes of the response data.
-                                       On input, it means the size in bytes of response data buffer.
-                                       On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
-                                       and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
-  @param  response                     A pointer to the response data.
-
-  @retval RETURN_SUCCESS               The request is processed and the response is returned.
-  @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
-  @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
-  @retval RETURN_SECURITY_VIOLATION    Any verification fails.
-**/
+ * Process the SPDM CHUNK_SEND request and return the response.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  request_size                  size in bytes of the request data.
+ * @param  request                      A pointer to the request data.
+ * @param  response_size                 size in bytes of the response data.
+ *                                     On input, it means the size in bytes of response data buffer.
+ *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
+ *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ * @param  response                     A pointer to the response data.
+ *
+ * @retval RETURN_SUCCESS               The request is processed and the response is returned.
+ * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ **/
 libspdm_return_t libspdm_get_response_chunk_send(void *context,
                                                  size_t request_size,
                                                  const void *request,
                                                  size_t *response_size,
                                                  void *response)
 {
-    spdm_chunk_send_request_t *spdm_request;
+    const spdm_chunk_send_request_t *spdm_request;
     spdm_chunk_send_ack_response_t *spdm_response;
     libspdm_context_t *spdm_context;
 
@@ -47,10 +47,10 @@ libspdm_return_t libspdm_get_response_chunk_send(void *context,
     size_t chunk_response_size;
 
     spdm_context = context;
-    spdm_request = (spdm_chunk_send_request_t*) request;
+    spdm_request = (const spdm_chunk_send_request_t*) request;
 
     if ((spdm_context->local_context.capability.flags &
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP) == 0) {
+         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP) == 0) {
         return libspdm_generate_error_response(
             spdm_context,
             SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
@@ -64,41 +64,38 @@ libspdm_return_t libspdm_get_response_chunk_send(void *context,
             response_size, response);
     }
 
-	if (spdm_context->connection_info.connection_state <
+    if (spdm_context->connection_info.connection_state <
         LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES) {
-        libspdm_generate_error_response(spdm_context,
-            SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
+        libspdm_generate_error_response(
+            spdm_context, SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
             response_size, response);
         return LIBSPDM_STATUS_SUCCESS;
     }
 
     if (request_size < sizeof(spdm_chunk_send_request_t)) {
-        libspdm_generate_error_response(spdm_context,
-            SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+        libspdm_generate_error_response(
+            spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
             response_size, response);
         return LIBSPDM_STATUS_SUCCESS;
     }
 
     if (spdm_request->header.spdm_version < SPDM_MESSAGE_VERSION_12) {
         return libspdm_generate_error_response(
-            spdm_context,
-            SPDM_ERROR_CODE_UNSUPPORTED_REQUEST, 0,
+            spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST, 0,
             response_size, response);
     }
 
     if (spdm_request->header.spdm_version
         != libspdm_get_connection_version(spdm_context)) {
         return libspdm_generate_error_response(
-            spdm_context,
-            SPDM_ERROR_CODE_VERSION_MISMATCH, 0,
+            spdm_context, SPDM_ERROR_CODE_VERSION_MISMATCH, 0,
             response_size, response);
     }
 
     if (spdm_context->chunk_context.get.chunk_in_use) {
         /* Spec does not support simultanious chunk send and chunk get */
         return libspdm_generate_error_response(
-            spdm_context,
-            SPDM_ERROR_CODE_UNSUPPORTED_REQUEST, 0,
+            spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST, 0,
             response_size, response);
     }
 
@@ -118,7 +115,8 @@ libspdm_return_t libspdm_get_response_chunk_send(void *context,
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
         else {
-            libspdm_get_scratch_buffer(spdm_context, (void**) &scratch_buffer, &scratch_buffer_size);
+            libspdm_get_scratch_buffer(spdm_context, (void**) &scratch_buffer,
+                                       &scratch_buffer_size);
             LIBSPDM_ASSERT(
                 scratch_buffer_size >=
                 LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE + LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
@@ -147,7 +145,7 @@ libspdm_return_t libspdm_get_response_chunk_send(void *context,
             || spdm_request->header.param2 != send_info->chunk_handle
             || spdm_request->chunk_size != calc_chunk_size
             || spdm_request->chunk_size + send_info->chunk_bytes_transferred
-               > send_info->large_message_size) {
+            > send_info->large_message_size) {
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
         else if ((spdm_request->header.param1 & SPDM_CHUNK_SEND_REQUEST_ATTRIBUTE_LAST_CHUNK)
@@ -180,7 +178,7 @@ libspdm_return_t libspdm_get_response_chunk_send(void *context,
     spdm_response = response;
 
     spdm_response->header.spdm_version = spdm_request->header.spdm_version;
-	spdm_response->header.request_response_code = SPDM_CHUNK_SEND_ACK;
+    spdm_response->header.request_response_code = SPDM_CHUNK_SEND_ACK;
     spdm_response->header.param1 = 0;
     spdm_response->header.param2 = spdm_request->header.param2; /* handle */
     spdm_response->chunk_seq_no = spdm_request->chunk_seq_no;

@@ -504,8 +504,8 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
     if ((spdm_context->connection_info.capability.data_transfer_size != 0) &&
         (my_response_size > spdm_context->connection_info.capability.data_transfer_size) &&
         libspdm_is_capabilities_flag_supported(
-                spdm_context, false, 0,
-                SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP)) {
+            spdm_context, false, 0,
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP)) {
 
         #if LIBSPDM_ENABLE_CHUNK_CAP
 

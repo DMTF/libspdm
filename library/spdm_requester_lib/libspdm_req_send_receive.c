@@ -56,7 +56,8 @@ libspdm_return_t libspdm_send_request(void *context, const uint32_t *session_id,
      * so just making the determination here by examining scratch/sender buffers.
      * This may be something that should be refactored in the future. */
     #if LIBSPDM_ENABLE_CHUNK_CAP
-    if ((uint8_t*) request >= sender_buffer && (uint8_t*)request < sender_buffer + sender_buffer_size) {
+    if ((uint8_t*) request >= sender_buffer &&
+        (uint8_t*)request < sender_buffer + sender_buffer_size) {
         message = sender_buffer;
         message_size = sender_buffer_size;
     }
@@ -257,9 +258,9 @@ libspdm_return_t libspdm_handle_large_request(
 
     /* Fail if requester or responder does not support chunk cap */
     if (!libspdm_is_capabilities_flag_supported(
-        spdm_context, true,
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP,
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP)) {
+            spdm_context, true,
+            SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP,
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP)) {
         return LIBSPDM_STATUS_ERROR_PEER;
     }
 
@@ -311,7 +312,7 @@ libspdm_return_t libspdm_handle_large_request(
             < (send_info->large_message_size - send_info->chunk_bytes_transferred)) {
 
             copy_size = spdm_context->connection_info.capability.data_transfer_size
-                - sizeof(spdm_chunk_send_request_t);
+                        - sizeof(spdm_chunk_send_request_t);
         }
         else {
             copy_size = (send_info->large_message_size - send_info->chunk_bytes_transferred);
@@ -366,7 +367,7 @@ libspdm_return_t libspdm_handle_large_request(
         }
 
         if (spdm_response->header.request_response_code == SPDM_ERROR
-          && spdm_response->header.param1 == SPDM_ERROR_CODE_LARGE_RESPONSE) {
+            && spdm_response->header.param1 == SPDM_ERROR_CODE_LARGE_RESPONSE) {
 
             /* It is possible that the CHUNK_SEND_ACK + chunk response is larger
              * than the DATA_TRANSFER_SIZE. In this case an ERROR_LARGE_RESPONSE
@@ -414,9 +415,10 @@ libspdm_return_t libspdm_handle_large_request(
                 break;
             }
             if ((send_info->chunk_bytes_transferred >= send_info->large_message_size
-                && !(spdm_response->header.param1 & SPDM_CHUNK_SEND_REQUEST_ATTRIBUTE_LAST_CHUNK))
+                 && !(spdm_response->header.param1 & SPDM_CHUNK_SEND_REQUEST_ATTRIBUTE_LAST_CHUNK))
                 || (send_info->chunk_bytes_transferred < send_info->large_message_size
-                    && (spdm_response->header.param1 & SPDM_CHUNK_SEND_REQUEST_ATTRIBUTE_LAST_CHUNK))) {
+                    && (spdm_response->header.param1 &
+                        SPDM_CHUNK_SEND_REQUEST_ATTRIBUTE_LAST_CHUNK))) {
                 status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
                 break;
             }
@@ -431,7 +433,8 @@ libspdm_return_t libspdm_handle_large_request(
                 libspdm_copy_mem(
                     send_info->large_message, send_info->large_message_capacity,
                     chunk_ptr, response_size - sizeof(spdm_chunk_send_ack_response_t));
-                send_info->large_message_size = (response_size - sizeof(spdm_chunk_send_ack_response_t));
+                send_info->large_message_size =
+                    (response_size - sizeof(spdm_chunk_send_ack_response_t));
             }
         }
 
@@ -516,11 +519,9 @@ libspdm_return_t libspdm_send_spdm_request(libspdm_context_t *spdm_context,
         if (((const spdm_message_header_t*) request)->request_response_code != SPDM_RESPOND_IF_READY
             && ((const spdm_message_header_t*) request)->request_response_code != SPDM_CHUNK_GET
             && ((const spdm_message_header_t*) request)->request_response_code != SPDM_CHUNK_SEND) {
-            libspdm_copy_mem(spdm_context->last_spdm_request,
-                sizeof(spdm_context->last_spdm_request),
-                request,
-                request_size
-            );
+            libspdm_copy_mem(
+                spdm_context->last_spdm_request, sizeof(spdm_context->last_spdm_request),
+                request, request_size);
             spdm_context->last_spdm_request_size = request_size;
         }
 
@@ -598,13 +599,13 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
     if (send_info->chunk_in_use) {
 
         libspdm_copy_mem(
-             *response, *response_size,
+            *response, *response_size,
             send_info->large_message, send_info->large_message_size);
         *response_size = send_info->large_message_size;
         response_capacity = send_info->large_message_capacity;
 
         /* This response may either be an actual response or ERROR_LARGE_RESPONSE,
-           the latter which should be handled in the large response handler. */
+         * the latter which should be handled in the large response handler. */
 
         send_info->chunk_in_use = false;
         send_info->chunk_handle++; /* Implicit wrap-around*/
@@ -618,7 +619,7 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
     else {
         response_capacity = *response_size;
         status = libspdm_receive_response(spdm_context, session_id, false,
-            response_size, response);
+                                          response_size, response);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             goto receive_done;
         }
