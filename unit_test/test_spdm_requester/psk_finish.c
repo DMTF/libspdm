@@ -976,6 +976,9 @@ void libspdm_test_requester_psk_finish_case1(void **state)
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
     libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_set_psk_hint(session_info,
+                                      LIBSPDM_TEST_PSK_HINT_STRING,
+                                      sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_HANDSHAKING);
@@ -1051,6 +1054,9 @@ void libspdm_test_requester_psk_finish_case2(void **state)
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
     libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_set_psk_hint(session_info,
+                                      LIBSPDM_TEST_PSK_HINT_STRING,
+                                      sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_HANDSHAKING);
@@ -1153,6 +1159,9 @@ void libspdm_test_requester_psk_finish_case3(void **state)
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
     libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_set_psk_hint(session_info,
+                                      LIBSPDM_TEST_PSK_HINT_STRING,
+                                      sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_HANDSHAKING);
@@ -1251,6 +1260,9 @@ void libspdm_test_requester_psk_finish_case4(void **state)
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
     libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_set_psk_hint(session_info,
+                                      LIBSPDM_TEST_PSK_HINT_STRING,
+                                      sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_HANDSHAKING);
@@ -1350,6 +1362,9 @@ void libspdm_test_requester_psk_finish_case5(void **state)
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
     libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_set_psk_hint(session_info,
+                                      LIBSPDM_TEST_PSK_HINT_STRING,
+                                      sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_HANDSHAKING);
@@ -1450,6 +1465,9 @@ void libspdm_test_requester_psk_finish_case6(void **state)
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
     libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_set_psk_hint(session_info,
+                                      LIBSPDM_TEST_PSK_HINT_STRING,
+                                      sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_HANDSHAKING);
@@ -1553,6 +1571,9 @@ void libspdm_test_requester_psk_finish_case7(void **state)
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
     libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_set_psk_hint(session_info,
+                                      LIBSPDM_TEST_PSK_HINT_STRING,
+                                      sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_HANDSHAKING);
@@ -1653,6 +1674,9 @@ void libspdm_test_requester_psk_finish_case8(void **state)
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
     libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_set_psk_hint(session_info,
+                                      LIBSPDM_TEST_PSK_HINT_STRING,
+                                      sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_HANDSHAKING);
@@ -1753,6 +1777,9 @@ void libspdm_test_requester_psk_finish_case9(void **state)
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
     libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_set_psk_hint(session_info,
+                                      LIBSPDM_TEST_PSK_HINT_STRING,
+                                      sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_HANDSHAKING);
@@ -1851,6 +1878,9 @@ void libspdm_test_requester_psk_finish_case10(void **state) {
         session_id = 0xFFFFFFFF;
         session_info = &spdm_context->session_info[0];
         libspdm_session_info_init (spdm_context, session_info, session_id, true);
+        libspdm_session_info_set_psk_hint(session_info,
+                                          LIBSPDM_TEST_PSK_HINT_STRING,
+                                          sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
         libspdm_secured_message_set_session_state (session_info->secured_message_context,
                                                    LIBSPDM_SESSION_STATE_HANDSHAKING);
         libspdm_set_mem (m_libspdm_dummy_key_buffer,
@@ -1955,6 +1985,9 @@ void libspdm_test_requester_psk_finish_case11(void **state)
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
     libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_set_psk_hint(session_info,
+                                      LIBSPDM_TEST_PSK_HINT_STRING,
+                                      sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_HANDSHAKING);
@@ -2079,6 +2112,9 @@ void libspdm_test_requester_psk_finish_case12(void **state)
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
     libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_set_psk_hint(session_info,
+                                      LIBSPDM_TEST_PSK_HINT_STRING,
+                                      sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_HANDSHAKING);
@@ -2178,6 +2214,9 @@ void libspdm_test_requester_psk_finish_case13(void **state)
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
     libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_set_psk_hint(session_info,
+                                      LIBSPDM_TEST_PSK_HINT_STRING,
+                                      sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_HANDSHAKING);
@@ -2278,6 +2317,9 @@ void libspdm_test_requester_psk_finish_case14(void **state)
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
     libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_set_psk_hint(session_info,
+                                      LIBSPDM_TEST_PSK_HINT_STRING,
+                                      sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_NOT_STARTED);
@@ -2375,6 +2417,9 @@ void libspdm_test_requester_psk_finish_case15(void **state)
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
     libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_set_psk_hint(session_info,
+                                      LIBSPDM_TEST_PSK_HINT_STRING,
+                                      sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_HANDSHAKING);
@@ -2470,6 +2515,9 @@ void libspdm_test_requester_psk_finish_case16(void **state)
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
     libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_session_info_set_psk_hint(session_info,
+                                      LIBSPDM_TEST_PSK_HINT_STRING,
+                                      sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_HANDSHAKING);

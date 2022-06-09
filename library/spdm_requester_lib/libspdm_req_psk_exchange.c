@@ -275,6 +275,9 @@ libspdm_return_t libspdm_try_send_receive_psk_exchange(
         status = LIBSPDM_STATUS_SESSION_NUMBER_EXCEED;
         goto receive_done;
     }
+    libspdm_session_info_set_psk_hint(session_info,
+                                      spdm_context->local_context.psk_hint,
+                                      spdm_context->local_context.psk_hint_size);
 
     measurement_summary_hash_size = libspdm_get_measurement_summary_hash_size(
         spdm_context, true, measurement_hash_type);

@@ -169,8 +169,13 @@ void libspdm_secured_message_set_psk_hint(void *spdm_secured_message_context,
     libspdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
-    secured_message_context->psk_hint = psk_hint;
-    secured_message_context->psk_hint_size = psk_hint_size;
+    if ((psk_hint != NULL) && (psk_hint_size > 0)) {
+        secured_message_context->psk_hint_size = psk_hint_size;
+        libspdm_copy_mem(secured_message_context->psk_hint,
+                         LIBSPDM_PSK_MAX_HINT_LENGTH,
+                         psk_hint,
+                         psk_hint_size);
+    }
 }
 
 /**
