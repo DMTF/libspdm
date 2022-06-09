@@ -439,7 +439,7 @@ libspdm_return_t libspdm_handle_large_request(
         }
 
     } while (LIBSPDM_STATUS_IS_SUCCESS(status)
-        && send_info->chunk_bytes_transferred < send_info->large_message_size);
+             && send_info->chunk_bytes_transferred < send_info->large_message_size);
 
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
 
