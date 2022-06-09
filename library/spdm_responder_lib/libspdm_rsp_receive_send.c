@@ -502,19 +502,12 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
     }
 
     if ((spdm_context->connection_info.capability.data_transfer_size != 0) &&
-        (my_response_size > spdm_context->connection_info.capability.data_transfer_size)) {
-
-        #if LIBSPDM_ENABLE_CHUNK_CAP
-
-        if (!libspdm_is_capabilities_flag_supported(
+        (my_response_size > spdm_context->connection_info.capability.data_transfer_size) &&
+        libspdm_is_capabilities_flag_supported(
                 spdm_context, false, 0,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP)) {
-            status = libspdm_generate_error_response(
-                spdm_context,
-                SPDM_ERROR_CODE_LARGE_RESPONSE,
-                spdm_request->request_response_code,
-                &my_response_size, my_response);
-        }
+
+        #if LIBSPDM_ENABLE_CHUNK_CAP
 
         get_info = &spdm_context->chunk_context.get;
 
@@ -563,6 +556,9 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
         {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
                            "Warning: Could not save chunk. Scratch buffer too small.\n"));
+
+            /* Should we really be returning LARGE_RESPONSE is we aren't supporting chunking?
+             * Wouldn't SPDM_ERROR_CODE_RESPONSE_TOO_LARGE be more appropriate? */
 
             status = libspdm_generate_error_response(spdm_context,
                                                      SPDM_ERROR_CODE_LARGE_RESPONSE,

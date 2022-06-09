@@ -219,17 +219,17 @@ libspdm_return_t libspdm_handle_error_large_response(
     size_t large_response_size;
     size_t large_response_size_so_far;
 
-    if (*inout_response_size < sizeof(spdm_error_response_t) +
-        sizeof(spdm_error_data_large_response_t)) {
-        return LIBSPDM_STATUS_INVALID_MSG_SIZE;
-    }
-
     /* Fail if requester or responder does not support chunk cap */
     if (!libspdm_is_capabilities_flag_supported(
             spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP)) {
         return LIBSPDM_STATUS_ERROR_PEER;
+    }
+
+    if (*inout_response_size < sizeof(spdm_error_response_t) +
+        sizeof(spdm_error_data_large_response_t)) {
+        return LIBSPDM_STATUS_INVALID_MSG_SIZE;
     }
 
     error_response = inout_response;
@@ -243,12 +243,14 @@ libspdm_return_t libspdm_handle_error_large_response(
     libspdm_get_scratch_buffer(spdm_context, (void**)&scratch_buffer, &scratch_buffer_size);
     LIBSPDM_ASSERT(
         scratch_buffer_size >=
-        LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE + LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+        LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE + LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_CAPACITY);
 
     /* The first LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE bytes of the scratch
      * buffer may be used for other purposes. Use only after that section. */
     large_response = scratch_buffer + LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_OFFSET;
-    large_response_capacity = LIBSPDM_MAX_SPDM_MSG_SIZE;
+    large_response_capacity = LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_CAPACITY;
+
+    /* Temporary send/receive buffers for chunking are in the scratch space */
     message = scratch_buffer + LIBSPDM_SCRATCH_BUFFER_SENDER_RECEIVER_OFFSET;
     message_size = LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE;
 
