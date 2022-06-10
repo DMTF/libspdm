@@ -299,6 +299,7 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
     result = libspdm_asym_get_private_key_from_pem(
         base_asym_algo, prikey, prikey_size, NULL, &context);
     if (!result) {
+        free(prikey);
         return false;
     }
 
@@ -310,7 +311,8 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
     result = libspdm_gen_x509_csr(hash_nid, asym_nid, csr_len, csr_pointer, csr_buffer_size,
                                   requester_info, requester_info_length,
                                   context, subject_name);
-
+    libspdm_asym_free(base_asym_algo, context);
+    free(prikey);
     return result;
 }
 
