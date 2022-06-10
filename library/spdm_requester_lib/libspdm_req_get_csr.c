@@ -148,7 +148,8 @@ libspdm_return_t libspdm_try_get_csr(void *context,
 
     if (*csr_len < spdm_response->csr_length) {
         *csr_len = spdm_response->csr_length;
-        return LIBSPDM_STATUS_BUFFER_TOO_SMALL;
+        status =  LIBSPDM_STATUS_BUFFER_TOO_SMALL;
+        goto receive_done;
     }
 
     libspdm_copy_mem(csr, *csr_len, spdm_response + 1, spdm_response->csr_length);
