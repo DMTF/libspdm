@@ -149,6 +149,8 @@ test_spdm_responder_if_ready
 test_x509_certificate_check
 test_spdm_responder_set_certificate
 test_spdm_requester_set_certificate
+test_spdm_responder_csr
+test_spdm_requester_get_csr
 )
 for ((i=0;i<${#cmds[*]};i++))
 do

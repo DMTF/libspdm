@@ -663,6 +663,8 @@ endif()
     ADD_SUBDIRECTORY(unit_test/fuzzing/test_spdm_crypt/test_x509_certificate_check)
     ADD_SUBDIRECTORY(unit_test/fuzzing/test_responder/test_spdm_responder_set_certificate)
     ADD_SUBDIRECTORY(unit_test/fuzzing/test_requester/test_spdm_requester_set_certificate)
+    ADD_SUBDIRECTORY(unit_test/fuzzing/test_responder/test_spdm_responder_csr)
+    ADD_SUBDIRECTORY(unit_test/fuzzing/test_requester/test_spdm_requester_get_csr)
 
     ADD_SUBDIRECTORY(os_stub/cryptlib_null)
     ADD_SUBDIRECTORY(unit_test/test_size/cryptstublib_dummy)
