@@ -242,20 +242,21 @@ bool libspdm_read_cached_csr(uint32_t base_asym_algo, uint8_t **csr_pointer, siz
  * @param[in]      base_asym_algo        asym public key to set
  * @param[in]      need_reset            device need reset for gen csr
  *
- * @param[out]     csr_len               CSR len for DER format
- * @param[in]      csr_pointer           For input, csr_pointer is address to store CSR.
- * @param[out]     csr_pointer           For input, csr_pointer is address for stored CSR.
- * @param[in]      csr_buffer_size       The size of store CSR buffer.
- *
  * @param[in]      requester_info        requester info to gen CSR
  * @param[in]      requester_info_length The len of requester info
+ *
+ * @param[in]      csr_len               For input，csr_len is the size of store CSR buffer.
+ *                                       For output，csr_len is CSR len for DER format
+ * @param[in]      csr_pointer           For input, csr_pointer is buffer address to store CSR.
+ *                                       For output, csr_pointer is address for stored CSR.
+ *                                       The csr_pointer address will be changed.
  *
  * @retval  true   Success.
  * @retval  false  Failed to gen CSR.
  **/
 bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *need_reset,
-                     size_t *csr_len, uint8_t **csr_pointer, size_t csr_buffer_size,
-                     uint8_t *requester_info, size_t requester_info_length)
+                     uint8_t *requester_info, size_t requester_info_length,
+                     size_t *csr_len, uint8_t **csr_pointer)
 {
     bool result;
     void *prikey;
@@ -266,21 +267,43 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
 
     uint8_t *cached_req_info;
     size_t cached_req_info_length;
+    uint8_t *cached_csr;
+    size_t csr_buffer_size;
+
+    csr_buffer_size = *csr_len;
 
     /*device gen csr need reset*/
     if (*need_reset) {
         result = libspdm_read_cached_requester_info(base_asym_algo,
                                                     &cached_req_info, &cached_req_info_length);
 
-        /*get the cahed requester info and csr*/
+        /*get the cached requester info and csr*/
         if ((result) &&
             (cached_req_info_length == requester_info_length) &&
             (libspdm_const_compare_mem(cached_req_info, requester_info, requester_info_length)) &&
-            (libspdm_read_cached_csr(base_asym_algo, csr_pointer, csr_len))) {
+            (libspdm_read_cached_csr(base_asym_algo, &cached_csr, csr_len))) {
+
+            /*get and save cached csr*/
+            if (csr_buffer_size < *csr_len) {
+                free(cached_csr);
+                free(cached_req_info);
+                LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"csr buffer is small to sotre cached csr! \n"));
+                return false;
+            } else {
+                libspdm_copy_mem(*csr_pointer, csr_buffer_size, cached_csr, *csr_len);
+            }
+
             /*device don't need reset this time*/
             *need_reset = false;
+
+            free(cached_csr);
+            free(cached_req_info);
             return true;
         } else {
+            if (cached_req_info != NULL) {
+                free(cached_req_info);
+            }
+
             /*device need reset this time: cache the req_info */
             result = libspdm_cache_requester_info(base_asym_algo,
                                                   requester_info, requester_info_length);
@@ -308,9 +331,10 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
 
     char *subject_name = "C=NL,O=PolarSSL,CN=PolarSSL Server 1";
 
-    result = libspdm_gen_x509_csr(hash_nid, asym_nid, csr_len, csr_pointer, csr_buffer_size,
+    result = libspdm_gen_x509_csr(hash_nid, asym_nid,
                                   requester_info, requester_info_length,
-                                  context, subject_name);
+                                  context, subject_name,
+                                  csr_len, csr_pointer);
     libspdm_asym_free(base_asym_algo, context);
     free(prikey);
     return result;

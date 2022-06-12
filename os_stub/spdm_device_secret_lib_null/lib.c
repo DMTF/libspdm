@@ -199,20 +199,21 @@ bool libspdm_write_certificate_to_nvm(uint8_t slot_id, const void * cert_chain,
  * @param[in]      base_asym_algo        asym public key to set
  * @param[in]      need_reset            device need reset for gen csr
  *
- * @param[out]     csr_len               CSR len for DER format
- * @param[in]      csr_pointer           For input, csr_pointer is address to store CSR.
- * @param[out]     csr_pointer           For input, csr_pointer is address for stored CSR.
- * @param[in]      csr_buffer_size       The size of store CSR buffer.
- *
  * @param[in]      requester_info        requester info to gen CSR
  * @param[in]      requester_info_length The len of requester info
+ *
+ * @param[in]      csr_len               For input，csr_len is the size of store CSR buffer.
+ *                                       For output，csr_len is CSR len for DER format
+ * @param[in]      csr_pointer           For input, csr_pointer is buffer address to store CSR.
+ *                                       For output, csr_pointer is address for stored CSR.
+ *                                       The csr_pointer address will be changed.
  *
  * @retval  true   Success.
  * @retval  false  Failed to gen CSR.
  **/
 bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *need_reset,
-                     size_t *csr_len, uint8_t **csr_pointer, size_t csr_buffer_size,
-                     uint8_t *requester_info, size_t requester_info_length)
+                     uint8_t *requester_info, size_t requester_info_length,
+                     size_t *csr_len, uint8_t **csr_pointer)
 {
     return false;
 }

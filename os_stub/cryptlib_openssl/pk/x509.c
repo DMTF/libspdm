@@ -2392,11 +2392,6 @@ bool libspdm_set_attribute_for_req(X509_REQ *req, uint8_t *req_info, size_t req_
  * @param[in]      hash_nid              hash algo for sign
  * @param[in]      asym_nid              asym algo for sign
  *
- * @param[out]     csr_len               CSR len for DER format
- * @param[in]      csr_pointer           For input, csr_pointer is address to store CSR.
- * @param[out]     csr_pointer           For input, csr_pointer is address for stored CSR.
- * @param[in]      csr_buffer_size       The size of store CSR buffer.
- *
  * @param[in]      requester_info        requester info to gen CSR
  * @param[in]      requester_info_length The len of requester info
  *
@@ -2411,13 +2406,19 @@ bool libspdm_set_attribute_for_req(X509_REQ *req, uint8_t *req_info, size_t req_
  * "SN","givenName","GN", "initials", "pseudonym", "generationQualifier", "domainComponent", "DC"}.
  * Note: The object of C and countryName should be CSR Supported Country Codes
  *
+ * @param[in]      csr_len               For input，csr_len is the size of store CSR buffer.
+ *                                       For output，csr_len is CSR len for DER format
+ * @param[in]      csr_pointer           For input, csr_pointer is buffer address to store CSR.
+ *                                       For output, csr_pointer is address for stored CSR.
+ *                                       The csr_pointer address will be changed.
+ *
  * @retval  true   Success.
  * @retval  false  Failed to gen CSR.
  **/
-bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid, size_t *csr_len,
-                          uint8_t **csr_pointer, size_t csr_buffer_size,
+bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
                           uint8_t *requester_info, size_t requester_info_length,
-                          void *context, char *subject_name)
+                          void *context, char *subject_name,
+                          size_t *csr_len, uint8_t **csr_pointer)
 {
     int ret;
     int version;

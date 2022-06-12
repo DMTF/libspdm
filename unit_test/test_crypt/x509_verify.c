@@ -503,14 +503,16 @@ bool libspdm_validate_crypt_x509_csr(void)
     uint8_t rsa_csr_pointer[LIBSPDM_MAX_CSR_SIZE] = {0};
     size_t rsa_csr_len;
     uint8_t *rsa_csr = rsa_csr_pointer;
+    bool need_reset;
 
-    bool need_reset = false;
+    need_reset = false;
+    rsa_csr_len = LIBSPDM_MAX_CSR_SIZE;
 
     libspdm_my_print("Gen and save RSA CSR!!!\n");
     ret = libspdm_gen_csr(SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384,
                           SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072,
-                          &need_reset, &rsa_csr_len, &rsa_csr, LIBSPDM_MAX_CSR_SIZE,
-                          NULL, 0);
+                          &need_reset, NULL, 0, &rsa_csr_len, &rsa_csr
+                          );
     if (!ret) {
         libspdm_my_print("Gen RSA CSR fail !!!\n");
         return ret;
@@ -529,11 +531,12 @@ bool libspdm_validate_crypt_x509_csr(void)
     size_t ecc_csr_len;
     uint8_t *ecc_csr = ecc_csr_pointer;
 
+    need_reset = false;
+    ecc_csr_len = LIBSPDM_MAX_CSR_SIZE;
     libspdm_my_print("\nGen and save ECC CSR!!!\n");
     ret = libspdm_gen_csr(SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384,
                           SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384,
-                          &need_reset, &ecc_csr_len, &ecc_csr, LIBSPDM_MAX_CSR_SIZE,
-                          NULL, 0);
+                          &need_reset, NULL, 0, &ecc_csr_len, &ecc_csr);
     if (!ret) {
         libspdm_my_print("Gen ECC CSR fail !!!\n");
         return ret;
@@ -552,11 +555,13 @@ bool libspdm_validate_crypt_x509_csr(void)
     size_t ecc256_csr_len;
     uint8_t *ecc256_csr = ecc256_csr_pointer;
 
+    need_reset = false;
+    ecc256_csr_len = LIBSPDM_MAX_CSR_SIZE;
     libspdm_my_print("\nGen and save ECC_256 CSR with right_req_info!!!\n");
     ret = libspdm_gen_csr(SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
                           SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
-                          &need_reset, &ecc256_csr_len, &ecc256_csr, LIBSPDM_MAX_CSR_SIZE,
-                          right_req_info, sizeof(right_req_info));
+                          &need_reset, right_req_info, sizeof(right_req_info),
+                          &ecc256_csr_len, &ecc256_csr);
     if (!ret) {
         libspdm_my_print("Gen ECC_256 CSR with right_req_info fail !!!\n");
         return ret;
