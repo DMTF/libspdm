@@ -539,11 +539,27 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
             get_info->chunk_bytes_transferred = 0;
 
             libspdm_zero_mem(scratch_buffer, scratch_buffer_size);
-            libspdm_copy_mem(scratch_buffer, scratch_buffer_size,
-                             my_response, my_response_size);
 
-            get_info->large_message = scratch_buffer;
-            get_info->large_message_size = my_response_size;
+            /* It's possible that the large response that was to be sent to the requester was
+             * a CHUNK_SEND_ACK + non-chunk response. In this case, to prevent chunking within
+             * chunking, only send back the actual response, by saving only non-chunk portion
+             * in the scratch buffer, used to respond to the next CHUNK_GET request. */
+            if (((spdm_message_header_t*) my_response)
+                ->request_response_code == SPDM_CHUNK_SEND_ACK) {
+                libspdm_copy_mem(scratch_buffer, scratch_buffer_size,
+                                 my_response + sizeof(spdm_chunk_send_ack_response_t),
+                                 my_response_size - sizeof(spdm_chunk_send_ack_response_t));
+
+                get_info->large_message = scratch_buffer;
+                get_info->large_message_size =
+                    my_response_size - sizeof(spdm_chunk_send_ack_response_t);
+            } else {
+                libspdm_copy_mem(scratch_buffer, scratch_buffer_size,
+                                 my_response, my_response_size);
+
+                get_info->large_message = scratch_buffer;
+                get_info->large_message_size = my_response_size;
+            }
 
             status = libspdm_generate_extended_error_response(spdm_context,
                                                               SPDM_ERROR_CODE_LARGE_RESPONSE, 0,

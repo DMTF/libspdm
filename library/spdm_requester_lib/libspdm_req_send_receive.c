@@ -373,7 +373,9 @@ libspdm_return_t libspdm_handle_large_request(
              * than the DATA_TRANSFER_SIZE. In this case an ERROR_LARGE_RESPONSE
              * is returned directly in the response buffer rather than part of
              * the CHUNK_SEND_ACK. Store this error response in scratch buffer
-             * to be handled when reading response */
+             * to be handled when reading response. Also note that in this case
+             * of large response, the CHUNK_SEND_ACK portion is not sent.
+             * Only the response portion that requires the CHUNK_GET is sent */
             if (response_size < send_info->large_message_capacity) {
                 libspdm_copy_mem(
                     send_info->large_message, send_info->large_message_capacity,
@@ -407,13 +409,17 @@ libspdm_return_t libspdm_handle_large_request(
                 break;
             }
             if (spdm_response->header.param2 != send_info->chunk_handle) {
-                status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+                status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
                 break;
             }
             if (send_info->chunk_seq_no != spdm_response->chunk_seq_no) {
                 status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
                 break;
             }
+
+            /* Guard against the case where we have a bad responder that:
+             * 1) Sends all bytes but does not set LAST_CHUNK bit.
+             * 2) Dos not send all bytes, but sets LAST_CHUNK bit. */
             if ((send_info->chunk_bytes_transferred >= send_info->large_message_size
                  && !(spdm_response->header.param1 & SPDM_CHUNK_SEND_REQUEST_ATTRIBUTE_LAST_CHUNK))
                 || (send_info->chunk_bytes_transferred < send_info->large_message_size
@@ -512,9 +518,11 @@ libspdm_return_t libspdm_send_spdm_request(libspdm_context_t *spdm_context,
         && request_size > spdm_context->connection_info.capability.data_transfer_size) {
 
         #if LIBSPDM_ENABLE_CHUNK_CAP
-        /* since libspdm_send_request is not called with the original request in
-         * this flow, backup it to last_spdm_request, because the caller wants to
-         * compare it with response */
+        /* libspdm_send_request is not called with the original request in this flow.
+         * This leads to the last_spdm_request field not having the original request value.
+         * The caller assumes the request has been copied to last_spdm_request,
+         * so that it can compare last_spdm_request's fields with response fields
+         * Therefore the request must be copied to last_spdm_request here. */
 
         if (((const spdm_message_header_t*) request)->request_response_code != SPDM_RESPOND_IF_READY
             && ((const spdm_message_header_t*) request)->request_response_code != SPDM_CHUNK_GET
@@ -528,7 +536,6 @@ libspdm_return_t libspdm_send_spdm_request(libspdm_context_t *spdm_context,
         status = libspdm_handle_large_request(
             spdm_context, session_id, request_size, request);
         #else  /* LIBSPDM_ENABLE_CHUNK_CAP*/
-        /* TODO: Is this the right error handling? */
         status = LIBSPDM_STATUS_BUFFER_TOO_SMALL;
         #endif /* LIBSPDM_ENABLE_CHUNK_CAP*/
     }
@@ -568,8 +575,6 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
     spdm_message_header_t *spdm_response;
     size_t response_capacity;
     libspdm_chunk_info_t *send_info;
-    size_t i;
-    uint8_t *ptr;
     #endif /* LIBSPDM_ENABLE_CHUNK_CAP */
 
     if ((session_id != NULL) &&
@@ -649,33 +654,21 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
         }
 
         /* These are the expected possible large response types.
-         * Anything else is potentially an unexpected error.
-         * If this assert pops, evaluate if the type should be added here
-         * according to the spec, or if it an error by the responder. */
-        LIBSPDM_ASSERT(
-            spdm_response->request_response_code == SPDM_DIGESTS ||
-            spdm_response->request_response_code == SPDM_CERTIFICATE ||
-            spdm_response->request_response_code == SPDM_CHALLENGE_AUTH ||
-            spdm_response->request_response_code == SPDM_MEASUREMENTS ||
-            spdm_response->request_response_code == SPDM_VENDOR_DEFINED_RESPONSE ||
-            spdm_response->request_response_code == SPDM_ALGORITHMS ||
-            spdm_response->request_response_code == SPDM_KEY_EXCHANGE_RSP ||
-            spdm_response->request_response_code == SPDM_FINISH_RSP ||
-            spdm_response->request_response_code == SPDM_PSK_EXCHANGE_RSP ||
-            spdm_response->request_response_code == SPDM_ENCAPSULATED_REQUEST ||
-            spdm_response->request_response_code == SPDM_ENCAPSULATED_RESPONSE_ACK ||
-            spdm_response->request_response_code == SPDM_CHUNK_SEND_ACK
-            );
-
-        /* If the response is CHUNK_SEND_ACK, break apart the response and return
-         * the response built by the chunks rather than the chunk send ack. */
-        if (spdm_response->request_response_code == SPDM_CHUNK_SEND_ACK) {
-
-            *response_size -= sizeof(spdm_chunk_send_ack_response_t);
-            ptr = (uint8_t*)spdm_response;
-            for (i = 0; i < *response_size; i++) {
-                ptr[i] = ptr[i + sizeof(spdm_chunk_send_ack_response_t)];
-            }
+         * Anything else is an unexpected error. */
+        if (spdm_response->request_response_code != SPDM_DIGESTS &&
+            spdm_response->request_response_code != SPDM_CERTIFICATE &&
+            spdm_response->request_response_code != SPDM_CHALLENGE_AUTH &&
+            spdm_response->request_response_code != SPDM_MEASUREMENTS &&
+            spdm_response->request_response_code != SPDM_VENDOR_DEFINED_RESPONSE &&
+            spdm_response->request_response_code != SPDM_ALGORITHMS &&
+            spdm_response->request_response_code != SPDM_KEY_EXCHANGE_RSP &&
+            spdm_response->request_response_code != SPDM_FINISH_RSP &&
+            spdm_response->request_response_code != SPDM_PSK_EXCHANGE_RSP &&
+            spdm_response->request_response_code != SPDM_ENCAPSULATED_REQUEST &&
+            spdm_response->request_response_code != SPDM_ENCAPSULATED_RESPONSE_ACK
+            ) {
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+            goto receive_done;
         }
     }
 
