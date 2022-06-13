@@ -1252,60 +1252,6 @@ void libspdm_test_responder_measurements_case19(void **state)
 }
 
 /**
- * Test 19: Error case, invalid SlotId parameter (slot_count < SlotId < SPDM_MAX_SLOT_COUNT)
- * Expected Behavior: get a RETURN_SUCCESS return code, empty transcript.message_m size, and Error message as response
- **/
-void libspdm_test_responder_measurements_case20(void **state)
-{
-    libspdm_return_t status;
-    libspdm_test_context_t *spdm_test_context;
-    libspdm_context_t *spdm_context;
-    size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    spdm_measurements_response_t *spdm_response;
-    /* size_t                measurment_sig_size;*/
-
-    spdm_test_context = *state;
-    spdm_context = spdm_test_context->spdm_context;
-    spdm_test_context->case_id = 0x14;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.measurement_hash_algo =
-        m_libspdm_use_measurement_hash_algo;
-
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
-                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_reset_message_m(spdm_context, NULL);
-    spdm_context->local_context.opaque_measurement_rsp_size = 0;
-    spdm_context->local_context.opaque_measurement_rsp = NULL;
-    /* measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 + libspdm_get_asym_signature_size (m_libspdm_use_asym_algo);*/
-
-    response_size = sizeof(response);
-    libspdm_get_random_number(SPDM_NONCE_SIZE,
-                              m_libspdm_get_measurements_request11.nonce);
-    status = libspdm_get_response_measurements(
-        spdm_context, m_libspdm_get_measurements_request11_size,
-        &m_libspdm_get_measurements_request11, &response_size, response);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(response_size, sizeof(spdm_error_response_t));
-    spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_INVALID_REQUEST);
-    assert_int_equal(spdm_response->header.param2, 0);
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
-#endif
-}
-
-/**
  * Test 21: Error case, request a measurement index not found
  * Expected Behavior: get a RETURN_SUCCESS return code, empty transcript.message_m size, and Error message as response
  **/
@@ -1778,8 +1724,6 @@ int libspdm_responder_measurements_test_main(void)
         cmocka_unit_test(libspdm_test_responder_measurements_case18),
         /* Bad SlotId parameter (>= SPDM_MAX_SLOT_COUNT)*/
         cmocka_unit_test(libspdm_test_responder_measurements_case19),
-        /* Bad SlotId parameter (slot_count < SlotId < SPDM_MAX_SLOT_COUNT)*/
-        cmocka_unit_test(libspdm_test_responder_measurements_case20),
         /* Error Case: request a measurement out of bounds*/
         cmocka_unit_test(libspdm_test_responder_measurements_case21),
         /* Large number of requests before requiring a signature*/

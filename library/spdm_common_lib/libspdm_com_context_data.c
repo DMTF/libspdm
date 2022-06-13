@@ -331,14 +331,14 @@ libspdm_return_t libspdm_set_data(void *context, libspdm_data_type_t data_type,
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         slot_id = *(uint8_t *)data;
-        if (slot_id > SPDM_MAX_SLOT_COUNT) {
+        if (slot_id >= SPDM_MAX_SLOT_COUNT) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         spdm_context->local_context.slot_count = slot_id;
         break;
     case LIBSPDM_DATA_LOCAL_PUBLIC_CERT_CHAIN:
         slot_id = parameter->additional_data[0];
-        if (slot_id >= spdm_context->local_context.slot_count) {
+        if (slot_id >= SPDM_MAX_SLOT_COUNT) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         spdm_context->local_context
@@ -357,7 +357,7 @@ libspdm_return_t libspdm_set_data(void *context, libspdm_data_type_t data_type,
         break;
     case LIBSPDM_DATA_PEER_USED_CERT_CHAIN_BUFFER:
         slot_id = parameter->additional_data[0];
-        if (slot_id >= spdm_context->local_context.slot_count) {
+        if (slot_id >= SPDM_MAX_SLOT_COUNT) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         if (data_size > LIBSPDM_MAX_CERT_CHAIN_SIZE) {

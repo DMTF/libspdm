@@ -138,7 +138,7 @@ libspdm_return_t libspdm_get_response_finish(void *context, size_t request_size,
 
     req_slot_id = spdm_request->header.param2;
     if ((req_slot_id != 0xFF) &&
-        (req_slot_id >= spdm_context->local_context.slot_count)) {
+        (req_slot_id >= SPDM_MAX_SLOT_COUNT)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);

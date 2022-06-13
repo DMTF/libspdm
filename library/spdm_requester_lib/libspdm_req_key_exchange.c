@@ -293,8 +293,7 @@ libspdm_return_t libspdm_try_send_receive_key_exchange(
             goto receive_done;
         }
         if ((*req_slot_id_param != 0xF) &&
-            (*req_slot_id_param >=
-             spdm_context->local_context.slot_count)) {
+            (*req_slot_id_param >= SPDM_MAX_SLOT_COUNT)) {
             libspdm_secured_message_dhe_free(
                 spdm_context->connection_info.algorithm
                 .dhe_named_group,

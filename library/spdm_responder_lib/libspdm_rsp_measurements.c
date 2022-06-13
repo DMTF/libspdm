@@ -408,8 +408,7 @@ libspdm_return_t libspdm_get_response_measurements(void *context,
             slot_id_param = spdm_request->slot_id_param &
                             SPDM_GET_MEASUREMENTS_REQUEST_SLOT_ID_MASK;
             if ((slot_id_param != 0xF) &&
-                (slot_id_param >=
-                 spdm_context->local_context.slot_count)) {
+                (slot_id_param >= SPDM_MAX_SLOT_COUNT)) {
                 return libspdm_generate_error_response(
                     spdm_context,
                     SPDM_ERROR_CODE_INVALID_REQUEST, 0,

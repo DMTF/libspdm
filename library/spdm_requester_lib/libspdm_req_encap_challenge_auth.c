@@ -69,7 +69,7 @@ libspdm_return_t libspdm_get_encap_response_challenge_auth(
     slot_id = spdm_request->header.param1;
 
     if ((slot_id != 0xFF) &&
-        (slot_id >= spdm_context->local_context.slot_count)) {
+        (slot_id >= SPDM_MAX_SLOT_COUNT)) {
         return libspdm_generate_encap_error_response(
             spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
             response_size, response);

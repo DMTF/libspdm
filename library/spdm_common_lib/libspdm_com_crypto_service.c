@@ -483,7 +483,7 @@ static bool libspdm_calculate_l1l2_hash(void *context, void *session_info,
 bool libspdm_generate_cert_chain_hash(libspdm_context_t *spdm_context,
                                       size_t slot_id, uint8_t *hash)
 {
-    LIBSPDM_ASSERT(slot_id < spdm_context->local_context.slot_count);
+    LIBSPDM_ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
     return libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
         spdm_context->local_context.local_cert_chain_provision[slot_id],
