@@ -34,7 +34,6 @@ libspdm_return_t libspdm_get_response_psk_exchange(void *context,
     const spdm_psk_exchange_request_t *spdm_request;
     spdm_psk_exchange_response_t *spdm_response;
     bool result;
-    uint8_t slot_id;
     uint32_t session_id;
     size_t measurement_summary_hash_size;
     uint32_t hmac_size;
@@ -140,12 +139,6 @@ libspdm_return_t libspdm_get_response_psk_exchange(void *context,
                 spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
                 SPDM_PSK_EXCHANGE, response_size, response);
         }
-    }
-    slot_id = spdm_request->header.param2;
-    if (slot_id >= spdm_context->local_context.slot_count) {
-        return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-                                               response_size, response);
     }
 
     measurement_summary_hash_size = libspdm_get_measurement_summary_hash_size(

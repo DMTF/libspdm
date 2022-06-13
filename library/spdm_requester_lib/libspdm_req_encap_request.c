@@ -444,9 +444,7 @@ libspdm_return_t libspdm_encapsulated_request(libspdm_context_t *spdm_context,
                     (*req_slot_id_param == 0)) {
                     *req_slot_id_param =
                         *((uint8_t *)spdm_encapsulated_response_ack_response + ack_header_size);
-                    if (*req_slot_id_param >=
-                        spdm_context->local_context
-                        .slot_count) {
+                    if (*req_slot_id_param >= SPDM_MAX_SLOT_COUNT) {
                         libspdm_release_receiver_buffer (spdm_context);
                         return LIBSPDM_STATUS_INVALID_MSG_FIELD;
                     }

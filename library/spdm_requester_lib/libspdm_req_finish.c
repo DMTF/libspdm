@@ -82,8 +82,7 @@ libspdm_return_t libspdm_try_send_receive_finish(libspdm_context_t *spdm_context
     }
 
     if (session_info->mut_auth_requested != 0) {
-        if ((req_slot_id_param >=
-             spdm_context->local_context.slot_count) &&
+        if ((req_slot_id_param >= SPDM_MAX_SLOT_COUNT) &&
             (req_slot_id_param != 0xFF)) {
             status = LIBSPDM_STATUS_INVALID_PARAMETER;
             goto error;
