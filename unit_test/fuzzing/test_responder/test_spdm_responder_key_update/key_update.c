@@ -51,8 +51,6 @@ libspdm_set_standard_key_update_test_state(libspdm_context_t *spdm_context,
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
-
-    libspdm_set_mem(spdm_context->last_update_request, 4, 0x00);
 }
 
 static void libspdm_set_standard_key_update_test_secrets(

@@ -35,6 +35,8 @@ libspdm_return_t libspdm_get_encap_response_key_update(void *context,
     libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
+    spdm_key_update_request_t *prev_spdm_request;
+    spdm_key_update_request_t spdm_key_init_update_operation;
     bool result;
 
     spdm_context = context;
@@ -82,26 +84,50 @@ libspdm_return_t libspdm_get_encap_response_key_update(void *context,
             response_size, response);
     }
 
+    /*last key operation*/
+    prev_spdm_request = &(session_info->last_key_update_request);
+
+    /*the end status of the successful key update overall flow*/
+    libspdm_zero_mem(&spdm_key_init_update_operation, sizeof(spdm_key_update_request_t));
+
     result = true;
     switch (spdm_request->header.param1) {
     case SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY:
+        if(libspdm_const_compare_mem(prev_spdm_request,
+                                     &spdm_key_init_update_operation,
+                                     sizeof(spdm_key_update_request_t)) != 0) {
+            result = false;
+            break;
+        }
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "libspdm_create_update_session_data_key[%x] Responder\n",
                        session_id));
         result = libspdm_create_update_session_data_key(
             session_info->secured_message_context,
             LIBSPDM_KEY_UPDATE_ACTION_RESPONDER);
+
+        /*save the last update operation*/
+        libspdm_copy_mem(prev_spdm_request, sizeof(spdm_key_update_request_t),
+                         spdm_request, request_size);
         break;
     case SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS:
         result = false;
         break;
     case SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY:
+        if(prev_spdm_request->header.param1 !=
+           SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY) {
+            result = false;
+            break;
+        }
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "libspdm_activate_update_session_data_key[%x] Responder new\n",
                        session_id));
         result = libspdm_activate_update_session_data_key(
             session_info->secured_message_context,
             LIBSPDM_KEY_UPDATE_ACTION_RESPONDER, true);
+
+        /*clear last_key_update_request*/
+        libspdm_zero_mem(prev_spdm_request, sizeof(spdm_key_update_request_t));
         break;
     default:
         result = false;
