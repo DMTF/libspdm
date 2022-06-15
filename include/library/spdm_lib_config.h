@@ -63,10 +63,6 @@
 #define LIBSPDM_MAX_CSR_SIZE 0x1000
 #endif
 
-#ifndef LIBSPDM_MAX_REQUSET_INFO_SIZE
-#define LIBSPDM_MAX_REQUSET_INFO_SIZE 0x300
-#endif
-
 /* If cache transcript data or transcript hash*/
 #ifndef LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 #define LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT 0

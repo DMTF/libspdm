@@ -41,8 +41,8 @@ libspdm_return_t libspdm_get_response_csr(void *context, size_t request_size,
     uint8_t *csr_p = csr_pointer;
     uint16_t requester_info_length;
     uint16_t opaque_data_length;
-    uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
-    uint8_t requester_info[LIBSPDM_MAX_REQUSET_INFO_SIZE];
+    uint8_t *opaque_data;
+    uint8_t *requester_info;
     bool need_reset;
 
     spdm_context = context;
@@ -95,24 +95,17 @@ libspdm_return_t libspdm_get_response_csr(void *context, size_t request_size,
     }
 
     requester_info_length = spdm_request->requester_info_length;
-    if ((requester_info_length < 0) || (requester_info_length > LIBSPDM_MAX_REQUSET_INFO_SIZE)) {
-        return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-                                               response_size, response);
-    }
     opaque_data_length = spdm_request->opaque_data_length;
-    if ((opaque_data_length < 0) || (opaque_data_length > SPDM_MAX_OPAQUE_DATA_SIZE)) {
+
+    if (opaque_data_length > SPDM_MAX_OPAQUE_DATA_SIZE) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
     }
 
-    libspdm_copy_mem(opaque_data, opaque_data_length,
-                     (const void*)(spdm_request + 1), opaque_data_length);
+    opaque_data = (void*)((size_t)(spdm_request + 1));
 
-    libspdm_copy_mem(requester_info, requester_info_length,
-                     (const void*)((const uint8_t*)(spdm_request + 1) + opaque_data_length),
-                     requester_info_length);
+    requester_info = (void*)(opaque_data + opaque_data_length);
 
     need_reset = spdm_context->need_reset_to_get_csr;
 
