@@ -98,11 +98,13 @@ libspdm_return_t libspdm_try_key_update(void *context, uint32_t session_id,
                 SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS;
         }
         spdm_request->header.param2 = 0;
+
         if(!libspdm_get_random_number(sizeof(spdm_request->header.param2),
                                       &spdm_request->header.param2)) {
             libspdm_release_sender_buffer (spdm_context);
             return LIBSPDM_STATUS_LOW_ENTROPY;
         }
+
         spdm_request_size = sizeof(spdm_key_update_request_t);
 
         /* If updating both, create new responder key*/

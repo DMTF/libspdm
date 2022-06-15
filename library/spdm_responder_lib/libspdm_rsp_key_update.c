@@ -36,6 +36,7 @@ libspdm_return_t libspdm_get_response_key_update(void *context,
     libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
+    spdm_key_update_request_t spdm_key_init_update_operation;
     bool result;
 
     spdm_context = context;
@@ -52,6 +53,7 @@ libspdm_return_t libspdm_get_response_key_update(void *context,
             spdm_request->header.request_response_code,
             response_size, response);
     }
+
     if (!libspdm_is_capabilities_flag_supported(
             spdm_context, false,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_UPD_CAP,
@@ -94,99 +96,105 @@ libspdm_return_t libspdm_get_response_key_update(void *context,
                                                response_size, response);
     }
 
-    prev_spdm_request = (spdm_key_update_request_t *)
-                        spdm_context->last_update_request;
+    /*last key operation*/
+    prev_spdm_request = &(session_info->last_key_update_request);
 
-    if(spdm_request->header.param2 != prev_spdm_request->header.param2 ||
-       spdm_request->header.param1 != prev_spdm_request->header.param1) {
-        switch (spdm_request->header.param1) {
-        case SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY:
-            if(prev_spdm_request->header.param1 ==
-               SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY ||
-               prev_spdm_request->header.param1 ==
-               SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS) {
-                return libspdm_generate_error_response(context,
-                                                       SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-                                                       response_size, response);
-            }
+    /*the end status of the successful key update overall flow*/
+    libspdm_zero_mem(&spdm_key_init_update_operation, sizeof(spdm_key_update_request_t));
 
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                           "libspdm_create_update_session_data_key[%x] Requester\n",
-                           session_id));
-            result = libspdm_create_update_session_data_key(
-                session_info->secured_message_context,
-                LIBSPDM_KEY_UPDATE_ACTION_REQUESTER);
-            if (!result) {
-                return LIBSPDM_STATUS_UNSUPPORTED_CAP;
-            }
-            break;
-        case SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS:
-            if(prev_spdm_request->header.param1 ==
-               SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY ||
-               prev_spdm_request->header.param1 ==
-               SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS) {
-                return libspdm_generate_error_response(context,
-                                                       SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-                                                       response_size, response);
-            }
-
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                           "libspdm_create_update_session_data_key[%x] Requester\n",
-                           session_id));
-            result = libspdm_create_update_session_data_key(
-                session_info->secured_message_context,
-                LIBSPDM_KEY_UPDATE_ACTION_REQUESTER);
-            if (!result) {
-                return LIBSPDM_STATUS_UNSUPPORTED_CAP;
-            }
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                           "libspdm_create_update_session_data_key[%x] Responder\n",
-                           session_id));
-            result = libspdm_create_update_session_data_key(
-                session_info->secured_message_context,
-                LIBSPDM_KEY_UPDATE_ACTION_RESPONDER);
-            if (!result) {
-                return LIBSPDM_STATUS_UNSUPPORTED_CAP;
-            }
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                           "libspdm_activate_update_session_data_key[%x] Responder new\n",
-                           session_id));
-            result = libspdm_activate_update_session_data_key(
-                session_info->secured_message_context,
-                LIBSPDM_KEY_UPDATE_ACTION_RESPONDER, true);
-            if (!result) {
-                return LIBSPDM_STATUS_UNSUPPORTED_CAP;
-            }
-            break;
-        case SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY:
-            if(prev_spdm_request->header.param1 !=
-               SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY &&
-               prev_spdm_request->header.param1 !=
-               SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS) {
-                return libspdm_generate_error_response(context,
-                                                       SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-                                                       response_size, response);
-            }
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                           "libspdm_activate_update_session_data_key[%x] Requester new\n",
-                           session_id));
-            result = libspdm_activate_update_session_data_key(
-                session_info->secured_message_context,
-                LIBSPDM_KEY_UPDATE_ACTION_REQUESTER, true);
-            if (!result) {
-                return LIBSPDM_STATUS_UNSUPPORTED_CAP;
-            }
-            break;
-        default:
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "espurious case\n"));
+    switch (spdm_request->header.param1) {
+    case SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY:
+        if(libspdm_const_compare_mem(prev_spdm_request,
+                                     &spdm_key_init_update_operation,
+                                     sizeof(spdm_key_update_request_t)) != 0) {
             return libspdm_generate_error_response(context,
                                                    SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                    response_size, response);
         }
-    }
 
-    libspdm_copy_mem(prev_spdm_request, sizeof(spdm_key_update_request_t),
-                     spdm_request, request_size);
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                       "libspdm_create_update_session_data_key[%x] Requester\n",
+                       session_id));
+        result = libspdm_create_update_session_data_key(
+            session_info->secured_message_context,
+            LIBSPDM_KEY_UPDATE_ACTION_REQUESTER);
+        if (!result) {
+            return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+        }
+
+        /*save the last update operation*/
+        libspdm_copy_mem(prev_spdm_request, sizeof(spdm_key_update_request_t),
+                         spdm_request, request_size);
+        break;
+    case SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS:
+        if(libspdm_const_compare_mem(prev_spdm_request,
+                                     &spdm_key_init_update_operation,
+                                     sizeof(spdm_key_update_request_t)) != 0) {
+            return libspdm_generate_error_response(context,
+                                                   SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                                   response_size, response);
+        }
+
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                       "libspdm_create_update_session_data_key[%x] Requester\n",
+                       session_id));
+        result = libspdm_create_update_session_data_key(
+            session_info->secured_message_context,
+            LIBSPDM_KEY_UPDATE_ACTION_REQUESTER);
+        if (!result) {
+            return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+        }
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                       "libspdm_create_update_session_data_key[%x] Responder\n",
+                       session_id));
+        result = libspdm_create_update_session_data_key(
+            session_info->secured_message_context,
+            LIBSPDM_KEY_UPDATE_ACTION_RESPONDER);
+        if (!result) {
+            return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+        }
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                       "libspdm_activate_update_session_data_key[%x] Responder new\n",
+                       session_id));
+        result = libspdm_activate_update_session_data_key(
+            session_info->secured_message_context,
+            LIBSPDM_KEY_UPDATE_ACTION_RESPONDER, true);
+        if (!result) {
+            return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+        }
+
+        /*save the last update operation*/
+        libspdm_copy_mem(prev_spdm_request, sizeof(spdm_key_update_request_t),
+                         spdm_request, request_size);
+        break;
+    case SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY:
+        if(prev_spdm_request->header.param1 !=
+           SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY &&
+           prev_spdm_request->header.param1 !=
+           SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS) {
+            return libspdm_generate_error_response(context,
+                                                   SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                                   response_size, response);
+        }
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                       "libspdm_activate_update_session_data_key[%x] Requester new\n",
+                       session_id));
+        result = libspdm_activate_update_session_data_key(
+            session_info->secured_message_context,
+            LIBSPDM_KEY_UPDATE_ACTION_REQUESTER, true);
+        if (!result) {
+            return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+        }
+
+        /*clear last_key_update_request*/
+        libspdm_zero_mem (prev_spdm_request, sizeof(spdm_key_update_request_t));
+        break;
+    default:
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "espurious case\n"));
+        return libspdm_generate_error_response(context,
+                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                               response_size, response);
+    }
 
     libspdm_reset_message_buffer_via_request_code(spdm_context, session_info,
                                                   spdm_request->header.request_response_code);

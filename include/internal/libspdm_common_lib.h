@@ -266,6 +266,8 @@ typedef struct {
     uint8_t end_session_attributes;
     uint8_t session_policy;
     libspdm_session_transcript_t session_transcript;
+    /* Register for the last KEY_UPDATE token and operation (responder only)*/
+    spdm_key_update_request_t last_key_update_request;
     void *secured_message_context;
 } libspdm_session_info_t;
 
@@ -409,10 +411,6 @@ typedef struct {
     /* App context data for use by application*/
 
     void *app_context_data_ptr;
-
-    /* Register for the last KEY_UPDATE token and operation (responder only)*/
-
-    uint8_t last_update_request[4];
 
     /* See LIBSPDM_DATA_HANDLE_ERROR_RETURN_POLICY_*. */
 
