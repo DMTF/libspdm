@@ -405,7 +405,20 @@ libspdm_return_t libspdm_handle_large_request(
             }
             if (spdm_response->header.param1
                 & SPDM_CHUNK_SEND_ACK_RESPONSE_ATTRIBUTE_EARLY_ERROR_DETECTED) {
-                status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+
+                /* Store the error response in scratch buffer to be read by
+                 * libspdm_receive_spdm_response and returned to its caller
+                 * and handled in the error response handling flow */
+                libspdm_copy_mem(
+                    send_info->large_message,
+                    send_info->large_message_capacity,
+                    (uint8_t*) (spdm_response + 1),
+                    response_size - sizeof(spdm_chunk_send_ack_response_t));
+
+                send_info->large_message_size =
+                    (response_size - sizeof(spdm_chunk_send_ack_response_t));
+
+                status = LIBSPDM_STATUS_SUCCESS;
                 break;
             }
             if (spdm_response->header.param2 != send_info->chunk_handle) {
@@ -417,25 +430,13 @@ libspdm_return_t libspdm_handle_large_request(
                 break;
             }
 
-            /* Guard against the case where we have a bad responder that:
-             * 1) Sends all bytes but does not set LAST_CHUNK bit.
-             * 2) Dos not send all bytes, but sets LAST_CHUNK bit. */
-            if ((send_info->chunk_bytes_transferred >= send_info->large_message_size
-                 && !(spdm_response->header.param1 & SPDM_CHUNK_SEND_REQUEST_ATTRIBUTE_LAST_CHUNK))
-                || (send_info->chunk_bytes_transferred < send_info->large_message_size
-                    && (spdm_response->header.param1 &
-                        SPDM_CHUNK_SEND_REQUEST_ATTRIBUTE_LAST_CHUNK))) {
-                status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-                break;
-            }
-
             chunk_ptr = (uint8_t*) (spdm_response + 1);
             send_info->chunk_seq_no++;
 
-            if (send_info->chunk_bytes_transferred >= send_info->large_message_size
-                && (spdm_response->header.param1 & SPDM_CHUNK_SEND_REQUEST_ATTRIBUTE_LAST_CHUNK)) {
+            if (send_info->chunk_bytes_transferred >= send_info->large_message_size) {
 
-                /* Store response in scratch buffer to be handled when reading response */
+                /* All bytes have been transferred. Store response in scratch buffer
+                 * to be read by libspdm_receive_spdm_response */
                 libspdm_copy_mem(
                     send_info->large_message, send_info->large_message_capacity,
                     chunk_ptr, response_size - sizeof(spdm_chunk_send_ack_response_t));
