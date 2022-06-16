@@ -511,6 +511,15 @@ libspdm_return_t libspdm_set_data(void *context, libspdm_data_type_t data_type,
         }
         spdm_context->need_reset_to_get_csr = *(bool *)data;
         break;
+    case LIBSPDM_DATA_VCA_CACHE:
+        if (data_size > sizeof(spdm_context->transcript.message_a.buffer)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        spdm_context->transcript.message_a.buffer_size = data_size;
+        libspdm_copy_mem(spdm_context->transcript.message_a.buffer,
+                         sizeof(spdm_context->transcript.message_a.buffer),
+                         data, data_size);
+        break;
     default:
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         break;
@@ -757,6 +766,10 @@ libspdm_return_t libspdm_get_data(void *context, libspdm_data_type_t data_type,
     case LIBSPDM_DATA_NEED_RESET_GET_CSR:
         target_data_size = sizeof(bool);
         target_data = &spdm_context->need_reset_to_get_csr;
+        break;
+    case LIBSPDM_DATA_VCA_CACHE:
+        target_data_size = spdm_context->transcript.message_a.buffer_size;
+        target_data = spdm_context->transcript.message_a.buffer;
         break;
     default:
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
