@@ -157,8 +157,10 @@ libspdm_return_t libspdm_get_response_chunk_send(void *context,
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
         else if (!(spdm_request->header.param1 & SPDM_CHUNK_SEND_REQUEST_ATTRIBUTE_LAST_CHUNK)
-                 && (spdm_request->chunk_size + send_info->chunk_bytes_transferred
-                     == send_info->large_message_size)) {
+                 && ((spdm_request->chunk_size + send_info->chunk_bytes_transferred
+                     >= send_info->large_message_size)
+                     || ((uint32_t) request_size
+                         != spdm_context->local_context.capability.data_transfer_size))) {
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         } else {
 
