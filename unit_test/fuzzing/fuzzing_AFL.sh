@@ -53,7 +53,7 @@ if [[ $PWD!=$libspdm_path ]];then
     pushd $libspdm_path
     latest_hash=`git log --pretty="%h" -1`
     export fuzzing_out=$libspdm_path/unit_test/fuzzing/out_$1_$latest_hash
-    export build_fuzzing=build_fuzz_$1_$latest_hash
+    export build_fuzzing=$libspdm_path/build_fuzz_$1_$latest_hash
 fi
 
 if [ ! -d "$fuzzing_out" ];then
@@ -171,7 +171,7 @@ if [[ $2 = "ON" ]]; then
     cd $fuzzing_out
     mkdir coverage_log
     cd coverage_log
-    lcov --capture --directory $libspdm_path --output-file coverage.info
+    lcov --capture --directory $build_fuzzing --output-file coverage.info
     genhtml coverage.info --output-directory .
 fi
 
