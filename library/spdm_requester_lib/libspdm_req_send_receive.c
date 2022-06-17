@@ -359,7 +359,7 @@ libspdm_return_t libspdm_handle_large_request(
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             break;
         }
-        spdm_response = (void*) (message);
+        spdm_response = (void*) (response);
 
         if (response_size < sizeof(spdm_message_header_t)) {
             status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
