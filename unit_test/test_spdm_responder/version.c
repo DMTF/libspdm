@@ -191,50 +191,6 @@ void libspdm_test_responder_version_case4(void **state)
 }
 
 /**
- * Test 5: receiving a correct GET_VERSION from the requester, but the responder could not
- * produce the response in time.
- * TODO: As from version 1.0.0, a GET_VERSION message should not receive an ERROR message
- * indicating the ResponseNotReady. No timing parameters have been agreed yet.
- **/
-void libspdm_test_responder_version_case5(void **state)
-{
-    libspdm_return_t status;
-    libspdm_test_context_t *spdm_test_context;
-    libspdm_context_t *spdm_context;
-    size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    spdm_version_response_t *spdm_response;
-    spdm_error_data_response_not_ready_t *error_data;
-
-    spdm_test_context = *state;
-    spdm_context = spdm_test_context->spdm_context;
-    spdm_test_context->case_id = 0x5;
-    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NOT_READY;
-
-    response_size = sizeof(response);
-    status = libspdm_get_response_version(spdm_context,
-                                          m_libspdm_get_version_request1_size,
-                                          &m_libspdm_get_version_request1,
-                                          &response_size, response);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(response_size,
-                     sizeof(spdm_error_response_t) +
-                     sizeof(spdm_error_data_response_not_ready_t));
-    spdm_response = (void *)response;
-    error_data =
-        (spdm_error_data_response_not_ready_t *)(&spdm_response
-                                                 ->reserved);
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_RESPONSE_NOT_READY);
-    assert_int_equal(spdm_response->header.param2, 0);
-    assert_int_equal(spdm_context->response_state,
-                     LIBSPDM_RESPONSE_STATE_NOT_READY);
-    assert_int_equal(error_data->request_code, SPDM_GET_VERSION);
-}
-
-/**
  * Test 6: receiving a GET_VERSION message in SPDM version 1.1 (in the header), but correct
  * 1.0-version format.
  * Expected behavior: the responder refuses the GET_VERSION message and produces an
@@ -371,8 +327,6 @@ int libspdm_responder_version_test_main(void)
         cmocka_unit_test(libspdm_test_responder_version_case3),
         /* response_state: SPDM_RESPONSE_STATE_NEED_RESYNC*/
         cmocka_unit_test(libspdm_test_responder_version_case4),
-        /* response_state: SPDM_RESPONSE_STATE_NOT_READY*/
-        cmocka_unit_test(libspdm_test_responder_version_case5),
         /* Invalid request*/
         cmocka_unit_test(libspdm_test_responder_version_case6),
         /* Buffer verification*/
