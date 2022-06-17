@@ -94,7 +94,7 @@ void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
     libspdm_test_responder_capabilities_case1(&State);
     /* connection_state Check*/
     libspdm_test_responder_capabilities_case2(&State);
-    /* response_state: LIBSPDM_RESPONSE_STATE_NOT_READY */
+    /* response_state*/
     libspdm_test_responder_capabilities_case3(&State);
 
     libspdm_unit_test_group_teardown(&State);

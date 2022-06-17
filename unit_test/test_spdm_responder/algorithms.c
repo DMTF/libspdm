@@ -1058,49 +1058,6 @@ void libspdm_test_responder_algorithms_case4(void **state)
                      LIBSPDM_RESPONSE_STATE_NEED_RESYNC);
 }
 
-void libspdm_test_responder_algorithms_case5(void **state)
-{
-    libspdm_return_t status;
-    libspdm_test_context_t *spdm_test_context;
-    libspdm_context_t *spdm_context;
-    size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    spdm_algorithms_response_t *spdm_response;
-    spdm_error_data_response_not_ready_t *error_data;
-
-    spdm_test_context = *state;
-    spdm_context = spdm_test_context->spdm_context;
-    spdm_test_context->case_id = 0x5;
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
-                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NOT_READY;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
-    spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
-
-    response_size = sizeof(response);
-    status = libspdm_get_response_algorithms(
-        spdm_context, m_libspdm_negotiate_algorithms_request1_size,
-        &m_libspdm_negotiate_algorithms_request1, &response_size,
-        response);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(response_size,
-                     sizeof(spdm_error_response_t) +
-                     sizeof(spdm_error_data_response_not_ready_t));
-    spdm_response = (void *)response;
-    error_data =
-        (spdm_error_data_response_not_ready_t *)(&spdm_response->length);
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_RESPONSE_NOT_READY);
-    assert_int_equal(spdm_response->header.param2, 0);
-    assert_int_equal(spdm_context->response_state,
-                     LIBSPDM_RESPONSE_STATE_NOT_READY);
-    assert_int_equal(error_data->request_code, SPDM_NEGOTIATE_ALGORITHMS);
-}
-
 void libspdm_test_responder_algorithms_case6(void **state)
 {
     libspdm_return_t status;
@@ -2297,8 +2254,6 @@ int libspdm_responder_algorithms_test_main(void)
         cmocka_unit_test(libspdm_test_responder_algorithms_case3),
         /* response_state: LIBSPDM_RESPONSE_STATE_NEED_RESYNC*/
         cmocka_unit_test(libspdm_test_responder_algorithms_case4),
-        /* response_state: LIBSPDM_RESPONSE_STATE_NOT_READY*/
-        cmocka_unit_test(libspdm_test_responder_algorithms_case5),
         /* connection_state Check*/
         cmocka_unit_test(libspdm_test_responder_algorithms_case6),
         /* Success case V1.1*/
