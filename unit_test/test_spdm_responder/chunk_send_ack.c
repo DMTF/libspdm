@@ -18,7 +18,7 @@ typedef struct {
 
 /* Copied from m_libspdm_negotiate_algorithm_request17 Test Case 22 */
 libspdm_negotiate_algorithms_request_spdm12_multiple_tables_t
-m_libspdm_chunk_send_negotiate_algorithm_request1 =
+    m_libspdm_chunk_send_negotiate_algorithm_request1 =
 {
     {
         {
@@ -96,7 +96,7 @@ m_libspdm_chunk_send_negotiate_algorithm_request1 =
 };
 
 size_t m_libspdm_chunk_send_negotiate_algorithm_request1_size =
-sizeof(m_libspdm_chunk_send_negotiate_algorithm_request1);
+    sizeof(m_libspdm_chunk_send_negotiate_algorithm_request1);
 
 void libspdm_test_responder_chunk_send_ack_setup_algo_state(libspdm_context_t* spdm_context)
 {
@@ -109,7 +109,7 @@ void libspdm_test_responder_chunk_send_ack_setup_algo_state(libspdm_context_t* s
         LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
-        SPDM_VERSION_NUMBER_SHIFT_BIT;
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
     spdm_context->local_context.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
@@ -242,7 +242,8 @@ void libspdm_test_responder_chunk_send_ack_rsp_case0(void** state)
 
         chunk_send_ack_response = (spdm_chunk_send_ack_response_t*) response;
         assert_int_equal(chunk_send_ack_response->header.spdm_version, SPDM_MESSAGE_VERSION_12);
-        assert_int_equal(chunk_send_ack_response->header.request_response_code, SPDM_CHUNK_SEND_ACK);
+        assert_int_equal(chunk_send_ack_response->header.request_response_code,
+                         SPDM_CHUNK_SEND_ACK);
         assert_int_equal(chunk_send_ack_response->header.param1, 0);
         assert_int_equal(chunk_send_ack_response->header.param2, spdm_test_context->case_id);
         assert_int_equal(chunk_send_ack_response->chunk_seq_no, chunk_send_request->chunk_seq_no);
@@ -319,8 +320,8 @@ void libspdm_test_responder_chunk_send_ack_rsp_case1(void** state)
     chunk_dst = ((uint8_t*) (chunk_send_request + 1)) + sizeof(uint32_t);
 
     request_size = sizeof(spdm_chunk_send_request_t)
-        + sizeof(uint32_t)
-        + chunk_send_request->chunk_size;
+                   + sizeof(uint32_t)
+                   + chunk_send_request->chunk_size;
 
     libspdm_copy_mem(chunk_dst, chunk_send_request->chunk_size,
                      chunk_src, chunk_send_request->chunk_size);
@@ -341,7 +342,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case1(void** state)
     assert_int_equal(error_response->header.param2, 0);
 }
 
- /**
+/**
  * Test 2: Responder receives a CHUNK_SEND request with bad response state.
  * Expected Behavior: Returns ERROR response message
  * with request_response_code as error code.
@@ -365,7 +366,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case2(void** state)
     const uint8_t* chunk_src;
     uint8_t* chunk_dst;
     uint16_t chunk_num;
-    uint32_t bytes_sent;
     uint32_t bytes_total;
 
     spdm_test_context = *state;
@@ -377,7 +377,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case2(void** state)
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_BUSY;
 
     chunk_num = 0;
-    bytes_sent = 0;
     bytes_total = sizeof(m_libspdm_chunk_send_negotiate_algorithm_request1);
     chunk_src = (const uint8_t*) &m_libspdm_chunk_send_negotiate_algorithm_request1;
 
@@ -398,8 +397,8 @@ void libspdm_test_responder_chunk_send_ack_rsp_case2(void** state)
     chunk_dst = ((uint8_t*) (chunk_send_request + 1)) + sizeof(uint32_t);
 
     request_size = sizeof(spdm_chunk_send_request_t)
-        + sizeof(uint32_t)
-        + chunk_send_request->chunk_size;
+                   + sizeof(uint32_t)
+                   + chunk_send_request->chunk_size;
 
     libspdm_copy_mem(chunk_dst, chunk_send_request->chunk_size,
                      chunk_src, chunk_send_request->chunk_size);
@@ -421,10 +420,10 @@ void libspdm_test_responder_chunk_send_ack_rsp_case2(void** state)
 }
 
 /**
-* Test 3: Responder receives a CHUNK_SEND request with bad connection state.
-* Expected Behavior: Returns ERROR response message
-* with SPDM_ERROR_CODE_UNEXPECTED_REQUEST error code.
-**/
+ * Test 3: Responder receives a CHUNK_SEND request with bad connection state.
+ * Expected Behavior: Returns ERROR response message
+ * with SPDM_ERROR_CODE_UNEXPECTED_REQUEST error code.
+ **/
 void libspdm_test_responder_chunk_send_ack_rsp_case3(void** state)
 {
     libspdm_return_t status;
@@ -444,7 +443,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case3(void** state)
     const uint8_t* chunk_src;
     uint8_t* chunk_dst;
     uint16_t chunk_num;
-    uint32_t bytes_sent;
     uint32_t bytes_total;
 
     spdm_test_context = *state;
@@ -457,7 +455,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case3(void** state)
         = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES - 1;
 
     chunk_num = 0;
-    bytes_sent = 0;
     bytes_total = sizeof(m_libspdm_chunk_send_negotiate_algorithm_request1);
     chunk_src = (const uint8_t*) &m_libspdm_chunk_send_negotiate_algorithm_request1;
 
@@ -478,8 +475,8 @@ void libspdm_test_responder_chunk_send_ack_rsp_case3(void** state)
     chunk_dst = ((uint8_t*) (chunk_send_request + 1)) + sizeof(uint32_t);
 
     request_size = sizeof(spdm_chunk_send_request_t)
-        + sizeof(uint32_t)
-        + chunk_send_request->chunk_size;
+                   + sizeof(uint32_t)
+                   + chunk_send_request->chunk_size;
 
     libspdm_copy_mem(chunk_dst, chunk_send_request->chunk_size,
                      chunk_src, chunk_send_request->chunk_size);
@@ -525,7 +522,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case4(void** state)
     const uint8_t* chunk_src;
     uint8_t* chunk_dst;
     uint16_t chunk_num;
-    uint32_t bytes_sent;
     uint32_t bytes_total;
 
     spdm_test_context = *state;
@@ -535,7 +531,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case4(void** state)
     libspdm_test_responder_chunk_send_ack_setup_algo_state(spdm_context);
 
     chunk_num = 0;
-    bytes_sent = 0;
     bytes_total = sizeof(m_libspdm_chunk_send_negotiate_algorithm_request1);
     chunk_src = (const uint8_t*) &m_libspdm_chunk_send_negotiate_algorithm_request1;
 
@@ -556,8 +551,8 @@ void libspdm_test_responder_chunk_send_ack_rsp_case4(void** state)
     chunk_dst = ((uint8_t*) (chunk_send_request + 1)) + sizeof(uint32_t);
 
     request_size = sizeof(spdm_chunk_send_request_t)
-        + sizeof(uint32_t)
-        + chunk_send_request->chunk_size;
+                   + sizeof(uint32_t)
+                   + chunk_send_request->chunk_size;
 
     libspdm_copy_mem(chunk_dst, chunk_send_request->chunk_size,
                      chunk_src, chunk_send_request->chunk_size);
@@ -602,7 +597,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case5(void** state)
     const uint8_t* chunk_src;
     uint8_t* chunk_dst;
     uint16_t chunk_num;
-    uint32_t bytes_sent;
     uint32_t bytes_total;
 
     spdm_test_context = *state;
@@ -612,7 +606,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case5(void** state)
     libspdm_test_responder_chunk_send_ack_setup_algo_state(spdm_context);
 
     chunk_num = 0;
-    bytes_sent = 0;
     bytes_total = sizeof(m_libspdm_chunk_send_negotiate_algorithm_request1);
     chunk_src = (const uint8_t*) &m_libspdm_chunk_send_negotiate_algorithm_request1;
 
@@ -633,8 +626,8 @@ void libspdm_test_responder_chunk_send_ack_rsp_case5(void** state)
     chunk_dst = ((uint8_t*) (chunk_send_request + 1)) + sizeof(uint32_t);
 
     request_size = sizeof(spdm_chunk_send_request_t)
-        + sizeof(uint32_t)
-        + chunk_send_request->chunk_size;
+                   + sizeof(uint32_t)
+                   + chunk_send_request->chunk_size;
 
     libspdm_copy_mem(chunk_dst, chunk_send_request->chunk_size,
                      chunk_src, chunk_send_request->chunk_size);
@@ -678,7 +671,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case6(void** state)
     const uint8_t* chunk_src;
     uint8_t* chunk_dst;
     uint16_t chunk_num;
-    uint32_t bytes_sent;
     uint32_t bytes_total;
 
     spdm_test_context = *state;
@@ -688,7 +680,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case6(void** state)
     libspdm_test_responder_chunk_send_ack_setup_algo_state(spdm_context);
 
     chunk_num = 0;
-    bytes_sent = 0;
     bytes_total = sizeof(m_libspdm_chunk_send_negotiate_algorithm_request1);
     chunk_src = (const uint8_t*) &m_libspdm_chunk_send_negotiate_algorithm_request1;
 
@@ -709,8 +700,8 @@ void libspdm_test_responder_chunk_send_ack_rsp_case6(void** state)
     chunk_dst = ((uint8_t*) (chunk_send_request + 1)) + sizeof(uint32_t);
 
     request_size = sizeof(spdm_chunk_send_request_t)
-        + sizeof(uint32_t)
-        + chunk_send_request->chunk_size;
+                   + sizeof(uint32_t)
+                   + chunk_send_request->chunk_size;
 
     libspdm_copy_mem(chunk_dst, chunk_send_request->chunk_size,
                      chunk_src, chunk_send_request->chunk_size);
@@ -753,7 +744,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case7(void** state)
     const uint8_t* chunk_src;
     uint8_t* chunk_dst;
     uint16_t chunk_num;
-    uint32_t bytes_sent;
     uint32_t bytes_total;
 
     spdm_test_context = *state;
@@ -764,7 +754,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case7(void** state)
     spdm_context->chunk_context.get.chunk_in_use = true;
 
     chunk_num = 0;
-    bytes_sent = 0;
     bytes_total = sizeof(m_libspdm_chunk_send_negotiate_algorithm_request1);
     chunk_src = (const uint8_t*) &m_libspdm_chunk_send_negotiate_algorithm_request1;
 
@@ -785,8 +774,8 @@ void libspdm_test_responder_chunk_send_ack_rsp_case7(void** state)
     chunk_dst = ((uint8_t*) (chunk_send_request + 1)) + sizeof(uint32_t);
 
     request_size = sizeof(spdm_chunk_send_request_t)
-        + sizeof(uint32_t)
-        + chunk_send_request->chunk_size;
+                   + sizeof(uint32_t)
+                   + chunk_send_request->chunk_size;
 
     libspdm_copy_mem(chunk_dst, chunk_send_request->chunk_size,
                      chunk_src, chunk_send_request->chunk_size);
@@ -831,7 +820,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case8(void** state)
 
     const uint8_t *chunk_src;
     uint8_t *chunk_dst;
-    uint32_t bytes_sent;
     uint32_t bytes_total;
 
     spdm_test_context = *state;
@@ -840,7 +828,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case8(void** state)
 
     libspdm_test_responder_chunk_send_ack_setup_algo_state(spdm_context);
 
-    bytes_sent = 0;
     bytes_total = sizeof(m_libspdm_chunk_send_negotiate_algorithm_request1);
     chunk_src = (const uint8_t*) &m_libspdm_chunk_send_negotiate_algorithm_request1;
 
@@ -861,8 +848,8 @@ void libspdm_test_responder_chunk_send_ack_rsp_case8(void** state)
     chunk_dst = ((uint8_t*) (chunk_send_request + 1)) + sizeof(uint32_t);
 
     request_size = sizeof(spdm_chunk_send_request_t)
-        + sizeof(uint32_t)
-        + chunk_send_request->chunk_size;
+                   + sizeof(uint32_t)
+                   + chunk_send_request->chunk_size;
 
     libspdm_copy_mem(chunk_dst, chunk_send_request->chunk_size,
                      chunk_src, chunk_send_request->chunk_size);
@@ -875,7 +862,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case8(void** state)
 
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     assert_true(response_size == sizeof(spdm_chunk_send_ack_response_t)
-                                 + sizeof(spdm_error_response_t));
+                + sizeof(spdm_error_response_t));
 
     chunk_send_ack_response = (spdm_chunk_send_ack_response_t*) response;
     assert_int_equal(chunk_send_ack_response->header.param1,
@@ -910,7 +897,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case9(void** state)
 
     const uint8_t* chunk_src;
     uint8_t* chunk_dst;
-    uint32_t bytes_sent;
     uint32_t bytes_total;
 
     spdm_test_context = *state;
@@ -919,7 +905,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case9(void** state)
 
     libspdm_test_responder_chunk_send_ack_setup_algo_state(spdm_context);
 
-    bytes_sent = 0;
     bytes_total = sizeof(m_libspdm_chunk_send_negotiate_algorithm_request1);
     chunk_src = (const uint8_t*) &m_libspdm_chunk_send_negotiate_algorithm_request1;
 
@@ -940,8 +925,8 @@ void libspdm_test_responder_chunk_send_ack_rsp_case9(void** state)
     chunk_dst = ((uint8_t*) (chunk_send_request + 1)) + sizeof(uint32_t);
 
     request_size = sizeof(spdm_chunk_send_request_t)
-        + sizeof(uint32_t)
-        + chunk_send_request->chunk_size;
+                   + sizeof(uint32_t)
+                   + chunk_send_request->chunk_size;
 
     libspdm_copy_mem(chunk_dst, chunk_send_request->chunk_size,
                      chunk_src, chunk_send_request->chunk_size);
@@ -991,7 +976,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case10(void** state)
 
     const uint8_t* chunk_src;
     uint8_t* chunk_dst;
-    uint32_t bytes_sent;
     uint32_t bytes_total;
 
     spdm_test_context = *state;
@@ -1000,7 +984,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case10(void** state)
 
     libspdm_test_responder_chunk_send_ack_setup_algo_state(spdm_context);
 
-    bytes_sent = 0;
     bytes_total = sizeof(m_libspdm_chunk_send_negotiate_algorithm_request1);
     chunk_src = (const uint8_t*) &m_libspdm_chunk_send_negotiate_algorithm_request1;
 
@@ -1021,9 +1004,9 @@ void libspdm_test_responder_chunk_send_ack_rsp_case10(void** state)
     chunk_dst = ((uint8_t*) (chunk_send_request + 1)) + sizeof(uint32_t);
 
     request_size = sizeof(spdm_chunk_send_request_t)
-        + sizeof(uint32_t)
-        + chunk_send_request->chunk_size
-        + 1; /* Request size too large */
+                   + sizeof(uint32_t)
+                   + chunk_send_request->chunk_size
+                   + 1; /* Request size too large */
 
     libspdm_copy_mem(chunk_dst, chunk_send_request->chunk_size,
                      chunk_src, chunk_send_request->chunk_size);
@@ -1071,8 +1054,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case11(void** state)
 
     const uint8_t* chunk_src;
     uint8_t* chunk_dst;
-    uint32_t bytes_sent;
-    uint32_t bytes_total;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1080,8 +1061,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case11(void** state)
 
     libspdm_test_responder_chunk_send_ack_setup_algo_state(spdm_context);
 
-    bytes_sent = 0;
-    bytes_total = sizeof(m_libspdm_chunk_send_negotiate_algorithm_request1);
     chunk_src = (const uint8_t*) &m_libspdm_chunk_send_negotiate_algorithm_request1;
 
     libspdm_zero_mem(request, sizeof(request));
@@ -1102,8 +1081,8 @@ void libspdm_test_responder_chunk_send_ack_rsp_case11(void** state)
     chunk_dst = ((uint8_t*) (chunk_send_request + 1)) + sizeof(uint32_t);
 
     request_size = sizeof(spdm_chunk_send_request_t)
-        + sizeof(uint32_t)
-        + chunk_send_request->chunk_size;
+                   + sizeof(uint32_t)
+                   + chunk_send_request->chunk_size;
 
     libspdm_copy_mem(chunk_dst, chunk_send_request->chunk_size,
                      chunk_src, chunk_send_request->chunk_size);
@@ -1151,7 +1130,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case12(void** state)
 
     const uint8_t* chunk_src;
     uint8_t* chunk_dst;
-    uint32_t bytes_sent;
     uint32_t bytes_total;
 
     spdm_test_context = *state;
@@ -1160,7 +1138,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case12(void** state)
 
     libspdm_test_responder_chunk_send_ack_setup_algo_state(spdm_context);
 
-    bytes_sent = 0;
     bytes_total = sizeof(m_libspdm_chunk_send_negotiate_algorithm_request1);
     chunk_src = (const uint8_t*) &m_libspdm_chunk_send_negotiate_algorithm_request1;
 
@@ -1182,8 +1159,8 @@ void libspdm_test_responder_chunk_send_ack_rsp_case12(void** state)
     chunk_dst = ((uint8_t*) (chunk_send_request + 1)) + sizeof(uint32_t);
 
     request_size = sizeof(spdm_chunk_send_request_t)
-        + sizeof(uint32_t)
-        + chunk_send_request->chunk_size;
+                   + sizeof(uint32_t)
+                   + chunk_send_request->chunk_size;
 
     libspdm_copy_mem(chunk_dst, chunk_send_request->chunk_size,
                      chunk_src, chunk_send_request->chunk_size);
@@ -1244,8 +1221,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case13(void** state)
 
     const uint8_t* chunk_src;
     uint8_t* chunk_dst;
-    uint32_t bytes_sent;
-    uint32_t bytes_total;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1256,8 +1231,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case13(void** state)
     spdm_context->chunk_context.send.chunk_handle = (uint8_t) spdm_test_context->case_id;
     spdm_context->chunk_context.send.chunk_seq_no = 0;
 
-    bytes_sent = 0;
-    bytes_total = sizeof(m_libspdm_chunk_send_negotiate_algorithm_request1);
     chunk_src = (const uint8_t*) &m_libspdm_chunk_send_negotiate_algorithm_request1;
 
     libspdm_zero_mem(request, sizeof(request));
@@ -1326,8 +1299,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case14(void** state)
 
     const uint8_t* chunk_src;
     uint8_t* chunk_dst;
-    uint32_t bytes_sent;
-    uint32_t bytes_total;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1338,8 +1309,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case14(void** state)
     spdm_context->chunk_context.send.chunk_handle = (uint8_t) spdm_test_context->case_id;
     spdm_context->chunk_context.send.chunk_seq_no = 0;
 
-    bytes_sent = 0;
-    bytes_total = sizeof(m_libspdm_chunk_send_negotiate_algorithm_request1);
     chunk_src = (const uint8_t*) &m_libspdm_chunk_send_negotiate_algorithm_request1;
 
     libspdm_zero_mem(request, sizeof(request));
@@ -1407,8 +1376,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case15(void** state)
 
     const uint8_t* chunk_src;
     uint8_t* chunk_dst;
-    uint32_t bytes_sent;
-    uint32_t bytes_total;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1419,8 +1386,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case15(void** state)
     spdm_context->chunk_context.send.chunk_handle = (uint8_t) spdm_test_context->case_id;
     spdm_context->chunk_context.send.chunk_seq_no = 0;
 
-    bytes_sent = 0;
-    bytes_total = sizeof(m_libspdm_chunk_send_negotiate_algorithm_request1);
     chunk_src = (const uint8_t*) &m_libspdm_chunk_send_negotiate_algorithm_request1;
 
     libspdm_zero_mem(request, sizeof(request));
@@ -1490,8 +1455,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case16(void** state)
 
     const uint8_t* chunk_src;
     uint8_t* chunk_dst;
-    uint32_t bytes_sent;
-    uint32_t bytes_total;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1504,8 +1467,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case16(void** state)
     spdm_context->chunk_context.send.large_message_size = 1024;
     spdm_context->chunk_context.send.chunk_bytes_transferred = 1023;
 
-    bytes_sent = 0;
-    bytes_total = sizeof(m_libspdm_chunk_send_negotiate_algorithm_request1);
     chunk_src = (const uint8_t*) &m_libspdm_chunk_send_negotiate_algorithm_request1;
 
     libspdm_zero_mem(request, sizeof(request));
@@ -1571,8 +1532,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case17(void** state)
 
     const uint8_t* chunk_src;
     uint8_t* chunk_dst;
-    uint32_t bytes_sent;
-    uint32_t bytes_total;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1585,8 +1544,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case17(void** state)
     spdm_context->chunk_context.send.large_message_size = 1024;
     spdm_context->chunk_context.send.chunk_bytes_transferred = 1023;
 
-    bytes_sent = 0;
-    bytes_total = sizeof(m_libspdm_chunk_send_negotiate_algorithm_request1);
     chunk_src = (const uint8_t*) &m_libspdm_chunk_send_negotiate_algorithm_request1;
 
     libspdm_zero_mem(request, sizeof(request));
@@ -1599,7 +1556,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case17(void** state)
     chunk_send_request->chunk_seq_no = 0;
     chunk_send_request->chunk_size = 1;
 
-    chunk_dst = ((uint8_t*) (chunk_send_request + 1)) ;
+    chunk_dst = ((uint8_t*) (chunk_send_request + 1));
 
     request_size = sizeof(spdm_chunk_send_request_t)
                    + chunk_send_request->chunk_size;
@@ -1652,8 +1609,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case18(void** state)
 
     const uint8_t* chunk_src;
     uint8_t* chunk_dst;
-    uint32_t bytes_sent;
-    uint32_t bytes_total;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1666,8 +1621,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case18(void** state)
     spdm_context->chunk_context.send.large_message_size = 1024;
     spdm_context->chunk_context.send.chunk_bytes_transferred = 1022;
 
-    bytes_sent = 0;
-    bytes_total = sizeof(m_libspdm_chunk_send_negotiate_algorithm_request1);
     chunk_src = (const uint8_t*) &m_libspdm_chunk_send_negotiate_algorithm_request1;
 
     libspdm_zero_mem(request, sizeof(request));
@@ -1683,7 +1636,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case18(void** state)
     chunk_dst = ((uint8_t*) (chunk_send_request + 1));
 
     request_size = sizeof(spdm_chunk_send_request_t)
-        + chunk_send_request->chunk_size;
+                   + chunk_send_request->chunk_size;
 
     libspdm_copy_mem(chunk_dst, chunk_send_request->chunk_size,
                      chunk_src, chunk_send_request->chunk_size);
@@ -1733,8 +1686,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case19(void** state)
 
     const uint8_t* chunk_src;
     uint8_t* chunk_dst;
-    uint32_t bytes_sent;
-    uint32_t bytes_total;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1747,8 +1698,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case19(void** state)
     spdm_context->chunk_context.send.large_message_size = 1024;
     spdm_context->chunk_context.send.chunk_bytes_transferred = 0;
 
-    bytes_sent = 0;
-    bytes_total = sizeof(m_libspdm_chunk_send_negotiate_algorithm_request1);
     chunk_src = (const uint8_t*) &m_libspdm_chunk_send_negotiate_algorithm_request1;
 
     libspdm_zero_mem(request, sizeof(request));
@@ -1767,7 +1716,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case19(void** state)
     chunk_dst = ((uint8_t*) (chunk_send_request + 1));
 
     request_size = sizeof(spdm_chunk_send_request_t)
-                  + chunk_send_request->chunk_size;
+                   + chunk_send_request->chunk_size;
 
     libspdm_copy_mem(chunk_dst, chunk_send_request->chunk_size,
                      chunk_src, chunk_send_request->chunk_size);
