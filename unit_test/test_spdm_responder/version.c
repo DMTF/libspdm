@@ -329,6 +329,8 @@ int libspdm_responder_version_test_main(void)
         cmocka_unit_test(libspdm_test_responder_version_case4),
         /* Invalid request*/
         cmocka_unit_test(libspdm_test_responder_version_case6),
+        /* Invalid request*/
+        cmocka_unit_test(libspdm_test_responder_version_case7),
         /* Buffer verification*/
         cmocka_unit_test(libspdm_test_responder_version_case8),
     };
