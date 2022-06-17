@@ -151,6 +151,8 @@ test_spdm_responder_set_certificate
 test_spdm_requester_set_certificate
 test_spdm_responder_csr
 test_spdm_requester_get_csr
+test_spdm_responder_chunk_get
+test_spdm_requester_chunk_get
 )
 for ((i=0;i<${#cmds[*]};i++))
 do
