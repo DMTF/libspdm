@@ -286,7 +286,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case1(void** state)
     const uint8_t* chunk_src;
     uint8_t* chunk_dst;
     uint16_t chunk_num;
-    uint32_t bytes_sent;
     uint32_t bytes_total;
 
     spdm_test_context = *state;
@@ -299,7 +298,6 @@ void libspdm_test_responder_chunk_send_ack_rsp_case1(void** state)
         ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
 
     chunk_num = 0;
-    bytes_sent = 0;
     bytes_total = sizeof(m_libspdm_chunk_send_negotiate_algorithm_request1);
     chunk_src = (const uint8_t*) &m_libspdm_chunk_send_negotiate_algorithm_request1;
 
