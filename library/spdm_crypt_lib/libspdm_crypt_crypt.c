@@ -11,14 +11,24 @@
 #define LIBSPDM_MAX_SIGNATURE_ALGO_OID_LEN 10
 #endif
 
-/*leaf cert basic constraints len*/
-#ifndef BASIC_CONSTRAINTS_LEN
-#define BASIC_CONSTRAINTS_LEN 2
+/*leaf cert basic constraints len,CA = false: 30 03 01 01 00*/
+#ifndef BASIC_CONSTRAINTS_CA_LEN
+#define BASIC_CONSTRAINTS_CA_LEN 5
 #endif
 
-/*leaf cert basic_constraints CA: false*/
-#define LIBSPDM_BASIC_CONSTRAINTS_STRING {0x30, 0x00}
-static const uint8_t m_libspdm_basic_constraints[] = LIBSPDM_BASIC_CONSTRAINTS_STRING;
+/**pathLenConstraint is optional.
+ * In https://www.pkisolutions.com/basic-constraints-certificate-extension/:
+ * pathLenConstraint: How many CAs are allowed in the chain below current CA certificate.
+ * This setting has no meaning for end entity certificates.
+ **/
+
+/*leaf cert basic_constraints case1: CA: false and CA object is excluded */
+#define LIBSPDM_BASIC_CONSTRAINTS_STRING_CASE1 {0x30, 0x00}
+static const uint8_t m_libspdm_basic_constraints_case1[] = LIBSPDM_BASIC_CONSTRAINTS_STRING_CASE1;
+
+/*leaf cert basic_constraints case2: CA: false */
+#define LIBSPDM_BASIC_CONSTRAINTS_STRING_CASE2 {0x30, 0x03, 0x01, 0x01, 0x00}
+static const uint8_t m_libspdm_basic_constraints_case2[] = LIBSPDM_BASIC_CONSTRAINTS_STRING_CASE2;
 
 /**
  * leaf cert spdm extension len
@@ -4195,10 +4205,9 @@ bool libspdm_verify_leaf_cert_basic_constraints(const uint8_t *cert, size_t cert
 {
     bool status;
     /*basic_constraints from cert*/
-    uint8_t cert_basic_constraints[BASIC_CONSTRAINTS_LEN];
+    uint8_t cert_basic_constraints[BASIC_CONSTRAINTS_CA_LEN];
     size_t len;
-
-    len = BASIC_CONSTRAINTS_LEN;
+    len = BASIC_CONSTRAINTS_CA_LEN;
 
     status = libspdm_x509_get_extended_basic_constraints(cert, cert_size,
                                                          cert_basic_constraints, &len);
@@ -4206,13 +4215,25 @@ bool libspdm_verify_leaf_cert_basic_constraints(const uint8_t *cert, size_t cert
     if (len == 0) {
         /* basic constraints is not present in cert */
         return true;
-    } else if (!status || len != BASIC_CONSTRAINTS_LEN ||
-               libspdm_const_compare_mem(cert_basic_constraints,
-                                         m_libspdm_basic_constraints, len)) {
+    } else if (!status ) {
         return false;
     }
 
-    return true;
+    if ((len == sizeof(m_libspdm_basic_constraints_case1)) &&
+        (!libspdm_const_compare_mem(cert_basic_constraints,
+                                    m_libspdm_basic_constraints_case1,
+                                    sizeof(m_libspdm_basic_constraints_case1)))) {
+        return true;
+    }
+
+    if ((len == sizeof(m_libspdm_basic_constraints_case2)) &&
+        (!libspdm_const_compare_mem(cert_basic_constraints,
+                                    m_libspdm_basic_constraints_case2,
+                                    sizeof(m_libspdm_basic_constraints_case2)))) {
+        return true;
+    }
+
+    return false;
 }
 
 /**
