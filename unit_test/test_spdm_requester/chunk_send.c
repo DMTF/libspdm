@@ -10,8 +10,6 @@
 
 #if LIBSPDM_ENABLE_CHUNK_CAP
 
-static uint8_t m_libspdm_chunk_get_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-
 static bool m_libspdm_chunk_send_last_chunk = false;
 static uint8_t m_libspdm_chunk_send_chunk_handle = 0;
 static uint16_t m_libspdm_chunk_send_chunk_seq_no = 0;
@@ -55,7 +53,8 @@ libspdm_return_t libspdm_requester_chunk_send_test_send_message(
 
     spdm_test_context = libspdm_get_test_context();
 
-    chunk_send = (void*) ((const uint8_t*) request + sizeof(libspdm_test_message_header_t));
+    chunk_send = (const spdm_chunk_send_request_t*)
+                 (void*) ((const uint8_t*) request + sizeof(libspdm_test_message_header_t));
 
     m_libspdm_chunk_send_chunk_handle = chunk_send->header.param2;
     m_libspdm_chunk_send_chunk_seq_no = chunk_send->chunk_seq_no;
@@ -111,7 +110,8 @@ libspdm_return_t libspdm_requester_chunk_send_test_receive_message(
 
     if (spdm_test_context->case_id == 1) {
         /* Successful chunk send of algorithms request */
-        chunk_send_ack_rsp = (void*) ((uint8_t*) *response + sizeof(libspdm_test_message_header_t));
+        chunk_send_ack_rsp
+            = (void*) ((uint8_t*) *response + sizeof(libspdm_test_message_header_t));
 
         chunk_send_ack_rsp->header.spdm_version = SPDM_MESSAGE_VERSION_12;
         chunk_send_ack_rsp->header.request_response_code = SPDM_CHUNK_SEND_ACK;
@@ -154,7 +154,8 @@ libspdm_return_t libspdm_requester_chunk_send_test_receive_message(
     }
     if (spdm_test_context->case_id == 4) {
         /* Response has bad SPDM version */
-        chunk_send_ack_rsp = (void*) ((uint8_t*) *response + sizeof(libspdm_test_message_header_t));
+        chunk_send_ack_rsp
+            = (void*) ((uint8_t*) *response + sizeof(libspdm_test_message_header_t));
 
         chunk_send_ack_rsp->header.spdm_version = SPDM_MESSAGE_VERSION_11; /* Bad SPDM version */
         chunk_send_ack_rsp->header.request_response_code = SPDM_CHUNK_SEND_ACK;
@@ -172,7 +173,8 @@ libspdm_return_t libspdm_requester_chunk_send_test_receive_message(
     }
     if (spdm_test_context->case_id == 5) {
         /* Response has bad request response code */
-        chunk_send_ack_rsp = (void*) ((uint8_t*) *response + sizeof(libspdm_test_message_header_t));
+        chunk_send_ack_rsp
+            = (void*) ((uint8_t*) *response + sizeof(libspdm_test_message_header_t));
 
         chunk_send_ack_rsp->header.spdm_version = SPDM_MESSAGE_VERSION_12;
         chunk_send_ack_rsp->header.request_response_code = SPDM_ERROR; /* Bad response code */
@@ -189,7 +191,8 @@ libspdm_return_t libspdm_requester_chunk_send_test_receive_message(
     }
     if (spdm_test_context->case_id == 6) {
         /* Response has bad response size */
-        chunk_send_ack_rsp = (void*) ((uint8_t*) *response + sizeof(libspdm_test_message_header_t));
+        chunk_send_ack_rsp
+            = (void*) ((uint8_t*) *response + sizeof(libspdm_test_message_header_t));
 
         chunk_send_ack_rsp->header.spdm_version = SPDM_MESSAGE_VERSION_12;
         chunk_send_ack_rsp->header.request_response_code = SPDM_CHUNK_SEND_ACK;
@@ -209,12 +212,13 @@ libspdm_return_t libspdm_requester_chunk_send_test_receive_message(
     }
     if (spdm_test_context->case_id == 7) {
         /* Response has early error detected */
-        chunk_send_ack_rsp = (void*) ((uint8_t*) *response + sizeof(libspdm_test_message_header_t));
+        chunk_send_ack_rsp =
+            (void*) ((uint8_t*) *response + sizeof(libspdm_test_message_header_t));
 
         chunk_send_ack_rsp->header.spdm_version = SPDM_MESSAGE_VERSION_12;
         chunk_send_ack_rsp->header.request_response_code = SPDM_CHUNK_SEND_ACK;
-        chunk_send_ack_rsp->header.param1 = /* Early Error Detected */
-            SPDM_CHUNK_SEND_ACK_RESPONSE_ATTRIBUTE_EARLY_ERROR_DETECTED;
+        chunk_send_ack_rsp->header.param1
+            = SPDM_CHUNK_SEND_ACK_RESPONSE_ATTRIBUTE_EARLY_ERROR_DETECTED;
         chunk_send_ack_rsp->header.param2 = m_libspdm_chunk_send_chunk_handle;
         chunk_send_ack_rsp->chunk_seq_no = m_libspdm_chunk_send_chunk_seq_no;
 
@@ -234,7 +238,8 @@ libspdm_return_t libspdm_requester_chunk_send_test_receive_message(
     }
     if (spdm_test_context->case_id == 8) {
         /* Response has bad chunk handle */
-        chunk_send_ack_rsp = (void*) ((uint8_t*) *response + sizeof(libspdm_test_message_header_t));
+        chunk_send_ack_rsp
+            = (void*) ((uint8_t*) *response + sizeof(libspdm_test_message_header_t));
 
         chunk_send_ack_rsp->header.spdm_version = SPDM_MESSAGE_VERSION_12;
         chunk_send_ack_rsp->header.request_response_code = SPDM_CHUNK_SEND_ACK;
@@ -254,7 +259,8 @@ libspdm_return_t libspdm_requester_chunk_send_test_receive_message(
     }
     if (spdm_test_context->case_id == 9) {
         /* Response has bad chunk seq no */
-        chunk_send_ack_rsp = (void*) ((uint8_t*) *response + sizeof(libspdm_test_message_header_t));
+        chunk_send_ack_rsp
+            = (void*) ((uint8_t*) *response + sizeof(libspdm_test_message_header_t));
 
         chunk_send_ack_rsp->header.spdm_version = SPDM_MESSAGE_VERSION_12;
         chunk_send_ack_rsp->header.request_response_code = SPDM_CHUNK_SEND_ACK;
@@ -315,14 +321,6 @@ void libspdm_test_requester_chunk_send_case1(void** state)
 
     status = libspdm_test_requester_chunk_send_generic_test_case(state, 1);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-
-    #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    assert_int_equal(
-        spdm_context->transcript.message_a.buffer_size,
-        sizeof(spdm_negotiate_algorithms_request_t) +
-        4 * sizeof(spdm_negotiate_algorithms_common_struct_table_t) +
-        sizeof(spdm_algorithms_response_t));
-    #endif
 }
 
 void libspdm_test_requester_chunk_send_case2(void** state)
