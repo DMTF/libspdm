@@ -2245,6 +2245,9 @@ libspdm_return_t libspdm_acquire_sender_buffer (
 void libspdm_release_sender_buffer (
     libspdm_context_t *spdm_context)
 {
+    LIBSPDM_ASSERT(spdm_context->sender_buffer != NULL);
+    LIBSPDM_ASSERT(spdm_context->sender_buffer_size != 0);
+
     spdm_context->release_sender_buffer (spdm_context, spdm_context->sender_buffer);
     spdm_context->sender_buffer = NULL;
     spdm_context->sender_buffer_size = 0;
@@ -2302,6 +2305,9 @@ libspdm_return_t libspdm_acquire_receiver_buffer (
 void libspdm_release_receiver_buffer (
     libspdm_context_t *spdm_context)
 {
+    LIBSPDM_ASSERT(spdm_context->receiver_buffer != NULL);
+    LIBSPDM_ASSERT(spdm_context->receiver_buffer_size != 0);
+
     spdm_context->release_receiver_buffer (spdm_context, spdm_context->receiver_buffer);
     spdm_context->receiver_buffer = NULL;
     spdm_context->receiver_buffer_size = 0;

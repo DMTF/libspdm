@@ -23,7 +23,7 @@ static uint8_t m_libspdm_local_certificate_chain_test_case_4[LIBSPDM_MAX_MESSAGE
 /* Override the LIBSPDM_DATA_TRANSFER_SIZE just for the unit tests in this file.
  * All other unit tests have the default data transfer size due to the specific
  * unit tests requests and responses hardcode for each test case. */
-#define CHUNK_GET_REQUESTER_UNIT_TEST_DATA_TRANSFER_SIZE (44)
+#define CHUNK_GET_REQUESTER_UNIT_TEST_DATA_TRANSFER_SIZE (42)
 
 /* Loading the target expiration certificate chain and saving root certificate hash
  * "rsa3072_Expiration/bundle_responder.certchain.der"*/
