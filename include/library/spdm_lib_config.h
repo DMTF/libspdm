@@ -292,17 +292,21 @@
  * It is exposed here, just in case the libspdm consumer wants to configure the setting at build time.
  */
 #if LIBSPDM_ENABLE_CHUNK_CAP
-#define LIBSPDM_SCRATCH_BUFFER_SIZE (LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE + \
-                                     LIBSPDM_MAX_SPDM_MSG_SIZE +          \
-                                     LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE \
-                                     )
 
 #define LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_OFFSET \
     (LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE)
 
+#define LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_CAPACITY \
+    (LIBSPDM_MAX_SPDM_MSG_SIZE)
+
 #define LIBSPDM_SCRATCH_BUFFER_SENDER_RECEIVER_OFFSET  \
     (LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE + \
-     LIBSPDM_MAX_SPDM_MSG_SIZE)
+     LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_CAPACITY)
+
+#define LIBSPDM_SCRATCH_BUFFER_SIZE (LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE + \
+                                     LIBSPDM_MAX_SPDM_MSG_SIZE +          \
+                                     LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE \
+                                     )
 
 #else
 #define LIBSPDM_SCRATCH_BUFFER_SIZE (LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE)

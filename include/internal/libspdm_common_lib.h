@@ -295,7 +295,7 @@ typedef struct {
 
     void* large_message;
     size_t large_message_size;
-
+    size_t large_message_capacity;
 } libspdm_chunk_info_t;
 
 typedef struct {

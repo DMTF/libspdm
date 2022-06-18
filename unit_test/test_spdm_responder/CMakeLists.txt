@@ -36,6 +36,7 @@ SET(src_test_spdm_responder
     csr.c
     receive_send.c
     chunk_get.c
+    chunk_send_ack.c
     ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/common.c
     ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/algo.c
     ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/support.c
