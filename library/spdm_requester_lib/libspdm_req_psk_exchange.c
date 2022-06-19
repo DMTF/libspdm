@@ -295,12 +295,14 @@ libspdm_return_t libspdm_try_send_receive_psk_exchange(
 
     ptr = (uint8_t *)spdm_response + sizeof(spdm_psk_exchange_response_t) +
           measurement_summary_hash_size + spdm_response->context_length;
-    status = libspdm_process_opaque_data_version_selection_data(
-        spdm_context, spdm_response->opaque_length, ptr);
-    if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        libspdm_free_session_id(spdm_context, *session_id);
-        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-        goto receive_done;
+    if (spdm_response->opaque_length != 0) {
+        status = libspdm_process_opaque_data_version_selection_data(
+            spdm_context, spdm_response->opaque_length, ptr);
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
+            libspdm_free_session_id(spdm_context, *session_id);
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+            goto receive_done;
+        }
     }
 
     spdm_response_size = sizeof(spdm_psk_exchange_response_t) +
