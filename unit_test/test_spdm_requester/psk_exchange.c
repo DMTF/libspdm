@@ -3959,7 +3959,7 @@ void libspdm_test_requester_psk_exchange_case14(void **state)
     spdm_context->connection_info.algorithm.key_schedule =
         m_libspdm_use_key_schedule_algo;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain_buffer_size =
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
                      sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
@@ -4044,7 +4044,7 @@ void libspdm_test_requester_psk_exchange_case15(void **state)
     spdm_context->connection_info.algorithm.key_schedule =
         m_libspdm_use_key_schedule_algo;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain_buffer_size =
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
                      sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
@@ -4130,7 +4130,7 @@ void libspdm_test_requester_psk_exchange_case16(void **state)
         m_libspdm_use_key_schedule_algo;
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain_buffer_size =
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
                      sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
@@ -4216,7 +4216,7 @@ void libspdm_test_requester_psk_exchange_case17(void **state)
         m_libspdm_use_key_schedule_algo;
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain_buffer_size =
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
                      sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
@@ -4293,7 +4293,7 @@ void libspdm_test_requester_psk_exchange_case18(void **state)
         m_libspdm_use_key_schedule_algo;
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain_buffer_size =
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
                      sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
@@ -4370,7 +4370,7 @@ void libspdm_test_requester_psk_exchange_case19(void **state)
         m_libspdm_use_key_schedule_algo;
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain_buffer_size =
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
                      sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
@@ -4448,7 +4448,7 @@ void libspdm_test_requester_psk_exchange_case20(void **state)
         m_libspdm_use_key_schedule_algo;
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain_buffer_size =
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
                      sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
@@ -4532,7 +4532,7 @@ void libspdm_test_requester_psk_exchange_case21(void **state)
         m_libspdm_use_key_schedule_algo;
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain_buffer_size =
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
                      sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
@@ -4627,7 +4627,7 @@ void libspdm_test_requester_psk_exchange_case22(void **state)
         m_libspdm_use_key_schedule_algo;
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain_buffer_size =
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
                      sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
@@ -4709,7 +4709,7 @@ void libspdm_test_requester_psk_exchange_case23(void **state)
     spdm_context->connection_info.algorithm.key_schedule =
         m_libspdm_use_key_schedule_algo;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain_buffer_size =
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
                      sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
@@ -4777,7 +4777,7 @@ void libspdm_test_requester_psk_exchange_case24(void **state)
     spdm_context->connection_info.algorithm.key_schedule =
         m_libspdm_use_key_schedule_algo;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain_buffer_size =
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
                      sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
@@ -4850,7 +4850,7 @@ void libspdm_test_requester_psk_exchange_case25(void **state)
     spdm_context->connection_info.algorithm.key_schedule =
         m_libspdm_use_key_schedule_algo;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain_buffer_size =
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
                      sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
@@ -4923,7 +4923,7 @@ void libspdm_test_requester_psk_exchange_case26(void **state)
     spdm_context->connection_info.algorithm.key_schedule =
         m_libspdm_use_key_schedule_algo;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain_buffer_size =
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain_buffer,
                      sizeof(spdm_context->connection_info.peer_used_cert_chain_buffer),
