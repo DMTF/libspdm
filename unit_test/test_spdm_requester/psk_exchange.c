@@ -4162,7 +4162,7 @@ void libspdm_test_requester_psk_exchange_case16(void **state)
         LIBSPDM_SESSION_STATE_HANDSHAKING);
     free(data);
 }
-//
+
 void libspdm_test_requester_psk_exchange_case17(void **state)
 {
     libspdm_return_t status;
