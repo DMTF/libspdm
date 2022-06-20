@@ -1415,11 +1415,6 @@ void libspdm_test_responder_psk_exchange_case13(void **state)
                      SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
 
-
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    assert_int_equal(spdm_context->transcript.message_m.buffer_size,
-                     0);
-#endif
     free(data1);
 }
 
