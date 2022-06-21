@@ -421,3 +421,12 @@ openssl asn1parse -in end_requester1.cert -out end_requester1.cert.der
 openssl asn1parse -in end_responder1.cert -out end_responder1.cert.der
 cat ca1.cert.der inter1.cert.der end_requester1.cert.der > bundle_requester.certchain1.der
 cat ca1.cert.der inter1.cert.der end_responder1.cert.der > bundle_responder.certchain1.der
+
+
+=== Add test cert in ecp256===
+Gen ecp256/end_requester_ca_false.cert.der is same with ecp256/end_requester.cert.der, expect the openssl.cnf is follow:
+[ v3_end ]
+basicConstraints = critical,CA:true
+
+Gen ecp256/end_requester_without_basic_constraint.cert.der is same with ecp256/end_requester.cert.der, expect the
+basicConstraints is excluded in openssl.cnf [ v3_end ].
