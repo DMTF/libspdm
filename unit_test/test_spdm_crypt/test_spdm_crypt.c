@@ -230,6 +230,29 @@ void libspdm_test_crypt_spdm_x509_certificate_check(void **state)
                                             true);
     assert_true(status);
     free(file_buffer);
+
+    /*check for leaf cert basic constraints, CA = true,pathlen:none*/
+    status = libspdm_read_input_file("ecp256/end_requester_ca_false.cert.der",
+                                     (void **)&file_buffer, &file_buffer_size);
+    assert_true(status);
+    status = libspdm_x509_certificate_check(file_buffer, file_buffer_size,
+                                            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+                                            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                                            true);
+    assert_false(status);
+    free(file_buffer);
+
+
+    /*check for leaf cert basic constraints, basic constraints is excluded*/
+    status = libspdm_read_input_file("ecp256/end_requester_without_basic_constraint.cert.der",
+                                     (void **)&file_buffer, &file_buffer_size);
+    assert_true(status);
+    status = libspdm_x509_certificate_check(file_buffer, file_buffer_size,
+                                            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+                                            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                                            true);
+    assert_true(status);
+    free(file_buffer);
 }
 
 int libspdm_crypt_lib_setup(void **state)
