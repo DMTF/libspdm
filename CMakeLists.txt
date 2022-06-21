@@ -613,6 +613,7 @@ endif()
     ADD_SUBDIRECTORY(unit_test/test_spdm_requester)
     ADD_SUBDIRECTORY(unit_test/test_spdm_responder)
     ADD_SUBDIRECTORY(unit_test/test_crypt)
+    ADD_SUBDIRECTORY(unit_test/test_spdm_crypt)
     endif()
 
     ADD_SUBDIRECTORY(unit_test/fuzzing/test_requester/test_spdm_requester_get_version)

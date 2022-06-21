@@ -7,12 +7,12 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/unit_test/cmockalib/cmocka/include
                     ${LIBSPDM_DIR}/unit_test/cmockalib/cmocka/include/cmockery
                     ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common
+                    ${LIBSPDM_DIR}/os_stub/include
+                    ${LIBSPDM_DIR}/os_stub
 )
 
 SET(src_test_spdm_crypt
     test_spdm_crypt.c
-    ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/common.c
-    ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/algo.c
     ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/support.c
 )
 
@@ -25,6 +25,7 @@ SET(test_spdm_crypt_LIBRARY
     rnglib
     malloclib
     cmockalib
+    spdm_device_secret_lib_sample
 )
 
 if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
@@ -37,7 +38,6 @@ if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
                    $<TARGET_OBJECTS:rnglib>
                    $<TARGET_OBJECTS:cryptlib_${CRYPTO}>
                    $<TARGET_OBJECTS:malloclib>
-                   $<TARGET_OBJECTS:cmockalib>
     )
 else()
     ADD_EXECUTABLE(test_spdm_crypt ${src_test_spdm_crypt})
