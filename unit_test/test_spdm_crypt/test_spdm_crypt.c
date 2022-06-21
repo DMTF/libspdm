@@ -5,6 +5,7 @@
  **/
 
 #include "spdm_unit_test.h"
+#include "library/spdm_common_lib.h"
 
 /* https://lapo.it/asn1js/#MCQGCisGAQQBgxyCEgEMFkFDTUU6V0lER0VUOjEyMzQ1Njc4OTA*/
 uint8_t m_libspdm_subject_alt_name_buffer1[] = {
@@ -150,7 +151,7 @@ void libspdm_test_crypt_spdm_get_dmtf_subject_alt_name(void **state)
     assert_string_equal(common_name, "ACME:WIDGET:1234567890");
     free(file_buffer);
 
-    status = libspdm_read_input_file("ecp512/end_requester.cert.der",
+    status = libspdm_read_input_file("ecp521/end_requester.cert.der",
                                      (void **)&file_buffer, &file_buffer_size);
     assert_true(status);
     dmtf_oid_size = 64;
@@ -220,7 +221,7 @@ void libspdm_test_crypt_spdm_x509_certificate_check(void **state)
     assert_true(status);
     free(file_buffer);
 
-    status = libspdm_read_input_file("ecp512/end_requester.cert.der",
+    status = libspdm_read_input_file("ecp521/end_requester.cert.der",
                                      (void **)&file_buffer, &file_buffer_size);
     assert_true(status);
     status = libspdm_x509_certificate_check(file_buffer, file_buffer_size,
@@ -246,8 +247,10 @@ int libspdm_crypt_lib_test_main(void)
     const struct CMUnitTest spdm_crypt_lib_tests[] = {
         cmocka_unit_test(
             libspdm_test_crypt_spdm_get_dmtf_subject_alt_name_from_bytes),
-        cmocka_unit_test(
-            libspdm_test_crypt_spdm_get_dmtf_subject_alt_name),
+        /* There is a libspdm_test_crypt_spdm_get_dmtf_subject_alt_name work around.
+         * cmocka_unit_test(
+         *   libspdm_test_crypt_spdm_get_dmtf_subject_alt_name),
+         **/
         cmocka_unit_test(libspdm_test_crypt_spdm_x509_certificate_check)
     };
 
