@@ -245,7 +245,7 @@ bool libspdm_get_element_from_opaque_data(libspdm_context_t *spdm_context,
             return false;
         }
         if (spdm_general_opaque_data_table_header->total_elements < 1) {
-            return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+            return false;
         }
         opaque_element_table_header =
             (const void *)(spdm_general_opaque_data_table_header + 1);
@@ -263,7 +263,7 @@ bool libspdm_get_element_from_opaque_data(libspdm_context_t *spdm_context,
             (general_opaque_data_table_header->opaque_version !=
              SECURED_MESSAGE_OPAQUE_VERSION) ||
             (general_opaque_data_table_header->total_elements < 1)) {
-            return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+            return false;
         }
         opaque_element_table_header =
             (const void *)(general_opaque_data_table_header + 1);
@@ -362,6 +362,7 @@ libspdm_process_opaque_data_supported_version_data(libspdm_context_t *spdm_conte
     size_t get_element_len;
 
     result = false;
+    get_element_ptr = NULL;
 
     if (spdm_context->local_context.secured_message_version
         .spdm_version_count == 0) {
@@ -378,7 +379,7 @@ libspdm_process_opaque_data_supported_version_data(libspdm_context_t *spdm_conte
         data_in, SPDM_REGISTRY_ID_DMTF,
         SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_SUPPORTED_VERSION,
         &get_element_ptr, &get_element_len);
-    if (!result) {
+    if ((!result) || (get_element_ptr == NULL)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"get element error!\n"));
         return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
@@ -541,6 +542,7 @@ libspdm_process_opaque_data_version_selection_data(libspdm_context_t *spdm_conte
     size_t get_element_len;
 
     result = false;
+    get_element_ptr = NULL;
 
     if (spdm_context->local_context.secured_message_version
         .spdm_version_count == 0) {
@@ -552,7 +554,7 @@ libspdm_process_opaque_data_version_selection_data(libspdm_context_t *spdm_conte
         data_in, SPDM_REGISTRY_ID_DMTF,
         SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_VERSION_SELECTION,
         &get_element_ptr, &get_element_len);
-    if (!result) {
+    if ((!result) || (get_element_ptr == NULL)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"get element error!\n"));
         return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
