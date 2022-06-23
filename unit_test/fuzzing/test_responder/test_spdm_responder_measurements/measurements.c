@@ -24,6 +24,7 @@ void libspdm_test_responder_measurements_case1(void **State)
     libspdm_context_t *spdm_context;
     size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    spdm_get_measurements_request_t *spdm_request;
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
@@ -43,6 +44,11 @@ void libspdm_test_responder_measurements_case1(void **State)
     response_size = sizeof(response);
     libspdm_get_response_measurements(spdm_context, spdm_test_context->test_buffer_size,
                                       spdm_test_context->test_buffer, &response_size, response);
+    spdm_request = (spdm_get_measurements_request_t * )spdm_test_context->test_buffer;
+    if ((spdm_request->header.param1 &
+         SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) == 0) {
+        libspdm_reset_message_m(spdm_context, NULL);
+    }
 }
 
 void libspdm_test_responder_measurements_case2(void **State)
@@ -54,6 +60,7 @@ void libspdm_test_responder_measurements_case2(void **State)
     uint32_t session_id;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     static uint8_t m_local_psk_hint[32];
+    spdm_get_measurements_request_t *spdm_request;
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
@@ -89,6 +96,11 @@ void libspdm_test_responder_measurements_case2(void **State)
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
     libspdm_get_response_measurements(spdm_context, spdm_test_context->test_buffer_size,
                                       spdm_test_context->test_buffer, &response_size, response);
+    spdm_request = (spdm_get_measurements_request_t * )spdm_test_context->test_buffer;
+    if ((spdm_request->header.param1 &
+         SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) == 0) {
+        libspdm_reset_message_m(spdm_context, NULL);
+    }
 }
 
 void libspdm_test_responder_measurements_case3(void **State)
@@ -99,6 +111,7 @@ void libspdm_test_responder_measurements_case3(void **State)
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     void *data;
     size_t data_size;
+    spdm_get_measurements_request_t *spdm_request;
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
@@ -131,6 +144,11 @@ void libspdm_test_responder_measurements_case3(void **State)
     libspdm_get_response_measurements(spdm_context, spdm_test_context->test_buffer_size,
                                       spdm_test_context->test_buffer, &response_size, response);
     free(data);
+    spdm_request = (spdm_get_measurements_request_t * )spdm_test_context->test_buffer;
+    if ((spdm_request->header.param1 &
+         SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) == 0) {
+        libspdm_reset_message_m(spdm_context, NULL);
+    }
 }
 
 void libspdm_test_responder_measurements_case4(void **State)
@@ -144,6 +162,7 @@ void libspdm_test_responder_measurements_case4(void **State)
     uint32_t session_id;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     static uint8_t m_local_psk_hint[32];
+    spdm_get_measurements_request_t *spdm_request;
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
@@ -192,6 +211,11 @@ void libspdm_test_responder_measurements_case4(void **State)
     libspdm_get_response_measurements(spdm_context, spdm_test_context->test_buffer_size,
                                       spdm_test_context->test_buffer, &response_size, response);
     free(data);
+    spdm_request = (spdm_get_measurements_request_t * )spdm_test_context->test_buffer;
+    if ((spdm_request->header.param1 &
+         SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) == 0) {
+        libspdm_reset_message_m(spdm_context, NULL);
+    }
 }
 
 libspdm_test_context_t m_libspdm_responder_measurements_test_context = {
