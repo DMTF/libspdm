@@ -425,6 +425,81 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    libspdm/unit_test/fuzzing/oss_fuzz.sh mbedtls ON 30
    ```
 
+6) fuzzing in Linux with [AFLTurbo](https://github.com/sleicasper/aflturbo)
+
+   #### Clone the repository and build the aflturbo code
+   ```
+   git clone https://github.com/sleicasper/aflturbo.git
+   cd aflturbo/
+   make
+   cp afl-fuzz afl-turbo-fuzz
+   export PATH=$PATH:$(pwd)
+   ```
+   > Build it with make & ensure AFLTurbo binary is in PATH environment variable.
+
+   Then run commands as root (every time reboot the OS):
+   ```
+   sudo bash -c 'echo core >/proc/sys/kernel/core_pattern'
+   cd /sys/devices/system/cpu/
+   sudo bash -c 'echo performance | tee cpu*/cpufreq/scaling_governor'
+   ```
+
+   Known issue: Above command cannot run in Windows Linux Subsystem.
+
+   Build cases with AFL toolchain `-DTOOLCHAIN=AFL`. For example:
+   ```
+   cd libspdm
+   mkdir build
+   cd build
+   cmake -DARCH=x64 -DTOOLCHAIN=AFL -DTARGET=Release -DCRYPTO=mbedtls ..
+   make copy_sample_key
+   make
+   ```
+
+   Run cases:
+   ```
+   mkdir testcase_dir
+   mkdir /dev/shm/findings_dir
+   cp <seed> testcase_dir
+   afl-turbo-fuzz -i testcase_dir -o /dev/shm/findings_dir <test_app> @@
+   ```
+   Note: /dev/shm is tmpfs.
+
+   Fuzzing Code Coverage in Linux with [AFLTurbo](https://github.com/sleicasper/aflturbo) and [lcov](http://ltp.sourceforge.net/coverage/lcov.php).
+   Install lcov `sudo apt-get install lcov`.
+
+   Build cases with AFL toolchain `-DTOOLCHAIN=AFL -DGCOV=ON`.
+   ```
+   cd libspdm
+   mkdir build
+   cd build
+   cmake -DARCH=x64 -DTOOLCHAIN=AFL -DTARGET=Release -DCRYPTO=mbedtls -DGCOV=ON ..
+   make copy_sample_key
+   make
+   ```
+   You can launch the script `fuzzing_AFLTurbo.sh` to run a duration for each fuzzing test case. If you want to run a specific case, please modify the cmd tuple in the script.
+
+   Firstly install [screen](https://www.gnu.org/software/screen/) `sudo apt install screen`.
+
+   The usage of the script `fuzzing_AFLTurbo.sh` is as following:
+   ```
+   libspdm/unit_test/fuzzing/fuzzing_AFLTurbo.sh <CRYPTO> <GCOV> <duration>
+   <CRYPTO> means selected Crypto library: mbedtls or openssl
+   <GCOV> means enable Code Coverage or not: ON or OFF
+   <duration> means the duration of every program keep fuzzing: NUMBER seconds
+   ```
+   For example: build with `mbedtls`, enable Code Coverage and every test case run 60 seconds.
+   ```
+   libspdm/unit_test/fuzzing/fuzzing_AFLTurbo.sh mbedtls ON 60
+   ```
+   Fuzzing output path and code coverage output path of the script `fuzzing_AFLTurbo.sh`:
+   ```
+   #libspdm/unit_test/fuzzing/out_<CRYPTO>_<GitLogHash>_<TIMESTAMP>/SummaryList.csv
+   libspdm/unit_test/fuzzing/out_mbedtls_ac992fd_2022-06-23_08-45-48/SummaryList.csv
+   #libspdm/unit_test/fuzzing/out_<CRYPTO>_<GitLogHash>_<TIMESTAMP>/coverage_log/index.html
+   libspdm/unit_test/fuzzing/out_mbedtls_ac992f_2022-06-23_08-45-48/coverage_log/index.html
+   ```
+
 ### Run Symbolic Execution
 
 1) [KLEE](https://klee.github.io/)
