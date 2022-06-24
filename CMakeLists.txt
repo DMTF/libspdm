@@ -668,6 +668,8 @@ endif()
     ADD_SUBDIRECTORY(unit_test/fuzzing/test_responder/test_spdm_responder_chunk_get)
     ADD_SUBDIRECTORY(unit_test/fuzzing/test_requester/test_spdm_requester_chunk_get)
     ADD_SUBDIRECTORY(unit_test/fuzzing/test_spdm_common/test_process_opaque_data)
+    ADD_SUBDIRECTORY(unit_test/fuzzing/test_responder/test_spdm_responder_chunk_send_ack)
+    ADD_SUBDIRECTORY(unit_test/fuzzing/test_requester/test_spdm_requester_chunk_send)
 
     ADD_SUBDIRECTORY(os_stub/cryptlib_null)
     ADD_SUBDIRECTORY(unit_test/test_size/cryptstublib_dummy)
