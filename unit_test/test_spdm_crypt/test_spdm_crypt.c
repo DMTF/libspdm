@@ -270,10 +270,9 @@ int libspdm_crypt_lib_test_main(void)
     const struct CMUnitTest spdm_crypt_lib_tests[] = {
         cmocka_unit_test(
             libspdm_test_crypt_spdm_get_dmtf_subject_alt_name_from_bytes),
-        /* There is a libspdm_test_crypt_spdm_get_dmtf_subject_alt_name work around.
-         * cmocka_unit_test(
-         *   libspdm_test_crypt_spdm_get_dmtf_subject_alt_name),
-         **/
+
+        cmocka_unit_test(libspdm_test_crypt_spdm_get_dmtf_subject_alt_name),
+
         cmocka_unit_test(libspdm_test_crypt_spdm_x509_certificate_check)
     };
 
