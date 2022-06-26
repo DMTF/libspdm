@@ -4558,16 +4558,8 @@ static uint8_t m_libspdm_oid_subject_alt_name[] = { 0x55, 0x1D, 0x11 };
  * @param[out]     oid              OID of otherName
  * @param[in,out]  oid_size          the buffersize for required OID
  *
- * @retval RETURN_SUCCESS           The certificate Organization name retrieved successfully.
- * @retval RETURN_INVALID_PARAMETER If cert is NULL.
- *                                 If name_buffer_size is NULL.
- *                                 If name_buffer is not NULL and *common_name_size is 0.
- *                                 If Certificate is invalid.
- * @retval RETURN_NOT_FOUND         If no SubjectAltName exists.
- * @retval RETURN_BUFFER_TOO_SMALL  If the name_buffer is NULL. The required buffer size
- *                                 (including the final null) is returned in the
- *                                 name_buffer_size parameter.
- * @retval RETURN_UNSUPPORTED       The operation is not supported.
+ * @retval true                     get the subjectAltName string successfully
+ * @retval failed                   get the subjectAltName string failed
  **/
 bool libspdm_get_dmtf_subject_alt_name_from_bytes(
     uint8_t *buffer, const size_t len, char *name_buffer,
@@ -4578,6 +4570,12 @@ bool libspdm_get_dmtf_subject_alt_name_from_bytes(
     int32_t length;
     size_t obj_len;
     int32_t ret;
+
+    /*copy mem variable*/
+    volatile uint8_t* dst;
+    const volatile uint8_t* src;
+    size_t dst_len;
+    size_t src_len;
 
     length = (int32_t)len;
     ptr = buffer;
@@ -4626,12 +4624,40 @@ bool libspdm_get_dmtf_subject_alt_name_from_bytes(
         return false;
     }
 
-    if (name_buffer != NULL) {
-        libspdm_copy_mem(name_buffer, *name_buffer_size, ptr, obj_len);
+    /* the src and dst adress are overlap,
+    * When the function is called by libspdm_get_dmtf_subject_alt_name.
+    * libspdm_copy_mem can not be uesed */
+    if ((name_buffer != NULL) && (ptr != NULL)) {
+        dst = (volatile uint8_t*) name_buffer;
+        src = (const volatile uint8_t*) ptr;
+        dst_len = *name_buffer_size;
+        src_len = obj_len;
+
+        /* Check for case where "dst_len" may be invalid. Do not zero "dst" in this case. */
+        if (dst_len > (SIZE_MAX >> 1)) {
+            LIBSPDM_ASSERT(0);
+            return false;
+        }
+
+        /* Guard against invalid lengths. Zero "dst" in these cases. */
+        if (src_len > dst_len ||
+            src_len > (SIZE_MAX >> 1)) {
+            libspdm_zero_mem(name_buffer, dst_len);
+            LIBSPDM_ASSERT(0);
+            return false;
+        }
+
+        while (src_len-- != 0) {
+            *(dst++) = *(src++);
+        }
+
+        /*encode name buffer to string*/
         *name_buffer_size = obj_len + 1;
         name_buffer[obj_len] = 0;
+        return true;
     }
-    return true;
+
+    return false;
 }
 
 /**
@@ -4650,16 +4676,8 @@ bool libspdm_get_dmtf_subject_alt_name_from_bytes(
  * @param[out]     oid              OID of otherName
  * @param[in,out]  oid_size          the buffersize for required OID
  *
- * @retval RETURN_SUCCESS           The certificate Organization name retrieved successfully.
- * @retval RETURN_INVALID_PARAMETER If cert is NULL.
- *                                 If name_buffer_size is NULL.
- *                                 If name_buffer is not NULL and *common_name_size is 0.
- *                                 If Certificate is invalid.
- * @retval RETURN_NOT_FOUND         If no SubjectAltName exists.
- * @retval RETURN_BUFFER_TOO_SMALL  If the name_buffer is NULL. The required buffer size
- *                                 (including the final null) is returned in the
- *                                 name_buffer_size parameter.
- * @retval RETURN_UNSUPPORTED       The operation is not supported.
+ * @retval true                     get the subjectAltName string successfully
+ * @retval failed                   get the subjectAltName string failed
  **/
 bool
 libspdm_get_dmtf_subject_alt_name(const uint8_t *cert, const size_t cert_size,

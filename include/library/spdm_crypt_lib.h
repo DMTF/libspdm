@@ -1263,16 +1263,8 @@ bool libspdm_is_root_certificate(const uint8_t *cert, size_t cert_size);
  * @param[out]     oid              OID of otherName
  * @param[in,out]  oid_size          the buffersize for required OID
  *
- * @retval RETURN_SUCCESS           The certificate Organization name retrieved successfully.
- * @retval RETURN_INVALID_PARAMETER If cert is NULL.
- *                                 If name_buffer_size is NULL.
- *                                 If name_buffer is not NULL and *common_name_size is 0.
- *                                 If Certificate is invalid.
- * @retval RETURN_NOT_FOUND         If no SubjectAltName exists.
- * @retval RETURN_BUFFER_TOO_SMALL  If the name_buffer is NULL. The required buffer size
- *                                 (including the final null) is returned in the
- *                                 name_buffer_size parameter.
- * @retval RETURN_UNSUPPORTED       The operation is not supported.
+ * @retval true                     get the subjectAltName string successfully
+ * @retval failed                   get the subjectAltName string failed
  **/
 bool libspdm_get_dmtf_subject_alt_name_from_bytes(
     uint8_t *buffer, const size_t len, char *name_buffer,
@@ -1295,16 +1287,8 @@ bool libspdm_get_dmtf_subject_alt_name_from_bytes(
  * @param[out]     oid              OID of otherName
  * @param[in,out]  oid_size          the buffersize for required OID
  *
- * @retval RETURN_SUCCESS           The certificate Organization name retrieved successfully.
- * @retval RETURN_INVALID_PARAMETER If cert is NULL.
- *                                 If name_buffer_size is NULL.
- *                                 If name_buffer is not NULL and *common_name_size is 0.
- *                                 If Certificate is invalid.
- * @retval RETURN_NOT_FOUND         If no SubjectAltName exists.
- * @retval RETURN_BUFFER_TOO_SMALL  If the name_buffer is NULL. The required buffer size
- *                                 (including the final null) is returned in the
- *                                 name_buffer_size parameter.
- * @retval RETURN_UNSUPPORTED       The operation is not supported.
+ * @retval true                     get the subjectAltName string successfully
+ * @retval failed                   get the subjectAltName string failed
  **/
 bool
 libspdm_get_dmtf_subject_alt_name(const uint8_t *cert, const size_t cert_size,
