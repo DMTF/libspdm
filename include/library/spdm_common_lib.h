@@ -111,20 +111,6 @@ typedef enum {
      **/
     LIBSPDM_DATA_HANDLE_ERROR_RETURN_POLICY,
 
-    /**
-     * The LIBSPDM_DATA_NEED_RESET control whether responder device requires a reset to complete the SET_CERT request.
-     * If the LIBSPDM_DATA_NEED_RESET is not set, the responder device doesn't need reset.
-     * If the LIBSPDM_DATA_NEED_RESET sets, the responder device needs reset.
-     **/
-    LIBSPDM_DATA_NEED_RESET_SET_CERT,
-
-    /**
-     * The LIBSPDM_DATA_NEED_RESET control whether responder device requires a reset to complete the GET_CSR request.
-     * If the LIBSPDM_DATA_NEED_RESET is not set, the responder device doesn't need reset.
-     * If the LIBSPDM_DATA_NEED_RESET sets, the responder device needs reset.
-     **/
-    LIBSPDM_DATA_NEED_RESET_GET_CSR,
-
     /* VCA cached for CACHE_CAP in 1.2 for transcript.*/
     LIBSPDM_DATA_VCA_CACHE,
     /* MAX*/

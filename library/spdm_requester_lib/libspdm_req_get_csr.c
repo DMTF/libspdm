@@ -46,6 +46,12 @@ libspdm_return_t libspdm_try_get_csr(void *context,
 
     spdm_context = context;
 
+    if (!libspdm_is_capabilities_flag_supported(
+            spdm_context, true, 0,
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CSR_CAP)) {
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+    }
+
     LIBSPDM_ASSERT(opaque_data_length < SPDM_MAX_OPAQUE_DATA_SIZE);
 
     if (spdm_context->connection_info.connection_state <

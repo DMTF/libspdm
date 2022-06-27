@@ -113,6 +113,8 @@ void libspdm_test_requester_get_csr_case1(void **state)
 
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CSR_CAP;
 
     status = libspdm_get_csr(spdm_context, NULL, 0, NULL, 0, NULL, (void *)&csr_form_get,
                              &csr_len);
@@ -143,6 +145,8 @@ void libspdm_test_requester_get_csr_case2(void **state)
 
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CSR_CAP;
 
     status = libspdm_get_csr(spdm_context, NULL, 0, NULL, 0, NULL, (void *)&csr_form_get,
                              &csr_len);

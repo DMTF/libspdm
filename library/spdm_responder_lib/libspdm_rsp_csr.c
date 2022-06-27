@@ -94,6 +94,14 @@ libspdm_return_t libspdm_get_response_csr(void *context, size_t request_size,
         }
     }
 
+    if (!libspdm_is_capabilities_flag_supported(
+            spdm_context, false, 0,
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CSR_CAP)) {
+        return libspdm_generate_error_response(
+            spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
+            SPDM_GET_CSR, response_size, response);
+    }
+
     requester_info_length = spdm_request->requester_info_length;
     opaque_data_length = spdm_request->opaque_data_length;
 
@@ -107,7 +115,9 @@ libspdm_return_t libspdm_get_response_csr(void *context, size_t request_size,
 
     requester_info = (void*)(opaque_data + opaque_data_length);
 
-    need_reset = spdm_context->need_reset_to_get_csr;
+    need_reset = libspdm_is_capabilities_flag_supported(
+        spdm_context, false, 0,
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_INSTALL_RESET_CAP);
 
     result = libspdm_verify_req_info(requester_info, requester_info_length);
     if (!result) {
@@ -134,7 +144,10 @@ libspdm_return_t libspdm_get_response_csr(void *context, size_t request_size,
     libspdm_zero_mem(response, *response_size);
     spdm_response = response;
 
-    if (spdm_context->need_reset_to_get_csr && need_reset) {
+    if (libspdm_is_capabilities_flag_supported(
+            spdm_context, false, 0,
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_INSTALL_RESET_CAP) &&
+        need_reset) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_RESET_REQUIRED, 0,
                                                response_size, response);
