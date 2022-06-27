@@ -43,6 +43,12 @@ libspdm_return_t libspdm_try_set_certificate(void *context, uint8_t slot_id,
 
     spdm_context = context;
 
+    if (!libspdm_is_capabilities_flag_supported(
+            spdm_context, true, 0,
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP)) {
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+    }
+
     LIBSPDM_ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
 
     if ((cert_chain == NULL) || (cert_chain_size == 0)) {

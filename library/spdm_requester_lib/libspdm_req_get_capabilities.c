@@ -33,6 +33,9 @@ static bool validate_responder_capability(uint32_t capabilities_flag,
      * uint8_t key_upd_cap = (uint8_t)(capabilities_flag>>14)&0x01;*/
     uint8_t handshake_in_the_clear_cap = (uint8_t)(capabilities_flag >> 15) & 0x01;
     uint8_t pub_key_id_cap = (uint8_t)(capabilities_flag >> 16) & 0x01;
+    uint8_t set_cert_cap = (uint8_t)(capabilities_flag >> 19) & 0x01;
+    uint8_t csr_cap = (uint8_t)(capabilities_flag >> 20) & 0x01;
+    uint8_t cert_install_reset_cap = (uint8_t)(capabilities_flag >> 21) & 0x01;
 
     switch (version) {
     case SPDM_MESSAGE_VERSION_10:
@@ -76,6 +79,18 @@ static bool validate_responder_capability(uint32_t capabilities_flag,
         /*reserved values selected in flags*/
         if (meas_cap == 3 || psk_cap == 3) {
             return false;
+        }
+
+        /*If CERT_INSTALL_RESET_CAP is set, CSR_CAP and/or SET_CERT_CAP shall be set.*/
+        if (cert_install_reset_cap == 1) {
+            if (set_cert_cap != 1) {
+                return false;
+            }
+        } else {
+            /*If CSR_CAP is set, SET_CERT_CAP shall be set.*/
+            if (csr_cap > set_cert_cap) {
+                return false;
+            }
         }
 
         return true;

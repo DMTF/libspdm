@@ -416,14 +416,6 @@ typedef struct {
 
     uint8_t handle_error_return_policy;
 
-    /* Control whether responder device requires a reset to complete the SET_CERT request.*/
-
-    bool need_reset_to_set_cert;
-
-    /* Control whether responder device requires a reset to complete the GET_CSR request.*/
-
-    bool need_reset_to_get_csr;
-
 #if LIBSPDM_ENABLE_CHUNK_CAP
     /* Chunk specific context */
     libspdm_chunk_context_t chunk_context;

@@ -94,6 +94,14 @@ libspdm_return_t libspdm_get_response_set_certificate(void *context, size_t requ
         }
     }
 
+    if (!libspdm_is_capabilities_flag_supported(
+            spdm_context, false, 0,
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP)) {
+        return libspdm_generate_error_response(
+            spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
+            SPDM_SET_CERTIFICATE, response_size, response);
+    }
+
     slot_id = spdm_request->header.param1 & SPDM_GET_CERTIFICATE_REQUEST_SLOT_ID_MASK;
     if (slot_id >= SPDM_MAX_SLOT_COUNT) {
         return libspdm_generate_error_response(spdm_context,
@@ -135,7 +143,10 @@ libspdm_return_t libspdm_get_response_set_certificate(void *context, size_t requ
     libspdm_zero_mem(response, *response_size);
     spdm_response = response;
 
-    if (spdm_context->need_reset_to_set_cert) {
+    /*requires a reset to complete the SET_CERTIFICATE request*/
+    if (libspdm_is_capabilities_flag_supported(
+            spdm_context, false, 0,
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_INSTALL_RESET_CAP)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_RESET_REQUIRED, 0,
                                                response_size, response);

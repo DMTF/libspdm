@@ -499,18 +499,6 @@ libspdm_return_t libspdm_set_data(void *context, libspdm_data_type_t data_type,
         }
         spdm_context->handle_error_return_policy = *(uint8_t *)data;
         break;
-    case LIBSPDM_DATA_NEED_RESET_SET_CERT:
-        if (data_size != sizeof(bool)) {
-            return LIBSPDM_STATUS_INVALID_PARAMETER;
-        }
-        spdm_context->need_reset_to_set_cert = *(bool *)data;
-        break;
-    case LIBSPDM_DATA_NEED_RESET_GET_CSR:
-        if (data_size != sizeof(bool)) {
-            return LIBSPDM_STATUS_INVALID_PARAMETER;
-        }
-        spdm_context->need_reset_to_get_csr = *(bool *)data;
-        break;
     case LIBSPDM_DATA_VCA_CACHE:
         if (data_size > sizeof(spdm_context->transcript.message_a.buffer)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
@@ -758,14 +746,6 @@ libspdm_return_t libspdm_get_data(void *context, libspdm_data_type_t data_type,
     case LIBSPDM_DATA_HANDLE_ERROR_RETURN_POLICY:
         target_data_size = sizeof(uint8_t);
         target_data = &spdm_context->handle_error_return_policy;
-        break;
-    case LIBSPDM_DATA_NEED_RESET_SET_CERT:
-        target_data_size = sizeof(bool);
-        target_data = &spdm_context->need_reset_to_set_cert;
-        break;
-    case LIBSPDM_DATA_NEED_RESET_GET_CSR:
-        target_data_size = sizeof(bool);
-        target_data = &spdm_context->need_reset_to_get_csr;
         break;
     case LIBSPDM_DATA_VCA_CACHE:
         target_data_size = spdm_context->transcript.message_a.buffer_size;
