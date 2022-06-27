@@ -110,6 +110,11 @@ jobs:
         run: |
           cd build/bin
           ./test_spdm_common
+      - name: Test_spdm_crypt
+        if: matrix.toolchain != 'LIBFUZZER'
+        run: |
+          cd build/bin
+          ./test_spdm_crypt
       - name: Test with initial seed
         if: matrix.os == 'ubuntu-latest' && matrix.arch == 'x64'
         run: |
