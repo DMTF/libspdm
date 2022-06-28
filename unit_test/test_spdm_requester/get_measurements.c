@@ -2711,6 +2711,8 @@ libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
         spdm_measurement_block_dmtf_t *measurment_block;
         uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
         size_t temp_buf_size;
+        uint8_t* temp_buf_ptr;
+
         uint8_t *ptr;
         ((libspdm_context_t *)spdm_context)->connection_info.algorithm.measurement_hash_algo =
             m_libspdm_use_measurement_hash_algo;
@@ -2718,7 +2720,8 @@ libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
                         sizeof(spdm_measurement_block_dmtf_t) +
                         libspdm_get_measurement_hash_size(m_libspdm_use_measurement_hash_algo) +
                         SPDM_NONCE_SIZE + sizeof(uint16_t);
-        spdm_response = (void *)temp_buf;
+        temp_buf_ptr = temp_buf + sizeof(libspdm_test_message_header_t);
+        spdm_response = (void *)temp_buf_ptr;
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response->header.request_response_code = SPDM_MEASUREMENTS;
@@ -2749,13 +2752,12 @@ libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
 
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer) - m_libspdm_local_buffer_size,
-                         temp_buf, temp_buf_size);
+                         temp_buf_ptr, temp_buf_size);
         m_libspdm_local_buffer_size += temp_buf_size;
 
-        libspdm_transport_test_encode_message(spdm_context, NULL, false,
-                                              false, temp_buf_size,
-                                              temp_buf, response_size,
-                                              response);
+        libspdm_transport_test_encode_message(spdm_context, NULL, false, false,
+                                              temp_buf_size, temp_buf_ptr,
+                                              response_size, response);
     }
         return LIBSPDM_STATUS_SUCCESS;
 
