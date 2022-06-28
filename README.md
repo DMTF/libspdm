@@ -28,11 +28,11 @@
 
 4) Implemented Requests and Responses
 
-   SPDM 1.0: GET_VERSION, GET_CAPABILITY, NEGOTIATE_ALGORITHM, GET_DIGEST, GET_CERTIFICATE, CHALLENGE, GET_MEASUREMENT
+   SPDM 1.0: `GET_VERSION`, `GET_CAPABILITIES`, `NEGOTIATE_ALGORITHMS`, `GET_DIGESTS`, `GET_CERTIFICATE`, `CHALLENGE`, and `GET_MEASUREMENTS`.
 
-   SPDM 1.1: KEY_EXCHANGE, FINISH, PSK_EXCHANGE, PSK_FINISH, END_SESSION, HEARTBEAT, KEY_UPDATE, ENCAPSULATED message
+   SPDM 1.1: `KEY_EXCHANGE`, `FINISH`, `PSK_EXCHANGE`, `PSK_FINISH`, `END_SESSION`, `HEARTBEAT`, `KEY_UPDATE`, and `ENCAPSULATED` messages.
 
-   SPDM 1.2: GET_CSR - TBD, SET_CERTIFICATE - TBD, CHUNK message - TBD
+   SPDM 1.2: `GET_CSR`, `SET_CERTIFICATE`, `CHUNK_SEND`, and `CHUNK_GET`.
 
 5) Cryptographic Algorithm Support
 
@@ -90,6 +90,7 @@
     - Change LLVM install path to C:/LLVM.
     - LLVM13 works good for clang and [libfuzzer](https://llvm.org/docs/LibFuzzer.html) build. Other versions are not validated for clang build.
     - Because the libfuzzer lib path is hard coded in CMakeLists, other versions may fail for libfuzzer build.
+
 2) [CMake](https://cmake.org/) (Version [3.17.2](https://github.com/Kitware/CMake/releases/tag/v3.17.2) is known to work. Newer versions may fail).
 
 ### Build Tools for Linux
@@ -101,7 +102,6 @@
     b) [LLVM](https://llvm.org/) (above LLVM10), install steps: `sudo apt-get install llvm-10` then `sudo apt-get install clang-10`. Use `llvm-ar -version` and `clang -v` to confirm the LLVM version. If LLVM installation fails or LLVM installation version is low, you can update Linux version to fix the issue.
 
 2) [CMake](https://cmake.org/).
-
 
 ### Cryptography Library
 
@@ -156,9 +156,9 @@
    ```
 
    Note ia32 build is not supported for CLANG build on Windows.
-   
+
    CMake can also generate Visual Studio project files. For example:
-   
+
    ```
    cmake -G"Visual Studio 16 2019" -DARCH=x64 -DTOOLCHAIN=VS2019 -DTARGET=Release -DCRYPTO=mbedtls ..
    ```
@@ -229,7 +229,7 @@ Example CMake commands:
 
    Refer to [spdm_dump](https://github.com/DMTF/spdm-dump/blob/main/doc/spdm_dump.md) for more details.
 
-### Other Test
+### Other Tests
 
   libspdm also supports other tests such as code coverage, fuzzing, symbolic execution, model checker.
 
