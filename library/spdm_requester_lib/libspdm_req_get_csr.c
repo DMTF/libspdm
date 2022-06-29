@@ -135,7 +135,7 @@ libspdm_return_t libspdm_try_get_csr(void *context,
     }
     if (spdm_response->header.request_response_code == SPDM_ERROR) {
         status = libspdm_handle_error_response_main(
-            spdm_context, NULL,
+            spdm_context, session_id,
             &spdm_response_size,
             (void **)&spdm_response, SPDM_GET_CSR, SPDM_CSR,
             sizeof(spdm_csr_response_t));
