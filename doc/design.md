@@ -270,7 +270,7 @@
 
 9) [spdm_lib_config.h](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_lib_config.h) provides an example of the configuration macros used in the libspdm library.
 
-The integrator can override the use of this file by defining the `LIBSPDM_CONFIG` macro.
+   The integrator can override the use of this file by defining the `LIBSPDM_CONFIG` macro.
 
 10) SPDM library depends upon the [HAL library](https://github.com/DMTF/libspdm/tree/main/include/hal).
 
