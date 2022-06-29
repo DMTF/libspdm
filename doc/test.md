@@ -1,8 +1,8 @@
-# Test in libspdm
+# Tests in libspdm
 
-Besides spdm_emu and UnitTest introduced in readme, libspdm also supports some other tests.
+Besides spdm_emu and UnitTest introduced in README, libspdm also supports other tests.
 
-## Prerequisit
+## Prerequisites
 
 ### Build Tool
 
@@ -48,7 +48,7 @@ git clone https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.gi
 
 cd toolchain
 ./build-all.sh --no-elf32 --cpu hs38 --install-dir $INSTALL_ROOT
-# This command will build toolchain for arc HS Linux development, for other arc cores please refer to https://github.com/foss-for-synopsys-dwc-arc-processors/toolchain/blob/arc-releases/README.md
+# This command will build toolchain for arc HS Linux development, for other arc cores refer to https://github.com/foss-for-synopsys-dwc-arc-processors/toolchain/blob/arc-releases/README.md
 
 sudo ln -s /<work_dir>/arc_gnu/toolchain/bin/* /usr/bin
 ```
@@ -127,7 +127,7 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
 
 ### Run fuzzing
 
-1) fuzzing in Linux with [AFL](https://lcamtuf.coredump.cx/afl/)
+1) Fuzzing in Linux with [AFL](https://lcamtuf.coredump.cx/afl/)
 
    Download and install [AFL](http://lcamtuf.coredump.cx/afl/releases/afl-latest.tgz).
    Unzip and follow docs\QuickStartGuide.txt.
@@ -181,9 +181,9 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    make copy_sample_key
    make
    ```
-   You can launch the script `fuzzing_AFL.sh` to run a duration for each fuzzing test case. If you want to run a specific case, please modify the cmd tuple in the script.
+   You can launch the script `fuzzing_AFL.sh` to run a duration for each fuzzing test case. If you want to run a specific case modify the cmd tuple in the script.
 
-   Firstly install [screen](https://www.gnu.org/software/screen/) `sudo apt install screen`.
+   First install [screen](https://www.gnu.org/software/screen/) `sudo apt install screen`.
 
    The usage of the script `fuzzing_AFL.sh` is as following:
    ```
@@ -204,14 +204,14 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    libspdm/unit_test/fuzzing/out_mbedtls_ac992fd/coverage_log/index.html
    ```
 
-2) fuzzing in Windows with [winafl](https://github.com/googleprojectzero/winafl)
+2) Fuzzing in Windows with [winafl](https://github.com/googleprojectzero/winafl)
 
    Clone [winafl](https://github.com/googleprojectzero/winafl).
    Download [DynamoRIO](https://dynamorio.org/).
 
    Set path `set AFL_PATH=<AFL_PATH>` and `set DRIO_PATH=<DynameRIO_PATH>`.
 
-   NOTE: as known issue https://github.com/googleprojectzero/winafl/issues/145 that cause compatibility issues in recent Windows versions, the author has disabled Drsyms in recent WinAFL builds, if you want you use the newest version, please according to Method.2 to rebuild winafl yourself.
+   NOTE: due to an issue https://github.com/googleprojectzero/winafl/issues/145 that causes compatibility issues in recent Windows versions, the author has disabled Drsyms in recent WinAFL builds. If you want to use the newest version you will need to rebuild winafl as detailed in the issue.
 
    Build winafl:
    ```
@@ -221,7 +221,7 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    cmake --build . --config Release
    ```
 
-   NOTE: If you get errors where the linker couldn't find certain .lib files. please refer to https://github.com/googleprojectzero/winafl/issues/145 and delete the nonexistent files from "Additional Dependencies".
+   NOTE: If you get errors where the linker couldn't find certain .lib files refer to https://github.com/googleprojectzero/winafl/issues/145 and delete the nonexistent files from "Additional Dependencies".
 
    Copy all binary under [build32|build64]/bin/Release to [bin32|bin64]. `robocopy /E /is /it [build32|build64]/bin/Release [bin32|bin64]`.
 
@@ -235,9 +235,9 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    afl-fuzz.exe -i in -o out -D %DRIO_PATH%\<bin64|bin32> -t 20000 -- -coverage_module <test_app> -fuzz_iterations 1000 -target_module <test_app> -target_method main -nargs 2 -- <test_app> @@
    ```
 
-3) fuzzing in Linux with LLVM [LibFuzzer](https://llvm.org/docs/LibFuzzer.html)
+3) Fuzzing in Linux with LLVM [LibFuzzer](https://llvm.org/docs/LibFuzzer.html)
 
-   Firstly please install LLVM with: `sudo apt install llvm`, and install CLANG with: `sudo apt install clang`.
+   First install LLVM with: `sudo apt install llvm`, and install CLANG with: `sudo apt install clang`.
 
    Ensure LLVM and CLANG binary in PATH environment variable.
    Use `llvm-ar --version` and `clang --version` to confirm the LLVM version(Take 'Ubuntu 20.04.2 LTS' as an example).
@@ -254,11 +254,11 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    clang version 10.0.0-4ubuntu1
    Target: x86_64-pc-linux-gnu
    Thread model: posix
-   InstalledDir: /usr/bin  
+   InstalledDir: /usr/bin
    ```
-   Currently when building with LIBFUZZER toolchain, it will enable [AddressSanitizer](https://clang.llvm.org/docs/AddressSanitizer.html) by using the `-fsanitize=fuzzer,address` flag during the compilation and linking. 
+   Currently when building with LIBFUZZER toolchain, it will enable [AddressSanitizer](https://clang.llvm.org/docs/AddressSanitizer.html) by using the `-fsanitize=fuzzer,address` flag during the compilation and linking.
    You can check it in [CMakeLists.txt](https://github.com/DMTF/libspdm/blob/main/CMakeLists.txt).
-   
+
    Build cases with LIBFUZZER toolchain `-DTOOLCHAIN=LIBFUZZER`(Note the unit test doesn't build when DTOOLCHAIN=LIBFUZZER).
    ```
    cd libspdm
@@ -268,7 +268,7 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    make copy_sample_key
    make
    ```
-   If you want to collect the code coverage of fuzzing test, please build cases with `-DGCOV=ON`.
+   If you want to collect the code coverage of fuzzing test build cases with `-DGCOV=ON`.
    ```
    cmake -DARCH=x64 -DTOOLCHAIN=LIBFUZZER -DTARGET=Release -DCRYPTO=mbedtls -DGCOV=ON ..
    ```
@@ -277,9 +277,9 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    mkdir NEW_CORPUS_DIR // Copy test seeds to the folder before run test
    <test_app> NEW_CORPUS_DIR -rss_limit_mb=0 -artifact_prefix=<OUTPUT_PATH>
    ```
-   You can launch the script `fuzzing_LibFuzzer.sh` to run a duration for each fuzzing test case. If you want to run a specific case, please modify the cmd tuple in the script.
+   You can launch the script `fuzzing_LibFuzzer.sh` to run a duration for each fuzzing test case. If you want to run a specific case modify the cmd tuple in the script.
 
-   Firstly install [screen](https://www.gnu.org/software/screen/) `sudo apt install screen`.
+   First install [screen](https://www.gnu.org/software/screen/) `sudo apt install screen`.
 
    The usage of the script `fuzzing_LibFuzzer.sh` is as following:
    ```
@@ -297,7 +297,7 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    #libspdm/unit_test/fuzzing/out_libfuzz_<CRYPTO>_<GitLogHash>/
    libspdm/unit_test/fuzzing/out_libfuzz_mbedtls_05e7bb4/
    ```
-4) fuzzing in Windows with LLVM [LibFuzzer](https://llvm.org/docs/LibFuzzer.html)
+4) Fuzzing in Windows with LLVM [LibFuzzer](https://llvm.org/docs/LibFuzzer.html)
 
    Note: IA32 build is not supported with LLVM in Windows.
 
@@ -310,10 +310,10 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    mkdir NEW_CORPUS_DIR // Copy test seeds to the folder before run test
    <test_app> NEW_CORPUS_DIR -rss_limit_mb=0 -artifact_prefix=<OUTPUT_PATH>
    ```
-5) fuzzing in Linux with [OSS-Fuzz](https://github.com/google/oss-fuzz) locally
+5) Fuzzing in Linux with [OSS-Fuzz](https://github.com/google/oss-fuzz) locally
 
-   Take 'Ubuntu 20.04.2 LTS' as an example:  
-   a. Install [Docker](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository)  
+   Take 'Ubuntu 20.04.2 LTS' as an example:
+   a. Install [Docker](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository)
    You can verify that Docker Engine is installed correctly by running the hello-world image.
    ```
    sudo docker run hello-world
@@ -323,37 +323,37 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    Hello from Docker!
    This message shows that your installation appears to be working correctly.
    ```
-   If you get the following `Timeout` error, please add and check your proxy configuration.
+   If you get the following `Timeout` error add and check your proxy configuration.
    ```
    Unable to find image 'hello-world:latest' locally
    docker: Error response from daemon: Get https://registry-1.docker.io/v2/: net/http: request canceled while waiting for connection (Client.Timeout exceeded while awaiting headers).
    See 'docker run --help'.
    ```
    Just add your Proxy details to the `/etc/systemd/system/docker.service.d/proxy.conf` (folder docker.service.d may not exists , so create the directory before), for example:
-   ``` 
+   ```
    [Service]
    Environment="HTTP_PROXY=http://proxy.example.com:80/"
    Environment="HTTPS_PROXY=https://proxy.example.com:80/"
    ```
-   If you get the following `toomanyrequests` error, please configure the registry-mirrors option for the Docker daemon.
+   If you get the following `toomanyrequests` error, configure the registry-mirrors option for the Docker daemon.
    ```
    Unable to find image 'hello-world:latest' locally
    docker: Error response from daemon: toomanyrequests: You have reached your pull rate limit. You may increase the limit by authenticating and upgrading: https://www.docker.com/increase-rate-limit.
    ```
    Just add your mirror details to the `/etc/docker/daemon.json`, for example:
    ```
-   { 
-      "registry-mirrors": ["https.your-mirror.example.com"] 
+   {
+      "registry-mirrors": ["https.your-mirror.example.com"]
    }
    ```
-   If you want to run `docker` without `sudo`, you can create a docker group.  
+   If you want to run `docker` without `sudo`, you can create a docker group.
    To create the docker group, add your user and activate the changes to groups:
    ```
    sudo groupadd docker
    sudo usermod -aG docker $USER
    newgrp docker
    ```
-   b. Setting up new project  
+   b. Setting up new project
    Clone [OSS-Fuzz](https://github.com/google/oss-fuzz)
    ```
    git clone https://github.com/google/oss-fuzz.git
@@ -370,7 +370,7 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    cd ~/oss-fuzz
    cp ~/libspdm/unit_test/fuzzing/oss-fuzz_conf/* ~/oss-fuzz/projects/libspdm/
    ```
-   c. Testing locally  
+   c. Testing locally
    Build your docker image
    ```
    cd oss-fuzz
@@ -381,7 +381,7 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    Successfully built 19b86a662c16
    Successfully tagged gcr.io/oss-fuzz/libspdm:latest
    ```
-   If you get the following `connection timed out` error when building docker image, unable to apt-get update through dockerfile, please enable proxy configuration in `Dockerfile`.
+   If you get the following `connection timed out` error when building docker image, unable to apt-get update through dockerfile then enable proxy configuration in `Dockerfile`.
    ```
    Err:1 http://archive.ubuntu.com/ubuntu xenial InRelease
    Could not connect to archive.ubuntu.com:80 (91.189.88.162), connection timed out [IP: 91.189.88.162 80]
@@ -408,10 +408,10 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    ```
    sudo python3 infra/helper.py coverage --no-corpus-download $PROJECT_NAME --fuzz-target=test_spdm_responder_version
    ```
-   d. Automation script  
-   You can launch the script `oss_fuzz.sh` to run a duration for each fuzzing test case. If you want to run a specific case, please modify the cmd tuple in the script.
+   d. Automation script
+   You can launch the script `oss_fuzz.sh` to run a duration for each fuzzing test case. If you want to run a specific case modify the cmd tuple in the script.
 
-   Firstly install [screen](https://www.gnu.org/software/screen/) `sudo apt install screen`.
+   First install [screen](https://www.gnu.org/software/screen/) `sudo apt install screen`.
 
    The usage of the script `oss_fuzz.sh` is as following:
    ```
@@ -424,7 +424,7 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    ```
    libspdm/unit_test/fuzzing/oss_fuzz.sh mbedtls ON 30
    ```
-6) fuzzing in Linux with [AFLTurbo](https://github.com/sleicasper/aflturbo)
+6) Fuzzing in Linux with [AFLTurbo](https://github.com/sleicasper/aflturbo)
 
    #### Clone the repository and build the aflturbo code
    ```
@@ -476,9 +476,9 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    make copy_sample_key
    make
    ```
-   You can launch the script `fuzzing_AFLTurbo.sh` to run a duration for each fuzzing test case. If you want to run a specific case, please modify the cmd tuple in the script.
+   You can launch the script `fuzzing_AFLTurbo.sh` to run a duration for each fuzzing test case. If you want to run a specific case modify the cmd tuple in the script.
 
-   Firstly install [screen](https://www.gnu.org/software/screen/) `sudo apt install screen`.
+   First install [screen](https://www.gnu.org/software/screen/) `sudo apt install screen`.
 
    The usage of the script `fuzzing_AFLTurbo.sh` is as following:
    ```
@@ -503,12 +503,12 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
 
 1) [KLEE](https://klee.github.io/)
 
-   Download and install [KLEE with LLVM9](https://klee.github.io/build-llvm9/). Please follow all 12 steps including optional ones.
+   Download and install [KLEE with LLVM9](https://klee.github.io/build-llvm9/). Follow all 12 steps including optional ones.
 
-   In step 3, constrint solver [STP](http://klee.github.io/build-stp) is recommended here.
+   In step 3, constraint solver [STP](http://klee.github.io/build-stp) is recommended here.
    Set size of the stack to a very large value: `$ ulimit -s unlimited`.
 
-   In step 8, below example can be use:
+   In step 8, below example can be used:
    ```
    $ cmake \
       -DENABLE_SOLVER_STP=ON \
@@ -555,13 +555,13 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
 
    Build cases with CBMC toolchain:
 
-   For Windowns, open visual studio 2019 command prompt at libspdm dir and build it with CBMC toolchain `-DARCH=ia32 -DTOOLCHAIN=LIBFUZZER`. (Use x86 command prompt for ARCH=ia32 only)
+   For Windows, open Visual Studio 2019 command prompt at libspdm dir and build it with CBMC toolchain `-DARCH=ia32 -DTOOLCHAIN=LIBFUZZER`. (Use x86 command prompt for ARCH=ia32 only)
 
    For Linux, open command prompt at libspdm dir and build it with CBMC toolchain `-DARCH=x64 -DTOOLCHAIN=CBMC`. (ARCH=x64 only)
 
    The output binary is created by the [goto-cc](https://github.com/diffblue/cbmc/blob/develop/doc/cprover-manual/goto-cc.md).
 
-   For more infomration on how to use [CBMC](https://github.com/diffblue/cbmc/), please refer to [CBMC Manual](https://github.com/diffblue/cbmc/tree/develop/doc/cprover-manual), such as [properties](https://github.com/diffblue/cbmc/blob/develop/doc/cprover-manual/properties.md), [modeling-nondeterminism](https://github.com/diffblue/cbmc/blob/develop/doc/cprover-manual/modeling-nondeterminism.md), [api](https://github.com/diffblue/cbmc/blob/develop/doc/cprover-manual/api.md). Example below:
+   For more infomration on how to use [CBMC](https://github.com/diffblue/cbmc/), refer to [CBMC Manual](https://github.com/diffblue/cbmc/tree/develop/doc/cprover-manual), such as [properties](https://github.com/diffblue/cbmc/blob/develop/doc/cprover-manual/properties.md), [modeling-nondeterminism](https://github.com/diffblue/cbmc/blob/develop/doc/cprover-manual/modeling-nondeterminism.md), [api](https://github.com/diffblue/cbmc/blob/develop/doc/cprover-manual/api.md). Example below:
 
    Using [goto-instrument](https://github.com/diffblue/cbmc/blob/develop/doc/cprover-manual/goto-instrument.md) static analyzer operates on goto-binaries and generate a modified binary:
    `goto-instrument SpdmRequester.exe SpdmRequester.gb <instrumentation-options>`
@@ -571,7 +571,7 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
 
 ### Run Static Analysis
 
-1) Use [Klocwork](https://www.perforce.com/products/klocwork) in windows as an example.
+1) Use [Klocwork](https://www.perforce.com/products/klocwork) in Windows as an example.
 
    Install Klocwork and set environment.
    ```
@@ -613,7 +613,7 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    make copy_sample_key
    make
    ```
-2) check the stack usage of individual functions in the .su file corresponding to every .c file
+2) Check the stack usage of individual functions in the .su file corresponding to every .c file
 
    For example:
    `<path_to_libspdm>/build/library/spdm_requester_lib/CMakeFiles/spdm_requester_lib.dir/libspdm_req_send_receive.c.su`
@@ -623,53 +623,24 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    <path_to_libspdm>/library/spdm_requester_lib/libspdm_req_send_receive.c:167:15:spdm_send_spdm_request  64      static
    <path_to_libspdm>/library/spdm_requester_lib/libspdm_req_send_receive.c:212:15:spdm_receive_spdm_response      64      static
    ```
-3) useful tool
+3) Useful tools
 
    avstack.pl, daniel beer, https://dlbeer.co.nz/oss/avstack.html
 
-### Collect spdm_context Size
+### Measure spdm_context Size
 
-libspdm requires an spdm_context as input parameter. The consumer of libspdm need allocate the spdm_context with size returned from libspdm_get_context_size().
+libspdm requires an spdm_context as input parameter. The consumer of libspdm needs to allocate the spdm_context with size returned from libspdm_get_context_size().
 
 Usually the spdm_context is allocated in the heap. The size of spdm_context can be shown in the [spdm emulator](https://github.com/DMTF/spdm-emu) with `printf("context_size - 0x%x\n", (uint32_t)libspdm_get_context_size());`.
 
-### Collect libspdm Size
+### Measure libspdm Size
 
 The size of libspdm can be evaluated by [test_size_of_spdm_requester](https://github.com/DMTF/libspdm/tree/main/unit_test/test_size/test_size_of_spdm_requester) and [test_size_of_spdm_responder](https://github.com/DMTF/libspdm/tree/main/unit_test/test_size/test_size_of_spdm_responder).
 
-Please use a release build with `-DTARGET=Release`.
+Use a release build with `-DTARGET=Release`.
 
 You can find the a raw image at `bin/test_size_of_spdm_requester` and `bin/test_size_of_spdm_responder`.
-Those images includes all SPDM features. They do not include crypto library or std library.
+Those images includes all SPDM features. They do not include cryptography library or standard library.
 Those images are used for size evaluation. They cannot run in OS environment.
 
-The SPDM feature can be controled by [spdm_lib_config.h](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_lib_config.h).
-
-```
-// Code space optimization for Optional request/response messages.
-//
-// Consumers of libspdm may wish to not fully implement all of the optional
-// SPDM request/response messages. Therefore we have provided these
-// SPDM_ENABLE_CAPABILITY_***_CAP compile time switches as an optimization
-// disable the code (#if 0) related to said optional capability, thereby
-// reducing the code space used in the image.
-//
-// A single switch may enable/disable a single capability or group of related
-// capabilities.
-//
-// LIBSPDM_ENABLE_CAPABILITY_CERT_CAP - Enable/Disable single CERT capability.
-// LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP - Enable/Disable single CHAL capability.
-// SPDM_ENABLE_CAPABILTIY_MEAS_CAP - Enable/Disables multiple MEAS capabilities:
-//                                  (MEAS_CAP_NO_SIG, MEAS_CAP_SIG, MEAS_FRESH_CAP)
-//
-// LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP - Enable/Disable single Key Exchange capability.
-// LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP - Enable/Disable PSK_EX and PSK_FINISH.
-
-#define LIBSPDM_ENABLE_CAPABILITY_CERT_CAP 1
-#define LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP 1
-#define LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP 1
-
-#define LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP   1
-#define LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP   1
-```
-
+The SPDM features can be controlled by [spdm_lib_config.h](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_lib_config.h).

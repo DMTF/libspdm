@@ -1,12 +1,12 @@
-# libspdm library design.
+# libspdm Library Design
 
 1. Use static linking (Library) when there is one instance that can be linked to the device.
-   For example, crypto engine.
+   For example, cryptography engine.
 
 2. Use dynamic linking (function registration) when there are multiple instances that can be linked to the device.
    For example, transport layer.
 
-## SPDM library layer
+## SPDM Library Layer
 
    ```
         +================+               +================+
@@ -47,19 +47,19 @@
 
 1) [spdm_requester_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_requester_lib.h) (follows DSP0274)
 
-   This library is linked for an SPDM requester.
+   This library is linked for an SPDM Requester.
 
 2) [spdm_responder_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_responder_lib.h) (follows DSP0274)
 
-   This library is linked for an SPDM responder.
+   This library is linked for an SPDM Responder.
 
 3) [spdm_common_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_common_lib.h) (follows DSP0274)
 
-   This library provides common services for spdm_requester_lib and spdm_responder_lib.
+   This library provides common services for `spdm_requester_lib` and `spdm_responder_lib`.
 
 4) [spdm_secured_message_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_secured_message_lib.h) (follows DSP0277)
 
-   This library handles the session key generation and secured messages encryption and decryption.
+   This library handles the session key generation and secured message encryption and decryption.
 
    This can be implemented in a secure environment if the session keys are considered a secret.
 
@@ -71,17 +71,17 @@
 
 6) [spdm_crypt_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_crypt_lib.h)
 
-   This library provides SPDM related crypto function. It is based upon [cryptlib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/cryptlib.h).
+   This library provides SPDM-related cryptography functions.
 
-7) transport layer encode/decode
+7) Transport layer encode/decode
 
 7.1) [spdm_transport_mctp_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_mctp_lib.h) (follows DSP0275 and DSP0276)
 
    This library encodes and decodes MCTP message header.
 
-   SPDM requester/responder need to register libspdm_transport_encode_message_func,
-   libspdm_transport_decode_message_func and libspdm_transport_get_header_size_func
-   to the spdm_requester_lib/spdm_responder_lib.
+   SPDM Requester / Responder needs to register `libspdm_transport_encode_message_func`,
+   `libspdm_transport_decode_message_func`, and `libspdm_transport_get_header_size_func`
+   to the `spdm_requester_lib` / `spdm_responder_lib`.
 
    These APIs encode and decode transport layer messages to or from a SPDM device.
 
@@ -89,26 +89,26 @@
 
    This library encodes and decodes PCI DOE message header.
 
-   SPDM requester/responder need to register libspdm_transport_encode_message_func,
-   libspdm_transport_decode_message_func and libspdm_transport_get_header_size_func
-   to the spdm_requester_lib/spdm_responder_lib.
+   SPDM Requester / Responders need to register `libspdm_transport_encode_message_func`,
+   `libspdm_transport_decode_message_func`, and `libspdm_transport_get_header_size_func`
+   to the `spdm_requester_lib` / `spdm_responder_lib`.
 
    These APIs encode and decode transport layer messages to or from a SPDM device.
 
-8) device IO
+8) Device IO
 
-   SPDM requester/responder need to register libspdm_device_send_message_func
-   and libspdm_device_receive_message_func to the spdm_requester_lib/spdm_responder_lib.
+   SPDM Requester / Responder needs to register `libspdm_device_send_message_func`
+   and `libspdm_device_receive_message_func` to the `spdm_requester_lib` / `spdm_responder_lib`.
 
-   SPDM requester/responder need to register libspdm_device_acquire_sender_buffer_func,
-   libspdm_device_release_sender_buffer_func, libspdm_device_acquire_receiver_buffer_func,
-   and libspdm_device_release_receiver_buffer_func to the spdm_requester_lib/spdm_responder_lib.
+   SPDM Requester / Responder need to register `libspdm_device_acquire_sender_buffer_func`,
+   `libspdm_device_release_sender_buffer_func`, `libspdm_device_acquire_receiver_buffer_func`,
+   and `libspdm_device_release_receiver_buffer_func` to the `spdm_requester_lib` / `spdm_responder_lib`.
 
-   These APIs send and receive transport layer messages to or from a SPDM device.
+   These APIs send and receive transport layer messages to or from an SPDM device.
 
    The size of sender/receiver buffer is `LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE`.
    The size of scratch buffer is `LIBSPDM_SCRATCH_BUFFER_SIZE`.
-   Please refer to [spdm_lib_config.h](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_lib_config.h).
+   Refer to [spdm_lib_config.h](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_lib_config.h).
 
    ```
    The sender flow is:
@@ -138,7 +138,7 @@
      |  | transport_message_buffer
      | sender_buffer
 
-   For secured message, the scratch_buffer is used to store plain text, the final cipher text will be in sender_buffer.
+   For secured messages the scratch_buffer is used to store plain text and the final cipher text will be in sender_buffer.
 
    libspdm_transport_encode_message_func(spdm_message_buffer, &transport_message_buffer)
    {
@@ -217,7 +217,7 @@
      |  | transport_message_buffer
      | receiver_buffer
 
-   For secured message, the scratch_buffer will be used to store plain text, the cipher text is in receiver_buffer.
+   For secured messages the scratch_buffer will be used to store plain text and the cipher text is in receiver_buffer.
 
    libspdm_transport_decode_message_func(transport_message_buffer, &spdm_message_buffer)
    {
@@ -268,24 +268,26 @@
 
    ```
 
-9) [spdm_lib_config.h](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_lib_config.h) provides the configuration to the libspdm library.
+9) [spdm_lib_config.h](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_lib_config.h) provides an example of the configuration macros used in the libspdm library.
+
+The integrator can override the use of this file by defining the `LIBSPDM_CONFIG` macro.
 
 10) SPDM library depends upon the [HAL library](https://github.com/DMTF/libspdm/tree/main/include/hal).
 
-   The sample implementation can be found at [os_stub](https://github.com/DMTF/libspdm/tree/main/os_stub)
+   Sample implementations can be found at [os_stub](https://github.com/DMTF/libspdm/tree/main/os_stub)
 
-   10.1) [cryptlib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/cryptlib.h) provides crypto functions.
+   10.1) [cryptlib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/cryptlib.h) provides cryptography functions.
 
-   10.2) [memlib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/memlib.h) provides memory operation.
+   10.2) [memlib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/memlib.h) provides memory operations.
 
    10.3) [debuglib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/debuglib.h) provides debug functions.
 
    10.4) [platform_lib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/platform_lib.h) provides sleep function and watchdog function.
 
-   10.4.1) sleep function.
+   10.4.1) Sleep function
 
    The sleep function delays the execution of a message flow instance for a defined period of time.
 
-   10.4.2) watchdog function.
+   10.4.2) Watchdog function
 
-   The wathdog function supports multiple software watchdogs for multiple sessions with one hardware watchdog.
+   The watchdog function supports multiple software watchdogs for multiple sessions with one hardware watchdog.
