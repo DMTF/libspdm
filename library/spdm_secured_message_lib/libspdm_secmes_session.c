@@ -236,9 +236,9 @@ libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
         status = libspdm_hmac_all(
             secured_message_context->base_hash_algo,
-            m_zero_filled_buffer, hash_size,
             secured_message_context->master_secret.dhe_secret,
             secured_message_context->dhe_key_size,
+            m_zero_filled_buffer, hash_size,
             secured_message_context->master_secret.handshake_secret);
         LIBSPDM_ASSERT(status);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "handshake_secret (0x%x) - ", hash_size));
