@@ -47,14 +47,14 @@ export fuzzing_seeds=$libspdm_path/unit_test/fuzzing/seeds
 export TIMESTAMP=`date +%Y-%m-%d_%H-%M-%S`
 
 # Here '~/aflturbo/' is the AFLTurbo PATH, replace it with yours.
-# export AFL_PATH=~/aflturbo/
-# export PATH=$PATH:$AFL_PATH
+export AFL_PATH=~/aflturbo/
+export PATH=$PATH:$AFL_PATH
 
 if [[ $PWD!=$libspdm_path ]];then
     pushd $libspdm_path
     latest_hash=`git log --pretty="%h" -1`
-    export fuzzing_out=$libspdm_path/unit_test/fuzzing/out_$1_$latest_hash_$TIMESTAMP
-    export build_fuzzing=build_fuzz_$1_$latest_hash_$TIMESTAMP
+    export fuzzing_out=$libspdm_path/unit_test/fuzzing/out_$1_$latest_hash-$TIMESTAMP
+    export build_fuzzing=$libspdm_path/build_fuzz_$1_$latest_hash-$TIMESTAMP
 fi
 
 if [ ! -d "$fuzzing_out" ];then
@@ -150,6 +150,12 @@ test_spdm_responder_if_ready
 test_x509_certificate_check
 test_spdm_responder_set_certificate
 test_spdm_requester_set_certificate
+test_spdm_responder_csr
+test_spdm_requester_get_csr
+test_spdm_responder_chunk_get
+test_spdm_requester_chunk_get
+test_spdm_responder_chunk_send_ack
+test_spdm_requester_chunk_send
 )
 
 export FUZZ_START_TIME=`date +%Y-%m-%d_%H:%M:%S`
@@ -173,7 +179,7 @@ if [[ $2 = "ON" ]]; then
     cd $fuzzing_out
     mkdir coverage_log
     cd coverage_log
-    lcov --capture --directory $libspdm_path --output-file coverage.info
+    lcov --capture --directory $build_fuzzing --output-file coverage.info
     genhtml coverage.info --output-directory . --title "Started at : $FUZZ_START_TIME | Crypto lib : $1 | AFL Turbo Fuzzing | Duration : $duration secs per testcase"
 fi
 

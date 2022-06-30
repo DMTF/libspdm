@@ -426,13 +426,15 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    ```
 6) Fuzzing in Linux with [AFLTurbo](https://github.com/sleicasper/aflturbo)
 
-   #### Clone the repository and build the aflturbo code
+   #### Install crypto libs then clone the repository and build the aflturbo code
    ```
+   sudo apt-get install libssl-dev
    git clone https://github.com/sleicasper/aflturbo.git
    cd aflturbo/
    make
    cp afl-fuzz afl-turbo-fuzz
-   export PATH=$PATH:$(pwd)
+   export AFL_PATH=$(pwd)
+   export PATH=$PATH:$AFL_PATH
    ```
    > Build it with make & ensure AFLTurbo binary is in PATH environment variable.
 
