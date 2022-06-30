@@ -99,6 +99,15 @@ libspdm_return_t libspdm_get_response_challenge_auth(void *context,
                                                response_size, response);
     }
 
+    if (slot_id != 0xFF) {
+        if (spdm_context->local_context
+            .local_cert_chain_provision[slot_id] == NULL) {
+            return libspdm_generate_error_response(
+                spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
+                0, response_size, response);
+        }
+    }
+
     signature_size = libspdm_get_asym_signature_size(
         spdm_context->connection_info.algorithm.base_asym_algo);
     hash_size = libspdm_get_hash_size(

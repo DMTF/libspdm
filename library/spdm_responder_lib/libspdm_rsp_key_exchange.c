@@ -107,6 +107,15 @@ libspdm_return_t libspdm_get_response_key_exchange(void *context,
                                                response_size, response);
     }
 
+    if (slot_id != 0xFF) {
+        if (spdm_context->local_context
+            .local_cert_chain_provision[slot_id] == NULL) {
+            return libspdm_generate_error_response(
+                spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
+                0, response_size, response);
+        }
+    }
+
     if (slot_id == 0xFF) {
         slot_id = spdm_context->local_context.provisioned_slot_id;
     }
