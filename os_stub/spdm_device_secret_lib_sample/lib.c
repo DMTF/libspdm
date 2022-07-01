@@ -609,7 +609,7 @@ libspdm_return_t libspdm_measurement_collection(
     if (measurements_index ==
         SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_TOTAL_NUMBER_OF_MEASUREMENTS) {
         *measurements_count = LIBSPDM_MEASUREMENT_BLOCK_NUMBER;
-        return LIBSPDM_STATUS_SUCCESS;
+        goto successful_return;
     } else if (measurements_index ==
                SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_ALL_MEASUREMENTS) {
 
@@ -672,7 +672,7 @@ libspdm_return_t libspdm_measurement_collection(
             measurement_block = (void *)((uint8_t *)measurement_block + measurement_block_size);
         }
 
-        return LIBSPDM_STATUS_SUCCESS;
+        goto successful_return;
     } else {
         /* One Index */
         if (measurements_index <= LIBSPDM_MEASUREMENT_BLOCK_HASH_NUMBER) {
@@ -759,6 +759,7 @@ libspdm_return_t libspdm_measurement_collection(
         }
     }
 
+successful_return:
     if ((content_changed != NULL) &&
         ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) >= SPDM_MESSAGE_VERSION_12)) {
         /* return content change*/
