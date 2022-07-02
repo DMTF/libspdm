@@ -7,18 +7,32 @@
 #ifndef __SPDM_LIB_CONFIG_H__
 #define __SPDM_LIB_CONFIG_H__
 
-/* How many version entries in a VERSION response that a Requester will tolerate */
+/* The SPDM specification allows a Responder to return up to 256 version entries in the `VERSION`
+ * response to the Requester, including duplicate entries. For a Requester this value specifies the
+ * maximum number of entries that libspdm will tolerate in a `VERSION` response before returning an
+ * error. A similiar macro, `SPDM_MAX_VERSION_COUNT`, exists for the Responder. However this macro
+ * is not meant to be configured by the integrator.
+ */
 #ifndef LIBSPDM_MAX_VERSION_COUNT
 #define LIBSPDM_MAX_VERSION_COUNT 5
 #endif
 
+/* This value specifies the maximum size, in bytes, of the `PSK_EXCHANGE.RequesterContext` and,
+ * if supported by the Responder, `PSK_EXCHANGE_RSP.ResponderContext` fields. The fields are
+ * typically random or monotonically increasing numbers.
+ */
 #ifndef LIBSPDM_PSK_CONTEXT_LENGTH
 #define LIBSPDM_PSK_CONTEXT_LENGTH LIBSPDM_MAX_HASH_SIZE
 #endif
+/* This value specifies the maximum size, in bytes, of the `PSK_EXCHANGE.PSKHint` field.*/
 #ifndef LIBSPDM_PSK_MAX_HINT_LENGTH
 #define LIBSPDM_PSK_MAX_HINT_LENGTH 16
 #endif
 
+/* libspdm allows an integrator to specify multiple root certificates as trust anchors when
+ * verifying certificate chains from an endpoint. This value specifies the maximum number of root
+ * certificates that libspdm can support.
+ */
 #ifndef LIBSPDM_MAX_ROOT_CERT_SUPPORT
 #define LIBSPDM_MAX_ROOT_CERT_SUPPORT 10
 #endif
@@ -26,15 +40,25 @@
 #ifndef LIBSPDM_MAX_MEASUREMENT_BLOCK_COUNT
 #define LIBSPDM_MAX_MEASUREMENT_BLOCK_COUNT 8
 #endif
+/* If the Responder supports it a Requester is allowed to establish multiple secure sessions with
+ * the Responder. This value specifies the maximum number of sessions libspdm can support.
+ */
 #ifndef LIBSPDM_MAX_SESSION_COUNT
 #define LIBSPDM_MAX_SESSION_COUNT 4
 #endif
+/* This value specifies the maximum size, in bytes, of a certificate chain that can be stored in a
+ * libspdm context.
+ */
 #ifndef LIBSPDM_MAX_CERT_CHAIN_SIZE
 #define LIBSPDM_MAX_CERT_CHAIN_SIZE 0x1000
 #endif
 #ifndef LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE
 #define LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE 0x1000
 #endif
+/* Partial certificates can be retrieved from a Requester or Responder and through multiple messages
+ * the complete certificate chain can be constructed. This value specifies the maximum size,
+ * in bytes, of a partial certificate that can be sent or received.
+ */
 #ifndef LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN
 #define LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN 1024
 #endif
@@ -49,6 +73,11 @@
 #define LIBSPDM_MAX_MESSAGE_MEDIUM_BUFFER_SIZE 0x300 /* to hold message_k before finished_key is ready*/
 #endif
 
+/* If the Responder replies with a Busy `ERROR` response to a request then the Requester is free to
+ * retry sending the request. This value specifies the maximum number of times libspdm will retry
+ * sending the request before returning an error. If its value is 0 then libspdm will not send any
+ * retry requests.
+ */
 #ifndef LIBSPDM_MAX_REQUEST_RETRY_TIMES
 #define LIBSPDM_MAX_REQUEST_RETRY_TIMES 3
 #endif
@@ -63,7 +92,12 @@
 #define LIBSPDM_MAX_CSR_SIZE 0x1000
 #endif
 
-/* If cache transcript data or transcript hash*/
+/* To ensure integrity in communication between the Requester and the Responder libspdm calculates
+ * cryptographic digests and signatures over multiple requests and responses. This value specifies
+ * whether libspdm will use a running calculation over the transcript, where requests and responses
+ * are discarded as they are cryptographically consumed, or whether libspdm will buffer the entire
+ * transcript before calculating the digest or signature.
+ */
 #ifndef LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 #define LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT 0
 #endif
