@@ -161,7 +161,7 @@ libspdm_return_t libspdm_get_response_csr(void *context, size_t request_size,
     }
 
     libspdm_copy_mem(spdm_response + 1, spdm_response->csr_length,
-                     csr_pointer, spdm_response->csr_length);
+                     csr_p, spdm_response->csr_length);
 
     return LIBSPDM_STATUS_SUCCESS;
 }
