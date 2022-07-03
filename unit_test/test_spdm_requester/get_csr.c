@@ -73,7 +73,7 @@ libspdm_return_t libspdm_requester_get_csr_test_receive_message(
         spdm_response->header.request_response_code = SPDM_CSR;
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
-        spdm_response->csr_length = global_csr_len;
+        spdm_response->csr_length = (uint16_t)global_csr_len;
         spdm_response->reserved = 0;
 
         libspdm_copy_mem(spdm_response + 1, global_csr_len, csr_data_pointer, global_csr_len);
