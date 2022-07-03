@@ -1089,8 +1089,8 @@ bool libspdm_psk_handshake_secret_hkdf_expand(
 
     hash_size = libspdm_get_hash_size(base_hash_algo);
 
-    result = libspdm_hmac_all(base_hash_algo, m_libspdm_my_zero_filled_buffer,
-                              hash_size, psk, psk_size, handshake_secret);
+    result = libspdm_hmac_all(base_hash_algo, psk, psk_size, m_libspdm_my_zero_filled_buffer,
+                              hash_size, handshake_secret);
     if (!result) {
         return result;
     }
