@@ -1045,7 +1045,7 @@ typedef struct {
     spdm_message_header_t header;
     /* param1 == RSVD
      * param2 == RSVD*/
-    size_t csr_length;
+    uint16_t csr_length;
     uint16_t reserved;
 } spdm_csr_response_t;
 

@@ -156,7 +156,7 @@ libspdm_return_t libspdm_get_response_csr(void *context, size_t request_size,
         spdm_response->header.request_response_code = SPDM_CSR;
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
-        spdm_response->csr_length = csr_len;
+        spdm_response->csr_length = (uint16_t)csr_len;
         spdm_response->reserved = 0;
     }
 
