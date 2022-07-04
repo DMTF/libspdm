@@ -95,7 +95,7 @@ libspdm_return_t libspdm_try_get_measurement(void *context, const uint32_t *sess
                                                   SPDM_GET_MEASUREMENTS);
     if (session_id == NULL) {
         if (spdm_context->connection_info.connection_state <
-            LIBSPDM_CONNECTION_STATE_AUTHENTICATED) {
+            LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
             return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
         }
         session_info = NULL;
