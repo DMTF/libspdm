@@ -602,6 +602,30 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
 
    View report at http://localhost:8080/.
 
+2) Use [Coverity](https://scan.coverity.com/) in Windows as an example.
+
+   Install Coverity and set environment.
+   For x64 builds, use a `x64 Native Tools Command Prompt for Visual Studio...` command prompt.
+   ```
+   set PATH=%PATH%;C:\Program Files\Coverity\Coverity Static Analysis\bin\
+   cov-configure --msvc --config C:\libspdm\CoverityConfig\coverity-config.xml
+   ```
+   Run CMAKE to generate makefile and build libspdm with Coverity :
+   ```
+   cd libspdm
+   mkdir build
+   cd build
+   cmake -G"NMake Makefiles" -DARCH=x64 -DTOOLCHAIN=VS2019 -DTARGET=Release -DCRYPTO=mbedtls ..
+   nmake copy_sample_key
+   cov-build --config C:\libspdm\CoverityConfig\coverity-config.xml --dir C:\libspdm\coverity-output nmake
+   ```
+   Execute `cov-analyze` command and generate the report :
+   ```
+   cov-analyze --dir C:\libspdm\coverity-output --all --rule --enable-constraint-fpp --enable-fnptr --enable-virtual --enable FORWARD_NULL
+   cov-format-errors --dir C:\libspdm\coverity-output --html-output html-report
+   ```
+   Please get the report from the folder `html-report`.
+
 ### Collect Stack Usage
 
 1) Stack usage with GCC -fstack-usage flag
