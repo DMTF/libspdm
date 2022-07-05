@@ -1037,6 +1037,8 @@ typedef struct {
      * param2 == RSVD*/
     uint16_t requester_info_length;
     uint16_t opaque_data_length;
+    /* uint8_t RequesterInfo[requester_info_length];
+     * uint8_t opaque_data[opaque_data_length]; */
 } spdm_get_csr_request_t;
 
 /* SPDM CSR response*/

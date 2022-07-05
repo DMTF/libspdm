@@ -287,7 +287,8 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
             if (csr_buffer_size < *csr_len) {
                 free(cached_csr);
                 free(cached_req_info);
-                LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"csr buffer is small to sotre cached csr! \n"));
+                LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                               "csr buffer is too small to sotre cached csr! \n"));
                 return false;
             } else {
                 libspdm_copy_mem(*csr_pointer, csr_buffer_size, cached_csr, *csr_len);
@@ -337,6 +338,11 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
                                   csr_len, csr_pointer);
     libspdm_asym_free(base_asym_algo, context);
     free(prikey);
+
+    if (csr_buffer_size < *csr_len) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"csr buffer is too small to sotre generated csr! \n"));
+        result = false;
+    }
     return result;
 }
 
