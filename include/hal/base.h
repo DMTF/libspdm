@@ -19,31 +19,6 @@
 #pragma warning(disable : 4200)
 #endif
 
-
-/* The Microsoft* C compiler can removed references to unreferenced data items
- *  if the /OPT:REF linker option is used. We defined a macro as this is a
- *  a non standard extension*/
-
-#if defined(_MSC_EXTENSIONS) && _MSC_VER < 1800
-
-/* Remove global variable from the linked image if there are no references to
- * it after all compiler and linker optimizations have been performed.*/
-
-
-#define LIBSPDM_GLOBAL_REMOVE_IF_UNREFERENCED __declspec(selectany)
-#else
-
-/* Remove the global variable from the linked image if there are no references
- *  to it after all compiler and linker optimizations have been performed.*/
-
-
-#define LIBSPDM_GLOBAL_REMOVE_IF_UNREFERENCED
-#endif
-
-
-/* Modifiers for data Types used to self document code.*/
-
-
 /**
  * Return the size of argument that has been aligned to sizeof (size_t).
  *
