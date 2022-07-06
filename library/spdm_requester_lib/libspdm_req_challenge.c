@@ -183,10 +183,6 @@ libspdm_return_t libspdm_try_challenge(void *context, uint8_t slot_id,
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             goto receive_done;
         }
-        if (spdm_response->header.param2 != 0) {
-            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-            goto receive_done;
-        }
     } else {
         if ((spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_11 &&
              (auth_attribute & SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_SLOT_ID_MASK) != slot_id) ||
