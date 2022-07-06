@@ -165,11 +165,13 @@ libspdm_return_t libspdm_get_response_challenge_auth(void *context,
     }
 
     spdm_response->header.param1 = auth_attribute;
-    spdm_response->header.param2 = (1 << slot_id);
     if (slot_id == 0xFF) {
         spdm_response->header.param2 = 0;
 
         slot_id = spdm_context->local_context.provisioned_slot_id;
+    }
+    else {
+        spdm_response->header.param2 = (1 << slot_id);
     }
 
     ptr = (void *)(spdm_response + 1);
