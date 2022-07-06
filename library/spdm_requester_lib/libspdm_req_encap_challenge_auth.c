@@ -101,11 +101,12 @@ libspdm_return_t libspdm_get_encap_response_challenge_auth(
     spdm_response->header.request_response_code = SPDM_CHALLENGE_AUTH;
     auth_attribute = (uint8_t)(slot_id & 0xF);
     spdm_response->header.param1 = auth_attribute;
-    spdm_response->header.param2 = (1 << slot_id);
     if (slot_id == 0xFF) {
         spdm_response->header.param2 = 0;
 
         slot_id = spdm_context->local_context.provisioned_slot_id;
+    } else {
+        spdm_response->header.param2 = (1 << slot_id);
     }
 
     ptr = (void *)(spdm_response + 1);
