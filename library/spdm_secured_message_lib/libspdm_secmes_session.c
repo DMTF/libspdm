@@ -6,8 +6,6 @@
 
 #include "internal/libspdm_secured_message_lib.h"
 
-LIBSPDM_GLOBAL_REMOVE_IF_UNREFERENCED uint8_t m_zero_filled_buffer[64];
-
 /**
  * This function dump raw data.
  *
@@ -212,6 +210,7 @@ libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
     uint8_t bin_str2[128];
     size_t bin_str2_size;
     libspdm_secured_message_context_t *secured_message_context;
+    uint8_t zero_filled_buffer[LIBSPDM_MAX_HASH_SIZE];
 
     secured_message_context = spdm_secured_message_context;
 
@@ -234,11 +233,12 @@ libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
             secured_message_context->master_secret.dhe_secret,
             secured_message_context->dhe_key_size);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
+        libspdm_zero_mem(zero_filled_buffer, sizeof(zero_filled_buffer));
         status = libspdm_hmac_all(
             secured_message_context->base_hash_algo,
             secured_message_context->master_secret.dhe_secret,
             secured_message_context->dhe_key_size,
-            m_zero_filled_buffer, hash_size,
+            zero_filled_buffer, hash_size,
             secured_message_context->master_secret.handshake_secret);
         LIBSPDM_ASSERT(status);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "handshake_secret (0x%x) - ", hash_size));
@@ -397,6 +397,7 @@ libspdm_generate_session_data_key(void *spdm_secured_message_context,
     uint8_t bin_str8[128];
     size_t bin_str8_size;
     libspdm_secured_message_context_t *secured_message_context;
+    uint8_t zero_filled_buffer[LIBSPDM_MAX_HASH_SIZE];
 
     secured_message_context = spdm_secured_message_context;
 
@@ -421,9 +422,10 @@ libspdm_generate_session_data_key(void *spdm_secured_message_context,
         libspdm_internal_dump_data(salt1, hash_size);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
+        libspdm_zero_mem(zero_filled_buffer, sizeof(zero_filled_buffer));
         status = libspdm_hmac_all(
             secured_message_context->base_hash_algo,
-            m_zero_filled_buffer, hash_size, salt1, hash_size,
+            zero_filled_buffer, hash_size, salt1, hash_size,
             secured_message_context->master_secret.master_secret);
         LIBSPDM_ASSERT(status);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "master_secret (0x%x) - ", hash_size));
