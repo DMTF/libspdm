@@ -1520,7 +1520,6 @@ libspdm_return_t libspdm_append_message_k(void *context, void *session_info,
                                          sizeof(cert_chain_buffer_hash),
                                          spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer_hash,
                                          hash_size);
-                        result = true;
                     } else {
                         result = libspdm_get_peer_cert_chain_buffer(
                             spdm_context, (const void **)&cert_chain_buffer,
@@ -1829,7 +1828,6 @@ libspdm_return_t libspdm_append_message_f(void *context, void *session_info,
                                          sizeof(mut_cert_chain_buffer_hash),
                                          spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer_hash,
                                          hash_size);
-                        result = true;
                     } else {
                         result = libspdm_get_peer_cert_chain_buffer(
                             spdm_context,
