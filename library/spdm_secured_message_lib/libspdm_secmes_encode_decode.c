@@ -146,8 +146,7 @@ libspdm_return_t libspdm_encode_secured_message(
     LIBSPDM_ASSERT(sequence_num_in_header_size <= sizeof(sequence_num_in_header));
 
     sequence_number++;
-    switch (session_state) {
-    case LIBSPDM_SESSION_STATE_HANDSHAKING:
+    if (session_state == LIBSPDM_SESSION_STATE_HANDSHAKING) {
         if (is_requester) {
             secured_message_context->handshake_secret
             .request_handshake_sequence_number =
@@ -157,8 +156,8 @@ libspdm_return_t libspdm_encode_secured_message(
             .response_handshake_sequence_number =
                 sequence_number;
         }
-        break;
-    case LIBSPDM_SESSION_STATE_ESTABLISHED:
+    }
+    else {
         if (is_requester) {
             secured_message_context->application_secret
             .request_data_sequence_number = sequence_number;
@@ -167,10 +166,6 @@ libspdm_return_t libspdm_encode_secured_message(
             .response_data_sequence_number =
                 sequence_number;
         }
-        break;
-    default:
-        LIBSPDM_ASSERT(false);
-        return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
 
     record_header_size = sizeof(spdm_secured_message_a_data_header1_t) +
@@ -445,8 +440,7 @@ libspdm_return_t libspdm_decode_secured_message(
     LIBSPDM_ASSERT(sequence_num_in_header_size <= sizeof(sequence_num_in_header));
 
     sequence_number++;
-    switch (session_state) {
-    case LIBSPDM_SESSION_STATE_HANDSHAKING:
+    if (session_state == LIBSPDM_SESSION_STATE_HANDSHAKING) {
         if (is_requester) {
             secured_message_context->handshake_secret
             .request_handshake_sequence_number =
@@ -456,8 +450,8 @@ libspdm_return_t libspdm_decode_secured_message(
             .response_handshake_sequence_number =
                 sequence_number;
         }
-        break;
-    case LIBSPDM_SESSION_STATE_ESTABLISHED:
+    }
+    else {
         if (is_requester) {
             secured_message_context->application_secret
             .request_data_sequence_number = sequence_number;
@@ -466,10 +460,6 @@ libspdm_return_t libspdm_decode_secured_message(
             .response_data_sequence_number =
                 sequence_number;
         }
-        break;
-    default:
-        LIBSPDM_ASSERT(false);
-        return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
 
     record_header_size = sizeof(spdm_secured_message_a_data_header1_t) +
