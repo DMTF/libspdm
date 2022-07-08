@@ -227,9 +227,8 @@ libspdm_return_t libspdm_encapsulated_request(libspdm_context_t *spdm_context,
         encapsulated_request_size = spdm_context->last_spdm_request_size;
         request_id = 0;
 #else /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
-        return RETURN_UNSUPPORTED;
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
-
     } else {
 
         transport_header_size = spdm_context->transport_get_header_size(spdm_context);
