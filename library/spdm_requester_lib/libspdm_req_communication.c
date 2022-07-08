@@ -73,10 +73,11 @@ libspdm_return_t libspdm_start_session(void *context, bool use_psk,
                                        uint8_t *heartbeat_period,
                                        void *measurement_hash)
 {
+#if !LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP && !LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+    return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+#else
     libspdm_return_t status;
-    #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
     libspdm_context_t *spdm_context;
-    #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
 
     #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
     libspdm_session_info_t *session_info;
@@ -168,6 +169,7 @@ libspdm_return_t libspdm_start_session(void *context, bool use_psk,
     #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
     }
     return status;
+#endif /* !LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP && !LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
 }
 
 /**
@@ -220,10 +222,11 @@ libspdm_return_t libspdm_start_session_ex(void *context, bool use_psk,
                                           void *responder_random,
                                           size_t *responder_random_size)
 {
+#if !LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP && !LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+    return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+#else
     libspdm_return_t status;
-    #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
     libspdm_context_t *spdm_context;
-    #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
 
     #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
     libspdm_session_info_t *session_info;
@@ -329,6 +332,7 @@ libspdm_return_t libspdm_start_session_ex(void *context, bool use_psk,
     }
 
     return status;
+#endif /* !LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP && !LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
 }
 
 /**
