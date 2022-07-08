@@ -50,10 +50,8 @@ libspdm_get_spdm_response_func libspdm_get_response_func_via_request_code(uint8_
         #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
 
         #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
-        { SPDM_GET_ENCAPSULATED_REQUEST,
-        libspdm_get_response_encapsulated_request },
-        { SPDM_DELIVER_ENCAPSULATED_RESPONSE,
-        libspdm_get_response_encapsulated_response_ack },
+        { SPDM_GET_ENCAPSULATED_REQUEST, libspdm_get_response_encapsulated_request },
+        { SPDM_DELIVER_ENCAPSULATED_RESPONSE, libspdm_get_response_encapsulated_response_ack },
         #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
 
         { SPDM_RESPOND_IF_READY, libspdm_get_response_respond_if_ready },
