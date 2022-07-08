@@ -1024,6 +1024,7 @@ int libspdm_requester_encap_request_test_main(void)
         /*Success Case ,func :libspdm_get_encap_response_certificate */
         cmocka_unit_test(libspdm_test_requester_encap_request_case8),
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP */
+
         /*Success Case ,func :libspdm_get_encap_response_key_update */
         cmocka_unit_test(libspdm_test_requester_encap_request_case9),
     };
