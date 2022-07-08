@@ -4,8 +4,8 @@
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
-#ifndef __BASE_H__
-#define __BASE_H__
+#ifndef BASE_H
+#define BASE_H
 
 
 /* Include processor specific binding*/
@@ -200,4 +200,4 @@ typedef char *LIBSPDM_VA_LIST;
  **/
 #define LIBSPDM_ARRAY_SIZE(array) (sizeof(array) / sizeof((array)[0]))
 
-#endif
+#endif /* BASE_H */

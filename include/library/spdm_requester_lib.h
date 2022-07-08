@@ -4,8 +4,8 @@
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
-#ifndef __SPDM_REQUESTER_LIB_H__
-#define __SPDM_REQUESTER_LIB_H__
+#ifndef SPDM_REQUESTER_LIB_H
+#define SPDM_REQUESTER_LIB_H
 
 #include "library/spdm_common_lib.h"
 
@@ -709,8 +709,6 @@ libspdm_return_t libspdm_generate_encap_extended_error_response(
     size_t extended_error_data_size, const uint8_t *extended_error_data,
     size_t *spdm_response_size, void *spdm_response);
 
-#endif
-
 /**
  * This function sends GET_CSR
  * to get csr from the device.
@@ -759,4 +757,6 @@ libspdm_return_t libspdm_set_certificate(void * context, uint8_t slot_id,
                                          void * cert_chain, size_t cert_chain_size,
                                          const uint32_t *session_id);
 
-#endif
+#endif /* LIBSPDM_ENABLE_SET_CERTIFICATE_CAP */
+
+#endif /* SPDM_REQUESTER_LIB_H */

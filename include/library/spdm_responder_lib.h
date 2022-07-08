@@ -4,8 +4,8 @@
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
-#ifndef __SPDM_RESPONDER_LIB_H__
-#define __SPDM_RESPONDER_LIB_H__
+#ifndef SPDM_RESPONDER_LIB_H
+#define SPDM_RESPONDER_LIB_H
 
 #include "library/spdm_common_lib.h"
 
@@ -216,4 +216,4 @@ libspdm_return_t libspdm_register_connection_state_callback_func(
  **/
 void libspdm_init_key_update_encap_state(void *spdm_context);
 
-#endif
+#endif /*SPDM_RESPONDER_LIB_H */

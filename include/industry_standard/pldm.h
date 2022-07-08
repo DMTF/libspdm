@@ -12,8 +12,8 @@
  * version 1.3.0 in Distributed Management Task Force (DMTF).
  **/
 
-#ifndef __PLDM_H__
-#define __PLDM_H__
+#ifndef PLDM_H
+#define PLDM_H
 
 #pragma pack(1)
 
@@ -75,4 +75,4 @@ typedef struct {
 
 #pragma pack()
 
-#endif
+#endif /* PLDM_H */

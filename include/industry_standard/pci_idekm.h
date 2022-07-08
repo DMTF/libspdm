@@ -8,8 +8,8 @@
  * Definitions of Integrity and data Encryption (IDE) ECN in PCI-SIG.
  **/
 
-#ifndef __PCI_IDE_KM_H__
-#define __PCI_IDE_KM_H__
+#ifndef PCI_IDE_KM_H
+#define PCI_IDE_KM_H
 
 
 #pragma pack(1)
@@ -136,4 +136,4 @@ typedef struct {
 
 #pragma pack()
 
-#endif
+#endif /* PCI_IDE_KM_H */

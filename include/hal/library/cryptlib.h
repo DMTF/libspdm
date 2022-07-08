@@ -11,8 +11,8 @@
  * functionality enabling.
  **/
 
-#ifndef __BASE_CRYPT_LIB_H__
-#define __BASE_CRYPT_LIB_H__
+#ifndef BASE_CRYPT_LIB_H
+#define BASE_CRYPT_LIB_H
 
 #define LIBSPDM_CRYPTO_NID_NULL 0x0000
 
@@ -4283,8 +4283,6 @@ bool libspdm_hkdf_sm3_256_expand(const uint8_t *prk, size_t prk_size,
                                  const uint8_t *info, size_t info_size,
                                  uint8_t *out, size_t out_size);
 
-#endif /* __BASE_CRYPT_LIB_H__*/
-
 /**
  * Gen CSR
  *
@@ -4318,3 +4316,5 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
                           uint8_t *requester_info, size_t requester_info_length,
                           void *context, char *subject_name,
                           size_t *csr_len, uint8_t **csr_pointer);
+
+#endif /* BASE_CRYPT_LIB_H */

@@ -4,8 +4,8 @@
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
-#ifndef __SPDM_DEVICE_SECRET_LIB_H__
-#define __SPDM_DEVICE_SECRET_LIB_H__
+#ifndef SPDM_DEVICE_SECRET_LIB_H
+#define SPDM_DEVICE_SECRET_LIB_H
 
 #ifndef LIBSPDM_CONFIG
 #include "library/spdm_lib_config.h"
@@ -210,8 +210,6 @@ bool libspdm_psk_master_secret_hkdf_expand(
     size_t info_size, uint8_t *out,
     size_t out_size);
 
-#endif
-
 /**
  * This function sends SET_CERTIFICATE
  * to set certificate from the device.
@@ -249,3 +247,5 @@ bool libspdm_write_certificate_to_nvm(uint8_t slot_id, const void * cert_chain,
 bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *need_reset,
                      uint8_t *requester_info, size_t requester_info_length,
                      size_t *csr_len, uint8_t **csr_pointer);
+
+#endif /*SPDM_DEVICE_SECRET_LIB_H */

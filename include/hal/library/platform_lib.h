@@ -3,8 +3,8 @@
  *  Copyright 2022 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
-#ifndef __PLATFORM_LIB_H__
-#define __PLATFORM_LIB_H__
+#ifndef PLATFORM_LIB_H
+#define PLATFORM_LIB_H
 
 /**
  * Suspends the execution of the current thread until the time-out interval elapses.
@@ -40,4 +40,4 @@ bool libspdm_stop_watchdog(uint32_t session_id);
  **/
 bool libspdm_reset_watchdog(uint32_t session_id);
 
-#endif /* __PLATFORM_LIB_H__ */
+#endif /* PLATFORM_LIB_H */

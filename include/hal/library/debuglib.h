@@ -15,8 +15,8 @@
  * defined, then debug and assert related macros wrapped by it are the NULL implementations.
  **/
 
-#ifndef __DEBUG_LIB_H__
-#define __DEBUG_LIB_H__
+#ifndef DEBUG_LIB_H
+#define DEBUG_LIB_H
 
 
 /* Declare bits for PcdDebugPrintErrorLevel and the error_level parameter of libspdm_debug_print()*/
@@ -186,4 +186,4 @@ void libspdm_debug_assert(const char *file_name, size_t line_number,
 #define LIBSPDM_DEBUG_CODE(expression)
 #endif
 
-#endif
+#endif /* DEBUG_LIB_H */

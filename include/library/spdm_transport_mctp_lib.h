@@ -4,8 +4,8 @@
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
-#ifndef __SPDM_MCTP_TRANSPORT_LIB_H__
-#define __SPDM_MCTP_TRANSPORT_LIB_H__
+#ifndef SPDM_MCTP_TRANSPORT_LIB_H
+#define SPDM_MCTP_TRANSPORT_LIB_H
 
 #include "library/spdm_common_lib.h"
 
@@ -119,4 +119,4 @@ uint8_t libspdm_mctp_get_sequence_number(uint64_t sequence_number,
  **/
 uint32_t libspdm_mctp_get_max_random_number_count(void);
 
-#endif
+#endif /* SPDM_MCTP_TRANSPORT_LIB_H */

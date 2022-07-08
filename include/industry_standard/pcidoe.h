@@ -12,8 +12,8 @@
  * Definitions of Integrity and data Encryption (IDE) ECN in PCI-SIG.
  **/
 
-#ifndef __PCI_DOE_BINDING_H__
-#define __PCI_DOE_BINDING_H__
+#ifndef PCI_DOE_BINDING_H
+#define PCI_DOE_BINDING_H
 
 #pragma pack(1)
 
@@ -97,4 +97,4 @@ typedef struct {
 
 #pragma pack()
 
-#endif
+#endif /* PCI_DOE_BINDING_H */
