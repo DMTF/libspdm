@@ -61,13 +61,13 @@ typedef struct {
  * @retval LIBSPDM_STATUS_CRYPTO_ERROR
  *         A generic cryptography error occurred.
  **/
-libspdm_return_t libspdm_try_get_certificate(void *context, const uint32_t *session_id,
-                                             uint8_t slot_id,
-                                             uint16_t length,
-                                             size_t *cert_chain_size,
-                                             void *cert_chain,
-                                             const void **trust_anchor,
-                                             size_t *trust_anchor_size)
+static libspdm_return_t libspdm_try_get_certificate(void *context, const uint32_t *session_id,
+                                                    uint8_t slot_id,
+                                                    uint16_t length,
+                                                    size_t *cert_chain_size,
+                                                    void *cert_chain,
+                                                    const void **trust_anchor,
+                                                    size_t *trust_anchor_size)
 {
     bool result;
     libspdm_return_t status;

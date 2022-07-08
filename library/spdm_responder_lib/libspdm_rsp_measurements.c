@@ -21,10 +21,10 @@
  * @retval true  measurement signature is created.
  * @retval false measurement signature is not created.
  **/
-bool libspdm_create_measurement_signature(libspdm_context_t *spdm_context,
-                                          libspdm_session_info_t *session_info,
-                                          void *response_message,
-                                          size_t response_message_size)
+static bool libspdm_create_measurement_signature(libspdm_context_t *spdm_context,
+                                                 libspdm_session_info_t *session_info,
+                                                 void *response_message,
+                                                 size_t response_message_size)
 {
     uint8_t *ptr;
     size_t measurment_sig_size;
@@ -76,9 +76,9 @@ bool libspdm_create_measurement_signature(libspdm_context_t *spdm_context,
  * @param  response_message              The measurement response message with empty signature to be filled.
  * @param  response_message_size          Total size in bytes of the response message including signature.
  **/
-bool libspdm_create_measurement_opaque(libspdm_context_t *spdm_context,
-                                       void *response_message,
-                                       size_t response_message_size)
+static bool libspdm_create_measurement_opaque(libspdm_context_t *spdm_context,
+                                              void *response_message,
+                                              size_t response_message_size)
 {
     uint8_t *ptr;
     size_t measurment_no_sig_size;

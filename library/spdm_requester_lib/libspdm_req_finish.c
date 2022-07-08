@@ -6,8 +6,9 @@
 
 #include "internal/libspdm_requester_lib.h"
 
-#pragma pack(1)
+#if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
+#pragma pack(1)
 typedef struct {
     spdm_message_header_t header;
     uint8_t signature[LIBSPDM_MAX_ASYM_KEY_SIZE];
@@ -18,10 +19,7 @@ typedef struct {
     spdm_message_header_t header;
     uint8_t verify_data[LIBSPDM_MAX_HASH_SIZE];
 } libspdm_finish_response_mine_t;
-
 #pragma pack()
-
-#if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
 /**
  * This function sends FINISH and receives FINISH_RSP for SPDM finish.
@@ -33,9 +31,9 @@ typedef struct {
  * @retval RETURN_SUCCESS               The FINISH is sent and the FINISH_RSP is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-libspdm_return_t libspdm_try_send_receive_finish(libspdm_context_t *spdm_context,
-                                                 uint32_t session_id,
-                                                 uint8_t req_slot_id_param)
+static libspdm_return_t libspdm_try_send_receive_finish(libspdm_context_t *spdm_context,
+                                                        uint32_t session_id,
+                                                        uint8_t req_slot_id_param)
 {
     libspdm_return_t status;
     libspdm_finish_request_mine_t *spdm_request;

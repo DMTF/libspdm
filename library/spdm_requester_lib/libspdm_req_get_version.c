@@ -37,9 +37,9 @@ typedef struct {
  * @retval LIBSPDM_STATUS_NEGOTIATION_FAIL
  *         The Requester and Responder do not support a common SPDM version.
  **/
-libspdm_return_t libspdm_try_get_version(libspdm_context_t *spdm_context,
-                                         uint8_t *version_number_entry_count,
-                                         spdm_version_number_t *version_number_entry)
+static libspdm_return_t libspdm_try_get_version(libspdm_context_t *spdm_context,
+                                                uint8_t *version_number_entry_count,
+                                                spdm_version_number_t *version_number_entry)
 {
     libspdm_return_t status;
     bool result;

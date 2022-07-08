@@ -26,11 +26,11 @@
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-libspdm_return_t libspdm_try_get_csr(void *context,
-                                     void *requester_info, uint16_t requester_info_length,
-                                     void *opaque_data, uint16_t opaque_data_length,
-                                     const uint32_t *session_id,
-                                     void *csr, size_t *csr_len)
+static libspdm_return_t libspdm_try_get_csr(void *context,
+                                            void *requester_info, uint16_t requester_info_length,
+                                            void *opaque_data, uint16_t opaque_data_length,
+                                            const uint32_t *session_id,
+                                            void *csr, size_t *csr_len)
 {
     libspdm_return_t status;
     spdm_get_csr_request_t *spdm_request;

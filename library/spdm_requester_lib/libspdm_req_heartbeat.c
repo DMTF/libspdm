@@ -7,12 +7,10 @@
 #include "internal/libspdm_requester_lib.h"
 
 #pragma pack(1)
-
 typedef struct {
     spdm_message_header_t header;
     uint8_t dummy_data[sizeof(spdm_error_data_response_not_ready_t)];
 } libspdm_heartbeat_response_mine_t;
-
 #pragma pack()
 
 /**
@@ -26,7 +24,7 @@ typedef struct {
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-libspdm_return_t libspdm_try_heartbeat(void *context, uint32_t session_id)
+static libspdm_return_t libspdm_try_heartbeat(void *context, uint32_t session_id)
 {
     libspdm_return_t status;
     spdm_heartbeat_request_t *spdm_request;

@@ -7,12 +7,10 @@
 #include "internal/libspdm_requester_lib.h"
 
 #pragma pack(1)
-
 typedef struct {
     spdm_message_header_t header;
     uint8_t dummy_data[sizeof(spdm_error_data_response_not_ready_t)];
 } libspdm_key_update_response_mine_t;
-
 #pragma pack()
 
 /**
@@ -32,8 +30,8 @@ typedef struct {
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-libspdm_return_t libspdm_try_key_update(void *context, uint32_t session_id,
-                                        bool single_direction, bool *key_updated)
+static libspdm_return_t libspdm_try_key_update(void *context, uint32_t session_id,
+                                               bool single_direction, bool *key_updated)
 {
     libspdm_return_t status;
     bool result;

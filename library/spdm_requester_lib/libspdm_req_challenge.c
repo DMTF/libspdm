@@ -6,8 +6,9 @@
 
 #include "internal/libspdm_requester_lib.h"
 
-#pragma pack(1)
+#if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 
+#pragma pack(1)
 typedef struct {
     spdm_message_header_t header;
     uint8_t cert_chain_hash[LIBSPDM_MAX_HASH_SIZE];
@@ -17,10 +18,7 @@ typedef struct {
     uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
     uint8_t signature[LIBSPDM_MAX_ASYM_KEY_SIZE];
 } libspdm_challenge_auth_response_max_t;
-
 #pragma pack()
-
-#if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 
 /**
  * This function sends CHALLENGE
@@ -44,13 +42,13 @@ typedef struct {
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-libspdm_return_t libspdm_try_challenge(void *context, uint8_t slot_id,
-                                       uint8_t measurement_hash_type,
-                                       void *measurement_hash,
-                                       uint8_t *slot_mask,
-                                       const void *requester_nonce_in,
-                                       void *requester_nonce,
-                                       void *responder_nonce)
+static libspdm_return_t libspdm_try_challenge(void *context, uint8_t slot_id,
+                                              uint8_t measurement_hash_type,
+                                              void *measurement_hash,
+                                              uint8_t *slot_mask,
+                                              const void *requester_nonce_in,
+                                              void *requester_nonce,
+                                              void *responder_nonce)
 {
     libspdm_return_t status;
     bool result;
@@ -431,4 +429,4 @@ libspdm_return_t libspdm_challenge_ex(void *context, uint8_t slot_id,
     return status;
 }
 
-#endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP */

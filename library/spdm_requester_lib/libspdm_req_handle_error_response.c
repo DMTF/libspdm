@@ -21,12 +21,12 @@
  * @retval RETURN_SUCCESS               The RESPOND_IF_READY is sent and an expected SPDM response is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-libspdm_return_t libspdm_requester_respond_if_ready(libspdm_context_t *spdm_context,
-                                                    const uint32_t *session_id,
-                                                    size_t *response_size,
-                                                    void **response,
-                                                    uint8_t expected_response_code,
-                                                    size_t expected_response_size)
+static libspdm_return_t libspdm_requester_respond_if_ready(libspdm_context_t *spdm_context,
+                                                           const uint32_t *session_id,
+                                                           size_t *response_size,
+                                                           void **response,
+                                                           uint8_t expected_response_code,
+                                                           size_t expected_response_size)
 {
     libspdm_return_t status;
     spdm_response_if_ready_request_t *spdm_request;
@@ -152,13 +152,13 @@ libspdm_return_t libspdm_handle_simple_error_response(void *context,
  * @retval RETURN_SUCCESS               The RESPOND_IF_READY is sent and an expected SPDM response is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-libspdm_return_t libspdm_handle_response_not_ready(libspdm_context_t *spdm_context,
-                                                   const uint32_t *session_id,
-                                                   size_t *response_size,
-                                                   void **response,
-                                                   uint8_t original_request_code,
-                                                   uint8_t expected_response_code,
-                                                   size_t expected_response_size)
+static libspdm_return_t libspdm_handle_response_not_ready(libspdm_context_t *spdm_context,
+                                                          const uint32_t *session_id,
+                                                          size_t *response_size,
+                                                          void **response,
+                                                          uint8_t original_request_code,
+                                                          uint8_t expected_response_code,
+                                                          size_t expected_response_size)
 {
     spdm_error_response_t *spdm_response;
     spdm_error_data_response_not_ready_t *extend_error_data;

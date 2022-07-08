@@ -5,7 +5,6 @@
  **/
 
 #include "internal/libspdm_requester_lib.h"
-#include "library/spdm_transport_mctp_lib.h"
 
 /**
  * Send an SPDM or an APP request to a device.

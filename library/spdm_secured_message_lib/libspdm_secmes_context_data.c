@@ -38,8 +38,7 @@ void libspdm_secured_message_init_context(void *spdm_secured_message_context)
  * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
  * @param  use_psk                       Indicate if the SPDM session use PSK.
  */
-void libspdm_secured_message_set_use_psk(void *spdm_secured_message_context,
-                                         bool use_psk)
+void libspdm_secured_message_set_use_psk(void *spdm_secured_message_context, bool use_psk)
 {
     libspdm_secured_message_context_t *secured_message_context;
 
@@ -55,8 +54,7 @@ void libspdm_secured_message_set_use_psk(void *spdm_secured_message_context,
  * @retval true  finished_key is ready.
  * @retval false finished_key is not ready.
  */
-bool
-libspdm_secured_message_is_finished_key_ready(void *spdm_secured_message_context)
+bool libspdm_secured_message_is_finished_key_ready(void *spdm_secured_message_context)
 {
     libspdm_secured_message_context_t *secured_message_context;
 
