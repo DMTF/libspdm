@@ -237,7 +237,7 @@ void libspdm_test_requester_get_measurement_case2(void **State)
         libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
     libspdm_get_leaf_cert_public_key_from_cert_chain(
         spdm_context->connection_info.algorithm.base_hash_algo,
-        spdm_context->connection_info.algorithm.base_asym_algo,
+        cc
         data, data_size,
         &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
@@ -336,7 +336,7 @@ void libspdm_test_requester_get_measurement_case3(void **State)
                             measurement_record);
     libspdm_test_message_header = 0;
     free(data);
-    libspdm_reset_message_m(spdm_context, NULL);
+    libspdm_reset_message_m(spdm_context, spdm_context->session_info);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 #else
     libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
