@@ -4,8 +4,8 @@
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
-#ifndef __SPDM_COMMON_LIB_H__
-#define __SPDM_COMMON_LIB_H__
+#ifndef SPDM_COMMON_LIB_H
+#define SPDM_COMMON_LIB_H
 
 #ifndef LIBSPDM_CONFIG
 #include "library/spdm_lib_config.h"
@@ -1139,4 +1139,4 @@ uint32_t libspdm_read_uint24(const uint8_t *buffer);
  **/
 void libspdm_write_uint24(uint8_t *buffer, uint32_t value);
 
-#endif
+#endif /* SPDM_COMMON_LIB_H */

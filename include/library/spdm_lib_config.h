@@ -4,8 +4,8 @@
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
-#ifndef __SPDM_LIB_CONFIG_H__
-#define __SPDM_LIB_CONFIG_H__
+#ifndef SPDM_LIB_CONFIG_H
+#define SPDM_LIB_CONFIG_H
 
 /* The SPDM specification allows a Responder to return up to 256 version entries in the `VERSION`
  * response to the Requester, including duplicate entries. For a Requester this value specifies the
@@ -346,4 +346,4 @@
 #define LIBSPDM_SCRATCH_BUFFER_SIZE (LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE)
 #endif
 
-#endif
+#endif /* SPDM_LIB_CONFIG_H */

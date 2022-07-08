@@ -4,8 +4,8 @@
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
-#ifndef __SPDM_RESPONDER_LIB_INTERNAL_H__
-#define __SPDM_RESPONDER_LIB_INTERNAL_H__
+#ifndef SPDM_RESPONDER_LIB_INTERNAL_H
+#define SPDM_RESPONDER_LIB_INTERNAL_H
 
 #include "library/spdm_responder_lib.h"
 #include "library/spdm_secured_message_lib.h"
@@ -653,8 +653,6 @@ void libspdm_set_session_state(libspdm_context_t *spdm_context,
 void libspdm_set_connection_state(libspdm_context_t *spdm_context,
                                   libspdm_connection_state_t connection_state);
 
-#endif
-
 /**
  * Process the SPDM GET_CSR request and return the response.
  *
@@ -749,3 +747,5 @@ libspdm_return_t libspdm_get_response_chunk_send(void* context,
                                                  void* response);
 
 #endif /* LIBSPDM_ENABLE_CHUNK_CAP */
+
+#endif /* SPDM_RESPONDER_LIB_INTERNAL_H */

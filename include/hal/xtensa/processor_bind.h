@@ -4,8 +4,8 @@
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
-#ifndef __PROCESSOR_BIND_H__
-#define __PROCESSOR_BIND_H__
+#ifndef PROCESSOR_BIND_H
+#define PROCESSOR_BIND_H
 
 
 /* Define the processor type so other code can make processor based choices*/
@@ -31,4 +31,4 @@
 #include LIBSPDM_STDDEF_ALT
 #endif
 
-#endif
+#endif /* PROCESSOR_BIND_H */

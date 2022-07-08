@@ -18,8 +18,8 @@
  * version 1.0.0 in Distributed Management Task Force (DMTF).
  **/
 
-#ifndef __MCTP_BINDING_H__
-#define __MCTP_BINDING_H__
+#ifndef MCTP_BINDING_H
+#define MCTP_BINDING_H
 
 #pragma pack(1)
 
@@ -58,4 +58,4 @@ typedef struct {
 
 #pragma pack()
 
-#endif
+#endif /* MCTP_BINDING_H */

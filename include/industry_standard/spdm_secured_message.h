@@ -9,8 +9,8 @@
  * version 1.0.0 in Distributed Management Task Force (DMTF).
  **/
 
-#ifndef __SPDM_SECURED_MESSAGE_H__
-#define __SPDM_SECURED_MESSAGE_H__
+#ifndef SPDM_SECURED_MESSAGE_H
+#define SPDM_SECURED_MESSAGE_H
 
 #pragma pack(1)
 
@@ -124,4 +124,4 @@ typedef struct {
 
 #pragma pack()
 
-#endif
+#endif /* SPDM_SECURED_MESSAGE_H */

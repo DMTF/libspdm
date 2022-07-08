@@ -9,8 +9,8 @@
  * version 1.2.0 in Distributed Management Task Force (DMTF).
  **/
 
-#ifndef __SPDM_H__
-#define __SPDM_H__
+#ifndef SPDM_H
+#define SPDM_H
 
 #pragma pack(1)
 
@@ -1124,4 +1124,4 @@ typedef struct {
  **/
 #define SPDM_ST1_VALUE_US 100000
 
-#endif
+#endif /* SPDM_H */

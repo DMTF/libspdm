@@ -4,8 +4,8 @@
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
-#ifndef __SPDM_CRYPTO_LIB_H__
-#define __SPDM_CRYPTO_LIB_H__
+#ifndef SPDM_CRYPTO_LIB_H
+#define SPDM_CRYPTO_LIB_H
 
 #ifndef LIBSPDM_CONFIG
 #include "library/spdm_lib_config.h"
@@ -1365,4 +1365,4 @@ bool libspdm_get_leaf_cert_public_key_from_cert_chain(uint32_t base_hash_algo,
  **/
 bool libspdm_verify_req_info(uint8_t *req_info, uint16_t req_info_len);
 
-#endif
+#endif /* SPDM_CRYPTO_LIB_H */

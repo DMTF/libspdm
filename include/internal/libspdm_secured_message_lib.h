@@ -4,8 +4,8 @@
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
-#ifndef __SPDM_SECURED_MESSAGE_LIB_INTERNAL_H__
-#define __SPDM_SECURED_MESSAGE_LIB_INTERNAL_H__
+#ifndef SPDM_SECURED_MESSAGE_LIB_INTERNAL_H
+#define SPDM_SECURED_MESSAGE_LIB_INTERNAL_H
 
 #include "library/spdm_secured_message_lib.h"
 
@@ -70,4 +70,4 @@ typedef struct {
     libspdm_error_struct_t last_spdm_error;
 } libspdm_secured_message_context_t;
 
-#endif
+#endif /* SPDM_SECURED_MESSAGE_LIB_INTERNAL_H */

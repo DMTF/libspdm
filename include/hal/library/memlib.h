@@ -12,8 +12,8 @@
  * This allows optimized library implementations to help increase performance.
  **/
 
-#ifndef __BASE_MEMORY_LIB__
-#define __BASE_MEMORY_LIB__
+#ifndef BASE_MEMORY_LIB
+#define BASE_MEMORY_LIB
 
 /**
  * Copies bytes from a source buffer to a destination buffer.
@@ -110,4 +110,4 @@ void *libspdm_zero_mem(void *buffer, size_t length);
 int32_t libspdm_const_compare_mem(const void *destination_buffer,
                                   const void *source_buffer, size_t length);
 
-#endif
+#endif /* BASE_MEMORY_LIB */

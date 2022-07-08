@@ -4,8 +4,8 @@
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
-#ifndef __SPDM_COMMON_LIB_INTERNAL_H__
-#define __SPDM_COMMON_LIB_INTERNAL_H__
+#ifndef SPDM_COMMON_LIB_INTERNAL_H
+#define SPDM_COMMON_LIB_INTERNAL_H
 
 #include "library/spdm_common_lib.h"
 #include "library/spdm_secured_message_lib.h"
@@ -1132,4 +1132,4 @@ void libspdm_get_receiver_buffer (
     void **receiver_buffer,
     size_t *receiver_buffer_size);
 
-#endif
+#endif /* SPDM_COMMON_LIB_INTERNAL_H */

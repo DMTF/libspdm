@@ -4,8 +4,8 @@
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
-#ifndef __SPDM_REQUESTER_LIB_INTERNAL_H__
-#define __SPDM_REQUESTER_LIB_INTERNAL_H__
+#ifndef SPDM_REQUESTER_LIB_INTERNAL_H
+#define SPDM_REQUESTER_LIB_INTERNAL_H
 
 #include "library/spdm_requester_lib.h"
 #include "library/spdm_secured_message_lib.h"
@@ -439,4 +439,4 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
                                                size_t *response_size,
                                                void **response);
 
-#endif
+#endif /* SPDM_REQUESTER_LIB_INTERNAL_H */
