@@ -64,7 +64,7 @@ typedef struct {
  *         The Requester and Responder could not agree on mutual algorithms.
  *         Note: This return value may be removed in the future.
  **/
-libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm_context)
+static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm_context)
 {
     libspdm_return_t status;
     libspdm_negotiate_algorithms_request_mine_t *spdm_request;

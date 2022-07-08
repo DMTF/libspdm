@@ -25,9 +25,9 @@
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-libspdm_return_t libspdm_try_set_certificate(void *context, uint8_t slot_id,
-                                             void * cert_chain, size_t cert_chain_size,
-                                             const uint32_t *session_id)
+static libspdm_return_t libspdm_try_set_certificate(void *context, uint8_t slot_id,
+                                                    void * cert_chain, size_t cert_chain_size,
+                                                    const uint32_t *session_id)
 {
     libspdm_return_t status;
     spdm_set_certificate_request_t *spdm_request;

@@ -11,20 +11,6 @@ typedef struct {
     libspdm_get_encap_response_func get_encap_response_func;
 } libspdm_get_encap_response_struct_t;
 
-libspdm_get_encap_response_struct_t m_libspdm_get_encap_response_struct[] = {
-
-    #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
-    { SPDM_GET_DIGESTS, libspdm_get_encap_response_digest },
-    { SPDM_GET_CERTIFICATE, libspdm_get_encap_response_certificate },
-    #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
-
-    #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
-    { SPDM_CHALLENGE, libspdm_get_encap_response_challenge_auth },
-    #endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/
-
-    { SPDM_KEY_UPDATE, libspdm_get_encap_response_key_update },
-};
-
 /**
  * Register an SPDM encapsulated message process function.
  *
@@ -53,10 +39,23 @@ void libspdm_register_get_encap_response_func(void *context,
  *
  * @return GET_ENCAP_RESPONSE function according to the request code.
  **/
-libspdm_get_encap_response_func
+static libspdm_get_encap_response_func
 libspdm_get_encap_response_func_via_request_code(uint8_t request_response_code)
 {
     size_t index;
+
+    libspdm_get_encap_response_struct_t m_libspdm_get_encap_response_struct[] = {
+        #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+        { SPDM_GET_DIGESTS, libspdm_get_encap_response_digest },
+        { SPDM_GET_CERTIFICATE, libspdm_get_encap_response_certificate },
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
+
+        #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
+        { SPDM_CHALLENGE, libspdm_get_encap_response_challenge_auth },
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/
+
+        { SPDM_KEY_UPDATE, libspdm_get_encap_response_key_update },
+    };
 
     for (index = 0;
          index < sizeof(m_libspdm_get_encap_response_struct) /
@@ -84,11 +83,11 @@ libspdm_get_encap_response_func_via_request_code(uint8_t request_response_code)
  * @retval RETURN_SUCCESS               The SPDM response is processed successfully.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is sent to the device.
  **/
-libspdm_return_t libspdm_process_encapsulated_request(libspdm_context_t *spdm_context,
-                                                      size_t encap_request_size,
-                                                      void *encap_request,
-                                                      size_t *encap_response_size,
-                                                      void *encap_response)
+static libspdm_return_t libspdm_process_encapsulated_request(libspdm_context_t *spdm_context,
+                                                             size_t encap_request_size,
+                                                             void *encap_request,
+                                                             size_t *encap_response_size,
+                                                             void *encap_response)
 {
     libspdm_get_encap_response_func get_encap_response_func;
     libspdm_return_t status;

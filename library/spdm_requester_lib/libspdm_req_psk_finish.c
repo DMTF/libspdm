@@ -9,7 +9,6 @@
 #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
 #pragma pack(1)
-
 typedef struct {
     spdm_message_header_t header;
     uint8_t verify_data[LIBSPDM_MAX_HASH_SIZE];
@@ -19,7 +18,6 @@ typedef struct {
     spdm_message_header_t header;
     uint8_t dummy_data[sizeof(spdm_error_data_response_not_ready_t)];
 } libspdm_psk_finish_response_max_t;
-
 #pragma pack()
 
 /**
@@ -31,8 +29,8 @@ typedef struct {
  * @retval RETURN_SUCCESS               The PSK_FINISH is sent and the PSK_FINISH_RSP is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-libspdm_return_t libspdm_try_send_receive_psk_finish(libspdm_context_t *spdm_context,
-                                                     uint32_t session_id)
+static libspdm_return_t libspdm_try_send_receive_psk_finish(libspdm_context_t *spdm_context,
+                                                            uint32_t session_id)
 {
     libspdm_return_t status;
     libspdm_psk_finish_request_mine_t *spdm_request;

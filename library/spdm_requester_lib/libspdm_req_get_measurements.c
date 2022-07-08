@@ -49,17 +49,17 @@ typedef struct {
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-libspdm_return_t libspdm_try_get_measurement(void *context, const uint32_t *session_id,
-                                             uint8_t request_attribute,
-                                             uint8_t measurement_operation,
-                                             uint8_t slot_id_param,
-                                             uint8_t *content_changed,
-                                             uint8_t *number_of_blocks,
-                                             uint32_t *measurement_record_length,
-                                             void *measurement_record,
-                                             const void *requester_nonce_in,
-                                             void *requester_nonce,
-                                             void *responder_nonce)
+static libspdm_return_t libspdm_try_get_measurement(void *context, const uint32_t *session_id,
+                                                    uint8_t request_attribute,
+                                                    uint8_t measurement_operation,
+                                                    uint8_t slot_id_param,
+                                                    uint8_t *content_changed,
+                                                    uint8_t *number_of_blocks,
+                                                    uint32_t *measurement_record_length,
+                                                    void *measurement_record,
+                                                    const void *requester_nonce_in,
+                                                    void *requester_nonce,
+                                                    void *responder_nonce)
 {
     bool result;
     libspdm_return_t status;

@@ -9,7 +9,6 @@
 #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
 #pragma pack(1)
-
 typedef struct {
     spdm_message_header_t header;
     uint16_t req_session_id;
@@ -34,7 +33,6 @@ typedef struct {
     uint8_t signature[LIBSPDM_MAX_ASYM_KEY_SIZE];
     uint8_t verify_data[LIBSPDM_MAX_HASH_SIZE];
 } libspdm_key_exchange_response_max_t;
-
 #pragma pack()
 
 /**
@@ -55,7 +53,7 @@ typedef struct {
  * @retval RETURN_SUCCESS               The KEY_EXCHANGE is sent and the KEY_EXCHANGE_RSP is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-libspdm_return_t libspdm_try_send_receive_key_exchange(
+static libspdm_return_t libspdm_try_send_receive_key_exchange(
     libspdm_context_t *spdm_context, uint8_t measurement_hash_type,
     uint8_t slot_id, uint8_t session_policy, uint32_t *session_id,
     uint8_t *heartbeat_period,

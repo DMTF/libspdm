@@ -124,7 +124,7 @@ static bool validate_responder_capability(uint32_t capabilities_flag,
  * @retval LIBSPDM_STATUS_BUFFER_FULL
  *         The buffer used to store transcripts is exhausted.
  **/
-libspdm_return_t libspdm_try_get_capabilities(libspdm_context_t *spdm_context)
+static libspdm_return_t libspdm_try_get_capabilities(libspdm_context_t *spdm_context)
 {
     libspdm_return_t status;
     spdm_get_capabilities_request_t *spdm_request;

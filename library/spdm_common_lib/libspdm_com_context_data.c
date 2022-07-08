@@ -14,7 +14,7 @@
  * @retval true  session info is required.
  * @retval false session info is not required.
  **/
-bool need_session_info_for_data(libspdm_data_type_t data_type)
+static bool need_session_info_for_data(libspdm_data_type_t data_type)
 {
     switch (data_type) {
     case LIBSPDM_DATA_SESSION_USE_PSK:

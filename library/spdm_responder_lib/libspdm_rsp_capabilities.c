@@ -17,7 +17,8 @@
  * @retval True                         The received SPDM version is valid.
  * @retval False                        The received SPDM version is invalid.
  **/
-bool libspdm_check_request_version_compability(libspdm_context_t *spdm_context, uint8_t version)
+static bool libspdm_check_request_version_compability(libspdm_context_t *spdm_context,
+                                                      uint8_t version)
 {
     uint8_t local_ver;
     size_t index;
@@ -46,8 +47,8 @@ bool libspdm_check_request_version_compability(libspdm_context_t *spdm_context, 
  * @retval True                         The received Capabilities flag is valid.
  * @retval False                        The received Capabilities flag is invalid.
  **/
-bool libspdm_check_request_flag_compability(uint32_t capabilities_flag,
-                                            uint8_t version)
+static bool libspdm_check_request_flag_compability(uint32_t capabilities_flag,
+                                                   uint8_t version)
 {
     uint8_t cert_cap = (uint8_t)(capabilities_flag >> 1) & 0x01;
     /*uint8_t chal_cap = (uint8_t)(capabilities_flag>>2)&0x01;*/

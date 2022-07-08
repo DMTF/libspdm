@@ -45,9 +45,9 @@ typedef struct {
  *         the Responder.
  *         Note: This return value may be removed in the future.
  **/
-libspdm_return_t libspdm_try_get_digest(void *context, const uint32_t *session_id,
-                                        uint8_t *slot_mask,
-                                        void *total_digest_buffer)
+static libspdm_return_t libspdm_try_get_digest(void *context, const uint32_t *session_id,
+                                               uint8_t *slot_mask,
+                                               void *total_digest_buffer)
 {
     bool result;
     libspdm_return_t status;

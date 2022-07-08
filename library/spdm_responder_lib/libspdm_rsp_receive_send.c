@@ -12,66 +12,6 @@ typedef struct {
     libspdm_get_spdm_response_func get_response_func;
 } libspdm_get_response_struct_t;
 
-libspdm_get_response_struct_t m_libspdm_get_response_struct[] = {
-    { SPDM_GET_VERSION, libspdm_get_response_version },
-    { SPDM_GET_CAPABILITIES, libspdm_get_response_capabilities },
-    { SPDM_NEGOTIATE_ALGORITHMS, libspdm_get_response_algorithms },
-
-    #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
-    { SPDM_GET_DIGESTS, libspdm_get_response_digests },
-    { SPDM_GET_CERTIFICATE, libspdm_get_response_certificate },
-    #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
-
-    #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
-    { SPDM_CHALLENGE, libspdm_get_response_challenge_auth },
-    #endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/
-
-    #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
-    { SPDM_GET_MEASUREMENTS, libspdm_get_response_measurements },
-    #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP*/
-
-    #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
-    { SPDM_KEY_EXCHANGE, libspdm_get_response_key_exchange },
-    #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
-
-    #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
-    { SPDM_PSK_EXCHANGE, libspdm_get_response_psk_exchange },
-    #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
-
-    #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
-    { SPDM_GET_ENCAPSULATED_REQUEST,
-      libspdm_get_response_encapsulated_request },
-    { SPDM_DELIVER_ENCAPSULATED_RESPONSE,
-      libspdm_get_response_encapsulated_response_ack },
-    #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
-
-    { SPDM_RESPOND_IF_READY, libspdm_get_response_respond_if_ready },
-
-    #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
-    { SPDM_FINISH, libspdm_get_response_finish },
-    #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
-
-    #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
-    { SPDM_PSK_FINISH, libspdm_get_response_psk_finish },
-    #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
-
-    #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
-    { SPDM_END_SESSION, libspdm_get_response_end_session },
-    { SPDM_HEARTBEAT, libspdm_get_response_heartbeat },
-    { SPDM_KEY_UPDATE, libspdm_get_response_key_update },
-    #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
-
-    { SPDM_GET_CSR, libspdm_get_response_csr },
-
-    #if LIBSPDM_ENABLE_SET_CERTIFICATE_CAP
-    { SPDM_SET_CERTIFICATE, libspdm_get_response_set_certificate },
-    #endif
-    #if LIBSPDM_ENABLE_CHUNK_CAP
-    { SPDM_CHUNK_GET, libspdm_get_response_chunk_get},
-    { SPDM_CHUNK_SEND, libspdm_get_response_chunk_send},
-    #endif
-};
-
 /**
  * Return the GET_SPDM_RESPONSE function via request code.
  *
@@ -79,10 +19,69 @@ libspdm_get_response_struct_t m_libspdm_get_response_struct[] = {
  *
  * @return GET_SPDM_RESPONSE function according to the request code.
  **/
-libspdm_get_spdm_response_func
-libspdm_get_response_func_via_request_code(uint8_t request_code)
+libspdm_get_spdm_response_func libspdm_get_response_func_via_request_code(uint8_t request_code)
 {
     size_t index;
+
+    libspdm_get_response_struct_t m_libspdm_get_response_struct[] = {
+        { SPDM_GET_VERSION, libspdm_get_response_version },
+        { SPDM_GET_CAPABILITIES, libspdm_get_response_capabilities },
+        { SPDM_NEGOTIATE_ALGORITHMS, libspdm_get_response_algorithms },
+
+        #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+        { SPDM_GET_DIGESTS, libspdm_get_response_digests },
+        { SPDM_GET_CERTIFICATE, libspdm_get_response_certificate },
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
+
+        #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
+        { SPDM_CHALLENGE, libspdm_get_response_challenge_auth },
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/
+
+        #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
+        { SPDM_GET_MEASUREMENTS, libspdm_get_response_measurements },
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP*/
+
+        #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+        { SPDM_KEY_EXCHANGE, libspdm_get_response_key_exchange },
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
+
+        #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+        { SPDM_PSK_EXCHANGE, libspdm_get_response_psk_exchange },
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
+
+        #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+        { SPDM_GET_ENCAPSULATED_REQUEST,
+        libspdm_get_response_encapsulated_request },
+        { SPDM_DELIVER_ENCAPSULATED_RESPONSE,
+        libspdm_get_response_encapsulated_response_ack },
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
+
+        { SPDM_RESPOND_IF_READY, libspdm_get_response_respond_if_ready },
+
+        #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+        { SPDM_FINISH, libspdm_get_response_finish },
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
+
+        #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+        { SPDM_PSK_FINISH, libspdm_get_response_psk_finish },
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
+
+        #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+        { SPDM_END_SESSION, libspdm_get_response_end_session },
+        { SPDM_HEARTBEAT, libspdm_get_response_heartbeat },
+        { SPDM_KEY_UPDATE, libspdm_get_response_key_update },
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
+
+        { SPDM_GET_CSR, libspdm_get_response_csr },
+
+        #if LIBSPDM_ENABLE_SET_CERTIFICATE_CAP
+        { SPDM_SET_CERTIFICATE, libspdm_get_response_set_certificate },
+        #endif
+        #if LIBSPDM_ENABLE_CHUNK_CAP
+        { SPDM_CHUNK_GET, libspdm_get_response_chunk_get},
+        { SPDM_CHUNK_SEND, libspdm_get_response_chunk_send},
+        #endif
+    };
 
     LIBSPDM_ASSERT(request_code != SPDM_RESPOND_IF_READY);
     for (index = 0; index < sizeof(m_libspdm_get_response_struct) /
@@ -103,8 +102,8 @@ libspdm_get_response_func_via_request_code(uint8_t request_code)
  *
  * @return GET_SPDM_RESPONSE function according to the last request.
  **/
-libspdm_get_spdm_response_func
-libspdm_get_response_func_via_last_request(libspdm_context_t *spdm_context)
+static libspdm_get_spdm_response_func libspdm_get_response_func_via_last_request(
+    libspdm_context_t *spdm_context)
 {
     spdm_message_header_t *spdm_request;
 
@@ -223,9 +222,9 @@ libspdm_return_t libspdm_process_request(void *context, uint32_t **session_id,
  * @param  session_id                    The session_id of a session.
  * @param  session_state                 The state of a session.
  **/
-void libspdm_trigger_session_state_callback(libspdm_context_t *spdm_context,
-                                            uint32_t session_id,
-                                            libspdm_session_state_t session_state)
+static void libspdm_trigger_session_state_callback(libspdm_context_t *spdm_context,
+                                                   uint32_t session_id,
+                                                   libspdm_session_state_t session_state)
 {
     size_t index;
 
@@ -275,9 +274,9 @@ void libspdm_set_session_state(libspdm_context_t *spdm_context,
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  connection_state              Indicate the SPDM connection state.
  **/
-void libspdm_trigger_connection_state_callback(libspdm_context_t *spdm_context,
-                                               const libspdm_connection_state_t
-                                               connection_state)
+static void libspdm_trigger_connection_state_callback(libspdm_context_t *spdm_context,
+                                                      const libspdm_connection_state_t
+                                                      connection_state)
 {
     size_t index;
 
