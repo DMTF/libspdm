@@ -60,12 +60,13 @@ bool libspdm_random_bytes(uint8_t *output, size_t size)
         if (!ret) {
             return ret;
         }
-        libspdm_copy_mem(output, dst_size, &temp_rand, size);
 
         if (size >= sizeof(uint64_t)) {
+            libspdm_copy_mem(output, dst_size, &temp_rand, sizeof(uint64_t));
             output += sizeof(uint64_t);
             size -= sizeof(uint64_t);
         } else {
+            libspdm_copy_mem(output, dst_size, &temp_rand, size);
             size = 0;
         }
     }
