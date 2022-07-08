@@ -522,6 +522,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
     }
 }
 
+#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 void libspdm_test_requester_encap_request_case1(void **State)
 {
     libspdm_return_t status;
@@ -574,7 +575,6 @@ void libspdm_test_requester_encap_request_case1(void **State)
     free(data);
 }
 
-#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 void libspdm_test_requester_encap_request_case2(void **State)
 {
     libspdm_return_t status;
@@ -936,7 +936,7 @@ void libspdm_test_requester_encap_request_case8(void **State)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     free(data);
 }
-#endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP */
 
 void libspdm_test_requester_encap_request_case9(void **State)
 {
@@ -1007,8 +1007,8 @@ int libspdm_requester_encap_request_test_main(void)
 {
     const struct CMUnitTest spdm_requester_encap_request_tests[] = {
         /* SendRequest failed*/
-        cmocka_unit_test(libspdm_test_requester_encap_request_case1),
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+        cmocka_unit_test(libspdm_test_requester_encap_request_case1),
         /* Success Case ,func :libspdm_get_encap_response_digest*/
         cmocka_unit_test(libspdm_test_requester_encap_request_case2),
         /* Error response: When spdm_encapsulated_response_ack_response versions are inconsistent*/
@@ -1023,10 +1023,9 @@ int libspdm_requester_encap_request_test_main(void)
         cmocka_unit_test(libspdm_test_requester_encap_request_case7),
         /*Success Case ,func :libspdm_get_encap_response_certificate */
         cmocka_unit_test(libspdm_test_requester_encap_request_case8),
-#endif
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP */
         /*Success Case ,func :libspdm_get_encap_response_key_update */
         cmocka_unit_test(libspdm_test_requester_encap_request_case9),
-
     };
 
     libspdm_setup_test_context(&m_libspdm_requester_encap_request_test_context);

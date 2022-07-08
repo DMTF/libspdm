@@ -138,9 +138,11 @@ int main(void)
         return_value = 1;
     }
 
+    #if LIBSPDM_ENABLE_SET_CERTIFICATE_CAP
     if (libspdm_requester_set_certificate_test_main() != 0) {
         return_value = 1;
     }
+    #endif /* LIBSPDM_ENABLE_SET_CERTIFICATE_CAP */
 
     if (libspdm_requester_get_csr_test_main() != 0) {
         return_value = 1;
