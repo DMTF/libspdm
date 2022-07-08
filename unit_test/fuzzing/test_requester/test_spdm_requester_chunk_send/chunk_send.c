@@ -67,7 +67,6 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context,
         chunk_copy_to = (uint8_t *)(chunk_send_ack_rsp + 1);
         chunk_size = spdm_response_size - (chunk_copy_to - (uint8_t *)spdm_response);
         chunk_rsp_size = sizeof(spdm_chunk_send_ack_response_t) + chunk_size;
-        context->connection_info.capability.data_transfer_size = (uint32_t)chunk_rsp_size;
         libspdm_transport_test_encode_message(
             context, NULL, false, false,
             chunk_rsp_size, chunk_send_ack_rsp,
@@ -76,7 +75,6 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context,
     else
     {
         chunk_rsp_size = sizeof(spdm_chunk_send_ack_response_t);
-        context->connection_info.capability.data_transfer_size = (uint32_t)chunk_rsp_size;
         libspdm_transport_test_encode_message(
             context, NULL, false, false,
             chunk_rsp_size, chunk_send_ack_rsp,
