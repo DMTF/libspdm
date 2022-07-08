@@ -336,7 +336,7 @@ void libspdm_test_requester_get_measurement_case3(void **State)
                             measurement_record);
     libspdm_test_message_header = 0;
     free(data);
-    libspdm_reset_message_m(spdm_context, NULL);
+    libspdm_reset_message_m(spdm_context, spdm_context->session_info);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 #else
     libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,

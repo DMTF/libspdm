@@ -99,7 +99,7 @@ void libspdm_test_responder_measurements_case2(void **State)
     spdm_request = (spdm_get_measurements_request_t * )spdm_test_context->test_buffer;
     if ((spdm_request->header.param1 &
          SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) == 0) {
-        libspdm_reset_message_m(spdm_context, NULL);
+        libspdm_reset_message_m(spdm_context, spdm_context->session_info);
     }
 }
 
@@ -214,7 +214,7 @@ void libspdm_test_responder_measurements_case4(void **State)
     spdm_request = (spdm_get_measurements_request_t * )spdm_test_context->test_buffer;
     if ((spdm_request->header.param1 &
          SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) == 0) {
-        libspdm_reset_message_m(spdm_context, NULL);
+        libspdm_reset_message_m(spdm_context, spdm_context->session_info);
     }
 }
 
