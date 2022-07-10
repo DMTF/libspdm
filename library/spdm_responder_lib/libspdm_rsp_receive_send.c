@@ -23,7 +23,7 @@ libspdm_get_spdm_response_func libspdm_get_response_func_via_request_code(uint8_
 {
     size_t index;
 
-    libspdm_get_response_struct_t m_libspdm_get_response_struct[] = {
+    libspdm_get_response_struct_t get_response_struct[] = {
         { SPDM_GET_VERSION, libspdm_get_response_version },
         { SPDM_GET_CAPABILITIES, libspdm_get_response_capabilities },
         { SPDM_NEGOTIATE_ALGORITHMS, libspdm_get_response_algorithms },
@@ -82,12 +82,9 @@ libspdm_get_spdm_response_func libspdm_get_response_func_via_request_code(uint8_
     };
 
     LIBSPDM_ASSERT(request_code != SPDM_RESPOND_IF_READY);
-    for (index = 0; index < sizeof(m_libspdm_get_response_struct) /
-         sizeof(m_libspdm_get_response_struct[0]);
-         index++) {
-        if (request_code ==
-            m_libspdm_get_response_struct[index].request_response_code) {
-            return m_libspdm_get_response_struct[index].get_response_func;
+    for (index = 0; index < sizeof(get_response_struct) / sizeof(get_response_struct[0]); index++) {
+        if (request_code == get_response_struct[index].request_response_code) {
+            return get_response_struct[index].get_response_func;
         }
     }
     return NULL;
