@@ -91,7 +91,7 @@ libspdm_return_t libspdm_get_response_algorithms(void *context,
     uint8_t ext_alg_count;
     uint16_t ext_alg_total_count;
 
-    uint32_t m_libspdm_hash_priority_table[] = {
+    uint32_t hash_priority_table[] = {
     #if LIBSPDM_SHA512_SUPPORT == 1
         SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_512,
     #endif
@@ -115,7 +115,7 @@ libspdm_return_t libspdm_get_response_algorithms(void *context,
     #endif
     };
 
-    uint32_t m_libspdm_asym_priority_table[] = {
+    uint32_t asym_priority_table[] = {
     #if LIBSPDM_ECDSA_SUPPORT == 1
         SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521,
         SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384,
@@ -142,7 +142,7 @@ libspdm_return_t libspdm_get_response_algorithms(void *context,
     #endif
     };
 
-    uint32_t m_libspdm_req_asym_priority_table[] = {
+    uint32_t req_asym_priority_table[] = {
     #if LIBSPDM_ECDSA_SUPPORT == 1
         SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521,
         SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384,
@@ -169,7 +169,7 @@ libspdm_return_t libspdm_get_response_algorithms(void *context,
     #endif
     };
 
-    uint32_t m_libspdm_dhe_priority_table[] = {
+    uint32_t dhe_priority_table[] = {
     #if LIBSPDM_ECDHE_SUPPORT == 1
         SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_521_R1,
         SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_384_R1,
@@ -185,7 +185,7 @@ libspdm_return_t libspdm_get_response_algorithms(void *context,
     #endif
     };
 
-    uint32_t m_libspdm_aead_priority_table[] = {
+    uint32_t aead_priority_table[] = {
     #if LIBSPDM_AEAD_GCM_SUPPORT == 1
         SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_256_GCM,
         SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_128_GCM,
@@ -198,11 +198,11 @@ libspdm_return_t libspdm_get_response_algorithms(void *context,
     #endif
     };
 
-    uint32_t m_libspdm_key_schedule_priority_table[] = {
+    uint32_t key_schedule_priority_table[] = {
         SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH,
     };
 
-    uint32_t m_libspdm_measurement_hash_priority_table[] = {
+    uint32_t measurement_hash_priority_table[] = {
     #if LIBSPDM_SHA512_SUPPORT == 1
         SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA_512,
     #endif
@@ -227,11 +227,11 @@ libspdm_return_t libspdm_get_response_algorithms(void *context,
         SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_RAW_BIT_STREAM_ONLY,
     };
 
-    uint32_t m_libspdm_measurement_spec_priority_table[] = {
+    uint32_t measurement_spec_priority_table[] = {
         SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
     };
 
-    uint32_t m_libspdm_other_params_support_priority_table[] = {
+    uint32_t other_params_support_priority_table[] = {
         SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1,
     };
 
@@ -445,22 +445,22 @@ libspdm_return_t libspdm_get_response_algorithms(void *context,
 
     spdm_response->measurement_specification_sel =
         (uint8_t)libspdm_prioritize_algorithm(
-            m_libspdm_measurement_spec_priority_table,
-            LIBSPDM_ARRAY_SIZE(m_libspdm_measurement_spec_priority_table),
+            measurement_spec_priority_table,
+            LIBSPDM_ARRAY_SIZE(measurement_spec_priority_table),
             spdm_context->local_context.algorithm.measurement_spec,
             spdm_context->connection_info.algorithm
             .measurement_spec);
     spdm_response->measurement_hash_algo = libspdm_prioritize_algorithm(
-        m_libspdm_measurement_hash_priority_table,
-        LIBSPDM_ARRAY_SIZE(m_libspdm_measurement_hash_priority_table),
+        measurement_hash_priority_table,
+        LIBSPDM_ARRAY_SIZE(measurement_hash_priority_table),
         spdm_context->local_context.algorithm.measurement_hash_algo,
         spdm_context->connection_info.algorithm.measurement_hash_algo);
     spdm_response->base_asym_sel = libspdm_prioritize_algorithm(
-        m_libspdm_asym_priority_table, LIBSPDM_ARRAY_SIZE(m_libspdm_asym_priority_table),
+        asym_priority_table, LIBSPDM_ARRAY_SIZE(asym_priority_table),
         spdm_context->local_context.algorithm.base_asym_algo,
         spdm_context->connection_info.algorithm.base_asym_algo);
     spdm_response->base_hash_sel = libspdm_prioritize_algorithm(
-        m_libspdm_hash_priority_table, LIBSPDM_ARRAY_SIZE(m_libspdm_hash_priority_table),
+        hash_priority_table, LIBSPDM_ARRAY_SIZE(hash_priority_table),
         spdm_context->local_context.algorithm.base_hash_algo,
         spdm_context->connection_info.algorithm.base_hash_algo);
     spdm_response->struct_table[0].alg_type =
@@ -468,7 +468,7 @@ libspdm_return_t libspdm_get_response_algorithms(void *context,
     spdm_response->struct_table[0].alg_count = 0x20;
     spdm_response->struct_table[0].alg_supported =
         (uint16_t)libspdm_prioritize_algorithm(
-            m_libspdm_dhe_priority_table, LIBSPDM_ARRAY_SIZE(m_libspdm_dhe_priority_table),
+            dhe_priority_table, LIBSPDM_ARRAY_SIZE(dhe_priority_table),
             spdm_context->local_context.algorithm.dhe_named_group,
             spdm_context->connection_info.algorithm.dhe_named_group);
     spdm_response->struct_table[1].alg_type =
@@ -476,7 +476,7 @@ libspdm_return_t libspdm_get_response_algorithms(void *context,
     spdm_response->struct_table[1].alg_count = 0x20;
     spdm_response->struct_table[1]
     .alg_supported = (uint16_t)libspdm_prioritize_algorithm(
-        m_libspdm_aead_priority_table, LIBSPDM_ARRAY_SIZE(m_libspdm_aead_priority_table),
+        aead_priority_table, LIBSPDM_ARRAY_SIZE(aead_priority_table),
         spdm_context->local_context.algorithm.aead_cipher_suite,
         spdm_context->connection_info.algorithm.aead_cipher_suite);
     spdm_response->struct_table[2].alg_type =
@@ -484,8 +484,8 @@ libspdm_return_t libspdm_get_response_algorithms(void *context,
     spdm_response->struct_table[2].alg_count = 0x20;
     spdm_response->struct_table[2]
     .alg_supported = (uint16_t)libspdm_prioritize_algorithm(
-        m_libspdm_req_asym_priority_table,
-        LIBSPDM_ARRAY_SIZE(m_libspdm_req_asym_priority_table),
+        req_asym_priority_table,
+        LIBSPDM_ARRAY_SIZE(req_asym_priority_table),
         spdm_context->local_context.algorithm.req_base_asym_alg,
         spdm_context->connection_info.algorithm.req_base_asym_alg);
     spdm_response->struct_table[3].alg_type =
@@ -493,15 +493,15 @@ libspdm_return_t libspdm_get_response_algorithms(void *context,
     spdm_response->struct_table[3].alg_count = 0x20;
     spdm_response->struct_table[3].alg_supported =
         (uint16_t)libspdm_prioritize_algorithm(
-            m_libspdm_key_schedule_priority_table,
-            LIBSPDM_ARRAY_SIZE(m_libspdm_key_schedule_priority_table),
+            key_schedule_priority_table,
+            LIBSPDM_ARRAY_SIZE(key_schedule_priority_table),
             spdm_context->local_context.algorithm.key_schedule,
             spdm_context->connection_info.algorithm.key_schedule);
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
         spdm_response->other_params_support =
             (uint8_t)libspdm_prioritize_algorithm(
-                m_libspdm_other_params_support_priority_table,
-                LIBSPDM_ARRAY_SIZE(m_libspdm_other_params_support_priority_table),
+                other_params_support_priority_table,
+                LIBSPDM_ARRAY_SIZE(other_params_support_priority_table),
                 spdm_context->local_context.algorithm.other_params_support,
                 spdm_context->connection_info.algorithm.other_params_support);
     }

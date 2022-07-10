@@ -44,7 +44,7 @@ libspdm_get_encap_response_func_via_request_code(uint8_t request_response_code)
 {
     size_t index;
 
-    libspdm_get_encap_response_struct_t m_libspdm_get_encap_response_struct[] = {
+    libspdm_get_encap_response_struct_t get_encap_response_struct[] = {
         #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
         { SPDM_GET_DIGESTS, libspdm_get_encap_response_digest },
         { SPDM_GET_CERTIFICATE, libspdm_get_encap_response_certificate },
@@ -57,15 +57,10 @@ libspdm_get_encap_response_func_via_request_code(uint8_t request_response_code)
         { SPDM_KEY_UPDATE, libspdm_get_encap_response_key_update },
     };
 
-    for (index = 0;
-         index < sizeof(m_libspdm_get_encap_response_struct) /
-         sizeof(m_libspdm_get_encap_response_struct[0]);
-         index++) {
-        if (request_response_code ==
-            m_libspdm_get_encap_response_struct[index]
-            .request_response_code) {
-            return m_libspdm_get_encap_response_struct[index]
-                   .get_encap_response_func;
+    for (index = 0; index < sizeof(get_encap_response_struct) /
+         sizeof(get_encap_response_struct[0]); index++) {
+        if (request_response_code == get_encap_response_struct[index].request_response_code) {
+            return get_encap_response_struct[index].get_encap_response_func;
         }
     }
     return NULL;
