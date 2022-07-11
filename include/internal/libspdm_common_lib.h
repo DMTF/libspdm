@@ -10,6 +10,8 @@
 #include "library/spdm_common_lib.h"
 #include "library/spdm_secured_message_lib.h"
 #include "library/spdm_return_status.h"
+#include "library/spdm_crypt_lib.h"
+#include "library/spdm_device_secret_lib.h"
 
 #define INVALID_SESSION_ID 0
 

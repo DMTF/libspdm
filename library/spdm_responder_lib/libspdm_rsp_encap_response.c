@@ -45,33 +45,33 @@ typedef struct {
     libspdm_process_encap_response_func process_encap_response;
 } libspdm_encap_response_struct_t;
 
-libspdm_encap_response_struct_t m_libspdm_encap_response_struct[] = {
-    #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
-    { SPDM_GET_DIGESTS, libspdm_get_encap_request_get_digest,
-      libspdm_process_encap_response_digest },
-
-    { SPDM_GET_CERTIFICATE, libspdm_get_encap_request_get_certificate,
-      libspdm_process_encap_response_certificate },
-    #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
-
-    #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
-    { SPDM_CHALLENGE, libspdm_get_encap_request_challenge,
-      libspdm_process_encap_response_challenge_auth },
-    #endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/
-
-    { SPDM_KEY_UPDATE, libspdm_get_encap_request_key_update,
-      libspdm_process_encap_response_key_update },
-};
-
 libspdm_encap_response_struct_t *
 libspdm_get_encap_struct_via_op_code(uint8_t request_op_code)
 {
     size_t index;
 
-    for (index = 0; index < LIBSPDM_ARRAY_SIZE(m_libspdm_encap_response_struct); index++) {
-        if (m_libspdm_encap_response_struct[index].request_op_code ==
+    libspdm_encap_response_struct_t encap_response_struct[] = {
+        #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+        { SPDM_GET_DIGESTS, libspdm_get_encap_request_get_digest,
+        libspdm_process_encap_response_digest },
+
+        { SPDM_GET_CERTIFICATE, libspdm_get_encap_request_get_certificate,
+        libspdm_process_encap_response_certificate },
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
+
+        #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
+        { SPDM_CHALLENGE, libspdm_get_encap_request_challenge,
+        libspdm_process_encap_response_challenge_auth },
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/
+
+        { SPDM_KEY_UPDATE, libspdm_get_encap_request_key_update,
+        libspdm_process_encap_response_key_update },
+    };
+
+    for (index = 0; index < LIBSPDM_ARRAY_SIZE(encap_response_struct); index++) {
+        if (encap_response_struct[index].request_op_code ==
             request_op_code) {
-            return &m_libspdm_encap_response_struct[index];
+            return &encap_response_struct[index];
         }
     }
     LIBSPDM_ASSERT(false);

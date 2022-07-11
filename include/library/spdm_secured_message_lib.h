@@ -7,20 +7,9 @@
 #ifndef SPDM_SECURED_MESSAGE_LIB_H
 #define SPDM_SECURED_MESSAGE_LIB_H
 
-#ifndef LIBSPDM_CONFIG
-#include "library/spdm_lib_config.h"
-#else
-#include LIBSPDM_CONFIG
-#endif
-
 #include "hal/base.h"
 #include "industry_standard/spdm.h"
 #include "industry_standard/spdm_secured_message.h"
-#include "hal/library/debuglib.h"
-#include "hal/library/memlib.h"
-#include "hal/library/cryptlib.h"
-#include "library/spdm_crypt_lib.h"
-#include "library/spdm_device_secret_lib.h"
 #include "library/spdm_return_status.h"
 
 typedef enum {
