@@ -4244,12 +4244,9 @@ bool libspdm_verify_leaf_cert_eku_spdm_OID(const uint8_t *cert, size_t cert_size
     size_t len;
 
     /* SPDM defined OID */
-    #define OID_SPDM_EXTENSION {0x2B, 0x06, 0x01, 0x04, 0x01, 0x83, 0x1C, 0x82, 0x12, 0x06}
-    uint8_t oid_spdm_extension[] = OID_SPDM_EXTENSION;
 
-    #define LIBSPDM_HARDWARE_IDENTITY_OID \
-        {0x2B, 0x06, 0x01, 0x04, 0x01, 0x83, 0x1C, 0x82, 0x12, 0x02}
-    uint8_t hardware_identity_oid[] = LIBSPDM_HARDWARE_IDENTITY_OID;
+    uint8_t oid_spdm_extension[] = SPDM_OID_EXTENSION;
+    uint8_t hardware_identity_oid[] = SPDM_OID_HARDWARE_IDENTITY;
 
     len = SPDM_EXTENDSION_LEN;
 
