@@ -11,6 +11,7 @@
 #include "library/spdm_requester_lib.h"
 #include "library/spdm_transport_mctp_lib.h"
 #include "library/malloclib.h"
+#include "library/spdm_crypt_lib.h"
 
 libspdm_return_t do_authentication_via_spdm(void *spdm_context);
 

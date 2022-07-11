@@ -8,6 +8,10 @@
 #define SPDM_SECURED_MESSAGE_LIB_INTERNAL_H
 
 #include "library/spdm_secured_message_lib.h"
+#include "library/spdm_crypt_lib.h"
+#include "library/spdm_device_secret_lib.h"
+#include "hal/library/memlib.h"
+#include "hal/library/cryptlib.h"
 
 typedef struct {
     uint8_t dhe_secret[LIBSPDM_MAX_DHE_KEY_SIZE];
