@@ -53,25 +53,26 @@ static libspdm_return_t libspdm_get_encap_struct_via_op_code
     libspdm_encap_response_struct_t encap_response_struct[] = {
         #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
         { SPDM_GET_DIGESTS, libspdm_get_encap_request_get_digest,
-        libspdm_process_encap_response_digest },
+            libspdm_process_encap_response_digest },
 
         { SPDM_GET_CERTIFICATE, libspdm_get_encap_request_get_certificate,
-        libspdm_process_encap_response_certificate },
+            libspdm_process_encap_response_certificate },
         #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
         #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
         { SPDM_CHALLENGE, libspdm_get_encap_request_challenge,
-        libspdm_process_encap_response_challenge_auth },
+            libspdm_process_encap_response_challenge_auth },
         #endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/
 
         { SPDM_KEY_UPDATE, libspdm_get_encap_request_key_update,
-        libspdm_process_encap_response_key_update },
+            libspdm_process_encap_response_key_update },
     };
 
     for (index = 0; index < LIBSPDM_ARRAY_SIZE(encap_response_struct); index++) {
         if (encap_response_struct[index].request_op_code == request_op_code) {
             libspdm_copy_mem(encap_struct, sizeof(libspdm_encap_response_struct_t),
-                &encap_response_struct[index], sizeof(libspdm_encap_response_struct_t));
+                             &encap_response_struct[index],
+                             sizeof(libspdm_encap_response_struct_t));
             return LIBSPDM_STATUS_SUCCESS;
         }
     }
@@ -162,7 +163,7 @@ libspdm_return_t libspdm_process_encapsulated_response(
     }
 
     /* Process the next request*/
-     status = libspdm_get_encap_struct_via_op_code(
+    status = libspdm_get_encap_struct_via_op_code(
         spdm_context->encap_context.current_request_op_code, &encap_response_struct);
     LIBSPDM_ASSERT(status == LIBSPDM_STATUS_SUCCESS);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
