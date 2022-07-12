@@ -8,6 +8,8 @@
 #include "internal/libspdm_requester_lib.h"
 #include "internal/libspdm_secured_message_lib.h"
 
+#if LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP
+
 uint8_t csr_pointer[LIBSPDM_MAX_CSR_SIZE] = {0};
 uint8_t *csr_data_pointer = csr_pointer;
 size_t global_csr_len;
@@ -179,3 +181,5 @@ int libspdm_requester_get_csr_test_main(void)
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }
+
+#endif /*LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP*/

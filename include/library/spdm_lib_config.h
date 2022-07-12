@@ -182,11 +182,14 @@
 
 /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP - Enable/Disable single CERT capability.
  * LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP - Enable/Disable single CHAL capability.
- * SPDM_ENABLE_CAPABILTIY_MEAS_CAP - Enable/Disables multiple MEAS capabilities:
+ * LIBSPDM_ENABLE_CAPABILTIY_MEAS_CAP - Enable/Disables multiple MEAS capabilities:
  *                                  (MEAS_CAP_NO_SIG, MEAS_CAP_SIG, MEAS_FRESH_CAP)*/
 
 /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP - Enable/Disable single Key Exchange capability.
  * LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP - Enable/Disable PSK_EX and PSK_FINISH.*/
+
+/* LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP - Enable/Disable get csr capability.
+ * LIBSPDM_ENABLE_SET_CERTIFICATE_CAP - Enable/Disable set certificate capability. */
 
 #ifndef LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 #define LIBSPDM_ENABLE_CAPABILITY_CERT_CAP 1
@@ -205,6 +208,9 @@
 #define LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP 1
 #endif
 
+#ifndef LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP
+#define LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP 1
+#endif
 #ifndef LIBSPDM_ENABLE_SET_CERTIFICATE_CAP
 #define LIBSPDM_ENABLE_SET_CERTIFICATE_CAP 1
 #endif

@@ -70,15 +70,18 @@ libspdm_get_spdm_response_func libspdm_get_response_func_via_request_code(uint8_
         { SPDM_KEY_UPDATE, libspdm_get_response_key_update },
         #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
 
+        #if LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP
         { SPDM_GET_CSR, libspdm_get_response_csr },
+        #endif /*LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP*/
 
         #if LIBSPDM_ENABLE_SET_CERTIFICATE_CAP
         { SPDM_SET_CERTIFICATE, libspdm_get_response_set_certificate },
-        #endif
+        #endif /*LIBSPDM_ENABLE_SET_CERTIFICATE_CAP*/
+
         #if LIBSPDM_ENABLE_CHUNK_CAP
         { SPDM_CHUNK_GET, libspdm_get_response_chunk_get},
         { SPDM_CHUNK_SEND, libspdm_get_response_chunk_send},
-        #endif
+        #endif /*LIBSPDM_ENABLE_CHUNK_CAP*/
     };
 
     LIBSPDM_ASSERT(request_code != SPDM_RESPOND_IF_READY);

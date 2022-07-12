@@ -7,6 +7,8 @@
 #include "internal/libspdm_responder_lib.h"
 #include "library/spdm_device_secret_lib.h"
 
+#if LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP
+
 /**
  * Process the SPDM GET_CSR request and return the response.
  *
@@ -165,3 +167,5 @@ libspdm_return_t libspdm_get_response_csr(void *context, size_t request_size,
 
     return LIBSPDM_STATUS_SUCCESS;
 }
+
+#endif /*LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP*/
