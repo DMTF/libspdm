@@ -6,6 +6,8 @@
 
 #include "internal/libspdm_requester_lib.h"
 
+#if LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP
+
 /**
  * This function sends GET_CSR
  * to get csr from the device.
@@ -213,3 +215,5 @@ libspdm_return_t libspdm_get_csr(void * context,
 
     return status;
 }
+
+#endif /*LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP*/

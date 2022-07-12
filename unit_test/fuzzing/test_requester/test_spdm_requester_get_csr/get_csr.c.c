@@ -9,6 +9,8 @@
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
 
+#if LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP
+
 bool m_secured_on_off;
 
 size_t libspdm_get_max_buffer_size(void)
@@ -243,3 +245,5 @@ void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
     libspdm_test_requester_get_csr_case2(&State);
     libspdm_unit_test_group_teardown(&State);
 }
+
+#endif /*LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP*/

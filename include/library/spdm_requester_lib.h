@@ -709,6 +709,7 @@ libspdm_return_t libspdm_generate_encap_extended_error_response(
     size_t extended_error_data_size, const uint8_t *extended_error_data,
     size_t *spdm_response_size, void *spdm_response);
 
+#if LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP
 /**
  * This function sends GET_CSR
  * to get csr from the device.
@@ -734,6 +735,7 @@ libspdm_return_t libspdm_get_csr(void * context,
                                  void * opaque_data, uint16_t opaque_data_length,
                                  const uint32_t *session_id,
                                  void *csr, size_t *csr_len);
+#endif /*LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP*/
 
 #if LIBSPDM_ENABLE_SET_CERTIFICATE_CAP
 /**

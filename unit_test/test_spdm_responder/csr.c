@@ -7,6 +7,8 @@
 #include "spdm_unit_test.h"
 #include "internal/libspdm_responder_lib.h"
 
+#if LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP
+
 uint8_t m_csr_opaque_data[8] = "libspdm";
 
 /*ECC 256 req_info(include right req_info attribute)*/
@@ -429,3 +431,5 @@ int libspdm_responder_csr_test_main(void)
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }
+
+#endif /*LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP*/
