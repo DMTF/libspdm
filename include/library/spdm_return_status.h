@@ -7,16 +7,19 @@
 #ifndef SPDM_RETURN_STATUS_H
 #define SPDM_RETURN_STATUS_H
 
+#ifndef LIBSPDM_STDINT_ALT
 #include <stdint.h>
+#else
+#include LIBSPDM_STDINT_ALT
+#endif
 
-/** The layout of libspdm_return_t is
- * [31:28] - severity
- * [27:24] - reserved
- * [23:16] - source
- * [15:00] - code
- **/
-/* TODO: Change to uint32_t once conversion has completed */
-typedef size_t libspdm_return_t;
+/* The layout of libspdm_return_t is
+ * [31:28] - Severity
+ * [27:24] - Reserved
+ * [23:16] - Source
+ * [15:00] - Code
+ */
+typedef uint32_t libspdm_return_t;
 
 /* Returns 1 if severity is LIBSPDM_SEVERITY_SUCCESS else it returns 0. */
 #define LIBSPDM_STATUS_IS_SUCCESS(status) \
@@ -27,7 +30,7 @@ typedef size_t libspdm_return_t;
     (LIBSPDM_STATUS_SEVERITY(status) == LIBSPDM_SEVERITY_ERROR)
 
 /* Returns the severity of the status. */
-#define LIBSPDM_STATUS_SEVERITY(status) (((status) >> 28) &0xf)
+#define LIBSPDM_STATUS_SEVERITY(status) (((status) >> 28) & 0xf)
 
 /* Returns the source of the status. */
 #define LIBSPDM_STATUS_SOURCE(status) (((status) >> 16) & 0xff)
@@ -58,7 +61,7 @@ typedef size_t libspdm_return_t;
     } \
     while (0)
 
-/* Core errors. */
+/* - Core Errors - */
 
 /* The function input parameter is invalid. */
 #define LIBSPDM_STATUS_INVALID_PARAMETER \
@@ -121,7 +124,7 @@ typedef size_t libspdm_return_t;
 #define LIBSPDM_STATUS_SESSION_MSG_ERROR \
     LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CORE, 0x000f)
 
-/* Cryptography errors. */
+/* - Cryptography Errors - */
 
 /* Generic failure originating from the cryptography module. */
 #define LIBSPDM_STATUS_CRYPTO_ERROR \
@@ -135,14 +138,13 @@ typedef size_t libspdm_return_t;
 #define LIBSPDM_STATUS_SEQUENCE_NUMBER_OVERFLOW \
     LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CRYPTO, 0x0002)
 
-/* Certificate parsing errors. */
+/* - Certificate Parsing Errors - */
 
 /* Certificate is malformed or does not comply to x.509 standard. */
 #define LIBSPDM_STATUS_INVALID_CERT \
     LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CERT_PARSE, 0x0000)
 
-
-/* Transport errors. */
+/* - Transport Errors - */
 
 /* Unable to send message to peer. */
 #define LIBSPDM_STATUS_SEND_FAIL \
@@ -152,7 +154,7 @@ typedef size_t libspdm_return_t;
 #define LIBSPDM_STATUS_RECEIVE_FAIL \
     LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPSM_SOURCE_TRANSPORT, 0x0001)
 
-/* measurement collection errors. */
+/* - Measurement Collection Errors - */
 
 /* Unable to collect measurement because of invalid index. */
 #define LIBSPDM_STATUS_MEAS_INVALID_INDEX \
@@ -162,7 +164,7 @@ typedef size_t libspdm_return_t;
 #define LIBSPDM_STATUS_MEAS_INTERNAL_ERROR \
     LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_MEAS_COLLECT, 0x0001)
 
-/* Random number generation errors. */
+/* - Random Number Generation Errors - */
 
 /* Unable to produce random number due to lack of entropy. */
 #define LIBSPDM_STATUS_LOW_ENTROPY \
