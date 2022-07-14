@@ -15,12 +15,9 @@
 
 #include "hal/base.h"
 #include "industry_standard/spdm.h"
-#include "hal/library/debuglib.h"
-#include "hal/library/memlib.h"
-#include "hal/library/cryptlib.h"
-#include "library/spdm_crypt_lib.h"
 #include "library/spdm_return_status.h"
 
+#if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 /**
  * Collect the device measurement.
  *
@@ -111,8 +108,7 @@ libspdm_return_t libspdm_measurement_collection(
  * @retval true  measurement summary hash is generated or skipped.
  * @retval false measurement summary hash is not generated.
  **/
-bool
-libspdm_generate_measurement_summary_hash(
+bool libspdm_generate_measurement_summary_hash(
     spdm_version_number_t spdm_version,
     uint32_t base_hash_algo,
     uint8_t measurement_specification,
@@ -120,6 +116,8 @@ libspdm_generate_measurement_summary_hash(
     uint8_t measurement_summary_hash_type,
     uint8_t  *measurement_summary_hash,
     size_t *measurement_summary_hash_size);
+
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
 
 /**
  * Sign an SPDM message data.
@@ -167,6 +165,7 @@ bool libspdm_responder_data_sign(
     const uint8_t *message, size_t message_size,
     uint8_t *signature, size_t *sig_size);
 
+#if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 /**
  * Derive HMAC-based Expand key Derivation Function (HKDF) Expand, based upon the negotiated HKDF algorithm.
  *
@@ -209,6 +208,7 @@ bool libspdm_psk_master_secret_hkdf_expand(
     const uint8_t *info,
     size_t info_size, uint8_t *out,
     size_t out_size);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
 
 /**
  * This function sends SET_CERTIFICATE
