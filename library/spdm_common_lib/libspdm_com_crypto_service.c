@@ -493,6 +493,29 @@ bool libspdm_generate_cert_chain_hash(libspdm_context_t *spdm_context,
 }
 
 /**
+ * Get the certificate slot mask
+ *
+ * @param[in]   context              A pointer to the SPDM context.
+ *
+ * @retval slot_mask                 get slot mask
+ **/
+uint8_t libspdm_get_cert_slot_mask(libspdm_context_t *spdm_context)
+{
+    size_t index;
+    uint8_t slot_mask;
+
+    slot_mask = 0;
+    for (index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
+        if (spdm_context->local_context
+            .local_cert_chain_provision[index] != NULL) {
+            slot_mask |= (1 << index);
+        }
+    }
+
+    return slot_mask;
+}
+
+/**
  * This function verifies the digest.
  *
  * @param  spdm_context                  A pointer to the SPDM context.

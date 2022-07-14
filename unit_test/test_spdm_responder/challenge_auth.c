@@ -574,6 +574,8 @@ void libspdm_test_responder_challenge_auth_case9(void **state) {
     spdm_challenge_auth_response_t *spdm_response;
     void                 *data1;
     size_t data_size1;
+    size_t index;
+    uint8_t slot_mask;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -611,7 +613,15 @@ void libspdm_test_responder_challenge_auth_case9(void **state) {
     spdm_response = (void *)response;
     assert_int_equal (spdm_response->header.request_response_code, SPDM_CHALLENGE_AUTH);
     assert_int_equal (spdm_response->header.param1, 1);
-    assert_int_equal (spdm_response->header.param2, 1 << 1);
+
+    slot_mask = 0;
+    for (index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
+        if (spdm_context->local_context
+            .local_cert_chain_provision[index] != NULL) {
+            slot_mask |= (1 << index);
+        }
+    }
+    assert_int_equal (spdm_response->header.param2, slot_mask);
     free(data1);
 }
 
@@ -630,6 +640,7 @@ void libspdm_test_responder_challenge_auth_case10(void **state) {
     spdm_challenge_auth_response_t *spdm_response;
     void                 *data1;
     size_t data_size1;
+    size_t index;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -649,6 +660,12 @@ void libspdm_test_responder_challenge_auth_case10(void **state) {
                                                      m_libspdm_use_asym_algo,
                                                      &data1, &data_size1,
                                                      NULL, NULL);
+    /*clear local_cert_chain_provision*/
+    for (index = 0; index <SPDM_MAX_SLOT_COUNT; index++) {
+        spdm_context->local_context.local_cert_chain_provision[index] = NULL;
+        spdm_context->local_context.local_cert_chain_provision_size[index] = 0;
+    }
+
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
     spdm_context->local_context.slot_count = 1;
