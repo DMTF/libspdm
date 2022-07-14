@@ -118,7 +118,7 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    Run all tests.
 
    Collect coverage data :
-   `lcov --capture --directory <openspdm_root_dir> --output-file coverage.info`
+   `lcov --capture --directory <libspdm_root_dir> --output-file coverage.info`
 
    Collect coverage report :
    `genhtml coverage.info --output-directory .`

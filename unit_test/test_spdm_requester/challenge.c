@@ -987,7 +987,7 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
     }
         return LIBSPDM_STATUS_SUCCESS;
 
-    case 0x10: /*correct CHALLENGE_AUTH message with "openspdm" opaque data*/
+    case 0x10: /*correct CHALLENGE_AUTH message with "libspdm" opaque data*/
     {
         spdm_challenge_auth_response_t  *spdm_response;
         void                          *data;
@@ -1037,7 +1037,7 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
          * Ptr += libspdm_get_hash_size (m_libspdm_use_hash_algo);*/
         *(uint16_t *)Ptr = 8;
         Ptr += sizeof(uint16_t);
-        libspdm_copy_mem(Ptr, (size_t)(*response) + *response_size - (size_t)Ptr, "openspdm", 8);
+        libspdm_copy_mem(Ptr, (size_t)(*response) + *response_size - (size_t)Ptr, "libspdm", 7);
         Ptr += 8;
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer) -
@@ -2464,7 +2464,7 @@ void libspdm_test_requester_challenge_case15(void **state) {
  * The CHALLENGE message requests usage of the first certificate in the chain
  * (param1=0) and do not request measurements (param2=0).
  * The received CHALLENGE_AUTH message correctly responds to the challenge, opaque
- * data with bytes from the string "openspdm", and a signature on the sent nonce.
+ * data with bytes from the string "libspdm", and a signature on the sent nonce.
  * Expected behavior: client returns a status of RETURN_SUCCESS.
  **/
 void libspdm_test_requester_challenge_case16(void **state) {

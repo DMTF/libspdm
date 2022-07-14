@@ -45,7 +45,7 @@ spdm_challenge_request_t m_libspdm_challenge_request6 = {
 };
 size_t m_libspdm_challenge_request6_size = sizeof(m_libspdm_challenge_request6);
 
-uint8_t m_opaque_challenge_auth_rsp[9] = "openspdm";
+uint8_t m_opaque_challenge_auth_rsp[8] = "libspdm";
 
 /**
  * Test 1: receiving a correct CHALLENGE message from the requester with
@@ -671,7 +671,7 @@ void libspdm_test_responder_challenge_auth_case10(void **state) {
 
 /**
  * Test 11: receiving a correct CHALLENGE message from the requester with opaque
- * data as the bytes of the string "openspdm", no measurements, and slot number 0.
+ * data as the bytes of the string "libspdm", no measurements, and slot number 0.
  * Expected behavior: the responder accepts the request and produces a valid
  * CHALLENGE_AUTH response message.
  **/
