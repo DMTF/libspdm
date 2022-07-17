@@ -109,10 +109,7 @@ libspdm_return_t libspdm_test_decode_message(uint32_t **session_id,
                                              void *transport_message,
                                              size_t *message_size, void **message)
 {
-    size_t alignment;
     const libspdm_test_message_header_t *test_message_header;
-
-    alignment = LIBSPDM_TEST_ALIGNMENT;
 
     LIBSPDM_ASSERT(transport_message_size > sizeof(libspdm_test_message_header_t));
     if (transport_message_size <= sizeof(libspdm_test_message_header_t)) {
@@ -144,7 +141,7 @@ libspdm_return_t libspdm_test_decode_message(uint32_t **session_id,
     }
 
     LIBSPDM_ASSERT(((transport_message_size - sizeof(libspdm_test_message_header_t)) &
-                    (alignment - 1)) == 0);
+                    (LIBSPDM_TEST_ALIGNMENT - 1)) == 0);
 
     *message_size = transport_message_size - sizeof(libspdm_test_message_header_t);
     *message = (uint8_t *)transport_message + sizeof(libspdm_test_message_header_t);

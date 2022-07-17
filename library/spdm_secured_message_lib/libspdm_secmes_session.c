@@ -120,7 +120,9 @@ bool libspdm_generate_aead_key_and_iv(
                                 SPDM_BIN_STR_5_LABEL, sizeof(SPDM_BIN_STR_5_LABEL) - 1,
                                 NULL, (uint16_t)key_length, hash_size, bin_str5,
                                 &bin_str5_size);
-    LIBSPDM_ASSERT(status);
+    if (!status) {
+        return LIBSPDM_STATUS_INVALID_PARAMETER;
+    }
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "bin_str5 (0x%x):\n", bin_str5_size));
     libspdm_internal_dump_hex(bin_str5, bin_str5_size);
     status = libspdm_hkdf_expand(secured_message_context->base_hash_algo,
@@ -175,7 +177,9 @@ bool libspdm_generate_finished_key(
                                 SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
                                 NULL, (uint16_t)hash_size, hash_size, bin_str7,
                                 &bin_str7_size);
-    LIBSPDM_ASSERT(status);
+    if (!status) {
+        return LIBSPDM_STATUS_INVALID_PARAMETER;
+    }
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "bin_str7 (0x%x):\n", bin_str7_size));
     libspdm_internal_dump_hex(bin_str7, bin_str7_size);
     status = libspdm_hkdf_expand(secured_message_context->base_hash_algo,

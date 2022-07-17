@@ -110,10 +110,7 @@ libspdm_return_t libspdm_mctp_decode_message(uint32_t **session_id,
                                              void *transport_message,
                                              size_t *message_size, void **message)
 {
-    size_t alignment;
     const mctp_message_header_t *mctp_message_header;
-
-    alignment = MCTP_ALIGNMENT;
 
     LIBSPDM_ASSERT(transport_message_size > sizeof(mctp_message_header_t));
     if (transport_message_size <= sizeof(mctp_message_header_t)) {
@@ -145,7 +142,7 @@ libspdm_return_t libspdm_mctp_decode_message(uint32_t **session_id,
     }
 
     LIBSPDM_ASSERT(((transport_message_size - sizeof(mctp_message_header_t)) &
-                    (alignment - 1)) == 0);
+                    (MCTP_ALIGNMENT - 1)) == 0);
 
     *message_size = transport_message_size - sizeof(mctp_message_header_t);
     *message = (uint8_t *)transport_message + sizeof(mctp_message_header_t);

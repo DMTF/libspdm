@@ -131,11 +131,8 @@ libspdm_return_t libspdm_pci_doe_decode_message(uint32_t **session_id,
                                                 size_t *message_size,
                                                 void **message)
 {
-    size_t alignment;
     const pci_doe_data_object_header_t *pci_doe_header;
     uint32_t length;
-
-    alignment = PCI_DOE_ALIGNMENT;
 
     LIBSPDM_ASSERT(transport_message_size > sizeof(pci_doe_data_object_header_t));
     if (transport_message_size <= sizeof(pci_doe_data_object_header_t)) {
@@ -184,7 +181,7 @@ libspdm_return_t libspdm_pci_doe_decode_message(uint32_t **session_id,
     }
 
     LIBSPDM_ASSERT(((transport_message_size - sizeof(pci_doe_data_object_header_t)) &
-                    (alignment - 1)) == 0);
+                    (PCI_DOE_ALIGNMENT - 1)) == 0);
 
     *message_size = transport_message_size - sizeof(pci_doe_data_object_header_t);
     *message = (uint8_t *)transport_message + sizeof(pci_doe_data_object_header_t);

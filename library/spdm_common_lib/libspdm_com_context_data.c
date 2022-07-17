@@ -1780,7 +1780,9 @@ libspdm_return_t libspdm_append_message_f(void *context, void *session_info,
         spdm_context = context;
         secured_message_context = spdm_session_info->secured_message_context;
         finished_key_ready = libspdm_secured_message_is_finished_key_ready(secured_message_context);
-        LIBSPDM_ASSERT (finished_key_ready);
+        if (!finished_key_ready) {
+            return LIBSPDM_STATUS_CRYPTO_ERROR;
+        }
         slot_id = spdm_context->connection_info.peer_used_cert_chain_slot_id;
 
         if (!spdm_session_info->session_transcript.message_f_initialized) {
