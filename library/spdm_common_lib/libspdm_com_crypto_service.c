@@ -165,13 +165,10 @@ static bool libspdm_calculate_m1m2(void *context, bool is_mut,
 {
     libspdm_context_t *spdm_context;
     libspdm_return_t status;
-    uint32_t hash_size;
 
     spdm_context = context;
 
     libspdm_init_managed_buffer(m1m2, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
-
-    uint32_t hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
 
     if (is_mut) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_mut_b data :\n"));
@@ -215,12 +212,12 @@ static bool libspdm_calculate_m1m2(void *context, bool is_mut,
                     spdm_context->connection_info.algorithm.base_hash_algo,
                     libspdm_get_managed_buffer(m1m2),
                     libspdm_get_managed_buffer_size(m1m2), hash_data)) {
-                return false;
-            }
+            return false;
+        }
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m1m2 Mut hash - "));
             libspdm_internal_dump_data(hash_data, hash_size);
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
-        );
+            );
 
     } else {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_a data :\n"));
@@ -274,12 +271,12 @@ static bool libspdm_calculate_m1m2(void *context, bool is_mut,
                     spdm_context->connection_info.algorithm.base_hash_algo,
                     libspdm_get_managed_buffer(m1m2),
                     libspdm_get_managed_buffer_size(m1m2), hash_data)) {
-                return false;
-            }
+            return false;
+        }
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m1m2 hash - "));
             libspdm_internal_dump_data(hash_data, hash_size);
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
-        );
+            );
     }
 
     return true;
@@ -353,16 +350,11 @@ static bool libspdm_calculate_l1l2(void *context, void *session_info,
     libspdm_context_t *spdm_context;
     libspdm_return_t status;
     libspdm_session_info_t *spdm_session_info;
-    uint32_t hash_size;
-    uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
 
     spdm_context = context;
     spdm_session_info = session_info;
 
     libspdm_init_managed_buffer(l1l2, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
-
-    hash_size = libspdm_get_hash_size(
-        spdm_context->connection_info.algorithm.base_hash_algo);
 
     if ((spdm_context->connection_info.version >> SPDM_VERSION_NUMBER_SHIFT_BIT) >
         SPDM_MESSAGE_VERSION_11) {
@@ -411,6 +403,9 @@ static bool libspdm_calculate_l1l2(void *context, void *session_info,
 
     /* Debug code only - calculate and print value of l1l2 hash*/
     LIBSPDM_DEBUG_CODE(
+        uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
+        uint32_t hash_size = libspdm_get_hash_size(
+            spdm_context->connection_info.algorithm.base_hash_algo);
         if (!libspdm_hash_all(
                 spdm_context->connection_info.algorithm.base_hash_algo,
                 libspdm_get_managed_buffer(l1l2),
