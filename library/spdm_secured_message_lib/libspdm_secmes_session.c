@@ -200,7 +200,7 @@ bool libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "bin_str0 (0x%x):\n", bin_str0_size));
     libspdm_internal_dump_hex(bin_str0, bin_str0_size);
 
-    if (!secured_message_context->use_psk) {
+    if (!(secured_message_context->use_psk)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "[DHE Secret]: "));
         libspdm_internal_dump_hex_str(
             secured_message_context->master_secret.dhe_secret,
@@ -383,7 +383,7 @@ bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
 
     hash_size = secured_message_context->hash_size;
 
-    if (!secured_message_context->use_psk) {
+    if (!(secured_message_context->use_psk)) {
         bin_str0_size = sizeof(bin_str0);
         status = libspdm_bin_concat(secured_message_context->version,
                                     SPDM_BIN_STR_0_LABEL,
