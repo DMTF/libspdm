@@ -12,7 +12,9 @@
 #ifndef __SPDM_DEVICE_SECRET_LIB_INTERNAL_H__
 #define __SPDM_DEVICE_SECRET_LIB_INTERNAL_H__
 
+#include "library/spdm_crypt_lib.h"
 #include "library/spdm_device_secret_lib.h"
+#include "hal/library/debuglib.h"
 
 #define LIBSPDM_MEASUREMENT_BLOCK_HASH_NUMBER 4
 #define LIBSPDM_MEASUREMENT_BLOCK_NUMBER (LIBSPDM_MEASUREMENT_BLOCK_HASH_NUMBER /*Index - 1~4*/ + \
