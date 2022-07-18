@@ -22,14 +22,6 @@
  * This setting has no meaning for end entity certificates.
  **/
 
-/*leaf cert basic_constraints case1: CA: false and CA object is excluded */
-#define LIBSPDM_BASIC_CONSTRAINTS_STRING_CASE1 {0x30, 0x00}
-static const uint8_t m_libspdm_basic_constraints_case1[] = LIBSPDM_BASIC_CONSTRAINTS_STRING_CASE1;
-
-/*leaf cert basic_constraints case2: CA: false */
-#define LIBSPDM_BASIC_CONSTRAINTS_STRING_CASE2 {0x30, 0x03, 0x01, 0x01, 0x00}
-static const uint8_t m_libspdm_basic_constraints_case2[] = LIBSPDM_BASIC_CONSTRAINTS_STRING_CASE2;
-
 /**
  * leaf cert spdm extension len
  * len > 2 * (spdm id-DMTF-spdm size + 2)
@@ -38,19 +30,6 @@ static const uint8_t m_libspdm_basic_constraints_case2[] = LIBSPDM_BASIC_CONSTRA
 #ifndef SPDM_EXTENDSION_LEN
 #define SPDM_EXTENDSION_LEN 30
 #endif
-
-/* SPDM defined OID*/
-#define OID_SPDM_EXTENSION \
-    {0x2B, 0x06, 0x01, 0x04, 0x01, 0x83, 0x1C, 0x82, 0x12, 0x06}
-
-static uint8_t m_oid_spdm_extension[] = OID_SPDM_EXTENSION;
-
-#define LIBSPDM_HARDWARE_IDENTITY_OID  \
-    {0x2B, 0x06, 0x01, 0x04, 0x01, 0x83, 0x1C, 0x82, 0x12, 0x02}
-
-static uint8_t m_libspdm_hardware_identity_oid[] =
-    LIBSPDM_HARDWARE_IDENTITY_OID;
-
 
 /*SHAxxxRSA OID: https://oidref.com/1.2.840.113549.1.1 */
 
@@ -4207,6 +4186,15 @@ bool libspdm_verify_leaf_cert_basic_constraints(const uint8_t *cert, size_t cert
     /*basic_constraints from cert*/
     uint8_t cert_basic_constraints[BASIC_CONSTRAINTS_CA_LEN];
     size_t len;
+
+    /*leaf cert basic_constraints case1: CA: false and CA object is excluded */
+    #define BASIC_CONSTRAINTS_STRING_CASE1 {0x30, 0x00}
+    uint8_t basic_constraints_case1[] = BASIC_CONSTRAINTS_STRING_CASE1;
+
+    /*leaf cert basic_constraints case2: CA: false */
+    #define BASIC_CONSTRAINTS_STRING_CASE2 {0x30, 0x03, 0x01, 0x01, 0x00}
+    uint8_t basic_constraints_case2[] = BASIC_CONSTRAINTS_STRING_CASE2;
+
     len = BASIC_CONSTRAINTS_CA_LEN;
 
     status = libspdm_x509_get_extended_basic_constraints(cert, cert_size,
@@ -4219,17 +4207,17 @@ bool libspdm_verify_leaf_cert_basic_constraints(const uint8_t *cert, size_t cert
         return false;
     }
 
-    if ((len == sizeof(m_libspdm_basic_constraints_case1)) &&
+    if ((len == sizeof(basic_constraints_case1)) &&
         (!libspdm_const_compare_mem(cert_basic_constraints,
-                                    m_libspdm_basic_constraints_case1,
-                                    sizeof(m_libspdm_basic_constraints_case1)))) {
+                                    basic_constraints_case1,
+                                    sizeof(basic_constraints_case1)))) {
         return true;
     }
 
-    if ((len == sizeof(m_libspdm_basic_constraints_case2)) &&
+    if ((len == sizeof(basic_constraints_case2)) &&
         (!libspdm_const_compare_mem(cert_basic_constraints,
-                                    m_libspdm_basic_constraints_case2,
-                                    sizeof(m_libspdm_basic_constraints_case2)))) {
+                                    basic_constraints_case2,
+                                    sizeof(basic_constraints_case2)))) {
         return true;
     }
 
@@ -4244,7 +4232,7 @@ bool libspdm_verify_leaf_cert_basic_constraints(const uint8_t *cert, size_t cert
  *
  * @retval  true   verify pass
  * @retval  false  verify fail,two case: 1. return is not RETURN_SUCCESS or RETURN_NOT_FOUND;
- *                                       2. m_libspdm_hardware_identity_oid is found in AliasCert model;
+ *                                       2. hardware_identity_oid is found in AliasCert model;
  **/
 bool libspdm_verify_leaf_cert_eku_spdm_OID(const uint8_t *cert, size_t cert_size,
                                            bool is_device_cert_model)
@@ -4255,6 +4243,11 @@ bool libspdm_verify_leaf_cert_eku_spdm_OID(const uint8_t *cert, size_t cert_size
     size_t index;
     size_t len;
 
+    /* SPDM defined OID */
+
+    uint8_t oid_spdm_extension[] = SPDM_OID_EXTENSION;
+    uint8_t hardware_identity_oid[] = SPDM_OID_HARDWARE_IDENTITY;
+
     len = SPDM_EXTENDSION_LEN;
 
     if (cert == NULL || cert_size == 0) {
@@ -4262,8 +4255,8 @@ bool libspdm_verify_leaf_cert_eku_spdm_OID(const uint8_t *cert, size_t cert_size
     }
 
     status = libspdm_x509_get_extension_data(cert, cert_size,
-                                             (const uint8_t *)m_oid_spdm_extension,
-                                             sizeof(m_oid_spdm_extension),
+                                             (const uint8_t *)oid_spdm_extension,
+                                             sizeof(oid_spdm_extension),
                                              spdm_extension,
                                              &len);
 
@@ -4275,9 +4268,9 @@ bool libspdm_verify_leaf_cert_eku_spdm_OID(const uint8_t *cert, size_t cert_size
 
     /*find the spdm hardware identity OID*/
     find_sucessful = false;
-    for(index = 0; index <= len - sizeof(m_libspdm_hardware_identity_oid); index++) {
-        if (!libspdm_const_compare_mem(spdm_extension + index, m_libspdm_hardware_identity_oid,
-                                       sizeof(m_libspdm_hardware_identity_oid))) {
+    for(index = 0; index <= len - sizeof(hardware_identity_oid); index++) {
+        if (!libspdm_const_compare_mem(spdm_extension + index, hardware_identity_oid,
+                                       sizeof(hardware_identity_oid))) {
             find_sucessful = true;
             break;
         }
@@ -4540,8 +4533,6 @@ bool libspdm_is_root_certificate(const uint8_t *cert, size_t cert_size)
     return true;
 }
 
-static uint8_t m_libspdm_oid_subject_alt_name[] = { 0x55, 0x1D, 0x11 };
-
 /**
  * Retrieve the SubjectAltName from SubjectAltName Bytes.
  *
@@ -4687,11 +4678,12 @@ libspdm_get_dmtf_subject_alt_name(const uint8_t *cert, const size_t cert_size,
 {
     bool status;
     size_t extension_data_size;
+    uint8_t oid_subject_alt_name[] = { 0x55, 0x1D, 0x11 };
 
     extension_data_size = 0;
     status = libspdm_x509_get_extension_data(cert, cert_size,
-                                             m_libspdm_oid_subject_alt_name,
-                                             sizeof(m_libspdm_oid_subject_alt_name), NULL,
+                                             oid_subject_alt_name,
+                                             sizeof(oid_subject_alt_name), NULL,
                                              &extension_data_size);
     if (status || (extension_data_size == 0)) {
         *name_buffer_size = 0;
@@ -4703,8 +4695,8 @@ libspdm_get_dmtf_subject_alt_name(const uint8_t *cert, const size_t cert_size,
     }
     status =
         libspdm_x509_get_extension_data(cert, cert_size,
-                                        m_libspdm_oid_subject_alt_name,
-                                        sizeof(m_libspdm_oid_subject_alt_name),
+                                        oid_subject_alt_name,
+                                        sizeof(oid_subject_alt_name),
                                         (uint8_t *)name_buffer, name_buffer_size);
     if (!status) {
         return status;

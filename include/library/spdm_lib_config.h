@@ -103,7 +103,7 @@
 #endif
 
 
-/* Crypto Configuation
+/* Cryptography Configuration
  * In each category, at least one should be selected.
  * NOTE: Not all combination can be supported. E.g. Don't mix NIST algo with SMx.*/
 
@@ -168,7 +168,6 @@
 #define LIBSPDM_SM3_256_SUPPORT 1
 #endif
 
-
 /* Code space optimization for Optional request/response messages.*/
 
 /* Consumers of libspdm may wish to not fully implement all of the optional
@@ -218,7 +217,6 @@
 #ifndef LIBSPDM_ENABLE_CHUNK_CAP
 #define LIBSPDM_ENABLE_CHUNK_CAP 1
 #endif
-
 
 /*
  * MinDataTransferSize = 42

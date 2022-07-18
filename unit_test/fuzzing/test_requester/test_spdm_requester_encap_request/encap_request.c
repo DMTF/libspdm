@@ -42,13 +42,14 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
     if (spdm_response_size > sizeof(temp_buf) - test_message_header_size - LIBSPDM_TEST_ALIGNMENT) {
         spdm_response_size = sizeof(temp_buf) - test_message_header_size - LIBSPDM_TEST_ALIGNMENT;
     }
-    libspdm_copy_mem((uint8_t *)temp_buf + test_message_header_size,
-                     sizeof(temp_buf) - test_message_header_size,
-                     (uint8_t *)spdm_test_context->test_buffer,
-                     spdm_response_size);
-
     switch (sub_index) {
     case 0:
+        libspdm_copy_mem((uint8_t *)temp_buf + test_message_header_size,
+                         sizeof(temp_buf),
+                         (uint8_t *)spdm_test_context->test_buffer +
+                         16 * sub_index,
+                         spdm_response_size);
+        break;
     case 1:
     case 2:
     case 3:

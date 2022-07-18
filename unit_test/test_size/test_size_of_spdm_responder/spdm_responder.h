@@ -11,6 +11,8 @@
 #include "library/spdm_responder_lib.h"
 #include "library/spdm_transport_mctp_lib.h"
 #include "library/malloclib.h"
+#include "hal/library/debuglib.h"
+#include "hal/library/memlib.h"
 
 void *spdm_server_init(void);
 
