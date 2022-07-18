@@ -165,6 +165,8 @@ void libspdm_test_requester_get_csr_case1(void **State)
 
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CSR_CAP;
 
     libspdm_get_csr(spdm_context, NULL, 0, NULL, 0, NULL, (void *)&csr_form_get,
                     &csr_len);
@@ -199,6 +201,8 @@ void libspdm_test_requester_get_csr_case2(void **State)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP |
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP |
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CSR_CAP;
 
     spdm_context->connection_info.algorithm.dhe_named_group =
         m_libspdm_use_dhe_algo;

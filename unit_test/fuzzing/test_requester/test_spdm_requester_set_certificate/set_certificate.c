@@ -109,6 +109,14 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context,
 
         spdm_test_context = libspdm_get_test_context();
         test_message_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        /* limit the encoding buffer to avoid assert, because the input buffer is controlled by the the libspdm consumer. */
+        test_message_header_size += sizeof(spdm_secured_message_a_data_header1_t) +
+                                    2 + /* MCTP_SEQUENCE_NUMBER_COUNT */
+                                    sizeof(spdm_secured_message_a_data_header2_t) +
+                                    sizeof(spdm_secured_message_cipher_header_t) +
+                                    32 /* MCTP_MAX_RANDOM_NUMBER_COUNT */ +
+                                    16 /* SPDM AEAD algorithm tag size */;
+
         spdm_response = (void *)((uint8_t *)temp_buf + test_message_header_size);
         spdm_response_size = spdm_test_context->test_buffer_size;
         if (spdm_response_size >
@@ -164,6 +172,8 @@ void libspdm_test_requester_set_certificate_case1(void **State)
 
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP;
 
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo,
@@ -195,7 +205,8 @@ void libspdm_test_requester_set_certificate_case2(void **State)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG |
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP |
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP |
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP;
     spdm_context->local_context.capability.flags = 0;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP |
