@@ -7,6 +7,8 @@
 #ifndef PROCESSOR_BIND_H
 #define PROCESSOR_BIND_H
 
+#define LIBSPDM_CPU_X64
+
 #if defined(_MSC_EXTENSIONS)
 
 /* For Microsoft tools disable warnings that make it impossible to compile at /W4. */
