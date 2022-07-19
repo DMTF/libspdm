@@ -16,12 +16,12 @@
 #include "library/memlib.h"
 #include "library/debuglib.h"
 #include <stddef.h>
+#include <stdarg.h>
 
 #define OPENSSLDIR ""
 #define ENGINESDIR ""
 
 #define MAX_STRING_SIZE 0x1000
-
 
 /* We already have "no-ui" in out Configure invocation.
  * but the code still fails to compile.
@@ -59,21 +59,6 @@
 #else
 #error Unknown target architecture
 #endif
-
-
-/* Map all va_xxxx elements to VA_xxx defined in MdePkg/include/base.h*/
-
-#if !defined(__CC_arm) /* if va_list is not already defined*/
-#define va_list LIBSPDM_VA_LIST
-#define va_arg LIBSPDM_VA_ARG
-#define va_start LIBSPDM_VA_START
-#define va_end LIBSPDM_VA_END
-#else /* __CC_arm*/
-#define va_start(marker, parameter) __va_start(marker, parameter)
-#define va_arg(marker, TYPE) __va_arg(marker, TYPE)
-#define va_end(marker) ((void)0)
-#endif
-
 
 /* Definitions for global constants used by CRT library routines*/
 

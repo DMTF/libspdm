@@ -8,6 +8,7 @@
  * X.509 Certificate Handler Wrapper Implementation.
  **/
 
+#include <stdarg.h>
 #include "internal_crypt_lib.h"
 #include <mbedtls/x509.h>
 #include <mbedtls/x509_crt.h>
@@ -69,7 +70,7 @@ bool libspdm_x509_construct_certificate(const uint8_t *cert, size_t cert_size,
 }
 
 static bool libspdm_x509_construct_certificate_stack_v(uint8_t **x509_stack,
-                                                       LIBSPDM_VA_LIST args)
+                                                       va_list args)
 {
     uint8_t *cert;
     size_t cert_size;
@@ -95,12 +96,12 @@ static bool libspdm_x509_construct_certificate_stack_v(uint8_t **x509_stack,
 
         /* If cert is NULL, then it is the end of the list.*/
 
-        cert = LIBSPDM_VA_ARG(args, uint8_t *);
+        cert = va_arg(args, uint8_t *);
         if (cert == NULL) {
             break;
         }
 
-        cert_size = LIBSPDM_VA_ARG(args, size_t);
+        cert_size = va_arg(args, size_t);
         if (cert_size == 0) {
             break;
         }
@@ -132,12 +133,12 @@ static bool libspdm_x509_construct_certificate_stack_v(uint8_t **x509_stack,
  **/
 bool libspdm_x509_construct_certificate_stack(uint8_t **x509_stack, ...)
 {
-    LIBSPDM_VA_LIST args;
+    va_list args;
     bool result;
 
-    LIBSPDM_VA_START(args, x509_stack);
+    va_start(args, x509_stack);
     result = libspdm_x509_construct_certificate_stack_v(x509_stack, args);
-    LIBSPDM_VA_END(args);
+    va_end(args);
     return result;
 }
 

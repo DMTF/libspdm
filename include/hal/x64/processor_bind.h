@@ -7,92 +7,31 @@
 #ifndef PROCESSOR_BIND_H
 #define PROCESSOR_BIND_H
 
-
-/* Define the processor type so other code can make processor based choices*/
-
-#define LIBSPDM_CPU_X64
-
-
-/* Make sure we are using the correct packing rules per EFI specification*/
-
-#if !defined(__GNUC__)
-#pragma pack()
-#endif
-
-#if defined(__GNUC__) && defined(__pic__) && !defined(USING_LTO) &&            \
-    !defined(__APPLE__)
-
-/* Mark all symbol declarations and references as hidden, meaning they will
- * not be subject to symbol preemption. This allows the compiler to refer to
- * symbols directly using relative references rather than via the GOT, which
- * contains absolute symbol addresses that are subject to runtime relocation.*/
-
-/* The LTO linker will not emit GOT based relocations when all symbol
- * references can be resolved locally, and so there is no need to set the
- * pragma in that case (and doing so will cause other issues).*/
-
-#pragma GCC visibility push(hidden)
-#endif
-
 #if defined(_MSC_EXTENSIONS)
 
+/* For Microsoft tools disable warnings that make it impossible to compile at /W4. */
 
-/* Disable warning that make it impossible to compile at /W4
- * This only works for Microsoft* tools*/
-
-
-
-/* Disabling bitfield type checking warnings.*/
-
-#pragma warning(disable : 4214)
-
-
-/* Disabling the unreferenced formal parameter warnings.*/
-
+/* Disable unreferenced formal parameter warnings. */
 #pragma warning(disable : 4100)
 
-
 /* Disable slightly different base types warning as char * can not be set
- * to a constant string.*/
-
+ * to a constant string. */
 #pragma warning(disable : 4057)
 
-
-/* ASSERT(false) or while (true) are legal constructs so suppress this warning*/
-
-#pragma warning(disable : 4127)
-
-
-/* This warning is caused by functions defined but not used. For precompiled header only.*/
-
-#pragma warning(disable : 4505)
-
-
-/* This warning is caused by empty (after preprocessing) source file. For precompiled header only.*/
-
-#pragma warning(disable : 4206)
-
 #if _MSC_VER == 1800 || _MSC_VER == 1900 || _MSC_VER >= 1910
-
-
 /* Disable these warnings for VS2013.*/
-
-
 
 /* This warning is for potentially uninitialized local variable, and it may cause false
  * positive issues in VS2013 and VS2015 build*/
-
 #pragma warning(disable : 4701)
-
 
 /* This warning is for potentially uninitialized local pointer variable, and it may cause
  * false positive issues in VS2013 and VS2015 build*/
-
 #pragma warning(disable : 4703)
 
-#endif
+#endif /* _MSC_VER == 1800 || _MSC_VER == 1900 || _MSC_VER >= 1910 */
 
-#endif
+#endif /* _MSC_EXTENSIONS */
 
 #ifndef LIBSPDM_STDINT_ALT
 
@@ -126,22 +65,22 @@
 #ifdef LIBSPDM_OPENSSL_STDINT_WORKAROUND
 #undef _WIN32
 #undef _WIN64
-#endif
+#endif /* LIBSPDM_OPENSSL_STDINT_WORKAROUND */
 
 #else
 #include LIBSPDM_STDINT_ALT
-#endif
+#endif /* LIBSPDM_STDINT_ALT */
 
 #ifndef LIBSPDM_STDBOOL_ALT
 #include <stdbool.h>
 #else
 #include LIBSPDM_STDBOOL_ALT
-#endif
+#endif /* LIBSPDM_STDBOOL_ALT */
 
 #ifndef LIBSPDM_STDDEF_ALT
 #include <stddef.h>
 #else
 #include LIBSPDM_STDDEF_ALT
-#endif
+#endif /* LIBSPDM_STDDEF_ALT */
 
 #endif /* PROCESSOR_BIND_H */

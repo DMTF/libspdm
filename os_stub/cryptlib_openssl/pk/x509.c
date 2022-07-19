@@ -8,6 +8,7 @@
  * X.509 Certificate Handler Wrapper Implementation.
  **/
 
+#include <stdarg.h>
 #include "internal_crypt_lib.h"
 #include <openssl/x509.h>
 #include <openssl/x509v3.h>
@@ -78,7 +79,7 @@ bool libspdm_x509_construct_certificate(const uint8_t *cert, size_t cert_size,
  * @param[in, out]  x509_stack  On input, pointer to an existing or NULL X509 stack object.
  *                            On output, pointer to the X509 stack object with new
  *                            inserted X509 certificate.
- * @param[in]       args       LIBSPDM_VA_LIST marker for the variable argument list.
+ * @param[in]       args       va_list marker for the variable argument list.
  *                            A list of DER-encoded single certificate data followed
  *                            by certificate size. A NULL terminates the list. The
  *                            pairs are the arguments to libspdm_x509_construct_certificate().
@@ -89,7 +90,7 @@ bool libspdm_x509_construct_certificate(const uint8_t *cert, size_t cert_size,
  *
  **/
 bool libspdm_x509_construct_certificate_stack_v(uint8_t **x509_stack,
-                                                LIBSPDM_VA_LIST args)
+                                                va_list args)
 {
     uint8_t *cert;
     size_t cert_size;
@@ -122,12 +123,12 @@ bool libspdm_x509_construct_certificate_stack_v(uint8_t **x509_stack,
 
         /* If cert is NULL, then it is the end of the list.*/
 
-        cert = LIBSPDM_VA_ARG(args, uint8_t *);
+        cert = va_arg(args, uint8_t *);
         if (cert == NULL) {
             break;
         }
 
-        cert_size = LIBSPDM_VA_ARG(args, size_t);
+        cert_size = va_arg(args, size_t);
         if (cert_size == 0) {
             break;
         }
@@ -178,12 +179,12 @@ bool libspdm_x509_construct_certificate_stack_v(uint8_t **x509_stack,
  **/
 bool libspdm_x509_construct_certificate_stack(uint8_t **x509_stack, ...)
 {
-    LIBSPDM_VA_LIST args;
+    va_list args;
     bool result;
 
-    LIBSPDM_VA_START(args, x509_stack);
+    va_start(args, x509_stack);
     result = libspdm_x509_construct_certificate_stack_v(x509_stack, args);
-    LIBSPDM_VA_END(args);
+    va_end(args);
     return result;
 }
 
