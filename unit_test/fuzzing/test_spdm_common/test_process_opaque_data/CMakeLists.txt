@@ -31,7 +31,7 @@ SET(test_process_opaque_data_LIBRARY
     spdm_secured_message_lib
     spdm_transport_test_lib
     spdm_device_secret_lib_null
-    platform_lib
+    platform_lib_null
 )
 
 if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
@@ -49,7 +49,7 @@ if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
                    $<TARGET_OBJECTS:spdm_secured_message_lib>
                    $<TARGET_OBJECTS:spdm_transport_test_lib>
                    $<TARGET_OBJECTS:spdm_device_secret_lib_null>
-                   $<TARGET_OBJECTS:platform_lib>
+                   $<TARGET_OBJECTS:platform_lib_null>
     )
 else()
     ADD_EXECUTABLE(test_process_opaque_data_check ${src_test_process_opaque_data})

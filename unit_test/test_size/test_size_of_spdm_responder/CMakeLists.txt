@@ -33,7 +33,7 @@ SET(test_size_of_spdm_responder_LIBRARY
     spdm_transport_mctp_lib
     spdm_device_secret_lib_null
     intrinsiclib
-    platform_lib
+    platform_lib_null
 )
 
 if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
