@@ -107,7 +107,7 @@
 
 1) [Mbed TLS](https://tls.mbed.org) as cryptography library. Version 2.27.0.
 
-2) [OpenSSL](https://www.openssl.org) as cryptography library. Version 1.1.1l.
+2) [OpenSSL](https://www.openssl.org) as cryptography library. Version 1.1.1q.
 
 ### Unit Test framework
 
