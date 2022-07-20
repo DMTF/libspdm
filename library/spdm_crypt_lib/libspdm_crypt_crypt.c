@@ -1965,6 +1965,7 @@ bool libspdm_asym_func_need_hash(uint32_t base_asym_algo)
     return false;
 }
 
+#if LIBSPDM_RSA_SSA_SUPPORT == 1
 bool
 libspdm_rsa_pkcs1_verify_with_nid_wrap (void *context, size_t hash_nid,
                                         const uint8_t *param, size_t param_size,
@@ -1976,7 +1977,9 @@ libspdm_rsa_pkcs1_verify_with_nid_wrap (void *context, size_t hash_nid,
     return libspdm_rsa_pkcs1_verify_with_nid (context, hash_nid,
                                               message, message_size, signature, sig_size);
 }
+#endif
 
+#if LIBSPDM_RSA_PSS_SUPPORT == 1
 bool
 libspdm_rsa_pss_verify_wrap (void *context, size_t hash_nid,
                              const uint8_t *param, size_t param_size,
@@ -1988,7 +1991,9 @@ libspdm_rsa_pss_verify_wrap (void *context, size_t hash_nid,
     return libspdm_rsa_pss_verify (context, hash_nid,
                                    message, message_size, signature, sig_size);
 }
+#endif
 
+#if LIBSPDM_ECDSA_SUPPORT == 1
 bool
 libspdm_ecdsa_verify_wrap (void *context, size_t hash_nid,
                            const uint8_t *param, size_t param_size,
@@ -2000,7 +2005,9 @@ libspdm_ecdsa_verify_wrap (void *context, size_t hash_nid,
     return libspdm_ecdsa_verify (context, hash_nid,
                                  message, message_size, signature, sig_size);
 }
+#endif
 
+#if (LIBSPDM_EDDSA_ED25519_SUPPORT == 1) || (LIBSPDM_EDDSA_ED448_SUPPORT == 1)
 bool
 libspdm_eddsa_verify_wrap (void *context, size_t hash_nid,
                            const uint8_t *param, size_t param_size,
@@ -2012,7 +2019,9 @@ libspdm_eddsa_verify_wrap (void *context, size_t hash_nid,
     return libspdm_eddsa_verify (context, hash_nid, param, param_size,
                                  message, message_size, signature, sig_size);
 }
+#endif
 
+#if LIBSPDM_SM2_DSA_SUPPORT == 1
 bool
 libspdm_sm2_dsa_verify_wrap (void *context, size_t hash_nid,
                              const uint8_t *param, size_t param_size,
@@ -2024,6 +2033,7 @@ libspdm_sm2_dsa_verify_wrap (void *context, size_t hash_nid,
     return libspdm_sm2_dsa_verify (context, hash_nid, param, param_size,
                                    message, message_size, signature, sig_size);
 }
+#endif
 
 /**
  * Return asymmetric verify function, based upon the negotiated asymmetric algorithm.
@@ -2375,6 +2385,7 @@ bool libspdm_asym_get_private_key_from_pem(uint32_t base_asym_algo,
                                          context);
 }
 
+#if LIBSPDM_RSA_SSA_SUPPORT == 1
 bool
 libspdm_rsa_pkcs1_sign_with_nid_wrap (void *context, size_t hash_nid,
                                       const uint8_t *param, size_t param_size,
@@ -2385,7 +2396,9 @@ libspdm_rsa_pkcs1_sign_with_nid_wrap (void *context, size_t hash_nid,
     return libspdm_rsa_pkcs1_sign_with_nid (context, hash_nid,
                                             message, message_size, signature, sig_size);
 }
+#endif
 
+#if LIBSPDM_RSA_PSS_SUPPORT == 1
 bool
 libspdm_rsa_pss_sign_wrap (void *context, size_t hash_nid,
                            const uint8_t *param, size_t param_size,
@@ -2396,7 +2409,9 @@ libspdm_rsa_pss_sign_wrap (void *context, size_t hash_nid,
     return libspdm_rsa_pss_sign (context, hash_nid,
                                  message, message_size, signature, sig_size);
 }
+#endif
 
+#if LIBSPDM_ECDSA_SUPPORT == 1
 bool
 libspdm_ecdsa_sign_wrap (void *context, size_t hash_nid,
                          const uint8_t *param, size_t param_size,
@@ -2407,7 +2422,9 @@ libspdm_ecdsa_sign_wrap (void *context, size_t hash_nid,
     return libspdm_ecdsa_sign (context, hash_nid,
                                message, message_size, signature, sig_size);
 }
+#endif
 
+#if (LIBSPDM_EDDSA_ED25519_SUPPORT == 1) || (LIBSPDM_EDDSA_ED448_SUPPORT == 1)
 bool
 libspdm_eddsa_sign_wrap (void *context, size_t hash_nid,
                          const uint8_t *param, size_t param_size,
@@ -2418,7 +2435,9 @@ libspdm_eddsa_sign_wrap (void *context, size_t hash_nid,
     return libspdm_eddsa_sign (context, hash_nid, param, param_size,
                                message, message_size, signature, sig_size);
 }
+#endif
 
+#if LIBSPDM_SM2_DSA_SUPPORT == 1
 bool
 libspdm_sm2_dsa_sign_wrap (void *context, size_t hash_nid,
                            const uint8_t *param, size_t param_size,
@@ -2429,6 +2448,7 @@ libspdm_sm2_dsa_sign_wrap (void *context, size_t hash_nid,
     return libspdm_sm2_dsa_sign (context, hash_nid, param, param_size,
                                  message, message_size, signature, sig_size);
 }
+#endif
 
 /**
  * Return asymmetric sign function, based upon the asymmetric algorithm.
