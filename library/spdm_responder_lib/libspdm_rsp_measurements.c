@@ -21,23 +21,23 @@
 static bool libspdm_create_measurement_opaque(libspdm_context_t *spdm_context,
                                               void *response_message,
                                               size_t response_message_size,
-                                              uint8_t *fill_response_ptr)
+                                              uint8_t **fill_response_ptr)
 {
-    if(!libspdm_get_random_number(SPDM_NONCE_SIZE, fill_response_ptr)) {
+    if(!libspdm_get_random_number(SPDM_NONCE_SIZE, *fill_response_ptr)) {
         return false;
     }
-    fill_response_ptr += SPDM_NONCE_SIZE;
+    *fill_response_ptr += SPDM_NONCE_SIZE;
 
-    *(uint16_t *)fill_response_ptr =
+    *(uint16_t *)(*fill_response_ptr) =
         (uint16_t)spdm_context->local_context.opaque_measurement_rsp_size;
-    fill_response_ptr += sizeof(uint16_t);
+    *fill_response_ptr += sizeof(uint16_t);
 
     if (spdm_context->local_context.opaque_measurement_rsp != NULL) {
-        libspdm_copy_mem(fill_response_ptr,
-                         response_message_size - (fill_response_ptr - (uint8_t*)response_message),
+        libspdm_copy_mem(*fill_response_ptr,
+                         response_message_size - (*fill_response_ptr - (uint8_t*)response_message),
                          spdm_context->local_context.opaque_measurement_rsp,
                          spdm_context->local_context.opaque_measurement_rsp_size);
-        fill_response_ptr += spdm_context->local_context.opaque_measurement_rsp_size;
+        *fill_response_ptr += spdm_context->local_context.opaque_measurement_rsp_size;
     }
 
     return true;
@@ -78,7 +78,7 @@ static bool libspdm_create_measurement_signature(libspdm_context_t *spdm_context
                         measurment_sig_size;
 
     if(!libspdm_create_measurement_opaque(spdm_context, response_message,
-                                          response_message_size, fill_response_ptr)) {
+                                          response_message_size, &fill_response_ptr)) {
         return false;
     }
 
@@ -411,7 +411,7 @@ libspdm_return_t libspdm_get_response_measurements(void *context,
         fill_response_ptr = (void *)((uint8_t *)spdm_response +
                                      spdm_response_size - measurements_no_sig_size);
         if(!libspdm_create_measurement_opaque(spdm_context, spdm_response,
-                                              spdm_response_size, fill_response_ptr)) {
+                                              spdm_response_size, &fill_response_ptr)) {
             return libspdm_generate_error_response(spdm_context,
                                                    SPDM_ERROR_CODE_UNSPECIFIED, 0,
                                                    response_size, response);
