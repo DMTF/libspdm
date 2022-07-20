@@ -1671,7 +1671,7 @@ libspdm_get_signing_context_string (
     spdm_version_number_t spdm_version,
     uint8_t op_code,
     bool is_requester,
-    size_t *context_size)
+    size_t context_size)
 {
     size_t index;
 
@@ -1681,7 +1681,7 @@ libspdm_get_signing_context_string (
     for (index = 0; index < LIBSPDM_ARRAY_SIZE(m_libspdm_signing_context_str_table); index++) {
         if (m_libspdm_signing_context_str_table[index].is_requester == is_requester &&
             m_libspdm_signing_context_str_table[index].op_code == op_code) {
-            *context_size = m_libspdm_signing_context_str_table[index].context_size;
+            context_size = m_libspdm_signing_context_str_table[index].context_size;
             return m_libspdm_signing_context_str_table[index].context;
         }
     }
@@ -2143,7 +2143,7 @@ bool libspdm_asym_verify(
             break;
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
             hash_nid = LIBSPDM_CRYPTO_NID_NULL;
-            param = libspdm_get_signing_context_string (spdm_version, op_code, false, &param_size);
+            param = libspdm_get_signing_context_string (spdm_version, op_code, false, param_size);
             break;
         default:
             /* pass thru for rest algorithm */
@@ -2245,7 +2245,7 @@ bool libspdm_asym_verify_hash(
             break;
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
             hash_nid = LIBSPDM_CRYPTO_NID_NULL;
-            param = libspdm_get_signing_context_string (spdm_version, op_code, false, &param_size);
+            param = libspdm_get_signing_context_string (spdm_version, op_code, false, param_size);
             break;
         default:
             /* pass thru for rest algorithm */
@@ -2552,7 +2552,7 @@ bool libspdm_asym_sign(
             break;
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
             hash_nid = LIBSPDM_CRYPTO_NID_NULL;
-            param = libspdm_get_signing_context_string (spdm_version, op_code, false, &param_size);
+            param = libspdm_get_signing_context_string (spdm_version, op_code, false, param_size);
             break;
         default:
             /* pass thru for rest algorithm */
@@ -2658,7 +2658,7 @@ bool libspdm_asym_sign_hash(
             break;
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
             hash_nid = LIBSPDM_CRYPTO_NID_NULL;
-            param = libspdm_get_signing_context_string (spdm_version, op_code, false, &param_size);
+            param = libspdm_get_signing_context_string (spdm_version, op_code, false, param_size);
             break;
         default:
             /* pass thru for rest algorithm */
@@ -2868,7 +2868,7 @@ bool libspdm_req_asym_verify(
             break;
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
             hash_nid = LIBSPDM_CRYPTO_NID_NULL;
-            param = libspdm_get_signing_context_string (spdm_version, op_code, true, &param_size);
+            param = libspdm_get_signing_context_string (spdm_version, op_code, true, param_size);
             break;
         default:
             /* pass thru for rest algorithm */
@@ -2970,7 +2970,7 @@ bool libspdm_req_asym_verify_hash(
             break;
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
             hash_nid = LIBSPDM_CRYPTO_NID_NULL;
-            param = libspdm_get_signing_context_string (spdm_version, op_code, true, &param_size);
+            param = libspdm_get_signing_context_string (spdm_version, op_code, true, param_size);
             break;
         default:
             /* pass thru for rest algorithm */
@@ -3132,7 +3132,7 @@ bool libspdm_req_asym_sign(
             break;
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
             hash_nid = LIBSPDM_CRYPTO_NID_NULL;
-            param = libspdm_get_signing_context_string (spdm_version, op_code, true, &param_size);
+            param = libspdm_get_signing_context_string (spdm_version, op_code, true, param_size);
             break;
         default:
             /* pass thru for rest algorithm */
@@ -3238,7 +3238,7 @@ bool libspdm_req_asym_sign_hash(
             break;
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
             hash_nid = LIBSPDM_CRYPTO_NID_NULL;
-            param = libspdm_get_signing_context_string (spdm_version, op_code, true, &param_size);
+            param = libspdm_get_signing_context_string (spdm_version, op_code, true, param_size);
             break;
         default:
             /* pass thru for rest algorithm */
