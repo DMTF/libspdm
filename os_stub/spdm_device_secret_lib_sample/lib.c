@@ -1024,6 +1024,7 @@ bool libspdm_responder_data_sign(
     result = libspdm_asym_get_private_key_from_pem(
         base_asym_algo, private_pem, private_pem_size, NULL, &context);
     if (!result) {
+        free(private_pem);
         return false;
     }
     if (is_data_hash) {
