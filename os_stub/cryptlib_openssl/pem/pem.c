@@ -81,13 +81,11 @@ bool libspdm_rsa_get_private_key_from_pem(const uint8_t *pem_data,
     bool status;
     BIO *pem_bio;
 
-
     /* Check input parameters.*/
 
     if (pem_data == NULL || rsa_context == NULL || pem_size > INT_MAX) {
         return false;
     }
-
 
     /* Add possible block-cipher descriptor for PEM data decryption.
      * NOTE: Only support most popular ciphers AES for the encrypted PEM.*/
@@ -104,18 +102,16 @@ bool libspdm_rsa_get_private_key_from_pem(const uint8_t *pem_data,
 
     status = false;
 
-
     /* Read encrypted PEM data.*/
 
     pem_bio = BIO_new(BIO_s_mem());
     if (pem_bio == NULL) {
-        goto done;
+        return status;
     }
 
     if (BIO_write(pem_bio, pem_data, (int)pem_size) <= 0) {
         goto done;
     }
-
 
     /* Retrieve RSA Private key from encrypted PEM data.*/
 
@@ -160,13 +156,11 @@ bool libspdm_ec_get_private_key_from_pem(const uint8_t *pem_data, size_t pem_siz
     bool status;
     BIO *pem_bio;
 
-
     /* Check input parameters.*/
 
     if (pem_data == NULL || ec_context == NULL || pem_size > INT_MAX) {
         return false;
     }
-
 
     /* Add possible block-cipher descriptor for PEM data decryption.
      * NOTE: Only support most popular ciphers AES for the encrypted PEM.*/
@@ -183,12 +177,11 @@ bool libspdm_ec_get_private_key_from_pem(const uint8_t *pem_data, size_t pem_siz
 
     status = false;
 
-
     /* Read encrypted PEM data.*/
 
     pem_bio = BIO_new(BIO_s_mem());
     if (pem_bio == NULL) {
-        goto done;
+        return status;
     }
 
     if (BIO_write(pem_bio, pem_data, (int)pem_size) <= 0) {
@@ -242,13 +235,11 @@ bool libspdm_ecd_get_private_key_from_pem(const uint8_t *pem_data,
     EVP_PKEY *pkey;
     int32_t type;
 
-
     /* Check input parameters.*/
 
     if (pem_data == NULL || ecd_context == NULL || pem_size > INT_MAX) {
         return false;
     }
-
 
     /* Add possible block-cipher descriptor for PEM data decryption.
      * NOTE: Only support most popular ciphers AES for the encrypted PEM.*/
@@ -265,12 +256,11 @@ bool libspdm_ecd_get_private_key_from_pem(const uint8_t *pem_data,
 
     status = false;
 
-
     /* Read encrypted PEM data.*/
 
     pem_bio = BIO_new(BIO_s_mem());
     if (pem_bio == NULL) {
-        goto done;
+        return status;
     }
 
     if (BIO_write(pem_bio, pem_data, (int)pem_size) <= 0) {
@@ -331,13 +321,11 @@ bool libspdm_sm2_get_private_key_from_pem(const uint8_t *pem_data,
     EC_KEY *ec_key;
     int32_t openssl_nid;
 
-
     /* Check input parameters.*/
 
     if (pem_data == NULL || sm2_context == NULL || pem_size > INT_MAX) {
         return false;
     }
-
 
     /* Add possible block-cipher descriptor for PEM data decryption.
      * NOTE: Only support SM4 for the encrypted PEM.*/
@@ -348,18 +336,16 @@ bool libspdm_sm2_get_private_key_from_pem(const uint8_t *pem_data,
 
     status = false;
 
-
     /* Read encrypted PEM data.*/
 
     pem_bio = BIO_new(BIO_s_mem());
     if (pem_bio == NULL) {
-        goto done;
+        return status;
     }
 
     if (BIO_write(pem_bio, pem_data, (int)pem_size) <= 0) {
         goto done;
     }
-
 
     /* Retrieve sm2 Private key from encrypted PEM data.*/
 
