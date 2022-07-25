@@ -1132,13 +1132,22 @@ libspdm_return_t libspdm_append_message_b(void *context, const void *message,
                 spdm_context->transcript.digest_context_m1m2 = NULL;
                 return LIBSPDM_STATUS_CRYPTO_ERROR;
             }
-        }
-
-        result = libspdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
-                                      spdm_context->transcript.digest_context_m1m2, message,
-                                      message_size);
-        if (!result) {
-            return LIBSPDM_STATUS_CRYPTO_ERROR;
+            result = libspdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
+                                          spdm_context->transcript.digest_context_m1m2, message,
+                                          message_size);
+            if (!result) {
+                libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
+                                   spdm_context->transcript.digest_context_m1m2);
+                spdm_context->transcript.digest_context_m1m2 = NULL;
+                return LIBSPDM_STATUS_CRYPTO_ERROR;
+            }
+        } else {
+            result = libspdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
+                                          spdm_context->transcript.digest_context_m1m2, message,
+                                          message_size);
+            if (!result) {
+                return LIBSPDM_STATUS_CRYPTO_ERROR;
+            }
         }
 
         return LIBSPDM_STATUS_SUCCESS;
@@ -1195,13 +1204,22 @@ libspdm_return_t libspdm_append_message_c(void *context, const void *message,
                 spdm_context->transcript.digest_context_m1m2 = NULL;
                 return LIBSPDM_STATUS_CRYPTO_ERROR;
             }
-        }
-
-        result = libspdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
-                                      spdm_context->transcript.digest_context_m1m2, message,
-                                      message_size);
-        if (!result) {
-            return LIBSPDM_STATUS_CRYPTO_ERROR;
+            result = libspdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
+                                          spdm_context->transcript.digest_context_m1m2, message,
+                                          message_size);
+            if (!result) {
+                libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
+                                   spdm_context->transcript.digest_context_m1m2);
+                spdm_context->transcript.digest_context_m1m2 = NULL;
+                return LIBSPDM_STATUS_CRYPTO_ERROR;
+            }
+        } else {
+            result = libspdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
+                                          spdm_context->transcript.digest_context_m1m2, message,
+                                          message_size);
+            if (!result) {
+                return LIBSPDM_STATUS_CRYPTO_ERROR;
+            }
         }
 
         return LIBSPDM_STATUS_SUCCESS;
@@ -1264,13 +1282,22 @@ libspdm_return_t libspdm_append_message_mut_b(void *context, const void *message
                     return LIBSPDM_STATUS_CRYPTO_ERROR;
                 }
             }
-        }
-
-        result = libspdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
-                                      spdm_context->transcript.digest_context_mut_m1m2, message,
-                                      message_size);
-        if (!result) {
-            return LIBSPDM_STATUS_CRYPTO_ERROR;
+            result = libspdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
+                                          spdm_context->transcript.digest_context_mut_m1m2, message,
+                                          message_size);
+            if (!result) {
+                libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
+                                   spdm_context->transcript.digest_context_mut_m1m2);
+                spdm_context->transcript.digest_context_mut_m1m2 = NULL;
+                return LIBSPDM_STATUS_CRYPTO_ERROR;
+            }
+        } else {
+            result = libspdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
+                                          spdm_context->transcript.digest_context_mut_m1m2, message,
+                                          message_size);
+            if (!result) {
+                return LIBSPDM_STATUS_CRYPTO_ERROR;
+            }
         }
 
         return LIBSPDM_STATUS_SUCCESS;
@@ -1333,13 +1360,22 @@ libspdm_return_t libspdm_append_message_mut_c(void *context, const void *message
                     return LIBSPDM_STATUS_CRYPTO_ERROR;
                 }
             }
-        }
-
-        result = libspdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
-                                      spdm_context->transcript.digest_context_mut_m1m2, message,
-                                      message_size);
-        if (!result) {
-            return LIBSPDM_STATUS_CRYPTO_ERROR;
+            result = libspdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
+                                          spdm_context->transcript.digest_context_mut_m1m2, message,
+                                          message_size);
+            if (!result) {
+                libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
+                                   spdm_context->transcript.digest_context_mut_m1m2);
+                spdm_context->transcript.digest_context_mut_m1m2 = NULL;
+                return LIBSPDM_STATUS_CRYPTO_ERROR;
+            }
+        } else {
+            result = libspdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
+                                          spdm_context->transcript.digest_context_mut_m1m2, message,
+                                          message_size);
+            if (!result) {
+                return LIBSPDM_STATUS_CRYPTO_ERROR;
+            }
         }
 
         return LIBSPDM_STATUS_SUCCESS;
