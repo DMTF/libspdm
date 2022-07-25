@@ -77,27 +77,6 @@ void libspdm_session_info_init(libspdm_context_t *spdm_context,
                                                      session_info->session_transcript.hmac_req_context_th_backup);
         session_info->session_transcript.hmac_req_context_th_backup = NULL;
     }
-    if (session_info->session_transcript.digest_context_th != NULL) {
-        libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
-                           session_info->session_transcript.digest_context_th);
-        session_info->session_transcript.digest_context_th =
-            session_info->session_transcript.digest_context_th_backup;
-        session_info->session_transcript.digest_context_th_backup = NULL;
-    }
-    if (session_info->session_transcript.hmac_rsp_context_th != NULL) {
-        libspdm_hmac_free_with_response_finished_key (secured_message_context,
-                                                      session_info->session_transcript.hmac_rsp_context_th);
-        session_info->session_transcript.hmac_rsp_context_th =
-            session_info->session_transcript.hmac_rsp_context_th_backup;
-        session_info->session_transcript.hmac_rsp_context_th_backup = NULL;
-    }
-    if (session_info->session_transcript.hmac_req_context_th != NULL) {
-        libspdm_hmac_free_with_response_finished_key (secured_message_context,
-                                                      session_info->session_transcript.hmac_req_context_th);
-        session_info->session_transcript.hmac_req_context_th =
-            session_info->session_transcript.hmac_req_context_th_backup;
-        session_info->session_transcript.hmac_req_context_th_backup = NULL;
-    }
 #endif
 
     libspdm_zero_mem (&(session_info->last_key_update_request), sizeof(spdm_key_update_request_t));
