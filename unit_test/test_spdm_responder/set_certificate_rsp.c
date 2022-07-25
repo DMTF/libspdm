@@ -38,8 +38,6 @@ void libspdm_test_responder_set_cetificate_rsp_case1(void **state)
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
 
-    spdm_context->local_context.slot_count = 1;
-
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &cert_chain,
                                                     &cert_chain_size, NULL, NULL);
@@ -101,8 +99,6 @@ void libspdm_test_responder_set_cetificate_rsp_case2(void **state)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
-
-    spdm_context->local_context.slot_count = 1;
 
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &cert_chain,
@@ -171,8 +167,6 @@ void libspdm_test_responder_set_cetificate_rsp_case3(void **state)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
-
-    spdm_context->local_context.slot_count = 1;
 
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &cert_chain,
@@ -244,8 +238,6 @@ void libspdm_test_responder_set_cetificate_rsp_case4(void **state)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
-
-    spdm_context->local_context.slot_count = 1;
 
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &cert_chain,
@@ -332,9 +324,6 @@ void libspdm_test_responder_set_cetificate_rsp_case5(void **state)
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
-
-    /*slot_count = 2(slot_id:0  slot_id:1)*/
-    spdm_context->local_context.slot_count = 2;
 
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &cert_chain,

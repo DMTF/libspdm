@@ -326,16 +326,6 @@ libspdm_return_t libspdm_set_data(void *context, libspdm_data_type_t data_type,
             data_size;
         spdm_context->local_context.peer_cert_chain_provision = data;
         break;
-    case LIBSPDM_DATA_LOCAL_SLOT_COUNT:
-        if (data_size != sizeof(uint8_t)) {
-            return LIBSPDM_STATUS_INVALID_PARAMETER;
-        }
-        slot_id = *(uint8_t *)data;
-        if (slot_id >= SPDM_MAX_SLOT_COUNT) {
-            return LIBSPDM_STATUS_INVALID_PARAMETER;
-        }
-        spdm_context->local_context.slot_count = slot_id;
-        break;
     case LIBSPDM_DATA_LOCAL_PUBLIC_CERT_CHAIN:
         slot_id = parameter->additional_data[0];
         if (slot_id >= SPDM_MAX_SLOT_COUNT) {

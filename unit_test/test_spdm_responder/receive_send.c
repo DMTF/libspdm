@@ -83,7 +83,6 @@ void libspdm_test_responder_receive_send_rsp_case1(void** state)
         &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
     #endif
 
-    spdm_context->local_context.slot_count = 1;
     spdm_context->connection_info.capability.data_transfer_size =
         CHUNK_GET_UNIT_TEST_OVERRIDE_DATA_TRANSFER_SIZE;
 

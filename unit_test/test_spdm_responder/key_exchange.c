@@ -122,7 +122,7 @@ void libspdm_test_responder_key_exchange_case1(void **state)
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
 
@@ -210,7 +210,7 @@ void libspdm_test_responder_key_exchange_case2(void **state)
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
 
@@ -292,7 +292,7 @@ void libspdm_test_responder_key_exchange_case3(void **state)
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
 
@@ -375,7 +375,7 @@ void libspdm_test_responder_key_exchange_case4(void **state)
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
 
@@ -460,7 +460,7 @@ void libspdm_test_responder_key_exchange_case5(void **state)
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
 
@@ -549,7 +549,7 @@ void libspdm_test_responder_key_exchange_case6(void **state)
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
 
@@ -630,7 +630,7 @@ void libspdm_test_responder_key_exchange_case7(void **state)
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -741,7 +741,7 @@ void libspdm_test_responder_key_exchange_case8(void **state)
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
 
@@ -852,7 +852,7 @@ void libspdm_test_responder_key_exchange_case9(void **state)
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
 
@@ -965,7 +965,7 @@ void libspdm_test_responder_key_exchange_case10(void **state)
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
 
@@ -1057,7 +1057,7 @@ void libspdm_test_responder_key_exchange_case11(void **state)
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
 
@@ -1143,7 +1143,7 @@ void libspdm_test_responder_key_exchange_case13(void **state)
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     spdm_context->local_context.provisioned_slot_id = 0xFF;
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
@@ -1230,7 +1230,7 @@ void libspdm_test_responder_key_exchange_case14(void **state)
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     spdm_context->local_context.provisioned_slot_id = 0;
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
@@ -1326,7 +1326,7 @@ void libspdm_test_responder_key_exchange_case15(void **state)
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
 
@@ -1424,7 +1424,7 @@ void libspdm_test_responder_key_exchange_case16(void **state)
                                                     &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
 
@@ -1524,7 +1524,7 @@ void libspdm_test_responder_key_exchange_case17(void **state)
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
 

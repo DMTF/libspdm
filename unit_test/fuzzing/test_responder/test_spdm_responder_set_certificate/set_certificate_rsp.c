@@ -34,8 +34,6 @@ void libspdm_test_responder_set_certificate_case1(void **State)
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
 
-    spdm_context->local_context.slot_count = 0X08;
-
     response_size = sizeof(response);
     libspdm_get_response_set_certificate(spdm_context,
                                          spdm_test_context->test_buffer_size,
@@ -77,8 +75,6 @@ void libspdm_test_responder_set_certificate_case2(void **State)
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
-
-    spdm_context->local_context.slot_count = 0X08;
 
     response_size = sizeof(response);
     libspdm_get_response_set_certificate(spdm_context,

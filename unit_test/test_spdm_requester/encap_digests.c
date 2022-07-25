@@ -56,7 +56,7 @@ void test_spdm_requester_challenge_auth_case1(void **state)
         LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
     libspdm_set_mem(m_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
                     (uint8_t)(0xFF));
-    spdm_context->local_context.slot_count = 1;
+
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->transcript.message_m.buffer_size =
         spdm_context->transcript.message_m.max_buffer_size;
@@ -112,7 +112,6 @@ void test_spdm_requester_challenge_auth_case2(void **state)
         LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
     libspdm_set_mem(m_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
                     (uint8_t)(0xFF));
-    spdm_context->local_context.slot_count = 1;
 
     response_size = sizeof(response);
     status = libspdm_get_encap_response_digest(spdm_context,
@@ -160,7 +159,6 @@ void test_spdm_requester_challenge_auth_case3(void **state)
         LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
     libspdm_set_mem(m_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
                     (uint8_t)(0xFF));
-    spdm_context->local_context.slot_count = 1;
 
     response_size = sizeof(response);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -220,7 +218,6 @@ void test_spdm_requester_challenge_auth_case4(void **state)
         LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
     libspdm_set_mem(m_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
                     (uint8_t)(0xFF));
-    spdm_context->local_context.slot_count = 1;
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->transcript.message_b.buffer_size =

@@ -37,8 +37,6 @@ void libspdm_test_responder_csr_case1(void **State)
     spdm_context->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
 
-    spdm_context->local_context.slot_count = 1;
-
     response_size = sizeof(response);
     libspdm_get_response_csr(spdm_context,
                              spdm_test_context->test_buffer_size,
@@ -70,8 +68,6 @@ void libspdm_test_responder_csr_case2(void **State)
         m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
-
-    spdm_context->local_context.slot_count = 1;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;

@@ -54,7 +54,6 @@ void libspdm_test_responder_respond_if_ready(void **State)
         LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
     libspdm_set_mem(local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
                     (uint8_t)(0xFF));
-    spdm_context->local_context.slot_count = 1;
 
     spdm_context->last_spdm_request_size = spdm_test_get_digest_request_size;
     libspdm_copy_mem(spdm_context->last_spdm_request, sizeof(spdm_context->last_spdm_request),

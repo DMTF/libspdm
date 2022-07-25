@@ -50,7 +50,7 @@ void libspdm_test_requester_encap_challenge(void **State)
                                                     NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
-    spdm_context->local_context.slot_count = 1;
+
     spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
     libspdm_reset_message_c(spdm_context);
 

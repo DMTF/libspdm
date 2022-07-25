@@ -895,7 +895,6 @@ void libspdm_test_requester_encap_request_case8(void **State)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x8;
 
-    spdm_context->local_context.slot_count = 1;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
@@ -952,7 +951,6 @@ void libspdm_test_requester_encap_request_case9(void **State)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x9;
 
-    spdm_context->local_context.slot_count = 1;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;

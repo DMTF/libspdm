@@ -102,7 +102,6 @@ void libspdm_test_responder_csr_case1(void **state)
     spdm_context->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
 
-    spdm_context->local_context.slot_count = 1;
 
     m_libspdm_set_certificate_request = malloc(sizeof(spdm_get_csr_request_t));
 
@@ -163,7 +162,6 @@ void libspdm_test_responder_csr_case2(void **state)
     spdm_context->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
 
-    spdm_context->local_context.slot_count = 1;
 
     m_libspdm_set_certificate_request = malloc(sizeof(spdm_get_csr_request_t));
 
@@ -227,8 +225,6 @@ void libspdm_test_responder_csr_case3(void **state)
         m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
-
-    spdm_context->local_context.slot_count = 1;
 
     m_libspdm_set_certificate_request = malloc(sizeof(spdm_get_csr_request_t) +
                                                sizeof(right_req_info));
@@ -300,8 +296,6 @@ void libspdm_test_responder_csr_case4(void **state)
     spdm_context->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
 
-    spdm_context->local_context.slot_count = 1;
-
     m_libspdm_set_certificate_request = malloc(sizeof(spdm_get_csr_request_t) +
                                                sizeof(m_csr_opaque_data));
 
@@ -367,8 +361,6 @@ void libspdm_test_responder_csr_case5(void **state)
         m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
-
-    spdm_context->local_context.slot_count = 1;
 
     m_libspdm_set_certificate_request = malloc(sizeof(spdm_get_csr_request_t) +
                                                sizeof(wrong_req_info));

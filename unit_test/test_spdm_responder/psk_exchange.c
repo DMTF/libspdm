@@ -157,7 +157,7 @@ void libspdm_test_responder_psk_exchange_case1(void **state)
     spdm_context->connection_info.local_used_cert_chain_buffer = data1;
     spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
     libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
     libspdm_copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
@@ -253,7 +253,7 @@ void libspdm_test_responder_psk_exchange_case2(void **state)
     spdm_context->connection_info.local_used_cert_chain_buffer = data1;
     spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
     libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
     libspdm_copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
@@ -341,7 +341,7 @@ void libspdm_test_responder_psk_exchange_case3(void **state)
     spdm_context->connection_info.local_used_cert_chain_buffer = data1;
     spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
     libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
     libspdm_copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
@@ -430,7 +430,7 @@ void libspdm_test_responder_psk_exchange_case4(void **state)
     spdm_context->connection_info.local_used_cert_chain_buffer = data1;
     spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
     libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
     libspdm_copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
@@ -521,7 +521,7 @@ void libspdm_test_responder_psk_exchange_case5(void **state)
     spdm_context->connection_info.local_used_cert_chain_buffer = data1;
     spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
     libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
     libspdm_copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
@@ -616,7 +616,7 @@ void libspdm_test_responder_psk_exchange_case6(void **state)
     spdm_context->connection_info.local_used_cert_chain_buffer = data1;
     spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
     libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
     libspdm_copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
@@ -703,7 +703,7 @@ void libspdm_test_responder_psk_exchange_case7(void **state)
     spdm_context->connection_info.local_used_cert_chain_buffer = data1;
     spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
     libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
     libspdm_copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
@@ -811,7 +811,7 @@ void libspdm_test_responder_psk_exchange_case8(void **state)
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
     spdm_context->connection_info.local_used_cert_chain_buffer = data1;
     spdm_context->connection_info.local_used_cert_chain_buffer_size = data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
     libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
     libspdm_copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
@@ -913,7 +913,7 @@ void libspdm_test_responder_psk_exchange_case9(void **state)
     spdm_context->connection_info.local_used_cert_chain_buffer = data1;
     spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
     libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
     libspdm_copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
@@ -1022,7 +1022,7 @@ void libspdm_test_responder_psk_exchange_case10(void **state)
     spdm_context->connection_info.local_used_cert_chain_buffer = data1;
     spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
     libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
     libspdm_copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
@@ -1145,7 +1145,7 @@ void libspdm_test_responder_psk_exchange_case11(void **state)
     spdm_context->connection_info.local_used_cert_chain_buffer = data1;
     spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
     libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
     libspdm_copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
@@ -1266,7 +1266,7 @@ void libspdm_test_responder_psk_exchange_case12(void **state)
     spdm_context->connection_info.local_used_cert_chain_buffer = data1;
     spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
     libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
     libspdm_copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
@@ -1373,7 +1373,7 @@ void libspdm_test_responder_psk_exchange_case13(void **state)
     spdm_context->connection_info.local_used_cert_chain_buffer = data1;
     spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
     libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
     libspdm_copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
@@ -1469,7 +1469,7 @@ void libspdm_test_responder_psk_exchange_case14(void **state)
     spdm_context->connection_info.local_used_cert_chain_buffer = data1;
     spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.psk_hint_size = 0;
     spdm_context->local_context.psk_hint = NULL;
@@ -1563,7 +1563,7 @@ void libspdm_test_responder_psk_exchange_case15(void **state)
     spdm_context->connection_info.local_used_cert_chain_buffer = data1;
     spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
     libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
     libspdm_copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
@@ -1663,7 +1663,7 @@ void libspdm_test_responder_psk_exchange_case16(void **state)
     spdm_context->connection_info.local_used_cert_chain_buffer = data1;
     spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
 
     spdm_context->local_context.psk_hint_size = 0;

@@ -41,7 +41,6 @@ void libspdm_test_requester_encap_certificate(void **State)
 
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
-    spdm_context->local_context.slot_count = 1;
 
     request_size = spdm_test_context->test_buffer_size;
     if (request_size > sizeof(spdm_get_certificate_request_t)) {

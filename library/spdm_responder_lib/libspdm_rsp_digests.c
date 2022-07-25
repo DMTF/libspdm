@@ -41,6 +41,10 @@ libspdm_return_t libspdm_get_response_digests(void *context, size_t request_size
     bool result;
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
+    /*total populated solt count*/
+    uint8_t slot_count;
+    /*populated solt index*/
+    uint8_t slot_index;
 
     spdm_context = context;
     spdm_request = request;
@@ -115,11 +119,10 @@ libspdm_return_t libspdm_get_response_digests(void *context, size_t request_size
     hash_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
 
+    slot_count = libspdm_get_cert_slot_count(spdm_context);
     LIBSPDM_ASSERT(*response_size >=
-                   sizeof(spdm_digest_response_t) +
-                   hash_size * spdm_context->local_context.slot_count);
-    *response_size = sizeof(spdm_digest_response_t) +
-                     hash_size * spdm_context->local_context.slot_count;
+                   sizeof(spdm_digest_response_t) + hash_size * slot_count);
+    *response_size = sizeof(spdm_digest_response_t) + hash_size * slot_count;
     libspdm_zero_mem(response, *response_size);
     spdm_response = response;
 
@@ -129,21 +132,19 @@ libspdm_return_t libspdm_get_response_digests(void *context, size_t request_size
     spdm_response->header.param2 = 0;
 
     digest = (void *)(spdm_response + 1);
-    for (index = 0; index < spdm_context->local_context.slot_count;
-         index++) {
+    slot_index = 0;
+    for (index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
         if (spdm_context->local_context
-            .local_cert_chain_provision[index] == NULL) {
-            return libspdm_generate_error_response(
-                spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
-                0, response_size, response);
-        }
-        spdm_response->header.param2 |= (1 << index);
-        result = libspdm_generate_cert_chain_hash(spdm_context, index,
-                                                  &digest[hash_size * index]);
-        if (!result) {
-            return libspdm_generate_error_response(
-                spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
-                0, response_size, response);
+            .local_cert_chain_provision[index] != NULL) {
+            spdm_response->header.param2 |= (1 << index);
+            result = libspdm_generate_cert_chain_hash(spdm_context, index,
+                                                      &digest[hash_size * slot_index]);
+            slot_index++;
+            if (!result) {
+                return libspdm_generate_error_response(
+                    spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
+                    0, response_size, response);
+            }
         }
     }
 
