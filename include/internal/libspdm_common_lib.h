@@ -66,7 +66,6 @@ typedef struct {
 
     const void *local_cert_chain_provision[SPDM_MAX_SLOT_COUNT];
     size_t local_cert_chain_provision_size[SPDM_MAX_SLOT_COUNT];
-    uint8_t slot_count;
     /* My provisioned certificate (for slot_id - 0xFF, default 0)*/
     uint8_t provisioned_slot_id;
 
@@ -1142,6 +1141,16 @@ void libspdm_get_receiver_buffer (
  * @retval slot_mask                 get slot mask
  **/
 uint8_t libspdm_get_cert_slot_mask (
+    libspdm_context_t *spdm_context);
+
+/**
+ * Get the certificate slot count
+ *
+ * @param[in]   context              A pointer to the SPDM context.
+ *
+ * @retval slot_count                get slot count
+ **/
+uint8_t libspdm_get_cert_slot_count(
     libspdm_context_t *spdm_context);
 
 #endif /* SPDM_COMMON_LIB_INTERNAL_H */

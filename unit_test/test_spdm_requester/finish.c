@@ -3041,7 +3041,7 @@ void libspdm_test_requester_finish_case16(void **state)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
-    spdm_context->local_context.slot_count = 1;
+
     status = libspdm_send_receive_finish(spdm_context, session_id,
                                          req_slot_id_param);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
@@ -3151,7 +3151,7 @@ void libspdm_test_requester_finish_case17(void **state)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
-    spdm_context->local_context.slot_count = 1;
+
     status = libspdm_send_receive_finish(spdm_context, session_id,
                                          req_slot_id_param);
     assert_int_equal(status, LIBSPDM_STATUS_VERIF_FAIL);
@@ -3257,7 +3257,7 @@ void libspdm_test_requester_finish_case18(void **state)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
-    spdm_context->local_context.slot_count = 1;
+
     status = libspdm_send_receive_finish(spdm_context, session_id,
                                          req_slot_id_param);
     assert_int_equal(status, LIBSPDM_STATUS_VERIF_FAIL);
@@ -3364,7 +3364,7 @@ void libspdm_test_requester_finish_case19(void **state)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
-    spdm_context->local_context.slot_count = 1;
+
     status = libspdm_send_receive_finish(spdm_context, session_id,
                                          req_slot_id_param);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_SIZE);
@@ -3471,7 +3471,7 @@ void libspdm_test_requester_finish_case20(void **state)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
-    spdm_context->local_context.slot_count = 1;
+
     status = libspdm_send_receive_finish(spdm_context, session_id,
                                          req_slot_id_param);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_SIZE);
@@ -3667,7 +3667,7 @@ void libspdm_test_requester_finish_case22(void **state)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
-    spdm_context->local_context.slot_count = 1;
+
     status = libspdm_send_receive_finish(spdm_context, session_id,
                                          req_slot_id_param);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);

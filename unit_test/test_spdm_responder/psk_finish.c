@@ -99,7 +99,7 @@ void libspdm_test_responder_psk_finish_case1(void **state)
     spdm_context->connection_info.local_used_cert_chain_buffer = data1;
     spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
     libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
@@ -208,7 +208,7 @@ void libspdm_test_responder_psk_finish_case2(void **state)
     spdm_context->connection_info.local_used_cert_chain_buffer = data1;
     spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
     libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
@@ -320,7 +320,7 @@ void libspdm_test_responder_psk_finish_case3(void **state)
     spdm_context->connection_info.local_used_cert_chain_buffer = data1;
     spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
     libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
@@ -436,7 +436,7 @@ void libspdm_test_responder_psk_finish_case4(void **state)
     spdm_context->connection_info.local_used_cert_chain_buffer = data1;
     spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
     libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
@@ -554,7 +554,7 @@ void libspdm_test_responder_psk_finish_case5(void **state)
     spdm_context->connection_info.local_used_cert_chain_buffer = data1;
     spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
     libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
@@ -678,7 +678,7 @@ void libspdm_test_responder_psk_finish_case6(void **state)
     spdm_context->connection_info.local_used_cert_chain_buffer = data1;
     spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
     libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
@@ -786,7 +786,7 @@ void libspdm_test_responder_psk_finish_case7(void **state)
     spdm_context->connection_info.local_used_cert_chain_buffer = data1;
     spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
     libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
@@ -919,7 +919,7 @@ void libspdm_test_responder_psk_finish_case8(void **state)
     spdm_context->connection_info.local_used_cert_chain_buffer = data1;
     spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     spdm_context->transcript.message_a.buffer_size = 0;
     spdm_context->local_context.mut_auth_requested = 0;
     libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
@@ -1034,7 +1034,7 @@ void libspdm_test_responder_psk_finish_case9(void **state)
     spdm_context->connection_info.local_used_cert_chain_buffer = data1;
     spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     spdm_context->transcript.message_a.buffer_size = 0;
     spdm_context->local_context.mut_auth_requested = 0;
     libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
@@ -1146,7 +1146,7 @@ void libspdm_test_responder_psk_finish_case10(void **state)
     spdm_context->connection_info.local_used_cert_chain_buffer = data1;
     spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     spdm_context->transcript.message_a.buffer_size = 0;
     spdm_context->local_context.mut_auth_requested = 0;
     libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
@@ -1252,7 +1252,7 @@ void libspdm_test_responder_psk_finish_case11(void **state)
     spdm_context->connection_info.local_used_cert_chain_buffer = data1;
     spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     spdm_context->transcript.message_a.buffer_size = 0;
     spdm_context->local_context.mut_auth_requested = 0;
     libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
@@ -1362,7 +1362,7 @@ void libspdm_test_responder_psk_finish_case12(void **state)
     spdm_context->connection_info.local_used_cert_chain_buffer = data1;
     spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     spdm_context->transcript.message_a.buffer_size = 0;
     spdm_context->local_context.mut_auth_requested = 0;
     libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
@@ -1478,7 +1478,7 @@ void libspdm_test_responder_psk_finish_case13(void **state)
     spdm_context->connection_info.local_used_cert_chain_buffer = data1;
     spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     spdm_context->transcript.message_a.buffer_size = 0;
     spdm_context->local_context.mut_auth_requested = 0;
     libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
@@ -1583,7 +1583,7 @@ void libspdm_test_responder_psk_finish_case14(void **state)
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
     spdm_context->connection_info.local_used_cert_chain_buffer = data1;
     spdm_context->connection_info.local_used_cert_chain_buffer_size = data_size1;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
     libspdm_zero_mem(m_libspdm_local_psk_hint, 32);

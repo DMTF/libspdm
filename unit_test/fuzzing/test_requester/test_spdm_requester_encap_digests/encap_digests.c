@@ -34,7 +34,6 @@ void libspdm_test_requester_encap_digests(void **State)
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
     libspdm_set_mem(m_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, (uint8_t)(0xFF));
-    spdm_context->local_context.slot_count = 1;
 
     request_size = spdm_test_context->test_buffer_size;
     if (request_size > sizeof(spdm_get_digest_request_t)) {

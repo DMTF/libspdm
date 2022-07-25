@@ -81,7 +81,7 @@ void test_libspdm_requester_encap_challenge_auth_case1(void **state)
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size;
-    spdm_context->local_context.slot_count = 1;
+
     spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
     libspdm_reset_message_c(spdm_context);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -156,7 +156,7 @@ void test_libspdm_requester_encap_challenge_auth_case2(void **state)
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size;
-    spdm_context->local_context.slot_count = 1;
+
     spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
     libspdm_reset_message_c(spdm_context);
 
@@ -213,7 +213,7 @@ void test_libspdm_requester_encap_challenge_auth_case3(void **state)
                                                     NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
-    spdm_context->local_context.slot_count = 1;
+
     spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
     libspdm_reset_message_c(spdm_context);
 
@@ -267,7 +267,7 @@ void test_libspdm_requester_encap_challenge_auth_case4(void **state)
                                                     NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
-    spdm_context->local_context.slot_count = 1;
+
     spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
     libspdm_reset_message_c(spdm_context);
 
@@ -321,7 +321,7 @@ void test_libspdm_requester_encap_challenge_auth_case5(void **state)
                                                     NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
-    spdm_context->local_context.slot_count = 1;
+
     spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
     libspdm_reset_message_c(spdm_context);
 

@@ -133,8 +133,7 @@ void libspdm_test_responder_measurements_case3(void **State)
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size,
                                                     NULL, NULL);
-    spdm_context->local_context.slot_count = SPDM_MAX_SLOT_COUNT;
-    for (int i = 1; i < spdm_context->local_context.slot_count; i++) {
+    for (int i = 1; i < SPDM_MAX_SLOT_COUNT; i++) {
         spdm_context->local_context.local_cert_chain_provision_size[i] = data_size;
         spdm_context->local_context.local_cert_chain_provision[i] = data;
     }
@@ -185,8 +184,7 @@ void libspdm_test_responder_measurements_case4(void **State)
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size,
                                                     NULL, NULL);
-    spdm_context->local_context.slot_count = SPDM_MAX_SLOT_COUNT;
-    for (int i = 1; i < spdm_context->local_context.slot_count; i++) {
+    for (int i = 1; i < SPDM_MAX_SLOT_COUNT; i++) {
         spdm_context->local_context.local_cert_chain_provision_size[i] = data_size;
         spdm_context->local_context.local_cert_chain_provision[i] = data;
     }

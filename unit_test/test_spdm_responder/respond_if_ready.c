@@ -313,7 +313,6 @@ void libspdm_test_responder_respond_if_ready_case1(void **state) {
         LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
     libspdm_set_mem (m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
                      (uint8_t)(0xFF));
-    spdm_context->local_context.slot_count = 1;
 
     spdm_context->last_spdm_request_size = m_libspdm_get_digest_request_size;
     libspdm_copy_mem(spdm_context->last_spdm_request, sizeof(spdm_context->last_spdm_request),
@@ -384,7 +383,6 @@ void libspdm_test_responder_respond_if_ready_case2(void **state) {
                                                      NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
-    spdm_context->local_context.slot_count = 1;
 
     spdm_context->last_spdm_request_size = m_libspdm_get_certificate_request_size;
     libspdm_copy_mem(spdm_context->last_spdm_request, sizeof(spdm_context->last_spdm_request),
@@ -461,7 +459,7 @@ void libspdm_test_responder_respond_if_ready_case3(void **state) {
                                                      NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
-    spdm_context->local_context.slot_count = 1;
+
     spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
 
     spdm_context->last_spdm_request_size = m_libspdm_challenge_request_size;
@@ -615,7 +613,7 @@ void libspdm_test_responder_respond_if_ready_case5(void **state) {
                                                      NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
-    spdm_context->local_context.slot_count = 1;
+
     spdm_context->local_context.mut_auth_requested = 0;
 
     m_libspdm_key_exchange_request.req_session_id = 0xFFFF;
@@ -736,7 +734,7 @@ void libspdm_test_responder_respond_if_ready_case6(void **state) {
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
     spdm_context->connection_info.local_used_cert_chain_buffer = data;
     spdm_context->connection_info.local_used_cert_chain_buffer_size = data_size;
-    spdm_context->local_context.slot_count = 1;
+
     spdm_context->local_context.mut_auth_requested = 0;
 
     session_id = 0xFFFFFFFF;
@@ -846,7 +844,7 @@ void libspdm_test_responder_respond_if_ready_case7(void **state) {
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
     spdm_context->connection_info.local_used_cert_chain_buffer = data;
     spdm_context->connection_info.local_used_cert_chain_buffer_size = data_size;
-    spdm_context->local_context.slot_count = 1;
+
     libspdm_zero_mem (local_psk_hint, 32);
     libspdm_copy_mem(&local_psk_hint[0], sizeof(local_psk_hint),
                      LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
@@ -962,7 +960,7 @@ void libspdm_test_responder_respond_if_ready_case8(void **state) {
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
     spdm_context->connection_info.local_used_cert_chain_buffer = data;
     spdm_context->connection_info.local_used_cert_chain_buffer_size = data_size;
-    spdm_context->local_context.slot_count = 1;
+
     spdm_context->local_context.mut_auth_requested = 0;
     libspdm_zero_mem (local_psk_hint, 32);
     libspdm_copy_mem(&local_psk_hint[0], sizeof(local_psk_hint),
@@ -1058,7 +1056,7 @@ void libspdm_test_responder_respond_if_ready_case9(void **state) {
         LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
     libspdm_set_mem (m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
                      (uint8_t)(0xFF));
-    spdm_context->local_context.slot_count = 1;
+
     spdm_context->last_spdm_request_size = m_libspdm_get_digest_request_size;
     libspdm_copy_mem(spdm_context->last_spdm_request, sizeof(spdm_context->last_spdm_request),
                      &m_libspdm_get_digest_request, m_libspdm_get_digest_request_size);
@@ -1118,7 +1116,7 @@ void libspdm_test_responder_respond_if_ready_case10(void **state) {
         LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
     libspdm_set_mem (m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
                      (uint8_t)(0xFF));
-    spdm_context->local_context.slot_count = 1;
+
     spdm_context->last_spdm_request_size = m_libspdm_get_digest_request_size;
     libspdm_copy_mem(spdm_context->last_spdm_request, sizeof(spdm_context->last_spdm_request),
                      &m_libspdm_get_digest_request, m_libspdm_get_digest_request_size);
@@ -1179,7 +1177,7 @@ void libspdm_test_responder_respond_if_ready_case11(void **state) {
         LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
     libspdm_set_mem (m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
                      (uint8_t)(0xFF));
-    spdm_context->local_context.slot_count = 1;
+
     spdm_context->last_spdm_request_size = m_libspdm_get_digest_request_size;
     libspdm_copy_mem(spdm_context->last_spdm_request, sizeof(spdm_context->last_spdm_request),
                      &m_libspdm_get_digest_request, m_libspdm_get_digest_request_size);
@@ -1242,7 +1240,7 @@ void libspdm_test_responder_respond_if_ready_case12(void **state) {
         LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
     libspdm_set_mem (m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
                      (uint8_t)(0xFF));
-    spdm_context->local_context.slot_count = 1;
+
     spdm_context->last_spdm_request_size = m_libspdm_get_digest_request_size;
     libspdm_copy_mem(spdm_context->last_spdm_request, sizeof(spdm_context->last_spdm_request),
                      &m_libspdm_get_digest_request, m_libspdm_get_digest_request_size);
@@ -1308,7 +1306,7 @@ void libspdm_test_responder_respond_if_ready_case13(void **state) {
         LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
     libspdm_set_mem (m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
                      (uint8_t)(0xFF));
-    spdm_context->local_context.slot_count = 1;
+
     spdm_context->last_spdm_request_size = m_libspdm_get_digest_request_size;
     libspdm_copy_mem(spdm_context->last_spdm_request, sizeof(spdm_context->last_spdm_request),
                      &m_libspdm_get_digest_request, m_libspdm_get_digest_request_size);
@@ -1367,7 +1365,7 @@ void libspdm_test_responder_respond_if_ready_case14(void **state) {
         LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
     libspdm_set_mem (m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
                      (uint8_t)(0xFF));
-    spdm_context->local_context.slot_count = 1;
+
     spdm_context->last_spdm_request_size = m_libspdm_get_digest_request_size;
     libspdm_copy_mem(spdm_context->last_spdm_request, sizeof(spdm_context->last_spdm_request),
                      &m_libspdm_get_digest_request, m_libspdm_get_digest_request_size);

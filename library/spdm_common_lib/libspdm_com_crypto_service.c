@@ -516,6 +516,29 @@ uint8_t libspdm_get_cert_slot_mask(libspdm_context_t *spdm_context)
 }
 
 /**
+ * Get the certificate slot count
+ *
+ * @param[in]   context              A pointer to the SPDM context.
+ *
+ * @retval slot_count                get slot count
+ **/
+uint8_t libspdm_get_cert_slot_count(libspdm_context_t *spdm_context)
+{
+    size_t index;
+    uint8_t slot_count;
+
+    slot_count = 0;
+    for (index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
+        if (spdm_context->local_context
+            .local_cert_chain_provision[index] != NULL) {
+            slot_count++;
+        }
+    }
+
+    return slot_count;
+}
+
+/**
  * This function verifies the digest.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
