@@ -339,11 +339,11 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
     spdm_message_header_t *spdm_response;
     bool result;
     size_t transport_header_size;
+    uint8_t *scratch_buffer;
+    size_t scratch_buffer_size;
 
     #if LIBSPDM_ENABLE_CHUNK_CAP
     libspdm_chunk_info_t* get_info;
-    void* scratch_buffer;
-    size_t scratch_buffer_size;
     #endif /* LIBSPDM_ENABLE_CHUNK_CAP */
 
     spdm_context = context;
@@ -351,10 +351,12 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
 
     /* For secure message, setup my_response to scratch buffer
      * For non-secure message, setup my_response to sender buffer*/
+    transport_header_size = spdm_context->transport_get_header_size(spdm_context);
     if (session_id != NULL) {
-        libspdm_get_scratch_buffer (spdm_context, (void **)&my_response, &my_response_size);
+        libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+        my_response = scratch_buffer + transport_header_size;
+        my_response_size = scratch_buffer_size - transport_header_size;
     } else {
-        transport_header_size = spdm_context->transport_get_header_size(spdm_context);
         my_response = (uint8_t *)*response + transport_header_size;
         my_response_size = *response_size - transport_header_size;
     }
@@ -516,7 +518,7 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
                            "Warning: Overwriting previous unrequested chunk_get info.\n"));
         }
 
-        libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
+        libspdm_get_scratch_buffer(spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
         LIBSPDM_ASSERT(scratch_buffer_size >= LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE
                        + LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
 
