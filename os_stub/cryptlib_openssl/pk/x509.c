@@ -2477,7 +2477,7 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
     if (requester_info_length != 0) {
         ret = libspdm_set_attribute_for_req(x509_req, requester_info, requester_info_length);
         if (ret == 0) {
-            return false;
+            goto free_all;
         }
     }
 
