@@ -84,13 +84,6 @@ void libspdm_session_info_init(libspdm_context_t *spdm_context,
             session_info->session_transcript.digest_context_th_backup;
         session_info->session_transcript.digest_context_th_backup = NULL;
     }
-    if (session_info->session_transcript.hmac_rsp_context_th != NULL) {
-        libspdm_hmac_free_with_response_finished_key (secured_message_context,
-                                                      session_info->session_transcript.hmac_rsp_context_th);
-        session_info->session_transcript.hmac_rsp_context_th =
-            session_info->session_transcript.hmac_rsp_context_th_backup;
-        session_info->session_transcript.hmac_rsp_context_th_backup = NULL;
-    }
     if (session_info->session_transcript.hmac_req_context_th != NULL) {
         libspdm_hmac_free_with_response_finished_key (secured_message_context,
                                                       session_info->session_transcript.hmac_req_context_th);
