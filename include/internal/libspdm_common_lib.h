@@ -1134,4 +1134,15 @@ void libspdm_get_receiver_buffer (
     void **receiver_buffer,
     size_t *receiver_buffer_size);
 
+/**
+ * Get the certificate slot mask
+ *
+ * @param[in]   context              A pointer to the SPDM context.
+ * @param[out]  slot_mask            address of get slot mask
+ *
+ **/
+void libspdm_get_cert_slot_mask(
+    libspdm_context_t *spdm_context,
+    uint8_t *slot_mask);
+
 #endif /* SPDM_COMMON_LIB_INTERNAL_H */
