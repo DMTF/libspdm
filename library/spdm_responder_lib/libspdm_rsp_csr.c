@@ -113,6 +113,13 @@ libspdm_return_t libspdm_get_response_csr(void *context, size_t request_size,
                                                response_size, response);
     }
 
+    if(requester_info_length >
+       LIBSPDM_MAX_MESSAGE_BUFFER_SIZE - sizeof(spdm_get_csr_request_t) - opaque_data_length) {
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                               response_size, response);
+    }
+
     opaque_data = (void*)((size_t)(spdm_request + 1));
 
     requester_info = (void*)(opaque_data + opaque_data_length);
