@@ -2536,6 +2536,7 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
     /*sign for x509 req*/
     ret = X509_REQ_sign(x509_req, private_key, md);
     if (ret <= 0) {
+        ret = 0;
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"sign csr error\n"));
         goto free_all;
     }
