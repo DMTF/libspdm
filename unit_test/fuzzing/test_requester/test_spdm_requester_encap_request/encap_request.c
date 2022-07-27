@@ -28,24 +28,41 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
     libspdm_test_context_t *spdm_test_context;
     uint8_t *spdm_response;
     size_t spdm_response_size;
-    uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     size_t test_message_header_size;
     uint32_t session_id;
     libspdm_session_info_t *session_info;
     static uint8_t sub_index = 0;
+    size_t aead_tag_max_size;
+    uint8_t *scratch_buffer;
+    size_t scratch_buffer_size;
 
     session_id = 0xFFFFFFFF;
     spdm_test_context = libspdm_get_test_context();
     test_message_header_size = libspdm_transport_test_get_header_size(spdm_context);
-    spdm_response = (void *)((uint8_t *)temp_buf + test_message_header_size);
+    /* limit the encoding buffer to avoid assert, because the input buffer is controlled by the the libspdm consumer. */
+    test_message_header_size += sizeof(spdm_secured_message_a_data_header1_t) +
+                                2 + /* MCTP_SEQUENCE_NUMBER_COUNT */
+                                sizeof(spdm_secured_message_a_data_header2_t) +
+                                sizeof(spdm_secured_message_cipher_header_t) +
+                                32; /* MCTP_MAX_RANDOM_NUMBER_COUNT */
+    aead_tag_max_size = LIBSPDM_MAX_AEAD_TAG_SIZE;
+
+    /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+     * transport_message is always in sender buffer. */
+    libspdm_get_scratch_buffer(spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+    spdm_response = (void *)(scratch_buffer + test_message_header_size);
     spdm_response_size = spdm_test_context->test_buffer_size;
-    if (spdm_response_size > sizeof(temp_buf) - test_message_header_size - LIBSPDM_TEST_ALIGNMENT) {
-        spdm_response_size = sizeof(temp_buf) - test_message_header_size - LIBSPDM_TEST_ALIGNMENT;
+    if (spdm_response_size >
+        LIBSPDM_MAX_MESSAGE_BUFFER_SIZE - test_message_header_size - aead_tag_max_size -
+        LIBSPDM_TEST_ALIGNMENT) {
+        spdm_response_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE - test_message_header_size -
+                             aead_tag_max_size -
+                             LIBSPDM_TEST_ALIGNMENT;
     }
     switch (sub_index) {
     case 0:
-        libspdm_copy_mem((uint8_t *)temp_buf + test_message_header_size,
-                         sizeof(temp_buf),
+        libspdm_copy_mem(scratch_buffer + test_message_header_size,
+                         scratch_buffer_size,
                          (uint8_t *)spdm_test_context->test_buffer +
                          16 * sub_index,
                          spdm_response_size);
@@ -62,8 +79,8 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
-        libspdm_copy_mem((uint8_t *)temp_buf,
-                         sizeof(temp_buf),
+        libspdm_copy_mem(scratch_buffer,
+                         scratch_buffer_size,
                          (uint8_t *)spdm_test_context->test_buffer +
                          16 * sub_index,
                          spdm_response_size);
@@ -77,8 +94,8 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
-        libspdm_copy_mem((uint8_t *)temp_buf,
-                         sizeof(temp_buf),
+        libspdm_copy_mem(scratch_buffer,
+                         scratch_buffer_size,
                          (uint8_t *)spdm_test_context->test_buffer +
                          44 * sub_index,
                          spdm_response_size);
@@ -91,8 +108,8 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
         } else {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
-        libspdm_copy_mem((uint8_t *)temp_buf,
-                         sizeof(temp_buf),
+        libspdm_copy_mem(scratch_buffer,
+                         scratch_buffer_size,
                          (uint8_t *)spdm_test_context->test_buffer +
                          16 * sub_index + 28,
                          spdm_response_size);

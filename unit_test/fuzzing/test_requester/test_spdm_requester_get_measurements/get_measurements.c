@@ -11,7 +11,7 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 
-uint8_t libspdm_test_message_header;
+bool m_secured_on_off;
 static uint8_t m_libspdm_local_psk_hint[32];
 static size_t m_libspdm_local_buffer_size;
 static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -85,42 +85,76 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
     size_t spdm_response_size;
     uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     size_t test_message_header_size;
-    uint32_t session_id;
-    libspdm_session_info_t *session_info;
 
-    spdm_test_context = libspdm_get_test_context();
     spdm_test_context = libspdm_get_test_context();
     test_message_header_size = libspdm_transport_test_get_header_size(spdm_context);
-    spdm_response = (void *)((uint8_t *)temp_buf + test_message_header_size);
-    spdm_response_size = spdm_test_context->test_buffer_size;
-    if (spdm_response_size > sizeof(temp_buf) - test_message_header_size - LIBSPDM_TEST_ALIGNMENT) {
-        spdm_response_size = sizeof(temp_buf) - test_message_header_size - LIBSPDM_TEST_ALIGNMENT;
-    }
-    libspdm_copy_mem((uint8_t *)temp_buf + test_message_header_size,
-                     sizeof(temp_buf) - test_message_header_size,
-                     spdm_test_context->test_buffer,
-                     spdm_response_size);
 
-    if (libspdm_test_message_header == LIBSPDM_TEST_MESSAGE_TYPE_SECURED_TEST) {
-        session_id = 0xFFFFFFFF;
-
-        libspdm_transport_test_encode_message(spdm_context, &session_id, false, false,
+    if (!m_secured_on_off)
+    {
+        spdm_response = (void *)((uint8_t *)temp_buf + test_message_header_size);
+        spdm_response_size = spdm_test_context->test_buffer_size;
+        if (spdm_response_size >
+            sizeof(temp_buf) - test_message_header_size - LIBSPDM_TEST_ALIGNMENT) {
+            spdm_response_size = sizeof(temp_buf) - test_message_header_size -
+                                 LIBSPDM_TEST_ALIGNMENT;
+        }
+        libspdm_copy_mem((uint8_t *)temp_buf + test_message_header_size,
+                         sizeof(temp_buf) - test_message_header_size,
+                         spdm_test_context->test_buffer,
+                         spdm_response_size);
+        libspdm_transport_test_encode_message(spdm_context, NULL, false, false,
                                               spdm_response_size,
                                               spdm_response, response_size, response);
 
-        session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
+    }else
+    {
+        uint32_t session_id;
+        libspdm_session_info_t *session_info;
+        uint8_t *scratch_buffer;
+        size_t scratch_buffer_size;
+        size_t aead_tag_max_size;
+
+        session_id = 0xFFFFFFFF;
+        spdm_response_size = spdm_test_context->test_buffer_size;
+        /* limit the encoding buffer to avoid assert, because the input buffer is controlled by the the libspdm consumer. */
+        test_message_header_size += sizeof(spdm_secured_message_a_data_header1_t) +
+                                    2 + /* MCTP_SEQUENCE_NUMBER_COUNT */
+                                    sizeof(spdm_secured_message_a_data_header2_t) +
+                                    sizeof(spdm_secured_message_cipher_header_t) +
+                                    32 /* MCTP_MAX_RANDOM_NUMBER_COUNT */;
+        aead_tag_max_size = LIBSPDM_MAX_AEAD_TAG_SIZE;
+
+        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
+         * transport_message is always in sender buffer. */
+        libspdm_get_scratch_buffer(spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+        spdm_response = (void *)(scratch_buffer + test_message_header_size);
+        spdm_response_size = spdm_test_context->test_buffer_size;
+        if (spdm_response_size >
+            LIBSPDM_MAX_MESSAGE_BUFFER_SIZE - test_message_header_size - aead_tag_max_size -
+            LIBSPDM_TEST_ALIGNMENT) {
+            spdm_response_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE - test_message_header_size -
+                                 aead_tag_max_size -
+                                 LIBSPDM_TEST_ALIGNMENT;
+        }
+
+        libspdm_copy_mem(scratch_buffer + test_message_header_size,
+                         scratch_buffer_size - test_message_header_size,
+                         spdm_test_context->test_buffer,
+                         spdm_response_size);
+        libspdm_transport_test_encode_message(spdm_context, &session_id, false,
+                                              false, spdm_response_size,
+                                              spdm_response, response_size,
+                                              response);
+        session_info = libspdm_get_session_info_via_session_id(
+            spdm_context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         /* WALKAROUND: If just use single context to encode message and then decode message */
-        ((libspdm_secured_message_context_t *)(session_info->secured_message_context))
+        ((libspdm_secured_message_context_t
+          *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
-    } else {
-        libspdm_transport_test_encode_message(spdm_context, NULL, false, false,
-                                              spdm_response_size,
-                                              spdm_response, response_size, response);
     }
-
     return LIBSPDM_STATUS_SUCCESS;
 }
 
@@ -137,6 +171,7 @@ void libspdm_test_requester_get_measurement_case1(void **State)
     void *hash;
     size_t hash_size;
 
+    m_secured_on_off = false;
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
@@ -205,6 +240,7 @@ void libspdm_test_requester_get_measurement_case2(void **State)
     void *hash;
     size_t hash_size;
 
+    m_secured_on_off = false;
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
@@ -273,8 +309,11 @@ void libspdm_test_requester_get_measurement_case3(void **State)
     void *hash;
     size_t hash_size;
 
+    m_secured_on_off = true;
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
+                                            << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
@@ -297,7 +336,6 @@ void libspdm_test_requester_get_measurement_case3(void **State)
     spdm_context->local_context.psk_hint_size = sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_libspdm_local_psk_hint;
     session_id = 0xFFFFFFFF;
-    libspdm_test_message_header = LIBSPDM_TEST_MESSAGE_TYPE_SECURED_TEST;
     session_info = &spdm_context->session_info[0];
     libspdm_session_info_init(spdm_context, session_info, session_id, true);
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
@@ -334,7 +372,6 @@ void libspdm_test_requester_get_measurement_case3(void **State)
     libspdm_get_measurement(spdm_context, &session_id, request_attribute, 1, 0, NULL,
                             &number_of_block, &measurement_record_length,
                             measurement_record);
-    libspdm_test_message_header = 0;
     free(data);
     libspdm_reset_message_m(spdm_context, spdm_context->session_info);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -357,6 +394,7 @@ void libspdm_test_requester_get_measurement_case4(void **State)
     void *hash;
     size_t hash_size;
 
+    m_secured_on_off = false;
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
