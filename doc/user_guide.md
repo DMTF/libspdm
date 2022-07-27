@@ -107,9 +107,6 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
 
    1.5, if mutual authentication is supported, deploy slot number, public certificate chain.
    ```
-   parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
-   libspdm_set_data (spdm_context, LIBSPDM_DATA_LOCAL_SLOT_COUNT, &parameter, &SlotNumber, sizeof(SlotNumber));
-
    parameter.additional_data[0] = slot_id;
    libspdm_set_data (spdm_context, LIBSPDM_DATA_LOCAL_PUBLIC_CERT_CHAIN, &parameter, my_public_cert_chains, my_public_cert_chains_size);
    ```
@@ -313,9 +310,6 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
 
    1.4, deploy slot number, public certificate chain.
    ```
-   parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
-   libspdm_set_data (spdm_context, LIBSPDM_DATA_LOCAL_SLOT_COUNT, &parameter, &SlotNumber, sizeof(SlotNumber));
-
    parameter.additional_data[0] = slot_id;
    libspdm_set_data (spdm_context, LIBSPDM_DATA_LOCAL_PUBLIC_CERT_CHAIN, &parameter, my_public_cert_chains, my_public_cert_chains_size);
    ```
