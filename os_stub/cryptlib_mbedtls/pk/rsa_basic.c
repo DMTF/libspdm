@@ -128,7 +128,7 @@ bool libspdm_rsa_set_key(void *rsa_context, const libspdm_rsa_key_tag_t key_tag,
         ret = -1;
         break;
     }
-    mbedtls_rsa_complete(rsa_key);
+
     return ret == 0;
 }
 
@@ -159,12 +159,18 @@ bool libspdm_rsa_pkcs1_verify_with_nid(void *rsa_context, size_t hash_nid,
 {
     int32_t ret;
     mbedtls_md_type_t md_alg;
+    mbedtls_rsa_context *rsa_key;
 
     if (rsa_context == NULL || message_hash == NULL || signature == NULL) {
         return false;
     }
 
     if (sig_size > INT_MAX || sig_size == 0) {
+        return false;
+    }
+
+    rsa_key = (mbedtls_rsa_context *)rsa_context;
+    if (mbedtls_rsa_complete(rsa_key) != 0) {
         return false;
     }
 
@@ -238,12 +244,18 @@ bool libspdm_rsa_pss_verify(void *rsa_context, size_t hash_nid,
 {
     int32_t ret;
     mbedtls_md_type_t md_alg;
+    mbedtls_rsa_context *rsa_key;
 
     if (rsa_context == NULL || message_hash == NULL || signature == NULL) {
         return false;
     }
 
     if (sig_size > INT_MAX || sig_size == 0) {
+        return false;
+    }
+
+    rsa_key = (mbedtls_rsa_context *)rsa_context;
+    if (mbedtls_rsa_complete(rsa_key) != 0) {
         return false;
     }
 

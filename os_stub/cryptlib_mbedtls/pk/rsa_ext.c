@@ -265,8 +265,14 @@ bool libspdm_rsa_pkcs1_sign_with_nid(void *rsa_context, size_t hash_nid,
 {
     int32_t ret;
     mbedtls_md_type_t md_alg;
+    mbedtls_rsa_context *rsa_key;
 
     if (rsa_context == NULL || message_hash == NULL) {
+        return false;
+    }
+
+    rsa_key = (mbedtls_rsa_context *)rsa_context;
+    if (mbedtls_rsa_complete(rsa_key) != 0) {
         return false;
     }
 
@@ -349,8 +355,14 @@ bool libspdm_rsa_pss_sign(void *rsa_context, size_t hash_nid,
 {
     int32_t ret;
     mbedtls_md_type_t md_alg;
+    mbedtls_rsa_context *rsa_key;
 
     if (rsa_context == NULL || message_hash == NULL) {
+        return false;
+    }
+
+    rsa_key = (mbedtls_rsa_context *)rsa_context;
+    if (mbedtls_rsa_complete(rsa_key) != 0) {
         return false;
     }
 
