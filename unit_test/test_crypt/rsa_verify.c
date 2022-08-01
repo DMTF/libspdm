@@ -8,11 +8,9 @@
 
 #define LIBSPDM_RSA_MODULUS_LENGTH 512
 
+/* RSA PKCS#1 Validation data from OpenSSL "Fips_rsa_selftest.c" */
 
-/* RSA PKCS#1 Validation data from OpenSSL "Fips_rsa_selftest.c"*/
-
-/* public Modulus of RSA key*/
-
+/* Public modulus of RSA key. */
 uint8_t m_libspdm_rsa_n[] = {
     0xBB, 0xF8, 0x2F, 0x09, 0x06, 0x82, 0xCE, 0x9C, 0x23, 0x38, 0xAC, 0x2B,
     0x9D, 0xA8, 0x71, 0xF7, 0x36, 0x8D, 0x07, 0xEE, 0xD4, 0x10, 0x43, 0xA4,
@@ -27,14 +25,10 @@ uint8_t m_libspdm_rsa_n[] = {
     0x46, 0xF8, 0xE5, 0xFD, 0x09, 0x1D, 0xBD, 0xCB
 };
 
-
-/* public Exponent of RSA key*/
-
+/* Public exponent of RSA key. */
 uint8_t m_libspdm_rsa_e[] = { 0x11 };
 
-
-/* Private Exponent of RSA key*/
-
+/* Private exponent of RSA key. */
 uint8_t m_libspdm_rsa_d[] = {
     0xA5, 0xDA, 0xFC, 0x53, 0x41, 0xFA, 0xF2, 0x89, 0xC4, 0xB9, 0x88, 0xDB,
     0x30, 0xC1, 0xCD, 0xF8, 0x3F, 0x31, 0x25, 0x1E, 0x06, 0x68, 0xB4, 0x27,
@@ -49,13 +43,10 @@ uint8_t m_libspdm_rsa_d[] = {
     0x46, 0x3A, 0x4B, 0xC8, 0x5B, 0x1C, 0xB3, 0xC1
 };
 
-
-/* Known Answer Test (KAT) data for RSA PKCS#1 Signing*/
-
+/* Known Answer Test (KAT) data for RSA PKCS#1 signing. */
 const char m_libspdm_rsa_sign_data[] = "OpenSSL FIPS 140-2 public key RSA KAT";
 
-/* Known signature for the above message, under SHA-1 digest*/
-
+/* Known signature for the above message using SHA-256. */
 uint8_t m_libspdm_rsa_pkcs1_signature[] = {
     0x71, 0xEE, 0x1A, 0xC0, 0xFE, 0x01, 0x93, 0x54, 0x79, 0x5C, 0xF2, 0x4C,
     0x4A, 0xFD, 0x1A, 0x05, 0x8F, 0x64, 0xB1, 0x6D, 0x61, 0x33, 0x8D, 0x9B,
@@ -70,20 +61,18 @@ uint8_t m_libspdm_rsa_pkcs1_signature[] = {
     0xDF, 0xF1, 0x5F, 0x84, 0x80, 0xD9, 0x46, 0xB4
 };
 
-
-/* Default public key 0x10001 = 65537*/
-
+/* Default public key 0x10001. */
 uint8_t m_libspdm_default_public_key[] = { 0x01, 0x00, 0x01 };
 
 /**
  * Validate Crypto RSA Interfaces.
  *
- * @retval  true  Validation succeeded.
+ * @retval  true   Validation succeeded.
  * @retval  false  Validation failed.
- *
  **/
 bool libspdm_validate_crypt_rsa(void)
 {
+    #if LIBSPDM_SHA256_SUPPORT
     void *rsa;
     uint8_t hash_value[LIBSPDM_SHA256_DIGEST_SIZE];
     size_t hash_size;
@@ -96,9 +85,7 @@ bool libspdm_validate_crypt_rsa(void)
 
     libspdm_my_print("\nCrypto RSA Engine Testing: ");
 
-
     /* Generate & Initialize RSA context*/
-
     rsa = libspdm_rsa_new();
     libspdm_my_print("\n- Generate RSA context ... ");
     if (rsa == NULL) {
@@ -106,14 +93,10 @@ bool libspdm_validate_crypt_rsa(void)
         return false;
     }
 
-
     /* Set/Get RSA key Components*/
-
     libspdm_my_print("Set/Get RSA key Components ... ");
 
-
     /* Set/Get RSA key N*/
-
     status = libspdm_rsa_set_key(rsa, LIBSPDM_RSA_KEY_N, m_libspdm_rsa_n, sizeof(m_libspdm_rsa_n));
     if (!status) {
         libspdm_my_print("[Fail]");
@@ -152,9 +135,7 @@ bool libspdm_validate_crypt_rsa(void)
 
     free_pool(KeyBuffer);
 
-
     /* Set/Get RSA key E*/
-
     status = libspdm_rsa_set_key(rsa, LIBSPDM_RSA_KEY_E, m_libspdm_rsa_e, sizeof(m_libspdm_rsa_e));
     if (!status) {
         libspdm_my_print("[Fail]");
@@ -193,14 +174,10 @@ bool libspdm_validate_crypt_rsa(void)
 
     free_pool(KeyBuffer);
 
-
     /* Clear/Get RSA key Components*/
-
     libspdm_my_print("Clear/Get RSA key Components ... ");
 
-
     /* Clear/Get RSA key N*/
-
     status = libspdm_rsa_set_key(rsa, LIBSPDM_RSA_KEY_N, NULL, 0);
     if (!status) {
         libspdm_my_print("[Fail]");
@@ -216,9 +193,7 @@ bool libspdm_validate_crypt_rsa(void)
         return false;
     }
 
-
     /* Clear/Get RSA key E*/
-
     status = libspdm_rsa_set_key(rsa, LIBSPDM_RSA_KEY_E, NULL, 0);
     if (!status) {
         libspdm_my_print("[Fail]");
@@ -234,9 +209,7 @@ bool libspdm_validate_crypt_rsa(void)
         return false;
     }
 
-
     /* Generate RSA key Components*/
-
     libspdm_my_print("Generate RSA key Components ... ");
 
     status = libspdm_rsa_generate_key(rsa, LIBSPDM_RSA_MODULUS_LENGTH, NULL, 0);
@@ -292,9 +265,7 @@ bool libspdm_validate_crypt_rsa(void)
         return false;
     }
 
-
     /* Check invalid RSA key components*/
-
     libspdm_my_print("Check Invalid RSA key Components ... ");
 
     status = libspdm_rsa_set_key(rsa, LIBSPDM_RSA_KEY_N, m_libspdm_rsa_n, sizeof(m_libspdm_rsa_n));
@@ -344,9 +315,7 @@ bool libspdm_validate_crypt_rsa(void)
 
     free_pool(KeyBuffer);
 
-
     /* SHA-256 digest message for PKCS#1 signature*/
-
     libspdm_my_print("hash Original message ... ");
     hash_size = LIBSPDM_SHA256_DIGEST_SIZE;
     libspdm_zero_mem(hash_value, hash_size);
@@ -384,9 +353,7 @@ bool libspdm_validate_crypt_rsa(void)
 
     libspdm_sha256_free(sha256_ctx);
 
-
     /* Sign RSA PKCS#1-encoded signature*/
-
     libspdm_my_print("PKCS#1 signature ... ");
 
     libspdm_rsa_free(rsa);
@@ -449,10 +416,7 @@ bool libspdm_validate_crypt_rsa(void)
         return false;
     }
 
-
     /* Verify RSA PKCS#1-encoded signature*/
-
-
     libspdm_my_print("PKCS#1 signature Verification ... ");
 
     status = libspdm_rsa_pkcs1_verify_with_nid(rsa, LIBSPDM_CRYPTO_NID_SHA256, hash_value,
@@ -466,9 +430,7 @@ bool libspdm_validate_crypt_rsa(void)
 
     free_pool(signature);
 
-
     /* Sign RSA PSS-encoded signature*/
-
     libspdm_my_print("PSS signature ... ");
 
     libspdm_rsa_free(rsa);
@@ -524,10 +486,7 @@ bool libspdm_validate_crypt_rsa(void)
         return false;
     }
 
-
     /* Verify RSA PSS-encoded signature*/
-
-
     libspdm_my_print("PSS signature Verification ... ");
 
     status = libspdm_rsa_pss_verify(rsa, LIBSPDM_CRYPTO_NID_SHA256, hash_value, hash_size,
@@ -542,11 +501,11 @@ bool libspdm_validate_crypt_rsa(void)
     free_pool(signature);
 
     /* Release Resources*/
-
     libspdm_rsa_free(rsa);
     libspdm_my_print("Release RSA context ... [Pass]");
 
     libspdm_my_print("\n");
+    #endif
 
     return true;
 }

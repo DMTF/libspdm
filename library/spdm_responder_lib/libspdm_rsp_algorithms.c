@@ -113,6 +113,7 @@ libspdm_return_t libspdm_get_response_algorithms(void *context,
     #if LIBSPDM_SM3_256_SUPPORT == 1
         SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SM3_256,
     #endif
+        0,
     };
 
     uint32_t asym_priority_table[] = {
