@@ -195,6 +195,85 @@ void libspdm_test_requester_psk_finish_case1(void **State)
     libspdm_reset_message_k(spdm_context, session_info);
 }
 
+void libspdm_test_requester_psk_finish_case2(void **State)
+{
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint32_t session_id;
+    void *data;
+    size_t data_size;
+    void *hash;
+    size_t hash_size;
+    libspdm_session_info_t *session_info;
+
+    m_libspdm_test_message_header = LIBSPDM_TEST_MESSAGE_TYPE_SECURED_TEST;
+    spdm_test_context = *State;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12
+                                            << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size,
+                                                    &hash, &hash_size);
+    libspdm_reset_message_a(spdm_context);
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo =
+        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group =
+        m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite =
+        m_libspdm_use_aead_algo;
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
+        data_size;
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
+                     data, data_size);
+#endif
+    libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
+    libspdm_copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
+                     LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
+    spdm_context->local_context.psk_hint_size = sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
+    spdm_context->local_context.psk_hint = m_libspdm_local_psk_hint;
+
+    session_id = 0xFFFFFFFF;
+    session_info = &spdm_context->session_info[0];
+    libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_secured_message_set_session_state(session_info->secured_message_context,
+                                              LIBSPDM_SESSION_STATE_HANDSHAKING);
+
+    libspdm_set_mem(
+        m_libspdm_dummy_key_buffer,
+        ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->aead_key_size,
+        (uint8_t)(0xFF));
+    libspdm_secured_message_set_response_handshake_encryption_key(
+        session_info->secured_message_context, m_libspdm_dummy_key_buffer,
+        ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->aead_key_size);
+    libspdm_set_mem(
+        m_libspdm_dummy_salt_buffer,
+        ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->aead_iv_size,
+        (uint8_t)(0xFF));
+    libspdm_secured_message_set_response_handshake_salt(
+        session_info->secured_message_context, m_libspdm_dummy_salt_buffer,
+        ((libspdm_secured_message_context_t *)(session_info->secured_message_context))->aead_iv_size);
+    ((libspdm_secured_message_context_t *)(session_info->secured_message_context))
+    ->handshake_secret.response_handshake_sequence_number = 0;
+    libspdm_secured_message_set_dummy_finished_key(session_info->secured_message_context);
+    libspdm_send_receive_psk_finish(spdm_context, session_id);
+    free(data);
+    libspdm_reset_message_f(spdm_context, session_info);
+    libspdm_reset_message_k(spdm_context, session_info);
+}
+
 libspdm_test_context_t m_libspdm_requester_psk_finish_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     true,
@@ -211,9 +290,14 @@ void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
     m_libspdm_requester_psk_finish_test_context.test_buffer = test_buffer;
     m_libspdm_requester_psk_finish_test_context.test_buffer_size = test_buffer_size;
 
-    /* Successful response*/
+    /* / * Successful response* /
+     * libspdm_unit_test_group_setup(&State);
+     * libspdm_test_requester_psk_finish_case1(&State);
+     * libspdm_unit_test_group_teardown(&State); */
+
+    /* Successful response V 1.2*/
     libspdm_unit_test_group_setup(&State);
-    libspdm_test_requester_psk_finish_case1(&State);
+    libspdm_test_requester_psk_finish_case2(&State);
     libspdm_unit_test_group_teardown(&State);
 }
 #else
