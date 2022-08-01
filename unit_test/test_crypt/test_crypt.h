@@ -16,14 +16,14 @@
 #include <assert.h>
 
 #include "hal/base.h"
+#include "library/spdm_lib_config.h"
 
 #include "hal/library/debuglib.h"
 #include "hal/library/memlib.h"
 #include "library/malloclib.h"
 #include "hal/library/cryptlib.h"
 
-bool libspdm_read_input_file(const char *file_name, void **file_data,
-                             size_t *file_size);
+bool libspdm_read_input_file(const char *file_name, void **file_data, size_t *file_size);
 
 size_t libspdm_ascii_str_len(const char *string);
 

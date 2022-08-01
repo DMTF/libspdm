@@ -58,9 +58,15 @@ void libspdm_cryptest_main(void)
         return;
     }
 
-    status = libspdm_validate_crypt_rsa();
-    if (!status) {
-        return;
+    if (LIBSPDM_SHA256_SUPPORT) {
+        status = libspdm_validate_crypt_rsa();
+        if (!status) {
+            return;
+        }
+    }
+    else {
+        libspdm_my_print("\nCrypto RSA Engine Testing: ");
+        libspdm_my_print("\n- Unable to test RSA Engine without SHA-256 support.\n");
     }
 
     status = libspdm_validate_crypt_rsa_2();
