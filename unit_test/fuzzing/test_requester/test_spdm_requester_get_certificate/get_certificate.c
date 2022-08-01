@@ -43,6 +43,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
     size_t test_message_header_size;
 
     spdm_test_context = libspdm_get_test_context();
+
     test_message_header_size = libspdm_transport_test_get_header_size(spdm_context);
     spdm_response = (void *)((uint8_t *)temp_buf + test_message_header_size);
     spdm_response_size = spdm_test_context->test_buffer_size;
@@ -107,6 +108,13 @@ void libspdm_test_requester_get_certificate_case1(void **State)
     spdm_context->local_context.peer_cert_chain_provision_size = 0;
     libspdm_reset_message_b(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->transcript.message_m.buffer_size =
+        spdm_context->transcript.message_m.max_buffer_size;
+#endif
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
@@ -152,6 +160,13 @@ void libspdm_test_requester_get_certificate_case2(void **State)
     spdm_context->local_context.peer_cert_chain_provision_size = 0;
     libspdm_reset_message_b(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->transcript.message_m.buffer_size =
+        spdm_context->transcript.message_m.max_buffer_size;
+#endif
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
@@ -197,6 +212,13 @@ void libspdm_test_requester_get_certificate_ex_case1(void **State)
     spdm_context->local_context.peer_cert_chain_provision_size = 0;
     libspdm_reset_message_b(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->transcript.message_m.buffer_size =
+        spdm_context->transcript.message_m.max_buffer_size;
+#endif
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
