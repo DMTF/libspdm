@@ -82,8 +82,8 @@ uint8_t m_libspdm_sm3_256_digest[LIBSPDM_SM3_256_DIGEST_SIZE] = {
 bool libspdm_validate_crypt_digest(void)
 {
     #if (LIBSPDM_SHA256_SUPPORT) || (LIBSPDM_SHA384_SUPPORT) || (LIBSPDM_SHA512_SUPPORT) || \
-        (LIBSPDM_SHA3_256_SUPPORT) || (LIBSPDM_SHA3_384_SUPPORT) || (LIBSPDM_SHA3_512_SUPPORT) || \
-        (LIBSPDM_SM3_256_SUPPORT)
+    (LIBSPDM_SHA3_256_SUPPORT) || (LIBSPDM_SHA3_384_SUPPORT) || (LIBSPDM_SHA3_512_SUPPORT) || \
+    (LIBSPDM_SM3_256_SUPPORT)
     void *hash_ctx;
     size_t data_size;
     uint8_t digest[LIBSPDM_MAX_DIGEST_SIZE];
@@ -131,7 +131,7 @@ bool libspdm_validate_crypt_digest(void)
 
     libspdm_my_print("Check value... ");
     if (libspdm_const_compare_mem(digest, m_libspdm_sha256_digest,
-                                LIBSPDM_SHA256_DIGEST_SIZE) != 0) {
+                                  LIBSPDM_SHA256_DIGEST_SIZE) != 0) {
         libspdm_my_print("[Fail]");
         return false;
     }
