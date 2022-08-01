@@ -232,6 +232,23 @@ typedef bool (*libspdm_hmac_all_func)(const void *data, size_t data_size,
                                       uint8_t *hmac_value);
 
 /**
+ * Derive HMAC-based Extract key Derivation Function (HKDF) Extract.
+ *
+ * @param  ikm              Pointer to the input key material.
+ * @param  ikm_size          key size in bytes.
+ * @param  salt             Pointer to the salt value.
+ * @param  salt_size         salt size in bytes.
+ * @param  prk_out           Pointer to buffer to receive hkdf value.
+ * @param  prk_out_size       size of hkdf bytes to generate.
+ *
+ * @retval true   Hkdf generated successfully.
+ * @retval false  Hkdf generation failed.
+ **/
+typedef bool (*libspdm_hkdf_extract_func)(const uint8_t *ikm, size_t ikm_size,
+                                          const uint8_t *salt, size_t salt_size,
+                                          uint8_t *prk_out, size_t prk_out_size);
+
+/**
  * Derive HMAC-based Expand key Derivation Function (HKDF) Expand.
  *
  * @param  prk                          Pointer to the user-supplied key.
@@ -722,6 +739,23 @@ bool libspdm_measurement_hash_all(uint32_t measurement_hash_algo,
 bool libspdm_hmac_all(uint32_t base_hash_algo, const void *data,
                       size_t data_size, const uint8_t *key,
                       size_t key_size, uint8_t *hmac_value);
+
+/**
+ * Derive HMAC-based Extract key Derivation Function (HKDF) Extract, based upon the negotiated HKDF algorithm.
+ *
+ * @param  ikm              Pointer to the input key material.
+ * @param  ikm_size          key size in bytes.
+ * @param  salt             Pointer to the salt value.
+ * @param  salt_size         salt size in bytes.
+ * @param  prk_out           Pointer to buffer to receive hkdf value.
+ * @param  prk_out_size       size of hkdf bytes to generate.
+ *
+ * @retval true   Hkdf generated successfully.
+ * @retval false  Hkdf generation failed.
+ **/
+bool libspdm_hkdf_extract(uint32_t base_hash_algo, const uint8_t *ikm, size_t ikm_size,
+                          const uint8_t *salt, size_t salt_size,
+                          uint8_t *prk_out, size_t prk_out_size);
 
 /**
  * Derive HMAC-based Expand key Derivation Function (HKDF) Expand, based upon the negotiated HKDF algorithm.

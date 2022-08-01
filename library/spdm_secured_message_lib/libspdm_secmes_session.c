@@ -207,12 +207,12 @@ bool libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
             secured_message_context->dhe_key_size);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
         libspdm_zero_mem(zero_filled_buffer, sizeof(zero_filled_buffer));
-        status = libspdm_hmac_all(
+        status = libspdm_hkdf_extract(
             secured_message_context->base_hash_algo,
             secured_message_context->master_secret.dhe_secret,
             secured_message_context->dhe_key_size,
             zero_filled_buffer, hash_size,
-            secured_message_context->master_secret.handshake_secret);
+            secured_message_context->master_secret.handshake_secret, hash_size);
         LIBSPDM_ASSERT(status);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "handshake_secret (0x%x) - ", hash_size));
         libspdm_internal_dump_data(
@@ -401,10 +401,10 @@ bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
         libspdm_zero_mem(zero_filled_buffer, sizeof(zero_filled_buffer));
-        status = libspdm_hmac_all(
+        status = libspdm_hkdf_extract(
             secured_message_context->base_hash_algo,
             zero_filled_buffer, hash_size, salt1, hash_size,
-            secured_message_context->master_secret.master_secret);
+            secured_message_context->master_secret.master_secret, hash_size);
         LIBSPDM_ASSERT(status);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "master_secret (0x%x) - ", hash_size));
         libspdm_internal_dump_data(

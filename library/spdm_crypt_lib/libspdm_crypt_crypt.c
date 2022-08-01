@@ -1543,6 +1543,98 @@ bool libspdm_hmac_all(uint32_t base_hash_algo, const void *data,
 }
 
 /**
+ * Return HKDF extract function, based upon the negotiated HKDF algorithm.
+ *
+ * @param  base_hash_algo                 SPDM base_hash_algo
+ *
+ * @return HKDF extract function
+ **/
+libspdm_hkdf_extract_func get_spdm_hkdf_extract_func(uint32_t base_hash_algo)
+{
+    switch (base_hash_algo) {
+    case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256:
+#if LIBSPDM_SHA256_SUPPORT == 1
+        return libspdm_hkdf_sha256_extract;
+#else
+        LIBSPDM_ASSERT(false);
+        break;
+#endif
+    case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384:
+#if LIBSPDM_SHA384_SUPPORT == 1
+        return libspdm_hkdf_sha384_extract;
+#else
+        LIBSPDM_ASSERT(false);
+        break;
+#endif
+    case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_512:
+#if LIBSPDM_SHA512_SUPPORT == 1
+        return libspdm_hkdf_sha512_extract;
+#else
+        LIBSPDM_ASSERT(false);
+        break;
+#endif
+    case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_256:
+#if LIBSPDM_SHA3_256_SUPPORT == 1
+        return libspdm_hkdf_sha3_256_extract;
+#else
+        LIBSPDM_ASSERT(false);
+        break;
+#endif
+    case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_384:
+#if LIBSPDM_SHA3_384_SUPPORT == 1
+        return libspdm_hkdf_sha3_384_extract;
+#else
+        LIBSPDM_ASSERT(false);
+        break;
+#endif
+    case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_512:
+#if LIBSPDM_SHA3_512_SUPPORT == 1
+        return libspdm_hkdf_sha3_512_extract;
+#else
+        LIBSPDM_ASSERT(false);
+        break;
+#endif
+    case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SM3_256:
+#if LIBSPDM_SM3_256_SUPPORT == 1
+        return libspdm_hkdf_sm3_256_extract;
+#else
+        LIBSPDM_ASSERT(false);
+        break;
+#endif
+    default:
+        LIBSPDM_ASSERT(false);
+        break;
+    }
+
+    return NULL;
+}
+
+/**
+ * Derive HMAC-based Extract key Derivation Function (HKDF) Extract, based upon the negotiated HKDF algorithm.
+ *
+ * @param  ikm              Pointer to the input key material.
+ * @param  ikm_size          key size in bytes.
+ * @param  salt             Pointer to the salt value.
+ * @param  salt_size         salt size in bytes.
+ * @param  prk_out           Pointer to buffer to receive hkdf value.
+ * @param  prk_out_size       size of hkdf bytes to generate.
+ *
+ * @retval true   Hkdf generated successfully.
+ * @retval false  Hkdf generation failed.
+ **/
+bool libspdm_hkdf_extract(uint32_t base_hash_algo, const uint8_t *ikm, size_t ikm_size,
+                          const uint8_t *salt, size_t salt_size,
+                          uint8_t *prk_out, size_t prk_out_size)
+{
+    libspdm_hkdf_extract_func hkdf_extract_function;
+    hkdf_extract_function = get_spdm_hkdf_extract_func(base_hash_algo);
+    if (hkdf_extract_function == NULL) {
+        return false;
+    }
+    return hkdf_extract_function(ikm, ikm_size, salt, salt_size, prk_out, prk_out_size);
+}
+
+/**
  * Return HKDF expand function, based upon the negotiated HKDF algorithm.
  *
  * @param  base_hash_algo                 SPDM base_hash_algo
