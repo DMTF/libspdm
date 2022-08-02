@@ -655,7 +655,7 @@ bool libspdm_x509_verify_cert_chain(const uint8_t *root_cert, size_t root_cert_l
     do {
         tmp_ptr = current_cert;
         ret = mbedtls_asn1_get_tag(
-            &tmp_ptr, cert_chain + cert_chain_length, &asn1_len,
+            (unsigned char **)&tmp_ptr, cert_chain + cert_chain_length, &asn1_len,
             MBEDTLS_ASN1_CONSTRUCTED | MBEDTLS_ASN1_SEQUENCE);
         if (ret != 0) {
             break;
@@ -737,7 +737,7 @@ bool libspdm_x509_get_cert_from_cert_chain(const uint8_t *cert_chain,
 
         tmp_ptr = current_cert;
         ret = mbedtls_asn1_get_tag(
-            &tmp_ptr, cert_chain + cert_chain_length, &asn1_len,
+            (unsigned char **)&tmp_ptr, cert_chain + cert_chain_length, &asn1_len,
             MBEDTLS_ASN1_CONSTRUCTED | MBEDTLS_ASN1_SEQUENCE);
         if (ret != 0) {
             break;
