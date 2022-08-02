@@ -81,11 +81,13 @@
 
 1) Compiler (Choose one)
 
-    a) [Visual Studio 2019](https://visualstudio.microsoft.com/vs/older-downloads/)
+    a) [Visual Studio 2022](https://visualstudio.microsoft.com/vs/older-downloads/)
 
-    b) [Visual Studio 2015](https://visualstudio.microsoft.com/vs/older-downloads/)
+    b) [Visual Studio 2019](https://visualstudio.microsoft.com/vs/older-downloads/)
 
-    c) [LLVM](https://llvm.org/) (LLVM13) Download: [LLVM-13.0.0-win64.exe](https://github.com/llvm/llvm-project/releases/tag/llvmorg-13.0.0).
+    c) [Visual Studio 2015](https://visualstudio.microsoft.com/vs/older-downloads/)
+
+    d) [LLVM](https://llvm.org/) (LLVM13) Download: [LLVM-13.0.0-win64.exe](https://github.com/llvm/llvm-project/releases/tag/llvmorg-13.0.0).
     - Add LLVM in PATH environment according to installation instruction.
     - Change LLVM install path to C:/LLVM.
     - LLVM13 works good for clang and [libfuzzer](https://llvm.org/docs/LibFuzzer.html) build. Other versions are not validated for clang build.
@@ -132,7 +134,7 @@
    cd libspdm
    mkdir build
    cd build
-   cmake -G"NMake Makefiles" -DARCH=<x64|ia32> -DTOOLCHAIN=<VS2019|VS2015|CLANG> -DTARGET=<Debug|Release> -DCRYPTO=<mbedtls|openssl> ..
+   cmake -G"NMake Makefiles" -DARCH=<x64|ia32> -DTOOLCHAIN=<VS2022|VS2019|VS2015|CLANG> -DTARGET=<Debug|Release> -DCRYPTO=<mbedtls|openssl> ..
    nmake copy_sample_key
    nmake
    ```
