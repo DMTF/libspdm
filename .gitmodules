@@ -7,3 +7,6 @@
 [submodule "unit_test/cmockalib/cmocka"]
     path = unit_test/cmockalib/cmocka
     url = https://git.cryptomilk.org/projects/cmocka.git
+[submodule "os_stub/openssl3lib/openssl"]
+	path = os_stub/openssl3lib/openssl
+	url = https://github.com/openssl/openssl
