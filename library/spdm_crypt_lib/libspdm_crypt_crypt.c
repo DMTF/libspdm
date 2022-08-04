@@ -6,9 +6,9 @@
 
 #include "library/spdm_crypt_lib.h"
 
-/*max signature algo oid len*/
-#ifndef LIBSPDM_MAX_SIGNATURE_ALGO_OID_LEN
-#define LIBSPDM_MAX_SIGNATURE_ALGO_OID_LEN 10
+/*max public key encryption algo oid len*/
+#ifndef LIBSPDM_MAX_ENCRYPTION_ALGO_OID_LEN
+#define LIBSPDM_MAX_ENCRYPTION_ALGO_OID_LEN 10
 #endif
 
 /*leaf cert basic constraints len,CA = false: 30 03 01 01 00*/
@@ -31,34 +31,48 @@
 #define SPDM_EXTENDSION_LEN 30
 #endif
 
-/*SHAxxxRSA OID: https://oidref.com/1.2.840.113549.1.1 */
+/**
+ * 0x02 is integer;
+ * 0x82 indicates that the length is expressed in two bytes;
+ * 0x01 and 0x01 are rsa key len;
+ **/
+#define KEY_ENCRY_ALGO_RSA2048_FLAG \
+    {0x02, 0x82, 0x01, 0x01}
+#define KEY_ENCRY_ALGO_RSA3072_FLAG \
+    {0x02, 0x82, 0x01, 0x81}
+#define KEY_ENCRY_ALGO_RSA4096_FLAG \
+    {0x02, 0x82, 0x02, 0x01}
 
-#define SIGN_ALGO_SHA256RSA_OID  \
-    {0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x01, 0x0B}
+/* the other case is ASN1 code different when integer is 1 on highest position*/
+#define KEY_ENCRY_ALGO_RSA2048_FLAG_OTHER \
+    {0x02, 0x82, 0x01, 0x00}
+#define KEY_ENCRY_ALGO_RSA3072_FLAG_OTHER \
+    {0x02, 0x82, 0x01, 0x80}
+#define KEY_ENCRY_ALGO_RSA4096_FLAG_OTHER \
+    {0x02, 0x82, 0x02, 0x00}
 
-#define SIGN_ALGO_SHA384RSA_OID  \
-    {0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x01, 0x0C}
-
-#define SIGN_ALGO_SHA512RSA_OID  \
-    {0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x01, 0x0D}
-
-/*SHAxxxECC OID: https://oidref.com/1.2.840.10045.4.3 */
-#define SIGN_ALGO_SHA256ECC_OID  \
-    {0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x04, 0x03, 0x02}
-
-#define SIGN_ALGO_SHA384ECC_OID  \
-    {0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x04, 0x03, 0x03}
-
-#define SIGN_ALGO_SHA512ECC_OID  \
-    {0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x04, 0x03, 0x04}
+/**
+ * http://oid-info.com/get/1.2.840.10045.3.1.7
+ * ECC256 curve OID: 1.2.840.10045.3.1.7
+ * http://oid-info.com/get/1.3.132.0.34
+ * ECC384 curve OID: 1.3.132.0.34
+ * http://oid-info.com/get/1.3.132.0.35
+ * ECC521 curve OID: 1.3.132.0.35
+ **/
+#define KEY_ENCRY_ALGO_ECC256_OID  \
+    {0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x03, 0x01, 0x07}
+#define KEY_ENCRY_ALGO_ECC384_OID  \
+    {0x2B, 0x81, 0x04, 0x00, 0x22}
+#define KEY_ENCRY_ALGO_ECC521_OID  \
+    {0x2B, 0x81, 0x04, 0x00, 0x23}
 
 /**
  * EDxxx OID: https://datatracker.ietf.org/doc/html/rfc8420
  * ED448 OID: 1.3.101.113
  * ED25519 OID: 1.3.101.112
  **/
-#define SIGN_ALGO_ED25519_OID {0x2B, 0x65, 0x70}
-#define SIGN_ALGO_ED448_OID   {0x2B, 0x65, 0x71}
+#define ENCRY_ALGO_ED25519_OID {0x2B, 0x65, 0x70}
+#define ENCRY_ALGO_ED448_OID   {0x2B, 0x65, 0x71}
 
 /**
  * This function returns the SPDM hash algorithm size.
@@ -4092,13 +4106,13 @@ static bool libspdm_internal_x509_date_time_check(const uint8_t *from,
 }
 
 /**
- * This function returns the SPDM signature algorithm OID len.
+ * This function returns the SPDM public key encryption algorithm OID len.
  *
- * @param  base_asym_algo                 SPDM base_asym_algo
+ * @param[in]  base_asym_algo          SPDM base_asym_algo
  *
- * @return SPDM signature algorithm OID len.
+ * @return SPDM public key encryption algorithms OID len.
  **/
-uint32_t libspdm_get_signature_algo_OID_len(uint32_t base_asym_algo)
+uint32_t libspdm_get_public_key_algo_OID_len(uint32_t base_asym_algo)
 {
     switch (base_asym_algo) {
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
@@ -4107,13 +4121,12 @@ uint32_t libspdm_get_signature_algo_OID_len(uint32_t base_asym_algo)
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
-        return 9;
+        return 4;
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
+        return 8;
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
-        return 8;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
-        return 8;
+        return 5;
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
         return 3;
@@ -4124,99 +4137,76 @@ uint32_t libspdm_get_signature_algo_OID_len(uint32_t base_asym_algo)
 }
 
 /**
- * This function get the SPDM signature algorithm OID.
+ * This function get the SPDM public key encryption algorithm OID.
  *
- * @param  base_asym_algo                 SPDM base_asym_algo
- * @param  base_hash_algo                 SPDM base_hash_algo
- * @param  oid                            SPDM signature algorithm OID
+ * @param[in]      base_asym_algo                 SPDM base_asym_algo
+ * @param[in,out]  oid                            SPDM public key encryption algorithm OID
+ * @param[in,out]  oid_other                      Other SPDM public key encryption algorithm OID
+ *                                                because of ASN1 code for integer
  *
  * @retval  true   get OID sucessful.
  * @retval  false  get OID fail.
  **/
-bool libspdm_get_signature_algo_OID(uint32_t base_asym_algo, uint32_t base_hash_algo,
-                                    uint8_t *oid)
+bool libspdm_get_public_key_algo_OID(uint32_t base_asym_algo,
+                                     uint8_t *oid, uint8_t *oid_other)
 {
     uint32_t oid_len;
-    oid_len = libspdm_get_signature_algo_OID_len(base_asym_algo);
+    oid_len = libspdm_get_public_key_algo_OID_len(base_asym_algo);
 
     switch (base_asym_algo) {
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048: {
+        uint8_t encry_algo_oid_rsa2048[] = KEY_ENCRY_ALGO_RSA2048_FLAG;
+        uint8_t encry_algo_oid_rsa2048_ohter[] = KEY_ENCRY_ALGO_RSA2048_FLAG_OTHER;
+        libspdm_copy_mem(oid, oid_len, encry_algo_oid_rsa2048, oid_len);
+        libspdm_copy_mem(oid_other, oid_len, encry_algo_oid_rsa2048_ohter, oid_len);
+        break;
+    }
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072: {
+        uint8_t encry_algo_oid_rsa3072[] = KEY_ENCRY_ALGO_RSA3072_FLAG;
+        uint8_t encry_algo_oid_rsa3072_ohter[] = KEY_ENCRY_ALGO_RSA3072_FLAG_OTHER;
+        libspdm_copy_mem(oid, oid_len, encry_algo_oid_rsa3072, oid_len);
+        libspdm_copy_mem(oid_other, oid_len, encry_algo_oid_rsa3072_ohter, oid_len);
+        break;
+    }
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
-        switch (base_hash_algo) {
-        case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256: {
-            uint8_t signature_algo_oid_sha256rsa[] = SIGN_ALGO_SHA256RSA_OID;
-            libspdm_copy_mem(oid, oid_len, signature_algo_oid_sha256rsa, oid_len);
-            break;
-        }
-        case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384: {
-            uint8_t signature_algo_oid_sha384rsa[] = SIGN_ALGO_SHA384RSA_OID;
-            libspdm_copy_mem(oid, oid_len, signature_algo_oid_sha384rsa, oid_len);
-            break;
-        }
-        case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_512: {
-            uint8_t signature_algo_oid_sha512rsa[] = SIGN_ALGO_SHA512RSA_OID;
-            libspdm_copy_mem(oid, oid_len, signature_algo_oid_sha512rsa, oid_len);
-            break;
-        }
-        /*rsa sha3 oid  TBD*/
-        case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_256:
-        case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_384:
-        case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_512:
-        case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SM3_256:
-
-        default:
-            LIBSPDM_ASSERT(false);
-            return false;
-        }
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096: {
+        uint8_t encry_algo_oid_rsa4096[] = KEY_ENCRY_ALGO_RSA4096_FLAG;
+        uint8_t encry_algo_oid_rsa4096_ohter[] = KEY_ENCRY_ALGO_RSA4096_FLAG_OTHER;
+        libspdm_copy_mem(oid, oid_len, encry_algo_oid_rsa4096, oid_len);
+        libspdm_copy_mem(oid_other, oid_len, encry_algo_oid_rsa4096_ohter, oid_len);
         break;
+    }
 
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
-        switch (base_hash_algo) {
-        case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256: {
-            uint8_t signature_algo_oid_sha256ecc[] = SIGN_ALGO_SHA256ECC_OID;
-            libspdm_copy_mem(oid, oid_len, signature_algo_oid_sha256ecc, oid_len);
-            break;
-        }
-        case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384: {
-            uint8_t signature_algo_oid_sha384ecc[] = SIGN_ALGO_SHA384ECC_OID;
-            libspdm_copy_mem(oid, oid_len, signature_algo_oid_sha384ecc, oid_len);
-            break;
-        }
-        case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_512: {
-            uint8_t signature_algo_oid_sha512ecc[] = SIGN_ALGO_SHA512ECC_OID;
-            libspdm_copy_mem(oid, oid_len, signature_algo_oid_sha512ecc, oid_len);
-            break;
-        }
-        /*ecc sha3 oid  TBD*/
-        case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_256:
-        case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_384:
-        case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_512:
-        case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SM3_256:
-
-        default:
-            LIBSPDM_ASSERT(false);
-            return false;
-        }
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256: {
+        uint8_t encry_algo_oid_ecc256[] = KEY_ENCRY_ALGO_ECC256_OID;
+        libspdm_copy_mem(oid, oid_len, encry_algo_oid_ecc256, oid_len);
         break;
+    }
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384: {
+        uint8_t encry_algo_oid_ecc384[] = KEY_ENCRY_ALGO_ECC384_OID;
+        libspdm_copy_mem(oid, oid_len, encry_algo_oid_ecc384, oid_len);
+        break;
+    }
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521: {
+        uint8_t encry_algo_oid_ecc521[] = KEY_ENCRY_ALGO_ECC521_OID;
+        libspdm_copy_mem(oid, oid_len, encry_algo_oid_ecc521, oid_len);
+        break;
+    }
 
     /*sm2 oid  TBD*/
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
         return true;
 
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519: {
-        uint8_t signature_algo_oid_ed25519[] = SIGN_ALGO_ED25519_OID;
-        libspdm_copy_mem(oid, oid_len, signature_algo_oid_ed25519, oid_len);
+        uint8_t encry_algo_oid_ed25519[] = ENCRY_ALGO_ED25519_OID;
+        libspdm_copy_mem(oid, oid_len, encry_algo_oid_ed25519, oid_len);
         break;
     }
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448: {
-        uint8_t signature_algo_oid_ed448[] = SIGN_ALGO_ED448_OID;
-        libspdm_copy_mem(oid, oid_len, signature_algo_oid_ed448, oid_len);
+        uint8_t encry_algo_oid_ed448[] = ENCRY_ALGO_ED448_OID;
+        libspdm_copy_mem(oid, oid_len, encry_algo_oid_ed448, oid_len);
         break;
     }
 
@@ -4229,56 +4219,218 @@ bool libspdm_get_signature_algo_OID(uint32_t base_asym_algo, uint32_t base_hash_
 }
 
 /**
- * Verify cert signature algo is matched to negotiated algo
+ * Verify cert public key encryption algorithm is matched to negotiated base_aysm algo
+ *
+ * @param[in]      cert                  Pointer to the DER-encoded certificate data.
+ * @param[in]      cert_size             The size of certificate data in bytes.
+ * @param[in]      base_asym_algo        SPDM base_asym_algo
+ * @param[out]     oid                   cert public key encryption algorithm OID
+ * @param[in]      oid_size              the buffer size for required OID
+ *
+ * @retval  true   get public key oid from cert successfully
+ * @retval  false  get public key oid from cert fail
+ **/
+bool libspdm_get_public_key_oid(const uint8_t *cert, size_t cert_size,
+                                uint8_t *oid, size_t oid_size, uint32_t base_asym_algo)
+{
+    bool ret;
+    uint8_t *ptr;
+    int32_t length;
+    size_t obj_len;
+    uint8_t *end;
+    uint8_t index;
+    uint8_t sequence_time;
+
+    length = (int32_t)cert_size;
+    ptr = (uint8_t*)(size_t)cert;
+    obj_len = 0;
+    end = ptr + length;
+    ret = true;
+
+    /* TBSCertificate have 5 sequence before subjectPublicKeyInfo*/
+    sequence_time = 5;
+
+    /*all cert sequence*/
+    ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                               LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+    if (!ret) {
+        return false;
+    }
+
+    /*TBSCertificate sequence*/
+    ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                               LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+    if (!ret) {
+        return false;
+    }
+
+    end = ptr + obj_len;
+    /*version*/
+    ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                               LIBSPDM_CRYPTO_ASN1_CONTEXT_SPECIFIC |
+                               LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+    if (!ret) {
+        return false;
+    }
+
+    ptr += obj_len;
+    /*serialNumber*/
+    ret = libspdm_asn1_get_tag(&ptr, end, &obj_len, LIBSPDM_CRYPTO_ASN1_INTEGER);
+    if (!ret) {
+        return false;
+    }
+
+    /**
+     * signature AlgorithmIdentifier,
+     * issuer Name,
+     * validity Validity,
+     * subject Name,
+     * subjectPublicKeyInfo
+     **/
+    for (index = 0; index < sequence_time; index++) {
+        ptr += obj_len;
+        ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                                   LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+        if (!ret) {
+            return false;
+        }
+    }
+
+    switch (base_asym_algo)
+    {
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
+        ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                                   LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+        if (!ret) {
+            return false;
+        }
+
+        ptr += obj_len;
+        ret = libspdm_asn1_get_tag(&ptr, end, &obj_len, LIBSPDM_CRYPTO_ASN1_BIT_STRING);
+        if (!ret) {
+            return false;
+        }
+
+        /*get rsa key len*/
+        ptr++;
+        ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                                   LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+        if (!ret) {
+            return false;
+        }
+        libspdm_copy_mem(oid, oid_size, ptr, oid_size);
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
+        ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                                   LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+        if (!ret) {
+            return false;
+        }
+        ret = libspdm_asn1_get_tag(&ptr, end, &obj_len, LIBSPDM_CRYPTO_ASN1_OID);
+        if (!ret) {
+            return false;
+        }
+
+        /*get ecc second oid*/
+        ptr +=obj_len;
+        ret = libspdm_asn1_get_tag(&ptr, end, &obj_len, LIBSPDM_CRYPTO_ASN1_OID);
+        if (!ret) {
+            return false;
+        }
+
+        if (oid_size != obj_len) {
+            return false;
+        }
+
+        libspdm_copy_mem(oid, oid_size, ptr, obj_len);
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
+        ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                                   LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+        if (!ret) {
+            return false;
+        }
+
+        /*get eddsa oid*/
+        ret = libspdm_asn1_get_tag(&ptr, end, &obj_len, LIBSPDM_CRYPTO_ASN1_OID);
+        if (!ret) {
+            return false;
+        }
+
+        if (oid_size != obj_len) {
+            return false;
+        }
+
+        libspdm_copy_mem(oid, oid_size, ptr, obj_len);
+        break;
+    default:
+        LIBSPDM_ASSERT(false);
+        return false;
+    }
+
+    return true;
+}
+
+/**
+ * Verify cert public key encryption algorithm is matched to negotiated base_aysm algo
  *
  * @param[in]  cert                  Pointer to the DER-encoded certificate data.
  * @param[in]  cert_size             The size of certificate data in bytes.
  * @param[in]  base_asym_algo        SPDM base_asym_algo
- * @param[in]  base_hash_algo        SPDM base_hash_algo
  *
  * @retval  true   verify pass
  * @retval  false  verify fail
  **/
-bool libspdm_verify_cert_signature_algo_OID(const uint8_t *cert, size_t cert_size,
-                                            uint32_t base_asym_algo,
-                                            uint32_t base_hash_algo)
+bool libspdm_verify_cert_subject_public_key_info(const uint8_t *cert, size_t cert_size,
+                                                 uint32_t base_asym_algo)
 {
-    /*signature algo OID from cert*/
-    uint8_t cert_signature_algo_oid[LIBSPDM_MAX_SIGNATURE_ALGO_OID_LEN];
-    /*signature algo OID from libspdm stored*/
-    uint8_t libspdm_signature_algo_oid[LIBSPDM_MAX_SIGNATURE_ALGO_OID_LEN];
     size_t oid_len;
     bool status;
+
+    /*public key encrypt algo OID from cert*/
+    uint8_t cert_public_key_crypt_algo_oid[LIBSPDM_MAX_ENCRYPTION_ALGO_OID_LEN];
+    /*public key encrypt algo OID from libspdm stored*/
+    uint8_t libspdm_public_key_crypt_algo_oid[LIBSPDM_MAX_ENCRYPTION_ALGO_OID_LEN];
+    uint8_t libspdm_public_key_crypt_algo_oid_other[LIBSPDM_MAX_ENCRYPTION_ALGO_OID_LEN];
+
+    libspdm_zero_mem(libspdm_public_key_crypt_algo_oid, LIBSPDM_MAX_ENCRYPTION_ALGO_OID_LEN);
+    libspdm_zero_mem(libspdm_public_key_crypt_algo_oid_other, LIBSPDM_MAX_ENCRYPTION_ALGO_OID_LEN);
 
     /*work around: skip the sm2*/
     if (base_asym_algo == SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256) {
         return true;
     }
 
-    oid_len = libspdm_get_signature_algo_OID_len(base_asym_algo);
+    oid_len = libspdm_get_public_key_algo_OID_len(base_asym_algo);
     if(oid_len == 0) {
-        status = false;
         return false;
     }
-    /*get signature algo OID from libspdm stored*/
-    status = libspdm_get_signature_algo_OID(base_asym_algo, base_hash_algo,
-                                            libspdm_signature_algo_oid);
+    /*get public key encrypt algo OID from libspdm stored*/
+    status = libspdm_get_public_key_algo_OID(base_asym_algo,
+                                             libspdm_public_key_crypt_algo_oid,
+                                             libspdm_public_key_crypt_algo_oid_other);
     if (!status) {
-        return false;
-    }
-
-    /*get signature algo OID from cert*/
-    status = libspdm_x509_get_signature_algorithm(cert, cert_size,
-                                                  cert_signature_algo_oid, &oid_len);
-    if (!status ||
-        oid_len != libspdm_get_signature_algo_OID_len(base_asym_algo)||
-        libspdm_const_compare_mem(cert_signature_algo_oid,
-                                  libspdm_signature_algo_oid, oid_len)) {
-        status = false;
         return status;
     }
 
-    status = true;
+    /*get public key encrypt algo OID from cert*/
+    status = libspdm_get_public_key_oid(cert, cert_size, cert_public_key_crypt_algo_oid, oid_len,
+                                        base_asym_algo);
+    if (!status || (libspdm_const_compare_mem(cert_public_key_crypt_algo_oid,
+                                              libspdm_public_key_crypt_algo_oid, oid_len) &&
+                    libspdm_const_compare_mem(cert_public_key_crypt_algo_oid,
+                                              libspdm_public_key_crypt_algo_oid_other, oid_len))) {
+        return false;
+    }
+
     return status;
 }
 
@@ -4474,9 +4626,9 @@ bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
         goto cleanup;
     }
 
-    /* 3. verify sinature_algorithem*/
+    /* 3. Verify public key algorithm. */
     status =
-        libspdm_verify_cert_signature_algo_OID(cert, cert_size, base_asym_algo, base_hash_algo);
+        libspdm_verify_cert_subject_public_key_info(cert, cert_size, base_asym_algo);
     if (!status) {
         goto cleanup;
     }
