@@ -1603,14 +1603,14 @@ bool libspdm_ec_get_public_key_from_x509(const uint8_t *cert, uintn cert_size,
 
     pkey = X509_get_pubkey(x509_cert);
     if ((pkey == NULL) || (EVP_PKEY_id(pkey) != EVP_PKEY_EC)) {
+        if (pkey != NULL) {
+            EVP_PKEY_free(pkey);
+        }
         goto done;
     }
 
-    /* Duplicate EC context from the retrieved EVP_PKEY.*/
-
-    if ((*ec_context = EC_KEY_dup(EVP_PKEY_get0_EC_KEY(pkey))) != NULL) {
-        res = true;
-    }
+    res = true;
+    *ec_context = (void *) pkey;
 
 done:
 
@@ -1618,10 +1618,6 @@ done:
 
     if (x509_cert != NULL) {
         X509_free(x509_cert);
-    }
-
-    if (pkey != NULL) {
-        EVP_PKEY_free(pkey);
     }
 
     return res;

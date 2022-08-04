@@ -199,9 +199,9 @@ bool libspdm_ec_get_private_key_from_pem(const uint8_t *pem_data, uintn pem_size
     /* Retrieve EC Private key from encrypted PEM data.*/
 
     *ec_context =
-        PEM_read_bio_ECPrivateKey(pem_bio, NULL,
-                                  (pem_password_cb *)&PasswordCallback,
-                                  (void *)password);
+        PEM_read_bio_PrivateKey(pem_bio, NULL,
+                                (pem_password_cb *)&PasswordCallback,
+                                (void *)password);
     if (*ec_context != NULL) {
         status = true;
     }

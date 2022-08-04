@@ -15,6 +15,11 @@
 #include <openssl/bn.h>
 #include <openssl/ec.h>
 #include <openssl/objects.h>
+#include <openssl/evp.h>
+#include <openssl/core_names.h>
+
+/* Max local buffer for internal use, make sure the buffer size can fit the largest DER sig. */
+#define MAX_EC_BUFFER_SIZE  140 //(66 * 2 + 8)
 
 /**
  * Allocates and Initializes one Elliptic Curve context for subsequent use
@@ -28,15 +33,10 @@
  **/
 void *libspdm_ec_new_by_nid(uintn nid)
 {
-    EC_KEY *ec_key;
-    EC_GROUP *ec_group;
-    bool ret_val;
+    EVP_PKEY_CTX *pkey_ctx;
+    EVP_PKEY *pkey;
     int32_t openssl_nid;
 
-    ec_key = EC_KEY_new();
-    if (ec_key == NULL) {
-        return NULL;
-    }
     switch (nid) {
     case LIBSPDM_CRYPTO_NID_SECP256R1:
         openssl_nid = NID_X9_62_prime256v1;
@@ -51,16 +51,28 @@ void *libspdm_ec_new_by_nid(uintn nid)
         return NULL;
     }
 
-    ec_group = EC_GROUP_new_by_curve_name(openssl_nid);
-    if (ec_group == NULL) {
+    pkey_ctx = EVP_PKEY_CTX_new_id(EVP_PKEY_EC, NULL);
+    if (pkey_ctx == NULL) {
         return NULL;
     }
-    ret_val = (bool)EC_KEY_set_group(ec_key, ec_group);
-    EC_GROUP_free(ec_group);
-    if (!ret_val) {
-        return NULL;
+
+    if (EVP_PKEY_paramgen_init(pkey_ctx) != 1) {
+        goto fail;
     }
-    return (void *)ec_key;
+
+    if (EVP_PKEY_CTX_set_ec_paramgen_curve_nid(pkey_ctx, openssl_nid) != 1) {
+        goto fail;
+    }
+
+    pkey = NULL;
+    if (EVP_PKEY_paramgen(pkey_ctx, &pkey) != 1) {
+        pkey = NULL;
+        goto fail;
+    }
+
+fail:
+    EVP_PKEY_CTX_free(pkey_ctx);
+    return (void *)pkey;
 }
 
 /**
@@ -71,7 +83,7 @@ void *libspdm_ec_new_by_nid(uintn nid)
  **/
 void libspdm_ec_free(void *ec_context)
 {
-    EC_KEY_free((EC_KEY *)ec_context);
+    EVP_PKEY_free((EVP_PKEY *)ec_context);
 }
 
 /**
@@ -92,77 +104,31 @@ void libspdm_ec_free(void *ec_context)
 bool libspdm_ec_set_pub_key(void *ec_context, const uint8_t *public_key,
                             uintn public_key_size)
 {
-    EC_KEY *ec_key;
-    const EC_GROUP *ec_group;
-    bool ret_val;
-    BIGNUM *bn_x;
-    BIGNUM *bn_y;
-    EC_POINT *ec_point;
-    int32_t openssl_nid;
+    EVP_PKEY *pkey;
+    uint8_t public_oct[MAX_EC_BUFFER_SIZE];
     uintn half_size;
 
     if (ec_context == NULL || public_key == NULL) {
         return false;
     }
 
-    ec_key = (EC_KEY *)ec_context;
-    openssl_nid = EC_GROUP_get_curve_name(EC_KEY_get0_group(ec_key));
-    switch (openssl_nid) {
-    case NID_X9_62_prime256v1:
-        half_size = 32;
-        break;
-    case NID_secp384r1:
-        half_size = 48;
-        break;
-    case NID_secp521r1:
-        half_size = 66;
-        break;
-    default:
-        return false;
-    }
+    pkey = (EVP_PKEY *)ec_context;
+    half_size = (EVP_PKEY_bits(pkey) + 7) / 8;
     if (public_key_size != half_size * 2) {
         return false;
     }
 
-    ec_group = EC_KEY_get0_group(ec_key);
-    ec_point = NULL;
+    /* convert raw key to octet key */
+    public_oct[0] = POINT_CONVERSION_UNCOMPRESSED;
+    libspdm_copy_mem(public_oct + 1, MAX_EC_BUFFER_SIZE - 1,
+                     public_key, public_key_size);
 
-    bn_x = BN_bin2bn(public_key, (uint32_t)half_size, NULL);
-    bn_y = BN_bin2bn(public_key + half_size, (uint32_t)half_size, NULL);
-    if (bn_x == NULL || bn_y == NULL) {
-        ret_val = false;
-        goto done;
-    }
-    ec_point = EC_POINT_new(ec_group);
-    if (ec_point == NULL) {
-        ret_val = false;
-        goto done;
+    if (EVP_PKEY_set_octet_string_param(pkey, OSSL_PKEY_PARAM_ENCODED_PUBLIC_KEY,
+                                        public_oct, public_key_size + 1) != 1) {
+        return false;
     }
 
-    ret_val = (bool)EC_POINT_set_affine_coordinates(ec_group, ec_point,
-                                                    bn_x, bn_y, NULL);
-    if (!ret_val) {
-        goto done;
-    }
-
-    ret_val = (bool)EC_KEY_set_public_key(ec_key, ec_point);
-    if (!ret_val) {
-        goto done;
-    }
-
-    ret_val = true;
-
-done:
-    if (bn_x != NULL) {
-        BN_free(bn_x);
-    }
-    if (bn_y != NULL) {
-        BN_free(bn_y);
-    }
-    if (ec_point != NULL) {
-        EC_POINT_free(ec_point);
-    }
-    return ret_val;
+    return true;
 }
 
 /**
@@ -184,13 +150,10 @@ done:
 bool libspdm_ec_get_pub_key(void *ec_context, uint8_t *public_key,
                             uintn *public_key_size)
 {
-    EC_KEY *ec_key;
-    const EC_GROUP *ec_group;
+    EVP_PKEY *pkey;
     bool ret_val;
-    const EC_POINT *ec_point;
     BIGNUM *bn_x;
     BIGNUM *bn_y;
-    int32_t openssl_nid;
     uintn half_size;
     intn x_size;
     intn y_size;
@@ -203,44 +166,18 @@ bool libspdm_ec_get_pub_key(void *ec_context, uint8_t *public_key,
         return false;
     }
 
-    ec_key = (EC_KEY *)ec_context;
-
-    openssl_nid = EC_GROUP_get_curve_name(EC_KEY_get0_group(ec_key));
-    switch (openssl_nid) {
-    case NID_X9_62_prime256v1:
-        half_size = 32;
-        break;
-    case NID_secp384r1:
-        half_size = 48;
-        break;
-    case NID_secp521r1:
-        half_size = 66;
-        break;
-    default:
-        return false;
-    }
+    pkey = (EVP_PKEY *)ec_context;
+    half_size = (EVP_PKEY_bits(pkey) + 7) / 8;
     if (*public_key_size < half_size * 2) {
         *public_key_size = half_size * 2;
         return false;
     }
     *public_key_size = half_size * 2;
 
-    ec_group = EC_KEY_get0_group(ec_key);
-    ec_point = EC_KEY_get0_public_key(ec_key);
-    if (ec_point == NULL) {
-        return false;
-    }
-
-    bn_x = BN_new();
-    bn_y = BN_new();
-    if (bn_x == NULL || bn_y == NULL) {
-        ret_val = false;
-        goto done;
-    }
-
-    ret_val = (bool)EC_POINT_get_affine_coordinates(ec_group, ec_point,
-                                                    bn_x, bn_y, NULL);
-    if (!ret_val) {
+    bn_x = NULL;
+    bn_y = NULL;
+    if (EVP_PKEY_get_bn_param(pkey, OSSL_PKEY_PARAM_EC_PUB_X, &bn_x) != 1 ||
+        EVP_PKEY_get_bn_param(pkey, OSSL_PKEY_PARAM_EC_PUB_Y, &bn_y) != 1) {
         goto done;
     }
 
@@ -284,21 +221,24 @@ done:
  **/
 bool libspdm_ec_check_key(const void *ec_context)
 {
-    EC_KEY *ec_key;
+    EVP_PKEY *pkey;
+    EVP_PKEY_CTX *pkey_ctx;
     bool ret_val;
 
     if (ec_context == NULL) {
         return false;
     }
 
-    ec_key = (EC_KEY *)ec_context;
-
-    ret_val = (bool)EC_KEY_check_key(ec_key);
-    if (!ret_val) {
+    pkey = ec_context;
+    pkey_ctx = EVP_PKEY_CTX_new(pkey, NULL);
+    if (pkey_ctx == NULL) {
         return false;
     }
 
-    return true;
+    ret_val = (bool) EVP_PKEY_public_check(pkey_ctx);
+
+    EVP_PKEY_CTX_free(pkey_ctx);
+    return ret_val;
 }
 
 /**
@@ -333,16 +273,10 @@ bool libspdm_ec_check_key(const void *ec_context)
 bool libspdm_ec_generate_key(void *ec_context, uint8_t *public,
                              uintn *public_size)
 {
-    EC_KEY *ec_key;
-    const EC_GROUP *ec_group;
     bool ret_val;
-    const EC_POINT *ec_point;
-    BIGNUM *bn_x;
-    BIGNUM *bn_y;
-    int32_t openssl_nid;
-    uintn half_size;
-    intn x_size;
-    intn y_size;
+    EVP_PKEY *pkey;
+    EVP_PKEY *gkey;
+    EVP_PKEY_CTX *gkey_ctx;
 
     if (ec_context == NULL || public_size == NULL) {
         return false;
@@ -352,72 +286,39 @@ bool libspdm_ec_generate_key(void *ec_context, uint8_t *public,
         return false;
     }
 
-    ec_key = (EC_KEY *)ec_context;
-    ret_val = (bool)EC_KEY_generate_key(ec_key);
-    if (!ret_val) {
-        return false;
-    }
-    openssl_nid = EC_GROUP_get_curve_name(EC_KEY_get0_group(ec_key));
-    switch (openssl_nid) {
-    case NID_X9_62_prime256v1:
-        half_size = 32;
-        break;
-    case NID_secp384r1:
-        half_size = 48;
-        break;
-    case NID_secp521r1:
-        half_size = 66;
-        break;
-    default:
-        return false;
-    }
-    if (*public_size < half_size * 2) {
-        *public_size = half_size * 2;
-        return false;
-    }
-    *public_size = half_size * 2;
-
-    ec_group = EC_KEY_get0_group(ec_key);
-    ec_point = EC_KEY_get0_public_key(ec_key);
-    if (ec_point == NULL) {
+    gkey = EVP_PKEY_new();
+    gkey_ctx = NULL;
+    if (gkey == NULL) {
         return false;
     }
 
-    bn_x = BN_new();
-    bn_y = BN_new();
-    if (bn_x == NULL || bn_y == NULL) {
-        ret_val = false;
-        goto done;
+    ret_val = false;
+    pkey = ec_context;
+
+    if (EVP_PKEY_copy_parameters(gkey, pkey) != 1) {
+        goto fail;
     }
 
-    ret_val = (bool)EC_POINT_get_affine_coordinates(ec_group, ec_point,
-                                                    bn_x, bn_y, NULL);
-    if (!ret_val) {
-        goto done;
+    gkey_ctx = EVP_PKEY_CTX_new(gkey, NULL);
+    if (gkey_ctx == NULL) {
+        goto fail;
+    }
+    if (EVP_PKEY_keygen_init(gkey_ctx) != 1) {
+        goto fail;
     }
 
-    x_size = BN_num_bytes(bn_x);
-    y_size = BN_num_bytes(bn_y);
-    if (x_size <= 0 || y_size <= 0) {
-        ret_val = false;
-        goto done;
+    if (EVP_PKEY_keygen(gkey_ctx, &pkey) != 1) {
+        goto fail;
     }
-    LIBSPDM_ASSERT((uintn)x_size <= half_size && (uintn)y_size <= half_size);
 
-    if (public != NULL) {
-        libspdm_zero_mem(public, *public_size);
-        BN_bn2bin(bn_x, &public[0 + half_size - x_size]);
-        BN_bn2bin(bn_y, &public[half_size + half_size - y_size]);
+    if (libspdm_ec_get_pub_key(pkey, public, public_size) != true) {
+        goto fail;
     }
+
     ret_val = true;
-
-done:
-    if (bn_x != NULL) {
-        BN_free(bn_x);
-    }
-    if (bn_y != NULL) {
-        BN_free(bn_y);
-    }
+fail:
+    EVP_PKEY_free(gkey);
+    EVP_PKEY_CTX_free(gkey_ctx);
     return ret_val;
 }
 
@@ -455,18 +356,13 @@ bool libspdm_ec_compute_key(void *ec_context, const uint8_t *peer_public,
                             uintn peer_public_size, uint8_t *key,
                             uintn *key_size)
 {
-    EC_KEY *ec_key;
-    const EC_GROUP *ec_group;
     bool ret_val;
-    BIGNUM *bn_x;
-    BIGNUM *bn_y;
-    EC_POINT *ec_point;
-    int32_t openssl_nid;
-    uintn half_size;
-    intn size;
+    EVP_PKEY *pkey;
+    EVP_PKEY *peer_pkey;
+    EVP_PKEY_CTX *pkey_ctx;
+    uintn secret_size;
 
-    if (ec_context == NULL || peer_public == NULL || key_size == NULL ||
-        key == NULL) {
+    if (ec_context == NULL || peer_public == NULL || key_size == NULL) {
         return false;
     }
 
@@ -474,72 +370,51 @@ bool libspdm_ec_compute_key(void *ec_context, const uint8_t *peer_public,
         return false;
     }
 
-    ec_key = (EC_KEY *)ec_context;
-    openssl_nid = EC_GROUP_get_curve_name(EC_KEY_get0_group(ec_key));
-    switch (openssl_nid) {
-    case NID_X9_62_prime256v1:
-        half_size = 32;
-        break;
-    case NID_secp384r1:
-        half_size = 48;
-        break;
-    case NID_secp521r1:
-        half_size = 66;
-        break;
-    default:
-        return false;
-    }
-    if (peer_public_size != half_size * 2) {
+    if (key == NULL && *key_size != 0) {
         return false;
     }
 
-    ec_group = EC_KEY_get0_group(ec_key);
-    ec_point = NULL;
-
-    bn_x = BN_bin2bn(peer_public, (uint32_t)half_size, NULL);
-    bn_y = BN_bin2bn(peer_public + half_size, (uint32_t)half_size, NULL);
-    if (bn_x == NULL || bn_y == NULL) {
-        ret_val = false;
-        goto done;
-    }
-    ec_point = EC_POINT_new(ec_group);
-    if (ec_point == NULL) {
-        ret_val = false;
-        goto done;
+    peer_pkey = EVP_PKEY_new();
+    if (peer_pkey == NULL) {
+        return false;
     }
 
-    ret_val = (bool)EC_POINT_set_affine_coordinates(ec_group, ec_point,
-                                                    bn_x, bn_y, NULL);
-    if (!ret_val) {
-        goto done;
+    ret_val = false;
+    pkey = (EVP_PKEY *)ec_context;
+    pkey_ctx = NULL;
+    if (EVP_PKEY_copy_parameters(peer_pkey, pkey) != 1) {
+        goto fail;
     }
 
-    size = ECDH_compute_key(key, *key_size, ec_point, ec_key, NULL);
-    if (size < 0) {
-        ret_val = false;
-        goto done;
+    if (libspdm_ec_set_pub_key(peer_pkey, peer_public, peer_public_size) != true) {
+        goto fail;
     }
 
-    if (*key_size < (uintn)size) {
-        *key_size = size;
-        ret_val = false;
-        goto done;
+    pkey_ctx = EVP_PKEY_CTX_new(pkey, NULL);
+    if (pkey_ctx == NULL) {
+        goto fail;
     }
 
-    *key_size = size;
+    if ((EVP_PKEY_derive_init(pkey_ctx) != 1) ||
+        (EVP_PKEY_derive_set_peer(pkey_ctx, peer_pkey) != 1) ||
+        (EVP_PKEY_derive(pkey_ctx, NULL, &secret_size) != 1)) {
+        goto fail;
+    }
+
+    if (*key_size < secret_size) {
+        *key_size = secret_size;
+        goto fail;
+    }
+    *key_size = secret_size;
+
+    if (EVP_PKEY_derive(pkey_ctx, key, key_size) != 1) {
+        goto fail;
+    }
 
     ret_val = true;
-
-done:
-    if (bn_x != NULL) {
-        BN_free(bn_x);
-    }
-    if (bn_y != NULL) {
-        BN_free(bn_y);
-    }
-    if (ec_point != NULL) {
-        EC_POINT_free(ec_point);
-    }
+fail:
+    EVP_PKEY_free(peer_pkey);
+    EVP_PKEY_CTX_free(pkey_ctx);
     return ret_val;
 }
 
@@ -576,39 +451,31 @@ bool libspdm_ecdsa_sign(void *ec_context, uintn hash_nid,
                         const uint8_t *message_hash, uintn hash_size,
                         uint8_t *signature, uintn *sig_size)
 {
-    EC_KEY *ec_key;
+    bool ret_val;
+    EVP_PKEY *pkey;
+    EVP_MD_CTX *mctx;
+    uintn half_size;
     ECDSA_SIG *ecdsa_sig;
-    int32_t openssl_nid;
-    uint8_t half_size;
+    uint8_t sig_der[MAX_EC_BUFFER_SIZE];
+    const uint8_t *sig_der_head;
+    uintn sig_der_size;
     BIGNUM *bn_r;
     BIGNUM *bn_s;
-    intn r_size;
-    intn s_size;
+    int r_size;
+    int s_size;
 
     if (ec_context == NULL || message_hash == NULL) {
         return false;
     }
 
-    if (signature == NULL) {
+    if (signature == NULL || sig_size == NULL) {
         return false;
     }
 
-    ec_key = (EC_KEY *)ec_context;
-    openssl_nid = EC_GROUP_get_curve_name(EC_KEY_get0_group(ec_key));
-    switch (openssl_nid) {
-    case NID_X9_62_prime256v1:
-        half_size = 32;
-        break;
-    case NID_secp384r1:
-        half_size = 48;
-        break;
-    case NID_secp521r1:
-        half_size = 66;
-        break;
-    default:
-        return false;
-    }
-    if (*sig_size < (uintn)(half_size * 2)) {
+    pkey = ec_context;
+    half_size = (EVP_PKEY_bits(pkey) + 7) / 8;
+
+    if (*sig_size < half_size * 2) {
         *sig_size = half_size * 2;
         return false;
     }
@@ -638,10 +505,25 @@ bool libspdm_ecdsa_sign(void *ec_context, uintn hash_nid,
         return false;
     }
 
-    ecdsa_sig = ECDSA_do_sign(message_hash, (uint32_t)hash_size,
-                              (EC_KEY *)ec_context);
-    if (ecdsa_sig == NULL) {
+    mctx = EVP_MD_CTX_new();
+    if (mctx == NULL) {
         return false;
+    }
+
+    ret_val = false;
+    pkey = (EVP_PKEY *)ec_context;
+    sig_der_size = MAX_EC_BUFFER_SIZE;
+    if (EVP_DigestSignInit(mctx, NULL, NULL, NULL, pkey) != 1) {
+        goto fail;
+    }
+    if (EVP_DigestSign(mctx, sig_der, &sig_der_size, message_hash, hash_size) != 1) {
+        goto fail;
+    }
+
+    ecdsa_sig = ECDSA_SIG_new();
+    sig_der_head = sig_der;
+    if (d2i_ECDSA_SIG(&ecdsa_sig, &sig_der_head, sig_der_size) == NULL) {
+        goto fail;
     }
 
     ECDSA_SIG_get0(ecdsa_sig, (const BIGNUM **)&bn_r,
@@ -660,7 +542,10 @@ bool libspdm_ecdsa_sign(void *ec_context, uintn hash_nid,
 
     ECDSA_SIG_free(ecdsa_sig);
 
-    return true;
+    ret_val = true;
+fail:
+    EVP_MD_CTX_free(mctx);
+    return ret_val;
 }
 
 /**
@@ -690,11 +575,14 @@ bool libspdm_ecdsa_verify(void *ec_context, uintn hash_nid,
                           const uint8_t *message_hash, uintn hash_size,
                           const uint8_t *signature, uintn sig_size)
 {
-    int32_t result;
-    EC_KEY *ec_key;
+    bool ret_val;
+    EVP_PKEY *pkey;
+    EVP_MD_CTX *mctx;
+    uintn half_size;
     ECDSA_SIG *ecdsa_sig;
-    int32_t openssl_nid;
-    uint8_t half_size;
+    uint8_t sig_der[MAX_EC_BUFFER_SIZE];
+    uint8_t *sig_der_head;
+    uintn sig_der_size;
     BIGNUM *bn_r;
     BIGNUM *bn_s;
 
@@ -706,22 +594,9 @@ bool libspdm_ecdsa_verify(void *ec_context, uintn hash_nid,
         return false;
     }
 
-    ec_key = (EC_KEY *)ec_context;
-    openssl_nid = EC_GROUP_get_curve_name(EC_KEY_get0_group(ec_key));
-    switch (openssl_nid) {
-    case NID_X9_62_prime256v1:
-        half_size = 32;
-        break;
-    case NID_secp384r1:
-        half_size = 48;
-        break;
-    case NID_secp521r1:
-        half_size = 66;
-        break;
-    default:
-        return false;
-    }
-    if (sig_size != (uintn)(half_size * 2)) {
+    pkey = ec_context;
+    half_size = (EVP_PKEY_bits(pkey) + 7) / 8;
+    if (sig_size != half_size * 2) {
         return false;
     }
 
@@ -743,34 +618,39 @@ bool libspdm_ecdsa_verify(void *ec_context, uintn hash_nid,
             return false;
         }
         break;
-
     default:
         return false;
     }
 
+    ret_val = false;
     ecdsa_sig = ECDSA_SIG_new();
-    if (ecdsa_sig == NULL) {
-        ECDSA_SIG_free(ecdsa_sig);
-        return false;
-    }
-
+    mctx = EVP_MD_CTX_new();
     bn_r = BN_bin2bn(signature, (uint32_t)half_size, NULL);
     bn_s = BN_bin2bn(signature + half_size, (uint32_t)half_size, NULL);
-    if (bn_r == NULL || bn_s == NULL) {
-        if (bn_r != NULL) {
-            BN_free(bn_r);
-        }
-        if (bn_s != NULL) {
-            BN_free(bn_s);
-        }
-        ECDSA_SIG_free(ecdsa_sig);
-        return false;
+    if (ecdsa_sig == NULL || mctx == NULL || bn_r == NULL || bn_s == NULL) {
+        BN_free(bn_r);
+        BN_free(bn_s);
+        goto fail;
     }
+
     ECDSA_SIG_set0(ecdsa_sig, bn_r, bn_s);
-    result = ECDSA_do_verify(message_hash, (uint32_t)hash_size, ecdsa_sig,
-                             (EC_KEY *)ec_context);
+    sig_der_head = sig_der;
+    sig_der_size = i2d_ECDSA_SIG(ecdsa_sig, &sig_der_head);
+    if (sig_der_size < 0) {
+        goto fail;
+    }
 
+    if (EVP_DigestVerifyInit(mctx, NULL, NULL, NULL, pkey) != 1) {
+        goto fail;
+    }
+    if (EVP_DigestVerify(mctx, sig_der, sig_der_size, message_hash, hash_size) != 1) {
+        goto fail;
+    }
+
+    ret_val = true;
+
+fail:
     ECDSA_SIG_free(ecdsa_sig);
-
-    return (result == 1);
+    EVP_MD_CTX_free(mctx);
+    return ret_val;
 }
