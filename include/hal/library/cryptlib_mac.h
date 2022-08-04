@@ -13,14 +13,14 @@
  * @return  Pointer to the HMAC_CTX context that has been initialized.
  *          If the allocations fails, libspdm_hmac_sha256_new() returns NULL.
  **/
-void *libspdm_hmac_sha256_new(void);
+extern void *libspdm_hmac_sha256_new(void);
 
 /**
  * Release the specified HMAC_CTX context.
  *
  * @param[in]  hmac_sha256_ctx  Pointer to the HMAC_CTX context to be released.
  **/
-void libspdm_hmac_sha256_free(void *hmac_sha256_ctx);
+extern void libspdm_hmac_sha256_free(void *hmac_sha256_ctx);
 
 /**
  * Set user-supplied key for subsequent use. It must be done before any
@@ -37,7 +37,7 @@ void libspdm_hmac_sha256_free(void *hmac_sha256_ctx);
  * @retval false  The key is set unsuccessfully.
  * @retval false  This interface is not supported.
  **/
-bool libspdm_hmac_sha256_set_key(void *hmac_sha256_ctx, const uint8_t *key, size_t key_size);
+extern bool libspdm_hmac_sha256_set_key(void *hmac_sha256_ctx, const uint8_t *key, size_t key_size);
 
 /**
  * Makes a copy of an existing HMAC-SHA256 context.
@@ -53,7 +53,7 @@ bool libspdm_hmac_sha256_set_key(void *hmac_sha256_ctx, const uint8_t *key, size
  * @retval false  HMAC-SHA256 context copy failed.
  * @retval false  This interface is not supported.
  **/
-bool libspdm_hmac_sha256_duplicate(const void *hmac_sha256_ctx, void *new_hmac_sha256_ctx);
+extern bool libspdm_hmac_sha256_duplicate(const void *hmac_sha256_ctx, void *new_hmac_sha256_ctx);
 
 /**
  * Digests the input data and updates HMAC-SHA256 context.
@@ -74,7 +74,7 @@ bool libspdm_hmac_sha256_duplicate(const void *hmac_sha256_ctx, void *new_hmac_s
  * @retval false  HMAC-SHA256 data digest failed.
  * @retval false  This interface is not supported.
  **/
-bool libspdm_hmac_sha256_update(void *hmac_sha256_ctx, const void *data, size_t data_size);
+extern bool libspdm_hmac_sha256_update(void *hmac_sha256_ctx, const void *data, size_t data_size);
 
 /**
  * Completes computation of the HMAC-SHA256 digest value.
@@ -97,7 +97,7 @@ bool libspdm_hmac_sha256_update(void *hmac_sha256_ctx, const void *data, size_t 
  * @retval false  HMAC-SHA256 digest computation failed.
  * @retval false  This interface is not supported.
  **/
-bool libspdm_hmac_sha256_final(void *hmac_sha256_ctx, uint8_t *hmac_value);
+extern bool libspdm_hmac_sha256_final(void *hmac_sha256_ctx, uint8_t *hmac_value);
 
 /**
  * Computes the HMAC-SHA256 digest of a input data buffer.
@@ -118,9 +118,9 @@ bool libspdm_hmac_sha256_final(void *hmac_sha256_ctx, uint8_t *hmac_value);
  * @retval false  HMAC-SHA256 digest computation failed.
  * @retval false  This interface is not supported.
  **/
-bool libspdm_hmac_sha256_all(const void *data, size_t data_size,
-                             const uint8_t *key, size_t key_size,
-                             uint8_t *hmac_value);
+extern bool libspdm_hmac_sha256_all(const void *data, size_t data_size,
+                                    const uint8_t *key, size_t key_size,
+                                    uint8_t *hmac_value);
 #endif /* LIBSPDM_SHA256_SUPPORT */
 
 #if LIBSPDM_SHA384_SUPPORT
@@ -130,14 +130,14 @@ bool libspdm_hmac_sha256_all(const void *data, size_t data_size,
  * @return  Pointer to the HMAC_CTX context that has been initialized.
  *          If the allocations fails, libspdm_hmac_sha384_new() returns NULL.
  **/
-void *libspdm_hmac_sha384_new(void);
+extern void *libspdm_hmac_sha384_new(void);
 
 /**
  * Release the specified HMAC_CTX context.
  *
  * @param[in]  hmac_sha384_ctx  Pointer to the HMAC_CTX context to be released.
  **/
-void libspdm_hmac_sha384_free(void *hmac_sha384_ctx);
+extern void libspdm_hmac_sha384_free(void *hmac_sha384_ctx);
 
 /**
  * Set user-supplied key for subsequent use. It must be done before any
@@ -154,7 +154,7 @@ void libspdm_hmac_sha384_free(void *hmac_sha384_ctx);
  * @retval false  The key is set unsuccessfully.
  * @retval false  This interface is not supported.
  **/
-bool libspdm_hmac_sha384_set_key(void *hmac_sha384_ctx, const uint8_t *key, size_t key_size);
+extern bool libspdm_hmac_sha384_set_key(void *hmac_sha384_ctx, const uint8_t *key, size_t key_size);
 
 /**
  * Makes a copy of an existing HMAC-SHA384 context.
@@ -170,7 +170,7 @@ bool libspdm_hmac_sha384_set_key(void *hmac_sha384_ctx, const uint8_t *key, size
  * @retval false  HMAC-SHA384 context copy failed.
  * @retval false  This interface is not supported.
  **/
-bool libspdm_hmac_sha384_duplicate(const void *hmac_sha384_ctx, void *new_hmac_sha384_ctx);
+extern bool libspdm_hmac_sha384_duplicate(const void *hmac_sha384_ctx, void *new_hmac_sha384_ctx);
 
 /**
  * Digests the input data and updates HMAC-SHA384 context.
@@ -191,7 +191,7 @@ bool libspdm_hmac_sha384_duplicate(const void *hmac_sha384_ctx, void *new_hmac_s
  * @retval false  HMAC-SHA384 data digest failed.
  * @retval false  This interface is not supported.
  **/
-bool libspdm_hmac_sha384_update(void *hmac_sha384_ctx, const void *data, size_t data_size);
+extern bool libspdm_hmac_sha384_update(void *hmac_sha384_ctx, const void *data, size_t data_size);
 
 /**
  * Completes computation of the HMAC-SHA384 digest value.
@@ -214,7 +214,7 @@ bool libspdm_hmac_sha384_update(void *hmac_sha384_ctx, const void *data, size_t 
  * @retval false  HMAC-SHA384 digest computation failed.
  * @retval false  This interface is not supported.
  **/
-bool libspdm_hmac_sha384_final(void *hmac_sha384_ctx, uint8_t *hmac_value);
+extern bool libspdm_hmac_sha384_final(void *hmac_sha384_ctx, uint8_t *hmac_value);
 
 /**
  * Computes the HMAC-SHA384 digest of a input data buffer.
@@ -235,9 +235,9 @@ bool libspdm_hmac_sha384_final(void *hmac_sha384_ctx, uint8_t *hmac_value);
  * @retval false  HMAC-SHA384 digest computation failed.
  * @retval false  This interface is not supported.
  **/
-bool libspdm_hmac_sha384_all(const void *data, size_t data_size,
-                             const uint8_t *key, size_t key_size,
-                             uint8_t *hmac_value);
+extern bool libspdm_hmac_sha384_all(const void *data, size_t data_size,
+                                    const uint8_t *key, size_t key_size,
+                                    uint8_t *hmac_value);
 #endif /* LIBSPDM_SHA384_SUPPORT */
 
 #if LIBSPDM_SHA512_SUPPORT
@@ -247,14 +247,14 @@ bool libspdm_hmac_sha384_all(const void *data, size_t data_size,
  * @return  Pointer to the HMAC_CTX context that has been initialized.
  *          If the allocations fails, libspdm_hmac_sha512_new() returns NULL.
  **/
-void *libspdm_hmac_sha512_new(void);
+extern void *libspdm_hmac_sha512_new(void);
 
 /**
  * Release the specified HMAC_CTX context.
  *
  * @param[in]  hmac_sha512_ctx  Pointer to the HMAC_CTX context to be released.
  **/
-void libspdm_hmac_sha512_free(void *hmac_sha512_ctx);
+extern void libspdm_hmac_sha512_free(void *hmac_sha512_ctx);
 
 /**
  * Set user-supplied key for subsequent use. It must be done before any
@@ -271,7 +271,7 @@ void libspdm_hmac_sha512_free(void *hmac_sha512_ctx);
  * @retval false  The key is set unsuccessfully.
  * @retval false  This interface is not supported.
  **/
-bool libspdm_hmac_sha512_set_key(void *hmac_sha512_ctx, const uint8_t *key, size_t key_size);
+extern bool libspdm_hmac_sha512_set_key(void *hmac_sha512_ctx, const uint8_t *key, size_t key_size);
 
 /**
  * Makes a copy of an existing HMAC-SHA512 context.
@@ -287,7 +287,7 @@ bool libspdm_hmac_sha512_set_key(void *hmac_sha512_ctx, const uint8_t *key, size
  * @retval false  HMAC-SHA512 context copy failed.
  * @retval false  This interface is not supported.
  **/
-bool libspdm_hmac_sha512_duplicate(const void *hmac_sha512_ctx, void *new_hmac_sha512_ctx);
+extern bool libspdm_hmac_sha512_duplicate(const void *hmac_sha512_ctx, void *new_hmac_sha512_ctx);
 
 /**
  * Digests the input data and updates HMAC-SHA512 context.
@@ -308,7 +308,7 @@ bool libspdm_hmac_sha512_duplicate(const void *hmac_sha512_ctx, void *new_hmac_s
  * @retval false  HMAC-SHA512 data digest failed.
  * @retval false  This interface is not supported.
  **/
-bool libspdm_hmac_sha512_update(void *hmac_sha512_ctx, const void *data, size_t data_size);
+extern bool libspdm_hmac_sha512_update(void *hmac_sha512_ctx, const void *data, size_t data_size);
 
 /**
  * Completes computation of the HMAC-SHA512 digest value.
@@ -331,7 +331,7 @@ bool libspdm_hmac_sha512_update(void *hmac_sha512_ctx, const void *data, size_t 
  * @retval false  HMAC-SHA512 digest computation failed.
  * @retval false  This interface is not supported.
  **/
-bool libspdm_hmac_sha512_final(void *hmac_sha512_ctx, uint8_t *hmac_value);
+extern bool libspdm_hmac_sha512_final(void *hmac_sha512_ctx, uint8_t *hmac_value);
 
 /**
  * Computes the HMAC-SHA512 digest of a input data buffer.
@@ -353,9 +353,9 @@ bool libspdm_hmac_sha512_final(void *hmac_sha512_ctx, uint8_t *hmac_value);
  * @retval false  This interface is not supported.
  *
  **/
-bool libspdm_hmac_sha512_all(const void *data, size_t data_size,
-                             const uint8_t *key, size_t key_size,
-                             uint8_t *hmac_value);
+extern bool libspdm_hmac_sha512_all(const void *data, size_t data_size,
+                                    const uint8_t *key, size_t key_size,
+                                    uint8_t *hmac_value);
 #endif /* LIBSPDM_SHA512_SUPPORT */
 
 #if LIBSPDM_SHA3_256_SUPPORT
@@ -365,14 +365,14 @@ bool libspdm_hmac_sha512_all(const void *data, size_t data_size,
  * @return  Pointer to the HMAC_CTX context that has been initialized.
  *          If the allocations fails, libspdm_hmac_sha3_256_new() returns NULL.
  **/
-void *libspdm_hmac_sha3_256_new(void);
+extern void *libspdm_hmac_sha3_256_new(void);
 
 /**
  * Release the specified HMAC_CTX context.
  *
  * @param[in]  hmac_sha3_256_ctx  Pointer to the HMAC_CTX context to be released.
  **/
-void libspdm_hmac_sha3_256_free(void *hmac_sha3_256_ctx);
+extern void libspdm_hmac_sha3_256_free(void *hmac_sha3_256_ctx);
 
 /**
  * Set user-supplied key for subsequent use. It must be done before any
@@ -387,7 +387,9 @@ void libspdm_hmac_sha3_256_free(void *hmac_sha3_256_ctx);
  * @retval true   The key is set successfully.
  * @retval false  The key is set unsuccessfully.
  **/
-bool libspdm_hmac_sha3_256_set_key(void *hmac_sha3_256_ctx, const uint8_t *key, size_t key_size);
+extern bool libspdm_hmac_sha3_256_set_key(void *hmac_sha3_256_ctx,
+                                          const uint8_t *key,
+                                          size_t key_size);
 
 /**
  * Makes a copy of an existing HMAC-SHA3-256 context.
@@ -401,7 +403,8 @@ bool libspdm_hmac_sha3_256_set_key(void *hmac_sha3_256_ctx, const uint8_t *key, 
  * @retval true   HMAC-SHA3-256 context copy succeeded.
  * @retval false  HMAC-SHA3-256 context copy failed.
  **/
-bool libspdm_hmac_sha3_256_duplicate(const void *hmac_sha3_256_ctx, void *new_hmac_sha3_256_ctx);
+extern bool libspdm_hmac_sha3_256_duplicate(const void *hmac_sha3_256_ctx,
+                                            void *new_hmac_sha3_256_ctx);
 
 /**
  * Digests the input data and updates HMAC-SHA3-256 context.
@@ -420,7 +423,8 @@ bool libspdm_hmac_sha3_256_duplicate(const void *hmac_sha3_256_ctx, void *new_hm
  * @retval true   HMAC-SHA3-256 data digest succeeded.
  * @retval false  HMAC-SHA3-256 data digest failed.
  **/
-bool libspdm_hmac_sha3_256_update(void *hmac_sha3_256_ctx, const void *data, size_t data_size);
+extern bool libspdm_hmac_sha3_256_update(void *hmac_sha3_256_ctx,
+                                         const void *data, size_t data_size);
 
 /**
  * Completes computation of the HMAC-SHA3-256 digest value.
@@ -441,7 +445,7 @@ bool libspdm_hmac_sha3_256_update(void *hmac_sha3_256_ctx, const void *data, siz
  * @retval true   HMAC-SHA3-256 digest computation succeeded.
  * @retval false  HMAC-SHA3-256 digest computation failed.
  **/
-bool libspdm_hmac_sha3_256_final(void *hmac_sha3_256_ctx, uint8_t *hmac_value);
+extern bool libspdm_hmac_sha3_256_final(void *hmac_sha3_256_ctx, uint8_t *hmac_value);
 
 /**
  * Computes the HMAC-SHA3-256 digest of a input data buffer.
@@ -462,9 +466,9 @@ bool libspdm_hmac_sha3_256_final(void *hmac_sha3_256_ctx, uint8_t *hmac_value);
  * @retval false  HMAC-SHA3-256 digest computation failed.
  * @retval false  This interface is not supported.
  **/
-bool libspdm_hmac_sha3_256_all(const void *data, size_t data_size,
-                               const uint8_t *key, size_t key_size,
-                               uint8_t *hmac_value);
+extern bool libspdm_hmac_sha3_256_all(const void *data, size_t data_size,
+                                      const uint8_t *key, size_t key_size,
+                                      uint8_t *hmac_value);
 #endif /* LIBSPDM_SHA3_256_SUPPORT */
 
 #if LIBSPDM_SHA3_384_SUPPORT
@@ -474,14 +478,14 @@ bool libspdm_hmac_sha3_256_all(const void *data, size_t data_size,
  * @return  Pointer to the HMAC_CTX context that has been initialized.
  *          If the allocations fails, libspdm_hmac_sha3_384_new() returns NULL.
  **/
-void *libspdm_hmac_sha3_384_new(void);
+extern void *libspdm_hmac_sha3_384_new(void);
 
 /**
  * Release the specified HMAC_CTX context.
  *
  * @param[in]  hmac_sha3_384_ctx  Pointer to the HMAC_CTX context to be released.
  **/
-void libspdm_hmac_sha3_384_free(void *hmac_sha3_384_ctx);
+extern void libspdm_hmac_sha3_384_free(void *hmac_sha3_384_ctx);
 
 /**
  * Set user-supplied key for subsequent use. It must be done before any
@@ -498,7 +502,9 @@ void libspdm_hmac_sha3_384_free(void *hmac_sha3_384_ctx);
  * @retval false  The key is set unsuccessfully.
  * @retval false  This interface is not supported.
  **/
-bool libspdm_hmac_sha3_384_set_key(void *hmac_sha3_384_ctx, const uint8_t *key, size_t key_size);
+extern bool libspdm_hmac_sha3_384_set_key(void *hmac_sha3_384_ctx,
+                                          const uint8_t *key,
+                                          size_t key_size);
 
 /**
  * Makes a copy of an existing HMAC-SHA3-384 context.
@@ -514,7 +520,8 @@ bool libspdm_hmac_sha3_384_set_key(void *hmac_sha3_384_ctx, const uint8_t *key, 
  * @retval false  HMAC-SHA3-384 context copy failed.
  * @retval false  This interface is not supported.
  **/
-bool libspdm_hmac_sha3_384_duplicate(const void *hmac_sha3_384_ctx, void *new_hmac_sha3_384_ctx);
+extern bool libspdm_hmac_sha3_384_duplicate(const void *hmac_sha3_384_ctx,
+                                            void *new_hmac_sha3_384_ctx);
 
 /**
  * Digests the input data and updates HMAC-SHA3-384 context.
@@ -535,7 +542,8 @@ bool libspdm_hmac_sha3_384_duplicate(const void *hmac_sha3_384_ctx, void *new_hm
  * @retval false  HMAC-SHA3-384 data digest failed.
  * @retval false  This interface is not supported.
  **/
-bool libspdm_hmac_sha3_384_update(void *hmac_sha3_384_ctx, const void *data, size_t data_size);
+extern bool libspdm_hmac_sha3_384_update(void *hmac_sha3_384_ctx, const void *data,
+                                         size_t data_size);
 
 /**
  * Completes computation of the HMAC-SHA3-384 digest value.
@@ -558,7 +566,7 @@ bool libspdm_hmac_sha3_384_update(void *hmac_sha3_384_ctx, const void *data, siz
  * @retval false  HMAC-SHA3-384 digest computation failed.
  * @retval false  This interface is not supported.
  **/
-bool libspdm_hmac_sha3_384_final(void *hmac_sha3_384_ctx, uint8_t *hmac_value);
+extern bool libspdm_hmac_sha3_384_final(void *hmac_sha3_384_ctx, uint8_t *hmac_value);
 
 /**
  * Computes the HMAC-SHA3-384 digest of a input data buffer.
@@ -579,9 +587,9 @@ bool libspdm_hmac_sha3_384_final(void *hmac_sha3_384_ctx, uint8_t *hmac_value);
  * @retval false  HMAC-SHA3-384 digest computation failed.
  * @retval false  This interface is not supported.
  **/
-bool libspdm_hmac_sha3_384_all(const void *data, size_t data_size,
-                               const uint8_t *key, size_t key_size,
-                               uint8_t *hmac_value);
+extern bool libspdm_hmac_sha3_384_all(const void *data, size_t data_size,
+                                      const uint8_t *key, size_t key_size,
+                                      uint8_t *hmac_value);
 #endif /* LIBSPDM_SHA3_384_SUPPORT */
 
 #if LIBSPDM_SHA3_512_SUPPORT
@@ -591,14 +599,14 @@ bool libspdm_hmac_sha3_384_all(const void *data, size_t data_size,
  * @return  Pointer to the HMAC_CTX context that has been initialized.
  *          If the allocations fails, libspdm_hmac_sha3_512_new() returns NULL.
  **/
-void *libspdm_hmac_sha3_512_new(void);
+extern void *libspdm_hmac_sha3_512_new(void);
 
 /**
  * Release the specified HMAC_CTX context.
  *
  * @param[in]  hmac_sha3_512_ctx  Pointer to the HMAC_CTX context to be released.
  **/
-void libspdm_hmac_sha3_512_free(void *hmac_sha3_512_ctx);
+extern void libspdm_hmac_sha3_512_free(void *hmac_sha3_512_ctx);
 
 /**
  * Set user-supplied key for subsequent use. It must be done before any
@@ -615,7 +623,9 @@ void libspdm_hmac_sha3_512_free(void *hmac_sha3_512_ctx);
  * @retval false  The key is set unsuccessfully.
  * @retval false  This interface is not supported.
  **/
-bool libspdm_hmac_sha3_512_set_key(void *hmac_sha3_512_ctx, const uint8_t *key, size_t key_size);
+extern bool libspdm_hmac_sha3_512_set_key(void *hmac_sha3_512_ctx,
+                                          const uint8_t *key,
+                                          size_t key_size);
 
 /**
  * Makes a copy of an existing HMAC-SHA3-512 context.
@@ -631,7 +641,8 @@ bool libspdm_hmac_sha3_512_set_key(void *hmac_sha3_512_ctx, const uint8_t *key, 
  * @retval false  HMAC-SHA3-512 context copy failed.
  * @retval false  This interface is not supported.
  **/
-bool libspdm_hmac_sha3_512_duplicate(const void *hmac_sha3_512_ctx, void *new_hmac_sha3_512_ctx);
+extern bool libspdm_hmac_sha3_512_duplicate(const void *hmac_sha3_512_ctx,
+                                            void *new_hmac_sha3_512_ctx);
 
 /**
  * Digests the input data and updates HMAC-SHA3-512 context.
@@ -652,7 +663,8 @@ bool libspdm_hmac_sha3_512_duplicate(const void *hmac_sha3_512_ctx, void *new_hm
  * @retval false  HMAC-SHA3-512 data digest failed.
  * @retval false  This interface is not supported.
  **/
-bool libspdm_hmac_sha3_512_update(void *hmac_sha3_512_ctx, const void *data, size_t data_size);
+extern bool libspdm_hmac_sha3_512_update(void *hmac_sha3_512_ctx,
+                                         const void *data, size_t data_size);
 
 /**
  * Completes computation of the HMAC-SHA3-512 digest value.
@@ -675,7 +687,7 @@ bool libspdm_hmac_sha3_512_update(void *hmac_sha3_512_ctx, const void *data, siz
  * @retval false  HMAC-SHA3-512 digest computation failed.
  * @retval false  This interface is not supported.
  **/
-bool libspdm_hmac_sha3_512_final(void *hmac_sha3_512_ctx, uint8_t *hmac_value);
+extern bool libspdm_hmac_sha3_512_final(void *hmac_sha3_512_ctx, uint8_t *hmac_value);
 
 /**
  * Computes the HMAC-SHA3-512 digest of a input data buffer.
@@ -696,9 +708,9 @@ bool libspdm_hmac_sha3_512_final(void *hmac_sha3_512_ctx, uint8_t *hmac_value);
  * @retval false  HMAC-SHA3-512 digest computation failed.
  * @retval false  This interface is not supported.
  **/
-bool libspdm_hmac_sha3_512_all(const void *data, size_t data_size,
-                               const uint8_t *key, size_t key_size,
-                               uint8_t *hmac_value);
+extern bool libspdm_hmac_sha3_512_all(const void *data, size_t data_size,
+                                      const uint8_t *key, size_t key_size,
+                                      uint8_t *hmac_value);
 #endif /* LIBSPDM_SHA3_512_SUPPORT */
 
 #if LIBSPDM_SM3_256_SUPPORT
@@ -708,14 +720,14 @@ bool libspdm_hmac_sha3_512_all(const void *data, size_t data_size,
  * @return  Pointer to the HMAC_CTX context that has been initialized.
  *          If the allocations fails, libspdm_hmac_sm3_256_new() returns NULL.
  **/
-void *libspdm_hmac_sm3_256_new(void);
+extern void *libspdm_hmac_sm3_256_new(void);
 
 /**
  * Release the specified HMAC_CTX context.
  *
  * @param[in]  hmac_sm3_256_ctx  Pointer to the HMAC_CTX context to be released.
  **/
-void libspdm_hmac_sm3_256_free(void *hmac_sm3_256_ctx);
+extern void libspdm_hmac_sm3_256_free(void *hmac_sm3_256_ctx);
 
 /**
  * Set user-supplied key for subsequent use. It must be done before any
@@ -730,7 +742,8 @@ void libspdm_hmac_sm3_256_free(void *hmac_sm3_256_ctx);
  * @retval true   The key is set successfully.
  * @retval false  The key is set unsuccessfully.
  **/
-bool libspdm_hmac_sm3_256_set_key(void *hmac_sm3_256_ctx, const uint8_t *key, size_t key_size);
+extern bool libspdm_hmac_sm3_256_set_key(void *hmac_sm3_256_ctx,
+                                         const uint8_t *key, size_t key_size);
 
 /**
  * Makes a copy of an existing HMAC-SM3-256 context.
@@ -744,7 +757,8 @@ bool libspdm_hmac_sm3_256_set_key(void *hmac_sm3_256_ctx, const uint8_t *key, si
  * @retval true   HMAC-SM3-256 context copy succeeded.
  * @retval false  HMAC-SM3-256 context copy failed.
  **/
-bool libspdm_hmac_sm3_256_duplicate(const void *hmac_sm3_256_ctx, void *new_hmac_sm3_256_ctx);
+extern bool libspdm_hmac_sm3_256_duplicate(const void *hmac_sm3_256_ctx,
+                                           void *new_hmac_sm3_256_ctx);
 
 /**
  * Digests the input data and updates HMAC-SM3-256 context.
@@ -763,7 +777,7 @@ bool libspdm_hmac_sm3_256_duplicate(const void *hmac_sm3_256_ctx, void *new_hmac
  * @retval true   HMAC-SM3-256 data digest succeeded.
  * @retval false  HMAC-SM3-256 data digest failed.
  **/
-bool libspdm_hmac_sm3_256_update(void *hmac_sm3_256_ctx, const void *data, size_t data_size);
+extern bool libspdm_hmac_sm3_256_update(void *hmac_sm3_256_ctx, const void *data, size_t data_size);
 
 /**
  * Completes computation of the HMAC-SM3-256 digest value.
@@ -784,7 +798,7 @@ bool libspdm_hmac_sm3_256_update(void *hmac_sm3_256_ctx, const void *data, size_
  * @retval true   HMAC-SM3-256 digest computation succeeded.
  * @retval false  HMAC-SM3-256 digest computation failed.
  **/
-bool libspdm_hmac_sm3_256_final(void *hmac_sm3_256_ctx, uint8_t *hmac_value);
+extern bool libspdm_hmac_sm3_256_final(void *hmac_sm3_256_ctx, uint8_t *hmac_value);
 
 /**
  * Computes the HMAC-SM3-256 digest of a input data buffer.
@@ -805,9 +819,9 @@ bool libspdm_hmac_sm3_256_final(void *hmac_sm3_256_ctx, uint8_t *hmac_value);
  * @retval false  HMAC-SM3-256 digest computation failed.
  * @retval false  This interface is not supported.
  **/
-bool libspdm_hmac_sm3_256_all(const void *data, size_t data_size,
-                              const uint8_t *key, size_t key_size,
-                              uint8_t *hmac_value);
+extern bool libspdm_hmac_sm3_256_all(const void *data, size_t data_size,
+                                     const uint8_t *key, size_t key_size,
+                                     uint8_t *hmac_value);
 #endif /* LIBSPDM_SM3_256_SUPPORT */
 
 #endif /* CRYPTLIB_MAC_H */
