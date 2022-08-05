@@ -197,6 +197,7 @@ libspdm_return_t libspdm_get_response_algorithms(void *context,
     #if LIBSPDM_AEAD_SM4_SUPPORT == 1
         SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AEAD_SM4_GCM,
     #endif
+        0,
     };
 
     uint32_t key_schedule_priority_table[] = {

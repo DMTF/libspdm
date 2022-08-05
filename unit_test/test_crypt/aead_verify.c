@@ -6,8 +6,7 @@
 
 #include "test_crypt.h"
 
-/* AES-GCM test data from NIST public test vectors */
-
+/* AES-GCM test data from NIST public test vectors. */
 uint8_t m_libspdm_gcm_key[] = {
     0xee, 0xbc, 0x1f, 0x57, 0x48, 0x7f, 0x51, 0x92, 0x1c, 0x04, 0x65,
     0x66, 0x5f, 0x8a, 0xe6, 0xd1, 0x65, 0x8b, 0xb2, 0x6d, 0xe6, 0xf8,
@@ -38,8 +37,7 @@ uint8_t m_libspdm_gcm_tag[] = {
     0xd7, 0x37, 0xee, 0x62, 0x98, 0xf7, 0x7e, 0x0c
 };
 
-/* CHACHA20-Poly1305 test data */
-
+/* CHACHA20-Poly1305 test data. */
 uint8_t m_libspdm_chacha20_poly1305_pt[] = {
     0x4c, 0x61, 0x64, 0x69, 0x65, 0x73, 0x20, 0x61, 0x6e, 0x64, 0x20, 0x47,
     0x65, 0x6e, 0x74, 0x6c, 0x65, 0x6d, 0x65, 0x6e, 0x20, 0x6f, 0x66, 0x20,
@@ -85,8 +83,7 @@ uint8_t m_libspdm_chacha20_poly1305_tag[] = {
     0x7e, 0x90, 0x2e, 0xcb, 0xd0, 0x60, 0x06, 0x91,
 };
 
-/* SM4-GCM test data */
-
+/* SM4-GCM test data. */
 uint8_t m_libspdm_sm4_gcm_pt[] = {
     0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xBB, 0xBB, 0xBB,
     0xBB, 0xBB, 0xBB, 0xBB, 0xBB, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC,
@@ -127,12 +124,14 @@ uint8_t m_libspdm_sm4_gcm_tag[] = {
 /**
  * Validate Crypto AEAD Ciphers Interfaces.
  *
- * @retval  true  Validation succeeded.
+ * @retval  true   Validation succeeded.
  * @retval  false  Validation failed.
  *
  **/
 bool libspdm_validate_crypt_aead_cipher(void)
 {
+    #if (LIBSPDM_AEAD_GCM_SUPPORT) || (LIBSPDM_AEAD_CHACHA20_POLY1305_SUPPORT) || \
+    (LIBSPDM_AEAD_SM4_SUPPORT)
     bool status;
     uint8_t OutBuffer[1024];
     size_t OutBufferSize;
@@ -140,8 +139,13 @@ bool libspdm_validate_crypt_aead_cipher(void)
     size_t OutTagSize;
 
     libspdm_my_print("\nCrypto AEAD Testing: ");
+    #else
+    goto Exit;
+    #endif
 
+    #if LIBSPDM_AEAD_GCM_SUPPORT
     libspdm_my_print("\n- AES-GCM Encryption: ");
+
     OutBufferSize = sizeof(OutBuffer);
     OutTagSize = sizeof(m_libspdm_gcm_tag);
     status = libspdm_aead_aes_gcm_encrypt(m_libspdm_gcm_key, sizeof(m_libspdm_gcm_key),
@@ -187,8 +191,11 @@ bool libspdm_validate_crypt_aead_cipher(void)
     }
 
     libspdm_my_print("[Pass]");
+    #endif /* LIBSPDM_AEAD_GCM_SUPPORT */
 
+    #if LIBSPDM_AEAD_CHACHA20_POLY1305_SUPPORT
     libspdm_my_print("\n- ChaCha20Poly1305 Encryption: ");
+
     OutBufferSize = sizeof(OutBuffer);
     OutTagSize = sizeof(m_libspdm_chacha20_poly1305_tag);
     status = libspdm_aead_chacha20_poly1305_encrypt(
@@ -240,8 +247,11 @@ bool libspdm_validate_crypt_aead_cipher(void)
     }
 
     libspdm_my_print("[Pass]");
+    #endif /* LIBSPDM_AEAD_CHACHA20_POLY1305_SUPPORT */
 
+    #if LIBSPDM_AEAD_SM4_SUPPORT
     libspdm_my_print("\n- SM4-GCM Encryption: ");
+
     OutBufferSize = sizeof(OutBuffer);
     OutTagSize = sizeof(m_libspdm_sm4_gcm_tag);
     status =
@@ -292,6 +302,7 @@ bool libspdm_validate_crypt_aead_cipher(void)
     }
 
     libspdm_my_print("[Pass]");
+    #endif /* LIBSPDM_AEAD_SM4_SUPPORT */
 
 Exit:
     libspdm_my_print("\n");
