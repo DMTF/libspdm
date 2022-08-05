@@ -115,7 +115,7 @@ extern bool libspdm_aead_chacha20_poly1305_encrypt(
  * iv_size must be 12, otherwise false is returned.
  * key_size must be 32, otherwise false is returned.
  * tag_size must be 16, otherwise false is returned.
-
+ *
  * If data verification fails, false is returned.
  *
  * @param[in]   key            Pointer to the encryption key.
