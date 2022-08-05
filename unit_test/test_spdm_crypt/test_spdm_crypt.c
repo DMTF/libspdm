@@ -253,6 +253,27 @@ void libspdm_test_crypt_spdm_x509_certificate_check(void **state)
                                             true);
     assert_true(status);
     free(file_buffer);
+
+    /*cert mismatched negotiated base_aysm_algo check*/
+    status = libspdm_read_input_file("rsa2048/end_requester.cert.der",
+                                     (void **)&file_buffer, &file_buffer_size);
+    assert_true(status);
+    status = libspdm_x509_certificate_check(file_buffer, file_buffer_size,
+                                            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072,
+                                            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                                            true);
+    assert_false(status);
+    free(file_buffer);
+
+    status = libspdm_read_input_file("ecp256/end_requester.cert.der",
+                                     (void **)&file_buffer, &file_buffer_size);
+    assert_true(status);
+    status = libspdm_x509_certificate_check(file_buffer, file_buffer_size,
+                                            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072,
+                                            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                                            true);
+    assert_false(status);
+    free(file_buffer);
 }
 
 int libspdm_crypt_lib_setup(void **state)
