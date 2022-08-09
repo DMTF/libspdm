@@ -4574,36 +4574,14 @@ bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
     bool status;
     size_t cert_version;
     size_t value;
-#if (LIBSPDM_RSA_SSA_SUPPORT == 1) || (LIBSPDM_RSA_PSS_SUPPORT == 1)
-    void *rsa_context;
-#endif
-#if LIBSPDM_ECDSA_SUPPORT == 1
-    void *ec_context;
-#endif
-#if (LIBSPDM_EDDSA_ED25519_SUPPORT == 1) || (LIBSPDM_EDDSA_ED448_SUPPORT == 1)
-    void *ecd_context;
-#endif
-#if LIBSPDM_SM2_DSA_SUPPORT == 1
-    void *sm2_context;
-#endif
+    void *context;
 
     if (cert == NULL || cert_size == 0) {
         return false;
     }
 
     status = true;
-#if (LIBSPDM_RSA_SSA_SUPPORT == 1) || (LIBSPDM_RSA_PSS_SUPPORT == 1)
-    rsa_context = NULL;
-#endif
-#if LIBSPDM_ECDSA_SUPPORT == 1
-    ec_context = NULL;
-#endif
-#if (LIBSPDM_EDDSA_ED25519_SUPPORT == 1) || (LIBSPDM_EDDSA_ED448_SUPPORT == 1)
-    ecd_context = NULL;
-#endif
-#if LIBSPDM_SM2_DSA_SUPPORT == 1
-    sm2_context = NULL;
-#endif
+    context = NULL;
     end_cert_from_len = 64;
     end_cert_to_len = 64;
 
@@ -4664,31 +4642,7 @@ bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
     }
 
     /* 7. subject_public_key*/
-    status = false;
-#if (LIBSPDM_RSA_SSA_SUPPORT == 1) || (LIBSPDM_RSA_PSS_SUPPORT == 1)
-    if (!status) {
-        status = libspdm_rsa_get_public_key_from_x509(cert, cert_size,
-                                                      &rsa_context);
-    }
-#endif
-#if LIBSPDM_ECDSA_SUPPORT == 1
-    if (!status) {
-        status = libspdm_ec_get_public_key_from_x509(cert, cert_size,
-                                                     &ec_context);
-    }
-#endif
-#if (LIBSPDM_EDDSA_ED25519_SUPPORT == 1) || (LIBSPDM_EDDSA_ED448_SUPPORT == 1)
-    if (!status) {
-        status = libspdm_ecd_get_public_key_from_x509(cert, cert_size,
-                                                      &ecd_context);
-    }
-#endif
-#if LIBSPDM_SM2_DSA_SUPPORT == 1
-    if (!status) {
-        status = libspdm_sm2_get_public_key_from_x509(cert, cert_size,
-                                                      &sm2_context);
-    }
-#endif
+    status = libspdm_asym_get_public_key_from_x509(base_asym_algo, cert, cert_size, &context);
     if (!status) {
         goto cleanup;
     }
@@ -4728,26 +4682,7 @@ bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
     status = true;
 
 cleanup:
-#if (LIBSPDM_RSA_SSA_SUPPORT == 1) || (LIBSPDM_RSA_PSS_SUPPORT == 1)
-    if (rsa_context != NULL) {
-        libspdm_rsa_free(rsa_context);
-    }
-#endif
-#if LIBSPDM_ECDSA_SUPPORT == 1
-    if (ec_context != NULL) {
-        libspdm_ec_free(ec_context);
-    }
-#endif
-#if (LIBSPDM_EDDSA_ED25519_SUPPORT == 1) || (LIBSPDM_EDDSA_ED448_SUPPORT == 1)
-    if (ecd_context != NULL) {
-        libspdm_ecd_free(ecd_context);
-    }
-#endif
-#if LIBSPDM_SM2_DSA_SUPPORT == 1
-    if (sm2_context != NULL) {
-        libspdm_sm2_dsa_free(sm2_context);
-    }
-#endif
+    libspdm_asym_free(base_asym_algo, context);
     return status;
 }
 
