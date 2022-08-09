@@ -972,6 +972,7 @@ bool libspdm_requester_data_sign(
                                                        private_pem_size, NULL,
                                                        &context);
     if (!result) {
+        free(private_pem);
         return false;
     }
     if (is_data_hash) {
