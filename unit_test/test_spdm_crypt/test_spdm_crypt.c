@@ -274,6 +274,48 @@ void libspdm_test_crypt_spdm_x509_certificate_check(void **state)
                                             true);
     assert_false(status);
     free(file_buffer);
+
+    /*test web cert: cert public key algo is RSA case*/
+    status = libspdm_read_input_file("test_web_cert/Google.cer",
+                                     (void **)&file_buffer, &file_buffer_size);
+    assert_true(status);
+    status = libspdm_x509_certificate_check(file_buffer, file_buffer_size,
+                                            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096,
+                                            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                                            true);
+    assert_true(status);
+    free(file_buffer);
+
+    status = libspdm_read_input_file("test_web_cert/Amazon.cer",
+                                     (void **)&file_buffer, &file_buffer_size);
+    assert_true(status);
+    status = libspdm_x509_certificate_check(file_buffer, file_buffer_size,
+                                            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
+                                            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                                            true);
+    assert_true(status);
+    free(file_buffer);
+
+    /*test web cert: ccert public key algo is ECC case*/
+    status = libspdm_read_input_file("test_web_cert/GitHub.cer",
+                                     (void **)&file_buffer, &file_buffer_size);
+    assert_true(status);
+    status = libspdm_x509_certificate_check(file_buffer, file_buffer_size,
+                                            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+                                            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                                            true);
+    assert_true(status);
+    free(file_buffer);
+
+    status = libspdm_read_input_file("test_web_cert/YouTube.cer",
+                                     (void **)&file_buffer, &file_buffer_size);
+    assert_true(status);
+    status = libspdm_x509_certificate_check(file_buffer, file_buffer_size,
+                                            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+                                            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                                            true);
+    assert_true(status);
+    free(file_buffer);
 }
 
 int libspdm_crypt_lib_setup(void **state)
