@@ -48,11 +48,13 @@ void *libspdm_ec_new_by_nid(size_t nid)
         openssl_nid = NID_secp521r1;
         break;
     default:
+        EC_KEY_free(ec_key);
         return NULL;
     }
 
     ec_group = EC_GROUP_new_by_curve_name(openssl_nid);
     if (ec_group == NULL) {
+        EC_KEY_free(ec_key);
         return NULL;
     }
     ret_val = (bool)EC_KEY_set_group(ec_key, ec_group);
