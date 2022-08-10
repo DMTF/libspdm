@@ -176,6 +176,23 @@ static bool libspdm_calculate_m1m2(void *context, bool is_mut,
         spdm_context->connection_info.algorithm.base_hash_algo);
 
     if (is_mut) {
+        if ((spdm_context->connection_info.version >> SPDM_VERSION_NUMBER_SHIFT_BIT) >
+            SPDM_MESSAGE_VERSION_11) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_a data :\n"));
+            libspdm_internal_dump_hex(
+                libspdm_get_managed_buffer(&spdm_context->transcript.message_a),
+                libspdm_get_managed_buffer_size(
+                    &spdm_context->transcript.message_a));
+            status = libspdm_append_managed_buffer(
+                m1m2,
+                libspdm_get_managed_buffer(&spdm_context->transcript.message_a),
+                libspdm_get_managed_buffer_size(
+                    &spdm_context->transcript.message_a));
+            if (LIBSPDM_STATUS_IS_ERROR(status)) {
+                return false;
+            }
+        }
+
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_mut_b data :\n"));
         libspdm_internal_dump_hex(
             libspdm_get_managed_buffer(
