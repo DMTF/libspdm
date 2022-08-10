@@ -148,7 +148,11 @@ bool libspdm_x509_construct_certificate_stack_v(uint8_t **x509_stack,
 
         /* Insert the new X509 object into X509 stack object.*/
 
-        sk_X509_push(cert_stack, x509_cert);
+        res = sk_X509_push(cert_stack, x509_cert);
+        if (!res) {
+            X509_free(x509_cert);
+            break;
+        }
     }
 
     if (!res) {
