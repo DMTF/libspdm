@@ -24,7 +24,7 @@
  * Base Specification (https://www.dmtf.org/sites/default/files/standards/documents/DSP0236_1.3.1.pdf)
  * 8.1 MCTP packet fields.*/
 
-/* It starts with MCTP transport header in Figure 4 – Generic message fields.*/
+/* It starts with MCTP transport header in Figure 4 - Generic message fields.*/
 
 #define LINKTYPE_MCTP 291 /* 0x0123*/
 
