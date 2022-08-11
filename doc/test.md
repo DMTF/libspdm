@@ -626,6 +626,12 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    ```
    Please get the report from the folder `html-report`.
 
+3) Use [CodeQL](https://github.com/github/codeql) in CI.
+
+   [Set up and check result](https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/setting-up-code-scanning-for-a-repository#setting-up-code-scanning-using-actions)
+   
+   [Manageing code scanning alerts for your repository](https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/managing-code-scanning-alerts-for-your-repository#viewing-the-alerts-for-a-repository)
+
 ### Collect Stack Usage
 
 1) Stack usage with GCC -fstack-usage flag
