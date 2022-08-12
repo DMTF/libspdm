@@ -11,6 +11,12 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/os_stub
 )
 
+if(CMAKE_SYSTEM_NAME MATCHES "Windows")
+    if((TOOLCHAIN STREQUAL "VS2015") OR (TOOLCHAIN STREQUAL "VS2019") OR (TOOLCHAIN STREQUAL "VS2022"))
+        ADD_COMPILE_OPTIONS(/wd4819)
+    endif()
+endif()
+
 SET(src_test_spdm_crypt
     test_spdm_crypt.c
     ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/support.c

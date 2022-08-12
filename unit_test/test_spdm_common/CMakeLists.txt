@@ -10,6 +10,12 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/test_spdm_requester
                     ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common
 )
 
+if(CMAKE_SYSTEM_NAME MATCHES "Windows")
+    if((TOOLCHAIN STREQUAL "VS2015") OR (TOOLCHAIN STREQUAL "VS2019") OR (TOOLCHAIN STREQUAL "VS2022"))
+        ADD_COMPILE_OPTIONS(/wd4819)
+    endif()
+endif()
+
 SET(src_test_spdm_common
     test_spdm_common.c
     context_data.c
