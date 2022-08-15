@@ -91,9 +91,7 @@ jobs:
           sudo apt-get install llvm gcc-multilib
           mkdir build
           cd build
-          cmake -E env CFLAGS="${{ matrix.configurations }} -DLIBSPDM_DEBUG_LIBSPDM_ASSERT_CONFIG=0" cmake -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ..
-          make copy_sample_key
-          make copy_seed
+          cmake -E env CFLAGS="${{ matrix.configurations }} -DLIBSPDM_DEBUG_LIBSPDM_ASSERT_CONFIG=0" cmake -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} -DENABLE_CODEQL=ON ..
           make -j`nproc`
 
     - name: Perform CodeQL Analysis
