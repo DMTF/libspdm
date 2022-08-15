@@ -28,6 +28,8 @@ void libspdm_test_responder_measurements_case1(void **State)
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
@@ -216,6 +218,41 @@ void libspdm_test_responder_measurements_case4(void **State)
     }
 }
 
+void libspdm_test_responder_measurements_case5(void **State)
+{
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    spdm_get_measurements_request_t *spdm_request;
+
+    spdm_test_context = *State;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+
+    libspdm_reset_message_m(spdm_context, NULL);
+    spdm_context->local_context.opaque_measurement_rsp_size = 0;
+    spdm_context->local_context.opaque_measurement_rsp = NULL;
+
+    response_size = sizeof(response);
+    libspdm_get_response_measurements(spdm_context, spdm_test_context->test_buffer_size,
+                                      spdm_test_context->test_buffer, &response_size, response);
+    spdm_request = (spdm_get_measurements_request_t * )spdm_test_context->test_buffer;
+    if ((spdm_request->header.param1 &
+         SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) == 0) {
+        libspdm_reset_message_m(spdm_context, NULL);
+    }
+}
+
 libspdm_test_context_t m_libspdm_responder_measurements_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     false,
@@ -250,6 +287,12 @@ void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
     libspdm_unit_test_group_setup(&State);
     libspdm_test_responder_measurements_case4(&State);
     libspdm_unit_test_group_teardown(&State);
+
+    /* Successful response V1.2 to get one measurement with signature and without opqaue data*/
+    libspdm_unit_test_group_setup(&State);
+    libspdm_test_responder_measurements_case5(&State);
+    libspdm_unit_test_group_teardown(&State);
+
 }
 #else
 size_t libspdm_get_max_buffer_size(void)

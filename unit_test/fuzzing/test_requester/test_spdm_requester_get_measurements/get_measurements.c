@@ -449,6 +449,74 @@ void libspdm_test_requester_get_measurement_case4(void **State)
 #endif
 }
 
+void libspdm_test_requester_get_measurement_case5(void **State)
+{
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint8_t number_of_block;
+    uint32_t measurement_record_length;
+    uint8_t measurement_record[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
+    uint8_t request_attribute;
+    void *data;
+    size_t data_size;
+    void *hash;
+    size_t hash_size;
+    uint8_t content_changed[10];
+
+    m_secured_on_off = false;
+    spdm_test_context = *State;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12
+                                            << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size,
+                                                    &hash, &hash_size);
+    libspdm_reset_message_m(spdm_context, NULL);
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
+        data_size;
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
+                     data, data_size);
+#else
+    libspdm_hash_all(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        data, data_size,
+        spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash);
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size =
+        libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+    libspdm_get_leaf_cert_public_key_from_cert_chain(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        spdm_context->connection_info.algorithm.base_asym_algo,
+        data, data_size,
+        &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+#endif
+
+    request_attribute = SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_RAW_BIT_STREAM_REQUESTED;
+
+    measurement_record_length = sizeof(measurement_record);
+    libspdm_get_measurement_ex(spdm_context, NULL, request_attribute, 1, 0, content_changed,
+                               &number_of_block,
+                               &measurement_record_length, measurement_record, NULL, NULL,
+                               NULL);
+    free(data);
+    libspdm_reset_message_m(spdm_context, NULL);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+#else
+    libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo,
+                      spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+#endif
+}
+
 libspdm_test_context_t m_libspdm_requester_get_measurements_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     true,
@@ -483,6 +551,11 @@ void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
     /* Successful response to get all measurements without signature*/
     libspdm_unit_test_group_setup(&State);
     libspdm_test_requester_get_measurement_case4(&State);
+    libspdm_unit_test_group_teardown(&State);
+
+    /* Successful response V1.2 to  to get one measurement without signature*/
+    libspdm_unit_test_group_setup(&State);
+    libspdm_test_requester_get_measurement_case5(&State);
     libspdm_unit_test_group_teardown(&State);
 }
 #else
