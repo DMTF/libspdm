@@ -121,6 +121,45 @@ void libspdm_test_requester_negotiate_algorithms_case3(void **State)
     libspdm_negotiate_algorithms(spdm_context);
 }
 
+void libspdm_test_requester_negotiate_algorithms_case4(void **State)
+{
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    spdm_test_context = *State;
+    spdm_context = spdm_test_context->spdm_context;
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    spdm_context->local_context.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    libspdm_reset_message_a(spdm_context);
+    spdm_context->local_context.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->local_context.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
+    spdm_context->local_context.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
+    spdm_context->local_context.algorithm.key_schedule = m_libspdm_use_key_schedule_algo;
+    spdm_context->local_context.algorithm.other_params_support =
+        SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
+
+    libspdm_negotiate_algorithms(spdm_context);
+}
+
 libspdm_test_context_t m_libspdm_test_requester_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     true,
@@ -149,5 +188,9 @@ void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
 
     libspdm_unit_test_group_setup(&State);
     libspdm_test_requester_negotiate_algorithms_case3(&State);
+    libspdm_unit_test_group_teardown(&State);
+
+    libspdm_unit_test_group_setup(&State);
+    libspdm_test_requester_negotiate_algorithms_case4(&State);
     libspdm_unit_test_group_teardown(&State);
 }

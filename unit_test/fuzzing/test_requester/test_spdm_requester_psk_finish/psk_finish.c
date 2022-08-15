@@ -290,10 +290,10 @@ void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
     m_libspdm_requester_psk_finish_test_context.test_buffer = test_buffer;
     m_libspdm_requester_psk_finish_test_context.test_buffer_size = test_buffer_size;
 
-    /* / * Successful response* /
-     * libspdm_unit_test_group_setup(&State);
-     * libspdm_test_requester_psk_finish_case1(&State);
-     * libspdm_unit_test_group_teardown(&State); */
+    /* Successful response */
+    libspdm_unit_test_group_setup(&State);
+    libspdm_test_requester_psk_finish_case1(&State);
+    libspdm_unit_test_group_teardown(&State);
 
     /* Successful response V 1.2*/
     libspdm_unit_test_group_setup(&State);

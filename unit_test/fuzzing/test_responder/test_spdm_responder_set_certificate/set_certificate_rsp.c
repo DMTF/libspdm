@@ -31,6 +31,8 @@ void libspdm_test_responder_set_certificate_case1(void **State)
 
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
 
@@ -59,6 +61,8 @@ void libspdm_test_responder_set_certificate_case2(void **State)
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     spdm_context->connection_info.algorithm.base_hash_algo =

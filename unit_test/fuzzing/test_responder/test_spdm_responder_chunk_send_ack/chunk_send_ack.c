@@ -91,12 +91,16 @@ void libspdm_test_responder_chunk_send_ack_case1(void **State)
         {
             chunk_send_request = (spdm_chunk_send_request_t *)request;
             spdm_message_header_t *test_spdm_message_header_t;
+
+            request_size = sizeof(spdm_chunk_send_request_t) + sizeof(uint32_t) +
+                           chunk_send_request->chunk_size;
+
             if (chunk_send_request->chunk_size > bytes_total)
             {
                 break;
             }
             if (chunk_send_request->chunk_size >
-                (bytes_total - sizeof(spdm_chunk_send_request_t) - sizeof(uint32_t)) ||
+                (request_size - sizeof(spdm_chunk_send_request_t) - sizeof(uint32_t)) ||
                 chunk_send_request->chunk_size == 0)
             {
                 break;
@@ -110,21 +114,20 @@ void libspdm_test_responder_chunk_send_ack_case1(void **State)
             spdm_context->local_context.capability.data_transfer_size =
                 chunk_send_request->chunk_size + sizeof(spdm_chunk_send_request_t) +
                 sizeof(uint32_t);
-
-            request_size = sizeof(spdm_chunk_send_request_t) + sizeof(uint32_t) +
-                           chunk_send_request->chunk_size;
         }
         else
         {
             chunk_send_request = (spdm_chunk_send_request_t *)request;
             spdm_message_header_t *test_spdm_message_header_t;
 
+            request_size = sizeof(spdm_chunk_send_request_t) + chunk_send_request->chunk_size;
+
             if (chunk_send_request->chunk_size > bytes_total)
             {
                 break;
             }
             if (chunk_send_request->chunk_size >
-                (bytes_total - sizeof(spdm_chunk_send_request_t) - bytes_sent) ||
+                (request_size - sizeof(spdm_chunk_send_request_t) - bytes_sent) ||
                 chunk_send_request->chunk_size == 0)
             {
                 break;
@@ -139,8 +142,6 @@ void libspdm_test_responder_chunk_send_ack_case1(void **State)
 
             spdm_context->local_context.capability.data_transfer_size =
                 chunk_send_request->chunk_size + sizeof(spdm_chunk_send_request_t);
-
-            request_size = sizeof(spdm_chunk_send_request_t) + chunk_send_request->chunk_size;
 
             if (bytes_total - bytes_sent == chunk_send_request->chunk_size)
             {

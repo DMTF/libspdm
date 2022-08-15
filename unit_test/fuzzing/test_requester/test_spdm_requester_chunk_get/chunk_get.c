@@ -35,25 +35,24 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context,
     size_t spdm_response_size;
     uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     size_t test_message_header_size;
-
     static bool error_large_response_sent = false;
-
-    size_t sub_rsp_size = 0;
-
+    static size_t chunk_rsp_buf = 0;
     spdm_chunk_response_response_t* chunk_rsp;
+
     size_t chunk_rsp_size;
 
     spdm_test_context = libspdm_get_test_context();
 
+    spdm_error_response_t* error_rsp;
+    size_t error_rsp_size;
+
+    test_message_header_size = libspdm_transport_test_get_header_size(spdm_context);
+    spdm_response_size = spdm_test_context->test_buffer_size;
+
     if (error_large_response_sent == false) {
         error_large_response_sent = true;
 
-        spdm_error_response_t* error_rsp;
-        size_t error_rsp_size;
-
-        test_message_header_size = libspdm_transport_test_get_header_size(spdm_context);
         spdm_response = (void *)((uint8_t *)temp_buf + test_message_header_size);
-        spdm_response_size = spdm_test_context->test_buffer_size;
         if (spdm_response_size >
             sizeof(temp_buf) - test_message_header_size - LIBSPDM_TEST_ALIGNMENT) {
             spdm_response_size = sizeof(temp_buf) - test_message_header_size -
@@ -74,21 +73,24 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context,
             error_rsp_size, error_rsp,
             response_size, response);
 
-        spdm_response = (void *)((uint8_t *)error_rsp);
-
         return LIBSPDM_STATUS_SUCCESS;
     }
     chunk_rsp = (void *)(spdm_response);
-    sub_rsp_size = sizeof(spdm_algorithms_response_t);
+
     chunk_rsp_size = sizeof(spdm_chunk_response_response_t)
-                     + sizeof(uint32_t) + sub_rsp_size;
+                     + sizeof(uint32_t) + sizeof(spdm_algorithms_response_t);
+
+    chunk_rsp_buf += chunk_rsp_size;
+    if (chunk_rsp_buf + sizeof(spdm_error_response_t) + sizeof(uint8_t) > spdm_response_size) {
+        return LIBSPDM_STATUS_RECEIVE_FAIL;
+    }
 
     libspdm_transport_test_encode_message(
         spdm_context, NULL, false, false,
         chunk_rsp_size, chunk_rsp,
         response_size, response);
 
-    spdm_response = (void *)(chunk_rsp + chunk_rsp_size);
+    spdm_response += chunk_rsp_size;
 
     return LIBSPDM_STATUS_SUCCESS;
 }
