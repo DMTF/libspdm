@@ -1768,7 +1768,7 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
         }
         break;
     default:
-        goto free_all;
+        return false;
     }
 
     switch (hash_nid)
@@ -1792,7 +1792,7 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
         result = libspdm_set_attribute_for_req(&req, requester_info, requester_info_length);
         if (!result) {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"set_attribute failed !\n"));
-            return false;
+            goto free_all;
         }
     }
 
