@@ -1222,7 +1222,7 @@ bool libspdm_write_certificate_to_nvm(uint8_t slot_id, const void * cert_chain,
     }
 
     /*write to NV memory*/
-    if ((fp_out = fopen(file_name, "w+b")) == NULL) {
+    if ((fp_out = fopen(file_name, "wrb")) == NULL) {
         printf("Unable to open file %s\n", file_name);
         return false;
     }

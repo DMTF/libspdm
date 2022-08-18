@@ -1488,7 +1488,7 @@ libspdm_return_t libspdm_append_message_k(void *context, void *session_info,
         size_t cert_chain_buffer_size;
         bool result;
         uint8_t cert_chain_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        uint32_t hash_size;
+        uint32_t hash_size = 0;
         bool finished_key_ready;
         libspdm_return_t status;
         uint8_t slot_id;
@@ -1766,7 +1766,7 @@ libspdm_return_t libspdm_append_message_f(void *context, void *session_info,
         bool finished_key_ready;
         libspdm_return_t status;
         uint8_t slot_id;
-
+        hash_size = 0;
         spdm_context = context;
         secured_message_context = spdm_session_info->secured_message_context;
         finished_key_ready = libspdm_secured_message_is_finished_key_ready(secured_message_context);

@@ -712,7 +712,7 @@ bool libspdm_x509_get_cert_from_cert_chain(const uint8_t *cert_chain,
 {
     size_t asn1_len;
     int32_t current_index;
-    size_t current_cert_len;
+    size_t current_cert_len = 0;
     const uint8_t *current_cert;
     const uint8_t *tmp_ptr;
     int32_t ret;
@@ -1188,9 +1188,10 @@ bool libspdm_x509_get_extension_data(const uint8_t *cert, size_t cert_size,
     mbedtls_x509_crt crt;
     int32_t ret;
     bool status;
-    uint8_t *ptr;
-    uint8_t *end;
-    size_t obj_len;
+    uint8_t *ptr = NULL;
+    uint8_t *end = NULL;
+    size_t obj_len = 0;
+
 
     if (cert == NULL || cert_size == 0 || oid == NULL || oid_size == 0 ||
         extension_data_size == NULL) {
