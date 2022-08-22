@@ -421,8 +421,9 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
                             hash_size, bin_str7, bin_str7_size,
                             response_finished_key, hash_size);
-        libspdm_hmac_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
-                         libspdm_get_managed_buffer_size(&th_curr),
+        libspdm_hash_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
+                         libspdm_get_managed_buffer_size(&th_curr), hash_data);
+        libspdm_hmac_all(m_libspdm_use_hash_algo, hash_data, hash_size,
                          response_finished_key, hash_size, ptr);
         ptr += hmac_size;
 
@@ -544,8 +545,9 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
                             hash_size, bin_str7, bin_str7_size,
                             response_finished_key, hash_size);
-        libspdm_hmac_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
-                         libspdm_get_managed_buffer_size(&th_curr),
+        libspdm_hash_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
+                         libspdm_get_managed_buffer_size(&th_curr), hash_data);
+        libspdm_hmac_all(m_libspdm_use_hash_algo, hash_data, hash_size,
                          response_finished_key, hash_size, ptr);
         ptr += hmac_size;
 
@@ -743,9 +745,9 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
                                 response_handshake_secret, hash_size,
                                 bin_str7, bin_str7_size,
                                 response_finished_key, hash_size);
-            libspdm_hmac_all(m_libspdm_use_hash_algo,
-                             libspdm_get_managed_buffer(&th_curr),
-                             libspdm_get_managed_buffer_size(&th_curr),
+            libspdm_hash_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
+                             libspdm_get_managed_buffer_size(&th_curr), hash_data);
+            libspdm_hmac_all(m_libspdm_use_hash_algo, hash_data, hash_size,
                              response_finished_key, hash_size, ptr);
             ptr += hmac_size;
 
@@ -956,9 +958,9 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
                                 response_handshake_secret, hash_size,
                                 bin_str7, bin_str7_size,
                                 response_finished_key, hash_size);
-            libspdm_hmac_all(m_libspdm_use_hash_algo,
-                             libspdm_get_managed_buffer(&th_curr),
-                             libspdm_get_managed_buffer_size(&th_curr),
+            libspdm_hash_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
+                             libspdm_get_managed_buffer_size(&th_curr), hash_data);
+            libspdm_hmac_all(m_libspdm_use_hash_algo, hash_data, hash_size,
                              response_finished_key, hash_size, ptr);
             ptr += hmac_size;
 
@@ -1117,8 +1119,9 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
                             hash_size, bin_str7, bin_str7_size,
                             response_finished_key, hash_size);
-        libspdm_hmac_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
-                         libspdm_get_managed_buffer_size(&th_curr),
+        libspdm_hash_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
+                         libspdm_get_managed_buffer_size(&th_curr), hash_data);
+        libspdm_hmac_all(m_libspdm_use_hash_algo, hash_data, hash_size,
                          response_finished_key, hash_size, ptr);
         ptr += hmac_size;
 
@@ -1226,8 +1229,9 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
                             hash_size, bin_str7, bin_str7_size,
                             response_finished_key, hash_size);
-        libspdm_hmac_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
-                         libspdm_get_managed_buffer_size(&th_curr),
+        libspdm_hash_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
+                         libspdm_get_managed_buffer_size(&th_curr), hash_data);
+        libspdm_hmac_all(m_libspdm_use_hash_algo, hash_data, hash_size,
                          response_finished_key, hash_size, ptr);
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer) - m_libspdm_local_buffer_size,
@@ -1354,8 +1358,9 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
                             hash_size, bin_str7, bin_str7_size,
                             response_finished_key, hash_size);
-        libspdm_hmac_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
-                         libspdm_get_managed_buffer_size(&th_curr),
+        libspdm_hash_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
+                         libspdm_get_managed_buffer_size(&th_curr), hash_data);
+        libspdm_hmac_all(m_libspdm_use_hash_algo, hash_data, hash_size,
                          response_finished_key, hash_size, ptr);
         ptr += hmac_size;
 
@@ -1489,8 +1494,9 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
                             hash_size, bin_str7, bin_str7_size,
                             response_finished_key, hash_size);
-        libspdm_hmac_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
-                         libspdm_get_managed_buffer_size(&th_curr),
+        libspdm_hash_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
+                         libspdm_get_managed_buffer_size(&th_curr), hash_data);
+        libspdm_hmac_all(m_libspdm_use_hash_algo, hash_data, hash_size,
                          response_finished_key, hash_size, ptr);
         ptr += hmac_size;
 
@@ -1624,8 +1630,9 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
                             hash_size, bin_str7, bin_str7_size,
                             response_finished_key, hash_size);
-        libspdm_hmac_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
-                         libspdm_get_managed_buffer_size(&th_curr),
+        libspdm_hash_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
+                         libspdm_get_managed_buffer_size(&th_curr), hash_data);
+        libspdm_hmac_all(m_libspdm_use_hash_algo, hash_data, hash_size,
                          response_finished_key, hash_size, ptr);
         ptr += hmac_size;
 
@@ -1760,8 +1767,9 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
                             hash_size, bin_str7, bin_str7_size,
                             response_finished_key, hash_size);
-        libspdm_hmac_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
-                         libspdm_get_managed_buffer_size(&th_curr),
+        libspdm_hash_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
+                         libspdm_get_managed_buffer_size(&th_curr), hash_data);
+        libspdm_hmac_all(m_libspdm_use_hash_algo, hash_data, hash_size,
                          response_finished_key, hash_size, ptr);
         ptr += hmac_size;
 
@@ -1887,8 +1895,9 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
                             hash_size, bin_str7, bin_str7_size,
                             response_finished_key, hash_size);
-        libspdm_hmac_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
-                         libspdm_get_managed_buffer_size(&th_curr),
+        libspdm_hash_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
+                         libspdm_get_managed_buffer_size(&th_curr), hash_data);
+        libspdm_hmac_all(m_libspdm_use_hash_algo, hash_data, hash_size,
                          response_finished_key, hash_size, ptr);
         ptr += hmac_size;
 
@@ -2014,8 +2023,9 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
                             hash_size, bin_str7, bin_str7_size,
                             response_finished_key, hash_size);
-        libspdm_hmac_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
-                         libspdm_get_managed_buffer_size(&th_curr),
+        libspdm_hash_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
+                         libspdm_get_managed_buffer_size(&th_curr), hash_data);
+        libspdm_hmac_all(m_libspdm_use_hash_algo, hash_data, hash_size,
                          response_finished_key, hash_size, ptr);
         ptr += hmac_size;
 
@@ -2150,8 +2160,9 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
                             hash_size, bin_str7, bin_str7_size,
                             response_finished_key, hash_size);
-        libspdm_hmac_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
-                         libspdm_get_managed_buffer_size(&th_curr),
+        libspdm_hash_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
+                         libspdm_get_managed_buffer_size(&th_curr), hash_data);
+        libspdm_hmac_all(m_libspdm_use_hash_algo, hash_data, hash_size,
                          response_finished_key, hash_size, ptr);
         ptr += hmac_size;
 
@@ -2275,8 +2286,9 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
                             hash_size, bin_str7, bin_str7_size,
                             response_finished_key, hash_size);
-        libspdm_hmac_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
-                         libspdm_get_managed_buffer_size(&th_curr),
+        libspdm_hash_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
+                         libspdm_get_managed_buffer_size(&th_curr), hash_data);
+        libspdm_hmac_all(m_libspdm_use_hash_algo, hash_data, hash_size,
                          response_finished_key, hash_size, ptr);
         ptr += hmac_size;
 
@@ -2400,8 +2412,9 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
                             hash_size, bin_str7, bin_str7_size,
                             response_finished_key, hash_size);
-        libspdm_hmac_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
-                         libspdm_get_managed_buffer_size(&th_curr),
+        libspdm_hash_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
+                         libspdm_get_managed_buffer_size(&th_curr), hash_data);
+        libspdm_hmac_all(m_libspdm_use_hash_algo, hash_data, hash_size,
                          response_finished_key, hash_size, ptr);
         ptr += hmac_size;
 
@@ -2525,8 +2538,9 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
                             hash_size, bin_str7, bin_str7_size,
                             response_finished_key, hash_size);
-        libspdm_hmac_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
-                         libspdm_get_managed_buffer_size(&th_curr),
+        libspdm_hash_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
+                         libspdm_get_managed_buffer_size(&th_curr), hash_data);
+        libspdm_hmac_all(m_libspdm_use_hash_algo, hash_data, hash_size,
                          response_finished_key, hash_size, ptr);
         ptr += hmac_size;
 
@@ -2650,8 +2664,9 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
                             hash_size, bin_str7, bin_str7_size,
                             response_finished_key, hash_size);
-        libspdm_hmac_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
-                         libspdm_get_managed_buffer_size(&th_curr),
+        libspdm_hash_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
+                         libspdm_get_managed_buffer_size(&th_curr), hash_data);
+        libspdm_hmac_all(m_libspdm_use_hash_algo, hash_data, hash_size,
                          response_finished_key, hash_size, ptr);
         /* Flip last byte of ResponderVerifyData*/
         ptr += hmac_size-1;
@@ -2778,8 +2793,9 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
                             hash_size, bin_str7, bin_str7_size,
                             response_finished_key, hash_size);
-        libspdm_hmac_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
-                         libspdm_get_managed_buffer_size(&th_curr),
+        libspdm_hash_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
+                         libspdm_get_managed_buffer_size(&th_curr), hash_data);
+        libspdm_hmac_all(m_libspdm_use_hash_algo, hash_data, hash_size,
                          response_finished_key, hash_size, ptr);
         ptr += hmac_size;
 
@@ -2901,8 +2917,9 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
                             hash_size, bin_str7, bin_str7_size,
                             response_finished_key, hash_size);
-        libspdm_hmac_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
-                         libspdm_get_managed_buffer_size(&th_curr),
+        libspdm_hash_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
+                         libspdm_get_managed_buffer_size(&th_curr), hash_data);
+        libspdm_hmac_all(m_libspdm_use_hash_algo, hash_data, hash_size,
                          response_finished_key, hash_size, ptr);
         ptr += hmac_size;
 
@@ -3024,8 +3041,9 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
                             hash_size, bin_str7, bin_str7_size,
                             response_finished_key, hash_size);
-        libspdm_hmac_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
-                         libspdm_get_managed_buffer_size(&th_curr),
+        libspdm_hash_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
+                         libspdm_get_managed_buffer_size(&th_curr), hash_data);
+        libspdm_hmac_all(m_libspdm_use_hash_algo, hash_data, hash_size,
                          response_finished_key, hash_size, ptr);
         ptr += hmac_size;
 
