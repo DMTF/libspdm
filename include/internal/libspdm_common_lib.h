@@ -183,9 +183,9 @@ typedef struct {
     libspdm_small_managed_buffer_t message_mut_c;
     libspdm_large_managed_buffer_t message_m;
 #else
-    void                   *digest_context_m1m2;
-    void                   *digest_context_mut_m1m2;
-    void                   *digest_context_l1l2;
+    void *digest_context_m1m2;
+    void *digest_context_mut_m1m2;
+    void *digest_context_l1l2;
 #endif
 } libspdm_transcript_t;
 
@@ -249,14 +249,10 @@ typedef struct {
     libspdm_large_managed_buffer_t temp_message_k;
     bool message_f_initialized;
     bool finished_key_ready;
-    void                   *digest_context_th;
-    void                   *digest_context_l1l2;
-    void                   *hmac_rsp_context_th;
-    void                   *hmac_req_context_th;
+    void *digest_context_th;
+    void *digest_context_l1l2;
     /* this is back up for message F reset.*/
-    void                   *digest_context_th_backup;
-    void                   *hmac_rsp_context_th_backup;
-    void                   *hmac_req_context_th_backup;
+    void *digest_context_th_backup;
 #endif
 } libspdm_session_transcript_t;
 
