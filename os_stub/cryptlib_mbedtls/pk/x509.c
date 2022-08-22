@@ -717,6 +717,7 @@ bool libspdm_x509_get_cert_from_cert_chain(const uint8_t *cert_chain,
     const uint8_t *tmp_ptr;
     int32_t ret;
 
+    current_cert_len = 0;
 
     /* Check input parameters.*/
 
@@ -1191,6 +1192,10 @@ bool libspdm_x509_get_extension_data(const uint8_t *cert, size_t cert_size,
     uint8_t *ptr;
     uint8_t *end;
     size_t obj_len;
+
+    ptr = NULL;
+    end = NULL;
+    obj_len = 0;
 
     if (cert == NULL || cert_size == 0 || oid == NULL || oid_size == 0 ||
         extension_data_size == NULL) {
