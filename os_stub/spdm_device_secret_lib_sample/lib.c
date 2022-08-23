@@ -8,7 +8,12 @@
  * SPDM common library.
  * It follows the SPDM Specification.
  **/
-
+#ifdef _MSC_VER
+#else
+    #include <fcntl.h>
+    #include <unistd.h>
+    #include <sys/stat.h>
+#endif
 #include <stdarg.h>
 #include <stddef.h>
 #include <setjmp.h>
@@ -1202,7 +1207,12 @@ bool libspdm_psk_master_secret_hkdf_expand(
 bool libspdm_write_certificate_to_nvm(uint8_t slot_id, const void * cert_chain,
                                       size_t cert_chain_size)
 {
+#ifdef _MSC_VER
     FILE *fp_out;
+#else
+    uint64_t fp_out;
+#endif
+
     char file_name[] = {'s','l','o','t','_','i','d','_','0','\0'};
 
     const uint8_t *root_cert_buffer;
@@ -1221,7 +1231,7 @@ bool libspdm_write_certificate_to_nvm(uint8_t slot_id, const void * cert_chain,
         return false;
     }
 
-    /*write to NV memory*/
+#ifdef _MSC_VER
     if ((fp_out = fopen(file_name, "w+b")) == NULL) {
         printf("Unable to open file %s\n", file_name);
         return false;
@@ -1234,6 +1244,21 @@ bool libspdm_write_certificate_to_nvm(uint8_t slot_id, const void * cert_chain,
     }
 
     fclose(fp_out);
+#else
+    if ((fp_out = open(file_name, O_WRONLY | O_CREAT | O_EXCL, S_IRWXU)) == -1) {
+        printf("Unable to open file %s\n", file_name);
+        return false;
+    }
+
+    if ((write(fp_out, cert_chain, cert_chain_size)) != cert_chain_size)
+    {
+        printf("Write output file error %s\n", file_name);
+        close(fp_out);
+        return false;
+    }
+
+    close(fp_out);
+#endif
 
     return true;
 }
