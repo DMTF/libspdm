@@ -25,7 +25,6 @@ void libspdm_secured_message_set_response_finished_key(
     libspdm_copy_mem(secured_message_context->handshake_secret.response_finished_key,
                      sizeof(secured_message_context->handshake_secret.response_finished_key),
                      key, secured_message_context->hash_size);
-    secured_message_context->finished_key_ready = true;
 }
 
 libspdm_return_t libspdm_requester_finish_test_send_message(void *spdm_context,

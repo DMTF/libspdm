@@ -59,7 +59,6 @@ typedef struct {
     size_t aead_iv_size;
     size_t aead_tag_size;
     bool use_psk;
-    bool finished_key_ready;
     libspdm_session_state_t session_state;
     libspdm_session_info_struct_master_secret_t master_secret;
     libspdm_session_info_struct_handshake_secret_t handshake_secret;

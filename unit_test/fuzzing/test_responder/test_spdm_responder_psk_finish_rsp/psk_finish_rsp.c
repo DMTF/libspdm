@@ -34,7 +34,6 @@ static void libspdm_secured_message_set_request_finished_key(void *spdm_secured_
     libspdm_copy_mem(secured_message_context->handshake_secret.request_finished_key,
                      sizeof(secured_message_context->handshake_secret.request_finished_key),
                      key,  secured_message_context->hash_size);
-    secured_message_context->finished_key_ready = true;
 }
 
 void libspdm_test_responder_psk_finish_rsp_case1(void **State)

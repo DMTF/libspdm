@@ -910,8 +910,6 @@ void libspdm_reset_message_k(void *context, void *session_info)
 
         spdm_context = context;
 
-        libspdm_reset_managed_buffer(&spdm_session_info->session_transcript.temp_message_k);
-
         if (spdm_session_info->session_transcript.digest_context_th != NULL) {
             libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
                                spdm_session_info->session_transcript.digest_context_th);
@@ -922,7 +920,6 @@ void libspdm_reset_message_k(void *context, void *session_info)
                                spdm_session_info->session_transcript.digest_context_th_backup);
             spdm_session_info->session_transcript.digest_context_th_backup = NULL;
         }
-        spdm_session_info->session_transcript.finished_key_ready = false;
     }
 #endif
 }
@@ -1460,20 +1457,15 @@ libspdm_return_t libspdm_append_message_k(void *context, void *session_info,
 #else
     {
         libspdm_context_t *spdm_context;
-        void *secured_message_context;
         uint8_t *cert_chain_buffer;
         size_t cert_chain_buffer_size;
         bool result;
         uint8_t cert_chain_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
         uint32_t hash_size;
-        bool finished_key_ready;
-        libspdm_return_t status;
         uint8_t slot_id;
 
         hash_size = 0;
         spdm_context = context;
-        secured_message_context = spdm_session_info->secured_message_context;
-        finished_key_ready = libspdm_secured_message_is_finished_key_ready(secured_message_context);
         slot_id = spdm_context->connection_info.peer_used_cert_chain_slot_id;
 
         if (spdm_session_info->session_transcript.digest_context_th == NULL) {
@@ -1553,13 +1545,6 @@ libspdm_return_t libspdm_append_message_k(void *context, void *session_info,
                                    spdm_session_info->session_transcript.digest_context_th);
                 return LIBSPDM_STATUS_CRYPTO_ERROR;
             }
-            status = libspdm_append_managed_buffer(
-                &spdm_session_info->session_transcript.temp_message_k,
-                libspdm_get_managed_buffer(&spdm_context->transcript.message_a),
-                libspdm_get_managed_buffer_size(&spdm_context->transcript.message_a));
-            if (LIBSPDM_STATUS_IS_ERROR(status)) {
-                return status;
-            }
             if (!spdm_session_info->use_psk) {
                 result = libspdm_hash_update (
                     spdm_context->connection_info.algorithm.base_hash_algo,
@@ -1569,12 +1554,6 @@ libspdm_return_t libspdm_append_message_k(void *context, void *session_info,
                     libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
                                        spdm_session_info->session_transcript.digest_context_th);
                     return LIBSPDM_STATUS_CRYPTO_ERROR;
-                }
-                status = libspdm_append_managed_buffer(
-                    &spdm_session_info->session_transcript.temp_message_k,
-                    cert_chain_buffer_hash, hash_size);
-                if (LIBSPDM_STATUS_IS_ERROR(status)) {
-                    return status;
                 }
             }
         }
@@ -1586,16 +1565,6 @@ libspdm_return_t libspdm_append_message_k(void *context, void *session_info,
             libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
                                spdm_session_info->session_transcript.digest_context_th);
             return LIBSPDM_STATUS_CRYPTO_ERROR;
-        }
-        if (!finished_key_ready) {
-
-            /* append message only if finished_key is NOT ready.*/
-
-            status = libspdm_append_managed_buffer(
-                &spdm_session_info->session_transcript.temp_message_k, message, message_size);
-            if (LIBSPDM_STATUS_IS_ERROR(status)) {
-                return status;
-            }
         }
         return LIBSPDM_STATUS_SUCCESS;
     }
@@ -1628,30 +1597,21 @@ libspdm_return_t libspdm_append_message_f(void *context, void *session_info,
 #else
     {
         libspdm_context_t *spdm_context;
-        void *secured_message_context;
         const uint8_t *mut_cert_chain_buffer;
         size_t mut_cert_chain_buffer_size;
         bool result;
         uint8_t mut_cert_chain_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
         uint32_t hash_size;
-        bool finished_key_ready;
         libspdm_return_t status;
         uint8_t slot_id;
 
         hash_size = 0;
         spdm_context = context;
-        secured_message_context = spdm_session_info->secured_message_context;
-        finished_key_ready = libspdm_secured_message_is_finished_key_ready(secured_message_context);
-        LIBSPDM_ASSERT (finished_key_ready);
         slot_id = spdm_context->connection_info.peer_used_cert_chain_slot_id;
 
         if (!spdm_session_info->session_transcript.message_f_initialized) {
 
-            /* digest_context_th might be NULL in unit test, where message_k is hardcoded.
-             * hmac_{rsp,req}_context_th might be NULL in real case, because
-             *   after finished_key_ready is generated, no one trigger libspdm_append_message_k.
-             * trigger message_k to initialize by using zero length message_k, no impact to hash or HMAC.
-             *   only temp_message_k is appended.*/
+            /* digest_context_th might be NULL in unit test, where message_k is hardcoded.*/
 
             if (spdm_session_info->session_transcript.digest_context_th == NULL) {
                 status = libspdm_append_message_k (context, session_info, is_requester, NULL, 0);
