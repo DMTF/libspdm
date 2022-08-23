@@ -7,6 +7,7 @@
 /** @file
  * C Run-Time Libraries (CRT) Time Management Routines Wrapper Implementation.
  **/
+#define _POSIX_C_SOURCE 200112L
 
 #include <base.h>
 #include "library/memlib.h"
@@ -15,13 +16,17 @@
 struct tm *mbedtls_platform_gmtime_r(const mbedtls_time_t *tt,
                                      struct tm *tm_buf)
 {
-    struct tm *lt;
-
-    lt = gmtime(tt);
-
-    if (lt != NULL) {
-        libspdm_copy_mem(tm_buf, sizeof(struct tm), lt, sizeof(struct tm));
+#ifdef _MSC_VER
+    if (gmtime_s(tm_buf, tt) != 0) {
+        return NULL;
     }
 
-    return ((lt == NULL) ? NULL : tm_buf);
+    return tm_buf;
+#else
+    if (gmtime_r(tt, tm_buf) == NULL) {
+        return NULL;
+    }
+
+    return tm_buf;
+#endif
 }
