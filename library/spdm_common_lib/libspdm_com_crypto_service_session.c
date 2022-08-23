@@ -167,7 +167,6 @@ bool libspdm_calculate_th_hmac_for_exchange_rsp(
     uint32_t hash_size;
     void *hash_context_th;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
-    libspdm_return_t status;
     bool result;
 
     spdm_context = context;
@@ -178,15 +177,6 @@ bool libspdm_calculate_th_hmac_for_exchange_rsp(
         spdm_context->connection_info.algorithm.base_hash_algo);
 
     LIBSPDM_ASSERT(*th_hmac_buffer_size >= hash_size);
-
-    if (session_info->session_transcript.digest_context_th == NULL) {
-        /* trigger message_k to initialize context after finished_key is ready.*/
-        status = libspdm_append_message_k (context, spdm_session_info, is_requester, NULL, 0);
-        if (LIBSPDM_STATUS_IS_ERROR(status)) {
-            return false;
-        }
-        LIBSPDM_ASSERT(session_info->session_transcript.digest_context_th != NULL);
-    }
 
     /* duplicate the th context, because we still need use original context to continue.*/
     hash_context_th = libspdm_hash_new (spdm_context->connection_info.algorithm.base_hash_algo);
