@@ -1128,6 +1128,9 @@ libspdm_return_t libspdm_append_message_b(void *context, const void *message,
                                       spdm_context->transcript.digest_context_m1m2, message,
                                       message_size);
         if (!result) {
+            libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
+                               spdm_context->transcript.digest_context_m1m2);
+            spdm_context->transcript.digest_context_m1m2 = NULL;
             return LIBSPDM_STATUS_CRYPTO_ERROR;
         }
 
@@ -1191,6 +1194,9 @@ libspdm_return_t libspdm_append_message_c(void *context, const void *message,
                                       spdm_context->transcript.digest_context_m1m2, message,
                                       message_size);
         if (!result) {
+            libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
+                               spdm_context->transcript.digest_context_m1m2);
+            spdm_context->transcript.digest_context_m1m2 = NULL;
             return LIBSPDM_STATUS_CRYPTO_ERROR;
         }
 
@@ -1260,6 +1266,9 @@ libspdm_return_t libspdm_append_message_mut_b(void *context, const void *message
                                       spdm_context->transcript.digest_context_mut_m1m2, message,
                                       message_size);
         if (!result) {
+            libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
+                               spdm_context->transcript.digest_context_mut_m1m2);
+            spdm_context->transcript.digest_context_mut_m1m2 = NULL;
             return LIBSPDM_STATUS_CRYPTO_ERROR;
         }
 
@@ -1329,6 +1338,9 @@ libspdm_return_t libspdm_append_message_mut_c(void *context, const void *message
                                       spdm_context->transcript.digest_context_mut_m1m2, message,
                                       message_size);
         if (!result) {
+            libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
+                               spdm_context->transcript.digest_context_mut_m1m2);
+            spdm_context->transcript.digest_context_mut_m1m2 = NULL;
             return LIBSPDM_STATUS_CRYPTO_ERROR;
         }
 
@@ -1449,6 +1461,9 @@ libspdm_return_t libspdm_append_message_m(void *context, void *session_info,
         }
 
         if (!result) {
+            libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
+                               spdm_session_info->session_transcript.digest_context_l1l2);
+            spdm_session_info->session_transcript.digest_context_l1l2 = NULL;
             return LIBSPDM_STATUS_CRYPTO_ERROR;
         }
 
