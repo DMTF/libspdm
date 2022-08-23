@@ -79,9 +79,6 @@ void libspdm_session_info_init(libspdm_context_t *spdm_context,
         sizeof(session_info->session_transcript.message_f.buffer);
     session_info->session_transcript.message_m.max_buffer_size =
         sizeof(session_info->session_transcript.message_m.buffer);
-#else
-    session_info->session_transcript.temp_message_k.max_buffer_size =
-        sizeof(session_info->session_transcript.temp_message_k.buffer);
 #endif
 }
 

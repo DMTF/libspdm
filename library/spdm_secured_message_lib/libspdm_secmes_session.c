@@ -350,7 +350,6 @@ bool libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
     libspdm_zero_mem(secured_message_context->master_secret.dhe_secret,
                      LIBSPDM_MAX_DHE_KEY_SIZE);
 
-    secured_message_context->finished_key_ready = true;
     return true;
 }
 

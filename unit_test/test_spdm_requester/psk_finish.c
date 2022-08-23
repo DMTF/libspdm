@@ -20,10 +20,6 @@ static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 static void libspdm_secured_message_set_dummy_finished_key(
     void *spdm_secured_message_context)
 {
-    libspdm_secured_message_context_t *secured_message_context;
-
-    secured_message_context = spdm_secured_message_context;
-    secured_message_context->finished_key_ready = true;
 }
 
 void libspdm_secured_message_set_response_handshake_encryption_key(

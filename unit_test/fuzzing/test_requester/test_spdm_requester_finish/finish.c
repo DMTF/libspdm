@@ -23,7 +23,6 @@ void libspdm_secured_message_set_response_finished_key(void *spdm_secured_messag
     libspdm_copy_mem(secured_message_context->handshake_secret.response_finished_key,
                      sizeof(secured_message_context->handshake_secret.response_finished_key),
                      key, secured_message_context->hash_size);
-    secured_message_context->finished_key_ready = true;
 }
 
 size_t libspdm_get_max_buffer_size(void)
