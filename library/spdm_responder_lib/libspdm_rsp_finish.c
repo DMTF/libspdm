@@ -40,7 +40,7 @@ libspdm_return_t libspdm_get_response_finish(void *context, size_t request_size,
     spdm_finish_response_t *spdm_response;
     libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
-    uint8_t th2_hash_data[64];
+    uint8_t th2_hash_data[LIBSPDM_MAX_HASH_SIZE];
     libspdm_return_t status;
     libspdm_session_state_t session_state;
 
