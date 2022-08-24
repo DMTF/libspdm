@@ -37,6 +37,44 @@ uint8_t m_libspdm_hkdf_sha256_okm[42] = {
 };
 
 /**
+ * This Hkdf-Sha384 test vector is form Project Wycheproof
+ * developed and maintained by members of Google Security Team.
+ * https://github.com/google/wycheproof/blob/master/testvectors/hkdf_sha384_test.json
+ **/
+uint8_t m_libspdm_hkdf_sha384_ikm[16] = {
+    0x86, 0x77, 0xdc, 0x79, 0x23, 0x3e, 0xf3, 0x48, 0x07, 0x77,
+    0xc4, 0xc6, 0x01, 0xef, 0x4f, 0x0b,
+};
+
+uint8_t m_libspdm_hkdf_sha384_salt[16] = {
+    0xad, 0x88, 0xdb, 0x71, 0x82, 0x44, 0xe2, 0xcb, 0x60, 0xe3,
+    0x5f, 0x87, 0x4d, 0x7a, 0xd8, 0x1f,
+};
+
+uint8_t m_libspdm_hkdf_sha384_info[20] = {
+    0xa3, 0x8f, 0x63, 0x4d, 0x94, 0x78, 0x19, 0xa9, 0xbf, 0xa7,
+    0x92, 0x17, 0x4b, 0x42, 0xba, 0xa2, 0x0c, 0x9f, 0xce, 0x15,
+};
+
+uint8_t m_libspdm_hkdf_sha384_prk[48] = {
+    0x60, 0xae, 0xa0, 0xde, 0xca, 0x97, 0x62, 0xaa, 0x43, 0xaf,
+    0x0e, 0x77, 0xa8, 0x0f, 0xb7, 0x76, 0xd0, 0x08, 0x19, 0x62,
+    0xf8, 0x30, 0xb5, 0x0d, 0x92, 0x08, 0x92, 0x7a, 0x8a, 0xd5,
+    0x6a, 0x3d, 0xc4, 0x4a, 0x5d, 0xfe, 0xb6, 0xb4, 0x79, 0x2f,
+    0x97, 0x92, 0x71, 0xe6, 0xcb, 0x08, 0x86, 0x52,
+};
+
+uint8_t m_libspdm_hkdf_sha384_okm[64] = {
+    0x75, 0x85, 0x46, 0x36, 0x2a, 0x07, 0x0c, 0x0f, 0x13, 0xcb,
+    0xfb, 0xf1, 0x75, 0x6e, 0x8f, 0x29, 0xb7, 0x81, 0x9f, 0xb9,
+    0x03, 0xc7, 0xed, 0x4f, 0x97, 0xa5, 0x6b, 0xe3, 0xc8, 0xf8,
+    0x1e, 0x8c, 0x37, 0xae, 0xf5, 0xc0, 0xf8, 0xe5, 0xd2, 0xb1,
+    0x7e, 0xb1, 0xaa, 0x02, 0xec, 0x04, 0xc3, 0x3f, 0x54, 0x6c,
+    0xb2, 0xf3, 0xd1, 0x93, 0xe9, 0x30, 0xa9, 0xf8, 0x9e, 0xc9,
+    0xce, 0x3a, 0x82, 0xb5
+};
+
+/**
  * Validate Crypto HMAC Key Derivation Function Interfaces.
  *
  * @retval  true  Validation succeeded.
@@ -46,7 +84,9 @@ uint8_t m_libspdm_hkdf_sha256_okm[42] = {
 bool libspdm_validate_crypt_hkdf(void)
 {
     uint8_t prk_out[32];
+    uint8_t prk_out48[48];
     uint8_t out[42];
+    uint8_t out64[64];
     bool status;
 
     libspdm_my_print(" \nCrypto HKDF Engine Testing:\n");
@@ -198,6 +238,73 @@ bool libspdm_validate_crypt_hkdf(void)
         out, sizeof(out)
         );
     if (!status) {
+        libspdm_my_print("[Fail]");
+        return false;
+    }
+
+    libspdm_my_print("[Pass]\n");
+
+    libspdm_my_print("- HKDF-SHA384: ");
+
+    /* HKDF-SHA-384 digest Validation*/
+
+    libspdm_my_print("extract... ");
+    libspdm_zero_mem(prk_out48, sizeof(prk_out48));
+    status = libspdm_hkdf_sha384_extract (
+        m_libspdm_hkdf_sha384_ikm, sizeof(m_libspdm_hkdf_sha384_ikm),
+        m_libspdm_hkdf_sha384_salt, sizeof(m_libspdm_hkdf_sha384_salt),
+        prk_out48, sizeof(prk_out48)
+        );
+    if (!status) {
+        libspdm_my_print("[Fail]");
+        return false;
+    }
+
+    libspdm_my_print("Check value... ");
+    if (libspdm_const_compare_mem(prk_out48, m_libspdm_hkdf_sha384_prk,
+                                  sizeof(m_libspdm_hkdf_sha384_prk)) !=
+        0) {
+        libspdm_my_print("[Fail]");
+        return false;
+    }
+
+    libspdm_zero_mem(out64, sizeof(out64));
+    libspdm_my_print("expand... ");
+    status = libspdm_hkdf_sha384_expand (
+        m_libspdm_hkdf_sha384_prk, sizeof(m_libspdm_hkdf_sha384_prk),
+        m_libspdm_hkdf_sha384_info, sizeof(m_libspdm_hkdf_sha384_info),
+        out64, sizeof(out64)
+        );
+    if (!status) {
+        libspdm_my_print("[Fail]");
+        return false;
+    }
+
+    libspdm_my_print("Check value... ");
+    if (libspdm_const_compare_mem(out64, m_libspdm_hkdf_sha384_okm,
+                                  sizeof(m_libspdm_hkdf_sha384_okm)) !=
+        0) {
+        libspdm_my_print("[Fail]");
+        return false;
+    }
+
+    libspdm_zero_mem(out64, sizeof(out64));
+    libspdm_my_print("extract_and_expand... ");
+    status = libspdm_hkdf_sha384_extract_and_expand (
+        m_libspdm_hkdf_sha384_ikm, sizeof(m_libspdm_hkdf_sha384_ikm),
+        m_libspdm_hkdf_sha384_salt, sizeof(m_libspdm_hkdf_sha384_salt),
+        m_libspdm_hkdf_sha384_info, sizeof(m_libspdm_hkdf_sha384_info),
+        out64, sizeof(out64)
+        );
+    if (!status) {
+        libspdm_my_print("[Fail]");
+        return false;
+    }
+
+    libspdm_my_print("Check value... ");
+    if (libspdm_const_compare_mem(out64, m_libspdm_hkdf_sha384_okm,
+                                  sizeof(m_libspdm_hkdf_sha384_okm)) !=
+        0) {
         libspdm_my_print("[Fail]");
         return false;
     }
