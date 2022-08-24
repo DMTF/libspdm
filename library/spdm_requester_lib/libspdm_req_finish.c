@@ -45,7 +45,7 @@ static libspdm_return_t libspdm_try_send_receive_finish(libspdm_context_t *spdm_
     libspdm_session_info_t *session_info;
     uint8_t *ptr;
     bool result;
-    uint8_t th2_hash_data[64];
+    uint8_t th2_hash_data[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_state_t session_state;
     uint8_t *message;
     size_t message_size;

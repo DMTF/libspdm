@@ -84,8 +84,8 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
     uint16_t rsp_session_id;
     libspdm_session_info_t *session_info;
     size_t opaque_psk_exchange_req_size;
-    uint8_t th1_hash_data[64];
-    uint8_t th2_hash_data[64];
+    uint8_t th1_hash_data[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t th2_hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint32_t algo_size;
     uint8_t *message;
     size_t message_size;

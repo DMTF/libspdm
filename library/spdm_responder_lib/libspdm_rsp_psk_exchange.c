@@ -46,8 +46,8 @@ libspdm_return_t libspdm_get_response_psk_exchange(void *context,
     uint16_t rsp_session_id;
     libspdm_return_t status;
     size_t opaque_psk_exchange_rsp_size;
-    uint8_t th1_hash_data[64];
-    uint8_t th2_hash_data[64];
+    uint8_t th1_hash_data[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t th2_hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint32_t algo_size;
     uint16_t context_length;
     const void *psk_hint;

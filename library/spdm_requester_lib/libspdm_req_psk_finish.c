@@ -39,7 +39,7 @@ static libspdm_return_t libspdm_try_send_receive_psk_finish(libspdm_context_t *s
     libspdm_psk_finish_response_max_t *spdm_response;
     size_t spdm_response_size;
     libspdm_session_info_t *session_info;
-    uint8_t th2_hash_data[64];
+    uint8_t th2_hash_data[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_state_t session_state;
     bool result;
     uint8_t *message;

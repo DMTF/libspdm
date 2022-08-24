@@ -36,7 +36,7 @@ libspdm_return_t libspdm_get_response_psk_finish(void *context,
     spdm_psk_finish_response_t *spdm_response;
     libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
-    uint8_t th2_hash_data[64];
+    uint8_t th2_hash_data[LIBSPDM_MAX_HASH_SIZE];
     const spdm_psk_finish_request_t *spdm_request;
     libspdm_return_t status;
     libspdm_session_state_t session_state;
