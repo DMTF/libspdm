@@ -233,7 +233,7 @@ typedef char *LIBSPDM_VA_LIST;
 /* Basic types mapping*/
 
 typedef size_t u_int;
-#ifdef __GNUC__
+#if defined(__GNUC__) && !defined(__MINGW64__)
 typedef size_t time_t; /* time_t is 4 bytes for 32bit machine and 8 bytes for 64bit machine */
 #endif
 typedef uint8_t __uint8_t;
@@ -266,8 +266,10 @@ struct tm {
 };
 
 /* Global variables*/
-
+#if defined(__GNUC__) && !defined(__MINGW64__)
 extern int errno;
+#endif
+
 extern FILE *stderr;
 
 
