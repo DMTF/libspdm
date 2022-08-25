@@ -114,8 +114,8 @@ int errno = 0;
 
 #endif
 
-#if defined(__GNUC__) ^ defined(_WIN32)
-int GetLastError()
+#if !defined(__GNUC__) && !defined(_WIN32)
+int GetLastError ()
 {
     return 0;
 }
