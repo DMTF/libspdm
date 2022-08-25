@@ -289,7 +289,6 @@ typedef struct {
 } libspdm_encap_context_t;
 
 #if LIBSPDM_ENABLE_CHUNK_CAP
-
 typedef struct {
     bool chunk_in_use;
     uint8_t chunk_handle;
@@ -305,8 +304,22 @@ typedef struct {
     libspdm_chunk_info_t send;
     libspdm_chunk_info_t get;
 } libspdm_chunk_context_t;
-
 #endif /* LIBSPDM_ENABLE_CHUNK_CAP */
+
+#if LIBSPDM_ENABLE_MSG_LOG
+typedef struct {
+    void *buffer;
+    size_t buffer_size;
+    uint32_t mode;
+    size_t offset;
+    uint32_t status;
+} libspdm_msg_log_t;
+
+#define LIBSPDM_MSG_LOG_MODE_ENABLE 1
+#define LIBSPDM_MSG_LOG_MODE_WRAP 2
+#define LIBSPDM_MSG_LOG_MODE_INC_ERR 4
+#define LIBSPDM_MSG_LOG_MODE_INC_CHUNK 8
+#endif /* LIBSPDM_ENABLE_MSG_LOG */
 
 #define libspdm_context_struct_version 0x2
 
@@ -421,6 +434,10 @@ typedef struct {
     /* Chunk specific context */
     libspdm_chunk_context_t chunk_context;
 #endif /*LIBSPDM_ENABLE_CHUNK_CAP*/
+
+#if LIBSPDM_ENABLE_MSG_LOG
+    libspdm_msg_log_t msg_log;
+#endif /* LIBSPDM_ENABLE_MSG_LOG */
 
 } libspdm_context_t;
 
