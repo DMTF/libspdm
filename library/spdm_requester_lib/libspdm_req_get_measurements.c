@@ -525,6 +525,10 @@ static libspdm_return_t libspdm_try_get_measurement(void *context, const uint32_
 
     status = LIBSPDM_STATUS_SUCCESS;
 
+    #if LIBSPDM_ENABLE_MSG_LOG
+    spdm_context->msg_log.offset += spdm_response_size;
+    #endif /* LIBSPDM_ENABLE_MSG_LOG */
+
 receive_done:
     libspdm_release_receiver_buffer (spdm_context);
     return status;

@@ -541,9 +541,21 @@ libspdm_return_t libspdm_send_spdm_request(libspdm_context_t *spdm_context,
     }
     else
     {
-        status = libspdm_send_request(
-            spdm_context, session_id, false, request_size, request);
+        status = libspdm_send_request(spdm_context, session_id, false, request_size, request);
     }
+
+    #if LIBSPDM_ENABLE_MSG_LOG
+    if ((status == LIBSPDM_STATUS_SUCCESS) && (spdm_context->msg_log.mode &
+        LIBSPDM_MSG_LOG_MODE_ENABLE) != 0) {
+        if (spdm_context->msg_log.offset + request_size > spdm_context->msg_log.buffer_size) {
+        } else {
+            libspdm_copy_mem((uint8_t *)spdm_context->msg_log.buffer + spdm_context->msg_log.offset,
+                             spdm_context->msg_log.buffer_size, request, request_size);
+            spdm_context->msg_log.offset += request_size;
+        }
+    }
+    #endif
+
     return status;
 }
 
@@ -597,15 +609,12 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
     }
 
     #if !LIBSPDM_ENABLE_CHUNK_CAP
-    status = libspdm_receive_response(spdm_context, session_id, false,
-                                      response_size, response);
+    status = libspdm_receive_response(spdm_context, session_id, false, response_size, response);
     #else /* LIBSPDM_ENABLE_CHUNK_CAP */
     send_info = &spdm_context->chunk_context.send;
     if (send_info->chunk_in_use) {
-
-        libspdm_copy_mem(
-            *response, *response_size,
-            send_info->large_message, send_info->large_message_size);
+        libspdm_copy_mem(*response, *response_size,
+                         send_info->large_message, send_info->large_message_size);
         *response_size = send_info->large_message_size;
         response_capacity = send_info->large_message_capacity;
 
@@ -671,6 +680,18 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
             goto receive_done;
         }
     }
+
+    #if LIBSPDM_ENABLE_MSG_LOG
+    if ((status == LIBSPDM_STATUS_SUCCESS) && (spdm_context->msg_log.mode &
+        LIBSPDM_MSG_LOG_MODE_ENABLE) != 0) {
+        if (spdm_context->msg_log.offset + *response_size > spdm_context->msg_log.buffer_size) {
+        } else {
+            libspdm_copy_mem((uint8_t *)spdm_context->msg_log.buffer + spdm_context->msg_log.offset,
+                             spdm_context->msg_log.buffer_size, spdm_response, *response_size);
+            //spdm_context->msg_log.offset += *response_size;
+        }
+    }
+    #endif
 
 receive_done:
     #endif /* LIBSPDM_ENABLE_CHUNK_CAP */

@@ -16,6 +16,7 @@
 static size_t m_libspdm_local_buffer_size;
 static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 static uint8_t m_libspdm_local_psk_hint[32];
+static uint8_t m_libspdm_msg_log_buffer[0x10000];
 
 size_t libspdm_test_get_measurement_request_size(const void *spdm_context,
                                                  const void *buffer,
@@ -2999,6 +3000,9 @@ void libspdm_test_requester_get_measurements_case2(void **state)
     spdm_context->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
 
+    libspdm_init_msg_log (spdm_context, m_libspdm_msg_log_buffer, sizeof(m_libspdm_msg_log_buffer));
+    libspdm_set_msg_log_mode (spdm_context, LIBSPDM_MSG_LOG_MODE_ENABLE);
+
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
@@ -3032,6 +3036,10 @@ void libspdm_test_requester_get_measurements_case2(void **state)
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
     free(data);
+
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "--- Printing the msg buffer! ---\n"));
+    libspdm_dump_hex(spdm_context->msg_log.buffer, spdm_context->msg_log.offset);
+
 }
 
 /**
