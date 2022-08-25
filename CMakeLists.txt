@@ -597,7 +597,8 @@ SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 
 ADD_CUSTOM_TARGET(copy_sample_key)
 
-if(CMAKE_SYSTEM_NAME MATCHES "Linux" OR MSYS MATCHES TRUE)
+execute_process(COMMAND uname OUTPUT_VARIABLE uname)
+if(CMAKE_SYSTEM_NAME MATCHES "Linux" OR uname MATCHES "^MINGW")
     ADD_CUSTOM_COMMAND(TARGET copy_sample_key
                     PRE_BUILD
                     COMMAND cp -r -f ${LIBSPDM_DIR}/unit_test/sample_key/* ${EXECUTABLE_OUTPUT_PATH})
@@ -606,12 +607,12 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
     STRING(REPLACE "/" "\\" DEST ${EXECUTABLE_OUTPUT_PATH})
     ADD_CUSTOM_COMMAND(TARGET copy_sample_key
                     PRE_BUILD
-                    COMMAND cp -r -f ${LIBSPDM_DIR}/unit_test/sample_key/* ${EXECUTABLE_OUTPUT_PATH})
+                    COMMAND xcopy /y /s ${SRC} ${DEST})
 endif()
 
 ADD_CUSTOM_TARGET(copy_seed)
 
-if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+if(CMAKE_SYSTEM_NAME MATCHES "Linux" OR uname MATCHES "^MINGW")
     ADD_CUSTOM_COMMAND(TARGET copy_seed
                     PRE_BUILD
                     COMMAND cp -r -f ${LIBSPDM_DIR}/unit_test/fuzzing/seeds ${EXECUTABLE_OUTPUT_PATH}
