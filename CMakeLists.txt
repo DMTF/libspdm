@@ -753,7 +753,7 @@ else()
         ADD_SUBDIRECTORY(unit_test/test_spdm_common)
         endif()
 
-    if(CMAKE_SYSTEM_NAME MATCHES "Windows")
+    if(CMAKE_SYSTEM_NAME MATCHES "Windows" AND NOT uname MATCHES "^MINGW")
         if(ARCH STREQUAL "x64")
         if(NOT TOOLCHAIN STREQUAL "LIBFUZZER")
             ADD_SUBDIRECTORY(unit_test/test_size/test_size_of_spdm_requester)
