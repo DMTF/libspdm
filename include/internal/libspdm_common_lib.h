@@ -302,16 +302,11 @@ typedef struct {
 #if LIBSPDM_ENABLE_MSG_LOG
 typedef struct {
     void *buffer;
-    size_t buffer_size;
+    size_t max_buffer_size;
     uint32_t mode;
-    size_t offset;
+    size_t buffer_size;
     uint32_t status;
 } libspdm_msg_log_t;
-
-#define LIBSPDM_MSG_LOG_MODE_ENABLE 1
-#define LIBSPDM_MSG_LOG_MODE_WRAP 2
-#define LIBSPDM_MSG_LOG_MODE_INC_ERR 4
-#define LIBSPDM_MSG_LOG_MODE_INC_CHUNK 8
 #endif /* LIBSPDM_ENABLE_MSG_LOG */
 
 #define libspdm_context_struct_version 0x2
@@ -1162,5 +1157,9 @@ uint8_t libspdm_get_cert_slot_mask (
  **/
 uint8_t libspdm_get_cert_slot_count(
     libspdm_context_t *spdm_context);
+
+#if LIBSPDM_ENABLE_MSG_LOG
+void libspdm_append_msg_log(void *context, void *message, size_t message_size);
+#endif
 
 #endif /* SPDM_COMMON_LIB_INTERNAL_H */

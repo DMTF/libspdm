@@ -3038,7 +3038,7 @@ void libspdm_test_requester_get_measurements_case2(void **state)
     free(data);
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "--- Printing the msg buffer! ---\n"));
-    libspdm_dump_hex(spdm_context->msg_log.buffer, spdm_context->msg_log.offset);
+    libspdm_dump_hex(spdm_context->msg_log.buffer, spdm_context->msg_log.buffer_size);
 
 }
 

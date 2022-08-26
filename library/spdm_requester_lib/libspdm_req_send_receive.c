@@ -545,14 +545,8 @@ libspdm_return_t libspdm_send_spdm_request(libspdm_context_t *spdm_context,
     }
 
     #if LIBSPDM_ENABLE_MSG_LOG
-    if ((status == LIBSPDM_STATUS_SUCCESS) && (spdm_context->msg_log.mode &
-        LIBSPDM_MSG_LOG_MODE_ENABLE) != 0) {
-        if (spdm_context->msg_log.offset + request_size > spdm_context->msg_log.buffer_size) {
-        } else {
-            libspdm_copy_mem((uint8_t *)spdm_context->msg_log.buffer + spdm_context->msg_log.offset,
-                             spdm_context->msg_log.buffer_size, request, request_size);
-            spdm_context->msg_log.offset += request_size;
-        }
+    if (status == LIBSPDM_STATUS_SUCCESS) {
+        libspdm_append_msg_log(spdm_context, request, request_size);
     }
     #endif
 
@@ -684,11 +678,12 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
     #if LIBSPDM_ENABLE_MSG_LOG
     if ((status == LIBSPDM_STATUS_SUCCESS) && (spdm_context->msg_log.mode &
         LIBSPDM_MSG_LOG_MODE_ENABLE) != 0) {
-        if (spdm_context->msg_log.offset + *response_size > spdm_context->msg_log.buffer_size) {
+        if (spdm_context->msg_log.buffer_size + *response_size >
+            spdm_context->msg_log.max_buffer_size) {
         } else {
-            libspdm_copy_mem((uint8_t *)spdm_context->msg_log.buffer + spdm_context->msg_log.offset,
-                             spdm_context->msg_log.buffer_size, spdm_response, *response_size);
-            //spdm_context->msg_log.offset += *response_size;
+            libspdm_copy_mem((uint8_t *)spdm_context->msg_log.buffer +
+                             spdm_context->msg_log.buffer_size,
+                             spdm_context->msg_log.max_buffer_size, spdm_response, *response_size);
         }
     }
     #endif
