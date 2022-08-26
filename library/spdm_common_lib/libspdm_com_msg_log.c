@@ -16,8 +16,8 @@ void libspdm_init_msg_log (void *context, void *msg_buffer, size_t msg_buffer_si
 
     spdm_context = context;
     spdm_context->msg_log.buffer = msg_buffer;
-    spdm_context->msg_log.buffer_size = msg_buffer_size;
-    spdm_context->msg_log.offset = 0;
+    spdm_context->msg_log.max_buffer_size = msg_buffer_size;
+    spdm_context->msg_log.buffer_size = 0;
     spdm_context->msg_log.mode = 0;
     spdm_context->msg_log.status = 0;
 }
@@ -51,7 +51,7 @@ size_t libspdm_get_msg_log_size (void *context)
 
     spdm_context = context;
 
-    return spdm_context->msg_log.offset;
+    return spdm_context->msg_log.buffer_size;
 }
 
 void libspdm_reset_msg_log (void *context)
@@ -62,8 +62,29 @@ void libspdm_reset_msg_log (void *context)
 
     spdm_context = context;
 
-    spdm_context->msg_log.offset = 0;
+    spdm_context->msg_log.buffer_size = 0;
     spdm_context->msg_log.mode = 0;
     spdm_context->msg_log.status = 0;
+}
+
+void libspdm_append_msg_log(void *context, void *message, size_t message_size)
+{
+    LIBSPDM_ASSERT((context != NULL) && (message != NULL));
+
+    libspdm_context_t *spdm_context;
+
+    spdm_context = context;
+
+    if ((spdm_context->msg_log.mode & LIBSPDM_MSG_LOG_MODE_ENABLE) != 0) {
+        if (spdm_context->msg_log.buffer_size + message_size >
+            spdm_context->msg_log.max_buffer_size) {
+            /* TODO : Implement wrapping / clamping logic. */
+        } else {
+            libspdm_copy_mem((uint8_t *)spdm_context->msg_log.buffer +
+                             spdm_context->msg_log.buffer_size,
+                             spdm_context->msg_log.max_buffer_size, message, message_size);
+            spdm_context->msg_log.buffer_size += message_size;
+        }
+    }
 }
 #endif /* LIBSPDM_ENABLE_MSG_LOG */
