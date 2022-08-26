@@ -77,7 +77,7 @@ jobs:
           arch: x86
           toolset: 14.0
       - name: 'Toolchain Setup - MinGW (x64)'
-        if: matrix.toolchain == 'GCC' && matrix.arch == 'x64' && matrix.os == windows.latest
+        if: matrix.toolchain == 'GCC' && matrix.arch == 'x64' && matrix.os == 'windows-latest'
         uses: msys2/setup-msys2@v2
         with:
           msystem: MINGW64
