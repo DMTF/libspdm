@@ -86,7 +86,93 @@ void libspdm_write_uint24(uint8_t *buffer, uint32_t value)
     buffer[0] = (uint8_t)(value & 0xFF);
     buffer[1] = (uint8_t)((value >> 8) & 0xFF);
     buffer[2] = (uint8_t)((value >> 16) & 0xFF);
-    return;
+}
+
+/**
+ * Reads a 16-bit value from memory that may be unaligned.
+ *
+ * @param  buffer  The pointer to a 16-bit value that may be unaligned.
+ *
+ * @return The 16-bit value read from buffer.
+ **/
+uint16_t libspdm_read_uint16(const uint8_t *buffer)
+{
+    return (uint16_t)(buffer[0] | buffer[1] << 8);
+}
+
+/**
+ * Writes a 16-bit value to memory that may be unaligned.
+ *
+ * @param  buffer  The pointer to a 16-bit value that may be unaligned.
+ * @param  value   16-bit value to write to buffer.
+ **/
+void libspdm_write_uint16(uint8_t *buffer, uint16_t value)
+{
+    buffer[0] = (uint8_t)(value & 0xFF);
+    buffer[1] = (uint8_t)((value >> 8) & 0xFF);
+}
+
+/**
+ * Reads a 32-bit value from memory that may be unaligned.
+ *
+ * @param  buffer  The pointer to a 32-bit value that may be unaligned.
+ *
+ * @return The 32-bit value read from buffer.
+ **/
+uint32_t libspdm_read_uint32(const uint8_t *buffer)
+{
+    return (uint32_t)(buffer[0] | buffer[1] << 8 | buffer[2] << 16 | buffer[3] << 24);
+}
+
+/**
+ * Writes a 32-bit value to memory that may be unaligned.
+ *
+ * @param  buffer  The pointer to a 32-bit value that may be unaligned.
+ * @param  value   32-bit value to write to buffer.
+ **/
+void libspdm_write_uint32(uint8_t *buffer, uint32_t value)
+{
+    buffer[0] = (uint8_t)(value & 0xFF);
+    buffer[1] = (uint8_t)((value >> 8) & 0xFF);
+    buffer[2] = (uint8_t)((value >> 16) & 0xFF);
+    buffer[3] = (uint8_t)((value >> 24) & 0xFF);
+}
+
+/**
+ * Reads a 64-bit value from memory that may be unaligned.
+ *
+ * @param  buffer  The pointer to a 64-bit value that may be unaligned.
+ *
+ * @return The 64-bit value read from buffer.
+ **/
+uint64_t libspdm_read_uint64(const uint8_t *buffer)
+{
+    return (uint64_t)(buffer[0]) |
+           ((uint64_t)(buffer[1]) << 8) |
+           ((uint64_t)(buffer[2]) << 16) |
+           ((uint64_t)(buffer[3]) << 24) |
+           ((uint64_t)(buffer[4]) << 32) |
+           ((uint64_t)(buffer[5]) << 40) |
+           ((uint64_t)(buffer[6]) << 48) |
+           ((uint64_t)(buffer[7]) << 56);
+}
+
+/**
+ * Writes a 64-bit value to memory that may be unaligned.
+ *
+ * @param  buffer  The pointer to a 64-bit value that may be unaligned.
+ * @param  value   64-bit value to write to buffer.
+ **/
+void libspdm_write_uint64(uint8_t *buffer, uint64_t value)
+{
+    buffer[0] = (uint8_t)(value & 0xFF);
+    buffer[1] = (uint8_t)((value >> 8) & 0xFF);
+    buffer[2] = (uint8_t)((value >> 16) & 0xFF);
+    buffer[3] = (uint8_t)((value >> 24) & 0xFF);
+    buffer[4] = (uint8_t)((value >> 32) & 0xFF);
+    buffer[5] = (uint8_t)((value >> 40) & 0xFF);
+    buffer[6] = (uint8_t)((value >> 48) & 0xFF);
+    buffer[7] = (uint8_t)((value >> 56) & 0xFF);
 }
 
 /**
