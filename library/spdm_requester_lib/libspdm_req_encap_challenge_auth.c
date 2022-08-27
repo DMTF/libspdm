@@ -134,8 +134,8 @@ libspdm_return_t libspdm_get_encap_response_challenge_auth(
 
     ptr += measurement_summary_hash_size;
 
-    *(uint16_t *)ptr = (uint16_t)spdm_context->local_context
-                       .opaque_challenge_auth_rsp_size;
+    libspdm_write_uint16 (ptr, (uint16_t)spdm_context->local_context
+                          .opaque_challenge_auth_rsp_size);
     ptr += sizeof(uint16_t);
     if (spdm_context->local_context.opaque_challenge_auth_rsp != NULL) {
         libspdm_copy_mem(ptr,
