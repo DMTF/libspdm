@@ -45,7 +45,7 @@ static bool rand_get_bytes(size_t length, uint8_t *rand_buffer)
             return ret;
         }
         if (length >= sizeof(temp_rand)) {
-            *((uint64_t *)rand_buffer) = temp_rand;
+            libspdm_copy_mem(rand_buffer, length, &temp_rand, sizeof(uint64_t));
             rand_buffer += sizeof(uint64_t);
             length -= sizeof(temp_rand);
         } else {
