@@ -222,8 +222,8 @@ libspdm_return_t libspdm_get_response_challenge_auth(void *context,
     }
     ptr += measurement_summary_hash_size;
 
-    *(uint16_t *)ptr = (uint16_t)spdm_context->local_context
-                       .opaque_challenge_auth_rsp_size;
+    ptr[0] = spdm_context->local_context.opaque_challenge_auth_rsp_size & 0xFF;
+    ptr[1] = (spdm_context->local_context.opaque_challenge_auth_rsp_size >> 8) & 0xFF;
     ptr += sizeof(uint16_t);
 
     if (spdm_context->local_context.opaque_challenge_auth_rsp != NULL) {
