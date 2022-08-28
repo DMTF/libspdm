@@ -95,7 +95,9 @@ bool libspdm_generate_aead_key_and_iv(
     status = libspdm_hkdf_expand(secured_message_context->base_hash_algo,
                                  major_secret, hash_size, bin_str5,
                                  bin_str5_size, key, key_length);
-    LIBSPDM_ASSERT(status);
+    if (!status) {
+        return false;
+    }
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "key (0x%x) - ", key_length));
     libspdm_internal_dump_data(key, key_length);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
@@ -111,7 +113,9 @@ bool libspdm_generate_aead_key_and_iv(
     status = libspdm_hkdf_expand(secured_message_context->base_hash_algo,
                                  major_secret, hash_size, bin_str6,
                                  bin_str6_size, iv, iv_length);
-    LIBSPDM_ASSERT(status);
+    if (!status) {
+        return false;
+    }
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "iv (0x%x) - ", iv_length));
     libspdm_internal_dump_data(iv, iv_length);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
@@ -150,7 +154,9 @@ bool libspdm_generate_finished_key(
     status = libspdm_hkdf_expand(secured_message_context->base_hash_algo,
                                  handshake_secret, hash_size, bin_str7,
                                  bin_str7_size, finished_key, hash_size);
-    LIBSPDM_ASSERT(status);
+    if (!status) {
+        return false;
+    }
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "finished_key (0x%x) - ", hash_size));
     libspdm_internal_dump_data(finished_key, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
@@ -387,7 +393,9 @@ bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
             secured_message_context->base_hash_algo,
             secured_message_context->master_secret.handshake_secret,
             hash_size, bin_str0, bin_str0_size, salt1, hash_size);
-        LIBSPDM_ASSERT(status);
+        if (!status) {
+            return false;
+        }
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "salt1 (0x%x) - ", hash_size));
         libspdm_internal_dump_data(salt1, hash_size);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
@@ -397,7 +405,9 @@ bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
             secured_message_context->base_hash_algo,
             zero_filled_buffer, hash_size, salt1, hash_size,
             secured_message_context->master_secret.master_secret, hash_size);
-        LIBSPDM_ASSERT(status);
+        if (!status) {
+            return false;
+        }
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "master_secret (0x%x) - ", hash_size));
         libspdm_internal_dump_data(
             secured_message_context->master_secret.master_secret,
@@ -619,7 +629,6 @@ bool libspdm_create_update_session_data_key(void *spdm_secured_message_context,
             secured_message_context->application_secret
             .request_data_secret,
             hash_size);
-        LIBSPDM_ASSERT(status);
         if (!status) {
             return false;
         }
@@ -680,7 +689,6 @@ bool libspdm_create_update_session_data_key(void *spdm_secured_message_context,
             secured_message_context->application_secret
             .response_data_secret,
             hash_size);
-        LIBSPDM_ASSERT(status);
         if (!status) {
             return false;
         }
