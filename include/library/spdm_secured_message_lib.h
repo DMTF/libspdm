@@ -457,18 +457,15 @@ bool libspdm_hmac_all_with_response_finished_key(
 /**
  * This function concatenates binary data, which is used as info in HKDF expand later.
  *
- * @param  label                        An ascii string label for the libspdm_bin_concat.
- * @param  label_size                    The size in bytes of the ASCII string label, not including NULL terminator.
- * @param  context                      A pre-defined hash value as the context for the libspdm_bin_concat.
- * @param  length                       16 bits length for the libspdm_bin_concat.
- * @param  hash_size                     The size in bytes of the context hash.
- * @param  out_bin                       The buffer to store the output binary.
- * @param  out_bin_size                   The size in bytes for the out_bin.
- *
- * @retval RETURN_SUCCESS               The binary libspdm_bin_concat data is generated.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
+ * @param  label        An ascii string label for the libspdm_bin_concat.
+ * @param  label_size   The size in bytes of the ASCII string label, not including NULL terminator.
+ * @param  context      A pre-defined hash value as the context for the libspdm_bin_concat.
+ * @param  length       16 bits length for the libspdm_bin_concat.
+ * @param  hash_size    The size in bytes of the context hash.
+ * @param  out_bin      The buffer to store the output binary.
+ * @param  out_bin_size The size in bytes for the out_bin.
  **/
-bool libspdm_bin_concat(spdm_version_number_t spdm_version,
+void libspdm_bin_concat(spdm_version_number_t spdm_version,
                         const char *label, size_t label_size,
                         const uint8_t *context, uint16_t length,
                         size_t hash_size, uint8_t *out_bin,
