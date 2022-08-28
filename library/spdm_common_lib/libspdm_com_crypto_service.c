@@ -373,9 +373,6 @@ static bool libspdm_calculate_l1l2(void *context, void *session_info,
 
     libspdm_init_managed_buffer(l1l2, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
 
-    hash_size = libspdm_get_hash_size(
-        spdm_context->connection_info.algorithm.base_hash_algo);
-
     if ((spdm_context->connection_info.version >> SPDM_VERSION_NUMBER_SHIFT_BIT) >
         SPDM_MESSAGE_VERSION_11) {
 
