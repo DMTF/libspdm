@@ -212,7 +212,9 @@ bool libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
             secured_message_context->dhe_key_size,
             zero_filled_buffer, hash_size,
             secured_message_context->master_secret.handshake_secret, hash_size);
-        LIBSPDM_ASSERT(status);
+        if (!status) {
+            return false;
+        }
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "handshake_secret (0x%x) - ", hash_size));
         libspdm_internal_dump_data(
             secured_message_context->master_secret.handshake_secret,
@@ -265,7 +267,7 @@ bool libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
                        SPDM_BIN_STR_2_LABEL, sizeof(SPDM_BIN_STR_2_LABEL) - 1,
                        th1_hash_data, (uint16_t)hash_size, hash_size,
                        bin_str2, &bin_str2_size);
-    LIBSPDM_ASSERT(status);
+
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "bin_str2 (0x%x):\n", bin_str2_size));
     libspdm_internal_dump_hex(bin_str2, bin_str2_size);
 
