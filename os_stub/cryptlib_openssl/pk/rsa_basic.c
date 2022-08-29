@@ -155,19 +155,12 @@ bool libspdm_rsa_set_key(void *rsa_context, const libspdm_rsa_key_tag_t key_tag,
             goto err;
         }
 
-        switch (key_tag) {
-        case LIBSPDM_RSA_KEY_N:
+        if (key_tag == LIBSPDM_RSA_KEY_N) {
             bn_n = BN_bin2bn(big_number, (uint32_t)bn_size, bn_n);
-            break;
-        case LIBSPDM_RSA_KEY_E:
+        } else if (key_tag == LIBSPDM_RSA_KEY_E) {
             bn_e = BN_bin2bn(big_number, (uint32_t)bn_size, bn_e);
-            break;
-        case LIBSPDM_RSA_KEY_D:
+        } else {
             bn_d = BN_bin2bn(big_number, (uint32_t)bn_size, bn_d);
-            break;
-        default:
-            status = false;
-            goto err;
         }
         if (RSA_set0_key(rsa_key, BN_dup(bn_n), BN_dup(bn_e),
                          BN_dup(bn_d)) == 0) {
@@ -195,16 +188,10 @@ bool libspdm_rsa_set_key(void *rsa_context, const libspdm_rsa_key_tag_t key_tag,
             goto err;
         }
 
-        switch (key_tag) {
-        case LIBSPDM_RSA_KEY_P:
+        if (key_tag == LIBSPDM_RSA_KEY_P) {
             bn_p = BN_bin2bn(big_number, (uint32_t)bn_size, bn_p);
-            break;
-        case LIBSPDM_RSA_KEY_Q:
+        } else {
             bn_q = BN_bin2bn(big_number, (uint32_t)bn_size, bn_q);
-            break;
-        default:
-            status = false;
-            goto err;
         }
         if (RSA_set0_factors(rsa_key, BN_dup(bn_p), BN_dup(bn_q)) ==
             0) {
@@ -238,20 +225,13 @@ bool libspdm_rsa_set_key(void *rsa_context, const libspdm_rsa_key_tag_t key_tag,
             goto err;
         }
 
-        switch (key_tag) {
-        case LIBSPDM_RSA_KEY_DP:
+        if (key_tag == LIBSPDM_RSA_KEY_DP) {
             bn_dp = BN_bin2bn(big_number, (uint32_t)bn_size, bn_dp);
-            break;
-        case LIBSPDM_RSA_KEY_DQ:
+        } else if (key_tag == LIBSPDM_RSA_KEY_DQ) {
             bn_dq = BN_bin2bn(big_number, (uint32_t)bn_size, bn_dq);
-            break;
-        case LIBSPDM_RSA_KEY_Q_INV:
+        } else {
             bn_q_inv = BN_bin2bn(big_number, (uint32_t)bn_size,
                                  bn_q_inv);
-            break;
-        default:
-            status = false;
-            goto err;
         }
         if (RSA_set0_crt_params(rsa_key, BN_dup(bn_dp), BN_dup(bn_dq),
                                 BN_dup(bn_q_inv)) == 0) {
