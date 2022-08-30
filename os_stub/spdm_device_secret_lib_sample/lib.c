@@ -1245,7 +1245,7 @@ bool libspdm_write_certificate_to_nvm(uint8_t slot_id, const void * cert_chain,
 
     fclose(fp_out);
 #else
-    if ((fp_out = open(file_name, O_WRONLY | O_CREAT | O_EXCL, S_IRWXU)) == -1) {
+    if ((fp_out = open(file_name, O_WRONLY | O_CREAT, S_IRWXU)) == -1) {
         printf("Unable to open file %s\n", file_name);
         return false;
     }
