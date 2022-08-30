@@ -810,7 +810,7 @@ uint32_t libspdm_get_msg_log_status (void *context);
 size_t libspdm_get_msg_log_size (void *context);
 
 /**
- * This function resets the message log while retaining the message buffer and size given in
+ * This function resets the message log while retaining the message buffer and maximum size given in
  * libspdm_init_msg_log.
  *
  * @param context  A pointer to the SPDM context.
