@@ -275,6 +275,10 @@ static libspdm_return_t libspdm_try_get_capabilities(libspdm_context_t *spdm_con
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
     status = LIBSPDM_STATUS_SUCCESS;
 
+    #if LIBSPDM_ENABLE_MSG_LOG
+    libspdm_append_msg_log(spdm_context, spdm_response, spdm_response_size);
+    #endif /* LIBSPDM_ENABLE_MSG_LOG */
+
 receive_done:
     libspdm_release_receiver_buffer (spdm_context);
     return status;

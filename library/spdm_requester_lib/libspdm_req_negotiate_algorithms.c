@@ -452,6 +452,10 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     status = LIBSPDM_STATUS_SUCCESS;
 
+    #if LIBSPDM_ENABLE_MSG_LOG
+    libspdm_append_msg_log(spdm_context, spdm_response, spdm_response_size);
+    #endif /* LIBSPDM_ENABLE_MSG_LOG */
+
 receive_done:
     libspdm_release_receiver_buffer (spdm_context);
     return status;
