@@ -75,16 +75,26 @@ void libspdm_append_msg_log(void *context, void *message, size_t message_size)
 
     spdm_context = context;
 
-    if ((spdm_context->msg_log.mode & LIBSPDM_MSG_LOG_MODE_ENABLE) != 0) {
+    if (((spdm_context->msg_log.mode & LIBSPDM_MSG_LOG_MODE_ENABLE) != 0) &&
+        ((spdm_context->msg_log.status & LIBSPDM_MSG_LOG_STATUS_CLAMP) == 0)) {
         if (spdm_context->msg_log.buffer_size + message_size >
             spdm_context->msg_log.max_buffer_size) {
-            /* TODO : Implement wrapping / clamping logic. */
+            libspdm_copy_mem((uint8_t *)spdm_context->msg_log.buffer +
+               spdm_context->msg_log.buffer_size,
+               spdm_context->msg_log.max_buffer_size, message,
+               spdm_context->msg_log.max_buffer_size - spdm_context->msg_log.buffer_size);
+            spdm_context->msg_log.status |= LIBSPDM_MSG_LOG_STATUS_CLAMP;
         } else {
             libspdm_copy_mem((uint8_t *)spdm_context->msg_log.buffer +
                              spdm_context->msg_log.buffer_size,
                              spdm_context->msg_log.max_buffer_size, message, message_size);
             spdm_context->msg_log.buffer_size += message_size;
         }
+
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Message Logging Status = [%x] Buffer Size = [%x] "
+                      "Max Buffer Size = [%x]\n", spdm_context->msg_log.status,
+                      spdm_context->msg_log.buffer_size, spdm_context->msg_log.max_buffer_size));
+        libspdm_internal_dump_hex(spdm_context->msg_log.buffer, spdm_context->msg_log.buffer_size);
     }
 }
 #endif /* LIBSPDM_ENABLE_MSG_LOG */

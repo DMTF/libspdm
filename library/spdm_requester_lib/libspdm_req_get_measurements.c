@@ -231,8 +231,7 @@ static libspdm_return_t libspdm_try_get_measurement(void *context, const uint32_
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             goto receive_done;
         }
-    } else if (spdm_response->header.request_response_code !=
-               SPDM_MEASUREMENTS) {
+    } else if (spdm_response->header.request_response_code != SPDM_MEASUREMENTS) {
         libspdm_reset_message_m(spdm_context, session_info);
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
@@ -262,8 +261,7 @@ static libspdm_return_t libspdm_try_get_measurement(void *context, const uint32_
         }
     }
 
-    measurement_record_data_length =
-        libspdm_read_uint24(spdm_response->measurement_record_length);
+    measurement_record_data_length = libspdm_read_uint24(spdm_response->measurement_record_length);
     if (measurement_operation ==
         SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_TOTAL_NUMBER_OF_MEASUREMENTS) {
         if (measurement_record_data_length != 0) {

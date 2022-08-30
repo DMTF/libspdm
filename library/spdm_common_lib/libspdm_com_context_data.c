@@ -2468,6 +2468,14 @@ void libspdm_reset_context(void *context)
     spdm_context->last_spdm_request_size = 0;
     spdm_context->encap_context.certificate_chain_buffer.max_buffer_size =
         sizeof(spdm_context->encap_context.certificate_chain_buffer.buffer);
+
+    #if LIBSPDM_ENABLE_MSG_LOG
+    spdm_context->msg_log.buffer = NULL;
+    spdm_context->msg_log.max_buffer_size = 0;
+    spdm_context->msg_log.buffer_size = 0;
+    spdm_context->msg_log.mode = 0;
+    spdm_context->msg_log.status = 0;
+    #endif
 }
 /**
  * Return the size in bytes of the SPDM context.

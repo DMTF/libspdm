@@ -16,7 +16,7 @@
 static size_t m_libspdm_local_buffer_size;
 static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 static uint8_t m_libspdm_local_psk_hint[32];
-static uint8_t m_libspdm_msg_log_buffer[0x10000];
+static uint8_t m_libspdm_msg_log_buffer[0x5000];
 
 size_t libspdm_test_get_measurement_request_size(const void *spdm_context,
                                                  const void *buffer,
@@ -3036,10 +3036,6 @@ void libspdm_test_requester_get_measurements_case2(void **state)
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
     free(data);
-
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "--- Printing the msg buffer! ---\n"));
-    libspdm_dump_hex(spdm_context->msg_log.buffer, spdm_context->msg_log.buffer_size);
-
 }
 
 /**
