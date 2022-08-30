@@ -1875,6 +1875,30 @@ void libspdm_register_transport_layer_func(
 }
 
 /**
+ * Register SPDM certificate verification functions for SPDM GET_CERTIFICATE in requester or responder.
+ * It is called after GET_CERTIFICATE gets a full certificate chain from peer.
+ *
+ * If it is NOT registered, the default verification in SPDM lib will be used. It verifies:
+ *    1) The integrity of the certificate chain, (Root Cert Hash->Root Cert->Cert Chain), according to X.509.
+ *  2) The trust anchor, according LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT or LIBSPDM_DATA_PEER_PUBLIC_CERT_CHAIN.
+ * If it is registered, SPDM lib will use this function to verify the certificate.
+ *
+ * This function must be called after libspdm_init_context, and before any SPDM communication.
+ *
+ * @param  context                  A pointer to the SPDM context.
+ * @param  verify_spdm_cert_chain   The fuction to verify an SPDM certificate after GET_CERTIFICATE.
+ **/
+void libspdm_register_verify_spdm_cert_chain_func(
+    void *context,
+    const libspdm_verify_spdm_cert_chain_func verify_spdm_cert_chain)
+{
+    libspdm_context_t *spdm_context;
+
+    spdm_context = context;
+    spdm_context->local_context.verify_peer_spdm_cert_chain = verify_spdm_cert_chain;
+}
+
+/**
  * Get the size of required scratch buffer.
  *
  * The SPDM integrator must call libspdm_get_sizeof_required_scratch_buffer to get the size,

@@ -144,7 +144,8 @@ void libspdm_test_requester_get_certificate_case2(void **State)
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-    spdm_context->local_context.verify_peer_spdm_cert_chain = libspdm_test_verify_spdm_cert_chain;
+    libspdm_register_verify_spdm_cert_chain_func (spdm_context,
+                                                  libspdm_test_verify_spdm_cert_chain);
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size,
@@ -196,7 +197,8 @@ void libspdm_test_requester_get_certificate_ex_case1(void **State)
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-    spdm_context->local_context.verify_peer_spdm_cert_chain = libspdm_test_verify_spdm_cert_chain;
+    libspdm_register_verify_spdm_cert_chain_func (spdm_context,
+                                                  libspdm_test_verify_spdm_cert_chain);
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size,
