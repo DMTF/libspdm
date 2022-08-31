@@ -781,11 +781,7 @@ void libspdm_init_msg_log (void *context, void *msg_buffer, size_t msg_buffer_si
  *
  * @param  context A pointer to the SPDM context.
  * @param  mode    A bitmask specifying the mode in which the message logger operates.
- *                 LIBSPDM_MSG_LOG_MODE_ENABLE  - when set the message logger is active.
- *                 LIBSPDM_MSG_LOG_MODE_WRAP    - when set the message logger will wrap on buffer
- *                                                overflow, else it clamps.
- *                 LIBSPDM_MSG_LOG_MODE_INC_ERR - when set the message logger will include error
- *                                                responses in the message log.
+ *                 LIBSPDM_MSG_LOG_MODE_ENABLE - when set the message logger is active.
  */
 void libspdm_set_msg_log_mode (void *context, uint32_t mode);
 
@@ -795,9 +791,8 @@ void libspdm_set_msg_log_mode (void *context, uint32_t mode);
  * @param  context  A pointer to the SPDM context.
  *
  * @retval uint32_t A bitmask giving the status of the message logger.
- *                  LIBSPDM_MSG_LOG_STATUS_FULL - when LIBSPDM_MSG_LOG_MODE_WRAP is clear and this
- *                                                bit is set then the message logging buffer has
- *                                                reached capacity.
+ *                  LIBSPDM_MSG_LOG_STATUS_BUFFER_FULL - if set the message logging buffer has
+ *                                                       reached capacity.
  */
 uint32_t libspdm_get_msg_log_status (void *context);
 
