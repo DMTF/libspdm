@@ -16,7 +16,7 @@
 static size_t m_libspdm_local_buffer_size;
 static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 static uint8_t m_libspdm_local_psk_hint[32];
-static uint8_t m_libspdm_msg_log_buffer[0x5000];
+static uint8_t m_libspdm_msg_log_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE * 2];
 
 size_t libspdm_test_get_measurement_request_size(const void *spdm_context,
                                                  const void *buffer,
