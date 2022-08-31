@@ -2475,7 +2475,7 @@ void libspdm_reset_context(void *context)
     spdm_context->msg_log.buffer_size = 0;
     spdm_context->msg_log.mode = 0;
     spdm_context->msg_log.status = 0;
-    #endif
+    #endif /* LIBSPDM_ENABLE_MSG_LOG */
 }
 /**
  * Return the size in bytes of the SPDM context.
