@@ -3000,8 +3000,10 @@ void libspdm_test_requester_get_measurements_case2(void **state)
     spdm_context->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
 
+    #if LIBSPDM_ENABLE_MSG_LOG
     libspdm_init_msg_log (spdm_context, m_libspdm_msg_log_buffer, sizeof(m_libspdm_msg_log_buffer));
     libspdm_set_msg_log_mode (spdm_context, LIBSPDM_MSG_LOG_MODE_ENABLE);
+    #endif /* LIBSPDM_ENABLE_MSG_LOG */
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
@@ -3036,6 +3038,10 @@ void libspdm_test_requester_get_measurements_case2(void **state)
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
     free(data);
+
+    #if LIBSPDM_ENABLE_MSG_LOG
+    libspdm_reset_msg_log(spdm_context);
+    #endif /* LIBSPDM_ENABLE_MSG_LOG */
 }
 
 /**
