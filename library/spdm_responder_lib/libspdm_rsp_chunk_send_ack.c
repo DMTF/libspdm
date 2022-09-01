@@ -6,7 +6,7 @@
 
 #include "internal/libspdm_responder_lib.h"
 
-#if LIBSPDM_ENABLE_CHUNK_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
 
 /**
  * Process the SPDM CHUNK_SEND request and return the response.
@@ -248,4 +248,4 @@ libspdm_return_t libspdm_get_response_chunk_send(void *context,
     return status;
 }
 
-#endif /* LIBSPDM_ENABLE_CHUNK_CAP */
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */

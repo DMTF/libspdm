@@ -8,7 +8,7 @@
 #include "internal/libspdm_requester_lib.h"
 #include "internal/libspdm_secured_message_lib.h"
 
-#if LIBSPDM_ENABLE_SET_CERTIFICATE_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP
 
 
 libspdm_return_t libspdm_requester_set_certificate_test_send_message(
@@ -408,4 +408,4 @@ int libspdm_requester_set_certificate_test_main(void)
                                   libspdm_unit_test_group_teardown);
 }
 
-#endif /* LIBSPDM_ENABLE_SET_CERTIFICATE_CAP*/
+#endif /* LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP*/

@@ -7,7 +7,7 @@
 #include "spdm_unit_test.h"
 #include "internal/libspdm_responder_lib.h"
 
-#if LIBSPDM_ENABLE_CHUNK_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
 
 #define CHUNK_SEND_ACK_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE (42)
 
@@ -1801,4 +1801,4 @@ int libspdm_responder_chunk_send_ack_test_main(void)
                                   libspdm_unit_test_group_teardown);
 }
 
-#endif /* LIBSPDM_ENABLE_CHUNK_CAP*/
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP*/
