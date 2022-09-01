@@ -13,25 +13,26 @@
 #include LIBSPDM_CONFIG
 #endif
 
-#if defined(LIBSPDM_ENABLE_SET_CERTIFICATE_CAP) && !defined(LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP)
+#if defined(LIBSPDM_ENABLE_SET_CERTIFICATE_CAP) && \
+    !defined(LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP)
 #ifdef _MSC_VER
-#pragma message("LIBSPDM_ENABLE_SET_CERTIFICATE_CAP is deprecated. Use \
-LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP instead. This warning will be removed with the next \
-release.")
+#pragma message("LIBSPDM_ENABLE_SET_CERTIFICATE_CAP is deprecated. Use " \
+    "LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP instead. This warning will be removed with " \
+    "the next release.")
 #else
-#warning LIBSPDM_ENABLE_SET_CERTIFICATE_CAP is deprecated. Use \
-LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP instead. This warning will be removed with the next \
-release.
+#warning "LIBSPDM_ENABLE_SET_CERTIFICATE_CAP is deprecated. Use" \
+    "LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP instead. This warning will be removed with " \
+    "the next release."
 #endif /* _MSC_VER */
 #endif /* defined(LIBSPDM_ENABLE_SET_CERTIFICATE_CAP) */
 
 #if defined(LIBSPDM_ENABLE_CHUNK_CAP) && !defined(LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP)
 #ifdef _MSC_VER
-#pragma message("LIBSPDM_ENABLE_CHUNK_CAP is deprecated. Use \
-LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP instead. This warning will be removed with the next release.")
+#pragma message("LIBSPDM_ENABLE_CHUNK_CAP is deprecated. Use LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP " \
+    "instead. This warning will be removed with the next release.")
 #else
-#warning LIBSPDM_ENABLE_CHUNK_CAP is deprecated. Use LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP \
-instead. This warning will be removed with the next release.
+#warning "LIBSPDM_ENABLE_CHUNK_CAP is deprecated. Use LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP " \
+    "instead. This warning will be removed with the next release."
 #endif /* _MSC_VER */
 #endif /* defined(LIBSPDM_ENABLE_CHUNK_CAP) */
 
