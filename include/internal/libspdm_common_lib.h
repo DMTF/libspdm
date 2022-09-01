@@ -281,7 +281,7 @@ typedef struct {
     libspdm_large_managed_buffer_t certificate_chain_buffer;
 } libspdm_encap_context_t;
 
-#if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP || LIBSPDM_ENABLE_CHUNK_CAP
 typedef struct {
     bool chunk_in_use;
     uint8_t chunk_handle;
@@ -418,10 +418,10 @@ typedef struct {
 
     uint8_t handle_error_return_policy;
 
-#if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP || LIBSPDM_ENABLE_CHUNK_CAP
     /* Chunk specific context */
     libspdm_chunk_context_t chunk_context;
-#endif /*LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP*/
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
 
 #if LIBSPDM_ENABLE_MSG_LOG
     libspdm_msg_log_t msg_log;

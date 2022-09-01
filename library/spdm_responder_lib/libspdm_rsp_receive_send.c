@@ -74,14 +74,14 @@ libspdm_get_spdm_response_func libspdm_get_response_func_via_request_code(uint8_
         { SPDM_GET_CSR, libspdm_get_response_csr },
         #endif /*LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP*/
 
-        #if LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP
+        #if LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP || LIBSPDM_ENABLE_SET_CERTIFICATE_CAP
         { SPDM_SET_CERTIFICATE, libspdm_get_response_set_certificate },
         #endif /*LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP*/
 
-        #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
+        #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP || LIBSPDM_ENABLE_CHUNK_CAP
         { SPDM_CHUNK_GET, libspdm_get_response_chunk_get},
         { SPDM_CHUNK_SEND, libspdm_get_response_chunk_send},
-        #endif /*LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP*/
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
     };
 
     LIBSPDM_ASSERT(request_code != SPDM_RESPOND_IF_READY);
@@ -342,7 +342,7 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
     uint8_t *scratch_buffer;
     size_t scratch_buffer_size;
 
-    #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP || LIBSPDM_ENABLE_CHUNK_CAPBu
     libspdm_chunk_info_t* get_info;
     #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
 
@@ -452,7 +452,7 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
         get_response_func =
             libspdm_get_response_func_via_last_request(spdm_context);
 
-        #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
+        #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP || LIBSPDM_ENABLE_CHUNK_CAP
         /* If responder is expecting chunk_get or chunk_send requests
          * and gets other requests instead, drop out of chunking mode */
         if (spdm_context->chunk_context.get.chunk_in_use
@@ -506,7 +506,7 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
             spdm_context, false, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP)) {
 
-        #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
+        #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP || LIBSPDM_ENABLE_CHUNK_CAP
 
         get_info = &spdm_context->chunk_context.get;
 

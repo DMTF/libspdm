@@ -737,7 +737,7 @@ libspdm_return_t libspdm_get_csr(void * context,
                                  void *csr, size_t *csr_len);
 #endif /*LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP*/
 
-#if LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP || LIBSPDM_ENABLE_SET_CERTIFICATE_CAP
 /**
  * This function try to send SET_CERTIFICATE
  * to set certificate from the device.
