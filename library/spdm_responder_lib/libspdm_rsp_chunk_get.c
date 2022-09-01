@@ -53,7 +53,9 @@ libspdm_return_t libspdm_get_response_chunk_get(
             response_size, response);
     }
 
-    if (spdm_context->response_state != LIBSPDM_RESPONSE_STATE_NORMAL) {
+    /*chunk mechanism can be used for normal or encap state*/
+    if ((spdm_context->response_state != LIBSPDM_RESPONSE_STATE_NORMAL) &&
+        (spdm_context->response_state != LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP)) {
         return libspdm_responder_handle_response_state(
             spdm_context,
             spdm_request->header.request_response_code,
