@@ -64,7 +64,7 @@ void libspdm_test_responder_capabilities_case3(void **State)
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
 
-    spdm_context->response_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
