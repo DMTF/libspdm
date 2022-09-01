@@ -85,6 +85,7 @@ void libspdm_append_msg_log(void *context, void *message, size_t message_size)
                              spdm_context->msg_log.max_buffer_size -
                              spdm_context->msg_log.buffer_size);
             spdm_context->msg_log.status |= LIBSPDM_MSG_LOG_STATUS_BUFFER_FULL;
+            spdm_context->msg_log.buffer_size = spdm_context->msg_log.max_buffer_size;
         } else {
             libspdm_copy_mem((uint8_t *)spdm_context->msg_log.buffer +
                              spdm_context->msg_log.buffer_size,
