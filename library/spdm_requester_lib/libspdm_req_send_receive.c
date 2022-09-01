@@ -54,7 +54,7 @@ libspdm_return_t libspdm_send_request(void *context, const uint32_t *session_id,
      * Did not want to modify ally request handlers to pass this information,
      * so just making the determination here by examining scratch/sender buffers.
      * This may be something that should be refactored in the future. */
-    #if LIBSPDM_ENABLE_CHUNK_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
     if ((uint8_t*) request >= sender_buffer &&
         (uint8_t*)request < sender_buffer + sender_buffer_size) {
         message = sender_buffer;
@@ -69,10 +69,10 @@ libspdm_return_t libspdm_send_request(void *context, const uint32_t *session_id,
         message = scratch_buffer + LIBSPDM_SCRATCH_BUFFER_SENDER_RECEIVER_OFFSET;
         message_size = LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE;
     }
-    #else /* LIBSPDM_ENABLE_CHUNK_CAP */
+    #else /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
     message = sender_buffer;
     message_size = sender_buffer_size;
-    #endif /* LIBSPDM_ENABLE_CHUNK_CAP */
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
 
     if (session_id != NULL) {
         /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
@@ -231,7 +231,7 @@ error:
     }
 }
 
-#if LIBSPDM_ENABLE_CHUNK_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
 libspdm_return_t libspdm_handle_large_request(
     libspdm_context_t *spdm_context,
     const uint32_t *session_id,
@@ -459,7 +459,7 @@ libspdm_return_t libspdm_handle_large_request(
 
     return status;
 }
-#endif /* LIBSPDM_ENABLE_CHUNK_CAP */
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
 
 /**
  * Send an SPDM request to a device.
@@ -517,7 +517,7 @@ libspdm_return_t libspdm_send_spdm_request(libspdm_context_t *spdm_context,
         && spdm_context->connection_info.capability.data_transfer_size != 0
         && request_size > spdm_context->connection_info.capability.data_transfer_size) {
 
-        #if LIBSPDM_ENABLE_CHUNK_CAP
+        #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
         /* libspdm_send_request is not called with the original request in this flow.
          * This leads to the last_spdm_request field not having the original request value.
          * The caller assumes the request has been copied to last_spdm_request,
@@ -535,9 +535,9 @@ libspdm_return_t libspdm_send_spdm_request(libspdm_context_t *spdm_context,
 
         status = libspdm_handle_large_request(
             spdm_context, session_id, request_size, request);
-        #else  /* LIBSPDM_ENABLE_CHUNK_CAP*/
+        #else  /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP*/
         status = LIBSPDM_STATUS_BUFFER_TOO_SMALL;
-        #endif /* LIBSPDM_ENABLE_CHUNK_CAP*/
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP*/
     }
     else
     {
@@ -577,11 +577,11 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
 
-    #if LIBSPDM_ENABLE_CHUNK_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
     spdm_message_header_t *spdm_response;
     size_t response_capacity;
     libspdm_chunk_info_t *send_info;
-    #endif /* LIBSPDM_ENABLE_CHUNK_CAP */
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
 
     if ((session_id != NULL) &&
         libspdm_is_capabilities_flag_supported(
@@ -602,9 +602,9 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
         }
     }
 
-    #if !LIBSPDM_ENABLE_CHUNK_CAP
+    #if !LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
     status = libspdm_receive_response(spdm_context, session_id, false, response_size, response);
-    #else /* LIBSPDM_ENABLE_CHUNK_CAP */
+    #else /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
     send_info = &spdm_context->chunk_context.send;
     if (send_info->chunk_in_use) {
         libspdm_copy_mem(*response, *response_size,
@@ -676,7 +676,7 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
     }
 
 receive_done:
-    #endif /* LIBSPDM_ENABLE_CHUNK_CAP */
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
 
     return status;
 }

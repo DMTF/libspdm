@@ -8,7 +8,7 @@
 #include "internal/libspdm_requester_lib.h"
 #include "internal/libspdm_secured_message_lib.h"
 
-#if LIBSPDM_ENABLE_CHUNK_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
 
 static bool m_libspdm_chunk_send_last_chunk = false;
 static uint8_t m_libspdm_chunk_send_chunk_handle = 0;
@@ -418,4 +418,4 @@ int libspdm_requester_chunk_send_test_main(void)
                                   libspdm_unit_test_group_teardown);
 }
 
-#endif /* LIBSPDM_ENABLE_CHUNK_CAP*/
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP*/
