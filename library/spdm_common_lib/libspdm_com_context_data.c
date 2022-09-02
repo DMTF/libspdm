@@ -2179,14 +2179,6 @@ libspdm_return_t libspdm_init_context(void *context)
             .secured_message_context);
     }
 
-
-    /* The libspdm_random_seed function may or may not be implemented.
-     * If unimplemented, the stub should always return success.*/
-
-    if (!libspdm_random_seed(NULL, 0)) {
-        return LIBSPDM_STATUS_LOW_ENTROPY;
-    }
-
     return LIBSPDM_STATUS_SUCCESS;
 }
 

@@ -36,8 +36,6 @@ void libspdm_cryptest_main(void)
     libspdm_my_print("\nCrypto Wrapper Cryptosystem Testing: \n");
     libspdm_my_print("-------------------------------------------- \n");
 
-    libspdm_random_seed(NULL, 0);
-
     status = libspdm_validate_crypt_digest();
     if (!status) {
         return;
