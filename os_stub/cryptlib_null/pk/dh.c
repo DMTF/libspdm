@@ -47,9 +47,6 @@ void libspdm_dh_free(void *dh_context)
  * Given generator g, and length of prime number p in bits, this function generates p,
  * and sets DH context according to value of g and p.
  *
- * Before this function can be invoked, pseudorandom number generator must be correctly
- * initialized by libspdm_random_seed().
- *
  * If dh_context is NULL, then return false.
  * If prime is NULL, then return false.
  *

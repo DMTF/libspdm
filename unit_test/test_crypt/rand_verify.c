@@ -30,12 +30,6 @@ bool libspdm_validate_crypt_prng(void)
 
     libspdm_my_print("- Random Generation...");
 
-    status = libspdm_random_seed(m_libspdm_seed_string, sizeof(m_libspdm_seed_string));
-    if (!status) {
-        libspdm_my_print("[Fail]");
-        return false;
-    }
-
     for (index = 0; index < 10; index++) {
         status = libspdm_random_bytes(m_libspdm_random_buffer, LIBSPDM_RANDOM_NUMBER_SIZE);
         if (!status) {

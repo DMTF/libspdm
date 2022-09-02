@@ -144,9 +144,6 @@ end:
  * length in bits of RSA modulus N as input, and generates all key components.
  * If public_exponent is NULL, the default RSA public exponent (0x10001) will be used.
  *
- * Before this function can be invoked, pseudorandom number generator must be correctly
- * initialized by libspdm_random_seed().
- *
  * If rsa_context is NULL, then return false.
  *
  * @param[in, out]  rsa_context           Pointer to RSA context being set.
