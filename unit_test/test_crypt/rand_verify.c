@@ -8,18 +8,14 @@
 
 #define LIBSPDM_RANDOM_NUMBER_SIZE 256
 
-uint8_t m_libspdm_seed_string[] = "This is the random seed for PRNG verification.";
-
 uint8_t m_libspdm_previous_random_buffer[LIBSPDM_RANDOM_NUMBER_SIZE] = { 0x0 };
-
 uint8_t m_libspdm_random_buffer[LIBSPDM_RANDOM_NUMBER_SIZE] = { 0x0 };
 
 /**
  * Validate Crypto pseudorandom number generator interfaces.
  *
- * @retval  true  Validation succeeded.
+ * @retval  true   Validation succeeded.
  * @retval  false  Validation failed.
- *
  **/
 bool libspdm_validate_crypt_prng(void)
 {

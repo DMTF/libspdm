@@ -1936,7 +1936,7 @@ bool libspdm_sm2_dsa_verify(const void *sm2_context, size_t hash_nid,
                             const uint8_t *signature, size_t sig_size);
 
 /*=====================================================================================
- *    Random Numer Generation Primitive
+ *    Random Number Generation Primitive
  *=====================================================================================*/
 
 /**
