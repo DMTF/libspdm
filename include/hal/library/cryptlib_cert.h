@@ -18,7 +18,7 @@
  * @retval  true   Get tag successful.
  * @retval  false  Failed to get tag or tag not match.
  **/
-bool libspdm_asn1_get_tag(uint8_t **ptr, const uint8_t *end, size_t *length, uint32_t tag);
+extern bool libspdm_asn1_get_tag(uint8_t **ptr, const uint8_t *end, size_t *length, uint32_t tag);
 
 /**
  * Retrieve the subject bytes from one X.509 certificate.
@@ -38,9 +38,9 @@ bool libspdm_asn1_get_tag(uint8_t **ptr, const uint8_t *end, size_t *length, uin
  *                 The subject_size will be updated with the required size.
  * @retval  false  This interface is not supported.
  **/
-bool libspdm_x509_get_subject_name(const uint8_t *cert, size_t cert_size,
-                                   uint8_t *cert_subject,
-                                   size_t *subject_size);
+extern bool libspdm_x509_get_subject_name(const uint8_t *cert, size_t cert_size,
+                                          uint8_t *cert_subject,
+                                          size_t *subject_size);
 
 /**
  * Retrieve the common name (CN) string from one X.509 certificate.
@@ -59,9 +59,9 @@ bool libspdm_x509_get_subject_name(const uint8_t *cert, size_t cert_size,
  * @retval  true
  * @retval  false
  **/
-bool libspdm_x509_get_common_name(const uint8_t *cert, size_t cert_size,
-                                  char *common_name,
-                                  size_t *common_name_size);
+extern bool libspdm_x509_get_common_name(const uint8_t *cert, size_t cert_size,
+                                         char *common_name,
+                                         size_t *common_name_size);
 
 /**
  * Retrieve the organization name (O) string from one X.509 certificate.
@@ -80,9 +80,9 @@ bool libspdm_x509_get_common_name(const uint8_t *cert, size_t cert_size,
  * @retval  true
  * @retval  false
  **/
-bool libspdm_x509_get_organization_name(const uint8_t *cert, size_t cert_size,
-                                        char *name_buffer,
-                                        size_t *name_buffer_size);
+extern bool libspdm_x509_get_organization_name(const uint8_t *cert, size_t cert_size,
+                                               char *name_buffer,
+                                               size_t *name_buffer_size);
 
 /**
  * Retrieve the version from one X.509 certificate.
@@ -98,7 +98,7 @@ bool libspdm_x509_get_organization_name(const uint8_t *cert, size_t cert_size,
  * @retval  true
  * @retval  false
  **/
-bool libspdm_x509_get_version(const uint8_t *cert, size_t cert_size, size_t *version);
+extern bool libspdm_x509_get_version(const uint8_t *cert, size_t cert_size, size_t *version);
 
 /**
  * Retrieve the serialNumber from one X.509 certificate.
@@ -116,9 +116,9 @@ bool libspdm_x509_get_version(const uint8_t *cert, size_t cert_size, size_t *ver
  * @retval  true
  * @retval  false
  **/
-bool libspdm_x509_get_serial_number(const uint8_t *cert, size_t cert_size,
-                                    uint8_t *serial_number,
-                                    size_t *serial_number_size);
+extern bool libspdm_x509_get_serial_number(const uint8_t *cert, size_t cert_size,
+                                           uint8_t *serial_number,
+                                           size_t *serial_number_size);
 
 /**
  * Retrieve the issuer bytes from one X.509 certificate.
@@ -138,9 +138,9 @@ bool libspdm_x509_get_serial_number(const uint8_t *cert, size_t cert_size,
  *                 The issuer_size will be updated with the required size.
  * @retval  false  This interface is not supported.
  **/
-bool libspdm_x509_get_issuer_name(const uint8_t *cert, size_t cert_size,
-                                  uint8_t *cert_issuer,
-                                  size_t *issuer_size);
+extern bool libspdm_x509_get_issuer_name(const uint8_t *cert, size_t cert_size,
+                                         uint8_t *cert_issuer,
+                                         size_t *issuer_size);
 
 /**
  * Retrieve the issuer common name (CN) string from one X.509 certificate.
@@ -159,9 +159,9 @@ bool libspdm_x509_get_issuer_name(const uint8_t *cert, size_t cert_size,
  * @retval  true
  * @retval  false
  **/
-bool libspdm_x509_get_issuer_common_name(const uint8_t *cert, size_t cert_size,
-                                         char *common_name,
-                                         size_t *common_name_size);
+extern bool libspdm_x509_get_issuer_common_name(const uint8_t *cert, size_t cert_size,
+                                                char *common_name,
+                                                size_t *common_name_size);
 
 /**
  * Retrieve the issuer organization name (O) string from one X.509 certificate.
@@ -180,10 +180,9 @@ bool libspdm_x509_get_issuer_common_name(const uint8_t *cert, size_t cert_size,
  * @retval  true
  * @retval  false
  **/
-bool
-libspdm_x509_get_issuer_orgnization_name(const uint8_t *cert, size_t cert_size,
-                                         char *name_buffer,
-                                         size_t *name_buffer_size);
+extern bool libspdm_x509_get_issuer_orgnization_name(const uint8_t *cert, size_t cert_size,
+                                                     char *name_buffer,
+                                                     size_t *name_buffer_size);
 
 /**
  * Retrieve the signature algorithm from one X.509 certificate.
@@ -196,9 +195,9 @@ libspdm_x509_get_issuer_orgnization_name(const uint8_t *cert, size_t cert_size,
  * @retval  true
  * @retval  false
  **/
-bool libspdm_x509_get_signature_algorithm(const uint8_t *cert,
-                                          size_t cert_size, uint8_t *oid,
-                                          size_t *oid_size);
+extern bool libspdm_x509_get_signature_algorithm(const uint8_t *cert,
+                                                 size_t cert_size, uint8_t *oid,
+                                                 size_t *oid_size);
 
 /**
  * Retrieve Extension data from one X.509 certificate.
@@ -213,10 +212,10 @@ bool libspdm_x509_get_signature_algorithm(const uint8_t *cert,
  * @retval  true
  * @retval  false
  **/
-bool libspdm_x509_get_extension_data(const uint8_t *cert, size_t cert_size,
-                                     const uint8_t *oid, size_t oid_size,
-                                     uint8_t *extension_data,
-                                     size_t *extension_data_size);
+extern bool libspdm_x509_get_extension_data(const uint8_t *cert, size_t cert_size,
+                                            const uint8_t *oid, size_t oid_size,
+                                            uint8_t *extension_data,
+                                            size_t *extension_data_size);
 
 /**
  * Retrieve the Validity from one X.509 certificate
@@ -239,9 +238,9 @@ bool libspdm_x509_get_extension_data(const uint8_t *cert, size_t cert_size,
  * @retval  false  Invalid certificate, or Validity retrieve failed.
  * @retval  false  This interface is not supported.
  **/
-bool libspdm_x509_get_validity(const uint8_t *cert, size_t cert_size,
-                               uint8_t *from, size_t *from_size, uint8_t *to,
-                               size_t *to_size);
+extern bool libspdm_x509_get_validity(const uint8_t *cert, size_t cert_size,
+                                      uint8_t *from, size_t *from_size, uint8_t *to,
+                                      size_t *to_size);
 
 /**
  * Format a date_time object into DataTime buffer
@@ -259,7 +258,8 @@ bool libspdm_x509_get_validity(const uint8_t *cert, size_t cert_size,
  * @retval  true
  * @retval  false
  **/
-bool libspdm_x509_set_date_time(char *date_time_str, void *date_time, size_t *date_time_size);
+extern bool libspdm_x509_set_date_time(char *date_time_str, void *date_time,
+                                       size_t *date_time_size);
 
 /**
  * Compare date_time1 object and date_time2 object.
@@ -277,7 +277,7 @@ bool libspdm_x509_set_date_time(char *date_time_str, void *date_time, size_t *da
  * @retval   1  If date_time1 > date_time2
  * @retval  -1  If date_time1 < date_time2
  **/
-int32_t libspdm_x509_compare_date_time(const void *date_time1, const void *date_time2);
+extern int32_t libspdm_x509_compare_date_time(const void *date_time1, const void *date_time2);
 
 /**
  * Retrieve the key usage from one X.509 certificate.
@@ -290,7 +290,7 @@ int32_t libspdm_x509_compare_date_time(const void *date_time1, const void *date_
  * @retval  false  Invalid certificate, or usage is NULL
  * @retval  false  This interface is not supported.
  **/
-bool libspdm_x509_get_key_usage(const uint8_t *cert, size_t cert_size, size_t *usage);
+extern bool libspdm_x509_get_key_usage(const uint8_t *cert, size_t cert_size, size_t *usage);
 
 /**
  * Retrieve the Extended key usage from one X.509 certificate.
@@ -303,9 +303,9 @@ bool libspdm_x509_get_key_usage(const uint8_t *cert, size_t cert_size, size_t *u
  * @retval  true
  * @retval  false
  **/
-bool libspdm_x509_get_extended_key_usage(const uint8_t *cert,
-                                         size_t cert_size, uint8_t *usage,
-                                         size_t *usage_size);
+extern bool libspdm_x509_get_extended_key_usage(const uint8_t *cert,
+                                                size_t cert_size, uint8_t *usage,
+                                                size_t *usage_size);
 
 /**
  * Retrieve the basic constraints from one X.509 certificate.
@@ -318,10 +318,10 @@ bool libspdm_x509_get_extended_key_usage(const uint8_t *cert,
  * @retval  true
  * @retval  false
  **/
-bool libspdm_x509_get_extended_basic_constraints(const uint8_t *cert,
-                                                 size_t cert_size,
-                                                 uint8_t *basic_constraints,
-                                                 size_t *basic_constraints_size);
+extern bool libspdm_x509_get_extended_basic_constraints(const uint8_t *cert,
+                                                        size_t cert_size,
+                                                        uint8_t *basic_constraints,
+                                                        size_t *basic_constraints_size);
 
 /**
  * Verify one X509 certificate was issued by the trusted CA.
@@ -341,8 +341,8 @@ bool libspdm_x509_get_extended_basic_constraints(const uint8_t *cert,
  * @retval  false  This interface is not supported.
  *
  **/
-bool libspdm_x509_verify_cert(const uint8_t *cert, size_t cert_size,
-                              const uint8_t *ca_cert, size_t ca_cert_size);
+extern bool libspdm_x509_verify_cert(const uint8_t *cert, size_t cert_size,
+                                     const uint8_t *ca_cert, size_t ca_cert_size);
 
 /**
  * Verify one X509 certificate was issued by the trusted CA.
@@ -362,9 +362,9 @@ bool libspdm_x509_verify_cert(const uint8_t *cert, size_t cert_size,
  * @retval  false  Invalid certificate or the certificate was not issued by the given
  *                 trusted CA.
  **/
-bool libspdm_x509_verify_cert_chain(const uint8_t *root_cert, size_t root_cert_length,
-                                    const uint8_t *cert_chain,
-                                    size_t cert_chain_length);
+extern bool libspdm_x509_verify_cert_chain(const uint8_t *root_cert, size_t root_cert_length,
+                                           const uint8_t *cert_chain,
+                                           size_t cert_chain_length);
 
 /**
  * Get one X509 certificate from cert_chain.
@@ -385,10 +385,10 @@ bool libspdm_x509_verify_cert_chain(const uint8_t *root_cert, size_t root_cert_l
  * @retval  true   Success.
  * @retval  false  Failed to get certificate from certificate chain.
  **/
-bool libspdm_x509_get_cert_from_cert_chain(const uint8_t *cert_chain,
-                                           size_t cert_chain_length,
-                                           const int32_t cert_index, const uint8_t **cert,
-                                           size_t *cert_length);
+extern bool libspdm_x509_get_cert_from_cert_chain(const uint8_t *cert_chain,
+                                                  size_t cert_chain_length,
+                                                  const int32_t cert_index, const uint8_t **cert,
+                                                  size_t *cert_length);
 
 /**
  * Construct a X509 object from DER-encoded certificate data.
@@ -405,8 +405,8 @@ bool libspdm_x509_get_cert_from_cert_chain(const uint8_t *cert_chain,
  * @retval  false  The operation failed.
  * @retval  false  This interface is not supported.
  **/
-bool libspdm_x509_construct_certificate(const uint8_t *cert, size_t cert_size,
-                                        uint8_t **single_x509_cert);
+extern bool libspdm_x509_construct_certificate(const uint8_t *cert, size_t cert_size,
+                                               uint8_t **single_x509_cert);
 
 /**
  * Construct a X509 stack object from a list of DER-encoded certificate data.
@@ -424,9 +424,8 @@ bool libspdm_x509_construct_certificate(const uint8_t *cert, size_t cert_size,
  * @retval  true   The X509 stack construction succeeded.
  * @retval  false  The construction operation failed.
  * @retval  false  This interface is not supported.
- *
  **/
-bool libspdm_x509_construct_certificate_stack(uint8_t **x509_stack, ...);
+extern bool libspdm_x509_construct_certificate_stack(uint8_t **x509_stack, ...);
 
 /**
  * Release the specified X509 object.
@@ -434,9 +433,8 @@ bool libspdm_x509_construct_certificate_stack(uint8_t **x509_stack, ...);
  * If the interface is not supported, then ASSERT().
  *
  * @param[in]  x509_cert  Pointer to the X509 object to be released.
- *
  **/
-void libspdm_x509_free(void *x509_cert);
+extern void libspdm_x509_free(void *x509_cert);
 
 /**
  * Release the specified X509 stack object.
@@ -444,9 +442,8 @@ void libspdm_x509_free(void *x509_cert);
  * If the interface is not supported, then ASSERT().
  *
  * @param[in]  x509_stack  Pointer to the X509 stack object to be released.
- *
  **/
-void libspdm_x509_stack_free(void *x509_stack);
+extern void libspdm_x509_stack_free(void *x509_stack);
 
 /**
  * Retrieve the TBSCertificate from one given X.509 certificate.
@@ -463,10 +460,9 @@ void libspdm_x509_stack_free(void *x509_stack);
  *
  * @retval  true   The TBSCertificate was retrieved successfully.
  * @retval  false  Invalid X.509 certificate.
- *
  **/
-bool libspdm_x509_get_tbs_cert(const uint8_t *cert, size_t cert_size,
-                               uint8_t **tbs_cert, size_t *tbs_cert_size);
+extern bool libspdm_x509_get_tbs_cert(const uint8_t *cert, size_t cert_size,
+                                      uint8_t **tbs_cert, size_t *tbs_cert_size);
 
 #if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)
 /**
@@ -476,22 +472,21 @@ bool libspdm_x509_get_tbs_cert(const uint8_t *cert, size_t cert_size,
  * If rsa_context is NULL, then return false.
  * If this interface is not supported, then return false.
  *
- * @param[in]  pem_data      Pointer to the PEM-encoded key data to be retrieved.
- * @param[in]  pem_size      size of the PEM key data in bytes.
+ * @param[in]  pem_data     Pointer to the PEM-encoded key data to be retrieved.
+ * @param[in]  pem_size     Size of the PEM key data in bytes.
  * @param[in]  password     NULL-terminated passphrase used for encrypted PEM key data.
- * @param[out] rsa_context   Pointer to new-generated RSA context which contain the retrieved
- *                         RSA private key component. Use libspdm_rsa_free() function to free the
- *                         resource.
+ * @param[out] rsa_context  Pointer to new-generated RSA context which contain the retrieved
+ *                          RSA private key component. Use libspdm_rsa_free() function to free the
+ *                          resource.
  *
  * @retval  true   RSA Private key was retrieved successfully.
  * @retval  false  Invalid PEM key data or incorrect password.
  * @retval  false  This interface is not supported.
- *
  **/
-bool libspdm_rsa_get_private_key_from_pem(const uint8_t *pem_data,
-                                          size_t pem_size,
-                                          const char *password,
-                                          void **rsa_context);
+extern bool libspdm_rsa_get_private_key_from_pem(const uint8_t *pem_data,
+                                                 size_t pem_size,
+                                                 const char *password,
+                                                 void **rsa_context);
 
 /**
  * Retrieve the RSA public key from one DER-encoded X509 certificate.
@@ -501,28 +496,27 @@ bool libspdm_rsa_get_private_key_from_pem(const uint8_t *pem_data,
  * If this interface is not supported, then return false.
  *
  * @param[in]  cert         Pointer to the DER-encoded X509 certificate.
- * @param[in]  cert_size     size of the X509 certificate in bytes.
- * @param[out] rsa_context   Pointer to new-generated RSA context which contain the retrieved
- *                         RSA public key component. Use libspdm_rsa_free() function to free the
- *                         resource.
+ * @param[in]  cert_size    Size of the X509 certificate in bytes.
+ * @param[out] rsa_context  Pointer to new-generated RSA context which contain the retrieved
+ *                          RSA public key component. Use libspdm_rsa_free() function to free the
+ *                          resource.
  *
  * @retval  true   RSA public key was retrieved successfully.
  * @retval  false  Fail to retrieve RSA public key from X509 certificate.
  * @retval  false  This interface is not supported.
- *
  **/
-bool libspdm_rsa_get_public_key_from_x509(const uint8_t *cert, size_t cert_size,
-                                          void **rsa_context);
+extern bool libspdm_rsa_get_public_key_from_x509(const uint8_t *cert, size_t cert_size,
+                                                 void **rsa_context);
 #endif /* (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT) */
 
 #if LIBSPDM_ECDSA_SUPPORT
 /**
  * Retrieve the EC Private key from the password-protected PEM key data.
  *
- * @param[in]  pem_data      Pointer to the PEM-encoded key data to be retrieved.
- * @param[in]  pem_size      size of the PEM key data in bytes.
- * @param[in]  password     NULL-terminated passphrase used for encrypted PEM key data.
- * @param[out] ec_context    Pointer to new-generated EC DSA context which contain the retrieved
+ * @param[in]  pem_data    Pointer to the PEM-encoded key data to be retrieved.
+ * @param[in]  pem_size    Size of the PEM key data in bytes.
+ * @param[in]  password    NULL-terminated passphrase used for encrypted PEM key data.
+ * @param[out] ec_context  Pointer to new-generated EC DSA context which contain the retrieved
  *                         EC private key component. Use libspdm_ec_free() function to free the
  *                         resource.
  *
@@ -533,16 +527,16 @@ bool libspdm_rsa_get_public_key_from_x509(const uint8_t *cert, size_t cert_size,
  * @retval  false  Invalid PEM key data or incorrect password.
  *
  **/
-bool libspdm_ec_get_private_key_from_pem(const uint8_t *pem_data, size_t pem_size,
-                                         const char *password,
-                                         void **ec_context);
+extern bool libspdm_ec_get_private_key_from_pem(const uint8_t *pem_data, size_t pem_size,
+                                                const char *password,
+                                                void **ec_context);
 
 /**
  * Retrieve the EC public key from one DER-encoded X509 certificate.
  *
- * @param[in]  cert         Pointer to the DER-encoded X509 certificate.
- * @param[in]  cert_size     size of the X509 certificate in bytes.
- * @param[out] ec_context    Pointer to new-generated EC DSA context which contain the retrieved
+ * @param[in]  cert        Pointer to the DER-encoded X509 certificate.
+ * @param[in]  cert_size   Size of the X509 certificate in bytes.
+ * @param[out] ec_context  Pointer to new-generated EC DSA context which contain the retrieved
  *                         EC public key component. Use libspdm_ec_free() function to free the
  *                         resource.
  *
@@ -553,41 +547,40 @@ bool libspdm_ec_get_private_key_from_pem(const uint8_t *pem_data, size_t pem_siz
  * @retval  false  Fail to retrieve EC public key from X509 certificate.
  *
  **/
-bool libspdm_ec_get_public_key_from_x509(const uint8_t *cert, size_t cert_size,
-                                         void **ec_context);
+extern bool libspdm_ec_get_public_key_from_x509(const uint8_t *cert, size_t cert_size,
+                                                void **ec_context);
 #endif /* LIBSPDM_ECDSA_SUPPORT */
 
 #if (LIBSPDM_EDDSA_ED25519_SUPPORT) || (LIBSPDM_EDDSA_ED448_SUPPORT)
 /**
  * Retrieve the Ed Private key from the password-protected PEM key data.
  *
- * @param[in]  pem_data      Pointer to the PEM-encoded key data to be retrieved.
- * @param[in]  pem_size      size of the PEM key data in bytes.
+ * @param[in]  pem_data     Pointer to the PEM-encoded key data to be retrieved.
+ * @param[in]  pem_size     Size of the PEM key data in bytes.
  * @param[in]  password     NULL-terminated passphrase used for encrypted PEM key data.
- * @param[out] ecd_context    Pointer to new-generated Ed DSA context which contain the retrieved
- *                         Ed private key component. Use libspdm_ecd_free() function to free the
- *                         resource.
+ * @param[out] ecd_context  Pointer to new-generated Ed DSA context which contain the retrieved
+ *                          Ed private key component. Use libspdm_ecd_free() function to free the
+ *                          resource.
  *
  * If pem_data is NULL, then return false.
  * If ecd_context is NULL, then return false.
  *
  * @retval  true   Ed Private key was retrieved successfully.
  * @retval  false  Invalid PEM key data or incorrect password.
- *
  **/
-bool libspdm_ecd_get_private_key_from_pem(const uint8_t *pem_data,
-                                          size_t pem_size,
-                                          const char *password,
-                                          void **ecd_context);
+extern bool libspdm_ecd_get_private_key_from_pem(const uint8_t *pem_data,
+                                                 size_t pem_size,
+                                                 const char *password,
+                                                 void **ecd_context);
 
 /**
  * Retrieve the Ed public key from one DER-encoded X509 certificate.
  *
  * @param[in]  cert         Pointer to the DER-encoded X509 certificate.
- * @param[in]  cert_size     size of the X509 certificate in bytes.
- * @param[out] ecd_context    Pointer to new-generated Ed DSA context which contain the retrieved
- *                         Ed public key component. Use libspdm_ecd_free() function to free the
- *                         resource.
+ * @param[in]  cert_size    Size of the X509 certificate in bytes.
+ * @param[out] ecd_context  Pointer to new-generated Ed DSA context which contain the retrieved
+ *                          Ed public key component. Use libspdm_ecd_free() function to free the
+ *                          resource.
  *
  * If cert is NULL, then return false.
  * If ecd_context is NULL, then return false.
@@ -596,20 +589,20 @@ bool libspdm_ecd_get_private_key_from_pem(const uint8_t *pem_data,
  * @retval  false  Fail to retrieve Ed public key from X509 certificate.
  *
  **/
-bool libspdm_ecd_get_public_key_from_x509(const uint8_t *cert, size_t cert_size,
-                                          void **ecd_context);
+extern bool libspdm_ecd_get_public_key_from_x509(const uint8_t *cert, size_t cert_size,
+                                                 void **ecd_context);
 #endif /* (LIBSPDM_EDDSA_ED25519_SUPPORT) || (LIBSPDM_EDDSA_ED448_SUPPORT) */
 
 #if LIBSPDM_SM2_DSA_SUPPORT
 /**
  * Retrieve the sm2 Private key from the password-protected PEM key data.
  *
- * @param[in]  pem_data      Pointer to the PEM-encoded key data to be retrieved.
- * @param[in]  pem_size      size of the PEM key data in bytes.
+ * @param[in]  pem_data     Pointer to the PEM-encoded key data to be retrieved.
+ * @param[in]  pem_size     Size of the PEM key data in bytes.
  * @param[in]  password     NULL-terminated passphrase used for encrypted PEM key data.
- * @param[out] sm2_context   Pointer to new-generated sm2 context which contain the retrieved
- *                         sm2 private key component. Use sm2_free() function to free the
- *                         resource.
+ * @param[out] sm2_context  Pointer to new-generated sm2 context which contain the retrieved
+ *                          sm2 private key component. Use sm2_free() function to free the
+ *                          resource.
  *
  * If pem_data is NULL, then return false.
  * If sm2_context is NULL, then return false.
@@ -618,19 +611,19 @@ bool libspdm_ecd_get_public_key_from_x509(const uint8_t *cert, size_t cert_size,
  * @retval  false  Invalid PEM key data or incorrect password.
  *
  **/
-bool libspdm_sm2_get_private_key_from_pem(const uint8_t *pem_data,
-                                          size_t pem_size,
-                                          const char *password,
-                                          void **sm2_context);
+extern bool libspdm_sm2_get_private_key_from_pem(const uint8_t *pem_data,
+                                                 size_t pem_size,
+                                                 const char *password,
+                                                 void **sm2_context);
 
 /**
  * Retrieve the sm2 public key from one DER-encoded X509 certificate.
  *
  * @param[in]  cert         Pointer to the DER-encoded X509 certificate.
- * @param[in]  cert_size     size of the X509 certificate in bytes.
- * @param[out] sm2_context   Pointer to new-generated sm2 context which contain the retrieved
- *                         sm2 public key component. Use sm2_free() function to free the
- *                         resource.
+ * @param[in]  cert_size    Size of the X509 certificate in bytes.
+ * @param[out] sm2_context  Pointer to new-generated sm2 context which contain the retrieved
+ *                          sm2 public key component. Use sm2_free() function to free the
+ *                          resource.
  *
  * If cert is NULL, then return false.
  * If sm2_context is NULL, then return false.
@@ -639,8 +632,8 @@ bool libspdm_sm2_get_private_key_from_pem(const uint8_t *pem_data,
  * @retval  false  Fail to retrieve sm2 public key from X509 certificate.
  *
  **/
-bool libspdm_sm2_get_public_key_from_x509(const uint8_t *cert, size_t cert_size,
-                                          void **sm2_context);
+extern bool libspdm_sm2_get_public_key_from_x509(const uint8_t *cert, size_t cert_size,
+                                                 void **sm2_context);
 #endif /* LIBSPDM_SM2_DSA_SUPPORT */
 
 #if LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP
@@ -674,10 +667,10 @@ bool libspdm_sm2_get_public_key_from_x509(const uint8_t *cert, size_t cert_size,
  * @retval  true   Success.
  * @retval  false  Failed to gen CSR.
  **/
-bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
-                          uint8_t *requester_info, size_t requester_info_length,
-                          void *context, char *subject_name,
-                          size_t *csr_len, uint8_t **csr_pointer);
+extern bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
+                                 uint8_t *requester_info, size_t requester_info_length,
+                                 void *context, char *subject_name,
+                                 size_t *csr_len, uint8_t **csr_pointer);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP */
 
 #endif /* CRYPTLIB_CERT_H */
