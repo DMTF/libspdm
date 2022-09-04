@@ -580,4 +580,4 @@ bool libspdm_validate_crypt_rsa_2(void)
     return true;
 }
 
-#endif (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)
+#endif /* (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT) */
