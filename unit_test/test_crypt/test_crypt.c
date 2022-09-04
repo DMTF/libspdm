@@ -69,10 +69,12 @@ void libspdm_cryptest_main(void)
         libspdm_my_print("\n- Unable to test RSA Engine without SHA-256 support.\n");
     }
 
+    #if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)
     status = libspdm_validate_crypt_rsa_2();
     if (!status) {
         return;
     }
+    #endif
 
     status = libspdm_validate_crypt_x509("ecp256", sizeof("ecp256"));
     if (!status) {
@@ -99,6 +101,7 @@ void libspdm_cryptest_main(void)
         return;
     }
 
+    #if LIBSPDM_ECDSA_SUPPORT
     status = libspdm_validate_crypt_ec();
     if (!status) {
         return;
@@ -108,7 +111,9 @@ void libspdm_cryptest_main(void)
     if (!status) {
         return;
     }
+    #endif /* LIBSPDM_ECDSA_SUPPORT */
 
+    #if (LIBSPDM_EDDSA_ED25519_SUPPORT) || (LIBSPDM_EDDSA_ED448_SUPPORT)
     status = libspdm_validate_crypt_ecd();
     if (!status) {
         return;
@@ -118,6 +123,7 @@ void libspdm_cryptest_main(void)
     if (!status) {
         return;
     }
+    #endif /* (LIBSPDM_EDDSA_ED25519_SUPPORT) || (LIBSPDM_EDDSA_ED448_SUPPORT) */
 
     status = libspdm_validate_crypt_ecx();
     if (!status) {
@@ -129,6 +135,7 @@ void libspdm_cryptest_main(void)
         return;
     }
 
+    #if LIBSPDM_SM2_DSA_SUPPORT
     status = libspdm_validate_crypt_sm2_2();
     if (!status) {
         return;
@@ -138,11 +145,14 @@ void libspdm_cryptest_main(void)
     if (!status) {
         return;
     }
+    #endif /* LIBSPDM_SM2_DSA_SUPPORT */
 
+    #if LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP
     status = libspdm_validate_crypt_x509_csr();
     if (!status) {
         return;
     }
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP **/
 
     return;
 }
