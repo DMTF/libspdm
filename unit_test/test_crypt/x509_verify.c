@@ -488,6 +488,7 @@ cleanup:
     return status;
 }
 
+#if LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP
 /**
  * Gen and verify CSR.
  *
@@ -592,6 +593,7 @@ bool libspdm_validate_crypt_x509_csr(void)
 
     return ret;
 }
+#endif /* LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP */
 
 void libspdm_dump_hex_str(const uint8_t *buffer, size_t buffer_size)
 {

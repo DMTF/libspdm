@@ -240,6 +240,7 @@ bool libspdm_read_cached_csr(uint32_t base_asym_algo, uint8_t **csr_pointer, siz
     return res;
 }
 
+#if LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP
 /**
  * Gen CSR
  *
@@ -350,6 +351,7 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
     }
     return result;
 }
+#endif /* LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP */
 
 /**
  * Fill image hash measurement block.

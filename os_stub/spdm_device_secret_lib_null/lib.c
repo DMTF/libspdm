@@ -192,6 +192,7 @@ bool libspdm_write_certificate_to_nvm(uint8_t slot_id, const void * cert_chain,
     return false;
 }
 
+#if LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP
 /**
  * Gen CSR
  *
@@ -217,3 +218,4 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
 {
     return false;
 }
+#endif /* LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP */
