@@ -1940,7 +1940,8 @@ bool libspdm_sm2_dsa_verify(const void *sm2_context, size_t hash_nid,
  *=====================================================================================*/
 
 /**
- * Generates a random byte stream of the specified size.
+ * Generates a random byte stream of the specified size. If initialization, testing, or seeding of
+ * the (pseudo)random number generator is required it should be done before this function is called.
  *
  * If output is NULL, then return false.
  * If this interface is not supported, then return false.
