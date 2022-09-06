@@ -128,22 +128,22 @@ void libspdm_cryptest_main(void)
         return;
     }
 
+    #if LIBSPDM_SM2_DSA_SUPPORT
     status = libspdm_validate_crypt_sm2();
     if (!status) {
         return;
     }
 
-    #if LIBSPDM_SM2_DSA_SUPPORT
     status = libspdm_validate_crypt_sm2_2();
     if (!status) {
         return;
     }
+    #endif /* LIBSPDM_SM2_DSA_SUPPORT */
 
     status = libspdm_validate_crypt_prng();
     if (!status) {
         return;
     }
-    #endif /* LIBSPDM_SM2_DSA_SUPPORT */
 
     #if LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP
     status = libspdm_validate_crypt_x509_csr();
