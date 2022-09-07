@@ -171,7 +171,7 @@ void libspdm_test_crypt_spdm_x509_certificate_check(void **state)
     uint8_t *file_buffer;
     size_t file_buffer_size;
 
-    if ((LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)) {
+    if ((LIBSPDM_RSA_SSA_SUPPORT) && (LIBSPDM_SHA256_SUPPORT)) {
         status = libspdm_read_input_file("rsa2048/end_requester.cert.der",
                                          (void **)&file_buffer, &file_buffer_size);
         assert_true(status);
@@ -182,7 +182,8 @@ void libspdm_test_crypt_spdm_x509_certificate_check(void **state)
                                                 true);
         assert_true(status);
         free(file_buffer);
-
+    }
+    if ((LIBSPDM_RSA_SSA_SUPPORT) && (LIBSPDM_SHA384_SUPPORT)) {
         status = libspdm_read_input_file("rsa3072/end_requester.cert.der",
                                          (void **)&file_buffer, &file_buffer_size);
         assert_true(status);
@@ -192,7 +193,8 @@ void libspdm_test_crypt_spdm_x509_certificate_check(void **state)
                                                 true);
         assert_true(status);
         free(file_buffer);
-
+    }
+    if ((LIBSPDM_RSA_SSA_SUPPORT) && (LIBSPDM_SHA512_SUPPORT)) {
         status = libspdm_read_input_file("rsa4096/end_requester.cert.der",
                                          (void **)&file_buffer, &file_buffer_size);
         assert_true(status);
@@ -204,7 +206,7 @@ void libspdm_test_crypt_spdm_x509_certificate_check(void **state)
         free(file_buffer);
     }
 
-    if (LIBSPDM_ECDSA_SUPPORT) {
+    if ((LIBSPDM_ECDSA_SUPPORT) && (LIBSPDM_SHA256_SUPPORT)) {
         status = libspdm_read_input_file("ecp256/end_requester.cert.der",
                                          (void **)&file_buffer, &file_buffer_size);
         assert_true(status);
@@ -214,7 +216,8 @@ void libspdm_test_crypt_spdm_x509_certificate_check(void **state)
                                                 true);
         assert_true(status);
         free(file_buffer);
-
+    }
+    if ((LIBSPDM_ECDSA_SUPPORT) && (LIBSPDM_SHA384_SUPPORT)) {
         status = libspdm_read_input_file("ecp384/end_requester.cert.der",
                                          (void **)&file_buffer, &file_buffer_size);
         assert_true(status);
@@ -224,7 +227,8 @@ void libspdm_test_crypt_spdm_x509_certificate_check(void **state)
                                                 true);
         assert_true(status);
         free(file_buffer);
-
+    }
+    if ((LIBSPDM_ECDSA_SUPPORT) && (LIBSPDM_SHA512_SUPPORT)) {
         status = libspdm_read_input_file("ecp521/end_requester.cert.der",
                                          (void **)&file_buffer, &file_buffer_size);
         assert_true(status);
@@ -234,7 +238,8 @@ void libspdm_test_crypt_spdm_x509_certificate_check(void **state)
                                                 true);
         assert_true(status);
         free(file_buffer);
-
+    }
+    if ((LIBSPDM_ECDSA_SUPPORT) && (LIBSPDM_SHA256_SUPPORT)) {
         /*check for leaf cert basic constraints, CA = true,pathlen:none*/
         status = libspdm_read_input_file("ecp256/end_requester_ca_false.cert.der",
                                          (void **)&file_buffer, &file_buffer_size);
@@ -258,8 +263,7 @@ void libspdm_test_crypt_spdm_x509_certificate_check(void **state)
         assert_true(status);
         free(file_buffer);
     }
-
-    if ((LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)) {
+    if ((LIBSPDM_RSA_SSA_SUPPORT) && (LIBSPDM_SHA256_SUPPORT)) {
         /* cert mismatched negotiated base_aysm_algo check */
         status = libspdm_read_input_file("rsa2048/end_requester.cert.der",
                                          (void **)&file_buffer, &file_buffer_size);
@@ -303,7 +307,7 @@ void libspdm_test_crypt_spdm_x509_certificate_check(void **state)
         free(file_buffer);
     }
 
-    if (LIBSPDM_ECDSA_SUPPORT) {
+    if ((LIBSPDM_ECDSA_SUPPORT) && (LIBSPDM_SHA256_SUPPORT)) {
         /*test web cert: ccert public key algo is ECC case*/
         status = libspdm_read_input_file("test_web_cert/GitHub.cer",
                                          (void **)&file_buffer, &file_buffer_size);
