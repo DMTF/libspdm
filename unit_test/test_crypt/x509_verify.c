@@ -498,13 +498,17 @@ cleanup:
 bool libspdm_validate_crypt_x509_csr(void)
 {
     bool ret;
+    #if ((LIBSPDM_ECDSA_SUPPORT) && ((LIBSPDM_SHA384_SUPPORT) || (LIBSPDM_SHA256_SUPPORT))) || \
+    ((LIBSPDM_RSA_SSA_SUPPORT) && (LIBSPDM_SHA384_SUPPORT))
+    bool need_reset;
+    #endif
 
+    #if (LIBSPDM_RSA_SSA_SUPPORT) && (LIBSPDM_SHA384_SUPPORT)
     libspdm_my_print("\nGen CSR test:\n");
     /*read private key to gen RSA CSR*/
     uint8_t rsa_csr_pointer[LIBSPDM_MAX_CSR_SIZE] = {0};
     size_t rsa_csr_len;
     uint8_t *rsa_csr = rsa_csr_pointer;
-    bool need_reset;
 
     need_reset = false;
     rsa_csr_len = LIBSPDM_MAX_CSR_SIZE;
@@ -526,7 +530,9 @@ bool libspdm_validate_crypt_x509_csr(void)
         return ret;
     }
     libspdm_my_print("Gen and save RSA CSR successful !!!\n");
+    #endif /* (LIBSPDM_RSA_SSA_SUPPORT) && (LIBSPDM_SHA384_SUPPORT) */
 
+    #if (LIBSPDM_ECDSA_SUPPORT) && (LIBSPDM_SHA384_SUPPORT)
     /*read private key to gen ECC CSR*/
     uint8_t ecc_csr_pointer[LIBSPDM_MAX_CSR_SIZE];
     size_t ecc_csr_len;
@@ -550,7 +556,9 @@ bool libspdm_validate_crypt_x509_csr(void)
         return ret;
     }
     libspdm_my_print("Gen and save ECC CSR successful !!!\n");
+    #endif /* (LIBSPDM_ECDSA_SUPPORT) && (LIBSPDM_SHA384_SUPPORT) */
 
+    #if (LIBSPDM_ECDSA_SUPPORT) && (LIBSPDM_SHA256_SUPPORT)
     /*read private key to gen ECC 256 CSR*/
     uint8_t ecc256_csr_pointer[LIBSPDM_MAX_CSR_SIZE];
     size_t ecc256_csr_len;
@@ -575,6 +583,7 @@ bool libspdm_validate_crypt_x509_csr(void)
         return ret;
     }
     libspdm_my_print("Gen and save ECC_256 CSR with right_req_info successful !!!\n");
+    #endif /* (LIBSPDM_ECDSA_SUPPORT) && (LIBSPDM_SHA256_SUPPORT) */
 
     libspdm_my_print("\nTest req_info verify function!!!\n");
     ret = libspdm_verify_req_info(right_req_info, sizeof(right_req_info));

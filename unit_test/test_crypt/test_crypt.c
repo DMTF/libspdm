@@ -56,23 +56,19 @@ void libspdm_cryptest_main(void)
         return;
     }
 
-    if (LIBSPDM_SHA256_SUPPORT) {
-        status = libspdm_validate_crypt_rsa();
-        if (!status) {
-            return;
-        }
-    }
-    else {
-        libspdm_my_print("\nCrypto RSA Engine Testing: ");
-        libspdm_my_print("\n- Unable to test RSA Engine without SHA-256 support.\n");
-    }
-
     #if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)
+    status = libspdm_validate_crypt_rsa();
+    if (!status) {
+        return;
+    }
+    #endif /* (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT) */
+
+    #if LIBSPDM_RSA_SSA_SUPPORT
     status = libspdm_validate_crypt_rsa_2();
     if (!status) {
         return;
     }
-    #endif
+    #endif /* LIBSPDM_RSA_SSA_SUPPORT */
 
     status = libspdm_validate_crypt_x509("ecp256", sizeof("ecp256"));
     if (!status) {
