@@ -147,7 +147,10 @@ static libspdm_return_t libspdm_try_get_measurement(void *context, const uint32_
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return status;
     }
-    LIBSPDM_ASSERT (message_size >= transport_header_size);
+    if (message_size >= transport_header_size) {
+        LIBSPDM_ASSERT (false);
+        return LIBSPDM_STATUS_INVALID_MSG_SIZE;
+    }
     spdm_request = (void *)(message + transport_header_size);
     spdm_request_size = message_size - transport_header_size;
 
@@ -204,7 +207,10 @@ static libspdm_return_t libspdm_try_get_measurement(void *context, const uint32_
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return status;
     }
-    LIBSPDM_ASSERT (message_size >= transport_header_size);
+    if (message_size >= transport_header_size) {
+        LIBSPDM_ASSERT (false);
+        return LIBSPDM_STATUS_INVALID_MSG_SIZE;
+    }
     spdm_response = (void *)(message);
     spdm_response_size = message_size;
 
