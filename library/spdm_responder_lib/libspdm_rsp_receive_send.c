@@ -341,9 +341,12 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
     size_t transport_header_size;
     uint8_t *scratch_buffer;
     size_t scratch_buffer_size;
+    uint8_t request_response_code;
 
-    #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP || LIBSPDM_ENABLE_CHUNK_CAPBu
+    #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP || LIBSPDM_ENABLE_CHUNK_CAP
     libspdm_chunk_info_t* get_info;
+    spdm_chunk_response_response_t *chunk_rsp;
+    uint8_t *chunk_ptr;
     #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
 
     spdm_context = context;
@@ -614,8 +617,28 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
     }
 
     spdm_response = (void *)my_response;
+    request_response_code = spdm_response->request_response_code;
+    #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP || LIBSPDM_ENABLE_CHUNK_CAP
+    switch (request_response_code) {
+    case SPDM_CHUNK_SEND_ACK:
+        request_response_code =
+            ((spdm_message_header_t*)(my_response + sizeof(spdm_chunk_send_ack_response_t)))
+            ->request_response_code;
+        break;
+    case SPDM_CHUNK_RESPONSE:
+        chunk_rsp = (spdm_chunk_response_response_t *)my_response;
+        chunk_ptr = (uint8_t*) (((uint32_t*) (chunk_rsp + 1)) + 1);
+        if (chunk_rsp->chunk_seq_no == 0) {
+            request_response_code = ((spdm_message_header_t*)chunk_ptr)->request_response_code;
+        }
+        break;
+    default:
+        break;
+    }
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
+
     if (session_id != NULL) {
-        switch (spdm_response->request_response_code) {
+        switch (request_response_code) {
         case SPDM_FINISH_RSP:
             if (!libspdm_is_capabilities_flag_supported(
                     spdm_context, false,
@@ -650,7 +673,7 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
             break;
         }
     } else {
-        switch (spdm_response->request_response_code) {
+        switch (request_response_code) {
         case SPDM_FINISH_RSP:
             if (libspdm_is_capabilities_flag_supported(
                     spdm_context, false,
