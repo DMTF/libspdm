@@ -14,8 +14,6 @@
 /**
  * Allocates and Initializes one Edwards-Curve context for subsequent use with the NID.
  *
- * The key is generated before the function returns.
- *
  * @param nid cipher NID
  *
  * @return  Pointer to the Edwards-Curve context that has been initialized.

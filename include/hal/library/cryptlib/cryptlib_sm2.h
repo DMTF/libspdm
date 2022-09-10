@@ -14,8 +14,6 @@
 /**
  * Allocates and Initializes one Shang-Mi2 context for subsequent use.
  *
- * The key is generated before the function returns.
- *
  * @param nid cipher NID
  *
  * @return  Pointer to the Shang-Mi2 context that has been initialized.
@@ -106,8 +104,6 @@ extern bool libspdm_sm2_dsa_generate_key(void *sm2_context, uint8_t *public,
 
 /**
  * Allocates and Initializes one Shang-Mi2 context for subsequent use.
- *
- * The key is generated before the function returns.
  *
  * @param nid cipher NID
  *
