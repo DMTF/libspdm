@@ -9,9 +9,24 @@
 
 /*=====================================================================================
  *    RSA Cryptography Primitives
- *=====================================================================================*/
+ *=====================================================================================
+ */
 
 #if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)
+/* RSA key Tags Definition used in libspdm_rsa_set_key() function for key component
+ * identification.
+ */
+typedef enum {
+    LIBSPDM_RSA_KEY_N, /*< RSA public Modulus (N)*/
+    LIBSPDM_RSA_KEY_E, /*< RSA public exponent (e)*/
+    LIBSPDM_RSA_KEY_D, /*< RSA Private exponent (d)*/
+    LIBSPDM_RSA_KEY_P, /*< RSA secret prime factor of Modulus (p)*/
+    LIBSPDM_RSA_KEY_Q, /*< RSA secret prime factor of Modules (q)*/
+    LIBSPDM_RSA_KEY_DP, /*< p's CRT exponent (== d mod (p - 1))*/
+    LIBSPDM_RSA_KEY_DQ, /*< q's CRT exponent (== d mod (q - 1))*/
+    LIBSPDM_RSA_KEY_Q_INV /*< The CRT coefficient (== 1/q mod p)*/
+} libspdm_rsa_key_tag_t;
+
 /**
  * Allocates and initializes one RSA context for subsequent use.
  *
