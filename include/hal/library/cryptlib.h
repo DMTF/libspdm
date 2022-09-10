@@ -108,6 +108,7 @@
 #include "hal/library/cryptlib/cryptlib_dh.h"
 #include "hal/library/cryptlib/cryptlib_ecd.h"
 #include "hal/library/cryptlib/cryptlib_sm2.h"
+#include "hal/library/cryptlib/cryptlib_rng.h"
 
 /*=====================================================================================
  *    Montgomery-Curve Primitive
@@ -194,25 +195,7 @@ bool libspdm_ecx_compute_key(void *ecx_context, const uint8_t *peer_public,
                              size_t *key_size);
 
 
-/*=====================================================================================
- *    Random Number Generation Primitive
- *=====================================================================================*/
 
-/**
- * Generates a random byte stream of the specified size. If initialization, testing, or seeding of
- * the (pseudo)random number generator is required it should be done before this function is called.
- *
- * If output is NULL, then return false.
- * If this interface is not supported, then return false.
- *
- * @param[out]  output  Pointer to buffer to receive random value.
- * @param[in]   size    Size of random bytes to generate.
- *
- * @retval true   Random byte stream generated successfully.
- * @retval false  Generation of random byte stream failed.
- * @retval false  This interface is not supported.
- **/
-bool libspdm_random_bytes(uint8_t *output, size_t size);
 
 
 
