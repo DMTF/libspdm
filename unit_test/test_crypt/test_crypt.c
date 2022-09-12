@@ -119,11 +119,6 @@ void libspdm_cryptest_main(void)
     }
     #endif /* (LIBSPDM_EDDSA_ED25519_SUPPORT) || (LIBSPDM_EDDSA_ED448_SUPPORT) */
 
-    status = libspdm_validate_crypt_ecx();
-    if (!status) {
-        return;
-    }
-
     #if LIBSPDM_SM2_DSA_SUPPORT
     status = libspdm_validate_crypt_sm2();
     if (!status) {
