@@ -644,7 +644,7 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
         && spdm_response->param1 == SPDM_ERROR_CODE_LARGE_RESPONSE) {
 
         status = libspdm_handle_error_large_response(
-            spdm_context, NULL,
+            spdm_context, session_id,
             response_size, (void*) spdm_response, response_capacity);
 
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
