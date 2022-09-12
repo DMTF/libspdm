@@ -656,19 +656,10 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
             goto receive_done;
         }
 
-        /* These are the expected possible large response types.
-         * Anything else is an unexpected error. */
-        if (spdm_response->request_response_code != SPDM_DIGESTS &&
-            spdm_response->request_response_code != SPDM_CERTIFICATE &&
-            spdm_response->request_response_code != SPDM_CHALLENGE_AUTH &&
-            spdm_response->request_response_code != SPDM_MEASUREMENTS &&
-            spdm_response->request_response_code != SPDM_VENDOR_DEFINED_RESPONSE &&
-            spdm_response->request_response_code != SPDM_ALGORITHMS &&
-            spdm_response->request_response_code != SPDM_KEY_EXCHANGE_RSP &&
-            spdm_response->request_response_code != SPDM_FINISH_RSP &&
-            spdm_response->request_response_code != SPDM_PSK_EXCHANGE_RSP &&
-            spdm_response->request_response_code != SPDM_ENCAPSULATED_REQUEST &&
-            spdm_response->request_response_code != SPDM_ENCAPSULATED_RESPONSE_ACK
+        /* Per the spec, SPDM_VERSION and SPDM_CAPABILITIES shall not be chunked
+         * and should be an unexpected error. */
+        if (spdm_response->request_response_code == SPDM_VERSION ||
+            spdm_response->request_response_code == SPDM_CAPABILITIES
             ) {
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             goto receive_done;
