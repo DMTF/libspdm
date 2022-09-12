@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.12)
 
 INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
-                    ${LIBSPDM_DIR}/include/hal 
+                    ${LIBSPDM_DIR}/include/hal
                     ${LIBSPDM_DIR}/include/hal/${ARCH}
                     ${LIBSPDM_DIR}/os_stub/include
                     ${LIBSPDM_DIR}/os_stub/cryptlib_openssl
@@ -27,7 +27,6 @@ SET(src_cryptlib_openssl
     pem/pem.c
     pk/ec.c
     pk/ecd.c
-    pk/ecx.c
     pk/dh.c
     pk/sm2.c
     pk/rsa_basic.c

@@ -146,15 +146,6 @@ bool libspdm_validate_crypt_ecd(void);
 bool libspdm_validate_crypt_ecd_2(void);
 
 /**
- * Validate Crypto MontgomeryCurve Interfaces.
- *
- * @retval  true  Validation succeeded.
- * @retval  false  Validation failed.
- *
- **/
-bool libspdm_validate_crypt_ecx(void);
-
-/**
  * Validate Crypto sm2 Interfaces.
  *
  * @retval  true  Validation succeeded.

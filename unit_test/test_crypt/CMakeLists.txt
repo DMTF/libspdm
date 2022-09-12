@@ -20,7 +20,6 @@ SET(src_test_crypt
     ec_verify2.c
     ecd_verify.c
     ecd_verify2.c
-    ecx_verify.c
     sm2_verify.c
     sm2_verify2.c
     rand_verify.c
