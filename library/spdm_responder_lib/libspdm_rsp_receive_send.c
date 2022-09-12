@@ -138,6 +138,9 @@ libspdm_return_t libspdm_process_request(void *context, uint32_t **session_id,
     size_t decoded_message_size;
 
     spdm_context = context;
+    size_t transport_header_size;
+    uint8_t *scratch_buffer;
+    size_t scratch_buffer_size;
 
     if (request == NULL) {
         return LIBSPDM_STATUS_INVALID_PARAMETER;
@@ -156,7 +159,16 @@ libspdm_return_t libspdm_process_request(void *context, uint32_t **session_id,
     /* always use scratch buffer to response.
      * if it is secured message, this scratch buffer will be used.
      * if it is normal message, the response ptr will point to receiver buffer. */
-    libspdm_get_scratch_buffer (spdm_context, (void **)&decoded_message_ptr, &decoded_message_size);
+    transport_header_size = spdm_context->transport_get_header_size(spdm_context);
+    libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+    decoded_message_ptr = scratch_buffer + transport_header_size;
+    #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
+    decoded_message_size = scratch_buffer_size - transport_header_size -
+                           LIBSPDM_SCRATCH_BUFFER_SENDER_RECEIVER_OFFSET;
+    #else
+    decoded_message_size = scratch_buffer_size - transport_header_size;
+    #endif
+
     status = spdm_context->transport_decode_message(
         spdm_context, &message_session_id, is_app_message, true,
         request_size, request, &decoded_message_size,
@@ -358,7 +370,12 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
     if (session_id != NULL) {
         libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
         my_response = scratch_buffer + transport_header_size;
+        #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
+        my_response_size = scratch_buffer_size - transport_header_size -
+                           LIBSPDM_SCRATCH_BUFFER_SENDER_RECEIVER_OFFSET;
+        #else
         my_response_size = scratch_buffer_size - transport_header_size;
+        #endif
     } else {
         my_response = (uint8_t *)*response + transport_header_size;
         my_response_size = *response_size - transport_header_size;

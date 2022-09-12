@@ -147,6 +147,9 @@ libspdm_return_t libspdm_receive_response(void *context, const uint32_t *session
     uint32_t *message_session_id;
     bool is_message_app_message;
     uint64_t timeout;
+    size_t transport_header_size;
+    uint8_t *scratch_buffer;
+    size_t scratch_buffer_size;
 
     spdm_context = context;
 
@@ -175,7 +178,16 @@ libspdm_return_t libspdm_receive_response(void *context, const uint32_t *session
     /* always use scratch buffer to response.
      * if it is secured message, this scratch buffer will be used.
      * if it is normal message, the response ptr will point to receiver buffer. */
-    libspdm_get_scratch_buffer (spdm_context, response, response_size);
+    transport_header_size = spdm_context->transport_get_header_size(spdm_context);
+    libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+    *response = scratch_buffer + transport_header_size;
+    #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
+    *response_size = scratch_buffer_size - transport_header_size -
+                     LIBSPDM_SCRATCH_BUFFER_SENDER_RECEIVER_OFFSET;
+    #else
+    *response_size = scratch_buffer_size - transport_header_size;
+    #endif
+
     status = spdm_context->transport_decode_message(
         spdm_context, &message_session_id, &is_message_app_message,
         false, message_size, message, response_size, response);

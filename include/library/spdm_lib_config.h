@@ -325,6 +325,11 @@
  * If chunking is supported, it should be at least LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE
  * + LIBSPDM_MAX_SPDM_MSG_SIZE + LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE.
  *
+ * +----------------------------------+-------------------------+------------------------------------------+
+ * |LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE|LIBSPDM_MAX_SPDM_MSG_SIZE|    LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE    |
+ * +----------------------------------+-------------------------+------------------------------------------+
+ * |<-Secure msg enconding /decoding->|<-Full SPDM msg (chunk)->|<-Temp send/receive buffer for chunking ->|
+ *
  * The value is NOT configurable.
  * The value MAY be changed in different libspdm version.
  * It is exposed here, just in case the libspdm consumer wants to configure the setting at build time.
