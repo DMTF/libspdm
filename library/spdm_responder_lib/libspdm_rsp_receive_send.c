@@ -621,9 +621,11 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
     #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP || LIBSPDM_ENABLE_CHUNK_CAP
     switch (request_response_code) {
     case SPDM_CHUNK_SEND_ACK:
-        request_response_code =
-            ((spdm_message_header_t*)(my_response + sizeof(spdm_chunk_send_ack_response_t)))
-            ->request_response_code;
+        if (my_response_size > sizeof(spdm_chunk_send_ack_response_t)) {
+            request_response_code =
+                ((spdm_message_header_t*)(my_response + sizeof(spdm_chunk_send_ack_response_t)))
+                ->request_response_code;
+        }
         break;
     case SPDM_CHUNK_RESPONSE:
         chunk_rsp = (spdm_chunk_response_response_t *)my_response;
