@@ -21,8 +21,7 @@ spdm_get_certificate_request_t m_libspdm_get_certificate_request1 = {
     0,
     LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN
 };
-size_t m_libspdm_get_certificate_request1_size =
-    sizeof(m_libspdm_get_certificate_request1);
+size_t m_libspdm_get_certificate_request1_size = sizeof(m_libspdm_get_certificate_request1);
 
 spdm_get_certificate_request_t m_libspdm_get_certificate_request2 = {
     { SPDM_MESSAGE_VERSION_10, SPDM_GET_CERTIFICATE, 0, 0 },
@@ -36,8 +35,7 @@ spdm_get_certificate_request_t m_libspdm_get_certificate_request3 = {
     0,
     0
 };
-size_t m_libspdm_get_certificate_request3_size =
-    sizeof(m_libspdm_get_certificate_request3);
+size_t m_libspdm_get_certificate_request3_size = sizeof(m_libspdm_get_certificate_request3);
 
 /**
  * Test 1: request the first LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN bytes of the certificate chain
