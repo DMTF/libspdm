@@ -56,8 +56,7 @@ libspdm_return_t libspdm_get_response_certificate(void *context,
             spdm_request->header.request_response_code,
             response_size, response);
     }
-    if (spdm_context->connection_info.connection_state <
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
+    if (spdm_context->connection_info.connection_state < LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNEXPECTED_REQUEST,
                                                0, response_size, response);
@@ -104,8 +103,7 @@ libspdm_return_t libspdm_get_response_certificate(void *context,
                                                response_size, response);
     }
 
-    if (spdm_context->local_context
-        .local_cert_chain_provision[slot_id] == NULL) {
+    if (spdm_context->local_context.local_cert_chain_provision[slot_id] == NULL) {
         return libspdm_generate_error_response(
             spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
             0, response_size, response);
@@ -113,36 +111,40 @@ libspdm_return_t libspdm_get_response_certificate(void *context,
 
     offset = spdm_request->offset;
     length = spdm_request->length;
-    if (length > LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN) {
-        length = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
-    }
+
     if (length == 0) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
     }
-
-    if (offset >= spdm_context->local_context
-        .local_cert_chain_provision_size[slot_id]) {
+    if (offset >= spdm_context->local_context.local_cert_chain_provision_size[slot_id]) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
     }
 
+    if (!libspdm_is_capabilities_flag_supported(spdm_context, false,
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP,
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP)) {
+        if (length > LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN) {
+            length = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
+        }
+    }
+
+
+
+
+
+    if ((size_t)(offset + length) > spdm_context->local_context.
+        local_cert_chain_provision_size[slot_id]) {
+        length = (uint16_t)(spdm_context->local_context.local_cert_chain_provision_size[slot_id] -
+                  offset);
+    }
+    remainder_length = spdm_context->local_context.local_cert_chain_provision_size[slot_id] -
+                       (length + offset);
+
     libspdm_reset_message_buffer_via_request_code(spdm_context, session_info,
                                                   spdm_request->header.request_response_code);
-
-    if ((size_t)(offset + length) >
-        spdm_context->local_context
-        .local_cert_chain_provision_size[slot_id]) {
-        length = (uint16_t)(
-            spdm_context->local_context
-            .local_cert_chain_provision_size[slot_id] -
-            offset);
-    }
-    remainder_length = spdm_context->local_context
-                       .local_cert_chain_provision_size[slot_id] -
-                       (length + offset);
 
     LIBSPDM_ASSERT(*response_size >= sizeof(spdm_certificate_response_t) + length);
     response_capacity = *response_size;
@@ -156,25 +158,21 @@ libspdm_return_t libspdm_get_response_certificate(void *context,
     spdm_response->header.param2 = 0;
     spdm_response->portion_length = length;
     spdm_response->remainder_length = (uint16_t)remainder_length;
-    libspdm_copy_mem(spdm_response + 1,
-                     response_capacity - sizeof(spdm_certificate_response_t),
+    libspdm_copy_mem(spdm_response + 1, response_capacity - sizeof(spdm_certificate_response_t),
                      (const uint8_t *)spdm_context->local_context
-                     .local_cert_chain_provision[slot_id] + offset,
-                     length);
+                     .local_cert_chain_provision[slot_id] + offset, length);
 
     /* Cache*/
 
     if (session_info == NULL) {
-        status = libspdm_append_message_b(spdm_context, spdm_request,
-                                          request_size);
+        status = libspdm_append_message_b(spdm_context, spdm_request, request_size);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return libspdm_generate_error_response(spdm_context,
                                                    SPDM_ERROR_CODE_UNSPECIFIED, 0,
                                                    response_size, response);
         }
 
-        status = libspdm_append_message_b(spdm_context, spdm_response,
-                                          *response_size);
+        status = libspdm_append_message_b(spdm_context, spdm_response, *response_size);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return libspdm_generate_error_response(spdm_context,
                                                    SPDM_ERROR_CODE_UNSPECIFIED, 0,
@@ -184,12 +182,10 @@ libspdm_return_t libspdm_get_response_certificate(void *context,
 
     if (spdm_context->connection_info.connection_state <
         LIBSPDM_CONNECTION_STATE_AFTER_CERTIFICATE) {
-        libspdm_set_connection_state(spdm_context,
-                                     LIBSPDM_CONNECTION_STATE_AFTER_CERTIFICATE);
+        libspdm_set_connection_state(spdm_context, LIBSPDM_CONNECTION_STATE_AFTER_CERTIFICATE);
     }
 
     return LIBSPDM_STATUS_SUCCESS;
 }
-
 
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
