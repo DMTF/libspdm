@@ -242,6 +242,10 @@ bool libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
             secured_message_context->handshake_secret
             .request_handshake_secret,
             hash_size);
+
+        if (!status) {
+            return false;
+        }
     }
     #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
     if (!(secured_message_context->use_psk)) {
@@ -252,9 +256,10 @@ bool libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
             secured_message_context->handshake_secret
             .request_handshake_secret,
             hash_size);
-    }
-    if (!status) {
-        return false;
+
+        if (!status) {
+            return false;
+        }
     }
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "request_handshake_secret (0x%x) - ", hash_size));
@@ -282,6 +287,10 @@ bool libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
             secured_message_context->handshake_secret
             .response_handshake_secret,
             hash_size);
+
+        if (!status) {
+           return false;
+        }
     }
     #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
     if (!(secured_message_context->use_psk)) {
@@ -292,9 +301,10 @@ bool libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
             secured_message_context->handshake_secret
             .response_handshake_secret,
             hash_size);
-    }
-    if (!status) {
-        return false;
+
+        if (!status) {
+            return false;
+        }
     }
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "response_handshake_secret (0x%x) - ", hash_size));
@@ -345,11 +355,9 @@ bool libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
     if (!status) {
         return status;
     }
-    secured_message_context->handshake_secret
-    .response_handshake_sequence_number = 0;
 
-    libspdm_zero_mem(secured_message_context->master_secret.dhe_secret,
-                     LIBSPDM_MAX_DHE_KEY_SIZE);
+    secured_message_context->handshake_secret.response_handshake_sequence_number = 0;
+    libspdm_zero_mem(secured_message_context->master_secret.dhe_secret, LIBSPDM_MAX_DHE_KEY_SIZE);
 
     return true;
 }
@@ -437,6 +445,10 @@ bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
             secured_message_context->application_secret
             .request_data_secret,
             hash_size);
+
+        if (!status) {
+            return false;
+        }
     }
     #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
     if (!(secured_message_context->use_psk)) {
@@ -447,9 +459,10 @@ bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
             secured_message_context->application_secret
             .request_data_secret,
             hash_size);
-    }
-    if (!status) {
-        return false;
+
+        if (!status) {
+            return false;
+        }
     }
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "request_data_secret (0x%x) - ", hash_size));
@@ -477,6 +490,10 @@ bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
             secured_message_context->application_secret
             .response_data_secret,
             hash_size);
+
+        if (!status) {
+            return false;
+        }
     }
     #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
     if (!(secured_message_context->use_psk)) {
@@ -487,9 +504,10 @@ bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
             secured_message_context->application_secret
             .response_data_secret,
             hash_size);
-    }
-    if (!status) {
-        return false;
+
+        if (!status) {
+            return false;
+        }
     }
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "response_data_secret (0x%x) - ", hash_size));
@@ -518,6 +536,10 @@ bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
             secured_message_context->handshake_secret
             .export_master_secret,
             hash_size);
+
+        if (!status) {
+            return false;
+        }
     }
     #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
     if (!(secured_message_context->use_psk)) {
@@ -528,9 +550,10 @@ bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
             secured_message_context->handshake_secret
             .export_master_secret,
             hash_size);
-    }
-    if (!status) {
-        return false;
+
+        if (!status) {
+            return false;
+        }
     }
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "export_master_secret (0x%x) - ", hash_size));
@@ -548,8 +571,7 @@ bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
     if (!status) {
         return status;
     }
-    secured_message_context->application_secret
-    .request_data_sequence_number = 0;
+    secured_message_context->application_secret.request_data_sequence_number = 0;
 
     status = libspdm_generate_aead_key_and_iv(
         secured_message_context,
@@ -560,8 +582,7 @@ bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
     if (!status) {
         return status;
     }
-    secured_message_context->application_secret
-    .response_data_sequence_number = 0;
+    secured_message_context->application_secret.response_data_sequence_number = 0;
 
     return true;
 }
@@ -827,30 +848,24 @@ bool libspdm_activate_update_session_data_key(void *spdm_secured_message_context
     }
 
     if (action == LIBSPDM_KEY_UPDATE_ACTION_REQUESTER) {
-        libspdm_zero_mem(&secured_message_context->application_secret_backup
-                         .request_data_secret,
+        libspdm_zero_mem(&secured_message_context->application_secret_backup.request_data_secret,
                          LIBSPDM_MAX_HASH_SIZE);
         libspdm_zero_mem(&secured_message_context->application_secret_backup
                          .request_data_encryption_key,
                          LIBSPDM_MAX_AEAD_KEY_SIZE);
-        libspdm_zero_mem(&secured_message_context->application_secret_backup
-                         .request_data_salt,
+        libspdm_zero_mem(&secured_message_context->application_secret_backup.request_data_salt,
                          LIBSPDM_MAX_AEAD_IV_SIZE);
-        secured_message_context->application_secret_backup
-        .request_data_sequence_number = 0;
+        secured_message_context->application_secret_backup.request_data_sequence_number = 0;
         secured_message_context->requester_backup_valid = false;
     } else if (action == LIBSPDM_KEY_UPDATE_ACTION_RESPONDER) {
-        libspdm_zero_mem(&secured_message_context->application_secret_backup
-                         .response_data_secret,
+        libspdm_zero_mem(&secured_message_context->application_secret_backup.response_data_secret,
                          LIBSPDM_MAX_HASH_SIZE);
         libspdm_zero_mem(&secured_message_context->application_secret_backup
                          .response_data_encryption_key,
                          LIBSPDM_MAX_AEAD_KEY_SIZE);
-        libspdm_zero_mem(&secured_message_context->application_secret_backup
-                         .response_data_salt,
+        libspdm_zero_mem(&secured_message_context->application_secret_backup.response_data_salt,
                          LIBSPDM_MAX_AEAD_IV_SIZE);
-        secured_message_context->application_secret_backup
-        .response_data_sequence_number = 0;
+        secured_message_context->application_secret_backup.response_data_sequence_number = 0;
         secured_message_context->responder_backup_valid = false;
     }
 
