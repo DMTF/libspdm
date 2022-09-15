@@ -103,6 +103,8 @@ void libspdm_test_responder_chunk_send_ack_setup_algo_state(libspdm_context_t* s
     /* This state is copied form Algorithms test case 22 */
     m_libspdm_chunk_send_negotiate_algorithm_request1.spdm_request_version10.base_hash_algo =
         m_libspdm_use_hash_algo;
+    m_libspdm_chunk_send_negotiate_algorithm_request1.spdm_request_version10.base_asym_algo =
+        m_libspdm_use_asym_algo;
 
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
     spdm_context->connection_info.connection_state =

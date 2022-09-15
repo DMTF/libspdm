@@ -536,16 +536,47 @@ libspdm_return_t libspdm_get_response_algorithms(void *context,
                 0, response_size, response);
         }
     }
-    algo_size = libspdm_get_hash_size(
-        spdm_context->connection_info.algorithm.base_hash_algo);
-    if (algo_size == 0) {
-        return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-                                               response_size, response);
-    }
+
     if (libspdm_is_capabilities_flag_supported(
             spdm_context, false, 0,
-            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP)) {
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP) ||
+        libspdm_is_capabilities_flag_supported(
+            spdm_context, false, 0,
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP) ||
+        libspdm_is_capabilities_flag_supported(
+            spdm_context, false, 0,
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG) ||
+        libspdm_is_capabilities_flag_supported(
+            spdm_context, false,
+            SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP,
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP) ||
+        libspdm_is_capabilities_flag_supported(
+            spdm_context, false,
+            SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP,
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP)) {
+        algo_size = libspdm_get_hash_size(
+            spdm_context->connection_info.algorithm.base_hash_algo);
+        if (algo_size == 0) {
+            return libspdm_generate_error_response(
+                spdm_context,
+                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                response_size, response);
+        }
+    }
+
+    if (libspdm_is_capabilities_flag_supported(
+            spdm_context, false, 0,
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP) ||
+        libspdm_is_capabilities_flag_supported(
+            spdm_context, false, 0,
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP) ||
+        libspdm_is_capabilities_flag_supported(
+            spdm_context, false, 0,
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG) ||
+        libspdm_is_capabilities_flag_supported(
+            spdm_context, false,
+            SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP,
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP)) {
         algo_size = libspdm_get_asym_signature_size(
             spdm_context->connection_info.algorithm.base_asym_algo);
         if (algo_size == 0) {
