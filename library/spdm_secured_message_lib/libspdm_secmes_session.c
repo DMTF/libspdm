@@ -289,7 +289,7 @@ bool libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
             hash_size);
 
         if (!status) {
-           return false;
+            return false;
         }
     }
     #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
