@@ -2362,6 +2362,8 @@ int libspdm_responder_algorithms_test_main(void)
         SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256;
     m_libspdm_negotiate_algorithm_request17.spdm_request_version10.base_hash_algo =
         m_libspdm_use_hash_algo;
+    m_libspdm_negotiate_algorithm_request17.spdm_request_version10.base_asym_algo =
+        m_libspdm_use_asym_algo;
     m_libspdm_negotiate_algorithm_request18.spdm_request_version10.base_hash_algo =
         m_libspdm_use_hash_algo;
     libspdm_setup_test_context(&m_libspdm_responder_algorithms_test_context);
