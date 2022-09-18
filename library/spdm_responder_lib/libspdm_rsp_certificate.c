@@ -124,17 +124,12 @@ libspdm_return_t libspdm_get_response_certificate(void *context,
     }
 
     if (!libspdm_is_capabilities_flag_supported(spdm_context, false,
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP,
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP,
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP)) {
         if (length > LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN) {
             length = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
         }
     }
-
-
-
-
-
     if ((size_t)(offset + length) > spdm_context->local_context.
         local_cert_chain_provision_size[slot_id]) {
         length = (uint16_t)(spdm_context->local_context.local_cert_chain_provision_size[slot_id] -
