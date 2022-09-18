@@ -85,18 +85,20 @@ static libspdm_return_t libspdm_try_get_certificate(void *context, const uint32_
     size_t transport_header_size;
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
+    bool chunk_enabled;
 
+    /* -=[Check Parameters Phase]=- */
     LIBSPDM_ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
 
+    /* -=[Verify State Phase]=- */
     spdm_context = context;
+
     if (!libspdm_is_capabilities_flag_supported(
             spdm_context, true, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP)) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
-
-    if (spdm_context->connection_info.connection_state <
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
+    if (spdm_context->connection_info.connection_state < LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
 
@@ -114,16 +116,29 @@ static libspdm_return_t libspdm_try_get_certificate(void *context, const uint32_
             return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
         }
     }
+
     libspdm_reset_message_buffer_via_request_code(spdm_context, session_info, SPDM_GET_CERTIFICATE);
 
     libspdm_init_managed_buffer(&certificate_chain_buffer, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
-    length = LIBSPDM_MIN(length, LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
+
+    chunk_enabled = libspdm_is_capabilities_flag_supported(spdm_context, true,
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP,
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP);
+
+    if (chunk_enabled) {
+        length = 0xffff;
+    }
+    else {
+        length = LIBSPDM_MIN(length, LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
+    }
+
     remainder_length = 0;
     total_responder_cert_chain_buffer_length = 0;
 
     transport_header_size = spdm_context->transport_get_header_size(spdm_context);
 
     do {
+        /* -=[Construct Request Phase]=- */
         status = libspdm_acquire_sender_buffer (spdm_context, &message_size, (void **)&message);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return status;
@@ -146,6 +161,7 @@ static libspdm_return_t libspdm_try_get_certificate(void *context, const uint32_
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "request (offset 0x%x, size 0x%x):\n",
                        spdm_request->offset, spdm_request->length));
 
+        /* -=[Send Request Phase]=- */
         status =
             libspdm_send_spdm_request(spdm_context, session_id, spdm_request_size, spdm_request);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
@@ -156,8 +172,7 @@ static libspdm_return_t libspdm_try_get_certificate(void *context, const uint32_
         libspdm_release_sender_buffer (spdm_context);
         spdm_request = (void *)spdm_context->last_spdm_request;
 
-        /* receive */
-
+        /* -=[Receive Response Phase]=- */
         status = libspdm_acquire_receiver_buffer (spdm_context, &message_size, (void **)&message);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return status;
@@ -175,6 +190,8 @@ static libspdm_return_t libspdm_try_get_certificate(void *context, const uint32_
             status = LIBSPDM_STATUS_RECEIVE_FAIL;
             goto done;
         }
+
+        /* -=[Validate Response Phase]=- */
         if (spdm_response_size < sizeof(spdm_message_header_t)) {
             libspdm_release_receiver_buffer (spdm_context);
             status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
@@ -233,11 +250,15 @@ static libspdm_return_t libspdm_try_get_certificate(void *context, const uint32_
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             goto done;
         }
+        if (chunk_enabled && (remainder_length != 0)) {
+            libspdm_release_receiver_buffer (spdm_context);
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+            goto done;
+        }
 
+        /* -=[Process Response Phase]=- */
         remainder_length = spdm_response->remainder_length;
         spdm_response_size = sizeof(spdm_certificate_response_t) + spdm_response->portion_length;
-
-        /* Cache data*/
 
         if (session_id == NULL) {
             status = libspdm_append_message_b(spdm_context, spdm_request, spdm_request_size);
@@ -246,8 +267,7 @@ static libspdm_return_t libspdm_try_get_certificate(void *context, const uint32_
                 status = LIBSPDM_STATUS_BUFFER_FULL;
                 goto done;
             }
-            status = libspdm_append_message_b(spdm_context, spdm_response,
-                                              spdm_response_size);
+            status = libspdm_append_message_b(spdm_context, spdm_response, spdm_response_size);
             if (LIBSPDM_STATUS_IS_ERROR(status)) {
                 libspdm_release_receiver_buffer (spdm_context);
                 status = LIBSPDM_STATUS_BUFFER_FULL;
