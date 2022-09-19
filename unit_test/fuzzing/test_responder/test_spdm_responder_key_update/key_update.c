@@ -126,24 +126,26 @@ void libspdm_test_responder_key_update(void **State)
     libspdm_secured_message_context_t *secured_message_context;
     size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uint8_t m_req_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
-    uint8_t m_rsp_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t req_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t rsp_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
 
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_set_standard_key_update_test_state(spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
     secured_message_context = session_info->secured_message_context;
 
     libspdm_set_standard_key_update_test_secrets(
-        session_info->secured_message_context, m_rsp_secret_buffer,
-        (uint8_t)(0xFF), m_req_secret_buffer, (uint8_t)(0xEE));
+        session_info->secured_message_context, rsp_secret_buffer,
+        (uint8_t)(0xFF), req_secret_buffer, (uint8_t)(0xEE));
 
     libspdm_compute_secret_update(spdm_context->connection_info.version,
                                   secured_message_context->hash_size,
-                                  m_req_secret_buffer, m_req_secret_buffer,
+                                  req_secret_buffer, req_secret_buffer,
                                   secured_message_context->hash_size);
 
     response_size = sizeof(response);
@@ -163,10 +165,8 @@ void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
     m_libspdm_responder_key_update_test_context.test_buffer_size =
         test_buffer_size;
 
-    libspdm_unit_test_group_setup(&State);
-
     /* Success Case*/
+    libspdm_unit_test_group_setup(&State);
     libspdm_test_responder_key_update(&State);
-
     libspdm_unit_test_group_teardown(&State);
 }
