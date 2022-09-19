@@ -239,6 +239,10 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
         libspdm_hmac_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
                          libspdm_get_managed_buffer_size(
                              &th_curr), response_finished_key, hash_size, ptr);
+        libspdm_hash_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
+                         libspdm_get_managed_buffer_size(&th_curr), hash_data);
+        libspdm_hmac_all(m_libspdm_use_hash_algo, hash_data, hash_size,
+                         response_finished_key, hash_size, ptr);
         break;
     }
     case 0x02: {

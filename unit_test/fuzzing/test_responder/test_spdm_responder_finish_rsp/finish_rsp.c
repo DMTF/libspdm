@@ -60,6 +60,7 @@ void libspdm_test_responder_finish_case1(void **State)
     uint32_t hmac_size;
     libspdm_finish_request_mine_t *spdm_test_finish_request;
     size_t spdm_test_finish_request_size;
+    uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t dummy_buffer[LIBSPDM_MAX_HASH_SIZE];
 
     spdm_test_context = *State;
@@ -122,9 +123,10 @@ void libspdm_test_responder_finish_case1(void **State)
     libspdm_append_managed_buffer(&th_curr, spdm_test_finish_request,
                                   sizeof(spdm_finish_request_t));
     libspdm_set_mem(request_finished_key, LIBSPDM_MAX_HASH_SIZE, (uint8_t)(0xFF));
-    libspdm_hmac_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
-                     libspdm_get_managed_buffer_size(&th_curr), request_finished_key, hash_size,
-                     ptr);
+    libspdm_hash_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
+                     libspdm_get_managed_buffer_size(&th_curr), hash_data);
+    libspdm_hmac_all(m_libspdm_use_hash_algo, hash_data, hash_size,
+                     request_finished_key, hash_size, ptr);
     spdm_test_finish_request_size = sizeof(spdm_finish_request_t) + hmac_size;
     response_size = sizeof(response);
     libspdm_get_response_finish(spdm_context, spdm_test_finish_request_size,
@@ -149,7 +151,7 @@ void libspdm_test_responder_finish_case2(void **State)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NOT_READY;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_BUSY;
 
     response_size = sizeof(response);
     libspdm_get_response_finish(spdm_context, spdm_test_context->test_buffer_size,
@@ -362,6 +364,7 @@ void libspdm_test_responder_finish_case8(void **State)
     uint32_t hash_size;
     uint32_t hmac_size;
     size_t req_asym_signature_size;
+    uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t dummy_buffer[LIBSPDM_MAX_HASH_SIZE];
     libspdm_finish_request_mine_t *spdm_test_finish_request;
     size_t spdm_test_finish_request_size;
@@ -426,6 +429,7 @@ void libspdm_test_responder_finish_case8(void **State)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+
     hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
     hmac_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
     req_asym_signature_size = libspdm_get_req_asym_signature_size(m_libspdm_use_req_asym_algo);
@@ -457,9 +461,10 @@ void libspdm_test_responder_finish_case8(void **State)
     libspdm_append_managed_buffer(&th_curr, ptr, req_asym_signature_size);
     ptr += req_asym_signature_size;
     libspdm_set_mem(request_finished_key, LIBSPDM_MAX_HASH_SIZE, (uint8_t)(0xFF));
-    libspdm_hmac_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
-                     libspdm_get_managed_buffer_size(&th_curr), request_finished_key, hash_size,
-                     ptr);
+    libspdm_hash_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
+                     libspdm_get_managed_buffer_size(&th_curr), hash_data);
+    libspdm_hmac_all(m_libspdm_use_hash_algo, hash_data, hash_size,
+                     request_finished_key, hash_size, ptr);
     spdm_test_finish_request_size =
         sizeof(spdm_finish_request_t) + req_asym_signature_size + hmac_size;
     response_size = sizeof(response);
@@ -488,7 +493,7 @@ void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
     libspdm_test_responder_finish_case1(&State);
     libspdm_unit_test_group_teardown(&State);
 
-    /*response_state: LIBSPDM_RESPONSE_STATE_NOT_READY */
+    /*response_state: LIBSPDM_RESPONSE_STATE_BUSY */
     libspdm_unit_test_group_setup(&State);
     libspdm_test_responder_finish_case2(&State);
     libspdm_unit_test_group_teardown(&State);
