@@ -61,7 +61,7 @@ void libspdm_requester_chunk_get_test_case1_build_certificates_response(
         m_libspdm_local_certificate_chain_size_test_case_1);
 
     *response_size = sizeof(spdm_certificate_response_t) +
-        m_libspdm_local_certificate_chain_size_test_case_1;
+                     m_libspdm_local_certificate_chain_size_test_case_1;
 }
 
 void libspdm_requester_chunk_get_test_case2_build_measurements_response(
