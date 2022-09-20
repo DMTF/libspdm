@@ -360,13 +360,13 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
     spdm_context = context;
     status = LIBSPDM_STATUS_UNSUPPORTED_CAP;
 
-   /* The SPDM response ("my_response") is normally stored directly into the "response" buffer.
-    * However, this cannot be done when:
-    * 1) The final response needs to be a secure message, so a temporary space within the
-    *    the scratch buffer is used as a source to encrypt the response in the "response" buffer.
-    * 2) chunking is enabled, so the "response" buffer may be too small for the SPDM response
-    *    of size LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE.
-    */
+    /* The SPDM response ("my_response") is normally stored directly into the "response" buffer.
+     * However, this cannot be done when:
+     * 1) The final response needs to be a secure message, so a temporary space within the
+     *    the scratch buffer is used as a source to encrypt the response in the "response" buffer.
+     * 2) chunking is enabled, so the "response" buffer may be too small for the SPDM response
+     *    of size LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE.
+     */
 
     transport_header_size = spdm_context->transport_get_header_size(spdm_context);
     #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP || LIBSPDM_ENABLE_CHUNK_CAP

@@ -194,7 +194,7 @@ libspdm_return_t libspdm_receive_response(void *context, const uint32_t *session
     libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
     *response = scratch_buffer + LIBSPDM_SCRATCH_BUFFER_SECURE_BUFFER_OFFSET +
                 transport_header_size;
-    *response_size = LIBSPDM_SCRATCH_BUFFER_SECURE_BUFFER_SIZE;
+    *response_size = LIBSPDM_SCRATCH_BUFFER_SECURE_BUFFER_SIZE - transport_header_size;
 
     /* Decode the "message" and place into "response", which points to the
      * secure buffer region of the scratch buffer. */
