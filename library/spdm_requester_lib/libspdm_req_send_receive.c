@@ -192,7 +192,8 @@ libspdm_return_t libspdm_receive_response(void *context, const uint32_t *session
      * if it is normal message, the response ptr will point to receiver buffer. */
     transport_header_size = spdm_context->transport_get_header_size(spdm_context);
     libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
-    *response = scratch_buffer + LIBSPDM_SCRATCH_BUFFER_SECURE_BUFFER_OFFSET + transport_header_size;
+    *response = scratch_buffer + LIBSPDM_SCRATCH_BUFFER_SECURE_BUFFER_OFFSET +
+                transport_header_size;
     *response_size = LIBSPDM_SCRATCH_BUFFER_SECURE_BUFFER_SIZE;
 
     /* Decode the "message" and place into "response", which points to the
