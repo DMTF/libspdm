@@ -1379,6 +1379,12 @@ libspdm_return_t libspdm_append_message_m(void *context, void *session_info,
             result = libspdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
                                           spdm_context->transcript.digest_context_l1l2, message,
                                           message_size);
+            if (!result) {
+                libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
+                                   spdm_context->transcript.digest_context_l1l2);
+                spdm_context->transcript.digest_context_l1l2 = NULL;
+                return LIBSPDM_STATUS_CRYPTO_ERROR;
+            }
         } else {
             if (spdm_session_info->session_transcript.digest_context_l1l2 == NULL) {
                 spdm_session_info->session_transcript.digest_context_l1l2 = libspdm_hash_new (
@@ -1417,13 +1423,12 @@ libspdm_return_t libspdm_append_message_m(void *context, void *session_info,
             result = libspdm_hash_update (spdm_context->connection_info.algorithm.base_hash_algo,
                                           spdm_session_info->session_transcript.digest_context_l1l2,
                                           message, message_size);
-        }
-
-        if (!result) {
-            libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
-                               spdm_session_info->session_transcript.digest_context_l1l2);
-            spdm_session_info->session_transcript.digest_context_l1l2 = NULL;
-            return LIBSPDM_STATUS_CRYPTO_ERROR;
+            if (!result) {
+                libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
+                                   spdm_session_info->session_transcript.digest_context_l1l2);
+                spdm_session_info->session_transcript.digest_context_l1l2 = NULL;
+                return LIBSPDM_STATUS_CRYPTO_ERROR;
+            }
         }
 
         return LIBSPDM_STATUS_SUCCESS;
