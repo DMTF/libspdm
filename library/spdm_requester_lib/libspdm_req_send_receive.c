@@ -49,37 +49,49 @@ libspdm_return_t libspdm_send_request(void *context, const uint32_t *session_id,
     libspdm_get_scratch_buffer(spdm_context, (void**) &scratch_buffer, &scratch_buffer_size);
     libspdm_get_sender_buffer(spdm_context, (void**) &sender_buffer, &sender_buffer_size);
 
-    /* This is a problem because original code assumes request is in the sender buffer,
-     * when it can really be using the scratch space for chunking.
+    /* When chunking is enabled, the "request" pointer can be within either the scratch buffer
+     * or the sender buffer. We must set "message" to point to the correct scratch or sender
+     * buffer for the rest of the code to flow properly.
+     * The code before chunking was added, assumed the request is only in the sender buffer,
+     * when it can really be using the scratch space.
      * Did not want to modify ally request handlers to pass this information,
      * so just making the determination here by examining scratch/sender buffers.
      * This may be something that should be refactored in the future. */
     #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP || LIBSPDM_ENABLE_CHUNK_CAP
     if ((uint8_t*) request >= sender_buffer &&
         (uint8_t*)request < sender_buffer + sender_buffer_size) {
+        /* "request" is within the sender buffer. */
         message = sender_buffer;
         message_size = sender_buffer_size;
     }
     else {
+        /* "request" is within scratch buffer. */
         LIBSPDM_ASSERT(
-            (uint8_t*)request >= scratch_buffer + LIBSPDM_SCRATCH_BUFFER_SENDER_RECEIVER_OFFSET
-            && (uint8_t*)request < scratch_buffer + LIBSPDM_SCRATCH_BUFFER_SENDER_RECEIVER_OFFSET
-            + LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE);
+            (uint8_t*)request >= scratch_buffer
+            + LIBSPDM_SCRATCH_BUFFER_CHUNKING_SENDER_RECEIVER_BUFFER_OFFSET
+            && (uint8_t*)request < scratch_buffer
+            + LIBSPDM_SCRATCH_BUFFER_CHUNKING_SENDER_RECEIVER_BUFFER_OFFSET
+            + LIBSPDM_SCRATCH_BUFFER_CHUNKING_SENDER_RECEIVER_BUFFER_SIZE);
 
-        message = scratch_buffer + LIBSPDM_SCRATCH_BUFFER_SENDER_RECEIVER_OFFSET;
-        message_size = LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE;
+        message = scratch_buffer + LIBSPDM_SCRATCH_BUFFER_CHUNKING_SENDER_RECEIVER_BUFFER_OFFSET;
+        message_size = LIBSPDM_SCRATCH_BUFFER_CHUNKING_SENDER_RECEIVER_BUFFER_SIZE;
     }
     #else /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
+    /* "request" is within sender buffer. */
     message = sender_buffer;
     message_size = sender_buffer_size;
     #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
 
     if (session_id != NULL) {
-        /* For secure message, message is in sender buffer, we need copy it to scratch buffer.
-         * transport_message is always in sender buffer. */
+        /* For a secure message, the message is currently in "request" buffer.
+         * We must first copy it to the scratch buffer secure message area
+         * to encrypt it back into the sender buffer later.
+         * We then point the "request" to this scratch buffer to be used later
+         * as the encryption source. */
 
-        libspdm_copy_mem (scratch_buffer + transport_header_size,
-                          scratch_buffer_size - transport_header_size,
+        libspdm_copy_mem (scratch_buffer
+                          + LIBSPDM_SCRATCH_BUFFER_SECURE_BUFFER_OFFSET + transport_header_size,
+                          LIBSPDM_SCRATCH_BUFFER_SECURE_BUFFER_SIZE - transport_header_size,
                           request, request_size);
         request = scratch_buffer + transport_header_size;
     }
@@ -180,14 +192,11 @@ libspdm_return_t libspdm_receive_response(void *context, const uint32_t *session
      * if it is normal message, the response ptr will point to receiver buffer. */
     transport_header_size = spdm_context->transport_get_header_size(spdm_context);
     libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
-    *response = scratch_buffer + transport_header_size;
-    #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
-    *response_size = scratch_buffer_size - transport_header_size -
-                     LIBSPDM_SCRATCH_BUFFER_SENDER_RECEIVER_OFFSET;
-    #else
-    *response_size = scratch_buffer_size - transport_header_size;
-    #endif
+    *response = scratch_buffer + LIBSPDM_SCRATCH_BUFFER_SECURE_BUFFER_OFFSET + transport_header_size;
+    *response_size = LIBSPDM_SCRATCH_BUFFER_SECURE_BUFFER_SIZE;
 
+    /* Decode the "message" and place into "response", which points to the
+     * secure buffer region of the scratch buffer. */
     status = spdm_context->transport_decode_message(
         spdm_context, &message_session_id, &is_message_app_message,
         false, message_size, message, response_size, response);
@@ -279,13 +288,11 @@ libspdm_return_t libspdm_handle_large_request(
     transport_header_size = spdm_context->transport_get_header_size(spdm_context);
 
     libspdm_get_scratch_buffer(spdm_context, (void**) &scratch_buffer, &scratch_buffer_size);
-    LIBSPDM_ASSERT(
-        scratch_buffer_size >=
-        LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE + LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+    LIBSPDM_ASSERT(scratch_buffer_size >= LIBSPDM_SCRATCH_BUFFER_SIZE);
 
     /* Temporary send/receive buffers for chunking are in the scratch space */
-    message = scratch_buffer + LIBSPDM_SCRATCH_BUFFER_SENDER_RECEIVER_OFFSET;
-    message_size = LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE;
+    message = scratch_buffer + LIBSPDM_SCRATCH_BUFFER_CHUNKING_SENDER_RECEIVER_BUFFER_OFFSET;
+    message_size = LIBSPDM_SCRATCH_BUFFER_CHUNKING_SENDER_RECEIVER_BUFFER_SIZE;
 
     send_info = &spdm_context->chunk_context.send;
     send_info->chunk_in_use = true;

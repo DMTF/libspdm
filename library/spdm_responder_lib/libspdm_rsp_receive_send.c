@@ -161,13 +161,9 @@ libspdm_return_t libspdm_process_request(void *context, uint32_t **session_id,
      * if it is normal message, the response ptr will point to receiver buffer. */
     transport_header_size = spdm_context->transport_get_header_size(spdm_context);
     libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
-    decoded_message_ptr = scratch_buffer + transport_header_size;
-    #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
-    decoded_message_size = scratch_buffer_size - transport_header_size -
-                           LIBSPDM_SCRATCH_BUFFER_SENDER_RECEIVER_OFFSET;
-    #else
-    decoded_message_size = scratch_buffer_size - transport_header_size;
-    #endif
+    decoded_message_ptr = scratch_buffer +
+                          LIBSPDM_SCRATCH_BUFFER_SECURE_BUFFER_OFFSET + transport_header_size;
+    decoded_message_size = LIBSPDM_SCRATCH_BUFFER_SECURE_BUFFER_SIZE - transport_header_size;
 
     status = spdm_context->transport_decode_message(
         spdm_context, &message_session_id, is_app_message, true,
@@ -364,22 +360,30 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
     spdm_context = context;
     status = LIBSPDM_STATUS_UNSUPPORTED_CAP;
 
-    /* For secure message, setup my_response to scratch buffer
-     * For non-secure message, setup my_response to sender buffer*/
+   /* The SPDM response ("my_response") is normally stored directly into the "response" buffer.
+    * However, this cannot be done when:
+    * 1) The final response needs to be a secure message, so a temporary space within the
+    *    the scratch buffer is used as a source to encrypt the response in the "response" buffer.
+    * 2) chunking is enabled, so the "response" buffer may be too small for the SPDM response
+    *    of size LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE.
+    */
+
     transport_header_size = spdm_context->transport_get_header_size(spdm_context);
-    if (session_id != NULL) {
+    if (LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP) {
         libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
-        my_response = scratch_buffer + transport_header_size;
-        #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
-        my_response_size = scratch_buffer_size - transport_header_size -
-                           LIBSPDM_SCRATCH_BUFFER_SENDER_RECEIVER_OFFSET;
-        #else
-        my_response_size = scratch_buffer_size - transport_header_size;
-        #endif
+        my_response = (void*)(scratch_buffer +
+                              LIBSPDM_SCRATCH_BUFFER_BUILD_MESSAGE_BUFFER_OFFSET + transport_header_size);
+        my_response_size = LIBSPDM_SCRATCH_BUFFER_BUILD_MESSAGE_BUFFER_SIZE - transport_header_size;
+    }
+    else if (session_id != NULL) {
+        libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+        my_response = scratch_buffer + LIBSPDM_SCRATCH_BUFFER_SECURE_BUFFER_OFFSET + transport_header_size;
+        my_response_size = LIBSPDM_SCRATCH_BUFFER_SECURE_BUFFER_SIZE - transport_header_size;
     } else {
         my_response = (uint8_t *)*response + transport_header_size;
         my_response_size = *response_size - transport_header_size;
     }
+
     libspdm_zero_mem(my_response, my_response_size);
 
     if (spdm_context->last_spdm_error.error_code != 0) {
@@ -539,14 +543,12 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
         }
 
         libspdm_get_scratch_buffer(spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
-        LIBSPDM_ASSERT(scratch_buffer_size >= LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE
-                       + LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
 
-        /* The first LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE bytes of the scratch
-         * buffer may be used for other purposes. Use only after that section. */
+        /* The first part of scratch buffer may be used for other purposes.
+         * Use only large message section for code below. */
 
-        scratch_buffer = (((uint8_t*) scratch_buffer) + LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE);
-        scratch_buffer_size = scratch_buffer_size - LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE;
+        scratch_buffer = (((uint8_t*) scratch_buffer) + LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_OFFSET);
+        scratch_buffer_size = LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_CAPACITY;
 
         if (my_response_size < scratch_buffer_size) {
 
@@ -624,6 +626,25 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmSendResponse[%x] (0x%x): \n",
                    (session_id != NULL) ? *session_id : 0, my_response_size));
     libspdm_internal_dump_hex(my_response, my_response_size);
+
+    /* At the beginning of this function, we adjusted "my_response" to point to a location
+     * in the scratch buffer to serve as a temporary location to fill the response,
+     * in the case where chunking is supported, or secure messaging is needed.
+     * Now that the true response has been processed within "my_response",
+     * "my_response" should have data that is smaller than the "response" buffer
+     * and can be copied into there, for the caller to use.
+     * Note: We must copy "my_response" back to "response", and reset "my_response"
+     * to point within response, prior to encoding the transport layer,
+     * so the "response" is the buffer that is transport encoded properly. */
+
+    if (my_response != (uint8_t*) *response + transport_header_size) {
+        LIBSPDM_ASSERT(my_response_size <= *response_size - transport_header_size);
+        libspdm_copy_mem((uint8_t*)*response + transport_header_size,
+                         *response_size - transport_header_size,
+                         my_response, my_response_size);
+        my_response = (uint8_t*) *response + transport_header_size;
+        my_response_size = *response_size - transport_header_size;
+    }
 
     status = spdm_context->transport_encode_message(
         spdm_context, session_id, is_app_message, false,
