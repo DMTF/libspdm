@@ -10,7 +10,7 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
 
-static void*  m_libspdm_local_certificate_chain_test_case_1;
+static void *m_libspdm_local_certificate_chain_test_case_1;
 static size_t m_libspdm_local_certificate_chain_size_test_case_1;
 
 static uint8_t m_libspdm_local_large_response_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -33,12 +33,10 @@ bool libspdm_libspdm_read_responder_public_certificate_chain_expiration(
 #define CHUNK_GET_UNIT_TEST_CHUNK_HANDLE (10)
 
 void libspdm_requester_chunk_get_test_case1_build_certificates_response(
-    void* context, void* response, size_t* response_size,
+    void *context, void *response, size_t *response_size,
     size_t sub_cert_index, size_t *sub_cert_count)
 {
-    spdm_certificate_response_t* cert_rsp;
-    uint16_t sub_cert_portion_length;
-    uint16_t sub_cert_remainder_length;
+    spdm_certificate_response_t *cert_rsp;
 
     if (m_libspdm_local_certificate_chain_test_case_1 == NULL) {
         libspdm_read_responder_public_certificate_chain(
@@ -48,40 +46,22 @@ void libspdm_requester_chunk_get_test_case1_build_certificates_response(
     }
     LIBSPDM_ASSERT(m_libspdm_local_certificate_chain_test_case_1 != NULL);
 
-    *sub_cert_count = (m_libspdm_local_certificate_chain_size_test_case_1 +
-                       LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN - 1) /
-                      LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
-
-    if (sub_cert_index != *sub_cert_count - 1) {
-        sub_cert_portion_length = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
-        sub_cert_remainder_length =
-            (uint16_t) (m_libspdm_local_certificate_chain_size_test_case_1 -
-                        LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN *
-                        (sub_cert_index + 1));
-    }
-    else {
-        sub_cert_portion_length = (uint16_t) (
-            m_libspdm_local_certificate_chain_size_test_case_1 -
-            LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * (*sub_cert_count - 1));
-        sub_cert_remainder_length = 0;
-    }
-
     cert_rsp = (spdm_certificate_response_t*) ((uint8_t*) response);
 
     cert_rsp->header.spdm_version = SPDM_MESSAGE_VERSION_12;
     cert_rsp->header.request_response_code = SPDM_CERTIFICATE;
     cert_rsp->header.param1 = 0;
     cert_rsp->header.param2 = 0;
-    cert_rsp->portion_length = sub_cert_portion_length;
-    cert_rsp->remainder_length = sub_cert_remainder_length;
+    cert_rsp->portion_length = (uint16_t) m_libspdm_local_certificate_chain_size_test_case_1;
+    cert_rsp->remainder_length = 0;
 
     libspdm_copy_mem(
-        cert_rsp + 1, sub_cert_portion_length,
-        (uint8_t*) m_libspdm_local_certificate_chain_test_case_1 +
-        LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * sub_cert_index,
-        sub_cert_portion_length);
+        cert_rsp + 1, m_libspdm_local_certificate_chain_size_test_case_1,
+        (uint8_t*) m_libspdm_local_certificate_chain_test_case_1,
+        m_libspdm_local_certificate_chain_size_test_case_1);
 
-    *response_size = sizeof(spdm_certificate_response_t) + sub_cert_portion_length;
+    *response_size = sizeof(spdm_certificate_response_t) +
+        m_libspdm_local_certificate_chain_size_test_case_1;
 }
 
 void libspdm_requester_chunk_get_test_case2_build_measurements_response(
@@ -571,15 +551,13 @@ void libspdm_test_requester_chunk_get_case1(void** state)
     spdm_test_context->case_id = 0x1;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->connection_info.capability.flags |=
         (SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP
          | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP
          | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP);
 
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->local_context.capability.flags |=  SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
     spdm_context->local_context.capability.data_transfer_size
         = CHUNK_GET_REQUESTER_UNIT_TEST_DATA_TRANSFER_SIZE;
 
@@ -592,22 +570,16 @@ void libspdm_test_requester_chunk_get_case1(void** state)
         data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
         &root_cert, &root_cert_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "root cert data :\n"));
-    libspdm_dump_hex(
-        root_cert,
-        root_cert_size);
-    spdm_context->local_context.peer_root_cert_provision_size[0] =
-        root_cert_size;
+    libspdm_dump_hex(root_cert, root_cert_size);
+    spdm_context->local_context.peer_root_cert_provision_size[0] = root_cert_size;
 
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
     spdm_context->local_context.peer_cert_chain_provision = NULL;
     spdm_context->local_context.peer_cert_chain_provision_size = 0;
     libspdm_reset_message_b(spdm_context);
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.req_base_asym_alg =
-        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
 
     #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->transcript.message_m.buffer_size =
@@ -618,8 +590,7 @@ void libspdm_test_requester_chunk_get_case1(void** state)
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size, cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    count = (data_size + LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN - 1) /
-            LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
+    count = (data_size + LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN - 1) / LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
     assert_int_equal(spdm_context->transcript.message_b.buffer_size,
                      sizeof(spdm_get_certificate_request_t) * count +
                      sizeof(spdm_certificate_response_t) * count +

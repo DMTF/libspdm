@@ -250,7 +250,7 @@ static libspdm_return_t libspdm_try_get_certificate(void *context, const uint32_
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             goto done;
         }
-        if (chunk_enabled && (remainder_length != 0)) {
+        if (chunk_enabled && (spdm_response->remainder_length != 0)) {
             libspdm_release_receiver_buffer (spdm_context);
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             goto done;
