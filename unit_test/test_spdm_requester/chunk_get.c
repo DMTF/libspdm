@@ -542,9 +542,6 @@ void libspdm_test_requester_chunk_get_case1(void** state)
     size_t hash_size;
     const uint8_t* root_cert;
     size_t root_cert_size;
-    #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    size_t count;
-    #endif
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -590,7 +587,6 @@ void libspdm_test_requester_chunk_get_case1(void** state)
     status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size, cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    count = (data_size + LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN - 1) / LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
     assert_int_equal(spdm_context->transcript.message_b.buffer_size,
                      sizeof(spdm_get_certificate_request_t) + sizeof(spdm_certificate_response_t) +
                      data_size);
