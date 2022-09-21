@@ -165,6 +165,14 @@
    cmake -G"Visual Studio 16 2019" -DARCH=x64 -DTOOLCHAIN=VS2019 -DTARGET=Release -DCRYPTO=mbedtls ..
    ```
 
+   Support openssl binary build. For example:
+   
+   ```
+   Note: Please install the openssl with command `nmake install` before build libspdm.
+   cmake -G"Visual Studio 16 2019" -DARCH=x64 -DTOOLCHAIN=VS2019 -DTARGET=Release -DCRYPTO=openssl -DENABLE_BINARY_BUILD=1 -DCOMPILED_LIBCRYPTO_PATH=<OPENSSL_PATH>/libcrypto.lib -DCOMPILED_LIBSSL_PATH=<OPENSSL_PATH>/libssl.lib ..
+   ```
+
+
 ### Linux Builds
    If ia32 builds run on a 64-bit Linux machine, then install `sudo apt-get install gcc-multilib`.
 
@@ -194,6 +202,12 @@ Example CMake commands:
    ```
    cmake -DARCH=x64 -DTOOLCHAIN=CLANG -DTARGET=Release -DCRYPTO=mbedtls ..
 
+   ```
+
+   Support openssl binary build. For example:
+   ```
+   Note: Please install the openssl with command `sudo make install` before build libspdm.
+   cmake -DARCH=x64 -DTOOLCHAIN=GCC -DTARGET=Release -DCRYPTO=openssl -DENABLE_BINARY_BUILD=1 -DCOMPILED_LIBCRYPTO_PATH=<OPENSSL_PATH>/libcrypto.a -DCOMPILED_LIBSSL_PATH=<OPENSSL_PATH>/libssl.a ..
    ```
 
 ## Run Test
