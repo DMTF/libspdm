@@ -592,8 +592,7 @@ void libspdm_test_requester_chunk_get_case1(void** state)
     #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     count = (data_size + LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN - 1) / LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
     assert_int_equal(spdm_context->transcript.message_b.buffer_size,
-                     sizeof(spdm_get_certificate_request_t) * count +
-                     sizeof(spdm_certificate_response_t) * count +
+                     sizeof(spdm_get_certificate_request_t) + sizeof(spdm_certificate_response_t) +
                      data_size);
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
     #endif

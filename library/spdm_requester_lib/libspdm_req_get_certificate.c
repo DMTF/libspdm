@@ -121,9 +121,10 @@ static libspdm_return_t libspdm_try_get_certificate(void *context, const uint32_
 
     libspdm_init_managed_buffer(&certificate_chain_buffer, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
 
-    chunk_enabled = libspdm_is_capabilities_flag_supported(spdm_context, true,
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP,
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP);
+    chunk_enabled =
+        libspdm_is_capabilities_flag_supported(spdm_context, true,
+                                               SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP,
+                                               SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP);
 
     if (chunk_enabled) {
         length = 0xffff;
