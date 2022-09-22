@@ -43,6 +43,10 @@ libspdm_return_t libspdm_responder_dispatch_message(void *context)
     }
     request = message;
     request_size = message_size;
+    #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP || LIBSPDM_ENABLE_CHUNK_CAP
+    /* need get real receiver buffer, because acquire receiver buffer will return scratch buffer*/
+    libspdm_get_receiver_buffer (spdm_context, (void **)&request, &request_size);
+    #endif
     status = spdm_context->receive_message(spdm_context, &request_size,
                                            (void **)&request, 0);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {

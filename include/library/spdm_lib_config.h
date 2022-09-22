@@ -322,13 +322,12 @@
  * in case of chunking.
  *
  * If chunking is not supported, it may be just LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE.
- * If chunking is supported, it should be at least LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE
- * + LIBSPDM_MAX_SPDM_MSG_SIZE + LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE.
+ * If chunking is supported, it should be at least below.
  *
- * +----------------------------------+-------------------------+------------------------------------------+
- * |LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE|LIBSPDM_MAX_SPDM_MSG_SIZE|    LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE    |
- * +----------------------------------+-------------------------+------------------------------------------+
- * |<-Secure msg enconding /decoding->|<-Full SPDM msg (chunk)->|<-Temp send/receive buffer for chunking ->|
+ * +---------------+--------------+--------------------------+------------------------------+
+ * |SECURE_MESSAGE |LARGE_MESSAGE |    SENDER_RECEIVER       | LARGE_SENDER_RECEIVER        |
+ * +---------------+--------------+--------------------------+------------------------------+
+ * |<-Secure msg ->|<-Large msg ->|<-Snd/Rcv buf for chunk ->|<-Snd/Rcv buf for large msg ->|
  *
  * The value is NOT configurable.
  * The value MAY be changed in different libspdm version.
@@ -336,19 +335,41 @@
  */
 #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
 
+/* first section */
+#define LIBSPDM_SCRATCH_BUFFER_SECURE_MESSAGE_OFFSET \
+    (0)
+
+#define LIBSPDM_SCRATCH_BUFFER_SECURE_MESSAGE_CAPACITY \
+    (LIBSPDM_MAX_SPDM_MSG_SIZE)
+
+/* second section */
 #define LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_OFFSET \
-    (LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE)
+    (LIBSPDM_SCRATCH_BUFFER_SECURE_MESSAGE_CAPACITY)
 
 #define LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_CAPACITY \
     (LIBSPDM_MAX_SPDM_MSG_SIZE)
 
+/* third section */
 #define LIBSPDM_SCRATCH_BUFFER_SENDER_RECEIVER_OFFSET  \
-    (LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE + \
+    (LIBSPDM_SCRATCH_BUFFER_SECURE_MESSAGE_CAPACITY + \
      LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_CAPACITY)
 
-#define LIBSPDM_SCRATCH_BUFFER_SIZE (LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE + \
-                                     LIBSPDM_MAX_SPDM_MSG_SIZE +          \
-                                     LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE \
+#define LIBSPDM_SCRATCH_BUFFER_SENDER_RECEIVER_CAPACITY \
+    (LIBSPDM_MAX_SPDM_MSG_SIZE)
+
+/* fourth section */
+#define LIBSPDM_SCRATCH_BUFFER_LARGE_SENDER_RECEIVER_OFFSET  \
+    (LIBSPDM_SCRATCH_BUFFER_SECURE_MESSAGE_CAPACITY + \
+     LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_CAPACITY + \
+     LIBSPDM_SCRATCH_BUFFER_SENDER_RECEIVER_CAPACITY)
+
+#define LIBSPDM_SCRATCH_BUFFER_LARGE_SENDER_RECEIVER_CAPACITY \
+    (LIBSPDM_MAX_SPDM_MSG_SIZE)
+
+#define LIBSPDM_SCRATCH_BUFFER_SIZE (LIBSPDM_SCRATCH_BUFFER_SECURE_MESSAGE_CAPACITY + \
+                                     LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_CAPACITY + \
+                                     LIBSPDM_SCRATCH_BUFFER_SENDER_RECEIVER_CAPACITY + \
+                                     LIBSPDM_SCRATCH_BUFFER_LARGE_SENDER_RECEIVER_CAPACITY \
                                      )
 
 #else

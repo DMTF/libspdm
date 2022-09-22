@@ -121,9 +121,7 @@ libspdm_return_t libspdm_get_response_chunk_send(void *context,
         else {
             libspdm_get_scratch_buffer(spdm_context, (void**) &scratch_buffer,
                                        &scratch_buffer_size);
-            LIBSPDM_ASSERT(
-                scratch_buffer_size >=
-                LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE + LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+            LIBSPDM_ASSERT(scratch_buffer_size >= LIBSPDM_SCRATCH_BUFFER_SIZE);
 
             send_info->chunk_in_use = true;
             send_info->chunk_handle = spdm_request->header.param2;
