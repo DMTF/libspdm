@@ -323,7 +323,7 @@ bool libspdm_ec_check_key(const void *ec_context)
  * If public_size is large enough but public is NULL, then return false.
  *
  * @param[in, out]  ec_context      Pointer to the EC context.
- * @param[out]      public         Pointer to the buffer to receive generated public X,Y.
+ * @param[out]      public_data     Pointer to the buffer to receive generated public X,Y.
  * @param[in, out]  public_size     On input, the size of public buffer in bytes.
  *                                On output, the size of data returned in public buffer in bytes.
  *
@@ -332,7 +332,7 @@ bool libspdm_ec_check_key(const void *ec_context)
  * @retval false  public_size is not large enough.
  *
  **/
-bool libspdm_ec_generate_key(void *ec_context, uint8_t *public,
+bool libspdm_ec_generate_key(void *ec_context, uint8_t *public_data,
                              size_t *public_size)
 {
     EC_KEY *ec_key;
@@ -350,7 +350,7 @@ bool libspdm_ec_generate_key(void *ec_context, uint8_t *public,
         return false;
     }
 
-    if (public == NULL && *public_size != 0) {
+    if (public_data == NULL && *public_size != 0) {
         return false;
     }
 
@@ -406,10 +406,10 @@ bool libspdm_ec_generate_key(void *ec_context, uint8_t *public,
     }
     LIBSPDM_ASSERT((size_t)x_size <= half_size && (size_t)y_size <= half_size);
 
-    if (public != NULL) {
-        libspdm_zero_mem(public, *public_size);
-        BN_bn2bin(bn_x, &public[0 + half_size - x_size]);
-        BN_bn2bin(bn_y, &public[half_size + half_size - y_size]);
+    if (public_data != NULL) {
+        libspdm_zero_mem(public_data, *public_size);
+        BN_bn2bin(bn_x, &public_data[0 + half_size - x_size]);
+        BN_bn2bin(bn_y, &public_data[half_size + half_size - y_size]);
     }
     ret_val = true;
 

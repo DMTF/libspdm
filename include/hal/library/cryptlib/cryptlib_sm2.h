@@ -91,7 +91,7 @@ extern bool libspdm_sm2_dsa_check_key(const void *sm2_context);
  * If public_size is large enough but public is NULL, then return false.
  *
  * @param[in, out]  sm2_context  Pointer to the sm2 context.
- * @param[out]      public       Pointer to the buffer to receive generated public X,Y.
+ * @param[out]      public_data  Pointer to the buffer to receive generated public X,Y.
  * @param[in, out]  public_size  On input, the size of public buffer in bytes.
  *                               On output, the size of data returned in public buffer in bytes.
  *
@@ -99,7 +99,7 @@ extern bool libspdm_sm2_dsa_check_key(const void *sm2_context);
  * @retval false  sm2 public X,Y generation failed.
  * @retval false  public_size is not large enough.
  **/
-extern bool libspdm_sm2_dsa_generate_key(void *sm2_context, uint8_t *public,
+extern bool libspdm_sm2_dsa_generate_key(void *sm2_context, uint8_t *public_data,
                                          size_t *public_size);
 
 /**
@@ -157,7 +157,7 @@ extern bool libspdm_sm2_key_exchange_init(const void *sm2_context, size_t hash_n
  * If public_size is large enough but public is NULL, then return false.
  *
  * @param[in, out]  sm2_context  Pointer to the sm2 context.
- * @param[out]      public       Pointer to the buffer to receive generated public X,Y.
+ * @param[out]      public_data  Pointer to the buffer to receive generated public X,Y.
  * @param[in, out]  public_size  On input, the size of public buffer in bytes.
  *                               On output, the size of data returned in public buffer in bytes.
  *
@@ -165,7 +165,7 @@ extern bool libspdm_sm2_key_exchange_init(const void *sm2_context, size_t hash_n
  * @retval false  sm2 public X,Y generation failed.
  * @retval false  public_size is not large enough.
  **/
-extern bool libspdm_sm2_key_exchange_generate_key(void *sm2_context, uint8_t *public,
+extern bool libspdm_sm2_key_exchange_generate_key(void *sm2_context, uint8_t *public_data,
                                                   size_t *public_size);
 
 /**

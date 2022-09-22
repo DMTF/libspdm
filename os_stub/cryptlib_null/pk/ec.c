@@ -60,7 +60,7 @@ void libspdm_ec_free(void *ec_context)
  * If public_size is large enough but public is NULL, then return false.
  *
  * @param[in, out]  ec_context      Pointer to the EC context.
- * @param[out]      public         Pointer to the buffer to receive generated public X,Y.
+ * @param[out]      public_data     Pointer to the buffer to receive generated public X,Y.
  * @param[in, out]  public_size     On input, the size of public buffer in bytes.
  *                                On output, the size of data returned in public buffer in bytes.
  *
@@ -69,7 +69,7 @@ void libspdm_ec_free(void *ec_context)
  * @retval false  public_size is not large enough.
  *
  **/
-bool libspdm_ec_generate_key(void *ec_context, uint8_t *public,
+bool libspdm_ec_generate_key(void *ec_context, uint8_t *public_data,
                              size_t *public_size)
 {
     LIBSPDM_ASSERT(false);
