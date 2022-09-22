@@ -61,13 +61,19 @@ libspdm_return_t libspdm_send_request(void *context, const uint32_t *session_id,
         message_size = sender_buffer_size;
     }
     else {
-        LIBSPDM_ASSERT(
-            (uint8_t*)request >= scratch_buffer + LIBSPDM_SCRATCH_BUFFER_SENDER_RECEIVER_OFFSET
+        if ((uint8_t*)request >= scratch_buffer + LIBSPDM_SCRATCH_BUFFER_SENDER_RECEIVER_OFFSET
             && (uint8_t*)request < scratch_buffer + LIBSPDM_SCRATCH_BUFFER_SENDER_RECEIVER_OFFSET
-            + LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE);
-
-        message = scratch_buffer + LIBSPDM_SCRATCH_BUFFER_SENDER_RECEIVER_OFFSET;
-        message_size = LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE;
+            + LIBSPDM_SCRATCH_BUFFER_SENDER_RECEIVER_CAPACITY) {
+            message = scratch_buffer + LIBSPDM_SCRATCH_BUFFER_SENDER_RECEIVER_OFFSET;
+            message_size = LIBSPDM_SCRATCH_BUFFER_SENDER_RECEIVER_CAPACITY;
+        } else if ((uint8_t*)request >=
+                   scratch_buffer + LIBSPDM_SCRATCH_BUFFER_LARGE_SENDER_RECEIVER_OFFSET
+                   && (uint8_t*)request <
+                   scratch_buffer + LIBSPDM_SCRATCH_BUFFER_LARGE_SENDER_RECEIVER_OFFSET
+                   + LIBSPDM_SCRATCH_BUFFER_LARGE_SENDER_RECEIVER_CAPACITY) {
+            message = scratch_buffer + LIBSPDM_SCRATCH_BUFFER_LARGE_SENDER_RECEIVER_OFFSET;
+            message_size = LIBSPDM_SCRATCH_BUFFER_LARGE_SENDER_RECEIVER_CAPACITY;
+        }
     }
     #else /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
     message = sender_buffer;
@@ -180,11 +186,12 @@ libspdm_return_t libspdm_receive_response(void *context, const uint32_t *session
      * if it is normal message, the response ptr will point to receiver buffer. */
     transport_header_size = spdm_context->transport_get_header_size(spdm_context);
     libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
-    *response = scratch_buffer + transport_header_size;
-    #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
-    *response_size = scratch_buffer_size - transport_header_size -
-                     LIBSPDM_SCRATCH_BUFFER_SENDER_RECEIVER_OFFSET;
+    #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP || LIBSPDM_ENABLE_CHUNK_CAP
+    *response = scratch_buffer + LIBSPDM_SCRATCH_BUFFER_SECURE_MESSAGE_OFFSET +
+                transport_header_size;
+    *response_size = LIBSPDM_SCRATCH_BUFFER_SECURE_MESSAGE_CAPACITY - transport_header_size;
     #else
+    *response = scratch_buffer + transport_header_size;
     *response_size = scratch_buffer_size - transport_header_size;
     #endif
 
@@ -279,18 +286,16 @@ libspdm_return_t libspdm_handle_large_request(
     transport_header_size = spdm_context->transport_get_header_size(spdm_context);
 
     libspdm_get_scratch_buffer(spdm_context, (void**) &scratch_buffer, &scratch_buffer_size);
-    LIBSPDM_ASSERT(
-        scratch_buffer_size >=
-        LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE + LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+    LIBSPDM_ASSERT(scratch_buffer_size >= LIBSPDM_SCRATCH_BUFFER_SIZE);
 
     /* Temporary send/receive buffers for chunking are in the scratch space */
     message = scratch_buffer + LIBSPDM_SCRATCH_BUFFER_SENDER_RECEIVER_OFFSET;
-    message_size = LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE;
+    message_size = LIBSPDM_SCRATCH_BUFFER_SENDER_RECEIVER_CAPACITY;
 
     send_info = &spdm_context->chunk_context.send;
     send_info->chunk_in_use = true;
 
-    /* The first LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE bytes of the scratch
+    /* The first section of the scratch
      * buffer may be used for other purposes. Use only after that section. */
     send_info->large_message = scratch_buffer + LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_OFFSET;
     send_info->large_message_capacity = LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_CAPACITY;

@@ -1189,8 +1189,8 @@ void libspdm_test_responder_capabilities_case24(void **state)
     assert_int_equal(spdm_response->header.spdm_version, SPDM_MESSAGE_VERSION_12);
     assert_int_equal(spdm_response->header.request_response_code,
                      SPDM_CAPABILITIES);
-    assert_int_equal(spdm_response->data_transfer_size, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
-    assert_int_equal(spdm_response->max_spdm_msg_size, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+    assert_int_equal(spdm_response->data_transfer_size, LIBSPDM_DATA_TRANSFER_SIZE);
+    assert_int_equal(spdm_response->max_spdm_msg_size, LIBSPDM_MAX_SPDM_MSG_SIZE);
 }
 
 void libspdm_test_responder_capabilities_case25(void **state)
