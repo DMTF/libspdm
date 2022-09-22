@@ -68,8 +68,7 @@ int libspdm_unit_test_group_setup(void **state)
     void *spdm_context;
 
     spdm_test_context = m_spdm_test_context;
-    spdm_test_context->spdm_context =
-        (void *)malloc(libspdm_get_context_size());
+    spdm_test_context->spdm_context = (void *)malloc(libspdm_get_context_size());
     if (spdm_test_context->spdm_context == NULL) {
         return -1;
     }

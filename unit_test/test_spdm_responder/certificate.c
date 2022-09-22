@@ -1124,6 +1124,83 @@ void libspdm_test_responder_certificate_case14(void **state)
     free(data);
 }
 
+/**
+ * Test 15: Produce a CERTIFICATE response that is meant to be chunked.
+ *          LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN is ignored when chunking is enabled.
+ **/
+void libspdm_test_responder_certificate_case15(void **state)
+{
+    libspdm_return_t status;
+    bool ret;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t request[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    spdm_get_certificate_request_t *spdm_cert_request;
+    spdm_certificate_response_t *spdm_cert_response;
+    void *data;
+    size_t data_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 15;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.capability.flags = 0;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.data_transfer_size =
+        SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12;
+
+    spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->local_context.capability.data_transfer_size =
+        SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP |
+                                                    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+
+    ret = libspdm_read_responder_public_certificate_chain(
+        m_libspdm_use_hash_algo, m_libspdm_use_asym_algo, &data,
+        &data_size, NULL, NULL);
+    assert_true(ret);
+
+    spdm_context->local_context.local_cert_chain_provision[0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+
+    spdm_cert_request = (spdm_get_certificate_request_t *) request;
+
+    spdm_cert_request->header.spdm_version = SPDM_MESSAGE_VERSION_12;
+    spdm_cert_request->header.request_response_code = SPDM_GET_CERTIFICATE;
+    spdm_cert_request->header.param1 = 0;
+    spdm_cert_request->header.param2 = 0;
+    spdm_cert_request->offset = 0;
+    spdm_cert_request->length = 0xffff;
+
+    response_size = sizeof(response);
+    libspdm_zero_mem(response, response_size);
+
+    status = libspdm_get_response_certificate(
+        spdm_context,
+        sizeof(spdm_get_certificate_request_t), &request,
+        &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    spdm_cert_response = (spdm_certificate_response_t *) response;
+
+    assert_int_equal(spdm_cert_response->header.spdm_version, SPDM_MESSAGE_VERSION_12);
+    assert_int_equal(spdm_cert_response->header.request_response_code, SPDM_CERTIFICATE);
+    assert_int_equal(spdm_cert_response->header.param1, 0);
+    assert_int_equal(spdm_cert_response->header.param2, 0);
+    assert_int_equal(spdm_cert_response->portion_length, data_size);
+    assert_int_equal(spdm_cert_response->remainder_length, 0);
+
+    free(data);
+}
+
 libspdm_test_context_t m_libspdm_responder_certificate_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     false,
@@ -1160,6 +1237,8 @@ int libspdm_responder_certificate_test_main(void)
         cmocka_unit_test(libspdm_test_responder_certificate_case13),
         /* Success Case in a session*/
         cmocka_unit_test(libspdm_test_responder_certificate_case14),
+        /* Produce a CERTIFICATE response that is meant to be chunked. */
+        cmocka_unit_test(libspdm_test_responder_certificate_case15),
     };
 
     libspdm_setup_test_context(&m_libspdm_responder_certificate_test_context);
