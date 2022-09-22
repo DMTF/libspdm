@@ -319,13 +319,13 @@ void libspdm_set_connection_state(libspdm_context_t *spdm_context,
 /**
  * Build a SPDM response to a device.
  *
- * @param  spdm_context                  The SPDM context for the device.
- * @param  session_id                    Indicate if the response is a secured message.
+ * @param  spdm_context                The SPDM context for the device.
+ * @param  session_id                  Indicate if the response is a secured message.
  *                                     If session_id is NULL, it is a normal message.
  *                                     If session_id is NOT NULL, it is a secured message.
- * @param  is_app_message                 Indicates if it is an APP message or SPDM message.
- * @param  response_size                 size in bytes of the response data buffer.
- * @param  response                     A pointer to a destination buffer to store the response.
+ * @param  is_app_message              Indicates if it is an APP message or SPDM message.
+ * @param  response_size               Size in bytes of the response data buffer.
+ * @param  response                    A pointer to a destination buffer to store the response.
  *                                     The caller is responsible for having
  *                                     either implicit or explicit ownership of the buffer.
  *
@@ -336,8 +336,8 @@ void libspdm_set_connection_state(libspdm_context_t *spdm_context,
  **/
 libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_id,
                                         bool is_app_message,
-                                        size_t *final_response_size,
-                                        void **final_response)
+                                        size_t *response_size,
+                                        void **response)
 {
     libspdm_context_t *spdm_context;
     uint8_t *temp_response;
@@ -352,7 +352,6 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
     uint8_t *scratch_buffer;
     size_t scratch_buffer_size;
     uint8_t request_response_code;
-    bool using_temp_buffer;
 
     #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP || LIBSPDM_ENABLE_CHUNK_CAP
     libspdm_chunk_info_t* get_info;
@@ -363,30 +362,29 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
     spdm_context = context;
     status = LIBSPDM_STATUS_UNSUPPORTED_CAP;
 
-    /* Upon exiting this function, the "final_response" buffer must contain
+    /* Upon exiting this function, the "response" buffer must contain
      * the response to be sent back to the requester. Within this function however,
-     * we perform all the work for building the response using "temp_response" ptr.
+     * we perform all the work for building the response using "temp_response".
      *
      * In the very trivial case, where chunking support is not compiled in and
      * a secure session is not used, this "temp_response" actually points to the
-     * "final_response" and all work is really done in the "final_response" buffer.
+     * "response" buffer and all work is really done in the "response" buffer.
      *
      * In the non-trivial cases however, where chunking is supported at compile time,
      * or a secure session is used, we must use a temporary buffer to work on the response.
-     * This is because the "final_response" buffer may not have enough room for a
-     * full response in case of chunking, or we just need a temporary spot to encrypt
-     * from for secure sessions.
+     * This is because "response" buffer may not have enough room for a
+     * full response in case of chunking support, or we just need a temporary spot
+     * to serve as the encryption source from for secure sessions.
      *
      * Therefore in this non-trival case, the "temp_response" is set to a location
-     * in the scratch space, and prior exiting this function, it must be copied to
-     * the "final_response" buffer.
+     * in the scratch space, and prior exiting this function, it is copied to
+     * the "response" buffer.
      */
 
     transport_header_size = spdm_context->transport_get_header_size(spdm_context);
     libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
 
     #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP || LIBSPDM_ENABLE_CHUNK_CAP
-    using_temp_buffer = true;
     temp_response = scratch_buffer +
                     LIBSPDM_SCRATCH_BUFFER_TEMP_MESSAGE_BUFFER_1_OFFSET +
                     transport_header_size;
@@ -394,16 +392,14 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
                             transport_header_size;
     #else
     if (session_id != NULL) {
-        using_temp_buffer = true;
         temp_response = scratch_buffer +
                         LIBSPDM_SCRATCH_BUFFER_TEMP_MESSAGE_BUFFER_1_OFFSET +
                         transport_header_size;
         temp_response_size = LIBSPDM_SCRATCH_BUFFER_TEMP_MESSAGE_BUFFER_1_SIZE -
                              transport_header_size;
     } else {
-        using_temp_buffer = false;
-        temp_response = (uint8_t*) final_response + transport_header_size;
-        temp_response_size = *final_response_size - transport_header_size;
+        temp_response = (uint8_t*) response + transport_header_size;
+        temp_response_size = *response_size - transport_header_size;
     }
     #endif
 
@@ -426,7 +422,7 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
                  * just ignore this message
                  * return UNSUPPORTED and clear response_size to continue the dispatch without send response
                  **/
-                *final_response_size = 0;
+                *response_size = 0;
                 status = LIBSPDM_STATUS_UNSUPPORTED_CAP;
             }
             break;
@@ -436,7 +432,7 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
              * just ignore this message
              * return UNSUPPORTED and clear response_size to continue the dispatch without send response
              **/
-            *final_response_size = 0;
+            *response_size = 0;
             status = LIBSPDM_STATUS_UNSUPPORTED_CAP;
             break;
         default:
@@ -453,20 +449,21 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
                        temp_response_size));
         libspdm_internal_dump_hex(temp_response, temp_response_size);
 
-        /* When truly using a temp buffer and not using a secure session
-         * we need to copy the response back from the temp buffer to the final
-         * response buffer. The reason we don't need to copy in the secure session
-         * case, is because the transport_encode_message will do the copying
-         * if it is a secure session */
-        if (using_temp_buffer && session_id == NULL) {
-            libspdm_copy_mem((uint8_t*)*final_response + transport_header_size,
-                             *final_response_size - transport_header_size,
+        /* If we are truly using a temporary response buffer within the scratch space,
+         * we MAY need to copy the response back from the "temp_buffer" to the "response" buffer.
+         * This is necessary when using the temporary buffer AND NOT using a secure session.
+         * In the case where a secure session is used, the transport_encode_message
+         * function a few lines down wil perform the copying.
+         */
+        if (temp_response != (uint8_t*)response + transport_header_size && session_id == NULL) {
+            libspdm_copy_mem((uint8_t*)*response + transport_header_size,
+                             *response_size - transport_header_size,
                              temp_response, temp_response_size);
         }
 
         status = spdm_context->transport_encode_message(
             spdm_context, session_id, false, false,
-            temp_response_size, temp_response, final_response_size, final_response);
+            temp_response_size, temp_response, response_size, response);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "transport_encode_message : %p\n",
                            status));
@@ -487,13 +484,13 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
         }
     }
 
-    if (*final_response == NULL) {
+    if (*response == NULL) {
         return LIBSPDM_STATUS_INVALID_PARAMETER;
     }
-    if (final_response_size == NULL) {
+    if (response_size == NULL) {
         return LIBSPDM_STATUS_INVALID_PARAMETER;
     }
-    if (*final_response_size == 0) {
+    if (*response_size == 0) {
         return LIBSPDM_STATUS_INVALID_PARAMETER;
     }
 
@@ -644,7 +641,7 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
      * just ignore this message
      * return UNSUPPORTED and clear response_size to continue the dispatch without send response.*/
     if((temp_response_size == 0) && (status == LIBSPDM_STATUS_UNSUPPORTED_CAP)) {
-        *final_response_size = 0;
+        *response_size = 0;
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
 
@@ -662,25 +659,22 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
                    (session_id != NULL) ? *session_id : 0, temp_response_size));
     libspdm_internal_dump_hex(temp_response, temp_response_size);
 
-    /* At the beginning of this function, we adjusted "my_response" to point to a location
-     * in the scratch buffer to serve as a temporary location to fill the response,
-     * in the case where chunking is supported, or secure messaging is needed.
-     * Now that the true response has been processed within "my_response",
-     * "my_response" should have data that is smaller than the "response" buffer
-     * and can be copied into there, for the caller to use.
-     * Note: We must copy "my_response" back to "response", and reset "my_response"
-     * to point within response, prior to encoding the transport layer,
-     * so the "response" is the buffer that is transport encoded properly. */
-
-    if (using_temp_buffer && session_id == NULL) {
-        libspdm_copy_mem((uint8_t*)*final_response + transport_header_size,
-                         *final_response_size - transport_header_size,
+    /* If we are truly using a temporary response buffer within the scratch space,
+     * we MAY need to copy the response back from the "temp_buffer" to the "response" buffer.
+     * This is necessary when using the temporary buffer AND NOT using a secure session.
+     * In the case where a secure session is used, the transport_encode_message
+     * function a few lines down wil perform the copying.
+     */
+    if (temp_response != (uint8_t*)response + transport_header_size && session_id == NULL) {
+        libspdm_copy_mem((uint8_t*)*response + transport_header_size,
+                         *response_size - transport_header_size,
                          temp_response, temp_response_size);
     }
 
+
     status = spdm_context->transport_encode_message(
         spdm_context, session_id, is_app_message, false,
-        temp_response_size, temp_response, final_response_size, final_response);
+        temp_response_size, temp_response, response_size, response);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "transport_encode_message : %p\n", status));
         return status;

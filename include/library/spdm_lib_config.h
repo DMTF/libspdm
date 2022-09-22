@@ -324,23 +324,24 @@
  *
  * Currently, the scratch buffer has the following usages:
  * 1) Temporary secure buffer for encrypted/decrypted messages.
- * 2) Temporary buffer for storing large request/response for use in chunking.
- * 3) Temporary send/receive buffer used in chunking.
- * 4) Temporary response buffer, when building a response, if chunking
+ * 2) Temporary response buffer, when building a response, if chunking
  *    is enabled, but not necessarily used.
+ * 3) Temporary buffer for storing large request/response for use in chunking.
+ * 4) Temporary send/receive buffer used in chunking.
  *
  * +-----------------------------------------------+
+ * | TEMP_MESSAGE_BUFFER_1
  * | Secure buffer for secure enconding/decoding   |
- * | LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE            |
+ * | or response buffer when chunking is supported |
+ * | LIBSPDM_MAX_SPDM_MSG_SIZE                     |
  * +-----------------------------------------------+
+ * | TEMP_MESSAGE_BUFFER_2
  * | Large request/response buffer for chunking    |
  * | LIBSPDM_MAX_SPDM_MSG_SIZE                     |
  * +-----------------------------------------------+
+ * | CHUNKING_SENDER_RECEIVER_BUFFER               |
  * | Sender/Receiver buffer for chunking           |
  * | LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE            |
- * +-----------------------------------------------+
- * | Response buffer when chunking enabled         |
- * | LIBSPDM_MAX_SPDM_MSG_SIZE                     |
  * +-----------------------------------------------+
  *
  * Generally, these values should not be changed.
