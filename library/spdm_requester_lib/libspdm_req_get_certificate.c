@@ -128,8 +128,7 @@ static libspdm_return_t libspdm_try_get_certificate(void *context, const uint32_
 
     if (chunk_enabled) {
         length = 0xffff;
-    }
-    else {
+    } else {
         length = LIBSPDM_MIN(length, LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
     }
 
