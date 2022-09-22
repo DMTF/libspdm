@@ -473,8 +473,7 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
 
     get_response_func = NULL;
     if (!is_app_message) {
-        get_response_func =
-            libspdm_get_response_func_via_last_request(spdm_context);
+        get_response_func = libspdm_get_response_func_via_last_request(spdm_context);
 
         #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP || LIBSPDM_ENABLE_CHUNK_CAP
         /* If responder is expecting chunk_get or chunk_send requests
