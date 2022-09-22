@@ -162,8 +162,10 @@ libspdm_return_t libspdm_process_request(void *context, uint32_t **session_id,
     transport_header_size = spdm_context->transport_get_header_size(spdm_context);
     libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
     decoded_message_ptr = scratch_buffer +
-                          LIBSPDM_SCRATCH_BUFFER_SECURE_BUFFER_OFFSET + transport_header_size;
-    decoded_message_size = LIBSPDM_SCRATCH_BUFFER_SECURE_BUFFER_SIZE - transport_header_size;
+                          LIBSPDM_SCRATCH_BUFFER_TEMP_MESSAGE_BUFFER_1_OFFSET +
+                          transport_header_size;
+    decoded_message_size = LIBSPDM_SCRATCH_BUFFER_TEMP_MESSAGE_BUFFER_1_SIZE -
+                           transport_header_size;
 
     status = spdm_context->transport_decode_message(
         spdm_context, &message_session_id, is_app_message, true,
@@ -371,9 +373,9 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
     transport_header_size = spdm_context->transport_get_header_size(spdm_context);
     libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
     temp_response = (void*)(scratch_buffer +
-                          LIBSPDM_SCRATCH_BUFFER_BUILD_MESSAGE_BUFFER_OFFSET +
+                          LIBSPDM_SCRATCH_BUFFER_TEMP_MESSAGE_BUFFER_1_OFFSET +
                           transport_header_size);
-    temp_response_size = LIBSPDM_SCRATCH_BUFFER_BUILD_MESSAGE_BUFFER_SIZE - transport_header_size;
+    temp_response_size = LIBSPDM_SCRATCH_BUFFER_TEMP_MESSAGE_BUFFER_1_SIZE - transport_header_size;
 
     libspdm_zero_mem(temp_response, temp_response_size);
 
@@ -545,8 +547,8 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
          * Use only large message section for code below. */
 
         scratch_buffer =
-            (((uint8_t*) scratch_buffer) + LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_OFFSET);
-        scratch_buffer_size = LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_CAPACITY;
+            (((uint8_t*) scratch_buffer) + LIBSPDM_SCRATCH_BUFFER_TEMP_MESSAGE_BUFFER_2_OFFSET);
+        scratch_buffer_size = LIBSPDM_SCRATCH_BUFFER_TEMP_MESSAGE_BUFFER_2_SIZE;
 
         if (temp_response_size < scratch_buffer_size) {
 

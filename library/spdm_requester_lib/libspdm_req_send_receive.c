@@ -90,8 +90,10 @@ libspdm_return_t libspdm_send_request(void *context, const uint32_t *session_id,
          * as the encryption source. */
 
         libspdm_copy_mem (scratch_buffer
-                          + LIBSPDM_SCRATCH_BUFFER_SECURE_BUFFER_OFFSET + transport_header_size,
-                          LIBSPDM_SCRATCH_BUFFER_SECURE_BUFFER_SIZE - transport_header_size,
+                          + LIBSPDM_SCRATCH_BUFFER_TEMP_MESSAGE_BUFFER_1_OFFSET
+                          + transport_header_size,
+                          LIBSPDM_SCRATCH_BUFFER_TEMP_MESSAGE_BUFFER_1_SIZE
+                          - transport_header_size,
                           request, request_size);
         request = scratch_buffer + transport_header_size;
     }
@@ -192,9 +194,10 @@ libspdm_return_t libspdm_receive_response(void *context, const uint32_t *session
      * if it is normal message, the response ptr will point to receiver buffer. */
     transport_header_size = spdm_context->transport_get_header_size(spdm_context);
     libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
-    *response = scratch_buffer + LIBSPDM_SCRATCH_BUFFER_SECURE_BUFFER_OFFSET +
+    *response = scratch_buffer +
+                LIBSPDM_SCRATCH_BUFFER_TEMP_MESSAGE_BUFFER_1_OFFSET +
                 transport_header_size;
-    *response_size = LIBSPDM_SCRATCH_BUFFER_SECURE_BUFFER_SIZE - transport_header_size;
+    *response_size = LIBSPDM_SCRATCH_BUFFER_TEMP_MESSAGE_BUFFER_1_SIZE - transport_header_size;
 
     /* Decode the "message" and place into "response", which points to the
      * secure buffer region of the scratch buffer. */
@@ -300,8 +303,8 @@ libspdm_return_t libspdm_handle_large_request(
 
     /* The first LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE bytes of the scratch
      * buffer may be used for other purposes. Use only after that section. */
-    send_info->large_message = scratch_buffer + LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_OFFSET;
-    send_info->large_message_capacity = LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_CAPACITY;
+    send_info->large_message = scratch_buffer + LIBSPDM_SCRATCH_BUFFER_TEMP_MESSAGE_BUFFER_2_OFFSET;
+    send_info->large_message_capacity = LIBSPDM_SCRATCH_BUFFER_TEMP_MESSAGE_BUFFER_2_SIZE;
 
     libspdm_zero_mem(send_info->large_message, send_info->large_message_capacity);
     libspdm_copy_mem(send_info->large_message, send_info->large_message_capacity,

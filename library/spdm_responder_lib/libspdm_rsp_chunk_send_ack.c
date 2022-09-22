@@ -128,8 +128,8 @@ libspdm_return_t libspdm_get_response_chunk_send(void *context,
             send_info->chunk_seq_no = spdm_request->chunk_seq_no;
 
             send_info->large_message = scratch_buffer +
-                                       LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_OFFSET;
-            send_info->large_message_capacity = LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_CAPACITY;
+                                       LIBSPDM_SCRATCH_BUFFER_TEMP_MESSAGE_BUFFER_2_OFFSET;
+            send_info->large_message_capacity = LIBSPDM_SCRATCH_BUFFER_TEMP_MESSAGE_BUFFER_2_SIZE;
             send_info->large_message_size = large_message_size;
             send_info->chunk_bytes_transferred = spdm_request->chunk_size;
 

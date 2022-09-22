@@ -244,8 +244,8 @@ libspdm_return_t libspdm_handle_error_large_response(
     LIBSPDM_ASSERT(scratch_buffer_size >= LIBSPDM_SCRATCH_BUFFER_SIZE);
 
     /* The large response should be stored in a special region of the scratch buffer */
-    large_response = scratch_buffer + LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_OFFSET;
-    large_response_capacity = LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_CAPACITY;
+    large_response = scratch_buffer + LIBSPDM_SCRATCH_BUFFER_TEMP_MESSAGE_BUFFER_2_OFFSET;
+    large_response_capacity = LIBSPDM_SCRATCH_BUFFER_TEMP_MESSAGE_BUFFER_2_SIZE;
 
     /* Temporary send/receive buffers for chunking are in the scratch space */
     message = scratch_buffer + LIBSPDM_SCRATCH_BUFFER_CHUNKING_SENDER_RECEIVER_BUFFER_OFFSET;
