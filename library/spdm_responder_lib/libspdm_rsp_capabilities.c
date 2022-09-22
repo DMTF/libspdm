@@ -71,6 +71,11 @@ static bool libspdm_check_request_flag_compability(uint32_t capabilities_flag,
         return true;
 
     case SPDM_MESSAGE_VERSION_11:
+        /*Muth_auth_cap set and encap_cap cleared
+         *Note: encap_cap is DEPRECATED after libspdm 1.1*/
+        if (mut_auth_cap != 0 && encap_cap == 0) {
+            return false;
+        }
     case SPDM_MESSAGE_VERSION_12:
     {
         /*meas_cap shall be set to 00b*/
@@ -95,10 +100,6 @@ static bool libspdm_check_request_flag_compability(uint32_t capabilities_flag,
         }
         /*PSK_cap set and encrypt_cap+mac_cap cleared*/
         if (psk_cap != 0 && (encrypt_cap == 0 && mac_cap == 0)) {
-            return false;
-        }
-        /*Muth_auth_cap set and encap_cap cleared*/
-        if (mut_auth_cap != 0 && encap_cap == 0) {
             return false;
         }
         /*Handshake_in_the_clear_cap set and key_ex_cap cleared*/

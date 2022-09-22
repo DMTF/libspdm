@@ -171,8 +171,8 @@ libspdm_return_t libspdm_encapsulated_request(libspdm_context_t *spdm_context,
 
     if (!libspdm_is_capabilities_flag_supported(
             spdm_context, true,
-            SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP,
-            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP)) {
+            SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP,
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP)) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
 
