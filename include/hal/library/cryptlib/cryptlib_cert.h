@@ -258,7 +258,7 @@ extern bool libspdm_x509_get_validity(const uint8_t *cert, size_t cert_size,
  * @retval  true
  * @retval  false
  **/
-extern bool libspdm_x509_set_date_time(char *date_time_str, void *date_time,
+extern bool libspdm_x509_set_date_time(const char *date_time_str, void *date_time,
                                        size_t *date_time_size);
 
 /**

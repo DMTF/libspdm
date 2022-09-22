@@ -32,7 +32,7 @@
  * @return  Pointer to the HASH_CTX context that has been initialized.
  *         If the allocations fails, libspdm_hash_new_func() returns NULL.
  **/
-typedef void * (*libspdm_hash_new_func)();
+typedef void * (*libspdm_hash_new_func)(void);
 
 /**
  * Release the specified HASH_CTX context.
@@ -130,7 +130,7 @@ typedef bool (*libspdm_hash_all_func)(const void *data, size_t data_size,
  * @return  Pointer to the HMAC context that has been initialized.
  *         If the allocations fails, libspdm_hmac_new_func() returns NULL.
  **/
-typedef void * (*libspdm_hmac_new_func)();
+typedef void * (*libspdm_hmac_new_func)(void);
 
 /**
  * Release the specified HMAC context.
