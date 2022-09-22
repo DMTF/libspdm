@@ -246,7 +246,7 @@ bool libspdm_ec_check_key(const void *ec_context)
  * If public_size is large enough but public is NULL, then return false.
  *
  * @param[in, out]  ec_context      Pointer to the EC context.
- * @param[out]      public         Pointer to the buffer to receive generated public X,Y.
+ * @param[out]      public_data     Pointer to the buffer to receive generated public X,Y.
  * @param[in, out]  public_size     On input, the size of public buffer in bytes.
  *                                On output, the size of data returned in public buffer in bytes.
  *
@@ -255,7 +255,7 @@ bool libspdm_ec_check_key(const void *ec_context)
  * @retval false  public_size is not large enough.
  *
  **/
-bool libspdm_ec_generate_key(void *ec_context, uint8_t *public,
+bool libspdm_ec_generate_key(void *ec_context, uint8_t *public_data,
                              size_t *public_size)
 {
     mbedtls_ecdh_context *ctx;
@@ -268,7 +268,7 @@ bool libspdm_ec_generate_key(void *ec_context, uint8_t *public,
         return false;
     }
 
-    if (public == NULL && *public_size != 0) {
+    if (public_data == NULL && *public_size != 0) {
         return false;
     }
 
@@ -297,19 +297,19 @@ bool libspdm_ec_generate_key(void *ec_context, uint8_t *public,
         return false;
     }
     *public_size = half_size * 2;
-    libspdm_zero_mem(public, *public_size);
+    libspdm_zero_mem(public_data, *public_size);
 
     x_size = mbedtls_mpi_size(&ctx->Q.X);
     y_size = mbedtls_mpi_size(&ctx->Q.Y);
     LIBSPDM_ASSERT(x_size <= half_size && y_size <= half_size);
 
     ret = mbedtls_mpi_write_binary(&ctx->Q.X,
-                                   &public[0 + half_size - x_size], x_size);
+                                   &public_data[0 + half_size - x_size], x_size);
     if (ret != 0) {
         return false;
     }
     ret = mbedtls_mpi_write_binary(
-        &ctx->Q.Y, &public[half_size + half_size - y_size], y_size);
+        &ctx->Q.Y, &public_data[half_size + half_size - y_size], y_size);
     if (ret != 0) {
         return false;
     }
