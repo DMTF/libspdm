@@ -709,8 +709,7 @@ bool libspdm_x509_get_extended_basic_constraints(const uint8_t *cert,
  *                                 date_time_size parameter.
  * @retval RETURN_UNSUPPORTED       The operation is not supported.
  **/
-bool libspdm_x509_set_date_time(char *date_time_str, void *date_time,
-                                size_t *date_time_size)
+bool libspdm_x509_set_date_time(const char *date_time_str, void *date_time, size_t *date_time_size)
 {
     LIBSPDM_ASSERT(false);
     return false;
