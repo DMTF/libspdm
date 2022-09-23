@@ -100,11 +100,11 @@
    SPDM Requester / Responder needs to register `libspdm_device_send_message_func`
    and `libspdm_device_receive_message_func` to the `spdm_requester_lib` / `spdm_responder_lib`.
 
-   SPDM Requester / Responder need to register `libspdm_device_acquire_sender_buffer_func`,
+   SPDM Requester / Responder needs to register `libspdm_device_acquire_sender_buffer_func`,
    `libspdm_device_release_sender_buffer_func`, `libspdm_device_acquire_receiver_buffer_func`,
    and `libspdm_device_release_receiver_buffer_func` to the `spdm_requester_lib` / `spdm_responder_lib`.
 
-   These APIs send and receive transport layer messages to or from an SPDM device.
+   These APIs send and receive transport layer messages to and from an SPDM device.
 
    The size of sender/receiver buffer is `LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE`.
    The size of scratch buffer is `LIBSPDM_SCRATCH_BUFFER_SIZE`.
@@ -267,6 +267,17 @@
      | scratch_buffer
 
    ```
+   The buffers have the following properties:
+
+   * libspdm never writes data to the receive buffer so the buffer may be read-only.
+   * libspdm both reads from and writes to the send buffer. Note that in a future release libspdm
+   may never read from the send buffer, allowing it to be write-only.
+   * libspdm always releases the send buffer before acquiring the receive buffer and releases the
+   receive buffer before acquiring the send buffer. Because of this the send buffer and receive buffer
+   may overlap or be the same buffer.
+   * libspdm assumes that, when populating the send buffer or parsing the receive buffer, both buffers
+   cannot be modified by external agents. It is the library integrator's responsibility to ensure that
+   the buffers cannot be tampered with while libspdm is accessing them.
 
 9) [spdm_lib_config.h](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_lib_config.h) provides an example of the configuration macros used in the libspdm library.
 
