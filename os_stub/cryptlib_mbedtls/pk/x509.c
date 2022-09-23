@@ -1454,9 +1454,9 @@ static int32_t libspdm_internal_x509_check_time(const mbedtls_x509_time *before,
     return (0);
 }
 
-static int32_t libspdm_internal_atoi(char *p_start, char *p_end)
+static int32_t libspdm_internal_atoi(const char *p_start, char const *p_end)
 {
-    char *p = p_start;
+    const char *p = p_start;
     int32_t k = 0;
     while (p < p_end) {
 
@@ -1502,7 +1502,7 @@ bool libspdm_x509_set_date_time(const char *date_time_str, void *date_time, size
     int32_t minute;
     int32_t second;
     bool status;
-    char *p;
+    const char *p;
 
     p = date_time_str;
 
