@@ -389,7 +389,7 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
                     LIBSPDM_SCRATCH_BUFFER_TEMP_MESSAGE_BUFFER_1_OFFSET +
                     transport_header_size;
     temp_response_size = LIBSPDM_SCRATCH_BUFFER_TEMP_MESSAGE_BUFFER_1_SIZE -
-                            transport_header_size;
+                         transport_header_size;
     #else
     if (session_id != NULL) {
         temp_response = scratch_buffer +
