@@ -316,43 +316,69 @@
 #endif
 
 
-/* Required scratch buffer size for libspdm internal usage.
- * It may be used to hold the encrypted/decrypted message and/or last sent/received message.
- * It may be used to hold the large request/response and intermediate send/receive buffer
- * in case of chunking.
+/* Scratch buffer defines:
+ * The scratch buffer is reserved for internal libspdm usage.
+ * It is a large buffer that is split into several smaller buffers, which are used as
+ * temporary storage in libspdm. Each smaller buffer has a offset and size
+ * that may be individually customized.
  *
- * If chunking is not supported, it may be just LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE.
- * If chunking is supported, it should be at least LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE
- * + LIBSPDM_MAX_SPDM_MSG_SIZE + LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE.
+ * Currently, the scratch buffer has the following usages:
+ * 1) Temporary secure buffer for encrypted/decrypted messages.
+ * 2) Temporary response buffer, when building a response, if chunking
+ *    is enabled, but not necessarily used.
+ * 3) Temporary buffer for storing large request/response for use in chunking.
+ * 4) Temporary send/receive buffer used in chunking.
  *
- * +----------------------------------+-------------------------+------------------------------------------+
- * |LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE|LIBSPDM_MAX_SPDM_MSG_SIZE|    LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE    |
- * +----------------------------------+-------------------------+------------------------------------------+
- * |<-Secure msg enconding /decoding->|<-Full SPDM msg (chunk)->|<-Temp send/receive buffer for chunking ->|
+ * +-----------------------------------------------+
+ * | TEMP_MESSAGE_BUFFER_1
+ * | Secure buffer for secure enconding/decoding   |
+ * | or response buffer when chunking is supported |
+ * | LIBSPDM_MAX_SPDM_MSG_SIZE                     |
+ * +-----------------------------------------------+
+ * | TEMP_MESSAGE_BUFFER_2
+ * | Large request/response buffer for chunking    |
+ * | LIBSPDM_MAX_SPDM_MSG_SIZE                     |
+ * +-----------------------------------------------+
+ * | CHUNKING_SENDER_RECEIVER_BUFFER               |
+ * | Sender/Receiver buffer for chunking           |
+ * | LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE            |
+ * +-----------------------------------------------+
  *
- * The value is NOT configurable.
+ * Generally, these values should not be changed.
  * The value MAY be changed in different libspdm version.
  * It is exposed here, just in case the libspdm consumer wants to configure the setting at build time.
  */
 #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
 
-#define LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_OFFSET \
-    (LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE)
-
-#define LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_CAPACITY \
+#define LIBSPDM_SCRATCH_BUFFER_TEMP_MESSAGE_BUFFER_1_OFFSET (0)
+#define LIBSPDM_SCRATCH_BUFFER_TEMP_MESSAGE_BUFFER_1_SIZE   \
     (LIBSPDM_MAX_SPDM_MSG_SIZE)
 
-#define LIBSPDM_SCRATCH_BUFFER_SENDER_RECEIVER_OFFSET  \
-    (LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE + \
-     LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_CAPACITY)
+#define LIBSPDM_SCRATCH_BUFFER_TEMP_MESSAGE_BUFFER_2_OFFSET \
+    (LIBSPDM_SCRATCH_BUFFER_TEMP_MESSAGE_BUFFER_1_OFFSET \
+     + LIBSPDM_SCRATCH_BUFFER_TEMP_MESSAGE_BUFFER_1_SIZE)
 
-#define LIBSPDM_SCRATCH_BUFFER_SIZE (LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE + \
-                                     LIBSPDM_MAX_SPDM_MSG_SIZE +          \
-                                     LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE \
-                                     )
+#define LIBSPDM_SCRATCH_BUFFER_TEMP_MESSAGE_BUFFER_2_SIZE \
+    (LIBSPDM_MAX_SPDM_MSG_SIZE)
+
+#define LIBSPDM_SCRATCH_BUFFER_CHUNKING_SENDER_RECEIVER_BUFFER_OFFSET  \
+    (LIBSPDM_SCRATCH_BUFFER_TEMP_MESSAGE_BUFFER_2_OFFSET \
+     + LIBSPDM_SCRATCH_BUFFER_TEMP_MESSAGE_BUFFER_2_SIZE)
+
+#define LIBSPDM_SCRATCH_BUFFER_CHUNKING_SENDER_RECEIVER_BUFFER_SIZE \
+    (LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE)
+
+#define LIBSPDM_SCRATCH_BUFFER_SIZE (LIBSPDM_SCRATCH_BUFFER_TEMP_MESSAGE_BUFFER_1_SIZE + \
+                                     LIBSPDM_SCRATCH_BUFFER_TEMP_MESSAGE_BUFFER_2_SIZE + \
+                                     LIBSPDM_SCRATCH_BUFFER_CHUNKING_SENDER_RECEIVER_BUFFER_SIZE)
 
 #else
-#define LIBSPDM_SCRATCH_BUFFER_SIZE (LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE)
+
+#define LIBSPDM_SCRATCH_BUFFER_TEMP_MESSAGE_BUFFER_1_OFFSET (0)
+#define LIBSPDM_SCRATCH_BUFFER_TEMP_MESSAGE_BUFFER_1_SIZE   \
+    (LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE)
+
+#define LIBSPDM_SCRATCH_BUFFER_SIZE (LIBSPDM_SCRATCH_BUFFER_TEMP_MESSAGE_BUFFER_1_SIZE)
 #endif
 
 #ifndef LIBSPDM_ENABLE_MSG_LOG

@@ -121,17 +121,15 @@ libspdm_return_t libspdm_get_response_chunk_send(void *context,
         else {
             libspdm_get_scratch_buffer(spdm_context, (void**) &scratch_buffer,
                                        &scratch_buffer_size);
-            LIBSPDM_ASSERT(
-                scratch_buffer_size >=
-                LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE + LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+            LIBSPDM_ASSERT(scratch_buffer_size >= LIBSPDM_SCRATCH_BUFFER_SIZE);
 
             send_info->chunk_in_use = true;
             send_info->chunk_handle = spdm_request->header.param2;
             send_info->chunk_seq_no = spdm_request->chunk_seq_no;
 
             send_info->large_message = scratch_buffer +
-                                       LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_OFFSET;
-            send_info->large_message_capacity = LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_CAPACITY;
+                                       LIBSPDM_SCRATCH_BUFFER_TEMP_MESSAGE_BUFFER_2_OFFSET;
+            send_info->large_message_capacity = LIBSPDM_SCRATCH_BUFFER_TEMP_MESSAGE_BUFFER_2_SIZE;
             send_info->large_message_size = large_message_size;
             send_info->chunk_bytes_transferred = spdm_request->chunk_size;
 
