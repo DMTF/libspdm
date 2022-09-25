@@ -5,6 +5,9 @@
  **/
 
 #include "library/spdm_crypt_lib.h"
+#include "hal/library/debuglib.h"
+#include "hal/library/memlib.h"
+#include "hal/library/cryptlib.h"
 
 /*max public key encryption algo oid len*/
 #ifndef LIBSPDM_MAX_ENCRYPTION_ALGO_OID_LEN
@@ -36,20 +39,14 @@
  * 0x82 indicates that the length is expressed in two bytes;
  * 0x01 and 0x01 are rsa key len;
  **/
-#define KEY_ENCRY_ALGO_RSA2048_FLAG \
-    {0x02, 0x82, 0x01, 0x01}
-#define KEY_ENCRY_ALGO_RSA3072_FLAG \
-    {0x02, 0x82, 0x01, 0x81}
-#define KEY_ENCRY_ALGO_RSA4096_FLAG \
-    {0x02, 0x82, 0x02, 0x01}
+#define KEY_ENCRY_ALGO_RSA2048_FLAG {0x02, 0x82, 0x01, 0x01}
+#define KEY_ENCRY_ALGO_RSA3072_FLAG {0x02, 0x82, 0x01, 0x81}
+#define KEY_ENCRY_ALGO_RSA4096_FLAG {0x02, 0x82, 0x02, 0x01}
 
 /* the other case is ASN1 code different when integer is 1 on highest position*/
-#define KEY_ENCRY_ALGO_RSA2048_FLAG_OTHER \
-    {0x02, 0x82, 0x01, 0x00}
-#define KEY_ENCRY_ALGO_RSA3072_FLAG_OTHER \
-    {0x02, 0x82, 0x01, 0x80}
-#define KEY_ENCRY_ALGO_RSA4096_FLAG_OTHER \
-    {0x02, 0x82, 0x02, 0x00}
+#define KEY_ENCRY_ALGO_RSA2048_FLAG_OTHER {0x02, 0x82, 0x01, 0x00}
+#define KEY_ENCRY_ALGO_RSA3072_FLAG_OTHER {0x02, 0x82, 0x01, 0x80}
+#define KEY_ENCRY_ALGO_RSA4096_FLAG_OTHER {0x02, 0x82, 0x02, 0x00}
 
 /**
  * http://oid-info.com/get/1.2.840.10045.3.1.7
@@ -59,12 +56,9 @@
  * http://oid-info.com/get/1.3.132.0.35
  * ECC521 curve OID: 1.3.132.0.35
  **/
-#define KEY_ENCRY_ALGO_ECC256_OID  \
-    {0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x03, 0x01, 0x07}
-#define KEY_ENCRY_ALGO_ECC384_OID  \
-    {0x2B, 0x81, 0x04, 0x00, 0x22}
-#define KEY_ENCRY_ALGO_ECC521_OID  \
-    {0x2B, 0x81, 0x04, 0x00, 0x23}
+#define KEY_ENCRY_ALGO_ECC256_OID {0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x03, 0x01, 0x07}
+#define KEY_ENCRY_ALGO_ECC384_OID {0x2B, 0x81, 0x04, 0x00, 0x22}
+#define KEY_ENCRY_ALGO_ECC521_OID {0x2B, 0x81, 0x04, 0x00, 0x23}
 
 /**
  * EDxxx OID: https://datatracker.ietf.org/doc/html/rfc8420
@@ -72,7 +66,7 @@
  * ED25519 OID: 1.3.101.112
  **/
 #define ENCRY_ALGO_ED25519_OID {0x2B, 0x65, 0x70}
-#define ENCRY_ALGO_ED448_OID   {0x2B, 0x65, 0x71}
+#define ENCRY_ALGO_ED448_OID {0x2B, 0x65, 0x71}
 
 /**
  * This function returns the SPDM hash algorithm size.
@@ -705,8 +699,7 @@ bool libspdm_hash_init(uint32_t base_hash_algo, void *hash_context)
  * @retval false  hash context copy failed.
  *
  **/
-bool libspdm_hash_duplicate(uint32_t base_hash_algo,
-                            const void *hash_ctx, void *new_hash_ctx)
+bool libspdm_hash_duplicate(uint32_t base_hash_algo, const void *hash_ctx, void *new_hash_ctx)
 {
     libspdm_hash_duplicate_func hash_function;
     hash_function = libspdm_get_hash_duplicate_func(base_hash_algo);
@@ -1459,8 +1452,7 @@ bool libspdm_hmac_init(uint32_t base_hash_algo,
  * @retval false  HMAC context copy failed.
  *
  **/
-bool libspdm_hmac_duplicate(uint32_t base_hash_algo,
-                            const void *hmac_ctx, void *new_hmac_ctx)
+bool libspdm_hmac_duplicate(uint32_t base_hash_algo, const void *hmac_ctx, void *new_hmac_ctx)
 {
     libspdm_hmac_duplicate_func hmac_function;
     hmac_function = libspdm_get_hmac_duplicate_func(base_hash_algo);
@@ -1518,8 +1510,7 @@ bool libspdm_hmac_update(uint32_t base_hash_algo,
  * @retval false  HMAC digest computation failed.
  *
  **/
-bool libspdm_hmac_final(uint32_t base_hash_algo,
-                        void *hmac_ctx,  uint8_t *hmac_value)
+bool libspdm_hmac_final(uint32_t base_hash_algo, void *hmac_ctx,  uint8_t *hmac_value)
 {
     libspdm_hmac_final_func hmac_function;
     hmac_function = libspdm_get_hmac_final_func(base_hash_algo);
@@ -1738,8 +1729,7 @@ bool libspdm_hkdf_expand(uint32_t base_hash_algo, const uint8_t *prk,
     if (hkdf_expand_function == NULL) {
         return false;
     }
-    return hkdf_expand_function(prk, prk_size, info, info_size, out,
-                                out_size);
+    return hkdf_expand_function(prk, prk_size, info, info_size, out, out_size);
 }
 
 typedef struct {
@@ -1772,8 +1762,7 @@ libspdm_signing_context_str_t m_libspdm_signing_context_str_table[]={
  * @param  is_requester                         indicate if the signing is from a requester
  * @param  context_size                         SPDM signing context size
  **/
-void *
-libspdm_get_signing_context_string (
+void *libspdm_get_signing_context_string (
     spdm_version_number_t spdm_version,
     uint8_t op_code,
     bool is_requester,
@@ -1803,8 +1792,7 @@ libspdm_get_signing_context_string (
  * @param  is_requester                         indicate if the signing is from a requester
  * @param  spdm_signing_context                 SPDM signing context
  **/
-void
-libspdm_create_signing_context (
+void libspdm_create_signing_context (
     spdm_version_number_t spdm_version,
     uint8_t op_code,
     bool is_requester,
@@ -2072,13 +2060,12 @@ bool libspdm_asym_func_need_hash(uint32_t base_asym_algo)
 }
 
 #if LIBSPDM_RSA_SSA_SUPPORT == 1
-bool
-libspdm_rsa_pkcs1_verify_with_nid_wrap (void *context, size_t hash_nid,
-                                        const uint8_t *param, size_t param_size,
-                                        const uint8_t *message,
-                                        size_t message_size,
-                                        const uint8_t *signature,
-                                        size_t sig_size)
+bool libspdm_rsa_pkcs1_verify_with_nid_wrap (void *context, size_t hash_nid,
+                                             const uint8_t *param, size_t param_size,
+                                             const uint8_t *message,
+                                             size_t message_size,
+                                             const uint8_t *signature,
+                                             size_t sig_size)
 {
     return libspdm_rsa_pkcs1_verify_with_nid (context, hash_nid,
                                               message, message_size, signature, sig_size);
@@ -2086,41 +2073,36 @@ libspdm_rsa_pkcs1_verify_with_nid_wrap (void *context, size_t hash_nid,
 #endif
 
 #if LIBSPDM_RSA_PSS_SUPPORT == 1
-bool
-libspdm_rsa_pss_verify_wrap (void *context, size_t hash_nid,
-                             const uint8_t *param, size_t param_size,
-                             const uint8_t *message,
-                             size_t message_size,
-                             const uint8_t *signature,
-                             size_t sig_size)
+bool libspdm_rsa_pss_verify_wrap (void *context, size_t hash_nid,
+                                  const uint8_t *param, size_t param_size,
+                                  const uint8_t *message,
+                                  size_t message_size,
+                                  const uint8_t *signature,
+                                  size_t sig_size)
 {
-    return libspdm_rsa_pss_verify (context, hash_nid,
-                                   message, message_size, signature, sig_size);
+    return libspdm_rsa_pss_verify (context, hash_nid, message, message_size, signature, sig_size);
 }
 #endif
 
 #if LIBSPDM_ECDSA_SUPPORT == 1
-bool
-libspdm_ecdsa_verify_wrap (void *context, size_t hash_nid,
-                           const uint8_t *param, size_t param_size,
-                           const uint8_t *message,
-                           size_t message_size,
-                           const uint8_t *signature,
-                           size_t sig_size)
+bool libspdm_ecdsa_verify_wrap (void *context, size_t hash_nid,
+                                const uint8_t *param, size_t param_size,
+                                const uint8_t *message,
+                                size_t message_size,
+                                const uint8_t *signature,
+                                size_t sig_size)
 {
-    return libspdm_ecdsa_verify (context, hash_nid,
-                                 message, message_size, signature, sig_size);
+    return libspdm_ecdsa_verify (context, hash_nid, message, message_size, signature, sig_size);
 }
 #endif
 
 #if (LIBSPDM_EDDSA_ED25519_SUPPORT == 1) || (LIBSPDM_EDDSA_ED448_SUPPORT == 1)
-bool
-libspdm_eddsa_verify_wrap (void *context, size_t hash_nid,
-                           const uint8_t *param, size_t param_size,
-                           const uint8_t *message,
-                           size_t message_size,
-                           const uint8_t *signature,
-                           size_t sig_size)
+bool libspdm_eddsa_verify_wrap (void *context, size_t hash_nid,
+                                const uint8_t *param, size_t param_size,
+                                const uint8_t *message,
+                                size_t message_size,
+                                const uint8_t *signature,
+                                size_t sig_size)
 {
     return libspdm_eddsa_verify (context, hash_nid, param, param_size,
                                  message, message_size, signature, sig_size);
@@ -2128,13 +2110,12 @@ libspdm_eddsa_verify_wrap (void *context, size_t hash_nid,
 #endif
 
 #if LIBSPDM_SM2_DSA_SUPPORT == 1
-bool
-libspdm_sm2_dsa_verify_wrap (void *context, size_t hash_nid,
-                             const uint8_t *param, size_t param_size,
-                             const uint8_t *message,
-                             size_t message_size,
-                             const uint8_t *signature,
-                             size_t sig_size)
+bool libspdm_sm2_dsa_verify_wrap (void *context, size_t hash_nid,
+                                  const uint8_t *param, size_t param_size,
+                                  const uint8_t *message,
+                                  size_t message_size,
+                                  const uint8_t *signature,
+                                  size_t sig_size)
 {
     return libspdm_sm2_dsa_verify (context, hash_nid, param, param_size,
                                    message, message_size, signature, sig_size);

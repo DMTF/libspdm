@@ -4,8 +4,8 @@
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
-#ifndef SPDM_CRYPTO_LIB_H
-#define SPDM_CRYPTO_LIB_H
+#ifndef SPDM_CRYPT_LIB_H
+#define SPDM_CRYPT_LIB_H
 
 #ifndef LIBSPDM_CONFIG
 #include "library/spdm_lib_config.h"
@@ -15,9 +15,6 @@
 
 #include "hal/base.h"
 #include "industry_standard/spdm.h"
-#include "hal/library/debuglib.h"
-#include "hal/library/memlib.h"
-#include "hal/library/cryptlib.h"
 
 #define LIBSPDM_MAX_DHE_KEY_SIZE 512
 #define LIBSPDM_MAX_ASYM_KEY_SIZE 512
@@ -30,14 +27,14 @@
  * Allocates and initializes one HASH_CTX context for subsequent hash use.
  *
  * @return  Pointer to the HASH_CTX context that has been initialized.
- *         If the allocations fails, libspdm_hash_new_func() returns NULL.
+ *          If the allocations fails, libspdm_hash_new_func() returns NULL.
  **/
-typedef void * (*libspdm_hash_new_func)(void);
+typedef void *(*libspdm_hash_new_func)(void);
 
 /**
  * Release the specified HASH_CTX context.
  *
- * @param  hash_context                   Pointer to the HASH_CTX context to be released.
+ * @param  hash_context Pointer to the HASH_CTX context to be released.
  **/
 typedef void (*libspdm_hash_free_func)(void *hash_context);
 
@@ -45,8 +42,8 @@ typedef void (*libspdm_hash_free_func)(void *hash_context);
  * Initializes user-supplied memory pointed by hash_context as hash context for
  * subsequent use.
  *
- * @param  base_hash_algo                 SPDM base_hash_algo
- * @param  hash_context                   Pointer to hash context being initialized.
+ * @param  base_hash_algo  SPDM base_hash_algo
+ * @param  hash_context    Pointer to hash context being initialized.
  *
  * @retval true   Hash context initialization succeeded.
  * @retval false  Hash context initialization failed.
@@ -59,15 +56,14 @@ typedef bool (*libspdm_hash_init_func)(void *hash_context);
  * If hash_ctx is NULL, then return false.
  * If new_hash_ctx is NULL, then return false.
  *
- * @param[in]  hash_ctx     Pointer to hash context being copied.
+ * @param[in]  hash_ctx      Pointer to hash context being copied.
  * @param[out] new_hash_ctx  Pointer to new hash context.
  *
- * @retval true   hash context copy succeeded.
- * @retval false  hash context copy failed.
+ * @retval true   Hash context copy succeeded.
+ * @retval false  Hash context copy failed.
  *
  **/
-typedef bool (*libspdm_hash_duplicate_func)(const void *hash_ctx,
-                                            void *new_hash_ctx);
+typedef bool (*libspdm_hash_duplicate_func)(const void *hash_ctx, void *new_hash_ctx);
 
 /**
  * Digests the input data and updates hash context.
@@ -86,8 +82,7 @@ typedef bool (*libspdm_hash_duplicate_func)(const void *hash_ctx,
  * @retval true   hash data digest succeeded.
  * @retval false  hash data digest failed.
  **/
-typedef bool (*libspdm_hash_update_func)(void *hash_context, const void *data,
-                                         size_t data_size);
+typedef bool (*libspdm_hash_update_func)(void *hash_context, const void *data, size_t data_size);
 
 /**
  * Completes computation of the hash digest value.
@@ -114,28 +109,27 @@ typedef bool (*libspdm_hash_final_func)(void *hash_context, uint8_t *hash_value)
  *
  * This function performs the hash of a given data buffer, and return the hash value.
  *
- * @param  data                         Pointer to the buffer containing the data to be hashed.
- * @param  data_size                     size of data buffer in bytes.
- * @param  hash_value                    Pointer to a buffer that receives the hash value.
+ * @param  data        Pointer to the buffer containing the data to be hashed.
+ * @param  data_size   Size of data buffer in bytes.
+ * @param  hash_value  Pointer to a buffer that receives the hash value.
  *
  * @retval true   hash computation succeeded.
  * @retval false  hash computation failed.
  **/
-typedef bool (*libspdm_hash_all_func)(const void *data, size_t data_size,
-                                      uint8_t *hash_value);
+typedef bool (*libspdm_hash_all_func)(const void *data, size_t data_size, uint8_t *hash_value);
 
 /**
  * Allocates and initializes one HMAC context for subsequent hash use.
  *
  * @return  Pointer to the HMAC context that has been initialized.
- *         If the allocations fails, libspdm_hmac_new_func() returns NULL.
+ *          If the allocations fails, libspdm_hmac_new_func() returns NULL.
  **/
-typedef void * (*libspdm_hmac_new_func)(void);
+typedef void *(*libspdm_hmac_new_func)(void);
 
 /**
  * Release the specified HMAC context.
  *
- * @param  hmac_ctx                   Pointer to the HMAC context to be released.
+ * @param  hmac_ctx  Pointer to the HMAC context to be released.
  **/
 typedef void (*libspdm_hmac_free_func)(void *hmac_ctx);
 
@@ -146,15 +140,14 @@ typedef void (*libspdm_hmac_free_func)(void *hmac_ctx);
  * If hmac_ctx is NULL, then return false.
  *
  * @param[out]  hmac_ctx  Pointer to HMAC context.
- * @param[in]   key                Pointer to the user-supplied key.
- * @param[in]   key_size            key size in bytes.
+ * @param[in]   key       Pointer to the user-supplied key.
+ * @param[in]   key_size  Key size in bytes.
  *
  * @retval true   The key is set successfully.
  * @retval false  The key is set unsuccessfully.
  *
  **/
-typedef bool (*libspdm_hmac_set_key_func)(void *hmac_ctx, const uint8_t *key,
-                                          size_t key_size);
+typedef bool (*libspdm_hmac_set_key_func)(void *hmac_ctx, const uint8_t *key, size_t key_size);
 
 /**
  * Makes a copy of an existing HMAC context.
@@ -162,15 +155,14 @@ typedef bool (*libspdm_hmac_set_key_func)(void *hmac_ctx, const uint8_t *key,
  * If hmac_ctx is NULL, then return false.
  * If new_hmac_ctx is NULL, then return false.
  *
- * @param[in]  hmac_ctx     Pointer to HMAC context being copied.
+ * @param[in]  hmac_ctx      Pointer to HMAC context being copied.
  * @param[out] new_hmac_ctx  Pointer to new HMAC context.
  *
  * @retval true   HMAC context copy succeeded.
  * @retval false  HMAC context copy failed.
  *
  **/
-typedef bool (*libspdm_hmac_duplicate_func)(const void *hmac_ctx,
-                                            void *new_hmac_ctx);
+typedef bool (*libspdm_hmac_duplicate_func)(const void *hmac_ctx, void *new_hmac_ctx);
 
 /**
  * Digests the input data and updates HMAC context.
@@ -182,16 +174,15 @@ typedef bool (*libspdm_hmac_duplicate_func)(const void *hmac_ctx,
  *
  * If hmac_ctx is NULL, then return false.
  *
- * @param[in, out]  hmac_ctx Pointer to the HMAC context.
- * @param[in]       data              Pointer to the buffer containing the data to be digested.
- * @param[in]       data_size          size of data buffer in bytes.
+ * @param[in, out]  hmac_ctx   Pointer to the HMAC context.
+ * @param[in]       data       Pointer to the buffer containing the data to be digested.
+ * @param[in]       data_size  Size of data buffer in bytes.
  *
  * @retval true   HMAC data digest succeeded.
  * @retval false  HMAC data digest failed.
  *
  **/
-typedef bool (*libspdm_hmac_update_func)(void *hmac_ctx, const void *data,
-                                         size_t data_size);
+typedef bool (*libspdm_hmac_update_func)(void *hmac_ctx, const void *data, size_t data_size);
 
 /**
  * Completes computation of the HMAC digest value.
@@ -203,9 +194,8 @@ typedef bool (*libspdm_hmac_update_func)(void *hmac_ctx, const void *data,
  * If hmac_ctx is NULL, then return false.
  * If hmac_value is NULL, then return false.
  *
- * @param[in, out]  hmac_ctx  Pointer to the HMAC context.
- * @param[out]      hmac_value          Pointer to a buffer that receives the HMAC digest
- *                                    value.
+ * @param[in, out]  hmac_ctx    Pointer to the HMAC context.
+ * @param[out]      hmac_value  Pointer to a buffer that receives the HMAC digest value.
  *
  * @retval true   HMAC digest computation succeeded.
  * @retval false  HMAC digest computation failed.
@@ -218,11 +208,11 @@ typedef bool (*libspdm_hmac_final_func)(void *hmac_ctx, uint8_t *hmac_value);
  *
  * This function performs the HMAC of a given data buffer, and return the hash value.
  *
- * @param  data                         Pointer to the buffer containing the data to be HMACed.
- * @param  data_size                     size of data buffer in bytes.
- * @param  key                          Pointer to the user-supplied key.
- * @param  key_size                      key size in bytes.
- * @param  hash_value                    Pointer to a buffer that receives the HMAC value.
+ * @param  data        Pointer to the buffer containing the data to be HMACed.
+ * @param  data_size   Size of data buffer in bytes.
+ * @param  key         Pointer to the user-supplied key.
+ * @param  key_size    Key size in bytes.
+ * @param  hash_value  Pointer to a buffer that receives the HMAC value.
  *
  * @retval true   HMAC computation succeeded.
  * @retval false  HMAC computation failed.
@@ -234,12 +224,12 @@ typedef bool (*libspdm_hmac_all_func)(const void *data, size_t data_size,
 /**
  * Derive HMAC-based Extract key Derivation Function (HKDF) Extract.
  *
- * @param  ikm              Pointer to the input key material.
- * @param  ikm_size          key size in bytes.
- * @param  salt             Pointer to the salt value.
- * @param  salt_size         salt size in bytes.
- * @param  prk_out           Pointer to buffer to receive hkdf value.
- * @param  prk_out_size       size of hkdf bytes to generate.
+ * @param  ikm           Pointer to the input key material.
+ * @param  ikm_size      Key size in bytes.
+ * @param  salt          Pointer to the salt value.
+ * @param  salt_size     Salt size in bytes.
+ * @param  prk_out       Pointer to buffer to receive hkdf value.
+ * @param  prk_out_size  Size of hkdf bytes to generate.
  *
  * @retval true   Hkdf generated successfully.
  * @retval false  Hkdf generation failed.
@@ -251,12 +241,12 @@ typedef bool (*libspdm_hkdf_extract_func)(const uint8_t *ikm, size_t ikm_size,
 /**
  * Derive HMAC-based Expand key Derivation Function (HKDF) Expand.
  *
- * @param  prk                          Pointer to the user-supplied key.
- * @param  prk_size                      key size in bytes.
- * @param  info                         Pointer to the application specific info.
- * @param  info_size                     info size in bytes.
- * @param  out                          Pointer to buffer to receive hkdf value.
- * @param  out_size                      size of hkdf bytes to generate.
+ * @param  prk        Pointer to the user-supplied key.
+ * @param  prk_size   Key size in bytes.
+ * @param  info       Pointer to the application specific info.
+ * @param  info_size  Info size in bytes.
+ * @param  out        Pointer to buffer to receive hkdf value.
+ * @param  out_size   Size of hkdf bytes to generate.
  *
  * @retval true   Hkdf generated successfully.
  * @retval false  Hkdf generation failed.
@@ -268,10 +258,10 @@ typedef bool (*libspdm_hkdf_expand_func)(const uint8_t *prk, size_t prk_size,
 /**
  * Retrieve the asymmetric public key from one DER-encoded X509 certificate.
  *
- * @param  cert                         Pointer to the DER-encoded X509 certificate.
- * @param  cert_size                     size of the X509 certificate in bytes.
- * @param  context                      Pointer to new-generated asymmetric context which contain the retrieved public key component.
- *                                     Use libspdm_asym_free() function to free the resource.
+ * @param  cert       Pointer to the DER-encoded X509 certificate.
+ * @param  cert_size  Size of the X509 certificate in bytes.
+ * @param  context    Pointer to new-generated asymmetric context which contain the retrieved public
+ *                    key component. Use libspdm_asym_free() function to free the resource.
  *
  * @retval  true   public key was retrieved successfully.
  * @retval  false  Fail to retrieve public key from X509 certificate.
@@ -283,7 +273,7 @@ typedef bool (*libspdm_asym_get_public_key_from_x509_func)(const uint8_t *cert,
 /**
  * Release the specified asymmetric context.
  *
- * @param  context                      Pointer to the asymmetric context to be released.
+ * @param  context  Pointer to the asymmetric context to be released.
  **/
 typedef void (*libspdm_asym_free_func)(void *context);
 
@@ -292,18 +282,18 @@ typedef void (*libspdm_asym_free_func)(void *context);
  *
  * For RSA/ECDSA, param is NULL.
  * For EdDSA, param is EdDSA context.
- *  For EdDSA25519, param is NULL.
- *  For EdDSA448, param is EdDSA448 context.
+ * For EdDSA25519, param is NULL.
+ * For EdDSA448, param is EdDSA448 context.
  * For SM2_DSA, param is SM2 IDa.
  *
- * @param  context                      Pointer to asymmetric context for signature verification.
- * @param  hash_nid                      hash NID
- * @param  param                        algorithm specific parameter
- * @param  param_size                   algorithm specific parameter size
- * @param  message                      Pointer to octet message to be checked (before hash).
- * @param  message_size                  size of the message in bytes.
- * @param  signature                    Pointer to asymmetric signature to be verified.
- * @param  sig_size                      size of signature in bytes.
+ * @param  context       Pointer to asymmetric context for signature verification.
+ * @param  hash_nid      Hash NID
+ * @param  param         Algorithm specific parameter
+ * @param  param_size    Algorithm specific parameter size
+ * @param  message       Pointer to octet message to be checked (before hash).
+ * @param  message_size  Size of the message in bytes.
+ * @param  signature     Pointer to asymmetric signature to be verified.
+ * @param  sig_size      Size of signature in bytes.
  *
  * @retval  true   Valid asymmetric signature.
  * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
@@ -318,11 +308,11 @@ typedef bool (*libspdm_asym_verify_func)(void *context, size_t hash_nid,
 /**
  * Retrieve the Private key from the password-protected PEM key data.
  *
- * @param  pem_data                      Pointer to the PEM-encoded key data to be retrieved.
- * @param  pem_size                      size of the PEM key data in bytes.
- * @param  password                     NULL-terminated passphrase used for encrypted PEM key data.
- * @param  context                      Pointer to new-generated asymmetric context which contain the retrieved private key component.
- *                                     Use libspdm_asym_free() function to free the resource.
+ * @param  pem_data  Pointer to the PEM-encoded key data to be retrieved.
+ * @param  pem_size  Size of the PEM key data in bytes.
+ * @param  password  NULL-terminated passphrase used for encrypted PEM key data.
+ * @param  context   Pointer to new-generated asymmetric context which contain the retrieved private
+ *                   key component. Use libspdm_asym_free() function to free the resource.
  *
  * @retval  true   Private key was retrieved successfully.
  * @retval  false  Invalid PEM key data or incorrect password.
@@ -342,19 +332,19 @@ typedef bool (*libspdm_asym_get_private_key_from_pem_func)(const uint8_t *pem_da
  * For EdDSA448, param is EdDSA448 context.
  * For SM2_DSA, param is SM2 IDa.
  *
- * @param  context                      Pointer to asymmetric context for signature generation.
- * @param  hash_nid                      hash NID
- * @param  param                        algorithm specific parameter
- * @param  param_size                   algorithm specific parameter size
- * @param  message                      Pointer to octet message to be signed (before hash).
- * @param  message_size                  size of the message in bytes.
- * @param  signature                    Pointer to buffer to receive signature.
- * @param  sig_size                      On input, the size of signature buffer in bytes.
- *                                     On output, the size of data returned in signature buffer in bytes.
+ * @param  context       Pointer to asymmetric context for signature generation.
+ * @param  hash_nid      Hash NID
+ * @param  param         Algorithm specific parameter
+ * @param  param_size    Algorithm specific parameter size
+ * @param  message       Pointer to octet message to be signed (before hash).
+ * @param  message_size  Size of the message in bytes.
+ * @param  signature     Pointer to buffer to receive signature.
+ * @param  sig_size      On input, the size of signature buffer in bytes.
+ *                       On output, the size of data returned in signature buffer in bytes.
  *
- * @retval  true   signature successfully generated.
- * @retval  false  signature generation failed.
- * @retval  false  sig_size is too small.
+ * @retval  true   Signature successfully generated.
+ * @retval  false  Signature generation failed.
+ * @retval  false  Sig_size is too small.
  **/
 typedef bool (*libspdm_asym_sign_func)(void *context, size_t hash_nid,
                                        const uint8_t *param, size_t param_size,
@@ -379,10 +369,10 @@ typedef void *(*libspdm_dhe_new_by_nid_func)(size_t nid);
  * If the public_key buffer is too small to hold the public key, false is returned and
  * public_key_size is set to the required buffer size to obtain the public key.
  *
- * @param  context                      Pointer to the DHE context.
- * @param  public_key                    Pointer to the buffer to receive generated public key.
- * @param  public_key_size                On input, the size of public_key buffer in bytes.
- *                                     On output, the size of data returned in public_key buffer in bytes.
+ * @param  context          Pointer to the DHE context.
+ * @param  public_key       Pointer to the buffer to receive generated public key.
+ * @param  public_key_size  On input, the size of public_key buffer in bytes.
+ *                          On output, the size of data returned in public_key buffer in bytes.
  *
  * @retval true   DHE public key generation succeeded.
  * @retval false  DHE public key generation failed.
@@ -398,16 +388,16 @@ typedef bool (*libspdm_dhe_generate_key_func)(void *context,
  * Given peer's public key, this function computes the exchanged common key, based on its own
  * context including value of prime modulus and random secret exponent.
  *
- * @param  context                      Pointer to the DHE context.
- * @param  peer_public_key                Pointer to the peer's public key.
- * @param  peer_public_key_size            size of peer's public key in bytes.
- * @param  key                          Pointer to the buffer to receive generated key.
- * @param  key_size                      On input, the size of key buffer in bytes.
- *                                     On output, the size of data returned in key buffer in bytes.
+ * @param  context               Pointer to the DHE context.
+ * @param  peer_public_key       Pointer to the peer's public key.
+ * @param  peer_public_key_size  Size of peer's public key in bytes.
+ * @param  key                   Pointer to the buffer to receive generated key.
+ * @param  key_size              On input, the size of key buffer in bytes.
+ *                               On output, the size of data returned in key buffer in bytes.
  *
  * @retval true   DHE exchanged key generation succeeded.
  * @retval false  DHE exchanged key generation failed.
- * @retval false  key_size is not large enough.
+ * @retval false  Key_size is not large enough.
  **/
 typedef bool (*libspdm_dhe_compute_key_func)(void *context,
                                              const uint8_t *peer_public,
@@ -417,25 +407,25 @@ typedef bool (*libspdm_dhe_compute_key_func)(void *context,
 /**
  * Release the specified DHE context.
  *
- * @param  context                      Pointer to the DHE context to be released.
+ * @param  context  Pointer to the DHE context to be released.
  **/
 typedef void (*libspdm_dhe_free_func)(void *context);
 
 /**
  * Performs AEAD authenticated encryption on a data buffer and additional authenticated data (AAD).
  *
- * @param  key                          Pointer to the encryption key.
- * @param  key_size                      size of the encryption key in bytes.
- * @param  iv                           Pointer to the IV value.
- * @param  iv_size                       size of the IV value in bytes.
- * @param  a_data                        Pointer to the additional authenticated data (AAD).
- * @param  a_data_size                    size of the additional authenticated data (AAD) in bytes.
- * @param  data_in                       Pointer to the input data buffer to be encrypted.
- * @param  data_in_size                   size of the input data buffer in bytes.
- * @param  tag_out                       Pointer to a buffer that receives the authentication tag output.
- * @param  tag_size                      size of the authentication tag in bytes.
- * @param  data_out                      Pointer to a buffer that receives the encryption output.
- * @param  data_out_size                  size of the output data buffer in bytes.
+ * @param  key            Pointer to the encryption key.
+ * @param  key_size       Size of the encryption key in bytes.
+ * @param  iv             Pointer to the IV value.
+ * @param  iv_size        Size of the IV value in bytes.
+ * @param  a_data         Pointer to the additional authenticated data (AAD).
+ * @param  a_data_size    Size of the additional authenticated data (AAD) in bytes.
+ * @param  data_in        Pointer to the input data buffer to be encrypted.
+ * @param  data_in_size   Size of the input data buffer in bytes.
+ * @param  tag_out        Pointer to a buffer that receives the authentication tag output.
+ * @param  tag_size       Size of the authentication tag in bytes.
+ * @param  data_out       Pointer to a buffer that receives the encryption output.
+ * @param  data_out_size  Size of the output data buffer in bytes.
  *
  * @retval true   AEAD authenticated encryption succeeded.
  * @retval false  AEAD authenticated encryption failed.
@@ -449,18 +439,18 @@ typedef bool (*libspdm_aead_encrypt_func)(
 /**
  * Performs AEAD authenticated decryption on a data buffer and additional authenticated data (AAD).
  *
- * @param  key                          Pointer to the encryption key.
- * @param  key_size                      size of the encryption key in bytes.
- * @param  iv                           Pointer to the IV value.
- * @param  iv_size                       size of the IV value in bytes.
- * @param  a_data                        Pointer to the additional authenticated data (AAD).
- * @param  a_data_size                    size of the additional authenticated data (AAD) in bytes.
- * @param  data_in                       Pointer to the input data buffer to be decrypted.
- * @param  data_in_size                   size of the input data buffer in bytes.
- * @param  tag                          Pointer to a buffer that contains the authentication tag.
- * @param  tag_size                      size of the authentication tag in bytes.
- * @param  data_out                      Pointer to a buffer that receives the decryption output.
- * @param  data_out_size                  size of the output data buffer in bytes.
+ * @param  key            Pointer to the encryption key.
+ * @param  key_size       Size of the encryption key in bytes.
+ * @param  iv             Pointer to the IV value.
+ * @param  iv_size        Size of the IV value in bytes.
+ * @param  a_data         Pointer to the additional authenticated data (AAD).
+ * @param  a_data_size    Size of the additional authenticated data (AAD) in bytes.
+ * @param  data_in        Pointer to the input data buffer to be decrypted.
+ * @param  data_in_size   Size of the input data buffer in bytes.
+ * @param  tag            Pointer to a buffer that contains the authentication tag.
+ * @param  tag_size       Size of the authentication tag in bytes.
+ * @param  data_out       Pointer to a buffer that receives the decryption output.
+ * @param  data_out_size  Size of the output data buffer in bytes.
  *
  * @retval true   AEAD authenticated decryption succeeded.
  * @retval false  AEAD authenticated decryption failed.
@@ -474,7 +464,7 @@ typedef bool (*libspdm_aead_decrypt_func)(
 /**
  * This function returns the SPDM hash algorithm size.
  *
- * @param  base_hash_algo                  SPDM base_hash_algo
+ * @param  base_hash_algo SPDM base_hash_algo
  *
  * @return SPDM hash algorithm size.
  **/
@@ -483,7 +473,7 @@ uint32_t libspdm_get_hash_size(uint32_t base_hash_algo);
 /**
  * Return cipher ID, based upon the negotiated hash algorithm.
  *
- * @param  base_hash_algo                  SPDM base_hash_algo
+ * @param  base_hash_algo  SPDM base_hash_algo
  *
  * @return hash cipher ID
  **/
@@ -492,7 +482,7 @@ size_t libspdm_get_hash_nid(uint32_t base_hash_algo);
 /**
  * Return asym NID, based upon the negotiated asym algorithm.
  *
- * @param  base_asym_algo                  SPDM base_asym_algo
+ * @param  base_asym_algo  SPDM base_asym_algo
  *
  * @return asym NID
  **/
@@ -501,7 +491,7 @@ size_t libspdm_get_aysm_nid(uint32_t base_asym_algo);
 /**
  * Allocates and initializes one HASH_CTX context for subsequent hash use.
  *
- * @param  base_hash_algo                 SPDM base_hash_algo
+ * @param  base_hash_algo  SPDM base_hash_algo
  *
  * @return  Pointer to the HASH_CTX context that has been initialized.
  *         If the allocations fails, libspdm_hash_new() returns NULL.
@@ -511,8 +501,8 @@ void *libspdm_hash_new(uint32_t base_hash_algo);
 /**
  * Release the specified HASH_CTX context.
  *
- * @param  base_hash_algo                 SPDM base_hash_algo
- * @param  hash_context                   Pointer to the HASH_CTX context to be released.
+ * @param  base_hash_algo  SPDM base_hash_algo
+ * @param  hash_context    Pointer to the HASH_CTX context to be released.
  **/
 void libspdm_hash_free(uint32_t base_hash_algo, void *hash_context);
 
@@ -520,8 +510,8 @@ void libspdm_hash_free(uint32_t base_hash_algo, void *hash_context);
  * Initializes user-supplied memory pointed by hash_context as hash context for
  * subsequent use.
  *
- * @param  base_hash_algo                 SPDM base_hash_algo
- * @param  hash_context                   Pointer to hash context being initialized.
+ * @param  base_hash_algo  SPDM base_hash_algo
+ * @param  hash_context    Pointer to hash context being initialized.
  *
  * @retval true   Hash context initialization succeeded.
  * @retval false  Hash context initialization failed.
@@ -534,15 +524,13 @@ bool libspdm_hash_init(uint32_t base_hash_algo, void *hash_context);
  * If hash_ctx is NULL, then return false.
  * If new_hash_ctx is NULL, then return false.
  *
- * @param[in]  hash_ctx     Pointer to hash context being copied.
+ * @param[in]  hash_ctx      Pointer to hash context being copied.
  * @param[out] new_hash_ctx  Pointer to new hash context.
  *
- * @retval true   hash context copy succeeded.
- * @retval false  hash context copy failed.
- *
+ * @retval true   Hash context copy succeeded.
+ * @retval false  Hash context copy failed.
  **/
-bool libspdm_hash_duplicate(uint32_t base_hash_algo,
-                            const void *hash_ctx, void *new_hash_ctx);
+bool libspdm_hash_duplicate(uint32_t base_hash_algo, const void *hash_ctx, void *new_hash_ctx);
 
 /**
  * Digests the input data and updates hash context.
@@ -554,12 +542,12 @@ bool libspdm_hash_duplicate(uint32_t base_hash_algo,
  *
  * If hash_context is NULL, then return false.
  *
- * @param[in, out]  hash_context   Pointer to the MD context.
- * @param[in]       data           Pointer to the buffer containing the data to be hashed.
- * @param[in]       data_size      Size of data buffer in bytes.
+ * @param[in, out]  hash_context  Pointer to the MD context.
+ * @param[in]       data          Pointer to the buffer containing the data to be hashed.
+ * @param[in]       data_size     Size of data buffer in bytes.
  *
- * @retval true   hash data digest succeeded.
- * @retval false  hash data digest failed.
+ * @retval true   Hash data digest succeeded.
+ * @retval false  Hash data digest failed.
  **/
 bool libspdm_hash_update(uint32_t base_hash_algo, void *hash_context,
                          const void *data, size_t data_size);
@@ -576,30 +564,29 @@ bool libspdm_hash_update(uint32_t base_hash_algo, void *hash_context,
  * If hash_context is NULL, then return false.
  * If hash_value is NULL, then return false.
  *
- * @param[in, out]  hash_context    Pointer to the hash context.
- * @param[out]      hash_value      Pointer to a buffer that receives the hash digest value.
+ * @param[in, out]  hash_context  Pointer to the hash context.
+ * @param[out]      hash_value    Pointer to a buffer that receives the hash digest value.
  *
- * @retval true   hash digest computation succeeded.
- * @retval false  hash digest computation failed.
+ * @retval true   Hash digest computation succeeded.
+ * @retval false  Hash digest computation failed.
  **/
-bool libspdm_hash_final(uint32_t base_hash_algo, void *hash_context,
-                        uint8_t *hash_value);
+bool libspdm_hash_final(uint32_t base_hash_algo, void *hash_context, uint8_t *hash_value);
 
 /**
  * Allocates and initializes one HMAC context for subsequent use.
  *
- * @param  base_hash_algo                 SPDM base_hash_algo
+ * @param  base_hash_algo  SPDM base_hash_algo
  *
  * @return  Pointer to the HMAC context that has been initialized.
- *         If the allocations fails, libspdm_hash_new() returns NULL.
+ *          If the allocations fails, libspdm_hash_new() returns NULL.
  **/
 void *libspdm_hmac_new(uint32_t base_hash_algo);
 
 /**
  * Release the specified HMAC context.
  *
- * @param  base_hash_algo                 SPDM base_hash_algo
- * @param  hmac_ctx                   Pointer to the HMAC context to be released.
+ * @param  base_hash_algo  SPDM base_hash_algo
+ * @param  hmac_ctx        Pointer to the HMAC context to be released.
  **/
 void libspdm_hmac_free(uint32_t base_hash_algo, void *hmac_ctx);
 
@@ -610,15 +597,16 @@ void libspdm_hmac_free(uint32_t base_hash_algo, void *hmac_ctx);
  * If hmac_ctx is NULL, then return false.
  *
  * @param[out]  hmac_ctx  Pointer to HMAC context.
- * @param[in]   key                Pointer to the user-supplied key.
- * @param[in]   key_size            key size in bytes.
+ * @param[in]   key       Pointer to the user-supplied key.
+ * @param[in]   key_size  Key size in bytes.
  *
  * @retval true   The key is set successfully.
  * @retval false  The key is set unsuccessfully.
  *
  **/
 bool libspdm_hmac_init(uint32_t base_hash_algo,
-                       void *hmac_ctx, const uint8_t *key,
+                       void *hmac_ctx,
+                       const uint8_t *key,
                        size_t key_size);
 
 /**
@@ -627,15 +615,15 @@ bool libspdm_hmac_init(uint32_t base_hash_algo,
  * If hmac_ctx is NULL, then return false.
  * If new_hmac_ctx is NULL, then return false.
  *
- * @param[in]  hmac_ctx     Pointer to HMAC context being copied.
+ * @param[in]  hmac_ctx      Pointer to HMAC context being copied.
  * @param[out] new_hmac_ctx  Pointer to new HMAC context.
  *
  * @retval true   HMAC context copy succeeded.
  * @retval false  HMAC context copy failed.
  *
  **/
-bool libspdm_hmac_duplicate(uint32_t base_hash_algo,
-                            const void *hmac_ctx, void *new_hmac_ctx);
+bool libspdm_hmac_duplicate(uint32_t base_hash_algo, const void *hmac_ctx, void *new_hmac_ctx);
+
 /**
  * Digests the input data and updates HMAC context.
  *
@@ -646,9 +634,9 @@ bool libspdm_hmac_duplicate(uint32_t base_hash_algo,
  *
  * If hmac_ctx is NULL, then return false.
  *
- * @param[in, out]  hmac_ctx Pointer to the HMAC context.
- * @param[in]       data              Pointer to the buffer containing the data to be digested.
- * @param[in]       data_size          size of data buffer in bytes.
+ * @param[in, out]  hmac_ctx   Pointer to the HMAC context.
+ * @param[in]       data       Pointer to the buffer containing the data to be digested.
+ * @param[in]       data_size  Size of data buffer in bytes.
  *
  * @retval true   HMAC data digest succeeded.
  * @retval false  HMAC data digest failed.
@@ -657,6 +645,7 @@ bool libspdm_hmac_duplicate(uint32_t base_hash_algo,
 bool libspdm_hmac_update(uint32_t base_hash_algo,
                          void *hmac_ctx, const void *data,
                          size_t data_size);
+
 /**
  * Completes computation of the HMAC digest value.
  *
@@ -667,29 +656,27 @@ bool libspdm_hmac_update(uint32_t base_hash_algo,
  * If hmac_ctx is NULL, then return false.
  * If hmac_value is NULL, then return false.
  *
- * @param[in, out]  hmac_ctx  Pointer to the HMAC context.
- * @param[out]      hmac_value          Pointer to a buffer that receives the HMAC digest
- *                                    value.
+ * @param[in, out]  hmac_ctx    Pointer to the HMAC context.
+ * @param[out]      hmac_value  Pointer to a buffer that receives the HMAC digest value.
  *
  * @retval true   HMAC digest computation succeeded.
  * @retval false  HMAC digest computation failed.
  *
  **/
-bool libspdm_hmac_final(uint32_t base_hash_algo,
-                        void *hmac_ctx,  uint8_t *hmac_value);
+bool libspdm_hmac_final(uint32_t base_hash_algo, void *hmac_ctx,  uint8_t *hmac_value);
 
 /**
  * Computes the hash of a input data buffer, based upon the negotiated hash algorithm.
  *
  * This function performs the hash of a given data buffer, and return the hash value.
  *
- * @param  base_hash_algo                 SPDM base_hash_algo
- * @param  data                         Pointer to the buffer containing the data to be hashed.
- * @param  data_size                     size of data buffer in bytes.
- * @param  hash_value                    Pointer to a buffer that receives the hash value.
+ * @param  base_hash_algo  SPDM base_hash_algo
+ * @param  data            Pointer to the buffer containing the data to be hashed.
+ * @param  data_size       Size of data buffer in bytes.
+ * @param  hash_value      Pointer to a buffer that receives the hash value.
  *
- * @retval true   hash computation succeeded.
- * @retval false  hash computation failed.
+ * @retval true   Hash computation succeeded.
+ * @retval false  Hash computation failed.
  **/
 bool libspdm_hash_all(uint32_t base_hash_algo, const void *data,
                       size_t data_size, uint8_t *hash_value);
@@ -697,7 +684,7 @@ bool libspdm_hash_all(uint32_t base_hash_algo, const void *data,
 /**
  * This function returns the SPDM measurement hash algorithm size.
  *
- * @param  measurement_hash_algo          SPDM measurement_hash_algo
+ * @param  measurement_hash_algo  SPDM measurement_hash_algo.
  *
  * @return SPDM measurement hash algorithm size.
  * @return 0xFFFFFFFF for RAW_BIT_STREAM_ONLY.
@@ -709,13 +696,13 @@ uint32_t libspdm_get_measurement_hash_size(uint32_t measurement_hash_algo);
  *
  * This function performs the hash of a given data buffer, and return the hash value.
  *
- * @param  measurement_hash_algo          SPDM measurement_hash_algo
- * @param  data                         Pointer to the buffer containing the data to be hashed.
- * @param  data_size                     size of data buffer in bytes.
- * @param  hash_value                    Pointer to a buffer that receives the hash value.
+ * @param  measurement_hash_algo  SPDM measurement_hash_algo
+ * @param  data                   Pointer to the buffer containing the data to be hashed.
+ * @param  data_size              Size of data buffer in bytes.
+ * @param  hash_value             Pointer to a buffer that receives the hash value.
  *
- * @retval true   hash computation succeeded.
- * @retval false  hash computation failed.
+ * @retval true   Hash computation succeeded.
+ * @retval false  Hash computation failed.
  **/
 bool libspdm_measurement_hash_all(uint32_t measurement_hash_algo,
                                   const void *data, size_t data_size,
@@ -726,12 +713,12 @@ bool libspdm_measurement_hash_all(uint32_t measurement_hash_algo,
  *
  * This function performs the HMAC of a given data buffer, and return the hash value.
  *
- * @param  base_hash_algo                 SPDM base_hash_algo
- * @param  data                         Pointer to the buffer containing the data to be HMACed.
- * @param  data_size                     size of data buffer in bytes.
- * @param  key                          Pointer to the user-supplied key.
- * @param  key_size                      key size in bytes.
- * @param  hash_value                    Pointer to a buffer that receives the HMAC value.
+ * @param  base_hash_algo  SPDM base_hash_algo
+ * @param  data            Pointer to the buffer containing the data to be HMACed.
+ * @param  data_size       Size of data buffer in bytes.
+ * @param  key             Pointer to the user-supplied key.
+ * @param  key_size        Key size in bytes.
+ * @param  hash_value      Pointer to a buffer that receives the HMAC value.
  *
  * @retval true   HMAC computation succeeded.
  * @retval false  HMAC computation failed.
@@ -741,14 +728,15 @@ bool libspdm_hmac_all(uint32_t base_hash_algo, const void *data,
                       size_t key_size, uint8_t *hmac_value);
 
 /**
- * Derive HMAC-based Extract key Derivation Function (HKDF) Extract, based upon the negotiated HKDF algorithm.
+ * Derive HMAC-based Extract key Derivation Function (HKDF) Extract, based upon the negotiated HKDF
+ * algorithm.
  *
- * @param  ikm              Pointer to the input key material.
- * @param  ikm_size          key size in bytes.
- * @param  salt             Pointer to the salt value.
- * @param  salt_size         salt size in bytes.
- * @param  prk_out           Pointer to buffer to receive hkdf value.
- * @param  prk_out_size       size of hkdf bytes to generate.
+ * @param  ikm           Pointer to the input key material.
+ * @param  ikm_size      Key size in bytes.
+ * @param  salt          Pointer to the salt value.
+ * @param  salt_size     Salt size in bytes.
+ * @param  prk_out       Pointer to buffer to receive hkdf value.
+ * @param  prk_out_size  Size of hkdf bytes to generate.
  *
  * @retval true   Hkdf generated successfully.
  * @retval false  Hkdf generation failed.
@@ -758,15 +746,16 @@ bool libspdm_hkdf_extract(uint32_t base_hash_algo, const uint8_t *ikm, size_t ik
                           uint8_t *prk_out, size_t prk_out_size);
 
 /**
- * Derive HMAC-based Expand key Derivation Function (HKDF) Expand, based upon the negotiated HKDF algorithm.
+ * Derive HMAC-based Expand key Derivation Function (HKDF) Expand, based upon the negotiated HKDF
+ * algorithm.
  *
- * @param  base_hash_algo                 SPDM base_hash_algo
- * @param  prk                          Pointer to the user-supplied key.
- * @param  prk_size                      key size in bytes.
- * @param  info                         Pointer to the application specific info.
- * @param  info_size                     info size in bytes.
- * @param  out                          Pointer to buffer to receive hkdf value.
- * @param  out_size                      size of hkdf bytes to generate.
+ * @param  base_hash_algo  SPDM base_hash_algo
+ * @param  prk             Pointer to the user-supplied key.
+ * @param  prk_size        Key size in bytes.
+ * @param  info            Pointer to the application specific info.
+ * @param  info_size       Info size in bytes.
+ * @param  out             Pointer to buffer to receive hkdf value.
+ * @param  out_size        Size of hkdf bytes to generate.
  *
  * @retval true   Hkdf generated successfully.
  * @retval false  Hkdf generation failed.
@@ -778,7 +767,7 @@ bool libspdm_hkdf_expand(uint32_t base_hash_algo, const uint8_t *prk,
 /**
  * This function returns the SPDM asymmetric algorithm size.
  *
- * @param  base_asym_algo                 SPDM base_hash_algo
+ * @param  base_asym_algo  SPDM base_hash_algo
  *
  * @return SPDM asymmetric algorithm size.
  **/
@@ -788,13 +777,14 @@ uint32_t libspdm_get_asym_signature_size(uint32_t base_asym_algo);
  * Retrieve the asymmetric public key from one DER-encoded X509 certificate,
  * based upon negotiated asymmetric algorithm.
  *
- * @param  base_asym_algo                 SPDM base_asym_algo
- * @param  cert                         Pointer to the DER-encoded X509 certificate.
- * @param  cert_size                     size of the X509 certificate in bytes.
- * @param  context                      Pointer to new-generated asymmetric context which contain the retrieved public key component.
- *                                     Use libspdm_asym_free() function to free the resource.
+ * @param  base_asym_algo  SPDM base_asym_algo
+ * @param  cert            Pointer to the DER-encoded X509 certificate.
+ * @param  cert_size       Size of the X509 certificate in bytes.
+ * @param  context         Pointer to new-generated asymmetric context which contain the retrieved
+ *                         public key component. Use libspdm_asym_free() function to free the
+ *                         resource.
  *
- * @retval  true   public key was retrieved successfully.
+ * @retval  true   Public key was retrieved successfully.
  * @retval  false  Fail to retrieve public key from X509 certificate.
  **/
 bool libspdm_asym_get_public_key_from_x509(uint32_t base_asym_algo,
@@ -803,25 +793,23 @@ bool libspdm_asym_get_public_key_from_x509(uint32_t base_asym_algo,
                                            void **context);
 
 /**
- * Release the specified asymmetric context,
- * based upon negotiated asymmetric algorithm.
+ * Release the specified asymmetric context, based upon negotiated asymmetric algorithm.
  *
- * @param  base_asym_algo                 SPDM base_asym_algo
- * @param  context                      Pointer to the asymmetric context to be released.
+ * @param  base_asym_algo  SPDM base_asym_algo
+ * @param  context         Pointer to the asymmetric context to be released.
  **/
 void libspdm_asym_free(uint32_t base_asym_algo, void *context);
 
 /**
- * Verifies the asymmetric signature,
- * based upon negotiated asymmetric algorithm.
+ * Verifies the asymmetric signature, based upon negotiated asymmetric algorithm.
  *
- * @param  base_asym_algo                 SPDM base_asym_algo
- * @param  base_hash_algo                 SPDM base_hash_algo
- * @param  context                      Pointer to asymmetric context for signature verification.
- * @param  message                      Pointer to octet message to be checked (before hash).
- * @param  message_size                  size of the message in bytes.
- * @param  signature                    Pointer to asymmetric signature to be verified.
- * @param  sig_size                      size of signature in bytes.
+ * @param  base_asym_algo  SPDM base_asym_algo
+ * @param  base_hash_algo  SPDM base_hash_algo
+ * @param  context         Pointer to asymmetric context for signature verification.
+ * @param  message         Pointer to octet message to be checked (before hash).
+ * @param  message_size    Size of the message in bytes.
+ * @param  signature       Pointer to asymmetric signature to be verified.
+ * @param  sig_size        Size of signature in bytes.
  *
  * @retval  true   Valid asymmetric signature.
  * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
@@ -834,16 +822,15 @@ bool libspdm_asym_verify(
     size_t sig_size);
 
 /**
- * Verifies the asymmetric signature,
- * based upon negotiated asymmetric algorithm.
+ * Verifies the asymmetric signature, based upon negotiated asymmetric algorithm.
  *
- * @param  base_asym_algo                 SPDM base_asym_algo
- * @param  base_hash_algo                 SPDM base_hash_algo
- * @param  context                      Pointer to asymmetric context for signature verification.
- * @param  message_hash                      Pointer to octet message hash to be checked (after hash).
- * @param  hash_size                  size of the hash in bytes.
- * @param  signature                    Pointer to asymmetric signature to be verified.
- * @param  sig_size                      size of signature in bytes.
+ * @param  base_asym_algo  SPDM base_asym_algo
+ * @param  base_hash_algo  SPDM base_hash_algo
+ * @param  context         Pointer to asymmetric context for signature verification.
+ * @param  message_hash    Pointer to octet message hash to be checked (after hash).
+ * @param  hash_size       Size of the hash in bytes.
+ * @param  signature       Pointer to asymmetric signature to be verified.
+ * @param  sig_size        Size of signature in bytes.
  *
  * @retval  true   Valid asymmetric signature.
  * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
@@ -858,12 +845,13 @@ bool libspdm_asym_verify_hash(
 /**
  * Retrieve the Private key from the password-protected PEM key data.
  *
- * @param  base_asym_algo                 SPDM base_asym_algo
- * @param  pem_data                      Pointer to the PEM-encoded key data to be retrieved.
- * @param  pem_size                      size of the PEM key data in bytes.
- * @param  password                     NULL-terminated passphrase used for encrypted PEM key data.
- * @param  context                      Pointer to new-generated asymmetric context which contain the retrieved private key component.
- *                                     Use libspdm_asym_free() function to free the resource.
+ * @param  base_asym_algo  SPDM base_asym_algo
+ * @param  pem_data        Pointer to the PEM-encoded key data to be retrieved.
+ * @param  pem_size        Size of the PEM key data in bytes.
+ * @param  password        NULL-terminated passphrase used for encrypted PEM key data.
+ * @param  context         Pointer to new-generated asymmetric context which contain the retrieved
+ *                         private key component.
+ *                         Use libspdm_asym_free() function to free the resource.
  *
  * @retval  true   Private key was retrieved successfully.
  * @retval  false  Invalid PEM key data or incorrect password.
@@ -880,17 +868,17 @@ bool libspdm_asym_get_private_key_from_pem(uint32_t base_asym_algo,
  * If the signature buffer is too small to hold the contents of signature, false
  * is returned and sig_size is set to the required buffer size to obtain the signature.
  *
- * @param  base_asym_algo                 SPDM base_asym_algo
- * @param  base_hash_algo                 SPDM base_hash_algo
- * @param  context                      Pointer to asymmetric context for signature generation.
- * @param  message                      Pointer to octet message to be signed (before hash).
- * @param  message_size                  size of the message in bytes.
- * @param  signature                    Pointer to buffer to receive signature.
- * @param  sig_size                      On input, the size of signature buffer in bytes.
- *                                     On output, the size of data returned in signature buffer in bytes.
+ * @param  base_asym_algo  SPDM base_asym_algo
+ * @param  base_hash_algo  SPDM base_hash_algo
+ * @param  context         Pointer to asymmetric context for signature generation.
+ * @param  message         Pointer to octet message to be signed (before hash).
+ * @param  message_size    Size of the message in bytes.
+ * @param  signature       Pointer to buffer to receive signature.
+ * @param  sig_size        On input, the size of signature buffer in bytes.
+ *                         On output, the size of data returned in signature buffer in bytes.
  *
- * @retval  true   signature successfully generated.
- * @retval  false  signature generation failed.
+ * @retval  true   Signature successfully generated.
+ * @retval  false  Signature generation failed.
  * @retval  false  sig_size is too small.
  **/
 bool libspdm_asym_sign(
@@ -906,17 +894,17 @@ bool libspdm_asym_sign(
  * If the signature buffer is too small to hold the contents of signature, false
  * is returned and sig_size is set to the required buffer size to obtain the signature.
  *
- * @param  base_asym_algo                 SPDM base_asym_algo
- * @param  base_hash_algo                 SPDM base_hash_algo
- * @param  context                      Pointer to asymmetric context for signature generation.
- * @param  message_hash                      Pointer to octet message hash to be signed (after hash).
- * @param  hash_size                  size of the hash in bytes.
- * @param  signature                    Pointer to buffer to receive signature.
- * @param  sig_size                      On input, the size of signature buffer in bytes.
- *                                     On output, the size of data returned in signature buffer in bytes.
+ * @param  base_asym_algo  SPDM base_asym_algo
+ * @param  base_hash_algo  SPDM base_hash_algo
+ * @param  context         Pointer to asymmetric context for signature generation.
+ * @param  message_hash    Pointer to octet message hash to be signed (after hash).
+ * @param  hash_size       Size of the hash in bytes.
+ * @param  signature       Pointer to buffer to receive signature.
+ * @param  sig_size        On input, the size of signature buffer in bytes.
+ *                         On output, the size of data returned in signature buffer in bytes.
  *
- * @retval  true   signature successfully generated.
- * @retval  false  signature generation failed.
+ * @retval  true   Signature successfully generated.
+ * @retval  false  Signature generation failed.
  * @retval  false  sig_size is too small.
  **/
 bool libspdm_asym_sign_hash(
@@ -929,7 +917,7 @@ bool libspdm_asym_sign_hash(
 /**
  * This function returns the SPDM requester asymmetric algorithm size.
  *
- * @param  req_base_asym_alg               SPDM req_base_asym_alg
+ * @param  req_base_asym_alg  SPDM req_base_asym_alg
  *
  * @return SPDM requester asymmetric algorithm size.
  **/
@@ -939,13 +927,14 @@ uint32_t libspdm_get_req_asym_signature_size(uint16_t req_base_asym_alg);
  * Retrieve the asymmetric public key from one DER-encoded X509 certificate,
  * based upon negotiated requester asymmetric algorithm.
  *
- * @param  req_base_asym_alg               SPDM req_base_asym_alg
- * @param  cert                         Pointer to the DER-encoded X509 certificate.
- * @param  cert_size                     size of the X509 certificate in bytes.
- * @param  context                      Pointer to new-generated asymmetric context which contain the retrieved public key component.
- *                                     Use libspdm_asym_free() function to free the resource.
+ * @param  req_base_asym_alg  SPDM req_base_asym_alg
+ * @param  cert               Pointer to the DER-encoded X509 certificate.
+ * @param  cert_size          Size of the X509 certificate in bytes.
+ * @param  context            Pointer to new-generated asymmetric context which contain the
+ *                            retrieved public key component. Use libspdm_asym_free() function to
+ *                            free the resource.
  *
- * @retval  true   public key was retrieved successfully.
+ * @retval  true   Public key was retrieved successfully.
  * @retval  false  Fail to retrieve public key from X509 certificate.
  **/
 bool libspdm_req_asym_get_public_key_from_x509(uint16_t req_base_asym_alg,
@@ -954,25 +943,23 @@ bool libspdm_req_asym_get_public_key_from_x509(uint16_t req_base_asym_alg,
                                                void **context);
 
 /**
- * Release the specified asymmetric context,
- * based upon negotiated requester asymmetric algorithm.
+ * Release the specified asymmetric context, based upon negotiated requester asymmetric algorithm.
  *
- * @param  req_base_asym_alg               SPDM req_base_asym_alg
- * @param  context                      Pointer to the asymmetric context to be released.
+ * @param  req_base_asym_alg  SPDM req_base_asym_alg
+ * @param  context            Pointer to the asymmetric context to be released.
  **/
 void libspdm_req_asym_free(uint16_t req_base_asym_alg, void *context);
 
 /**
- * Verifies the asymmetric signature,
- * based upon negotiated requester asymmetric algorithm.
+ * Verifies the asymmetric signature, based upon negotiated requester asymmetric algorithm.
  *
- * @param  req_base_asym_alg               SPDM req_base_asym_alg
- * @param  base_hash_algo                 SPDM base_hash_algo
- * @param  context                      Pointer to asymmetric context for signature verification.
- * @param  message                      Pointer to octet message to be checked (before hash).
- * @param  message_size                  size of the message in bytes.
- * @param  signature                    Pointer to asymmetric signature to be verified.
- * @param  sig_size                      size of signature in bytes.
+ * @param  req_base_asym_alg  SPDM req_base_asym_alg
+ * @param  base_hash_algo     SPDM base_hash_algo
+ * @param  context            Pointer to asymmetric context for signature verification.
+ * @param  message            Pointer to octet message to be checked (before hash).
+ * @param  message_size       Size of the message in bytes.
+ * @param  signature          Pointer to asymmetric signature to be verified.
+ * @param  sig_size           Size of signature in bytes.
  *
  * @retval  true   Valid asymmetric signature.
  * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
@@ -985,16 +972,15 @@ bool libspdm_req_asym_verify(
     const uint8_t *signature, size_t sig_size);
 
 /**
- * Verifies the asymmetric signature,
- * based upon negotiated requester asymmetric algorithm.
+ * Verifies the asymmetric signature, based upon negotiated requester asymmetric algorithm.
  *
- * @param  req_base_asym_alg               SPDM req_base_asym_alg
- * @param  base_hash_algo                 SPDM base_hash_algo
- * @param  context                      Pointer to asymmetric context for signature verification.
- * @param  message_hash                      Pointer to octet message hash to be checked (after hash).
- * @param  hash_size                  size of the hash in bytes.
- * @param  signature                    Pointer to asymmetric signature to be verified.
- * @param  sig_size                      size of signature in bytes.
+ * @param  req_base_asym_alg  SPDM req_base_asym_alg
+ * @param  base_hash_algo     SPDM base_hash_algo
+ * @param  context            Pointer to asymmetric context for signature verification.
+ * @param  message_hash       Pointer to octet message hash to be checked (after hash).
+ * @param  hash_size          Size of the hash in bytes.
+ * @param  signature          Pointer to asymmetric signature to be verified.
+ * @param  sig_size           Size of signature in bytes.
  *
  * @retval  true   Valid asymmetric signature.
  * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
@@ -1009,12 +995,13 @@ bool libspdm_req_asym_verify_hash(
 /**
  * Retrieve the Private key from the password-protected PEM key data.
  *
- * @param  req_base_asym_alg               SPDM req_base_asym_alg
- * @param  pem_data                      Pointer to the PEM-encoded key data to be retrieved.
- * @param  pem_size                      size of the PEM key data in bytes.
- * @param  password                     NULL-terminated passphrase used for encrypted PEM key data.
- * @param  context                      Pointer to new-generated asymmetric context which contain the retrieved private key component.
- *                                     Use libspdm_asym_free() function to free the resource.
+ * @param  req_base_asym_alg  SPDM req_base_asym_alg
+ * @param  pem_data           Pointer to the PEM-encoded key data to be retrieved.
+ * @param  pem_size           Size of the PEM key data in bytes.
+ * @param  password           NULL-terminated passphrase used for encrypted PEM key data.
+ * @param  context            Pointer to new-generated asymmetric context which contain the
+ *                            retrieved private key component. Use libspdm_asym_free() function to
+ *                            free the resource.
  *
  * @retval  true   Private key was retrieved successfully.
  * @retval  false  Invalid PEM key data or incorrect password.
@@ -1031,17 +1018,17 @@ bool libspdm_req_asym_get_private_key_from_pem(uint16_t req_base_asym_alg,
  * If the signature buffer is too small to hold the contents of signature, false
  * is returned and sig_size is set to the required buffer size to obtain the signature.
  *
- * @param  req_base_asym_alg               SPDM req_base_asym_alg
- * @param  base_hash_algo                 SPDM base_hash_algo
- * @param  context                      Pointer to asymmetric context for signature generation.
- * @param  message                      Pointer to octet message to be signed (before hash).
- * @param  message_size                  size of the message in bytes.
- * @param  signature                    Pointer to buffer to receive signature.
- * @param  sig_size                      On input, the size of signature buffer in bytes.
- *                                     On output, the size of data returned in signature buffer in bytes.
+ * @param  req_base_asym_alg  SPDM req_base_asym_alg
+ * @param  base_hash_algo     SPDM base_hash_algo
+ * @param  context            Pointer to asymmetric context for signature generation.
+ * @param  message            Pointer to octet message to be signed (before hash).
+ * @param  message_size       Size of the message in bytes.
+ * @param  signature          Pointer to buffer to receive signature.
+ * @param  sig_size           On input, the size of signature buffer in bytes.
+ *                            On output, the size of data returned in signature buffer in bytes.
  *
- * @retval  true   signature successfully generated.
- * @retval  false  signature generation failed.
+ * @retval  true   Signature successfully generated.
+ * @retval  false  Signature generation failed.
  * @retval  false  sig_size is too small.
  **/
 bool libspdm_req_asym_sign(
@@ -1057,17 +1044,17 @@ bool libspdm_req_asym_sign(
  * If the signature buffer is too small to hold the contents of signature, false
  * is returned and sig_size is set to the required buffer size to obtain the signature.
  *
- * @param  req_base_asym_alg               SPDM req_base_asym_alg
- * @param  base_hash_algo                 SPDM base_hash_algo
- * @param  context                      Pointer to asymmetric context for signature generation.
- * @param  message_hash                      Pointer to octet message hash to be signed (after hash).
- * @param  hash_size                  size of the hash in bytes.
- * @param  signature                    Pointer to buffer to receive signature.
- * @param  sig_size                      On input, the size of signature buffer in bytes.
- *                                     On output, the size of data returned in signature buffer in bytes.
+ * @param  req_base_asym_alg  SPDM req_base_asym_alg
+ * @param  base_hash_algo     SPDM base_hash_algo
+ * @param  context            Pointer to asymmetric context for signature generation.
+ * @param  message_hash       Pointer to octet message hash to be signed (after hash).
+ * @param  hash_size          Size of the hash in bytes.
+ * @param  signature          Pointer to buffer to receive signature.
+ * @param  sig_size           On input, the size of signature buffer in bytes.
+ *                            On output, the size of data returned in signature buffer in bytes.
  *
- * @retval  true   signature successfully generated.
- * @retval  false  signature generation failed.
+ * @retval  true   Signature successfully generated.
+ * @retval  false  Signature generation failed.
  * @retval  false  sig_size is too small.
  **/
 bool libspdm_req_asym_sign_hash(
@@ -1080,7 +1067,7 @@ bool libspdm_req_asym_sign_hash(
 /**
  * This function returns the SPDM DHE algorithm key size.
  *
- * @param  dhe_named_group                SPDM dhe_named_group
+ * @param  dhe_named_group  SPDM dhe_named_group
  *
  * @return SPDM DHE algorithm key size.
  **/
@@ -1090,10 +1077,8 @@ uint32_t libspdm_get_dhe_pub_key_size(uint16_t dhe_named_group);
  * Allocates and Initializes one Diffie-Hellman Ephemeral (DHE) context for subsequent use,
  * based upon negotiated DHE algorithm.
  *
- * @param  dhe_named_group                SPDM dhe_named_group
- * @param  is_initiator                   if the caller is initiator.
- *                                       true: initiator
- *                                       false: not an initiator
+ * @param  dhe_named_group  SPDM dhe_named_group
+ * @param  is_initiator     If the caller is initiator.
  *
  * @return  Pointer to the Diffie-Hellman context that has been initialized.
  **/
@@ -1101,28 +1086,26 @@ void *libspdm_dhe_new(spdm_version_number_t spdm_version,
                       uint16_t dhe_named_group, bool is_initiator);
 
 /**
- * Release the specified DHE context,
- * based upon negotiated DHE algorithm.
+ * Release the specified DHE context, based upon negotiated DHE algorithm.
  *
- * @param  dhe_named_group                SPDM dhe_named_group
- * @param  context                      Pointer to the DHE context to be released.
+ * @param  dhe_named_group  SPDM dhe_named_group
+ * @param  context          Pointer to the DHE context to be released.
  **/
 void libspdm_dhe_free(uint16_t dhe_named_group, void *context);
 
 /**
- * Generates DHE public key,
- * based upon negotiated DHE algorithm.
+ * Generates DHE public key, based upon negotiated DHE algorithm.
  *
  * This function generates random secret exponent, and computes the public key, which is
  * returned via parameter public_key and public_key_size. DH context is updated accordingly.
  * If the public_key buffer is too small to hold the public key, false is returned and
  * public_key_size is set to the required buffer size to obtain the public key.
  *
- * @param  dhe_named_group                SPDM dhe_named_group
- * @param  context                      Pointer to the DHE context.
- * @param  public_key                    Pointer to the buffer to receive generated public key.
- * @param  public_key_size                On input, the size of public_key buffer in bytes.
- *                                     On output, the size of data returned in public_key buffer in bytes.
+ * @param  dhe_named_group   SPDM dhe_named_group
+ * @param  context           Pointer to the DHE context.
+ * @param  public_key        Pointer to the buffer to receive generated public key.
+ * @param  public_key_size   On input, the size of public_key buffer in bytes.
+ *                           On output, the size of data returned in public_key buffer in bytes.
  *
  * @retval true   DHE public key generation succeeded.
  * @retval false  DHE public key generation failed.
@@ -1133,19 +1116,18 @@ bool libspdm_dhe_generate_key(uint16_t dhe_named_group, void *context,
                               size_t *public_key_size);
 
 /**
- * Computes exchanged common key,
- * based upon negotiated DHE algorithm.
+ * Computes exchanged common key, based upon negotiated DHE algorithm.
  *
  * Given peer's public key, this function computes the exchanged common key, based on its own
  * context including value of prime modulus and random secret exponent.
  *
- * @param  dhe_named_group                SPDM dhe_named_group
- * @param  context                      Pointer to the DHE context.
- * @param  peer_public_key                Pointer to the peer's public key.
- * @param  peer_public_key_size            size of peer's public key in bytes.
- * @param  key                          Pointer to the buffer to receive generated key.
- * @param  key_size                      On input, the size of key buffer in bytes.
- *                                     On output, the size of data returned in key buffer in bytes.
+ * @param  dhe_named_group       SPDM dhe_named_group
+ * @param  context               Pointer to the DHE context.
+ * @param  peer_public_key       Pointer to the peer's public key.
+ * @param  peer_public_key_size  Size of peer's public key in bytes.
+ * @param  key                   Pointer to the buffer to receive generated key.
+ * @param  key_size              On input, the size of key buffer in bytes.
+ *                               On output, the size of data returned in key buffer in bytes.
  *
  * @retval true   DHE exchanged key generation succeeded.
  * @retval false  DHE exchanged key generation failed.
@@ -1159,7 +1141,7 @@ bool libspdm_dhe_compute_key(uint16_t dhe_named_group, void *context,
 /**
  * This function returns the SPDM AEAD algorithm key size.
  *
- * @param  aead_cipher_suite              SPDM aead_cipher_suite
+ * @param  aead_cipher_suite  SPDM aead_cipher_suite
  *
  * @return SPDM AEAD algorithm key size.
  **/
@@ -1168,7 +1150,7 @@ uint32_t libspdm_get_aead_key_size(uint16_t aead_cipher_suite);
 /**
  * This function returns the SPDM AEAD algorithm iv size.
  *
- * @param  aead_cipher_suite              SPDM aead_cipher_suite
+ * @param  aead_cipher_suite  SPDM aead_cipher_suite
  *
  * @return SPDM AEAD algorithm iv size.
  **/
@@ -1177,7 +1159,7 @@ uint32_t libspdm_get_aead_iv_size(uint16_t aead_cipher_suite);
 /**
  * This function returns the SPDM AEAD algorithm tag size.
  *
- * @param  aead_cipher_suite              SPDM aead_cipher_suite
+ * @param  aead_cipher_suite  SPDM aead_cipher_suite
  *
  * @return SPDM AEAD algorithm tag size.
  **/
@@ -1187,19 +1169,19 @@ uint32_t libspdm_get_aead_tag_size(uint16_t aead_cipher_suite);
  * Performs AEAD authenticated encryption on a data buffer and additional authenticated data (AAD),
  * based upon negotiated AEAD algorithm.
  *
- * @param  aead_cipher_suite              SPDM aead_cipher_suite
- * @param  key                          Pointer to the encryption key.
- * @param  key_size                      size of the encryption key in bytes.
- * @param  iv                           Pointer to the IV value.
- * @param  iv_size                       size of the IV value in bytes.
- * @param  a_data                        Pointer to the additional authenticated data (AAD).
- * @param  a_data_size                    size of the additional authenticated data (AAD) in bytes.
- * @param  data_in                       Pointer to the input data buffer to be encrypted.
- * @param  data_in_size                   size of the input data buffer in bytes.
- * @param  tag_out                       Pointer to a buffer that receives the authentication tag output.
- * @param  tag_size                      size of the authentication tag in bytes.
- * @param  data_out                      Pointer to a buffer that receives the encryption output.
- * @param  data_out_size                  size of the output data buffer in bytes.
+ * @param  aead_cipher_suite  SPDM aead_cipher_suite
+ * @param  key                Pointer to the encryption key.
+ * @param  key_size           Size of the encryption key in bytes.
+ * @param  iv                 Pointer to the IV value.
+ * @param  iv_size            Size of the IV value in bytes.
+ * @param  a_data             Pointer to the additional authenticated data (AAD).
+ * @param  a_data_size        Size of the additional authenticated data (AAD) in bytes.
+ * @param  data_in            Pointer to the input data buffer to be encrypted.
+ * @param  data_in_size       Size of the input data buffer in bytes.
+ * @param  tag_out            Pointer to a buffer that receives the authentication tag output.
+ * @param  tag_size           Size of the authentication tag in bytes.
+ * @param  data_out           Pointer to a buffer that receives the encryption output.
+ * @param  data_out_size      Size of the output data buffer in bytes.
  *
  * @retval true   AEAD authenticated encryption succeeded.
  * @retval false  AEAD authenticated encryption failed.
@@ -1217,19 +1199,19 @@ bool libspdm_aead_encryption(const spdm_version_number_t secured_message_version
  * Performs AEAD authenticated decryption on a data buffer and additional authenticated data (AAD),
  * based upon negotiated AEAD algorithm.
  *
- * @param  aead_cipher_suite              SPDM aead_cipher_suite
- * @param  key                          Pointer to the encryption key.
- * @param  key_size                      size of the encryption key in bytes.
- * @param  iv                           Pointer to the IV value.
- * @param  iv_size                       size of the IV value in bytes.
- * @param  a_data                        Pointer to the additional authenticated data (AAD).
- * @param  a_data_size                    size of the additional authenticated data (AAD) in bytes.
- * @param  data_in                       Pointer to the input data buffer to be decrypted.
- * @param  data_in_size                   size of the input data buffer in bytes.
- * @param  tag                          Pointer to a buffer that contains the authentication tag.
- * @param  tag_size                      size of the authentication tag in bytes.
- * @param  data_out                      Pointer to a buffer that receives the decryption output.
- * @param  data_out_size                  size of the output data buffer in bytes.
+ * @param  aead_cipher_suite  SPDM aead_cipher_suite
+ * @param  key                Pointer to the encryption key.
+ * @param  key_size           Size of the encryption key in bytes.
+ * @param  iv                 Pointer to the IV value.
+ * @param  iv_size            Size of the IV value in bytes.
+ * @param  a_data             Pointer to the additional authenticated data (AAD).
+ * @param  a_data_size        Size of the additional authenticated data (AAD) in bytes.
+ * @param  data_in            Pointer to the input data buffer to be decrypted.
+ * @param  data_in_size       Size of the input data buffer in bytes.
+ * @param  tag                Pointer to a buffer that contains the authentication tag.
+ * @param  tag_size           Size of the authentication tag in bytes.
+ * @param  data_out           Pointer to a buffer that receives the decryption output.
+ * @param  data_out_size      Size of the output data buffer in bytes.
  *
  * @retval true   AEAD authenticated decryption succeeded.
  * @retval false  AEAD authenticated decryption failed.
@@ -1246,24 +1228,24 @@ bool libspdm_aead_decryption(const spdm_version_number_t secured_message_version
 /**
  * Generates a random byte stream of the specified size.
  *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  size                         size of random bytes to generate.
- * @param  rand                         Pointer to buffer to receive random value.
+ * @param  spdm_context  A pointer to the SPDM context.
+ * @param  size          Size of random bytes to generate.
+ * @param  rand          Pointer to buffer to receive random value.
  **/
 bool libspdm_get_random_number(size_t size, uint8_t *rand);
 
 /**
  * Certificate Check for SPDM leaf cert.
  *
- * @param[in]  cert            Pointer to the DER-encoded certificate data.
- * @param[in]  cert_size        The size of certificate data in bytes.
+ * @param[in]  cert                  Pointer to the DER-encoded certificate data.
+ * @param[in]  cert_size             The size of certificate data in bytes.
  * @param[in]  base_asym_algo        SPDM base_asym_algo
  * @param[in]  base_hash_algo        SPDM base_hash_algo
- * @param[in]  is_device_cert_model  If true, the cert chain is DeviceCert model;
- *                                   If false, the cert chain is AliasCert model;
+ * @param[in]  is_device_cert_model  If true, the cert chain is DeviceCert model.
+ *                                   If false, the cert chain is AliasCert model.
  *
  * @retval  true   Success.
- * @retval  false  Certificate is not valid
+ * @retval  false  Certificate is not valid.
  **/
 bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
                                     uint32_t base_asym_algo, uint32_t base_hash_algo,
@@ -1273,8 +1255,8 @@ bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
  * Return certificate is root cert or not.
  * Certificate is considered as a root certificate if the subjectname equal issuername.
  *
- * @param[in]  cert            Pointer to the DER-encoded certificate data.
- * @param[in]  cert_size        The size of certificate data in bytes.
+ * @param[in]  cert       Pointer to the DER-encoded certificate data.
+ * @param[in]  cert_size  The size of certificate data in bytes.
  *
  * @retval  true   Certificate is self-signed.
  * @retval  false  Certificate is not self-signed.
@@ -1284,21 +1266,21 @@ bool libspdm_is_root_certificate(const uint8_t *cert, size_t cert_size);
 /**
  * Retrieve the SubjectAltName from SubjectAltName Bytes.
  *
- * @param[in]      buffer           Pointer to subjectAltName oct bytes.
- * @param[in]      len              size of buffer in bytes.
- * @param[out]     name_buffer       buffer to contain the retrieved certificate
- *                                 SubjectAltName. At most name_buffer_size bytes will be
- *                                 written. Maybe NULL in order to determine the size
- *                                 buffer needed.
- * @param[in,out]  name_buffer_size   The size in bytes of the name buffer on input,
- *                                 and the size of buffer returned name on output.
- *                                 If name_buffer is NULL then the amount of space needed
- *                                 in buffer (including the final null) is returned.
- * @param[out]     oid              OID of otherName
- * @param[in,out]  oid_size          the buffersize for required OID
+ * @param[in]      buffer            Pointer to subjectAltName oct bytes.
+ * @param[in]      len               Size of buffer in bytes.
+ * @param[out]     name_buffer       Buffer to contain the retrieved certificate
+ *                                   SubjectAltName. At most name_buffer_size bytes will be
+ *                                   written. Maybe NULL in order to determine the size
+ *                                   buffer needed.
+ * @param[in,out]  name_buffer_size  The size in bytes of the name buffer on input,
+ *                                   and the size of buffer returned name on output.
+ *                                   If name_buffer is NULL then the amount of space needed
+ *                                   in buffer (including the final null) is returned.
+ * @param[out]     oid               OID of otherName
+ * @param[in,out]  oid_size          The buffersize for required OID
  *
- * @retval true                     get the subjectAltName string successfully
- * @retval failed                   get the subjectAltName string failed
+ * @retval true    Get the subjectAltName string successfully
+ * @retval failed  Get the subjectAltName string failed
  **/
 bool libspdm_get_dmtf_subject_alt_name_from_bytes(
     uint8_t *buffer, const size_t len, char *name_buffer,
@@ -1308,21 +1290,21 @@ bool libspdm_get_dmtf_subject_alt_name_from_bytes(
 /**
  * Retrieve the SubjectAltName from one X.509 certificate.
  *
- * @param[in]      cert             Pointer to the DER-encoded X509 certificate.
- * @param[in]      cert_size         size of the X509 certificate in bytes.
- * @param[out]     name_buffer       buffer to contain the retrieved certificate
- *                                 SubjectAltName. At most name_buffer_size bytes will be
- *                                 written. Maybe NULL in order to determine the size
- *                                 buffer needed.
- * @param[in,out]  name_buffer_size   The size in bytes of the name buffer on input,
- *                                 and the size of buffer returned name on output.
- *                                 If name_buffer is NULL then the amount of space needed
- *                                 in buffer (including the final null) is returned.
- * @param[out]     oid              OID of otherName
- * @param[in,out]  oid_size          the buffersize for required OID
+ * @param[in]      cert              Pointer to the DER-encoded X509 certificate.
+ * @param[in]      cert_size         Size of the X509 certificate in bytes.
+ * @param[out]     name_buffer       Buffer to contain the retrieved certificate
+ *                                   SubjectAltName. At most name_buffer_size bytes will be
+ *                                   written. Maybe NULL in order to determine the size
+ *                                   buffer needed.
+ * @param[in,out]  name_buffer_size  The size in bytes of the name buffer on input,
+ *                                   and the size of buffer returned name on output.
+ *                                   If name_buffer is NULL then the amount of space needed
+ *                                   in buffer (including the final null) is returned.
+ * @param[out]     oid               OID of otherName
+ * @param[in,out]  oid_size          The buffersize for required OID
  *
- * @retval true                     get the subjectAltName string successfully
- * @retval failed                   get the subjectAltName string failed
+ * @retval true    Get the subjectAltName string successfully
+ * @retval failed  Get the subjectAltName string failed
  **/
 bool
 libspdm_get_dmtf_subject_alt_name(const uint8_t *cert, const size_t cert_size,
@@ -1333,32 +1315,33 @@ libspdm_get_dmtf_subject_alt_name(const uint8_t *cert, const size_t cert_size,
 /**
  * This function verifies the integrity of certificate chain data without spdm_cert_chain_t header.
  *
- * @param  cert_chain_data          The certificate chain data without spdm_cert_chain_t header.
- * @param  cert_chain_data_size      size in bytes of the certificate chain data.
- * @param  base_hash_algo            SPDM base_hash_algo
- * @param  base_asym_algo            SPDM base_asym_algo
- * @param  is_device_cert_model      If true, the cert chain is DeviceCert model;
- *                                   If false, the cert chain is AliasCert model;
+ * @param  cert_chain_data       The certificate chain data without spdm_cert_chain_t header.
+ * @param  cert_chain_data_size  Size in bytes of the certificate chain data.
+ * @param  base_hash_algo        SPDM base_hash_algo
+ * @param  base_asym_algo        SPDM base_asym_algo
+ * @param  is_device_cert_model  If true, the cert chain is DeviceCert model.
+ *                               If false, the cert chain is AliasCert model.
  *
- * @retval true  certificate chain data integrity verification pass.
- * @retval false certificate chain data integrity verification fail.
+ * @retval true  Certificate chain data integrity verification pass.
+ * @retval false Certificate chain data integrity verification fail.
  **/
 bool libspdm_verify_cert_chain_data(uint8_t *cert_chain_data, size_t cert_chain_data_size,
                                     uint32_t base_asym_algo, uint32_t base_hash_algo,
                                     bool is_device_cert_model);
 
 /**
- * This function verifies the integrity of certificate chain buffer including spdm_cert_chain_t header.
+ * This function verifies the integrity of certificate chain buffer including
+ * spdm_cert_chain_t header.
  *
- * @param  base_hash_algo                 SPDM base_hash_algo
- * @param  base_asym_algo                 SPDM base_asym_algo
- * @param  cert_chain_buffer              The certificate chain buffer including spdm_cert_chain_t header.
- * @param  cert_chain_buffer_size         size in bytes of the certificate chain buffer.
- * @param  is_device_cert_model           If true, the cert chain is DeviceCert model;
- *                                        If false, the cert chain is AliasCert model;
+ * @param  base_hash_algo          SPDM base_hash_algo
+ * @param  base_asym_algo          SPDM base_asym_algo
+ * @param  cert_chain_buffer       The certificate chain buffer including spdm_cert_chain_t header.
+ * @param  cert_chain_buffer_size  Size in bytes of the certificate chain buffer.
+ * @param  is_device_cert_model    If true, the cert chain is DeviceCert model.
+ *                                 If false, the cert chain is AliasCert model.
  *
- * @retval true  certificate chain buffer integrity verification pass.
- * @retval false certificate chain buffer integrity verification fail.
+ * @retval true   Certificate chain buffer integrity verification pass.
+ * @retval false  Certificate chain buffer integrity verification fail.
  **/
 bool libspdm_verify_certificate_chain_buffer(uint32_t base_hash_algo, uint32_t base_asym_algo,
                                              const void *cert_chain_buffer,
@@ -1370,13 +1353,14 @@ bool libspdm_verify_certificate_chain_buffer(uint32_t base_hash_algo, uint32_t b
  * based upon negotiated asymmetric or requester asymmetric algorithm.
  *
  *
- * @param  base_hash_algo                SPDM base_hash_algo.
- * @param  base_asym_alg                 SPDM base_asym_algo or req_base_asym_alg.
- * @param  cert_chain_data               Certitiface chain data without spdm_cert_chain_t header.
- * @param  cert_chain_data_size          size in bytes of the certitiface chain data.
- * @param  public_key                    Pointer to new-generated asymmetric context which contain the retrieved public key component.
+ * @param  base_hash_algo        SPDM base_hash_algo.
+ * @param  base_asym_alg         SPDM base_asym_algo or req_base_asym_alg.
+ * @param  cert_chain_data       Certitiface chain data without spdm_cert_chain_t header.
+ * @param  cert_chain_data_size  Size in bytes of the certitiface chain data.
+ * @param  public_key            Pointer to new-generated asymmetric context which contain the
+ *                               retrieved public key component.
  *
- * @retval  true   public key was retrieved successfully.
+ * @retval  true   Public key was retrieved successfully.
  * @retval  false  Fail to retrieve public key from X509 certificate.
  **/
 bool libspdm_get_leaf_cert_public_key_from_cert_chain(uint32_t base_hash_algo,
@@ -1386,10 +1370,10 @@ bool libspdm_get_leaf_cert_public_key_from_cert_chain(uint32_t base_hash_algo,
                                                       void **public_key);
 
 /**
- * Verify req info format refer to PKCS#10
+ * Verify req info format refer to PKCS#10.
  *
- * @param[in]      req_info              requester info to gen CSR
- * @param[in]      req_info_len          The len of requester info
+ * @param[in]      req_info      Requester info to gen CSR.
+ * @param[in]      req_info_len  The len of requester info.
  *
  * @retval  true    Vaild req info, have three situations:
  *                                  1: no req_info
@@ -1399,4 +1383,4 @@ bool libspdm_get_leaf_cert_public_key_from_cert_chain(uint32_t base_hash_algo,
  **/
 bool libspdm_verify_req_info(uint8_t *req_info, uint16_t req_info_len);
 
-#endif /* SPDM_CRYPTO_LIB_H */
+#endif /* SPDM_CRYPT_LIB_H */
