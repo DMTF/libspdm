@@ -1,8 +1,8 @@
-# SPDM requester and responder user guide
+# SPDM Requester and Responder User Guide
 
-This document provides the general information on how to write an SPDM requester or an SPDM responder.
+This document provides the general information on how to construct an SPDM Requester or an SPDM Responder.
 
-## SPDM requester user guide
+## SPDM Requester
 
 Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-emu/blob/main/spdm_emu/spdm_requester_emu/spdm_requester_spdm.c)
 
@@ -26,7 +26,7 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
 
    0.4, choose required SPDM transport libs, such as [spdm_transport_mctp_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_mctp_lib.h) and [spdm_transport_pcidoe_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_pcidoe_lib.h)
 
-   0.5, implement required SPDM device IO functions - spdm_device_send_message_func and spdm_device_receive_message_func. 
+   0.5, implement required SPDM device IO functions - spdm_device_send_message_func and spdm_device_receive_message_func.
 
 1. Initialize SPDM context
 
@@ -223,7 +223,7 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
    libspdm_send_receive_data (spdm_context, &session_id, TRUE, &request, request_size, &response, &response_size);
    ```
 
-## SPDM responder user guide
+## SPDM Responder
 
 Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-emu/blob/main/spdm_emu/spdm_responder_emu/spdm_responder_spdm.c)
 
@@ -264,7 +264,6 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
 
    scratch_buffer_size = libspdm_get_sizeof_required_scratch_buffer(m_spdm_context);
    LIBSPDM_ASSERT (scratch_buffer_size == LIBSPDM_SCRATCH_BUFFER_SIZE);
-   scratch_buffer = (void *)malloc(scratch_buffer_size);
    libspdm_set_scratch_buffer (spdm_context, m_scratch_buffer, scratch_buffer_size);
    ```
 
@@ -356,18 +355,16 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
 3. Register message process callback
 
    This callback need handle both SPDM vendor defined message and transport layer application message.
-
    ```
-   return_status
-   libspdm_get_response_vendor_defined_request (
-     IN     void                *spdm_context,
-     IN     uint32               *session_id,
-     IN     boolean              is_app_message,
-     IN     uintn                request_size,
-     IN     void                 *request,
-     IN OUT uintn                *response_size,
-        OUT void                 *response
-     )
+   return_status libspdm_get_response_vendor_defined_request (
+     void           *spdm_context,
+     const uint32_t *session_id,
+     bool            is_app_message,
+     size_t          request_size,
+     const void     *request,
+     size_t         *response_size,
+     void           *response
+   )
    {
      if (is_app_message) {
        // this is a transport layer application message
@@ -378,3 +375,28 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
 
    libspdm_register_get_response_func (spdm_context, libspdm_get_response_vendor_defined_request);
    ```
+
+## Message Logging
+libspdm allows an integrator to log request and response messages to an integrator-provided buffer.
+Message logging enables independent verification of message transcripts by a Verifier entity,
+and also aids in debugging. Message logging is enabled at compile time by setting the
+`LIBSPDM_ENABLE_MSG_LOG` macro to a value of `1`. Message logging is enabled at run time through the
+`libspdm_set_msg_log_mode` function, and its status is checked with the `libspdm_get_msg_log_status`
+function. When enabled both request messages and response messages are written to the buffer.
+Writing to the message log buffer may fill the buffer after which subsequent writes to the
+buffer will be ignored. Once the desired messages have been captured in the message log buffer the
+`libspdm_get_msg_log_size` returns the size, in bytes, of all the concatenated messages.
+```
+libspdm_init_msg_log (spdm_context, msg_log_buffer, sizeof(msg_log_buffer));
+libspdm_set_msg_log_mode (spdm_context, LIBSPDM_MSG_LOG_MODE_ENABLE);
+
+/* Send requests and receive responses that will be logged to the buffer. */
+
+buffer_size = libspdm_get_msg_log_size (spdm_context);
+
+/* Send msg_log_buffer and buffer_size to the Verifier for independent verification. */
+```
+Currently message logging is only supported within a Requester, and only for the `GET_VERSION`,
+`GET_CAPABILITIES`, `NEGOTIATE_ALGORITHMS`, and `GET_MEASUREMENTS` requests and their associated
+responses. More messages will be added in a subsequent release. Message logging can also be added to
+the Responder if there is interest.
