@@ -21,6 +21,9 @@
 /*buffer size to store subject object*/
 #define MAX_SBUJECT_NAME_LEN 0x100
 
+/*see link:"https://man.openbsd.org/ASN1_get_object.3" */
+#define OPENSSL_ASN1_ERROR_MASK 0x80
+
 /* OID*/
 #define OID_EXT_KEY_USAGE     { 0x55, 0x1D, 0x25 }
 #define OID_BASIC_CONSTRAINTS { 0x55, 0x1D, 0x13 }
@@ -255,7 +258,7 @@ bool libspdm_asn1_get_tag(uint8_t **ptr, const uint8_t *end, size_t *length,
     int32_t obj_tag;
     int32_t obj_class;
     long obj_length;
-
+    int32_t ret;
 
     /* Save ptr position*/
 
@@ -266,8 +269,13 @@ bool libspdm_asn1_get_tag(uint8_t **ptr, const uint8_t *end, size_t *length,
         return false;
     }
 
-    ASN1_get_object((const uint8_t **)ptr, &obj_length, &obj_tag, &obj_class,
-                    (int32_t)(end - (*ptr)));
+    ret = ASN1_get_object((const uint8_t **)ptr, &obj_length, &obj_tag, &obj_class,
+                          (int32_t)(end - (*ptr)));
+    /* Either a primitive encoding with a valid tag and definite length, but the content octets won't fit into omax, or parsing failed. */
+    if (ret & OPENSSL_ASN1_ERROR_MASK) {
+        return false;
+    }
+
     if (obj_tag == (int32_t)(tag & LIBSPDM_CRYPTO_ASN1_TAG_VALUE_MASK) &&
         obj_class == (int32_t)(tag & LIBSPDM_CRYPTO_ASN1_TAG_CLASS_MASK)) {
         *length = (size_t)obj_length;
@@ -2043,7 +2051,7 @@ bool libspdm_x509_verify_cert_chain(const uint8_t *root_cert, size_t root_cert_l
             (const uint8_t **)&tmp_ptr, (long *)&length,
             (int *)&asn1_tag, (int *)&obj_class,
             (long)(cert_chain_length + cert_chain - tmp_ptr));
-        if (asn1_tag != V_ASN1_SEQUENCE || ret == 0x80) {
+        if (asn1_tag != V_ASN1_SEQUENCE || ret & OPENSSL_ASN1_ERROR_MASK) {
             break;
         }
 
@@ -2133,7 +2141,7 @@ bool libspdm_x509_get_cert_from_cert_chain(const uint8_t *cert_chain,
             (const uint8_t **)&tmp_ptr, (long *)&asn1_len,
             (int *)&asn1_tag, (int *)&obj_class,
             (long)(cert_chain_length + cert_chain - tmp_ptr));
-        if (asn1_tag != V_ASN1_SEQUENCE || ret == 0x80) {
+        if (asn1_tag != V_ASN1_SEQUENCE || ret & OPENSSL_ASN1_ERROR_MASK) {
             break;
         }
 
