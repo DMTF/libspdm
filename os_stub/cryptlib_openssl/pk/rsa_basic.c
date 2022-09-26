@@ -23,6 +23,7 @@
 #include <openssl/objects.h>
 #include <openssl/evp.h>
 
+#if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)
 /**
  * Allocates and initializes one RSA context for subsequent use.
  *
@@ -260,7 +261,9 @@ err:
 
     return status;
 }
+#endif /* (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT) */
 
+#if LIBSPDM_RSA_SSA_SUPPORT
 /**
  * Verifies the RSA-SSA signature with EMSA-PKCS1-v1_5 encoding scheme defined in
  * RSA PKCS#1.
@@ -352,7 +355,9 @@ bool libspdm_rsa_pkcs1_verify_with_nid(void *rsa_context, size_t hash_nid,
                             sig_buf, (uint32_t)sig_size,
                             (RSA *)rsa_context);
 }
+#endif /* LIBSPDM_RSA_SSA_SUPPORT */
 
+#if LIBSPDM_RSA_PSS_SUPPORT
 /**
  * Verifies the RSA-SSA signature with EMSA-PSS encoding scheme defined in
  * RSA PKCS#1 v2.2.
@@ -464,3 +469,4 @@ bool libspdm_rsa_pss_verify(void *rsa_context, size_t hash_nid,
 
     return result;
 }
+#endif /* LIBSPDM_RSA_PSS_SUPPORT */

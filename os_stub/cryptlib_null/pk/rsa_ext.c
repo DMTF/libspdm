@@ -18,6 +18,7 @@
 
 #include "internal_crypt_lib.h"
 
+#if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)
 /**
  * Gets the tag-designated RSA key component from the established RSA context.
  *
@@ -101,7 +102,9 @@ bool libspdm_rsa_check_key(void *rsa_context)
     LIBSPDM_ASSERT(false);
     return false;
 }
+#endif /* (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT) */
 
+#if LIBSPDM_RSA_SSA_SUPPORT
 /**
  * Carries out the RSA-SSA signature generation with EMSA-PKCS1-v1_5 encoding scheme.
  *
@@ -138,7 +141,9 @@ bool libspdm_rsa_pkcs1_sign_with_nid(void *rsa_context, size_t hash_nid,
     LIBSPDM_ASSERT(false);
     return false;
 }
+#endif /* LIBSPDM_RSA_SSA_SUPPORT */
 
+#if LIBSPDM_RSA_PSS_SUPPORT
 /**
  * Carries out the RSA-SSA signature generation with EMSA-PSS encoding scheme.
  *
@@ -175,3 +180,4 @@ bool libspdm_rsa_pss_sign(void *rsa_context, size_t hash_nid,
     LIBSPDM_ASSERT(false);
     return false;
 }
+#endif /* LIBSPDM_RSA_PSS_SUPPORT */

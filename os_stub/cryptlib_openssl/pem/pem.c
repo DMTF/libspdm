@@ -56,6 +56,7 @@ int PasswordCallback(char *buf, const int size, const int flag, const void *key)
     }
 }
 
+#if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)
 /**
  * Retrieve the RSA Private key from the password-protected PEM key data.
  *
@@ -131,6 +132,7 @@ done:
 
     return status;
 }
+#endif /* (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT) */
 
 /**
  * Retrieve the EC Private key from the password-protected PEM key data.

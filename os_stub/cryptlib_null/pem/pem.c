@@ -10,6 +10,7 @@
 
 #include "internal_crypt_lib.h"
 
+#if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)
 /**
  * Retrieve the RSA Private key from the password-protected PEM key data.
  *
@@ -35,6 +36,7 @@ bool libspdm_rsa_get_private_key_from_pem(const uint8_t *pem_data,
     LIBSPDM_ASSERT(false);
     return false;
 }
+#endif /* (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT) */
 
 /**
  * Retrieve the EC Private key from the password-protected PEM key data.

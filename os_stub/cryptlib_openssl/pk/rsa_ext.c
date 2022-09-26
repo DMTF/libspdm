@@ -24,6 +24,7 @@
 #include <openssl/objects.h>
 #include <openssl/evp.h>
 
+#if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)
 /**
  * Gets the tag-designated RSA key component from the established RSA context.
  *
@@ -257,7 +258,9 @@ bool libspdm_rsa_check_key(void *rsa_context)
 
     return true;
 }
+#endif /* (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT) */
 
+#if LIBSPDM_RSA_SSA_SUPPORT
 /**
  * Carries out the RSA-SSA signature generation with EMSA-PKCS1-v1_5 encoding scheme.
  *
@@ -365,7 +368,9 @@ bool libspdm_rsa_pkcs1_sign_with_nid(void *rsa_context, size_t hash_nid,
                           signature, (uint32_t *)sig_size,
                           (RSA *)rsa_context);
 }
+#endif /* LIBSPDM_RSA_SSA_SUPPORT */
 
+#if LIBSPDM_RSA_PSS_SUPPORT
 /**
  * Carries out the RSA-SSA signature generation with EMSA-PSS encoding scheme.
  *
@@ -487,3 +492,4 @@ bool libspdm_rsa_pss_sign(void *rsa_context, size_t hash_nid,
         return true;
     }
 }
+#endif /* LIBSPDM_RSA_PSS_SUPPORT */
