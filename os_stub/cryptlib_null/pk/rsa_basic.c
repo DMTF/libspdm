@@ -18,6 +18,7 @@
 
 #include "internal_crypt_lib.h"
 
+#if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)
 /**
  * Allocates and initializes one RSA context for subsequent use.
  *
@@ -70,6 +71,9 @@ bool libspdm_rsa_set_key(void *rsa_context, const libspdm_rsa_key_tag_t key_tag,
     LIBSPDM_ASSERT(false);
     return false;
 }
+#endif /* (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT) */
+
+#if LIBSPDM_RSA_SSA_SUPPORT
 
 /**
  * Verifies the RSA-SSA signature with EMSA-PKCS1-v1_5 encoding scheme defined in
@@ -99,7 +103,9 @@ bool libspdm_rsa_pkcs1_verify_with_nid(void *rsa_context, size_t hash_nid,
     LIBSPDM_ASSERT(false);
     return false;
 }
+#endif /* LIBSPDM_RSA_SSA_SUPPORT */
 
+#if LIBSPDM_RSA_PSS_SUPPORT
 /**
  * Verifies the RSA-SSA signature with EMSA-PSS encoding scheme defined in
  * RSA PKCS#1 v2.2.
@@ -129,3 +135,4 @@ bool libspdm_rsa_pss_verify(void *rsa_context, size_t hash_nid,
     LIBSPDM_ASSERT(false);
     return false;
 }
+#endif /* LIBSPDM_RSA_PSS_SUPPORT */

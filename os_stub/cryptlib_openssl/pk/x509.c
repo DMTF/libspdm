@@ -1505,6 +1505,7 @@ bool libspdm_x509_get_extended_basic_constraints(const uint8_t *cert,
     return status;
 }
 
+#if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)
 /**
  * Retrieve the RSA public key from one DER-encoded X509 certificate.
  *
@@ -1579,6 +1580,7 @@ done:
 
     return res;
 }
+#endif /* (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT) */
 
 /**
  * Retrieve the EC public key from one DER-encoded X509 certificate.

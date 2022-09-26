@@ -191,6 +191,7 @@ libspdm_x509_get_organization_name(const uint8_t *cert, size_t cert_size,
     return false;
 }
 
+#if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)
 /**
  * Retrieve the RSA public key from one DER-encoded X509 certificate.
  *
@@ -213,6 +214,7 @@ bool libspdm_rsa_get_public_key_from_x509(const uint8_t *cert, size_t cert_size,
     LIBSPDM_ASSERT(false);
     return false;
 }
+#endif /* (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT) */
 
 /**
  * Retrieve the EC public key from one DER-encoded X509 certificate.
