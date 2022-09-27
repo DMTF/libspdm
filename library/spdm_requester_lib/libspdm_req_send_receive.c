@@ -397,6 +397,7 @@ libspdm_return_t libspdm_handle_large_request(
                     send_info->large_message, send_info->large_message_capacity,
                     spdm_response, response_size);
                 send_info->large_message_size = response_size;
+                break;
             }
             else {
                 status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
@@ -458,6 +459,7 @@ libspdm_return_t libspdm_handle_large_request(
                     chunk_ptr, response_size - sizeof(spdm_chunk_send_ack_response_t));
                 send_info->large_message_size =
                     (response_size - sizeof(spdm_chunk_send_ack_response_t));
+                break;
             }
         }
 
