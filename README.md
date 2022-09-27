@@ -24,7 +24,7 @@
 
 3) Programming Context
 
-   The core libraries in `libspdm/library/` require only the C99 freestanding headers and so are suitable for embedded and systems programming. Any functionality beyond the freestanding headers is provided by `libspdm/os_stub` or by the library's integrator. The core libraries do not contain any statically allocated variables. The core libraries do not dynamically allocate memory.
+   The core libraries in `libspdm/library/` require only the C99 freestanding headers and so are suitable for embedded and systems programming. Any functionality beyond the freestanding headers is provided by `libspdm/os_stub` or by the library's integrator. All statically allocated memory in the core libraries is read-only. The core libraries do not dynamically allocate memory.
 
 4) Implemented Requests and Responses
 
