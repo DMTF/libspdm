@@ -3,12 +3,14 @@ name: Build
 on:
   push:
     paths-ignore:
+      - '**/*.md'
       - 'doc/**'
     branches:
       - main
   pull_request:
     paths-ignore:
-      - 'doc/**'    
+      - 'doc/**'
+      - '**/*.md'
     branches:
       - main
 
