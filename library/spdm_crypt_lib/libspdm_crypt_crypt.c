@@ -1735,12 +1735,12 @@ bool libspdm_hkdf_expand(uint32_t base_hash_algo, const uint8_t *prk,
 typedef struct {
     bool is_requester;
     uint8_t op_code;
-    void    *context;
+    const void *context;
     size_t context_size;
     size_t zero_pad_size;
 } libspdm_signing_context_str_t;
 
-libspdm_signing_context_str_t m_libspdm_signing_context_str_table[]={
+const libspdm_signing_context_str_t m_libspdm_signing_context_str_table[]={
     {false, SPDM_CHALLENGE_AUTH, SPDM_CHALLENGE_AUTH_SIGN_CONTEXT,
      SPDM_CHALLENGE_AUTH_SIGN_CONTEXT_SIZE, 36 - SPDM_CHALLENGE_AUTH_SIGN_CONTEXT_SIZE},
     {true, SPDM_CHALLENGE_AUTH, SPDM_MUT_CHALLENGE_AUTH_SIGN_CONTEXT,
@@ -1762,7 +1762,7 @@ libspdm_signing_context_str_t m_libspdm_signing_context_str_table[]={
  * @param  is_requester                         indicate if the signing is from a requester
  * @param  context_size                         SPDM signing context size
  **/
-void *libspdm_get_signing_context_string (
+const void *libspdm_get_signing_context_string (
     spdm_version_number_t spdm_version,
     uint8_t op_code,
     bool is_requester,
@@ -2212,7 +2212,7 @@ bool libspdm_asym_verify(
     size_t hash_nid;
     uint8_t spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE +
                                              LIBSPDM_MAX_HASH_SIZE];
-    void *param;
+    const void *param;
     size_t param_size;
 
     hash_nid = libspdm_get_hash_nid(base_hash_algo);
@@ -2313,7 +2313,7 @@ bool libspdm_asym_verify_hash(
     size_t hash_nid;
     uint8_t spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE +
                                              LIBSPDM_MAX_HASH_SIZE];
-    void *param;
+    const void *param;
     size_t param_size;
 
     hash_nid = libspdm_get_hash_nid(base_hash_algo);
@@ -2631,7 +2631,7 @@ bool libspdm_asym_sign(
     size_t hash_nid;
     uint8_t spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE +
                                              LIBSPDM_MAX_HASH_SIZE];
-    void *param;
+    const void *param;
     size_t param_size;
 
     hash_nid = libspdm_get_hash_nid(base_hash_algo);
@@ -2736,7 +2736,7 @@ bool libspdm_asym_sign_hash(
     size_t hash_nid;
     uint8_t spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE +
                                              LIBSPDM_MAX_HASH_SIZE];
-    void *param;
+    const void *param;
     size_t param_size;
 
     hash_nid = libspdm_get_hash_nid(base_hash_algo);
@@ -2947,7 +2947,7 @@ bool libspdm_req_asym_verify(
     size_t hash_nid;
     uint8_t spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE +
                                              LIBSPDM_MAX_HASH_SIZE];
-    void *param;
+    const void *param;
     size_t param_size;
 
     hash_nid = libspdm_get_hash_nid(base_hash_algo);
@@ -3048,7 +3048,7 @@ bool libspdm_req_asym_verify_hash(
     size_t hash_nid;
     uint8_t spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE +
                                              LIBSPDM_MAX_HASH_SIZE];
-    void *param;
+    const void *param;
     size_t param_size;
 
     hash_nid = libspdm_get_hash_nid(base_hash_algo);
@@ -3211,7 +3211,7 @@ bool libspdm_req_asym_sign(
     size_t hash_nid;
     uint8_t spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE +
                                              LIBSPDM_MAX_HASH_SIZE];
-    void *param;
+    const void *param;
     size_t param_size;
 
     hash_nid = libspdm_get_hash_nid(base_hash_algo);
@@ -3316,7 +3316,7 @@ bool libspdm_req_asym_sign_hash(
     size_t hash_nid;
     uint8_t spdm12_signing_context_with_hash[SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE +
                                              LIBSPDM_MAX_HASH_SIZE];
-    void *param;
+    const void *param;
     size_t param_size;
 
     hash_nid = libspdm_get_hash_nid(base_hash_algo);
