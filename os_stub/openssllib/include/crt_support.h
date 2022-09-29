@@ -209,7 +209,6 @@ typedef char *LIBSPDM_VA_LIST;
 /* Definitions for global constants used by CRT library routines*/
 
 #define EINVAL 22 /* Invalid argument */
-#define EAFNOSUPPORT 47 /* Address family not supported by protocol family */
 #define INT_MAX 0x7FFFFFFF /* Maximum (signed) int value */
 #define LONG_MAX 0X7FFFFFFFL /* max value for a long */
 #define LONG_MIN (-LONG_MAX - 1) /* min value for a long */
@@ -264,11 +263,6 @@ struct tm {
     long tm_gmtoff; /* offset from CUT in seconds */
     char *tm_zone; /* timezone abbreviation */
 };
-
-/* Global variables*/
-#if defined(__GNUC__) && !defined(__MINGW64__)
-extern int errno;
-#endif
 
 extern FILE *stderr;
 

@@ -107,13 +107,6 @@ gid_t getegid(void)
     return 0;
 }
 
-#if defined(__GNUC__) && !defined(_WIN32)
-/* Below is only required in GCC (non-windows) build.
- * MSVC does not like it.*/
-int errno = 0;
-
-#endif
-
 #if !defined(__GNUC__) && !defined(_WIN32)
 int GetLastError ()
 {
