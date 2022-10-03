@@ -1,4 +1,4 @@
-# libspdm is a sample implementation that follows the DMTF [SPDM](https://www.dmtf.org/standards/pmci) specification
+# libspdm is a sample implementation that follows the DMTF [SPDM](https://www.dmtf.org/standards/spdm) specifications
 
 ## Features
 
@@ -6,7 +6,7 @@
 
    The SPDM and secured message libraries follow :
 
-   [DSP0274](https://www.dmtf.org/dsp/DSP0274)  Security Protocol and Data Model (SPDM) Specification (version [1.0.1](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.0.1.pdf), version [1.1.1](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.1.1.pdf) and version [1.2.1](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.2.1.pdf))
+   [DSP0274](https://www.dmtf.org/dsp/DSP0274)  Security Protocol and Data Model (SPDM) Specification (version [1.0.1](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.0.1.pdf), version [1.1.2](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.1.2.pdf) and version [1.2.1](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.2.1.pdf))
 
    [DSP0277](https://www.dmtf.org/dsp/DSP0277)  Secured Messages using SPDM Specification (version [1.1.0](https://www.dmtf.org/sites/default/files/standards/documents/DSP0277_1.1.0.pdf))
 
@@ -24,7 +24,7 @@
 
 3) Programming Context
 
-   The core libraries in `libspdm/library/` require only the C99 freestanding headers and so are suitable for embedded and systems programming. Any functionality beyond the freestanding headers is provided by `libspdm/os_stub` or by the library's integrator. All statically allocated memory in the core libraries is read-only. The core libraries do not dynamically allocate memory.
+   The core libraries in `libspdm/library` require only the C99 freestanding headers and so are suitable for embedded and systems programming. Any functionality beyond the freestanding headers is provided by `libspdm/os_stub` or by the library's integrator. All statically allocated memory in the core libraries is read-only. The core libraries do not dynamically allocate memory.
 
 4) Implemented Requests and Responses
 
@@ -63,17 +63,17 @@
 
    Free and Open Source Developers European Meeting 2021 - [openspdm](https://fosdem.org/2021/schedule/event/firmware_uoifaaffsdc/)
 
-2) libspdm Library Threat Model:
+2) Library Threat Model
 
-   The user guide can be found at [threat_model](https://github.com/DMTF/libspdm/blob/main/doc/threat_model.md)
+   The user guide can be found at [threat_model](https://github.com/DMTF/libspdm/blob/main/doc/threat_model.md).
 
-3) libspdm Library Design:
+3) Library Design
 
-   The detailed design can be found at [design](https://github.com/DMTF/libspdm/blob/main/doc/design.md)
+   The detailed design can be found at [design](https://github.com/DMTF/libspdm/blob/main/doc/design.md).
 
-4) libspdm User Guide:
+4) User Guide
 
-   The user guide can be found at [user_guide](https://github.com/DMTF/libspdm/blob/main/doc/user_guide.md)
+   The user guide can be found at [user_guide](https://github.com/DMTF/libspdm/blob/main/doc/user_guide.md).
 
 ## Prerequisites
 
@@ -166,7 +166,7 @@
    ```
 
    Support openssl binary build. For example:
-   
+
    ```
    Note: Please install the openssl with command `nmake install` before build libspdm.
    cmake -G"Visual Studio 16 2019" -DARCH=x64 -DTOOLCHAIN=VS2019 -DTARGET=Release -DCRYPTO=openssl -DENABLE_BINARY_BUILD=1 -DCOMPILED_LIBCRYPTO_PATH=<OPENSSL_PATH>/libcrypto.lib -DCOMPILED_LIBSSL_PATH=<OPENSSL_PATH>/libssl.lib ..
@@ -214,7 +214,7 @@ Example CMake commands:
 
 ### Run [unit_test](https://github.com/DMTF/libspdm/tree/main/unit_test)
 
-   The UnitTest output is at libspdm/build/bin.
+   The unit test output is at `libspdm/build/bin`.
    Open one command prompt at output dir to run `test_spdm_requester > NUL` and `test_spdm_responder > NUL`.
 
    You should see something like:
@@ -229,27 +229,26 @@ Example CMake commands:
       [  PASSED  ] 2 test(s).
    </pre>
 
-   Note: You MUST use a command prompt with the current working directory at libspdm/build/bin when running ULTs or they may fail.
-   Eg. Don't run the ULT from libsdpm/build directory by calling "bin/test_spdm_responder > NULL"
-
-### Run [spdm_emu](https://github.com/DMTF/spdm-emu)
-
-   The spdm_emu output is at spdm_emu/build/bin.
-   Open one command prompt at output dir to run `spdm_responder_emu`. Then open another command prompt to run `spdm_requester_emu`.
-
-   Refer to [spdm_emu](https://github.com/DMTF/spdm-emu/blob/main/doc/spdm_emu.md) for more details.
-
-### [spdm_dump](https://github.com/DMTF/spdm-dump) tool
-
-   The tool output is at spdm_dump/build/bin. It can be used to parse the pcap file for offline analysis.
-
-   Refer to [spdm_dump](https://github.com/DMTF/spdm-dump/blob/main/doc/spdm_dump.md) for more details.
+   Note: You must use a command prompt with the current working directory at `libspdm/build/bin` when running unit tests or they may fail.
+   Eg. Don't run the unit tests from libsdpm/build directory by calling "bin/test_spdm_responder > NULL"
 
 ### Other Tests
 
   libspdm also supports other tests such as code coverage, fuzzing, symbolic execution, model checker.
 
   Refer to [test](https://github.com/DMTF/libspdm/blob/main/doc/test.md) for more details.
+
+## Associated Repsositories
+
+### [spdm-emu](https://github.com/DMTF/spdm-emu)
+
+   spdm-emu implements a full SPDM Requester and a full SPDM Responder using libspdm. It can be used
+   to test a Requester or Responder implementation, or to see how libspdm can be integrated into a
+   Requester or Responder implementation.
+
+### [spdm-dump](https://github.com/DMTF/spdm-dump) tool
+
+   spdm-dump can be used to parse `pcap` files that capture SPDM traffic for offline analysis.
 
 ## Features not implemented yet
 
