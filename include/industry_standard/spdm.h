@@ -22,9 +22,7 @@
 #define SPDM_NONCE_SIZE 32
 #define SPDM_RANDOM_DATA_SIZE 32
 
-
-/* SPDM response code (1.0)*/
-
+/* SPDM response code (1.0) */
 #define SPDM_DIGESTS 0x01
 #define SPDM_CERTIFICATE 0x02
 #define SPDM_CHALLENGE_AUTH 0x03
@@ -35,8 +33,7 @@
 #define SPDM_VENDOR_DEFINED_RESPONSE 0x7E
 #define SPDM_ERROR 0x7F
 
-/* SPDM response code (1.1)*/
-
+/* SPDM response code (1.1) */
 #define SPDM_KEY_EXCHANGE_RSP 0x64
 #define SPDM_FINISH_RSP 0x65
 #define SPDM_PSK_EXCHANGE_RSP 0x66
@@ -47,15 +44,13 @@
 #define SPDM_ENCAPSULATED_RESPONSE_ACK 0x6B
 #define SPDM_END_SESSION_ACK 0x6C
 
-/* SPDM response code (1.2)*/
-
+/* SPDM response code (1.2) */
 #define SPDM_CSR 0x6D
 #define SPDM_SET_CERTIFICATE_RSP 0x6E
 #define SPDM_CHUNK_SEND_ACK 0x05
 #define SPDM_CHUNK_RESPONSE 0x06
 
-/* SPDM request code (1.0)*/
-
+/* SPDM request code (1.0) */
 #define SPDM_GET_DIGESTS 0x81
 #define SPDM_GET_CERTIFICATE 0x82
 #define SPDM_CHALLENGE 0x83
@@ -66,8 +61,7 @@
 #define SPDM_VENDOR_DEFINED_REQUEST 0xFE
 #define SPDM_RESPOND_IF_READY 0xFF
 
-/* SPDM request code (1.1)*/
-
+/* SPDM request code (1.1) */
 #define SPDM_KEY_EXCHANGE 0xE4
 #define SPDM_FINISH 0xE5
 #define SPDM_PSK_EXCHANGE 0xE6
@@ -78,15 +72,13 @@
 #define SPDM_DELIVER_ENCAPSULATED_RESPONSE 0xEB
 #define SPDM_END_SESSION 0xEC
 
-/* SPDM request code (1.2)*/
-
+/* SPDM request code (1.2) */
 #define SPDM_GET_CSR 0xED
 #define SPDM_SET_CERTIFICATE 0xEE
 #define SPDM_CHUNK_SEND 0x85
 #define SPDM_CHUNK_GET 0x86
 
 /* SPDM message header*/
-
 typedef struct {
     uint8_t spdm_version;
     uint8_t request_response_code;
@@ -99,9 +91,7 @@ typedef struct {
 #define SPDM_MESSAGE_VERSION_12 0x12
 #define SPDM_MESSAGE_VERSION SPDM_MESSAGE_VERSION_10
 
-
-/* SPDM GET_VERSION request*/
-
+/* SPDM GET_VERSION request */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == RSVD
@@ -109,8 +99,7 @@ typedef struct {
 } spdm_get_version_request_t;
 
 
-/* SPDM GET_VERSION response*/
-
+/* SPDM GET_VERSION response */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == RSVD
@@ -119,7 +108,6 @@ typedef struct {
     uint8_t version_number_entry_count;
     /*spdm_version_number_t  version_number_entry[version_number_entry_count];*/
 } spdm_version_response_t;
-
 
 /* SPDM VERSION structure
  * bit[15:12] major_version
@@ -130,12 +118,11 @@ typedef uint16_t spdm_version_number_t;
 #define SPDM_VERSION_NUMBER_SHIFT_BIT 8
 
 #define SPDM_VERSION_1_2_SIGNING_PREFIX_CONTEXT "dmtf-spdm-v1.2.*"
-#define SPDM_VERSION_1_2_SIGNING_PREFIX_CONTEXT_SIZE (sizeof(SPDM_VERSION_1_2_SIGNING_PREFIX_CONTEXT) \
-                                                      - 1)
+#define SPDM_VERSION_1_2_SIGNING_PREFIX_CONTEXT_SIZE \
+        (sizeof(SPDM_VERSION_1_2_SIGNING_PREFIX_CONTEXT) - 1)
 #define SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE 100
 
-/* SPDM GET_CAPABILITIES request*/
-
+/* SPDM GET_CAPABILITIES request */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == RSVD
@@ -167,8 +154,7 @@ typedef struct {
 
 #define SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12  42
 
-/* SPDM GET_CAPABILITIES request flags (1.1)*/
-
+/* SPDM GET_CAPABILITIES request flags (1.1) */
 #define SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP 0x00000002
 #define SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP 0x00000004
 #define SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP 0x00000040
@@ -182,12 +168,11 @@ typedef struct {
 #define SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_UPD_CAP 0x00004000
 #define SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP 0x00008000
 #define SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP 0x00010000
-/* SPDM GET_CAPABILITIES request flags (1.2)*/
+
+/* SPDM GET_CAPABILITIES request flags (1.2) */
 #define SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP 0x00020000
 
-
-/* SPDM GET_CAPABILITIES response flags (1.0)*/
-
+/* SPDM GET_CAPABILITIES response flags (1.0) */
 #define SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CACHE_CAP 0x00000001
 #define SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP 0x00000002
 #define SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP 0x00000004
@@ -196,22 +181,21 @@ typedef struct {
 #define SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG 0x00000010
 #define SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_FRESH_CAP 0x00000020
 
-/* SPDM GET_CAPABILITIES response flags (1.1)*/
-
+/* SPDM GET_CAPABILITIES response flags (1.1) */
 #define SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP 0x00000040
 #define SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP 0x00000080
 #define SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP 0x00000100
 #define SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP 0x00000200
 #define SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP (0x00000400 | 0x00000800)
 #define SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER 0x00000400
-#define SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT    \
-    0x00000800
+#define SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT 0x00000800
 #define SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP 0x00001000
 #define SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP 0x00002000
 #define SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_UPD_CAP 0x00004000
 #define SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP 0x00008000
 #define SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PUB_KEY_ID_CAP 0x00010000
-/* SPDM GET_CAPABILITIES request flags (1.2)*/
+
+/* SPDM GET_CAPABILITIES request flags (1.2) */
 #define SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP 0x00020000
 #define SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP 0x00040000
 
@@ -220,8 +204,7 @@ typedef struct {
 #define SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CSR_CAP 0x00100000
 #define SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_INSTALL_RESET_CAP 0x00200000
 
-/* SPDM NEGOTIATE_ALGORITHMS request*/
-
+/* SPDM NEGOTIATE_ALGORITHMS request */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == Number of Algorithms Structure Tables
@@ -269,8 +252,7 @@ typedef struct {
 } spdm_negotiate_algorithms_common_struct_table_t;
 
 
-/* SPDM NEGOTIATE_ALGORITHMS request base_asym_algo/REQ_BASE_ASYM_ALG*/
-
+/* SPDM NEGOTIATE_ALGORITHMS request base_asym_algo/REQ_BASE_ASYM_ALG */
 #define SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048 0x00000001
 #define SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048 0x00000002
 #define SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072 0x00000004
@@ -281,14 +263,12 @@ typedef struct {
 #define SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384 0x00000080
 #define SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521 0x00000100
 
-/* SPDM NEGOTIATE_ALGORITHMS request base_asym_algo/REQ_BASE_ASYM_ALG (1.2)*/
-
+/* SPDM NEGOTIATE_ALGORITHMS request base_asym_algo/REQ_BASE_ASYM_ALG (1.2) */
 #define SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256 0x00000200
 #define SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519 0x00000400
 #define SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448 0x00000800
 
-/* SPDM NEGOTIATE_ALGORITHMS request base_hash_algo*/
-
+/* SPDM NEGOTIATE_ALGORITHMS request base_hash_algo */
 #define SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256 0x00000001
 #define SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384 0x00000002
 #define SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_512 0x00000004
@@ -296,12 +276,10 @@ typedef struct {
 #define SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_384 0x00000010
 #define SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_512 0x00000020
 
-/* SPDM NEGOTIATE_ALGORITHMS request base_hash_algo (1.2)*/
-
+/* SPDM NEGOTIATE_ALGORITHMS request base_hash_algo (1.2) */
 #define SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SM3_256 0x00000040
 
-/* SPDM NEGOTIATE_ALGORITHMS request DHE*/
-
+/* SPDM NEGOTIATE_ALGORITHMS request DHE */
 #define SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_2048 0x00000001
 #define SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_3072 0x00000002
 #define SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_4096 0x00000004
@@ -309,27 +287,21 @@ typedef struct {
 #define SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_384_R1 0x00000010
 #define SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_521_R1 0x00000020
 
-/* SPDM NEGOTIATE_ALGORITHMS request DHE (1.2)*/
-
+/* SPDM NEGOTIATE_ALGORITHMS request DHE (1.2) */
 #define SPDM_ALGORITHMS_DHE_NAMED_GROUP_SM2_P256 0x00000040
 
-/* SPDM NEGOTIATE_ALGORITHMS request AEAD*/
-
+/* SPDM NEGOTIATE_ALGORITHMS request AEAD */
 #define SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_128_GCM 0x00000001
 #define SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_256_GCM 0x00000002
 #define SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_CHACHA20_POLY1305 0x00000004
 
-/* SPDM NEGOTIATE_ALGORITHMS request AEAD (1.2)*/
-
+/* SPDM NEGOTIATE_ALGORITHMS request AEAD (1.2) */
 #define SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AEAD_SM4_GCM 0x00000008
 
-/* SPDM NEGOTIATE_ALGORITHMS request KEY_SCHEDULE*/
-
+/* SPDM NEGOTIATE_ALGORITHMS request KEY_SCHEDULE */
 #define SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH 0x00000001
 
-
-/* SPDM NEGOTIATE_ALGORITHMS response*/
-
+/* SPDM NEGOTIATE_ALGORITHMS response */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == Number of Algorithms Structure Tables
@@ -352,9 +324,7 @@ typedef struct {
      * spdm_negotiate_algorithms_struct_table_t  alg_struct[param1];*/
 } spdm_algorithms_response_t;
 
-
-/* SPDM NEGOTIATE_ALGORITHMS response measurement_hash_algo*/
-
+/* SPDM NEGOTIATE_ALGORITHMS response measurement_hash_algo */
 #define SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_RAW_BIT_STREAM_ONLY 0x00000001
 #define SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA_256 0x00000002
 #define SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA_384 0x00000004
@@ -363,35 +333,29 @@ typedef struct {
 #define SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA3_384 0x00000020
 #define SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA3_512 0x00000040
 
-/* SPDM NEGOTIATE_ALGORITHMS response measurement_hash_algo (1.2)*/
-
+/* SPDM NEGOTIATE_ALGORITHMS response measurement_hash_algo (1.2) */
 #define SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SM3_256 0x00000080
 
-/* SPDM Opaque Data Format (1.2)*/
-
+/* SPDM Opaque Data Format (1.2) */
 #define SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_0 0x00000001
 #define SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1 0x00000002
 #define SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_MASK 0xF
 
 /* SPDM Opaque Data Format 1 (1.2) */
-
 typedef struct {
     uint8_t total_elements;
     uint8_t reserved[3];
     /*opaque_element_table_t  opaque_list[];*/
 } spdm_general_opaque_data_table_header_t;
 
-/* SPDM extended algorithm*/
-
+/* SPDM extended algorithm */
 typedef struct {
     uint8_t registry_id;
     uint8_t reserved;
     uint16_t algorithm_id;
 } spdm_extended_algorithm_t;
 
-
-/* SPDM registry_id*/
-
+/* SPDM registry_id */
 #define SPDM_REGISTRY_ID_DMTF 0
 #define SPDM_REGISTRY_ID_TCG 1
 #define SPDM_REGISTRY_ID_USB 2
@@ -402,18 +366,14 @@ typedef struct {
 #define SPDM_REGISTRY_ID_CXL 7
 #define SPDM_REGISTRY_ID_JEDEC 8
 
-
-/* SPDM GET_DIGESTS request*/
-
+/* SPDM GET_DIGESTS request */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == RSVD
      * param2 == RSVD*/
 } spdm_get_digest_request_t;
 
-
-/* SPDM GET_DIGESTS response*/
-
+/* SPDM GET_DIGESTS response */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == RSVD
@@ -422,8 +382,7 @@ typedef struct {
 } spdm_digest_response_t;
 
 
-/* SPDM GET_CERTIFICATE request*/
-
+/* SPDM GET_CERTIFICATE request */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == BIT[0:3]=slot_id, BIT[4:7]=RSVD
@@ -434,8 +393,7 @@ typedef struct {
 
 #define SPDM_GET_CERTIFICATE_REQUEST_SLOT_ID_MASK 0xF
 
-/* SPDM GET_CERTIFICATE response*/
-
+/* SPDM GET_CERTIFICATE response */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == BIT[0:3]=slot_id, BIT[4:7]=RSVD
@@ -446,9 +404,7 @@ typedef struct {
 } spdm_certificate_response_t;
 
 #define SPDM_CERTIFICATE_RESPONSE_SLOT_ID_MASK 0xF
-
 typedef struct {
-
     /* Total length of the certificate chain, in bytes,
      * including all fields in this table.*/
 
@@ -468,9 +424,7 @@ typedef struct {
     /*uint8_t    certificates[length - 4 - hash_size];*/
 } spdm_cert_chain_t;
 
-
-/* SPDM CHALLENGE request*/
-
+/* SPDM CHALLENGE request */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == slot_id
@@ -478,9 +432,7 @@ typedef struct {
     uint8_t nonce[32];
 } spdm_challenge_request_t;
 
-
-/* SPDM CHALLENGE response*/
-
+/* SPDM CHALLENGE response */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == ResponseAttribute, BIT[0:3]=slot_id, BIT[4:6]=RSVD, BIT[7]=basic_mut_auth(deprecated in 1.2)
@@ -493,9 +445,7 @@ typedef struct {
      * uint8_t                signature[key_size];*/
 } spdm_challenge_auth_response_t;
 
-
-/* SPDM CHALLENGE request HashType*/
-
+/* SPDM CHALLENGE request HashType */
 #define SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH 0
 #define SPDM_CHALLENGE_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH 1
 #define SPDM_CHALLENGE_REQUEST_ALL_MEASUREMENTS_HASH 0xFF
@@ -508,9 +458,7 @@ typedef struct {
 #define SPDM_MUT_CHALLENGE_AUTH_SIGN_CONTEXT "requester-challenge_auth signing"
 #define SPDM_MUT_CHALLENGE_AUTH_SIGN_CONTEXT_SIZE (sizeof(SPDM_MUT_CHALLENGE_AUTH_SIGN_CONTEXT) - 1)
 
-
-/* SPDM GET_MEASUREMENTS request*/
-
+/* SPDM GET_MEASUREMENTS request */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == Attributes
@@ -522,23 +470,18 @@ typedef struct {
 
 #define SPDM_GET_MEASUREMENTS_REQUEST_SLOT_ID_MASK 0xF
 
-/* SPDM GET_MEASUREMENTS request Attributes*/
-
+/* SPDM GET_MEASUREMENTS request Attributes */
 #define SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE 0x00000001
 #define SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_RAW_BIT_STREAM_REQUESTED 0x00000002
 
+/* SPDM GET_MEASUREMENTS request measurement_operation */
+#define SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_TOTAL_NUMBER_OF_MEASUREMENTS 0
 
-/* SPDM GET_MEASUREMENTS request measurement_operation*/
-
-#define SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_TOTAL_NUMBER_OF_MEASUREMENTS \
-    0
-/*SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_INDEX*/
-#define SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_ALL_MEASUREMENTS   \
-    0xFF
+/*SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_INDEX */
+#define SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_ALL_MEASUREMENTS 0xFF
 
 
-/* SPDM MEASUREMENTS block common header*/
-
+/* SPDM MEASUREMENTS block common header */
 typedef struct {
     uint8_t index;
     uint8_t measurement_specification;
@@ -548,9 +491,7 @@ typedef struct {
 
 #define SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF 0x00000001
 
-
-/* SPDM MEASUREMENTS block DMTF header*/
-
+/* SPDM MEASUREMENTS block DMTF header */
 typedef struct {
     uint8_t dmtf_spec_measurement_value_type;
     uint16_t dmtf_spec_measurement_value_size;
@@ -563,9 +504,7 @@ typedef struct {
     /*uint8_t                                 hash_value[hash_size];*/
 } spdm_measurement_block_dmtf_t;
 
-
-/* SPDM MEASUREMENTS block MeasurementValueType*/
-
+/* SPDM MEASUREMENTS block MeasurementValueType */
 #define SPDM_MEASUREMENT_BLOCK_MEASUREMENT_TYPE_IMMUTABLE_ROM 0
 #define SPDM_MEASUREMENT_BLOCK_MEASUREMENT_TYPE_MUTABLE_FIRMWARE 1
 #define SPDM_MEASUREMENT_BLOCK_MEASUREMENT_TYPE_HARDWARE_CONFIGURATION 2
@@ -577,13 +516,11 @@ typedef struct {
 #define SPDM_MEASUREMENT_BLOCK_MEASUREMENT_TYPE_MASK 0x7
 #define SPDM_MEASUREMENT_BLOCK_MEASUREMENT_TYPE_RAW_BIT_STREAM 0x00000080
 
-/* SPDM MEASUREMENTS block index*/
-
+/* SPDM MEASUREMENTS block index */
 #define SPDM_MEASUREMENT_BLOCK_MEASUREMENT_INDEX_MEASUREMENT_MANIFEST 0xFD
 #define SPDM_MEASUREMENT_BLOCK_MEASUREMENT_INDEX_DEVICE_MODE 0xFE
 
-/* SPDM MEASUREMENTS device mode*/
-
+/* SPDM MEASUREMENTS device mode */
 typedef struct {
     uint32_t operational_mode_capabilties;
     uint32_t operational_mode_state;
@@ -604,11 +541,10 @@ typedef struct {
 #define SPDM_MEASUREMENT_DEVICE_MODE_INVASIVE_DEBUG_MODE_HAS_BEEN_ACTIVE 0x00000008
 #define SPDM_MEASUREMENT_DEVICE_MODE_INVASIVE_DEBUG_MODE_HAS_BEEN_ACTIVE_AFTER_MFG 0x00000010
 
-/* SPDM MEASUREMENTS SVN*/
+/* SPDM MEASUREMENTS SVN */
 typedef uint64_t spdm_measurements_secure_version_number_t;
 
-/* SPDM GET_MEASUREMENTS response*/
-
+/* SPDM GET_MEASUREMENTS response */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == TotalNumberOfMeasurement/RSVD
@@ -624,8 +560,7 @@ typedef struct {
 
 #define SPDM_MEASUREMENTS_RESPONSE_SLOT_ID_MASK 0xF
 
-/* SPDM MEASUREMENTS content changed*/
-
+/* SPDM MEASUREMENTS content changed */
 #define SPDM_MEASUREMENTS_RESPONSE_CONTENT_CHANGE_MASK          0x30
 #define SPDM_MEASUREMENTS_RESPONSE_CONTENT_CHANGE_NO_DETECTION  0x00
 #define SPDM_MEASUREMENTS_RESPONSE_CONTENT_CHANGE_DETECTED      0x10
@@ -634,9 +569,7 @@ typedef struct {
 #define SPDM_MEASUREMENTS_SIGN_CONTEXT "responder-measurements signing"
 #define SPDM_MEASUREMENTS_SIGN_CONTEXT_SIZE (sizeof(SPDM_MEASUREMENTS_SIGN_CONTEXT) - 1)
 
-
-/* SPDM ERROR response*/
-
+/* SPDM ERROR response */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == Error Code
@@ -646,8 +579,7 @@ typedef struct {
 
 #define SPDM_EXTENDED_ERROR_DATA_MAX_SIZE 32
 
-/* SPDM error code*/
-
+/* SPDM error code */
 #define SPDM_ERROR_CODE_INVALID_REQUEST 0x01
 #define SPDM_ERROR_CODE_BUSY 0x03
 #define SPDM_ERROR_CODE_UNEXPECTED_REQUEST 0x04
@@ -658,16 +590,14 @@ typedef struct {
 #define SPDM_ERROR_CODE_REQUEST_RESYNCH 0x43
 #define SPDM_ERROR_CODE_VENDOR_DEFINED 0xFF
 
-/* SPDM error code (1.1)*/
-
+/* SPDM error code (1.1) */
 #define SPDM_ERROR_CODE_INVALID_SESSION 0x02 /* Deprecated in SPDM 1.2*/
 #define SPDM_ERROR_CODE_DECRYPT_ERROR 0x06
 #define SPDM_ERROR_CODE_REQUEST_IN_FLIGHT 0x08
 #define SPDM_ERROR_CODE_INVALID_RESPONSE_CODE 0x09
 #define SPDM_ERROR_CODE_SESSION_LIMIT_EXCEEDED 0x0A
 
-/* SPDM error code (1.2)*/
-
+/* SPDM error code (1.2) */
 #define SPDM_ERROR_CODE_SESSION_REQUIRED 0x0B
 #define SPDM_ERROR_CODE_RESET_REQUIRED 0x0C
 #define SPDM_ERROR_CODE_RESPONSE_TOO_LARGE 0x0D
@@ -675,9 +605,7 @@ typedef struct {
 #define SPDM_ERROR_CODE_LARGE_RESPONSE 0x0F
 #define SPDM_ERROR_CODE_MESSAGE_LOST 0x10
 
-
-/* SPDM ResponseNotReady extended data*/
-
+/* SPDM ResponseNotReady extended data */
 typedef struct {
     uint8_t rd_exponent;
     uint8_t request_code;
@@ -692,9 +620,7 @@ typedef struct {
     spdm_error_data_response_not_ready_t extend_error_data;
 } spdm_error_response_data_response_not_ready_t;
 
-
-/* SPDM LargeResponse extended data*/
-
+/* SPDM LargeResponse extended data */
 typedef struct {
     uint8_t handle;
 } spdm_error_data_large_response_t;
@@ -706,17 +632,14 @@ typedef struct {
     spdm_error_data_large_response_t extend_error_data;
 } spdm_error_response_large_response_t;
 
-/* SPDM RESPONSE_IF_READY request*/
-
+/* SPDM RESPONSE_IF_READY request */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == request_code
      * param2 == token*/
 } spdm_response_if_ready_request_t;
 
-
-/* SPDM VENDOR_DEFINED request*/
-
+/* SPDM VENDOR_DEFINED request */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == RSVD
@@ -728,9 +651,7 @@ typedef struct {
      * uint8_t                vendor_defined_payload[payload_length];*/
 } spdm_vendor_defined_request_msg_t;
 
-
-/* SPDM VENDOR_DEFINED response*/
-
+/* SPDM VENDOR_DEFINED response */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == RSVD
@@ -742,13 +663,9 @@ typedef struct {
      * uint8_t                vendor_defined_payload[payload_length];*/
 } spdm_vendor_defined_response_msg_t;
 
+/* Below command is defined in SPDM 1.1 */
 
-/* Below command is defined in SPDM 1.1*/
-
-
-
-/* SPDM KEY_EXCHANGE request*/
-
+/* SPDM KEY_EXCHANGE request */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == HashType
@@ -763,19 +680,15 @@ typedef struct {
      * uint8_t                opaque_data[opaque_length];*/
 } spdm_key_exchange_request_t;
 
-/* SPDM KEY_EXCHANGE request session_policy*/
-
+/* SPDM KEY_EXCHANGE request session_policy */
 #define SPDM_KEY_EXCHANGE_REQUEST_SESSION_POLICY_TERMINATION_POLICY_RUNTIME_UPDATE 0x00000001
 
-/* SPDM KEY_EXCHANGE request HashType*/
-
+/* SPDM KEY_EXCHANGE request HashType */
 #define SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH 0
 #define SPDM_KEY_EXCHANGE_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH 1
 #define SPDM_KEY_EXCHANGE_REQUEST_ALL_MEASUREMENTS_HASH 0xFF
 
-
-/* SPDM KEY_EXCHANGE response*/
-
+/* SPDM KEY_EXCHANGE response */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == heartbeat_period
@@ -792,30 +705,24 @@ typedef struct {
     * uint8_t                verify_data[H];*/
 } spdm_key_exchange_response_t;
 
-
-/* SPDM KEY_EXCHANGE response mut_auth_requested*/
-
+/* SPDM KEY_EXCHANGE response mut_auth_requested */
 #define SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED 0x00000001
 #define SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST 0x00000002
 #define SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS 0x00000004
 
 #define SPDM_KEY_EXCHANGE_RESPONSE_SIGN_CONTEXT "responder-key_exchange_rsp signing"
-#define SPDM_KEY_EXCHANGE_RESPONSE_SIGN_CONTEXT_SIZE (sizeof(SPDM_KEY_EXCHANGE_RESPONSE_SIGN_CONTEXT) \
-                                                      - 1)
+#define SPDM_KEY_EXCHANGE_RESPONSE_SIGN_CONTEXT_SIZE
+        (sizeof(SPDM_KEY_EXCHANGE_RESPONSE_SIGN_CONTEXT) - 1)
 
 #define SPDM_VERSION_1_2_KEY_EXCHANGE_REQUESTER_CONTEXT "Requester-KEP-dmtf-spdm-v1.2"
-#define SPDM_VERSION_1_2_KEY_EXCHANGE_REQUESTER_CONTEXT_SIZE (sizeof( \
-                                                                  SPDM_VERSION_1_2_KEY_EXCHANGE_REQUESTER_CONTEXT) \
-                                                              - 1)
+#define SPDM_VERSION_1_2_KEY_EXCHANGE_REQUESTER_CONTEXT_SIZE
+        (sizeof(SPDM_VERSION_1_2_KEY_EXCHANGE_REQUESTER_CONTEXT) - 1)
 
 #define SPDM_VERSION_1_2_KEY_EXCHANGE_RESPONDER_CONTEXT "Responder-KEP-dmtf-spdm-v1.2"
-#define SPDM_VERSION_1_2_KEY_EXCHANGE_RESPONDER_CONTEXT_SIZE (sizeof( \
-                                                                  SPDM_VERSION_1_2_KEY_EXCHANGE_RESPONDER_CONTEXT) \
-                                                              - 1)
+#define SPDM_VERSION_1_2_KEY_EXCHANGE_RESPONDER_CONTEXT_SIZE
+        (sizeof(SPDM_VERSION_1_2_KEY_EXCHANGE_RESPONDER_CONTEXT) - 1)
 
-
-/* SPDM FINISH request*/
-
+/* SPDM FINISH request */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == signature_included
@@ -824,14 +731,10 @@ typedef struct {
      * uint8_t                verify_data[H];*/
 } spdm_finish_request_t;
 
-
-/* SPDM FINISH request signature_included*/
-
+/* SPDM FINISH request signature_included */
 #define SPDM_FINISH_REQUEST_ATTRIBUTES_SIGNATURE_INCLUDED 0x00000001
 
-
-/* SPDM FINISH response*/
-
+/* SPDM FINISH response */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == RSVD
@@ -842,9 +745,7 @@ typedef struct {
 #define SPDM_FINISH_SIGN_CONTEXT "requester-finish signing"
 #define SPDM_FINISH_SIGN_CONTEXT_SIZE (sizeof(SPDM_FINISH_SIGN_CONTEXT) - 1)
 
-
-/* SPDM PSK_EXCHANGE request*/
-
+/* SPDM PSK_EXCHANGE request */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == HashType
@@ -858,9 +759,7 @@ typedef struct {
      * uint8_t                opaque_data[opaque_length];*/
 } spdm_psk_exchange_request_t;
 
-
-/* SPDM PSK_EXCHANGE response*/
-
+/* SPDM PSK_EXCHANGE response */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == heartbeat_period
@@ -875,9 +774,7 @@ typedef struct {
      * uint8_t                verify_data[H];*/
 } spdm_psk_exchange_response_t;
 
-
-/* SPDM PSK_FINISH request*/
-
+/* SPDM PSK_FINISH request */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == RSVD
@@ -885,9 +782,7 @@ typedef struct {
      * uint8_t                verify_data[H];*/
 } spdm_psk_finish_request_t;
 
-
-/* SPDM PSK_FINISH response*/
-
+/* SPDM PSK_FINISH response */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == RSVD
@@ -895,60 +790,47 @@ typedef struct {
 } spdm_psk_finish_response_t;
 
 
-/* SPDM HEARTBEAT request*/
-
+/* SPDM HEARTBEAT request */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == RSVD
      * param2 == RSVD*/
 } spdm_heartbeat_request_t;
 
-
-/* SPDM HEARTBEAT response*/
-
+/* SPDM HEARTBEAT response */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == RSVD
      * param2 == RSVD*/
 } spdm_heartbeat_response_t;
 
-
-/* SPDM KEY_UPDATE request*/
-
+/* SPDM KEY_UPDATE request */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == key_operation
      * param2 == tag*/
 } spdm_key_update_request_t;
 
-
-/* SPDM KEY_UPDATE Operations table*/
-
+/* SPDM KEY_UPDATE Operations table */
 #define SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY 1
 #define SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS 2
 #define SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY 3
 
-
-/* SPDM KEY_UPDATE response*/
-
+/* SPDM KEY_UPDATE response */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == key_operation
      * param2 == tag*/
 } spdm_key_update_response_t;
 
-
-/* SPDM GET_ENCAPSULATED_REQUEST request*/
-
+/* SPDM GET_ENCAPSULATED_REQUEST request */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == RSVD
      * param2 == RSVD*/
 } spdm_get_encapsulated_request_request_t;
 
-
-/* SPDM ENCAPSULATED_REQUEST response*/
-
+/* SPDM ENCAPSULATED_REQUEST response */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == request_id
@@ -956,9 +838,7 @@ typedef struct {
      * uint8_t                encapsulated_request[];*/
 } spdm_encapsulated_request_response_t;
 
-
-/* SPDM DELIVER_ENCAPSULATED_RESPONSE request*/
-
+/* SPDM DELIVER_ENCAPSULATED_RESPONSE request */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == request_id
@@ -966,9 +846,7 @@ typedef struct {
      * uint8_t                encapsulated_response[];*/
 } spdm_deliver_encapsulated_response_request_t;
 
-
-/* SPDM ENCAPSULATED_RESPONSE_ACK response*/
-
+/* SPDM ENCAPSULATED_RESPONSE_ACK response */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == request_id
@@ -981,39 +859,29 @@ typedef struct {
     /*uint8_t                encapsulated_request[];*/
 } spdm_encapsulated_response_ack_response_t;
 
-
-/* SPDM ENCAPSULATED_RESPONSE_ACK_RESPONSE payload Type*/
-
+/* SPDM ENCAPSULATED_RESPONSE_ACK_RESPONSE payload Type */
 #define SPDM_ENCAPSULATED_RESPONSE_ACK_RESPONSE_PAYLOAD_TYPE_ABSENT 0
 #define SPDM_ENCAPSULATED_RESPONSE_ACK_RESPONSE_PAYLOAD_TYPE_PRESENT 1
 #define SPDM_ENCAPSULATED_RESPONSE_ACK_RESPONSE_PAYLOAD_TYPE_REQ_SLOT_NUMBER 2
 
-
-/* SPDM END_SESSION request*/
-
+/* SPDM END_SESSION request */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == end_session_request_attributes
      * param2 == RSVD*/
 } spdm_end_session_request_t;
 
-
-/* SPDM END_SESSION request Attributes*/
-
+/* SPDM END_SESSION request Attributes */
 #define SPDM_END_SESSION_REQUEST_ATTRIBUTES_PRESERVE_NEGOTIATED_STATE_CLEAR 0x00000001
 
-
-/* SPDM END_SESSION response*/
-
+/* SPDM END_SESSION response */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == RSVD
      * param2 == RSVD*/
 } spdm_end_session_response_t;
 
-
-/* SPDM SET_CERTIFICATE request*/
-
+/* SPDM SET_CERTIFICATE request */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == BIT[0:3]=slot_id, BIT[4:7]=RSVD
@@ -1021,16 +889,14 @@ typedef struct {
      * void * cert_chain*/
 } spdm_set_certificate_request_t;
 
-/* SPDM SET_CERTIFICATE_RSP response*/
-
+/* SPDM SET_CERTIFICATE_RSP response */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == BIT[0:3]=slot_id, BIT[4:7]=RSVD
      * param2 == RSVD*/
 } spdm_set_certificate_response_t;
 
-/* SPDM GET_CSR request*/
-
+/* SPDM GET_CSR request */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == RSVD
@@ -1041,8 +907,7 @@ typedef struct {
      * uint8_t opaque_data[opaque_data_length]; */
 } spdm_get_csr_request_t;
 
-/* SPDM CSR response*/
-
+/* SPDM CSR response */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == RSVD
@@ -1052,7 +917,6 @@ typedef struct {
 } spdm_csr_response_t;
 
 /* SPDM CHUNK_SEND request */
-
 typedef struct {
     spdm_message_header_t header;
     /* param1 - Request Attributes
@@ -1068,7 +932,6 @@ typedef struct {
 #define SPDM_CHUNK_SEND_REQUEST_ATTRIBUTE_LAST_CHUNK (1 << 0)
 
 /* SPDM CHUNK_SEND_ACK response */
-
 typedef struct {
     spdm_message_header_t header;
     /* param1 - Response Attributes
@@ -1080,7 +943,6 @@ typedef struct {
 #define SPDM_CHUNK_SEND_ACK_RESPONSE_ATTRIBUTE_EARLY_ERROR_DETECTED (1 << 0)
 
 /* SPDM CHUNK_GET request */
-
 typedef struct {
     spdm_message_header_t header;
     /* param1 - Reserved
@@ -1089,7 +951,6 @@ typedef struct {
 } spdm_chunk_get_request_t;
 
 /* SPDM CHUNK_RESPONSE response */
-
 typedef struct {
     spdm_message_header_t header;
     /* param1 - Response Attributes
@@ -1119,7 +980,7 @@ typedef struct {
 #define SPDM_BIN_STR_9_LABEL "traffic upd"
 
 /**
- * the maximum amount of time in microseconds the Responder has to provide a response
+ * The maximum amount of time in microseconds the Responder has to provide a response
  * to requests that do not require cryptographic processing.
  **/
 #define SPDM_ST1_VALUE_US 100000
