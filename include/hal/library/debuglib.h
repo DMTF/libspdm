@@ -18,9 +18,7 @@
 #ifndef DEBUG_LIB_H
 #define DEBUG_LIB_H
 
-
 /* Declare bits for PcdDebugPrintErrorLevel and the error_level parameter of libspdm_debug_print()*/
-
 #define LIBSPDM_DEBUG_INFO 0x00000040 /* Informational debug messages*/
 /* Detailed debug messages that may significantly impact boot performance*/
 #define LIBSPDM_DEBUG_VERBOSE 0x00400000
