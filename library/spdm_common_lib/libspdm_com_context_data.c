@@ -2176,7 +2176,7 @@ void libspdm_reset_context(void *context)
 size_t libspdm_get_context_size(void)
 {
     return sizeof(libspdm_context_t) + libspdm_secured_message_get_context_size() *
-        LIBSPDM_MAX_SESSION_COUNT;
+           LIBSPDM_MAX_SESSION_COUNT;
 }
 
 /**
