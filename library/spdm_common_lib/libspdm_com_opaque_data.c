@@ -303,7 +303,8 @@ bool libspdm_get_element_from_opaque_data(libspdm_context_t *spdm_context,
 
         /*move to next element*/
         opaque_element_table_header = (const secured_message_opaque_element_table_header_t *)
-            ((const uint8_t *)opaque_element_table_header + current_element_len);
+                                      ((const uint8_t *)opaque_element_table_header +
+                                       current_element_len);
     }
 
     /*ensure data size is right*/
