@@ -31,7 +31,7 @@ bool libspdm_get_peer_cert_chain_buffer(void *context,
     if (spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer_size != 0) {
         *cert_chain_buffer = spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer;
         *cert_chain_buffer_size = spdm_context->connection_info
-            .peer_used_cert_chain[slot_id].buffer_size;
+                                  .peer_used_cert_chain[slot_id].buffer_size;
         return true;
     }
 #endif
