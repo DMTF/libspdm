@@ -46,19 +46,19 @@ void libspdm_internal_dump_hex(const uint8_t *data, size_t size)
     size_t count;
     size_t left;
 
-#define COLUME_SIZE (16 * 2)
+    #define COLUMN_SIZE (16 * 2)
 
-    count = size / COLUME_SIZE;
-    left = size % COLUME_SIZE;
+    count = size / COLUMN_SIZE;
+    left = size % COLUMN_SIZE;
     for (index = 0; index < count; index++) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "%04x: ", index * COLUME_SIZE));
-        libspdm_internal_dump_data(data + index * COLUME_SIZE, COLUME_SIZE);
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "%04x: ", index * COLUMN_SIZE));
+        libspdm_internal_dump_data(data + index * COLUMN_SIZE, COLUMN_SIZE);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     }
 
     if (left != 0) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "%04x: ", index * COLUME_SIZE));
-        libspdm_internal_dump_data(data + index * COLUME_SIZE, left);
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "%04x: ", index * COLUMN_SIZE));
+        libspdm_internal_dump_data(data + index * COLUMN_SIZE, left);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     }
 }
@@ -207,23 +207,20 @@ libspdm_return_t libspdm_append_managed_buffer(void *m_buffer, const void *buffe
                    (managed_buffer->max_buffer_size ==
                     LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE));
     LIBSPDM_ASSERT(managed_buffer->max_buffer_size >= managed_buffer->buffer_size);
-    if (buffer_size >
-        managed_buffer->max_buffer_size - managed_buffer->buffer_size) {
+    if (buffer_size > managed_buffer->max_buffer_size - managed_buffer->buffer_size) {
         /* Do not LIBSPDM_ASSERT here, because command processor will append message from external.*/
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
                        "libspdm_append_managed_buffer 0x%x fail, rest 0x%x only\n",
                        (uint32_t)buffer_size,
-                       (uint32_t)(managed_buffer->max_buffer_size -
-                                  managed_buffer->buffer_size)));
+                       (uint32_t)(managed_buffer->max_buffer_size - managed_buffer->buffer_size)));
         return LIBSPDM_STATUS_BUFFER_FULL;
     }
-    LIBSPDM_ASSERT(buffer_size <=
-                   managed_buffer->max_buffer_size - managed_buffer->buffer_size);
+    LIBSPDM_ASSERT(buffer_size <= managed_buffer->max_buffer_size - managed_buffer->buffer_size);
 
     libspdm_copy_mem((uint8_t *)(managed_buffer + 1) + managed_buffer->buffer_size,
-                     buffer_size,
-                     buffer, buffer_size);
+                     buffer_size, buffer, buffer_size);
     managed_buffer->buffer_size += buffer_size;
+
     return LIBSPDM_STATUS_SUCCESS;
 }
 

@@ -6,7 +6,6 @@
 
 #include "internal/libspdm_common_lib.h"
 
-
 /**
  * Return the size in bytes of opaque data version selection.
  *
@@ -14,13 +13,11 @@
  *
  * @return the size in bytes of opaque data version selection.
  **/
-size_t libspdm_get_opaque_data_version_selection_data_size(
-    const libspdm_context_t *spdm_context)
+size_t libspdm_get_opaque_data_version_selection_data_size(const libspdm_context_t *spdm_context)
 {
     size_t size;
 
-    if (spdm_context->local_context.secured_message_version
-        .spdm_version_count == 0) {
+    if (spdm_context->local_context.secured_message_version.spdm_version_count == 0) {
         return 0;
     }
 
@@ -44,13 +41,11 @@ size_t libspdm_get_opaque_data_version_selection_data_size(
  *
  * @return the size in bytes of opaque data supported version.
  **/
-size_t libspdm_get_opaque_data_supported_version_data_size(
-    libspdm_context_t *spdm_context)
+size_t libspdm_get_opaque_data_supported_version_data_size(libspdm_context_t *spdm_context)
 {
     size_t size;
 
-    if (spdm_context->local_context.secured_message_version
-        .spdm_version_count == 0) {
+    if (spdm_context->local_context.secured_message_version.spdm_version_count == 0) {
         return 0;
     }
 
@@ -114,10 +109,9 @@ size_t libspdm_get_untrusted_opaque_data_supported_version_data_size(
  * @retval RETURN_SUCCESS               The opaque data supported version is built successfully.
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
-libspdm_return_t
-libspdm_build_opaque_data_supported_version_data(libspdm_context_t *spdm_context,
-                                                 size_t *data_out_size,
-                                                 void *data_out)
+libspdm_return_t libspdm_build_opaque_data_supported_version_data(libspdm_context_t *spdm_context,
+                                                                  size_t *data_out_size,
+                                                                  void *data_out)
 {
     size_t final_data_size;
     secured_message_general_opaque_data_table_header_t
@@ -131,14 +125,12 @@ libspdm_build_opaque_data_supported_version_data(libspdm_context_t *spdm_context
     spdm_version_number_t *versions_list;
     void *end;
 
-    if (spdm_context->local_context.secured_message_version
-        .spdm_version_count == 0) {
+    if (spdm_context->local_context.secured_message_version.spdm_version_count == 0) {
         *data_out_size = 0;
         return LIBSPDM_STATUS_SUCCESS;
     }
 
-    final_data_size =
-        libspdm_get_opaque_data_supported_version_data_size(spdm_context);
+    final_data_size = libspdm_get_opaque_data_supported_version_data_size(spdm_context);
     if (*data_out_size < final_data_size) {
         *data_out_size = final_data_size;
         return LIBSPDM_STATUS_BUFFER_TOO_SMALL;
@@ -147,18 +139,14 @@ libspdm_build_opaque_data_supported_version_data(libspdm_context_t *spdm_context
         spdm_general_opaque_data_table_header = data_out;
         spdm_general_opaque_data_table_header->total_elements = 1;
         libspdm_write_uint24(spdm_general_opaque_data_table_header->reserved, 0);
-        opaque_element_table_header =
-            (void *)(spdm_general_opaque_data_table_header + 1);
+        opaque_element_table_header = (void *)(spdm_general_opaque_data_table_header + 1);
     } else {
         general_opaque_data_table_header = data_out;
-        general_opaque_data_table_header->spec_id =
-            SECURED_MESSAGE_OPAQUE_DATA_SPEC_ID;
-        general_opaque_data_table_header->opaque_version =
-            SECURED_MESSAGE_OPAQUE_VERSION;
+        general_opaque_data_table_header->spec_id = SECURED_MESSAGE_OPAQUE_DATA_SPEC_ID;
+        general_opaque_data_table_header->opaque_version = SECURED_MESSAGE_OPAQUE_VERSION;
         general_opaque_data_table_header->total_elements = 1;
         general_opaque_data_table_header->reserved = 0;
-        opaque_element_table_header =
-            (void *)(general_opaque_data_table_header + 1);
+        opaque_element_table_header = (void *)(general_opaque_data_table_header + 1);
     }
 
     opaque_element_table_header->id = SPDM_REGISTRY_ID_DMTF;
@@ -168,8 +156,7 @@ libspdm_build_opaque_data_supported_version_data(libspdm_context_t *spdm_context
         sizeof(spdm_version_number_t) *
         spdm_context->local_context.secured_message_version.spdm_version_count;
 
-    opaque_element_support_version =
-        (void *)(opaque_element_table_header + 1);
+    opaque_element_support_version = (void *)(opaque_element_table_header + 1);
     opaque_element_support_version->sm_data_version =
         SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_DATA_VERSION;
     opaque_element_support_version->sm_data_id =
@@ -247,8 +234,7 @@ bool libspdm_get_element_from_opaque_data(libspdm_context_t *spdm_context,
         if (spdm_general_opaque_data_table_header->total_elements < 1) {
             return false;
         }
-        opaque_element_table_header =
-            (const void *)(spdm_general_opaque_data_table_header + 1);
+        opaque_element_table_header = (const void *)(spdm_general_opaque_data_table_header + 1);
 
         element_num = spdm_general_opaque_data_table_header->total_elements;
 
@@ -265,8 +251,7 @@ bool libspdm_get_element_from_opaque_data(libspdm_context_t *spdm_context,
             (general_opaque_data_table_header->total_elements < 1)) {
             return false;
         }
-        opaque_element_table_header =
-            (const void *)(general_opaque_data_table_header + 1);
+        opaque_element_table_header = (const void *)(general_opaque_data_table_header + 1);
 
         element_num = general_opaque_data_table_header->total_elements;
 
@@ -274,9 +259,7 @@ bool libspdm_get_element_from_opaque_data(libspdm_context_t *spdm_context,
                             sizeof(secured_message_general_opaque_data_table_header_t);
     }
 
-    for (element_index = 0; element_index < element_num;
-         element_index++) {
-
+    for (element_index = 0; element_index < element_num; element_index++) {
         /*ensure the opaque_element_table_header is valid*/
         if (total_element_len + sizeof(secured_message_opaque_element_table_header_t) >
             data_element_size) {
@@ -301,8 +284,7 @@ bool libspdm_get_element_from_opaque_data(libspdm_context_t *spdm_context,
         }
 
         if (opaque_element_table_header->id == element_id) {
-            secured_message_element_header =
-                (const void *)(opaque_element_table_header + 1);
+            secured_message_element_header = (const void *)(opaque_element_table_header + 1);
             if ((const uint8_t *)secured_message_element_header +
                 sizeof(secured_message_opaque_element_header_t) >
                 (const uint8_t *)data_in + data_in_size) {
@@ -320,8 +302,7 @@ bool libspdm_get_element_from_opaque_data(libspdm_context_t *spdm_context,
         }
 
         /*move to next element*/
-        opaque_element_table_header =
-            (const secured_message_opaque_element_table_header_t *)(
+        opaque_element_table_header = (const secured_message_opaque_element_table_header_t *)(
                 (const uint8_t *)opaque_element_table_header + current_element_len);
     }
 
@@ -464,14 +445,12 @@ libspdm_build_opaque_data_version_selection_data(const libspdm_context_t *spdm_c
     *opaque_element_version_section;
     void *end;
 
-    if (spdm_context->local_context.secured_message_version
-        .spdm_version_count == 0) {
+    if (spdm_context->local_context.secured_message_version.spdm_version_count == 0) {
         *data_out_size = 0;
         return LIBSPDM_STATUS_SUCCESS;
     }
 
-    final_data_size =
-        libspdm_get_opaque_data_version_selection_data_size(spdm_context);
+    final_data_size = libspdm_get_opaque_data_version_selection_data_size(spdm_context);
     if (*data_out_size < final_data_size) {
         *data_out_size = final_data_size;
         return LIBSPDM_STATUS_BUFFER_TOO_SMALL;
@@ -482,19 +461,15 @@ libspdm_build_opaque_data_version_selection_data(const libspdm_context_t *spdm_c
         spdm_general_opaque_data_table_header->total_elements = 1;
         libspdm_write_uint24(spdm_general_opaque_data_table_header->reserved, 0);
 
-        opaque_element_table_header =
-            (void *)(spdm_general_opaque_data_table_header + 1);
+        opaque_element_table_header = (void *)(spdm_general_opaque_data_table_header + 1);
     } else {
         general_opaque_data_table_header = data_out;
-        general_opaque_data_table_header->spec_id =
-            SECURED_MESSAGE_OPAQUE_DATA_SPEC_ID;
-        general_opaque_data_table_header->opaque_version =
-            SECURED_MESSAGE_OPAQUE_VERSION;
+        general_opaque_data_table_header->spec_id = SECURED_MESSAGE_OPAQUE_DATA_SPEC_ID;
+        general_opaque_data_table_header->opaque_version = SECURED_MESSAGE_OPAQUE_VERSION;
         general_opaque_data_table_header->total_elements = 1;
         general_opaque_data_table_header->reserved = 0;
 
-        opaque_element_table_header =
-            (void *)(general_opaque_data_table_header + 1);
+        opaque_element_table_header = (void *)(general_opaque_data_table_header + 1);
     }
     opaque_element_table_header->id = SPDM_REGISTRY_ID_DMTF;
     opaque_element_table_header->vendor_len = 0;
@@ -526,10 +501,9 @@ libspdm_build_opaque_data_version_selection_data(const libspdm_context_t *spdm_c
  * @retval RETURN_SUCCESS               The opaque data version selection is processed successfully.
  * @retval RETURN_UNSUPPORTED           The data_in is NOT opaque data version selection.
  **/
-libspdm_return_t
-libspdm_process_opaque_data_version_selection_data(libspdm_context_t *spdm_context,
-                                                   size_t data_in_size,
-                                                   void *data_in)
+libspdm_return_t libspdm_process_opaque_data_version_selection_data(libspdm_context_t *spdm_context,
+                                                                    size_t data_in_size,
+                                                                    void *data_in)
 {
     const secured_message_opaque_element_table_header_t
     *opaque_element_table_header;
@@ -544,8 +518,7 @@ libspdm_process_opaque_data_version_selection_data(libspdm_context_t *spdm_conte
     result = false;
     get_element_ptr = NULL;
 
-    if (spdm_context->local_context.secured_message_version
-        .spdm_version_count == 0) {
+    if (spdm_context->local_context.secured_message_version.spdm_version_count == 0) {
         return LIBSPDM_STATUS_SUCCESS;
     }
 
