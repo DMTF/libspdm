@@ -69,9 +69,9 @@ void libspdm_reset_msg_log (void *context)
 
 void libspdm_append_msg_log(void *context, void *message, size_t message_size)
 {
-    LIBSPDM_ASSERT((context != NULL) && (message != NULL));
-
     libspdm_context_t *spdm_context;
+
+    LIBSPDM_ASSERT((context != NULL) && (message != NULL));
 
     spdm_context = context;
 

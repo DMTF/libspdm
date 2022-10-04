@@ -40,8 +40,7 @@ void libspdm_session_info_init(libspdm_context_t *spdm_context,
         break;
     }
 
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-#else
+#if !LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     if (session_info->session_transcript.digest_context_th != NULL) {
         libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
                            session_info->session_transcript.digest_context_th);
@@ -56,14 +55,11 @@ void libspdm_session_info_init(libspdm_context_t *spdm_context,
 
     libspdm_zero_mem (&(session_info->last_key_update_request), sizeof(spdm_key_update_request_t));
     libspdm_zero_mem(session_info, offsetof(libspdm_session_info_t, secured_message_context));
-    libspdm_secured_message_init_context(
-        session_info->secured_message_context);
+    libspdm_secured_message_init_context(session_info->secured_message_context);
     session_info->session_id = session_id;
     session_info->use_psk = use_psk;
-    libspdm_secured_message_set_use_psk(session_info->secured_message_context,
-                                        use_psk);
-    libspdm_secured_message_set_session_type(
-        session_info->secured_message_context, session_type);
+    libspdm_secured_message_set_use_psk(session_info->secured_message_context, use_psk);
+    libspdm_secured_message_set_session_type(session_info->secured_message_context, session_type);
     libspdm_secured_message_set_algorithms(
         session_info->secured_message_context,
         spdm_context->connection_info.version,
@@ -107,8 +103,7 @@ void libspdm_session_info_set_psk_hint(libspdm_session_info_t *session_info,
  *
  * @return session info.
  **/
-void *libspdm_get_session_info_via_session_id(void *context,
-                                              uint32_t session_id)
+void *libspdm_get_session_info_via_session_id(void *context, uint32_t session_id)
 {
     libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
@@ -143,13 +138,11 @@ void *libspdm_get_session_info_via_session_id(void *context,
  *
  * @return secured message context.
  **/
-void *libspdm_get_secured_message_context_via_session_id(void *spdm_context,
-                                                         uint32_t session_id)
+void *libspdm_get_secured_message_context_via_session_id(void *spdm_context, uint32_t session_id)
 {
     libspdm_session_info_t *session_info;
 
-    session_info =
-        libspdm_get_session_info_via_session_id(spdm_context, session_id);
+    session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
     if (session_info == NULL) {
         return NULL;
     } else {
@@ -164,8 +157,7 @@ void *libspdm_get_secured_message_context_via_session_id(void *spdm_context,
  *
  * @return secured message context.
  **/
-void *
-libspdm_get_secured_message_context_via_session_info(void *spdm_session_info)
+void *libspdm_get_secured_message_context_via_session_info(void *spdm_session_info)
 {
     libspdm_session_info_t *session_info;
 
@@ -185,8 +177,7 @@ libspdm_get_secured_message_context_via_session_info(void *spdm_session_info)
  *
  * @return session info associated with this new session ID.
  **/
-void *libspdm_assign_session_id(void *context, uint32_t session_id,
-                                bool use_psk)
+void *libspdm_assign_session_id(void *context, uint32_t session_id, bool use_psk)
 {
     libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
@@ -195,8 +186,7 @@ void *libspdm_assign_session_id(void *context, uint32_t session_id,
     spdm_context = context;
 
     if (session_id == INVALID_SESSION_ID) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
-                       "libspdm_assign_session_id - Invalid session_id\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "libspdm_assign_session_id - Invalid session_id\n"));
         LIBSPDM_ASSERT(false);
         return NULL;
     }
@@ -241,8 +231,7 @@ uint16_t libspdm_allocate_req_session_id(libspdm_context_t *spdm_context)
 
     session_info = spdm_context->session_info;
     for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index++) {
-        if ((session_info[index].session_id & 0xFFFF0000) ==
-            (INVALID_SESSION_ID & 0xFFFF0000)) {
+        if ((session_info[index].session_id & 0xFFFF0000) == (INVALID_SESSION_ID & 0xFFFF0000)) {
             req_session_id = (uint16_t)(0xFFFF - index);
             return req_session_id;
         }
@@ -267,8 +256,7 @@ uint16_t libspdm_allocate_rsp_session_id(const libspdm_context_t *spdm_context)
 
     session_info = spdm_context->session_info;
     for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index++) {
-        if ((session_info[index].session_id & 0xFFFF) ==
-            (INVALID_SESSION_ID & 0xFFFF)) {
+        if ((session_info[index].session_id & 0xFFFF) == (INVALID_SESSION_ID & 0xFFFF)) {
             rsp_session_id = (uint16_t)(0xFFFF - index);
             return rsp_session_id;
         }
@@ -293,8 +281,7 @@ void libspdm_free_session_id(void *context, uint32_t session_id)
     spdm_context = context;
 
     if (session_id == INVALID_SESSION_ID) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
-                       "libspdm_free_session_id - Invalid session_id\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "libspdm_free_session_id - Invalid session_id\n"));
         LIBSPDM_ASSERT(false);
         return;
     }
@@ -311,5 +298,4 @@ void libspdm_free_session_id(void *context, uint32_t session_id)
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "libspdm_free_session_id - MAX session_id\n"));
     LIBSPDM_ASSERT(false);
-    return;
 }
