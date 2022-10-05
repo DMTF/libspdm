@@ -20,22 +20,16 @@ typedef enum {
 } libspdm_session_type_t;
 
 typedef enum {
-
-    /* Before send KEY_EXCHANGE/PSK_EXCHANGE
-     * or after END_SESSION*/
-
+    /* Before send KEY_EXCHANGE/PSK_EXCHANGE or after END_SESSION */
     LIBSPDM_SESSION_STATE_NOT_STARTED,
 
-    /* After send KEY_EXHCNAGE, before send FINISH*/
-
+    /* After send KEY_EXHCNAGE, before send FINISH */
     LIBSPDM_SESSION_STATE_HANDSHAKING,
 
-    /* After send FINISH, before END_SESSION*/
-
+    /* After send FINISH, before END_SESSION */
     LIBSPDM_SESSION_STATE_ESTABLISHED,
 
-    /* MAX*/
-
+    /* MAX */
     LIBSPDM_SESSION_STATE_MAX
 } libspdm_session_state_t;
 
@@ -61,8 +55,7 @@ void libspdm_secured_message_init_context(void *spdm_secured_message_context);
  * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
  * @param  use_psk                       Indicate if the SPDM session use PSK.
  */
-void libspdm_secured_message_set_use_psk(void *spdm_secured_message_context,
-                                         bool use_psk);
+void libspdm_secured_message_set_use_psk(void *spdm_secured_message_context, bool use_psk);
 
 /**
  * Set session_state to an SPDM secured message context.
@@ -165,32 +158,30 @@ typedef struct {
 #pragma pack()
 
 /**
- * Export the SessionKeys from an SPDM secured message context.
+ * Export the session_keys from an SPDM secured message context.
  *
  * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- * @param  SessionKeys                  Indicate the buffer to store the SessionKeys in libspdm_secure_session_keys_struct_t.
- * @param  SessionKeysSize              The size in bytes of the SessionKeys in libspdm_secure_session_keys_struct_t.
+ * @param  session_keys                  Indicate the buffer to store the session_keys in libspdm_secure_session_keys_struct_t.
+ * @param  session_keys_size              The size in bytes of the session_keys in libspdm_secure_session_keys_struct_t.
  *
- * @retval RETURN_SUCCESS  SessionKeys are exported.
+ * @retval RETURN_SUCCESS  session_keys are exported.
  */
-bool
-libspdm_secured_message_export_session_keys(void *spdm_secured_message_context,
-                                            void *SessionKeys,
-                                            size_t *SessionKeysSize);
+bool libspdm_secured_message_export_session_keys(void *spdm_secured_message_context,
+                                                 void *session_keys,
+                                                 size_t *session_keys_size);
 
 /**
- * Import the SessionKeys from an SPDM secured message context.
+ * Import the session_keys from an SPDM secured message context.
  *
  * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- * @param  SessionKeys                  Indicate the buffer to store the SessionKeys in libspdm_secure_session_keys_struct_t.
- * @param  SessionKeysSize              The size in bytes of the SessionKeys in libspdm_secure_session_keys_struct_t.
+ * @param  session_keys                  Indicate the buffer to store the session_keys in libspdm_secure_session_keys_struct_t.
+ * @param  session_keys_size              The size in bytes of the session_keys in libspdm_secure_session_keys_struct_t.
  *
- * @retval RETURN_SUCCESS  SessionKeys are imported.
+ * @retval RETURN_SUCCESS  session_keys are imported.
  */
-bool
-libspdm_secured_message_import_session_keys(void *spdm_secured_message_context,
-                                            const void *SessionKeys,
-                                            size_t SessionKeysSize);
+bool libspdm_secured_message_import_session_keys(void *spdm_secured_message_context,
+                                                 const void *session_keys,
+                                                 size_t session_keys_size);
 
 /**
  * Allocates and Initializes one Diffie-Hellman Ephemeral (DHE) context for subsequent use,
@@ -213,8 +204,7 @@ void *libspdm_secured_message_dhe_new(spdm_version_number_t spdm_version,
  * @param  dhe_named_group                SPDM dhe_named_group
  * @param  dhe_context                   Pointer to the DHE context to be released.
  **/
-void libspdm_secured_message_dhe_free(uint16_t dhe_named_group,
-                                      void *dhe_context);
+void libspdm_secured_message_dhe_free(uint16_t dhe_named_group, void *dhe_context);
 
 /**
  * Generates DHE public key,
@@ -276,9 +266,7 @@ void libspdm_clear_handshake_secret(void *spdm_secured_message_context);
  *
  * @return Pointer to the HMAC context that has been initialized.
  **/
-void *
-libspdm_hmac_new_with_request_finished_key(
-    void *spdm_secured_message_context);
+void *libspdm_hmac_new_with_request_finished_key(void *spdm_secured_message_context);
 
 /**
  * Release the specified HMAC context, with request_finished_key.
@@ -357,10 +345,9 @@ bool libspdm_hmac_final_with_request_finished_key(
  * @retval true   HMAC computation succeeded.
  * @retval false  HMAC computation failed.
  **/
-bool
-libspdm_hmac_all_with_request_finished_key(void *spdm_secured_message_context,
-                                           const void *data, size_t data_size,
-                                           uint8_t *hmac_value);
+bool libspdm_hmac_all_with_request_finished_key(void *spdm_secured_message_context,
+                                                const void *data, size_t data_size,
+                                                uint8_t *hmac_value);
 
 /**
  * Allocates and initializes one HMAC context for subsequent use, with response_finished_key.
@@ -369,9 +356,7 @@ libspdm_hmac_all_with_request_finished_key(void *spdm_secured_message_context,
  *
  * @return Pointer to the HMAC context that has been initialized.
  **/
-void *
-libspdm_hmac_new_with_response_finished_key(
-    void *spdm_secured_message_context);
+void *libspdm_hmac_new_with_response_finished_key(void *spdm_secured_message_context);
 
 /**
  * Release the specified HMAC context, with response_finished_key.
@@ -479,9 +464,8 @@ void libspdm_bin_concat(spdm_version_number_t spdm_version,
  *
  * @retval RETURN_SUCCESS  SPDM HandshakeKey for a session is generated.
  **/
-bool
-libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
-                                       const uint8_t *th1_hash_data);
+bool libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
+                                            const uint8_t *th1_hash_data);
 
 /**
  * This function generates SPDM DataKey for a session.
@@ -491,9 +475,8 @@ libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
  *
  * @retval RETURN_SUCCESS  SPDM DataKey for a session is generated.
  **/
-bool
-libspdm_generate_session_data_key(void *spdm_secured_message_context,
-                                  const uint8_t *th2_hash_data);
+bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
+                                       const uint8_t *th2_hash_data);
 
 typedef enum {
     LIBSPDM_KEY_UPDATE_ACTION_REQUESTER,
@@ -509,9 +492,8 @@ typedef enum {
  *
  * @retval RETURN_SUCCESS  SPDM DataKey update is created.
  **/
-bool
-libspdm_create_update_session_data_key(void *spdm_secured_message_context,
-                                       libspdm_key_update_action_t action);
+bool libspdm_create_update_session_data_key(void *spdm_secured_message_context,
+                                            libspdm_key_update_action_t action);
 
 /**
  * This function activates the update of SPDM DataKey for a session.
@@ -522,10 +504,9 @@ libspdm_create_update_session_data_key(void *spdm_secured_message_context,
  *
  * @retval RETURN_SUCCESS  SPDM DataKey update is activated.
  **/
-bool
-libspdm_activate_update_session_data_key(void *spdm_secured_message_context,
-                                         libspdm_key_update_action_t action,
-                                         bool use_new_key);
+bool libspdm_activate_update_session_data_key(void *spdm_secured_message_context,
+                                              libspdm_key_update_action_t action,
+                                              bool use_new_key);
 
 /**
  * Get sequence number in an SPDM secure message.
@@ -558,8 +539,7 @@ typedef uint32_t (*libspdm_secured_message_get_max_random_number_count_func)(voi
 typedef struct {
     uint32_t version;
     libspdm_secured_message_get_sequence_number_func get_sequence_number;
-    libspdm_secured_message_get_max_random_number_count_func
-        get_max_random_number_count;
+    libspdm_secured_message_get_max_random_number_count_func get_max_random_number_count;
 } libspdm_secured_message_callbacks_t;
 
 typedef struct {
