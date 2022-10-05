@@ -803,9 +803,8 @@ bool libspdm_activate_update_session_data_key(void *spdm_secured_message_context
                              ->application_secret_backup
                              .response_data_salt,
                              LIBSPDM_MAX_AEAD_IV_SIZE);
-            secured_message_context->application_secret
-            .response_data_sequence_number = secured_message_context->application_secret_backup
-                .response_data_sequence_number;
+            secured_message_context->application_secret.response_data_sequence_number =
+                secured_message_context->application_secret_backup.response_data_sequence_number;
         }
     }
 
