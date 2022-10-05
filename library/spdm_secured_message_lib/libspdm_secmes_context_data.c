@@ -213,18 +213,18 @@ bool libspdm_secured_message_export_master_secret(
 }
 
 /**
- * Export the SessionKeys from an SPDM secured message context.
+ * Export the session_keys from an SPDM secured message context.
  *
  * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- * @param  SessionKeys                  Indicate the buffer to store the SessionKeys in libspdm_secure_session_keys_struct_t.
- * @param  SessionKeysSize              The size in bytes of the SessionKeys in libspdm_secure_session_keys_struct_t.
+ * @param  session_keys                  Indicate the buffer to store the session_keys in libspdm_secure_session_keys_struct_t.
+ * @param  session_keys_size              The size in bytes of the session_keys in libspdm_secure_session_keys_struct_t.
  *
- * @retval RETURN_SUCCESS  SessionKeys are exported.
+ * @retval RETURN_SUCCESS  session_keys are exported.
  */
 bool
 libspdm_secured_message_export_session_keys(void *spdm_secured_message_context,
-                                            void *SessionKeys,
-                                            size_t *SessionKeysSize)
+                                            void *session_keys,
+                                            size_t *session_keys_size)
 {
     libspdm_secured_message_context_t *secured_message_context;
     size_t struct_size;
@@ -237,44 +237,44 @@ libspdm_secured_message_export_session_keys(void *spdm_secured_message_context,
                    secured_message_context->aead_iv_size + sizeof(uint64_t)) *
                   2;
 
-    if (*SessionKeysSize < struct_size) {
-        *SessionKeysSize = struct_size;
+    if (*session_keys_size < struct_size) {
+        *session_keys_size = struct_size;
         return false;
     }
 
-    session_keys_struct = SessionKeys;
+    session_keys_struct = session_keys;
     session_keys_struct->version = LIBSPDM_SECURE_SESSION_KEYS_STRUCT_VERSION;
     session_keys_struct->aead_key_size = (uint32_t)secured_message_context->aead_key_size;
     session_keys_struct->aead_iv_size =  (uint32_t)secured_message_context->aead_iv_size;
 
     ptr = (void *)(session_keys_struct + 1);
     libspdm_copy_mem(ptr,
-                     *SessionKeysSize - (ptr - (uint8_t*)SessionKeys),
+                     *session_keys_size - (ptr - (uint8_t*)session_keys),
                      secured_message_context->application_secret.request_data_encryption_key,
                      secured_message_context->aead_key_size);
     ptr += secured_message_context->aead_key_size;
     libspdm_copy_mem(ptr,
-                     *SessionKeysSize - (ptr - (uint8_t*)SessionKeys),
+                     *session_keys_size - (ptr - (uint8_t*)session_keys),
                      secured_message_context->application_secret.request_data_salt,
                      secured_message_context->aead_iv_size);
     ptr += secured_message_context->aead_iv_size;
     libspdm_copy_mem(ptr,
-                     *SessionKeysSize - (ptr - (uint8_t*)SessionKeys),
+                     *session_keys_size - (ptr - (uint8_t*)session_keys),
                      &secured_message_context->application_secret.request_data_sequence_number,
                      sizeof(uint64_t));
     ptr += sizeof(uint64_t);
     libspdm_copy_mem(ptr,
-                     *SessionKeysSize - (ptr - (uint8_t*)SessionKeys),
+                     *session_keys_size - (ptr - (uint8_t*)session_keys),
                      secured_message_context->application_secret.response_data_encryption_key,
                      secured_message_context->aead_key_size);
     ptr += secured_message_context->aead_key_size;
     libspdm_copy_mem(ptr,
-                     *SessionKeysSize - (ptr - (uint8_t*)SessionKeys),
+                     *session_keys_size - (ptr - (uint8_t*)session_keys),
                      secured_message_context->application_secret.response_data_salt,
                      secured_message_context->aead_iv_size);
     ptr += secured_message_context->aead_iv_size;
     libspdm_copy_mem(ptr,
-                     *SessionKeysSize - (ptr - (uint8_t*)SessionKeys),
+                     *session_keys_size - (ptr - (uint8_t*)session_keys),
                      &secured_message_context->application_secret.response_data_sequence_number,
                      sizeof(uint64_t));
     ptr += sizeof(uint64_t);
@@ -282,18 +282,18 @@ libspdm_secured_message_export_session_keys(void *spdm_secured_message_context,
 }
 
 /**
- * Import the SessionKeys from an SPDM secured message context.
+ * Import the session_keys from an SPDM secured message context.
  *
  * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- * @param  SessionKeys                  Indicate the buffer to store the SessionKeys in libspdm_secure_session_keys_struct_t.
- * @param  SessionKeysSize              The size in bytes of the SessionKeys in libspdm_secure_session_keys_struct_t.
+ * @param  session_keys                  Indicate the buffer to store the session_keys in libspdm_secure_session_keys_struct_t.
+ * @param  session_keys_size              The size in bytes of the session_keys in libspdm_secure_session_keys_struct_t.
  *
- * @retval RETURN_SUCCESS  SessionKeys are imported.
+ * @retval RETURN_SUCCESS  session_keys are imported.
  */
 bool
 libspdm_secured_message_import_session_keys(void *spdm_secured_message_context,
-                                            const void *SessionKeys,
-                                            size_t SessionKeysSize)
+                                            const void *session_keys,
+                                            size_t session_keys_size)
 {
     libspdm_secured_message_context_t *secured_message_context;
     size_t struct_size;
@@ -305,11 +305,11 @@ libspdm_secured_message_import_session_keys(void *spdm_secured_message_context,
                   (secured_message_context->aead_key_size +
                    secured_message_context->aead_iv_size + sizeof(uint64_t)) * 2;
 
-    if (SessionKeysSize != struct_size) {
+    if (session_keys_size != struct_size) {
         return false;
     }
 
-    session_keys_struct = SessionKeys;
+    session_keys_struct = session_keys;
     if ((session_keys_struct->version !=
          LIBSPDM_SECURE_SESSION_KEYS_STRUCT_VERSION) ||
         (session_keys_struct->aead_key_size !=
