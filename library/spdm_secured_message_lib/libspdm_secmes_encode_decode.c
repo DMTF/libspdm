@@ -188,7 +188,8 @@ libspdm_return_t libspdm_encode_secured_message(
         *secured_message_size = total_secured_message_size;
         record_header1 = (void *)secured_message;
         record_header2 = (void *)((uint8_t *)record_header1 +
-                     sizeof(spdm_secured_message_a_data_header1_t) + sequence_num_in_header_size);
+                                  sizeof(spdm_secured_message_a_data_header1_t) +
+                                  sequence_num_in_header_size);
         record_header1->session_id = session_id;
         libspdm_copy_mem(record_header1 + 1,
                          *secured_message_size
