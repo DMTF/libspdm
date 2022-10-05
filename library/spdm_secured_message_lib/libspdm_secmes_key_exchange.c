@@ -30,8 +30,7 @@ void *libspdm_secured_message_dhe_new(spdm_version_number_t spdm_version,
  * @param  dhe_named_group                SPDM dhe_named_group
  * @param  dhe_context                   Pointer to the DHE context to be released.
  **/
-void libspdm_secured_message_dhe_free(uint16_t dhe_named_group,
-                                      void *dhe_context)
+void libspdm_secured_message_dhe_free(uint16_t dhe_named_group, void *dhe_context)
 {
     libspdm_dhe_free(dhe_named_group, dhe_context);
 }
@@ -60,8 +59,7 @@ bool libspdm_secured_message_dhe_generate_key(uint16_t dhe_named_group,
                                               uint8_t *public_key,
                                               size_t *public_key_size)
 {
-    return libspdm_dhe_generate_key(dhe_named_group, dhe_context, public_key,
-                                    public_key_size);
+    return libspdm_dhe_generate_key(dhe_named_group, dhe_context, public_key, public_key_size);
 }
 
 /**

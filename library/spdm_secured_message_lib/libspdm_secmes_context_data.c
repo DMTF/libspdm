@@ -28,8 +28,7 @@ void libspdm_secured_message_init_context(void *spdm_secured_message_context)
     libspdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
-    libspdm_zero_mem(secured_message_context,
-                     sizeof(libspdm_secured_message_context_t));
+    libspdm_zero_mem(secured_message_context, sizeof(libspdm_secured_message_context_t));
 }
 
 /**
@@ -169,10 +168,9 @@ void libspdm_secured_message_set_psk_hint(void *spdm_secured_message_context,
  *
  * @retval RETURN_SUCCESS  DHE Secret is imported.
  */
-bool
-libspdm_secured_message_import_dhe_secret(void *spdm_secured_message_context,
-                                          const void *dhe_secret,
-                                          size_t dhe_secret_size)
+bool libspdm_secured_message_import_dhe_secret(void *spdm_secured_message_context,
+                                               const void *dhe_secret,
+                                               size_t dhe_secret_size)
 {
     libspdm_secured_message_context_t *secured_message_context;
 
@@ -246,10 +244,8 @@ libspdm_secured_message_export_session_keys(void *spdm_secured_message_context,
 
     session_keys_struct = SessionKeys;
     session_keys_struct->version = LIBSPDM_SECURE_SESSION_KEYS_STRUCT_VERSION;
-    session_keys_struct->aead_key_size =
-        (uint32_t)secured_message_context->aead_key_size;
-    session_keys_struct->aead_iv_size =
-        (uint32_t)secured_message_context->aead_iv_size;
+    session_keys_struct->aead_key_size = (uint32_t)secured_message_context->aead_key_size;
+    session_keys_struct->aead_iv_size =  (uint32_t)secured_message_context->aead_iv_size;
 
     ptr = (void *)(session_keys_struct + 1);
     libspdm_copy_mem(ptr,
@@ -307,8 +303,7 @@ libspdm_secured_message_import_session_keys(void *spdm_secured_message_context,
     secured_message_context = spdm_secured_message_context;
     struct_size = sizeof(libspdm_secure_session_keys_struct_t) +
                   (secured_message_context->aead_key_size +
-                   secured_message_context->aead_iv_size + sizeof(uint64_t)) *
-                  2;
+                   secured_message_context->aead_iv_size + sizeof(uint64_t)) * 2;
 
     if (SessionKeysSize != struct_size) {
         return false;
@@ -325,8 +320,7 @@ libspdm_secured_message_import_session_keys(void *spdm_secured_message_context,
     }
 
     ptr = (const void *)(session_keys_struct + 1);
-    libspdm_copy_mem(secured_message_context->application_secret
-                     .request_data_encryption_key,
+    libspdm_copy_mem(secured_message_context->application_secret.request_data_encryption_key,
                      sizeof(secured_message_context->application_secret
                             .request_data_encryption_key),
                      ptr, secured_message_context->aead_key_size);
@@ -336,8 +330,7 @@ libspdm_secured_message_import_session_keys(void *spdm_secured_message_context,
                             .request_data_salt),
                      ptr, secured_message_context->aead_iv_size);
     ptr += secured_message_context->aead_iv_size;
-    libspdm_copy_mem(&secured_message_context->application_secret
-                     .request_data_sequence_number,
+    libspdm_copy_mem(&secured_message_context->application_secret.request_data_sequence_number,
                      sizeof(secured_message_context->application_secret
                             .request_data_sequence_number),
                      ptr, sizeof(uint64_t));
@@ -349,12 +342,10 @@ libspdm_secured_message_import_session_keys(void *spdm_secured_message_context,
                      ptr, secured_message_context->aead_key_size);
     ptr += secured_message_context->aead_key_size;
     libspdm_copy_mem(secured_message_context->application_secret.response_data_salt,
-                     sizeof(secured_message_context->application_secret
-                            .response_data_salt),
+                     sizeof(secured_message_context->application_secret.response_data_salt),
                      ptr, secured_message_context->aead_iv_size);
     ptr += secured_message_context->aead_iv_size;
-    libspdm_copy_mem(&secured_message_context->application_secret
-                     .response_data_sequence_number,
+    libspdm_copy_mem(&secured_message_context->application_secret.response_data_sequence_number,
                      sizeof(secured_message_context->application_secret
                             .response_data_sequence_number),
                      ptr, sizeof(uint64_t));
