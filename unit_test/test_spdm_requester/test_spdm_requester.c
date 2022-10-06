@@ -37,10 +37,13 @@ int libspdm_requester_psk_exchange_test_main(void);
 int libspdm_requester_psk_finish_test_main(void);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
 
+#if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP)
 int libspdm_requester_heartbeat_test_main(void);
 int libspdm_requester_key_update_test_main(void);
-int libspdm_requester_encap_key_update_test_main(void);
 int libspdm_requester_end_session_test_main(void);
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP) */
+
+int libspdm_requester_encap_key_update_test_main(void);
 int libspdm_requester_encap_request_test_main(void);
 
 int libspdm_requester_set_certificate_test_main(void);
@@ -120,10 +123,10 @@ int main(void)
     }
     #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
 
+    #if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP)
     if (libspdm_requester_heartbeat_test_main() != 0) {
         return_value = 1;
     }
-
     if (libspdm_requester_key_update_test_main() != 0) {
         return_value = 1;
     }
@@ -133,6 +136,7 @@ int main(void)
     if (libspdm_requester_end_session_test_main() != 0) {
         return_value = 1;
     }
+    #endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP) */
 
     if (libspdm_requester_encap_request_test_main() != 0) {
         return_value = 1;

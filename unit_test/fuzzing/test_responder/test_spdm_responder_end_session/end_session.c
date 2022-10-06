@@ -9,6 +9,7 @@
 #include "spdm_device_secret_lib_internal.h"
 #include "internal/libspdm_responder_lib.h"
 
+#if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP)
 
 size_t libspdm_get_max_buffer_size(void)
 {
@@ -97,8 +98,7 @@ void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
     libspdm_setup_test_context(&m_libspdm_responder_end_session_test_context);
 
     m_libspdm_responder_end_session_test_context.test_buffer = test_buffer;
-    m_libspdm_responder_end_session_test_context.test_buffer_size =
-        test_buffer_size;
+    m_libspdm_responder_end_session_test_context.test_buffer_size = test_buffer_size;
 
     libspdm_unit_test_group_setup(&State);
 
@@ -107,3 +107,13 @@ void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
 
     libspdm_unit_test_group_teardown(&State);
 }
+#else
+size_t libspdm_get_max_buffer_size(void)
+{
+    return 0;
+}
+
+void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size) {
+
+}
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP) */

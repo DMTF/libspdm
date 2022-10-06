@@ -8,13 +8,12 @@
 #include "internal/libspdm_responder_lib.h"
 #include "internal/libspdm_secured_message_lib.h"
 
+#if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 #pragma pack(1)
-
 typedef struct {
     spdm_message_header_t header;
     uint8_t verify_data[LIBSPDM_MAX_HASH_SIZE];
 } libspdm_psk_finish_request_mine_t;
-
 #pragma pack()
 
 libspdm_psk_finish_request_mine_t m_libspdm_psk_finish_request1 = {
@@ -1707,3 +1706,5 @@ int libspdm_responder_psk_finish_test_main(void)
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }
+
+#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
