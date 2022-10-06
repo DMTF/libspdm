@@ -144,6 +144,7 @@ libspdm_return_t libspdm_get_response_algorithms(void *spdm_context,
                                                  size_t *response_size,
                                                  void *response);
 
+#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 /**
  * Process the SPDM GET_DIGESTS request and return the response.
  *
@@ -161,16 +162,10 @@ libspdm_return_t libspdm_get_response_algorithms(void *spdm_context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-
-#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
-
 libspdm_return_t libspdm_get_response_digests(void *spdm_context,
                                               size_t request_size, const void *request,
                                               size_t *response_size,
                                               void *response);
-
-#endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
-
 /**
  * Process the SPDM GET_CERTIFICATE request and return the response.
  *
@@ -189,16 +184,14 @@ libspdm_return_t libspdm_get_response_digests(void *spdm_context,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 
-#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
-
 libspdm_return_t libspdm_get_response_certificate(void *spdm_context,
                                                   size_t request_size,
                                                   const void *request,
                                                   size_t *response_size,
                                                   void *response);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP */
 
-#endif /* ENABLE_SPDM_GET_CERTIFICATE*/
-
+#if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 /**
  * Process the SPDM CHALLENGE request and return the response.
  *
@@ -216,17 +209,14 @@ libspdm_return_t libspdm_get_response_certificate(void *spdm_context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-
-#if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
-
 libspdm_return_t libspdm_get_response_challenge_auth(void *spdm_context,
                                                      size_t request_size,
                                                      const void *request,
                                                      size_t *response_size,
                                                      void *response);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP */
 
-#endif /* #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/
-
+#if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 /**
  * Process the SPDM GET_MEASUREMENT request and return the response.
  *
@@ -244,17 +234,14 @@ libspdm_return_t libspdm_get_response_challenge_auth(void *spdm_context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-
-#if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
-
 libspdm_return_t libspdm_get_response_measurements(void *spdm_context,
                                                    size_t request_size,
                                                    const void *request,
                                                    size_t *response_size,
                                                    void *response);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
 
-#endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP*/
-
+#if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 /**
  * Process the SPDM KEY_EXCHANGE request and return the response.
  *
@@ -299,7 +286,9 @@ libspdm_return_t libspdm_get_response_finish(void *spdm_context,
                                              size_t request_size, const void *request,
                                              size_t *response_size,
                                              void *response);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP */
 
+#if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 /**
  * Process the SPDM PSK_EXCHANGE request and return the response.
  *
@@ -345,7 +334,9 @@ libspdm_return_t libspdm_get_response_psk_finish(void *spdm_context,
                                                  const void *request,
                                                  size_t *response_size,
                                                  void *response);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
 
+#if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP)
 /**
  * Process the SPDM END_SESSION request and return the response.
  *
@@ -370,29 +361,6 @@ libspdm_return_t libspdm_get_response_end_session(void *spdm_context,
                                                   void *response);
 
 /**
- * Process the SPDM HEARTBEAT request and return the response.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  request_size                  size in bytes of the request data.
- * @param  request                      A pointer to the request data.
- * @param  response_size                 size in bytes of the response data.
- *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
- * @param  response                     A pointer to the response data.
- *
- * @retval RETURN_SUCCESS               The request is processed and the response is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
- **/
-libspdm_return_t libspdm_get_response_heartbeat(void *spdm_context,
-                                                size_t request_size,
-                                                const void *request,
-                                                size_t *response_size,
-                                                void *response);
-
-/**
  * Process the SPDM KEY_UPDATE request and return the response.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
@@ -414,6 +382,30 @@ libspdm_return_t libspdm_get_response_key_update(void *spdm_context,
                                                  const void *request,
                                                  size_t *response_size,
                                                  void *response);
+
+/**
+ * Process the SPDM HEARTBEAT request and return the response.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  request_size                  size in bytes of the request data.
+ * @param  request                      A pointer to the request data.
+ * @param  response_size                 size in bytes of the response data.
+ *                                     On input, it means the size in bytes of response data buffer.
+ *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
+ *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ * @param  response                     A pointer to the response data.
+ *
+ * @retval RETURN_SUCCESS               The request is processed and the response is returned.
+ * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ **/
+libspdm_return_t libspdm_get_response_heartbeat(void *spdm_context,
+                                                size_t request_size,
+                                                const void *request,
+                                                size_t *response_size,
+                                                void *response);
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP) */
 
 /**
  * Process the SPDM ENCAPSULATED_REQUEST request and return the response.
@@ -470,10 +462,9 @@ libspdm_return_t libspdm_get_response_encapsulated_response_ack(
  * @retval RETURN_SUCCESS               The encapsulated request is returned.
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
-libspdm_return_t
-libspdm_get_encap_request_get_digest(libspdm_context_t *spdm_context,
-                                     size_t *encap_request_size,
-                                     void *encap_request);
+libspdm_return_t libspdm_get_encap_request_get_digest(libspdm_context_t *spdm_context,
+                                                      size_t *encap_request_size,
+                                                      void *encap_request);
 
 /**
  * Process the SPDM encapsulated DIGESTS response.
@@ -508,10 +499,9 @@ libspdm_return_t libspdm_process_encap_response_digest(
  * @retval RETURN_SUCCESS               The encapsulated request is returned.
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
-libspdm_return_t
-libspdm_get_encap_request_get_certificate(libspdm_context_t *spdm_context,
-                                          size_t *encap_request_size,
-                                          void *encap_request);
+libspdm_return_t libspdm_get_encap_request_get_certificate(libspdm_context_t *spdm_context,
+                                                           size_t *encap_request_size,
+                                                           void *encap_request);
 
 /**
  * Process the SPDM encapsulated CERTIFICATE response.
@@ -603,8 +593,7 @@ libspdm_return_t libspdm_process_encap_response_key_update(
  *
  * @return GET_SPDM_RESPONSE function according to the request code.
  **/
-libspdm_get_spdm_response_func
-libspdm_get_response_func_via_request_code(uint8_t request_code);
+libspdm_get_spdm_response_func libspdm_get_response_func_via_request_code(uint8_t request_code);
 
 /**
  * This function initializes the mut_auth encapsulated state.
@@ -612,8 +601,7 @@ libspdm_get_response_func_via_request_code(uint8_t request_code);
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  mut_auth_requested             Indicate of the mut_auth_requested through KEY_EXCHANGE response.
  **/
-void libspdm_init_mut_auth_encap_state(libspdm_context_t *spdm_context,
-                                       uint8_t mut_auth_requested);
+void libspdm_init_mut_auth_encap_state(libspdm_context_t *spdm_context, uint8_t mut_auth_requested);
 
 /**
  * This function initializes the basic_mut_auth encapsulated state.

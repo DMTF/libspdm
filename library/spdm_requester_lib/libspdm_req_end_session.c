@@ -6,6 +6,8 @@
 
 #include "internal/libspdm_requester_lib.h"
 
+#if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP)
+
 #pragma pack(1)
 typedef struct {
     spdm_message_header_t header;
@@ -42,8 +44,7 @@ static libspdm_return_t libspdm_try_send_receive_end_session(libspdm_context_t *
         LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
-    session_info =
-        libspdm_get_session_info_via_session_id(spdm_context, session_id);
+    session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
     if (session_info == NULL) {
         LIBSPDM_ASSERT(false);
         return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
@@ -75,15 +76,13 @@ static libspdm_return_t libspdm_try_send_receive_end_session(libspdm_context_t *
     spdm_request->header.param2 = 0;
 
     spdm_request_size = sizeof(spdm_end_session_request_t);
-    status = libspdm_send_spdm_request(spdm_context, &session_id,
-                                       spdm_request_size, spdm_request);
+    status = libspdm_send_spdm_request(spdm_context, &session_id, spdm_request_size, spdm_request);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_release_sender_buffer (spdm_context);
         return status;
     }
 
-    libspdm_reset_message_buffer_via_request_code(spdm_context, session_info,
-                                                  SPDM_END_SESSION);
+    libspdm_reset_message_buffer_via_request_code(spdm_context, session_info, SPDM_END_SESSION);
 
     libspdm_release_sender_buffer (spdm_context);
     spdm_request = (void *)spdm_context->last_spdm_request;
@@ -120,8 +119,7 @@ static libspdm_return_t libspdm_try_send_receive_end_session(libspdm_context_t *
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             goto receive_done;
         }
-    } else if (spdm_response->header.request_response_code !=
-               SPDM_END_SESSION_ACK) {
+    } else if (spdm_response->header.request_response_code != SPDM_END_SESSION_ACK) {
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
@@ -163,3 +161,5 @@ libspdm_return_t libspdm_send_receive_end_session(libspdm_context_t *spdm_contex
 
     return status;
 }
+
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP) */

@@ -54,63 +54,52 @@ typedef struct {
 } libspdm_peer_used_cert_chain_t;
 
 typedef struct {
-
-    /* Local device info*/
-
+    /* Local device info */
     libspdm_device_version_t version;
     libspdm_device_capability_t capability;
     libspdm_device_algorithm_t algorithm;
     libspdm_device_version_t secured_message_version;
 
-    /* My Certificate*/
-
+    /* My Certificate */
     const void *local_cert_chain_provision[SPDM_MAX_SLOT_COUNT];
     size_t local_cert_chain_provision_size[SPDM_MAX_SLOT_COUNT];
     /* My provisioned certificate (for slot_id - 0xFF, default 0)*/
     uint8_t provisioned_slot_id;
 
-    /* Peer Root Certificate*/
-
+    /* Peer Root Certificate */
     const void *peer_root_cert_provision[LIBSPDM_MAX_ROOT_CERT_SUPPORT];
     size_t peer_root_cert_provision_size[LIBSPDM_MAX_ROOT_CERT_SUPPORT];
 
     /* Peer CertificateChain
      * Whether it contains the root certificate or not,
      * it should be equal to the one returned from peer by get_certificate*/
-
     const void *peer_cert_chain_provision;
     size_t peer_cert_chain_provision_size;
+
     /* Peer Cert verify*/
     libspdm_verify_spdm_cert_chain_func verify_peer_spdm_cert_chain;
 
     /* PSK provision locally*/
-
     size_t psk_hint_size;
     const void *psk_hint;
 
     /* opaque_data provision locally*/
-
     size_t opaque_challenge_auth_rsp_size;
     uint8_t *opaque_challenge_auth_rsp;
     size_t opaque_measurement_rsp_size;
     uint8_t *opaque_measurement_rsp;
 
     /* Responder policy*/
-
     bool basic_mut_auth_requested;
     uint8_t mut_auth_requested;
     uint8_t heartbeat_period;
-
 } libspdm_local_context_t;
 
 typedef struct {
-
-    /* Connection State*/
-
+    /* Connection State */
     libspdm_connection_state_t connection_state;
 
-    /* Peer device info (negotiated)*/
-
+    /* Peer device info (negotiated) */
     spdm_version_number_t version;
     libspdm_device_capability_t capability;
     libspdm_device_algorithm_t algorithm;
@@ -124,8 +113,7 @@ typedef struct {
     libspdm_peer_used_cert_chain_t peer_used_cert_chain[SPDM_MAX_SLOT_COUNT];
     uint8_t peer_used_cert_chain_slot_id;
 
-    /* Local Used CertificateChain (for responder, or requester in mut auth)*/
-
+    /* Local Used CertificateChain (for responder, or requester in mut auth) */
     const uint8_t *local_used_cert_chain_buffer;
     size_t local_used_cert_chain_buffer_size;
 } libspdm_connection_info_t;
@@ -153,7 +141,6 @@ typedef struct {
     size_t buffer_size;
     uint8_t buffer[LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE];
 } libspdm_small_managed_buffer_t;
-
 
 /* signature = Sign(SK, hash(M1))
  * Verify(PK, hash(M2), signature)*/
@@ -189,7 +176,6 @@ typedef struct {
 #endif
 } libspdm_transcript_t;
 
-
 /* TH for KEY_EXCHANGE response signature: Concatenate (A, Ct, K)
  * Ct = certificate chain
  * K  = Concatenate (KEY_EXCHANGE request, KEY_EXCHANGE response\signature+verify_data)*/
@@ -219,7 +205,6 @@ typedef struct {
  * K  = Concatenate (KEY_EXCHANGE request, KEY_EXCHANGE response)*/
 /* CM = mutual certificate chain *
  * F  = Concatenate (FINISH request, FINISH response)*/
-
 
 /* TH for PSK_EXCHANGE response HMAC: Concatenate (A, K)
  * K  = Concatenate (PSK_EXCHANGE request, PSK_EXCHANGE response\verify_data)*/
@@ -269,8 +254,7 @@ typedef struct {
 typedef struct {
     /* Valid OpCode: GET_DIEGST/GET_CERTIFICATE/CHALLENGE/KEY_UPDATE
      * The last one is 0x00, as terminator.*/
-    uint8_t request_op_code_sequence[LIBSPDM_MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT +
-                                     1];
+    uint8_t request_op_code_sequence[LIBSPDM_MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT + 1];
     uint8_t request_op_code_count;
     uint8_t current_request_op_code;
     uint8_t request_id;
@@ -314,8 +298,7 @@ typedef struct {
 typedef struct {
     uint32_t version;
 
-    /* IO information*/
-
+    /* IO information */
     libspdm_device_send_message_func send_message;
     libspdm_device_receive_message_func receive_message;
 
@@ -330,15 +313,13 @@ typedef struct {
     libspdm_device_acquire_receiver_buffer_func acquire_receiver_buffer;
     libspdm_device_release_receiver_buffer_func release_receiver_buffer;
 
-    /* Transport Layer infomration*/
-
+    /* Transport Layer information */
     libspdm_transport_encode_message_func transport_encode_message;
     libspdm_transport_decode_message_func transport_decode_message;
     libspdm_transport_get_header_size_func transport_get_header_size;
 
     /* Cached plain text command
-     * If the command is cipher text, decrypt then cache it.*/
-
+     * If the command is cipher text, decrypt then cache it. */
     uint8_t last_spdm_request[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     size_t last_spdm_request_size;
 
@@ -352,33 +333,26 @@ typedef struct {
     uint8_t *receiver_buffer;
     size_t receiver_buffer_size;
 
-    /* Cache session_id in this spdm_message, only valid for secured message.*/
-
+    /* Cache session_id in this spdm_message, only valid for secured message. */
     uint32_t last_spdm_request_session_id;
     bool last_spdm_request_session_id_valid;
 
-    /* Cache the error in libspdm_process_request. It is handled in libspdm_build_response.*/
-
+    /* Cache the error in libspdm_process_request. It is handled in libspdm_build_response. */
     libspdm_error_struct_t last_spdm_error;
 
-
-    /* Register GetResponse function (responder only)*/
-
+    /* Register GetResponse function (responder only) */
     size_t get_response_func;
 
-    /* Register GetEncapResponse function (requester only)*/
-
+    /* Register GetEncapResponse function (requester only) */
     size_t get_encap_response_func;
     libspdm_encap_context_t encap_context;
 
     /* Register spdm_session_state_callback function (responder only)
-     * Register can know the state after StartSession / EndSession.*/
-
+     * Register can know the state after StartSession / EndSession. */
     size_t spdm_session_state_callback[LIBSPDM_MAX_SESSION_STATE_CALLBACK_NUM];
 
     /* Register spdm_connection_state_callback function (responder only)
-     * Register can know the connection state such as negotiated.*/
-
+     * Register can know the connection state such as negotiated. */
     size_t spdm_connection_state_callback
     [LIBSPDM_MAX_CONNECTION_STATE_CALLBACK_NUM];
 
@@ -389,33 +363,26 @@ typedef struct {
 
     libspdm_session_info_t session_info[LIBSPDM_MAX_SESSION_COUNT];
 
-    /* Cache lastest session ID for HANDSHAKE_IN_THE_CLEAR*/
-
+    /* Cache lastest session ID for HANDSHAKE_IN_THE_CLEAR */
     uint32_t latest_session_id;
 
-    /* Register for Responder state, be initial to Normal (responder only)*/
-
+    /* Register for Responder state, be initial to Normal (responder only) */
     libspdm_response_state_t response_state;
 
-    /* Cached data for SPDM_ERROR_CODE_RESPONSE_NOT_READY/SPDM_RESPOND_IF_READY*/
-
+    /* Cached data for SPDM_ERROR_CODE_RESPONSE_NOT_READY/SPDM_RESPOND_IF_READY */
     spdm_error_data_response_not_ready_t error_data;
     uint8_t cache_spdm_request[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     size_t cache_spdm_request_size;
     uint8_t current_token;
 
-    /* Register for the retry times when receive "BUSY" Error response (requester only)*/
-
+    /* Register for the retry times when receive "BUSY" Error response (requester only) */
     uint8_t retry_times;
     bool crypto_request;
 
-
-    /* App context data for use by application*/
-
+    /* App context data for use by application */
     void *app_context_data_ptr;
 
     /* See LIBSPDM_DATA_HANDLE_ERROR_RETURN_POLICY_*. */
-
     uint8_t handle_error_return_policy;
 
 #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP || LIBSPDM_ENABLE_CHUNK_CAP
@@ -426,7 +393,6 @@ typedef struct {
 #if LIBSPDM_ENABLE_MSG_LOG
     libspdm_msg_log_t msg_log;
 #endif /* LIBSPDM_ENABLE_MSG_LOG */
-
 } libspdm_context_t;
 
 /**
@@ -500,8 +466,7 @@ void *libspdm_get_managed_buffer(void *managed_buffer);
  * @param  managed_buffer                The managed buffer.
  * @param  max_buffer_size                The maximum size in bytes of the managed buffer.
  **/
-void libspdm_init_managed_buffer(void *managed_buffer,
-                                 size_t max_buffer_size);
+void libspdm_init_managed_buffer(void *managed_buffer, size_t max_buffer_size);
 
 /**
  * Reset message buffer in SPDM context according to request code.
@@ -561,8 +526,7 @@ uint16_t libspdm_allocate_rsp_session_id(const libspdm_context_t *spdm_context);
  * @retval true  the version is supported.
  * @retval false the version is not supported.
  **/
-bool libspdm_is_version_supported(const libspdm_context_t *spdm_context,
-                                  uint8_t version);
+bool libspdm_is_version_supported(const libspdm_context_t *spdm_context, uint8_t version);
 
 /**
  * This function returns connection version negotiated by GET_VERSION/VERSION.
@@ -584,11 +548,10 @@ uint8_t libspdm_get_connection_version(const libspdm_context_t *spdm_context);
  * @retval true  the capablities flag is supported.
  * @retval false the capablities flag is not supported.
  **/
-bool
-libspdm_is_capabilities_flag_supported(const libspdm_context_t *spdm_context,
-                                       bool is_requester,
-                                       uint32_t requester_capabilities_flag,
-                                       uint32_t responder_capabilities_flag);
+bool libspdm_is_capabilities_flag_supported(const libspdm_context_t *spdm_context,
+                                            bool is_requester,
+                                            uint32_t requester_capabilities_flag,
+                                            uint32_t responder_capabilities_flag);
 
 /**
  * This function generates the certificate chain hash.
@@ -740,10 +703,9 @@ bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
  * @retval true  key exchange signature is generated.
  * @retval false key exchange signature is not generated.
  **/
-bool
-libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context,
-                                            libspdm_session_info_t *session_info,
-                                            uint8_t *signature);
+bool libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context,
+                                                 libspdm_session_info_t *session_info,
+                                                 uint8_t *signature);
 
 /**
  * This function generates the key exchange HMAC based upon TH.
@@ -755,10 +717,9 @@ libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context,
  * @retval true  key exchange HMAC is generated.
  * @retval false key exchange HMAC is not generated.
  **/
-bool
-libspdm_generate_key_exchange_rsp_hmac(libspdm_context_t *spdm_context,
-                                       libspdm_session_info_t *session_info,
-                                       uint8_t *hmac);
+bool libspdm_generate_key_exchange_rsp_hmac(libspdm_context_t *spdm_context,
+                                            libspdm_session_info_t *session_info,
+                                            uint8_t *hmac);
 
 /**
  * This function verifies the key exchange signature based upon TH.
@@ -890,10 +851,9 @@ bool libspdm_verify_finish_rsp_hmac(libspdm_context_t *spdm_context,
  * @retval true  PSK exchange HMAC is generated.
  * @retval false PSK exchange HMAC is not generated.
  **/
-bool
-libspdm_generate_psk_exchange_rsp_hmac(libspdm_context_t *spdm_context,
-                                       libspdm_session_info_t *session_info,
-                                       uint8_t *hmac);
+bool libspdm_generate_psk_exchange_rsp_hmac(libspdm_context_t *spdm_context,
+                                            libspdm_session_info_t *session_info,
+                                            uint8_t *hmac);
 
 /**
  * This function verifies the PSK exchange HMAC based upon TH.
@@ -921,10 +881,9 @@ bool libspdm_verify_psk_exchange_rsp_hmac(libspdm_context_t *spdm_context,
  * @retval true  PSK finish HMAC is generated.
  * @retval false PSK finish HMAC is not generated.
  **/
-bool
-libspdm_generate_psk_exchange_req_hmac(libspdm_context_t *spdm_context,
-                                       libspdm_session_info_t *session_info,
-                                       void *hmac);
+bool libspdm_generate_psk_exchange_req_hmac(libspdm_context_t *spdm_context,
+                                            libspdm_session_info_t *session_info,
+                                            void *hmac);
 
 /**
  * This function verifies the PSK finish HMAC based upon TH.
@@ -948,8 +907,7 @@ bool libspdm_verify_psk_finish_req_hmac(libspdm_context_t *spdm_context,
  *
  * @return the size in bytes of opaque data supproted version.
  **/
-size_t libspdm_get_opaque_data_supported_version_data_size(
-    libspdm_context_t *spdm_context);
+size_t libspdm_get_opaque_data_supported_version_data_size(libspdm_context_t *spdm_context);
 
 /**
  * Build opaque data supported version.
@@ -993,8 +951,7 @@ libspdm_process_opaque_data_version_selection_data(libspdm_context_t *spdm_conte
  *
  * @return the size in bytes of opaque data version selection.
  **/
-size_t libspdm_get_opaque_data_version_selection_data_size(
-    const libspdm_context_t *spdm_context);
+size_t libspdm_get_opaque_data_version_selection_data_size(const libspdm_context_t *spdm_context);
 
 /**
  * Build opaque data version selection.
@@ -1087,8 +1044,7 @@ libspdm_return_t libspdm_acquire_sender_buffer (
  *
  * @retval RETURN_SUCCESS               The sender buffer is Released.
  **/
-void libspdm_release_sender_buffer (
-    libspdm_context_t *spdm_context);
+void libspdm_release_sender_buffer (libspdm_context_t *spdm_context);
 
 /**
  * Get the sender buffer.
@@ -1122,8 +1078,7 @@ libspdm_return_t libspdm_acquire_receiver_buffer (
  *
  * @retval RETURN_SUCCESS               The receiver buffer is Released.
  **/
-void libspdm_release_receiver_buffer (
-    libspdm_context_t *spdm_context);
+void libspdm_release_receiver_buffer (libspdm_context_t *spdm_context);
 
 /**
  * Get the receiver buffer.
@@ -1145,8 +1100,7 @@ void libspdm_get_receiver_buffer (
  *
  * @retval slot_mask                 get slot mask
  **/
-uint8_t libspdm_get_cert_slot_mask (
-    libspdm_context_t *spdm_context);
+uint8_t libspdm_get_cert_slot_mask (libspdm_context_t *spdm_context);
 
 /**
  * Get the certificate slot count
@@ -1155,8 +1109,7 @@ uint8_t libspdm_get_cert_slot_mask (
  *
  * @retval slot_count                get slot count
  **/
-uint8_t libspdm_get_cert_slot_count(
-    libspdm_context_t *spdm_context);
+uint8_t libspdm_get_cert_slot_count(libspdm_context_t *spdm_context);
 
 #if LIBSPDM_ENABLE_MSG_LOG
 void libspdm_append_msg_log(void *context, void *message, size_t message_size);
