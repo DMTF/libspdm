@@ -305,4 +305,4 @@ size_t libspdm_get_max_buffer_size(void)
 void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size){
 
 }
-#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
+#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */

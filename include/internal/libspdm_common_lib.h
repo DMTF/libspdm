@@ -348,7 +348,7 @@ typedef struct {
     libspdm_encap_context_t encap_context;
 
     /* Register spdm_session_state_callback function (responder only)
-     * Register can know the state after StartSession / EndSession. */
+    * Register can know the state after StartSession / EndSession. */
     size_t spdm_session_state_callback[LIBSPDM_MAX_SESSION_STATE_CALLBACK_NUM];
 
     /* Register spdm_connection_state_callback function (responder only)

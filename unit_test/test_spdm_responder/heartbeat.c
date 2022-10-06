@@ -8,6 +8,8 @@
 #include "internal/libspdm_responder_lib.h"
 #include "internal/libspdm_secured_message_lib.h"
 
+#if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP)
+
 spdm_heartbeat_request_t m_libspdm_heartbeat_request1 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_HEARTBEAT, 0, 0 }
 };
@@ -646,3 +648,5 @@ int libspdm_responder_heartbeat_test_main(void)
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }
+
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP) */

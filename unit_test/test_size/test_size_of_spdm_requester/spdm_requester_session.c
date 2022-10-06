@@ -6,6 +6,7 @@
 
 #include "spdm_requester.h"
 
+#if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP)
 libspdm_return_t do_session_via_spdm(void *spdm_context)
 {
     libspdm_return_t status;
@@ -37,3 +38,4 @@ libspdm_return_t do_session_via_spdm(void *spdm_context)
 
     return status;
 }
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP) */

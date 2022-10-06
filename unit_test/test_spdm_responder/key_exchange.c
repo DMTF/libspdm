@@ -10,7 +10,6 @@
 #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
 #pragma pack(1)
-
 typedef struct {
     spdm_message_header_t header;
     uint16_t req_session_id;
@@ -21,7 +20,6 @@ typedef struct {
     uint16_t opaque_length;
     uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
 } libspdm_key_exchange_request_mine_t;
-
 #pragma pack()
 
 libspdm_key_exchange_request_mine_t m_libspdm_key_exchange_request1 = {

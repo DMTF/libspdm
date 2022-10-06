@@ -25,8 +25,10 @@ void spdm_dispatch(void)
         return;
     }
 
+    #if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP)
     status = do_session_via_spdm(spdm_context);
-    return;
+    #endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP) */
+
 }
 
 /**
