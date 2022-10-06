@@ -221,10 +221,9 @@ bool libspdm_secured_message_export_master_secret(
  *
  * @retval RETURN_SUCCESS  session_keys are exported.
  */
-bool
-libspdm_secured_message_export_session_keys(void *spdm_secured_message_context,
-                                            void *session_keys,
-                                            size_t *session_keys_size)
+bool libspdm_secured_message_export_session_keys(void *spdm_secured_message_context,
+                                                 void *session_keys,
+                                                 size_t *session_keys_size)
 {
     libspdm_secured_message_context_t *secured_message_context;
     size_t struct_size;
@@ -234,8 +233,7 @@ libspdm_secured_message_export_session_keys(void *spdm_secured_message_context,
     secured_message_context = spdm_secured_message_context;
     struct_size = sizeof(libspdm_secure_session_keys_struct_t) +
                   (secured_message_context->aead_key_size +
-                   secured_message_context->aead_iv_size + sizeof(uint64_t)) *
-                  2;
+                   secured_message_context->aead_iv_size + sizeof(uint64_t)) * 2;
 
     if (*session_keys_size < struct_size) {
         *session_keys_size = struct_size;
