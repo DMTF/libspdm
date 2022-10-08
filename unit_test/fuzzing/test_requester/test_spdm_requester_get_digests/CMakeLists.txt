@@ -8,6 +8,7 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/fuzzing/test_requester/test_spdm_re
                     ${LIBSPDM_DIR}/os_stub/spdm_device_secret_lib_sample
                     ${LIBSPDM_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common
                     ${LIBSPDM_DIR}/os_stub/include
+                    ${LIBSPDM_DIR}/os_stub
 )
 
 if(TOOLCHAIN STREQUAL "KLEE")
