@@ -4,6 +4,7 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/os_stub/spdm_device_secret_lib_sample
                     ${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/include/hal
                     ${LIBSPDM_DIR}/include/hal/${ARCH}
+                    ${LIBSPDM_DIR}/os_stub
 )
 
 SET(src_spdm_device_secret_lib_sample

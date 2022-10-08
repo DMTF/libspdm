@@ -36,6 +36,7 @@ SET(test_crypt_LIBRARY
     malloclib
     spdm_device_secret_lib_sample
     spdm_crypt_lib
+    spdm_crypt_ext_lib
 )
 
 if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))

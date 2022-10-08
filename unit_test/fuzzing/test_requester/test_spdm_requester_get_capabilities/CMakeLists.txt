@@ -28,6 +28,7 @@ SET(test_spdm_requester_get_capabilities_LIBRARY
     cryptlib_${CRYPTO}
     malloclib
     spdm_crypt_lib
+    spdm_crypt_ext_lib
     spdm_secured_message_lib
     spdm_transport_test_lib
     spdm_device_secret_lib_null

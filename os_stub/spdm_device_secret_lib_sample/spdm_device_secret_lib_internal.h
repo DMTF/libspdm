@@ -13,6 +13,7 @@
 #define __SPDM_DEVICE_SECRET_LIB_INTERNAL_H__
 
 #include "library/spdm_crypt_lib.h"
+#include "spdm_crypt_ext_lib/spdm_crypt_ext_lib.h"
 #include "library/spdm_device_secret_lib.h"
 #include "hal/library/debuglib.h"
 

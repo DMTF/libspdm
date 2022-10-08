@@ -305,22 +305,7 @@ typedef bool (*libspdm_asym_verify_func)(void *context, size_t hash_nid,
                                          const uint8_t *signature,
                                          size_t sig_size);
 
-/**
- * Retrieve the Private key from the password-protected PEM key data.
- *
- * @param  pem_data  Pointer to the PEM-encoded key data to be retrieved.
- * @param  pem_size  Size of the PEM key data in bytes.
- * @param  password  NULL-terminated passphrase used for encrypted PEM key data.
- * @param  context   Pointer to new-generated asymmetric context which contain the retrieved private
- *                   key component. Use libspdm_asym_free() function to free the resource.
- *
- * @retval  true   Private key was retrieved successfully.
- * @retval  false  Invalid PEM key data or incorrect password.
- **/
-typedef bool (*libspdm_asym_get_private_key_from_pem_func)(const uint8_t *pem_data,
-                                                           size_t pem_size,
-                                                           const char *password,
-                                                           void **context);
+
 
 /**
  * Carries out the signature generation.
@@ -842,25 +827,7 @@ bool libspdm_asym_verify_hash(
     size_t hash_size, const uint8_t *signature,
     size_t sig_size);
 
-/**
- * Retrieve the Private key from the password-protected PEM key data.
- *
- * @param  base_asym_algo  SPDM base_asym_algo
- * @param  pem_data        Pointer to the PEM-encoded key data to be retrieved.
- * @param  pem_size        Size of the PEM key data in bytes.
- * @param  password        NULL-terminated passphrase used for encrypted PEM key data.
- * @param  context         Pointer to new-generated asymmetric context which contain the retrieved
- *                         private key component.
- *                         Use libspdm_asym_free() function to free the resource.
- *
- * @retval  true   Private key was retrieved successfully.
- * @retval  false  Invalid PEM key data or incorrect password.
- **/
-bool libspdm_asym_get_private_key_from_pem(uint32_t base_asym_algo,
-                                           const uint8_t *pem_data,
-                                           size_t pem_size,
-                                           const char *password,
-                                           void **context);
+
 
 /**
  * Carries out the signature generation.
@@ -992,25 +959,7 @@ bool libspdm_req_asym_verify_hash(
     const uint8_t *message_hash, size_t hash_size,
     const uint8_t *signature, size_t sig_size);
 
-/**
- * Retrieve the Private key from the password-protected PEM key data.
- *
- * @param  req_base_asym_alg  SPDM req_base_asym_alg
- * @param  pem_data           Pointer to the PEM-encoded key data to be retrieved.
- * @param  pem_size           Size of the PEM key data in bytes.
- * @param  password           NULL-terminated passphrase used for encrypted PEM key data.
- * @param  context            Pointer to new-generated asymmetric context which contain the
- *                            retrieved private key component. Use libspdm_asym_free() function to
- *                            free the resource.
- *
- * @retval  true   Private key was retrieved successfully.
- * @retval  false  Invalid PEM key data or incorrect password.
- **/
-bool libspdm_req_asym_get_private_key_from_pem(uint16_t req_base_asym_alg,
-                                               const uint8_t *pem_data,
-                                               size_t pem_size,
-                                               const char *password,
-                                               void **context);
+
 
 /**
  * Carries out the signature generation.
