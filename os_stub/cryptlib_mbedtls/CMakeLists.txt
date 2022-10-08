@@ -5,6 +5,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
 endif()
 
 INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
+                    ${LIBSPDM_DIR}/include/hal
                     ${LIBSPDM_DIR}/include/hal/${ARCH}
                     ${LIBSPDM_DIR}/os_stub/include
                     ${LIBSPDM_DIR}/os_stub
