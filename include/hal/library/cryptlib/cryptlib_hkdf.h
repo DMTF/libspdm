@@ -13,26 +13,6 @@
 
 #if LIBSPDM_SHA256_SUPPORT
 /**
- * Derive key data using HMAC-SHA256 based KDF.
- *
- * @param[in]   key        Pointer to the user-supplied key.
- * @param[in]   key_size   Key size in bytes.
- * @param[in]   salt       Pointer to the salt value.
- * @param[in]   salt_size  Salt size in bytes.
- * @param[in]   info       Pointer to the application specific info.
- * @param[in]   info_size  Info size in bytes.
- * @param[out]  out        Pointer to buffer to receive hkdf value.
- * @param[in]   out_size   Size of hkdf bytes to generate.
- *
- * @retval true   Hkdf generated successfully.
- * @retval false  Hkdf generation failed.
- **/
-extern bool libspdm_hkdf_sha256_extract_and_expand(const uint8_t *key, size_t key_size,
-                                                   const uint8_t *salt, size_t salt_size,
-                                                   const uint8_t *info, size_t info_size,
-                                                   uint8_t *out, size_t out_size);
-
-/**
  * Derive SHA-256 HMAC-based Extract key Derivation Function (HKDF).
  *
  * @param[in]   key           Pointer to the user-supplied key.
@@ -68,26 +48,6 @@ extern bool libspdm_hkdf_sha256_expand(const uint8_t *prk, size_t prk_size,
 #endif /* LIBSPDM_SHA256_SUPPORT */
 
 #if LIBSPDM_SHA384_SUPPORT
-/**
- * Derive key data using HMAC-SHA384 based KDF.
- *
- * @param[in]   key        Pointer to the user-supplied key.
- * @param[in]   key_size   Key size in bytes.
- * @param[in]   salt       Pointer to the salt value.
- * @param[in]   salt_size  Salt size in bytes.
- * @param[in]   info       Pointer to the application specific info.
- * @param[in]   info_size  Info size in bytes.
- * @param[out]  out        Pointer to buffer to receive hkdf value.
- * @param[in]   out_size   Size of hkdf bytes to generate.
- *
- * @retval true   Hkdf generated successfully.
- * @retval false  Hkdf generation failed.
- **/
-extern bool libspdm_hkdf_sha384_extract_and_expand(const uint8_t *key, size_t key_size,
-                                                   const uint8_t *salt, size_t salt_size,
-                                                   const uint8_t *info, size_t info_size,
-                                                   uint8_t *out, size_t out_size);
-
 /**
  * Derive SHA384 HMAC-based Extract key Derivation Function (HKDF).
  *
@@ -125,26 +85,6 @@ extern bool libspdm_hkdf_sha384_expand(const uint8_t *prk, size_t prk_size,
 
 #if LIBSPDM_SHA512_SUPPORT
 /**
- * Derive key data using HMAC-SHA512 based KDF.
- *
- * @param[in]   key        Pointer to the user-supplied key.
- * @param[in]   key_size   Key size in bytes.
- * @param[in]   salt       Pointer to the salt value.
- * @param[in]   salt_size  Salt size in bytes.
- * @param[in]   info       Pointer to the application specific info.
- * @param[in]   info_size  Info size in bytes.
- * @param[out]  out        Pointer to buffer to receive hkdf value.
- * @param[in]   out_size   Size of hkdf bytes to generate.
- *
- * @retval true   Hkdf generated successfully.
- * @retval false  Hkdf generation failed.
- **/
-extern bool libspdm_hkdf_sha512_extract_and_expand(const uint8_t *key, size_t key_size,
-                                                   const uint8_t *salt, size_t salt_size,
-                                                   const uint8_t *info, size_t info_size,
-                                                   uint8_t *out, size_t out_size);
-
-/**
  * Derive SHA512 HMAC-based Extract key Derivation Function (HKDF).
  *
  * @param[in]   key           Pointer to the user-supplied key.
@@ -180,26 +120,6 @@ extern bool libspdm_hkdf_sha512_expand(const uint8_t *prk, size_t prk_size,
 #endif /* LIBSPDM_SHA512_SUPPORT */
 
 #if LIBSPDM_SHA3_256_SUPPORT
-/**
- * Derive SHA3_256 HMAC-based Extract-and-Expand key Derivation Function (HKDF).
- *
- * @param[in]   key        Pointer to the user-supplied key.
- * @param[in]   key_size   Key size in bytes.
- * @param[in]   salt       Pointer to the salt value.
- * @param[in]   salt_size  Salt size in bytes.
- * @param[in]   info       Pointer to the application specific info.
- * @param[in]   info_size  Info size in bytes.
- * @param[out]  out        Pointer to buffer to receive hkdf value.
- * @param[in]   out_size   Size of hkdf bytes to generate.
- *
- * @retval true   Hkdf generated successfully.
- * @retval false  Hkdf generation failed.
- **/
-extern bool libspdm_hkdf_sha3_256_extract_and_expand(const uint8_t *key, size_t key_size,
-                                                     const uint8_t *salt, size_t salt_size,
-                                                     const uint8_t *info, size_t info_size,
-                                                     uint8_t *out, size_t out_size);
-
 /**
  * Derive SHA3_256 HMAC-based Extract key Derivation Function (HKDF).
  *
@@ -237,26 +157,6 @@ extern bool libspdm_hkdf_sha3_256_expand(const uint8_t *prk, size_t prk_size,
 
 #if LIBSPDM_SHA3_384_SUPPORT
 /**
- * Derive SHA3_384 HMAC-based Extract-and-Expand key Derivation Function (HKDF).
- *
- * @param[in]   key        Pointer to the user-supplied key.
- * @param[in]   key_size   Key size in bytes.
- * @param[in]   salt       Pointer to the salt value.
- * @param[in]   salt_size  Salt size in bytes.
- * @param[in]   info       Pointer to the application specific info.
- * @param[in]   info_size  Info size in bytes.
- * @param[out]  out        Pointer to buffer to receive hkdf value.
- * @param[in]   out_size   Size of hkdf bytes to generate.
- *
- * @retval true   Hkdf generated successfully.
- * @retval false  Hkdf generation failed.
- **/
-extern bool libspdm_hkdf_sha3_384_extract_and_expand(const uint8_t *key, size_t key_size,
-                                                     const uint8_t *salt, size_t salt_size,
-                                                     const uint8_t *info, size_t info_size,
-                                                     uint8_t *out, size_t out_size);
-
-/**
  * Derive SHA3_384 HMAC-based Extract key Derivation Function (HKDF).
  *
  * @param[in]   key           Pointer to the user-supplied key.
@@ -293,26 +193,6 @@ extern bool libspdm_hkdf_sha3_384_expand(const uint8_t *prk, size_t prk_size,
 
 #if LIBSPDM_SHA3_512_SUPPORT
 /**
- * Derive SHA3_512 HMAC-based Extract-and-Expand key Derivation Function (HKDF).
- *
- * @param[in]   key        Pointer to the user-supplied key.
- * @param[in]   key_size   Key size in bytes.
- * @param[in]   salt       Pointer to the salt value.
- * @param[in]   salt_size  Salt size in bytes.
- * @param[in]   info       Pointer to the application specific info.
- * @param[in]   info_size  Info size in bytes.
- * @param[out]  out        Pointer to buffer to receive hkdf value.
- * @param[in]   out_size   Size of hkdf bytes to generate.
- *
- * @retval true   Hkdf generated successfully.
- * @retval false  Hkdf generation failed.
- **/
-extern bool libspdm_hkdf_sha3_512_extract_and_expand(const uint8_t *key, size_t key_size,
-                                                     const uint8_t *salt, size_t salt_size,
-                                                     const uint8_t *info, size_t info_size,
-                                                     uint8_t *out, size_t out_size);
-
-/**
  * Derive SHA3_512 HMAC-based Extract key Derivation Function (HKDF).
  *
  * @param[in]   key           Pointer to the user-supplied key.
@@ -348,26 +228,6 @@ extern bool libspdm_hkdf_sha3_512_expand(const uint8_t *prk, size_t prk_size,
 #endif /* LIBSPDM_SHA3_512_SUPPORT */
 
 #if LIBSPDM_SM3_256_SUPPORT
-/**
- * Derive SM3_256 HMAC-based Extract-and-Expand key Derivation Function (HKDF).
- *
- * @param[in]   key        Pointer to the user-supplied key.
- * @param[in]   key_size   Key size in bytes.
- * @param[in]   salt       Pointer to the salt value.
- * @param[in]   salt_size  Salt size in bytes.
- * @param[in]   info       Pointer to the application specific info.
- * @param[in]   info_size  Info size in bytes.
- * @param[out]  out        Pointer to buffer to receive hkdf value.
- * @param[in]   out_size   Size of hkdf bytes to generate.
- *
- * @retval true   Hkdf generated successfully.
- * @retval false  Hkdf generation failed.
- **/
-extern bool libspdm_hkdf_sm3_256_extract_and_expand(const uint8_t *key, size_t key_size,
-                                                    const uint8_t *salt, size_t salt_size,
-                                                    const uint8_t *info, size_t info_size,
-                                                    uint8_t *out, size_t out_size);
-
 /**
  * Derive SM3_256 HMAC-based Extract key Derivation Function (HKDF).
  *
