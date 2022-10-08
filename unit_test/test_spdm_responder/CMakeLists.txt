@@ -8,6 +8,7 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/test_spdm_responder
                     ${LIBSPDM_DIR}/unit_test/cmockalib/cmocka/include
                     ${LIBSPDM_DIR}/unit_test/cmockalib/cmocka/include/cmockery
                     ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common
+                    ${LIBSPDM_DIR}/os_stub
 )
 
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
@@ -58,6 +59,7 @@ SET(test_spdm_responder_LIBRARY
     cryptlib_${CRYPTO}
     malloclib
     spdm_crypt_lib
+    spdm_crypt_ext_lib
     spdm_secured_message_lib
     spdm_device_secret_lib_sample
     spdm_transport_test_lib

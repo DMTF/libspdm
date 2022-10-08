@@ -32,9 +32,9 @@ SET(test_spdm_requester_get_certificate_LIBRARY
     cryptlib_${CRYPTO}
     malloclib
     spdm_crypt_lib
+    spdm_crypt_ext_lib
     spdm_secured_message_lib
     spdm_transport_test_lib
-    
     spdm_device_secret_lib_sample
     cmockalib
 )
@@ -54,7 +54,7 @@ if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
                    $<TARGET_OBJECTS:spdm_crypt_lib>
                    $<TARGET_OBJECTS:spdm_secured_message_lib>
                    $<TARGET_OBJECTS:spdm_transport_test_lib>
-                   
+
                    $<TARGET_OBJECTS:spdm_device_secret_lib_sample>
                    $<TARGET_OBJECTS:cmockalib>
     )

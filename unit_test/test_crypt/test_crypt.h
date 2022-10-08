@@ -22,6 +22,7 @@
 #include "hal/library/memlib.h"
 #include "library/malloclib.h"
 #include "hal/library/cryptlib.h"
+#include "spdm_crypt_ext_lib/cryptlib_ext.h"
 
 bool libspdm_read_input_file(const char *file_name, void **file_data, size_t *file_size);
 
