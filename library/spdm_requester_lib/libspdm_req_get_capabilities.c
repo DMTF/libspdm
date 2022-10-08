@@ -19,7 +19,7 @@ static bool validate_responder_capability(uint32_t capabilities_flag, uint8_t ve
 {
     /*uint8_t cache_cap = (uint8_t)(capabilities_flag)&0x01;*/
     uint8_t cert_cap = (uint8_t)(capabilities_flag >> 1) & 0x01;
-    /*uint8_t chal_cap = (uint8_t)(capabilities_flag>>2)&0x01;*/
+    uint8_t chal_cap = (uint8_t)(capabilities_flag>>2) & 0x01;
     uint8_t meas_cap = (uint8_t)(capabilities_flag >> 3) & 0x03;
     /*uint8_t meas_fresh_cap = (uint8_t)(capabilities_flag>>5)&0x01;*/
     uint8_t encrypt_cap = (uint8_t)(capabilities_flag >> 6) & 0x01;
@@ -88,6 +88,13 @@ static bool validate_responder_capability(uint32_t capabilities_flag, uint8_t ve
         } else {
             /*If CSR_CAP is set, SET_CERT_CAP shall be set.*/
             if (csr_cap > set_cert_cap) {
+                return false;
+            }
+        }
+
+        /*if (CHAL_CAP == 1 || MEAS_CAP == 2 || KEY_EX_CAP == 1), then (CERT_CAP == 1 || PUB_KEY_ID_CAP == 1)*/
+        if ((chal_cap != 0) || (key_ex_cap != 0) || (meas_cap == 2)) {
+            if ((cert_cap == 0) && (pub_key_id_cap == 0)) {
                 return false;
             }
         }
