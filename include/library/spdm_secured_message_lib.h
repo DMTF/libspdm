@@ -146,7 +146,7 @@ bool libspdm_secured_message_export_master_secret(
  * after libspdm_secured_message_export_master_secret().
  *
  * @param  spdm_secured_message_context  A pointer to the SPDM secured message context.
-  */
+ */
 void libspdm_secured_message_erase_export_master_secret(void *spdm_secured_message_context);
 
 #define LIBSPDM_SECURE_SESSION_KEYS_STRUCT_VERSION 1
