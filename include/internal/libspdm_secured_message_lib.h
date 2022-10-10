@@ -23,7 +23,6 @@ typedef struct {
 typedef struct {
     uint8_t request_handshake_secret[LIBSPDM_MAX_HASH_SIZE];
     uint8_t response_handshake_secret[LIBSPDM_MAX_HASH_SIZE];
-    uint8_t export_master_secret[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     uint8_t response_finished_key[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_handshake_encryption_key[LIBSPDM_MAX_AEAD_KEY_SIZE];
@@ -68,6 +67,7 @@ typedef struct {
     bool responder_backup_valid;
     size_t psk_hint_size;
     uint8_t psk_hint[LIBSPDM_PSK_MAX_HINT_LENGTH];
+    uint8_t export_master_secret[LIBSPDM_MAX_HASH_SIZE];
 
     /* Cache the error in libspdm_decode_secured_message.
      * It is handled in libspdm_build_response. */

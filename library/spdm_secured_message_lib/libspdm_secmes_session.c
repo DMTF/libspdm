@@ -519,7 +519,7 @@ bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
             secured_message_context->psk_hint,
             secured_message_context->psk_hint_size, bin_str8,
             bin_str8_size,
-            secured_message_context->handshake_secret.export_master_secret,
+            secured_message_context->export_master_secret,
             hash_size);
 
         if (!status) {
@@ -532,7 +532,7 @@ bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
             secured_message_context->base_hash_algo,
             secured_message_context->master_secret.master_secret,
             hash_size, bin_str8, bin_str8_size,
-            secured_message_context->handshake_secret.export_master_secret,
+            secured_message_context->export_master_secret,
             hash_size);
 
         if (!status) {
@@ -542,7 +542,7 @@ bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "export_master_secret (0x%x) - ", hash_size));
     libspdm_internal_dump_data(
-        secured_message_context->handshake_secret.export_master_secret, hash_size);
+        secured_message_context->export_master_secret, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
     status = libspdm_generate_aead_key_and_iv(
