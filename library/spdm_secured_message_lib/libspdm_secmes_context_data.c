@@ -206,10 +206,20 @@ bool libspdm_secured_message_export_master_secret(
         return false;
     }
     libspdm_copy_mem(export_master_secret, *export_master_secret_size,
-                     secured_message_context->handshake_secret.export_master_secret,
+                     secured_message_context->export_master_secret,
                      secured_message_context->hash_size);
     *export_master_secret_size = secured_message_context->hash_size;
     return true;
+}
+
+void libspdm_secured_message_erase_export_master_secret(void *spdm_secured_message_context)
+{
+    libspdm_secured_message_context_t *secured_message_context;
+
+    LIBSPDM_ASSERT(spdm_secured_message_context != NULL);
+
+    libspdm_zero_mem(secured_message_context->export_master_secret,
+                     secured_message_context->hash_size);
 }
 
 /**
