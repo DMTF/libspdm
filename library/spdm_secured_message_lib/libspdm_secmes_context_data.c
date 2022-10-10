@@ -218,6 +218,8 @@ void libspdm_secured_message_erase_export_master_secret(void *spdm_secured_messa
 
     LIBSPDM_ASSERT(spdm_secured_message_context != NULL);
 
+    secured_message_context = spdm_secured_message_context;
+
     libspdm_zero_mem(secured_message_context->export_master_secret,
                      secured_message_context->hash_size);
 }
