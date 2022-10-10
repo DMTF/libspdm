@@ -117,7 +117,6 @@ libspdm_return_t libspdm_get_response_measurements(void *context,
                                                    size_t *response_size,
                                                    void *response)
 {
-    uint8_t index;
     const spdm_get_measurements_request_t *spdm_request;
     spdm_measurements_response_t *spdm_response;
     size_t spdm_response_size;
@@ -125,7 +124,6 @@ libspdm_return_t libspdm_get_response_measurements(void *context,
     size_t signature_size;
     size_t measurements_sig_size;
     size_t measurements_no_sig_size;
-
     libspdm_context_t *spdm_context;
     uint8_t slot_id_param;
     uint8_t measurements_index;
@@ -320,25 +318,24 @@ libspdm_return_t libspdm_get_response_measurements(void *context,
         break;
     case SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_ALL_MEASUREMENTS:
         LIBSPDM_DEBUG_CODE(
-        size_t debug_measurements_record_size;
-        size_t debug_measurements_block_size;
-        spdm_measurement_block_dmtf_t *debug_measurement_block;
+            uint8_t index;
+            size_t debug_measurements_record_size;
+            size_t debug_measurements_block_size;
+            spdm_measurement_block_dmtf_t *debug_measurement_block;
 
-        debug_measurements_record_size = 0;
-        debug_measurement_block = (void *)measurements;
-        for (index = 0; index < measurements_count; index++) {
+            debug_measurements_record_size = 0;
+            debug_measurement_block = (void *)measurements;
+            for (index = 0; index < measurements_count; index++) {
             debug_measurements_block_size =
                 sizeof(spdm_measurement_block_dmtf_t) +
-                debug_measurement_block
-                ->measurement_block_dmtf_header
+                debug_measurement_block->measurement_block_dmtf_header
                 .dmtf_spec_measurement_value_size;
             debug_measurements_record_size += debug_measurements_block_size;
             debug_measurement_block =
-                (void *)((size_t)debug_measurement_block +
-                         debug_measurements_block_size);
+                (void *)((size_t)debug_measurement_block + debug_measurements_block_size);
         }
-        LIBSPDM_ASSERT(debug_measurements_record_size == measurements_size);
-        );
+            LIBSPDM_ASSERT(debug_measurements_record_size == measurements_size);
+            );
 
         spdm_response_size += measurements_size;
         LIBSPDM_ASSERT(*response_size >= spdm_response_size);
