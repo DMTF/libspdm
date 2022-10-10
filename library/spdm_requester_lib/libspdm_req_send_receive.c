@@ -381,6 +381,10 @@ libspdm_return_t libspdm_handle_large_request(
             status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
             break;
         }
+        if (spdm_response->header.spdm_version != libspdm_get_connection_version(spdm_context)) {
+                status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                break;
+        }
 
         if (spdm_response->header.request_response_code == SPDM_ERROR
             && spdm_response->header.param1 == SPDM_ERROR_CODE_LARGE_RESPONSE) {
@@ -403,14 +407,7 @@ libspdm_return_t libspdm_handle_large_request(
                 status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
                 break;
             }
-        }
-        else {
-
-            if (spdm_response->header.spdm_version
-                != libspdm_get_connection_version(spdm_context)) {
-                status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-                break;
-            }
+        } else {
             if (spdm_response->header.request_response_code != SPDM_CHUNK_SEND_ACK) {
                 status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
                 break;
