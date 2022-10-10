@@ -382,8 +382,8 @@ libspdm_return_t libspdm_handle_large_request(
             break;
         }
         if (spdm_response->header.spdm_version != libspdm_get_connection_version(spdm_context)) {
-                status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-                break;
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+            break;
         }
 
         if (spdm_response->header.request_response_code == SPDM_ERROR
