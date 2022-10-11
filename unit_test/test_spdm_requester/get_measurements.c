@@ -4031,7 +4031,7 @@ void libspdm_test_requester_get_measurements_case16(void **state)
     size_t data_size;
     void *hash;
     size_t hash_size;
-    uint8_t SlotIDs[] = { 0, 1, 2, 3, 0xF };
+    uint8_t SlotIDs[] = { 0, 1, 2, 3 };
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -4093,18 +4093,12 @@ void libspdm_test_requester_get_measurements_case16(void **state)
         if (SlotIDs[i] == LIBSPDM_ALTERNATIVE_DEFAULT_SLOT_ID) {
             assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-            assert_int_equal(
-                spdm_context->transcript.message_m.buffer_size,
-                0);
+            assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
-        } else if (SlotIDs[i] == 0xF) {
-            assert_int_equal(status, LIBSPDM_STATUS_INVALID_PARAMETER);
         } else {
             assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-            assert_int_equal(
-                spdm_context->transcript.message_m.buffer_size,
-                0);
+            assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
         }
     }
