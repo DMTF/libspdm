@@ -80,13 +80,15 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
     size_t message_size;
     size_t transport_header_size;
 
-    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL, SPDM_NEGOTIATE_ALGORITHMS);
-
+    /* -=[Verify State Phase]=- */
     if (spdm_context->connection_info.connection_state !=
         LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES) {
         return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
 
+    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL, SPDM_NEGOTIATE_ALGORITHMS);
+
+    /* -=[Construct Request Phase]=- */
     transport_header_size = spdm_context->transport_get_header_size(spdm_context);
     status = libspdm_acquire_sender_buffer (spdm_context, &message_size, (void **)&message);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
@@ -139,6 +141,7 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
         spdm_context->local_context.algorithm.key_schedule;
     spdm_request_size = spdm_request->length;
 
+    /* -=[Send Request Phase]=- */
     status = libspdm_send_spdm_request(spdm_context, NULL, spdm_request_size, spdm_request);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_release_sender_buffer (spdm_context);
@@ -147,8 +150,7 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
     libspdm_release_sender_buffer (spdm_context);
     spdm_request = (void *)spdm_context->last_spdm_request;
 
-    /* receive */
-
+    /* -=[Receive Response Phase]=- */
     status = libspdm_acquire_receiver_buffer (spdm_context, &message_size, (void **)&message);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return status;
@@ -164,6 +166,7 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
         goto receive_done;
     }
 
+    /* -=[Validate Response Phase]=- */
     if (spdm_response_size < sizeof(spdm_message_header_t)) {
         status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
@@ -173,8 +176,7 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
         goto receive_done;
     }
     if (spdm_response->header.request_response_code == SPDM_ERROR) {
-        status = libspdm_handle_simple_error_response(
-            spdm_context, spdm_response->header.param1);
+        status = libspdm_handle_simple_error_response(spdm_context, spdm_response->header.param1);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             goto receive_done;
         }
@@ -186,7 +188,6 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
         status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
     }
-
     if (spdm_response->ext_asym_sel_count > 0) {
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
@@ -199,8 +200,7 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
         sizeof(spdm_algorithms_response_t) +
         sizeof(uint32_t) * spdm_response->ext_asym_sel_count +
         sizeof(uint32_t) * spdm_response->ext_hash_sel_count +
-        sizeof(spdm_negotiate_algorithms_common_struct_table_t) *
-        spdm_response->header.param1) {
+        sizeof(spdm_negotiate_algorithms_common_struct_table_t) * spdm_response->header.param1) {
         status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
     }
@@ -211,13 +211,11 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
                  sizeof(uint32_t) * spdm_response->ext_hash_sel_count);
     if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
         for (index = 0; index < spdm_response->header.param1; index++) {
-            if ((size_t)spdm_response + spdm_response_size <
-                (size_t)struct_table) {
+            if ((size_t)spdm_response + spdm_response_size < (size_t)struct_table) {
                 status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
                 goto receive_done;
             }
-            if ((size_t)spdm_response + spdm_response_size -
-                (size_t)struct_table <
+            if ((size_t)spdm_response + spdm_response_size - (size_t)struct_table <
                 sizeof(spdm_negotiate_algorithms_common_struct_table_t)) {
                 status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
                 goto receive_done;
@@ -233,8 +231,7 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
                 goto receive_done;
             }
             if ((size_t)spdm_response + spdm_response_size -
-                (size_t)struct_table -
-                sizeof(spdm_negotiate_algorithms_common_struct_table_t) <
+                (size_t)struct_table - sizeof(spdm_negotiate_algorithms_common_struct_table_t) <
                 sizeof(uint32_t) * ext_alg_count) {
                 status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
                 goto receive_done;
@@ -251,8 +248,7 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
         goto receive_done;
     }
 
-    /* Cache data*/
-
+    /* -=[Process Response Phase]=- */
     status = libspdm_append_message_a(spdm_context, spdm_request, spdm_request_size);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         status = LIBSPDM_STATUS_BUFFER_FULL;
@@ -273,10 +269,8 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
     }
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         spdm_response->measurement_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        spdm_response->base_asym_sel;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        spdm_response->base_hash_sel;
+    spdm_context->connection_info.algorithm.base_asym_algo = spdm_response->base_asym_sel;
+    spdm_context->connection_info.algorithm.base_hash_algo = spdm_response->base_hash_sel;
 
     if (libspdm_is_capabilities_flag_supported(
             spdm_context, true, 0,
@@ -287,8 +281,7 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
             goto receive_done;
         }
         algo_size = libspdm_get_measurement_hash_size(
-            spdm_context->connection_info.algorithm
-            .measurement_hash_algo);
+            spdm_context->connection_info.algorithm.measurement_hash_algo);
         if (algo_size == 0) {
             status = LIBSPDM_STATUS_NEGOTIATION_FAIL;
             goto receive_done;
@@ -312,8 +305,7 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
             spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP)) {
-        algo_size = libspdm_get_hash_size(
-            spdm_context->connection_info.algorithm.base_hash_algo);
+        algo_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
         if (algo_size == 0) {
             status = LIBSPDM_STATUS_NEGOTIATION_FAIL;
             goto receive_done;
@@ -355,30 +347,24 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
         struct_table =
             (void *)((size_t)spdm_response +
                      sizeof(spdm_algorithms_response_t) +
-                     sizeof(uint32_t) *
-                     spdm_response->ext_asym_sel_count +
-                     sizeof(uint32_t) *
-                     spdm_response->ext_hash_sel_count);
+                     sizeof(uint32_t) * spdm_response->ext_asym_sel_count +
+                     sizeof(uint32_t) * spdm_response->ext_hash_sel_count);
         for (index = 0; index < spdm_response->header.param1; index++) {
             switch (struct_table->alg_type) {
             case SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_DHE:
-                spdm_context->connection_info.algorithm
-                .dhe_named_group =
+                spdm_context->connection_info.algorithm.dhe_named_group =
                     struct_table->alg_supported;
                 break;
             case SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_AEAD:
-                spdm_context->connection_info.algorithm
-                .aead_cipher_suite =
+                spdm_context->connection_info.algorithm.aead_cipher_suite =
                     struct_table->alg_supported;
                 break;
             case SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_REQ_BASE_ASYM_ALG:
-                spdm_context->connection_info.algorithm
-                .req_base_asym_alg =
+                spdm_context->connection_info.algorithm.req_base_asym_alg =
                     struct_table->alg_supported;
                 break;
             case SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE:
-                spdm_context->connection_info.algorithm
-                .key_schedule =
+                spdm_context->connection_info.algorithm.key_schedule =
                     struct_table->alg_supported;
                 break;
             }
@@ -394,8 +380,7 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP)) {
             algo_size = libspdm_get_dhe_pub_key_size(
-                spdm_context->connection_info.algorithm
-                .dhe_named_group);
+                spdm_context->connection_info.algorithm.dhe_named_group);
             if (algo_size == 0) {
                 status = LIBSPDM_STATUS_NEGOTIATION_FAIL;
                 goto receive_done;
@@ -415,8 +400,7 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP)) {
             algo_size = libspdm_get_aead_key_size(
-                spdm_context->connection_info.algorithm
-                .aead_cipher_suite);
+                spdm_context->connection_info.algorithm.aead_cipher_suite);
             if (algo_size == 0) {
                 status = LIBSPDM_STATUS_NEGOTIATION_FAIL;
                 goto receive_done;
@@ -432,8 +416,7 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP)) {
             algo_size = libspdm_get_req_asym_signature_size(
-                spdm_context->connection_info.algorithm
-                .req_base_asym_alg);
+                spdm_context->connection_info.algorithm.req_base_asym_alg);
             if (algo_size == 0) {
                 status = LIBSPDM_STATUS_NEGOTIATION_FAIL;
                 goto receive_done;
@@ -452,8 +435,7 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
                 spdm_context, true,
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP)) {
-            if (spdm_context->connection_info.algorithm
-                .key_schedule !=
+            if (spdm_context->connection_info.algorithm.key_schedule !=
                 SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH) {
                 status = LIBSPDM_STATUS_NEGOTIATION_FAIL;
                 goto receive_done;
@@ -479,44 +461,21 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
         spdm_context->connection_info.algorithm.key_schedule = 0;
     }
 
+    /* -=[Update State Phase]=- */
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    status = LIBSPDM_STATUS_SUCCESS;
 
+    /* -=[Log Message Phase]=- */
     #if LIBSPDM_ENABLE_MSG_LOG
     libspdm_append_msg_log(spdm_context, spdm_response, spdm_response_size);
     #endif /* LIBSPDM_ENABLE_MSG_LOG */
+
+    status = LIBSPDM_STATUS_SUCCESS;
 
 receive_done:
     libspdm_release_receiver_buffer (spdm_context);
     return status;
 }
 
-/**
- * This function sends NEGOTIATE_ALGORITHMS and receives ALGORITHMS. It may retry
- * NEGOTIATE_ALGORITHMS multiple times if the Responder replies with a Busy error.
- *
- * @param  spdm_context A pointer to the SPDM context.
- *
- * @retval LIBSPDM_STATUS_SUCCESS
- *         NEGOTIATE_ALGORITHMS was sent and ALGORITHMS was received.
- * @retval LIBSPDM_STATUS_INVALID_STATE_LOCAL
- *         Cannot send NEGOTIATE_ALGORITHMS due to Requester's state.
- * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE
- *         The size of the ALGORITHMS response is invalid.
- * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD
- *         The ALGORITHMS response contains one or more invalid fields.
- * @retval LIBSPDM_STATUS_ERROR_PEER
- *         The Responder returned an unexpected error.
- * @retval LIBSPDM_STATUS_BUSY_PEER
- *         The Responder continually returned Busy error messages.
- * @retval LIBSPDM_STATUS_RESYNCH_PEER
- *         The Responder returned a RequestResynch error message.
- * @retval LIBSPDM_STATUS_BUFFER_FULL
- *         The buffer used to store transcripts is exhausted.
- * @retval LIBSPDM_STATUS_NEGOTIATION_FAIL
- *         The Requester and Responder could not agree on mutual algorithms.
- *         Note: This return value may be removed in the future.
- **/
 libspdm_return_t libspdm_negotiate_algorithms(libspdm_context_t *spdm_context)
 {
     size_t retry;
