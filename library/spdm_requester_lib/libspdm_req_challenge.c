@@ -223,8 +223,7 @@ static libspdm_return_t libspdm_try_challenge(void *context, uint8_t slot_id,
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "cert_chain_hash (0x%x) - ", hash_size));
     libspdm_internal_dump_data(cert_chain_hash, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
-    result = libspdm_verify_certificate_chain_hash(spdm_context,
-                                                   cert_chain_hash, hash_size);
+    result = libspdm_verify_certificate_chain_hash(spdm_context, cert_chain_hash, hash_size);
     if (!result) {
         status = LIBSPDM_STATUS_VERIF_FAIL;
         goto receive_done;
@@ -285,8 +284,7 @@ static libspdm_return_t libspdm_try_challenge(void *context, uint8_t slot_id,
     signature = ptr;
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "signature (0x%x):\n", signature_size));
     libspdm_internal_dump_hex(signature, signature_size);
-    result = libspdm_verify_challenge_auth_signature(
-        spdm_context, true, signature, signature_size);
+    result = libspdm_verify_challenge_auth_signature(spdm_context, true, signature, signature_size);
     if (!result) {
         libspdm_reset_message_c(spdm_context);
         status = LIBSPDM_STATUS_VERIF_FAIL;
@@ -301,6 +299,7 @@ static libspdm_return_t libspdm_try_challenge(void *context, uint8_t slot_id,
         *slot_mask = spdm_response->header.param2;
     }
 
+    /* -=[Update State Phase]=- */
     if ((auth_attribute & SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_BASIC_MUT_AUTH_REQ) != 0) {
         /* we must release it here, because libspdm_encapsulated_request() will acquire again. */
         libspdm_release_receiver_buffer (spdm_context);
