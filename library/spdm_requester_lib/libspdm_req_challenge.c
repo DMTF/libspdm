@@ -76,7 +76,7 @@ static libspdm_return_t libspdm_try_challenge(void *context, uint8_t slot_id,
     /* -=[Check Parameters Phase]=- */
     LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xff));
     LIBSPDM_ASSERT((slot_id != 0xff) ||
-                   (spdm_context->local_context.peer_cert_chain_provision_size != 0));
+                   (spdm_context->local_context.peer_cert_chain_provision_size == 0));
 
     /* -=[Verify State Phase]=- */
     if (!libspdm_is_capabilities_flag_supported(

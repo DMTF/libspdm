@@ -86,7 +86,7 @@ static libspdm_return_t libspdm_try_get_measurement(void *context, const uint32_
     /* -=[Check Parameters Phase]=- */
     LIBSPDM_ASSERT((slot_id_param < SPDM_MAX_SLOT_COUNT) || (slot_id_param == 0xF));
     LIBSPDM_ASSERT((slot_id_param != 0xf) ||
-                   (spdm_context->local_context.peer_cert_chain_provision_size != 0));
+                   (spdm_context->local_context.peer_cert_chain_provision_size == 0));
 
     /* -=[Verify State Phase]=- */
     if (!libspdm_is_capabilities_flag_supported(
