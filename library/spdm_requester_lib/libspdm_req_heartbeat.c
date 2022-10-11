@@ -14,15 +14,11 @@ typedef struct {
 #pragma pack()
 
 /**
- * This function sends HEARTBEAT
- * to an SPDM Session.
+ * This function sends HEARTBEAT to an SPDM Session.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  session_id                    The session ID of the session.
  *
- * @retval RETURN_SUCCESS               The heartbeat is sent and received.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 static libspdm_return_t libspdm_try_heartbeat(void *context, uint32_t session_id)
 {
@@ -39,21 +35,19 @@ static libspdm_return_t libspdm_try_heartbeat(void *context, uint32_t session_id
     size_t transport_header_size;
 
     spdm_context = context;
+
+    /* -=[Check Parameters Phase]=- */
+    session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
+    LIBSPDM_ASSERT (session_info != NULL);
+
+    /* -=[Verify State Phase]=- */
     if (!libspdm_is_capabilities_flag_supported(
             spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP)) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
-
-    if (spdm_context->connection_info.connection_state <
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
-        return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
-    }
-    session_info =
-        libspdm_get_session_info_via_session_id(spdm_context, session_id);
-    if (session_info == NULL) {
-        LIBSPDM_ASSERT(false);
+    if (spdm_context->connection_info.connection_state < LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
     session_state = libspdm_secured_message_get_session_state(
@@ -62,6 +56,7 @@ static libspdm_return_t libspdm_try_heartbeat(void *context, uint32_t session_id
         return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
 
+    /* -=[Construct Request Phase]=- */
     transport_header_size = spdm_context->transport_get_header_size(spdm_context);
     status = libspdm_acquire_sender_buffer (spdm_context, &message_size, (void **)&message);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
@@ -76,8 +71,9 @@ static libspdm_return_t libspdm_try_heartbeat(void *context, uint32_t session_id
     spdm_request->header.param1 = 0;
     spdm_request->header.param2 = 0;
     spdm_request_size = sizeof(spdm_heartbeat_request_t);
-    status = libspdm_send_spdm_request(spdm_context, &session_id,
-                                       spdm_request_size, spdm_request);
+
+    /* -=[Send Request Phase]=- */
+    status = libspdm_send_spdm_request(spdm_context, &session_id, spdm_request_size, spdm_request);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_release_sender_buffer (spdm_context);
         return status;
@@ -85,11 +81,9 @@ static libspdm_return_t libspdm_try_heartbeat(void *context, uint32_t session_id
     libspdm_release_sender_buffer (spdm_context);
     spdm_request = (void *)spdm_context->last_spdm_request;
 
-    libspdm_reset_message_buffer_via_request_code(spdm_context, session_info,
-                                                  SPDM_HEARTBEAT);
+    libspdm_reset_message_buffer_via_request_code(spdm_context, session_info, SPDM_HEARTBEAT);
 
-    /* receive */
-
+    /* -=[Receive Response Phase]=- */
     status = libspdm_acquire_receiver_buffer (spdm_context, &message_size, (void **)&message);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return status;
@@ -104,6 +98,8 @@ static libspdm_return_t libspdm_try_heartbeat(void *context, uint32_t session_id
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         goto receive_done;
     }
+
+    /* -=[Validate Response Phase]=- */
     if (spdm_response_size < sizeof(spdm_message_header_t)) {
         status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
@@ -120,8 +116,7 @@ static libspdm_return_t libspdm_try_heartbeat(void *context, uint32_t session_id
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             goto receive_done;
         }
-    } else if (spdm_response->header.request_response_code !=
-               SPDM_HEARTBEAT_ACK) {
+    } else if (spdm_response->header.request_response_code != SPDM_HEARTBEAT_ACK) {
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
@@ -129,6 +124,7 @@ static libspdm_return_t libspdm_try_heartbeat(void *context, uint32_t session_id
         status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
     }
+
     status = LIBSPDM_STATUS_SUCCESS;
 
 receive_done:
