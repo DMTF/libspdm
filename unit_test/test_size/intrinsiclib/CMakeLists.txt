@@ -4,9 +4,6 @@ if(TOOLCHAIN MATCHES "VS")
     SET(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /GL-")
 endif()
 
-if(TOOLCHAIN MATCHES "CLANG")
-    ADD_COMPILE_OPTIONS(-Wno-incompatible-library-redeclaration)
-endif()
 
 INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/include/hal/${ARCH}
@@ -18,7 +15,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
         memory_intrinsics.c        
     )
 elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
-    if(ARCH STREQUAL "x64")
+    if(ARCH STREQUAL "x64" OR ARCH STREQUAL "arm")
         SET(src_intrinsiclib
             copy_mem.c
             memory_intrinsics.c        

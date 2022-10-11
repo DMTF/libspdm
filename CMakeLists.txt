@@ -10,7 +10,7 @@ MESSAGE("## Build Configuration ##")
 MESSAGE("#########################")
 
 SET(ARCH ${ARCH} CACHE STRING "Choose the arch of build: ia32 x64 arm aarch64 riscv32 riscv64 arc" FORCE)
-SET(TOOLCHAIN ${TOOLCHAIN} CACHE STRING "Choose the toolchain of build: Windows: VS2015 VS2019 VS2022 CLANG LIBFUZZER Linux: GCC ARM_GCC AARCH64_GCC RISCV32_GCC RISCV64_GCC ARC_GCC CLANG CBMC AFL KLEE LIBFUZZER" FORCE)
+SET(TOOLCHAIN ${TOOLCHAIN} CACHE STRING "Choose the toolchain of build: Windows: VS2015 VS2019 VS2022 CLANG LIBFUZZER ARM_CLANG Linux: GCC ARM_GCC AARCH64_GCC RISCV32_GCC RISCV64_GCC ARC_GCC CLANG CBMC AFL KLEE LIBFUZZER" FORCE)
 SET(CMAKE_BUILD_TYPE ${TARGET} CACHE STRING "Choose the target of build: Debug Release" FORCE)
 SET(CRYPTO ${CRYPTO} CACHE STRING "Choose the crypto of build: mbedtls openssl" FORCE)
 SET(GCOV ${GCOV} CACHE STRING "Choose the target of Gcov: ON  OFF, and default is OFF" FORCE)
@@ -105,6 +105,8 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
         MESSAGE("TOOLCHAIN = CBMC")
     elseif(TOOLCHAIN STREQUAL "LIBFUZZER")
         MESSAGE("TOOLCHAIN = LIBFUZZER")
+    elseif(TOOLCHAIN STREQUAL "ARM_CLANG")
+        MESSAGE("TOOLCHAIN = ARM_CLANG")
     else()
         MESSAGE(FATAL_ERROR "Unkown TOOLCHAIN")
     endif()
@@ -553,6 +555,32 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
 
         SET(CMAKE_C_FLAGS_RELEASE     "/GL /O1b2s")
         SET(CMAKE_C_FLAGS_DEBUG       "/Od")
+
+    elseif(TOOLCHAIN STREQUAL "ARM_CLANG")
+        set(TOOLCHAIN_PATH C:/ArmStudio/sw/ARMCompiler6.18)
+        find_program(ARM_CLANG NAMES armclang PATHS ${TOOLCHAIN_PATH}/bin REQUIRED NO_DEFAULT_PATH)
+        find_program(ARM_CXX NAMES armclang PATHS ${TOOLCHAIN_PATH}/bin REQUIRED NO_DEFAULT_PATH)
+        find_program(ARM_ASM NAMES armasm PATHS ${TOOLCHAIN_PATH}/bin REQUIRED NO_DEFAULT_PATH)
+        find_program(ARM_AR NAMES armar PATHS ${TOOLCHAIN_PATH}/bin REQUIRED NO_DEFAULT_PATH)
+        find_program(ARM_LINK NAMES armlink PATHS ${TOOLCHAIN_PATH}/bin REQUIRED NO_DEFAULT_PATH)
+        find_program(ARM_FROMELF NAMES fromelf PATHS ${TOOLCHAIN_PATH}/bin REQUIRED NO_DEFAULT_PATH)
+
+        set(CMAKE_C_COMPILER ${ARM_CLANG} CACHE STRING "")
+        set(CMAKE_CXX_COMPILER ${ARM_CXX} CACHE STRING "")
+        set(CMAKE_ASM_COMPILER ${ARM_ASM} CACHE STRING "")
+        set(CMAKE_LINKER ${ARM_LINK} CACHE STRING "")
+
+        set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+        set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+        set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+        set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
+        set(CMAKE_FIND_ROOT_PATH ${TOOLCHAIN_PATH})
+
+        ADD_COMPILE_OPTIONS(--target=arm-arm-none-eabi)
+        
+        SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}
+        /LIBPATH:'%UniversalCRTSdkDir%lib/%UCRTVersion%/ucrt/arm'
+        /LIBPATH:'%WindowsSdkDir%lib/%WindowsSDKLibVersion%/um/arm")
     else()
         # See https://gitlab.kitware.com/cmake/cmake/-/issues/18317 for following workaround
         STRING(REGEX REPLACE "/W3" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
