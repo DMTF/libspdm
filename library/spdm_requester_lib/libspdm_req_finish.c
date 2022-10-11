@@ -24,9 +24,9 @@ typedef struct {
 /**
  * This function sends FINISH and receives FINISH_RSP for SPDM finish.
  *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_id                    session_id to the FINISH request.
- * @param  req_slot_id_param               req_slot_id_param to the FINISH request.
+ * @param  spdm_context       A pointer to the SPDM context.
+ * @param  session_id         session_id to the FINISH request.
+ * @param  req_slot_id_param  req_slot_id_param to the FINISH request.
  *
  * @retval RETURN_SUCCESS               The FINISH is sent and the FINISH_RSP is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
@@ -51,6 +51,11 @@ static libspdm_return_t libspdm_try_send_receive_finish(libspdm_context_t *spdm_
     size_t message_size;
     size_t transport_header_size;
 
+    /* -=[Check Parameters Phase]=- */
+    session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
+    LIBSPDM_ASSERT (session_info != NULL);
+
+    /* -=[Verify State Phase]=- */
     if (!libspdm_is_capabilities_flag_supported(
             spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP,
@@ -59,29 +64,19 @@ static libspdm_return_t libspdm_try_send_receive_finish(libspdm_context_t *spdm_
         goto error;
     }
 
-    if (spdm_context->connection_info.connection_state <
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
+    if (spdm_context->connection_info.connection_state < LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         status = LIBSPDM_STATUS_INVALID_STATE_LOCAL;
         goto error;
     }
 
-    session_info =
-        libspdm_get_session_info_via_session_id(spdm_context, session_id);
-    if (session_info == NULL) {
-        LIBSPDM_ASSERT(false);
-        status = LIBSPDM_STATUS_INVALID_STATE_LOCAL;
-        goto error;
-    }
     session_state = libspdm_secured_message_get_session_state(
         session_info->secured_message_context);
     if (session_state != LIBSPDM_SESSION_STATE_HANDSHAKING) {
         status = LIBSPDM_STATUS_INVALID_STATE_LOCAL;
         goto error;
     }
-
     if (session_info->mut_auth_requested != 0) {
-        if ((req_slot_id_param >= SPDM_MAX_SLOT_COUNT) &&
-            (req_slot_id_param != 0xFF)) {
+        if ((req_slot_id_param >= SPDM_MAX_SLOT_COUNT) && (req_slot_id_param != 0xFF)) {
             status = LIBSPDM_STATUS_INVALID_PARAMETER;
             goto error;
         }
@@ -92,6 +87,7 @@ static libspdm_return_t libspdm_try_send_receive_finish(libspdm_context_t *spdm_
         }
     }
 
+    /* -=[Construct Request Phase]=- */
     transport_header_size = spdm_context->transport_get_header_size(spdm_context);
     status = libspdm_acquire_sender_buffer (spdm_context, &message_size, (void **)&message);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
@@ -104,12 +100,10 @@ static libspdm_return_t libspdm_try_send_receive_finish(libspdm_context_t *spdm_
     spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request->header.request_response_code = SPDM_FINISH;
     if (session_info->mut_auth_requested) {
-        spdm_request->header.param1 =
-            SPDM_FINISH_REQUEST_ATTRIBUTES_SIGNATURE_INCLUDED;
+        spdm_request->header.param1 = SPDM_FINISH_REQUEST_ATTRIBUTES_SIGNATURE_INCLUDED;
         spdm_request->header.param2 = req_slot_id_param;
         signature_size = libspdm_get_req_asym_signature_size(
-            spdm_context->connection_info.algorithm
-            .req_base_asym_alg);
+            spdm_context->connection_info.algorithm.req_base_asym_alg);
     } else {
         spdm_request->header.param1 = 0;
         spdm_request->header.param2 = 0;
@@ -117,24 +111,18 @@ static libspdm_return_t libspdm_try_send_receive_finish(libspdm_context_t *spdm_
     }
 
     if (req_slot_id_param == 0xFF) {
-        req_slot_id_param =
-            spdm_context->local_context.provisioned_slot_id;
+        req_slot_id_param = spdm_context->local_context.provisioned_slot_id;
     }
 
     if (session_info->mut_auth_requested) {
         spdm_context->connection_info.local_used_cert_chain_buffer =
-            spdm_context->local_context
-            .local_cert_chain_provision[req_slot_id_param];
+            spdm_context->local_context.local_cert_chain_provision[req_slot_id_param];
         spdm_context->connection_info.local_used_cert_chain_buffer_size =
-            spdm_context->local_context
-            .local_cert_chain_provision_size
-            [req_slot_id_param];
+            spdm_context->local_context.local_cert_chain_provision_size[req_slot_id_param];
     }
 
-    hmac_size = libspdm_get_hash_size(
-        spdm_context->connection_info.algorithm.base_hash_algo);
-    spdm_request_size =
-        sizeof(spdm_finish_request_t) + signature_size + hmac_size;
+    hmac_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+    spdm_request_size = sizeof(spdm_finish_request_t) + signature_size + hmac_size;
     ptr = spdm_request->signature;
 
     status = libspdm_append_message_f(spdm_context, session_info, true, (uint8_t *)spdm_request,
@@ -145,15 +133,13 @@ static libspdm_return_t libspdm_try_send_receive_finish(libspdm_context_t *spdm_
         goto error;
     }
     if (session_info->mut_auth_requested) {
-        result = libspdm_generate_finish_req_signature(spdm_context,
-                                                       session_info, ptr);
+        result = libspdm_generate_finish_req_signature(spdm_context, session_info, ptr);
         if (!result) {
             libspdm_release_sender_buffer (spdm_context);
             status = LIBSPDM_STATUS_CRYPTO_ERROR;
             goto error;
         }
-        status = libspdm_append_message_f(spdm_context, session_info, true, ptr,
-                                          signature_size);
+        status = libspdm_append_message_f(spdm_context, session_info, true, ptr, signature_size);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             libspdm_release_sender_buffer (spdm_context);
             status = LIBSPDM_STATUS_BUFFER_FULL;
@@ -176,21 +162,19 @@ static libspdm_return_t libspdm_try_send_receive_finish(libspdm_context_t *spdm_
         goto error;
     }
 
-    status = libspdm_send_spdm_request(spdm_context, &session_id,
-                                       spdm_request_size, spdm_request);
+    /* -=[Send Request Phase]=- */
+    status = libspdm_send_spdm_request(spdm_context, &session_id, spdm_request_size, spdm_request);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_release_sender_buffer (spdm_context);
         goto error;
     }
 
-    libspdm_reset_message_buffer_via_request_code(spdm_context, session_info,
-                                                  SPDM_FINISH);
+    libspdm_reset_message_buffer_via_request_code(spdm_context, session_info, SPDM_FINISH);
 
     libspdm_release_sender_buffer (spdm_context);
     spdm_request = (void *)spdm_context->last_spdm_request;
 
-    /* receive */
-
+    /* -=[Receive Response Phase]=- */
     status = libspdm_acquire_receiver_buffer (spdm_context, &message_size, (void **)&message);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         goto error;
@@ -205,6 +189,8 @@ static libspdm_return_t libspdm_try_send_receive_finish(libspdm_context_t *spdm_
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         goto receive_done;
     }
+
+    /* -=[Validate Response Phase]=- */
     if (spdm_response_size < sizeof(spdm_message_header_t)) {
         status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
@@ -229,8 +215,7 @@ static libspdm_return_t libspdm_try_send_receive_finish(libspdm_context_t *spdm_
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             goto receive_done;
         }
-    } else if (spdm_response->header.request_response_code !=
-               SPDM_FINISH_RSP) {
+    } else if (spdm_response->header.request_response_code != SPDM_FINISH_RSP) {
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
@@ -279,9 +264,9 @@ static libspdm_return_t libspdm_try_send_receive_finish(libspdm_context_t *spdm_
         }
     }
 
+    /* -=[Process Response Phase]=- */
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_generate_session_data_key[%x]\n", session_id));
-    result = libspdm_calculate_th2_hash(spdm_context, session_info, true,
-                                        th2_hash_data);
+    result = libspdm_calculate_th2_hash(spdm_context, session_info, true, th2_hash_data);
     if (!result) {
         status = LIBSPDM_STATUS_CRYPTO_ERROR;
         goto receive_done;
@@ -293,19 +278,21 @@ static libspdm_return_t libspdm_try_send_receive_finish(libspdm_context_t *spdm_
         goto receive_done;
     }
 
+    /* -=[Update State Phase]=- */
     libspdm_secured_message_set_session_state(
-        session_info->secured_message_context,
-        LIBSPDM_SESSION_STATE_ESTABLISHED);
+        session_info->secured_message_context, LIBSPDM_SESSION_STATE_ESTABLISHED);
 
     libspdm_release_receiver_buffer (spdm_context);
+
     return LIBSPDM_STATUS_SUCCESS;
 
 receive_done:
     libspdm_release_receiver_buffer (spdm_context);
 error:
-    if (LIBSPDM_STATUS_BUSY_PEER != status) {
+    if (status != LIBSPDM_STATUS_BUSY_PEER) {
         libspdm_free_session_id(spdm_context, session_id);
     }
+
     return status;
 }
 
@@ -321,7 +308,7 @@ libspdm_return_t libspdm_send_receive_finish(libspdm_context_t *spdm_context,
     do {
         status = libspdm_try_send_receive_finish(spdm_context, session_id,
                                                  req_slot_id_param);
-        if (LIBSPDM_STATUS_BUSY_PEER != status) {
+        if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
         }
     } while (retry-- != 0);
