@@ -1133,6 +1133,3 @@ libspdm_get_measurement_summary_hash_size(libspdm_context_t *spdm_context,
         break;
     }
 }
-
-
-
