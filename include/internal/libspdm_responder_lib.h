@@ -737,4 +737,13 @@ libspdm_return_t libspdm_get_response_chunk_send(void* context,
 
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
 
+/**
+ * This function allocates half of session ID for a responder.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ *
+ * @return half of session ID for a responder.
+ **/
+uint16_t libspdm_allocate_rsp_session_id(const libspdm_context_t *spdm_context);
+
 #endif /* SPDM_RESPONDER_LIB_INTERNAL_H */

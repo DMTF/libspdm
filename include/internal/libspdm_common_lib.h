@@ -500,24 +500,6 @@ void libspdm_session_info_set_psk_hint(libspdm_session_info_t *session_info,
                                        size_t psk_hint_size);
 
 /**
- * This function allocates half of session ID for a requester.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- *
- * @return half of session ID for a requester.
- **/
-uint16_t libspdm_allocate_req_session_id(libspdm_context_t *spdm_context);
-
-/**
- * This function allocates half of session ID for a responder.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- *
- * @return half of session ID for a responder.
- **/
-uint16_t libspdm_allocate_rsp_session_id(const libspdm_context_t *spdm_context);
-
-/**
  * This function returns if a given version is supported based upon the GET_VERSION/VERSION.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
@@ -623,10 +605,9 @@ bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
  * @retval true  hash verification pass.
  * @retval false hash verification fail.
  **/
-bool
-libspdm_verify_certificate_chain_hash(libspdm_context_t *spdm_context,
-                                      const void *certificate_chain_hash,
-                                      size_t certificate_chain_hash_size);
+bool libspdm_verify_certificate_chain_hash(libspdm_context_t *spdm_context,
+                                           const void *certificate_chain_hash,
+                                           size_t certificate_chain_hash_size);
 
 /**
  * This function verifies the challenge signature based upon m1m2.
@@ -654,251 +635,38 @@ bool libspdm_verify_challenge_auth_signature(libspdm_context_t *spdm_context,
  * @return 0 measurement summary hash type is invalid, NO_MEAS hash type or no MEAS capabilities.
  * @return measurement summary hash size according to type.
  **/
-uint32_t
-libspdm_get_measurement_summary_hash_size(libspdm_context_t *spdm_context,
-                                          bool is_requester,
-                                          uint8_t measurement_summary_hash_type);
+uint32_t libspdm_get_measurement_summary_hash_size(libspdm_context_t *spdm_context,
+                                                   bool is_requester,
+                                                   uint8_t measurement_summary_hash_type);
 
-/**
- * This function generates the measurement signature to response message based upon l1l2.
+/*
+ * This function calculates l1l2.
  * If session_info is NULL, this function will use M cache of SPDM context,
  * else will use M cache of SPDM session context.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  session_info                  A pointer to the SPDM session context.
- * @param  signature                    The buffer to store the signature.
+ * @param  l1l2                          The buffer to store the l1l2.
  *
- * @retval true  measurement signature is generated.
- * @retval false measurement signature is not generated.
- **/
-bool libspdm_generate_measurement_signature(libspdm_context_t *spdm_context,
-                                            libspdm_session_info_t *session_info,
-                                            uint8_t *signature);
+ * @retval RETURN_SUCCESS  l1l2 is calculated.
+ */
+bool libspdm_calculate_l1l2(void *context, void *session_info,
+                            libspdm_large_managed_buffer_t *l1l2);
 
-/**
- * This function verifies the measurement signature based upon l1l2.
+/*
+ * This function calculates l1l2 hash.
  * If session_info is NULL, this function will use M cache of SPDM context,
  * else will use M cache of SPDM session context.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  session_info                  A pointer to the SPDM session context.
- * @param  sign_data                     The signature data buffer.
- * @param  sign_data_size                 size in bytes of the signature data buffer.
+ * @param  l1l2_hash_size               size in bytes of the l1l2 hash
+ * @param  l1l2_hash                   The buffer to store the l1l2 hash
  *
- * @retval true  signature verification pass.
- * @retval false signature verification fail.
- **/
-bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
-                                          libspdm_session_info_t *session_info,
-                                          const void *sign_data,
-                                          size_t sign_data_size);
-
-/**
- * This function generates the key exchange signature based upon TH.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  The session info of an SPDM session.
- * @param  signature                    The buffer to store the key exchange signature.
- *
- * @retval true  key exchange signature is generated.
- * @retval false key exchange signature is not generated.
- **/
-bool libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context,
-                                                 libspdm_session_info_t *session_info,
-                                                 uint8_t *signature);
-
-/**
- * This function generates the key exchange HMAC based upon TH.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  The session info of an SPDM session.
- * @param  hmac                         The buffer to store the key exchange HMAC.
- *
- * @retval true  key exchange HMAC is generated.
- * @retval false key exchange HMAC is not generated.
- **/
-bool libspdm_generate_key_exchange_rsp_hmac(libspdm_context_t *spdm_context,
-                                            libspdm_session_info_t *session_info,
-                                            uint8_t *hmac);
-
-/**
- * This function verifies the key exchange signature based upon TH.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  The session info of an SPDM session.
- * @param  sign_data                     The signature data buffer.
- * @param  sign_data_size                 size in bytes of the signature data buffer.
- *
- * @retval true  signature verification pass.
- * @retval false signature verification fail.
- **/
-bool libspdm_verify_key_exchange_rsp_signature(
-    libspdm_context_t *spdm_context, libspdm_session_info_t *session_info,
-    const void *sign_data, const size_t sign_data_size);
-
-/**
- * This function verifies the key exchange HMAC based upon TH.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  The session info of an SPDM session.
- * @param  hmac_data                     The HMAC data buffer.
- * @param  hmac_data_size                 size in bytes of the HMAC data buffer.
- *
- * @retval true  HMAC verification pass.
- * @retval false HMAC verification fail.
- **/
-bool libspdm_verify_key_exchange_rsp_hmac(libspdm_context_t *spdm_context,
-                                          libspdm_session_info_t *session_info,
-                                          const void *hmac_data,
-                                          size_t hmac_data_size);
-
-/**
- * This function generates the finish signature based upon TH.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  The session info of an SPDM session.
- * @param  signature                    The buffer to store the finish signature.
- *
- * @retval true  finish signature is generated.
- * @retval false finish signature is not generated.
- **/
-bool libspdm_generate_finish_req_signature(libspdm_context_t *spdm_context,
-                                           libspdm_session_info_t *session_info,
-                                           uint8_t *signature);
-
-/**
- * This function generates the finish HMAC based upon TH.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  The session info of an SPDM session.
- * @param  hmac                         The buffer to store the finish HMAC.
- *
- * @retval true  finish HMAC is generated.
- * @retval false finish HMAC is not generated.
- **/
-bool libspdm_generate_finish_req_hmac(libspdm_context_t *spdm_context,
-                                      libspdm_session_info_t *session_info,
-                                      void *hmac);
-
-/**
- * This function verifies the finish signature based upon TH.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  The session info of an SPDM session.
- * @param  sign_data                     The signature data buffer.
- * @param  sign_data_size                 size in bytes of the signature data buffer.
- *
- * @retval true  signature verification pass.
- * @retval false signature verification fail.
- **/
-bool libspdm_verify_finish_req_signature(libspdm_context_t *spdm_context,
-                                         libspdm_session_info_t *session_info,
-                                         const void *sign_data,
-                                         const size_t sign_data_size);
-
-/**
- * This function verifies the finish HMAC based upon TH.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  The session info of an SPDM session.
- * @param  hmac_data                     The HMAC data buffer.
- * @param  hmac_data_size                 size in bytes of the HMAC data buffer.
- *
- * @retval true  HMAC verification pass.
- * @retval false HMAC verification fail.
- **/
-bool libspdm_verify_finish_req_hmac(libspdm_context_t *spdm_context,
-                                    libspdm_session_info_t *session_info,
-                                    const uint8_t *hmac, size_t hmac_size);
-
-/**
- * This function generates the finish HMAC based upon TH.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  The session info of an SPDM session.
- * @param  hmac                         The buffer to store the finish HMAC.
- *
- * @retval true  finish HMAC is generated.
- * @retval false finish HMAC is not generated.
- **/
-bool libspdm_generate_finish_rsp_hmac(libspdm_context_t *spdm_context,
-                                      libspdm_session_info_t *session_info,
-                                      uint8_t *hmac);
-
-/**
- * This function verifies the finish HMAC based upon TH.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  The session info of an SPDM session.
- * @param  hmac_data                     The HMAC data buffer.
- * @param  hmac_data_size                 size in bytes of the HMAC data buffer.
- *
- * @retval true  HMAC verification pass.
- * @retval false HMAC verification fail.
- **/
-bool libspdm_verify_finish_rsp_hmac(libspdm_context_t *spdm_context,
-                                    libspdm_session_info_t *session_info,
-                                    const void *hmac_data,
-                                    size_t hmac_data_size);
-
-/**
- * This function generates the PSK exchange HMAC based upon TH.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  The session info of an SPDM session.
- * @param  hmac                         The buffer to store the PSK exchange HMAC.
- *
- * @retval true  PSK exchange HMAC is generated.
- * @retval false PSK exchange HMAC is not generated.
- **/
-bool libspdm_generate_psk_exchange_rsp_hmac(libspdm_context_t *spdm_context,
-                                            libspdm_session_info_t *session_info,
-                                            uint8_t *hmac);
-
-/**
- * This function verifies the PSK exchange HMAC based upon TH.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  The session info of an SPDM session.
- * @param  hmac_data                     The HMAC data buffer.
- * @param  hmac_data_size                 size in bytes of the HMAC data buffer.
- *
- * @retval true  HMAC verification pass.
- * @retval false HMAC verification fail.
- **/
-bool libspdm_verify_psk_exchange_rsp_hmac(libspdm_context_t *spdm_context,
-                                          libspdm_session_info_t *session_info,
-                                          const void *hmac_data,
-                                          size_t hmac_data_size);
-
-/**
- * This function generates the PSK finish HMAC based upon TH.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  The session info of an SPDM session.
- * @param  hmac                         The buffer to store the finish HMAC.
- *
- * @retval true  PSK finish HMAC is generated.
- * @retval false PSK finish HMAC is not generated.
- **/
-bool libspdm_generate_psk_exchange_req_hmac(libspdm_context_t *spdm_context,
-                                            libspdm_session_info_t *session_info,
-                                            void *hmac);
-
-/**
- * This function verifies the PSK finish HMAC based upon TH.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  The session info of an SPDM session.
- * @param  hmac_data                     The HMAC data buffer.
- * @param  hmac_data_size                 size in bytes of the HMAC data buffer.
- *
- * @retval true  HMAC verification pass.
- * @retval false HMAC verification fail.
- **/
-bool libspdm_verify_psk_finish_req_hmac(libspdm_context_t *spdm_context,
-                                        libspdm_session_info_t *session_info,
-                                        const uint8_t *hmac, size_t hmac_size);
+ * @retval RETURN_SUCCESS  l1l2 is calculated.
+ */
+bool libspdm_calculate_l1l2_hash(void *context, void *session_info,
+                                 size_t *l1l2_hash_size, void *l1l2_hash);
 
 /**
  * Return the size in bytes of opaque data supproted version.

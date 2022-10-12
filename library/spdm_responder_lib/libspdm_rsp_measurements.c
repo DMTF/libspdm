@@ -9,6 +9,65 @@
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 
 /**
+ * This function generates the measurement signature to response message based upon l1l2.
+ * If session_info is NULL, this function will use M cache of SPDM context,
+ * else will use M cache of SPDM session context.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_info                  A pointer to the SPDM session context.
+ * @param  signature                    The buffer to store the signature.
+ *
+ * @retval true  measurement signature is generated.
+ * @retval false measurement signature is not generated.
+ **/
+static bool libspdm_generate_measurement_signature(libspdm_context_t *spdm_context,
+                                                   libspdm_session_info_t *session_info,
+                                                   uint8_t *signature)
+{
+    size_t signature_size;
+    bool result;
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    libspdm_large_managed_buffer_t l1l2;
+    uint8_t *l1l2_buffer;
+    size_t l1l2_buffer_size;
+#else
+    uint8_t l1l2_hash[LIBSPDM_MAX_HASH_SIZE];
+    size_t l1l2_hash_size;
+#endif
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    result = libspdm_calculate_l1l2(spdm_context, session_info, &l1l2);
+#else
+    l1l2_hash_size = sizeof(l1l2_hash);
+    result = libspdm_calculate_l1l2_hash(spdm_context, session_info, &l1l2_hash_size, l1l2_hash);
+#endif
+    libspdm_reset_message_m(spdm_context, session_info);
+    if (!result) {
+        return false;
+    }
+
+    signature_size = libspdm_get_asym_signature_size(
+        spdm_context->connection_info.algorithm.base_asym_algo);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    l1l2_buffer = libspdm_get_managed_buffer(&l1l2);
+    l1l2_buffer_size = libspdm_get_managed_buffer_size(&l1l2);
+
+    result = libspdm_responder_data_sign(
+        spdm_context->connection_info.version, SPDM_MEASUREMENTS,
+        spdm_context->connection_info.algorithm.base_asym_algo,
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        false, l1l2_buffer, l1l2_buffer_size, signature, &signature_size);
+#else
+    result = libspdm_responder_data_sign(
+        spdm_context->connection_info.version, SPDM_MEASUREMENTS,
+        spdm_context->connection_info.algorithm.base_asym_algo,
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        true, l1l2_hash, l1l2_hash_size, signature, &signature_size);
+#endif
+    return result;
+}
+
+/**
  * This function creates the opaque data to response message.
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  response_message              The measurement response message with empty signature to be filled.

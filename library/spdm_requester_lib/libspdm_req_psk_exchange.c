@@ -34,6 +34,75 @@ typedef struct {
 #pragma pack()
 
 /**
+ * This function verifies the PSK exchange HMAC based upon TH.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_info                  The session info of an SPDM session.
+ * @param  hmac_data                     The HMAC data buffer.
+ * @param  hmac_data_size                 size in bytes of the HMAC data buffer.
+ *
+ * @retval true  HMAC verification pass.
+ * @retval false HMAC verification fail.
+ **/
+bool libspdm_verify_psk_exchange_rsp_hmac(libspdm_context_t *spdm_context,
+                                          libspdm_session_info_t *session_info,
+                                          const void *hmac_data,
+                                          size_t hmac_data_size)
+{
+    size_t hash_size;
+    uint8_t calc_hmac_data[LIBSPDM_MAX_HASH_SIZE];
+    bool result;
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    size_t th_curr_data_size;
+    uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
+#endif
+
+    hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+    LIBSPDM_ASSERT(hash_size == hmac_data_size);
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    th_curr_data_size = sizeof(th_curr_data);
+    result = libspdm_calculate_th_for_exchange(spdm_context, session_info,
+                                               NULL, 0, &th_curr_data_size,
+                                               th_curr_data);
+    if (!result) {
+        return false;
+    }
+
+    result = libspdm_hash_all (spdm_context->connection_info.algorithm.base_hash_algo,
+                               th_curr_data, th_curr_data_size, hash_data);
+    if (!result) {
+        return false;
+    }
+
+    result = libspdm_hmac_all_with_response_finished_key(
+        session_info->secured_message_context, hash_data,
+        hash_size, calc_hmac_data);
+    if (!result) {
+        return false;
+    }
+#else
+    result = libspdm_calculate_th_hmac_for_exchange_rsp(
+        spdm_context, session_info, true, &hash_size, calc_hmac_data);
+    if (!result) {
+        return false;
+    }
+#endif
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "th_curr hmac - "));
+    libspdm_internal_dump_data(calc_hmac_data, hash_size);
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
+
+    if (libspdm_const_compare_mem(calc_hmac_data, hmac_data, hash_size) != 0) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_psk_exchange_rsp_hmac - FAIL !!!\n"));
+        return false;
+    }
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_psk_exchange_rsp_hmac - PASS !!!\n"));
+
+    return true;
+}
+
+/**
  * This function sends PSK_EXCHANGE and receives PSK_EXCHANGE_RSP for SPDM PSK exchange.
  *
  * @param  spdm_context                  A pointer to the SPDM context.

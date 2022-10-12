@@ -10,6 +10,344 @@
 #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
 /**
+ * This function verifies the finish HMAC based upon TH.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_info                  The session info of an SPDM session.
+ * @param  hmac_data                     The HMAC data buffer.
+ * @param  hmac_data_size                 size in bytes of the HMAC data buffer.
+ *
+ * @retval true  HMAC verification pass.
+ * @retval false HMAC verification fail.
+ **/
+bool libspdm_verify_finish_req_hmac(libspdm_context_t *spdm_context,
+                                    libspdm_session_info_t *session_info,
+                                    const uint8_t *hmac, size_t hmac_size)
+{
+    uint8_t hmac_data[LIBSPDM_MAX_HASH_SIZE];
+    size_t hash_size;
+    bool result;
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    uint8_t *cert_chain_buffer;
+    size_t cert_chain_buffer_size;
+    uint8_t *mut_cert_chain_buffer;
+    size_t mut_cert_chain_buffer_size;
+    uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    size_t th_curr_data_size;
+    uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
+#endif
+
+    hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+    LIBSPDM_ASSERT(hmac_size == hash_size);
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    result = libspdm_get_local_cert_chain_buffer(
+        spdm_context, (const void **)&cert_chain_buffer, &cert_chain_buffer_size);
+    if (!result) {
+        return false;
+    }
+
+    if (session_info->mut_auth_requested) {
+        result = libspdm_get_peer_cert_chain_buffer(
+            spdm_context, (const void **)&mut_cert_chain_buffer,
+            &mut_cert_chain_buffer_size);
+        if (!result) {
+            return false;
+        }
+    } else {
+        mut_cert_chain_buffer = NULL;
+        mut_cert_chain_buffer_size = 0;
+    }
+
+    th_curr_data_size = sizeof(th_curr_data);
+    result = libspdm_calculate_th_for_finish(
+        spdm_context, session_info, cert_chain_buffer,
+        cert_chain_buffer_size, mut_cert_chain_buffer,
+        mut_cert_chain_buffer_size, &th_curr_data_size, th_curr_data);
+    if (!result) {
+        return false;
+    }
+
+    result = libspdm_hash_all (spdm_context->connection_info.algorithm.base_hash_algo,
+                               th_curr_data, th_curr_data_size, hash_data);
+    if (!result) {
+        return false;
+    }
+
+    result = libspdm_hmac_all_with_request_finished_key(
+        session_info->secured_message_context, hash_data,
+        hash_size, hmac_data);
+    if (!result) {
+        return false;
+    }
+#else
+    result = libspdm_calculate_th_hmac_for_finish_req(
+        spdm_context, session_info, &hash_size, hmac_data);
+    if (!result) {
+        return false;
+    }
+#endif
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "th_curr hmac - "));
+    libspdm_internal_dump_data(hmac_data, hash_size);
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
+
+    if (libspdm_const_compare_mem(hmac, hmac_data, hash_size) != 0) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_finish_req_hmac - FAIL !!!\n"));
+        return false;
+    }
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_finish_req_hmac - PASS !!!\n"));
+    return true;
+}
+
+/**
+ * This function verifies the finish signature based upon TH.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_info                  The session info of an SPDM session.
+ * @param  sign_data                     The signature data buffer.
+ * @param  sign_data_size                 size in bytes of the signature data buffer.
+ *
+ * @retval true  signature verification pass.
+ * @retval false signature verification fail.
+ **/
+bool libspdm_verify_finish_req_signature(libspdm_context_t *spdm_context,
+                                         libspdm_session_info_t *session_info,
+                                         const void *sign_data,
+                                         const size_t sign_data_size)
+{
+    size_t hash_size;
+    uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
+    bool result;
+    const uint8_t *mut_cert_chain_data;
+    size_t mut_cert_chain_data_size;
+    const uint8_t *mut_cert_buffer;
+    size_t mut_cert_buffer_size;
+    void *context;
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    uint8_t *cert_chain_buffer;
+    size_t cert_chain_buffer_size;
+    uint8_t *mut_cert_chain_buffer;
+    size_t mut_cert_chain_buffer_size;
+    uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    size_t th_curr_data_size;
+#else
+    uint8_t slot_id;
+#endif
+
+    hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    result = libspdm_get_local_cert_chain_buffer(
+        spdm_context, (const void **)&cert_chain_buffer, &cert_chain_buffer_size);
+    if (!result) {
+        return false;
+    }
+
+    result = libspdm_get_peer_cert_chain_buffer(spdm_context,
+                                                (const void **)&mut_cert_chain_buffer,
+                                                &mut_cert_chain_buffer_size);
+    if (!result) {
+        return false;
+    }
+
+    th_curr_data_size = sizeof(th_curr_data);
+    result = libspdm_calculate_th_for_finish(
+        spdm_context, session_info, cert_chain_buffer,
+        cert_chain_buffer_size, mut_cert_chain_buffer,
+        mut_cert_chain_buffer_size, &th_curr_data_size, th_curr_data);
+    if (!result) {
+        return false;
+    }
+
+    /* Debug code only - required for debug print of th_curr below*/
+    LIBSPDM_DEBUG_CODE(
+        if (!libspdm_hash_all(
+                spdm_context->connection_info.algorithm.base_hash_algo,
+                th_curr_data, th_curr_data_size, hash_data)) {
+        return false;
+    }
+        );
+#else
+    result = libspdm_calculate_th_hash_for_finish(
+        spdm_context, session_info, &hash_size, hash_data);
+    if (!result) {
+        return false;
+    }
+#endif
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "th_curr hash - "));
+    libspdm_internal_dump_data(hash_data, hash_size);
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
+
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "signature - "));
+    libspdm_internal_dump_data(sign_data, sign_data_size);
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    /* Get leaf cert from cert chain*/
+
+    result = libspdm_get_peer_cert_chain_data(spdm_context,
+                                              (const void **)&mut_cert_chain_data,
+                                              &mut_cert_chain_data_size);
+    if (!result) {
+        return false;
+    }
+    result = libspdm_x509_get_cert_from_cert_chain(mut_cert_chain_data,
+                                                   mut_cert_chain_data_size, -1,
+                                                   &mut_cert_buffer,
+                                                   &mut_cert_buffer_size);
+    if (!result) {
+        return false;
+    }
+
+    result = libspdm_req_asym_get_public_key_from_x509(
+        spdm_context->connection_info.algorithm.req_base_asym_alg,
+        mut_cert_buffer, mut_cert_buffer_size, &context);
+    if (!result) {
+        return false;
+    }
+
+    result = libspdm_req_asym_verify(
+        spdm_context->connection_info.version, SPDM_FINISH,
+        spdm_context->connection_info.algorithm.req_base_asym_alg,
+        spdm_context->connection_info.algorithm.base_hash_algo, context,
+        th_curr_data, th_curr_data_size, sign_data, sign_data_size);
+    libspdm_req_asym_free(spdm_context->connection_info.algorithm.req_base_asym_alg, context);
+#else
+    slot_id = spdm_context->connection_info.peer_used_cert_chain_slot_id;
+    if (spdm_context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key != NULL) {
+        result = libspdm_req_asym_verify_hash(
+            spdm_context->connection_info.version, SPDM_FINISH,
+            spdm_context->connection_info.algorithm.req_base_asym_alg,
+            spdm_context->connection_info.algorithm.base_hash_algo,
+            spdm_context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key,
+            hash_data, hash_size, sign_data, sign_data_size);
+    } else {
+        /* Get leaf cert from cert chain*/
+        result = libspdm_get_peer_cert_chain_data(spdm_context,
+                                                  (const void **)&mut_cert_chain_data,
+                                                  &mut_cert_chain_data_size);
+        if (!result) {
+            return false;
+        }
+        result = libspdm_x509_get_cert_from_cert_chain(mut_cert_chain_data,
+                                                       mut_cert_chain_data_size, -1,
+                                                       &mut_cert_buffer,
+                                                       &mut_cert_buffer_size);
+        if (!result) {
+            return false;
+        }
+
+        result = libspdm_req_asym_get_public_key_from_x509(
+            spdm_context->connection_info.algorithm.req_base_asym_alg,
+            mut_cert_buffer, mut_cert_buffer_size, &context);
+        if (!result) {
+            return false;
+        }
+
+        result = libspdm_req_asym_verify_hash(
+            spdm_context->connection_info.version, SPDM_FINISH,
+            spdm_context->connection_info.algorithm.req_base_asym_alg,
+            spdm_context->connection_info.algorithm.base_hash_algo, context,
+            hash_data, hash_size, sign_data, sign_data_size);
+        libspdm_req_asym_free(spdm_context->connection_info.algorithm.req_base_asym_alg, context);
+    }
+#endif
+
+    if (!result) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! VerifyFinishSignature - FAIL !!!\n"));
+        return false;
+    }
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! VerifyFinishSignature - PASS !!!\n"));
+
+    return true;
+}
+
+/**
+ * This function generates the finish HMAC based upon TH.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_info                  The session info of an SPDM session.
+ * @param  hmac                         The buffer to store the finish HMAC.
+ *
+ * @retval true  finish HMAC is generated.
+ * @retval false finish HMAC is not generated.
+ **/
+static bool libspdm_generate_finish_rsp_hmac(libspdm_context_t *spdm_context,
+                                             libspdm_session_info_t *session_info,
+                                             uint8_t *hmac)
+{
+    uint8_t hmac_data[LIBSPDM_MAX_HASH_SIZE];
+    size_t hash_size;
+    bool result;
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    uint8_t *cert_chain_buffer;
+    size_t cert_chain_buffer_size;
+    uint8_t *mut_cert_chain_buffer;
+    size_t mut_cert_chain_buffer_size;
+    uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    size_t th_curr_data_size;
+    uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
+#endif
+
+    hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    result = libspdm_get_local_cert_chain_buffer(
+        spdm_context, (const void **)&cert_chain_buffer, &cert_chain_buffer_size);
+    if (!result) {
+        return false;
+    }
+
+    if (session_info->mut_auth_requested) {
+        result = libspdm_get_peer_cert_chain_buffer(
+            spdm_context, (const void **)&mut_cert_chain_buffer,
+            &mut_cert_chain_buffer_size);
+        if (!result) {
+            return false;
+        }
+    } else {
+        mut_cert_chain_buffer = NULL;
+        mut_cert_chain_buffer_size = 0;
+    }
+
+    th_curr_data_size = sizeof(th_curr_data);
+    result = libspdm_calculate_th_for_finish(
+        spdm_context, session_info, cert_chain_buffer,
+        cert_chain_buffer_size, mut_cert_chain_buffer,
+        mut_cert_chain_buffer_size, &th_curr_data_size, th_curr_data);
+    if (!result) {
+        return false;
+    }
+
+    result = libspdm_hash_all (spdm_context->connection_info.algorithm.base_hash_algo,
+                               th_curr_data, th_curr_data_size, hash_data);
+    if (!result) {
+        return false;
+    }
+
+    result = libspdm_hmac_all_with_response_finished_key(
+        session_info->secured_message_context, hash_data,
+        hash_size, hmac_data);
+    if (!result) {
+        return false;
+    }
+#else
+    result = libspdm_calculate_th_hmac_for_finish_rsp(
+        spdm_context, session_info, &hash_size, hmac_data);
+    if (!result) {
+        return false;
+    }
+#endif
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "th_curr hmac - "));
+    libspdm_internal_dump_data(hmac_data, hash_size);
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
+
+    libspdm_copy_mem(hmac, hash_size, hmac_data, hash_size);
+
+    return true;
+}
+
+/**
  * Process the SPDM FINISH request and return the response.
  *
  * @param  spdm_context                  A pointer to the SPDM context.

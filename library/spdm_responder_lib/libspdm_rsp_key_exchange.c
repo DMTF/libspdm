@@ -9,6 +9,160 @@
 #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
 /**
+ * This function generates the key exchange HMAC based upon TH.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_info                  The session info of an SPDM session.
+ * @param  hmac                         The buffer to store the key exchange HMAC.
+ *
+ * @retval true  key exchange HMAC is generated.
+ * @retval false key exchange HMAC is not generated.
+ **/
+static bool libspdm_generate_key_exchange_rsp_hmac(libspdm_context_t *spdm_context,
+                                                   libspdm_session_info_t *session_info,
+                                                   uint8_t *hmac)
+{
+    uint8_t hmac_data[LIBSPDM_MAX_HASH_SIZE];
+    size_t hash_size;
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    uint8_t *cert_chain_buffer;
+    size_t cert_chain_buffer_size;
+    uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    size_t th_curr_data_size;
+    uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
+#endif
+    bool result;
+
+    hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    result = libspdm_get_local_cert_chain_buffer(
+        spdm_context, (const void **)&cert_chain_buffer, &cert_chain_buffer_size);
+    if (!result) {
+        return false;
+    }
+
+    th_curr_data_size = sizeof(th_curr_data);
+    result = libspdm_calculate_th_for_exchange(
+        spdm_context, session_info, cert_chain_buffer,
+        cert_chain_buffer_size, &th_curr_data_size, th_curr_data);
+    if (!result) {
+        return false;
+    }
+
+    result = libspdm_hash_all (spdm_context->connection_info.algorithm.base_hash_algo,
+                               th_curr_data, th_curr_data_size, hash_data);
+    if (!result) {
+        return false;
+    }
+
+    result = libspdm_hmac_all_with_response_finished_key(
+        session_info->secured_message_context, hash_data,
+        hash_size, hmac_data);
+    if (!result) {
+        return false;
+    }
+#else
+    result = libspdm_calculate_th_hmac_for_exchange_rsp(
+        spdm_context, session_info, false, &hash_size, hmac_data);
+    if (!result) {
+        return false;
+    }
+#endif
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "th_curr hmac - "));
+    libspdm_internal_dump_data(hmac_data, hash_size);
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
+    libspdm_copy_mem(hmac, hash_size, hmac_data, hash_size);
+
+    return true;
+}
+
+/**
+ * This function generates the key exchange signature based upon TH.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_info                  The session info of an SPDM session.
+ * @param  signature                    The buffer to store the key exchange signature.
+ *
+ * @retval true  key exchange signature is generated.
+ * @retval false key exchange signature is not generated.
+ **/
+static bool libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context,
+                                                        libspdm_session_info_t *session_info,
+                                                        uint8_t *signature)
+{
+    uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
+    const uint8_t *cert_chain_buffer;
+    size_t cert_chain_buffer_size;
+    bool result;
+    size_t signature_size;
+    size_t hash_size;
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    size_t th_curr_data_size;
+#endif
+
+    signature_size = libspdm_get_asym_signature_size(
+        spdm_context->connection_info.algorithm.base_asym_algo);
+    hash_size = libspdm_get_hash_size(
+        spdm_context->connection_info.algorithm.base_hash_algo);
+
+    result = libspdm_get_local_cert_chain_buffer(
+        spdm_context, (const void **)&cert_chain_buffer, &cert_chain_buffer_size);
+    if (!result) {
+        return false;
+    }
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    th_curr_data_size = sizeof(th_curr_data);
+    result = libspdm_calculate_th_for_exchange(
+        spdm_context, session_info, cert_chain_buffer,
+        cert_chain_buffer_size, &th_curr_data_size, th_curr_data);
+    if (!result) {
+        return false;
+    }
+
+    /* Debug code only - required for debug print of th_curr hash below*/
+    LIBSPDM_DEBUG_CODE(
+        if (!libspdm_hash_all(
+                spdm_context->connection_info.algorithm.base_hash_algo,
+                th_curr_data, th_curr_data_size, hash_data)) {
+        return false;
+    }
+        );
+#else
+    result = libspdm_calculate_th_hash_for_exchange(
+        spdm_context, session_info, &hash_size, hash_data);
+    if (!result) {
+        return false;
+    }
+#endif
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "th_curr hash - "));
+    libspdm_internal_dump_data(hash_data, hash_size);
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    result = libspdm_responder_data_sign(
+        spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
+        spdm_context->connection_info.algorithm.base_asym_algo,
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        false, th_curr_data, th_curr_data_size, signature, &signature_size);
+#else
+    result = libspdm_responder_data_sign(
+        spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
+        spdm_context->connection_info.algorithm.base_asym_algo,
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        true, hash_data, hash_size, signature, &signature_size);
+#endif
+    if (result) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "signature - "));
+        libspdm_internal_dump_data(signature, signature_size);
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
+    }
+    return result;
+}
+
+/**
  * Process the SPDM KEY_EXCHANGE request and return the response.
  *
  * @param  spdm_context                  A pointer to the SPDM context.

@@ -217,56 +217,6 @@ void *libspdm_assign_session_id(void *context, uint32_t session_id, bool use_psk
 }
 
 /**
- * This function allocates half of session ID for a requester.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- *
- * @return half of session ID for a requester.
- **/
-uint16_t libspdm_allocate_req_session_id(libspdm_context_t *spdm_context)
-{
-    uint16_t req_session_id;
-    libspdm_session_info_t *session_info;
-    size_t index;
-
-    session_info = spdm_context->session_info;
-    for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index++) {
-        if ((session_info[index].session_id & 0xFFFF0000) == (INVALID_SESSION_ID & 0xFFFF0000)) {
-            req_session_id = (uint16_t)(0xFFFF - index);
-            return req_session_id;
-        }
-    }
-
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "libspdm_allocate_req_session_id - MAX session_id\n"));
-    return (INVALID_SESSION_ID & 0xFFFF0000) >> 16;
-}
-
-/**
- * This function allocates half of session ID for a responder.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- *
- * @return half of session ID for a responder.
- **/
-uint16_t libspdm_allocate_rsp_session_id(const libspdm_context_t *spdm_context)
-{
-    uint16_t rsp_session_id;
-    const libspdm_session_info_t *session_info;
-    size_t index;
-
-    session_info = spdm_context->session_info;
-    for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index++) {
-        if ((session_info[index].session_id & 0xFFFF) == (INVALID_SESSION_ID & 0xFFFF)) {
-            rsp_session_id = (uint16_t)(0xFFFF - index);
-            return rsp_session_id;
-        }
-    }
-
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "libspdm_allocate_rsp_session_id - MAX session_id\n"));
-    return (INVALID_SESSION_ID & 0xFFFF);
-}
-
-/**
  * This function frees a session ID.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
