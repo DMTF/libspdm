@@ -50,6 +50,7 @@ SET(src_test_spdm_requester
 SET(test_spdm_requester_LIBRARY
     memlib
     debuglib
+    spdm_responder_lib
     spdm_requester_lib
     spdm_common_lib
     ${CRYPTO_LIB_PATHS}

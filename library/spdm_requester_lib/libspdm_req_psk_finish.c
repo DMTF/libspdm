@@ -21,6 +21,68 @@ typedef struct {
 #pragma pack()
 
 /**
+ * This function generates the PSK finish HMAC based upon TH.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_info                  The session info of an SPDM session.
+ * @param  hmac                         The buffer to store the finish HMAC.
+ *
+ * @retval true  PSK finish HMAC is generated.
+ * @retval false PSK finish HMAC is not generated.
+ **/
+bool libspdm_generate_psk_exchange_req_hmac(libspdm_context_t *spdm_context,
+                                            libspdm_session_info_t *session_info,
+                                            void *hmac)
+{
+    size_t hash_size;
+    uint8_t calc_hmac_data[LIBSPDM_MAX_HASH_SIZE];
+    bool result;
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    size_t th_curr_data_size;
+    uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
+#endif
+
+    hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    th_curr_data_size = sizeof(th_curr_data);
+    result = libspdm_calculate_th_for_finish(spdm_context, session_info, NULL,
+                                             0, NULL, 0, &th_curr_data_size,
+                                             th_curr_data);
+    if (!result) {
+        return false;
+    }
+
+    result = libspdm_hash_all (spdm_context->connection_info.algorithm.base_hash_algo,
+                               th_curr_data, th_curr_data_size, hash_data);
+    if (!result) {
+        return false;
+    }
+
+    result = libspdm_hmac_all_with_request_finished_key(
+        session_info->secured_message_context, hash_data,
+        hash_size, calc_hmac_data);
+    if (!result) {
+        return false;
+    }
+#else
+    result = libspdm_calculate_th_hmac_for_finish_req(
+        spdm_context, session_info, &hash_size, calc_hmac_data);
+    if (!result) {
+        return false;
+    }
+#endif
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "th_curr hmac - "));
+    libspdm_internal_dump_data(calc_hmac_data, hash_size);
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
+
+    libspdm_copy_mem(hmac, hash_size, calc_hmac_data, hash_size);
+
+    return true;
+}
+
+/**
  * This function sends PSK_FINISH and receives PSK_FINISH_RSP for SPDM PSK finish.
  *
  * @param  spdm_context                  A pointer to the SPDM context.

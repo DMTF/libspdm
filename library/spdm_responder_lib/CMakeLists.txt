@@ -10,6 +10,7 @@ SET(src_spdm_responder_lib
     libspdm_rsp_capabilities.c
     libspdm_rsp_certificate.c
     libspdm_rsp_challenge_auth.c
+    libspdm_rsp_common.c
     libspdm_rsp_communication.c
     libspdm_rsp_digests.c
     libspdm_rsp_encap_challenge.c

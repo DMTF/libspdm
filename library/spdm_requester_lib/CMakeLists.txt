@@ -6,6 +6,7 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
 
 SET(src_spdm_requester_lib
     libspdm_req_challenge.c
+    libspdm_req_common.c
     libspdm_req_communication.c
     libspdm_req_encap_certificate.c
     libspdm_req_encap_challenge_auth.c

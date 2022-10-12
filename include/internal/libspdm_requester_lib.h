@@ -424,4 +424,13 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
                                                size_t *response_size,
                                                void **response);
 
+/**
+ * This function allocates half of session ID for a requester.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ *
+ * @return half of session ID for a requester.
+ **/
+uint16_t libspdm_allocate_req_session_id(libspdm_context_t *spdm_context);
+
 #endif /* SPDM_REQUESTER_LIB_INTERNAL_H */
