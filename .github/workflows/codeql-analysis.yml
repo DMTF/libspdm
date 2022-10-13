@@ -15,7 +15,7 @@ on:
   push:
     paths-ignore:
       - '**/*.md'
-      - 'doc/**'    
+      - 'doc/**'
     branches: [ "main" ]
   pull_request:
     paths-ignore:
@@ -77,9 +77,9 @@ jobs:
         # queries: security-extended,security-and-quality
 
     - name: Setup Node.js environment
-      uses: actions/setup-node@v3.4.1
+      uses: actions/setup-node@v3
       with:
-        node-version: 14.x
+        node-version: 16.x
 
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
