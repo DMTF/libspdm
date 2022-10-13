@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Check
         # Reject any .md files with tabs in them
         run: |
@@ -31,7 +31,7 @@ jobs:
           sudo apt update
           sudo apt install --no-install-recommends -y uncrustify
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Check
         # Run an uncrustify check. If the check indicates problems, then apply the fixes and show the diff.
         run: |
