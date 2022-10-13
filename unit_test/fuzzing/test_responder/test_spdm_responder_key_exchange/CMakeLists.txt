@@ -26,6 +26,7 @@ SET(src_test_spdm_responder_key_exchange
 SET(test_spdm_responder_key_exchange_LIBRARY
     memlib
     debuglib
+    spdm_requester_lib
     spdm_responder_lib
     spdm_common_lib
     ${CRYPTO_LIB_PATHS}
