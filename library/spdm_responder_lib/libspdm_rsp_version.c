@@ -18,14 +18,14 @@ typedef struct {
 /**
  * Process the SPDM GET_VERSION request and return the response.
  *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  request_size                  size in bytes of the request data.
- * @param  request                      A pointer to the request data.
- * @param  response_size                 size in bytes of the response data.
- *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
- * @param  response                     A pointer to the response data.
+ * @param  spdm_context   A pointer to the SPDM context.
+ * @param  request_size   Size in bytes of the request data.
+ * @param  request        A pointer to the request data.
+ * @param  response_size  Size in bytes of the response data.
+ *                        On input, it means the size in bytes of response data buffer.
+ *                        On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
+ *                        and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ * @param  response       A pointer to the response data.
  *
  * @retval RETURN_SUCCESS               The request is processed and the response is returned.
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
@@ -45,6 +45,7 @@ libspdm_return_t libspdm_get_response_version(void *context, size_t request_size
     spdm_context = context;
     spdm_request = request;
 
+    /* -=[Validate Request Phase]=- */
     if (request_size != sizeof(spdm_get_version_request_t)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
@@ -57,12 +58,10 @@ libspdm_return_t libspdm_get_response_version(void *context, size_t request_size
                                                response_size, response);
     }
 
-    libspdm_set_connection_state(spdm_context,
-                                 LIBSPDM_CONNECTION_STATE_NOT_STARTED);
+    libspdm_set_connection_state(spdm_context, LIBSPDM_CONNECTION_STATE_NOT_STARTED);
 
     if ((spdm_context->response_state == LIBSPDM_RESPONSE_STATE_NEED_RESYNC) ||
-        (spdm_context->response_state ==
-         LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP)) {
+        (spdm_context->response_state == LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP)) {
         /* receiving a GET_VERSION resets a need to resynchronization*/
         spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
     }
@@ -73,17 +72,14 @@ libspdm_return_t libspdm_get_response_version(void *context, size_t request_size
             response_size, response);
     }
 
+    /* -=[Process Request Phase]=- */
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                                                   spdm_request->header.request_response_code);
-
-
-    /* Cache*/
 
     libspdm_reset_message_a(spdm_context);
     libspdm_reset_message_b(spdm_context);
     libspdm_reset_message_c(spdm_context);
-    status = libspdm_append_message_a(spdm_context, spdm_request,
-                                      request_size);
+    status = libspdm_append_message_a(spdm_context, spdm_request, request_size);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,
@@ -91,6 +87,8 @@ libspdm_return_t libspdm_get_response_version(void *context, size_t request_size
     }
 
     libspdm_reset_context(spdm_context);
+
+    /* -=[Construct Response Phase]=- */
     LIBSPDM_ASSERT(*response_size >= sizeof(libspdm_version_response_mine_t));
     *response_size =
         sizeof(spdm_version_response_t) +
@@ -111,11 +109,7 @@ libspdm_return_t libspdm_get_response_version(void *context, size_t request_size
                      sizeof(spdm_version_number_t) *
                      spdm_context->local_context.version.spdm_version_count);
 
-
-    /* Cache*/
-
-    status = libspdm_append_message_a(spdm_context, spdm_response,
-                                      *response_size);
+    status = libspdm_append_message_a(spdm_context, spdm_response, *response_size);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_reset_message_a(spdm_context);
         return libspdm_generate_error_response(spdm_context,
@@ -123,8 +117,8 @@ libspdm_return_t libspdm_get_response_version(void *context, size_t request_size
                                                response_size, response);
     }
 
-    libspdm_set_connection_state(spdm_context,
-                                 LIBSPDM_CONNECTION_STATE_AFTER_VERSION);
+    /* -=[Update State Phase]=- */
+    libspdm_set_connection_state(spdm_context, LIBSPDM_CONNECTION_STATE_AFTER_VERSION);
 
     return LIBSPDM_STATUS_SUCCESS;
 }
