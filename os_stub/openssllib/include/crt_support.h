@@ -320,7 +320,7 @@ int memcmp(const void *str1, const void *str2, size_t n);
 void *memmove(void *dest, const void *src, size_t count);
 size_t strlen(const char *string);
 char *strcpy(char *dest, const char *src);
-char *strncpy(char *destinin, const char *source, int maxlen);
+char *strncpy(char *destinin, const char *source, size_t maxlen);
 char *strcat(char *dest, const char *src);
 int strncmp(const char *str1, const char *str2, size_t n);
 int strcasecmp(const char *s1, const char *s2);
