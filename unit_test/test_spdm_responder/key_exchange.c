@@ -6,6 +6,7 @@
 
 #include "spdm_unit_test.h"
 #include "internal/libspdm_responder_lib.h"
+#include "internal/libspdm_requester_lib.h"
 
 #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 

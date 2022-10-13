@@ -25,6 +25,7 @@ SET(src_test_spdm_requester_psk_exchange
 SET(test_spdm_requester_psk_exchange_LIBRARY
     memlib
     debuglib
+    spdm_responder_lib
     spdm_requester_lib
     spdm_common_lib
     ${CRYPTO_LIB_PATHS}

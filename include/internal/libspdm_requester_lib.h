@@ -433,4 +433,31 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
  **/
 uint16_t libspdm_allocate_req_session_id(libspdm_context_t *spdm_context);
 
+/**
+ * Build opaque data supported version.
+ *
+ * This function should be called in KEY_EXCHANGE/PSK_EXCHANGE request generation.
+ *
+ * @param  data_out_size  Size in bytes of the data_out.
+ *                        On input, it means the size in bytes of data_out buffer.
+ *                        On output, it means the size in bytes of copied data_out buffer if RETURN_SUCCESS is returned,
+ *                        and means the size in bytes of desired data_out buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ * @param  data_out       A pointer to the desination buffer to store the opaque data supported version.
+ **/
+libspdm_return_t libspdm_build_opaque_data_supported_version_data(libspdm_context_t *spdm_context,
+                                                                  size_t *data_out_size,
+                                                                  void *data_out);
+
+/**
+ * Process opaque data version selection.
+ *
+ * This function should be called in KEY_EXCHANGE/PSK_EXCHANGE response parsing in requester.
+ *
+ * @param  data_in_size  Size in bytes of the data_in.
+ * @param  data_in       A pointer to the buffer to store the opaque data version selection.
+ **/
+libspdm_return_t libspdm_process_opaque_data_version_selection_data(libspdm_context_t *spdm_context,
+                                                                    size_t data_in_size,
+                                                                    void *data_in);
+
 #endif /* SPDM_REQUESTER_LIB_INTERNAL_H */

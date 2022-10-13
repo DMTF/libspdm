@@ -7,6 +7,7 @@
 #include "library/spdm_crypt_lib.h"
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
+#include "internal/libspdm_responder_lib.h"
 
 
 size_t libspdm_get_max_buffer_size(void)

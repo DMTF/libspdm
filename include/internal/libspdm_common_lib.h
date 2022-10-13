@@ -669,6 +669,38 @@ bool libspdm_calculate_l1l2_hash(void *context, void *session_info,
                                  size_t *l1l2_hash_size, void *l1l2_hash);
 
 /**
+ * Get element from multi element opaque data by element id.
+ *
+ * This function should be called in
+ * libspdm_process_opaque_data_supported_version_data/libspdm_process_opaque_data_version_selection_data.
+ *
+ * @param[in]  data_in_size     Size of multi element opaque data.
+ * @param[in]  data_in          A pointer to the multi element opaque data.
+ * @param[in]  element_id       Element id.
+ * @param[in]  sm_data_id       ID for the Secured Message data type.
+ * @param[out] get_element_ptr  Pointer to store finded element.
+ *
+ * @retval true   Get element successfully
+ * @retval false  Get element failed
+ **/
+bool libspdm_get_element_from_opaque_data(libspdm_context_t *spdm_context,
+                                          size_t data_in_size, const void *data_in,
+                                          uint8_t element_id, uint8_t sm_data_id,
+                                          const void **get_element_ptr, size_t *get_element_len);
+
+/**
+ * Return the size in bytes of opaque data supported version.
+ *
+ * This function should be called in libspdm_process_opaque_data_supported_version_data.
+ *
+ * @param  version_count  Secure version count.
+ *
+ * @return The size in bytes of opaque data supported version.
+ **/
+size_t libspdm_get_untrusted_opaque_data_supported_version_data_size(
+    libspdm_context_t *spdm_context, uint8_t version_count);
+
+/**
  * Return the size in bytes of opaque data supproted version.
  *
  * This function should be called in KEY_EXCHANGE/PSK_EXCHANGE request generation.
@@ -678,41 +710,6 @@ bool libspdm_calculate_l1l2_hash(void *context, void *session_info,
 size_t libspdm_get_opaque_data_supported_version_data_size(libspdm_context_t *spdm_context);
 
 /**
- * Build opaque data supported version.
- *
- * This function should be called in KEY_EXCHANGE/PSK_EXCHANGE request generation.
- *
- * @param  data_out_size                  size in bytes of the data_out.
- *                                     On input, it means the size in bytes of data_out buffer.
- *                                     On output, it means the size in bytes of copied data_out buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired data_out buffer if RETURN_BUFFER_TOO_SMALL is returned.
- * @param  data_out                      A pointer to the desination buffer to store the opaque data supported version.
- *
- * @retval RETURN_SUCCESS               The opaque data supported version is built successfully.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- **/
-libspdm_return_t
-libspdm_build_opaque_data_supported_version_data(libspdm_context_t *spdm_context,
-                                                 size_t *data_out_size,
-                                                 void *data_out);
-
-/**
- * Process opaque data version selection.
- *
- * This function should be called in KEY_EXCHANGE/PSK_EXCHANGE response parsing in requester.
- *
- * @param  data_in_size                   size in bytes of the data_in.
- * @param  data_in                       A pointer to the buffer to store the opaque data version selection.
- *
- * @retval RETURN_SUCCESS               The opaque data version selection is processed successfully.
- * @retval RETURN_UNSUPPORTED           The data_in is NOT opaque data version selection.
- **/
-libspdm_return_t
-libspdm_process_opaque_data_version_selection_data(libspdm_context_t *spdm_context,
-                                                   size_t data_in_size,
-                                                   void *data_in);
-
-/**
  * Return the size in bytes of opaque data version selection.
  *
  * This function should be called in KEY_EXCHANGE/PSK_EXCHANGE response generation.
@@ -720,41 +717,6 @@ libspdm_process_opaque_data_version_selection_data(libspdm_context_t *spdm_conte
  * @return the size in bytes of opaque data version selection.
  **/
 size_t libspdm_get_opaque_data_version_selection_data_size(const libspdm_context_t *spdm_context);
-
-/**
- * Build opaque data version selection.
- *
- * This function should be called in KEY_EXCHANGE/PSK_EXCHANGE response generation.
- *
- * @param  data_out_size                  size in bytes of the data_out.
- *                                     On input, it means the size in bytes of data_out buffer.
- *                                     On output, it means the size in bytes of copied data_out buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired data_out buffer if RETURN_BUFFER_TOO_SMALL is returned.
- * @param  data_out                      A pointer to the desination buffer to store the opaque data version selection.
- *
- * @retval RETURN_SUCCESS               The opaque data version selection is built successfully.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- **/
-libspdm_return_t
-libspdm_build_opaque_data_version_selection_data(const libspdm_context_t *spdm_context,
-                                                 size_t *data_out_size,
-                                                 void *data_out);
-
-/**
- * Process opaque data supported version.
- *
- * This function should be called in KEY_EXCHANGE/PSK_EXCHANGE request parsing in responder.
- *
- * @param  data_in_size                   size in bytes of the data_in.
- * @param  data_in                       A pointer to the buffer to store the opaque data supported version.
- *
- * @retval RETURN_SUCCESS               The opaque data supported version is processed successfully.
- * @retval RETURN_UNSUPPORTED           The data_in is NOT opaque data supported version.
- **/
-libspdm_return_t
-libspdm_process_opaque_data_supported_version_data(libspdm_context_t *spdm_context,
-                                                   size_t data_in_size,
-                                                   const void *data_in);
 
 /**
  * Return the SPDMversion field of the version number struct.

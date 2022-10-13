@@ -52,6 +52,7 @@ SET(src_test_spdm_responder
 SET(test_spdm_responder_LIBRARY
     memlib
     debuglib
+    spdm_requester_lib
     spdm_responder_lib
     spdm_common_lib
     ${CRYPTO_LIB_PATHS}

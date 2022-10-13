@@ -26,6 +26,7 @@ SET(test_spdm_requester_key_exchange_LIBRARY
     memlib
     debuglib
     spdm_requester_lib
+    spdm_responder_lib
     spdm_common_lib
     ${CRYPTO_LIB_PATHS}
     rnglib

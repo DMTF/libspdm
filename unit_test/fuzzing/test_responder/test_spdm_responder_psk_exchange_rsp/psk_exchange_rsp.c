@@ -8,6 +8,7 @@
 #include "toolchain_harness.h"
 #include "spdm_device_secret_lib_internal.h"
 #include "internal/libspdm_responder_lib.h"
+#include "internal/libspdm_requester_lib.h"
 
 #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
