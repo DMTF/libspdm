@@ -3,13 +3,14 @@
  *  Copyright 2021-2022 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
-
 #include <base.h>
+#if 0
 #include <stdlib.h>
 #include "stdio.h"
 #include <unistd.h>
 #include <fcntl.h>
 #include <assert.h>
+#endif
 
 /**
  * Generates a 64-bit random number.
@@ -24,6 +25,7 @@
  **/
 bool libspdm_get_random_number_64(uint64_t *rand_data)
 {
+#if 0
     int fd;
 
     assert(rand_data != NULL);
@@ -39,6 +41,7 @@ bool libspdm_get_random_number_64(uint64_t *rand_data)
         return false;
     }
     close(fd);
+#endif
 
     return true;
 }

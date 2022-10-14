@@ -84,8 +84,8 @@ if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
                    $<TARGET_OBJECTS:platform_lib>
     )
 else()
-    ADD_EXECUTABLE(test_spdm_responder ${src_test_spdm_responder})
-    TARGET_LINK_LIBRARIES(test_spdm_responder ${test_spdm_responder_LIBRARY})
+    #ADD_EXECUTABLE(test_spdm_responder ${src_test_spdm_responder})
+    #TARGET_LINK_LIBRARIES(test_spdm_responder ${test_spdm_responder_LIBRARY})
 endif()
 
 

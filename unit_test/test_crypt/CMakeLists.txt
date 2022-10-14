@@ -49,7 +49,7 @@ if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
                    $<TARGET_OBJECTS:malloclib>
     )
 else()
-    ADD_EXECUTABLE(test_crypt ${src_test_crypt})
-    TARGET_LINK_LIBRARIES(test_crypt ${test_crypt_LIBRARY})
+     #ADD_EXECUTABLE(test_crypt ${src_test_crypt})
+     #TARGET_LINK_LIBRARIES(test_crypt ${test_crypt_LIBRARY})
 endif()
 

@@ -41,8 +41,8 @@ SET(test_spdm_common_LIBRARY
 )
 
 if(NOT ((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC")))
-    ADD_EXECUTABLE(test_spdm_common ${src_test_spdm_common})
-    TARGET_LINK_LIBRARIES(test_spdm_common ${test_spdm_common_LIBRARY})
+#    ADD_EXECUTABLE(test_spdm_common ${src_test_spdm_common})
+#    TARGET_LINK_LIBRARIES(test_spdm_common ${test_spdm_common_LIBRARY})
 endif()
 
 

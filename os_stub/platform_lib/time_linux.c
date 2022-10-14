@@ -5,9 +5,11 @@
  **/
 
 #include <base.h>
+#if 0
 #include <stdlib.h>
 #include <sys/time.h>
 #include <errno.h>
+#endif
 
 /**
  * Suspends the execution of the current thread until the time-out interval elapses.
@@ -17,6 +19,7 @@
  **/
 void libspdm_sleep(uint64_t milliseconds)
 {
+#if 0
     struct timeval tv;
     int err;
 
@@ -26,4 +29,5 @@ void libspdm_sleep(uint64_t milliseconds)
     do {
         err=select(0, NULL, NULL, NULL, &tv);
     } while(err<0 && errno==EINTR);
+#endif
 }
