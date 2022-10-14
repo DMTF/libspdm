@@ -269,7 +269,7 @@ void libspdm_set_last_spdm_error_struct(void *spdm_context,
  * @retval RETURN_SUCCESS       context is initialized.
  * @retval RETURN_DEVICE_ERROR  context initialization failed.
  */
-libspdm_return_t libspdm_init_context(void *context);
+libspdm_return_t libspdm_init_context(void *spdm_context);
 
 /**
  * Reset an SPDM context.
@@ -278,7 +278,7 @@ libspdm_return_t libspdm_init_context(void *context);
  *
  * @param  spdm_context  A pointer to the SPDM context.
  */
-void libspdm_reset_context(void *context);
+void libspdm_reset_context(void *spdm_context);
 
 /**
  * Return the size in bytes of the SPDM context.
@@ -403,7 +403,7 @@ void libspdm_register_device_io_func(
  * @retval RETURN_SUCCESS               The sender buffer is acquired.
  **/
 typedef libspdm_return_t (*libspdm_device_acquire_sender_buffer_func)(
-    void *context, size_t *max_msg_size, void **msg_buf_ptr);
+    void *spdm_context, size_t *max_msg_size, void **msg_buf_ptr);
 
 /**
  * Release a device sender buffer for transport layer message.
@@ -413,7 +413,8 @@ typedef libspdm_return_t (*libspdm_device_acquire_sender_buffer_func)(
  *
  * @retval RETURN_SUCCESS               The sender buffer is Released.
  **/
-typedef void (*libspdm_device_release_sender_buffer_func)(void *context, const void *msg_buf_ptr);
+typedef void (*libspdm_device_release_sender_buffer_func)(void *spdm_context,
+                                                          const void *msg_buf_ptr);
 
 /**
  * Acquire a device receiver buffer for transport layer message.
@@ -453,7 +454,7 @@ typedef void (*libspdm_device_release_sender_buffer_func)(void *context, const v
  * @retval RETURN_SUCCESS  The receiver buffer is acquired.
  **/
 typedef libspdm_return_t (*libspdm_device_acquire_receiver_buffer_func)(
-    void *context, size_t *max_msg_size, void **msg_buf_ptr);
+    void *spdm_context, size_t *max_msg_size, void **msg_buf_ptr);
 
 /**
  * Release a device receiver buffer for transport layer message.
@@ -463,7 +464,8 @@ typedef libspdm_return_t (*libspdm_device_acquire_receiver_buffer_func)(
  *
  * @retval RETURN_SUCCESS  The receiver buffer is Released.
  **/
-typedef void (*libspdm_device_release_receiver_buffer_func)(void *context, const void *msg_buf_ptr);
+typedef void (*libspdm_device_release_receiver_buffer_func)(void *spdm_context,
+                                                            const void *msg_buf_ptr);
 
 /**
  * Register SPDM device buffer management functions.
@@ -531,8 +533,8 @@ typedef libspdm_return_t (*libspdm_transport_encode_message_func)(
  *
  * @param  spdm_context            A pointer to the SPDM context.
  * @param  session_id              Indicates if it is a secured message protected via SPDM session.
- *                                 If *session_id is NULL, it is a normal message.
- *                                 If *session_id is not NULL, it is a secured message.
+ *                                 If session_id is NULL, it is a normal message.
+ *                                 If session_id is not NULL, it is a secured message.
  * @param  is_app_message          Indicates if it is an APP message or SPDM message.
  * @param  is_requester            Indicates if it is a requester message.
  * @param  transport_message_size  Size in bytes of the transport message data buffer.
@@ -593,7 +595,7 @@ void libspdm_register_transport_layer_func(
  *
  * @return the size of required scratch buffer.
  **/
-size_t libspdm_get_sizeof_required_scratch_buffer (void *context);
+size_t libspdm_get_sizeof_required_scratch_buffer (void *spdm_context);
 
 /**
  * Set the scratch buffer.
@@ -603,20 +605,20 @@ size_t libspdm_get_sizeof_required_scratch_buffer (void *context);
  *
  * This function must be called after libspdm_init_context, and before any SPDM communication.
  *
- * @param  context              A pointer to the SPDM context.
+ * @param  spdm_context         A pointer to the SPDM context.
  * @param  scratch_buffer       Buffer address of the scratch buffer.
  * @param  scratch_buffer_size  Size of the scratch buffer.
  *
  **/
 void libspdm_set_scratch_buffer (
-    void *context,
+    void *spdm_context,
     void *scratch_buffer,
     size_t scratch_buffer_size);
 
 /**
  * Get the scratch buffer.
  *
- * @param  context              A pointer to the SPDM context.
+ * @param  spdm_context         A pointer to the SPDM context.
  * @param  scratch_buffer       Buffer address of the scratch buffer.
  * @param  scratch_buffer_size  Size of the scratch buffer.
  *
@@ -674,179 +676,6 @@ void libspdm_register_verify_spdm_cert_chain_func(
     const libspdm_verify_spdm_cert_chain_func verify_spdm_cert_chain);
 
 /**
- * Reset message A cache in SPDM context.
- *
- * @param  spdm_context  A pointer to the SPDM context.
- **/
-void libspdm_reset_message_a(void *spdm_context);
-
-/**
- * Reset message B cache in SPDM context.
- *
- * @param  spdm_context  A pointer to the SPDM context.
- **/
-void libspdm_reset_message_b(void *spdm_context);
-
-/**
- * Reset message C cache in SPDM context.
- *
- * @param  spdm_context  A pointer to the SPDM context.
- **/
-void libspdm_reset_message_c(void *spdm_context);
-
-/**
- * Reset message MutB cache in SPDM context.
- *
- * @param  spdm_context  A pointer to the SPDM context.
- **/
-void libspdm_reset_message_mut_b(void *spdm_context);
-
-/**
- * Reset message MutC cache in SPDM context.
- *
- * @param  spdm_context  A pointer to the SPDM context.
- **/
-void libspdm_reset_message_mut_c(void *spdm_context);
-
-/**
- * Reset message M cache in SPDM context.
- * If session_info is NULL, this function will use M cache of SPDM context,
- * else will use M cache of SPDM session context.
- *
- * @param  spdm_context  A pointer to the SPDM context.
- * @param  session_info  A pointer to the SPDM session context.
- **/
-void libspdm_reset_message_m(void *context, void *session_info);
-
-/**
- * Reset message K cache in SPDM context.
- *
- * @param  spdm_context       A pointer to the SPDM context.
- * @param  spdm_session_info  A pointer to the SPDM session context.
- **/
-void libspdm_reset_message_k(void *context, void *spdm_session_info);
-
-/**
- * Reset message F cache in SPDM context.
- *
- * @param  spdm_context       A pointer to the SPDM context.
- * @param  spdm_session_info  A pointer to the SPDM session context.
- **/
-void libspdm_reset_message_f(void *context, void *spdm_session_info);
-
-/**
- * Append message A cache in SPDM context.
- *
- * @param  spdm_context  A pointer to the SPDM context.
- * @param  message       Message buffer.
- * @param  message_size  Size in bytes of message buffer.
- *
- * @return RETURN_SUCCESS          message is appended.
- * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
- **/
-libspdm_return_t libspdm_append_message_a(void *spdm_context, const void *message,
-                                          size_t message_size);
-/**
- * Append message B cache in SPDM context.
- *
- * @param  spdm_context  A pointer to the SPDM context.
- * @param  message       Message buffer.
- * @param  message_size  Size in bytes of message buffer.
- *
- * @return RETURN_SUCCESS          message is appended.
- * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
- **/
-libspdm_return_t libspdm_append_message_b(void *spdm_context, const void *message,
-                                          size_t message_size);
-
-/**
- * Append message C cache in SPDM context.
- *
- * @param  spdm_context  A pointer to the SPDM context.
- * @param  message       Message buffer.
- * @param  message_size  Size in bytes of message buffer.
- *
- * @return RETURN_SUCCESS          message is appended.
- * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
- **/
-libspdm_return_t libspdm_append_message_c(void *spdm_context, const void *message,
-                                          size_t message_size);
-
-/**
- * Append message MutB cache in SPDM context.
- *
- * @param  spdm_context  A pointer to the SPDM context.
- * @param  message       Message buffer.
- * @param  message_size  Size in bytes of message buffer.
- *
- * @return RETURN_SUCCESS          message is appended.
- * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
- **/
-libspdm_return_t libspdm_append_message_mut_b(void *spdm_context, const void *message,
-                                              size_t message_size);
-
-/**
- * Append message MutC cache in SPDM context.
- *
- * @param  spdm_context  A pointer to the SPDM context.
- * @param  message       Message buffer.
- * @param  message_size  Size in bytes of message buffer.
- *
- * @return RETURN_SUCCESS          message is appended.
- * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
- **/
-libspdm_return_t libspdm_append_message_mut_c(void *spdm_context, const void *message,
-                                              size_t message_size);
-
-/**
- * Append message M cache in SPDM context.
- * If session_info is NULL, this function will use M cache of SPDM context,
- * else will use M cache of SPDM session context.
- *
- * @param  spdm_context  A pointer to the SPDM context.
- * @param  session_info  A pointer to the SPDM session context.
- * @param  message       Message buffer.
- * @param  message_size  Size in bytes of message buffer.
- *
- * @return RETURN_SUCCESS          message is appended.
- * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
- **/
-libspdm_return_t libspdm_append_message_m(void *context, void *session_info,
-                                          const void *message, size_t message_size);
-
-/**
- * Append message K cache in SPDM context.
- *
- * @param  spdm_context       A pointer to the SPDM context.
- * @param  spdm_session_info  A pointer to the SPDM session context.
- * @param  is_requester       Indicate of the key generation for a requester or a responder.
- * @param  message            Message buffer.
- * @param  message_size       Size in bytes of message buffer.
- *
- * @return RETURN_SUCCESS          message is appended.
- * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
- **/
-libspdm_return_t libspdm_append_message_k(void *context, void *spdm_session_info,
-                                          bool is_requester, const void *message,
-                                          size_t message_size);
-
-/**
- * Append message F cache in SPDM context.
- *
- * @param  spdm_context       A pointer to the SPDM context.
- * @param  spdm_session_info  A pointer to the SPDM session context.
- * @param  is_requester       Indicate of the key generation for a requester or a responder.
- * @param  message            Message buffer.
- * @param  message_size       Size in bytes of message buffer.
- *
- * @return RETURN_SUCCESS          message is appended.
- * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
- **/
-libspdm_return_t libspdm_append_message_f(void *context, void *spdm_session_info,
-                                          bool is_requester, const void *message,
-                                          size_t message_size);
-
-/**
  * This function gets the session info via session ID.
  *
  * @param  spdm_context  A pointer to the SPDM context.
@@ -874,171 +703,6 @@ void *libspdm_get_secured_message_context_via_session_id(void *spdm_context, uin
  * @return secured message context.
  **/
 void *libspdm_get_secured_message_context_via_session_info(void *spdm_session_info);
-
-/**
- * This function assigns a new session ID.
- *
- * @param  spdm_context  A pointer to the SPDM context.
- * @param  session_id    The SPDM session ID.
- *
- * @return session info associated with this new session ID.
- **/
-void *libspdm_assign_session_id(void *spdm_context, uint32_t session_id, bool use_psk);
-
-/**
- * This function frees a session ID.
- *
- * @param  spdm_context  A pointer to the SPDM context.
- * @param  session_id    The SPDM session ID.
- **/
-void libspdm_free_session_id(void *spdm_context, uint32_t session_id);
-
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-/*
- * This function calculates current TH data with message A and message K.
- *
- * @param  spdm_context            A pointer to the SPDM context.
- * @param  session_info            The SPDM session ID.
- * @param  cert_chain_buffer       Certitiface chain buffer with spdm_cert_chain_t header.
- * @param  cert_chain_buffer_size  Size in bytes of the certitiface chain buffer.
- * @param  th_data_buffer_size     Size in bytes of the th_data_buffer
- * @param  th_data_buffer          The buffer to store the th_data_buffer
- *
- * @retval RETURN_SUCCESS  current TH data is calculated.
- */
-bool libspdm_calculate_th_for_exchange(
-    void *spdm_context, void *spdm_session_info,
-    const uint8_t *cert_chain_buffer, size_t cert_chain_buffer_size,
-    size_t *th_data_buffer_size, void *th_data_buffer);
-#else
-/*
- * This function calculates current TH hash with message A and message K.
- *
- * @param  spdm_context         A pointer to the SPDM context.
- * @param  session_info         The SPDM session ID.
- * @param  th_hash_buffer_size  Size in bytes of the th_hash_buffer
- * @param  th_hash_buffer       The buffer to store the th_hash_buffer
- *
- * @retval RETURN_SUCCESS  current TH hash is calculated.
- */
-bool libspdm_calculate_th_hash_for_exchange(
-    void *context, void *spdm_session_info,
-    size_t *th_hash_buffer_size, void *th_hash_buffer);
-
-/*
- * This function calculates current TH hmac with message A and message K, with response finished_key.
- *
- * @param  spdm_context         A pointer to the SPDM context.
- * @param  session_info         The SPDM session ID.
- * @param  th_hmac_buffer_size  Size in bytes of the th_hmac_buffer
- * @param  th_hmac_buffer       The buffer to store the th_hmac_buffer
- *
- * @retval RETURN_SUCCESS  current TH hmac is calculated.
- */
-bool libspdm_calculate_th_hmac_for_exchange_rsp(
-    void *context, void *spdm_session_info, bool is_requester,
-    size_t *th_hmac_buffer_size, void *th_hmac_buffer);
-#endif
-
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-/*
- * This function calculates current TH data with message A, message K and message F.
- *
- * @param  spdm_context                A pointer to the SPDM context.
- * @param  session_info                The SPDM session ID.
- * @param  cert_chain_buffer           Certitiface chain buffer with spdm_cert_chain_t header.
- * @param  cert_chain_buffer_size      Size in bytes of the certitiface chain buffer.
- * @param  mut_cert_chain_buffer       Certitiface chain buffer with spdm_cert_chain_t header in mutual authentication.
- * @param  mut_cert_chain_buffer_size  Size in bytes of the certitiface chain buffer in mutual authentication.
- * @param  th_data_buffer_size         Size in bytes of the th_data_buffer.
- * @param  th_data_buffer              The buffer to store the th_data_buffer
- *
- * @retval RETURN_SUCCESS  current TH data is calculated.
- */
-bool libspdm_calculate_th_for_finish(void *spdm_context,
-                                     void *spdm_session_info,
-                                     const uint8_t *cert_chain_buffer,
-                                     size_t cert_chain_buffer_size,
-                                     const uint8_t *mut_cert_chain_buffer,
-                                     size_t mut_cert_chain_buffer_size,
-                                     size_t *th_data_buffer_size,
-                                     void *th_data_buffer);
-#else
-/*
- * This function calculates current TH hash with message A, message K and message F.
- *
- * @param  spdm_context         A pointer to the SPDM context.
- * @param  session_info         The SPDM session ID.
- * @param  th_hash_buffer_size  Size in bytes of the th_hash_buffer
- * @param  th_hash_buffer       The buffer to store the th_hash_buffer
- *
- * @retval RETURN_SUCCESS  current TH hash is calculated.
- */
-bool libspdm_calculate_th_hash_for_finish(void *spdm_context,
-                                          void *spdm_session_info,
-                                          size_t *th_hash_buffer_size,
-                                          void *th_hash_buffer);
-
-/*
- * This function calculates current TH hmac with message A, message K and message F, with response finished_key.
- *
- * @param  spdm_context         A pointer to the SPDM context.
- * @param  session_info         The SPDM session ID.
- * @param  th_hmac_buffer_size  Size in bytes of the th_hmac_buffer
- * @param  th_hmac_buffer       The buffer to store the th_hmac_buffer
- *
- * @retval RETURN_SUCCESS  current TH hmac is calculated.
- */
-bool libspdm_calculate_th_hmac_for_finish_rsp(void *spdm_context,
-                                              void *spdm_session_info,
-                                              size_t *th_hmac_buffer_size,
-                                              void *th_hmac_buffer);
-
-/*
- * This function calculates current TH hmac with message A, message K and message F, with request finished_key.
- *
- * @param  spdm_context         A pointer to the SPDM context.
- * @param  session_info         The SPDM session ID.
- * @param  th_hmac_buffer_size  Size in bytes of the th_hmac_buffer
- * @param  th_hmac_buffer       The buffer to store the th_hmac_buffer
- *
- * @retval RETURN_SUCCESS  current TH hmac is calculated.
- */
-bool libspdm_calculate_th_hmac_for_finish_req(void *spdm_context,
-                                              void *spdm_session_info,
-                                              size_t *th_hmac_buffer_size,
-                                              void *th_hmac_buffer);
-#endif
-
-/*
- * This function calculates th1 hash.
- *
- * @param  spdm_context   A pointer to the SPDM context.
- * @param  session_info   The SPDM session ID.
- * @param  is_requester   Indicate of the key generation for a requester or a responder.
- * @param  th1_hash_data  Th1 hash.
- *
- * @retval RETURN_SUCCESS  th1 hash is calculated.
- */
-bool libspdm_calculate_th1_hash(void *spdm_context,
-                                void *spdm_session_info,
-                                bool is_requester,
-                                uint8_t *th1_hash_data);
-
-/*
- * This function calculates th2 hash.
- *
- * @param  spdm_context   A pointer to the SPDM context.
- * @param  session_info   The SPDM session ID.
- * @param  is_requester   Indicate of the key generation for a requester or a responder.
- * @param  th1_hash_data  Th2 hash
- *
- * @retval RETURN_SUCCESS  th2 hash is calculated.
- */
-bool libspdm_calculate_th2_hash(void *spdm_context,
-                                void *spdm_session_info,
-                                bool is_requester,
-                                uint8_t *th2_hash_data);
 
 /**
  * This function returns peer certificate chain buffer including spdm_cert_chain_t header.
@@ -1095,73 +759,5 @@ bool libspdm_get_local_cert_chain_buffer(void *spdm_context,
 bool libspdm_get_local_cert_chain_data(void *spdm_context,
                                        const void **cert_chain_data,
                                        size_t *cert_chain_data_size);
-
-/**
- * Reads a 24-bit value from memory that may be unaligned.
- *
- * @param  buffer  The pointer to a 24-bit value that may be unaligned.
- *
- * @return The 24-bit value read from buffer.
- **/
-uint32_t libspdm_read_uint24(const uint8_t *buffer);
-
-/**
- * Writes a 24-bit value to memory that may be unaligned.
- *
- * @param  buffer  The pointer to a 24-bit value that may be unaligned.
- * @param  value   24-bit value to write to buffer.
- **/
-void libspdm_write_uint24(uint8_t *buffer, uint32_t value);
-
-/**
- * Reads a 16-bit value from memory that may be unaligned.
- *
- * @param  buffer  The pointer to a 16-bit value that may be unaligned.
- *
- * @return The 16-bit value read from buffer.
- **/
-uint16_t libspdm_read_uint16(const uint8_t *buffer);
-
-/**
- * Writes a 16-bit value to memory that may be unaligned.
- *
- * @param  buffer  The pointer to a 16-bit value that may be unaligned.
- * @param  value   16-bit value to write to buffer.
- **/
-void libspdm_write_uint16(uint8_t *buffer, uint16_t value);
-
-/**
- * Reads a 32-bit value from memory that may be unaligned.
- *
- * @param  buffer  The pointer to a 32-bit value that may be unaligned.
- *
- * @return The 32-bit value read from buffer.
- **/
-uint32_t libspdm_read_uint32(const uint8_t *buffer);
-
-/**
- * Writes a 32-bit value to memory that may be unaligned.
- *
- * @param  buffer  The pointer to a 32-bit value that may be unaligned.
- * @param  value   32-bit value to write to buffer.
- **/
-void libspdm_write_uint32(uint8_t *buffer, uint32_t value);
-
-/**
- * Reads a 64-bit value from memory that may be unaligned.
- *
- * @param  buffer  The pointer to a 64-bit value that may be unaligned.
- *
- * @return The 64-bit value read from buffer.
- **/
-uint64_t libspdm_read_uint64(const uint8_t *buffer);
-
-/**
- * Writes a 64-bit value to memory that may be unaligned.
- *
- * @param  buffer  The pointer to a 64-bit value that may be unaligned.
- * @param  value   64-bit value to write to buffer.
- **/
-void libspdm_write_uint64(uint8_t *buffer, uint64_t value);
 
 #endif /* SPDM_COMMON_LIB_H */
