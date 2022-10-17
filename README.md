@@ -209,6 +209,23 @@ Example CMake commands:
    Note: Please install the openssl with command `sudo make install` before build libspdm.
    cmake -DARCH=x64 -DTOOLCHAIN=GCC -DTARGET=Release -DCRYPTO=openssl -DENABLE_BINARY_BUILD=1 -DCOMPILED_LIBCRYPTO_PATH=<OPENSSL_PATH>/libcrypto.a -DCOMPILED_LIBSSL_PATH=<OPENSSL_PATH>/libssl.a ..
    ```
+### Armclang build on Linux.
+1) Install  [Arm Development Studio 2022.1 linux](https://developer.arm.com/downloads/-/arm-development-studio-downloads)
+2) Build command
+```
+export PATH=$PATH:/opt/arm/developmentstudio-2022.1/sw/ARMCompiler6.18/bin
+export ARM_PRODUCT_DEF=/opt/arm/developmentstudio-2022.1/sw/mappings/gold.elmap
+export ARMLMD_LICENSE_FILE=XXXX
+cmake -DARCH=arm -DTOOLCHAIN=ARM_CLANG -DTARGET=Debug -DCRYPTO=mbedtls  ..
+or
+cmake -DARCH=aarch64 -DTOOLCHAIN=ARM_CLANG -DTARGET=Debug -DCRYPTO=mbedtls  ..
+or
+cmake -DARCH=arm -DTOOLCHAIN=ARM_CLANG -DTARGET=Debug -DCRYPTO=openssl  ..
+or
+cmake -DARCH=aarch64 -DTOOLCHAIN=ARM_CLANG -DTARGET=Debug -DCRYPTO=openssl  ..
+make copy_sample_key
+make -j
+```
 
 ## Run Test
 
