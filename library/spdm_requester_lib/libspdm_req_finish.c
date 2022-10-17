@@ -121,9 +121,9 @@ bool libspdm_verify_finish_rsp_hmac(libspdm_context_t *spdm_context,
  * @retval true  finish HMAC is generated.
  * @retval false finish HMAC is not generated.
  **/
-static bool libspdm_generate_finish_req_hmac(libspdm_context_t *spdm_context,
-                                             libspdm_session_info_t *session_info,
-                                             void *hmac)
+bool libspdm_generate_finish_req_hmac(libspdm_context_t *spdm_context,
+                                      libspdm_session_info_t *session_info,
+                                      void *hmac)
 {
     size_t hash_size;
     uint8_t calc_hmac_data[LIBSPDM_MAX_HASH_SIZE];
@@ -206,9 +206,9 @@ static bool libspdm_generate_finish_req_hmac(libspdm_context_t *spdm_context,
  * @retval true  finish signature is generated.
  * @retval false finish signature is not generated.
  **/
-static bool libspdm_generate_finish_req_signature(libspdm_context_t *spdm_context,
-                                                  libspdm_session_info_t *session_info,
-                                                  uint8_t *signature)
+bool libspdm_generate_finish_req_signature(libspdm_context_t *spdm_context,
+                                           libspdm_session_info_t *session_info,
+                                           uint8_t *signature)
 {
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     bool result;

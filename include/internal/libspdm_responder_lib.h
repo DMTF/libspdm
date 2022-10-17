@@ -775,4 +775,93 @@ libspdm_process_opaque_data_supported_version_data(libspdm_context_t *spdm_conte
                                                    size_t data_in_size,
                                                    const void *data_in);
 
+/**
+ * This function verifies the finish HMAC based upon TH.
+ *
+ * @param  spdm_context    A pointer to the SPDM context.
+ * @param  session_info    The session info of an SPDM session.
+ * @param  hmac_data       The HMAC data buffer.
+ * @param  hmac_data_size  Size in bytes of the HMAC data buffer.
+ *
+ * @retval true  HMAC verification pass.
+ * @retval false HMAC verification fail.
+ **/
+bool libspdm_verify_finish_req_hmac(libspdm_context_t *spdm_context,
+                                    libspdm_session_info_t *session_info,
+                                    const uint8_t *hmac, size_t hmac_size);
+
+/**
+ * This function verifies the finish signature based upon TH.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_info                  The session info of an SPDM session.
+ * @param  sign_data                     The signature data buffer.
+ * @param  sign_data_size                 size in bytes of the signature data buffer.
+ *
+ * @retval true  signature verification pass.
+ * @retval false signature verification fail.
+ **/
+bool libspdm_verify_finish_req_signature(libspdm_context_t *spdm_context,
+                                         libspdm_session_info_t *session_info,
+                                         const void *sign_data,
+                                         const size_t sign_data_size);
+
+/**
+ * This function generates the finish HMAC based upon TH.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_info                  The session info of an SPDM session.
+ * @param  hmac                         The buffer to store the finish HMAC.
+ *
+ * @retval true  finish HMAC is generated.
+ * @retval false finish HMAC is not generated.
+ **/
+bool libspdm_generate_finish_rsp_hmac(libspdm_context_t *spdm_context,
+                                      libspdm_session_info_t *session_info,
+                                      uint8_t *hmac);
+
+/**
+ * This function generates the key exchange HMAC based upon TH.
+ *
+ * @param  spdm_context  A pointer to the SPDM context.
+ * @param  session_info  The session info of an SPDM session.
+ * @param  hmac          The buffer to store the key exchange HMAC.
+ *
+ * @retval true  key exchange HMAC is generated.
+ * @retval false key exchange HMAC is not generated.
+ **/
+bool libspdm_generate_key_exchange_rsp_hmac(libspdm_context_t *spdm_context,
+                                            libspdm_session_info_t *session_info,
+                                            uint8_t *hmac);
+
+/**
+ * This function generates the key exchange signature based upon TH.
+ *
+ * @param  spdm_context  A pointer to the SPDM context.
+ * @param  session_info  The session info of an SPDM session.
+ * @param  signature     The buffer to store the key exchange signature.
+ *
+ * @retval true  key exchange signature is generated.
+ * @retval false key exchange signature is not generated.
+ **/
+bool libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context,
+                                                 libspdm_session_info_t *session_info,
+                                                 uint8_t *signature);
+
+/**
+ * This function generates the measurement signature to response message based upon l1l2.
+ * If session_info is NULL, this function will use M cache of SPDM context,
+ * else will use M cache of SPDM session context.
+ *
+ * @param  spdm_context  A pointer to the SPDM context.
+ * @param  session_info  A pointer to the SPDM session context.
+ * @param  signature     The buffer to store the signature.
+ *
+ * @retval true  measurement signature is generated.
+ * @retval false measurement signature is not generated.
+ **/
+bool libspdm_generate_measurement_signature(libspdm_context_t *spdm_context,
+                                            libspdm_session_info_t *session_info,
+                                            uint8_t *signature);
+
 #endif /* SPDM_RESPONDER_LIB_INTERNAL_H */

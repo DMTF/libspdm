@@ -36,10 +36,10 @@ typedef struct {
  * @retval true  signature verification pass.
  * @retval false signature verification fail.
  **/
-static bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
-                                                 libspdm_session_info_t *session_info,
-                                                 const void *sign_data,
-                                                 size_t sign_data_size)
+bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
+                                          libspdm_session_info_t *session_info,
+                                          const void *sign_data,
+                                          size_t sign_data_size)
 {
     bool result;
     const uint8_t *cert_buffer;

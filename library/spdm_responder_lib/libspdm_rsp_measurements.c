@@ -20,9 +20,9 @@
  * @retval true  measurement signature is generated.
  * @retval false measurement signature is not generated.
  **/
-static bool libspdm_generate_measurement_signature(libspdm_context_t *spdm_context,
-                                                   libspdm_session_info_t *session_info,
-                                                   uint8_t *signature)
+bool libspdm_generate_measurement_signature(libspdm_context_t *spdm_context,
+                                            libspdm_session_info_t *session_info,
+                                            uint8_t *signature)
 {
     size_t signature_size;
     bool result;
