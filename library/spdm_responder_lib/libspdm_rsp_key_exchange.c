@@ -18,9 +18,9 @@
  * @retval true  key exchange HMAC is generated.
  * @retval false key exchange HMAC is not generated.
  **/
-static bool libspdm_generate_key_exchange_rsp_hmac(libspdm_context_t *spdm_context,
-                                                   libspdm_session_info_t *session_info,
-                                                   uint8_t *hmac)
+bool libspdm_generate_key_exchange_rsp_hmac(libspdm_context_t *spdm_context,
+                                            libspdm_session_info_t *session_info,
+                                            uint8_t *hmac)
 {
     uint8_t hmac_data[LIBSPDM_MAX_HASH_SIZE];
     size_t hash_size;
@@ -87,9 +87,9 @@ static bool libspdm_generate_key_exchange_rsp_hmac(libspdm_context_t *spdm_conte
  * @retval true  key exchange signature is generated.
  * @retval false key exchange signature is not generated.
  **/
-static bool libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context,
-                                                        libspdm_session_info_t *session_info,
-                                                        uint8_t *signature)
+bool libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context,
+                                                 libspdm_session_info_t *session_info,
+                                                 uint8_t *signature)
 {
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     const uint8_t *cert_chain_buffer;
