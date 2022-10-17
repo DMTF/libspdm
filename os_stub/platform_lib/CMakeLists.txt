@@ -9,6 +9,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
 SET(src_platform_lib
     time_linux.c
     watchdog.c
+    divtest.c
 )
 elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
 SET(src_platform_lib

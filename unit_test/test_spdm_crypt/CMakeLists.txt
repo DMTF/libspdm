@@ -32,6 +32,7 @@ SET(test_spdm_crypt_LIBRARY
     malloclib
     cmockalib
     spdm_device_secret_lib_sample
+    platform_lib
 )
 
 if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
@@ -44,6 +45,7 @@ if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
                    $<TARGET_OBJECTS:rnglib>
                    $<TARGET_OBJECTS:cryptlib_${CRYPTO}>
                    $<TARGET_OBJECTS:malloclib>
+                   $<TARGET_OBJECTS:platform_lib>
     )
 else()
     ADD_EXECUTABLE(test_spdm_crypt ${src_test_spdm_crypt})

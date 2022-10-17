@@ -18,6 +18,7 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/cmockalib
 
 SET(src_CmockaLib
     cmocka/src/cmocka.c
+    strup.c
 )
 
 ADD_LIBRARY(cmockalib STATIC ${src_CmockaLib})

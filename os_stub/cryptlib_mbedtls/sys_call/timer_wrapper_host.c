@@ -23,9 +23,9 @@ struct tm *mbedtls_platform_gmtime_r(const mbedtls_time_t *tt,
 
     return tm_buf;
 #else
-    if (gmtime_r(tt, tm_buf) == NULL) {
-        return NULL;
-    }
+    // if (gmtime_r(tt, tm_buf) == NULL) {
+    //     return NULL;
+    // }
 
     return tm_buf;
 #endif

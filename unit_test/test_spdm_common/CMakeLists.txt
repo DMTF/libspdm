@@ -38,6 +38,7 @@ SET(test_spdm_common_LIBRARY
     spdm_device_secret_lib_sample
     spdm_transport_test_lib
     cmockalib
+    platform_lib
 )
 
 if(NOT ((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC")))

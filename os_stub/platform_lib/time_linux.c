@@ -6,7 +6,9 @@
 
 #include <base.h>
 #include <stdlib.h>
-#include <sys/time.h>
+
+
+#include <time.h>
 #include <errno.h>
 
 /**
@@ -17,13 +19,13 @@
  **/
 void libspdm_sleep(uint64_t milliseconds)
 {
-    struct timeval tv;
-    int err;
+    // struct timeval tv;
+    // int err;
 
-    tv.tv_sec = milliseconds / 1000;
-    tv.tv_usec = (milliseconds % 1000) * 1000;
+    // tv.tv_sec = milliseconds / 1000;
+    // tv.tv_usec = (milliseconds % 1000) * 1000;
 
-    do {
-        err=select(0, NULL, NULL, NULL, &tv);
-    } while(err<0 && errno==EINTR);
+    // do {
+    //     err=select(0, NULL, NULL, NULL, &tv);
+    // } while(err<0 && errno==EINTR);
 }

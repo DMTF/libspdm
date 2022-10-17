@@ -10,9 +10,7 @@
  **/
 #ifdef _MSC_VER
 #else
-    #include <fcntl.h>
-    #include <unistd.h>
-    #include <sys/stat.h>
+
 #endif
 #include <stdarg.h>
 #include <stddef.h>
@@ -1233,7 +1231,7 @@ bool libspdm_write_certificate_to_nvm(uint8_t slot_id, const void * cert_chain,
         return false;
     }
 
-#ifdef _MSC_VER
+
     if ((fp_out = fopen(file_name, "w+b")) == NULL) {
         printf("Unable to open file %s\n", file_name);
         return false;
@@ -1246,21 +1244,7 @@ bool libspdm_write_certificate_to_nvm(uint8_t slot_id, const void * cert_chain,
     }
 
     fclose(fp_out);
-#else
-    if ((fp_out = open(file_name, O_WRONLY | O_CREAT, S_IRWXU)) == -1) {
-        printf("Unable to open file %s\n", file_name);
-        return false;
-    }
 
-    if ((write(fp_out, cert_chain, cert_chain_size)) != cert_chain_size)
-    {
-        printf("Write output file error %s\n", file_name);
-        close(fp_out);
-        return false;
-    }
-
-    close(fp_out);
-#endif
 
     return true;
 }
