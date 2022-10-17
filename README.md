@@ -105,6 +105,7 @@
 
 2) [CMake](https://cmake.org/).
 
+
 ### Cryptography Library
 
 1) [Mbed TLS](https://tls.mbed.org) as cryptography library. Version 2.28.1.
@@ -209,6 +210,26 @@ Example CMake commands:
    Note: Please install the openssl with command `sudo make install` before build libspdm.
    cmake -DARCH=x64 -DTOOLCHAIN=GCC -DTARGET=Release -DCRYPTO=openssl -DENABLE_BINARY_BUILD=1 -DCOMPILED_LIBCRYPTO_PATH=<OPENSSL_PATH>/libcrypto.a -DCOMPILED_LIBSSL_PATH=<OPENSSL_PATH>/libssl.a ..
    ```
+### Armclang build on Windows.
+1) Install MSYS2 https://www.msys2.org/ to C:\msys64.
+2) Add set(CMAKE_SYSTEM_ARCH "armv8-a") on the top of C:\msys64\mingw64\share\cmake\Modules\Compiler\ARMClang.cmake.
+3) Install amrclang (change the default installation path from C:\Program Files\Arm\Development Studio 2022.1   to C:\ArmStudio to avoid bank space)
+4) Launch MSYS2 -> MSYS2 MINGW64.
+5) Install cmake and make.
+```
+pacman -S mingw-w64-x86_64-cmake
+pacman -S make
+```
+6) Build command
+```
+cd libspdm
+mkdir build
+cd build
+export PATH=$PATH:/c/ArmStudio/sw/ARMCompiler6.18/bin
+export CC=/c/ArmStudio/sw/ARMCompiler6.18/bin/armclang.exe
+cmake -G"MSYS Makefiles" -DARCH=arm -DTOOLCHAIN=ARM_CLANG -DTARGET=Debug -DCRYPTO=mbedtls ..
+make -j <thread number>
+```
 
 ## Run Test
 
