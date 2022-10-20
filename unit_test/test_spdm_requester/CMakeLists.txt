@@ -66,6 +66,10 @@ SET(test_spdm_requester_LIBRARY
     platform_lib
 )
 
+if(TOOLCHAIN STREQUAL "ARM_CLANG")
+    SET(test_spdm_requester_LIBRARY ${test_spdm_requester_LIBRARY} armbuild_lib)
+endif()
+
 if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
     ADD_EXECUTABLE(test_spdm_requester
                    ${src_test_spdm_requester}

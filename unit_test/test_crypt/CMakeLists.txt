@@ -39,6 +39,10 @@ SET(test_crypt_LIBRARY
     spdm_crypt_ext_lib
 )
 
+if(TOOLCHAIN STREQUAL "ARM_CLANG")
+    SET(test_crypt_LIBRARY ${test_crypt_LIBRARY} armbuild_lib)
+endif()
+
 if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
     ADD_EXECUTABLE(test_crypt
                    ${src_test_crypt}
