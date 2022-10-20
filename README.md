@@ -171,7 +171,40 @@
    Note: Please install the openssl with command `nmake install` before build libspdm.
    cmake -G"Visual Studio 16 2019" -DARCH=x64 -DTOOLCHAIN=VS2019 -DTARGET=Release -DCRYPTO=openssl -DENABLE_BINARY_BUILD=1 -DCOMPILED_LIBCRYPTO_PATH=<OPENSSL_PATH>/libcrypto.lib -DCOMPILED_LIBSSL_PATH=<OPENSSL_PATH>/libssl.lib ..
    ```
-
+### Armclang build on Windows.
+1) Install [MSYS2](https://www.msys2.org/).
+2) Install amrclang (change the default installation path from C:\Program Files\Arm\Development Studio 2022.1 to C:\ArmStudio to avoid blank space)
+3) Launch MSYS2 -> MSYS2 MINGW64.
+4) Install cmake and make.
+```
+pacman -S mingw-w64-x86_64-cmake
+pacman -S make
+```
+5) Setup build environment command
+```
+cd libspdm
+mkdir build
+cd build
+export PATH=$PATH:/c/ArmStudio/sw/ARMCompiler6.18/bin
+export CC=/c/ArmStudio/sw/ARMCompiler6.18/bin/armclang.exe
+export ARM_PRODUCT_DEF=/c/ArmStudio/sw/mappings/gold.elmap
+export ARMLMD_LICENSE_FILE=<license file>
+```
+6) some work around for Windows armclang build
+- Add set(CMAKE_SYSTEM_ARCH "armv8-a") on the top of `C:\msys64\mingw64\share\cmake\Modules\Compiler\ARMClang.cmake`. The CMAKE_SYSTEM_ARCH is the target arch.
+- ws2_32 is the socket lib, and the armclang does not support it. Change `set(libs ${libs} ws2_32)` to `#set(libs ${libs} ws2_32)` in `libspdm\os_stub\mbedtlslib\mbedtls\library\CMakeLists.txt`.
+7) Build arm command
+```
+cmake -G"MSYS Makefiles" -DARCH=arm -DTOOLCHAIN=ARM_CLANG -DTARGET=Debug -DCRYPTO=mbedtls ..
+make -j <thread number>
+```
+for example `make -j 8` or `make -j`
+8) Build aarch64 command
+```
+cmake -G"MSYS Makefiles" -DARCH=aarch64 -DTOOLCHAIN=ARM_CLANG -DTARGET=Debug -DCRYPTO=mbedtls ..
+make -j <thread number>
+```
+for example `make -j 8` or `make -j`
 
 ### Linux Builds
    If ia32 builds run on a 64-bit Linux machine, then install `sudo apt-get install gcc-multilib`.
@@ -209,6 +242,29 @@ Example CMake commands:
    Note: Please install the openssl with command `sudo make install` before build libspdm.
    cmake -DARCH=x64 -DTOOLCHAIN=GCC -DTARGET=Release -DCRYPTO=openssl -DENABLE_BINARY_BUILD=1 -DCOMPILED_LIBCRYPTO_PATH=<OPENSSL_PATH>/libcrypto.a -DCOMPILED_LIBSSL_PATH=<OPENSSL_PATH>/libssl.a ..
    ```
+### Armclang build on Linux.
+1) Install  [Arm Development Studio 2022.1 linux](https://developer.arm.com/downloads/-/arm-development-studio-downloads) follow the [Arm Development Studio Getting Started Guide](https://developer.arm.com/documentation/101469/2022-1/Installing-and-configuring-Arm-Development-Studio/Installing-on-Linux)
+2) Setup enviroment
+```
+echo 'export PATH=$PATH:/opt/arm/developmentstudio-2022.1/sw/ARMCompiler6.18/bin' | sudo tee -a ~/.bashrc
+echo 'export ARM_PRODUCT_DEF=/opt/arm/developmentstudio-2022.1/sw/mappings/gold.elmap' | sudo tee -a ~/.bashrc
+echo 'export ARMLMD_LICENSE_FILE=<license file>' | sudo tee -a ~/.bashrc
+source ~/.bashrc
+```
+3) Build command for arm
+```
+cmake -DARCH=arm -DTOOLCHAIN=ARM_CLANG -DTARGET=Debug -DCRYPTO=mbedtls  ..
+make copy_sample_key
+make -j <thread number>
+```
+for example `make -j 8` or `make -j`
+4) Build command for aarch64
+```
+cmake -DARCH=aarch64 -DTOOLCHAIN=ARM_CLANG -DTARGET=Debug -DCRYPTO=mbedtls  ..
+make copy_sample_key
+make -j <thread number>
+```
+for example `make -j 8` or `make -j`
 
 ## Run Test
 

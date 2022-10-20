@@ -8,7 +8,9 @@
  * SPDM common library.
  * It follows the SPDM Specification.
  **/
-#ifdef _MSC_VER
+#include <base.h>
+#if defined(_MSC_VER) || (defined(__clang__) && (defined (LIBSPDM_CPU_AARCH64) || \
+    defined(LIBSPDM_CPU_ARM)))
 #else
     #include <fcntl.h>
     #include <unistd.h>
@@ -23,7 +25,6 @@
 #include <assert.h>
 #include <string.h>
 
-#include <base.h>
 #include "library/memlib.h"
 #include "spdm_device_secret_lib_internal.h"
 
@@ -1209,7 +1210,8 @@ bool libspdm_psk_master_secret_hkdf_expand(
 bool libspdm_write_certificate_to_nvm(uint8_t slot_id, const void * cert_chain,
                                       size_t cert_chain_size)
 {
-#ifdef _MSC_VER
+#if defined(_MSC_VER) || (defined(__clang__) && (defined (LIBSPDM_CPU_AARCH64) || \
+    defined(LIBSPDM_CPU_ARM)))
     FILE *fp_out;
 #else
     uint64_t fp_out;
@@ -1233,7 +1235,8 @@ bool libspdm_write_certificate_to_nvm(uint8_t slot_id, const void * cert_chain,
         return false;
     }
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) || (defined(__clang__) && (defined (LIBSPDM_CPU_AARCH64) || \
+    defined(LIBSPDM_CPU_ARM)))
     if ((fp_out = fopen(file_name, "w+b")) == NULL) {
         printf("Unable to open file %s\n", file_name);
         return false;
