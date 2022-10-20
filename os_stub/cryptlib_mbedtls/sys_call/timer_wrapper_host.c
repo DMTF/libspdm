@@ -12,16 +12,25 @@
 #include <base.h>
 #include "library/memlib.h"
 #include <mbedtls/platform_time.h>
-
 struct tm *mbedtls_platform_gmtime_r(const mbedtls_time_t *tt,
                                      struct tm *tm_buf)
 {
-#ifdef _MSC_VER
+#if defined(_MSC_VER)
     if (gmtime_s(tm_buf, tt) != 0) {
         return NULL;
     }
 
     return tm_buf;
+#elif defined(__clang__) && (defined (LIBSPDM_CPU_AARCH64) || defined(LIBSPDM_CPU_ARM))
+    struct tm *lt;
+
+    lt = gmtime(tt);
+
+    if (lt != NULL) {
+        libspdm_copy_mem(tm_buf, sizeof(struct tm), lt, sizeof(struct tm));
+    }
+
+    return ((lt == NULL) ? NULL : tm_buf);
 #else
     if (gmtime_r(tt, tm_buf) == NULL) {
         return NULL;
