@@ -43,6 +43,10 @@ SET(test_spdm_common_LIBRARY
     cmockalib
 )
 
+if(TOOLCHAIN STREQUAL "ARM_CLANG")
+    SET(test_spdm_common_LIBRARY ${test_spdm_common_LIBRARY} armbuild_lib)
+endif()
+
 if(NOT ((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC")))
     ADD_EXECUTABLE(test_spdm_common ${src_test_spdm_common})
     TARGET_LINK_LIBRARIES(test_spdm_common ${test_spdm_common_LIBRARY})

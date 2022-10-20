@@ -756,6 +756,10 @@ else()
         ADD_SUBDIRECTORY(unit_test/spdm_transport_test_lib)
         ADD_SUBDIRECTORY(unit_test/cmockalib)
 
+        if(TOOLCHAIN STREQUAL "ARM_CLANG")
+        ADD_SUBDIRECTORY(os_stub/armbuild_lib)
+        endif()
+
         if(NOT TOOLCHAIN STREQUAL "LIBFUZZER")
         ADD_SUBDIRECTORY(unit_test/test_spdm_requester)
         ADD_SUBDIRECTORY(unit_test/test_spdm_responder)
