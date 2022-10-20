@@ -6,7 +6,9 @@
 
 #include <base.h>
 #include <stdlib.h>
+#ifndef LIBSPDM_ARMCLANG_BUILD
 #include <sys/time.h>
+#endif
 #include <errno.h>
 
 /**
@@ -17,6 +19,7 @@
  **/
 void libspdm_sleep(uint64_t milliseconds)
 {
+#ifndef LIBSPDM_ARMCLANG_BUILD
     struct timeval tv;
     int err;
 
@@ -26,4 +29,5 @@ void libspdm_sleep(uint64_t milliseconds)
     do {
         err=select(0, NULL, NULL, NULL, &tv);
     } while(err<0 && errno==EINTR);
+#endif
 }

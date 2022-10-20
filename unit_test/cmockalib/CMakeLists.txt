@@ -16,8 +16,15 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/cmockalib
                     ${LIBSPDM_DIR}/unit_test/cmockalib/cmocka/include/cmockery
 )
 
-SET(src_CmockaLib
-    cmocka/src/cmocka.c
-)
+if(TOOLCHAIN STREQUAL "ARM_CLANG")
+    SET(src_CmockaLib
+        cmocka/src/cmocka.c
+        strdup.c
+    )
+else()
+    SET(src_CmockaLib
+        cmocka/src/cmocka.c
+    )
+endif()
 
 ADD_LIBRARY(cmockalib STATIC ${src_CmockaLib})
