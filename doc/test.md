@@ -85,7 +85,7 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    Install Perl [ActivePerl 5.26](https://www.activestate.com/products/perl/downloads/).
 
    Build cases.
-   Goto libspdm/Build/\<TARGET>_\<TOOLCHAIN>/\<ARCH>. mkdir log and cd log.
+   Goto libspdm/build. mkdir log and cd log.
 
    Run all tests and generate log file :
    `%DRIO_PATH%\<bin64|bin32>\drrun.exe -c %DRIO_PATH%\tools\<lib64|lib32>\release\drcov.dll -- <test_app>`
@@ -98,7 +98,7 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
 
    The final report is index.html.
 
-2) Code Coverage in Linux with GCC and [lcov](http://ltp.sourceforge.net/coverage/lcov.php).
+2) Code Coverage with GCC and [lcov](https://github.com/linux-test-project/lcov/releases).
 
    Install lcov `sudo apt-get install lcov`.
 
@@ -113,7 +113,7 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    make
    ```
 
-   Goto libspdm/Build/\<TARGET>_\<TOOLCHAIN>/\<ARCH>. mkdir log and cd log.
+   Goto libspdm/build. mkdir log and cd log.
 
    Run all tests.
 
@@ -169,7 +169,7 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    ```
    Note: /dev/shm is tmpfs.
 
-   Fuzzing Code Coverage in Linux with [AFL](https://lcamtuf.coredump.cx/afl/) and [lcov](http://ltp.sourceforge.net/coverage/lcov.php).
+   Fuzzing Code Coverage in Linux with [AFL](https://lcamtuf.coredump.cx/afl/) and [lcov](https://github.com/linux-test-project/lcov/releases).
    Install lcov `sudo apt-get install lcov`.
 
    Build cases with AFL toolchain `-DTOOLCHAIN=AFL -DGCOV=ON`.
@@ -466,7 +466,7 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    ```
    Note: /dev/shm is tmpfs.
 
-   Fuzzing Code Coverage in Linux with [AFLTurbo](https://github.com/sleicasper/aflturbo) and [lcov](http://ltp.sourceforge.net/coverage/lcov.php).
+   Fuzzing Code Coverage in Linux with [AFLTurbo](https://github.com/sleicasper/aflturbo) and [lcov](https://github.com/linux-test-project/lcov/releases).
    Install lcov `sudo apt-get install lcov`.
 
    Build cases with AFL toolchain `-DTOOLCHAIN=AFL -DGCOV=ON`.
