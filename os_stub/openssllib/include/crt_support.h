@@ -16,7 +16,9 @@
 #include "library/memlib.h"
 #include "library/debuglib.h"
 #include <stddef.h>
-
+#if defined(_MSC_VER) && defined(__clang__)
+#include <corecrt.h>
+#endif
 #define OPENSSLDIR ""
 #define ENGINESDIR ""
 
@@ -324,7 +326,7 @@ char *strncpy(char *destinin, const char *source, size_t maxlen);
 char *strcat(char *dest, const char *src);
 int strncmp(const char *str1, const char *str2, size_t n);
 int strcasecmp(const char *s1, const char *s2);
-int sprintf(char *string, char *format, ...);
+int sprintf(char *string, const char *format, ...);
 #define localtime(timer) NULL
 #define assert(expression)
 int atoi(const char *nptr);
