@@ -9,6 +9,8 @@
 
 #if defined(__GNUC__) && !defined(_WIN32)
 typedef size_t time_t;
+#elif defined(__clang__)
+typedef size_t time_t;
 #endif
 
 /* Structures Definitions*/

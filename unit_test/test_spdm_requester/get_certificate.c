@@ -1082,6 +1082,10 @@ libspdm_return_t libspdm_requester_get_certificate_test_receive_message(
         void *root_cert_data;
         size_t root_cert_size;
 
+        root_cert_size = 0;
+        cert_buffer_size = 0;
+        hash_size = 0;
+
         if (m_libspdm_local_certificate_chain == NULL) {
             libspdm_read_responder_public_certificate_chain(
                 m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
@@ -1192,6 +1196,10 @@ libspdm_return_t libspdm_requester_get_certificate_test_receive_message(
         size_t cert_chain_without_root_size;
         void *root_cert_data;
         size_t root_cert_size;
+
+        root_cert_size = 0;
+        cert_buffer_size = 0;
+        hash_size = 0;
 
         if (m_libspdm_local_certificate_chain == NULL) {
             libspdm_read_responder_public_certificate_chain(

@@ -265,9 +265,9 @@ spdm_end_session_request_t m_libspdm_end_session_request = {
     }
 };
 size_t m_libspdm_end_session_request_size = sizeof(m_libspdm_end_session_request);
-
+#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 static uint8_t m_libspdm_local_certificate_chain[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-
+#endif
 static void libspdm_secured_message_set_request_finished_key(
     void *spdm_secured_message_context, const void *key, size_t key_size)
 {

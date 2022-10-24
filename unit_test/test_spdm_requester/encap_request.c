@@ -49,6 +49,11 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
 
     libspdm_test_context_t *spdm_test_context;
     spdm_get_encapsulated_request_request_t *libspdm_encapsulated_request_response;
+    uint8_t *digest;
+    uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    size_t temp_buf_size;
+    uint8_t *temp_buf_ptr;
+
     spdm_test_context = libspdm_get_test_context();
     static uint8_t sub_index = 0;
     switch (spdm_test_context->case_id)
@@ -59,10 +64,6 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
     case 0x2:
     {
         spdm_digest_response_t *spdm_response;
-        uint8_t *digest;
-        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-        size_t temp_buf_size;
-        uint8_t *temp_buf_ptr;
 
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_hash_algo =
@@ -125,10 +126,6 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
     case 0x3:
     {
         spdm_digest_response_t *spdm_response;
-        uint8_t *digest;
-        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-        size_t temp_buf_size;
-        uint8_t *temp_buf_ptr;
 
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_hash_algo =
@@ -192,9 +189,6 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
     case 0x4:
     {
         spdm_digest_response_t *spdm_response;
-        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-        size_t temp_buf_size;
-        uint8_t *temp_buf_ptr;
 
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_hash_algo =
@@ -215,10 +209,6 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
     case 0x5:
     {
         spdm_digest_response_t *spdm_response;
-        uint8_t *digest;
-        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-        size_t temp_buf_size;
-        uint8_t *temp_buf_ptr;
 
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_hash_algo =
@@ -277,10 +267,6 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
     case 0x6:
     {
         spdm_digest_response_t *spdm_response;
-        uint8_t *digest;
-        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-        size_t temp_buf_size;
-        uint8_t *temp_buf_ptr;
 
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_hash_algo =
@@ -343,10 +329,6 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
     case 0x7:
     {
         spdm_digest_response_t *spdm_response;
-        uint8_t *digest;
-        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-        size_t temp_buf_size;
-        uint8_t *temp_buf_ptr;
 
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_hash_algo =
@@ -408,9 +390,6 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
     case 0x8:
     {
         spdm_get_certificate_request_t *spdm_response;
-        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-        size_t temp_buf_size;
-        uint8_t *temp_buf_ptr;
 
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_hash_algo =
@@ -465,9 +444,6 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
     case 0x9:
     {
         spdm_key_update_request_t *spdm_response;
-        uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-        size_t temp_buf_size;
-        uint8_t *temp_buf_ptr;
 
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_hash_algo =
