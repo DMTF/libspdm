@@ -206,6 +206,9 @@ make -j <thread number>
 ```
 for example `make -j 8` or `make -j`
 
+8) some feature for armclang build is TBD by user
+When use libspdm with armclang build: `libspdm_sleep` and `libspdm_get_random_number_64` need to be completed.
+
 ### Linux Builds
    If ia32 builds run on a 64-bit Linux machine, then install `sudo apt-get install gcc-multilib`.
 
@@ -265,6 +268,8 @@ make copy_sample_key
 make -j <thread number>
 ```
 for example `make -j 8` or `make -j`
+5) some feature for armclang build is TBD by user
+When use libspdm with armclang build: `libspdm_sleep` and `libspdm_get_random_number_64` need to be completed.
 
 ## Run Test
 
