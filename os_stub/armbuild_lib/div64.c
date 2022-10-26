@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  **/
 
+/*Portions of this file have been modified from the original (https://github.com/llvm/llvm-project/blob/main/compiler-rt/lib/builtins/udivmodti4.c) under the following copyright and license.*/
+
 /**
  *  Copyright Notice:
  *  Copyright 2021-2022 DMTF. All rights reserved.
