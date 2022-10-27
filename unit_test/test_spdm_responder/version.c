@@ -52,8 +52,8 @@ size_t m_libspdm_get_version_request4_size = sizeof(m_libspdm_get_version_reques
 
 /**
  * Test 1: receiving a correct GET_VERSION from the requester.
- * Expected behavior: the responder accepts the request and produces a valid VERSION
- * response message.
+ * Expected behavior: the responder accepts the request, produces a valid VERSION
+ * response message, and then resets the connection state.
  **/
 void libspdm_test_responder_version_case1(void **state)
 {
@@ -67,6 +67,7 @@ void libspdm_test_responder_version_case1(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x1;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NOT_STARTED;
 
     response_size = sizeof(response);
     status = libspdm_get_response_version(spdm_context,
@@ -81,13 +82,15 @@ void libspdm_test_responder_version_case1(void **state)
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
                      SPDM_VERSION);
+    assert_int_equal(spdm_context->connection_info.connection_state,
+                     LIBSPDM_CONNECTION_STATE_AFTER_VERSION);
 }
 
 /**
  * Test 2: receiving a GET_VERSION message larger than specified (more parameters than the
  * header), results in a correct VERSION message.
- * Expected behavior: the responder refuses the GET_VERSION message and produces an
- * ERROR message indicating the InvalidRequest.
+ * Expected behavior: the responder refuses the GET_VERSION message, produces an
+ * ERROR message indicating the InvalidRequest, and will not reset the connection state.
  **/
 void libspdm_test_responder_version_case2(void **state)
 {
@@ -101,6 +104,7 @@ void libspdm_test_responder_version_case2(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x2;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NOT_STARTED;
 
     response_size = sizeof(response);
     status = libspdm_get_response_version(spdm_context,
@@ -115,6 +119,8 @@ void libspdm_test_responder_version_case2(void **state)
     assert_int_equal(spdm_response->header.param1,
                      SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
+    assert_int_equal(spdm_context->connection_info.connection_state,
+                     LIBSPDM_CONNECTION_STATE_NOT_STARTED);
 }
 
 /**
@@ -193,8 +199,8 @@ void libspdm_test_responder_version_case4(void **state)
 /**
  * Test 6: receiving a GET_VERSION message in SPDM version 1.1 (in the header), but correct
  * 1.0-version format.
- * Expected behavior: the responder refuses the GET_VERSION message and produces an
- * ERROR message indicating the InvalidRequest.
+ * Expected behavior: the responder refuses the GET_VERSION message, produces an
+ * ERROR message indicating the InvalidRequest, and will not reset the connection state.
  **/
 void libspdm_test_responder_version_case6(void **state)
 {
@@ -209,6 +215,7 @@ void libspdm_test_responder_version_case6(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x6;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
 
     response_size = sizeof(response);
     status = libspdm_get_response_version(spdm_context,
@@ -223,6 +230,8 @@ void libspdm_test_responder_version_case6(void **state)
     assert_int_equal(spdm_response->header.param1,
                      SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
+    assert_int_equal(spdm_context->connection_info.connection_state,
+                     LIBSPDM_CONNECTION_STATE_AUTHENTICATED);
 }
 
 /**
