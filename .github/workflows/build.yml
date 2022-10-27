@@ -34,17 +34,15 @@ jobs:
           - Release
         toolchain:
           - GCC
-          - VS2015
           - VS2019
           - LIBFUZZER
+          - CLANG
         configurations:
           - "-DLIBSPDM_ENABLE_CAPABILITY_CERT_CAP=1 -DLIBSPDM_ENABLE_CAPABILITY_CHAL_CAP=1 -DLIBSPDM_ENABLE_CAPABILITY_MEAS_CAP=1 -DLIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP=1 -DLIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP=1 -DLIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP=1 -DLIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP=1"
           - "-DLIBSPDM_ENABLE_CAPABILITY_CERT_CAP=0 -DLIBSPDM_ENABLE_CAPABILITY_CHAL_CAP=0 -DLIBSPDM_ENABLE_CAPABILITY_MEAS_CAP=0 -DLIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP=0 -DLIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP=0 -DLIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP=0 -DLIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP=0"
           - "-DLIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT=0"
           - "-DLIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT=1"
         exclude:
-          - os: ubuntu-latest
-            toolchain: VS2015
           - os: ubuntu-latest
             toolchain: VS2019
           - os: ubuntu-latest
@@ -59,6 +57,8 @@ jobs:
             toolchain: LIBFUZZER
           - crypto: openssl
             arch: ia32
+          - os: windows-latest
+            toolchain: CLANG
     steps:
       - name: Toolchain Setup - VS2019 (x64)
         if: matrix.toolchain == 'VS2019' && matrix.arch == 'x64'
@@ -70,18 +70,18 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: x86
-      - name: Toolchain Setup - VS2015 (x64)
-        if: matrix.toolchain == 'VS2015' && matrix.arch == 'x64'
-        uses: ilammy/msvc-dev-cmd@v1
+      - name: Install Clang
+        if: matrix.toolchain == 'CLANG' && matrix.os == 'ubuntu-latest' && matrix.arch == 'x64'
+        uses: egor-tensin/setup-clang@v1
         with:
-          arch: x64
-          toolset: 14.0
-      - name: Toolchain Setup - VS2015 (x86)
-        if: matrix.toolchain == 'VS2015' && matrix.arch == 'ia32'
-        uses: ilammy/msvc-dev-cmd@v1
+          version: 10
+          platform: x64
+      - name: Install Clang (x86)
+        if: matrix.toolchain == 'CLANG' && matrix.os == 'ubuntu-latest' && matrix.arch == 'ia32'
+        uses: egor-tensin/setup-clang@v1
         with:
-          arch: x86
-          toolset: 14.0
+          version: 10
+          platform: x86
       - name: 'Toolchain Setup - MinGW (x64)'
         if: matrix.toolchain == 'GCC' && matrix.arch == 'x64' && matrix.os == 'windows-latest'
         uses: msys2/setup-msys2@v2
