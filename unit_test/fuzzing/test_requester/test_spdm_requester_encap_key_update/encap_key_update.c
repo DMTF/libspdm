@@ -9,6 +9,8 @@
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
 
+#if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+
 static void libspdm_set_standard_key_update_test_state(libspdm_context_t *spdm_context,
                                                        uint32_t *session_id)
 {
@@ -152,3 +154,13 @@ void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
     libspdm_test_requester_encap_key_update(&State);
     libspdm_unit_test_group_teardown(&State);
 }
+#else
+size_t libspdm_get_max_buffer_size(void)
+{
+    return 0;
+}
+
+void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size){
+
+}
+#endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP*/

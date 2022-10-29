@@ -7,6 +7,8 @@
 #include "internal/libspdm_secured_message_lib.h"
 #include "internal/libspdm_responder_lib.h"
 
+#if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+
 static void libspdm_set_standard_key_update_test_state(libspdm_context_t *spdm_context,
                                                        uint32_t *session_id)
 {
@@ -268,3 +270,5 @@ int libspdm_responder_encap_key_update_test_main(void)
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }
+
+#endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP*/

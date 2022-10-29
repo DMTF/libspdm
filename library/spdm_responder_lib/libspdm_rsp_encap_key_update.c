@@ -6,6 +6,8 @@
 
 #include "internal/libspdm_responder_lib.h"
 
+#if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+
 /**
  * Get the SPDM encapsulated KEY_UPDATE request.
  *
@@ -196,3 +198,5 @@ libspdm_return_t libspdm_process_encap_response_key_update(
 
     return LIBSPDM_STATUS_SUCCESS;
 }
+
+#endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP*/

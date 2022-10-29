@@ -7,6 +7,8 @@
 #include "internal/libspdm_requester_lib.h"
 #include "internal/libspdm_secured_message_lib.h"
 
+#if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+
 spdm_key_update_request_t m_spdm_key_update_request1 = {
     {SPDM_MESSAGE_VERSION_11, SPDM_KEY_UPDATE,
      SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY, 0x3}
@@ -1122,3 +1124,5 @@ int libspdm_requester_encap_key_update_test_main(void)
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }
+
+#endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP*/

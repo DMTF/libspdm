@@ -6,6 +6,8 @@
 
 #include "internal/libspdm_requester_lib.h"
 
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP || LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+
 /**
  * Generate encapsulated ERROR message.
  *
@@ -82,3 +84,5 @@ libspdm_return_t libspdm_generate_encap_extended_error_response(
         sizeof(spdm_error_response_t) + extended_error_data_size;
     return LIBSPDM_STATUS_SUCCESS;
 }
+
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP || LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP*/

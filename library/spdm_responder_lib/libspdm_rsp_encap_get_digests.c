@@ -6,7 +6,7 @@
 
 #include "internal/libspdm_responder_lib.h"
 
-#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP || LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
 
 /**
  * Get the SPDM encapsulated GET_DIGESTS request.
@@ -161,4 +161,4 @@ libspdm_return_t libspdm_process_encap_response_digest(
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-#endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP || LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP*/
