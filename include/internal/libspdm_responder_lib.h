@@ -407,6 +407,7 @@ libspdm_return_t libspdm_get_response_heartbeat(void *spdm_context,
                                                 void *response);
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP) */
 
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP || LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
 /**
  * Process the SPDM ENCAPSULATED_REQUEST request and return the response.
  *
@@ -478,13 +479,10 @@ libspdm_return_t libspdm_get_encap_request_get_digest(libspdm_context_t *spdm_co
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
-
 libspdm_return_t libspdm_process_encap_response_digest(
     libspdm_context_t *spdm_context, size_t encap_response_size,
     const void *encap_response, bool *need_continue);
 
-#endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
 /**
  * Get the SPDM encapsulated GET_CERTIFICATE request.
@@ -585,6 +583,7 @@ libspdm_get_encap_request_key_update(libspdm_context_t *spdm_context,
 libspdm_return_t libspdm_process_encap_response_key_update(
     libspdm_context_t *spdm_context, size_t encap_response_size,
     const void *encap_response, bool *need_continue);
+#endif
 
 /**
  * Return the GET_SPDM_RESPONSE function via request code.
@@ -595,6 +594,7 @@ libspdm_return_t libspdm_process_encap_response_key_update(
  **/
 libspdm_get_spdm_response_func libspdm_get_response_func_via_request_code(uint8_t request_code);
 
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP || LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
 /**
  * This function initializes the mut_auth encapsulated state.
  *
@@ -609,6 +609,7 @@ void libspdm_init_mut_auth_encap_state(libspdm_context_t *spdm_context, uint8_t 
  * @param  spdm_context                  A pointer to the SPDM context.
  **/
 void libspdm_init_basic_mut_auth_encap_state(libspdm_context_t *spdm_context);
+#endif
 
 /**
  * This function handles the encap error response.

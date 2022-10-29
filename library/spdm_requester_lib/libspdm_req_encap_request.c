@@ -6,6 +6,8 @@
 
 #include "internal/libspdm_requester_lib.h"
 
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP || LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+
 typedef struct {
     uint8_t request_response_code;
     libspdm_get_encap_response_func get_encap_response_func;
@@ -493,3 +495,5 @@ libspdm_return_t libspdm_send_receive_encap_request(void *spdm_context,
 {
     return libspdm_encapsulated_request(spdm_context, session_id, 0, NULL);
 }
+
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP || LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP*/

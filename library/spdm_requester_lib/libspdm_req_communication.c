@@ -107,9 +107,16 @@ libspdm_return_t libspdm_start_session(void *context, bool use_psk,
         case 0:
             break;
         case SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED:
+#if !LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "libspdm_start_session - unsupported mut_auth_requested - 0x%x\n",
+                           session_info->mut_auth_requested));
+            return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+#endif
             break;
         case SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST:
         case SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS:
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP || LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
             status = libspdm_encapsulated_request(
                 spdm_context, session_id,
                 session_info->mut_auth_requested,
@@ -119,6 +126,12 @@ libspdm_return_t libspdm_start_session(void *context, bool use_psk,
             if (LIBSPDM_STATUS_IS_ERROR(status)) {
                 return status;
             }
+#else
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "libspdm_start_session - unsupported mut_auth_requested - 0x%x\n",
+                           session_info->mut_auth_requested));
+            return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+#endif
             break;
         default:
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
@@ -254,9 +267,16 @@ libspdm_return_t libspdm_start_session_ex(void *context, bool use_psk,
         case 0:
             break;
         case SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED:
+#if !LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "libspdm_start_session - unsupported mut_auth_requested - 0x%x\n",
+                           session_info->mut_auth_requested));
+            return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+#endif
             break;
         case SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST:
         case SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS:
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP || LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
             status = libspdm_encapsulated_request(
                 spdm_context, session_id,
                 session_info->mut_auth_requested,
@@ -266,6 +286,12 @@ libspdm_return_t libspdm_start_session_ex(void *context, bool use_psk,
             if (LIBSPDM_STATUS_IS_ERROR(status)) {
                 return status;
             }
+#else
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "libspdm_start_session - unsupported mut_auth_requested - 0x%x\n",
+                           session_info->mut_auth_requested));
+            return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+#endif
             break;
         default:
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,

@@ -6,6 +6,8 @@
 
 #include "internal/libspdm_responder_lib.h"
 
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP || LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+
 /**
  * Get the SPDM encapsulated request.
  *
@@ -51,18 +53,14 @@ static libspdm_return_t libspdm_get_encap_struct_via_op_code
     size_t index;
 
     libspdm_encap_response_struct_t encap_response_struct[] = {
-        #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
         { SPDM_GET_DIGESTS, libspdm_get_encap_request_get_digest,
           libspdm_process_encap_response_digest },
 
         { SPDM_GET_CERTIFICATE, libspdm_get_encap_request_get_certificate,
           libspdm_process_encap_response_certificate },
-        #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
-        #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
         { SPDM_CHALLENGE, libspdm_get_encap_request_challenge,
           libspdm_process_encap_response_challenge_auth },
-        #endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/
 
         { SPDM_KEY_UPDATE, libspdm_get_encap_request_key_update,
           libspdm_process_encap_response_key_update },
@@ -572,3 +570,5 @@ libspdm_return_t libspdm_handle_encap_error_response_main(
 
     return LIBSPDM_STATUS_UNSUPPORTED_CAP;
 }
+
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP || LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP*/
