@@ -11,6 +11,8 @@
 
 #if defined(_MSC_EXTENSIONS)
 #pragma optimize("", off)
+#elif defined (__clang__)
+#pragma clang optimize off
 #endif
 
 void spdm_dispatch(void)
