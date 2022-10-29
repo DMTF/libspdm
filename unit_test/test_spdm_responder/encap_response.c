@@ -7,7 +7,7 @@
 #include "spdm_unit_test.h"
 #include "internal/libspdm_responder_lib.h"
 
-#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP || LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
 
 spdm_get_encapsulated_request_request_t m_libspdm_encapsulated_request_t1 = {
     {SPDM_MESSAGE_VERSION_11, SPDM_GET_ENCAPSULATED_REQUEST, 0, 0}
@@ -1015,4 +1015,4 @@ int libspdm_responder_encapsulated_response_test_main(void)
                                   libspdm_unit_test_group_teardown);
 }
 
-#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP || LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP*/
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)*/

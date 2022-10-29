@@ -9,7 +9,7 @@
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
 
-#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP || LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
 
 bool libspdm_test_verify_spdm_cert_chain(void *spdm_context, uint8_t slot_id,
                                          size_t cert_chain_size, const void *cert_chain,
@@ -335,4 +335,4 @@ size_t libspdm_get_max_buffer_size(void)
 void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size){
 
 }
-#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP || LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP*/
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)*/
