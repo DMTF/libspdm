@@ -400,7 +400,8 @@ void libspdm_register_device_io_func(
  * @param  max_msg_size  Size in bytes of the maximum size of sender buffer.
  * @param  msg_buf_ptr   A pointer to a sender buffer.
  *
- * @retval RETURN_SUCCESS               The sender buffer is acquired.
+ * @retval LIBSPDM_STATUS_SUCCESS       The sender buffer has been acquired.
+ * @retval LIBSPDM_STATUS_ACQUIRE_FAIL  Unable to acquire sender buffer.
  **/
 typedef libspdm_return_t (*libspdm_device_acquire_sender_buffer_func)(
     void *spdm_context, size_t *max_msg_size, void **msg_buf_ptr);
@@ -451,7 +452,8 @@ typedef void (*libspdm_device_release_sender_buffer_func)(void *spdm_context,
  * @param  max_msg_size  Size in bytes of the maximum size of receiver buffer.
  * @param  msg_buf_pt    A pointer to a receiver buffer.
  *
- * @retval RETURN_SUCCESS  The receiver buffer is acquired.
+ * @retval LIBSPDM_STATUS_SUCCESS       The receiver buffer has been acquired.
+ * @retval LIBSPDM_STATUS_ACQUIRE_FAIL  Unable to acquire receiver buffer.
  **/
 typedef libspdm_return_t (*libspdm_device_acquire_receiver_buffer_func)(
     void *spdm_context, size_t *max_msg_size, void **msg_buf_ptr);

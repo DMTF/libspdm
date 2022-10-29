@@ -8,6 +8,7 @@
 #include "internal/libspdm_requester_lib.h"
 
 int libspdm_requester_get_version_test_main(void);
+int libspdm_requester_get_version_error_test_main(void);
 int libspdm_requester_get_capabilities_test_main(void);
 int libspdm_requester_negotiate_algorithms_test_main(void);
 
@@ -58,6 +59,9 @@ int main(void)
 {
     int return_value = 0;
     if (libspdm_requester_get_version_test_main() != 0) {
+        return_value = 1;
+    }
+    if (libspdm_requester_get_version_error_test_main() != 0) {
         return_value = 1;
     }
 

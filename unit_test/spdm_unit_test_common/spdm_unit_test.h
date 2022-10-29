@@ -66,20 +66,21 @@ typedef struct {
 } libspdm_test_context_t;
 
 int libspdm_unit_test_group_setup(void **state);
-
 int libspdm_unit_test_group_teardown(void **state);
-
 void libspdm_setup_test_context(libspdm_test_context_t *spdm_test_context);
-
 libspdm_test_context_t *libspdm_get_test_context(void);
-
 void libspdm_dump_hex_str(const uint8_t *buffer, size_t buffer_size);
-
 void libspdm_dump_data(const uint8_t *buffer, size_t buffer_size);
-
 void libspdm_dump_hex(const uint8_t *buffer, size_t buffer_size);
+bool libspdm_read_input_file(const char *file_name, void **file_data, size_t *file_size);
 
-bool libspdm_read_input_file(const char *file_name, void **file_data,
-                             size_t *file_size);
+typedef enum
+{
+    LIBSPDM_ERR_ACQUIRE_SENDER_BUFFER,
+    LIBSPDM_ERR_ACQUIRE_RECEIVER_BUFFER
+} libspdm_error_target_t;
+
+void libspdm_force_error (libspdm_error_target_t target);
+void libspdm_release_error (libspdm_error_target_t target);
 
 #endif
