@@ -731,8 +731,6 @@ void libspdm_register_get_response_func(
 
     spdm_context = context;
     spdm_context->get_response_func = (size_t)get_response_func;
-
-    return;
 }
 
 /**

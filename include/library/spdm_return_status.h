@@ -124,6 +124,10 @@ typedef uint32_t libspdm_return_t;
 #define LIBSPDM_STATUS_SESSION_MSG_ERROR \
     LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CORE, 0x000f)
 
+/* Unable to acquire resource. */
+#define LIBSPDM_STATUS_ACQUIRE_FAIL \
+    LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CORE, 0x0010)
+
 /* - Cryptography Errors - */
 
 /* Generic failure originating from the cryptography module. */
