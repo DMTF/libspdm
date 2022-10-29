@@ -3491,7 +3491,7 @@ void libspdm_test_requester_get_certificate_case24(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_VERIF_FAIL);
     free(data);
 }
-
+#if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 /**
  * Test 25: Normal case, request a certificate chain
  * Expected Behavior: receives a valid certificate chain with the correct number of Certificate messages
@@ -3596,7 +3596,7 @@ void libspdm_test_requester_get_certificate_case25(void **state)
     free(data);
     free(data1);
 }
-
+#endif
 /**
  * Test 26: Normal case, request a certificate chain in a session
  * Expected Behavior: receives a valid certificate chain with the correct number of Certificate messages
@@ -3751,8 +3751,10 @@ int libspdm_requester_get_certificate_test_main(void)
         cmocka_unit_test(libspdm_test_requester_get_certificate_case23),
         /* hardware identify OID is found in AliasCert model cert */
         cmocka_unit_test(libspdm_test_requester_get_certificate_case24),
+#if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
         /* GetCert (0), GetCert(1) and Challenge(0) */
         cmocka_unit_test(libspdm_test_requester_get_certificate_case25),
+#endif
         /* get cert in secure session */
         cmocka_unit_test(libspdm_test_requester_get_certificate_case26),
     };
