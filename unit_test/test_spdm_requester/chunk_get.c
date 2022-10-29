@@ -595,6 +595,7 @@ void libspdm_test_requester_chunk_get_case1(void** state)
     free(data);
 }
 #endif
+#if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 void libspdm_test_requester_chunk_get_case2(void** state)
 {
     /* Copied from Get Measurements Test Case 0x20 */
@@ -677,7 +678,8 @@ void libspdm_test_requester_chunk_get_case2(void** state)
     #endif
     free(data);
 }
-
+#endif
+#if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 void libspdm_test_requester_chunk_get_case3(void** state)
 {
     /* Copied from Challenge Test Case 2*/
@@ -747,6 +749,7 @@ void libspdm_test_requester_chunk_get_case3(void** state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     free(data);
 }
+#endif
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 void libspdm_test_requester_chunk_get_case4(void** state)
 {
@@ -885,11 +888,14 @@ int libspdm_requester_chunk_get_test_main(void)
         /* Request a certificate in portions */
         cmocka_unit_test(libspdm_test_requester_chunk_get_case1),
 #endif
+#if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
         /* Request all measurements */
         cmocka_unit_test(libspdm_test_requester_chunk_get_case2),
-
+#endif
+#if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
         /* Request Challenge */
         cmocka_unit_test(libspdm_test_requester_chunk_get_case3),
+#endif
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
         /* Request Digests */
         cmocka_unit_test(libspdm_test_requester_chunk_get_case4),
