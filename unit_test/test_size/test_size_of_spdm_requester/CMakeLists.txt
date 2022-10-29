@@ -21,7 +21,7 @@ SET(src_test_size_of_spdm_requester
 
 SET(test_size_of_spdm_requester_LIBRARY
     memlib
-    debuglib
+    debuglib_null
     spdm_requester_lib
     spdm_common_lib
 #    cryptstublib_dummy

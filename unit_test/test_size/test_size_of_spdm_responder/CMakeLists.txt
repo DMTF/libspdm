@@ -19,7 +19,7 @@ SET(src_test_size_of_spdm_responder
 
 SET(test_size_of_spdm_responder_LIBRARY
     memlib
-    debuglib
+    debuglib_null
     spdm_responder_lib
     spdm_common_lib
 #    cryptstublib_dummy
