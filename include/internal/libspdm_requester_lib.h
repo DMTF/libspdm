@@ -266,7 +266,7 @@ libspdm_return_t libspdm_send_receive_end_session(libspdm_context_t *spdm_contex
                                                   uint8_t end_session_attributes);
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP) */
 
-#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP || LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
 /**
  * This function executes a series of SPDM encapsulated requests and receives SPDM encapsulated responses.
  *
@@ -377,7 +377,7 @@ libspdm_return_t libspdm_get_encap_response_key_update(void *context,
                                                        void *request,
                                                        size_t *response_size,
                                                        void *response);
-#endif
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)*/
 
 /**
  * Send an SPDM request to a device.

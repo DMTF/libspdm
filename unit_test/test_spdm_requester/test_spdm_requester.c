@@ -40,7 +40,7 @@ int libspdm_requester_key_update_test_main(void);
 int libspdm_requester_end_session_test_main(void);
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP) */
 
-#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP || LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
 int libspdm_requester_encap_digests_test_main(void);
 int libspdm_requester_encap_certificate_test_main(void);
 int libspdm_requester_encap_challenge_auth_test_main(void);
@@ -131,7 +131,7 @@ int main(void)
     }
     #endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP) */
 
-    #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP || LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+    #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
     if (libspdm_requester_encap_digests_test_main() != 0) {
         return_value = 1;
     }
@@ -144,7 +144,7 @@ int main(void)
     if (libspdm_requester_encap_request_test_main() != 0) {
         return_value = 1;
     }
-    #endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP || LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
+    #endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) */
 
     #if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
     if (libspdm_requester_encap_key_update_test_main() != 0) {

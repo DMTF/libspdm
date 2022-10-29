@@ -375,7 +375,7 @@ libspdm_return_t libspdm_get_response_key_exchange(void *context,
             spdm_context->local_context.mut_auth_requested;
     }
     if (spdm_response->mut_auth_requested != 0) {
-#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP || LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
         libspdm_init_mut_auth_encap_state(
             context, spdm_response->mut_auth_requested);
         spdm_response->req_slot_id_param =
