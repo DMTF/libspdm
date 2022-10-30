@@ -791,6 +791,7 @@ bool libspdm_verify_finish_req_hmac(libspdm_context_t *spdm_context,
                                     libspdm_session_info_t *session_info,
                                     const uint8_t *hmac, size_t hmac_size);
 
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
 /**
  * This function verifies the finish signature based upon TH.
  *
@@ -806,6 +807,7 @@ bool libspdm_verify_finish_req_signature(libspdm_context_t *spdm_context,
                                          libspdm_session_info_t *session_info,
                                          const void *sign_data,
                                          const size_t sign_data_size);
+#endif
 
 /**
  * This function generates the finish HMAC based upon TH.

@@ -99,6 +99,7 @@ bool libspdm_verify_finish_req_hmac(libspdm_context_t *spdm_context,
     return true;
 }
 
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
 /**
  * This function verifies the finish signature based upon TH.
  *
@@ -261,6 +262,7 @@ bool libspdm_verify_finish_req_signature(libspdm_context_t *spdm_context,
 
     return true;
 }
+#endif
 
 /**
  * This function generates the finish HMAC based upon TH.
@@ -459,13 +461,14 @@ libspdm_return_t libspdm_get_response_finish(void *context, size_t request_size,
 
     hmac_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
+    signature_size = 0;
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     if (session_info->mut_auth_requested) {
         signature_size = libspdm_get_req_asym_signature_size(
             spdm_context->connection_info.algorithm
             .req_base_asym_alg);
-    } else {
-        signature_size = 0;
     }
+#endif
 
     if (request_size !=
         sizeof(spdm_finish_request_t) + signature_size + hmac_size) {
@@ -500,6 +503,7 @@ libspdm_return_t libspdm_get_response_finish(void *context, size_t request_size,
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,
                                                response_size, response);
     }
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     if (session_info->mut_auth_requested) {
         result = libspdm_verify_finish_req_signature(
             spdm_context, session_info,
@@ -530,6 +534,7 @@ libspdm_return_t libspdm_get_response_finish(void *context, size_t request_size,
                 0, response_size, response);
         }
     }
+#endif
 
     result = libspdm_verify_finish_req_hmac(
         spdm_context, session_info,

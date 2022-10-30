@@ -458,6 +458,7 @@ libspdm_return_t libspdm_process_opaque_data_version_selection_data(libspdm_cont
                                                                     size_t data_in_size,
                                                                     void *data_in);
 
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
 /**
  * This function generates the finish signature based upon TH.
  *
@@ -471,6 +472,7 @@ libspdm_return_t libspdm_process_opaque_data_version_selection_data(libspdm_cont
 bool libspdm_generate_finish_req_signature(libspdm_context_t *spdm_context,
                                            libspdm_session_info_t *session_info,
                                            uint8_t *signature);
+#endif
 
 /**
  * This function generates the finish HMAC based upon TH.
