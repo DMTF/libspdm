@@ -535,10 +535,10 @@ static libspdm_return_t libspdm_requester_get_version_test_receive_message(
  **/
 
 /*
-static void libspdm_test_requester_get_version_case1(void **state)
-{
-}
-*/
+ * static void libspdm_test_requester_get_version_case1(void **state)
+ * {
+ * }
+ */
 
 /**
  * Test 2: receiving a correct VERSION message with available version 1.0 and 1.1.
