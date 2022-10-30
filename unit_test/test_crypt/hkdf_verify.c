@@ -84,10 +84,16 @@ bool libspdm_validate_crypt_hkdf(void)
 {
     #if LIBSPDM_SHA256_SUPPORT ||  LIBSPDM_SHA3_256_SUPPORT || LIBSPDM_SM3_256_SUPPORT || \
     LIBSPDM_SHA384_SUPPORT
+
+    #if LIBSPDM_SHA256_SUPPORT ||  LIBSPDM_SHA3_256_SUPPORT || LIBSPDM_SM3_256_SUPPORT
     uint8_t prk_out[32];
-    uint8_t prk_out48[48];
     uint8_t out[42];
+    #endif
+
+    #if LIBSPDM_SHA384_SUPPORT
+    uint8_t prk_out48[48];
     uint8_t out64[64];
+    #endif
     bool status;
 
     libspdm_my_print(" \nCrypto HKDF Engine Testing:\n");
