@@ -1774,7 +1774,7 @@ void libspdm_register_device_buffer_func(
     spdm_context->release_sender_buffer = release_sender_buffer;
     spdm_context->acquire_receiver_buffer = acquire_receiver_buffer;
     spdm_context->release_receiver_buffer = release_receiver_buffer;
- }
+}
 
 /**
  * Register SPDM transport layer encode/decode functions for SPDM or APP messages.
