@@ -7,11 +7,7 @@
 #ifndef SPDM_CRYPT_LIB_H
 #define SPDM_CRYPT_LIB_H
 
-#ifndef LIBSPDM_CONFIG
-#include "library/spdm_lib_config.h"
-#else
-#include LIBSPDM_CONFIG
-#endif
+#include "internal/libspdm_lib_config.h"
 
 #include "hal/base.h"
 #include "industry_standard/spdm.h"
