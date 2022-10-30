@@ -196,6 +196,7 @@ bool libspdm_generate_finish_req_hmac(libspdm_context_t *spdm_context,
     return true;
 }
 
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
 /**
  * This function generates the finish signature based upon TH.
  *
@@ -291,6 +292,7 @@ bool libspdm_generate_finish_req_signature(libspdm_context_t *spdm_context,
 
     return result;
 }
+#endif
 
 /**
  * This function sends FINISH and receives FINISH_RSP for SPDM finish.
@@ -370,16 +372,17 @@ static libspdm_return_t libspdm_try_send_receive_finish(libspdm_context_t *spdm_
 
     spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request->header.request_response_code = SPDM_FINISH;
+    spdm_request->header.param1 = 0;
+    spdm_request->header.param2 = 0;
+    signature_size = 0;
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     if (session_info->mut_auth_requested) {
         spdm_request->header.param1 = SPDM_FINISH_REQUEST_ATTRIBUTES_SIGNATURE_INCLUDED;
         spdm_request->header.param2 = req_slot_id_param;
         signature_size = libspdm_get_req_asym_signature_size(
             spdm_context->connection_info.algorithm.req_base_asym_alg);
-    } else {
-        spdm_request->header.param1 = 0;
-        spdm_request->header.param2 = 0;
-        signature_size = 0;
     }
+#endif
 
     if (req_slot_id_param == 0xFF) {
         req_slot_id_param = spdm_context->local_context.provisioned_slot_id;
@@ -403,6 +406,7 @@ static libspdm_return_t libspdm_try_send_receive_finish(libspdm_context_t *spdm_
         status = LIBSPDM_STATUS_BUFFER_FULL;
         goto error;
     }
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     if (session_info->mut_auth_requested) {
         result = libspdm_generate_finish_req_signature(spdm_context, session_info, ptr);
         if (!result) {
@@ -418,6 +422,7 @@ static libspdm_return_t libspdm_try_send_receive_finish(libspdm_context_t *spdm_
         }
         ptr += signature_size;
     }
+#endif
 
     result = libspdm_generate_finish_req_hmac(spdm_context, session_info, ptr);
     if (!result) {
