@@ -485,6 +485,12 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
     }
     *req_slot_id_param = spdm_response->req_slot_id_param;
     if (spdm_response->mut_auth_requested != 0) {
+        if (!libspdm_is_capabilities_flag_supported(
+                spdm_context, true,
+                SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP,
+                SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP)) {
+            return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+        }
         if ((spdm_response->mut_auth_requested != SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED) &&
             (spdm_response->mut_auth_requested !=
              SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST) &&
