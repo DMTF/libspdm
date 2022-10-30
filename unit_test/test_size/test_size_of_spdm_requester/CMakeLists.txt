@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.12)
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-    SET(CMAKE_EXE_LINKER_FLAGS "-nostdlib -Wl,-n,-q,--gc-sections -Wl,--entry,ModuleEntryPoint")
+    SET(CMAKE_EXE_LINKER_FLAGS "-nostdlib -flto -Wl,--entry,ModuleEntryPoint")
 elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
     SET(CMAKE_EXE_LINKER_FLAGS "/DLL /ENTRY:ModuleEntryPoint /NOLOGO /SUBSYSTEM:EFI_BOOT_SERVICE_DRIVER /NODEFAULTLIB /IGNORE:4086 /MAP /OPT:REF")
 endif()
@@ -17,6 +17,7 @@ SET(src_test_size_of_spdm_requester
     spdm_requester_init.c
     spdm_requester_main.c
     spdm_requester_session.c
+    compiler_stub.c
 )
 
 SET(test_size_of_spdm_requester_LIBRARY
