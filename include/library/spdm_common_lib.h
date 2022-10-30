@@ -7,11 +7,7 @@
 #ifndef SPDM_COMMON_LIB_H
 #define SPDM_COMMON_LIB_H
 
-#ifndef LIBSPDM_CONFIG
-#include "library/spdm_lib_config.h"
-#else
-#include LIBSPDM_CONFIG
-#endif
+#include "internal/libspdm_lib_config.h"
 
 #if defined(LIBSPDM_ENABLE_SET_CERTIFICATE_CAP) && \
     !defined(LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP)

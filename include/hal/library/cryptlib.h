@@ -14,11 +14,7 @@
 #ifndef CRYPTLIB_H
 #define CRYPTLIB_H
 
-#ifndef LIBSPDM_CONFIG
-#include "library/spdm_lib_config.h"
-#else
-#include LIBSPDM_CONFIG
-#endif
+#include "internal/libspdm_lib_config.h"
 
 #define LIBSPDM_CRYPTO_NID_NULL 0x0000
 
