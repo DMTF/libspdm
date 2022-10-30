@@ -563,30 +563,30 @@ static void libspdm_test_requester_get_version_case2(void **state)
  **/
 
 /*
-static void libspdm_test_requester_get_version_case3(void **state)
-{
-}
-*/
+ * static void libspdm_test_requester_get_version_case3(void **state)
+ * {
+ * }
+ */
 
 /**
  * Test 4: Can be populated with new test.
  **/
 
 /*
-static void libspdm_test_requester_get_version_case4(void **state)
-{
-}
-*/
+ * static void libspdm_test_requester_get_version_case4(void **state)
+ * {
+ * }
+ */
 
 /**
  * Test 5: Can be populated with new test.
  **/
 
 /*
-static void libspdm_test_requester_get_version_case5(void **state)
-{
-}
-*/
+ * static void libspdm_test_requester_get_version_case5(void **state)
+ * {
+ * }
+ */
 
 /**
  * Test 6: on the first try, receiving a Busy ERROR message, and on retry, receiving
@@ -612,30 +612,30 @@ static void libspdm_test_requester_get_version_case6(void **state)
  **/
 
 /*
-static void libspdm_test_requester_get_version_case7(void **state)
-{
-}
-*/
+ * static void libspdm_test_requester_get_version_case7(void **state)
+ * {
+ * }
+ */
 
 /**
  * Test 8: Can be populated with new test.
  **/
 
 /*
-static void libspdm_test_requester_get_version_case8(void **state)
-{
-}
-*/
+ * static void libspdm_test_requester_get_version_case8(void **state)
+ * {
+ * }
+ */
 
 /**
  * Test 9: Can be populated with new test.
  **/
 
 /*
-static void libspdm_test_requester_get_version_case9(void **state)
-{
-}
-*/
+ * static void libspdm_test_requester_get_version_case9(void **state)
+ * {
+ * }
+ */
 
 /**
  * Test 10: receiving a VERSION message with a larger list of available versions than indicated.
@@ -663,40 +663,40 @@ static void libspdm_test_requester_get_version_case10(void **state)
  **/
 
 /*
-static void libspdm_test_requester_get_version_case11(void **state)
-{
-}
-*/
+ * static void libspdm_test_requester_get_version_case11(void **state)
+ * {
+ * }
+ */
 
 /**
  * Test 12: Can be populated with new test.
  **/
 
 /*
-static void libspdm_test_requester_get_version_case12(void **state)
-{
-}
-*/
+ * static void libspdm_test_requester_get_version_case12(void **state)
+ * {
+ * }
+ */
 
 /**
  * Test 13: Can be populated with new test.
  **/
 
 /*
-static void libspdm_test_requester_get_version_case13(void **state)
-{
-}
-*/
+ * static void libspdm_test_requester_get_version_case13(void **state)
+ * {
+ * }
+ */
 
 /**
  * Test 14: Can be populated with new test.
  **/
 
 /*
-static void libspdm_test_requester_get_version_case14(void **state)
-{
-}
-*/
+ * static void libspdm_test_requester_get_version_case14(void **state)
+ * {
+ * }
+ */
 
 /**
  * Test 15: receiving a VERSION message with unordered vesion list.
@@ -772,20 +772,20 @@ static void libspdm_test_requester_get_version_case16(void **state)
  **/
 
 /*
-static void libspdm_test_requester_get_version_case17(void **state)
-{
-}
-*/
+ * static void libspdm_test_requester_get_version_case17(void **state)
+ * {
+ * }
+ */
 
 /**
  * Test 18: Can be populated with new test.
  **/
 
 /*
-static void libspdm_test_requester_get_version_case18(void **state)
-{
-}
-*/
+ * static void libspdm_test_requester_get_version_case18(void **state)
+ * {
+ * }
+ */
 
 libspdm_test_context_t m_libspdm_requester_get_version_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,

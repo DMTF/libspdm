@@ -661,19 +661,17 @@ static void libspdm_test_requester_get_version_err_case8(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_NOT_READY_PEER);
 }
 
+/*
+ * static void libspdm_test_requester_get_version_err_case9(void **state)
+ * {
+ * }
+ */
 
 /*
-void libspdm_test_requester_get_version_err_case9(void **state)
-{
-}
-*/
-
-
-/*
-void libspdm_test_requester_get_version_err_case10(void **state)
-{
-}
-*/
+ * static void libspdm_test_requester_get_version_err_case10(void **state)
+ * {
+ * }
+ */
 
 /**
  * Test 11: receiving a correct VERSION message with available version 1.0 and 1.1, but
@@ -771,16 +769,16 @@ static void libspdm_test_requester_get_version_err_case14(void **state) {
 }
 
 /*
-void libspdm_test_requester_get_version_err_case15(void **state)
-{
-}
-*/
+ * static void libspdm_test_requester_get_version_err_case15(void **state)
+ * {
+ * }
+ */
 
 /*
-void libspdm_test_requester_get_version_err_case16(void **state)
-{
-}
-*/
+ * static void libspdm_test_requester_get_version_err_case16(void **state)
+ * {
+ * }
+ */
 
 /**
  * Test 17: when no VERSION message is received, and the client returns a device error.
