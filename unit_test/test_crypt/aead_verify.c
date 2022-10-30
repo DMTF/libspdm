@@ -302,9 +302,9 @@ bool libspdm_validate_crypt_aead_cipher(void)
     }
 
     libspdm_my_print("[Pass]");
+Exit:
     #endif /* LIBSPDM_AEAD_SM4_SUPPORT */
 
-Exit:
     libspdm_my_print("\n");
 
     return true;
