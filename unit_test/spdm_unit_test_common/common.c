@@ -10,7 +10,6 @@ static libspdm_test_context_t *m_spdm_test_context;
 
 static bool m_send_receive_buffer_acquired = false;
 static uint8_t m_send_receive_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-static size_t m_send_receive_buffer_size;
 
 static bool m_error_acquire_sender_buffer = false;
 static bool m_error_acquire_receiver_buffer = false;
@@ -131,23 +130,23 @@ int libspdm_unit_test_group_teardown(void **state)
 void libspdm_force_error (libspdm_error_target_t target)
 {
     switch (target) {
-        case LIBSPDM_ERR_ACQUIRE_SENDER_BUFFER:
-            m_error_acquire_sender_buffer = true;
-            break;
-        case LIBSPDM_ERR_ACQUIRE_RECEIVER_BUFFER:
-            m_error_acquire_receiver_buffer = true;
-            break;
+    case LIBSPDM_ERR_ACQUIRE_SENDER_BUFFER:
+        m_error_acquire_sender_buffer = true;
+        break;
+    case LIBSPDM_ERR_ACQUIRE_RECEIVER_BUFFER:
+        m_error_acquire_receiver_buffer = true;
+        break;
     }
 }
 
 void libspdm_release_error (libspdm_error_target_t target)
 {
     switch (target) {
-        case LIBSPDM_ERR_ACQUIRE_SENDER_BUFFER:
-            m_error_acquire_sender_buffer = false;
-            break;
-        case LIBSPDM_ERR_ACQUIRE_RECEIVER_BUFFER:
-            m_error_acquire_receiver_buffer = false;
-            break;
+    case LIBSPDM_ERR_ACQUIRE_SENDER_BUFFER:
+        m_error_acquire_sender_buffer = false;
+        break;
+    case LIBSPDM_ERR_ACQUIRE_RECEIVER_BUFFER:
+        m_error_acquire_receiver_buffer = false;
+        break;
     }
 }
