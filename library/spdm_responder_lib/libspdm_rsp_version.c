@@ -54,7 +54,7 @@ libspdm_return_t libspdm_get_response_version(void *context, size_t request_size
 
     if (spdm_request->header.spdm_version != SPDM_MESSAGE_VERSION_10) {
         return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                               SPDM_ERROR_CODE_VERSION_MISMATCH, 0,
                                                response_size, response);
     }
 

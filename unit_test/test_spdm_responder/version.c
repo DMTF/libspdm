@@ -200,7 +200,7 @@ void libspdm_test_responder_version_case4(void **state)
  * Test 6: receiving a GET_VERSION message in SPDM version 1.1 (in the header), but correct
  * 1.0-version format.
  * Expected behavior: the responder refuses the GET_VERSION message, produces an
- * ERROR message indicating the InvalidRequest, and will not reset the connection state.
+ * ERROR message indicating the VersionMismatch, and will not reset the connection state.
  **/
 void libspdm_test_responder_version_case6(void **state)
 {
@@ -228,44 +228,17 @@ void libspdm_test_responder_version_case6(void **state)
     assert_int_equal(spdm_response->header.request_response_code,
                      SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_INVALID_REQUEST);
+                     SPDM_ERROR_CODE_VERSION_MISMATCH);
     assert_int_equal(spdm_response->header.param2, 0);
     assert_int_equal(spdm_context->connection_info.connection_state,
                      LIBSPDM_CONNECTION_STATE_AUTHENTICATED);
 }
 
 /**
- * Test 7: receiving a SPDM message with a VERSION 0x04 request_response_code instead
- * of a GET_VERSION 0x84 one.
- * Expected behavior: the responder refuses the VERSION message and produces an
- * ERROR message indicating the InvalidRequest.
+ * Test 7: can be populated with new test.
  **/
 void libspdm_test_responder_version_case7(void **state)
 {
-    libspdm_return_t status;
-    libspdm_test_context_t *spdm_test_context;
-    libspdm_context_t *spdm_context;
-    size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    spdm_version_response_t *spdm_response;
-
-    spdm_test_context = *state;
-    spdm_context = spdm_test_context->spdm_context;
-    spdm_test_context->case_id = 0x6;
-
-    response_size = sizeof(response);
-    status = libspdm_get_response_version(spdm_context,
-                                          m_libspdm_get_version_request3_size,
-                                          &m_libspdm_get_version_request3,
-                                          &response_size, response);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(response_size, sizeof(spdm_error_response_t));
-    spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_INVALID_REQUEST);
-    assert_int_equal(spdm_response->header.param2, 0);
 }
 
 /**
