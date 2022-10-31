@@ -1201,6 +1201,61 @@ void libspdm_test_responder_certificate_case15(void **state)
     free(data);
 }
 
+/**
+ * Test 16: request a 0 byte certificate chain
+ * Expected Behavior: portion length should be 0 and remainder length should be the size of the
+ *                    certificate chain.
+ **/
+void libspdm_test_responder_certificate_case16(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    spdm_certificate_response_t *spdm_response;
+    void *data;
+    size_t data_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 16;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, NULL, NULL);
+    spdm_context->local_context.local_cert_chain_provision[0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->transcript.message_m.buffer_size =
+        spdm_context->transcript.message_m.max_buffer_size;
+#endif
+
+    m_libspdm_get_certificate_request3.offset = 0;
+    m_libspdm_get_certificate_request3.length = 0;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_certificate(
+        spdm_context, m_libspdm_get_certificate_request3_size,
+        &m_libspdm_get_certificate_request3, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_certificate_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_CERTIFICATE);
+    assert_int_equal(spdm_response->header.param1, 0);
+    assert_int_equal(spdm_response->portion_length, 0);
+    assert_int_equal(spdm_response->remainder_length, data_size);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
+#endif
+    free(data);
+}
+
 libspdm_test_context_t m_libspdm_responder_certificate_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     false,
@@ -1239,6 +1294,7 @@ int libspdm_responder_certificate_test_main(void)
         cmocka_unit_test(libspdm_test_responder_certificate_case14),
         /* Produce a CERTIFICATE response that is meant to be chunked. */
         cmocka_unit_test(libspdm_test_responder_certificate_case15),
+        cmocka_unit_test(libspdm_test_responder_certificate_case16),
     };
 
     libspdm_setup_test_context(&m_libspdm_responder_certificate_test_context);
