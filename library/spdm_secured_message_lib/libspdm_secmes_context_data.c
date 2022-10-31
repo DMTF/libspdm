@@ -63,6 +63,7 @@ void libspdm_secured_message_set_session_state(
     if (session_state == LIBSPDM_SESSION_STATE_ESTABLISHED) {
         /* session handshake key should be zeroized after handshake phase. */
         libspdm_clear_handshake_secret(secured_message_context);
+        libspdm_clear_master_secret(secured_message_context);
     }
 }
 
@@ -212,7 +213,7 @@ bool libspdm_secured_message_export_master_secret(
     return true;
 }
 
-void libspdm_secured_message_erase_export_master_secret(void *spdm_secured_message_context)
+void libspdm_secured_message_clear_export_master_secret(void *spdm_secured_message_context)
 {
     libspdm_secured_message_context_t *secured_message_context;
 

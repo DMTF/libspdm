@@ -147,7 +147,7 @@ bool libspdm_secured_message_export_master_secret(
  *
  * @param  spdm_secured_message_context  A pointer to the SPDM secured message context.
  */
-void libspdm_secured_message_erase_export_master_secret(void *spdm_secured_message_context);
+void libspdm_secured_message_clear_export_master_secret(void *spdm_secured_message_context);
 
 #define LIBSPDM_SECURE_SESSION_KEYS_STRUCT_VERSION 1
 
@@ -261,11 +261,18 @@ bool libspdm_secured_message_dhe_compute_key(
     void *spdm_secured_message_context);
 
 /**
- * This function used to clear handshake secret.
+ * This function is used to clear handshake secret.
  *
- * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
+ * @param spdm_secured_message_context  A pointer to the SPDM secured message context.
  **/
 void libspdm_clear_handshake_secret(void *spdm_secured_message_context);
+
+/**
+ * This function is used to clear the master secret;
+ *
+ * @param spdm_secured_message_context  A pointer to the SPDM secured message context.
+ **/
+void libspdm_clear_master_secret(void *spdm_secured_message_context);
 
 /**
  * Allocates and initializes one HMAC context for subsequent use, with request_finished_key.
