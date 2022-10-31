@@ -112,11 +112,6 @@ libspdm_return_t libspdm_get_response_certificate(void *context,
     offset = spdm_request->offset;
     length = spdm_request->length;
 
-    if (length == 0) {
-        return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-                                               response_size, response);
-    }
     if (offset >= spdm_context->local_context.local_cert_chain_provision_size[slot_id]) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
@@ -153,6 +148,7 @@ libspdm_return_t libspdm_get_response_certificate(void *context,
     spdm_response->header.param2 = 0;
     spdm_response->portion_length = length;
     spdm_response->remainder_length = (uint16_t)remainder_length;
+
     libspdm_copy_mem(spdm_response + 1, response_capacity - sizeof(spdm_certificate_response_t),
                      (const uint8_t *)spdm_context->local_context
                      .local_cert_chain_provision[slot_id] + offset, length);
@@ -183,4 +179,4 @@ libspdm_return_t libspdm_get_response_certificate(void *context,
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-#endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP */
