@@ -1230,6 +1230,7 @@ void libspdm_test_responder_certificate_case16(void **state)
                                                     &data_size, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->session_info[0].session_id = 0;
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->transcript.message_m.buffer_size =
