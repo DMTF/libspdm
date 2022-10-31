@@ -13,7 +13,8 @@
 static size_t m_libspdm_local_buffer_size;
 static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
-uint8_t m_libspdm_dummy_buffer[LIBSPDM_MAX_HASH_SIZE];
+static uint8_t m_libspdm_dummy_buffer[LIBSPDM_MAX_HASH_SIZE];
+static const uint8_t m_libspdm_zero_buffer[LIBSPDM_MAX_HASH_SIZE] = {0};
 
 void libspdm_secured_message_set_response_finished_key(
     void *spdm_secured_message_context, const void *key, size_t key_size)
@@ -1609,6 +1610,7 @@ void libspdm_test_requester_finish_case2(void **state)
     void *hash;
     size_t hash_size;
     libspdm_session_info_t *session_info;
+    libspdm_secured_message_context_t *secured_message_context;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1680,13 +1682,17 @@ void libspdm_test_requester_finish_case2(void **state)
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
     req_slot_id_param = 0;
-    status = libspdm_send_receive_finish(spdm_context, session_id,
-                                         req_slot_id_param);
+    status = libspdm_send_receive_finish(spdm_context, session_id, req_slot_id_param);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(
         libspdm_secured_message_get_session_state(
             spdm_context->session_info[0].secured_message_context),
         LIBSPDM_SESSION_STATE_ESTABLISHED);
+
+    secured_message_context = session_info->secured_message_context;
+
+    assert_memory_equal((const void *)secured_message_context->master_secret.master_secret,
+                        (const void *)m_libspdm_zero_buffer, sizeof(m_libspdm_zero_buffer));
     free(data);
 }
 
