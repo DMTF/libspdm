@@ -9,14 +9,14 @@
 #include "internal/libspdm_secured_message_lib.h"
 
 #pragma pack(1)
+
 typedef struct {
     spdm_message_header_t header;
     uint8_t signature[LIBSPDM_MAX_ASYM_KEY_SIZE];
     uint8_t verify_data[LIBSPDM_MAX_HASH_SIZE];
 } libspdm_finish_request_mine_t;
-#pragma pack()
 
-static const uint8_t m_libspdm_zero_buffer[LIBSPDM_MAX_HASH_SIZE] = {0};
+#pragma pack()
 
 libspdm_finish_request_mine_t m_libspdm_finish_request1 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_FINISH, 0, 0 },
@@ -77,7 +77,6 @@ void libspdm_test_responder_finish_case1(void **state)
     uint32_t session_id;
     uint32_t hash_size;
     uint32_t hmac_size;
-    libspdm_secured_message_context_t *secured_message_context;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -157,15 +156,11 @@ void libspdm_test_responder_finish_case1(void **state)
                                          &m_libspdm_finish_request1,
                                          &response_size, response);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(response_size, sizeof(spdm_finish_response_t) + hmac_size);
+    assert_int_equal(response_size,
+                     sizeof(spdm_finish_response_t) + hmac_size);
     spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code, SPDM_FINISH_RSP);
-
-    secured_message_context = session_info->secured_message_context;
-
-    assert_memory_equal((const void *)secured_message_context->master_secret.master_secret,
-                        (const void *)m_libspdm_zero_buffer, sizeof(m_libspdm_zero_buffer));
-
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_FINISH_RSP);
     free(data1);
 }
 
