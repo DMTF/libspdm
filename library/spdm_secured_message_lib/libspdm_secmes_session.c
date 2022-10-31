@@ -708,11 +708,6 @@ bool libspdm_create_update_session_data_key(void *spdm_secured_message_context,
     return true;
 }
 
-/**
- * This function used to clear handshake secret.
- *
- * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- **/
 void libspdm_clear_handshake_secret(void *spdm_secured_message_context)
 {
     libspdm_secured_message_context_t *secured_message_context;
@@ -726,6 +721,15 @@ void libspdm_clear_handshake_secret(void *spdm_secured_message_context)
 
     secured_message_context->requester_backup_valid = false;
     secured_message_context->responder_backup_valid = false;
+}
+
+void libspdm_clear_master_secret(void *spdm_secured_message_context)
+{
+    libspdm_secured_message_context_t *secured_message_context;
+
+    secured_message_context = spdm_secured_message_context;
+
+    libspdm_zero_mem(secured_message_context->master_secret.master_secret, LIBSPDM_MAX_HASH_SIZE);
 }
 
 /**
