@@ -46,6 +46,24 @@ extern bool libspdm_ec_set_pub_key(void *ec_context, const uint8_t *public_key,
                                    size_t public_key_size);
 
 /**
+ * Sets the private key component into the established EC context.
+ *
+ * For P-256, the private_key_size is 32 byte.
+ * For P-384, the private_key_size is 48 byte.
+ * For P-521, the private_key_size is 66 byte.
+ *
+ * @param[in, out]  ec_context       Pointer to EC context being set.
+ * @param[in]       private_key      Pointer to the private key buffer.
+ * @param[in]       private_key_size The size of private key buffer in bytes.
+ *
+ * @retval  true   EC private key component was set successfully.
+ * @retval  false  Invalid EC private key component.
+ *
+ **/
+extern bool libspdm_ec_set_priv_key(void *ec_context, const uint8_t *private_key,
+                                    size_t private_key_size);
+
+/**
  * Gets the public key component from the established EC context.
  *
  * For P-256, the public_size is 64. first 32-byte is X, second 32-byte is Y.

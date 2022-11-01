@@ -6,6 +6,19 @@
 
 #include "test_crypt.h"
 
+/*ecp256 key: https://lapo.it/asn1js/#MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgjqRWI_stNQKCZwHIIL9pQLqos_cTSZ2Q3L5XaPaE-hGhRANCAAR-X9hTLdaMSJxS9gNglcAxjLCocVJ5I6msv8D7iLloQfRC_RsnQFl5UkTDAKfkavduNdy0AM2VR4XMmD6I9E1D*/
+uint8_t m_libspdm_ec_public_key[] = {
+    0x7E, 0x5F, 0xD8, 0x53, 0x2D, 0xD6, 0x8C, 0x48, 0x9C, 0x52, 0xF6, 0x03, 0x60, 0x95, 0xC0, 0x31,
+    0x8C, 0xB0, 0xA8, 0x71, 0x52, 0x79, 0x23, 0xA9, 0xAC, 0xBF, 0xC0, 0xFB, 0x88, 0xB9, 0x68, 0x41,
+    0xF4, 0x42, 0xFD, 0x1B, 0x27, 0x40, 0x59, 0x79, 0x52, 0x44, 0xC3, 0x00, 0xA7, 0xE4, 0x6A, 0xF7,
+    0x6E, 0x35, 0xDC, 0xB4, 0x00, 0xCD, 0x95, 0x47, 0x85, 0xCC, 0x98, 0x3E, 0x88, 0xF4, 0x4D, 0x43,
+};
+
+uint8_t m_libspdm_ec_private_key[] = {
+    0x8E, 0xA4, 0x56, 0x23, 0xFB, 0x2D, 0x35, 0x02, 0x82, 0x67, 0x01, 0xC8, 0x20, 0xBF, 0x69, 0x40,
+    0xBA, 0xA8, 0xB3, 0xF7, 0x13, 0x49, 0x9D, 0x90, 0xDC, 0xBE, 0x57, 0x68, 0xF6, 0x84, 0xFA, 0x11,
+};
+
 /**
  * Validate Crypto EC Interfaces.
  *
@@ -376,6 +389,56 @@ bool libspdm_validate_crypt_ec(void)
 
     libspdm_ec_free(ec1);
     libspdm_ec_free(ec2);
+
+    libspdm_my_print("\nSet public and private key Testing:\n");
+    libspdm_my_print("- Context1 ... ");
+    ec1 = libspdm_ec_new_by_nid(LIBSPDM_CRYPTO_NID_SECP256R1);
+    if (ec1 == NULL) {
+        libspdm_my_print("[Fail]");
+        return false;
+    }
+
+    libspdm_my_print("Import public key in Context1 ... ");
+    status = libspdm_ec_set_pub_key(ec1, m_libspdm_ec_public_key, sizeof(m_libspdm_ec_public_key));
+    if (!status) {
+        libspdm_my_print("[Fail]");
+        libspdm_ec_free(ec1);
+        return false;
+    }
+
+    libspdm_my_print("Import private key in Context1 ... ");
+    status =
+        libspdm_ec_set_priv_key(ec1, m_libspdm_ec_private_key, sizeof(m_libspdm_ec_private_key));
+    if (!status) {
+        libspdm_my_print("[Fail]");
+        libspdm_ec_free(ec1);
+        return false;
+    }
+
+    /* Use the set key to verify EC-DSA */
+    hash_size = sizeof(hash_value);
+    sig_size = sizeof(signature);
+    libspdm_my_print("\n- EC-DSA Signing in Context1 ... ");
+    status = libspdm_ecdsa_sign(ec1, LIBSPDM_CRYPTO_NID_SHA256, hash_value, hash_size,
+                                signature, &sig_size);
+    if (!status) {
+        libspdm_my_print("[Fail]");
+        libspdm_ec_free(ec1);
+        return false;
+    }
+
+    libspdm_my_print("EC-DSA Verification in Context1 ... ");
+    status = libspdm_ecdsa_verify(ec1, LIBSPDM_CRYPTO_NID_SHA256, hash_value, hash_size,
+                                  signature, sig_size);
+    if (!status) {
+        libspdm_my_print("[Fail]");
+        libspdm_ec_free(ec1);
+        return false;
+    } else {
+        libspdm_my_print("[Pass]\n");
+    }
+
+    libspdm_ec_free(ec1);
 
     return true;
 }
