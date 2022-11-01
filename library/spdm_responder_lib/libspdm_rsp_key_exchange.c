@@ -358,6 +358,8 @@ libspdm_return_t libspdm_get_response_key_exchange(void *context,
             response_size, response);
     }
 
+    session_info->heartbeat_period = spdm_context->local_context.heartbeat_period;
+
     spdm_response->rsp_session_id = rsp_session_id;
 
     spdm_response->mut_auth_requested = 0;

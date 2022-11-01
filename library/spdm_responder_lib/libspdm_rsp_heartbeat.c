@@ -57,8 +57,7 @@ libspdm_return_t libspdm_get_response_heartbeat(void *context,
                                                SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
                                                0, response_size, response);
     }
-    if (spdm_context->connection_info.connection_state <
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
+    if (spdm_context->connection_info.connection_state < LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNEXPECTED_REQUEST,
                                                0, response_size, response);
@@ -87,6 +86,12 @@ libspdm_return_t libspdm_get_response_heartbeat(void *context,
     if (request_size != sizeof(spdm_heartbeat_request_t)) {
         return libspdm_generate_error_response(context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                               response_size, response);
+    }
+
+    if (session_info->heartbeat_period == 0) {
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
                                                response_size, response);
     }
 

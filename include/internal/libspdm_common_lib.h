@@ -244,6 +244,7 @@ typedef struct {
     uint8_t mut_auth_requested;
     uint8_t end_session_attributes;
     uint8_t session_policy;
+    uint8_t heartbeat_period;
     libspdm_session_transcript_t session_transcript;
     /* Register for the last KEY_UPDATE token and operation (responder only)*/
     spdm_key_update_request_t last_key_update_request;
