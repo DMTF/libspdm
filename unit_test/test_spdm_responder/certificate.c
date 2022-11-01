@@ -1230,12 +1230,6 @@ void libspdm_test_responder_certificate_case16(void **state)
                                                     &data_size, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
-    spdm_context->session_info[0].session_id = 0;
-
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->transcript.message_m.buffer_size =
-        spdm_context->transcript.message_m.max_buffer_size;
-#endif
 
     m_libspdm_get_certificate_request3.offset = 0;
     m_libspdm_get_certificate_request3.length = 0;
@@ -1251,9 +1245,7 @@ void libspdm_test_responder_certificate_case16(void **state)
     assert_int_equal(spdm_response->header.param1, 0);
     assert_int_equal(spdm_response->portion_length, 0);
     assert_int_equal(spdm_response->remainder_length, data_size);
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
-#endif
+
     free(data);
 }
 
