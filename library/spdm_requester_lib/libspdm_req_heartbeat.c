@@ -55,6 +55,9 @@ static libspdm_return_t libspdm_try_heartbeat(void *context, uint32_t session_id
     if (session_state != LIBSPDM_SESSION_STATE_ESTABLISHED) {
         return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
+    if (session_info->heartbeat_period == 0) {
+        return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
+    }
 
     /* -=[Construct Request Phase]=- */
     transport_header_size = spdm_context->transport_get_header_size(spdm_context);

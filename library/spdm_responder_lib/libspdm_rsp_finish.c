@@ -419,8 +419,7 @@ libspdm_return_t libspdm_get_response_finish(void *context, size_t request_size,
         /* No handshake in clear, then it must be in a session.*/
         if (!spdm_context->last_spdm_request_session_id_valid) {
             return libspdm_generate_error_response(
-                context, SPDM_ERROR_CODE_SESSION_REQUIRED, 0,
-                response_size, response);
+                context, SPDM_ERROR_CODE_SESSION_REQUIRED, 0, response_size, response);
         }
     } else {
         /* handshake in clear, then it must not be in a session.*/
@@ -435,8 +434,7 @@ libspdm_return_t libspdm_get_response_finish(void *context, size_t request_size,
     } else {
         session_id = spdm_context->latest_session_id;
     }
-    session_info =
-        libspdm_get_session_info_via_session_id(spdm_context, session_id);
+    session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
     if (session_info == NULL) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_SESSION_REQUIRED, 0,
@@ -459,14 +457,12 @@ libspdm_return_t libspdm_get_response_finish(void *context, size_t request_size,
                                                response_size, response);
     }
 
-    hmac_size = libspdm_get_hash_size(
-        spdm_context->connection_info.algorithm.base_hash_algo);
+    hmac_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
     signature_size = 0;
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     if (session_info->mut_auth_requested) {
         signature_size = libspdm_get_req_asym_signature_size(
-            spdm_context->connection_info.algorithm
-            .req_base_asym_alg);
+            spdm_context->connection_info.algorithm.req_base_asym_alg);
     }
 #endif
 
@@ -507,8 +503,7 @@ libspdm_return_t libspdm_get_response_finish(void *context, size_t request_size,
     if (session_info->mut_auth_requested) {
         result = libspdm_verify_finish_req_signature(
             spdm_context, session_info,
-            (const uint8_t *)request + sizeof(spdm_finish_request_t),
-            signature_size);
+            (const uint8_t *)request + sizeof(spdm_finish_request_t), signature_size);
         if (!result) {
             if((spdm_context->handle_error_return_policy &
                 LIBSPDM_DATA_HANDLE_ERROR_RETURN_POLICY_DROP_ON_DECRYPT_ERROR) == 0) {
@@ -537,10 +532,8 @@ libspdm_return_t libspdm_get_response_finish(void *context, size_t request_size,
 #endif
 
     result = libspdm_verify_finish_req_hmac(
-        spdm_context, session_info,
-        (const uint8_t *)request + signature_size +
-        sizeof(spdm_finish_request_t),
-        hmac_size);
+        spdm_context, session_info, (const uint8_t *)request + signature_size +
+        sizeof(spdm_finish_request_t), hmac_size);
     if (!result) {
         if((spdm_context->handle_error_return_policy &
             LIBSPDM_DATA_HANDLE_ERROR_RETURN_POLICY_DROP_ON_DECRYPT_ERROR) == 0) {
@@ -618,8 +611,7 @@ libspdm_return_t libspdm_get_response_finish(void *context, size_t request_size,
     }
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_generate_session_data_key[%x]\n", session_id));
-    result = libspdm_calculate_th2_hash(spdm_context, session_info, false,
-                                        th2_hash_data);
+    result = libspdm_calculate_th2_hash(spdm_context, session_info, false, th2_hash_data);
     if (!result) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,
@@ -633,8 +625,7 @@ libspdm_return_t libspdm_get_response_finish(void *context, size_t request_size,
                                                response_size, response);
     }
 
-    result = libspdm_start_watchdog(session_id,
-                                    spdm_context->local_context.heartbeat_period * 2);
+    result = libspdm_start_watchdog(session_id, spdm_context->local_context.heartbeat_period * 2);
     if (!result) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,

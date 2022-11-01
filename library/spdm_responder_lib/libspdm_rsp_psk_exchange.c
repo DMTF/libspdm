@@ -402,8 +402,7 @@ libspdm_return_t libspdm_get_response_psk_exchange(void *context,
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
         session_info->session_policy = spdm_request->header.param2;
     }
-    libspdm_set_session_state(spdm_context, session_id,
-                              LIBSPDM_SESSION_STATE_HANDSHAKING);
+    libspdm_set_session_state(spdm_context, session_id, LIBSPDM_SESSION_STATE_HANDSHAKING);
 
     if (!libspdm_is_capabilities_flag_supported(
             spdm_context, false, 0,
@@ -427,9 +426,10 @@ libspdm_return_t libspdm_get_response_psk_exchange(void *context,
                 0, response_size, response);
         }
 
-        libspdm_set_session_state(spdm_context, session_id,
-                                  LIBSPDM_SESSION_STATE_ESTABLISHED);
+        libspdm_set_session_state(spdm_context, session_id, LIBSPDM_SESSION_STATE_ESTABLISHED);
     }
+
+    session_info->heartbeat_period = spdm_context->local_context.heartbeat_period;
 
     return LIBSPDM_STATUS_SUCCESS;
 }

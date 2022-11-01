@@ -706,6 +706,7 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
         libspdm_copy_mem(measurement_hash, measurement_summary_hash_size,
                          measurement_summary_hash, measurement_summary_hash_size);
     }
+    session_info->heartbeat_period = spdm_response->header.param1;
     session_info->mut_auth_requested = spdm_response->mut_auth_requested;
     session_info->session_policy = session_policy;
 

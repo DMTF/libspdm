@@ -500,6 +500,8 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
             LIBSPDM_SESSION_STATE_ESTABLISHED);
     }
 
+    session_info->heartbeat_period = spdm_response->header.param1;
+
     status = LIBSPDM_STATUS_SUCCESS;
 
 receive_done:
