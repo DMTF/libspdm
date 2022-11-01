@@ -1,0 +1,65 @@
+name: Code Coverage
+
+on:
+  schedule:
+    - cron:  '00 8 * * *'
+    branches:
+      - main
+  workflow_dispatch:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Build - Linux
+        run: |
+          sudo apt-get update
+          sudo apt-get install lcov
+          mkdir build
+          cd build
+          cmake -DARCH=x64 -DTOOLCHAIN=GCC -DTARGET=Debug -DCRYPTO=mbedtls -DGCOV=ON ..
+          make copy_sample_key
+          make copy_seed
+          make -j`nproc`
+      - name: Test Requester
+        run: |
+          cd build/bin
+          ./test_spdm_requester
+      - name: Test Responder
+        run: |
+          cd build/bin
+          ./test_spdm_responder
+      - name: Test Common
+        run: |
+          cd build/bin
+          ./test_spdm_common
+      - name: Test Cryptography
+        run: |
+          cd build/bin
+          ./test_spdm_crypt
+      - name: Generate Coverage
+        env:
+          CI_COMMIT_MESSAGE: Publish code coverage.
+          CI_COMMIT_AUTHOR: Continuous Integration
+        run: |
+          mkdir /tmp/coverage_log
+          lcov --capture --directory ./build --output-file coverage.info
+          genhtml coverage.info --output-directory /tmp/coverage_log
+          git fetch origin
+          git checkout github_pages
+          rm -rf ./coverage_log
+          mv /tmp/coverage_log ./
+          git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
+          git config --global user.email "void@void.net"
+          git add -f coverage_log/\*
+          git commit -a -m "${{ env.CI_COMMIT_MESSAGE }}"
+          git push --force origin github_pages
