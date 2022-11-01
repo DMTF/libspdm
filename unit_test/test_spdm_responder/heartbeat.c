@@ -619,8 +619,6 @@ void libspdm_test_responder_heartbeat_case8(void **state)
     size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_heartbeat_response_t *spdm_response;
-    //void *data1;
-    //size_t data_size1;
     libspdm_session_info_t *session_info;
     uint32_t session_id;
 
@@ -639,15 +637,6 @@ void libspdm_test_responder_heartbeat_case8(void **state)
         m_libspdm_use_measurement_hash_algo;
     spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
-    #if 0
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data1,
-                                                    &data_size1, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
-    spdm_context->connection_info.local_used_cert_chain_buffer = data1;
-    spdm_context->connection_info.local_used_cert_chain_buffer_size = data_size1;
-    #endif
 
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
@@ -679,8 +668,6 @@ void libspdm_test_responder_heartbeat_case8(void **state)
     assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
-
-    //free(data1);
 }
 
 libspdm_test_context_t m_libspdm_responder_heartbeat_test_context = {
