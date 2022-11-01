@@ -136,6 +136,58 @@ bool libspdm_ec_set_pub_key(void *ec_context, const uint8_t *public_key,
 }
 
 /**
+ * Sets the private key component into the established EC context.
+ *
+ * For P-256, the private_key_size is 32 byte.
+ * For P-384, the private_key_size is 48 byte.
+ * For P-521, the private_key_size is 66 byte.
+ *
+ * @param[in, out]  ec_context       Pointer to EC context being set.
+ * @param[in]       private_key      Pointer to the private key buffer.
+ * @param[in]       private_key_size The size of private key buffer in bytes.
+ *
+ * @retval  true   EC private key component was set successfully.
+ * @retval  false  Invalid EC private key component.
+ *
+ **/
+bool libspdm_ec_set_priv_key(void *ec_context, const uint8_t *private_key,
+                             size_t private_key_size)
+{
+    mbedtls_ecdh_context *ctx;
+    int32_t ret;
+    size_t half_size;
+
+    if (ec_context == NULL || private_key == NULL) {
+        return false;
+    }
+
+    ctx = ec_context;
+    switch (ctx->grp.id) {
+    case MBEDTLS_ECP_DP_SECP256R1:
+        half_size = 32;
+        break;
+    case MBEDTLS_ECP_DP_SECP384R1:
+        half_size = 48;
+        break;
+    case MBEDTLS_ECP_DP_SECP521R1:
+        half_size = 66;
+        break;
+    default:
+        return false;
+    }
+    if (private_key_size != half_size) {
+        return false;
+    }
+
+    ret = mbedtls_mpi_read_binary(&ctx->d, private_key, private_key_size);
+    if (ret != 0) {
+        return false;
+    }
+
+    return true;
+}
+
+/**
  * Gets the public key component from the established EC context.
  *
  * For P-256, the public_size is 64. first 32-byte is X, second 32-byte is Y.

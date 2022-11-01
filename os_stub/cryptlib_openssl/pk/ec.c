@@ -168,6 +168,72 @@ done:
 }
 
 /**
+ * Sets the private key component into the established EC context.
+ *
+ * For P-256, the private_key_size is 32 byte.
+ * For P-384, the private_key_size is 48 byte.
+ * For P-521, the private_key_size is 66 byte.
+ *
+ * @param[in, out]  ec_context       Pointer to EC context being set.
+ * @param[in]       private_key      Pointer to the private key buffer.
+ * @param[in]       private_key_size The size of private key buffer in bytes.
+ *
+ * @retval  true   EC private key component was set successfully.
+ * @retval  false  Invalid EC private key component.
+ *
+ **/
+bool libspdm_ec_set_priv_key(void *ec_context, const uint8_t *private_key,
+                             size_t private_key_size)
+{
+    EC_KEY *ec_key;
+    bool ret_val;
+    BIGNUM * priv_key;
+    int32_t openssl_nid;
+    size_t half_size;
+
+    if (ec_context == NULL || private_key == NULL) {
+        return false;
+    }
+
+    ec_key = (EC_KEY *)ec_context;
+    openssl_nid = EC_GROUP_get_curve_name(EC_KEY_get0_group(ec_key));
+    switch (openssl_nid) {
+    case NID_X9_62_prime256v1:
+        half_size = 32;
+        break;
+    case NID_secp384r1:
+        half_size = 48;
+        break;
+    case NID_secp521r1:
+        half_size = 66;
+        break;
+    default:
+        return false;
+    }
+    if (private_key_size != half_size) {
+        return false;
+    }
+
+    priv_key = BN_bin2bn(private_key, private_key_size, NULL);
+    if (priv_key == NULL) {
+        ret_val = false;
+        goto done;
+    }
+    ret_val = (bool)EC_KEY_set_private_key(ec_key, priv_key);
+    if (!ret_val) {
+        goto done;
+    }
+
+    ret_val = true;
+
+done:
+    if (priv_key != NULL) {
+        BN_free(priv_key);
+    }
+    return ret_val;
+}
+
+/**
  * Gets the public key component from the established EC context.
  *
  * For P-256, the public_size is 64. first 32-byte is X, second 32-byte is Y.
