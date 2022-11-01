@@ -3,11 +3,7 @@ name: Code Coverage
 on:
   schedule:
     - cron:  '00 8 * * *'
-    branches:
-      - main
   workflow_dispatch:
-    branches:
-      - main
 
 jobs:
   build:
