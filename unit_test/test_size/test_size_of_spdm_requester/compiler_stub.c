@@ -6,6 +6,10 @@
 
 #include "spdm_requester.h"
 
+void __stack_chk_guard (void)
+{
+}
+
 void __stack_chk_fail (void)
 {
 }

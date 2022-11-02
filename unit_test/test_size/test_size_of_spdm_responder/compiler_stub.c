@@ -6,6 +6,10 @@
 
 #include "spdm_responder.h"
 
+void __stack_chk_guard (void)
+{
+}
+
 void __stack_chk_fail (void)
 {
 }
