@@ -34,7 +34,7 @@ SET(test_spdm_crypt_LIBRARY
     spdm_device_secret_lib_sample
 )
 
-if(TOOLCHAIN STREQUAL "ARM_CLANG")
+if(TOOLCHAIN STREQUAL "ARM_DS2022")
     SET(test_spdm_crypt_LIBRARY ${test_spdm_crypt_LIBRARY} armbuild_lib)
 endif()
 

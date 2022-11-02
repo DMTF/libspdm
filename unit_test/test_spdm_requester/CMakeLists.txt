@@ -67,7 +67,7 @@ SET(test_spdm_requester_LIBRARY
     platform_lib
 )
 
-if(TOOLCHAIN STREQUAL "ARM_CLANG")
+if(TOOLCHAIN STREQUAL "ARM_DS2022")
     SET(test_spdm_requester_LIBRARY ${test_spdm_requester_LIBRARY} armbuild_lib)
 endif()
 
