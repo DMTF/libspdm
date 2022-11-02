@@ -43,7 +43,7 @@ SET(test_spdm_common_LIBRARY
     cmockalib
 )
 
-if(TOOLCHAIN STREQUAL "ARM_CLANG")
+if(TOOLCHAIN STREQUAL "ARM_DS2022")
     SET(test_spdm_common_LIBRARY ${test_spdm_common_LIBRARY} armbuild_lib)
 endif()
 

@@ -39,7 +39,7 @@ SET(test_crypt_LIBRARY
     spdm_crypt_ext_lib
 )
 
-if(TOOLCHAIN STREQUAL "ARM_CLANG")
+if(TOOLCHAIN STREQUAL "ARM_DS2022")
     SET(test_crypt_LIBRARY ${test_crypt_LIBRARY} armbuild_lib)
 endif()
 

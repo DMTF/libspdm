@@ -87,11 +87,27 @@
 
     c) [Visual Studio 2015](https://visualstudio.microsoft.com/vs/older-downloads/)
 
-    d) [LLVM](https://llvm.org/) (LLVM13) Download: [LLVM-13.0.0-win64.exe](https://github.com/llvm/llvm-project/releases/tag/llvmorg-13.0.0).
-    - Add LLVM in PATH environment according to installation instruction.
-    - Change LLVM install path to C:/LLVM.
+    d) [LLVM](https://llvm.org/) (LLVM13)
+    - Install [LLVM-13.0.0-win64.exe](https://github.com/llvm/llvm-project/releases/tag/llvmorg-13.0.0). Please change LLVM install path to C:/LLVM, and add LLVM in PATH environment.
     - LLVM13 works good for clang and [libfuzzer](https://llvm.org/docs/LibFuzzer.html) build. Other versions are not validated for clang build.
     - Because the libfuzzer lib path is hard coded in CMakeLists, other versions may fail for libfuzzer build.
+
+    e) [ARM Developerment Studio 2022](https://developer.arm.com/downloads/-/arm-development-studio-downloads) for ARM/AARCH64.
+    - Install [MSYS2](https://www.msys2.org/).
+    - Install ARM DS2022. Please change the default installation path C:\ArmStudio.
+    - Launch MSYS2 -> MSYS2 MINGW64.
+    - Install cmake and make, with `pacman -S mingw-w64-x86_64-cmake` and `pacman -S make`.
+    - Setup build environment
+      ```
+      export PATH=$PATH:/c/ArmStudio/sw/ARMCompiler6.18/bin
+      export CC=/c/ArmStudio/sw/ARMCompiler6.18/bin/armclang.exe
+      export ARM_PRODUCT_DEF=/c/ArmStudio/sw/mappings/gold.elmap
+      export ARMLMD_LICENSE_FILE=<license file>
+      ```
+    - Apply below work around for Windows ARM DS2022 build
+      - Add set(CMAKE_SYSTEM_ARCH "armv8-a") on the top of `C:\msys64\mingw64\share\cmake\Modules\Compiler\ARMClang.cmake`. The CMAKE_SYSTEM_ARCH is the target arch.
+      - Change `set(libs ${libs} ws2_32)` to `#set(libs ${libs} ws2_32)` in `libspdm\os_stub\mbedtlslib\mbedtls\library\CMakeLists.txt`. ws2_32 is the socket lib, and the armclang does not support it. 
+    - Implement the TBD features. `libspdm_sleep` and `libspdm_get_random_number_64` need to be implemented before it can run on a real system.
 
 2) [CMake](https://cmake.org/) (Version [3.17.2](https://github.com/Kitware/CMake/releases/tag/v3.17.2) is known to work. Newer versions may fail).
 
@@ -101,7 +117,21 @@
 
     a) [GCC](https://gcc.gnu.org/) (above GCC5)
 
-    b) [LLVM](https://llvm.org/) (above LLVM10), install steps: `sudo apt-get install llvm-10` then `sudo apt-get install clang-10`. Use `llvm-ar -version` and `clang -v` to confirm the LLVM version. If LLVM installation fails or LLVM installation version is low, you can update Linux version to fix the issue.
+    b) [LLVM](https://llvm.org/) (above LLVM10)
+    - Install steps: `sudo apt-get install llvm-10` then `sudo apt-get install clang-10`.
+    - Use `llvm-ar -version` and `clang -v` to confirm the LLVM version.
+    - If LLVM installation fails or LLVM installation version is low, you can update Linux version to fix the issue.
+
+    c) [ARM Developerment Studio 2022](https://developer.arm.com/downloads/-/arm-development-studio-downloads) for ARM/AARCH64.
+    - Follow the [Arm Development Studio Getting Started Guide](https://developer.arm.com/documentation/101469/2022-1/Installing-and-configuring-Arm-Development-Studio/Installing-on-Linux) to install Linux version.
+    - Setup build environment
+      ```
+      echo 'export PATH=$PATH:/opt/arm/developmentstudio-2022.1/sw/ARMCompiler6.18/bin' | sudo tee -a ~/.bashrc
+      echo 'export ARM_PRODUCT_DEF=/opt/arm/developmentstudio-2022.1/sw/mappings/gold.elmap' | sudo tee -a ~/.bashrc
+      echo 'export ARMLMD_LICENSE_FILE=<license file>' | sudo tee -a ~/.bashrc
+      source ~/.bashrc
+      ```
+    - Implement the TBD features. `libspdm_sleep` and `libspdm_get_random_number_64` need to be implemented before it can run on a real system.
 
 2) [CMake](https://cmake.org/).
 
@@ -171,43 +201,30 @@
    Note: Please install the openssl with command `nmake install` before build libspdm.
    cmake -G"Visual Studio 16 2019" -DARCH=x64 -DTOOLCHAIN=VS2019 -DTARGET=Release -DCRYPTO=openssl -DENABLE_BINARY_BUILD=1 -DCOMPILED_LIBCRYPTO_PATH=<OPENSSL_PATH>/libcrypto.lib -DCOMPILED_LIBSSL_PATH=<OPENSSL_PATH>/libssl.lib ..
    ```
-### Armclang build on Windows.
-1) Install [MSYS2](https://www.msys2.org/).
-2) Install amrclang (change the default installation path from C:\Program Files\Arm\Development Studio 2022.1 to C:\ArmStudio to avoid blank space)
-3) Launch MSYS2 -> MSYS2 MINGW64.
-4) Install cmake and make.
-```
-pacman -S mingw-w64-x86_64-cmake
-pacman -S make
-```
-5) Setup build environment command
-```
-cd libspdm
-mkdir build
-cd build
-export PATH=$PATH:/c/ArmStudio/sw/ARMCompiler6.18/bin
-export CC=/c/ArmStudio/sw/ARMCompiler6.18/bin/armclang.exe
-export ARM_PRODUCT_DEF=/c/ArmStudio/sw/mappings/gold.elmap
-export ARMLMD_LICENSE_FILE=<license file>
-```
-6) some work around for Windows armclang build
-- Add set(CMAKE_SYSTEM_ARCH "armv8-a") on the top of `C:\msys64\mingw64\share\cmake\Modules\Compiler\ARMClang.cmake`. The CMAKE_SYSTEM_ARCH is the target arch.
-- ws2_32 is the socket lib, and the armclang does not support it. Change `set(libs ${libs} ws2_32)` to `#set(libs ${libs} ws2_32)` in `libspdm\os_stub\mbedtlslib\mbedtls\library\CMakeLists.txt`.
-7) Build arm command
-```
-cmake -G"MSYS Makefiles" -DARCH=arm -DTOOLCHAIN=ARM_CLANG -DTARGET=Debug -DCRYPTO=mbedtls ..
-make -j <thread number>
-```
-for example `make -j 8` or `make -j`
-8) Build aarch64 command
-```
-cmake -G"MSYS Makefiles" -DARCH=aarch64 -DTOOLCHAIN=ARM_CLANG -DTARGET=Debug -DCRYPTO=mbedtls ..
-make -j <thread number>
-```
-for example `make -j 8` or `make -j`
 
-8) some feature for armclang build is TBD by user
-When use libspdm with armclang build: `libspdm_sleep` and `libspdm_get_random_number_64` need to be completed.
+#### Windows Builds with ARM DS2022
+
+   For ARM DS2022 build (arm or aarch64) on Windows, Launch `MSYS2 -> MSYS2 MINGW64` command prompt.
+   ```
+   cd libspdm
+   mkdir build
+   cd build
+   cmake -G"MSYS Makefiles" -DARCH=<arm|aarch64> -DTOOLCHAIN=ARM_DS2022 -DTARGET=<Debug|Release> -DCRYPTO=<mbedtls|openssl> ..
+   make copy_sample_key
+   make
+   ```
+
+   Example CMake commands:
+
+   ```
+   cmake -G"MSYS Makefiles" -DARCH=arm -DTOOLCHAIN=ARM_DS2022 -DTARGET=Debug -DCRYPTO=mbedtls ..
+   ```
+
+   ```
+   cmake -G"MSYS Makefiles" -DARCH=aarch64 -DTOOLCHAIN=ARM_DS2022 -DTARGET=Release -DCRYPTO=mbedtls ..
+   ```
+
+   Note: `make -j` can be used to accelerate the build.
 
 ### Linux Builds
    If ia32 builds run on a 64-bit Linux machine, then install `sudo apt-get install gcc-multilib`.
@@ -245,31 +262,30 @@ Example CMake commands:
    Note: Please install the openssl with command `sudo make install` before build libspdm.
    cmake -DARCH=x64 -DTOOLCHAIN=GCC -DTARGET=Release -DCRYPTO=openssl -DENABLE_BINARY_BUILD=1 -DCOMPILED_LIBCRYPTO_PATH=<OPENSSL_PATH>/libcrypto.a -DCOMPILED_LIBSSL_PATH=<OPENSSL_PATH>/libssl.a ..
    ```
-### Armclang build on Linux.
-1) Install  [Arm Development Studio 2022.1 linux](https://developer.arm.com/downloads/-/arm-development-studio-downloads) follow the [Arm Development Studio Getting Started Guide](https://developer.arm.com/documentation/101469/2022-1/Installing-and-configuring-Arm-Development-Studio/Installing-on-Linux)
-2) Setup enviroment
-```
-echo 'export PATH=$PATH:/opt/arm/developmentstudio-2022.1/sw/ARMCompiler6.18/bin' | sudo tee -a ~/.bashrc
-echo 'export ARM_PRODUCT_DEF=/opt/arm/developmentstudio-2022.1/sw/mappings/gold.elmap' | sudo tee -a ~/.bashrc
-echo 'export ARMLMD_LICENSE_FILE=<license file>' | sudo tee -a ~/.bashrc
-source ~/.bashrc
-```
-3) Build command for arm
-```
-cmake -DARCH=arm -DTOOLCHAIN=ARM_CLANG -DTARGET=Debug -DCRYPTO=mbedtls  ..
-make copy_sample_key
-make -j <thread number>
-```
-for example `make -j 8` or `make -j`
-4) Build command for aarch64
-```
-cmake -DARCH=aarch64 -DTOOLCHAIN=ARM_CLANG -DTARGET=Debug -DCRYPTO=mbedtls  ..
-make copy_sample_key
-make -j <thread number>
-```
-for example `make -j 8` or `make -j`
-5) some feature for armclang build is TBD by user
-When use libspdm with armclang build: `libspdm_sleep` and `libspdm_get_random_number_64` need to be completed.
+
+#### Linux Builds with ARM DS2022
+
+   For ARM DS2022 build (arm or aarch64) on Linux,
+   ```
+   cd libspdm
+   mkdir build
+   cd build
+   cmake -DARCH=<arm|aarch64> -DTOOLCHAIN=ARM_DS2022 -DTARGET=<Debug|Release> -DCRYPTO=<mbedtls|openssl> ..
+   make copy_sample_key
+   make
+   ```
+
+   Example CMake commands:
+
+   ```
+   cmake -DARCH=arm -DTOOLCHAIN=ARM_DS2022 -DTARGET=Debug -DCRYPTO=mbedtls ..
+   ```
+
+   ```
+   cmake -DARCH=aarch64 -DTOOLCHAIN=ARM_DS2022 -DTARGET=Release -DCRYPTO=mbedtls ..
+   ```
+
+   Note: `make -j` can be used to accelerate the build.
 
 ## Run Test
 

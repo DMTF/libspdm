@@ -6,7 +6,7 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/os_stub/rnglib
 )
 
-if(CMAKE_SYSTEM_NAME MATCHES "Linux" AND NOT TOOLCHAIN STREQUAL "ARM_CLANG")
+if(CMAKE_SYSTEM_NAME MATCHES "Linux" AND NOT TOOLCHAIN STREQUAL "ARM_DS2022")
 SET(src_rnglib
     rng_linux.c
 )

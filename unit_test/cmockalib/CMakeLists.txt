@@ -16,7 +16,7 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/cmockalib
                     ${LIBSPDM_DIR}/unit_test/cmockalib/cmocka/include/cmockery
 )
 
-if(TOOLCHAIN STREQUAL "ARM_CLANG")
+if(TOOLCHAIN STREQUAL "ARM_DS2022")
     SET(src_CmockaLib
         cmocka/src/cmocka.c
         strdup.c
