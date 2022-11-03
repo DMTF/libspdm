@@ -10,6 +10,7 @@
 int libspdm_requester_get_version_test_main(void);
 int libspdm_requester_get_version_error_test_main(void);
 int libspdm_requester_get_capabilities_test_main(void);
+int libspdm_requester_get_capabilities_error_test_main(void);
 int libspdm_requester_negotiate_algorithms_test_main(void);
 
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
@@ -71,6 +72,9 @@ int main(void)
     }
 
     if (libspdm_requester_get_capabilities_test_main() != 0) {
+        return_value = 1;
+    }
+    if (libspdm_requester_get_capabilities_error_test_main() != 0) {
         return_value = 1;
     }
 
