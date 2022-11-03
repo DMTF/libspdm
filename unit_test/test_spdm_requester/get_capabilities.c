@@ -984,9 +984,11 @@ static libspdm_return_t libspdm_requester_get_capabilities_test_receive_message(
     }
 }
 
-static void libspdm_test_requester_get_capabilities_case1(void **state)
-{
-}
+/*
+ * static void libspdm_test_requester_get_capabilities_case1(void **state)
+ * {
+ * }
+ */
 
 static void libspdm_test_requester_get_capabilities_case2(void **state)
 {
@@ -1017,17 +1019,23 @@ static void libspdm_test_requester_get_capabilities_case2(void **state)
 #endif
 }
 
-static void libspdm_test_requester_get_capabilities_case3(void **state)
-{
-}
+/*
+ * static void libspdm_test_requester_get_capabilities_case3(void **state)
+ * {
+ * }
+ */
 
-static void libspdm_test_requester_get_capabilities_case4(void **state)
-{
-}
+/*
+ * static void libspdm_test_requester_get_capabilities_case4(void **state)
+ * {
+ * }
+ */
 
-static void libspdm_test_requester_get_capabilities_case5(void **state)
-{
-}
+/*
+ * static void libspdm_test_requester_get_capabilities_case5(void **state)
+ * {
+ * }
+ */
 
 static void libspdm_test_requester_get_capabilities_case6(void **state)
 {
@@ -1052,17 +1060,23 @@ static void libspdm_test_requester_get_capabilities_case6(void **state)
                      LIBSPDM_DEFAULT_CAPABILITY_FLAG);
 }
 
-static void libspdm_test_requester_get_capabilities_case7(void **state)
-{
-}
+/*
+ * static void libspdm_test_requester_get_capabilities_case7(void **state)
+ * {
+ * }
+ */
 
-static void libspdm_test_requester_get_capabilities_case8(void **state)
-{
-}
+/*
+ * static void libspdm_test_requester_get_capabilities_case8(void **state)
+ * {
+ * }
+ */
 
-static void libspdm_test_requester_get_capabilities_case9(void **state)
-{
-}
+/*
+ * static void libspdm_test_requester_get_capabilities_case9(void **state)
+ * {
+ * }
+ */
 
 static void libspdm_test_requester_get_capabilities_case10(void **state)
 {
@@ -1141,17 +1155,23 @@ static void libspdm_test_requester_get_capabilities_case12(void **state)
                      SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_FRESH_CAP);
 }
 
-static void libspdm_test_requester_get_capabilities_case13(void **state)
-{
-}
+/*
+ * static void libspdm_test_requester_get_capabilities_case13(void **state)
+ * {
+ * }
+ */
 
-static void libspdm_test_requester_get_capabilities_case14(void **state)
-{
-}
+/*
+ * static void libspdm_test_requester_get_capabilities_case14(void **state)
+ * {
+ * }
+ */
 
-static void libspdm_test_requester_get_capabilities_case15(void **state)
-{
-}
+/*
+ * static void libspdm_test_requester_get_capabilities_case15(void **state)
+ * {
+ * }
+ */
 
 static void libspdm_test_requester_get_capabilities_case16(void **state)
 {
@@ -1175,65 +1195,95 @@ static void libspdm_test_requester_get_capabilities_case16(void **state)
                      LIBSPDM_DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_11);
 }
 
-static void libspdm_test_requester_get_capabilities_case17(void **state)
-{
-}
+/*
+ * static void libspdm_test_requester_get_capabilities_case17(void **state)
+ * {
+ * }
+ */
 
-static void libspdm_test_requester_get_capabilities_case18(void **state)
-{
-}
+/*
+ * static void libspdm_test_requester_get_capabilities_case18(void **state)
+ * {
+ * }
+ */
 
-static void libspdm_test_requester_get_capabilities_case19(void **state)
-{
-}
+/*
+ * static void libspdm_test_requester_get_capabilities_case19(void **state)
+ * {
+ * }
+ */
 
-static void libspdm_test_requester_get_capabilities_case20(void **state)
-{
-}
+/*
+ * static void libspdm_test_requester_get_capabilities_case20(void **state)
+ * {
+ * }
+ */
 
-static void libspdm_test_requester_get_capabilities_case21(void **state)
-{
-}
+/*
+ * static void libspdm_test_requester_get_capabilities_case21(void **state)
+ * {
+ * }
+ */
 
-static void libspdm_test_requester_get_capabilities_case22(void **state)
-{
-}
+/*
+ * static void libspdm_test_requester_get_capabilities_case22(void **state)
+ * {
+ * }
+ */
 
-static void libspdm_test_requester_get_capabilities_case23(void **state)
-{
-}
+/*
+ * static void libspdm_test_requester_get_capabilities_case23(void **state)
+ * {
+ * }
+ */
 
-static void libspdm_test_requester_get_capabilities_case24(void **state)
-{
-}
+/*
+ * static void libspdm_test_requester_get_capabilities_case24(void **state)
+ * {
+ * }
+ */
 
-static void libspdm_test_requester_get_capabilities_case25(void **state)
-{
-}
+/*
+ * static void libspdm_test_requester_get_capabilities_case25(void **state)
+ * {
+ * }
+ */
 
-static void libspdm_test_requester_get_capabilities_case26(void **state)
-{
-}
+/*
+ * static void libspdm_test_requester_get_capabilities_case26(void **state)
+ * {
+ * }
+ */
 
-static void libspdm_test_requester_get_capabilities_case27(void **state)
-{
-}
+/*
+ * static void libspdm_test_requester_get_capabilities_case27(void **state)
+ * {
+ * }
+ */
 
-static void libspdm_test_requester_get_capabilities_case28(void **state)
-{
-}
+/*
+ * static void libspdm_test_requester_get_capabilities_case28(void **state)
+ * {
+ * }
+ */
 
-static void libspdm_test_requester_get_capabilities_case29(void **state)
-{
-}
+/*
+ * static void libspdm_test_requester_get_capabilities_case29(void **state)
+ * {
+ * }
+ */
 
-static void libspdm_test_requester_get_capabilities_case30(void **state)
-{
-}
+/*
+ * static void libspdm_test_requester_get_capabilities_case30(void **state)
+ * {
+ * }
+ */
 
-static void libspdm_test_requester_get_capabilities_case31(void **state)
-{
-}
+/*
+ * static void libspdm_test_requester_get_capabilities_case31(void **state)
+ * {
+ * }
+ */
 
 static void libspdm_test_requester_get_capabilities_case32(void **state)
 {
@@ -1300,9 +1350,11 @@ static void libspdm_test_requester_get_capabilities_case33(void **state)
 }
 
 
-static void libspdm_test_requester_get_capabilities_case34(void **state)
-{
-}
+/*
+ * static void libspdm_test_requester_get_capabilities_case34(void **state)
+ * {
+ * }
+ */
 
 static libspdm_test_context_t m_libspdm_requester_get_capabilities_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
