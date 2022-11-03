@@ -366,12 +366,12 @@ static libspdm_return_t libspdm_requester_get_capabilities_test_receive_message(
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
-        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response->header.request_response_code = SPDM_CAPABILITIES;
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->ct_exponent = 0;
-        spdm_response->flags = 0xc00;
+        spdm_response->flags = SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, spdm_response_size,
@@ -489,7 +489,8 @@ static libspdm_return_t libspdm_requester_get_capabilities_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->ct_exponent = 0;
-        spdm_response->flags = SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+        spdm_response->flags = SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
+                               SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, spdm_response_size,
