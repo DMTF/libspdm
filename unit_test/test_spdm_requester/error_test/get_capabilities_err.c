@@ -121,14 +121,7 @@ static libspdm_return_t libspdm_requester_get_capabilities_test_send_message(
         return LIBSPDM_STATUS_SUCCESS;
     case 0x1F:
         return LIBSPDM_STATUS_SUCCESS;
-    case 0x20: {
-        const uint8_t *ptr = (const uint8_t *)request;
-
-        m_libspdm_local_buffer_size = 0;
-        libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer), &ptr[1],
-                         request_size - 1);
-        m_libspdm_local_buffer_size += (request_size - 1);
-    }
+    case 0x20:
         return LIBSPDM_STATUS_SUCCESS;
     case 0x21:
         return LIBSPDM_STATUS_SUCCESS;
@@ -165,7 +158,7 @@ static libspdm_return_t libspdm_requester_get_capabilities_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->ct_exponent = 0;
-        spdm_response->flags = LIBSPDM_DEFAULT_CAPABILITY_FLAG;
+        spdm_response->flags = SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_FRESH_CAP;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, spdm_response_size,
@@ -243,52 +236,27 @@ static libspdm_return_t libspdm_requester_get_capabilities_test_receive_message(
         return LIBSPDM_STATUS_SUCCESS;
 
     case 0x6: {
-        static size_t sub_index1 = 0;
-        if (sub_index1 == 0) {
-            spdm_error_response_t *spdm_response;
-            size_t spdm_response_size;
-            size_t transport_header_size;
+        spdm_capabilities_response_t *spdm_response;
+        size_t spdm_response_size;
+        size_t transport_header_size;
 
-            spdm_response_size = sizeof(spdm_error_response_t);
-            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
-            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+        spdm_response_size = sizeof(spdm_capabilities_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
-            libspdm_zero_mem(spdm_response, spdm_response_size);
-            spdm_response->header.spdm_version =
-                SPDM_MESSAGE_VERSION_10;
-            spdm_response->header.request_response_code = SPDM_ERROR;
-            spdm_response->header.param1 = SPDM_ERROR_CODE_BUSY;
-            spdm_response->header.param2 = 0;
+        libspdm_zero_mem(spdm_response, spdm_response_size);
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response->header.request_response_code = SPDM_CAPABILITIES;
+        spdm_response->header.param1 = 0;
+        spdm_response->header.param2 = 0;
+        spdm_response->ct_exponent = 0;
+        spdm_response->flags = SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_NO_SIG |
+                               SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
 
-            libspdm_transport_test_encode_message(
-                spdm_context, NULL, false, false,
-                spdm_response_size, spdm_response,
-                response_size, response);
-        } else if (sub_index1 == 1) {
-            spdm_capabilities_response_t *spdm_response;
-            size_t spdm_response_size;
-            size_t transport_header_size;
-
-            spdm_response_size = sizeof(spdm_capabilities_response_t);
-            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
-            spdm_response = (void *)((uint8_t *)*response + transport_header_size);
-
-            libspdm_zero_mem(spdm_response, spdm_response_size);
-            spdm_response->header.spdm_version =
-                SPDM_MESSAGE_VERSION_10;
-            spdm_response->header.request_response_code =
-                SPDM_CAPABILITIES;
-            spdm_response->header.param1 = 0;
-            spdm_response->header.param2 = 0;
-            spdm_response->ct_exponent = 0;
-            spdm_response->flags = LIBSPDM_DEFAULT_CAPABILITY_FLAG;
-
-            libspdm_transport_test_encode_message(
-                spdm_context, NULL, false, false,
-                spdm_response_size, spdm_response,
-                response_size, response);
-        }
-        sub_index1++;
+        libspdm_transport_test_encode_message(spdm_context, NULL, false,
+                                              false, spdm_response_size,
+                                              spdm_response,
+                                              response_size, response);
     }
         return LIBSPDM_STATUS_SUCCESS;
 
@@ -379,12 +347,7 @@ static libspdm_return_t libspdm_requester_get_capabilities_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->ct_exponent = 0;
-        spdm_response->flags =
-            (SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CACHE_CAP |
-             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP |
-             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP |
-             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG |
-             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_FRESH_CAP);
+        spdm_response->flags = SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, spdm_response_size,
@@ -408,12 +371,7 @@ static libspdm_return_t libspdm_requester_get_capabilities_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->ct_exponent = 0;
-        spdm_response->flags =
-            !(SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CACHE_CAP |
-              SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP |
-              SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP |
-              SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG |
-              SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_FRESH_CAP);
+        spdm_response->flags = 0xc00;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, spdm_response_size,
@@ -432,12 +390,12 @@ static libspdm_return_t libspdm_requester_get_capabilities_test_receive_message(
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
-        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response->header.request_response_code = SPDM_CAPABILITIES;
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->ct_exponent = 0;
-        spdm_response->flags = SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_FRESH_CAP;
+        spdm_response->flags = SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, spdm_response_size,
@@ -531,7 +489,7 @@ static libspdm_return_t libspdm_requester_get_capabilities_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->ct_exponent = 0;
-        spdm_response->flags = LIBSPDM_DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_11;
+        spdm_response->flags = SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, spdm_response_size,
@@ -877,8 +835,7 @@ static libspdm_return_t libspdm_requester_get_capabilities_test_receive_message(
     }
         return LIBSPDM_STATUS_SUCCESS;
 
-    case 0x1d:
-    {
+    case 0x1d: {
         static uint16_t error_code = LIBSPDM_ERROR_CODE_RESERVED_00;
 
         spdm_error_response_t *spdm_response;
@@ -914,6 +871,30 @@ static libspdm_return_t libspdm_requester_get_capabilities_test_receive_message(
     }
         return LIBSPDM_STATUS_SUCCESS;
 
+    case 0x1e: {
+        spdm_capabilities_response_t *spdm_response;
+        size_t spdm_response_size;
+        size_t transport_header_size;
+
+        spdm_response_size = sizeof(spdm_capabilities_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        libspdm_zero_mem(spdm_response, spdm_response_size);
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_12;
+        spdm_response->header.request_response_code = SPDM_CAPABILITIES;
+        spdm_response->header.param1 = 0;
+        spdm_response->header.param2 = 0;
+        spdm_response->ct_exponent = 0;
+        spdm_response->flags = SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP;
+
+        libspdm_transport_test_encode_message(spdm_context, NULL, false,
+                                              false, spdm_response_size,
+                                              spdm_response,
+                                              response_size, response);
+    }
+        return LIBSPDM_STATUS_SUCCESS;
+
     case 0x1F:
         return LIBSPDM_STATUS_RECEIVE_FAIL;
 
@@ -927,21 +908,12 @@ static libspdm_return_t libspdm_requester_get_capabilities_test_receive_message(
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
-        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_12;
         spdm_response->header.request_response_code = SPDM_CAPABILITIES;
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->ct_exponent = 0;
-        spdm_response->flags = LIBSPDM_DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_11;
-
-        spdm_response_size = sizeof(spdm_capabilities_response_t) -
-                             sizeof(spdm_response->data_transfer_size) -
-                             sizeof(spdm_response->max_spdm_msg_size);
-
-        libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
-                         sizeof(m_libspdm_local_buffer) - m_libspdm_local_buffer_size,
-                         (uint8_t *)spdm_response, spdm_response_size);
-        m_libspdm_local_buffer_size += spdm_response_size;
+        spdm_response->flags = SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CSR_CAP;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, spdm_response_size,
@@ -965,7 +937,7 @@ static libspdm_return_t libspdm_requester_get_capabilities_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->ct_exponent = 0;
-        spdm_response->flags = LIBSPDM_DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_12;
+        spdm_response->flags = SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_INSTALL_RESET_CAP;
         spdm_response->data_transfer_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
         spdm_response->max_spdm_msg_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
@@ -1015,8 +987,7 @@ static void libspdm_test_requester_get_capabilities_err_case1(void **state)
     spdm_test_context->case_id = 0x1;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
     spdm_context->local_context.capability.ct_exponent = 0;
     spdm_context->local_context.capability.flags = LIBSPDM_DEFAULT_CAPABILITY_FLAG;
@@ -1025,10 +996,27 @@ static void libspdm_test_requester_get_capabilities_err_case1(void **state)
 }
 
 /**
- * static void libspdm_test_requester_get_capabilities_err_case2(void **state)
- * {
- * }
+ * Test 2: Responder sets MEAS_FRESH_CAP but does not set MEAS_CAP.
+ * Expected behavior: returns with status LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
+static void libspdm_test_requester_get_capabilities_err_case2(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x2;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+
+    spdm_context->local_context.capability.ct_exponent = 0;
+    spdm_context->local_context.capability.flags = LIBSPDM_DEFAULT_CAPABILITY_FLAG;
+    status = libspdm_get_capabilities(spdm_context);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+}
 
 static void libspdm_test_requester_get_capabilities_err_case3(void **state)
 {
@@ -1090,10 +1078,28 @@ static void libspdm_test_requester_get_capabilities_err_case5(void **state)
 }
 
 /**
- * static void libspdm_test_requester_get_capabilities_err_case6(void **state)
- * {
- * }
+ * Test 6: Responder sets illegal SPDM 1.0 combination of MEAS_CAP (no signature), CERT_CAP,
+ *         and CHAL_CAP.
+ * Expected behavior: returns with status LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
+static void libspdm_test_requester_get_capabilities_err_case6(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x6;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+
+    spdm_context->local_context.capability.ct_exponent = 0;
+    spdm_context->local_context.capability.flags = LIBSPDM_DEFAULT_CAPABILITY_FLAG;
+    status = libspdm_get_capabilities(spdm_context);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+}
 
 static void libspdm_test_requester_get_capabilities_err_case7(void **state)
 {
@@ -1160,22 +1166,77 @@ static void libspdm_test_requester_get_capabilities_err_case9(void **state)
 }
 
 /**
- * static void libspdm_test_requester_get_capabilities_err_case10(void **state)
- * {
- * }
+ * Test 10: Responder sets illegal SPDM 1.0 combination of MEAS_CAP (with signature), CERT_CAP,
+ *         and CHAL_CAP.
+ * Expected behavior: returns with status LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
+static void libspdm_test_requester_get_capabilities_err_case10(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xa;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+
+    spdm_context->local_context.capability.ct_exponent = 0;
+    spdm_context->local_context.capability.flags = LIBSPDM_DEFAULT_CAPABILITY_FLAG;
+    status = libspdm_get_capabilities(spdm_context);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+}
 
 /**
- * static void libspdm_test_requester_get_capabilities_err_case11(void **state)
- * {
- * }
+ * Test 11: Responder sets illegal 1.1/1.2 PSK_CAP value (3).
+ * Expected behavior: returns with status LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
+static void libspdm_test_requester_get_capabilities_err_case11(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xb;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+
+    spdm_context->local_context.capability.ct_exponent = 0;
+    spdm_context->local_context.capability.flags = LIBSPDM_DEFAULT_CAPABILITY_FLAG;
+    status = libspdm_get_capabilities(spdm_context);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+}
 
 /**
- * static void libspdm_test_requester_get_capabilities_err_case12(void **state)
- * {
- * }
+ * Test 11: Responder sets illegal 1.1/1.2 combination of values.
+ *          CERT_CAP enabled.
+ *          CHAL_CAP and KEY_EX_CAP disabled.
+ *          MEAS_CAP with signature is disabled.
+ * Expected behavior: returns with status LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
+static void libspdm_test_requester_get_capabilities_err_case12(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xc;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+
+    spdm_context->local_context.capability.ct_exponent = 0;
+    spdm_context->local_context.capability.flags = LIBSPDM_DEFAULT_CAPABILITY_FLAG;
+    status = libspdm_get_capabilities(spdm_context);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+}
 
 static void libspdm_test_requester_get_capabilities_err_case13(void **state)
 {
@@ -1235,10 +1296,30 @@ static void libspdm_test_requester_get_capabilities_err_case15(void **state)
 }
 
 /**
- * static void libspdm_test_requester_get_capabilities_err_case16(void **state)
- * {
- * }
+ * Test 16: Responder sets illegal 1.1/1.2 combination of values.
+ *          CERT_CAP and PUB_KEY_ID_CAP disabled.
+ *          At least one of CHAL_CAP, KEY_EX_CAP, MEAS_CAP (with signature), or MUT_AUTH_CAP
+ *          is enabled.
+ * Expected behavior: returns with status LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
+static void libspdm_test_requester_get_capabilities_err_case16(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x10;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+
+    spdm_context->local_context.capability.ct_exponent = 0;
+    spdm_context->local_context.capability.flags = LIBSPDM_DEFAULT_CAPABILITY_FLAG;
+    status = libspdm_get_capabilities(spdm_context);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+}
 
 static void libspdm_test_requester_get_capabilities_err_case17(void **state)
 {
@@ -1536,10 +1617,29 @@ static void libspdm_test_requester_get_capabilities_err_case29(void **state) {
 }
 
 /**
- * static void libspdm_test_requester_get_capabilities_err_case30(void **state)
- * {
- * }
+ * Test 30: Responder sets illegal 1.2 combination of values.
+ *          CERT_CAP is disabled.
+ *          ALIAS_CERT_CAP is enabled.
+ * Expected behavior: returns with status LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
+static void libspdm_test_requester_get_capabilities_err_case30(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x1E;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+
+    spdm_context->local_context.capability.ct_exponent = 0;
+    spdm_context->local_context.capability.flags = LIBSPDM_DEFAULT_CAPABILITY_FLAG;
+    status = libspdm_get_capabilities(spdm_context);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+}
 
 static void libspdm_test_requester_get_capabilities_err_case31(void **state)
 {
@@ -1560,16 +1660,54 @@ static void libspdm_test_requester_get_capabilities_err_case31(void **state)
 }
 
 /**
- * static void libspdm_test_requester_get_capabilities_err_case32(void **state)
- * {
- * }
+ * Test 32: Responder sets illegal 1.2 combination of values.
+ *          CSR_CAP is enabled.
+ *          SET_CERT_CAP is disabled.
+ * Expected behavior: returns with status LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
+static void libspdm_test_requester_get_capabilities_err_case32(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x20;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+
+    spdm_context->local_context.capability.ct_exponent = 0;
+    spdm_context->local_context.capability.flags = LIBSPDM_DEFAULT_CAPABILITY_FLAG;
+    status = libspdm_get_capabilities(spdm_context);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+}
 
 /**
- * static void libspdm_test_requester_get_capabilities_err_case33(void **state)
- * {
- * }
+ * Test 33: Responder sets illegal 1.2 combination of values.
+ *          CERT_INSTALL_RESET_CAP is enabled.
+ *          CSR_CAP and SET_CERT_CAP are disabled.
+ * Expected behavior: returns with status LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
+static void libspdm_test_requester_get_capabilities_err_case33(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x21;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+
+    spdm_context->local_context.capability.ct_exponent = 0;
+    spdm_context->local_context.capability.flags = LIBSPDM_DEFAULT_CAPABILITY_FLAG;
+    status = libspdm_get_capabilities(spdm_context);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+}
 
 static void libspdm_test_requester_get_capabilities_err_case34(void **state)
 {
@@ -1605,21 +1743,21 @@ int libspdm_requester_get_capabilities_error_test_main(void)
 {
     const struct CMUnitTest m_spdm_requester_get_capabilities_tests[] = {
         cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case1),
-        /* cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case2), */
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case2),
         cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case3),
         cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case4),
         cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case5),
-        /* cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case6), */
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case6),
         cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case7),
         cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case8),
         cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case9),
-        /* cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case10),
-         * cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case11),
-         * cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case12), */
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case10),
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case11),
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case12),
         cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case13),
         cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case14),
         cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case15),
-        /* cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case16), */
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case16),
         cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case17),
         cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case18),
         cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case19),
@@ -1633,10 +1771,10 @@ int libspdm_requester_get_capabilities_error_test_main(void)
         cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case27),
         cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case28),
         cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case29),
-        /* cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case30), */
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case30),
         cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case31),
-        /* cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case32),
-         * cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case33), */
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case32),
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case33),
         cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case34),
     };
 
