@@ -89,7 +89,6 @@ static bool validate_responder_capability(uint32_t capabilities_flag, uint8_t ve
             }
         }
 
-
         /* Checks that originate from certificate or public key capabilities. */
         if ((cert_cap == 1) || (pub_key_id_cap == 1)) {
             /* Certificate capabilities and public key capabilities cannot both be set. */
