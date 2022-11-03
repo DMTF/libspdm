@@ -19,93 +19,116 @@ static bool validate_responder_capability(uint32_t capabilities_flag, uint8_t ve
 {
     /*uint8_t cache_cap = (uint8_t)(capabilities_flag)&0x01;*/
     uint8_t cert_cap = (uint8_t)(capabilities_flag >> 1) & 0x01;
-    uint8_t chal_cap = (uint8_t)(capabilities_flag>>2) & 0x01;
+    uint8_t chal_cap = (uint8_t)(capabilities_flag >> 2) & 0x01;
     uint8_t meas_cap = (uint8_t)(capabilities_flag >> 3) & 0x03;
-    /*uint8_t meas_fresh_cap = (uint8_t)(capabilities_flag>>5)&0x01;*/
+    uint8_t meas_fresh_cap = (uint8_t)(capabilities_flag >> 5) & 0x01;
     uint8_t encrypt_cap = (uint8_t)(capabilities_flag >> 6) & 0x01;
     uint8_t mac_cap = (uint8_t)(capabilities_flag >> 7) & 0x01;
     uint8_t mut_auth_cap = (uint8_t)(capabilities_flag >> 8) & 0x01;
     uint8_t key_ex_cap = (uint8_t)(capabilities_flag >> 9) & 0x01;
     uint8_t psk_cap = (uint8_t)(capabilities_flag >> 10) & 0x03;
     uint8_t encap_cap = (uint8_t)(capabilities_flag >> 12) & 0x01;
-    /*uint8_t hbeat_cap = (uint8_t)(capabilities_flag>>13)&0x01;
-     * uint8_t key_upd_cap = (uint8_t)(capabilities_flag>>14)&0x01;*/
+    uint8_t hbeat_cap = (uint8_t)(capabilities_flag >> 13) & 0x01;
+    uint8_t key_upd_cap = (uint8_t)(capabilities_flag >> 14) & 0x01;
     uint8_t handshake_in_the_clear_cap = (uint8_t)(capabilities_flag >> 15) & 0x01;
     uint8_t pub_key_id_cap = (uint8_t)(capabilities_flag >> 16) & 0x01;
+    /* uint8_t chunk_cap = (uint8_t)(capabilities_flag >> 17) & 0x01; */
+    uint8_t alias_cert_cap = (uint8_t)(capabilities_flag >> 18) & 0x01;
     uint8_t set_cert_cap = (uint8_t)(capabilities_flag >> 19) & 0x01;
     uint8_t csr_cap = (uint8_t)(capabilities_flag >> 20) & 0x01;
     uint8_t cert_install_reset_cap = (uint8_t)(capabilities_flag >> 21) & 0x01;
 
-    switch (version) {
-    case SPDM_MESSAGE_VERSION_10:
+    /* Checks common to all SPDM versions. */
+
+    /* Illegal to return reserved value. */
+    if (meas_cap == 3) {
+        return false;
+    }
+
+    /* If MEAS_FRESH_CAP is set then MEAS_CAP must be set. */
+    if ((meas_cap == 0) && (meas_fresh_cap == 1)) {
+        return false;
+    }
+
+    if (version == SPDM_MESSAGE_VERSION_10) {
+        /* If measurements are not signed then CERT_CAP must equal CHAL_CAP.
+         * If measurements are signed then CERT_CAP must be set. */
+        if ((meas_cap == 0) || (meas_cap == 1)) {
+            if (cert_cap != chal_cap) {
+                return false;
+            }
+        } else if (meas_cap == 2) {
+            if (cert_cap == 0) {
+                return false;
+            }
+        }
         return true;
+    }
 
-    case SPDM_MESSAGE_VERSION_11:
-    case SPDM_MESSAGE_VERSION_12: {
-        /*Encrypt_cap set and psk_cap+key_ex_cap cleared*/
-        if (encrypt_cap != 0 && (psk_cap == 0 && key_ex_cap == 0)) {
-            return false;
-        }
-        /*MAC_cap set and psk_cap+key_ex_cap cleared*/
-        if (mac_cap != 0 && (psk_cap == 0 && key_ex_cap == 0)) {
-            return false;
-        }
-        /*Key_ex_cap set and encrypt_cap+mac_cap cleared*/
-        if (key_ex_cap != 0 && (encrypt_cap == 0 && mac_cap == 0)) {
-            return false;
-        }
-        /*PSK_cap set and encrypt_cap+mac_cap cleared*/
-        if (psk_cap != 0 && (encrypt_cap == 0 && mac_cap == 0)) {
-            return false;
-        }
-        /*Muth_auth_cap set and encap_cap cleared*/
-        if (mut_auth_cap != 0 && encap_cap == 0) {
-            return false;
-        }
-        /*Handshake_in_the_clear_cap set and key_ex_cap cleared*/
-        if (handshake_in_the_clear_cap != 0 && key_ex_cap == 0) {
-            return false;
-        }
-        /*Case "Handshake_in_the_clear_cap set and encrypt_cap+mac_cap cleared"
-         * It will be verified by "Key_ex_cap set and encrypt_cap+mac_cap cleared" and
-         *"Handshake_in_the_clear_cap set and key_ex_cap cleared" in above if statement,
-         * so we don't add new if statement.*/
-
-        /*Pub_key_id_cap set and cert_cap set*/
-        if (pub_key_id_cap != 0 && cert_cap != 0) {
-            return false;
-        }
-        /*reserved values selected in flags*/
-        if (meas_cap == 3 || psk_cap == 3) {
+    /* Checks common to 1.1 and 1.2. */
+    if ((version == SPDM_MESSAGE_VERSION_11) || (version == SPDM_MESSAGE_VERSION_12)) {
+        /* Illegal to return reserved values. */
+        if (psk_cap == 3) {
             return false;
         }
 
-        /*If CERT_INSTALL_RESET_CAP is set, CSR_CAP and/or SET_CERT_CAP shall be set.*/
-        if (cert_install_reset_cap == 1) {
-            if (set_cert_cap != 1) {
+        /* Checks that originate from key exchange capabilities. */
+        if ((key_ex_cap == 1) || (psk_cap != 0)) {
+            if ((mac_cap == 0) && (encrypt_cap == 0)) {
                 return false;
             }
         } else {
-            /*If CSR_CAP is set, SET_CERT_CAP shall be set.*/
-            if (csr_cap > set_cert_cap) {
+            if ((mac_cap == 1) || (encrypt_cap == 1) || (handshake_in_the_clear_cap == 1) ||
+                (hbeat_cap == 1) || (key_upd_cap == 1)) {
+                return false;
+            }
+        }
+        if ((key_ex_cap == 0) && (psk_cap != 0)) {
+            if (handshake_in_the_clear_cap == 1) {
                 return false;
             }
         }
 
-        /*if (CHAL_CAP == 1 || MEAS_CAP == 2 || KEY_EX_CAP == 1), then (CERT_CAP == 1 || PUB_KEY_ID_CAP == 1)*/
-        if ((chal_cap != 0) || (key_ex_cap != 0) || (meas_cap == 2)) {
-            if ((cert_cap == 0) && (pub_key_id_cap == 0)) {
+
+        /* Checks that originate from certificate or public key capabilities. */
+        if ((cert_cap == 1) || (pub_key_id_cap == 1)) {
+            /* Certificate capabilities and public key capabilities cannot both be set. */
+            if ((cert_cap == 1) && (pub_key_id_cap == 1)) {
+                return false;
+            }
+            if ((chal_cap == 0) && (key_ex_cap == 0) && ((meas_cap == 0) || (meas_cap == 1))) {
+                return false;
+            }
+        } else {
+            /* If certificates or public keys are  not enabled then these capabilities
+             * cannot be enabled. */
+            if ((chal_cap == 1) || (key_ex_cap == 1) || (meas_cap == 2) || (mut_auth_cap == 1)) {
                 return false;
             }
         }
-
-        return true;
     }
 
-    default:
-        LIBSPDM_ASSERT(false);
-        return false;
+    /* Checks specific to 1.1. */
+    if (version == SPDM_MESSAGE_VERSION_11) {
+        if ((mut_auth_cap == 1) && (encap_cap == 0)) {
+            return false;
+        }
     }
+
+    /* Checks specific to 1.2. */
+    if (version == SPDM_MESSAGE_VERSION_12) {
+        if ((cert_cap == 0) && (alias_cert_cap == 1)) {
+            return false;
+        }
+        if ((csr_cap == 1) && (set_cert_cap == 0)) {
+            return false;
+        }
+        if ((cert_install_reset_cap == 1) && (csr_cap == 0) && (set_cert_cap == 0)) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 /**

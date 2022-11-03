@@ -256,10 +256,7 @@ static libspdm_return_t receive_message(
     }
         return LIBSPDM_STATUS_SUCCESS;
 
-    case 0x9:
-        return LIBSPDM_STATUS_SUCCESS;
-
-    case 0xA: {
+    case 0x9: {
         libspdm_version_response_mine_t *spdm_response;
         size_t spdm_response_size;
         size_t transport_header_size;
@@ -273,7 +270,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.request_response_code = SPDM_VERSION;
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
-        spdm_response->version_number_entry_count = 2;
+        spdm_response->version_number_entry_count = 255;
         spdm_response->version_number_entry[0] = 0x10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
         spdm_response->version_number_entry[1] = 0x11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
         spdm_response->version_number_entry[2] = 0x12 << SPDM_VERSION_NUMBER_SHIFT_BIT;
@@ -284,6 +281,9 @@ static libspdm_return_t receive_message(
                                               response_size, response);
     }
         return LIBSPDM_STATUS_SUCCESS;
+
+    case 0xA:
+        return LIBSPDM_STATUS_RECEIVE_FAIL;
 
     case 0xB: {
         libspdm_version_response_mine_t *spdm_response;
@@ -509,8 +509,8 @@ static libspdm_return_t receive_message(
 }
 
 /**
- * Test 1: when no VERSION message is received, and the client returns a device error.
- * Expected behavior: client returns a status of LIBSPDM_STATUS_SEND_FAIL.
+ * Test 1: Unable to send the GET_VERSION request.
+ * Expected behavior: returns a status of LIBSPDM_STATUS_SEND_FAIL.
  **/
 static void libspdm_test_requester_get_version_err_case1(void **state)
 {
@@ -661,17 +661,43 @@ static void libspdm_test_requester_get_version_err_case8(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_NOT_READY_PEER);
 }
 
-/*
- * static void libspdm_test_requester_get_version_err_case9(void **state)
- * {
- * }
- */
+/**
+ * Test 9: Number of version entries are larger than what the Requester can tolerate.
+ * Expected behavior: returns a status of LIBSPDM_STATUS_INVALID_MSG_FIELD.
+ **/
+static void libspdm_test_requester_get_version_err_case9(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
 
-/*
- * static void libspdm_test_requester_get_version_err_case10(void **state)
- * {
- * }
- */
+    LIBSPDM_ASSERT(LIBSPDM_MAX_VERSION_COUNT != 255);
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x9;
+
+    status = libspdm_get_version(spdm_context, NULL, NULL);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+}
+
+/**
+ * Test 10: Requester is unable to receive a VERSION response from the Responder.
+ * Expected behavior: returns a status of LIBSPDM_STATUS_RECEIVE_FAIL.
+ **/
+static void libspdm_test_requester_get_version_err_case10(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xa;
+
+    status = libspdm_get_version(spdm_context, NULL, NULL);
+    assert_int_equal(status, LIBSPDM_STATUS_RECEIVE_FAIL);
+}
 
 /**
  * Test 11: receiving a correct VERSION message with available version 1.0 and 1.1, but
@@ -834,8 +860,8 @@ int libspdm_requester_get_version_error_test_main(void)
         cmocka_unit_test(libspdm_test_requester_get_version_err_case6),
         cmocka_unit_test(libspdm_test_requester_get_version_err_case7),
         cmocka_unit_test(libspdm_test_requester_get_version_err_case8),
-        /* cmocka_unit_test(libspdm_test_requester_get_version_err_case9),
-         * cmocka_unit_test(libspdm_test_requester_get_version_err_case10), */
+        cmocka_unit_test(libspdm_test_requester_get_version_err_case9),
+        cmocka_unit_test(libspdm_test_requester_get_version_err_case10),
         cmocka_unit_test(libspdm_test_requester_get_version_err_case11),
         cmocka_unit_test(libspdm_test_requester_get_version_err_case12),
         cmocka_unit_test(libspdm_test_requester_get_version_err_case13),
