@@ -100,7 +100,7 @@ static bool validate_responder_capability(uint32_t capabilities_flag, uint8_t ve
                 return false;
             }
         } else {
-            /* If certificates or public keys are  not enabled then these capabilities
+            /* If certificates or public keys are not enabled then these capabilities
              * cannot be enabled. */
             if ((chal_cap == 1) || (key_ex_cap == 1) || (meas_cap == 2) || (mut_auth_cap == 1)) {
                 return false;
@@ -117,7 +117,7 @@ static bool validate_responder_capability(uint32_t capabilities_flag, uint8_t ve
 
     /* Checks specific to 1.2. */
     if (version == SPDM_MESSAGE_VERSION_12) {
-        if ((cert_cap == 0) && (alias_cert_cap == 1)) {
+        if ((cert_cap == 0) && ((alias_cert_cap == 1) || (set_cert_cap == 1))) {
             return false;
         }
         if ((csr_cap == 1) && (set_cert_cap == 0)) {
