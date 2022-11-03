@@ -13,6 +13,7 @@
 #include "internal_crypt_lib.h"
 #include <mbedtls/dhm.h>
 #include <mbedtls/bignum.h>
+#include <string.h>
 
 static const unsigned char m_ffehde2048_p[] =
     MBEDTLS_DHM_RFC7919_FFDHE2048_P_BIN;
@@ -273,7 +274,6 @@ bool libspdm_dh_compute_key(void *dh_context, const uint8_t *peer_public_key,
     mbedtls_dhm_context *ctx;
     size_t return_size;
     size_t dh_key_size;
-    size_t key_capacity;
 
     /* Check input parameters.*/
 
@@ -306,7 +306,6 @@ bool libspdm_dh_compute_key(void *dh_context, const uint8_t *peer_public_key,
     if (*key_size < dh_key_size) {
         return false;
     }
-    key_capacity = *key_size;
     *key_size = dh_key_size;
 
     ret = mbedtls_dhm_read_public(dh_context, peer_public_key,
@@ -321,10 +320,10 @@ bool libspdm_dh_compute_key(void *dh_context, const uint8_t *peer_public_key,
     if (ret != 0) {
         return false;
     }
+
+    /*change the key, for example: from 0x123400 to 0x001234*/
     if (return_size < dh_key_size) {
-        libspdm_copy_mem(key + dh_key_size - return_size,
-                         key_capacity - (dh_key_size - return_size),
-                         key, return_size);
+        memmove(key + dh_key_size - return_size, key, return_size);
         libspdm_zero_mem(key, dh_key_size - return_size);
     }
 
