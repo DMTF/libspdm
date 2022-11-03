@@ -48,8 +48,8 @@
      SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP | \
      SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP)
 
-static size_t m_libspdm_local_buffer_size;
-static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE];
+/* static size_t m_libspdm_local_buffer_size;
+ * static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE]; */
 
 static libspdm_return_t libspdm_requester_get_capabilities_test_send_message(
     void *spdm_context, size_t request_size, const void *request,
