@@ -133,6 +133,15 @@
       ```
     - Implement the TBD features. `libspdm_sleep` and `libspdm_get_random_number_64` need to be implemented before it can run on a real system.
 
+    d) [ARM GNU](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads).
+    - Download 11.2-2022.02: GNU/Linux target (arm-none-linux-gnueabihf, aarch64-none-linux-gnu), and unzip it.
+    - Add <tool_path>/bin to the $PATH environment. For example:
+      ```
+      echo 'export PATH=~/gcc-arm-11.2-2022.02-x86_64-arm-none-linux-gnueabihf/bin:$PATH' | sudo tee -a ~/.bashrc
+      echo 'export PATH=~/gcc-arm-11.2-2022.02-x86_64-aarch64-none-linux-gnu/bin:$PATH' | sudo tee -a ~/.bashrc
+      source ~/.bashrc
+      ```
+
 2) [CMake](https://cmake.org/).
 
 ### Cryptography Library
@@ -283,6 +292,30 @@ Example CMake commands:
 
    ```
    cmake -DARCH=aarch64 -DTOOLCHAIN=ARM_DS2022 -DTARGET=Release -DCRYPTO=mbedtls ..
+   ```
+
+   Note: `make -j` can be used to accelerate the build.
+
+#### Linux Builds with ARM GNU Toolchain
+
+   For ARM GNU toolchain GNU/Linux target (arm-none-linux-gnueabihf, aarch64-none-linux-gnu) build on Linux, 
+   ```
+   cd libspdm
+   mkdir build
+   cd build
+   cmake -DARCH=<arm|aarch64> -DTOOLCHAIN=ARM_GNU -DTARGET=<Debug|Release> -DCRYPTO=<mbedtls|openssl> ..
+   make copy_sample_key
+   make
+   ```
+
+   Example CMake commands:
+
+   ```
+   cmake -DARCH=arm -DTOOLCHAIN=ARM_GNU -DTARGET=Debug -DCRYPTO=mbedtls ..
+   ```
+
+   ```
+   cmake -DARCH=aarch64 -DTOOLCHAIN=ARM_GNU -DTARGET=Release -DCRYPTO=mbedtls ..
    ```
 
    Note: `make -j` can be used to accelerate the build.
