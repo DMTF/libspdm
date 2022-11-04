@@ -29,7 +29,7 @@ void libspdm_my_print(const char *message)
 /**
  * entrypoint of Cryptographic Validation Utility.
  **/
-void libspdm_cryptest_main(void)
+bool libspdm_cryptest_main(void)
 {
     bool status;
 
@@ -38,116 +38,121 @@ void libspdm_cryptest_main(void)
 
     status = libspdm_validate_crypt_digest();
     if (!status) {
-        return;
+        return status;
     }
 
     status = libspdm_validate_crypt_hmac();
     if (!status) {
-        return;
+        return status;
     }
 
     status = libspdm_validate_crypt_hkdf();
     if (!status) {
-        return;
+        return status;
     }
 
     status = libspdm_validate_crypt_aead_cipher();
     if (!status) {
-        return;
+        return status;
     }
 
     #if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)
     status = libspdm_validate_crypt_rsa();
     if (!status) {
-        return;
+        return status;
     }
     #endif /* (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT) */
 
     #if LIBSPDM_RSA_SSA_SUPPORT
     status = libspdm_validate_crypt_rsa_2();
     if (!status) {
-        return;
+        return status;
     }
     #endif /* LIBSPDM_RSA_SSA_SUPPORT */
 
     status = libspdm_validate_crypt_x509("ecp256", sizeof("ecp256"));
     if (!status) {
-        return;
+        return status;
     }
 
     status = libspdm_validate_crypt_x509("ecp384", sizeof("ecp384"));
     if (!status) {
-        return;
+        return status;
     }
 
     status = libspdm_validate_crypt_x509("rsa2048", sizeof("rsa2048"));
     if (!status) {
-        return;
+        return status;
     }
 
     status = libspdm_validate_crypt_x509("rsa3072", sizeof("rsa3072"));
     if (!status) {
-        return;
+        return status;
     }
 
     status = libspdm_validate_crypt_dh();
     if (!status) {
-        return;
+        return status;
     }
 
     #if LIBSPDM_ECDSA_SUPPORT
     status = libspdm_validate_crypt_ec();
     if (!status) {
-        return;
+        return status;
     }
 
     status = libspdm_validate_crypt_ec_2();
     if (!status) {
-        return;
+        return status;
     }
     #endif /* LIBSPDM_ECDSA_SUPPORT */
 
     #if (LIBSPDM_EDDSA_ED25519_SUPPORT) || (LIBSPDM_EDDSA_ED448_SUPPORT)
     status = libspdm_validate_crypt_ecd();
     if (!status) {
-        return;
+        return status;
     }
 
     status = libspdm_validate_crypt_ecd_2();
     if (!status) {
-        return;
+        return status;
     }
     #endif /* (LIBSPDM_EDDSA_ED25519_SUPPORT) || (LIBSPDM_EDDSA_ED448_SUPPORT) */
 
     #if LIBSPDM_SM2_DSA_SUPPORT
     status = libspdm_validate_crypt_sm2();
     if (!status) {
-        return;
+        return status;
     }
 
     status = libspdm_validate_crypt_sm2_2();
     if (!status) {
-        return;
+        return status;
     }
     #endif /* LIBSPDM_SM2_DSA_SUPPORT */
 
     status = libspdm_validate_crypt_prng();
     if (!status) {
-        return;
+        return status;
     }
 
     #if LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP
     status = libspdm_validate_crypt_x509_csr();
     if (!status) {
-        return;
+        return status;
     }
     #endif /* LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP **/
 
-    return;
+    return status;
 }
 
 int main(void)
 {
-    libspdm_cryptest_main();
-    return 0;
+    int return_value = 0;
+
+    if (libspdm_cryptest_main() != 0) {
+        return_value = 1;
+    }
+
+    return return_value;
 }

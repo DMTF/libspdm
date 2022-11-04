@@ -359,6 +359,11 @@ int libspdm_crypt_lib_test_main(void)
 
 int main(void)
 {
-    libspdm_crypt_lib_test_main();
-    return 0;
+    int return_value = 0;
+
+    if (libspdm_crypt_lib_test_main() != 0) {
+        return_value = 1;
+    }
+
+    return return_value;
 }
