@@ -28,6 +28,7 @@ SET(src_test_size_of_spdm_requester
     spdm_requester_main.c
     spdm_requester_session.c
     compiler_stub.c
+    support.c
 )
 
 SET(test_size_of_spdm_requester_LIBRARY
@@ -45,6 +46,8 @@ SET(test_size_of_spdm_requester_LIBRARY
     spdm_secured_message_lib
     spdm_transport_mctp_lib
     spdm_device_secret_lib_null
+#    spdm_device_secret_lib_sample
+#    spdm_crypt_ext_lib
     intrinsiclib
     platform_lib_null
 )
