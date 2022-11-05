@@ -62,7 +62,6 @@ static libspdm_return_t libspdm_try_challenge(void *context, uint8_t slot_id,
     void *nonce;
     void *measurement_summary_hash;
     uint16_t opaque_length;
-    void *opaque;
     void *signature;
     size_t signature_size;
     libspdm_context_t *spdm_context;
@@ -276,10 +275,13 @@ static libspdm_return_t libspdm_try_challenge(void *context, uint8_t slot_id,
         goto receive_done;
     }
 
-    opaque = ptr;
+    LIBSPDM_DEBUG_CODE(
+        void *opaque;
+        opaque = ptr;
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "opaque (0x%x):\n", opaque_length));
+        LIBSPDM_INTERNAL_DUMP_HEX(opaque, opaque_length);
+    );
     ptr += opaque_length;
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "opaque (0x%x):\n", opaque_length));
-    LIBSPDM_INTERNAL_DUMP_HEX(opaque, opaque_length);
 
     signature = ptr;
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "signature (0x%x):\n", signature_size));
