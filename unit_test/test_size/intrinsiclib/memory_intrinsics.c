@@ -70,6 +70,21 @@ int ascii_strcmp(const char *first_string, const char *second_string)
     return *first_string - *second_string;
 }
 
+int ascii_strncmp(const char *first_string, const char *second_string, size_t length)
+{
+    if (length == 0) {
+        return 0;
+    }
+    while ((*first_string != '\0') && (*first_string != '\0')  &&
+           (*first_string == *second_string) && (length > 1)) {
+        first_string++;
+        second_string++;
+        length--;
+    }
+
+    return *first_string - *second_string;
+}
+
 int strcmp(const char *s1, const char *s2)
 {
     return (int)ascii_strcmp(s1, s2);
@@ -127,4 +142,34 @@ char *ascii_strstr(char *string, const char *search_string)
 char *strstr(char *str1, const char *str2)
 {
     return ascii_strstr(str1, str2);
+}
+
+const void * memscan ( const void * ptr, int value, size_t num )
+{
+    const char  *p;
+
+    p = (const void *)ptr;
+    do {
+        if (*p == value) {
+            return (const void *)p;
+        }
+        ++p;
+    } while (--num != 0);
+
+    return NULL;
+}
+
+const void * memchr ( const void * ptr, int value, size_t num )
+{
+    return memscan (ptr, value, num);
+}
+
+const char * strchr ( const char * str, int ch )
+{
+    return memscan (str, (int)ascii_strlen(str) + 1, ch);
+}
+
+int strncmp ( const char * str1, const char * str2, size_t num )
+{
+    return (int)ascii_strncmp(str1, str2, num);
 }

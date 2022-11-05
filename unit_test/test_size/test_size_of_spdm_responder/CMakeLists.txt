@@ -26,6 +26,7 @@ SET(src_test_size_of_spdm_responder
     spdm_responder_init.c
     spdm_responder_main.c
     compiler_stub.c
+    support.c
 )
 
 SET(test_size_of_spdm_responder_LIBRARY
@@ -43,6 +44,8 @@ SET(test_size_of_spdm_responder_LIBRARY
     spdm_secured_message_lib
     spdm_transport_mctp_lib
     spdm_device_secret_lib_null
+#    spdm_device_secret_lib_sample
+#    spdm_crypt_ext_lib
     intrinsiclib
     platform_lib_null
 )
