@@ -11,6 +11,7 @@
 
 #include "library/spdm_device_secret_lib.h"
 
+#if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 /**
  * Collect the device measurement.
  *
@@ -71,7 +72,9 @@ libspdm_generate_measurement_summary_hash(
 {
     return false;
 }
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
 
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
 /**
  * Sign an SPDM message data.
  *
@@ -96,6 +99,7 @@ bool libspdm_requester_data_sign(
 {
     return false;
 }
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
 
 /**
  * Sign an SPDM message data.
@@ -122,6 +126,7 @@ bool libspdm_responder_data_sign(
     return false;
 }
 
+#if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 /**
  * Derive HMAC-based Expand key Derivation Function (HKDF) Expand, based upon the negotiated HKDF algorithm.
  *
@@ -173,7 +178,9 @@ bool libspdm_psk_master_secret_hkdf_expand(
 {
     return false;
 }
+#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
 
+#if LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP
 /**
  * This function sends SET_CERTIFICATE
  * to set certificate from the device.
@@ -191,6 +198,7 @@ bool libspdm_write_certificate_to_nvm(uint8_t slot_id, const void * cert_chain,
 {
     return false;
 }
+#endif /* LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP
 /**

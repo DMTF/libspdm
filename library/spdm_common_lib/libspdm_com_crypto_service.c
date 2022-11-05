@@ -767,6 +767,7 @@ bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
     }
 
     if (is_requester) {
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
         signature_size = libspdm_get_req_asym_signature_size(
             spdm_context->connection_info.algorithm.req_base_asym_alg);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -782,6 +783,9 @@ bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
             spdm_context->connection_info.algorithm.base_hash_algo,
             true, m1m2_hash, m1m2_hash_size, signature, &signature_size);
 #endif
+#else /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
+        result = false;
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
     } else {
         signature_size = libspdm_get_asym_signature_size(
             spdm_context->connection_info.algorithm.base_asym_algo);

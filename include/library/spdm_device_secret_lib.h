@@ -118,6 +118,7 @@ bool libspdm_generate_measurement_summary_hash(
     size_t *measurement_summary_hash_size);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
 
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
 /**
  * Sign an SPDM message data.
  *
@@ -140,6 +141,7 @@ bool libspdm_requester_data_sign(
     uint32_t base_hash_algo, bool is_data_hash,
     const uint8_t *message, size_t message_size,
     uint8_t *signature, size_t *sig_size);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
 
 /**
  * Sign an SPDM message data.
