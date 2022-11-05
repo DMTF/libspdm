@@ -73,6 +73,7 @@ bool libspdm_read_responder_private_key(uint32_t base_asym_algo,
     return res;
 }
 
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
 bool libspdm_read_requester_private_key(uint16_t req_base_asym_alg,
                                         void **data, size_t *size)
 {
@@ -117,7 +118,9 @@ bool libspdm_read_requester_private_key(uint16_t req_base_asym_alg,
     res = libspdm_read_input_file(file, data, size);
     return res;
 }
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
 
+#if LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP
 bool libspdm_read_cached_requester_info(uint32_t base_asym_algo,
                                         uint8_t **req_info, size_t *req_info_length)
 {
@@ -241,7 +244,6 @@ bool libspdm_read_cached_csr(uint32_t base_asym_algo, uint8_t **csr_pointer, siz
     return res;
 }
 
-#if LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP
 /**
  * Gen CSR
  *
@@ -354,6 +356,7 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP */
 
+#if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 /**
  * Fill image hash measurement block.
  *
@@ -942,7 +945,9 @@ bool libspdm_generate_measurement_summary_hash(
     }
     return true;
 }
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
 
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
 /**
  * Sign an SPDM message data.
  *
@@ -997,6 +1002,7 @@ bool libspdm_requester_data_sign(
 
     return result;
 }
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
 
 /**
  * Sign an SPDM message data.
@@ -1049,6 +1055,8 @@ bool libspdm_responder_data_sign(
 
     return result;
 }
+
+#if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
 uint8_t m_libspdm_my_zero_filled_buffer[64];
 uint8_t m_libspdm_bin_str0[0x11] = {
@@ -1194,7 +1202,9 @@ bool libspdm_psk_master_secret_hkdf_expand(
 
     return result;
 }
+#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
 
+#if LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP
 /**
  * This function sends SET_CERTIFICATE
  * to set certificate from the device.
@@ -1267,3 +1277,4 @@ bool libspdm_write_certificate_to_nvm(uint8_t slot_id, const void * cert_chain,
 
     return true;
 }
+#endif /* LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP */
