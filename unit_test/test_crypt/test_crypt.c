@@ -23,7 +23,7 @@ size_t libspdm_ascii_str_len(const char *string)
 
 void libspdm_my_print(const char *message)
 {
-    libspdm_debug_print(LIBSPDM_DEBUG_INFO, "%s", message);
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "%s", message));
 }
 
 /**
