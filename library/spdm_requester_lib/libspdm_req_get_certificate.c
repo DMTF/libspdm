@@ -277,7 +277,7 @@ static libspdm_return_t libspdm_try_get_certificate(void *context, const uint32_
 
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Certificate (offset 0x%x, size 0x%x):\n",
                        spdm_request->offset, spdm_response->portion_length));
-        libspdm_internal_dump_hex(spdm_response->cert_chain, spdm_response->portion_length);
+        LIBSPDM_INTERNAL_DUMP_HEX(spdm_response->cert_chain, spdm_response->portion_length);
 
         status = libspdm_append_managed_buffer(&certificate_chain_buffer,
                                                spdm_response->cert_chain,

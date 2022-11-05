@@ -88,7 +88,7 @@ bool libspdm_verify_finish_req_hmac(libspdm_context_t *spdm_context,
     }
 #endif
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "th_curr hmac - "));
-    libspdm_internal_dump_data(hmac_data, hash_size);
+    LIBSPDM_INTERNAL_DUMP_DATA(hmac_data, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
     if (libspdm_const_compare_mem(hmac, hmac_data, hash_size) != 0) {
@@ -176,11 +176,11 @@ bool libspdm_verify_finish_req_signature(libspdm_context_t *spdm_context,
     }
 #endif
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "th_curr hash - "));
-    libspdm_internal_dump_data(hash_data, hash_size);
+    LIBSPDM_INTERNAL_DUMP_DATA(hash_data, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "signature - "));
-    libspdm_internal_dump_data(sign_data, sign_data_size);
+    LIBSPDM_INTERNAL_DUMP_DATA(sign_data, sign_data_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -341,7 +341,7 @@ bool libspdm_generate_finish_rsp_hmac(libspdm_context_t *spdm_context,
     }
 #endif
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "th_curr hmac - "));
-    libspdm_internal_dump_data(hmac_data, hash_size);
+    LIBSPDM_INTERNAL_DUMP_DATA(hmac_data, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
     libspdm_copy_mem(hmac, hash_size, hmac_data, hash_size);

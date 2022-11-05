@@ -4,7 +4,7 @@
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
-#include <base.h>
+#include "hal/base.h"
 
 void libspdm_debug_assert(const char *file_name, size_t line_number,
                           const char *description)

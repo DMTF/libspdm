@@ -8,7 +8,7 @@
  * SPDM common library.
  * It follows the SPDM Specification.
  **/
-#include <base.h>
+#include "hal/base.h"
 #if defined(_MSC_VER) || (defined(__clang__) && (defined (LIBSPDM_CPU_AARCH64) || \
     defined(LIBSPDM_CPU_ARM)))
 #else
@@ -25,7 +25,7 @@
 #include <assert.h>
 #include <string.h>
 
-#include "library/memlib.h"
+#include "hal/library/memlib.h"
 #include "spdm_device_secret_lib_internal.h"
 
 bool libspdm_read_responder_private_key(uint32_t base_asym_algo,

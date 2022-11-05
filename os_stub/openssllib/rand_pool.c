@@ -7,7 +7,7 @@
 #include "crypto/rand.h"
 #include <openssl/aes.h>
 
-#include <base.h>
+#include "hal/base.h"
 #include "library/rnglib.h"
 
 /**

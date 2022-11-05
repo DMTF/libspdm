@@ -70,7 +70,7 @@ bool libspdm_generate_key_exchange_rsp_hmac(libspdm_context_t *spdm_context,
     }
 #endif
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "th_curr hmac - "));
-    libspdm_internal_dump_data(hmac_data, hash_size);
+    LIBSPDM_INTERNAL_DUMP_DATA(hmac_data, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     libspdm_copy_mem(hmac, hash_size, hmac_data, hash_size);
 
@@ -138,7 +138,7 @@ bool libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context
     }
 #endif
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "th_curr hash - "));
-    libspdm_internal_dump_data(hash_data, hash_size);
+    LIBSPDM_INTERNAL_DUMP_DATA(hash_data, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -156,7 +156,7 @@ bool libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context
 #endif
     if (result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "signature - "));
-        libspdm_internal_dump_data(signature, signature_size);
+        LIBSPDM_INTERNAL_DUMP_DATA(signature, signature_size);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     }
     return result;
@@ -414,10 +414,10 @@ libspdm_return_t libspdm_get_response_key_exchange(void *context,
                                                response_size, response);
     }
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Calc SelfKey (0x%x):\n", dhe_key_size));
-    libspdm_internal_dump_hex(ptr, dhe_key_size);
+    LIBSPDM_INTERNAL_DUMP_HEX(ptr, dhe_key_size);
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Calc peer_key (0x%x):\n", dhe_key_size));
-    libspdm_internal_dump_hex((const uint8_t *)request +
+    LIBSPDM_INTERNAL_DUMP_HEX((const uint8_t *)request +
                               sizeof(spdm_key_exchange_request_t),
                               dhe_key_size);
 

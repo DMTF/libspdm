@@ -18,8 +18,8 @@
 #include <assert.h>
 #include <string.h>
 
-#include <base.h>
-#include "library/memlib.h"
+#include "hal/base.h"
+#include "hal/library/memlib.h"
 #include "spdm_device_secret_lib_internal.h"
 
 bool libspdm_read_responder_root_public_certificate(uint32_t base_hash_algo,

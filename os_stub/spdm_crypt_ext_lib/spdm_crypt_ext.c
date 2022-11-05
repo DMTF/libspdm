@@ -8,7 +8,7 @@
 #include "spdm_crypt_ext_lib/spdm_crypt_ext_lib.h"
 #include "spdm_crypt_ext_lib/cryptlib_ext.h"
 #include "industry_standard/spdm.h"
-#include "hal/library/debuglib.h"
+#include "internal/hal/debuglib_internal.h"
 
 /**
  * Return asymmetric GET_PRIVATE_KEY_FROM_PEM function, based upon the asymmetric algorithm.

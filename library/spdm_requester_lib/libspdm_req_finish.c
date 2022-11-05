@@ -99,7 +99,7 @@ bool libspdm_verify_finish_rsp_hmac(libspdm_context_t *spdm_context,
     }
 #endif
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "th_curr hmac - "));
-    libspdm_internal_dump_data(calc_hmac_data, hash_size);
+    LIBSPDM_INTERNAL_DUMP_DATA(calc_hmac_data, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
     if (libspdm_const_compare_mem(calc_hmac_data, hmac_data, hash_size) != 0) {
@@ -188,7 +188,7 @@ bool libspdm_generate_finish_req_hmac(libspdm_context_t *spdm_context,
     }
 #endif
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "th_curr hmac - "));
-    libspdm_internal_dump_data(calc_hmac_data, hash_size);
+    LIBSPDM_INTERNAL_DUMP_DATA(calc_hmac_data, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
     libspdm_copy_mem(hmac, hash_size, calc_hmac_data, hash_size);
@@ -268,7 +268,7 @@ bool libspdm_generate_finish_req_signature(libspdm_context_t *spdm_context,
     }
 #endif
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "th_curr hash - "));
-    libspdm_internal_dump_data(hash_data, hash_size);
+    LIBSPDM_INTERNAL_DUMP_DATA(hash_data, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -286,7 +286,7 @@ bool libspdm_generate_finish_req_signature(libspdm_context_t *spdm_context,
 #endif
     if (result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "signature - "));
-        libspdm_internal_dump_data(signature, signature_size);
+        LIBSPDM_INTERNAL_DUMP_DATA(signature, signature_size);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     }
 
@@ -520,7 +520,7 @@ static libspdm_return_t libspdm_try_send_receive_finish(libspdm_context_t *spdm_
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "verify_data (0x%x):\n", hmac_size));
-        libspdm_internal_dump_hex(spdm_response->verify_data, hmac_size);
+        LIBSPDM_INTERNAL_DUMP_HEX(spdm_response->verify_data, hmac_size);
         result = libspdm_verify_finish_rsp_hmac(spdm_context, session_info,
                                                 spdm_response->verify_data,
                                                 hmac_size);

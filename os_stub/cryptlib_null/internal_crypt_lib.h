@@ -11,9 +11,9 @@
 #ifndef __INTERNAL_CRYPT_LIB_H__
 #define __INTERNAL_CRYPT_LIB_H__
 
-#include <base.h>
-#include "library/debuglib.h"
-#include "library/memlib.h"
+#include "hal/base.h"
+#include "internal/hal/debuglib_internal.h"
+#include "hal/library/memlib.h"
 #include "library/cryptlib.h"
 
 typedef size_t size_t;

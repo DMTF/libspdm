@@ -5,7 +5,7 @@
  **/
 
 #include "hal/base.h"
-#include "hal/library/debuglib.h"
+#include "internal/hal/debuglib_internal.h"
 
 #if defined(__GNUC__) && !defined(_WIN32)
 typedef size_t time_t;

@@ -13,7 +13,7 @@
 #include "library/malloclib.h"
 #include "library/spdm_crypt_lib.h"
 #include "hal/library/memlib.h"
-#include "hal/library/debuglib.h"
+#include "internal/hal/debuglib_internal.h"
 
 libspdm_return_t do_authentication_via_spdm(void *spdm_context);
 

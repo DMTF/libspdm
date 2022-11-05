@@ -12,9 +12,9 @@
 #ifndef __CRT_LIB_SUPPORT_H__
 #define __CRT_LIB_SUPPORT_H__
 
-#include <base.h>
-#include "library/memlib.h"
-#include "library/debuglib.h"
+#include "hal/base.h"
+#include "hal/library/memlib.h"
+#include "internal/hal/debuglib_internal.h"
 #include <stddef.h>
 #if defined(_MSC_VER) && defined(__clang__)
 #include <corecrt.h>

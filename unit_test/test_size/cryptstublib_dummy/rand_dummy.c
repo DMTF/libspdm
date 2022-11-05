@@ -5,7 +5,7 @@
  **/
 
 #include "hal/base.h"
-#include "hal/library/debuglib.h"
+#include "internal/hal/debuglib_internal.h"
 
 int rand()
 {

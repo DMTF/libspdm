@@ -42,7 +42,7 @@ bool libspdm_calculate_th_for_exchange(
     libspdm_init_managed_buffer(&th_curr, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_a data :\n"));
-    libspdm_internal_dump_hex(
+    LIBSPDM_INTERNAL_DUMP_HEX(
         libspdm_get_managed_buffer(&spdm_context->transcript.message_a),
         libspdm_get_managed_buffer_size(&spdm_context->transcript.message_a));
     status = libspdm_append_managed_buffer(
@@ -55,7 +55,7 @@ bool libspdm_calculate_th_for_exchange(
 
     if (cert_chain_buffer != NULL) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "th_message_ct data :\n"));
-        libspdm_internal_dump_hex(cert_chain_buffer, cert_chain_buffer_size);
+        LIBSPDM_INTERNAL_DUMP_HEX(cert_chain_buffer, cert_chain_buffer_size);
         result = libspdm_hash_all(
             spdm_context->connection_info.algorithm.base_hash_algo,
             cert_chain_buffer, cert_chain_buffer_size,
@@ -70,7 +70,7 @@ bool libspdm_calculate_th_for_exchange(
     }
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_k data :\n"));
-    libspdm_internal_dump_hex(
+    LIBSPDM_INTERNAL_DUMP_HEX(
         libspdm_get_managed_buffer(&session_info->session_transcript.message_k),
         libspdm_get_managed_buffer_size(&session_info->session_transcript.message_k));
     status = libspdm_append_managed_buffer(
@@ -244,7 +244,7 @@ bool libspdm_calculate_th_for_finish(void *context,
     libspdm_init_managed_buffer(&th_curr, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_a data :\n"));
-    libspdm_internal_dump_hex(
+    LIBSPDM_INTERNAL_DUMP_HEX(
         libspdm_get_managed_buffer(&spdm_context->transcript.message_a),
         libspdm_get_managed_buffer_size(&spdm_context->transcript.message_a));
     status = libspdm_append_managed_buffer(
@@ -257,7 +257,7 @@ bool libspdm_calculate_th_for_finish(void *context,
 
     if (cert_chain_buffer != NULL) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "th_message_ct data :\n"));
-        libspdm_internal_dump_hex(cert_chain_buffer, cert_chain_buffer_size);
+        LIBSPDM_INTERNAL_DUMP_HEX(cert_chain_buffer, cert_chain_buffer_size);
         result = libspdm_hash_all(
             spdm_context->connection_info.algorithm.base_hash_algo,
             cert_chain_buffer, cert_chain_buffer_size,
@@ -272,7 +272,7 @@ bool libspdm_calculate_th_for_finish(void *context,
     }
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_k data :\n"));
-    libspdm_internal_dump_hex(
+    LIBSPDM_INTERNAL_DUMP_HEX(
         libspdm_get_managed_buffer(&session_info->session_transcript.message_k),
         libspdm_get_managed_buffer_size(&session_info->session_transcript.message_k));
     status = libspdm_append_managed_buffer(
@@ -285,7 +285,7 @@ bool libspdm_calculate_th_for_finish(void *context,
 
     if (mut_cert_chain_buffer != NULL) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "th_message_cm data :\n"));
-        libspdm_internal_dump_hex(mut_cert_chain_buffer, mut_cert_chain_buffer_size);
+        LIBSPDM_INTERNAL_DUMP_HEX(mut_cert_chain_buffer, mut_cert_chain_buffer_size);
         result = libspdm_hash_all(
             spdm_context->connection_info.algorithm.base_hash_algo,
             mut_cert_chain_buffer, mut_cert_chain_buffer_size,
@@ -300,7 +300,7 @@ bool libspdm_calculate_th_for_finish(void *context,
     }
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_f data :\n"));
-    libspdm_internal_dump_hex(
+    LIBSPDM_INTERNAL_DUMP_HEX(
         libspdm_get_managed_buffer(&session_info->session_transcript.message_f),
         libspdm_get_managed_buffer_size(&session_info->session_transcript.message_f));
     status = libspdm_append_managed_buffer(
@@ -607,7 +607,7 @@ bool libspdm_calculate_th1_hash(void *context,
     }
 #endif
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "th1 hash - "));
-    libspdm_internal_dump_data(th1_hash_data, hash_size);
+    LIBSPDM_INTERNAL_DUMP_DATA(th1_hash_data, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
     return true;
@@ -711,7 +711,7 @@ bool libspdm_calculate_th2_hash(void *context,
     }
 #endif
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "th2 hash - "));
-    libspdm_internal_dump_data(th2_hash_data, hash_size);
+    LIBSPDM_INTERNAL_DUMP_DATA(th2_hash_data, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
     return true;

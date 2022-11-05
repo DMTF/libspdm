@@ -155,7 +155,7 @@ libspdm_return_t libspdm_process_encap_response_certificate(
                    libspdm_get_managed_buffer_size(
                        &spdm_context->encap_context.certificate_chain_buffer),
                    spdm_response->portion_length));
-    libspdm_internal_dump_hex((const void *)(spdm_response + 1),
+    LIBSPDM_INTERNAL_DUMP_HEX((const void *)(spdm_response + 1),
                               spdm_response->portion_length);
 
     status = libspdm_append_managed_buffer(

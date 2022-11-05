@@ -220,7 +220,7 @@ libspdm_return_t libspdm_process_request(void *context, uint32_t **session_id,
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmReceiveRequest[%x] (0x%x): \n",
                    (message_session_id != NULL) ? *message_session_id : 0,
                    spdm_context->last_spdm_request_size));
-    libspdm_internal_dump_hex((uint8_t *)spdm_context->last_spdm_request,
+    LIBSPDM_INTERNAL_DUMP_HEX((uint8_t *)spdm_context->last_spdm_request,
                               spdm_context->last_spdm_request_size);
 
     return LIBSPDM_STATUS_SUCCESS;
@@ -428,7 +428,7 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmSendResponse[%x] (0x%x): \n",
                        (session_id != NULL) ? *session_id : 0,
                        my_response_size));
-        libspdm_internal_dump_hex(my_response, my_response_size);
+        LIBSPDM_INTERNAL_DUMP_HEX(my_response, my_response_size);
 
         status = spdm_context->transport_encode_message(
             spdm_context, session_id, false, false,
@@ -625,7 +625,7 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmSendResponse[%x] (0x%x): \n",
                    (session_id != NULL) ? *session_id : 0, my_response_size));
-    libspdm_internal_dump_hex(my_response, my_response_size);
+    LIBSPDM_INTERNAL_DUMP_HEX(my_response, my_response_size);
 
     status = spdm_context->transport_encode_message(
         spdm_context, session_id, is_app_message, false,

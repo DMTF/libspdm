@@ -9,10 +9,10 @@
  * the armv8 special code form https://github.com/altera-opensource/intel-socfpga-hwlib
  **/
 
-#include <base.h>
+#include "hal/base.h"
 #include <stdlib.h>
 #include <errno.h>
-#include "hal/library/debuglib.h"
+#include "internal/hal/debuglib_internal.h"
 
 /**
  * Suspends the execution of the current thread until the time-out interval elapses.

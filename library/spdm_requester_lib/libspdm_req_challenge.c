@@ -117,7 +117,7 @@ static libspdm_return_t libspdm_try_challenge(void *context, uint8_t slot_id,
                          requester_nonce_in, SPDM_NONCE_SIZE);
     }
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ClientNonce - "));
-    libspdm_internal_dump_data(spdm_request->nonce, SPDM_NONCE_SIZE);
+    LIBSPDM_INTERNAL_DUMP_DATA(spdm_request->nonce, SPDM_NONCE_SIZE);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     if (requester_nonce != NULL) {
         libspdm_copy_mem(requester_nonce, SPDM_NONCE_SIZE, spdm_request->nonce, SPDM_NONCE_SIZE);
@@ -221,7 +221,7 @@ static libspdm_return_t libspdm_try_challenge(void *context, uint8_t slot_id,
     cert_chain_hash = ptr;
     ptr += hash_size;
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "cert_chain_hash (0x%x) - ", hash_size));
-    libspdm_internal_dump_data(cert_chain_hash, hash_size);
+    LIBSPDM_INTERNAL_DUMP_DATA(cert_chain_hash, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     result = libspdm_verify_certificate_chain_hash(spdm_context, cert_chain_hash, hash_size);
     if (!result) {
@@ -231,7 +231,7 @@ static libspdm_return_t libspdm_try_challenge(void *context, uint8_t slot_id,
 
     nonce = ptr;
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "nonce (0x%x) - ", SPDM_NONCE_SIZE));
-    libspdm_internal_dump_data(nonce, SPDM_NONCE_SIZE);
+    LIBSPDM_INTERNAL_DUMP_DATA(nonce, SPDM_NONCE_SIZE);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     ptr += SPDM_NONCE_SIZE;
     if (responder_nonce != NULL) {
@@ -242,7 +242,7 @@ static libspdm_return_t libspdm_try_challenge(void *context, uint8_t slot_id,
     ptr += measurement_summary_hash_size;
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "measurement_summary_hash (0x%x) - ",
                    measurement_summary_hash_size));
-    libspdm_internal_dump_data(measurement_summary_hash, measurement_summary_hash_size);
+    LIBSPDM_INTERNAL_DUMP_DATA(measurement_summary_hash, measurement_summary_hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
     opaque_length = *(uint16_t *)ptr;
@@ -279,11 +279,11 @@ static libspdm_return_t libspdm_try_challenge(void *context, uint8_t slot_id,
     opaque = ptr;
     ptr += opaque_length;
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "opaque (0x%x):\n", opaque_length));
-    libspdm_internal_dump_hex(opaque, opaque_length);
+    LIBSPDM_INTERNAL_DUMP_HEX(opaque, opaque_length);
 
     signature = ptr;
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "signature (0x%x):\n", signature_size));
-    libspdm_internal_dump_hex(signature, signature_size);
+    LIBSPDM_INTERNAL_DUMP_HEX(signature, signature_size);
     result = libspdm_verify_challenge_auth_signature(spdm_context, true, signature, signature_size);
     if (!result) {
         libspdm_reset_message_c(spdm_context);

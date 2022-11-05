@@ -9,8 +9,8 @@
  **/
 #define _POSIX_C_SOURCE 200112L
 
-#include <base.h>
-#include "library/memlib.h"
+#include "hal/base.h"
+#include "hal/library/memlib.h"
 #include <mbedtls/platform_time.h>
 struct tm *mbedtls_platform_gmtime_r(const mbedtls_time_t *tt,
                                      struct tm *tm_buf)

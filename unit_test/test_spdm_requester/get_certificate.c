@@ -3468,7 +3468,7 @@ void libspdm_test_requester_get_certificate_case24(void **state)
                                           data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
                                           &root_cert, &root_cert_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "root cert data :\n"));
-    libspdm_internal_dump_hex(
+    LIBSPDM_INTERNAL_DUMP_HEX(
         root_cert,
         root_cert_size);
     spdm_context->local_context.peer_root_cert_provision_size[0] =

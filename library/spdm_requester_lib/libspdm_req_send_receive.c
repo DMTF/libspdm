@@ -43,7 +43,7 @@ libspdm_return_t libspdm_send_request(void *context, const uint32_t *session_id,
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_send_spdm_request[%x] (0x%x): \n",
                    (session_id != NULL) ? *session_id : 0x0, request_size));
-    libspdm_internal_dump_hex(request, request_size);
+    LIBSPDM_INTERNAL_DUMP_HEX(request, request_size);
 
     transport_header_size = spdm_context->transport_get_header_size(spdm_context);
     libspdm_get_scratch_buffer(spdm_context, (void**) &scratch_buffer, &scratch_buffer_size);
@@ -238,7 +238,7 @@ libspdm_return_t libspdm_receive_response(void *context, const uint32_t *session
                        "libspdm_receive_spdm_response[%x] status - %p\n",
                        (session_id != NULL) ? *session_id : 0x0, status));
     } else {
-        libspdm_internal_dump_hex(*response, *response_size);
+        LIBSPDM_INTERNAL_DUMP_HEX(*response, *response_size);
     }
     return status;
 

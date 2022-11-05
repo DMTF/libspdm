@@ -4,7 +4,7 @@
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
-#include <base.h>
+#include "hal/base.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,10 +12,9 @@
 #include <assert.h>
 #include <stdarg.h>
 
-#include "library/debuglib.h"
+#include "internal/hal/debuglib_internal.h"
 
-
-/* Define the maximum debug and assert message length that this library supports*/
+/* Define the maximum debug and assert message length that this library supports. */
 
 #define LIBSPDM_MAX_DEBUG_MESSAGE_LENGTH 0x100
 
@@ -28,11 +27,10 @@
 #endif
 
 #ifndef LIBSPDM_DEBUG_LEVEL_CONFIG
-#define LIBSPDM_DEBUG_LEVEL_CONFIG (LIBSPDM_DEBUG_INFO | LIBSPDM_DEBUG_INFO)
+#define LIBSPDM_DEBUG_LEVEL_CONFIG (LIBSPDM_DEBUG_INFO | LIBSPDM_DEBUG_ERROR)
 #endif
 
-void libspdm_debug_assert(const char *file_name, size_t line_number,
-                          const char *description)
+void libspdm_debug_assert(const char *file_name, size_t line_number, const char *description)
 {
     printf("LIBSPDM_ASSERT: %s(%d): %s\n", file_name, (int32_t)(uint32_t)line_number,
            description);

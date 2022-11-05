@@ -11,11 +11,11 @@
 #ifndef __INTERNAL_CRYPT_LIB_H__
 #define __INTERNAL_CRYPT_LIB_H__
 
-#include <base.h>
-#include "library/memlib.h"
+#include "hal/base.h"
+#include "hal/library/memlib.h"
 #include "library/malloclib.h"
-#include "library/debuglib.h"
-#include "library/cryptlib.h"
+#include "internal/hal/debuglib_internal.h"
+#include "hal/library/cryptlib.h"
 #include "spdm_crypt_ext_lib/cryptlib_ext.h"
 #include <stdio.h>
 

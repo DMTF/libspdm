@@ -8,11 +8,10 @@
  * Base Memory Allocation Routines Wrapper.
  **/
 
-#include <base.h>
-#include "library/debuglib.h"
+#include "hal/base.h"
+#include "internal/hal/debuglib_internal.h"
 #include "library/malloclib.h"
 #include <stddef.h>
-
 
 /* Extra header to record the memory buffer size from malloc routine.*/
 

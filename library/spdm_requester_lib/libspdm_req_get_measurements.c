@@ -295,7 +295,7 @@ static libspdm_return_t libspdm_try_get_measurement(void *context, const uint32_
                              requester_nonce_in, SPDM_NONCE_SIZE);
         }
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ClientNonce - "));
-        libspdm_internal_dump_data(spdm_request->nonce, SPDM_NONCE_SIZE);
+        LIBSPDM_INTERNAL_DUMP_DATA(spdm_request->nonce, SPDM_NONCE_SIZE);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
         spdm_request->slot_id_param = slot_id_param;
 
@@ -426,7 +426,7 @@ static libspdm_return_t libspdm_try_get_measurement(void *context, const uint32_
         ptr = measurement_record_data + measurement_record_data_length;
         nonce = ptr;
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "nonce (0x%x) - ", SPDM_NONCE_SIZE));
-        libspdm_internal_dump_data(nonce, SPDM_NONCE_SIZE);
+        LIBSPDM_INTERNAL_DUMP_DATA(nonce, SPDM_NONCE_SIZE);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
         ptr += SPDM_NONCE_SIZE;
         if (responder_nonce != NULL) {
@@ -471,11 +471,11 @@ static libspdm_return_t libspdm_try_get_measurement(void *context, const uint32_
         opaque = ptr;
         ptr += opaque_length;
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "opaque (0x%x):\n", opaque_length));
-        libspdm_internal_dump_hex(opaque, opaque_length);
+        LIBSPDM_INTERNAL_DUMP_HEX(opaque, opaque_length);
 
         signature = ptr;
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "signature (0x%x):\n", signature_size));
-        libspdm_internal_dump_hex(signature, signature_size);
+        LIBSPDM_INTERNAL_DUMP_HEX(signature, signature_size);
 
         result = libspdm_verify_measurement_signature(
             spdm_context, session_info, signature, signature_size);
@@ -497,7 +497,7 @@ static libspdm_return_t libspdm_try_get_measurement(void *context, const uint32_
 
         nonce = ptr;
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "nonce (0x%x) - ", SPDM_NONCE_SIZE));
-        libspdm_internal_dump_data(nonce, SPDM_NONCE_SIZE);
+        LIBSPDM_INTERNAL_DUMP_DATA(nonce, SPDM_NONCE_SIZE);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
         ptr += SPDM_NONCE_SIZE;
         if (responder_nonce != NULL) {

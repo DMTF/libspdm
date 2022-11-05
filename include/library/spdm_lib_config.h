@@ -7,6 +7,11 @@
 #ifndef SPDM_LIB_CONFIG_H
 #define SPDM_LIB_CONFIG_H
 
+/* Enables assertions and debug printing. */
+#ifndef LIBSPDM_DEBUG_ENABLE
+#define LIBSPDM_DEBUG_ENABLE 1
+#endif
+
 /* The SPDM specification allows a Responder to return up to 256 version entries in the `VERSION`
  * response to the Requester, including duplicate entries. For a Requester this value specifies the
  * maximum number of entries that libspdm will tolerate in a `VERSION` response before returning an

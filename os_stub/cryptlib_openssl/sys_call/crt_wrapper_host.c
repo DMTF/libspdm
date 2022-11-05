@@ -10,8 +10,8 @@
 
 #include <stdio.h>
 
-#include <base.h>
-#include "library/debuglib.h"
+#include "hal/base.h"
+#include "internal/hal/debuglib_internal.h"
 #include <openssl/bio.h>
 
 /* Convert character to lowercase */
