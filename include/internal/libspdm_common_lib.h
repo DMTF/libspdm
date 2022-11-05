@@ -403,7 +403,7 @@ typedef struct {
  * @param  size  raw data size
  **/
 #if LIBSPDM_DEBUG_PRINT_ENABLE
-#define LIBSPDM_INTERNAL_DUMP_HEX_STR(data, size) LIBSPDM_INTERNAL_DUMP_HEX_STR(data, size)
+#define LIBSPDM_INTERNAL_DUMP_HEX_STR(data, size) libspdm_internal_dump_hex_str(data, size)
 void libspdm_internal_dump_hex_str(const uint8_t *data, size_t size);
 #else
 #define LIBSPDM_INTERNAL_DUMP_HEX_STR(data, size)
@@ -429,7 +429,7 @@ void libspdm_internal_dump_data(const uint8_t *data, size_t size);
  * @param  size  raw data size
  **/
 #if LIBSPDM_DEBUG_PRINT_ENABLE
-#define LIBSPDM_INTERNAL_DUMP_HEX(data, size) LIBSPDM_INTERNAL_DUMP_HEX(data, size)
+#define LIBSPDM_INTERNAL_DUMP_HEX(data, size) libspdm_internal_dump_hex(data, size)
 void libspdm_internal_dump_hex(const uint8_t *data, size_t size);
 #else
 #define LIBSPDM_INTERNAL_DUMP_HEX(data, size)
