@@ -1239,7 +1239,8 @@ extern void my_free( void *ptr );
  *
  * Uncomment this macro to disable the built-in platform entropy functions.
  */
-#if defined(__clang__)
+#if !defined(unix) && !defined(__unix__) && !defined(__unix) && \
+    !defined(_WIN32)
 #define MBEDTLS_NO_PLATFORM_ENTROPY
 #endif
 
