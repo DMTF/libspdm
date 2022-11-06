@@ -211,10 +211,8 @@ bool libspdm_generate_finish_req_signature(libspdm_context_t *spdm_context,
                                            libspdm_session_info_t *session_info,
                                            uint8_t *signature)
 {
-    uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     bool result;
     size_t signature_size;
-    size_t hash_size;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     uint8_t *cert_chain_buffer;
     size_t cert_chain_buffer_size;
@@ -223,11 +221,20 @@ bool libspdm_generate_finish_req_signature(libspdm_context_t *spdm_context,
     uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     size_t th_curr_data_size;
 #endif
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) || (LIBSPDM_DEBUG_PRINT_ENABLE)
+    size_t hash_size;
+#endif
+#if ((LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) && (LIBSPDM_DEBUG_BLOCK_ENABLE)) || \
+    !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
+    uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
+#endif
 
     signature_size = libspdm_get_req_asym_signature_size(
         spdm_context->connection_info.algorithm.req_base_asym_alg);
-    hash_size = libspdm_get_hash_size(
-        spdm_context->connection_info.algorithm.base_hash_algo);
+
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) || (LIBSPDM_DEBUG_PRINT_ENABLE)
+    hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+#endif
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     result = libspdm_get_peer_cert_chain_buffer(

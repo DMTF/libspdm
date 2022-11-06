@@ -127,8 +127,6 @@ bool libspdm_verify_key_exchange_rsp_signature(
     libspdm_context_t *spdm_context, libspdm_session_info_t *session_info,
     const void *sign_data, const size_t sign_data_size)
 {
-    size_t hash_size;
-    uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     bool result;
     const uint8_t *cert_chain_data;
     size_t cert_chain_data_size;
@@ -143,8 +141,12 @@ bool libspdm_verify_key_exchange_rsp_signature(
 #else
     uint8_t slot_id;
 #endif
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) || (LIBSPDM_DEBUG_PRINT_ENABLE)
+    size_t hash_size;
+    uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
 
     hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+#endif
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     result = libspdm_get_peer_cert_chain_buffer(

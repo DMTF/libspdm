@@ -91,21 +91,26 @@ bool libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context
                                                  libspdm_session_info_t *session_info,
                                                  uint8_t *signature)
 {
-    uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     const uint8_t *cert_chain_buffer;
     size_t cert_chain_buffer_size;
     bool result;
     size_t signature_size;
-    size_t hash_size;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     size_t th_curr_data_size;
 #endif
+#if ((LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) && (LIBSPDM_DEBUG_BLOCK_ENABLE)) || \
+    !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
+    uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
+#endif
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) || (LIBSPDM_DEBUG_PRINT_ENABLE)
+    size_t hash_size;
+
+    hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+#endif
 
     signature_size = libspdm_get_asym_signature_size(
         spdm_context->connection_info.algorithm.base_asym_algo);
-    hash_size = libspdm_get_hash_size(
-        spdm_context->connection_info.algorithm.base_hash_algo);
 
     result = libspdm_get_local_cert_chain_buffer(
         spdm_context, (const void **)&cert_chain_buffer, &cert_chain_buffer_size);

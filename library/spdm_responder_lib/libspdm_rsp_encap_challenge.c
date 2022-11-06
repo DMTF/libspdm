@@ -177,7 +177,7 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Encap nonce (0x%x) - ", SPDM_NONCE_SIZE));
         LIBSPDM_INTERNAL_DUMP_DATA(nonce, SPDM_NONCE_SIZE);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
-    );
+        );
     ptr += SPDM_NONCE_SIZE;
 
     LIBSPDM_DEBUG_CODE(
@@ -187,7 +187,7 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
                         measurement_summary_hash_size));
         LIBSPDM_INTERNAL_DUMP_DATA(measurement_summary_hash, measurement_summary_hash_size);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
-    );
+        );
     ptr += measurement_summary_hash_size;
 
     opaque_length = *(const uint16_t *)ptr;
@@ -217,7 +217,7 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
         opaque = ptr;
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Encap opaque (0x%x):\n", opaque_length));
         LIBSPDM_INTERNAL_DUMP_HEX(opaque, opaque_length);
-    );
+        );
     ptr += opaque_length;
 
     signature = ptr;

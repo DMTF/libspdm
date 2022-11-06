@@ -495,44 +495,6 @@ bool libspdm_calculate_th_hmac_for_finish_req(void *context,
 }
 #endif
 
-/**
- * This function generates the key exchange signature based upon TH.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  The session info of an SPDM session.
- * @param  signature                    The buffer to store the key exchange signature.
- *
- * @retval true  key exchange signature is generated.
- * @retval false key exchange signature is not generated.
- **/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*
  * This function calculates th1 hash.
  *
@@ -549,7 +511,6 @@ bool libspdm_calculate_th1_hash(void *context,
                                 uint8_t *th1_hash_data)
 {
     libspdm_context_t *spdm_context;
-    size_t hash_size;
     libspdm_session_info_t *session_info;
     bool result;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -558,15 +519,18 @@ bool libspdm_calculate_th1_hash(void *context,
     uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     size_t th_curr_data_size;
 #endif
-
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) || (LIBSPDM_DEBUG_PRINT_ENABLE)
+    size_t hash_size;
+#endif
     spdm_context = context;
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Calc th1 hash ...\n"));
 
     session_info = spdm_session_info;
 
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) || (LIBSPDM_DEBUG_PRINT_ENABLE)
     hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
-
+#endif
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     if (!session_info->use_psk) {
         if (is_requester) {
@@ -629,7 +593,6 @@ bool libspdm_calculate_th2_hash(void *context,
                                 uint8_t *th2_hash_data)
 {
     libspdm_context_t *spdm_context;
-    size_t hash_size;
     libspdm_session_info_t *session_info;
     bool result;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -640,6 +603,9 @@ bool libspdm_calculate_th2_hash(void *context,
     uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     size_t th_curr_data_size;
 #endif
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) || (LIBSPDM_DEBUG_PRINT_ENABLE)
+    size_t hash_size;
+#endif
 
     spdm_context = context;
 
@@ -647,7 +613,9 @@ bool libspdm_calculate_th2_hash(void *context,
 
     session_info = spdm_session_info;
 
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) || (LIBSPDM_DEBUG_PRINT_ENABLE)
     hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+#endif
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     if (!session_info->use_psk) {
