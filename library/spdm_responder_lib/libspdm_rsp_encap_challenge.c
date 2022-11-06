@@ -184,7 +184,7 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
         const void *measurement_summary_hash;
         measurement_summary_hash = ptr;
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Encap measurement_summary_hash (0x%x) - ",
-                        measurement_summary_hash_size));
+                       measurement_summary_hash_size));
         LIBSPDM_INTERNAL_DUMP_DATA(measurement_summary_hash, measurement_summary_hash_size);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
         );
