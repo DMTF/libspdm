@@ -51,7 +51,7 @@ time_t _time64(time_t *t)
     return 0;
 }
 
-struct tm *mbedtls_platform_gmtime_r(const time_t *tt, struct tm *tm_buf)
+struct tm *gmtime_r(const time_t *timep, struct tm *result)
 {
     LIBSPDM_ASSERT(false);
     return NULL;
