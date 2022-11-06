@@ -40,7 +40,6 @@ SET(src_cryptlib_mbedtls
     rand/rand.c
     sys_call/mem_allocation.c
     sys_call/crt_wrapper_host.c
-    sys_call/timer_wrapper_host.c
 )
 
 ADD_LIBRARY(cryptlib_mbedtls STATIC ${src_cryptlib_mbedtls})
