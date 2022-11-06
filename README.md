@@ -57,6 +57,28 @@
 
    Support to be linked by other language. For example, [JAVA verifier](https://github.com/altera-opensource/verifier).
 
+7) Supported Architecture and Cross-Compiler based on X64 platform.
+
+| Windows System  | ia32 | x64 | arm | aarch64 | riscv32 | riscv64 |
+| --------------- | ---- | --- | --- | ------- | ------- | ------- |
+| [VS2015](https://visualstudio.microsoft.com/vs/older-downloads/) |  cl  |  cl |  -  |    -    |    -    |    -    |
+| [VS2019](https://visualstudio.microsoft.com/vs/older-downloads/) |  cl  |  cl |  -  |    -    |    -    |    -    |
+| [VS2022](https://visualstudio.microsoft.com/vs/older-downloads/) |  cl  |  cl |  -  |    -    |    -    |    -    |
+| [ARM_DS2022](https://developer.arm.com/downloads/-/arm-development-studio-downloads) |  -   |  -  | armclang | armclang |    -    |    -    |
+| [GCC](https://gcc.gnu.org/) | gcc  | gcc |  -  |    -    |    -    |    -    |
+| [CLANG](https://llvm.org/) | clang-cl | clang-cl |  -  |    -    |    -    |    -    |
+
+| Linux System    | ia32 | x64 | arm | aarch64 | riscv32 | riscv64 |
+| --------------- | ---- | --- | --- | ------- | ------- | ------- |
+| [GCC](https://gcc.gnu.org/) | gcc  | gcc |  -  |    -    |    -    |    -    |
+| [CLANG](https://llvm.org/) | clang|clang|  -  |    -    |    -    |    -    |
+| [ARM_DS2022](https://developer.arm.com/downloads/-/arm-development-studio-downloads) |  -   |  -  | armclang | armclang |    -    |    -    |
+| [ARM_GNU](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads) |  -   |  -  | arm-none-linux-gnueabihf-gcc | aarch64-none-linux-gnu-gcc |    -    |    -    |
+| [ARM_GCC](https://packages.ubuntu.com/bionic/gcc-arm-linux-gnueabi) |  -   |  -  | arm-linux-gnueabi-gcc |    -    |    -    |    -    |
+| [AARCH64_GCC](https://packages.ubuntu.com/bionic/gcc-aarch64-linux-gnu) |  -   |  -  |  -  | aarch64-linux-gnu-gcc |    -    |    -    |
+| [RISCV32_GCC](https://github.com/riscv/riscv-gnu-toolchain) |  -   |  -  |  -  |    -    | riscv32-unknown-linux-gnu-gcc |    -    |
+| [RISCV64_GCC](https://packages.ubuntu.com/bionic/gcc-riscv64-linux-gnu) |  -   |  -  |  -  |    -    |    -    | riscv64-linux-gnu-gcc |
+
 ## Documents
 
 1) Presentation
