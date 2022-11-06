@@ -7,7 +7,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
         if(TOOLCHAIN STREQUAL "ARM_DS2022")
             SET(CMAKE_EXE_LINKER_FLAGS "--target=aarch64-arm-none-eabi -nostdlib -flto -Wl,--entry,ModuleEntryPoint,--undefined=__udivti3")
         elseif(TOOLCHAIN STREQUAL "ARM_GNU")
-            SET(CMAKE_EXE_LINKER_FLAGS "-nostdlib -flto -Wl,--entry,ModuleEntryPoint")
+            SET(CMAKE_EXE_LINKER_FLAGS "-nostdlib -flto -Wl,--entry,ModuleEntryPoint,--undefined=__udivti3")
         elseif(TOOLCHAIN STREQUAL "AARCH64_GCC")
             SET(CMAKE_EXE_LINKER_FLAGS "-nostdlib -flto -Wl,--entry,ModuleEntryPoint")
         endif()
@@ -49,7 +49,7 @@ SET(test_size_of_spdm_requester_LIBRARY
     platform_lib_null
 )
 
-if(TOOLCHAIN STREQUAL "ARM_DS2022")
+if(TOOLCHAIN STREQUAL "ARM_DS2022" OR TOOLCHAIN STREQUAL "ARM_GNU")
     SET(test_size_of_spdm_requester_LIBRARY ${test_size_of_spdm_requester_LIBRARY} armbuild_lib)
 endif()
 
