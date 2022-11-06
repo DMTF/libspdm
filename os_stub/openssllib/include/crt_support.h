@@ -14,7 +14,7 @@
 
 #include "hal/base.h"
 #include "hal/library/memlib.h"
-#include "internal/hal/debuglib_internal.h"
+#include "hal/library/debuglib.h"
 #include <stddef.h>
 #if defined(_MSC_VER) && defined(__clang__)
 #include <corecrt.h>

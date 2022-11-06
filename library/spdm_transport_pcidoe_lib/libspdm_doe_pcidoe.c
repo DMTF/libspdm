@@ -6,7 +6,7 @@
 
 #include "library/spdm_transport_pcidoe_lib.h"
 #include "industry_standard/pcidoe.h"
-#include "internal/hal/debuglib_internal.h"
+#include "hal/library/debuglib.h"
 #include "hal/library/memlib.h"
 
 #define PCI_DOE_ALIGNMENT 4

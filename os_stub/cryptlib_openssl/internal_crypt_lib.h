@@ -14,7 +14,7 @@
 #include "hal/base.h"
 #include "hal/library/memlib.h"
 #include "library/malloclib.h"
-#include "internal/hal/debuglib_internal.h"
+#include "hal/library/debuglib.h"
 #include "library/cryptlib.h"
 
 #include "crt_support.h"

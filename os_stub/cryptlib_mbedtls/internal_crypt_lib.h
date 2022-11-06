@@ -14,7 +14,7 @@
 #include "hal/base.h"
 #include "hal/library/memlib.h"
 #include "library/malloclib.h"
-#include "internal/hal/debuglib_internal.h"
+#include "hal/library/debuglib.h"
 #include "hal/library/cryptlib.h"
 #include "spdm_crypt_ext_lib/cryptlib_ext.h"
 #include <stdio.h>

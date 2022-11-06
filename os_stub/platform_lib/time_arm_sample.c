@@ -12,7 +12,7 @@
 #include "hal/base.h"
 #include <stdlib.h>
 #include <errno.h>
-#include "internal/hal/debuglib_internal.h"
+#include "hal/library/debuglib.h"
 
 /**
  * Suspends the execution of the current thread until the time-out interval elapses.

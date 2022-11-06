@@ -9,7 +9,7 @@
  **/
 
 #include "base.h"
-#include "internal/hal/debuglib_internal.h"
+#include "hal/library/debuglib.h"
 #include "hal/library/memlib.h"
 
 /**

@@ -7,7 +7,13 @@
 #ifndef SPDM_LIB_CONFIG_H
 #define SPDM_LIB_CONFIG_H
 
-/* Enables assertions and debug printing. */
+/* Enables assertions and debug printing. When `LIBSPDM_DEBUG_ENABLE` is defined it overrides or
+ * sets the values of `LIBSPDM_DEBUG_PRINT_ENABLE`, `LIBSPDM_DEBUG_ASSERT_ENABLE`, and
+ * `LIBSPDM_BLOCK_ENABLE` to the value of `LIBSPDM_DEBUG_ENABLE`.
+ *
+ * Note that if this file is used with CMake and `DTARGET=Release` is defined, then all debugging
+ * is disabled.
+ */
 #ifndef LIBSPDM_DEBUG_ENABLE
 #define LIBSPDM_DEBUG_ENABLE 1
 #endif

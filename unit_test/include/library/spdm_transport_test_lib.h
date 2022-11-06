@@ -8,7 +8,7 @@
 #define __SPDM_TEST_TRANSPORT_LIB_H__
 
 #include "library/spdm_common_lib.h"
-#include "internal/hal/debuglib_internal.h"
+#include "hal/library/debuglib.h"
 #include "hal/library/memlib.h"
 
 #define LIBSPDM_TEST_MESSAGE_TYPE_SPDM 0x01

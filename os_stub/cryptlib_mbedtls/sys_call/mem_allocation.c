@@ -9,7 +9,7 @@
  **/
 
 #include "hal/base.h"
-#include "internal/hal/debuglib_internal.h"
+#include "hal/library/debuglib.h"
 #include "library/malloclib.h"
 #include <stddef.h>
 

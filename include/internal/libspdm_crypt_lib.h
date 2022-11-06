@@ -6,5 +6,5 @@
 
 #include "library/spdm_crypt_lib.h"
 #include "hal/library/cryptlib.h"
-#include "internal/hal/debuglib_internal.h"
+#include "hal/library/debuglib.h"
 #include "hal/library/memlib.h"
