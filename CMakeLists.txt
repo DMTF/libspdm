@@ -785,7 +785,7 @@ else()
         ADD_SUBDIRECTORY(unit_test/spdm_transport_test_lib)
         ADD_SUBDIRECTORY(unit_test/cmockalib)
 
-        if(TOOLCHAIN STREQUAL "ARM_DS2022")
+        if(TOOLCHAIN STREQUAL "ARM_DS2022" OR TOOLCHAIN STREQUAL "ARM_GNU")
         ADD_SUBDIRECTORY(os_stub/armbuild_lib)
         endif()
 
