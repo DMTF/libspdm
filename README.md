@@ -76,7 +76,7 @@
 | [ARM_GNU](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads) |  -   |  -  | arm-none-linux-gnueabihf-gcc | aarch64-none-linux-gnu-gcc |    -    |    -    |
 | [ARM_GCC](https://packages.ubuntu.com/bionic/gcc-arm-linux-gnueabi) |  -   |  -  | arm-linux-gnueabi-gcc |    -    |    -    |    -    |
 | [AARCH64_GCC](https://packages.ubuntu.com/bionic/gcc-aarch64-linux-gnu) |  -   |  -  |  -  | aarch64-linux-gnu-gcc |    -    |    -    |
-| [RISCV32_GCC](https://github.com/riscv/riscv-gnu-toolchain) |  -   |  -  |  -  |    -    | riscv32-unknown-linux-gnu-gcc |    -    |
+| [RISCV_GNU](https://github.com/riscv/riscv-gnu-toolchain) |  -   |  -  |  -  |    -    | riscv32-unknown-linux-gnu-gcc | riscv64-unknown-linux-gnu-gcc |
 | [RISCV64_GCC](https://packages.ubuntu.com/bionic/gcc-riscv64-linux-gnu) |  -   |  -  |  -  |    -    |    -    | riscv64-linux-gnu-gcc |
 
 ## Documents
