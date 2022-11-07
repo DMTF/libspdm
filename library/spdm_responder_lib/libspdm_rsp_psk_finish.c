@@ -65,7 +65,7 @@ bool libspdm_verify_psk_finish_req_hmac(libspdm_context_t *spdm_context,
     }
 #endif
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Calc th_curr hmac - "));
-    libspdm_internal_dump_data(hmac_data, hash_size);
+    LIBSPDM_INTERNAL_DUMP_DATA(hmac_data, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
     if (libspdm_const_compare_mem(hmac, hmac_data, hash_size) != 0) {

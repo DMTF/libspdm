@@ -201,7 +201,7 @@ static libspdm_return_t libspdm_try_get_digest(void *context, const uint32_t *se
 
     for (index = 0; index < digest_count; index++) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "digest (0x%x) - ", index));
-        libspdm_internal_dump_data(&spdm_response->digest[digest_size * index], digest_size);
+        LIBSPDM_INTERNAL_DUMP_DATA(&spdm_response->digest[digest_size * index], digest_size);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     }
 

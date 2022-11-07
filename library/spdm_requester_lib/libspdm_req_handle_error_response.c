@@ -392,7 +392,7 @@ libspdm_return_t libspdm_handle_error_large_response(
                              large_response, large_response_size);
             *inout_response_size = large_response_size;
 
-            libspdm_internal_dump_hex(large_response, large_response_size);
+            LIBSPDM_INTERNAL_DUMP_HEX(large_response, large_response_size);
         }
     }
 

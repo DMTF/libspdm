@@ -165,7 +165,7 @@ bool libspdm_calculate_l1l2(void *context, void *session_info,
         /* Need append VCA since 1.2 script*/
 
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_a data :\n"));
-        libspdm_internal_dump_hex(
+        LIBSPDM_INTERNAL_DUMP_HEX(
             libspdm_get_managed_buffer(&spdm_context->transcript.message_a),
             libspdm_get_managed_buffer_size(&spdm_context->transcript.message_a));
         status = libspdm_append_managed_buffer(
@@ -179,7 +179,7 @@ bool libspdm_calculate_l1l2(void *context, void *session_info,
 
     if (spdm_session_info == NULL) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_m data :\n"));
-        libspdm_internal_dump_hex(
+        LIBSPDM_INTERNAL_DUMP_HEX(
             libspdm_get_managed_buffer(&spdm_context->transcript.message_m),
             libspdm_get_managed_buffer_size(&spdm_context->transcript.message_m));
         status = libspdm_append_managed_buffer(
@@ -188,7 +188,7 @@ bool libspdm_calculate_l1l2(void *context, void *session_info,
             libspdm_get_managed_buffer_size(&spdm_context->transcript.message_m));
     } else {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "use message_m in session :\n"));
-        libspdm_internal_dump_hex(
+        LIBSPDM_INTERNAL_DUMP_HEX(
             libspdm_get_managed_buffer(&spdm_session_info->session_transcript.message_m),
             libspdm_get_managed_buffer_size(&spdm_session_info->session_transcript.message_m));
         status = libspdm_append_managed_buffer(
@@ -212,7 +212,7 @@ bool libspdm_calculate_l1l2(void *context, void *session_info,
         return false;
     }
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "l1l2 hash - "));
-        libspdm_internal_dump_data(hash_data, hash_size);
+        LIBSPDM_INTERNAL_DUMP_DATA(hash_data, hash_size);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
         );
 
@@ -258,7 +258,7 @@ bool libspdm_calculate_l1l2_hash(void *context, void *session_info,
         return false;
     }
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "l1l2 hash - "));
-    libspdm_internal_dump_data(l1l2_hash, hash_size);
+    LIBSPDM_INTERNAL_DUMP_DATA(l1l2_hash, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
     *l1l2_hash_size = hash_size;
@@ -291,7 +291,7 @@ static bool libspdm_calculate_m1m2(void *context, bool is_mut,
         if ((spdm_context->connection_info.version >> SPDM_VERSION_NUMBER_SHIFT_BIT) >
             SPDM_MESSAGE_VERSION_11) {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_a data :\n"));
-            libspdm_internal_dump_hex(
+            LIBSPDM_INTERNAL_DUMP_HEX(
                 libspdm_get_managed_buffer(&spdm_context->transcript.message_a),
                 libspdm_get_managed_buffer_size(&spdm_context->transcript.message_a));
             status = libspdm_append_managed_buffer(
@@ -304,7 +304,7 @@ static bool libspdm_calculate_m1m2(void *context, bool is_mut,
         }
 
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_mut_b data :\n"));
-        libspdm_internal_dump_hex(
+        LIBSPDM_INTERNAL_DUMP_HEX(
             libspdm_get_managed_buffer(&spdm_context->transcript.message_mut_b),
             libspdm_get_managed_buffer_size(&spdm_context->transcript.message_mut_b));
         status = libspdm_append_managed_buffer(
@@ -316,7 +316,7 @@ static bool libspdm_calculate_m1m2(void *context, bool is_mut,
         }
 
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_mut_c data :\n"));
-        libspdm_internal_dump_hex(
+        LIBSPDM_INTERNAL_DUMP_HEX(
             libspdm_get_managed_buffer(&spdm_context->transcript.message_mut_c),
             libspdm_get_managed_buffer_size(&spdm_context->transcript.message_mut_c));
         status = libspdm_append_managed_buffer(
@@ -339,13 +339,13 @@ static bool libspdm_calculate_m1m2(void *context, bool is_mut,
             return false;
         }
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m1m2 Mut hash - "));
-            libspdm_internal_dump_data(hash_data, hash_size);
+            LIBSPDM_INTERNAL_DUMP_DATA(hash_data, hash_size);
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
             );
 
     } else {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_a data :\n"));
-        libspdm_internal_dump_hex(
+        LIBSPDM_INTERNAL_DUMP_HEX(
             libspdm_get_managed_buffer(&spdm_context->transcript.message_a),
             libspdm_get_managed_buffer_size(&spdm_context->transcript.message_a));
         status = libspdm_append_managed_buffer(
@@ -357,7 +357,7 @@ static bool libspdm_calculate_m1m2(void *context, bool is_mut,
         }
 
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_b data :\n"));
-        libspdm_internal_dump_hex(
+        LIBSPDM_INTERNAL_DUMP_HEX(
             libspdm_get_managed_buffer(&spdm_context->transcript.message_b),
             libspdm_get_managed_buffer_size(&spdm_context->transcript.message_b));
         status = libspdm_append_managed_buffer(
@@ -369,7 +369,7 @@ static bool libspdm_calculate_m1m2(void *context, bool is_mut,
         }
 
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_c data :\n"));
-        libspdm_internal_dump_hex(
+        LIBSPDM_INTERNAL_DUMP_HEX(
             libspdm_get_managed_buffer(&spdm_context->transcript.message_c),
             libspdm_get_managed_buffer_size(&spdm_context->transcript.message_c));
         status = libspdm_append_managed_buffer(
@@ -392,7 +392,7 @@ static bool libspdm_calculate_m1m2(void *context, bool is_mut,
             return false;
         }
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m1m2 hash - "));
-            libspdm_internal_dump_data(hash_data, hash_size);
+            LIBSPDM_INTERNAL_DUMP_DATA(hash_data, hash_size);
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
             );
     }
@@ -429,7 +429,7 @@ static bool libspdm_calculate_m1m2_hash(void *context, bool is_mut,
             return false;
         }
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m1m2 Mut hash - "));
-        libspdm_internal_dump_data(m1m2_hash, hash_size);
+        LIBSPDM_INTERNAL_DUMP_DATA(m1m2_hash, hash_size);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
     } else {
@@ -439,7 +439,7 @@ static bool libspdm_calculate_m1m2_hash(void *context, bool is_mut,
             return false;
         }
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m1m2 hash - "));
-        libspdm_internal_dump_data(m1m2_hash, hash_size);
+        LIBSPDM_INTERNAL_DUMP_DATA(m1m2_hash, hash_size);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     }
 

@@ -396,13 +396,15 @@ typedef struct {
 #endif /* LIBSPDM_ENABLE_MSG_LOG */
 } libspdm_context_t;
 
+#if LIBSPDM_DEBUG_PRINT_ENABLE
 /**
  * This function dump raw data.
  *
  * @param  data  raw data
  * @param  size  raw data size
  **/
-void libspdm_internal_dump_hex_str(const uint8_t *data, size_t size);
+void LIBSPDM_INTERNAL_DUMP_HEX_str(const uint8_t *data, size_t size);
+#define LIBSPDM_INTERNAL_DUMP_HEX_STR(data, size) LIBSPDM_INTERNAL_DUMP_HEX_str(data, size)
 
 /**
  * This function dump raw data.
@@ -411,6 +413,7 @@ void libspdm_internal_dump_hex_str(const uint8_t *data, size_t size);
  * @param  size  raw data size
  **/
 void libspdm_internal_dump_data(const uint8_t *data, size_t size);
+#define LIBSPDM_INTERNAL_DUMP_DATA(data, size) libspdm_internal_dump_data(data, size)
 
 /**
  * This function dump raw data with colume format.
@@ -419,6 +422,13 @@ void libspdm_internal_dump_data(const uint8_t *data, size_t size);
  * @param  size  raw data size
  **/
 void libspdm_internal_dump_hex(const uint8_t *data, size_t size);
+#define LIBSPDM_INTERNAL_DUMP_HEX(data, size) libspdm_internal_dump_hex(data, size)
+
+#else /* LIBSPDM_DEBUG_PRINT_ENABLE */
+#define LIBSPDM_INTERNAL_DUMP_HEX(data, size)
+#define LIBSPDM_INTERNAL_DUMP_HEX_STR(data, size)
+#define LIBSPDM_INTERNAL_DUMP_DATA(data, size)
+#endif /* LIBSPDM_DEBUG_PRINT_ENABLE */
 
 /**
  * Append a new data buffer to the managed buffer.

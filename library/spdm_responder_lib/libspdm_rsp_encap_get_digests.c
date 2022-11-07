@@ -146,7 +146,7 @@ libspdm_return_t libspdm_process_encap_response_digest(
     digest = (const void *)(spdm_response + 1);
     for (index = 0; index < digest_count; index++) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "digest (0x%x) - ", index));
-        libspdm_internal_dump_data(&digest[digest_size * index], digest_size);
+        LIBSPDM_INTERNAL_DUMP_DATA(&digest[digest_size * index], digest_size);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     }
 
