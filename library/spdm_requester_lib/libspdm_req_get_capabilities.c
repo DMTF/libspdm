@@ -272,7 +272,7 @@ static libspdm_return_t libspdm_try_get_capabilities(libspdm_context_t *spdm_con
             goto receive_done;
         }
 
-        if (((spdm_response->flags & SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP) == 0) &&
+        if (((spdm_response->flags & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP) == 0) &&
             (spdm_response->data_transfer_size != spdm_response->max_spdm_msg_size)) {
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             goto receive_done;
