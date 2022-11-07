@@ -226,14 +226,14 @@ bool libspdm_validate_crypt_ec(void)
     public2_length = sizeof(public2);
 
     libspdm_my_print("- Context1 ... ");
-    ec1 = libspdm_ec_new_by_nid(LIBSPDM_CRYPTO_NID_SECP256R1);
+    ec1 = libspdm_ec_new_by_nid(LIBSPDM_CRYPTO_NID_ECDSA_NIST_P256);
     if (ec1 == NULL) {
         libspdm_my_print("[Fail]");
         return false;
     }
 
     libspdm_my_print("Context2 ... ");
-    ec2 = libspdm_ec_new_by_nid(LIBSPDM_CRYPTO_NID_SECP521R1);
+    ec2 = libspdm_ec_new_by_nid(LIBSPDM_CRYPTO_NID_ECDSA_NIST_P521);
     if (ec2 == NULL) {
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
@@ -319,14 +319,14 @@ bool libspdm_validate_crypt_ec(void)
     public2_length = sizeof(public2);
 
     libspdm_my_print("- Context1 ... ");
-    ec1 = libspdm_ec_new_by_nid(LIBSPDM_CRYPTO_NID_SECP256R1);
+    ec1 = libspdm_ec_new_by_nid(LIBSPDM_CRYPTO_NID_ECDSA_NIST_P256);
     if (ec1 == NULL) {
         libspdm_my_print("[Fail]");
         return false;
     }
 
     libspdm_my_print("Context2 ... ");
-    ec2 = libspdm_ec_new_by_nid(LIBSPDM_CRYPTO_NID_SECP256R1);
+    ec2 = libspdm_ec_new_by_nid(LIBSPDM_CRYPTO_NID_ECDSA_NIST_P256);
     if (ec2 == NULL) {
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
@@ -392,7 +392,7 @@ bool libspdm_validate_crypt_ec(void)
 
     libspdm_my_print("\nSet public and private key Testing:\n");
     libspdm_my_print("- Context1 ... ");
-    ec1 = libspdm_ec_new_by_nid(LIBSPDM_CRYPTO_NID_SECP256R1);
+    ec1 = libspdm_ec_new_by_nid(LIBSPDM_CRYPTO_NID_ECDSA_NIST_P256);
     if (ec1 == NULL) {
         libspdm_my_print("[Fail]");
         return false;

@@ -39,12 +39,15 @@ void *libspdm_ec_new_by_nid(size_t nid)
     }
     switch (nid) {
     case LIBSPDM_CRYPTO_NID_SECP256R1:
+    case LIBSPDM_CRYPTO_NID_ECDSA_NIST_P256:
         openssl_nid = NID_X9_62_prime256v1;
         break;
     case LIBSPDM_CRYPTO_NID_SECP384R1:
+    case LIBSPDM_CRYPTO_NID_ECDSA_NIST_P384:
         openssl_nid = NID_secp384r1;
         break;
     case LIBSPDM_CRYPTO_NID_SECP521R1:
+    case LIBSPDM_CRYPTO_NID_ECDSA_NIST_P521:
         openssl_nid = NID_secp521r1;
         break;
     default:
