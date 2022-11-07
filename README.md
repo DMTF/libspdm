@@ -55,6 +55,8 @@
 
    Support to be included in [OpenBMC](https://github.com/openbmc). It is in planning, see [SPDM Integration](https://www.youtube.com/watch?v=PmgXkLJYI-E).
 
+   Support to be linked by other language. For example, [JAVA verifier](https://github.com/altera-opensource/verifier).
+
 ## Documents
 
 1) Presentation
