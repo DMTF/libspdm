@@ -76,6 +76,27 @@ int memcmp(const void *buf1, const void *buf2, size_t count)
     return (int)libspdm_const_compare_mem(buf1, buf2, count);
 }
 
+#if defined(__clang__) && !defined(__APPLE__)
+
+/* Copies bytes between buffers */
+static __attribute__((__used__)) void *__memcpy(void *dest, const void *src,
+                                                unsigned int count)
+{
+    libspdm_copy_mem(dest, (size_t)count, src, (size_t)count);
+    return dest;
+}
+__attribute__((__alias__("__memcpy"))) void *memcpy(void *dest, const void *src,
+                                                    unsigned int count);
+
+#else
+/* Copies bytes between buffers */
+void *memcpy(void *dest, const void *src, unsigned int count)
+{
+    libspdm_copy_mem(dest, (size_t) count, src, (size_t)count);
+    return dest;
+}
+#endif
+
 int ascii_strcmp(const char *first_string, const char *second_string)
 {
     while ((*first_string != '\0') && (*first_string == *second_string)) {

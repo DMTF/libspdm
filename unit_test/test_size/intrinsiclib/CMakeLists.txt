@@ -14,18 +14,18 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     SET(src_intrinsiclib
-        copy_mem.c
-        memory_intrinsics.c        
+        compiler_stub.c
+        memory_intrinsics.c
     )
 elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
     if(ARCH STREQUAL "x64")
         SET(src_intrinsiclib
-            copy_mem.c
-            memory_intrinsics.c        
+            compiler_stub.c
+            memory_intrinsics.c
         )
     elseif(ARCH STREQUAL "ia32")
         SET(src_intrinsiclib
-            copy_mem.c
+            compiler_stub.c
             memory_intrinsics.c
             ia32/math_div_s64x64.c
             ia32/math_div_s64x64_remainder.c
