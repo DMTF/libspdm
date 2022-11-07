@@ -4,182 +4,111 @@
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
-/** @file
- * Provides services to print debug and assert messages to a debug output device.
- *
- * The Debug library supports debug print and asserts based on a combination of macros and code.
- * The debug library can be turned on and off so that the debug code does not increase the size of an image.
- *
- * Note that a reserved macro named MDEPKG_NDEBUG is introduced for the intention
- * of size reduction when compiler optimization is disabled. If MDEPKG_NDEBUG is
- * defined, then debug and assert related macros wrapped by it are the NULL implementations.
- **/
-
 #ifndef DEBUG_LIB_H
 #define DEBUG_LIB_H
 
-/* Declare bits for PcdDebugPrintErrorLevel and the error_level parameter of libspdm_debug_print()*/
-#define LIBSPDM_DEBUG_INFO 0x00000040 /* Informational debug messages*/
-/* Detailed debug messages that may significantly impact boot performance*/
-#define LIBSPDM_DEBUG_VERBOSE 0x00400000
-#define LIBSPDM_DEBUG_ERROR 0x80000000 /* Error*/
+/** @file
+ * Provides services to print debug and assert messages to a debug output device.
+ *
+ * The debug library supports debug print and asserts based on a combination of macros and code.
+ * The debug library can be turned on and off so that the debug code does not increase the size of
+ * an image.
+ **/
+
+#include "internal/libspdm_lib_config.h"
+
+#if LIBSPDM_DEBUG_PRINT_ENABLE
+
+/* Declare bits for the error_level parameter of libspdm_debug_print(). */
+#define LIBSPDM_DEBUG_INFO 0x00000040
+#define LIBSPDM_DEBUG_ERROR 0x80000000
 
 /**
  * Prints a debug message to the debug output device if the specified error level is enabled.
  *
- * If any bit in error_level is also set in DebugPrintErrorLevelLib function
- * GetDebugPrintErrorLevel (), then print the message specified by format and the
- * associated variable argument list to the debug output device.
- *
- * If format is NULL, then ASSERT().
- *
- * @param  error_level  The error level of the debug message.
- * @param  format      The format string for the debug message to print.
- * @param  ...         The variable argument list whose contents are accessed
- *                    based on the format string specified by format.
- *
+ * @param  error_level  The error level of the debug message, either LIBSPDM_DEBUG_INFO or
+ *                      LIBSPDM_DEBUG_ERROR.
+ * @param  format       The format string for the debug message to print.
+ * @param  ...          The variable argument list whose contents are accessed
+ *                      based on the format string specified by format.
  **/
-void libspdm_debug_print(size_t error_level, const char *format, ...);
+extern void libspdm_debug_print(size_t error_level, const char *format, ...);
+#endif /* LIBSPDM_DEBUG_PRINT_ENABLE */
 
+#if LIBSPDM_DEBUG_ASSERT_ENABLE
 /**
  * Prints an assert message containing a filename, line number, and description.
  * This may be followed by a breakpoint or a dead loop.
  *
- * Print a message of the form "ASSERT <file_name>(<line_number>): <description>\n"
- * to the debug output device.  If DEBUG_PROPERTY_ASSERT_BREAKPOINT_ENABLED bit of
- * PcdDebugProperyMask is set then CpuBreakpoint() is called. Otherwise, if
- * DEBUG_PROPERTY_ASSERT_DEADLOOP_ENABLED bit of PcdDebugProperyMask is set then
- * CpuDeadLoop() is called.  If neither of these bits are set, then this function
- * returns immediately after the message is printed to the debug output device.
- * libspdm_debug_assert() must actively prevent recursion.  If libspdm_debug_assert() is called while
- * processing another libspdm_debug_assert(), then libspdm_debug_assert() must return immediately.
- *
- * If file_name is NULL, then a <file_name> string of "(NULL) Filename" is printed.
- * If description is NULL, then a <description> string of "(NULL) description" is printed.
- *
- * @param  file_name     The pointer to the name of the source file that generated the assert condition.
+ * @param  file_name     The pointer to the name of the source file that generated the assert
+ *                       condition.
  * @param  line_number   The line number in the source file that generated the assert condition
- * @param  description  The pointer to the description of the assert condition.
+ * @param  description   The pointer to the description of the assert condition.
  *
  **/
-void libspdm_debug_assert(const char *file_name, size_t line_number,
-                          const char *description);
+extern void libspdm_debug_assert(const char *file_name, size_t line_number,
+                                 const char *description);
+#endif /* LIBSPDM_DEBUG_ASSERT_ENABLE */
 
 /**
- * Internal worker macro that calls libspdm_debug_assert().
- *
- * This macro calls libspdm_debug_assert(), passing in the filename, line number, and an
- * expression that evaluated to false.
- *
- * @param  expression  Boolean expression that evaluated to false
- *
- **/
-#define _LIBSPDM_ASSERT(expression) libspdm_debug_assert(__FILE__, __LINE__, #expression)
-
-/**
- * Internal worker macro that calls libspdm_debug_print().
- *
- * This macro calls libspdm_debug_print() passing in the debug error level, a format
- * string, and a variable argument list.
- * __VA_ARGS__ is not supported by EBC compiler, Microsoft Visual Studio .NET 2003
- * and Microsoft Windows Server 2003 Driver Development Kit (Microsoft WINDDK) version 3790.1830.
- *
- * @param  expression  expression containing an error level, a format string,
- *                    and a variable argument list based on the format string.
- *
- **/
-
-#define _LIBSPDM_DEBUG_PRINT(PrintLevel, ...)                                          \
-    do {                                                                   \
-        libspdm_debug_print(PrintLevel, ## __VA_ARGS__);                        \
-    } while (false)
-#define _LIBSPDM_DEBUG(expression) _LIBSPDM_DEBUG_PRINT expression
-
-/**
- * Macro that calls libspdm_debug_assert() if an expression evaluates to false.
- *
- * If MDEPKG_NDEBUG is not defined and the DEBUG_PROPERTY_DEBUG_ASSERT_ENABLED
- * bit of PcdDebugProperyMask is set, then this macro evaluates the Boolean
- * expression specified by expression.  If expression evaluates to false, then
- * libspdm_debug_assert() is called passing in the source filename, source line number,
- * and expression.
+ * LIBSPDM_ASSERT(expression) - Macro that calls libspdm_debug_assert() if an expression evaluates
+ *                              to false. It is enabled through the LIBSPDM_DEBUG_ASSERT_ENABLE
+ *                              macro.
  *
  * @param  expression  Boolean expression.
- *
  **/
-#if !defined(MDEPKG_NDEBUG)
-#define LIBSPDM_ASSERT(expression)                                                     \
-    do {                                                                   \
-        if (!(expression)) {                                           \
-            _LIBSPDM_ASSERT(expression);                                   \
-        }                                                              \
+#if LIBSPDM_DEBUG_ASSERT_ENABLE
+#define LIBSPDM_ASSERT(expression) \
+    do { \
+        if (!(expression)) { \
+            libspdm_debug_assert(__FILE__, __LINE__, #expression); \
+        } \
     } while (false)
 #else
 #define LIBSPDM_ASSERT(expression)
 #endif
 
 /**
- * Macro that calls libspdm_debug_print().
+ * LIBSPDM_DEBUG(level, format_string, argument_list...) - Macro that calls libspdm_debug_print().
+ *                                                         It is enabled through the
+ *                                                         LIBSPDM_PRINT_ENABLE macro.
+ * @param print_level    Either LIBSPDM_DEBUG_INFO or LIBSPDM_DEBUG_ERROR.
+ * @param format_string  Formatted string.
+ * @param argument_list  List of arguments.
  *
- * If MDEPKG_NDEBUG is not defined and the DEBUG_PROPERTY_DEBUG_PRINT_ENABLED
- * bit of PcdDebugProperyMask is set, then this macro passes expression to
- * libspdm_debug_print().
- *
- * @param  expression  expression containing an error level, a format string,
- *                    and a variable argument list based on the format string.
- *
- *
+ * Note that format_string and argument_list are the same as those defined by the C printf function.
  **/
-#if !defined(MDEPKG_NDEBUG)
-#define LIBSPDM_DEBUG(expression)                                                      \
-    do {                                                                   \
-        _LIBSPDM_DEBUG(expression);                                            \
+#if LIBSPDM_DEBUG_PRINT_ENABLE
+#define LIBSPDM_DEBUG(expression) \
+    do { \
+        LIBSPDM_DEBUG_INTERNAL(expression); \
     } while (false)
+
+#define LIBSPDM_DEBUG_PRINT_INTERNAL(print_level, ...) \
+    do { \
+        libspdm_debug_print(print_level, ## __VA_ARGS__); \
+    } while (false)
+
+#define LIBSPDM_DEBUG_INTERNAL(expression) LIBSPDM_DEBUG_PRINT_INTERNAL expression
 #else
 #define LIBSPDM_DEBUG(expression)
 #endif
 
 /**
- * Macro that marks the beginning of debug source code.
+ * LIBSPDM_DEBUG_CODE(expression) - Macro that defines a section of debug source code.
+ *                                  It is enabled through the LIBSPDM_BLOCK_ENABLE macro.
  *
- * If the DEBUG_PROPERTY_DEBUG_CODE_ENABLED bit of PcdDebugProperyMask is set,
- * then this macro marks the beginning of source code that is included in a module.
- * Otherwise, the source lines between LIBSPDM_LIBSPDM_DEBUG_CODE_BEGIN() and LIBSPDM_LIBSPDM_DEBUG_CODE_END()
- * are not included in a module.
- *
+ * @param expression  One or more lines of expressions that are used for debugging and should not
+ *                    affect the behavior of functional code.
  **/
-#define LIBSPDM_DEBUG_CODE_BEGIN()                                                     \
-    do {                                                                   \
-        uint8_t __debug_code_local
-
-/**
- * The macro that marks the end of debug source code.
- *
- * If the DEBUG_PROPERTY_DEBUG_CODE_ENABLED bit of PcdDebugProperyMask is set,
- * then this macro marks the end of source code that is included in a module.
- * Otherwise, the source lines between LIBSPDM_LIBSPDM_DEBUG_CODE_BEGIN() and LIBSPDM_LIBSPDM_DEBUG_CODE_END()
- * are not included in a module.
- *
- **/
-#define LIBSPDM_DEBUG_CODE_END()                                                       \
-    __debug_code_local = 0;                                                \
-    __debug_code_local++;                                                  \
-    }                                                                      \
-    while (false)
-
-/**
- * The macro that declares a section of debug source code.
- *
- * If the DEBUG_PROPERTY_DEBUG_CODE_ENABLED bit of PcdDebugProperyMask is set,
- * then the source code specified by expression is included in a module.
- * Otherwise, the source specified by expression is not included in a module.
- *
- **/
-
-#if !defined(MDEPKG_NDEBUG)
-#define LIBSPDM_DEBUG_CODE(expression)                                                 \
-    LIBSPDM_DEBUG_CODE_BEGIN();                                                    \
-    expression LIBSPDM_DEBUG_CODE_END()
+#if LIBSPDM_DEBUG_BLOCK_ENABLE
+#define LIBSPDM_DEBUG_CODE(expression) \
+    do { \
+        uint8_t __debug_code_local; \
+        expression \
+        __debug_code_local = 0; \
+            __debug_code_local++; \
+    } while (false)
 #else
 #define LIBSPDM_DEBUG_CODE(expression)
 #endif

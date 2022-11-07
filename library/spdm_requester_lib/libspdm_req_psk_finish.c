@@ -74,7 +74,7 @@ bool libspdm_generate_psk_exchange_req_hmac(libspdm_context_t *spdm_context,
     }
 #endif
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "th_curr hmac - "));
-    libspdm_internal_dump_data(calc_hmac_data, hash_size);
+    LIBSPDM_INTERNAL_DUMP_DATA(calc_hmac_data, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
     libspdm_copy_mem(hmac, hash_size, calc_hmac_data, hash_size);

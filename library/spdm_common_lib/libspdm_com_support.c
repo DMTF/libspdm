@@ -6,13 +6,8 @@
 
 #include "internal/libspdm_common_lib.h"
 
-/**
- * This function dump raw data.
- *
- * @param  data  raw data
- * @param  size  raw data size
- **/
-void libspdm_internal_dump_hex_str(const uint8_t *data, size_t size)
+#if LIBSPDM_DEBUG_PRINT_ENABLE
+void LIBSPDM_INTERNAL_DUMP_HEX_str(const uint8_t *data, size_t size)
 {
     size_t index;
     for (index = 0; index < size; index++) {
@@ -20,12 +15,6 @@ void libspdm_internal_dump_hex_str(const uint8_t *data, size_t size)
     }
 }
 
-/**
- * This function dump raw data.
- *
- * @param  data  raw data
- * @param  size  raw data size
- **/
 void libspdm_internal_dump_data(const uint8_t *data, size_t size)
 {
     size_t index;
@@ -34,12 +23,6 @@ void libspdm_internal_dump_data(const uint8_t *data, size_t size)
     }
 }
 
-/**
- * This function dump raw data with colume format.
- *
- * @param  data  raw data
- * @param  size  raw data size
- **/
 void libspdm_internal_dump_hex(const uint8_t *data, size_t size)
 {
     size_t index;
@@ -52,16 +35,17 @@ void libspdm_internal_dump_hex(const uint8_t *data, size_t size)
     left = size % COLUMN_SIZE;
     for (index = 0; index < count; index++) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "%04x: ", index * COLUMN_SIZE));
-        libspdm_internal_dump_data(data + index * COLUMN_SIZE, COLUMN_SIZE);
+        LIBSPDM_INTERNAL_DUMP_DATA(data + index * COLUMN_SIZE, COLUMN_SIZE);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     }
 
     if (left != 0) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "%04x: ", index * COLUMN_SIZE));
-        libspdm_internal_dump_data(data + index * COLUMN_SIZE, left);
+        LIBSPDM_INTERNAL_DUMP_DATA(data + index * COLUMN_SIZE, left);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     }
 }
+#endif /* LIBSPDM_DEBUG_PRINT_ENABLE */
 
 /**
  * Reads a 24-bit value from memory that may be unaligned.
