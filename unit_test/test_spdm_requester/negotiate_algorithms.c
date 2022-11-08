@@ -1715,6 +1715,7 @@ int libspdm_requester_negotiate_algorithms_test_main(void)
         cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case33),
         cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case32),
         cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case33),
+        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case34),
     };
 
     libspdm_setup_test_context(&m_libspdm_requester_negotiate_algorithms_test_context);
