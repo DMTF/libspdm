@@ -44,6 +44,7 @@ SET(src_test_spdm_requester
     chunk_send.c
     error_test/get_version_err.c
     error_test/get_capabilities_err.c
+    error_test/negotiate_algorithms_err.c
     ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/common.c
     ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/algo.c
     ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/support.c

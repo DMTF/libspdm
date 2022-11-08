@@ -1252,4 +1252,17 @@ uint64_t libspdm_read_uint64(const uint8_t *buffer);
  **/
 void libspdm_write_uint64(uint8_t *buffer, uint64_t value);
 
+/**
+ * Determine if bitmask has at most one bit set.
+ *
+ * @param mask  The bitmask to be tested.
+ *
+ * @return true   At most one bit is set.
+ * @return false  More than one bit is set.
+ */
+static inline bool libspdm_onehot0(uint32_t mask)
+{
+    return !mask || !(mask & (mask - 1));
+}
+
 #endif /* SPDM_COMMON_LIB_INTERNAL_H */
