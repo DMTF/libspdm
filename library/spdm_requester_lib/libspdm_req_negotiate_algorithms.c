@@ -188,6 +188,22 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
         status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
     }
+    if (!libspdm_onehot0(spdm_response->measurement_specification_sel)) {
+        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+        goto receive_done;
+    }
+    if (!libspdm_onehot0(spdm_response->measurement_hash_algo)) {
+        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+        goto receive_done;
+    }
+    if (!libspdm_onehot0(spdm_response->base_asym_sel)) {
+        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+        goto receive_done;
+    }
+    if (!libspdm_onehot0(spdm_response->base_hash_sel)) {
+        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+        goto receive_done;
+    }
     if (spdm_response->ext_asym_sel_count > 0) {
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
@@ -210,6 +226,7 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
                  sizeof(uint32_t) * spdm_response->ext_asym_sel_count +
                  sizeof(uint32_t) * spdm_response->ext_hash_sel_count);
     if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
+        /* header.param1 is implictly checked through spdm_response_size. */
         for (index = 0; index < spdm_response->header.param1; index++) {
             if ((size_t)spdm_response + spdm_response_size < (size_t)struct_table) {
                 status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
@@ -222,11 +239,19 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
             }
             fixed_alg_size = (struct_table->alg_count >> 4) & 0xF;
             ext_alg_count = struct_table->alg_count & 0xF;
+            if ((struct_table->alg_type < 2) || (struct_table->alg_type > 5)) {
+                status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                goto receive_done;
+            }
             if (fixed_alg_size != 2) {
                 status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
                 goto receive_done;
             }
             if (ext_alg_count > 0) {
+                status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                goto receive_done;
+            }
+            if (!libspdm_onehot0(struct_table->alg_supported)) {
                 status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
                 goto receive_done;
             }
@@ -242,6 +267,7 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
                          sizeof(uint32_t) * ext_alg_count);
         }
     }
+
     spdm_response_size = (size_t)struct_table - (size_t)spdm_response;
     if (spdm_response_size != spdm_response->length) {
         status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
