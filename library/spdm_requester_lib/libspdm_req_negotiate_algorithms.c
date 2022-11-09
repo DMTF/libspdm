@@ -239,7 +239,9 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
             }
             fixed_alg_size = (struct_table->alg_count >> 4) & 0xF;
             ext_alg_count = struct_table->alg_count & 0xF;
-            if ((struct_table->alg_type < 2) || (struct_table->alg_type > 5)) {
+            if ((struct_table->alg_type < SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_DHE) ||
+                (struct_table->alg_type >
+                 SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE)) {
                 status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
                 goto receive_done;
             }
