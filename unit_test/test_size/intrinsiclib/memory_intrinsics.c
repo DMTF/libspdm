@@ -50,7 +50,23 @@ void *memset(void *dest, int ch, size_t count)
 
 void *memmove(void *dest, const void *src, size_t count)
 {
-    libspdm_copy_mem(dest, count, src, count);
+    unsigned char        *d;
+    unsigned char const  *s;
+
+    d = dest;
+    s = src;
+
+    if (d < s) {
+        while (count-- != 0) {
+            *d++ = *s++;
+        }
+    } else {
+        d += count;
+        s += count;
+        while (count-- != 0) {
+            *--d = *--s;
+        }
+    }
     return dest;
 }
 
