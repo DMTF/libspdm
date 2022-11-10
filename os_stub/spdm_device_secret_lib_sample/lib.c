@@ -29,7 +29,7 @@
 #include "spdm_device_secret_lib_internal.h"
 
 #ifndef LIBSPDM_PRIVATE_KEY_USE_PEM
-#define LIBSPDM_PRIVATE_KEY_USE_PEM 0
+#define LIBSPDM_PRIVATE_KEY_USE_PEM 1
 #endif
 
 #if !LIBSPDM_PRIVATE_KEY_USE_PEM
@@ -538,6 +538,7 @@ bool libspdm_get_responder_private_key_from_raw_data(uint32_t base_asym_algo, vo
 #endif /*LIBSPDM_ECDSA_SUPPORT*/
 
     switch (base_asym_algo) {
+#if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048:
         rsa_n = m_libspdm_rsa2048_res_n;
@@ -565,6 +566,9 @@ bool libspdm_get_responder_private_key_from_raw_data(uint32_t base_asym_algo, vo
         rsa_e_size = sizeof(m_libspdm_rsa4096_res_e);
         rsa_d_size = sizeof(m_libspdm_rsa4096_res_d);
         break;
+#endif /* (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT) */
+
+#if LIBSPDM_ECDSA_SUPPORT
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
         ec_nid = LIBSPDM_CRYPTO_NID_ECDSA_NIST_P256;
         ec_public = m_libspdm_ec256_responder_public_key;
@@ -586,6 +590,7 @@ bool libspdm_get_responder_private_key_from_raw_data(uint32_t base_asym_algo, vo
         ec_public_size = sizeof(m_libspdm_ec521_responder_public_key);
         ec_private_size = sizeof(m_libspdm_ec521_responder_private_key);
         break;
+#endif /*LIBSPDM_ECDSA_SUPPORT*/
     default:
         LIBSPDM_ASSERT(false);
         return false;
@@ -677,6 +682,7 @@ bool libspdm_get_requester_private_key_from_raw_data(uint32_t base_asym_algo, vo
 #endif /*LIBSPDM_ECDSA_SUPPORT*/
 
     switch (base_asym_algo) {
+#if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048:
         rsa_n = m_libspdm_rsa2048_req_n;
@@ -704,6 +710,9 @@ bool libspdm_get_requester_private_key_from_raw_data(uint32_t base_asym_algo, vo
         rsa_e_size = sizeof(m_libspdm_rsa4096_req_e);
         rsa_d_size = sizeof(m_libspdm_rsa4096_req_d);
         break;
+#endif /* (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT) */
+
+#if LIBSPDM_ECDSA_SUPPORT
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
         ec_nid = LIBSPDM_CRYPTO_NID_ECDSA_NIST_P256;
         ec_public = m_libspdm_ec256_requester_public_key;
@@ -725,6 +734,7 @@ bool libspdm_get_requester_private_key_from_raw_data(uint32_t base_asym_algo, vo
         ec_public_size = sizeof(m_libspdm_ec521_requester_public_key);
         ec_private_size = sizeof(m_libspdm_ec521_requester_private_key);
         break;
+#endif /*LIBSPDM_ECDSA_SUPPORT*/
     default:
         LIBSPDM_ASSERT(false);
         return false;

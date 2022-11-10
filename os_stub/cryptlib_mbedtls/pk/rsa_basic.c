@@ -97,6 +97,7 @@ bool libspdm_rsa_set_key(void *rsa_context, const libspdm_rsa_key_tag_t key_tag,
     if (big_number) {
         ret = mbedtls_mpi_read_binary(&value, big_number, bn_size);
         if (ret != 0) {
+            mbedtls_mpi_free(&value);
             return false;
         }
     }
@@ -130,6 +131,7 @@ bool libspdm_rsa_set_key(void *rsa_context, const libspdm_rsa_key_tag_t key_tag,
         break;
     }
 
+    mbedtls_mpi_free(&value);
     return ret == 0;
 }
 #endif /* (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT) */
