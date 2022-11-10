@@ -107,7 +107,7 @@ libspdm_return_t libspdm_start_session(void *context, bool use_psk,
         case 0:
             break;
         case SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED:
-#if !LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+#if !(LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP)
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                            "libspdm_start_session - unsupported mut_auth_requested - 0x%x\n",
                            session_info->mut_auth_requested));
@@ -267,7 +267,7 @@ libspdm_return_t libspdm_start_session_ex(void *context, bool use_psk,
         case 0:
             break;
         case SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED:
-#if !LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+#if !(LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP)
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                            "libspdm_start_session - unsupported mut_auth_requested - 0x%x\n",
                            session_info->mut_auth_requested));
