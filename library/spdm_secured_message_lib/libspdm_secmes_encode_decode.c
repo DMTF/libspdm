@@ -234,7 +234,7 @@ libspdm_return_t libspdm_encode_secured_message(
         dec_msg = (uint8_t *)enc_msg_header;
         tag = (uint8_t *)record_header1 + record_header_size +
               cipher_text_size;
-
+LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "encrypt session_type is  LIBSPDM_SESSION_TYPE_ENC_MAC:\n"));
         result = libspdm_aead_encryption(
             secured_message_context->secured_message_version,
             secured_message_context->aead_cipher_suite, key,
@@ -273,7 +273,7 @@ libspdm_return_t libspdm_encode_secured_message(
         a_data = (uint8_t *)record_header1;
         tag = (uint8_t *)record_header1 + record_header_size +
               app_message_size;
-
+LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "encrypt session_type is  LIBSPDM_SESSION_TYPE_MAC_ONLY:\n"));
         result = libspdm_aead_encryption(
             secured_message_context->secured_message_version,
             secured_message_context->aead_cipher_suite, key,
@@ -512,6 +512,7 @@ libspdm_return_t libspdm_decode_secured_message(
         enc_msg_header = (void *)dec_msg;
         tag = (const uint8_t *)record_header1 + record_header_size +
               cipher_text_size;
+LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "decrypt session_type is  LIBSPDM_SESSION_TYPE_ENC_MAC:\n"));
         result = libspdm_aead_decryption(
             secured_message_context->secured_message_version,
             secured_message_context->aead_cipher_suite, key,
@@ -532,6 +533,7 @@ libspdm_return_t libspdm_decode_secured_message(
                 if (!result) {
                     return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
                 }
+LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "decode again\n"));
                 status = libspdm_decode_secured_message(
                     spdm_secured_message_context, session_id,
                     is_requester, secured_message_size,
@@ -607,6 +609,7 @@ libspdm_return_t libspdm_decode_secured_message(
         a_data = (uint8_t *)record_header1;
         tag = (uint8_t *)record_header1 + record_header_size +
               record_header2->length - aead_tag_size;
+LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "decrypt session_type is  LIBSPDM_SESSION_TYPE_MAC_ONLY:\n"));
         result = libspdm_aead_decryption(
             secured_message_context->secured_message_version,
             secured_message_context->aead_cipher_suite, key,
@@ -628,6 +631,7 @@ libspdm_return_t libspdm_decode_secured_message(
                 if (!result) {
                     return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
                 }
+LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "decode again\n"));
                 status = libspdm_decode_secured_message(
                     spdm_secured_message_context, session_id,
                     is_requester, secured_message_size,

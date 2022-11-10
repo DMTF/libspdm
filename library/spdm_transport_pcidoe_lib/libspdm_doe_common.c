@@ -121,6 +121,8 @@ libspdm_return_t libspdm_transport_pci_doe_encode_message(
             return status;
         }
 
+LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "encode secured message is:\n"));
+libspdm_internal_dump_hex(secured_message, secured_message_size);
         /* secured message to secured PCI DOE message*/
         status = libspdm_pci_doe_encode_message(
             session_id, secured_message_size, secured_message,
@@ -130,6 +132,9 @@ libspdm_return_t libspdm_transport_pci_doe_encode_message(
                            status));
             return status;
         }
+LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "encode secured PCI_DOE message is:\n"));
+libspdm_internal_dump_hex(transport_message, transport_message_size);
+
     } else {
         /* SPDM message to normal PCI DOE message*/
         status = libspdm_pci_doe_encode_message(NULL, message_size, message,
@@ -215,6 +220,8 @@ libspdm_return_t libspdm_transport_pci_doe_decode_message(
         return status;
     }
 
+LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "decode secured PCI_DOE message is:\n"));
+libspdm_internal_dump_hex(transport_message, transport_message_size);
     if (secured_message_session_id != NULL) {
         *session_id = secured_message_session_id;
 
@@ -229,6 +236,8 @@ libspdm_return_t libspdm_transport_pci_doe_decode_message(
             return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         }
 
+LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "decode secured message is:\n"));
+libspdm_internal_dump_hex(secured_message, secured_message_size);
         /* Secured message to message*/
         status = libspdm_decode_secured_message(
             secured_message_context, *secured_message_session_id,

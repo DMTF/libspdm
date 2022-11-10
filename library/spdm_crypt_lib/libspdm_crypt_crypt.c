@@ -3859,6 +3859,7 @@ libspdm_aead_encrypt_func libspdm_get_aead_enc_func(uint16_t aead_cipher_suite)
     switch (aead_cipher_suite) {
     case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_128_GCM:
 #if LIBSPDM_AEAD_GCM_SUPPORT == 1
+LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "use aead aes_128_gcm encrypt\n"));
         return libspdm_aead_aes_gcm_encrypt;
 #else
         LIBSPDM_ASSERT(false);
@@ -3866,6 +3867,7 @@ libspdm_aead_encrypt_func libspdm_get_aead_enc_func(uint16_t aead_cipher_suite)
 #endif
     case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_256_GCM:
 #if LIBSPDM_AEAD_GCM_SUPPORT == 1
+LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "use aead aes_256_gcm encrypt\n"));
         return libspdm_aead_aes_gcm_encrypt;
 #else
         LIBSPDM_ASSERT(false);
@@ -3873,6 +3875,7 @@ libspdm_aead_encrypt_func libspdm_get_aead_enc_func(uint16_t aead_cipher_suite)
 #endif
     case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_CHACHA20_POLY1305:
 #if LIBSPDM_AEAD_CHACHA20_POLY1305_SUPPORT == 1
+LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "use aead chacha20_poly1305 encrypt\n"));
         return libspdm_aead_chacha20_poly1305_encrypt;
 #else
         LIBSPDM_ASSERT(false);
@@ -3880,6 +3883,7 @@ libspdm_aead_encrypt_func libspdm_get_aead_enc_func(uint16_t aead_cipher_suite)
 #endif
     case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AEAD_SM4_GCM:
 #if LIBSPDM_AEAD_SM4_SUPPORT == 1
+LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "use aead sm4_gcm encrypt\n"));
         return libspdm_aead_sm4_gcm_encrypt;
 #else
         LIBSPDM_ASSERT(false);
@@ -3901,7 +3905,7 @@ libspdm_aead_encrypt_func libspdm_get_aead_enc_func(uint16_t aead_cipher_suite)
  * @param  key                          Pointer to the encryption key.
  * @param  key_size                      size of the encryption key in bytes.
  * @param  iv                           Pointer to the IV value.
- * @param  iv_size                       size of the IV value in bytes.
+ * @param  iv_size                  ke     size of the IV value in bytes.
  * @param  a_data                        Pointer to the additional authenticated data (AAD).
  * @param  a_data_size                    size of the additional authenticated data (AAD) in bytes.
  * @param  data_in                       Pointer to the input data buffer to be encrypted.
@@ -3928,6 +3932,15 @@ bool libspdm_aead_encryption(const spdm_version_number_t secured_message_version
     if (aead_enc_function == NULL) {
         return false;
     }
+LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "aead encrypt input:\n"));
+LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "key:\n"));
+libspdm_internal_dump_hex(key, key_size);
+LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "iv:\n"));
+libspdm_internal_dump_hex(iv, iv_size);
+LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "a_data:\n"));
+libspdm_internal_dump_hex(a_data, a_data_size);
+LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "data_in:\n"));
+libspdm_internal_dump_hex(data_in, data_in_size);
     return aead_enc_function(key, key_size, iv, iv_size, a_data,
                              a_data_size, data_in, data_in_size, tag_out,
                              tag_size, data_out, data_out_size);
@@ -3945,6 +3958,7 @@ libspdm_aead_decrypt_func libspdm_get_aead_dec_func(uint16_t aead_cipher_suite)
     switch (aead_cipher_suite) {
     case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_128_GCM:
 #if LIBSPDM_AEAD_GCM_SUPPORT == 1
+LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "use aead aes_128_gcm decrypt\n"));
         return libspdm_aead_aes_gcm_decrypt;
 #else
         LIBSPDM_ASSERT(false);
@@ -3952,6 +3966,7 @@ libspdm_aead_decrypt_func libspdm_get_aead_dec_func(uint16_t aead_cipher_suite)
 #endif
     case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_256_GCM:
 #if LIBSPDM_AEAD_GCM_SUPPORT == 1
+LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "use aead aes_256_gcm decrypt\n"));
         return libspdm_aead_aes_gcm_decrypt;
 #else
         LIBSPDM_ASSERT(false);
@@ -3959,6 +3974,7 @@ libspdm_aead_decrypt_func libspdm_get_aead_dec_func(uint16_t aead_cipher_suite)
 #endif
     case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_CHACHA20_POLY1305:
 #if LIBSPDM_AEAD_CHACHA20_POLY1305_SUPPORT == 1
+LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "use aead aes_256_gcm decrypt\n"));
         return libspdm_aead_chacha20_poly1305_decrypt;
 #else
         LIBSPDM_ASSERT(false);
@@ -3966,6 +3982,7 @@ libspdm_aead_decrypt_func libspdm_get_aead_dec_func(uint16_t aead_cipher_suite)
 #endif
     case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AEAD_SM4_GCM:
 #if LIBSPDM_AEAD_SM4_SUPPORT == 1
+LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "use aead sm4_gcm decrypt\n"));
         return libspdm_aead_sm4_gcm_decrypt;
 #else
         LIBSPDM_ASSERT(false);
@@ -4014,6 +4031,15 @@ bool libspdm_aead_decryption(const spdm_version_number_t secured_message_version
     if (aead_dec_function == NULL) {
         return false;
     }
+LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "aead decrypt input:\n"));
+LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "key:\n"));
+libspdm_internal_dump_hex(key, key_size);
+LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "iv:\n"));
+libspdm_internal_dump_hex(iv, iv_size);
+LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "a_data:\n"));
+libspdm_internal_dump_hex(a_data, a_data_size);
+LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "data_in:\n"));
+libspdm_internal_dump_hex(data_in, data_in_size);
     return aead_dec_function(key, key_size, iv, iv_size, a_data,
                              a_data_size, data_in, data_in_size, tag,
                              tag_size, data_out, data_out_size);
