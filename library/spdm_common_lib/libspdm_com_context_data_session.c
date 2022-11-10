@@ -40,7 +40,7 @@ void libspdm_session_info_init(libspdm_context_t *spdm_context,
         break;
     }
 
-#if !LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
     if (session_info->session_transcript.digest_context_th != NULL) {
         libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
                            session_info->session_transcript.digest_context_th);
