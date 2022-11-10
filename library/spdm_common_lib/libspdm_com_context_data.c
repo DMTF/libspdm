@@ -52,7 +52,7 @@ libspdm_return_t libspdm_set_data(void *context, libspdm_data_type_t data_type,
     uint8_t slot_id;
     uint8_t mut_auth_requested;
     uint8_t root_cert_index;
-#if !LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
     bool status;
 #endif
 

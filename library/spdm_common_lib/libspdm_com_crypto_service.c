@@ -828,7 +828,7 @@ bool libspdm_verify_certificate_chain_hash(libspdm_context_t *spdm_context,
     const uint8_t *cert_chain_buffer;
     size_t cert_chain_buffer_size;
     bool result;
-#if !LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
     uint8_t slot_id;
 #endif
 
