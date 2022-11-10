@@ -593,7 +593,7 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
 
-    #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP || LIBSPDM_ENABLE_CHUNK_CAP
+    #if (LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP) || (LIBSPDM_ENABLE_CHUNK_CAP)
     spdm_message_header_t *spdm_response;
     size_t response_capacity;
     libspdm_chunk_info_t *send_info;
@@ -618,7 +618,7 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
         }
     }
 
-    #if !LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP && !LIBSPDM_ENABLE_CHUNK_CAP
+    #if !(LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP) && !(LIBSPDM_ENABLE_CHUNK_CAP)
     status = libspdm_receive_response(spdm_context, session_id, false, response_size, response);
     #else /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
     send_info = &spdm_context->chunk_context.send;
