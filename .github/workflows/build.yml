@@ -30,6 +30,7 @@ jobs:
         arch:
           - x64
           - ia32
+          - aarch64
         target:
           - Debug
           - Release
@@ -38,6 +39,7 @@ jobs:
           - VS2019
           - LIBFUZZER
           - CLANG
+          - ARM_GNU
         configurations:
           - "-DLIBSPDM_ENABLE_CAPABILITY_CERT_CAP=1 -DLIBSPDM_ENABLE_CAPABILITY_CHAL_CAP=1 -DLIBSPDM_ENABLE_CAPABILITY_MEAS_CAP=1 -DLIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP=1 -DLIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP=1 -DLIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP=1 -DLIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP=1 -DLIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP=1 -DLIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP=1"
           - "-DLIBSPDM_ENABLE_CAPABILITY_CERT_CAP=0 -DLIBSPDM_ENABLE_CAPABILITY_CHAL_CAP=0 -DLIBSPDM_ENABLE_CAPABILITY_MEAS_CAP=0 -DLIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP=0 -DLIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP=0 -DLIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP=0 -DLIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP=0 -DLIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP=0 -DLIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP=0"
@@ -68,6 +70,28 @@ jobs:
             toolchain: CLANG
           - configurations: "-DLIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT=1"
             toolchain: CLANG
+          - arch: aarch64
+            toolchain: GCC
+          - arch: aarch64
+            toolchain: VS2019
+          - arch: aarch64
+            toolchain: LIBFUZZER
+          - arch: aarch64
+            toolchain: CLANG
+          - os: windows-latest
+            toolchain: ARM_GNU
+          - arch: x64
+            toolchain: ARM_GNU
+          - arch: ia32
+            toolchain: ARM_GNU
+          - configurations: "-DLIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT=0"
+            toolchain: ARM_GNU
+          - configurations: "-DLIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT=1"
+            toolchain: ARM_GNU
+          - target: Debug
+            toolchain: ARM_GNU
+          - crypto: openssl
+            toolchain: ARM_GNU
     steps:
       - name: Toolchain Setup - VS2019 (x64)
         if: matrix.toolchain == 'VS2019' && matrix.arch == 'x64'
@@ -97,6 +121,11 @@ jobs:
             toolchain:p
             cmake:p
             make:p
+      - name: Toolchain Setup - ARM_GNU
+        if: matrix.toolchain == 'ARM_GNU' && matrix.os == 'ubuntu-latest'
+        run: |
+          wget https://developer.arm.com/-/media/Files/downloads/gnu/11.2-2022.02/binrel/gcc-arm-11.2-2022.02-x86_64-aarch64-none-linux-gnu.tar.xz
+          tar -xvf gcc-arm-11.2-2022.02-x86_64-aarch64-none-linux-gnu.tar.xz -C ~/
       - name: Checkout
         uses: actions/checkout@v3
         with:
@@ -105,6 +134,7 @@ jobs:
       - name: Build - Linux
         if: matrix.os == 'ubuntu-latest'
         run: |
+          export PATH=~/gcc-arm-11.2-2022.02-x86_64-aarch64-none-linux-gnu/bin:$PATH
           mkdir build
           cd build
           cmake -E env CFLAGS="${{ matrix.configurations }} -DLIBSPDM_DEBUG_LIBSPDM_ASSERT_CONFIG=0" cmake -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ..
@@ -130,27 +160,27 @@ jobs:
           make
 
       - name: Test Requester
-        if: matrix.toolchain != 'LIBFUZZER'
+        if: matrix.toolchain != 'LIBFUZZER' && matrix.toolchain != 'ARM_GNU'
         run: |
           cd build/bin
           ./test_spdm_requester
       - name: Test Responder
-        if: matrix.toolchain != 'LIBFUZZER'
+        if: matrix.toolchain != 'LIBFUZZER' && matrix.toolchain != 'ARM_GNU'
         run: |
           cd build/bin
           ./test_spdm_responder
       - name: Test_spdm_common
-        if: matrix.toolchain != 'LIBFUZZER'
+        if: matrix.toolchain != 'LIBFUZZER' && matrix.toolchain != 'ARM_GNU'
         run: |
           cd build/bin
           ./test_spdm_common
       - name: Test_spdm_crypt
-        if: matrix.toolchain != 'LIBFUZZER'
+        if: matrix.toolchain != 'LIBFUZZER' && matrix.toolchain != 'ARM_GNU'
         run: |
           cd build/bin
           ./test_spdm_crypt
       - name: Test_crypt
-        if: matrix.toolchain != 'LIBFUZZER'
+        if: matrix.toolchain != 'LIBFUZZER' && matrix.toolchain != 'ARM_GNU'
         run: |
           cd build/bin
           ./test_crypt
