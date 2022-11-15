@@ -40,6 +40,8 @@ jobs:
           - LIBFUZZER
           - CLANG
           - ARM_GNU
+        gcov:
+          - ON
         configurations:
           - "-DLIBSPDM_ENABLE_CAPABILITY_CERT_CAP=1 -DLIBSPDM_ENABLE_CAPABILITY_CHAL_CAP=1 -DLIBSPDM_ENABLE_CAPABILITY_MEAS_CAP=1 -DLIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP=1 -DLIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP=1 -DLIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP=1 -DLIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP=1 -DLIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP=1 -DLIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP=1"
           - "-DLIBSPDM_ENABLE_CAPABILITY_CERT_CAP=0 -DLIBSPDM_ENABLE_CAPABILITY_CHAL_CAP=0 -DLIBSPDM_ENABLE_CAPABILITY_MEAS_CAP=0 -DLIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP=0 -DLIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP=0 -DLIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP=0 -DLIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP=0 -DLIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP=0 -DLIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP=0"
@@ -137,7 +139,7 @@ jobs:
           export PATH=~/gcc-arm-11.2-2022.02-x86_64-aarch64-none-linux-gnu/bin:$PATH
           mkdir build
           cd build
-          cmake -E env CFLAGS="${{ matrix.configurations }} -DLIBSPDM_DEBUG_LIBSPDM_ASSERT_CONFIG=0" cmake -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ..
+          cmake -E env CFLAGS="${{ matrix.configurations }} -DLIBSPDM_DEBUG_LIBSPDM_ASSERT_CONFIG=0" cmake -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} -DGCOV=${{ matrix.gcov }} ..
           make copy_sample_key
           make copy_seed
           make -j`nproc`
