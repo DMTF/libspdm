@@ -23,7 +23,7 @@ jobs:
           mkdir build
           cd build
           cmake -DARCH=x64 -DTOOLCHAIN=GCC -DTARGET=Debug -DCRYPTO=mbedtls -DGCOV=ON ..
-          make copy_sample_key copy_seed lib cmockalib cryptlib_mbedtls debuglib intrinsiclib malloclib mbedcrypto mbedtls mbedx509 memlib platform_lib rnglib spdm_common_lib spdm_crypt_ext_lib spdm_crypt_lib spdm_device_secret_lib_sample spdm_requester_lib spdm_responder_lib spdm_secured_message_lib spdm_transport_mctp_lib spdm_transport_pcidoe_lib test_spdm_common test_spdm_crypt test_spdm_responder test_spdm_requester -j`nproc`
+          make -j`nproc`
       - name: Test Requester
         run: |
           cd build/bin
