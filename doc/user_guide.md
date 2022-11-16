@@ -45,6 +45,15 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
    libspdm_set_scratch_buffer (spdm_context, m_scratch_buffer, scratch_buffer_size);
    ```
 
+   The location of session keys can be separated from spdm_context if desired.
+
+   ```
+   spdm_secured_context_size = libspdm_secured_message_get_total_context_size();
+   spdm_secured_context = (void *)pointer_to_secured_memory;
+   spdm_context = (void *)malloc (libspdm_get_context_size_without_secured_context());
+   libspdm_init_context_with_secure_data_location(spdm_context, spdm_secured_context);
+   ```
+
    1.2, register the device io functions, transport layer functions, and device buffer functions.
    The libspdm provides the default [spdm_transport_mctp_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_mctp_lib.h) and [spdm_transport_pcidoe_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_pcidoe_lib.h).
    The SPDM device driver need provide device IO send/receive function.
@@ -265,6 +274,15 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
    scratch_buffer_size = libspdm_get_sizeof_required_scratch_buffer(m_spdm_context);
    LIBSPDM_ASSERT (scratch_buffer_size == LIBSPDM_SCRATCH_BUFFER_SIZE);
    libspdm_set_scratch_buffer (spdm_context, m_scratch_buffer, scratch_buffer_size);
+   ```
+  
+   The location of session keys can be separated from spdm_context if desired.
+
+   ```
+   spdm_secured_context_size = libspdm_secured_message_get_total_context_size();
+   spdm_secured_context = (void *)pointer_to_secured_memory;
+   spdm_context = (void *)malloc (libspdm_get_context_size_without_secured_context());
+   libspdm_init_context_with_secure_data_location(spdm_context, spdm_secured_context);
    ```
 
    1.2, register the device io functions, transport layer functions, and device buffer functions.
