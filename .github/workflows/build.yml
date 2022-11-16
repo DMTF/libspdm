@@ -158,7 +158,14 @@ jobs:
           cmake -E env CFLAGS="${{ matrix.configurations }} -DLIBSPDM_DEBUG_LIBSPDM_ASSERT_CONFIG=0" cmake -G"MSYS Makefiles" -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ..
           make copy_sample_key
           make
-
+      - name: Build - Linux - GCOV=ON
+        if: matrix.os == 'ubuntu-latest' && matrix.toolchain == 'GCC' && matrix.target == 'Debug' && matrix.arch == 'x64'
+        run: |
+          mkdir build_gcov
+          cd build_gcov
+          cmake -DARCH=x64 -DTOOLCHAIN=GCC -DTARGET=Debug -DCRYPTO=${{matrix.crypto}} -DGCOV=ON ..
+          make copy_sample_key
+          make -j`nproc`
       - name: Test Requester
         if: matrix.toolchain != 'LIBFUZZER' && matrix.toolchain != 'ARM_GNU'
         run: |
