@@ -7,13 +7,23 @@
 #include "internal/libspdm_secured_message_lib.h"
 
 /**
- * Return the size in bytes of the SPDM secured message context.
+ * Return the size in bytes of a single SPDM secured message context.
  *
- * @return the size in bytes of the SPDM secured message context.
+ * @return the size in bytes of a single SPDM secured message context.
  **/
 size_t libspdm_secured_message_get_context_size(void)
 {
     return sizeof(libspdm_secured_message_context_t);
+}
+
+/**
+ * Return the size in bytes of all SPDM secured message contexts.
+ *
+ * @return the size in bytes of all SPDM secured message contexts.
+ **/
+size_t libspdm_secured_message_get_total_context_size(void)
+{
+    return sizeof(libspdm_secured_message_context_t) * LIBSPDM_MAX_SESSION_COUNT;
 }
 
 /**
