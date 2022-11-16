@@ -17,7 +17,6 @@
 #include "library/debuglib.h"
 #include "library/cryptlib.h"
 #include "spdm_crypt_ext_lib/cryptlib_ext.h"
-#include <stdio.h>
 
 /* We should alwasy add mbedtls/config.h here
  * to ensure the config override takes effect.*/
