@@ -1246,7 +1246,7 @@ void libspdm_test_secured_message_context_location_selection_case18(void **state
     {
         /* Ensure the SPDM context points to the specified memory. */
         assert_int_equal(spdm_context->session_info[index].secured_message_context,
-            single_secured_context);
+                         single_secured_context);
         single_secured_context += libspdm_secured_message_get_context_size();
     }
 
