@@ -863,6 +863,7 @@ else()
         ADD_SUBDIRECTORY(unit_test/test_size/cryptstublib_dummy)
         ADD_SUBDIRECTORY(unit_test/test_size/intrinsiclib)
         ADD_SUBDIRECTORY(unit_test/test_size/malloclib_null)
+        ADD_SUBDIRECTORY(unit_test/test_size/malloclib_simple)
         ADD_SUBDIRECTORY(unit_test/test_size/rnglib_null)
 
         if(NOT TOOLCHAIN STREQUAL "LIBFUZZER")
