@@ -1229,7 +1229,7 @@ void libspdm_test_secured_message_context_location_selection_case18(void **state
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     void *secured_message_contexts;
-    void *single_secured_context;
+    uint8_t *single_secured_context;
     size_t index;
 
     spdm_test_context = *state;
