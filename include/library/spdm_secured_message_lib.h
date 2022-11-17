@@ -494,6 +494,13 @@ bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
                                        const uint8_t *th2_hash_data);
 
 typedef enum {
+    LIBSPDM_KEY_UPDATE_OPERATION_CREATE_UPDATE,
+    LIBSPDM_KEY_UPDATE_OPERATION_COMMIT_UPDATE,
+    LIBSPDM_KEY_UPDATE_OPERATION_DISCARD_UPDATE,
+    LIBSPDM_KEY_UPDATE_OPERATION_MAX
+} libspdm_key_update_operation_t;
+
+typedef enum {
     LIBSPDM_KEY_UPDATE_ACTION_REQUESTER,
     LIBSPDM_KEY_UPDATE_ACTION_RESPONDER,
     LIBSPDM_KEY_UPDATE_ACTION_MAX

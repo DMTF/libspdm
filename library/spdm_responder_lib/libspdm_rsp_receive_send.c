@@ -131,11 +131,16 @@ libspdm_return_t libspdm_process_request(void *context, uint32_t **session_id,
                                          size_t request_size, void *request)
 {
     libspdm_context_t *spdm_context;
+    void *temp_session_context;
     libspdm_return_t status;
     libspdm_session_info_t *session_info;
     uint32_t *message_session_id;
     uint8_t *decoded_message_ptr;
     size_t decoded_message_size;
+    uint8_t *backup_decoded_message_ptr;
+    size_t backup_decoded_message_size;
+    bool result;
+    bool reset_key_update;
 
     spdm_context = context;
     size_t transport_header_size;
@@ -170,10 +175,50 @@ libspdm_return_t libspdm_process_request(void *context, uint32_t **session_id,
     decoded_message_size = scratch_buffer_size - transport_header_size;
     #endif
 
+    backup_decoded_message_ptr = decoded_message_ptr;
+    backup_decoded_message_size = decoded_message_size;
+
     status = spdm_context->transport_decode_message(
         spdm_context, &message_session_id, is_app_message, true,
         request_size, request, &decoded_message_size,
         (void **)&decoded_message_ptr);
+
+    reset_key_update = false;
+    if (status == LIBSPDM_STATUS_SESSION_MSG_ERROR_TRY_DISCARD_KEY_UPDATE) {
+        /* Failed to decode, but have backup keys. Try rolling back before aborting.
+         * message_session_id must be valid for us to have attempted decryption. */
+        if (message_session_id == NULL) {
+            return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
+        }
+        temp_session_context = libspdm_get_secured_message_context_via_session_id(
+            spdm_context, *message_session_id);
+        if (temp_session_context == NULL) {
+            return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
+        }
+
+        result = libspdm_activate_update_session_data_key(
+            temp_session_context, LIBSPDM_KEY_UPDATE_ACTION_REQUESTER, false);
+        if (!result) {
+            return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
+        }
+        libspdm_trigger_key_update_callback(
+            spdm_context, *message_session_id,
+            LIBSPDM_KEY_UPDATE_OPERATION_DISCARD_UPDATE,
+            LIBSPDM_KEY_UPDATE_ACTION_REQUESTER);
+
+        /* Retry decoding message with backup Requester key.
+         * Must reset some of the parameters in case they were modified */
+        message_session_id = NULL;
+        decoded_message_ptr = backup_decoded_message_ptr;
+        decoded_message_size = backup_decoded_message_size;
+        status = spdm_context->transport_decode_message(
+            spdm_context, &message_session_id, is_app_message, true,
+            request_size, request, &decoded_message_size,
+            (void **)&decoded_message_ptr);
+        
+        reset_key_update = true;
+    }
+
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "transport_decode_message : %p\n", status));
         if (spdm_context->last_spdm_error.error_code != 0) {
@@ -187,6 +232,30 @@ libspdm_return_t libspdm_process_request(void *context, uint32_t **session_id,
         }
         return status;
     }
+
+    /* Handle special case for bi-directional communication:
+     * If the Requester returns RESPONSE_NOT_READY error to KEY_UPDATE, the Responder needs
+     * to activate backup key to parse the error. Then later the Requester will return SUCCESS,
+     * the Responder needs new key. So we need to restore the environment by
+     * libspdm_create_update_session_data_key() again.*/
+    if (reset_key_update)
+    {
+        /* temp_session_context and message_session_id must necessarily
+         * be valid for us to reach here. */
+        if (temp_session_context == NULL || message_session_id == NULL) {
+            return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
+        }
+        result = libspdm_create_update_session_data_key(
+            temp_session_context, LIBSPDM_KEY_UPDATE_ACTION_REQUESTER);
+        if (!result) {
+            return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
+        }
+        libspdm_trigger_key_update_callback(
+            temp_session_context, *message_session_id,
+            LIBSPDM_KEY_UPDATE_OPERATION_CREATE_UPDATE,
+            LIBSPDM_KEY_UPDATE_ACTION_REQUESTER);
+    }
+
     spdm_context->last_spdm_request_size = decoded_message_size;
     libspdm_copy_mem (spdm_context->last_spdm_request,
                       sizeof(spdm_context->last_spdm_request),
@@ -316,6 +385,31 @@ void libspdm_set_connection_state(libspdm_context_t *spdm_context,
             connection_state;
         libspdm_trigger_connection_state_callback(spdm_context,
                                                   connection_state);
+    }
+}
+
+/**
+ * Notify the key update operation to an SPDM context register.
+ *
+ * @param  spdm_context           A pointer to the SPDM context.
+ * @param  session_id             Session ID for the keys being updated.
+ * @param  key_update_operation   Indicate the key update operation.
+ * @param  key_update_action      Indicate the direction of the key update.
+ **/
+void libspdm_trigger_key_update_callback(void *context, uint32_t session_id,
+    libspdm_key_update_operation_t key_update_op,
+    libspdm_key_update_action_t key_update_action)
+{
+    libspdm_context_t *spdm_context;
+    size_t index;
+
+    spdm_context = context;
+    for (index = 0; index < LIBSPDM_MAX_KEY_UPDATE_CALLBACK_NUM; index++) {
+        if (spdm_context->spdm_key_update_callback[index] != 0) {
+            ((libspdm_key_update_callback_func)spdm_context
+             ->spdm_key_update_callback[index])(
+                spdm_context, session_id, key_update_op, key_update_action);
+        }
     }
 }
 
@@ -788,6 +882,36 @@ libspdm_return_t libspdm_register_connection_state_callback_func(
         if (spdm_context->spdm_connection_state_callback[index] == 0) {
             spdm_context->spdm_connection_state_callback[index] =
                 (size_t)spdm_connection_state_callback;
+            return LIBSPDM_STATUS_SUCCESS;
+        }
+    }
+    LIBSPDM_ASSERT(false);
+
+    return LIBSPDM_STATUS_BUFFER_FULL;
+}
+
+/**
+ * Register a key update callback function.
+ *
+ * This function can be called multiple times to register multiple callbacks.
+ *
+ * @param  spdm_context              A pointer to the SPDM context.
+ * @param  spdm_key_update_callback  The function to be called in key update operation.
+ *
+ * @retval RETURN_SUCCESS          The callback is registered.
+ * @retval RETURN_ALREADY_STARTED  No enough memory to register the callback.
+ **/
+libspdm_return_t libspdm_register_key_update_callback_func(
+    void *context, libspdm_key_update_callback_func spdm_key_update_callback)
+{
+    libspdm_context_t *spdm_context;
+    size_t index;
+
+    spdm_context = context;
+    for (index = 0; index < LIBSPDM_MAX_KEY_UPDATE_CALLBACK_NUM; index++) {
+        if (spdm_context->spdm_key_update_callback[index] == 0) {
+            spdm_context->spdm_key_update_callback[index] =
+                (size_t)spdm_key_update_callback;
             return LIBSPDM_STATUS_SUCCESS;
         }
     }
