@@ -2156,7 +2156,7 @@ libspdm_return_t libspdm_init_context(void *context)
     secured_message_context = (void *)((size_t)(spdm_context + 1));
 
     return libspdm_init_context_with_secure_data_location(context,
-        secured_message_context);
+                                                          secured_message_context);
 }
 
 /**
