@@ -95,6 +95,10 @@ libspdm_get_encap_request_key_update(libspdm_context_t *spdm_context,
         if (!result) {
             return LIBSPDM_STATUS_CRYPTO_ERROR;
         }
+        libspdm_trigger_key_update_callback(
+            spdm_context, session_id, LIBSPDM_KEY_UPDATE_OPERATION_CREATE_UPDATE,
+            LIBSPDM_KEY_UPDATE_ACTION_RESPONDER);
+
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "libspdm_activate_update_session_data_key[%x] Responder new\n",
                        session_id));
@@ -104,6 +108,9 @@ libspdm_get_encap_request_key_update(libspdm_context_t *spdm_context,
         if (!result) {
             return LIBSPDM_STATUS_CRYPTO_ERROR;
         }
+        libspdm_trigger_key_update_callback(
+            spdm_context, session_id, LIBSPDM_KEY_UPDATE_OPERATION_COMMIT_UPDATE,
+            LIBSPDM_KEY_UPDATE_ACTION_RESPONDER);
     }
 
     libspdm_copy_mem(&spdm_context->encap_context.last_encap_request_header,

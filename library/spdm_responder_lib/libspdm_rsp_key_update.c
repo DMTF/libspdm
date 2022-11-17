@@ -121,6 +121,9 @@ libspdm_return_t libspdm_get_response_key_update(void *context,
         if (!result) {
             return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         }
+        libspdm_trigger_key_update_callback(
+            context, session_id, LIBSPDM_KEY_UPDATE_OPERATION_CREATE_UPDATE,
+            LIBSPDM_KEY_UPDATE_ACTION_REQUESTER);
 
         /*save the last update operation*/
         libspdm_copy_mem(prev_spdm_request, sizeof(spdm_key_update_request_t),
@@ -144,6 +147,10 @@ libspdm_return_t libspdm_get_response_key_update(void *context,
         if (!result) {
             return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         }
+        libspdm_trigger_key_update_callback(
+            context, session_id, LIBSPDM_KEY_UPDATE_OPERATION_CREATE_UPDATE,
+            LIBSPDM_KEY_UPDATE_ACTION_REQUESTER);
+
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "libspdm_create_update_session_data_key[%x] Responder\n",
                        session_id));
@@ -153,15 +160,23 @@ libspdm_return_t libspdm_get_response_key_update(void *context,
         if (!result) {
             return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         }
+        libspdm_trigger_key_update_callback(
+            context, session_id, LIBSPDM_KEY_UPDATE_OPERATION_CREATE_UPDATE,
+            LIBSPDM_KEY_UPDATE_ACTION_RESPONDER);
+
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "libspdm_activate_update_session_data_key[%x] Responder new\n",
                        session_id));
+        /* We can commit to Responder key. */
         result = libspdm_activate_update_session_data_key(
             session_info->secured_message_context,
             LIBSPDM_KEY_UPDATE_ACTION_RESPONDER, true);
         if (!result) {
             return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         }
+        libspdm_trigger_key_update_callback(
+            context, session_id, LIBSPDM_KEY_UPDATE_OPERATION_COMMIT_UPDATE,
+            LIBSPDM_KEY_UPDATE_ACTION_RESPONDER);
 
         /*save the last update operation*/
         libspdm_copy_mem(prev_spdm_request, sizeof(spdm_key_update_request_t),
@@ -179,12 +194,16 @@ libspdm_return_t libspdm_get_response_key_update(void *context,
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "libspdm_activate_update_session_data_key[%x] Requester new\n",
                        session_id));
+        /* With Requester key verified, we can discard backups. */
         result = libspdm_activate_update_session_data_key(
             session_info->secured_message_context,
             LIBSPDM_KEY_UPDATE_ACTION_REQUESTER, true);
         if (!result) {
             return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         }
+        libspdm_trigger_key_update_callback(
+            context, session_id, LIBSPDM_KEY_UPDATE_OPERATION_COMMIT_UPDATE,
+            LIBSPDM_KEY_UPDATE_ACTION_REQUESTER);
 
         /*clear last_key_update_request*/
         libspdm_zero_mem (prev_spdm_request, sizeof(spdm_key_update_request_t));
