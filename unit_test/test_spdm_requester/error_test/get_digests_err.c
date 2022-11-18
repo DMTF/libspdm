@@ -1300,39 +1300,11 @@ static void libspdm_test_requester_get_digests_err_case11(void **state)
 }
 
 /**
- * Test 12: a request message is successfully sent but the size of the response message is smaller than the size of the SPDM message header,
- * meaning it is an invalid response message
- * Expected Behavior: requester returns the status RETURN_DEVICE_ERROR, with no successful DIGESTS message received (managed buffer not shrinked)
+ * Test 12:
+ * Expected Behavior:
  **/
 static void libspdm_test_requester_get_digests_err_case12(void **state)
 {
-    libspdm_return_t status;
-    libspdm_test_context_t *spdm_test_context;
-    libspdm_context_t *spdm_context;
-    uint8_t slot_mask;
-    uint8_t total_digest_buffer[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
-
-    spdm_test_context = *state;
-    spdm_context = spdm_test_context->spdm_context;
-    spdm_test_context->case_id = 0xC;
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
-                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.peer_cert_chain_provision = m_libspdm_local_certificate_chain;
-    spdm_context->local_context.peer_cert_chain_provision_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
-    libspdm_set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
-                    (uint8_t)(0xFF));
-    libspdm_reset_message_b(spdm_context);
-
-    libspdm_zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
-    status = libspdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
-    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_SIZE);
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    assert_int_equal(spdm_context->transcript.message_b.buffer_size,
-                     sizeof(spdm_get_digest_request_t));
-#endif
 }
 
 /**
@@ -1717,6 +1689,7 @@ int libspdm_requester_get_digests_error_test_main(void)
         cmocka_unit_test(libspdm_test_requester_get_digests_err_case9),
         cmocka_unit_test(libspdm_test_requester_get_digests_err_case10),
         cmocka_unit_test(libspdm_test_requester_get_digests_err_case11),
+        cmocka_unit_test(libspdm_test_requester_get_digests_err_case12),
         cmocka_unit_test(libspdm_test_requester_get_digests_err_case13),
         cmocka_unit_test(libspdm_test_requester_get_digests_err_case14),
         cmocka_unit_test(libspdm_test_requester_get_digests_err_case15),
