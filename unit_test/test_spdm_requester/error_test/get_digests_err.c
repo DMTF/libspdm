@@ -1405,38 +1405,11 @@ static void libspdm_test_requester_get_digests_err_case14(void **state)
 }
 
 /**
- * Test 15: a request message is successfully sent but it cannot be appended to the internal cache since the internal cache is full
- * Expected Behavior: requester returns the status RETURN_DEVICE_ERROR
+ * Test 15:
+ * Expected Behavior:
  **/
 static void libspdm_test_requester_get_digests_err_case15(void **state)
 {
-    libspdm_return_t status;
-    libspdm_test_context_t *spdm_test_context;
-    libspdm_context_t *spdm_context;
-    uint8_t slot_mask;
-    uint8_t total_digest_buffer[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
-
-
-    spdm_test_context = *state;
-    spdm_context = spdm_test_context->spdm_context;
-    spdm_test_context->case_id = 0xF;
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
-                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.peer_cert_chain_provision = m_libspdm_local_certificate_chain;
-    spdm_context->local_context.peer_cert_chain_provision_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
-    libspdm_set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
-                    (uint8_t)(0xFF));
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->transcript.message_b.buffer_size =
-        spdm_context->transcript.message_b.max_buffer_size;
-#endif
-
-    libspdm_zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
-    status = libspdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
-    assert_int_equal(status, LIBSPDM_STATUS_BUFFER_FULL);
 }
 
 /**
@@ -1746,6 +1719,7 @@ int libspdm_requester_get_digests_error_test_main(void)
         cmocka_unit_test(libspdm_test_requester_get_digests_err_case11),
         cmocka_unit_test(libspdm_test_requester_get_digests_err_case13),
         cmocka_unit_test(libspdm_test_requester_get_digests_err_case14),
+        cmocka_unit_test(libspdm_test_requester_get_digests_err_case15),
         cmocka_unit_test(libspdm_test_requester_get_digests_err_case16),
         cmocka_unit_test(libspdm_test_requester_get_digests_err_case17),
         cmocka_unit_test(libspdm_test_requester_get_digests_err_case18),
