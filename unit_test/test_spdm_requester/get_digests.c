@@ -1508,17 +1508,15 @@ int libspdm_requester_get_digests_test_main(void)
         cmocka_unit_test(libspdm_test_requester_get_digests_case9),
         cmocka_unit_test(libspdm_test_requester_get_digests_case10),
         cmocka_unit_test(libspdm_test_requester_get_digests_case11),
-        /* size of response < spdm_message_header_t
-        * cmocka_unit_test(libspdm_test_requester_get_digests_case12),
-        * request_response_code wrong in response*/
+        cmocka_unit_test(libspdm_test_requester_get_digests_case12),
         cmocka_unit_test(libspdm_test_requester_get_digests_case13),
         cmocka_unit_test(libspdm_test_requester_get_digests_case14),
         cmocka_unit_test(libspdm_test_requester_get_digests_case16),
         cmocka_unit_test(libspdm_test_requester_get_digests_case17),
         cmocka_unit_test(libspdm_test_requester_get_digests_case18),
-        /* cmocka_unit_test(libspdm_test_requester_get_digests_err_case19),
-         * cmocka_unit_test(libspdm_test_requester_get_digests_err_case20),
-         * cmocka_unit_test(libspdm_test_requester_get_digests_err_case21), */
+        cmocka_unit_test(libspdm_test_requester_get_digests_case19),
+        cmocka_unit_test(libspdm_test_requester_get_digests_case20),
+        cmocka_unit_test(libspdm_test_requester_get_digests_case21),
         cmocka_unit_test(libspdm_test_requester_get_digests_case22),
         cmocka_unit_test(libspdm_test_requester_get_digests_case23),
         cmocka_unit_test(libspdm_test_requester_get_digests_case24),

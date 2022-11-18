@@ -1540,6 +1540,7 @@ static void libspdm_test_requester_get_digests_err_case18(void **state)
 #endif
 }
 
+#if 0
 /**
  * Test 19: a request message is successfully sent but several digests (except the first) received in the response message are invalid
  * Expected Behavior: requester returns the status RETURN_SECURITY_VIOLATION, with error state LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE
@@ -1642,6 +1643,7 @@ static void libspdm_test_requester_get_digests_err_case21(void **state)
                      sizeof(spdm_get_digest_request_t));
 #endif
 }
+#endif
 
 /**
  * Test 22: receiving an unexpected ERROR message from the responder.
