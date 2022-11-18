@@ -491,7 +491,10 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
                 spdm_context, true,
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP)) {
-            return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+            libspdm_secured_message_dhe_free(
+                spdm_context->connection_info.algorithm.dhe_named_group, dhe_context);
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+            goto receive_done;
         }
         if ((spdm_response->mut_auth_requested != SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED) &&
             (spdm_response->mut_auth_requested !=
