@@ -1511,6 +1511,7 @@ int libspdm_requester_get_digests_test_main(void)
         cmocka_unit_test(libspdm_test_requester_get_digests_case12),
         cmocka_unit_test(libspdm_test_requester_get_digests_case13),
         cmocka_unit_test(libspdm_test_requester_get_digests_case14),
+        cmocka_unit_test(libspdm_test_requester_get_digests_case15),
         cmocka_unit_test(libspdm_test_requester_get_digests_case16),
         cmocka_unit_test(libspdm_test_requester_get_digests_case17),
         cmocka_unit_test(libspdm_test_requester_get_digests_case18),
