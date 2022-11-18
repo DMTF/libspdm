@@ -24,6 +24,7 @@ jobs:
           cd build
           cmake -DARCH=x64 -DTOOLCHAIN=GCC -DTARGET=Debug -DCRYPTO=mbedtls -DGCOV=ON ..
           make -j`nproc`
+          make copy_sample_key
       - name: Test Requester
         run: |
           cd build/bin
