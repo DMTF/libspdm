@@ -73,8 +73,7 @@ static libspdm_return_t libspdm_try_get_digest(void *context, const uint32_t *se
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP)) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
-    if (spdm_context->connection_info.connection_state <
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
+    if (spdm_context->connection_info.connection_state < LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
 
@@ -82,7 +81,6 @@ static libspdm_return_t libspdm_try_get_digest(void *context, const uint32_t *se
     if (session_id != NULL) {
         session_info = libspdm_get_session_info_via_session_id(spdm_context, *session_id);
         if (session_info == NULL) {
-            LIBSPDM_ASSERT(false);
             return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
         }
         session_state = libspdm_secured_message_get_session_state(
