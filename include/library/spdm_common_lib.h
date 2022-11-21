@@ -238,18 +238,21 @@ void libspdm_set_last_spdm_error_struct(void *spdm_context,
  * The size in bytes of the spdm_context can be returned by
  * libspdm_get_context_size_without_secured_context.
  *
- * The size in bytes of the secured message context can be returned by
- * libspdm_secured_message_get_total_context_size.
+ * The size in bytes of a single secured message context can be returned by
+ * libspdm_secured_message_get_context_size.
  *
- * @param  spdm_context              A pointer to the SPDM context.
- * @param  secured_message_contexts  A pointer to the secured message context buffer.
- *                                   This will hold all secured message contexts.
+ * @param  spdm_context          A pointer to the SPDM context.
+ * @param  secured_contexts      An array of pointers, with each entry containing
+ *                               the location of a secured message context.
+ * @param  num_secured_contexts  Number of secured message contexts to initialize.
+ *                               Currently, only LIBSPDM_MAX_SESSION_COUNT is supported.
  *
- * @retval RETURN_SUCCESS       Contexts are initialized.
- * @retval RETURN_DEVICE_ERROR  Context initialization failed.
+ * @retval RETURN_SUCCESS        Contexts are initialized.
+ * @retval RETURN_DEVICE_ERROR   Context initialization failed.
  */
-libspdm_return_t libspdm_init_context_with_secure_data_location(void *context,
-                                                                void *secured_message_contexts);
+libspdm_return_t libspdm_init_context_with_secured_context(void *context,
+                                                           void **secured_contexts,
+                                                           size_t num_secured_contexts);
 
 /**
  * Initialize an SPDM context, as well as secured message contexts.
@@ -275,6 +278,16 @@ libspdm_return_t libspdm_init_context(void *context);
 void libspdm_reset_context(void *spdm_context);
 
 /**
+ * Return the size in bytes of the SPDM context. This includes all
+ * secured message context data as well.
+ *
+ * For just the SPDM context size, use libspdm_get_context_size_without_secured_context.
+ *
+ * @return the size in bytes of the SPDM context and secured message contexts.
+ **/
+size_t libspdm_get_context_size(void);
+
+/**
  * Return the size in bytes of just the SPDM context, without secured message context.
  *
  * For the complete context size, use libspdm_get_context_size.
@@ -282,16 +295,6 @@ void libspdm_reset_context(void *spdm_context);
  * @return the size in bytes of the SPDM context.
  **/
 size_t libspdm_get_context_size_without_secured_context(void);
-
-/**
- * Return the size in bytes of the SPDM context. This includes all secured message
- * context data as well.
- *
- * For just the SPDM context size, use libspdm_get_context_size_without_secured_context.
- *
- * @return the size in bytes of the SPDM context and secured message contexts.
- **/
-size_t libspdm_get_context_size(void);
 
 /**
  * Send an SPDM transport layer message to a device.

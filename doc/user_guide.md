@@ -46,12 +46,17 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
    ```
 
    The location of session keys can be separated from spdm_context if desired.
+   Each session holds keys in a secured context, and the location of each can be
+   directly specified.
 
    ```
-   spdm_secured_context_size = libspdm_secured_message_get_total_context_size();
-   spdm_secured_context = (void *)pointer_to_secured_memory;
+   spdm_secured_context_size = libspdm_secured_message_get_context_size();
+   spdm_secured_contexts[0] = (void *)pointer_to_secured_memory_0;
+   spdm_secured_contexts[1] = (void *)pointer_to_secured_memory_1;
+   [...]
+   spdm_secured_contexts[num_sessions] = (void *)pointer_to_secured_memory_num_sessions;
    spdm_context = (void *)malloc (libspdm_get_context_size_without_secured_context());
-   libspdm_init_context_with_secure_data_location(spdm_context, spdm_secured_context);
+   libspdm_init_context_with_secured_context(spdm_context, spdm_secured_contexts, num_sessions);
    ```
 
    1.2, register the device io functions, transport layer functions, and device buffer functions.
@@ -277,12 +282,17 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
    ```
   
    The location of session keys can be separated from spdm_context if desired.
+   Each session holds keys in a secured context, and the location of each can be
+   directly specified.
 
    ```
-   spdm_secured_context_size = libspdm_secured_message_get_total_context_size();
-   spdm_secured_context = (void *)pointer_to_secured_memory;
+   spdm_secured_context_size = libspdm_secured_message_get_context_size();
+   spdm_secured_contexts[0] = (void *)pointer_to_secured_memory_0;
+   spdm_secured_contexts[1] = (void *)pointer_to_secured_memory_1;
+   [...]
+   spdm_secured_contexts[num_sessions] = (void *)pointer_to_secured_memory_num_sessions;
    spdm_context = (void *)malloc (libspdm_get_context_size_without_secured_context());
-   libspdm_init_context_with_secure_data_location(spdm_context, spdm_secured_context);
+   libspdm_init_context_with_secured_context(spdm_context, spdm_secured_contexts, num_sessions);
    ```
 
    1.2, register the device io functions, transport layer functions, and device buffer functions.

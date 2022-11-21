@@ -1228,30 +1228,44 @@ void libspdm_test_secured_message_context_location_selection_case18(void **state
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    void *secured_message_contexts;
-    uint8_t *single_secured_context;
+    void *secured_message_contexts[LIBSPDM_MAX_SESSION_COUNT];
     size_t index;
 
     spdm_test_context = *state;
     spdm_test_context->case_id = 0x12;
 
     spdm_context = (libspdm_context_t *)malloc(libspdm_get_context_size_without_secured_context());
-    secured_message_contexts = (void *)malloc(libspdm_secured_message_get_total_context_size());
 
-    status = libspdm_init_context_with_secure_data_location(spdm_context, secured_message_contexts);
+    for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index++)
+    {
+        secured_message_contexts[index] = (void *)malloc(libspdm_secured_message_get_context_size());
+    }
+
+    status = libspdm_init_context_with_secured_context(spdm_context, secured_message_contexts,
+                                                       LIBSPDM_MAX_SESSION_COUNT);
     assert_int_equal (status, LIBSPDM_STATUS_SUCCESS);
 
-    single_secured_context = secured_message_contexts;
     for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index++)
     {
         /* Ensure the SPDM context points to the specified memory. */
         assert_int_equal(spdm_context->session_info[index].secured_message_context,
-                         single_secured_context);
-        single_secured_context += libspdm_secured_message_get_context_size();
+                         secured_message_contexts[index]);
     }
 
+    /* Check that only the expected number of sessions is supported. */
+    status = libspdm_init_context_with_secured_context(spdm_context, secured_message_contexts,
+                                                       LIBSPDM_MAX_SESSION_COUNT - 1);
+    assert_int_equal (status, LIBSPDM_STATUS_INVALID_PARAMETER);
+
+    status = libspdm_init_context_with_secured_context(spdm_context, secured_message_contexts,
+                                                       LIBSPDM_MAX_SESSION_COUNT + 1);
+    assert_int_equal (status, LIBSPDM_STATUS_INVALID_PARAMETER);
+
     free(spdm_context);
-    free(secured_message_contexts);
+    for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index++)
+    {
+        free(secured_message_contexts[index]);
+    }
 }
 
 static libspdm_test_context_t m_libspdm_common_context_data_test_context = {
