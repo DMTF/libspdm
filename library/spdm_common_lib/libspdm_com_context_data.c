@@ -2161,9 +2161,10 @@ libspdm_return_t libspdm_init_context(void *context)
     secured_context = (void *)((size_t)(spdm_context + 1));
     secured_context_size = libspdm_secured_message_get_context_size();
 
-    for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index ++)
+    for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index++)
     {
-        secured_contexts[index] = secured_context + secured_context_size * index;
+        secured_contexts[index] =
+            (uint8_t *)secured_context + secured_context_size * index;
     }
 
     return libspdm_init_context_with_secured_context(context,
@@ -2235,7 +2236,7 @@ void libspdm_reset_context(void *context)
 size_t libspdm_get_context_size(void)
 {
     return sizeof(libspdm_context_t) +
-        libspdm_secured_message_get_context_size() * LIBSPDM_MAX_SESSION_COUNT;
+           libspdm_secured_message_get_context_size() * LIBSPDM_MAX_SESSION_COUNT;
 }
 
 /**
