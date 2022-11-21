@@ -325,6 +325,12 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
         return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
 
+    req_session_id = libspdm_allocate_req_session_id(spdm_context);
+    if (req_session_id == ((INVALID_SESSION_ID & 0xFFFF0000) >> 16))
+    {
+        return LIBSPDM_STATUS_SESSION_NUMBER_EXCEED;
+    }
+
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL, SPDM_KEY_EXCHANGE);
 
     /* -=[Construct Request Phase]=- */
@@ -360,7 +366,6 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
                          spdm_request->random_data, SPDM_RANDOM_DATA_SIZE);
     }
 
-    req_session_id = libspdm_allocate_req_session_id(spdm_context);
     spdm_request->req_session_id = req_session_id;
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
         spdm_request->session_policy = session_policy;
