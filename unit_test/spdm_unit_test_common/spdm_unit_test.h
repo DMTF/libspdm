@@ -77,7 +77,8 @@ bool libspdm_read_input_file(const char *file_name, void **file_data, size_t *fi
 typedef enum
 {
     LIBSPDM_ERR_ACQUIRE_SENDER_BUFFER,
-    LIBSPDM_ERR_ACQUIRE_RECEIVER_BUFFER
+    LIBSPDM_ERR_ACQUIRE_RECEIVER_BUFFER,
+    LIBSPDM_ERR_SHA256_HASH_ALL,
 } libspdm_error_target_t;
 
 void libspdm_force_error (libspdm_error_target_t target);

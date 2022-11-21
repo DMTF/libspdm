@@ -14,6 +14,26 @@ static uint8_t m_send_receive_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 static bool m_error_acquire_sender_buffer = false;
 static bool m_error_acquire_receiver_buffer = false;
 
+#if LIBSPDM_UNIT_TEST
+extern bool m_libspdm_sha256_new_error;
+extern bool m_libspdm_sha256_init_error;
+extern bool m_libspdm_sha256_update_error;
+extern bool m_libspdm_sha256_final_error;
+extern bool m_libspdm_sha256_hash_all_error;
+
+extern bool m_libspdm_sha384_new_error;
+extern bool m_libspdm_sha384_init_error;
+extern bool m_libspdm_sha384_update_error;
+extern bool m_libspdm_sha384_final_error;
+extern bool m_libspdm_sha384_hash_all_error;
+
+extern bool m_libspdm_sha512_new_error;
+extern bool m_libspdm_sha512_init_error;
+extern bool m_libspdm_sha512_update_error;
+extern bool m_libspdm_sha512_final_error;
+extern bool m_libspdm_sha512_hash_all_error;
+#endif
+
 libspdm_return_t spdm_device_acquire_sender_buffer (
     void *context, size_t *max_msg_size, void **msg_buf_ptr)
 {
@@ -127,6 +147,7 @@ int libspdm_unit_test_group_teardown(void **state)
     return 0;
 }
 
+#if LIBSPDM_UNIT_TEST
 void libspdm_force_error (libspdm_error_target_t target)
 {
     switch (target) {
@@ -135,6 +156,9 @@ void libspdm_force_error (libspdm_error_target_t target)
         break;
     case LIBSPDM_ERR_ACQUIRE_RECEIVER_BUFFER:
         m_error_acquire_receiver_buffer = true;
+        break;
+    case LIBSPDM_ERR_SHA256_HASH_ALL:
+        m_libspdm_sha256_hash_all_error = true;
         break;
     }
 }
@@ -148,5 +172,9 @@ void libspdm_release_error (libspdm_error_target_t target)
     case LIBSPDM_ERR_ACQUIRE_RECEIVER_BUFFER:
         m_error_acquire_receiver_buffer = false;
         break;
+    case LIBSPDM_ERR_SHA256_HASH_ALL:
+        m_libspdm_sha256_hash_all_error = false;
+        break;
     }
 }
+#endif

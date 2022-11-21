@@ -17,6 +17,8 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     endif()
 endif()
 
+add_compile_definitions(LIBSPDM_UNIT_TEST=1)
+
 SET(src_test_spdm_requester
     test_spdm_requester.c
     get_version.c
@@ -59,7 +61,7 @@ SET(test_spdm_requester_LIBRARY
     spdm_common_lib
     ${CRYPTO_LIB_PATHS}
     rnglib
-    cryptlib_${CRYPTO}
+    cryptlib_wrapper
     malloclib
     spdm_crypt_lib
     spdm_crypt_ext_lib
