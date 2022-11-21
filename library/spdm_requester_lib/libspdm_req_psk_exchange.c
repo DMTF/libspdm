@@ -175,6 +175,12 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
         return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
 
+    req_session_id = libspdm_allocate_req_session_id(spdm_context);
+    if (req_session_id == ((INVALID_SESSION_ID & 0xFFFF0000) >> 16))
+    {
+        return LIBSPDM_STATUS_SESSION_NUMBER_EXCEED;
+    }
+
     {
         /* Double check if algorithm has been provisioned, because ALGORITHM might be skipped.*/
         if (libspdm_is_capabilities_flag_supported(
@@ -232,7 +238,6 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
         libspdm_get_opaque_data_supported_version_data_size(spdm_context);
     spdm_request->opaque_length = (uint16_t)opaque_psk_exchange_req_size;
 
-    req_session_id = libspdm_allocate_req_session_id(spdm_context);
     spdm_request->req_session_id = req_session_id;
 
     ptr = spdm_request->psk_hint;
