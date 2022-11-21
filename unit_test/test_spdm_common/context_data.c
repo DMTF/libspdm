@@ -1238,7 +1238,8 @@ void libspdm_test_secured_message_context_location_selection_case18(void **state
 
     for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index++)
     {
-        secured_message_contexts[index] = (void *)malloc(libspdm_secured_message_get_context_size());
+        secured_message_contexts[index] =
+            (void *)malloc(libspdm_secured_message_get_context_size());
     }
 
     status = libspdm_init_context_with_secured_context(spdm_context, secured_message_contexts,
