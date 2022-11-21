@@ -17,16 +17,6 @@ size_t libspdm_secured_message_get_context_size(void)
 }
 
 /**
- * Return the size in bytes of all SPDM secured message contexts.
- *
- * @return the size in bytes of all SPDM secured message contexts.
- **/
-size_t libspdm_secured_message_get_total_context_size(void)
-{
-    return sizeof(libspdm_secured_message_context_t) * LIBSPDM_MAX_SESSION_COUNT;
-}
-
-/**
  * Initialize an SPDM secured message context.
  *
  * The size in bytes of the spdm_secured_message_context can be returned by libspdm_secured_message_get_context_size.
