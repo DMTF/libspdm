@@ -1,4 +1,4 @@
-name: Build
+name: Build and Test
 
 on:
   push:
@@ -176,22 +176,22 @@ jobs:
         run: |
           cd build/bin
           ./test_spdm_responder
-      - name: Test_spdm_common
+      - name: Test Common
         if: matrix.toolchain != 'LIBFUZZER' && matrix.toolchain != 'ARM_GNU'
         run: |
           cd build/bin
           ./test_spdm_common
-      - name: Test_spdm_crypt
+      - name: Test SPDM Crypt
         if: matrix.toolchain != 'LIBFUZZER' && matrix.toolchain != 'ARM_GNU'
         run: |
           cd build/bin
           ./test_spdm_crypt
-      - name: Test_crypt
+      - name: Test Crypt
         if: matrix.toolchain != 'LIBFUZZER' && matrix.toolchain != 'ARM_GNU'
         run: |
           cd build/bin
           ./test_crypt
-      - name: Test with initial seed
+      - name: Fuzz test with initial seed
         if: matrix.os == 'ubuntu-latest' && matrix.arch == 'x64'
         run: |
           cd build/bin
