@@ -529,12 +529,10 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
     rsp_session_id = spdm_response->rsp_session_id;
     *session_id = (req_session_id << 16) | rsp_session_id;
     session_info = libspdm_assign_session_id(spdm_context, *session_id, false);
-    if (session_info == NULL) {
-        libspdm_secured_message_dhe_free(
-            spdm_context->connection_info.algorithm.dhe_named_group, dhe_context);
-        status = LIBSPDM_STATUS_SESSION_NUMBER_EXCEED;
-        goto receive_done;
-    }
+
+    /* session_info cannot be null as the check after libspdm_allocate_req_session_id assures
+     * that there is space for a new session ID and its initialization. */
+    LIBSPDM_ASSERT(session_info != NULL);
 
     signature_size = libspdm_get_asym_signature_size(
         spdm_context->connection_info.algorithm.base_asym_algo);
