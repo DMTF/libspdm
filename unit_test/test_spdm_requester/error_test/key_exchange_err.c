@@ -15,8 +15,8 @@ static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 static uint8_t m_libspdm_zero_filled_buffer[64];
 
 static size_t libspdm_test_get_key_exchange_request_size(const void *spdm_context,
-                                                  const void *buffer,
-                                                  size_t buffer_size)
+                                                         const void *buffer,
+                                                         size_t buffer_size)
 {
     const spdm_key_exchange_request_t *spdm_request;
     size_t message_size;
