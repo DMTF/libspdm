@@ -15,8 +15,8 @@ static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 static uint8_t m_libspdm_zero_filled_buffer[64];
 
 static size_t libspdm_test_get_key_exchange_request_size(const void *spdm_context,
-                                                  const void *buffer,
-                                                  size_t buffer_size)
+                                                         const void *buffer,
+                                                         size_t buffer_size)
 {
     const spdm_key_exchange_request_t *spdm_request;
     size_t message_size;
@@ -4583,7 +4583,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
     }
         return LIBSPDM_STATUS_SUCCESS;
 
-case 0x1F: {
+    case 0x1F: {
         spdm_key_exchange_response_t *spdm_response;
         size_t dhe_key_size;
         uint32_t hash_size;
@@ -4644,7 +4644,6 @@ case 0x1F: {
         spdm_response->rsp_session_id = libspdm_allocate_rsp_session_id(spdm_context);
         spdm_response->mut_auth_requested = 0;
         spdm_response->req_slot_id_param = 0;
-        //libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, spdm_response->random_data);
         memset(spdm_response->random_data, 0x5c, SPDM_RANDOM_DATA_SIZE);
         ptr = (void *)(spdm_response + 1);
         dhe_context = libspdm_dhe_new(
