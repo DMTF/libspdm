@@ -6,6 +6,71 @@
 
 #include "internal/libspdm_crypt_lib.h"
 
+/**
+ * Release the specified asymmetric context.
+ *
+ * @param  context  Pointer to the asymmetric context to be released.
+ **/
+typedef void (*libspdm_asym_free_func)(void *context);
+
+/**
+ * Verifies the asymmetric signature.
+ *
+ * For RSA/ECDSA, param is NULL.
+ * For EdDSA, param is EdDSA context.
+ * For EdDSA25519, param is NULL.
+ * For EdDSA448, param is EdDSA448 context.
+ * For SM2_DSA, param is SM2 IDa.
+ *
+ * @param  context       Pointer to asymmetric context for signature verification.
+ * @param  hash_nid      Hash NID
+ * @param  param         Algorithm specific parameter
+ * @param  param_size    Algorithm specific parameter size
+ * @param  message       Pointer to octet message to be checked (before hash).
+ * @param  message_size  Size of the message in bytes.
+ * @param  signature     Pointer to asymmetric signature to be verified.
+ * @param  sig_size      Size of signature in bytes.
+ *
+ * @retval  true   Valid asymmetric signature.
+ * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
+ **/
+typedef bool (*libspdm_asym_verify_func)(void *context, size_t hash_nid,
+                                         const uint8_t *param, size_t param_size,
+                                         const uint8_t *message,
+                                         size_t message_size,
+                                         const uint8_t *signature,
+                                         size_t sig_size);
+
+/**
+ * Carries out the signature generation.
+ *
+ * If the signature buffer is too small to hold the contents of signature, false
+ * is returned and sig_size is set to the required buffer size to obtain the signature.
+ *
+ * For RSA/ECDSA/EdDSA25519, param is NULL.
+ * For EdDSA448, param is EdDSA448 context.
+ * For SM2_DSA, param is SM2 IDa.
+ *
+ * @param  context       Pointer to asymmetric context for signature generation.
+ * @param  hash_nid      Hash NID
+ * @param  param         Algorithm specific parameter
+ * @param  param_size    Algorithm specific parameter size
+ * @param  message       Pointer to octet message to be signed (before hash).
+ * @param  message_size  Size of the message in bytes.
+ * @param  signature     Pointer to buffer to receive signature.
+ * @param  sig_size      On input, the size of signature buffer in bytes.
+ *                       On output, the size of data returned in signature buffer in bytes.
+ *
+ * @retval  true   Signature successfully generated.
+ * @retval  false  Signature generation failed.
+ * @retval  false  Sig_size is too small.
+ **/
+typedef bool (*libspdm_asym_sign_func)(void *context, size_t hash_nid,
+                                       const uint8_t *param, size_t param_size,
+                                       const uint8_t *message,
+                                       size_t message_size, uint8_t *signature,
+                                       size_t *sig_size);
+
 typedef struct {
     bool is_requester;
     uint8_t op_code;
@@ -14,7 +79,7 @@ typedef struct {
     size_t zero_pad_size;
 } libspdm_signing_context_str_t;
 
-const libspdm_signing_context_str_t m_libspdm_signing_context_str_table[]={
+static const libspdm_signing_context_str_t m_libspdm_signing_context_str_table[] = {
     {false, SPDM_CHALLENGE_AUTH, SPDM_CHALLENGE_AUTH_SIGN_CONTEXT,
      SPDM_CHALLENGE_AUTH_SIGN_CONTEXT_SIZE, 36 - SPDM_CHALLENGE_AUTH_SIGN_CONTEXT_SIZE},
     {true, SPDM_CHALLENGE_AUTH, SPDM_MUT_CHALLENGE_AUTH_SIGN_CONTEXT,
@@ -170,53 +235,6 @@ static void libspdm_create_signing_context (
     LIBSPDM_ASSERT(false);
 }
 
-/**
- * Return asym NID, based upon the negotiated asym algorithm.
- *
- * @param  base_asym_algo                  SPDM base_asym_algo
- *
- * @return asym NID
- **/
-size_t libspdm_get_aysm_nid(uint32_t base_asym_algo)
-{
-    switch (base_asym_algo)
-    {
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
-        return LIBSPDM_CRYPTO_NID_RSASSA2048;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
-        return LIBSPDM_CRYPTO_NID_RSASSA3072;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
-        return LIBSPDM_CRYPTO_NID_RSASSA4096;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048:
-        return LIBSPDM_CRYPTO_NID_RSAPSS2048;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
-        return LIBSPDM_CRYPTO_NID_RSAPSS3072;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
-        return LIBSPDM_CRYPTO_NID_RSAPSS4096;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
-        return LIBSPDM_CRYPTO_NID_ECDSA_NIST_P256;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
-        return LIBSPDM_CRYPTO_NID_ECDSA_NIST_P384;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
-        return LIBSPDM_CRYPTO_NID_ECDSA_NIST_P521;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519:
-        return LIBSPDM_CRYPTO_NID_EDDSA_ED25519;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
-        return LIBSPDM_CRYPTO_NID_EDDSA_ED448;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
-        return LIBSPDM_CRYPTO_NID_SM2_DSA_P256;
-    default:
-        return LIBSPDM_CRYPTO_NID_NULL;
-    }
-}
-
-/**
- * This function returns the SPDM asymmetric algorithm size.
- *
- * @param  base_asym_algo                 SPDM base_asym_algo
- *
- * @return SPDM asymmetric algorithm size.
- **/
 uint32_t libspdm_get_asym_signature_size(uint32_t base_asym_algo)
 {
     switch (base_asym_algo) {
@@ -360,13 +378,6 @@ static libspdm_asym_free_func libspdm_get_asym_free(uint32_t base_asym_algo)
     return NULL;
 }
 
-/**
- * Release the specified asymmetric context,
- * based upon negotiated asymmetric algorithm.
- *
- * @param  base_asym_algo                 SPDM base_asym_algo
- * @param  context                      Pointer to the asymmetric context to be released.
- **/
 void libspdm_asym_free(uint32_t base_asym_algo, void *context)
 {
     libspdm_asym_free_func free_function;
@@ -385,7 +396,7 @@ void libspdm_asym_free(uint32_t base_asym_algo, void *context)
  * @retval true  asymmetric function need message hash
  * @retval false asymmetric function need raw message
  **/
-bool libspdm_asym_func_need_hash(uint32_t base_asym_algo)
+static bool libspdm_asym_func_need_hash(uint32_t base_asym_algo)
 {
     switch (base_asym_algo) {
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
@@ -412,12 +423,12 @@ bool libspdm_asym_func_need_hash(uint32_t base_asym_algo)
 }
 
 #if LIBSPDM_RSA_SSA_SUPPORT
-bool libspdm_rsa_pkcs1_verify_with_nid_wrap (void *context, size_t hash_nid,
-                                             const uint8_t *param, size_t param_size,
-                                             const uint8_t *message,
-                                             size_t message_size,
-                                             const uint8_t *signature,
-                                             size_t sig_size)
+static bool libspdm_rsa_pkcs1_verify_with_nid_wrap (void *context, size_t hash_nid,
+                                                    const uint8_t *param, size_t param_size,
+                                                    const uint8_t *message,
+                                                    size_t message_size,
+                                                    const uint8_t *signature,
+                                                    size_t sig_size)
 {
     return libspdm_rsa_pkcs1_verify_with_nid (context, hash_nid,
                                               message, message_size, signature, sig_size);
@@ -425,12 +436,12 @@ bool libspdm_rsa_pkcs1_verify_with_nid_wrap (void *context, size_t hash_nid,
 #endif
 
 #if LIBSPDM_RSA_PSS_SUPPORT
-bool libspdm_rsa_pss_verify_wrap (void *context, size_t hash_nid,
-                                  const uint8_t *param, size_t param_size,
-                                  const uint8_t *message,
-                                  size_t message_size,
-                                  const uint8_t *signature,
-                                  size_t sig_size)
+static bool libspdm_rsa_pss_verify_wrap (void *context, size_t hash_nid,
+                                         const uint8_t *param, size_t param_size,
+                                         const uint8_t *message,
+                                         size_t message_size,
+                                         const uint8_t *signature,
+                                         size_t sig_size)
 {
     return libspdm_rsa_pss_verify (context, hash_nid, message, message_size, signature, sig_size);
 }
@@ -534,21 +545,6 @@ static libspdm_asym_verify_func libspdm_get_asym_verify(uint32_t base_asym_algo)
     return NULL;
 }
 
-/**
- * Verifies the asymmetric signature,
- * based upon negotiated asymmetric algorithm.
- *
- * @param  base_asym_algo                 SPDM base_asym_algo
- * @param  base_hash_algo                 SPDM base_hash_algo
- * @param  context                      Pointer to asymmetric context for signature verification.
- * @param  message                      Pointer to octet message to be checked (before hash).
- * @param  message_size                  size of the message in bytes.
- * @param  signature                    Pointer to asymmetric signature to be verified.
- * @param  sig_size                      size of signature in bytes.
- *
- * @retval  true   Valid asymmetric signature.
- * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
- **/
 bool libspdm_asym_verify(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint32_t base_asym_algo, uint32_t base_hash_algo,
@@ -634,21 +630,6 @@ bool libspdm_asym_verify(
     }
 }
 
-/**
- * Verifies the asymmetric signature,
- * based upon negotiated asymmetric algorithm.
- *
- * @param  base_asym_algo                 SPDM base_asym_algo
- * @param  base_hash_algo                 SPDM base_hash_algo
- * @param  context                      Pointer to asymmetric context for signature verification.
- * @param  message_hash                      Pointer to octet message hash to be checked (after hash).
- * @param  hash_size                  size of the hash in bytes.
- * @param  signature                    Pointer to asymmetric signature to be verified.
- * @param  sig_size                      size of signature in bytes.
- *
- * @retval  true   Valid asymmetric signature.
- * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
- **/
 bool libspdm_asym_verify_hash(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint32_t base_asym_algo, uint32_t base_hash_algo,
@@ -740,25 +721,6 @@ bool libspdm_asym_verify_hash(
     }
 }
 
-/**
- * Carries out the signature generation.
- *
- * If the signature buffer is too small to hold the contents of signature, false
- * is returned and sig_size is set to the required buffer size to obtain the signature.
- *
- * @param  base_asym_algo                 SPDM base_asym_algo
- * @param  base_hash_algo                 SPDM base_hash_algo
- * @param  context                      Pointer to asymmetric context for signature generation.
- * @param  message                      Pointer to octet message to be signed (before hash).
- * @param  message_size                  size of the message in bytes.
- * @param  signature                    Pointer to buffer to receive signature.
- * @param  sig_size                      On input, the size of signature buffer in bytes.
- *                                     On output, the size of data returned in signature buffer in bytes.
- *
- * @retval  true   signature successfully generated.
- * @retval  false  signature generation failed.
- * @retval  false  sig_size is too small.
- **/
 bool libspdm_asym_sign(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint32_t base_asym_algo, uint32_t base_hash_algo,
@@ -844,25 +806,6 @@ bool libspdm_asym_sign(
     }
 }
 
-/**
- * Carries out the signature generation.
- *
- * If the signature buffer is too small to hold the contents of signature, false
- * is returned and sig_size is set to the required buffer size to obtain the signature.
- *
- * @param  base_asym_algo                 SPDM base_asym_algo
- * @param  base_hash_algo                 SPDM base_hash_algo
- * @param  context                      Pointer to asymmetric context for signature generation.
- * @param  message_hash                      Pointer to octet message hash to be signed (after hash).
- * @param  hash_size                  size of the hash in bytes.
- * @param  signature                    Pointer to buffer to receive signature.
- * @param  sig_size                      On input, the size of signature buffer in bytes.
- *                                     On output, the size of data returned in signature buffer in bytes.
- *
- * @retval  true   signature successfully generated.
- * @retval  false  signature generation failed.
- * @retval  false  sig_size is too small.
- **/
 bool libspdm_asym_sign_hash(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint32_t base_asym_algo, uint32_t base_hash_algo,
@@ -954,15 +897,6 @@ bool libspdm_asym_sign_hash(
     }
 }
 
-
-
-/**
- * This function returns the SPDM requester asymmetric algorithm size.
- *
- * @param  req_base_asym_alg               SPDM req_base_asym_alg
- *
- * @return SPDM requester asymmetric algorithm size.
- **/
 uint32_t libspdm_get_req_asym_signature_size(uint16_t req_base_asym_alg)
 {
     return libspdm_get_asym_signature_size(req_base_asym_alg);
@@ -980,13 +914,6 @@ static libspdm_asym_free_func libspdm_get_req_asym_free(uint16_t req_base_asym_a
     return libspdm_get_asym_free(req_base_asym_alg);
 }
 
-/**
- * Release the specified asymmetric context,
- * based upon negotiated requester asymmetric algorithm.
- *
- * @param  req_base_asym_alg               SPDM req_base_asym_alg
- * @param  context                      Pointer to the asymmetric context to be released.
- **/
 void libspdm_req_asym_free(uint16_t req_base_asym_alg, void *context)
 {
     libspdm_asym_free_func free_function;
@@ -997,14 +924,6 @@ void libspdm_req_asym_free(uint16_t req_base_asym_alg, void *context)
     free_function(context);
 }
 
-/**
- * Return if requester asymmetric function need message hash.
- *
- * @param  req_base_asym_alg               SPDM req_base_asym_alg
- *
- * @retval true  requester asymmetric function need message hash
- * @retval false requester asymmetric function need raw message
- **/
 bool libspdm_req_asym_func_need_hash(uint16_t req_base_asym_alg)
 {
     return libspdm_asym_func_need_hash(req_base_asym_alg);
@@ -1022,21 +941,6 @@ static libspdm_asym_verify_func libspdm_get_req_asym_verify(uint16_t req_base_as
     return libspdm_get_asym_verify(req_base_asym_alg);
 }
 
-/**
- * Verifies the asymmetric signature,
- * based upon negotiated requester asymmetric algorithm.
- *
- * @param  req_base_asym_alg               SPDM req_base_asym_alg
- * @param  base_hash_algo                 SPDM base_hash_algo
- * @param  context                      Pointer to asymmetric context for signature verification.
- * @param  message                      Pointer to octet message to be checked (before hash).
- * @param  message_size                  size of the message in bytes.
- * @param  signature                    Pointer to asymmetric signature to be verified.
- * @param  sig_size                      size of signature in bytes.
- *
- * @retval  true   Valid asymmetric signature.
- * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
- **/
 bool libspdm_req_asym_verify(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint16_t req_base_asym_alg,
@@ -1122,21 +1026,6 @@ bool libspdm_req_asym_verify(
     }
 }
 
-/**
- * Verifies the asymmetric signature,
- * based upon negotiated requester asymmetric algorithm.
- *
- * @param  req_base_asym_alg               SPDM req_base_asym_alg
- * @param  base_hash_algo                 SPDM base_hash_algo
- * @param  context                      Pointer to asymmetric context for signature verification.
- * @param  message_hash                      Pointer to octet message hash to be checked (after hash).
- * @param  hash_size                  size of the hash in bytes.
- * @param  signature                    Pointer to asymmetric signature to be verified.
- * @param  sig_size                      size of signature in bytes.
- *
- * @retval  true   Valid asymmetric signature.
- * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
- **/
 bool libspdm_req_asym_verify_hash(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint16_t req_base_asym_alg,
@@ -1240,25 +1129,6 @@ static libspdm_asym_sign_func libspdm_get_req_asym_sign(uint16_t req_base_asym_a
     return libspdm_get_asym_sign(req_base_asym_alg);
 }
 
-/**
- * Carries out the signature generation.
- *
- * If the signature buffer is too small to hold the contents of signature, false
- * is returned and sig_size is set to the required buffer size to obtain the signature.
- *
- * @param  req_base_asym_alg               SPDM req_base_asym_alg
- * @param  base_hash_algo                 SPDM base_hash_algo
- * @param  context                      Pointer to asymmetric context for signature generation.
- * @param  message                      Pointer to octet message to be signed (before hash).
- * @param  message_size                  size of the message in bytes.
- * @param  signature                    Pointer to buffer to receive signature.
- * @param  sig_size                      On input, the size of signature buffer in bytes.
- *                                     On output, the size of data returned in signature buffer in bytes.
- *
- * @retval  true   signature successfully generated.
- * @retval  false  signature generation failed.
- * @retval  false  sig_size is too small.
- **/
 bool libspdm_req_asym_sign(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint16_t req_base_asym_alg,
@@ -1344,25 +1214,6 @@ bool libspdm_req_asym_sign(
     }
 }
 
-/**
- * Carries out the signature generation.
- *
- * If the signature buffer is too small to hold the contents of signature, false
- * is returned and sig_size is set to the required buffer size to obtain the signature.
- *
- * @param  req_base_asym_alg               SPDM req_base_asym_alg
- * @param  base_hash_algo                 SPDM base_hash_algo
- * @param  context                      Pointer to asymmetric context for signature generation.
- * @param  message_hash                      Pointer to octet message hash to be signed (after hash).
- * @param  hash_size                  size of the hash in bytes.
- * @param  signature                    Pointer to buffer to receive signature.
- * @param  sig_size                      On input, the size of signature buffer in bytes.
- *                                     On output, the size of data returned in signature buffer in bytes.
- *
- * @retval  true   signature successfully generated.
- * @retval  false  signature generation failed.
- * @retval  false  sig_size is too small.
- **/
 bool libspdm_req_asym_sign_hash(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint16_t req_base_asym_alg,

@@ -66,4 +66,30 @@ bool libspdm_req_asym_get_private_key_from_pem(uint16_t req_base_asym_alg,
                                                const char *password,
                                                void **context);
 
+/**
+ * Return asym NID, based upon the negotiated asym algorithm.
+ *
+ * @param  base_asym_algo  SPDM base_asym_algo
+ *
+ * @return asym NID
+ **/
+size_t libspdm_get_aysm_nid(uint32_t base_asym_algo);
+
+/**
+ * Computes the hash of a input data buffer, based upon the negotiated measurement hash algorithm.
+ *
+ * This function performs the hash of a given data buffer, and return the hash value.
+ *
+ * @param  measurement_hash_algo  SPDM measurement_hash_algo
+ * @param  data                   Pointer to the buffer containing the data to be hashed.
+ * @param  data_size              Size of data buffer in bytes.
+ * @param  hash_value             Pointer to a buffer that receives the hash value.
+ *
+ * @retval true   Hash computation succeeded.
+ * @retval false  Hash computation failed.
+ **/
+bool libspdm_measurement_hash_all(uint32_t measurement_hash_algo,
+                                  const void *data, size_t data_size,
+                                  uint8_t *hash_value);
+
 #endif /* SPDM_CRYPT_EXT_LIB_H */

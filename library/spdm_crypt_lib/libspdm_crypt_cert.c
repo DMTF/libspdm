@@ -66,6 +66,21 @@
 #define ENCRY_ALGO_ED448_OID {0x2B, 0x65, 0x71}
 
 /**
+ * Retrieve the asymmetric public key from one DER-encoded X509 certificate.
+ *
+ * @param  cert       Pointer to the DER-encoded X509 certificate.
+ * @param  cert_size  Size of the X509 certificate in bytes.
+ * @param  context    Pointer to new-generated asymmetric context which contain the retrieved public
+ *                    key component. Use libspdm_asym_free() function to free the resource.
+ *
+ * @retval  true   public key was retrieved successfully.
+ * @retval  false  Fail to retrieve public key from X509 certificate.
+ **/
+typedef bool (*libspdm_asym_get_public_key_from_x509_func)(const uint8_t *cert,
+                                                           size_t cert_size,
+                                                           void **context);
+
+/**
  * Return asymmetric GET_PUBLIC_KEY_FROM_X509 function, based upon the negotiated asymmetric algorithm.
  *
  * @param  base_asym_algo                 SPDM base_asym_algo
@@ -145,10 +160,6 @@ bool libspdm_asym_get_public_key_from_x509(uint32_t base_asym_algo,
     }
     return get_public_key_from_x509_function(cert, cert_size, context);
 }
-
-
-
-
 
 /**
  * Return requester asymmetric GET_PUBLIC_KEY_FROM_X509 function, based upon the negotiated requester asymmetric algorithm.
@@ -1103,19 +1114,6 @@ bool libspdm_verify_cert_chain_data(uint8_t *cert_chain_data, size_t cert_chain_
     return true;
 }
 
-/**
- * This function verifies the integrity of certificate chain buffer including spdm_cert_chain_t header.
- *
- * @param  base_hash_algo                 SPDM base_hash_algo
- * @param  base_asym_algo                 SPDM base_asym_algo
- * @param  cert_chain_buffer              The certificate chain buffer including spdm_cert_chain_t header.
- * @param  cert_chain_buffer_size         size in bytes of the certificate chain buffer.
- * @param  is_device_cert_model           If true, the cert chain is DeviceCert model;
- *                                        If false, the cert chain is AliasCert model;
- *
- * @retval true  certificate chain buffer integrity verification pass.
- * @retval false certificate chain buffer integrity verification fail.
- **/
 bool libspdm_verify_certificate_chain_buffer(uint32_t base_hash_algo, uint32_t base_asym_algo,
                                              const void *cert_chain_buffer,
                                              size_t cert_chain_buffer_size,
@@ -1205,20 +1203,6 @@ bool libspdm_verify_certificate_chain_buffer(uint32_t base_hash_algo, uint32_t b
     return true;
 }
 
-/**
- * Retrieve the asymmetric public key from one DER-encoded X509 certificate,
- * based upon negotiated asymmetric or requester asymmetric algorithm.
- *
- *
- * @param  base_hash_algo                SPDM base_hash_algo.
- * @param  base_asym_alg                 SPDM base_asym_algo or req_base_asym_alg.
- * @param  cert_chain_data               Certitiface chain data without spdm_cert_chain_t header.
- * @param  cert_chain_data_size          size in bytes of the certitiface chain data.
- * @param  public_key                    Pointer to new-generated asymmetric context which contain the retrieved public key component.
- *
- * @retval  true   public key was retrieved successfully.
- * @retval  false  Fail to retrieve public key from X509 certificate.
- **/
 bool libspdm_get_leaf_cert_public_key_from_cert_chain(uint32_t base_hash_algo,
                                                       uint32_t base_asym_alg,
                                                       uint8_t *cert_chain_data,
@@ -1253,18 +1237,6 @@ bool libspdm_get_leaf_cert_public_key_from_cert_chain(uint32_t base_hash_algo,
     return true;
 }
 
-/**
- * Verify req info format refer to PKCS#10
- *
- * @param[in]      req_info              requester info to gen CSR
- * @param[in]      req_info_len          The len of requester info
- *
- * @retval  true    Vaild req info, have three situations:
- *                                  1: no req_info
- *                                  2: good format req_info without attributes
- *                                  3: good format req_info with good format attributes
- * @retval  false   Invaild req info.
- **/
 bool libspdm_verify_req_info(uint8_t *req_info, uint16_t req_info_len)
 {
     bool ret;

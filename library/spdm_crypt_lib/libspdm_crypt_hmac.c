@@ -7,13 +7,116 @@
 #include "internal/libspdm_crypt_lib.h"
 
 /**
+ * Allocates and initializes one HMAC context for subsequent hash use.
+ *
+ * @return  Pointer to the HMAC context that has been initialized.
+ *          If the allocations fails, libspdm_hmac_new_func() returns NULL.
+ **/
+typedef void *(*libspdm_hmac_new_func)(void);
+
+/**
+ * Release the specified HMAC context.
+ *
+ * @param  hmac_ctx  Pointer to the HMAC context to be released.
+ **/
+typedef void (*libspdm_hmac_free_func)(void *hmac_ctx);
+
+/**
+ * Set user-supplied key for subsequent use. It must be done before any
+ * calling to hmac_update().
+ *
+ * If hmac_ctx is NULL, then return false.
+ *
+ * @param[out]  hmac_ctx  Pointer to HMAC context.
+ * @param[in]   key       Pointer to the user-supplied key.
+ * @param[in]   key_size  Key size in bytes.
+ *
+ * @retval true   The key is set successfully.
+ * @retval false  The key is set unsuccessfully.
+ *
+ **/
+typedef bool (*libspdm_hmac_set_key_func)(void *hmac_ctx, const uint8_t *key, size_t key_size);
+
+/**
+ * Makes a copy of an existing HMAC context.
+ *
+ * If hmac_ctx is NULL, then return false.
+ * If new_hmac_ctx is NULL, then return false.
+ *
+ * @param[in]  hmac_ctx      Pointer to HMAC context being copied.
+ * @param[out] new_hmac_ctx  Pointer to new HMAC context.
+ *
+ * @retval true   HMAC context copy succeeded.
+ * @retval false  HMAC context copy failed.
+ *
+ **/
+typedef bool (*libspdm_hmac_duplicate_func)(const void *hmac_ctx, void *new_hmac_ctx);
+
+/**
+ * Digests the input data and updates HMAC context.
+ *
+ * This function performs HMAC digest on a data buffer of the specified size.
+ * It can be called multiple times to compute the digest of long or discontinuous data streams.
+ * HMAC context should be initialized by hmac_new(), and should not be finalized
+ * by hmac_final(). Behavior with invalid context is undefined.
+ *
+ * If hmac_ctx is NULL, then return false.
+ *
+ * @param[in, out]  hmac_ctx   Pointer to the HMAC context.
+ * @param[in]       data       Pointer to the buffer containing the data to be digested.
+ * @param[in]       data_size  Size of data buffer in bytes.
+ *
+ * @retval true   HMAC data digest succeeded.
+ * @retval false  HMAC data digest failed.
+ *
+ **/
+typedef bool (*libspdm_hmac_update_func)(void *hmac_ctx, const void *data, size_t data_size);
+
+/**
+ * Completes computation of the HMAC digest value.
+ *
+ * This function completes HMAC hash computation and retrieves the digest value into
+ * the specified memory. After this function has been called, the HMAC context cannot
+ * be used again.
+ *
+ * If hmac_ctx is NULL, then return false.
+ * If hmac_value is NULL, then return false.
+ *
+ * @param[in, out]  hmac_ctx    Pointer to the HMAC context.
+ * @param[out]      hmac_value  Pointer to a buffer that receives the HMAC digest value.
+ *
+ * @retval true   HMAC digest computation succeeded.
+ * @retval false  HMAC digest computation failed.
+ *
+ **/
+typedef bool (*libspdm_hmac_final_func)(void *hmac_ctx, uint8_t *hmac_value);
+
+/**
+ * Computes the HMAC of a input data buffer.
+ *
+ * This function performs the HMAC of a given data buffer, and return the hash value.
+ *
+ * @param  data        Pointer to the buffer containing the data to be HMACed.
+ * @param  data_size   Size of data buffer in bytes.
+ * @param  key         Pointer to the user-supplied key.
+ * @param  key_size    Key size in bytes.
+ * @param  hash_value  Pointer to a buffer that receives the HMAC value.
+ *
+ * @retval true   HMAC computation succeeded.
+ * @retval false  HMAC computation failed.
+ **/
+typedef bool (*libspdm_hmac_all_func)(const void *data, size_t data_size,
+                                      const uint8_t *key, size_t key_size,
+                                      uint8_t *hmac_value);
+
+/**
  * Return HMAC new function, based upon the negotiated HMAC algorithm.
  *
  * @param  base_hash_algo                  SPDM base_hash_algo
  *
  * @return HMAC new function
  **/
-libspdm_hmac_new_func libspdm_get_hmac_new_func(uint32_t base_hash_algo)
+static libspdm_hmac_new_func libspdm_get_hmac_new_func(uint32_t base_hash_algo)
 {
     switch (base_hash_algo) {
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256:
@@ -80,7 +183,7 @@ libspdm_hmac_new_func libspdm_get_hmac_new_func(uint32_t base_hash_algo)
  *
  * @return HMAC free function
  **/
-libspdm_hmac_free_func libspdm_get_hmac_free_func(uint32_t base_hash_algo)
+static libspdm_hmac_free_func libspdm_get_hmac_free_func(uint32_t base_hash_algo)
 {
     switch (base_hash_algo) {
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256:
@@ -147,7 +250,7 @@ libspdm_hmac_free_func libspdm_get_hmac_free_func(uint32_t base_hash_algo)
  *
  * @return HMAC init function
  **/
-libspdm_hmac_set_key_func libspdm_get_hmac_init_func(uint32_t base_hash_algo)
+static libspdm_hmac_set_key_func libspdm_get_hmac_init_func(uint32_t base_hash_algo)
 {
     switch (base_hash_algo) {
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256:
@@ -214,7 +317,7 @@ libspdm_hmac_set_key_func libspdm_get_hmac_init_func(uint32_t base_hash_algo)
  *
  * @return HMAC duplicate function
  **/
-libspdm_hmac_duplicate_func libspdm_get_hmac_duplicate_func(uint32_t base_hash_algo)
+static libspdm_hmac_duplicate_func libspdm_get_hmac_duplicate_func(uint32_t base_hash_algo)
 {
     switch (base_hash_algo) {
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256:
@@ -281,7 +384,7 @@ libspdm_hmac_duplicate_func libspdm_get_hmac_duplicate_func(uint32_t base_hash_a
  *
  * @return HMAC update function
  **/
-libspdm_hmac_update_func libspdm_get_hmac_update_func(uint32_t base_hash_algo)
+static libspdm_hmac_update_func libspdm_get_hmac_update_func(uint32_t base_hash_algo)
 {
     switch (base_hash_algo) {
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256:
@@ -348,7 +451,7 @@ libspdm_hmac_update_func libspdm_get_hmac_update_func(uint32_t base_hash_algo)
  *
  * @return HMAC final function
  **/
-libspdm_hmac_final_func libspdm_get_hmac_final_func(uint32_t base_hash_algo)
+static libspdm_hmac_final_func libspdm_get_hmac_final_func(uint32_t base_hash_algo)
 {
     switch (base_hash_algo) {
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256:
@@ -415,7 +518,7 @@ libspdm_hmac_final_func libspdm_get_hmac_final_func(uint32_t base_hash_algo)
  *
  * @return HMAC function
  **/
-libspdm_hmac_all_func libspdm_get_hmac_all_func(uint32_t base_hash_algo)
+static libspdm_hmac_all_func libspdm_get_hmac_all_func(uint32_t base_hash_algo)
 {
     switch (base_hash_algo) {
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256:
@@ -475,14 +578,6 @@ libspdm_hmac_all_func libspdm_get_hmac_all_func(uint32_t base_hash_algo)
     return NULL;
 }
 
-/**
- * Allocates and initializes one HMAC context for subsequent use.
- *
- * @param  base_hash_algo                 SPDM base_hash_algo
- *
- * @return  Pointer to the HMAC context that has been initialized.
- *         If the allocations fails, libspdm_hash_new() returns NULL.
- **/
 void *libspdm_hmac_new(uint32_t base_hash_algo)
 {
     libspdm_hmac_new_func hmac_function;
@@ -493,12 +588,6 @@ void *libspdm_hmac_new(uint32_t base_hash_algo)
     return hmac_function();
 }
 
-/**
- * Release the specified HMAC context.
- *
- * @param  base_hash_algo                 SPDM base_hash_algo
- * @param  hmac_ctx                   Pointer to the HMAC context to be released.
- **/
 void libspdm_hmac_free(uint32_t base_hash_algo, void *hmac_ctx)
 {
     libspdm_hmac_free_func hmac_function;
@@ -509,20 +598,6 @@ void libspdm_hmac_free(uint32_t base_hash_algo, void *hmac_ctx)
     hmac_function(hmac_ctx);
 }
 
-/**
- * Set user-supplied key for subsequent use. It must be done before any
- * calling to hmac_update().
- *
- * If hmac_ctx is NULL, then return false.
- *
- * @param[out]  hmac_ctx  Pointer to HMAC context.
- * @param[in]   key                Pointer to the user-supplied key.
- * @param[in]   key_size            key size in bytes.
- *
- * @retval true   The key is set successfully.
- * @retval false  The key is set unsuccessfully.
- *
- **/
 bool libspdm_hmac_init(uint32_t base_hash_algo,
                        void *hmac_ctx, const uint8_t *key,
                        size_t key_size)
@@ -535,19 +610,6 @@ bool libspdm_hmac_init(uint32_t base_hash_algo,
     return hmac_function(hmac_ctx, key, key_size);
 }
 
-/**
- * Makes a copy of an existing HMAC context.
- *
- * If hmac_ctx is NULL, then return false.
- * If new_hmac_ctx is NULL, then return false.
- *
- * @param[in]  hmac_ctx     Pointer to HMAC context being copied.
- * @param[out] new_hmac_ctx  Pointer to new HMAC context.
- *
- * @retval true   HMAC context copy succeeded.
- * @retval false  HMAC context copy failed.
- *
- **/
 bool libspdm_hmac_duplicate(uint32_t base_hash_algo, const void *hmac_ctx, void *new_hmac_ctx)
 {
     libspdm_hmac_duplicate_func hmac_function;
@@ -558,24 +620,6 @@ bool libspdm_hmac_duplicate(uint32_t base_hash_algo, const void *hmac_ctx, void 
     return hmac_function(hmac_ctx, new_hmac_ctx);
 }
 
-/**
- * Digests the input data and updates HMAC context.
- *
- * This function performs HMAC digest on a data buffer of the specified size.
- * It can be called multiple times to compute the digest of long or discontinuous data streams.
- * HMAC context should be initialized by hmac_new(), and should not be finalized
- * by hmac_final(). Behavior with invalid context is undefined.
- *
- * If hmac_ctx is NULL, then return false.
- *
- * @param[in, out]  hmac_ctx Pointer to the HMAC context.
- * @param[in]       data              Pointer to the buffer containing the data to be digested.
- * @param[in]       data_size          size of data buffer in bytes.
- *
- * @retval true   HMAC data digest succeeded.
- * @retval false  HMAC data digest failed.
- *
- **/
 bool libspdm_hmac_update(uint32_t base_hash_algo,
                          void *hmac_ctx, const void *data,
                          size_t data_size)
@@ -588,24 +632,6 @@ bool libspdm_hmac_update(uint32_t base_hash_algo,
     return hmac_function(hmac_ctx, data, data_size);
 }
 
-/**
- * Completes computation of the HMAC digest value.
- *
- * This function completes HMAC hash computation and retrieves the digest value into
- * the specified memory. After this function has been called, the HMAC context cannot
- * be used again.
- *
- * If hmac_ctx is NULL, then return false.
- * If hmac_value is NULL, then return false.
- *
- * @param[in, out]  hmac_ctx  Pointer to the HMAC context.
- * @param[out]      hmac_value          Pointer to a buffer that receives the HMAC digest
- *                                    value.
- *
- * @retval true   HMAC digest computation succeeded.
- * @retval false  HMAC digest computation failed.
- *
- **/
 bool libspdm_hmac_final(uint32_t base_hash_algo, void *hmac_ctx,  uint8_t *hmac_value)
 {
     libspdm_hmac_final_func hmac_function;
@@ -616,21 +642,6 @@ bool libspdm_hmac_final(uint32_t base_hash_algo, void *hmac_ctx,  uint8_t *hmac_
     return hmac_function(hmac_ctx, hmac_value);
 }
 
-/**
- * Computes the HMAC of a input data buffer, based upon the negotiated HMAC algorithm.
- *
- * This function performs the HMAC of a given data buffer, and return the hash value.
- *
- * @param  base_hash_algo                 SPDM base_hash_algo
- * @param  data                         Pointer to the buffer containing the data to be HMACed.
- * @param  data_size                     size of data buffer in bytes.
- * @param  key                          Pointer to the user-supplied key.
- * @param  key_size                      key size in bytes.
- * @param  hash_value                    Pointer to a buffer that receives the HMAC value.
- *
- * @retval true   HMAC computation succeeded.
- * @retval false  HMAC computation failed.
- **/
 bool libspdm_hmac_all(uint32_t base_hash_algo, const void *data,
                       size_t data_size, const uint8_t *key,
                       size_t key_size, uint8_t *hmac_value)

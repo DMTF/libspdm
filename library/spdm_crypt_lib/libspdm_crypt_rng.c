@@ -6,13 +6,6 @@
 
 #include "internal/libspdm_crypt_lib.h"
 
-/**
- * Generates a random byte stream of the specified size.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  size                         size of random bytes to generate.
- * @param  rand                         Pointer to buffer to receive random value.
- **/
 bool libspdm_get_random_number(size_t size, uint8_t *rand)
 {
     if (size == 0) {

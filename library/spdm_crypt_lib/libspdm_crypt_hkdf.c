@@ -7,13 +7,47 @@
 #include "internal/libspdm_crypt_lib.h"
 
 /**
+ * Derive HMAC-based Extract key Derivation Function (HKDF) Extract.
+ *
+ * @param  ikm           Pointer to the input key material.
+ * @param  ikm_size      Key size in bytes.
+ * @param  salt          Pointer to the salt value.
+ * @param  salt_size     Salt size in bytes.
+ * @param  prk_out       Pointer to buffer to receive hkdf value.
+ * @param  prk_out_size  Size of hkdf bytes to generate.
+ *
+ * @retval true   Hkdf generated successfully.
+ * @retval false  Hkdf generation failed.
+ **/
+typedef bool (*libspdm_hkdf_extract_func)(const uint8_t *ikm, size_t ikm_size,
+                                          const uint8_t *salt, size_t salt_size,
+                                          uint8_t *prk_out, size_t prk_out_size);
+
+/**
+ * Derive HMAC-based Expand key Derivation Function (HKDF) Expand.
+ *
+ * @param  prk        Pointer to the user-supplied key.
+ * @param  prk_size   Key size in bytes.
+ * @param  info       Pointer to the application specific info.
+ * @param  info_size  Info size in bytes.
+ * @param  out        Pointer to buffer to receive hkdf value.
+ * @param  out_size   Size of hkdf bytes to generate.
+ *
+ * @retval true   Hkdf generated successfully.
+ * @retval false  Hkdf generation failed.
+ **/
+typedef bool (*libspdm_hkdf_expand_func)(const uint8_t *prk, size_t prk_size,
+                                         const uint8_t *info, size_t info_size,
+                                         uint8_t *out, size_t out_size);
+
+/**
  * Return HKDF extract function, based upon the negotiated HKDF algorithm.
  *
  * @param  base_hash_algo                 SPDM base_hash_algo
  *
  * @return HKDF extract function
  **/
-libspdm_hkdf_extract_func get_spdm_hkdf_extract_func(uint32_t base_hash_algo)
+static libspdm_hkdf_extract_func get_spdm_hkdf_extract_func(uint32_t base_hash_algo)
 {
     switch (base_hash_algo) {
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256:
@@ -73,19 +107,6 @@ libspdm_hkdf_extract_func get_spdm_hkdf_extract_func(uint32_t base_hash_algo)
     return NULL;
 }
 
-/**
- * Derive HMAC-based Extract key Derivation Function (HKDF) Extract, based upon the negotiated HKDF algorithm.
- *
- * @param  ikm              Pointer to the input key material.
- * @param  ikm_size          key size in bytes.
- * @param  salt             Pointer to the salt value.
- * @param  salt_size         salt size in bytes.
- * @param  prk_out           Pointer to buffer to receive hkdf value.
- * @param  prk_out_size       size of hkdf bytes to generate.
- *
- * @retval true   Hkdf generated successfully.
- * @retval false  Hkdf generation failed.
- **/
 bool libspdm_hkdf_extract(uint32_t base_hash_algo, const uint8_t *ikm, size_t ikm_size,
                           const uint8_t *salt, size_t salt_size,
                           uint8_t *prk_out, size_t prk_out_size)
@@ -105,7 +126,7 @@ bool libspdm_hkdf_extract(uint32_t base_hash_algo, const uint8_t *ikm, size_t ik
  *
  * @return HKDF expand function
  **/
-libspdm_hkdf_expand_func get_spdm_hkdf_expand_func(uint32_t base_hash_algo)
+static libspdm_hkdf_expand_func get_spdm_hkdf_expand_func(uint32_t base_hash_algo)
 {
     switch (base_hash_algo) {
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256:
@@ -165,20 +186,6 @@ libspdm_hkdf_expand_func get_spdm_hkdf_expand_func(uint32_t base_hash_algo)
     return NULL;
 }
 
-/**
- * Derive HMAC-based Expand key Derivation Function (HKDF) Expand, based upon the negotiated HKDF algorithm.
- *
- * @param  base_hash_algo                 SPDM base_hash_algo
- * @param  prk                          Pointer to the user-supplied key.
- * @param  prk_size                      key size in bytes.
- * @param  info                         Pointer to the application specific info.
- * @param  info_size                     info size in bytes.
- * @param  out                          Pointer to buffer to receive hkdf value.
- * @param  out_size                      size of hkdf bytes to generate.
- *
- * @retval true   Hkdf generated successfully.
- * @retval false  Hkdf generation failed.
- **/
 bool libspdm_hkdf_expand(uint32_t base_hash_algo, const uint8_t *prk,
                          size_t prk_size, const uint8_t *info,
                          size_t info_size, uint8_t *out, size_t out_size)
