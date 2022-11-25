@@ -78,6 +78,7 @@
 | [AARCH64_GCC](https://packages.ubuntu.com/bionic/gcc-aarch64-linux-gnu) |  -   |  -  |  -  | aarch64-linux-gnu-gcc |    -    |    -    |
 | [RISCV_GNU](https://github.com/riscv/riscv-gnu-toolchain) |  -   |  -  |  -  |    -    | riscv32-unknown-linux-gnu-gcc | riscv64-unknown-linux-gnu-gcc |
 | [RISCV64_GCC](https://packages.ubuntu.com/bionic/gcc-riscv64-linux-gnu) |  -   |  -  |  -  |    -    |    -    | riscv64-linux-gnu-gcc |
+| [RISCV_XPACK](https://github.com/xpack-dev-tools/riscv-none-elf-gcc-xpack) |  -   |  -  |  -  |    -    |    -    | riscv-none-elf-gcc |
 
 ## Documents
 
@@ -165,6 +166,15 @@
       echo 'export PATH=~/gcc-arm-11.2-2022.02-x86_64-aarch64-none-linux-gnu/bin:$PATH' | sudo tee -a ~/.bashrc
       source ~/.bashrc
       ```
+    e) [RISCV_XPACK](https://github.com/xpack-dev-tools/riscv-none-elf-gcc-xpack/releases/).
+    - Download xPack GNU RISC-V Embedded GCC v12.2.0-1(xpack-riscv-none-elf-gcc-12.1.0-2-linux-x64.tar.gz), and unzip it.
+    - Add <tool_path>/bin to the $PATH environment. For example:
+      ```
+      echo 'export PATH=~/xpack-riscv-none-elf-gcc-12.2.0-1/bin:$PATH' | sudo tee -a ~/.bashrc
+      source ~/.bashrc
+      ```
+    - Test install successfully. Use `riscv-none-elf-gcc --version`, then the successful install can see `riscv-none-elf-gcc (xPack GNU RISC-V Embedded GCC x86_64) 12.1.0`.
+
 
 2) [CMake](https://cmake.org/).
 
@@ -340,6 +350,31 @@ Example CMake commands:
 
    ```
    cmake -DARCH=aarch64 -DTOOLCHAIN=ARM_GNU -DTARGET=Release -DCRYPTO=mbedtls ..
+   ```
+
+   Note: `make -j` can be used to accelerate the build.
+
+#### Linux Builds with RISCV_XPACK Toolchain
+
+   For RISCV_XPACK toolchain GNU/Linux target (riscv-none-elf-gcc-12.1.0-2-linux-x64) build on Linux, 
+   (The riscv64 arch is not supported now.)
+   ```
+   cd libspdm
+   mkdir build
+   cd build
+   cmake -DARCH=<riscv32> -DTOOLCHAIN=RISCV_XPACK -DTARGET=<Debug|Release> -DCRYPTO=<mbedtls|openssl> ..
+   make copy_sample_key
+   make
+   ```
+
+   Example CMake commands:
+
+   ```
+   cmake -DARCH=riscv32 -DTOOLCHAIN=RISCV_XPACK -DTARGET=Debug -DCRYPTO=mbedtls ..
+   ```
+
+   ```
+   cmake -DARCH=riscv32 -DTOOLCHAIN=RISCV_XPACK -DTARGET=Release -DCRYPTO=mbedtls ..
    ```
 
    Note: `make -j` can be used to accelerate the build.

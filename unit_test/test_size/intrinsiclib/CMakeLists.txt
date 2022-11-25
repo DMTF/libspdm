@@ -13,10 +13,18 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
 )
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-    SET(src_intrinsiclib
-        compiler_stub.c
-        memory_intrinsics.c
-    )
+    if(TOOLCHAIN STREQUAL "RISCV_XPACK")
+        SET(src_intrinsiclib
+            compiler_stub.c
+            memory_intrinsics.c
+            ashldi3.c
+        )
+    else()
+        SET(src_intrinsiclib
+            compiler_stub.c
+            memory_intrinsics.c
+        )
+    endif()
 elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
     if(ARCH STREQUAL "x64")
         SET(src_intrinsiclib

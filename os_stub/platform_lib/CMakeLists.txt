@@ -5,7 +5,7 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/include/hal/${ARCH}
 )
 
-if(CMAKE_SYSTEM_NAME MATCHES "Linux" AND NOT TOOLCHAIN STREQUAL "ARM_DS2022")
+if(CMAKE_SYSTEM_NAME MATCHES "Linux" AND (NOT TOOLCHAIN STREQUAL "ARM_DS2022") AND (NOT TOOLCHAIN STREQUAL "RISCV_XPACK"))
 SET(src_platform_lib
     time_linux.c
     watchdog.c
@@ -17,7 +17,7 @@ SET(src_platform_lib
 )
 else()
 SET(src_platform_lib
-    time_arm_sample.c
+    time_sample.c
     watchdog.c
 )
 endif()
