@@ -8,19 +8,6 @@
 
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
 
-/**
- * Get the SPDM encapsulated GET_CERTIFICATE request.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  encap_request_size             size in bytes of the encapsulated request data.
- *                                     On input, it means the size in bytes of encapsulated request data buffer.
- *                                     On output, it means the size in bytes of copied encapsulated request data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired encapsulated request data buffer if RETURN_BUFFER_TOO_SMALL is returned.
- * @param  encap_request                 A pointer to the encapsulated request data.
- *
- * @retval RETURN_SUCCESS               The encapsulated request is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- **/
 libspdm_return_t
 libspdm_get_encap_request_get_certificate(libspdm_context_t *spdm_context,
                                           size_t *encap_request_size,
@@ -73,18 +60,6 @@ libspdm_get_encap_request_get_certificate(libspdm_context_t *spdm_context,
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-/**
- * Process the SPDM encapsulated CERTIFICATE response.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  encap_response_size            size in bytes of the encapsulated response data.
- * @param  encap_response                A pointer to the encapsulated response data.
- * @param  need_continue                     Indicate if encapsulated communication need continue.
- *
- * @retval RETURN_SUCCESS               The encapsulated response is processed.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
- **/
 libspdm_return_t libspdm_process_encap_response_certificate(
     libspdm_context_t *spdm_context, size_t encap_response_size,
     const void *encap_response, bool *need_continue)

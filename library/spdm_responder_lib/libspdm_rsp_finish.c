@@ -9,17 +9,6 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
-/**
- * This function verifies the finish HMAC based upon TH.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  The session info of an SPDM session.
- * @param  hmac_data                     The HMAC data buffer.
- * @param  hmac_data_size                 size in bytes of the HMAC data buffer.
- *
- * @retval true  HMAC verification pass.
- * @retval false HMAC verification fail.
- **/
 bool libspdm_verify_finish_req_hmac(libspdm_context_t *spdm_context,
                                     libspdm_session_info_t *session_info,
                                     const uint8_t *hmac, size_t hmac_size)
@@ -100,17 +89,6 @@ bool libspdm_verify_finish_req_hmac(libspdm_context_t *spdm_context,
 }
 
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
-/**
- * This function verifies the finish signature based upon TH.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  The session info of an SPDM session.
- * @param  sign_data                     The signature data buffer.
- * @param  sign_data_size                 size in bytes of the signature data buffer.
- *
- * @retval true  signature verification pass.
- * @retval false signature verification fail.
- **/
 bool libspdm_verify_finish_req_signature(libspdm_context_t *spdm_context,
                                          libspdm_session_info_t *session_info,
                                          const void *sign_data,
@@ -269,16 +247,6 @@ bool libspdm_verify_finish_req_signature(libspdm_context_t *spdm_context,
 }
 #endif
 
-/**
- * This function generates the finish HMAC based upon TH.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  The session info of an SPDM session.
- * @param  hmac                         The buffer to store the finish HMAC.
- *
- * @retval true  finish HMAC is generated.
- * @retval false finish HMAC is not generated.
- **/
 bool libspdm_generate_finish_rsp_hmac(libspdm_context_t *spdm_context,
                                       libspdm_session_info_t *session_info,
                                       uint8_t *hmac)
@@ -354,23 +322,6 @@ bool libspdm_generate_finish_rsp_hmac(libspdm_context_t *spdm_context,
     return true;
 }
 
-/**
- * Process the SPDM FINISH request and return the response.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  request_size                  size in bytes of the request data.
- * @param  request                      A pointer to the request data.
- * @param  response_size                 size in bytes of the response data.
- *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
- * @param  response                     A pointer to the response data.
- *
- * @retval RETURN_SUCCESS               The request is processed and the response is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
- **/
 libspdm_return_t libspdm_get_response_finish(void *context, size_t request_size,
                                              const void *request,
                                              size_t *response_size,
@@ -411,8 +362,7 @@ libspdm_return_t libspdm_get_response_finish(void *context, size_t request_size,
             spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
             SPDM_KEY_EXCHANGE, response_size, response);
     }
-    if (spdm_context->connection_info.connection_state <
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
+    if (spdm_context->connection_info.connection_state < LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNEXPECTED_REQUEST,
                                                0, response_size, response);

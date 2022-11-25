@@ -78,7 +78,7 @@ static libspdm_return_t libspdm_get_encap_struct_via_op_code
     return LIBSPDM_STATUS_INVALID_PARAMETER;
 }
 
-void libspdm_encap_move_to_next_op_code(libspdm_context_t *spdm_context)
+static void libspdm_encap_move_to_next_op_code(libspdm_context_t *spdm_context)
 {
     uint8_t index;
 
@@ -115,7 +115,7 @@ void libspdm_encap_move_to_next_op_code(libspdm_context_t *spdm_context)
  * @retval RETURN_SUCCESS               The SPDM encapsulated request is generated successfully.
  * @retval RETURN_UNSUPPORTED           Do not know how to process the request.
  **/
-libspdm_return_t libspdm_process_encapsulated_response(
+static libspdm_return_t libspdm_process_encapsulated_response(
     libspdm_context_t *spdm_context, size_t encap_response_size,
     const void *encap_response, size_t *encap_request_size,
     void *encap_request)
@@ -176,20 +176,11 @@ libspdm_return_t libspdm_process_encapsulated_response(
     return status;
 }
 
-/**
- * This function initializes the mut_auth encapsulated state.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  mut_auth_requested             Indicate of the mut_auth_requested through KEY_EXCHANGE or CHALLENG response.
- **/
-void libspdm_init_mut_auth_encap_state(libspdm_context_t *spdm_context,
-                                       uint8_t mut_auth_requested)
+void libspdm_init_mut_auth_encap_state(libspdm_context_t *spdm_context, uint8_t mut_auth_requested)
 {
     spdm_context->encap_context.current_request_op_code = 0x00;
-    if (mut_auth_requested ==
-        SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS) {
-        spdm_context->encap_context.current_request_op_code =
-            SPDM_GET_DIGESTS;
+    if (mut_auth_requested == SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS) {
+        spdm_context->encap_context.current_request_op_code = SPDM_GET_DIGESTS;
     }
     spdm_context->encap_context.request_id = 0;
     spdm_context->encap_context.last_encap_request_size = 0;
@@ -234,11 +225,6 @@ void libspdm_init_mut_auth_encap_state(libspdm_context_t *spdm_context,
     }
 }
 
-/**
- * This function initializes the basic_mut_auth encapsulated state.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- **/
 void libspdm_init_basic_mut_auth_encap_state(libspdm_context_t *spdm_context)
 {
     spdm_context->encap_context.current_request_op_code = 0x00;
@@ -288,11 +274,6 @@ void libspdm_init_basic_mut_auth_encap_state(libspdm_context_t *spdm_context)
     }
 }
 
-/**
- * This function initializes the key_update encapsulated state.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- **/
 void libspdm_init_key_update_encap_state(void *context)
 {
     libspdm_context_t *spdm_context;
@@ -317,23 +298,6 @@ void libspdm_init_key_update_encap_state(void *context)
         SPDM_KEY_UPDATE;
 }
 
-/**
- * Process the SPDM ENCAPSULATED_REQUEST request and return the response.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  request_size                  size in bytes of the request data.
- * @param  request                      A pointer to the request data.
- * @param  response_size                 size in bytes of the response data.
- *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
- * @param  response                     A pointer to the response data.
- *
- * @retval RETURN_SUCCESS               The request is processed and the response is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
- **/
 libspdm_return_t libspdm_get_response_encapsulated_request(
     void *context, size_t request_size, const void *request,
     size_t *response_size, void *response)
@@ -412,23 +376,6 @@ libspdm_return_t libspdm_get_response_encapsulated_request(
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-/**
- * Process the SPDM ENCAPSULATED_RESPONSE_ACK request and return the response.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  request_size                  size in bytes of the request data.
- * @param  request                      A pointer to the request data.
- * @param  response_size                 size in bytes of the response data.
- *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
- * @param  response                     A pointer to the response data.
- *
- * @retval RETURN_SUCCESS               The request is processed and the response is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
- **/
 libspdm_return_t libspdm_get_response_encapsulated_response_ack(
     void *context, size_t request_size, const void *request,
     size_t *response_size, void *response)
@@ -553,14 +500,6 @@ libspdm_return_t libspdm_get_response_encapsulated_response_ack(
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-/**
- * This function handles the encap error response.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  error_code                    Indicate the error code.
- *
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- **/
 libspdm_return_t libspdm_handle_encap_error_response_main(
     libspdm_context_t *spdm_context, uint8_t error_code)
 {

@@ -53,18 +53,6 @@ static uint32_t libspdm_prioritize_algorithm(const uint32_t *priority_table,
     return 0;
 }
 
-/**
- * Process the SPDM NEGOTIATE_ALGORITHMS request and return the response.
- *
- * @param  spdm_context   A pointer to the SPDM context.
- * @param  request_size   Size in bytes of the request data.
- * @param  request        A pointer to the request data.
- * @param  response_size  Size in bytes of the response data.
- *                        On input, it means the size in bytes of response data buffer.
- *                        On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                        and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
- * @param  response       A pointer to the response data.
- **/
 libspdm_return_t libspdm_get_response_algorithms(void *context,
                                                  size_t request_size,
                                                  const void *request,

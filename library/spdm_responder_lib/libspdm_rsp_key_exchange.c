@@ -8,16 +8,6 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
-/**
- * This function generates the key exchange HMAC based upon TH.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  The session info of an SPDM session.
- * @param  hmac                         The buffer to store the key exchange HMAC.
- *
- * @retval true  key exchange HMAC is generated.
- * @retval false key exchange HMAC is not generated.
- **/
 bool libspdm_generate_key_exchange_rsp_hmac(libspdm_context_t *spdm_context,
                                             libspdm_session_info_t *session_info,
                                             uint8_t *hmac)
@@ -77,16 +67,6 @@ bool libspdm_generate_key_exchange_rsp_hmac(libspdm_context_t *spdm_context,
     return true;
 }
 
-/**
- * This function generates the key exchange signature based upon TH.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  The session info of an SPDM session.
- * @param  signature                    The buffer to store the key exchange signature.
- *
- * @retval true  key exchange signature is generated.
- * @retval false key exchange signature is not generated.
- **/
 bool libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context,
                                                  libspdm_session_info_t *session_info,
                                                  uint8_t *signature)
@@ -167,23 +147,6 @@ bool libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context
     return result;
 }
 
-/**
- * Process the SPDM KEY_EXCHANGE request and return the response.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  request_size                  size in bytes of the request data.
- * @param  request                      A pointer to the request data.
- * @param  response_size                 size in bytes of the response data.
- *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
- * @param  response                     A pointer to the response data.
- *
- * @retval RETURN_SUCCESS               The request is processed and the response is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
- **/
 libspdm_return_t libspdm_get_response_key_exchange(void *context,
                                                    size_t request_size,
                                                    const void *request,
