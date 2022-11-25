@@ -6,18 +6,6 @@
 
 #include "internal/libspdm_requester_lib.h"
 
-/**
- * This function sends GET_VERSION, GET_CAPABILITIES, NEGOTIATE_ALGORITHM
- * to initialize the connection with SPDM responder.
- *
- * Before this function, the requester configuration data can be set via libspdm_set_data.
- * After this function, the negotiated configuration data can be got via libspdm_get_data.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- *
- * @retval RETURN_SUCCESS               The connection is initialized successfully.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- **/
 libspdm_return_t libspdm_init_connection(void *context, bool get_version_only)
 {
     libspdm_return_t status;
@@ -44,27 +32,6 @@ libspdm_return_t libspdm_init_connection(void *context, bool get_version_only)
 }
 
 #if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP)
-/**
- * This function sends KEY_EXCHANGE/FINISH or PSK_EXCHANGE/PSK_FINISH
- * to start an SPDM Session.
- *
- * If encapsulated mutual authentication is requested from the responder,
- * this function also perform the encapsulated mutual authentication.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  use_psk                       false means to use KEY_EXCHANGE/FINISH to start a session.
- *                                     true means to use PSK_EXCHANGE/PSK_FINISH to start a session.
- * @param  measurement_hash_type          The type of the measurement hash.
- * @param  slot_id                      The number of slot for the certificate chain.
- * @param  session_policy               The policy for the session.
- * @param  session_id                    The session ID of the session.
- * @param  heartbeat_period              The heartbeat period for the session.
- * @param  measurement_hash              A pointer to a destination buffer to store the measurement hash.
- *
- * @retval RETURN_SUCCESS               The SPDM session is started.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
- **/
 libspdm_return_t libspdm_start_session(void *context, bool use_psk,
                                        uint8_t measurement_hash_type,
                                        uint8_t slot_id,
@@ -176,42 +143,6 @@ libspdm_return_t libspdm_start_session(void *context, bool use_psk,
     return status;
 }
 
-/**
- * This function sends KEY_EXCHANGE/FINISH or PSK_EXCHANGE/PSK_FINISH
- * to start an SPDM Session.
- *
- * If encapsulated mutual authentication is requested from the responder,
- * this function also perform the encapsulated mutual authentication.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  use_psk                       false means to use KEY_EXCHANGE/FINISH to start a session.
- *                                     true means to use PSK_EXCHANGE/PSK_FINISH to start a session.
- * @param  measurement_hash_type          The type of the measurement hash.
- * @param  slot_id                      The number of slot for the certificate chain.
- * @param  session_id                    The session ID of the session.
- * @param  session_policy               The policy for the session.
- * @param  heartbeat_period              The heartbeat period for the session.
- * @param  measurement_hash              A pointer to a destination buffer to store the measurement hash.
- * @param  requester_random_in           A buffer to hold the requester random as input, if not NULL.
- * @param  requester_random_in_size      The size of requester_random_in.
- *                                      If use_psk is false, it must be 32 bytes.
- *                                      If use_psk is true, it means the PSK context and must be 32 bytes at least,
- *                                      but not exceed LIBSPDM_PSK_CONTEXT_LENGTH.
- * @param  requester_random              A buffer to hold the requester random, if not NULL.
- * @param  requester_random_size         On input, the size of requester_random buffer.
- *                                      On output, the size of data returned in requester_random buffer.
- *                                      If use_psk is false, it must be 32 bytes.
- *                                      If use_psk is true, it means the PSK context and must be 32 bytes at least.
- * @param  responder_random              A buffer to hold the responder random, if not NULL.
- * @param  responder_random_size         On input, the size of requester_random buffer.
- *                                      On output, the size of data returned in requester_random buffer.
- *                                      If use_psk is false, it must be 32 bytes.
- *                                      If use_psk is true, it means the PSK context. It could be 0 if device does not support context.
- *
- * @retval RETURN_SUCCESS               The SPDM session is started.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
- **/
 libspdm_return_t libspdm_start_session_ex(void *context, bool use_psk,
                                           uint8_t measurement_hash_type,
                                           uint8_t slot_id,
@@ -343,18 +274,6 @@ libspdm_return_t libspdm_start_session_ex(void *context, bool use_psk,
     return status;
 }
 
-/**
- * This function sends END_SESSION
- * to stop an SPDM Session.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_id                    The session ID of the session.
- * @param  end_session_attributes         The end session attribute for the session.
- *
- * @retval RETURN_SUCCESS               The SPDM session is stopped.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
- **/
 libspdm_return_t libspdm_stop_session(void *context, uint32_t session_id,
                                       uint8_t end_session_attributes)
 {
@@ -370,33 +289,6 @@ libspdm_return_t libspdm_stop_session(void *context, uint32_t session_id,
 }
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP) */
 
-/**
- * Send and receive an SPDM or APP message.
- *
- * The SPDM message can be a normal message or a secured message in SPDM session.
- *
- * The APP message is encoded to a secured message directly in SPDM session.
- * The APP message format is defined by the transport layer.
- * Take MCTP as example: APP message == MCTP header (MCTP_MESSAGE_TYPE_SPDM) + SPDM message
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_id                    Indicates if it is a secured message protected via SPDM session.
- *                                     If session_id is NULL, it is a normal message.
- *                                     If session_id is NOT NULL, it is a secured message.
- * @param  is_app_message                 Indicates if it is an APP message or SPDM message.
- * @param  request                      A pointer to the request data.
- * @param  request_size                  size in bytes of the request data.
- * @param  response                     A pointer to the response data.
- * @param  response_size                 size in bytes of the response data.
- *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
- *
- * @retval RETURN_SUCCESS               The SPDM request is set successfully.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
- **/
 libspdm_return_t libspdm_send_receive_data(void *context, const uint32_t *session_id,
                                            bool is_app_message,
                                            const void *request, size_t request_size,

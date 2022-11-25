@@ -104,17 +104,7 @@ static libspdm_return_t libspdm_requester_respond_if_ready(libspdm_context_t *sp
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-/**
- * This function handles simple error code.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  error_code                    Indicate the error code.
- *
- * @retval RETURN_NO_RESPONSE           If the error code is BUSY.
- * @retval RETURN_DEVICE_ERROR          If the error code is REQUEST_RESYNCH or others.
- **/
-libspdm_return_t libspdm_handle_simple_error_response(void *context,
-                                                      uint8_t error_code)
+libspdm_return_t libspdm_handle_simple_error_response(void *context, uint8_t error_code)
 {
     libspdm_context_t *spdm_context;
 
@@ -190,7 +180,7 @@ static libspdm_return_t libspdm_handle_response_not_ready(libspdm_context_t *spd
                                               expected_response_size);
 }
 
-#if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP || LIBSPDM_ENABLE_CHUNK_CAP
+#if (LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP) || (LIBSPDM_ENABLE_CHUNK_CAP)
 libspdm_return_t libspdm_handle_error_large_response(
     libspdm_context_t *spdm_context,
     const uint32_t *session_id,
@@ -400,34 +390,6 @@ libspdm_return_t libspdm_handle_error_large_response(
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
 
-/**
- * This function handles the error response.
- *
- * The SPDM response code must be SPDM_ERROR.
- * For error code RESPONSE_NOT_READY, this function sends RESPOND_IF_READY and receives an expected SPDM response.
- * For error code BUSY, this function shrinks the managed buffer, and return RETURN_NO_RESPONSE.
- * For error code REQUEST_RESYNCH, this function shrinks the managed buffer, clears connection_state, and return RETURN_DEVICE_ERROR.
- * For error code DECRYPT_ERROR, end the session: free session id and session key, return RETURN_SECURITY_VIOLATION.
- * For any other error code, this function shrinks the managed buffer, and return RETURN_DEVICE_ERROR.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_id                    Indicates if it is a secured message protected via SPDM session.
- *                                       If session_id is NULL, it is a normal message.
- *                                       If session_id is NOT NULL, it is a secured message.
- * @param  response_size                 The size of the response.
- *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned.
- * @param  response                     The SPDM response message.
- * @param  original_request_code          Indicate the original request code.
- * @param  expected_response_code         Indicate the expected response code.
- * @param  expected_response_size         Indicate the expected response size.
- *
- * @retval RETURN_SUCCESS               The error code is RESPONSE_NOT_READY. The RESPOND_IF_READY is sent and an expected SPDM response is received.
- * @retval RETURN_NO_RESPONSE           The error code is BUSY.
- * @retval RETURN_DEVICE_ERROR          The error code is REQUEST_RESYNCH or others.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    The error code is DECRYPT_ERROR and session_id is NOT NULL.
- **/
 libspdm_return_t libspdm_handle_error_response_main(
     libspdm_context_t *spdm_context, const uint32_t *session_id,
     size_t *response_size, void **response,

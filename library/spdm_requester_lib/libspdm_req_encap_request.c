@@ -13,15 +13,6 @@ typedef struct {
     libspdm_get_encap_response_func get_encap_response_func;
 } libspdm_get_encap_response_struct_t;
 
-/**
- * Register an SPDM encapsulated message process function.
- *
- * If the default encapsulated message process function cannot handle the encapsulated message,
- * this function will be invoked.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  get_encap_response_func         The function to process the encapsuled message.
- **/
 void libspdm_register_get_encap_response_func(void *context,
                                               const libspdm_get_encap_response_func
                                               get_encap_response_func)
@@ -120,22 +111,6 @@ static libspdm_return_t libspdm_process_encapsulated_request(libspdm_context_t *
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-/**
- * This function executes a series of SPDM encapsulated requests and receives SPDM encapsulated responses.
- *
- * This function starts with the first encapsulated request (such as GET_ENCAPSULATED_REQUEST)
- * and ends with last encapsulated response (such as RESPONSE_PAYLOAD_TYPE_ABSENT or RESPONSE_PAYLOAD_TYPE_SLOT_NUMBER).
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_id                    Indicate if the encapsulated request is a secured message.
- *                                     If session_id is NULL, it is a normal message.
- *                                     If session_id is NOT NULL, it is a secured message.
- * @param  mut_auth_requested             Indicate of the mut_auth_requested through KEY_EXCHANGE or CHALLENG response.
- * @param  req_slot_id_param               req_slot_id_param from the RESPONSE_PAYLOAD_TYPE_REQ_SLOT_NUMBER.
- *
- * @retval RETURN_SUCCESS               The SPDM Encapsulated requests are sent and the responses are received.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- **/
 libspdm_return_t libspdm_encapsulated_request(libspdm_context_t *spdm_context,
                                               const uint32_t *session_id,
                                               uint8_t mut_auth_requested,
@@ -286,13 +261,11 @@ libspdm_return_t libspdm_encapsulated_request(libspdm_context_t *spdm_context,
             libspdm_release_receiver_buffer (spdm_context);
             return LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
-        if (spdm_response_size <
-            sizeof(spdm_encapsulated_request_response_t)) {
+        if (spdm_response_size < sizeof(spdm_encapsulated_request_response_t)) {
             libspdm_release_receiver_buffer (spdm_context);
             return LIBSPDM_STATUS_INVALID_MSG_SIZE;
         }
-        if (spdm_response_size ==
-            sizeof(spdm_encapsulated_request_response_t)) {
+        if (spdm_response_size == sizeof(spdm_encapsulated_request_response_t)) {
 
             /* Done*/
             libspdm_release_receiver_buffer (spdm_context);
@@ -300,17 +273,14 @@ libspdm_return_t libspdm_encapsulated_request(libspdm_context_t *spdm_context,
         }
         request_id = libspdm_encapsulated_request_response->header.param1;
 
-        encapsulated_request =
-            (void *)(libspdm_encapsulated_request_response + 1);
+        encapsulated_request = (void *)(libspdm_encapsulated_request_response + 1);
         encapsulated_request_size =
-            spdm_response_size -
-            sizeof(spdm_encapsulated_request_response_t);
+            spdm_response_size - sizeof(spdm_encapsulated_request_response_t);
 
         libspdm_copy_mem (spdm_context->last_spdm_request,
                           sizeof(spdm_context->last_spdm_request),
                           encapsulated_request,
-                          encapsulated_request_size
-                          );
+                          encapsulated_request_size);
         spdm_context->last_spdm_request_size = encapsulated_request_size;
         encapsulated_request = (void *)spdm_context->last_spdm_request;
 
@@ -336,15 +306,11 @@ libspdm_return_t libspdm_encapsulated_request(libspdm_context_t *spdm_context,
         spdm_deliver_encapsulated_response_request->header
         .request_response_code =
             SPDM_DELIVER_ENCAPSULATED_RESPONSE;
-        spdm_deliver_encapsulated_response_request->header.param1 =
-            request_id;
+        spdm_deliver_encapsulated_response_request->header.param1 = request_id;
         spdm_deliver_encapsulated_response_request->header.param2 = 0;
-        encapsulated_response =
-            (void *)(spdm_deliver_encapsulated_response_request +
-                     1);
+        encapsulated_response = (void *)(spdm_deliver_encapsulated_response_request + 1);
         encapsulated_response_size =
-            spdm_request_size -
-            sizeof(spdm_deliver_encapsulated_response_request_t);
+            spdm_request_size - sizeof(spdm_deliver_encapsulated_response_request_t);
 
         status = libspdm_process_encapsulated_request(
             spdm_context, encapsulated_request_size,
@@ -356,8 +322,7 @@ libspdm_return_t libspdm_encapsulated_request(libspdm_context_t *spdm_context,
         }
 
         spdm_request_size =
-            sizeof(spdm_deliver_encapsulated_response_request_t) +
-            encapsulated_response_size;
+            sizeof(spdm_deliver_encapsulated_response_request_t) + encapsulated_response_size;
         status = libspdm_send_spdm_request(
             spdm_context, session_id, spdm_request_size,
             spdm_request);
@@ -474,22 +439,7 @@ libspdm_return_t libspdm_encapsulated_request(libspdm_context_t *spdm_context,
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-/**
- * This function executes a series of SPDM encapsulated requests and receives SPDM encapsulated responses.
- *
- * This function starts with the first encapsulated request (such as GET_ENCAPSULATED_REQUEST)
- * and ends with last encapsulated response (such as RESPONSE_PAYLOAD_TYPE_ABSENT or RESPONSE_PAYLOAD_TYPE_SLOT_NUMBER).
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_id                    Indicate if the encapsulated request is a secured message.
- *                                     If session_id is NULL, it is a normal message.
- *                                     If session_id is NOT NULL, it is a secured message.
- *
- * @retval RETURN_SUCCESS               The SPDM Encapsulated requests are sent and the responses are received.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- **/
-libspdm_return_t libspdm_send_receive_encap_request(void *spdm_context,
-                                                    const uint32_t *session_id)
+libspdm_return_t libspdm_send_receive_encap_request(void *spdm_context, const uint32_t *session_id)
 {
     return libspdm_encapsulated_request(spdm_context, session_id, 0, NULL);
 }

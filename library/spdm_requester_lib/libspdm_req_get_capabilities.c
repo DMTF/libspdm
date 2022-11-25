@@ -319,29 +319,6 @@ receive_done:
     return status;
 }
 
-/**
- * This function sends GET_CAPABILITIES and receives CAPABILITIES. It may retry GET_CAPABILITIES
- * multiple times if the Responder replies with a Busy error.
- *
- * @param  spdm_context A pointer to the SPDM context.
- *
- * @retval LIBSPDM_STATUS_SUCCESS
- *         GET_CAPABILITIES was sent and CAPABILITIES was received.
- * @retval LIBSPDM_STATUS_INVALID_STATE_LOCAL
- *         Cannot send GET_CAPABILITIES due to Requester's state. Send GET_VERSION first.
- * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE
- *         The size of the CAPABILITIES response is invalid.
- * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD
- *         The CAPABILITIES response contains one or more invalid fields.
- * @retval LIBSPDM_STATUS_ERROR_PEER
- *         The Responder returned an unexpected error.
- * @retval LIBSPDM_STATUS_BUSY_PEER
- *         The Responder continually returned Busy error messages.
- * @retval LIBSPDM_STATUS_RESYNCH_PEER
- *         The Responder returned a RequestResynch error message.
- * @retval LIBSPDM_STATUS_BUFFER_FULL
- *         The buffer used to store transcripts is exhausted.
- **/
 libspdm_return_t libspdm_get_capabilities(libspdm_context_t *spdm_context)
 {
     size_t retry;

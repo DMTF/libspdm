@@ -33,17 +33,6 @@ typedef struct {
 } libspdm_psk_exchange_response_max_t;
 #pragma pack()
 
-/**
- * This function verifies the PSK exchange HMAC based upon TH.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  The session info of an SPDM session.
- * @param  hmac_data                     The HMAC data buffer.
- * @param  hmac_data_size                 size in bytes of the HMAC data buffer.
- *
- * @retval true  HMAC verification pass.
- * @retval false HMAC verification fail.
- **/
 bool libspdm_verify_psk_exchange_rsp_hmac(libspdm_context_t *spdm_context,
                                           libspdm_session_info_t *session_info,
                                           const void *hmac_data,
@@ -514,19 +503,6 @@ receive_done:
     return status;
 }
 
-/**
- * This function sends PSK_EXCHANGE and receives PSK_EXCHANGE_RSP for SPDM PSK exchange.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  measurement_hash_type          measurement_hash_type to the PSK_EXCHANGE request.
- * @param  session_policy               The policy for the session.
- * @param  session_id                    session_id from the PSK_EXCHANGE_RSP response.
- * @param  heartbeat_period              heartbeat_period from the PSK_EXCHANGE_RSP response.
- * @param  measurement_hash              measurement_hash from the PSK_EXCHANGE_RSP response.
- *
- * @retval RETURN_SUCCESS               The PSK_EXCHANGE is sent and the PSK_EXCHANGE_RSP is received.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- **/
 libspdm_return_t libspdm_send_receive_psk_exchange(libspdm_context_t *spdm_context,
                                                    uint8_t measurement_hash_type,
                                                    uint8_t session_policy,
@@ -552,30 +528,6 @@ libspdm_return_t libspdm_send_receive_psk_exchange(libspdm_context_t *spdm_conte
     return status;
 }
 
-/**
- * This function sends PSK_EXCHANGE and receives PSK_EXCHANGE_RSP for SPDM PSK exchange.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  measurement_hash_type          measurement_hash_type to the PSK_EXCHANGE request.
- * @param  session_policy               The policy for the session.
- * @param  session_id                    session_id from the PSK_EXCHANGE_RSP response.
- * @param  heartbeat_period              heartbeat_period from the PSK_EXCHANGE_RSP response.
- * @param  measurement_hash              measurement_hash from the PSK_EXCHANGE_RSP response.
- * @param  requester_context_in          A buffer to hold the requester context as input, if not NULL.
- * @param  requester_context_in_size     The size of requester_context_in.
- *                                      It must be 32 bytes at least, but not exceed LIBSPDM_PSK_CONTEXT_LENGTH.
- * @param  requester_context             A buffer to hold the requester context, if not NULL.
- * @param  requester_context_size        On input, the size of requester_context buffer.
- *                                      On output, the size of data returned in requester_context buffer.
- *                                      It must be 32 bytes at least.
- * @param  responder_context             A buffer to hold the responder context, if not NULL.
- * @param  responder_context_size        On input, the size of requester_context buffer.
- *                                      On output, the size of data returned in requester_context buffer.
- *                                      It could be 0 if device does not support context.
- *
- * @retval RETURN_SUCCESS               The PSK_EXCHANGE is sent and the PSK_EXCHANGE_RSP is received.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- **/
 libspdm_return_t libspdm_send_receive_psk_exchange_ex(libspdm_context_t *spdm_context,
                                                       uint8_t measurement_hash_type,
                                                       uint8_t session_policy,

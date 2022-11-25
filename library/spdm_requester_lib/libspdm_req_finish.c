@@ -21,17 +21,6 @@ typedef struct {
 } libspdm_finish_response_mine_t;
 #pragma pack()
 
-/**
- * This function verifies the finish HMAC based upon TH.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  The session info of an SPDM session.
- * @param  hmac_data                     The HMAC data buffer.
- * @param  hmac_data_size                 size in bytes of the HMAC data buffer.
- *
- * @retval true  HMAC verification pass.
- * @retval false HMAC verification fail.
- **/
 bool libspdm_verify_finish_rsp_hmac(libspdm_context_t *spdm_context,
                                     libspdm_session_info_t *session_info,
                                     const void *hmac_data, size_t hmac_data_size)
@@ -111,16 +100,6 @@ bool libspdm_verify_finish_rsp_hmac(libspdm_context_t *spdm_context,
     return true;
 }
 
-/**
- * This function generates the finish HMAC based upon TH.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  The session info of an SPDM session.
- * @param  hmac                         The buffer to store the finish HMAC.
- *
- * @retval true  finish HMAC is generated.
- * @retval false finish HMAC is not generated.
- **/
 bool libspdm_generate_finish_req_hmac(libspdm_context_t *spdm_context,
                                       libspdm_session_info_t *session_info,
                                       void *hmac)
@@ -197,16 +176,7 @@ bool libspdm_generate_finish_req_hmac(libspdm_context_t *spdm_context,
 }
 
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
-/**
- * This function generates the finish signature based upon TH.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  The session info of an SPDM session.
- * @param  signature                    The buffer to store the finish signature.
- *
- * @retval true  finish signature is generated.
- * @retval false finish signature is not generated.
- **/
+
 bool libspdm_generate_finish_req_signature(libspdm_context_t *spdm_context,
                                            libspdm_session_info_t *session_info,
                                            uint8_t *signature)
@@ -299,7 +269,7 @@ bool libspdm_generate_finish_req_signature(libspdm_context_t *spdm_context,
 
     return result;
 }
-#endif
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
 
 /**
  * This function sends FINISH and receives FINISH_RSP for SPDM finish.
