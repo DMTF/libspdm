@@ -7,6 +7,65 @@
 #include "internal/libspdm_crypt_lib.h"
 
 /**
+ * Allocates and Initializes one Diffie-Hellman Ephemeral (DHE) context for subsequent use.
+ *
+ * @param nid cipher NID
+ *
+ * @return  Pointer to the Diffie-Hellman context that has been initialized.
+ **/
+typedef void *(*libspdm_dhe_new_by_nid_func)(size_t nid);
+
+/**
+ * Generates DHE public key.
+ *
+ * This function generates random secret exponent, and computes the public key, which is
+ * returned via parameter public_key and public_key_size. DH context is updated accordingly.
+ * If the public_key buffer is too small to hold the public key, false is returned and
+ * public_key_size is set to the required buffer size to obtain the public key.
+ *
+ * @param  context          Pointer to the DHE context.
+ * @param  public_key       Pointer to the buffer to receive generated public key.
+ * @param  public_key_size  On input, the size of public_key buffer in bytes.
+ *                          On output, the size of data returned in public_key buffer in bytes.
+ *
+ * @retval true   DHE public key generation succeeded.
+ * @retval false  DHE public key generation failed.
+ * @retval false  public_key_size is not large enough.
+ **/
+typedef bool (*libspdm_dhe_generate_key_func)(void *context,
+                                              uint8_t *public_key,
+                                              size_t *public_key_size);
+
+/**
+ * Computes exchanged common key.
+ *
+ * Given peer's public key, this function computes the exchanged common key, based on its own
+ * context including value of prime modulus and random secret exponent.
+ *
+ * @param  context               Pointer to the DHE context.
+ * @param  peer_public_key       Pointer to the peer's public key.
+ * @param  peer_public_key_size  Size of peer's public key in bytes.
+ * @param  key                   Pointer to the buffer to receive generated key.
+ * @param  key_size              On input, the size of key buffer in bytes.
+ *                               On output, the size of data returned in key buffer in bytes.
+ *
+ * @retval true   DHE exchanged key generation succeeded.
+ * @retval false  DHE exchanged key generation failed.
+ * @retval false  Key_size is not large enough.
+ **/
+typedef bool (*libspdm_dhe_compute_key_func)(void *context,
+                                             const uint8_t *peer_public,
+                                             size_t peer_public_size,
+                                             uint8_t *key, size_t *key_size);
+
+/**
+ * Release the specified DHE context.
+ *
+ * @param  context  Pointer to the DHE context to be released.
+ **/
+typedef void (*libspdm_dhe_free_func)(void *context);
+
+/**
  * This function returns the SPDM DHE algorithm key size.
  *
  * @param  dhe_named_group                SPDM dhe_named_group
@@ -42,7 +101,7 @@ uint32_t libspdm_get_dhe_pub_key_size(uint16_t dhe_named_group)
  *
  * @return DHE cipher ID
  **/
-size_t libspdm_get_dhe_nid(uint16_t dhe_named_group)
+static size_t libspdm_get_dhe_nid(uint16_t dhe_named_group)
 {
     switch (dhe_named_group) {
     case SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_2048:
@@ -71,7 +130,7 @@ size_t libspdm_get_dhe_nid(uint16_t dhe_named_group)
  *
  * @return DHE new by NID function
  **/
-libspdm_dhe_new_by_nid_func libspdm_get_dhe_new(uint16_t dhe_named_group)
+static libspdm_dhe_new_by_nid_func libspdm_get_dhe_new(uint16_t dhe_named_group)
 {
     switch (dhe_named_group) {
     case SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_2048:
@@ -107,17 +166,6 @@ libspdm_dhe_new_by_nid_func libspdm_get_dhe_new(uint16_t dhe_named_group)
     return NULL;
 }
 
-/**
- * Allocates and Initializes one Diffie-Hellman Ephemeral (DHE) context for subsequent use,
- * based upon negotiated DHE algorithm.
- *
- * @param  dhe_named_group                SPDM dhe_named_group
- * @param  is_initiator                   if the caller is initiator.
- *                                       true: initiator
- *                                       false: not an initiator
- *
- * @return  Pointer to the Diffie-Hellman context that has been initialized.
- **/
 void *libspdm_dhe_new(spdm_version_number_t spdm_version,
                       uint16_t dhe_named_group, bool is_initiator)
 {
@@ -183,7 +231,7 @@ void *libspdm_dhe_new(spdm_version_number_t spdm_version,
  *
  * @return DHE free function
  **/
-libspdm_dhe_free_func libspdm_get_dhe_free(uint16_t dhe_named_group)
+static libspdm_dhe_free_func libspdm_get_dhe_free(uint16_t dhe_named_group)
 {
     switch (dhe_named_group) {
     case SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_2048:
@@ -219,13 +267,6 @@ libspdm_dhe_free_func libspdm_get_dhe_free(uint16_t dhe_named_group)
     return NULL;
 }
 
-/**
- * Release the specified DHE context,
- * based upon negotiated DHE algorithm.
- *
- * @param  dhe_named_group                SPDM dhe_named_group
- * @param  context                      Pointer to the DHE context to be released.
- **/
 void libspdm_dhe_free(uint16_t dhe_named_group, void *context)
 {
     libspdm_dhe_free_func free_function;
@@ -243,7 +284,7 @@ void libspdm_dhe_free(uint16_t dhe_named_group, void *context)
  *
  * @return DHE generate key function
  **/
-libspdm_dhe_generate_key_func libspdm_get_dhe_generate_key(uint16_t dhe_named_group)
+static libspdm_dhe_generate_key_func libspdm_get_dhe_generate_key(uint16_t dhe_named_group)
 {
     switch (dhe_named_group) {
     case SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_2048:
@@ -279,25 +320,6 @@ libspdm_dhe_generate_key_func libspdm_get_dhe_generate_key(uint16_t dhe_named_gr
     return NULL;
 }
 
-/**
- * Generates DHE public key,
- * based upon negotiated DHE algorithm.
- *
- * This function generates random secret exponent, and computes the public key, which is
- * returned via parameter public_key and public_key_size. DH context is updated accordingly.
- * If the public_key buffer is too small to hold the public key, false is returned and
- * public_key_size is set to the required buffer size to obtain the public key.
- *
- * @param  dhe_named_group                SPDM dhe_named_group
- * @param  context                      Pointer to the DHE context.
- * @param  public_key                    Pointer to the buffer to receive generated public key.
- * @param  public_key_size                On input, the size of public_key buffer in bytes.
- *                                     On output, the size of data returned in public_key buffer in bytes.
- *
- * @retval true   DHE public key generation succeeded.
- * @retval false  DHE public key generation failed.
- * @retval false  public_key_size is not large enough.
- **/
 bool libspdm_dhe_generate_key(uint16_t dhe_named_group, void *context,
                               uint8_t *public_key,
                               size_t *public_key_size)
@@ -317,7 +339,7 @@ bool libspdm_dhe_generate_key(uint16_t dhe_named_group, void *context,
  *
  * @return DHE compute key function
  **/
-libspdm_dhe_compute_key_func libspdm_get_dhe_compute_key(uint16_t dhe_named_group)
+static libspdm_dhe_compute_key_func libspdm_get_dhe_compute_key(uint16_t dhe_named_group)
 {
     switch (dhe_named_group) {
     case SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_2048:
@@ -353,25 +375,6 @@ libspdm_dhe_compute_key_func libspdm_get_dhe_compute_key(uint16_t dhe_named_grou
     return NULL;
 }
 
-/**
- * Computes exchanged common key,
- * based upon negotiated DHE algorithm.
- *
- * Given peer's public key, this function computes the exchanged common key, based on its own
- * context including value of prime modulus and random secret exponent.
- *
- * @param  dhe_named_group                SPDM dhe_named_group
- * @param  context                      Pointer to the DHE context.
- * @param  peer_public_key                Pointer to the peer's public key.
- * @param  peer_public_key_size            size of peer's public key in bytes.
- * @param  key                          Pointer to the buffer to receive generated key.
- * @param  key_size                      On input, the size of key buffer in bytes.
- *                                     On output, the size of data returned in key buffer in bytes.
- *
- * @retval true   DHE exchanged key generation succeeded.
- * @retval false  DHE exchanged key generation failed.
- * @retval false  key_size is not large enough.
- **/
 bool libspdm_dhe_compute_key(uint16_t dhe_named_group, void *context,
                              const uint8_t *peer_public,
                              size_t peer_public_size, uint8_t *key,

@@ -6,6 +6,7 @@
 
 #include "library/spdm_lib_config.h"
 #include "spdm_crypt_ext_lib/spdm_crypt_ext_lib.h"
+#include "hal/library/cryptlib.h"
 #include "spdm_crypt_ext_lib/cryptlib_ext.h"
 #include "industry_standard/spdm.h"
 #include "hal/library/debuglib.h"
@@ -132,4 +133,130 @@ bool libspdm_req_asym_get_private_key_from_pem(uint16_t req_base_asym_alg,
     }
     return asym_get_private_key_from_pem(pem_data, pem_size, password,
                                          context);
+}
+
+/**
+ * Computes the hash of a input data buffer.
+ *
+ * This function performs the hash of a given data buffer, and return the hash value.
+ *
+ * @param  data        Pointer to the buffer containing the data to be hashed.
+ * @param  data_size   Size of data buffer in bytes.
+ * @param  hash_value  Pointer to a buffer that receives the hash value.
+ *
+ * @retval true   hash computation succeeded.
+ * @retval false  hash computation failed.
+ **/
+typedef bool (*libspdm_hash_all_func)(const void *data, size_t data_size, uint8_t *hash_value);
+
+/**
+ * Return hash function, based upon the negotiated measurement hash algorithm.
+ *
+ * @param  measurement_hash_algo          SPDM measurement_hash_algo
+ *
+ * @return hash function
+ **/
+static libspdm_hash_all_func libspdm_spdm_measurement_hash_func(uint32_t measurement_hash_algo)
+{
+    switch (measurement_hash_algo) {
+    case SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA_256:
+#if LIBSPDM_SHA256_SUPPORT
+        return libspdm_sha256_hash_all;
+#else
+        LIBSPDM_ASSERT(false);
+        break;
+#endif
+    case SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA_384:
+#if LIBSPDM_SHA384_SUPPORT
+        return libspdm_sha384_hash_all;
+#else
+        LIBSPDM_ASSERT(false);
+        break;
+#endif
+    case SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA_512:
+#if LIBSPDM_SHA512_SUPPORT
+        return libspdm_sha512_hash_all;
+#else
+        LIBSPDM_ASSERT(false);
+        break;
+#endif
+    case SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA3_256:
+#if LIBSPDM_SHA3_256_SUPPORT
+        return libspdm_sha3_256_hash_all;
+#else
+        LIBSPDM_ASSERT(false);
+        break;
+#endif
+    case SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA3_384:
+#if LIBSPDM_SHA3_384_SUPPORT
+        return libspdm_sha3_384_hash_all;
+#else
+        LIBSPDM_ASSERT(false);
+        break;
+#endif
+    case SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SHA3_512:
+#if LIBSPDM_SHA3_512_SUPPORT
+        return libspdm_sha3_512_hash_all;
+#else
+        LIBSPDM_ASSERT(false);
+        break;
+#endif
+    case SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_TPM_ALG_SM3_256:
+#if LIBSPDM_SM3_256_SUPPORT
+        return libspdm_sm3_256_hash_all;
+#else
+        LIBSPDM_ASSERT(false);
+        break;
+#endif
+    default:
+        LIBSPDM_ASSERT(false);
+        break;
+    }
+
+    return NULL;
+}
+
+bool libspdm_measurement_hash_all(uint32_t measurement_hash_algo,
+                                  const void *data, size_t data_size,
+                                  uint8_t *hash_value)
+{
+    libspdm_hash_all_func hash_function;
+    hash_function = libspdm_spdm_measurement_hash_func(measurement_hash_algo);
+    if (hash_function == NULL) {
+        return false;
+    }
+    return hash_function(data, data_size, hash_value);
+}
+
+size_t libspdm_get_aysm_nid(uint32_t base_asym_algo)
+{
+    switch (base_asym_algo)
+    {
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
+        return LIBSPDM_CRYPTO_NID_RSASSA2048;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
+        return LIBSPDM_CRYPTO_NID_RSASSA3072;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
+        return LIBSPDM_CRYPTO_NID_RSASSA4096;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048:
+        return LIBSPDM_CRYPTO_NID_RSAPSS2048;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
+        return LIBSPDM_CRYPTO_NID_RSAPSS3072;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
+        return LIBSPDM_CRYPTO_NID_RSAPSS4096;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
+        return LIBSPDM_CRYPTO_NID_ECDSA_NIST_P256;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
+        return LIBSPDM_CRYPTO_NID_ECDSA_NIST_P384;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
+        return LIBSPDM_CRYPTO_NID_ECDSA_NIST_P521;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519:
+        return LIBSPDM_CRYPTO_NID_EDDSA_ED25519;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
+        return LIBSPDM_CRYPTO_NID_EDDSA_ED448;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
+        return LIBSPDM_CRYPTO_NID_SM2_DSA_P256;
+    default:
+        return LIBSPDM_CRYPTO_NID_NULL;
+    }
 }

@@ -7,12 +7,55 @@
 #include "internal/libspdm_crypt_lib.h"
 
 /**
- * This function returns the SPDM AEAD algorithm key size.
+ * Performs AEAD authenticated encryption on a data buffer and additional authenticated data (AAD).
  *
- * @param  aead_cipher_suite              SPDM aead_cipher_suite
+ * @param  key            Pointer to the encryption key.
+ * @param  key_size       Size of the encryption key in bytes.
+ * @param  iv             Pointer to the IV value.
+ * @param  iv_size        Size of the IV value in bytes.
+ * @param  a_data         Pointer to the additional authenticated data (AAD).
+ * @param  a_data_size    Size of the additional authenticated data (AAD) in bytes.
+ * @param  data_in        Pointer to the input data buffer to be encrypted.
+ * @param  data_in_size   Size of the input data buffer in bytes.
+ * @param  tag_out        Pointer to a buffer that receives the authentication tag output.
+ * @param  tag_size       Size of the authentication tag in bytes.
+ * @param  data_out       Pointer to a buffer that receives the encryption output.
+ * @param  data_out_size  Size of the output data buffer in bytes.
  *
- * @return SPDM AEAD algorithm key size.
+ * @retval true   AEAD authenticated encryption succeeded.
+ * @retval false  AEAD authenticated encryption failed.
  **/
+typedef bool (*libspdm_aead_encrypt_func)(
+    const uint8_t *key, size_t key_size, const uint8_t *iv,
+    size_t iv_size, const uint8_t *a_data, size_t a_data_size,
+    const uint8_t *data_in, size_t data_in_size, uint8_t *tag_out,
+    size_t tag_size, uint8_t *data_out, size_t *data_out_size);
+
+/**
+ * Performs AEAD authenticated decryption on a data buffer and additional authenticated data (AAD).
+ *
+ * @param  key            Pointer to the encryption key.
+ * @param  key_size       Size of the encryption key in bytes.
+ * @param  iv             Pointer to the IV value.
+ * @param  iv_size        Size of the IV value in bytes.
+ * @param  a_data         Pointer to the additional authenticated data (AAD).
+ * @param  a_data_size    Size of the additional authenticated data (AAD) in bytes.
+ * @param  data_in        Pointer to the input data buffer to be decrypted.
+ * @param  data_in_size   Size of the input data buffer in bytes.
+ * @param  tag            Pointer to a buffer that contains the authentication tag.
+ * @param  tag_size       Size of the authentication tag in bytes.
+ * @param  data_out       Pointer to a buffer that receives the decryption output.
+ * @param  data_out_size  Size of the output data buffer in bytes.
+ *
+ * @retval true   AEAD authenticated decryption succeeded.
+ * @retval false  AEAD authenticated decryption failed.
+ **/
+typedef bool (*libspdm_aead_decrypt_func)(
+    const uint8_t *key, size_t key_size, const uint8_t *iv,
+    size_t iv_size, const uint8_t *a_data, size_t a_data_size,
+    const uint8_t *data_in, size_t data_in_size, const uint8_t *tag,
+    size_t tag_size, uint8_t *data_out, size_t *data_out_size);
+
 uint32_t libspdm_get_aead_key_size(uint16_t aead_cipher_suite)
 {
     switch (aead_cipher_suite) {
@@ -29,13 +72,6 @@ uint32_t libspdm_get_aead_key_size(uint16_t aead_cipher_suite)
     }
 }
 
-/**
- * This function returns the SPDM AEAD algorithm iv size.
- *
- * @param  aead_cipher_suite              SPDM aead_cipher_suite
- *
- * @return SPDM AEAD algorithm iv size.
- **/
 uint32_t libspdm_get_aead_iv_size(uint16_t aead_cipher_suite)
 {
     switch (aead_cipher_suite) {
@@ -52,13 +88,6 @@ uint32_t libspdm_get_aead_iv_size(uint16_t aead_cipher_suite)
     }
 }
 
-/**
- * This function returns the SPDM AEAD algorithm tag size.
- *
- * @param  aead_cipher_suite              SPDM aead_cipher_suite
- *
- * @return SPDM AEAD algorithm tag size.
- **/
 uint32_t libspdm_get_aead_tag_size(uint16_t aead_cipher_suite)
 {
     switch (aead_cipher_suite) {
@@ -121,27 +150,6 @@ static libspdm_aead_encrypt_func libspdm_get_aead_enc_func(uint16_t aead_cipher_
     return NULL;
 }
 
-/**
- * Performs AEAD authenticated encryption on a data buffer and additional authenticated data (AAD),
- * based upon negotiated AEAD algorithm.
- *
- * @param  aead_cipher_suite              SPDM aead_cipher_suite
- * @param  key                          Pointer to the encryption key.
- * @param  key_size                      size of the encryption key in bytes.
- * @param  iv                           Pointer to the IV value.
- * @param  iv_size                       size of the IV value in bytes.
- * @param  a_data                        Pointer to the additional authenticated data (AAD).
- * @param  a_data_size                    size of the additional authenticated data (AAD) in bytes.
- * @param  data_in                       Pointer to the input data buffer to be encrypted.
- * @param  data_in_size                   size of the input data buffer in bytes.
- * @param  tag_out                       Pointer to a buffer that receives the authentication tag output.
- * @param  tag_size                      size of the authentication tag in bytes.
- * @param  data_out                      Pointer to a buffer that receives the encryption output.
- * @param  data_out_size                  size of the output data buffer in bytes.
- *
- * @retval true   AEAD authenticated encryption succeeded.
- * @retval false  AEAD authenticated encryption failed.
- **/
 bool libspdm_aead_encryption(const spdm_version_number_t secured_message_version,
                              uint16_t aead_cipher_suite, const uint8_t *key,
                              size_t key_size, const uint8_t *iv,
@@ -207,27 +215,6 @@ static libspdm_aead_decrypt_func libspdm_get_aead_dec_func(uint16_t aead_cipher_
     return NULL;
 }
 
-/**
- * Performs AEAD authenticated decryption on a data buffer and additional authenticated data (AAD),
- * based upon negotiated AEAD algorithm.
- *
- * @param  aead_cipher_suite              SPDM aead_cipher_suite
- * @param  key                          Pointer to the encryption key.
- * @param  key_size                      size of the encryption key in bytes.
- * @param  iv                           Pointer to the IV value.
- * @param  iv_size                       size of the IV value in bytes.
- * @param  a_data                        Pointer to the additional authenticated data (AAD).
- * @param  a_data_size                    size of the additional authenticated data (AAD) in bytes.
- * @param  data_in                       Pointer to the input data buffer to be decrypted.
- * @param  data_in_size                   size of the input data buffer in bytes.
- * @param  tag                          Pointer to a buffer that contains the authentication tag.
- * @param  tag_size                      size of the authentication tag in bytes.
- * @param  data_out                      Pointer to a buffer that receives the decryption output.
- * @param  data_out_size                  size of the output data buffer in bytes.
- *
- * @retval true   AEAD authenticated decryption succeeded.
- * @retval false  AEAD authenticated decryption failed.
- **/
 bool libspdm_aead_decryption(const spdm_version_number_t secured_message_version,
                              uint16_t aead_cipher_suite, const uint8_t *key,
                              size_t key_size, const uint8_t *iv,
