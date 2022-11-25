@@ -6,22 +6,6 @@
 
 #include "internal/libspdm_responder_lib.h"
 
-/**
- * Build the response when the response state is incorrect.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  request_code                  The SPDM request code.
- * @param  response_size                 size in bytes of the response data.
- *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
- * @param  response                     A pointer to the response data.
- *
- * @retval RETURN_SUCCESS               The response is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
- **/
 libspdm_return_t libspdm_responder_handle_response_state(void *context,
                                                          uint8_t request_code,
                                                          size_t *response_size,

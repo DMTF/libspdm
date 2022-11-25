@@ -70,23 +70,6 @@ static bool libspdm_generate_psk_exchange_rsp_hmac(libspdm_context_t *spdm_conte
     return true;
 }
 
-/**
- * Process the SPDM PSK_EXCHANGE request and return the response.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  request_size                  size in bytes of the request data.
- * @param  request                      A pointer to the request data.
- * @param  response_size                 size in bytes of the response data.
- *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
- * @param  response                     A pointer to the response data.
- *
- * @retval RETURN_SUCCESS               The request is processed and the response is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
- **/
 libspdm_return_t libspdm_get_response_psk_exchange(void *context,
                                                    size_t request_size,
                                                    const void *request,
@@ -139,8 +122,7 @@ libspdm_return_t libspdm_get_response_psk_exchange(void *context,
             spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
             SPDM_PSK_EXCHANGE, response_size, response);
     }
-    if (spdm_context->connection_info.connection_state <
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
+    if (spdm_context->connection_info.connection_state < LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNEXPECTED_REQUEST,
                                                0, response_size, response);
@@ -157,8 +139,7 @@ libspdm_return_t libspdm_get_response_psk_exchange(void *context,
                 spdm_context, true, 0,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
             if (spdm_context->connection_info.algorithm
-                .measurement_spec !=
-                SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF) {
+                .measurement_spec != SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF) {
                 return libspdm_generate_error_response(
                     spdm_context,
                     SPDM_ERROR_CODE_INVALID_REQUEST,
@@ -176,8 +157,7 @@ libspdm_return_t libspdm_get_response_psk_exchange(void *context,
                     response);
             }
         }
-        algo_size = libspdm_get_hash_size(
-            spdm_context->connection_info.algorithm.base_hash_algo);
+        algo_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
         if (algo_size == 0) {
             return libspdm_generate_error_response(
                 spdm_context,
@@ -207,8 +187,7 @@ libspdm_return_t libspdm_get_response_psk_exchange(void *context,
 
     measurement_summary_hash_size = libspdm_get_measurement_summary_hash_size(
         spdm_context, false, spdm_request->header.param1);
-    hmac_size = libspdm_get_hash_size(
-        spdm_context->connection_info.algorithm.base_hash_algo);
+    hmac_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
 
     if (request_size < sizeof(spdm_psk_exchange_request_t)) {
         return libspdm_generate_error_response(spdm_context,

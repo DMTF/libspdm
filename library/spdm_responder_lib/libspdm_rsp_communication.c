@@ -6,19 +6,6 @@
 
 #include "internal/libspdm_responder_lib.h"
 
-/**
- * This is the main dispatch function in SPDM responder.
- *
- * It receives one request message, processes it and sends the response message.
- *
- * It should be called in a while loop or an timer/interrupt handler.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- *
- * @retval RETURN_SUCCESS               One SPDM request message is processed.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_UNSUPPORTED           One request message is not supported.
- **/
 libspdm_return_t libspdm_responder_dispatch_message(void *context)
 {
     libspdm_return_t status;

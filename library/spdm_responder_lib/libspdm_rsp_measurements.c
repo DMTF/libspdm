@@ -8,18 +8,6 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 
-/**
- * This function generates the measurement signature to response message based upon l1l2.
- * If session_info is NULL, this function will use M cache of SPDM context,
- * else will use M cache of SPDM session context.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  A pointer to the SPDM session context.
- * @param  signature                    The buffer to store the signature.
- *
- * @retval true  measurement signature is generated.
- * @retval false measurement signature is not generated.
- **/
 bool libspdm_generate_measurement_signature(libspdm_context_t *spdm_context,
                                             libspdm_session_info_t *session_info,
                                             uint8_t *signature)
@@ -152,24 +140,6 @@ static bool libspdm_create_measurement_signature(libspdm_context_t *spdm_context
     return result;
 }
 
-
-/**
- * Process the SPDM GET_MEASUREMENT request and return the response.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  request_size                  size in bytes of the request data.
- * @param  request                      A pointer to the request data.
- * @param  response_size                 size in bytes of the response data.
- *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
- * @param  response                     A pointer to the response data.
- *
- * @retval RETURN_SUCCESS               The request is processed and the response is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
- **/
 libspdm_return_t libspdm_get_response_measurements(void *context,
                                                    size_t request_size,
                                                    const void *request,
