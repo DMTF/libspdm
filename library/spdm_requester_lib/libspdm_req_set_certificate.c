@@ -6,7 +6,7 @@
 
 #include "internal/libspdm_requester_lib.h"
 
-#if LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP || LIBSPDM_ENABLE_SET_CERTIFICATE_CAP
+#if (LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP) || (LIBSPDM_ENABLE_SET_CERTIFICATE_CAP)
 
 /**
  * This function sends SET_CERTIFICATE
@@ -159,23 +159,6 @@ receive_done:
     return status;
 }
 
-/**
- * This function try to send SET_CERTIFICATE
- * to set certificate from the device.
- *
- * @param  context                      A pointer to the SPDM context.
- * @param  slot_id                      The number of slot for the certificate chain.
- * @param  cert_chain                   The pointer for the certificate chain to set.
- *                                      The cert chain is a full SPDM certificate chain, including Length and Root Cert Hash.
- * @param  cert_chain_size              The size of the certificate chain to set.
- * @param  session_id                   Indicates if it is a secured message protected via SPDM session.
- *                                      If session_id is NULL, it is a normal message.
- *                                      If session_id is NOT NULL, it is a secured message.
- *
- * @retval RETURN_SUCCESS               The measurement is got successfully.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
- **/
 libspdm_return_t libspdm_set_certificate(void * context, uint8_t slot_id,
                                          void * cert_chain, size_t cert_chain_size,
                                          const uint32_t *session_id)

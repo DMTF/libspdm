@@ -70,8 +70,7 @@ static libspdm_return_t libspdm_try_key_update(void *context, uint32_t session_i
         return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
 
-    libspdm_reset_message_buffer_via_request_code(spdm_context, session_info,
-                                                  SPDM_KEY_UPDATE);
+    libspdm_reset_message_buffer_via_request_code(spdm_context, session_info, SPDM_KEY_UPDATE);
 
     if(!(*key_updated)) {
 
@@ -89,11 +88,9 @@ static libspdm_return_t libspdm_try_key_update(void *context, uint32_t session_i
         spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
         spdm_request->header.request_response_code = SPDM_KEY_UPDATE;
         if (single_direction) {
-            spdm_request->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
+            spdm_request->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
         } else {
-            spdm_request->header.param1 =
-                SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS;
+            spdm_request->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS;
         }
         spdm_request->header.param2 = 0;
 

@@ -35,17 +35,6 @@ typedef struct {
 } libspdm_key_exchange_response_max_t;
 #pragma pack()
 
-/**
- * This function verifies the key exchange HMAC based upon TH.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  The session info of an SPDM session.
- * @param  hmac_data                     The HMAC data buffer.
- * @param  hmac_data_size                 size in bytes of the HMAC data buffer.
- *
- * @retval true  HMAC verification pass.
- * @retval false HMAC verification fail.
- **/
 bool libspdm_verify_key_exchange_rsp_hmac(libspdm_context_t *spdm_context,
                                           libspdm_session_info_t *session_info,
                                           const void *hmac_data,
@@ -112,17 +101,6 @@ bool libspdm_verify_key_exchange_rsp_hmac(libspdm_context_t *spdm_context,
     return true;
 }
 
-/**
- * This function verifies the key exchange signature based upon TH.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  The session info of an SPDM session.
- * @param  sign_data                     The signature data buffer.
- * @param  sign_data_size                 size in bytes of the signature data buffer.
- *
- * @retval true  signature verification pass.
- * @retval false signature verification fail.
- **/
 bool libspdm_verify_key_exchange_rsp_signature(
     libspdm_context_t *spdm_context, libspdm_session_info_t *session_info,
     const void *sign_data, const size_t sign_data_size)

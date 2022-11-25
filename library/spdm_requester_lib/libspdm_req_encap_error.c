@@ -8,23 +8,6 @@
 
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
 
-/**
- * Generate encapsulated ERROR message.
- *
- * This function can be called in libspdm_get_encap_response_func.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  error_code                    The error code of the message.
- * @param  error_data                    The error data of the message.
- * @param  spdm_response_size             size in bytes of the response data.
- *                                     On input, it means the size in bytes of data buffer.
- *                                     On output, it means the size in bytes of copied data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired data buffer if RETURN_BUFFER_TOO_SMALL is returned.
- * @param  spdm_response                 A pointer to the response data.
- *
- * @retval RETURN_SUCCESS               The error message is generated.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- **/
 libspdm_return_t libspdm_generate_encap_error_response(const void *context,
                                                        uint8_t error_code,
                                                        uint8_t error_data,
@@ -45,25 +28,6 @@ libspdm_return_t libspdm_generate_encap_error_response(const void *context,
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-/**
- * Generate encapsulated ERROR message with extended error data.
- *
- * This function can be called in libspdm_get_encap_response_func.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  error_code                    The error code of the message.
- * @param  error_data                    The error data of the message.
- * @param  extended_error_data_size        The size in bytes of the extended error data.
- * @param  extended_error_data            A pointer to the extended error data.
- * @param  spdm_response_size             size in bytes of the response data.
- *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
- * @param  spdm_response                 A pointer to the response data.
- *
- * @retval RETURN_SUCCESS               The error message is generated.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- **/
 libspdm_return_t libspdm_generate_encap_extended_error_response(
     const void *context, uint8_t error_code, uint8_t error_data,
     size_t extended_error_data_size, const uint8_t *extended_error_data,

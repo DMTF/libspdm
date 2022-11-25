@@ -170,26 +170,6 @@ receive_done:
     return status;
 }
 
-/**
- * This function sends GET_CSR
- * to get csr from the device.
- *
- * @param[in]  context                      A pointer to the SPDM context.
- * @param[in]  requester_info               requester info to gen CSR
- * @param[in]  requester_info_length        The len of requester info
- * @param[in]  opaque_data                  opaque data
- * @param[in]  opaque_data_length           The len of opaque data
- * @param[in]  session_id                   Indicates if it is a secured message protected via SPDM session.
- *                                          If session_id is NULL, it is a normal message.
- *                                          If session_id is NOT NULL, it is a secured message.
- * @param[out] csr                          address to store CSR.
- * @param[out] csr_len                      on input, *csr_len indicates the max csr buffer size.
- *                                          on output, *csr_len indicates the actual csr buffer size.
- *
- * @retval RETURN_SUCCESS               The measurement is got successfully.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
- **/
 libspdm_return_t libspdm_get_csr(void * context,
                                  void * requester_info, uint16_t requester_info_length,
                                  void * opaque_data, uint16_t opaque_data_length,
