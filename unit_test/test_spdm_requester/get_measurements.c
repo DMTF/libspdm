@@ -3098,10 +3098,10 @@ static void libspdm_test_requester_get_measurements_case3(void **state)
     }
 
     status = libspdm_get_measurement_ex(spdm_context, NULL, request_attribute, 1,
-                                     0, NULL, &number_of_block,
-                                     &measurement_record_length,
-                                     measurement_record, requester_nonce_in,
-                                     requester_nonce, responder_nonce);
+                                        0, NULL, &number_of_block,
+                                        &measurement_record_length,
+                                        measurement_record, requester_nonce_in,
+                                        requester_nonce, responder_nonce);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     for (int index = 0; index < SPDM_NONCE_SIZE; index++) {
         assert_int_equal (requester_nonce_in[index], requester_nonce[index]);
