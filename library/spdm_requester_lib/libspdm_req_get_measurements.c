@@ -23,19 +23,6 @@ typedef struct {
 } libspdm_measurements_response_max_t;
 #pragma pack()
 
-/**
- * This function verifies the measurement signature based upon l1l2.
- * If session_info is NULL, this function will use M cache of SPDM context,
- * else will use M cache of SPDM session context.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  A pointer to the SPDM session context.
- * @param  sign_data                     The signature data buffer.
- * @param  sign_data_size                 size in bytes of the signature data buffer.
- *
- * @retval true  signature verification pass.
- * @retval false signature verification fail.
- **/
 bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
                                           libspdm_session_info_t *session_info,
                                           const void *sign_data,
@@ -225,15 +212,13 @@ static libspdm_return_t libspdm_try_get_measurement(void *context, const uint32_
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
 
+    if (spdm_context->connection_info.connection_state < LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
+        return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
+    }
+
     if (session_id == NULL) {
-        if (spdm_context->connection_info.connection_state < LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
-            return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
-        }
         session_info = NULL;
     } else {
-        if (spdm_context->connection_info.connection_state < LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
-            return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
-        }
         session_info = libspdm_get_session_info_via_session_id(spdm_context, *session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
@@ -244,8 +229,6 @@ static libspdm_return_t libspdm_try_get_measurement(void *context, const uint32_
             return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
         }
     }
-
-    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL, SPDM_GET_MEASUREMENTS);
 
     if (libspdm_is_capabilities_flag_supported(
             spdm_context, true, 0,
@@ -260,6 +243,8 @@ static libspdm_return_t libspdm_try_get_measurement(void *context, const uint32_
     } else {
         signature_size = 0;
     }
+
+    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL, SPDM_GET_MEASUREMENTS);
 
     /* -=[Construct Request Phase]=- */
     spdm_context->connection_info.peer_used_cert_chain_slot_id = slot_id_param;

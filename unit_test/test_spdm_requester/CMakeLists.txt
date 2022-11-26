@@ -47,6 +47,7 @@ SET(src_test_spdm_requester
     error_test/negotiate_algorithms_err.c
     error_test/get_digests_err.c
     error_test/key_exchange_err.c
+    error_test/get_measurements_err.c
     ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/common.c
     ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/algo.c
     ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/support.c
