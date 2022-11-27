@@ -15,7 +15,7 @@
 #include <base.h>
 #include "library/memlib.h"
 #include "library/debuglib.h"
-#include <stddef.h>
+
 #if defined(_MSC_VER) && defined(__clang__)
 #include <corecrt.h>
 #endif
@@ -47,8 +47,7 @@
 
 #define CONFIG_HEADER_BN_H
 
-#if defined(LIBSPDM_CPU_X64) || defined(LIBSPDM_CPU_AARCH64) ||                        \
-    defined(LIBSPDM_CPU_IA64) || defined(LIBSPDM_CPU_RISCV64)
+#if defined(LIBSPDM_CPU_X64) || defined(LIBSPDM_CPU_AARCH64) || defined(LIBSPDM_CPU_RISCV64)
 
 /* With GCC we would normally use SIXTY_FOUR_BIT_LONG, but MSVC needs
  * SIXTY_FOUR_BIT, because 'long' is 32-bit and only 'long long' is

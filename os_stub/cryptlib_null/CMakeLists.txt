@@ -7,7 +7,6 @@ endif()
 INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/os_stub/cryptlib_null
                     ${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/include/hal
-                    ${LIBSPDM_DIR}/include/hal/${ARCH}
                     ${LIBSPDM_DIR}/os_stub/include
 )
 

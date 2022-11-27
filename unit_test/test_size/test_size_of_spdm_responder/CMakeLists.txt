@@ -21,7 +21,6 @@ endif()
 
 INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/test_size/test_size_of_spdm_responder
                     ${LIBSPDM_DIR}/include
-                    ${LIBSPDM_DIR}/include/hal/${ARCH}
                     ${LIBSPDM_DIR}/os_stub/include
 )
 

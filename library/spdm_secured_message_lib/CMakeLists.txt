@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 2.8.12)
 
-INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
-                    ${LIBSPDM_DIR}/include/hal/${ARCH}
-)
+INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include)
 
 SET(src_spdm_secured_message_lib
     libspdm_secmes_context_data.c
