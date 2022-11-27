@@ -29,9 +29,9 @@
  * portion of libspdm. */
 
 /* This will lead to _WIN32 and _WIN64 to be NOT defined when reaching the OpenSSL
-* portions of a compilation unit (header files + c file), thus meeting the
-* no Win32/Win64 requirement for OpenSSL, but will still be defined when compiling
-* the <vcruntime.h> file in the compilation unit (and getting the right size_t). */
+ * portions of a compilation unit (header files + c file), thus meeting the
+ * no Win32/Win64 requirement for OpenSSL, but will still be defined when compiling
+ * the <vcruntime.h> file in the compilation unit (and getting the right size_t). */
 
 /* In the future libspdm intends to use the Windows native compilation flags and defines,
  * in place of the UEFI profile / personality. */
