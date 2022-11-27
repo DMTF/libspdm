@@ -1,9 +1,7 @@
 cmake_minimum_required(VERSION 2.6)
 
 INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
-                    ${LIBSPDM_DIR}/include/hal
-                    ${LIBSPDM_DIR}/include/hal/${ARCH}
-)
+                    ${LIBSPDM_DIR}/include/hal)
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux" AND NOT TOOLCHAIN STREQUAL "ARM_DS2022")
 SET(src_platform_lib

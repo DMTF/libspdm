@@ -8,9 +8,7 @@ if(TOOLCHAIN MATCHES "CLANG")
     ADD_COMPILE_OPTIONS(-Wno-incompatible-library-redeclaration)
 endif()
 
-INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
-                    ${LIBSPDM_DIR}/include/hal/${ARCH}
-)
+INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include)
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     SET(src_intrinsiclib

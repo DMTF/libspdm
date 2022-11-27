@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 2.8.12)
 
 INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/include/hal
-                    ${LIBSPDM_DIR}/include/hal/${ARCH}
                     ${LIBSPDM_DIR}/os_stub/include
                     ${LIBSPDM_DIR}/os_stub/cryptlib_openssl
                     ${LIBSPDM_DIR}/os_stub/openssllib/include
@@ -10,6 +9,12 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/os_stub/openssllib/openssl/crypto/include
                     ${LIBSPDM_DIR}/os_stub/openssllib/openssl
 )
+
+if (ARCH STREQUAL "ia32")
+    ADD_COMPILE_OPTIONS(-DLIBSPDM_CPU_IA32)
+elseif (ARCH STREQUAL "x64")
+    ADD_COMPILE_OPTIONS(-DLIBSPDM_CPU_X64)
+endif()
 
 SET(src_cryptlib_openssl
     cipher/aead_aes_gcm.c

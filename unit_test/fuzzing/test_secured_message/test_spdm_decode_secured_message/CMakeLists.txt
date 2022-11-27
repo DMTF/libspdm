@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 2.8.12)
 
 INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/fuzzing/test_secured_message/test_spdm_decode_secured_message
                     ${LIBSPDM_DIR}/include
-                    ${LIBSPDM_DIR}/include/hal/${ARCH}
                     ${LIBSPDM_DIR}/include/library
                     ${LIBSPDM_DIR}/unit_test/include
                     ${LIBSPDM_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common

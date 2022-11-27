@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 2.8.12)
 
 INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/fuzzing/test_responder/test_spdm_responder__encap_key_update
                     ${LIBSPDM_DIR}/include
-                    ${LIBSPDM_DIR}/include/hal/${ARCH}
                     ${LIBSPDM_DIR}/unit_test/include
                     ${LIBSPDM_DIR}/unit_test/cmockalib/cmocka/include
                     ${LIBSPDM_DIR}/unit_test/cmockalib/cmocka/include/cmockery

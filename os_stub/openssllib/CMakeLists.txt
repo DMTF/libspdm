@@ -1,10 +1,21 @@
 cmake_minimum_required(VERSION 2.8.12)
 
-ADD_COMPILE_OPTIONS(-DLIBSPDM_OPENSSL_STDINT_WORKAROUND -DL_ENDIAN -DOPENSSL_SMALL_FOOTPRINT -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -DOPENSSL_SYS_UEFI=1 ${OPENSSL_FLAGS})
+ADD_COMPILE_OPTIONS(-DL_ENDIAN -DOPENSSL_SMALL_FOOTPRINT -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -DOPENSSL_SYS_UEFI=1 ${OPENSSL_FLAGS})
+
+if(CMAKE_SYSTEM_NAME MATCHES "Windows" AND (ARCH STREQUAL "x64" OR ARCH STREQUAL "ia32"))
+    if(TOOLCHAIN STREQUAL "VS2015" OR TOOLCHAIN STREQUAL "VS2019" OR TOOLCHAIN STREQUAL "VS2022")
+        ADD_COMPILE_OPTIONS(-DLIBSPDM_OPENSSL_STDINT_WORKAROUND)
+    endif()
+endif()
+
+if (ARCH STREQUAL "ia32")
+    ADD_COMPILE_OPTIONS(-DLIBSPDM_CPU_IA32)
+elseif (ARCH STREQUAL "x64")
+    ADD_COMPILE_OPTIONS(-DLIBSPDM_CPU_X64)
+endif()
 
 INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
-                    ${LIBSPDM_DIR}/include/hal 
-                    ${LIBSPDM_DIR}/include/hal/${ARCH}
+                    ${LIBSPDM_DIR}/include/hal
                     ${LIBSPDM_DIR}/os_stub/include
                     ${LIBSPDM_DIR}/os_stub/openssllib
                     ${LIBSPDM_DIR}/os_stub/openssllib/include
@@ -32,8 +43,8 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/os_stub/openssllib/openssl/crypto/kdf
                     ${LIBSPDM_DIR}/os_stub/openssllib/openssl/crypto/hmac
                     ${LIBSPDM_DIR}/os_stub/openssllib/openssl/crypto/evp
-                    ${LIBSPDM_DIR}/os_stub/openssllib/openssl/crypto/err 
-                    ${LIBSPDM_DIR}/os_stub/openssllib/openssl/crypto/dso 
+                    ${LIBSPDM_DIR}/os_stub/openssllib/openssl/crypto/err
+                    ${LIBSPDM_DIR}/os_stub/openssllib/openssl/crypto/dso
                     ${LIBSPDM_DIR}/os_stub/openssllib/openssl/crypto/ec
                     ${LIBSPDM_DIR}/os_stub/openssllib/openssl/crypto/ec/curve448
                     ${LIBSPDM_DIR}/os_stub/openssllib/openssl/crypto/ec/curve448/arch_32
@@ -56,7 +67,7 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/os_stub/openssllib/openssl/crypto/sm4
                     ${LIBSPDM_DIR}/os_stub/openssllib/openssl/ms
                     ${LIBSPDM_DIR}/os_stub/openssllib/openssl
-                    
+
 )
 
 SET(src_openssllib
