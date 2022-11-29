@@ -10,7 +10,7 @@ MESSAGE("## Build Configuration ##")
 MESSAGE("#########################")
 
 SET(ARCH ${ARCH} CACHE STRING "Choose the arch of build: ia32 x64 arm aarch64 riscv32 riscv64 arc" FORCE)
-SET(TOOLCHAIN ${TOOLCHAIN} CACHE STRING "Choose the toolchain of build: Windows: VS2015 VS2019 VS2022 CLANG ARM_DS2022 LIBFUZZER Linux: GCC ARM_DS2022 ARM_GNU ARM_GCC AARCH64_GCC RISCV_GNU RISCV64_GCC RISCV_XPACK ARC_GCC CLANG CBMC AFL KLEE LIBFUZZER" FORCE)
+SET(TOOLCHAIN ${TOOLCHAIN} CACHE STRING "Choose the toolchain of build: Windows: VS2015 VS2019 VS2022 CLANG ARM_DS2022 LIBFUZZER Linux: GCC ARM_DS2022 ARM_GNU ARM_GNU_BARE_METAL ARM_GCC AARCH64_GCC RISCV_GNU RISCV64_GCC RISCV_XPACK ARC_GCC CLANG CBMC AFL KLEE LIBFUZZER" FORCE)
 SET(CMAKE_BUILD_TYPE ${TARGET} CACHE STRING "Choose the target of build: Debug Release" FORCE)
 SET(CRYPTO ${CRYPTO} CACHE STRING "Choose the crypto of build: mbedtls openssl" FORCE)
 SET(GCOV ${GCOV} CACHE STRING "Choose the target of Gcov: ON  OFF, and default is OFF" FORCE)
@@ -69,6 +69,8 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
         MESSAGE("TOOLCHAIN = ARM_DS2022")
     elseif(TOOLCHAIN STREQUAL "ARM_GNU")
         MESSAGE("TOOLCHAIN = ARM_GNU")
+    elseif(TOOLCHAIN STREQUAL "ARM_GNU_BARE_METAL")
+        MESSAGE("TOOLCHAIN = ARM_GNU_BARE_METAL")
     elseif(TOOLCHAIN STREQUAL "ARM_GCC")
         MESSAGE("TOOLCHAIN = ARM_GCC")
     elseif(TOOLCHAIN STREQUAL "AARCH64_GCC")
@@ -267,6 +269,29 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
         if(GCOV STREQUAL "ON")
         SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}  --coverage -lgcov -fprofile-arcs -ftest-coverage")
         endif()
+
+        SET(CMAKE_C_LINK_EXECUTABLE "<CMAKE_LINKER> <LINK_FLAGS> <OBJECTS> -o <TARGET> -Wl,--start-group <LINK_LIBRARIES> -Wl,--end-group")
+
+
+    elseif(TOOLCHAIN STREQUAL "ARM_GNU_BARE_METAL")
+        if(ARCH STREQUAL "aarch64")
+            SET(CMAKE_C_COMPILER aarch64-none-elf-gcc)
+            SET(CMAKE_AR aarch64-none-elf-gcc-ar)
+            SET(CMAKE_LINKER aarch64-none-elf-gcc)
+        elseif(ARCH STREQUAL "arm")
+            SET(CMAKE_C_COMPILER arm-none-eabi-gcc)
+            SET(CMAKE_AR arm-none-eabi-gcc-ar)
+            SET(CMAKE_LINKER arm-none-eabi-gcc)
+        endif()
+        SET(CMAKE_SHARED_LIBRARY_LINK_C_FLAGS "")
+        ADD_COMPILE_OPTIONS(-fshort-wchar --specs=nosys.specs -fno-strict-aliasing -Wall -Wno-error=format -Werror -Wno-array-bounds -ffunction-sections -fdata-sections -fno-common -Wno-address -fpie -fno-asynchronous-unwind-tables -flto -DUSING_LTO  -Wno-maybe-uninitialized -Wno-uninitialized  -Wno-builtin-declaration-mismatch -Wno-nonnull-compare -Werror-implicit-function-declaration)
+        if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+            ADD_COMPILE_OPTIONS(-g)
+        endif()
+
+        SET(OPENSSL_FLAGS -include base.h -Wno-error=maybe-uninitialized -Wno-error=format -Wno-format -Wno-error=unused-but-set-variable -Wno-cast-qual)
+        SET(CMOCKA_FLAGS -std=gnu99 -Wpedantic -Wall -Wshadow -Wno-error=format -Wmissing-prototypes -Wcast-align -Werror=address -Wstrict-prototypes -Werror=strict-prototypes -Wwrite-strings -Werror=write-strings -Werror-implicit-function-declaration -Wpointer-arith -Werror=pointer-arith -Wdeclaration-after-statement -Werror=declaration-after-statement -Wreturn-type -Werror=return-type -Wuninitialized -Werror=uninitialized -Werror=strict-overflow -Wstrict-overflow=2 -Wno-format-zero-length -Wmissing-field-initializers -Wformat-security -Werror=format-security -fno-common -Wformat -fno-common -fstack-protector-strong -Wno-cast-qual)
+        SET(CMAKE_EXE_LINKER_FLAGS "--specs=nosys.specs -flto -Wno-error -no-pie" )
 
         SET(CMAKE_C_LINK_EXECUTABLE "<CMAKE_LINKER> <LINK_FLAGS> <OBJECTS> -o <TARGET> -Wl,--start-group <LINK_LIBRARIES> -Wl,--end-group")
 
@@ -824,7 +849,7 @@ else()
         ADD_SUBDIRECTORY(unit_test/spdm_transport_test_lib)
         ADD_SUBDIRECTORY(unit_test/cmockalib)
 
-        if(TOOLCHAIN STREQUAL "ARM_DS2022" OR TOOLCHAIN STREQUAL "ARM_GNU")
+        if(TOOLCHAIN STREQUAL "ARM_DS2022" OR TOOLCHAIN STREQUAL "ARM_GNU" OR TOOLCHAIN STREQUAL "ARM_GNU_BARE_METAL")
         ADD_SUBDIRECTORY(os_stub/armbuild_lib)
         endif()
 
@@ -907,8 +932,8 @@ else()
     if(GCOV STREQUAL "OFF")
         if((CMAKE_SYSTEM_NAME MATCHES "Windows" AND ARCH STREQUAL "x64" AND TOOLCHAIN STREQUAL "VS2019") OR
         (CMAKE_SYSTEM_NAME MATCHES "Linux" AND ARCH STREQUAL "x64" AND (TOOLCHAIN STREQUAL "GCC" OR TOOLCHAIN STREQUAL "CLANG")) OR
-        (CMAKE_SYSTEM_NAME MATCHES "Linux" AND ARCH STREQUAL "aarch64" AND (TOOLCHAIN STREQUAL "AARCH64_GCC" OR TOOLCHAIN STREQUAL "ARM_DS2022" OR TOOLCHAIN STREQUAL "ARM_GNU")) OR
-        (CMAKE_SYSTEM_NAME MATCHES "Linux"  AND TOOLCHAIN STREQUAL "RISCV_XPACK"))
+        (CMAKE_SYSTEM_NAME MATCHES "Linux"  AND TOOLCHAIN STREQUAL "RISCV_XPACK") OR
+        (CMAKE_SYSTEM_NAME MATCHES "Linux" AND ARCH STREQUAL "aarch64"))
             ADD_SUBDIRECTORY(unit_test/test_size/test_size_of_spdm_requester)
             ADD_SUBDIRECTORY(unit_test/test_size/test_size_of_spdm_responder)
         endif()

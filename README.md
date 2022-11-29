@@ -74,6 +74,7 @@
 | [CLANG](https://llvm.org/) | clang|clang|  -  |    -    |    -    |    -    |
 | [ARM_DS2022](https://developer.arm.com/downloads/-/arm-development-studio-downloads) |  -   |  -  | armclang | armclang |    -    |    -    |
 | [ARM_GNU](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads) |  -   |  -  | arm-none-linux-gnueabihf-gcc | aarch64-none-linux-gnu-gcc |    -    |    -    |
+| [ARM_GNU_BARE_METAL](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads) |  -   |  -  | arm-none-eabi | aarch64-none-elf |    -    |    -    |
 | [ARM_GCC](https://packages.ubuntu.com/bionic/gcc-arm-linux-gnueabi) |  -   |  -  | arm-linux-gnueabi-gcc |    -    |    -    |    -    |
 | [AARCH64_GCC](https://packages.ubuntu.com/bionic/gcc-aarch64-linux-gnu) |  -   |  -  |  -  | aarch64-linux-gnu-gcc |    -    |    -    |
 | [RISCV_GNU](https://github.com/riscv/riscv-gnu-toolchain) |  -   |  -  |  -  |    -    | riscv32-unknown-linux-gnu-gcc | riscv64-unknown-linux-gnu-gcc |
@@ -166,7 +167,17 @@
       echo 'export PATH=~/gcc-arm-11.2-2022.02-x86_64-aarch64-none-linux-gnu/bin:$PATH' | sudo tee -a ~/.bashrc
       source ~/.bashrc
       ```
-    e) [RISCV_XPACK](https://github.com/xpack-dev-tools/riscv-none-elf-gcc-xpack/releases/).
+
+    e) [ARM GNU bare metal](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads).
+    - Download 11.2-2022.02: GNU/Linux target (arm-none-eabi, aarch64-none-elf), and unzip it.
+    - Add <tool_path>/bin to the $PATH environment. For example:
+      ```
+      echo 'export PATH=~/gcc-arm-11.2-2022.02-x86_64-arm-none-eabi/bin:$PATH' | sudo tee -a ~/.bashrc
+      echo 'export PATH=~/gcc-arm-11.2-2022.02-x86_64-aarch64-none-elf/bin:$PATH' | sudo tee -a ~/.bashrc
+      source ~/.bashrc
+      ```
+
+    f) [RISCV_XPACK](https://github.com/xpack-dev-tools/riscv-none-elf-gcc-xpack/releases/).
     - Download xPack GNU RISC-V Embedded GCC v12.2.0-1(xpack-riscv-none-elf-gcc-12.1.0-2-linux-x64.tar.gz), and unzip it.
     - Add <tool_path>/bin to the $PATH environment. For example:
       ```
@@ -174,6 +185,7 @@
       source ~/.bashrc
       ```
     - Test install successfully. Use `riscv-none-elf-gcc --version`, then the successful install can see `riscv-none-elf-gcc (xPack GNU RISC-V Embedded GCC x86_64) 12.1.0`.
+
 
 
 2) [CMake](https://cmake.org/).
@@ -354,6 +366,29 @@ Example CMake commands:
 
    Note: `make -j` can be used to accelerate the build.
 
+#### Linux Builds with ARM_GNU_bare_metal Toolchain
+
+   For ARM_GNU_bare_metal toolchain GNU/Linux target (arm-none-eabi, aarch64-none-elf) build on Linux, 
+   ```
+   cd libspdm
+   mkdir build
+   cd build
+   cmake -DARCH=<arm|aarch64> -DTOOLCHAIN=ARM_GNU_BARE_METAL -DTARGET=<Debug|Release> -DCRYPTO=<mbedtls|openssl> ..
+   make copy_sample_key
+   make
+   ```
+
+   Example CMake commands:
+
+   ```
+   cmake -DARCH=arm -DTOOLCHAIN=ARM_GNU_BARE_METAL -DTARGET=Debug -DCRYPTO=mbedtls ..
+   ```
+   ```
+   cmake -DARCH=aarch64 -DTOOLCHAIN=ARM_GNU_BARE_METAL -DTARGET=Release -DCRYPTO=mbedtls ..
+   ```
+
+   Note: `make -j` can be used to accelerate the build.
+
 #### Linux Builds with RISCV_XPACK Toolchain
 
    For RISCV_XPACK toolchain GNU/Linux target (riscv-none-elf-gcc-12.1.0-2-linux-x64) build on Linux, 
@@ -368,15 +403,12 @@ Example CMake commands:
    ```
 
    Example CMake commands:
-
    ```
    cmake -DARCH=riscv32 -DTOOLCHAIN=RISCV_XPACK -DTARGET=Debug -DCRYPTO=mbedtls ..
    ```
-
    ```
    cmake -DARCH=riscv32 -DTOOLCHAIN=RISCV_XPACK -DTARGET=Release -DCRYPTO=mbedtls ..
    ```
-
    Note: `make -j` can be used to accelerate the build.
 
 ## Run Test
