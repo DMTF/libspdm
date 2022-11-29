@@ -159,38 +159,22 @@ void libspdm_write_uint64(uint8_t *buffer, uint64_t value)
     buffer[7] = (uint8_t)((value >> 56) & 0xFF);
 }
 
-/**
- * Append a new data buffer to the managed buffer.
- *
- * @param  libspdm_managed_buffer_t                The managed buffer to be appended.
- * @param  buffer                       The address of the data buffer to be appended to the managed buffer.
- * @param  buffer_size                   The size in bytes of the data buffer to be appended to the managed buffer.
- *
- * @retval RETURN_SUCCESS               The new data buffer is appended to the managed buffer.
- * @retval RETURN_BUFFER_TOO_SMALL      The managed buffer is too small to be appended.
- **/
 libspdm_return_t libspdm_append_managed_buffer(void *m_buffer, const void *buffer,
                                                size_t buffer_size)
 {
     libspdm_managed_buffer_t *managed_buffer;
 
-    managed_buffer = m_buffer;
+    LIBSPDM_ASSERT(buffer != NULL);
 
     if (buffer_size == 0) {
         return LIBSPDM_STATUS_SUCCESS;
     }
-    if (buffer == NULL) {
-        return LIBSPDM_STATUS_INVALID_PARAMETER;
-    }
-    LIBSPDM_ASSERT(buffer != NULL);
+
+    managed_buffer = m_buffer;
+
     LIBSPDM_ASSERT(buffer_size != 0);
-    LIBSPDM_ASSERT((managed_buffer->max_buffer_size ==
-                    LIBSPDM_MAX_MESSAGE_BUFFER_SIZE) ||
-                   (managed_buffer->max_buffer_size ==
-                    LIBSPDM_MAX_MESSAGE_MEDIUM_BUFFER_SIZE) ||
-                   (managed_buffer->max_buffer_size ==
-                    LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE));
     LIBSPDM_ASSERT(managed_buffer->max_buffer_size >= managed_buffer->buffer_size);
+
     if (buffer_size > managed_buffer->max_buffer_size - managed_buffer->buffer_size) {
         /* Do not LIBSPDM_ASSERT here, because command processor will append message from external.*/
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
@@ -208,90 +192,40 @@ libspdm_return_t libspdm_append_managed_buffer(void *m_buffer, const void *buffe
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-/**
- * Reset the managed buffer.
- * The buffer_size is reset to 0.
- * The max_buffer_size is unchanged.
- * The buffer is not freed.
- *
- * @param  libspdm_managed_buffer_t                The managed buffer to be shrinked.
- **/
 void libspdm_reset_managed_buffer(void *m_buffer)
 {
     libspdm_managed_buffer_t *managed_buffer;
 
     managed_buffer = m_buffer;
-
-    LIBSPDM_ASSERT((managed_buffer->max_buffer_size ==
-                    LIBSPDM_MAX_MESSAGE_BUFFER_SIZE) ||
-                   (managed_buffer->max_buffer_size ==
-                    LIBSPDM_MAX_MESSAGE_MEDIUM_BUFFER_SIZE) ||
-                   (managed_buffer->max_buffer_size ==
-                    LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE));
     managed_buffer->buffer_size = 0;
+
     libspdm_zero_mem(managed_buffer + 1, managed_buffer->max_buffer_size);
 }
 
-/**
- * Return the size of managed buffer.
- *
- * @param  libspdm_managed_buffer_t                The managed buffer.
- *
- * @return the size of managed buffer.
- **/
 size_t libspdm_get_managed_buffer_size(void *m_buffer)
 {
     libspdm_managed_buffer_t *managed_buffer;
 
     managed_buffer = m_buffer;
 
-    LIBSPDM_ASSERT((managed_buffer->max_buffer_size ==
-                    LIBSPDM_MAX_MESSAGE_BUFFER_SIZE) ||
-                   (managed_buffer->max_buffer_size ==
-                    LIBSPDM_MAX_MESSAGE_MEDIUM_BUFFER_SIZE) ||
-                   (managed_buffer->max_buffer_size ==
-                    LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE));
     return managed_buffer->buffer_size;
 }
 
-/**
- * Return the address of managed buffer.
- *
- * @param  libspdm_managed_buffer_t                The managed buffer.
- *
- * @return the address of managed buffer.
- **/
 void *libspdm_get_managed_buffer(void *m_buffer)
 {
     libspdm_managed_buffer_t *managed_buffer;
 
     managed_buffer = m_buffer;
 
-    LIBSPDM_ASSERT((managed_buffer->max_buffer_size ==
-                    LIBSPDM_MAX_MESSAGE_BUFFER_SIZE) ||
-                   (managed_buffer->max_buffer_size ==
-                    LIBSPDM_MAX_MESSAGE_MEDIUM_BUFFER_SIZE) ||
-                   (managed_buffer->max_buffer_size ==
-                    LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE));
     return (managed_buffer + 1);
 }
 
-/**
- * Init the managed buffer.
- *
- * @param  libspdm_managed_buffer_t                The managed buffer.
- * @param  max_buffer_size                The maximum size in bytes of the managed buffer.
- **/
 void libspdm_init_managed_buffer(void *m_buffer, size_t max_buffer_size)
 {
     libspdm_managed_buffer_t *managed_buffer;
 
     managed_buffer = m_buffer;
-
-    LIBSPDM_ASSERT((max_buffer_size == LIBSPDM_MAX_MESSAGE_BUFFER_SIZE) ||
-                   (max_buffer_size == LIBSPDM_MAX_MESSAGE_MEDIUM_BUFFER_SIZE) ||
-                   (max_buffer_size == LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE));
-
     managed_buffer->max_buffer_size = max_buffer_size;
+
     libspdm_reset_managed_buffer(m_buffer);
 }
