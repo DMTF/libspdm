@@ -246,11 +246,12 @@ void libspdm_set_last_spdm_error_struct(void *spdm_context,
  *                               the location of a secured message context.
  * @param  num_secured_contexts  Number of secured message contexts to initialize.
  *                               Currently, only LIBSPDM_MAX_SESSION_COUNT is supported.
+ *                               In future releases, lesser values may be supported.
  *
  * @retval RETURN_SUCCESS        Contexts are initialized.
  * @retval RETURN_DEVICE_ERROR   Context initialization failed.
  */
-libspdm_return_t libspdm_init_context_with_secured_context(void *context,
+libspdm_return_t libspdm_init_context_with_secured_context(void *spdm_context,
                                                            void **secured_contexts,
                                                            size_t num_secured_contexts);
 
@@ -266,7 +267,7 @@ libspdm_return_t libspdm_init_context_with_secured_context(void *context,
  * @retval RETURN_SUCCESS       context is initialized.
  * @retval RETURN_DEVICE_ERROR  context initialization failed.
  */
-libspdm_return_t libspdm_init_context(void *context);
+libspdm_return_t libspdm_init_context(void *spdm_context);
 
 /**
  * Reset an SPDM context.

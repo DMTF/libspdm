@@ -2071,11 +2071,9 @@ libspdm_return_t libspdm_init_context_with_secured_context(void *context,
     libspdm_context_t *spdm_context;
     size_t index;
 
-    if (context == NULL || secured_contexts == NULL ||
-        num_secured_contexts != LIBSPDM_MAX_SESSION_COUNT)
-    {
-        return LIBSPDM_STATUS_INVALID_PARAMETER;
-    }
+    LIBSPDM_ASSERT(context != NULL);
+    LIBSPDM_ASSERT(secured_contexts != NULL);
+    LIBSPDM_ASSERT(num_secured_contexts == LIBSPDM_MAX_SESSION_COUNT);
 
     spdm_context = context;
     libspdm_zero_mem(spdm_context, sizeof(libspdm_context_t));
@@ -2150,10 +2148,7 @@ libspdm_return_t libspdm_init_context(void *context)
     size_t secured_context_size;
     size_t index;
 
-    if (context == NULL)
-    {
-        return LIBSPDM_STATUS_INVALID_PARAMETER;
-    }
+    LIBSPDM_ASSERT(context != NULL);
 
     /* libspdm_get_context_size() allocates space for all secured message
      * contexts. They are appended to the general SPDM context. */
