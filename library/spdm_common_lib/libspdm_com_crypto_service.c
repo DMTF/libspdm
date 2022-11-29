@@ -645,14 +645,20 @@ bool libspdm_verify_peer_cert_chain_buffer(libspdm_context_t *spdm_context,
                                           sizeof(spdm_cert_chain_t),
                                           root_cert_hash, root_cert_hash_size) == 0) {
                 break;
-            } else if ((root_cert_index < (LIBSPDM_MAX_ROOT_CERT_SUPPORT - 1)) &&
-                       (spdm_context->local_context.peer_root_cert_provision[root_cert_index + 1] !=
-                        NULL)) {
+            }
+
+            #if (LIBSPDM_MAX_ROOT_CERT_SUPPORT) > 1
+            if ((root_cert_index < ((LIBSPDM_MAX_ROOT_CERT_SUPPORT) - 1)) &&
+                (spdm_context->local_context.peer_root_cert_provision[root_cert_index + 1] !=
+                 NULL)) {
                 root_cert_index++;
                 root_cert = spdm_context->local_context.peer_root_cert_provision[root_cert_index];
                 root_cert_size =
                     spdm_context->local_context.peer_root_cert_provision_size[root_cert_index];
-            } else {
+            } else
+            #endif /* LIBSPDM_MAX_ROOT_CERT_SUPPORT */
+
+            {
                 LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                                "!!! verify_peer_cert_chain_buffer - "
                                "FAIL (all root cert hash mismatch) !!!\n"));
