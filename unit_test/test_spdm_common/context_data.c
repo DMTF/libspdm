@@ -1253,15 +1253,6 @@ void libspdm_test_secured_message_context_location_selection_case18(void **state
                          secured_message_contexts[index]);
     }
 
-    /* Check that only the expected number of sessions is supported. */
-    status = libspdm_init_context_with_secured_context(spdm_context, secured_message_contexts,
-                                                       LIBSPDM_MAX_SESSION_COUNT - 1);
-    assert_int_equal (status, LIBSPDM_STATUS_INVALID_PARAMETER);
-
-    status = libspdm_init_context_with_secured_context(spdm_context, secured_message_contexts,
-                                                       LIBSPDM_MAX_SESSION_COUNT + 1);
-    assert_int_equal (status, LIBSPDM_STATUS_INVALID_PARAMETER);
-
     free(spdm_context);
     for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index++)
     {
