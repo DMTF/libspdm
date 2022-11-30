@@ -3447,24 +3447,19 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)
-        ->connection_info.algorithm.base_asym_algo =
-            m_libspdm_use_asym_algo;
+        ->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
         ((libspdm_context_t *)spdm_context)
-        ->connection_info.algorithm.base_hash_algo =
-            m_libspdm_use_hash_algo;
+        ->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
         ((libspdm_context_t *)spdm_context)
-        ->connection_info.algorithm.dhe_named_group =
-            m_libspdm_use_dhe_algo;
+        ->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
         ((libspdm_context_t *)spdm_context)
-        ->connection_info.algorithm.measurement_hash_algo =
-            m_libspdm_use_measurement_hash_algo;
+        ->connection_info.algorithm.measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
         signature_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
         hmac_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
         dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
         opaque_key_exchange_rsp_size =
-            libspdm_get_opaque_data_version_selection_data_size(
-                spdm_context);
+            libspdm_get_opaque_data_version_selection_data_size(spdm_context);
         spdm_response_size = sizeof(spdm_key_exchange_response_t) +
                              dhe_key_size + 0 + sizeof(uint16_t) +
                              opaque_key_exchange_rsp_size + signature_size +
@@ -3474,23 +3469,18 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         libspdm_zero_mem(spdm_response,spdm_response_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response->header.request_response_code =
-            SPDM_KEY_EXCHANGE_RSP;
-        spdm_response->header.param1 = 0;
-        spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context);
+        spdm_response->header.request_response_code = SPDM_KEY_EXCHANGE_RSP;
+        spdm_response->header.param1 = 0x0;
+        spdm_response->rsp_session_id = libspdm_allocate_rsp_session_id(spdm_context);
         spdm_response->mut_auth_requested =
             SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST;
-        spdm_response->req_slot_id_param = 0xF;
-        libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
-                                  spdm_response->random_data);
+        spdm_response->req_slot_id_param = 0x0;
+        libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, spdm_response->random_data);
         ptr = (void *)(spdm_response + 1);
         dhe_context = libspdm_dhe_new(
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-                m_libspdm_use_dhe_algo,
-                true);
-        libspdm_dhe_generate_key(m_libspdm_use_dhe_algo, dhe_context, ptr,
-                                 &dhe_key_size);
+                m_libspdm_use_dhe_algo, true);
+        libspdm_dhe_generate_key(m_libspdm_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
         final_key_size = sizeof(final_key);
         libspdm_dhe_compute_key(
             m_libspdm_use_dhe_algo, dhe_context,
@@ -3616,24 +3606,19 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)
-        ->connection_info.algorithm.base_asym_algo =
-            m_libspdm_use_asym_algo;
+        ->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
         ((libspdm_context_t *)spdm_context)
-        ->connection_info.algorithm.base_hash_algo =
-            m_libspdm_use_hash_algo;
+        ->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
         ((libspdm_context_t *)spdm_context)
-        ->connection_info.algorithm.dhe_named_group =
-            m_libspdm_use_dhe_algo;
+        ->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
         ((libspdm_context_t *)spdm_context)
-        ->connection_info.algorithm.measurement_hash_algo =
-            m_libspdm_use_measurement_hash_algo;
+        ->connection_info.algorithm.measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
         signature_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
         hmac_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
         dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
         opaque_key_exchange_rsp_size =
-            libspdm_get_opaque_data_version_selection_data_size(
-                spdm_context);
+            libspdm_get_opaque_data_version_selection_data_size(spdm_context);
         spdm_response_size = sizeof(spdm_key_exchange_response_t) +
                              dhe_key_size + 0 + sizeof(uint16_t) +
                              opaque_key_exchange_rsp_size + signature_size +
@@ -3643,23 +3628,19 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         libspdm_zero_mem(spdm_response,spdm_response_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response->header.request_response_code =
-            SPDM_KEY_EXCHANGE_RSP;
+        spdm_response->header.request_response_code = SPDM_KEY_EXCHANGE_RSP;
         spdm_response->header.param1 = 0;
-        spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context);
+        spdm_response->rsp_session_id = libspdm_allocate_rsp_session_id(spdm_context);
         spdm_response->mut_auth_requested =
             SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS;
-        spdm_response->req_slot_id_param = 0xF;
+        spdm_response->req_slot_id_param = 0;
         libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                                   spdm_response->random_data);
         ptr = (void *)(spdm_response + 1);
         dhe_context = libspdm_dhe_new(
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-                m_libspdm_use_dhe_algo,
-                true);
-        libspdm_dhe_generate_key(m_libspdm_use_dhe_algo, dhe_context, ptr,
-                                 &dhe_key_size);
+                m_libspdm_use_dhe_algo, true);
+        libspdm_dhe_generate_key(m_libspdm_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
         final_key_size = sizeof(final_key);
         libspdm_dhe_compute_key(
             m_libspdm_use_dhe_algo, dhe_context,
@@ -6625,8 +6606,7 @@ static void libspdm_test_requester_key_exchange_case24(void **state)
     spdm_test_context->case_id = 0x18;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->connection_info.capability.flags |=
@@ -6644,14 +6624,10 @@ static void libspdm_test_requester_key_exchange_case24(void **state)
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, &hash, &hash_size);
     libspdm_reset_message_a(spdm_context);
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.dhe_named_group =
-        m_libspdm_use_dhe_algo;
-    spdm_context->connection_info.algorithm.aead_cipher_suite =
-        m_libspdm_use_aead_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
 

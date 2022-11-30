@@ -286,6 +286,7 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
     uint8_t *message;
     size_t message_size;
     size_t transport_header_size;
+    uint8_t mut_auth_requested;
 
     /* -=[Check Parameters Phase]=- */
     LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xff));
@@ -468,8 +469,11 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
     if (heartbeat_period != NULL) {
         *heartbeat_period = spdm_response->header.param1;
     }
-    *req_slot_id_param = spdm_response->req_slot_id_param;
-    if (spdm_response->mut_auth_requested != 0) {
+
+    *req_slot_id_param = spdm_response->req_slot_id_param & 0xf;
+    mut_auth_requested = spdm_response->mut_auth_requested & 0xf;
+
+    if (mut_auth_requested != 0) {
         if (!libspdm_is_capabilities_flag_supported(
                 spdm_context, true,
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP,
@@ -479,10 +483,10 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             goto receive_done;
         }
-        if ((spdm_response->mut_auth_requested != SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED) &&
-            (spdm_response->mut_auth_requested !=
+        if ((mut_auth_requested != SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED) &&
+            (mut_auth_requested !=
              SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST) &&
-            (spdm_response->mut_auth_requested !=
+            (mut_auth_requested !=
              SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS)) {
             libspdm_secured_message_dhe_free(
                 spdm_context->connection_info.algorithm.dhe_named_group, dhe_context);
@@ -495,13 +499,18 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             goto receive_done;
         }
-    } else {
-        if (*req_slot_id_param != 0) {
-            libspdm_secured_message_dhe_free(
-                spdm_context->connection_info.algorithm.dhe_named_group, dhe_context);
-            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-            goto receive_done;
+        if ((mut_auth_requested != SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED) &&
+            (*req_slot_id_param != 0)) {
+                libspdm_secured_message_dhe_free(
+                    spdm_context->connection_info.algorithm.dhe_named_group, dhe_context);
+                status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                goto receive_done;
         }
+    } else if (*req_slot_id_param != 0) {
+        libspdm_secured_message_dhe_free(
+            spdm_context->connection_info.algorithm.dhe_named_group, dhe_context);
+        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+        goto receive_done;
     }
 
     rsp_session_id = spdm_response->rsp_session_id;
@@ -693,7 +702,7 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
                          measurement_summary_hash, measurement_summary_hash_size);
     }
     session_info->heartbeat_period = spdm_response->header.param1;
-    session_info->mut_auth_requested = spdm_response->mut_auth_requested;
+    session_info->mut_auth_requested = mut_auth_requested;
     session_info->session_policy = session_policy;
 
     /* -=[Update State Phase]=- */
