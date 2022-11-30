@@ -28,10 +28,6 @@
 #include "library/memlib.h"
 #include "spdm_device_secret_lib_internal.h"
 
-#ifndef LIBSPDM_PRIVATE_KEY_USE_PEM
-#define LIBSPDM_PRIVATE_KEY_USE_PEM 1
-#endif
-
 #if !LIBSPDM_PRIVATE_KEY_USE_PEM
 
 #if LIBSPDM_ECDSA_SUPPORT

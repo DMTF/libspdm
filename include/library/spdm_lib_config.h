@@ -179,6 +179,11 @@
 #define LIBSPDM_SM3_256_SUPPORT 1
 #endif
 
+/*Private key use mode: PEM or Raw data*/
+#ifndef LIBSPDM_PRIVATE_KEY_USE_PEM
+#define LIBSPDM_PRIVATE_KEY_USE_PEM 1
+#endif
+
 /* Code space optimization for Optional request/response messages.*/
 
 /* Consumers of libspdm may wish to not fully implement all of the optional
