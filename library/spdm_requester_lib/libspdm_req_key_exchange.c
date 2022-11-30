@@ -501,10 +501,10 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
         }
         if ((mut_auth_requested != SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED) &&
             (*req_slot_id_param != 0)) {
-                libspdm_secured_message_dhe_free(
-                    spdm_context->connection_info.algorithm.dhe_named_group, dhe_context);
-                status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-                goto receive_done;
+            libspdm_secured_message_dhe_free(
+                spdm_context->connection_info.algorithm.dhe_named_group, dhe_context);
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+            goto receive_done;
         }
     } else if (*req_slot_id_param != 0) {
         libspdm_secured_message_dhe_free(
