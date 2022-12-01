@@ -52,7 +52,7 @@ void libspdm_bin_concat(spdm_version_number_t spdm_version,
         libspdm_copy_mem(out_bin + sizeof(uint16_t) + sizeof(LIBSPDM_BIN_CONCAT_LABEL) -
                          1 + label_size,
                          *out_bin_size - (sizeof(uint16_t) + sizeof(LIBSPDM_BIN_CONCAT_LABEL) -
-                          1 + label_size), context, hash_size);
+                                          1 + label_size), context, hash_size);
     }
 
     #undef LIBSPDM_BIN_CONCAT_LABEL
