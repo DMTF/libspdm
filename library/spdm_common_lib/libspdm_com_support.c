@@ -7,7 +7,7 @@
 #include "internal/libspdm_common_lib.h"
 
 #if LIBSPDM_DEBUG_PRINT_ENABLE
-void LIBSPDM_INTERNAL_DUMP_HEX_str(const uint8_t *data, size_t size)
+void libspdm_internal_dump_hex_str(const uint8_t *data, size_t size)
 {
     size_t index;
     for (index = 0; index < size; index++) {
