@@ -1030,6 +1030,16 @@ libspdm_return_t libspdm_append_message_f(void *context, void *spdm_session_info
                                           size_t message_size);
 
 /**
+ * This function generate a new session ID by concatnating req_session_id and rsp_session_id.
+ *
+ * @param[in]  req_session_id
+ * @param[in]  rsp_session_id
+ *
+ * @return this new session ID.
+ **/
+uint32_t libspdm_generate_session_id(uint16_t req_session_id, uint16_t rsp_session_id);
+
+/**
  * This function assigns a new session ID.
  *
  * @param  spdm_context  A pointer to the SPDM context.

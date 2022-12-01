@@ -330,7 +330,7 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
         *heartbeat_period = spdm_response->header.param1;
     }
     rsp_session_id = spdm_response->rsp_session_id;
-    *session_id = (req_session_id << 16) | rsp_session_id;
+    *session_id = libspdm_generate_session_id(req_session_id, rsp_session_id);
     session_info = libspdm_assign_session_id(spdm_context, *session_id, true);
     if (session_info == NULL) {
         status = LIBSPDM_STATUS_SESSION_NUMBER_EXCEED;

@@ -505,7 +505,7 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
     }
 
     rsp_session_id = spdm_response->rsp_session_id;
-    *session_id = (req_session_id << 16) | rsp_session_id;
+    *session_id = libspdm_generate_session_id(req_session_id, rsp_session_id);
     session_info = libspdm_assign_session_id(spdm_context, *session_id, false);
 
     /* session_info cannot be null as the check after libspdm_allocate_req_session_id assures
