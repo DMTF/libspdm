@@ -170,6 +170,21 @@ void *libspdm_get_secured_message_context_via_session_info(void *spdm_session_in
 }
 
 /**
+ * This function generate a new session ID by concatnating req_session_id and rsp_session_id.
+ *
+ * @param[in]  req_session_id
+ * @param[in]  rsp_session_id
+ *
+ * @return this new session ID.
+ **/
+uint32_t libspdm_generate_session_id(uint16_t req_session_id, uint16_t rsp_session_id)
+{
+    uint32_t session_id;
+    session_id = (rsp_session_id << 16) | req_session_id;
+    return session_id;
+}
+
+/**
  * This function assigns a new session ID.
  *
  * @param  spdm_context                  A pointer to the SPDM context.

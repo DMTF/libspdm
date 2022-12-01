@@ -260,7 +260,7 @@ libspdm_return_t libspdm_get_response_psk_exchange(void *context,
             spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
             response_size, response);
     }
-    session_id = (req_session_id << 16) | rsp_session_id;
+    session_id = libspdm_generate_session_id(req_session_id, rsp_session_id);
     session_info = libspdm_assign_session_id(spdm_context, session_id, true);
     if (session_info == NULL) {
         return libspdm_generate_error_response(
