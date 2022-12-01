@@ -471,7 +471,7 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
     }
 
     *req_slot_id_param = spdm_response->req_slot_id_param & 0xf;
-    mut_auth_requested = spdm_response->mut_auth_requested & 0xf;
+    mut_auth_requested = spdm_response->mut_auth_requested & 0x7;
 
     if (mut_auth_requested != 0) {
         if (!libspdm_is_capabilities_flag_supported(
