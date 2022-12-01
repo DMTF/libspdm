@@ -25,7 +25,10 @@ void libspdm_bin_concat(spdm_version_number_t spdm_version,
 {
     size_t final_size;
 
-    final_size = sizeof(uint16_t) + sizeof(SPDM_VERSION_1_1_BIN_CONCAT_LABEL) - 1 + label_size;
+    /* The correct version characters (1.1 or 1.2) will replace the x.x. */
+    #define LIBSPDM_BIN_CONCAT_LABEL "spdmx.x "
+
+    final_size = sizeof(uint16_t) + sizeof(LIBSPDM_BIN_CONCAT_LABEL) - 1 + label_size;
     if (context != NULL) {
         final_size += hash_size;
     }
@@ -35,26 +38,24 @@ void libspdm_bin_concat(spdm_version_number_t spdm_version,
     *out_bin_size = final_size;
 
     libspdm_copy_mem(out_bin, *out_bin_size, &length, sizeof(uint16_t));
-    libspdm_copy_mem(out_bin + sizeof(uint16_t),
-                     *out_bin_size - sizeof(uint16_t),
-                     SPDM_VERSION_1_1_BIN_CONCAT_LABEL,
-                     sizeof(SPDM_VERSION_1_1_BIN_CONCAT_LABEL) - 1);
-    /* patch the version*/
+    libspdm_copy_mem(out_bin + sizeof(uint16_t), *out_bin_size - sizeof(uint16_t),
+                     LIBSPDM_BIN_CONCAT_LABEL, sizeof(LIBSPDM_BIN_CONCAT_LABEL) - 1);
+
+    /* Patch the version. */
     out_bin[6] = (char)('0' + ((spdm_version >> 12) & 0xF));
     out_bin[8] = (char)('0' + ((spdm_version >> 8) & 0xF));
-    libspdm_copy_mem(out_bin + sizeof(uint16_t) + sizeof(SPDM_VERSION_1_1_BIN_CONCAT_LABEL) - 1,
-                     *out_bin_size -
-                     (sizeof(uint16_t) + sizeof(SPDM_VERSION_1_1_BIN_CONCAT_LABEL) - 1),
-                     label,
-                     label_size);
+    libspdm_copy_mem(out_bin + sizeof(uint16_t) + sizeof(LIBSPDM_BIN_CONCAT_LABEL) - 1,
+                     *out_bin_size - (sizeof(uint16_t) + sizeof(LIBSPDM_BIN_CONCAT_LABEL) - 1),
+                     label, label_size);
+
     if (context != NULL) {
-        libspdm_copy_mem(out_bin + sizeof(uint16_t) + sizeof(SPDM_VERSION_1_1_BIN_CONCAT_LABEL) -
+        libspdm_copy_mem(out_bin + sizeof(uint16_t) + sizeof(LIBSPDM_BIN_CONCAT_LABEL) -
                          1 + label_size,
-                         *out_bin_size -
-                         (sizeof(uint16_t) + sizeof(SPDM_VERSION_1_1_BIN_CONCAT_LABEL) -
-                          1 + label_size),
-                         context, hash_size);
+                         *out_bin_size - (sizeof(uint16_t) + sizeof(LIBSPDM_BIN_CONCAT_LABEL) -
+                          1 + label_size), context, hash_size);
     }
+
+    #undef LIBSPDM_BIN_CONCAT_LABEL
 }
 
 /**
