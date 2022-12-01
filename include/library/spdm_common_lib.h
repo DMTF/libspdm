@@ -279,6 +279,16 @@ libspdm_return_t libspdm_init_context(void *spdm_context);
 void libspdm_reset_context(void *spdm_context);
 
 /**
+ * Free the memory of contexts within the SPDM context.
+ * These are typically contexts whose memory has been allocated by the cryptography library.
+ * This function does not free the SPDM context itself.
+ *
+ * @param[in]  spdm_context         A pointer to the SPDM context.
+ *
+ */
+void libspdm_deinit_context(void *spdm_context);
+
+/**
  * Return the size in bytes of the SPDM context. This includes all
  * secured message context data as well.
  *

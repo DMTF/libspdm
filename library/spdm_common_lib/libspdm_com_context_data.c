@@ -2221,6 +2221,47 @@ void libspdm_reset_context(void *context)
 }
 
 /**
+ * Free the memory of contexts within the SPDM context.
+ * These are typically contexts whose memory has been allocated by the cryptography library.
+ * This function does not free the SPDM context itself.
+ *
+ * @param[in]  spdm_context         A pointer to the SPDM context.
+ *
+ */
+void libspdm_deinit_context(void *context)
+{
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
+    libspdm_context_t *spdm_context;
+    void *pubkey_context;
+    bool is_requester;
+    uint8_t slot_index;
+
+    spdm_context = context;
+    is_requester = spdm_context->local_context.is_requester;
+
+    for (slot_index = 0; slot_index < SPDM_MAX_SLOT_COUNT; slot_index++) {
+        pubkey_context = spdm_context->connection_info.peer_used_cert_chain[slot_index].
+                         leaf_cert_public_key;
+
+        if (pubkey_context != NULL) {
+            if (is_requester) {
+                libspdm_asym_free(
+                    spdm_context->connection_info.algorithm.base_asym_algo, pubkey_context);
+            } else {
+                libspdm_req_asym_free(
+                    spdm_context->connection_info.algorithm.req_base_asym_alg, pubkey_context);
+            }
+
+            pubkey_context = NULL;
+            spdm_context->connection_info.peer_used_cert_chain[slot_index].
+            leaf_cert_public_key = NULL;
+        }
+    }
+
+#endif
+}
+
+/**
  * Return the size in bytes of the SPDM context. This includes all
  * secured message context data as well.
  *
