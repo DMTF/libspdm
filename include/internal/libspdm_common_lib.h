@@ -93,6 +93,9 @@ typedef struct {
     bool basic_mut_auth_requested;
     uint8_t mut_auth_requested;
     uint8_t heartbeat_period;
+
+    /*The device role*/
+    bool is_requester;
 } libspdm_local_context_t;
 
 typedef struct {

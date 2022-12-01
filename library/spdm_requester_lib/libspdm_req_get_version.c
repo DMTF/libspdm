@@ -193,6 +193,9 @@ static libspdm_return_t libspdm_try_get_version(libspdm_context_t *spdm_context,
     libspdm_append_msg_log(spdm_context, spdm_response, spdm_response_size);
     #endif /* LIBSPDM_ENABLE_MSG_LOG */
 
+    /*Set the role of device*/
+    spdm_context->local_context.is_requester = true;
+
 receive_done:
     libspdm_release_receiver_buffer (spdm_context);
     return status;

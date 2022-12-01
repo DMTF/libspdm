@@ -247,6 +247,12 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
    libspdm_send_receive_data (spdm_context, &session_id, TRUE, &request, request_size, &response, &response_size);
    ```
 
+7. Free the memory of contexts within the SPDM context when all flow is over.
+   This function doesn't free the SPDM context itself.
+   ```
+   libspdm_deinit_context(spdm_context);
+   ```
+
 ## SPDM Responder
 
 Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-emu/blob/main/spdm_emu/spdm_responder_emu/spdm_responder_spdm.c)
@@ -420,6 +426,12 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
    }
 
    libspdm_register_get_response_func (spdm_context, libspdm_get_response_vendor_defined_request);
+   ```
+
+4. Free the memory of contexts within the SPDM context when all flow is over.
+   This function doesn't free the SPDM context itself.
+   ```
+   libspdm_deinit_context(spdm_context);
    ```
 
 ## Message Logging

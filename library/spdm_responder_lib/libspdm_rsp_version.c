@@ -103,5 +103,8 @@ libspdm_return_t libspdm_get_response_version(void *context, size_t request_size
     /* -=[Update State Phase]=- */
     libspdm_set_connection_state(spdm_context, LIBSPDM_CONNECTION_STATE_AFTER_VERSION);
 
+    /*Set the role of device*/
+    spdm_context->local_context.is_requester = false;
+
     return LIBSPDM_STATUS_SUCCESS;
 }
