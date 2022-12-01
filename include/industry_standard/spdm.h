@@ -968,6 +968,7 @@ typedef struct {
 #pragma pack()
 
 #define SPDM_VERSION_1_1_BIN_CONCAT_LABEL "spdm1.1 "
+#define SPDM_VERSION_1_2_BIN_CONCAT_LABEL "spdm1.2 "
 #define SPDM_BIN_STR_0_LABEL "derived"
 #define SPDM_BIN_STR_1_LABEL "req hs data"
 #define SPDM_BIN_STR_2_LABEL "rsp hs data"
