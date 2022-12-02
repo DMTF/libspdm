@@ -111,6 +111,7 @@ libspdm_return_t libspdm_receive_response(void *context, const uint32_t *session
                                           void **response)
 {
     libspdm_context_t *spdm_context;
+    void *temp_session_context;
     libspdm_return_t status;
     uint8_t *message;
     size_t message_size;
@@ -120,6 +121,10 @@ libspdm_return_t libspdm_receive_response(void *context, const uint32_t *session
     size_t transport_header_size;
     uint8_t *scratch_buffer;
     size_t scratch_buffer_size;
+    void *backup_response;
+    size_t backup_response_size;
+    bool reset_key_update;
+    bool result;
 
     spdm_context = context;
 
@@ -159,9 +164,44 @@ libspdm_return_t libspdm_receive_response(void *context, const uint32_t *session
     *response_size = scratch_buffer_size - transport_header_size;
     #endif
 
+    backup_response = *response;
+    backup_response_size = *response_size;
+
     status = spdm_context->transport_decode_message(
         spdm_context, &message_session_id, &is_message_app_message,
         false, message_size, message, response_size, response);
+
+    reset_key_update = false;
+    if (status == LIBSPDM_STATUS_SESSION_MSG_ERROR_TRY_DISCARD_KEY_UPDATE) {
+        /* Failed to decode, but have backup keys. Try rolling back before aborting.
+         * message_session_id must be valid for us to have attempted decryption. */
+        if (message_session_id == NULL) {
+            return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
+        }
+        temp_session_context = libspdm_get_secured_message_context_via_session_id(
+            spdm_context, *message_session_id);
+        if (temp_session_context == NULL) {
+            return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
+        }
+
+        result = libspdm_activate_update_session_data_key(
+            temp_session_context, LIBSPDM_KEY_UPDATE_ACTION_RESPONDER, false);
+        if (!result) {
+            return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
+        }
+
+        /* Retry decoding message with backup Requester key.
+         * Must reset some of the parameters in case they were modified */
+        message_session_id = NULL;
+        is_message_app_message = false;
+        *response = backup_response;
+        *response_size = backup_response_size;
+        status = spdm_context->transport_decode_message(
+            spdm_context, &message_session_id, &is_message_app_message,
+            false, message_size, message, response_size, response);
+
+        reset_key_update = true;
+    }
 
     if (session_id != NULL) {
         if (message_session_id == NULL) {
@@ -204,6 +244,26 @@ libspdm_return_t libspdm_receive_response(void *context, const uint32_t *session
     } else {
         LIBSPDM_INTERNAL_DUMP_HEX(*response, *response_size);
     }
+
+    /* Handle special case:
+     * If the Responder returns RESPONSE_NOT_READY error to KEY_UPDATE, the Requester needs
+     * to activate backup key to parse the error. Then later the Responder will return SUCCESS,
+     * the Requester needs new key. So we need to restore the environment by
+     * libspdm_create_update_session_data_key() again.*/
+    if (reset_key_update)
+    {
+        /* temp_session_context and message_session_id must necessarily
+         * be valid for us to reach here. */
+        if (temp_session_context == NULL || message_session_id == NULL) {
+            return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
+        }
+        result = libspdm_create_update_session_data_key(
+            temp_session_context, LIBSPDM_KEY_UPDATE_ACTION_RESPONDER);
+        if (!result) {
+            return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
+        }
+    }
+
     return status;
 
 error:

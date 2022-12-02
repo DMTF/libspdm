@@ -357,6 +357,10 @@ typedef struct {
     size_t spdm_connection_state_callback
     [LIBSPDM_MAX_CONNECTION_STATE_CALLBACK_NUM];
 
+    /* Register libspdm_key_update_callback function (responder only)
+     * Register can know when session keys are updated during KEY_UPDATE operations. */
+    size_t spdm_key_update_callback[LIBSPDM_MAX_KEY_UPDATE_CALLBACK_NUM];
+
     libspdm_local_context_t local_context;
 
     libspdm_connection_info_t connection_info;
