@@ -1453,12 +1453,8 @@ libspdm_return_t libspdm_append_message_k(void *context, void *session_info,
                     }
                 }
             }
-        }
 
-
-        /* prepare digest_context_th*/
-
-        if (spdm_session_info->session_transcript.digest_context_th == NULL) {
+            /* prepare digest_context_th*/
             spdm_session_info->session_transcript.digest_context_th = libspdm_hash_new (
                 spdm_context->connection_info.algorithm.base_hash_algo);
             if (spdm_session_info->session_transcript.digest_context_th == NULL) {
@@ -1623,13 +1619,9 @@ libspdm_return_t libspdm_append_message_f(void *context, void *session_info,
                 spdm_session_info->session_transcript.digest_context_th_backup = NULL;
                 return LIBSPDM_STATUS_CRYPTO_ERROR;
             }
-        }
 
-
-        /* prepare digest_context_th*/
-
-        LIBSPDM_ASSERT (spdm_session_info->session_transcript.digest_context_th != NULL);
-        if (!spdm_session_info->session_transcript.message_f_initialized) {
+            /* prepare digest_context_th*/
+            LIBSPDM_ASSERT (spdm_session_info->session_transcript.digest_context_th != NULL);
             if (!spdm_session_info->use_psk && spdm_session_info->mut_auth_requested) {
                 result = libspdm_hash_update (
                     spdm_context->connection_info.algorithm.base_hash_algo,
