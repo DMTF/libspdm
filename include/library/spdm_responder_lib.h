@@ -210,6 +210,44 @@ libspdm_return_t libspdm_register_connection_state_callback_func(
     libspdm_connection_state_callback_func spdm_connection_state_callback);
 
 /**
+ * Notify the key update operation to an SPDM context register.
+ *
+ * @param  spdm_context           A pointer to the SPDM context.
+ * @param  session_id             Session ID for the keys being updated.
+ * @param  key_update_operation   Indicate the key update operation.
+ * @param  key_update_action      Indicate the direction of the key update.
+ **/
+typedef void (*libspdm_key_update_callback_func)(
+    void *spdm_context, uint32_t session_id, libspdm_key_update_operation_t key_update_op,
+    libspdm_key_update_action_t key_update_action);
+
+/**
+ * Notify the key update operation to an SPDM context register.
+ *
+ * @param  spdm_context           A pointer to the SPDM context.
+ * @param  session_id             Session ID for the keys being updated.
+ * @param  key_update_operation   Indicate the key update operation.
+ * @param  key_update_action      Indicate the direction of the key update.
+ **/
+void libspdm_trigger_key_update_callback(
+    void *spdm_context, uint32_t session_id, libspdm_key_update_operation_t key_update_op,
+    libspdm_key_update_action_t key_update_action);
+
+/**
+ * Register a key update callback function.
+ *
+ * This function can be called multiple times to register multiple callbacks.
+ *
+ * @param  spdm_context              A pointer to the SPDM context.
+ * @param  spdm_key_update_callback  The function to be called in key update operation.
+ *
+ * @retval RETURN_SUCCESS          The callback is registered.
+ * @retval RETURN_ALREADY_STARTED  No enough memory to register the callback.
+ **/
+libspdm_return_t libspdm_register_key_update_callback_func(
+    void *spdm_context, libspdm_key_update_callback_func spdm_key_update_callback);
+
+/**
  * This function initializes the key_update encapsulated state.
  *
  * @param  spdm_context                  A pointer to the SPDM context.

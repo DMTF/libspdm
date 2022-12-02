@@ -322,7 +322,6 @@ libspdm_return_t libspdm_decode_secured_message(
     libspdm_session_type_t session_type;
     libspdm_session_state_t session_state;
     libspdm_error_struct_t spdm_error;
-    libspdm_return_t status;
 
     spdm_error.error_code = 0;
     spdm_error.session_id = 0;
@@ -489,39 +488,10 @@ libspdm_return_t libspdm_decode_secured_message(
             record_header_size, enc_msg, cipher_text_size, tag,
             aead_tag_size, dec_msg, &cipher_text_size);
         if (!result) {
-            /* Try to use backup key to decrypt, because peer may use old key to encrypt error message.
-             * Recursive call only once, because the xxx_backup_valid will be cleared in libspdm_activate_update_session_data_key().*/
-
+            /* Backup keys are valid, fail and alert rollback and retry is possible. */
             if ((is_requester && secured_message_context->requester_backup_valid) ||
                 ((!is_requester) && secured_message_context->responder_backup_valid)) {
-                result = libspdm_activate_update_session_data_key(
-                    secured_message_context,
-                    is_requester ? LIBSPDM_KEY_UPDATE_ACTION_REQUESTER : LIBSPDM_KEY_UPDATE_ACTION_RESPONDER,
-                    false);
-                if (!result) {
-                    return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
-                }
-                status = libspdm_decode_secured_message(
-                    spdm_secured_message_context, session_id,
-                    is_requester, secured_message_size,
-                    secured_message, app_message_size,
-                    app_message, spdm_secured_message_callbacks);
-                if (LIBSPDM_STATUS_IS_ERROR(status)) {
-                    return status;
-                }
-
-                /* Handle special case:
-                 * If the responder returns SPDM_RESPOND_IF_READY error, the requester need activate backup key to parse the error.
-                 * Then later the responder will return SUCCESS, the requester need activate new key.
-                 * So we need restore the environment by libspdm_create_update_session_data_key() again.*/
-
-                result = libspdm_create_update_session_data_key (
-                    secured_message_context,
-                    is_requester ? LIBSPDM_KEY_UPDATE_ACTION_REQUESTER : LIBSPDM_KEY_UPDATE_ACTION_RESPONDER);
-                if (!result) {
-                    return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
-                }
-                return LIBSPDM_STATUS_SUCCESS;
+                return LIBSPDM_STATUS_SESSION_MSG_ERROR_TRY_DISCARD_KEY_UPDATE;
             }
 
             libspdm_secured_message_set_last_spdm_error_struct(
@@ -584,40 +554,10 @@ libspdm_return_t libspdm_decode_secured_message(
             aead_tag_size,
             NULL, 0, tag, aead_tag_size, NULL, NULL);
         if (!result) {
-
-            /* try to use backup key to decrypt, because peer may use old key to encrypt error message.
-             * recursive call only once, because the xxx_backup_valid will be cleard in libspdm_activate_update_session_data_key().*/
-
+            /* Backup keys are valid, fail and alert rollback and retry is possible. */
             if ((is_requester && secured_message_context->requester_backup_valid) ||
                 ((!is_requester) && secured_message_context->responder_backup_valid)) {
-                result = libspdm_activate_update_session_data_key(
-                    secured_message_context,
-                    is_requester ? LIBSPDM_KEY_UPDATE_ACTION_REQUESTER : LIBSPDM_KEY_UPDATE_ACTION_RESPONDER,
-                    false);
-                if (!result) {
-                    return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
-                }
-                status = libspdm_decode_secured_message(
-                    spdm_secured_message_context, session_id,
-                    is_requester, secured_message_size,
-                    secured_message, app_message_size,
-                    app_message, spdm_secured_message_callbacks);
-                if (LIBSPDM_STATUS_IS_ERROR(status)) {
-                    return status;
-                }
-
-                /* Handle special case:
-                 * If the responder returns SPDM_RESPOND_IF_READY error, the requester need activate backup key to parse the error.
-                 * Then later the responder will return SUCCESS, the requester need activate new key.
-                 * So we need restore the environment by libspdm_create_update_session_data_key() again.*/
-
-                result = libspdm_create_update_session_data_key (
-                    secured_message_context,
-                    is_requester ? LIBSPDM_KEY_UPDATE_ACTION_REQUESTER : LIBSPDM_KEY_UPDATE_ACTION_RESPONDER);
-                if (!result) {
-                    return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
-                }
-                return LIBSPDM_STATUS_SUCCESS;
+                return LIBSPDM_STATUS_SESSION_MSG_ERROR_TRY_DISCARD_KEY_UPDATE;
             }
 
             libspdm_secured_message_set_last_spdm_error_struct(
