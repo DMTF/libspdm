@@ -302,7 +302,8 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
 
     if (libspdm_is_capabilities_flag_supported(
             spdm_context, true, 0,
-            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP) &&
+        (spdm_request->measurement_specification != 0)) {
         if (spdm_context->connection_info.algorithm.measurement_spec !=
             SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF) {
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
