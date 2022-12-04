@@ -2700,6 +2700,8 @@ static void libspdm_test_requester_get_measurements_err_case1(void **state)
         m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.measurement_spec =
+        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
@@ -2770,6 +2772,8 @@ static void libspdm_test_requester_get_measurements_err_case2(void **state)
         m_libspdm_use_measurement_hash_algo;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.measurement_spec =
+        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 
     request_attribute = SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE;
 
@@ -2821,6 +2825,8 @@ static void libspdm_test_requester_get_measurements_err_case3(void **state)
         m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.measurement_spec =
+        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
@@ -2894,6 +2900,8 @@ static void libspdm_test_requester_get_measurements_err_case4(void **state)
         m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.measurement_spec =
+        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
@@ -2967,6 +2975,8 @@ static void libspdm_test_requester_get_measurements_err_case5(void **state)
         m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.measurement_spec =
+        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
@@ -3038,7 +3048,8 @@ static void libspdm_test_requester_get_measurements_err_case6(void **state)
         m_libspdm_use_measurement_hash_algo;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
-
+    spdm_context->local_context.algorithm.measurement_spec =
+        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
     request_attribute = SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE;
 
     measurement_record_length = sizeof(measurement_record);
@@ -3089,6 +3100,8 @@ static void libspdm_test_requester_get_measurements_err_case7(void **state)
         m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.measurement_spec =
+        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
@@ -3165,6 +3178,8 @@ static void libspdm_test_requester_get_measurements_err_case8(void **state)
         m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.measurement_spec =
+        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
@@ -3232,7 +3247,8 @@ static void libspdm_test_requester_get_measurements_err_case9(void **state)
         m_libspdm_use_measurement_hash_algo;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
-
+    spdm_context->local_context.algorithm.measurement_spec =
+        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
     request_attribute = SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE;
 
     measurement_record_length = sizeof(measurement_record);
@@ -3281,7 +3297,8 @@ static void libspdm_test_requester_get_measurements_err_case10(void **state)
         m_libspdm_use_measurement_hash_algo;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
-
+    spdm_context->local_context.algorithm.measurement_spec =
+        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
     request_attribute = 0;
     measurement_record_length = sizeof(measurement_record);
 
@@ -3332,6 +3349,8 @@ static void libspdm_test_requester_get_measurements_err_case11(void **state)
         m_libspdm_use_measurement_hash_algo;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.measurement_spec =
+        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 
     request_attribute = 0;
     measurement_record_length = sizeof(measurement_record);
@@ -3384,6 +3403,8 @@ static void libspdm_test_requester_get_measurements_err_case12(void **state)
         m_libspdm_use_measurement_hash_algo;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.measurement_spec =
+        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
@@ -3458,6 +3479,8 @@ static void libspdm_test_requester_get_measurements_err_case13(void **state)
         m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.measurement_spec =
+        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
@@ -3533,6 +3556,8 @@ static void libspdm_test_requester_get_measurements_err_case14(void **state)
         m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.measurement_spec =
+        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
@@ -3608,6 +3633,8 @@ static void libspdm_test_requester_get_measurements_err_case15(void **state)
         m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.measurement_spec =
+        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
@@ -3679,7 +3706,8 @@ static void libspdm_test_requester_get_measurements_err_case16(void **state)
         m_libspdm_use_measurement_hash_algo;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
-
+    spdm_context->local_context.algorithm.measurement_spec =
+        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
     request_attribute = SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE;
 
     measurement_record_length = sizeof(measurement_record);
@@ -3729,6 +3757,8 @@ static void libspdm_test_requester_get_measurements_err_case17(void **state)
         m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.measurement_spec =
+        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
@@ -3816,6 +3846,8 @@ static void libspdm_test_requester_get_measurements_err_case19(void **state)
         m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.measurement_spec =
+        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
@@ -3890,6 +3922,8 @@ static void libspdm_test_requester_get_measurements_err_case20(void **state)
         m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.measurement_spec =
+        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
@@ -3964,6 +3998,8 @@ static void libspdm_test_requester_get_measurements_err_case21(void **state)
         m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.measurement_spec =
+        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
@@ -4040,6 +4076,8 @@ static void libspdm_test_requester_get_measurements_err_case22(void **state)
         m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.measurement_spec =
+        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
@@ -4144,6 +4182,8 @@ static void libspdm_test_requester_get_measurements_err_case24(void **state)
         m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.measurement_spec =
+        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
@@ -4227,6 +4267,8 @@ static void libspdm_test_requester_get_measurements_err_case26(void **state)
         m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.measurement_spec =
+        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
@@ -4303,6 +4345,8 @@ static void libspdm_test_requester_get_measurements_err_case27(void **state)
         m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.measurement_spec =
+        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
@@ -4381,6 +4425,8 @@ static void libspdm_test_requester_get_measurements_err_case28(void **state)
         m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.measurement_spec =
+        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
@@ -4486,6 +4532,8 @@ static void libspdm_test_requester_get_measurements_err_case33(void **state) {
         m_libspdm_use_measurement_hash_algo;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.measurement_spec =
+        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;

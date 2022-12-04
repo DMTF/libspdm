@@ -1728,6 +1728,8 @@ static void libspdm_test_requester_negotiate_algorithms_error_case10(void **stat
         LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
     spdm_context->local_context.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
+    spdm_context->local_context.algorithm.measurement_spec =
+        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
     spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
     spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.measurement_hash_algo = 0;
@@ -2546,6 +2548,8 @@ static void libspdm_test_requester_negotiate_algorithms_error_case35(void **stat
         m_libspdm_use_measurement_hash_algo;
     spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
     spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->local_context.algorithm.measurement_spec =
+        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
     libspdm_reset_message_a(spdm_context);
 
     status = libspdm_negotiate_algorithms (spdm_context);

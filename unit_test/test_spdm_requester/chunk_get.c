@@ -639,6 +639,8 @@ void libspdm_test_requester_chunk_get_case2(void** state)
         m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.measurement_spec =
+        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
     #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = data_size;
     libspdm_copy_mem(
