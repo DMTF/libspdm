@@ -402,13 +402,6 @@ static libspdm_return_t libspdm_requester_get_measurements_test_send_message(
         m_libspdm_local_buffer_size += app_message_size - 3;
         return LIBSPDM_STATUS_SUCCESS;
     case 0x23:
-        m_libspdm_local_buffer_size = 0;
-        message_size = libspdm_test_get_measurement_request_size(
-            spdm_context, (const uint8_t *)request + header_size,
-            request_size - header_size);
-        libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
-                         (const uint8_t *)request + header_size, message_size);
-        m_libspdm_local_buffer_size += message_size;
         return LIBSPDM_STATUS_SUCCESS;
     case 0x24:
         m_libspdm_local_buffer_size = 0;
@@ -2692,14 +2685,12 @@ static libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         /* WALKAROUND: If just use single context to encode message and then decode message */
-        ((libspdm_secured_message_context_t
-          *)(session_info->secured_message_context))
+        ((libspdm_secured_message_context_t *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
     }
         return LIBSPDM_STATUS_SUCCESS;
 
     case 0x23: {
-
         spdm_measurements_response_t *spdm_response;
         spdm_measurement_block_dmtf_t *measurment_block;
         size_t spdm_response_size;
@@ -2722,26 +2713,27 @@ static libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
         libspdm_write_uint24(
             spdm_response->measurement_record_length,
             (uint32_t)(sizeof(spdm_measurement_block_dmtf_t) +
-                       libspdm_get_measurement_hash_size(
-                           m_libspdm_use_measurement_hash_algo)));
+                       libspdm_get_measurement_hash_size(m_libspdm_use_measurement_hash_algo)));
         measurment_block = (void *)(spdm_response + 1);
         libspdm_set_mem(measurment_block,
                         sizeof(spdm_measurement_block_dmtf_t) +
                         libspdm_get_measurement_hash_size(m_libspdm_use_measurement_hash_algo), 1);
-        measurment_block->measurement_block_common_header
-        .measurement_specification = SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
-        measurment_block->measurement_block_common_header
-        .measurement_size =
+        measurment_block->measurement_block_common_header.measurement_specification =
+            SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
+        measurment_block->measurement_block_common_header.measurement_size =
             (uint16_t)(sizeof(spdm_measurement_block_dmtf_header_t) +
-                       libspdm_get_measurement_hash_size(
-                           m_libspdm_use_measurement_hash_algo));
+                       libspdm_get_measurement_hash_size(m_libspdm_use_measurement_hash_algo));
 
         ptr = (uint8_t *)spdm_response +
               sizeof(spdm_measurements_response_t) +
               sizeof(spdm_measurement_block_dmtf_t) +
               libspdm_get_measurement_hash_size(m_libspdm_use_measurement_hash_algo);
-        libspdm_get_random_number(SPDM_NONCE_SIZE,ptr);
+        libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
         *(uint16_t *)(ptr + SPDM_NONCE_SIZE) = 0;
+
+        libspdm_copy_mem (m_libspdm_local_buffer, m_libspdm_local_buffer_size,
+                          spdm_response, spdm_response_size);
+        m_libspdm_local_buffer_size = spdm_response_size;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, spdm_response_size,
@@ -5424,8 +5416,7 @@ static void libspdm_test_requester_get_measurements_case35(void **state)
     spdm_test_context->case_id = 0x23;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
@@ -5440,8 +5431,7 @@ static void libspdm_test_requester_get_measurements_case35(void **state)
     spdm_context->local_context.algorithm.measurement_spec =
         SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
-        data_size;
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
                      sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
                      data, data_size);
@@ -5464,7 +5454,7 @@ static void libspdm_test_requester_get_measurements_case35(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     /*filling M buffer with arbitrary data*/
     arbitrary_size = 18;
-    libspdm_set_mem(spdm_context->transcript.message_m.buffer, arbitrary_size, (uint8_t) 0xFF);
+    libspdm_set_mem(spdm_context->transcript.message_m.buffer, arbitrary_size, 0xFF);
     spdm_context->transcript.message_m.buffer_size = arbitrary_size;
 #endif
 
@@ -5476,12 +5466,13 @@ static void libspdm_test_requester_get_measurements_case35(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    assert_int_equal(spdm_context->transcript.message_m.buffer_size,
+    /* Subtract the size of the request message. */
+    assert_int_equal(spdm_context->transcript.message_m.buffer_size - 0x4,
                      arbitrary_size + m_libspdm_local_buffer_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer (0x%x):\n",
                    m_libspdm_local_buffer_size));
     libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
-    assert_memory_equal(spdm_context->transcript.message_m.buffer + arbitrary_size,
+    assert_memory_equal(spdm_context->transcript.message_m.buffer + arbitrary_size + 0x4,
                         m_libspdm_local_buffer, m_libspdm_local_buffer_size);
 #endif
     free(data);
