@@ -402,6 +402,15 @@ static libspdm_return_t libspdm_requester_get_measurements_test_send_message(
         m_libspdm_local_buffer_size += app_message_size - 3;
         return LIBSPDM_STATUS_SUCCESS;
     case 0x23:
+        /* m_libspdm_local_buffer_size is set by case35 and already contains the arbitrary fill
+         * data. */
+        message_size = libspdm_test_get_measurement_request_size(
+            spdm_context, (const uint8_t *)request + header_size,
+            request_size - header_size);
+        libspdm_copy_mem(m_libspdm_local_buffer + m_libspdm_local_buffer_size,
+                         sizeof(m_libspdm_local_buffer),
+                         (const uint8_t *)request + header_size, message_size);
+        m_libspdm_local_buffer_size += message_size;
         return LIBSPDM_STATUS_SUCCESS;
     case 0x24:
         m_libspdm_local_buffer_size = 0;
@@ -2731,9 +2740,10 @@ static libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
         libspdm_get_random_number(SPDM_NONCE_SIZE, ptr);
         *(uint16_t *)(ptr + SPDM_NONCE_SIZE) = 0;
 
-        libspdm_copy_mem (m_libspdm_local_buffer, m_libspdm_local_buffer_size,
+        libspdm_copy_mem (m_libspdm_local_buffer + m_libspdm_local_buffer_size,
+                          sizeof(m_libspdm_local_buffer) - m_libspdm_local_buffer_size,
                           spdm_response, spdm_response_size);
-        m_libspdm_local_buffer_size = spdm_response_size;
+        m_libspdm_local_buffer_size += spdm_response_size;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, spdm_response_size,
@@ -5329,8 +5339,10 @@ static void libspdm_test_requester_get_measurements_case34(void **state)
 /**
  * Test 35: a request message is successfully sent and a response message is successfully received.
  * Buffer M already has arbitrary data. No signature is requested.
- * Expected Behavior: requester returns the status RETURN_SUCCESS and a MEASUREMENTS message is
- * received, buffer M appends the exchanged GET_MEASUREMENTS and MEASUREMENTS messages.
+ * Expected Behavior: requester returns the status LIBSPDM_STATUS_SUCCESS and a MEASUREMENTS message
+ * is received, buffer M appends the exchanged GET_MEASUREMENTS and MEASUREMENTS messages.
+ *
+ * Note that this test is only exercised when LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT is enabled.
  **/
 static void libspdm_test_requester_get_measurements_case35(void **state)
 {
@@ -5346,7 +5358,7 @@ static void libspdm_test_requester_get_measurements_case35(void **state)
     void *hash;
     size_t hash_size;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    size_t arbitrary_size;
+    const size_t arbitrary_fill_size = 18;
 #endif
 
     spdm_test_context = *state;
@@ -5385,13 +5397,14 @@ static void libspdm_test_requester_get_measurements_case35(void **state)
         &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
 
-    request_attribute = 0; /*do not request signature*/
+    request_attribute = 0; /* Do not request a signature. */
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    /*filling M buffer with arbitrary data*/
-    arbitrary_size = 18;
-    libspdm_set_mem(spdm_context->transcript.message_m.buffer, arbitrary_size, 0xFF);
-    spdm_context->transcript.message_m.buffer_size = arbitrary_size;
+    /* Fill M buffer and local buffer with arbitrary data. */
+    libspdm_set_mem(spdm_context->transcript.message_m.buffer, arbitrary_fill_size, 0xFF);
+    libspdm_set_mem(m_libspdm_local_buffer, arbitrary_fill_size, 0xFF);
+    spdm_context->transcript.message_m.buffer_size = arbitrary_fill_size;
+    m_libspdm_local_buffer_size = arbitrary_fill_size;
 #endif
 
     measurement_record_length = sizeof(measurement_record);
@@ -5402,13 +5415,13 @@ static void libspdm_test_requester_get_measurements_case35(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    /* Subtract the size of the request message. */
-    assert_int_equal(spdm_context->transcript.message_m.buffer_size - 0x4,
-                     arbitrary_size + m_libspdm_local_buffer_size);
+    /* Check that the size of the two buffers are the same (fill data + request + response) */
+    assert_int_equal(spdm_context->transcript.message_m.buffer_size, m_libspdm_local_buffer_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer (0x%x):\n",
                    m_libspdm_local_buffer_size));
     libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
-    assert_memory_equal(spdm_context->transcript.message_m.buffer + arbitrary_size + 0x4,
+    /* Check that the contents of the two buffers are the same (fill data, request, response) */
+    assert_memory_equal(spdm_context->transcript.message_m.buffer,
                         m_libspdm_local_buffer, m_libspdm_local_buffer_size);
 #endif
     free(data);
