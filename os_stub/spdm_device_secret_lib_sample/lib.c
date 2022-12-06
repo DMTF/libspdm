@@ -1021,25 +1021,6 @@ bool libspdm_read_cached_csr(uint32_t base_asym_algo, uint8_t **csr_pointer, siz
     return res;
 }
 
-/**
- * Gen CSR
- *
- * @param[in]      base_hash_algo        hash algo for sign
- * @param[in]      base_asym_algo        asym public key to set
- * @param[in]      need_reset            device need reset for gen csr
- *
- * @param[in]      requester_info        requester info to gen CSR
- * @param[in]      requester_info_length The len of requester info
- *
- * @param[in]      csr_len               For input，csr_len is the size of store CSR buffer.
- *                                       For output，csr_len is CSR len for DER format
- * @param[in]      csr_pointer           For input, csr_pointer is buffer address to store CSR.
- *                                       For output, csr_pointer is address for stored CSR.
- *                                       The csr_pointer address will be changed.
- *
- * @retval  true   Success.
- * @retval  false  Failed to gen CSR.
- **/
 bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *need_reset,
                      uint8_t *requester_info, size_t requester_info_length,
                      size_t *csr_len, uint8_t **csr_pointer)
@@ -1344,39 +1325,6 @@ size_t libspdm_fill_measurement_device_mode_block (
     return sizeof(spdm_measurement_block_dmtf_t) + sizeof(device_mode);
 }
 
-/**
- * Collect the device measurement.
- *
- * Please see a more detailed description of this function in spdm_device_secret_lib.h
- *
- * @param  measurement_specification     Indicates the measurement specification.
- *                                     It must align with measurement_specification (SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_*)
- * @param  measurement_hash_algo          Indicates the measurement hash algorithm.
- *                                     It must align with measurement_hash_algo (SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_*)
- * @param  measurements_index       The measurement index to of the measurement to return.
- * @param  measurements_count       The count of the device measurement block.
- * @param  measurements             A pointer to a destination buffer to store the concatenation of all device measurement blocks.
- * @param  measurements_size        On input, indicates the size in bytes of the destination buffer.
- *                                 On output, indicates the size in bytes of all device measurement blocks in the buffer.
- *
- *
- * @retval RETURN_SUCCESS             Successfully returned measurement_count and optionally measurements, measurements_size.
- * @retval RETURN_BUFFER_TOO_SMALL    "measurements" buffer too small for measurements.
- * @retval RETURN_INVALID_PARAMETER   Invalid parameter passed to function.
- * @retval RETURN_***                 Any other RETURN_ error from base.h
- *
- * In this example, there are 7 possible measurements.
- * The 1~4 measurements indices may be hashes or raw bitstreams.
- * The 5~7 measurement index always contains the raw bitstream.
- * The raw buffers are filled with repeating values of 1 for measurment index 1,
- * repeating values of 2 for measurement index 2, and so on.
- * If a hash is requested, the first 4 buffers will be hashed and the hash
- * values will be returned for those measurements.
- * The 5 buffer is svn.
- * The 6 buffer is manifest.
- * The 7 buffer is device mode.
- **/
-
 libspdm_return_t libspdm_measurement_collection(
     spdm_version_number_t spdm_version,
     uint8_t measurement_specification,
@@ -1579,25 +1527,6 @@ successful_return:
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-/**
- * This function calculates the measurement summary hash.
- *
- * @param  spdm_version                  The spdm version.
- * @param  base_hash_algo                The hash algo to use on summary.
- * @param  measurement_specification     Indicates the measurement specification.
- *                                      It must align with measurement_specification
- *                                      (SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_*)
- * @param  measurement_hash_algo         Indicates the measurement hash algorithm.
- *                                      It must align with measurement_hash_alg
- *                                      (SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_*)
- *
- * @param  measurement_summary_hash_type   The type of the measurement summary hash.
- * @param  measurement_summary_hash        The buffer to store the measurement summary hash.
- * @param  measurement_summary_hash_size   The size in bytes of the buffer.
- *
- * @retval true  measurement summary hash is generated or skipped.
- * @retval false measurement summary hash is not generated.
- **/
 bool libspdm_generate_measurement_summary_hash(
     spdm_version_number_t spdm_version, uint32_t base_hash_algo,
     uint8_t measurement_specification, uint32_t measurement_hash_algo,
@@ -1736,20 +1665,6 @@ bool libspdm_generate_measurement_summary_hash(
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
-/**
- * Sign an SPDM message data.
- *
- * @param  req_base_asym_alg               Indicates the signing algorithm.
- * @param  base_hash_algo                 Indicates the hash algorithm.
- * @param  message                      A pointer to a message to be signed (before hash).
- * @param  message_size                  The size in bytes of the message to be signed.
- * @param  signature                    A pointer to a destination buffer to store the signature.
- * @param  sig_size                      On input, indicates the size in bytes of the destination buffer to store the signature.
- *                                     On output, indicates the size in bytes of the signature in the buffer.
- *
- * @retval true  signing success.
- * @retval false signing fail.
- **/
 bool libspdm_requester_data_sign(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint16_t req_base_asym_alg,
@@ -1802,20 +1717,6 @@ bool libspdm_requester_data_sign(
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
 
-/**
- * Sign an SPDM message data.
- *
- * @param  base_asym_algo                 Indicates the signing algorithm.
- * @param  base_hash_algo                 Indicates the hash algorithm.
- * @param  message                      A pointer to a message to be signed (before hash).
- * @param  message_size                  The size in bytes of the message to be signed.
- * @param  signature                    A pointer to a destination buffer to store the signature.
- * @param  sig_size                      On input, indicates the size in bytes of the destination buffer to store the signature.
- *                                     On output, indicates the size in bytes of the signature in the buffer.
- *
- * @retval true  signing success.
- * @retval false signing fail.
- **/
 bool libspdm_responder_data_sign(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint32_t base_asym_algo,
@@ -1875,20 +1776,6 @@ uint8_t m_libspdm_bin_str0[0x11] = {
     0x64, 0x65, 0x72, 0x69, 0x76, 0x65, 0x64,
 };
 
-/**
- * Derive HMAC-based Expand key Derivation Function (HKDF) Expand, based upon the negotiated HKDF algorithm.
- *
- * @param  base_hash_algo                 Indicates the hash algorithm.
- * @param  psk_hint                      Pointer to the user-supplied PSK Hint.
- * @param  psk_hint_size                  PSK Hint size in bytes.
- * @param  info                         Pointer to the application specific info.
- * @param  info_size                     info size in bytes.
- * @param  out                          Pointer to buffer to receive hkdf value.
- * @param  out_size                      size of hkdf bytes to generate.
- *
- * @retval true   Hkdf generated successfully.
- * @retval false  Hkdf generation failed.
- **/
 bool libspdm_psk_handshake_secret_hkdf_expand(
     spdm_version_number_t spdm_version,
     uint32_t base_hash_algo,
@@ -1934,20 +1821,6 @@ bool libspdm_psk_handshake_secret_hkdf_expand(
     return result;
 }
 
-/**
- * Derive HMAC-based Expand key Derivation Function (HKDF) Expand, based upon the negotiated HKDF algorithm.
- *
- * @param  base_hash_algo                 Indicates the hash algorithm.
- * @param  psk_hint                      Pointer to the user-supplied PSK Hint.
- * @param  psk_hint_size                  PSK Hint size in bytes.
- * @param  info                         Pointer to the application specific info.
- * @param  info_size                     info size in bytes.
- * @param  out                          Pointer to buffer to receive hkdf value.
- * @param  out_size                      size of hkdf bytes to generate.
- *
- * @retval true   Hkdf generated successfully.
- * @retval false  Hkdf generation failed.
- **/
 bool libspdm_psk_master_secret_hkdf_expand(
     spdm_version_number_t spdm_version,
     uint32_t base_hash_algo,
@@ -2013,18 +1886,6 @@ bool libspdm_psk_master_secret_hkdf_expand(
 #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP
-/**
- * This function sends SET_CERTIFICATE
- * to set certificate from the device.
- *
- *
- * @param[in]  slot_id                      The number of slot for the certificate chain.
- * @param[in]  cert_chain                   The pointer for the certificate chain to set.
- * @param[in]  cert_chain_size              The size of the certificate chain to set.
- *
- * @retval true                         Set certificate to NV successfully.
- * @retval false                        Set certificate to NV unsuccessfully.
- **/
 bool libspdm_write_certificate_to_nvm(uint8_t slot_id, const void * cert_chain,
                                       size_t cert_chain_size)
 {

@@ -236,8 +236,8 @@ bool libspdm_write_certificate_to_nvm(uint8_t slot_id, const void * cert_chain,
  * @param[in]      requester_info        requester info to gen CSR
  * @param[in]      requester_info_length The len of requester info
  *
- * @param[in]      csr_len               For input，csr_len is the size of store CSR buffer.
- *                                       For output，csr_len is CSR len for DER format
+ * @param[in]      csr_len               For input, csr_len is the size of store CSR buffer.
+ *                                       For output, csr_len is CSR len for DER format
  * @param[in]      csr_pointer           For input, csr_pointer is buffer address to store CSR.
  *                                       For output, csr_pointer is address for stored CSR.
  *                                       The csr_pointer address will be changed.

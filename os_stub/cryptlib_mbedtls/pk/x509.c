@@ -1711,8 +1711,8 @@ bool libspdm_set_attribute_for_req(mbedtls_x509write_csr *req, uint8_t *req_info
  * "SN","givenName","GN", "initials", "pseudonym", "generationQualifier", "domainComponent", "DC"}.
  * Note: The object of C and countryName should be CSR Supported Country Codes
  *
- * @param[in]      csr_len               For input，csr_len is the size of store CSR buffer.
- *                                       For output，csr_len is CSR len for DER format
+ * @param[in]      csr_len               For input, csr_len is the size of store CSR buffer.
+ *                                       For output, csr_len is CSR len for DER format
  * @param[in]      csr_pointer           For input, csr_pointer is buffer address to store CSR.
  *                                       For output, csr_pointer is address for stored CSR.
  *                                       The csr_pointer address will be changed.
