@@ -133,7 +133,7 @@ typedef uint32_t libspdm_return_t;
     LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CORE, 0x0010)
 
 /* Re-triable decrypt error from peer - must rollback to backup keys. */
-#define LIBSPDM_STATUS_SESSION_MSG_ERROR_TRY_DISCARD_KEY_UPDATE \
+#define LIBSPDM_STATUS_SESSION_TRY_DISCARD_KEY_UPDATE \
     LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CORE, 0x0011)
 
 /* - Cryptography Errors - */

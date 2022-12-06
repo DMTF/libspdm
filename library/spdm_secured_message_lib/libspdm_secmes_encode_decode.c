@@ -491,7 +491,7 @@ libspdm_return_t libspdm_decode_secured_message(
             /* Backup keys are valid, fail and alert rollback and retry is possible. */
             if ((is_requester && secured_message_context->requester_backup_valid) ||
                 ((!is_requester) && secured_message_context->responder_backup_valid)) {
-                return LIBSPDM_STATUS_SESSION_MSG_ERROR_TRY_DISCARD_KEY_UPDATE;
+                return LIBSPDM_STATUS_SESSION_TRY_DISCARD_KEY_UPDATE;
             }
 
             libspdm_secured_message_set_last_spdm_error_struct(
@@ -557,7 +557,7 @@ libspdm_return_t libspdm_decode_secured_message(
             /* Backup keys are valid, fail and alert rollback and retry is possible. */
             if ((is_requester && secured_message_context->requester_backup_valid) ||
                 ((!is_requester) && secured_message_context->responder_backup_valid)) {
-                return LIBSPDM_STATUS_SESSION_MSG_ERROR_TRY_DISCARD_KEY_UPDATE;
+                return LIBSPDM_STATUS_SESSION_TRY_DISCARD_KEY_UPDATE;
             }
 
             libspdm_secured_message_set_last_spdm_error_struct(
