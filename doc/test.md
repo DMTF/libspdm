@@ -129,7 +129,7 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
 
 1) Fuzzing in Linux with [AFL](https://lcamtuf.coredump.cx/afl/)
 
-   Download and install [AFL](http://lcamtuf.coredump.cx/afl/releases/afl-latest.tgz).
+   Download and install [AFL](https://lcamtuf.coredump.cx/afl/releases/afl-latest.tgz).
    Unzip and follow docs\QuickStartGuide.txt.
    Build it with `make`.
    Ensure AFL binary is in PATH environment variable.
@@ -243,7 +243,7 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    Use `llvm-ar --version` and `clang --version` to confirm the LLVM version(Take 'Ubuntu 20.04.2 LTS' as an example).
    ```
    ~$ llvm-ar --version
-   LLVM (http://llvm.org/):
+   LLVM (https://llvm.org/):
      LLVM version 10.0.0
 
      Optimized build.
@@ -383,7 +383,7 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    ```
    If you get the following `connection timed out` error when building docker image, unable to apt-get update through dockerfile then enable proxy configuration in `Dockerfile`.
    ```
-   Err:1 http://archive.ubuntu.com/ubuntu xenial InRelease
+   Err:1 https://archive.ubuntu.com/ubuntu xenial InRelease
    Could not connect to archive.ubuntu.com:80 (91.189.88.162), connection timed out [IP: 91.189.88.162 80]
    ```
    Just set your Proxy Environment before `RUN apt-get` in `oss-fuzz/projects/libspdm/Dockerfile`, for example:
@@ -507,7 +507,7 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
 
    Download and install [KLEE with LLVM9](https://klee.github.io/build-llvm9/). Follow all 12 steps including optional ones.
 
-   In step 3, constraint solver [STP](http://klee.github.io/build-stp) is recommended here.
+   In step 3, constraint solver [STP](https://klee.github.io/build-stp) is recommended here.
    Set size of the stack to a very large value: `$ ulimit -s unlimited`.
 
    In step 8, below example can be used:
@@ -534,7 +534,7 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
 
    Build cases in Linux with KLEE toolchain `-DTOOLCHAIN=KLEE`. (KLEE does not support Windows)
 
-   Use [KLEE](http://klee.github.io/tutorials) to [generate ktest](https://klee.github.io/tutorials/testing-coreutils/):
+   Use [KLEE](https://klee.github.io/tutorials) to [generate ktest](https://klee.github.io/tutorials/testing-coreutils/):
    `klee --only-output-states-covering-new <test_app>`
 
    Transfer .ktest to seed file, which can be used for AFL-fuzzer.
@@ -548,11 +548,11 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
 
 ### Run Model Checker
 
-1) [CBMC](http://www.cprover.org/cbmc/)
+1) [CBMC](https://www.cprover.org/cbmc/)
 
-   Install [CBMC tool](http://www.cprover.org/cprover-manual/).
-   For Windows, unzip [cbmc-5-10-win](http://www.cprover.org/cbmc/download/cbmc-5-10-win.zip).
-   For Linux, unzip [cbmc-5-11-linux-64](http://www.cprover.org/cbmc/download/cbmc-5-11-linux-64.tgz).
+   Install [CBMC tool](https://www.cprover.org/cprover-manual/).
+   For Windows, unzip [cbmc-5-10-win](https://www.cprover.org/cbmc/download/cbmc-5-10-win.zip).
+   For Linux, unzip [cbmc-5-11-linux-64](https://www.cprover.org/cbmc/download/cbmc-5-11-linux-64.tgz).
    Ensure CBMC executable directory is in PATH environment variable.
 
    Build cases with CBMC toolchain:
@@ -629,7 +629,7 @@ For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
 3) Use [CodeQL](https://github.com/github/codeql) in CI.
 
    [Set up and check result](https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/setting-up-code-scanning-for-a-repository#setting-up-code-scanning-using-actions)
-   
+
    [Manageing code scanning alerts for your repository](https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/managing-code-scanning-alerts-for-your-repository#viewing-the-alerts-for-a-repository)
 
 ### Collect Stack Usage

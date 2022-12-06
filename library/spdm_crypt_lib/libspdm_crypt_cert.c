@@ -46,11 +46,11 @@
 #define KEY_ENCRY_ALGO_RSA4096_FLAG_OTHER {0x02, 0x82, 0x02, 0x00}
 
 /**
- * http://oid-info.com/get/1.2.840.10045.3.1.7
+ * https://oidref.com/1.2.840.10045.3.1.7
  * ECC256 curve OID: 1.2.840.10045.3.1.7
- * http://oid-info.com/get/1.3.132.0.34
+ * https://oidref.com/1.3.132.0.34
  * ECC384 curve OID: 1.3.132.0.34
- * http://oid-info.com/get/1.3.132.0.35
+ * https://oidref.com/1.3.132.0.35
  * ECC521 curve OID: 1.3.132.0.35
  **/
 #define KEY_ENCRY_ALGO_ECC256_OID {0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x03, 0x01, 0x07}
