@@ -7,7 +7,7 @@ on:
   pull_request:
     branches:
       - main
-  workflow_dispatch:      
+  workflow_dispatch:
 
 jobs:
   markdown-style-check:
@@ -42,5 +42,18 @@ jobs:
             set -e
             ./script/format_nix.sh
             git diff
+            exit 1
+          fi
+  file-encoding:
+    name: File Encoding Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Check
+        run: |
+          set +e
+          ./script/check_encode.sh
+          if [ $? -ne 0 ]; then
             exit 1
           fi
