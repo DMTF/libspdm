@@ -20,13 +20,11 @@ bool libspdm_get_peer_cert_chain_buffer(void *context,
                                         const void **cert_chain_buffer,
                                         size_t *cert_chain_buffer_size)
 {
-    libspdm_context_t *spdm_context;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    libspdm_context_t *spdm_context;
     uint8_t slot_id;
-#endif
 
     spdm_context = context;
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     slot_id = spdm_context->connection_info.peer_used_cert_chain_slot_id;
     if (spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer_size != 0) {
         *cert_chain_buffer = spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer;
@@ -52,15 +50,12 @@ bool libspdm_get_peer_cert_chain_data(void *context,
                                       const void **cert_chain_data,
                                       size_t *cert_chain_data_size)
 {
-    libspdm_context_t *spdm_context;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    libspdm_context_t *spdm_context;
     bool result;
     size_t hash_size;
-#endif
 
     spdm_context = context;
-
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     result = libspdm_get_peer_cert_chain_buffer(spdm_context, cert_chain_data,
                                                 cert_chain_data_size);
     if (!result) {
@@ -72,9 +67,8 @@ bool libspdm_get_peer_cert_chain_data(void *context,
     *cert_chain_data = (const uint8_t *)*cert_chain_data + sizeof(spdm_cert_chain_t) + hash_size;
     *cert_chain_data_size = *cert_chain_data_size - (sizeof(spdm_cert_chain_t) + hash_size);
     return true;
-#else
-    return false;
 #endif
+    return false;
 }
 
 /**
