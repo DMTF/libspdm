@@ -184,6 +184,8 @@ libspdm_return_t libspdm_process_request(void *context, uint32_t **session_id,
         (void **)&decoded_message_ptr);
 
     reset_key_update = false;
+    temp_session_context = NULL;
+
     if (status == LIBSPDM_STATUS_SESSION_TRY_DISCARD_KEY_UPDATE) {
         /* Failed to decode, but have backup keys. Try rolling back before aborting.
          * message_session_id must be valid for us to have attempted decryption. */
