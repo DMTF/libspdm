@@ -785,7 +785,7 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
             spdm_response->header.request_response_code = SPDM_DIGESTS;
             spdm_response->header.param2 = 0;
 
-           if (m_libspdm_local_certificate_chain_test_cert == NULL) {
+            if (m_libspdm_local_certificate_chain_test_cert == NULL) {
                 libspdm_read_responder_public_certificate_chain(
                     m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
                     &m_libspdm_local_certificate_chain_test_cert,
