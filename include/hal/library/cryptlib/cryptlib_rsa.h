@@ -45,6 +45,26 @@ extern void *libspdm_rsa_new(void);
 extern void libspdm_rsa_free(void *rsa_context);
 
 /**
+ * Retrieve the RSA Public key from the DER key data.
+ *
+ *
+ * @param[in]  der_data     Pointer to the DER-encoded key data to be retrieved.
+ * @param[in]  der_size     Size of the DER key data in bytes.
+ * @param[out] rsa_context  Pointer to new-generated RSA context which contain the retrieved
+ *                          RSA public key component. Use libspdm_rsa_free() function to free the
+ *                          resource.
+ *
+ * If der_data is NULL, then return false.
+ * If rsa_context is NULL, then return false.
+ *
+ * @retval  true   RSA Public key was retrieved successfully.
+ * @retval  false  Invalid DER key data.
+ **/
+extern bool libspdm_rsa_get_public_key_from_der(const uint8_t *der_data,
+                                                size_t der_size,
+                                                void **rsa_context);
+
+/**
  * Sets the tag-designated key component into the established RSA context.
  *
  * This function sets the tag-designated RSA key component into the established

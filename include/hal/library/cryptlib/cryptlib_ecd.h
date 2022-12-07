@@ -29,6 +29,25 @@ extern void *libspdm_ecd_new_by_nid(size_t nid);
 extern void libspdm_ecd_free(void *ecd_context);
 
 /**
+ * Retrieve the Ed Public key from the DER key data.
+ *
+ * @param[in]  der_data     Pointer to the DER-encoded key data to be retrieved.
+ * @param[in]  der_size     Size of the DER key data in bytes.
+ * @param[out] ecd_context  Pointer to new-generated Ed context which contain the retrieved
+ *                          Ed public key component. Use libspdm_ecd_free() function to free the
+ *                          resource.
+ *
+ * If der_data is NULL, then return false.
+ * If ecd_context is NULL, then return false.
+ *
+ * @retval  true   Ed Public key was retrieved successfully.
+ * @retval  false  Invalid DER key data.
+ **/
+extern bool libspdm_ecd_get_public_key_from_der(const uint8_t *der_data,
+                                                size_t der_size,
+                                                void **ecd_context);
+
+/**
  * Sets the public key component into the established Ed context.
  *
  * For ed25519, the public_size is 32.

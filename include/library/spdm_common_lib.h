@@ -57,7 +57,8 @@ typedef enum {
     /* LIBSPDM_DATA_LOCAL_SLOT_COUNT is deprecated. Do not use it. Reserved only. */
     LIBSPDM_DATA_LOCAL_SLOT_COUNT,
     LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT,
-    LIBSPDM_DATA_PEER_PUBLIC_CERT_CHAIN,
+    LIBSPDM_DATA_LOCAL_PUBLIC_KEY,
+    LIBSPDM_DATA_PEER_PUBLIC_KEY,
     LIBSPDM_DATA_BASIC_MUT_AUTH_REQUESTED,
     LIBSPDM_DATA_MUT_AUTH_REQUESTED,
     LIBSPDM_DATA_HEARTBEAT_PERIOD,
@@ -772,4 +773,31 @@ bool libspdm_get_local_cert_chain_data(void *spdm_context,
                                        const void **cert_chain_data,
                                        size_t *cert_chain_data_size);
 
+/**
+ * This function returns peer public key buffer.
+ *
+ * @param  spdm_context                 A pointer to the SPDM context.
+ * @param  peer_public_key_buffer       Peer public key buffer.
+ * @param  peer_public_key_buffer_size  Size in bytes of peer public key buffer.
+ *
+ * @retval true  Peer public key buffer is returned.
+ * @retval false Peer public key buffer is not found.
+ **/
+bool libspdm_get_peer_public_key_buffer(void *spdm_context,
+                                        const void **peer_public_key_buffer,
+                                        size_t *peer_public_key_buffer_size);
+
+/**
+ * This function returns local public key buffer.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  local_public_key_buffer       Local public key buffer.
+ * @param  local_public_key_buffer_size  Size in bytes of local public key buffer.
+ *
+ * @retval true  Local public key buffer is returned.
+ * @retval false Local public key buffer is not found.
+ **/
+bool libspdm_get_local_public_key_buffer(void *spdm_context,
+                                         const void **local_public_key_buffer,
+                                         size_t *local_public_key_buffer_size);
 #endif /* SPDM_COMMON_LIB_H */

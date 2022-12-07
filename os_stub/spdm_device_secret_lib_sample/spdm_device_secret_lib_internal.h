@@ -76,6 +76,11 @@ bool libspdm_read_responder_root_public_certificate_by_size(
     void **data, size_t *size, void **hash,
     size_t *hash_size);
 
+bool libspdm_read_responder_public_key(
+    uint32_t base_asym_algo, void **data, size_t *size);
+
+bool libspdm_read_requester_public_key(
+    uint16_t req_base_asym_alg, void **data, size_t *size);
 
 /* External*/
 

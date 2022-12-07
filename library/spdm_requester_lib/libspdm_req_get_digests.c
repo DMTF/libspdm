@@ -203,7 +203,8 @@ static libspdm_return_t libspdm_try_get_digest(void *context, const uint32_t *se
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     }
 
-    result = libspdm_verify_peer_digests(spdm_context, spdm_response->digest, digest_count);
+    result = libspdm_verify_peer_digests(
+        spdm_context, spdm_response->digest, spdm_response->header.param2);
     if (!result) {
         status = LIBSPDM_STATUS_VERIF_FAIL;
         goto receive_done;

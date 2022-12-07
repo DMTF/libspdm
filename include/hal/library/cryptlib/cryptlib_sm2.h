@@ -29,6 +29,26 @@ extern void *libspdm_sm2_dsa_new_by_nid(size_t nid);
 extern void libspdm_sm2_dsa_free(void *sm2_context);
 
 /**
+ * Retrieve the sm2 Public key from the DER key data.
+ *
+ * @param[in]  der_data     Pointer to the DER-encoded key data to be retrieved.
+ * @param[in]  der_size     Size of the DER key data in bytes.
+ * @param[out] sm2_context  Pointer to new-generated sm2 context which contain the retrieved
+ *                          sm2 public key component. Use sm2_free() function to free the
+ *                          resource.
+ *
+ * If der_data is NULL, then return false.
+ * If sm2_context is NULL, then return false.
+ *
+ * @retval  true   sm2 Public key was retrieved successfully.
+ * @retval  false  Invalid DER key data.
+ *
+ **/
+extern bool libspdm_sm2_get_public_key_from_der(const uint8_t *der_data,
+                                                size_t der_size,
+                                                void **sm2_context);
+
+/**
  * Sets the public key component into the established sm2 context.
  *
  * The public_size is 64. first 32-byte is X, second 32-byte is Y.

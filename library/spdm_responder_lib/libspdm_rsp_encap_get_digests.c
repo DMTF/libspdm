@@ -125,7 +125,7 @@ libspdm_return_t libspdm_process_encap_response_digest(
     }
 
     result = libspdm_verify_peer_digests(spdm_context, digest,
-                                         digest_count);
+                                         spdm_response->header.param2);
     if (!result) {
         return LIBSPDM_STATUS_VERIF_FAIL;
     }

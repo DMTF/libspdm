@@ -17,6 +17,7 @@ bool libspdm_verify_finish_req_hmac(libspdm_context_t *spdm_context,
     size_t hash_size;
     bool result;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    uint8_t slot_id;
     uint8_t *cert_chain_buffer;
     size_t cert_chain_buffer_size;
     uint8_t *mut_cert_chain_buffer;
@@ -30,18 +31,35 @@ bool libspdm_verify_finish_req_hmac(libspdm_context_t *spdm_context,
     LIBSPDM_ASSERT(hmac_size == hash_size);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    result = libspdm_get_local_cert_chain_buffer(
-        spdm_context, (const void **)&cert_chain_buffer, &cert_chain_buffer_size);
-    if (!result) {
-        return false;
+    slot_id = spdm_context->connection_info.local_used_cert_chain_slot_id;
+
+    if (slot_id == 0xFF) {
+        result = libspdm_get_local_public_key_buffer(
+            spdm_context, (const void **)&cert_chain_buffer, &cert_chain_buffer_size);
+        if (!result) {
+            return false;
+        }
+    } else {
+        result = libspdm_get_local_cert_chain_buffer(
+            spdm_context, (const void **)&cert_chain_buffer, &cert_chain_buffer_size);
+        if (!result) {
+            return false;
+        }
     }
 
     if (session_info->mut_auth_requested) {
-        result = libspdm_get_peer_cert_chain_buffer(
-            spdm_context, (const void **)&mut_cert_chain_buffer,
-            &mut_cert_chain_buffer_size);
-        if (!result) {
-            return false;
+        if (slot_id == 0xFF) {
+            result = libspdm_get_peer_public_key_buffer(
+                spdm_context, (const void **)&mut_cert_chain_buffer, &mut_cert_chain_buffer_size);
+            if (!result) {
+                return false;
+            }
+        } else {
+            result = libspdm_get_peer_cert_chain_buffer(
+                spdm_context, (const void **)&mut_cert_chain_buffer, &mut_cert_chain_buffer_size);
+            if (!result) {
+                return false;
+            }
         }
     } else {
         mut_cert_chain_buffer = NULL;
@@ -95,11 +113,8 @@ bool libspdm_verify_finish_req_signature(libspdm_context_t *spdm_context,
                                          const size_t sign_data_size)
 {
     bool result;
-    const uint8_t *mut_cert_chain_data;
-    size_t mut_cert_chain_data_size;
-    const uint8_t *mut_cert_buffer;
-    size_t mut_cert_buffer_size;
     void *context;
+    uint8_t slot_id;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     uint8_t *cert_chain_buffer;
     size_t cert_chain_buffer_size;
@@ -107,8 +122,10 @@ bool libspdm_verify_finish_req_signature(libspdm_context_t *spdm_context,
     size_t mut_cert_chain_buffer_size;
     uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     size_t th_curr_data_size;
-#else
-    uint8_t slot_id;
+    const uint8_t *mut_cert_chain_data;
+    size_t mut_cert_chain_data_size;
+    const uint8_t *mut_cert_buffer;
+    size_t mut_cert_buffer_size;
 #endif
 #if ((LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) && (LIBSPDM_DEBUG_BLOCK_ENABLE)) || \
     !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
@@ -120,18 +137,33 @@ bool libspdm_verify_finish_req_signature(libspdm_context_t *spdm_context,
     hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
 #endif
 
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    result = libspdm_get_local_cert_chain_buffer(
-        spdm_context, (const void **)&cert_chain_buffer, &cert_chain_buffer_size);
-    if (!result) {
-        return false;
-    }
+    slot_id = spdm_context->connection_info.local_used_cert_chain_slot_id;
 
-    result = libspdm_get_peer_cert_chain_buffer(spdm_context,
-                                                (const void **)&mut_cert_chain_buffer,
-                                                &mut_cert_chain_buffer_size);
-    if (!result) {
-        return false;
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    if (slot_id == 0xFF) {
+        result = libspdm_get_local_public_key_buffer(
+            spdm_context, (const void **)&cert_chain_buffer, &cert_chain_buffer_size);
+        if (!result) {
+            return false;
+        }
+
+        result = libspdm_get_peer_public_key_buffer(
+            spdm_context, (const void **)&mut_cert_chain_buffer, &mut_cert_chain_buffer_size);
+        if (!result) {
+            return false;
+        }
+    } else {
+        result = libspdm_get_local_cert_chain_buffer(
+            spdm_context, (const void **)&cert_chain_buffer, &cert_chain_buffer_size);
+        if (!result) {
+            return false;
+        }
+
+        result = libspdm_get_peer_cert_chain_buffer(
+            spdm_context, (const void **)&mut_cert_chain_buffer, &mut_cert_chain_buffer_size);
+        if (!result) {
+            return false;
+        }
     }
 
     th_curr_data_size = sizeof(th_curr_data);
@@ -167,44 +199,15 @@ bool libspdm_verify_finish_req_signature(libspdm_context_t *spdm_context,
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    /* Get leaf cert from cert chain*/
-
-    result = libspdm_get_peer_cert_chain_data(spdm_context,
-                                              (const void **)&mut_cert_chain_data,
-                                              &mut_cert_chain_data_size);
-    if (!result) {
-        return false;
-    }
-    result = libspdm_x509_get_cert_from_cert_chain(mut_cert_chain_data,
-                                                   mut_cert_chain_data_size, -1,
-                                                   &mut_cert_buffer,
-                                                   &mut_cert_buffer_size);
-    if (!result) {
-        return false;
-    }
-
-    result = libspdm_req_asym_get_public_key_from_x509(
-        spdm_context->connection_info.algorithm.req_base_asym_alg,
-        mut_cert_buffer, mut_cert_buffer_size, &context);
-    if (!result) {
-        return false;
-    }
-
-    result = libspdm_req_asym_verify(
-        spdm_context->connection_info.version, SPDM_FINISH,
-        spdm_context->connection_info.algorithm.req_base_asym_alg,
-        spdm_context->connection_info.algorithm.base_hash_algo, context,
-        th_curr_data, th_curr_data_size, sign_data, sign_data_size);
-    libspdm_req_asym_free(spdm_context->connection_info.algorithm.req_base_asym_alg, context);
-#else
-    slot_id = spdm_context->connection_info.peer_used_cert_chain_slot_id;
-    if (spdm_context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key != NULL) {
-        result = libspdm_req_asym_verify_hash(
-            spdm_context->connection_info.version, SPDM_FINISH,
+    if (slot_id == 0xFF) {
+        result = libspdm_req_asym_get_public_key_from_der(
             spdm_context->connection_info.algorithm.req_base_asym_alg,
-            spdm_context->connection_info.algorithm.base_hash_algo,
-            spdm_context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key,
-            hash_data, hash_size, sign_data, sign_data_size);
+            spdm_context->local_context.peer_public_key_provision,
+            spdm_context->local_context.peer_public_key_provision_size,
+            &context);
+        if (!result) {
+            return false;
+        }
     } else {
         /* Get leaf cert from cert chain*/
         result = libspdm_get_peer_cert_chain_data(spdm_context,
@@ -213,6 +216,7 @@ bool libspdm_verify_finish_req_signature(libspdm_context_t *spdm_context,
         if (!result) {
             return false;
         }
+
         result = libspdm_x509_get_cert_from_cert_chain(mut_cert_chain_data,
                                                        mut_cert_chain_data_size, -1,
                                                        &mut_cert_buffer,
@@ -227,13 +231,38 @@ bool libspdm_verify_finish_req_signature(libspdm_context_t *spdm_context,
         if (!result) {
             return false;
         }
+    }
+
+    result = libspdm_req_asym_verify(
+        spdm_context->connection_info.version, SPDM_FINISH,
+        spdm_context->connection_info.algorithm.req_base_asym_alg,
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        context, th_curr_data, th_curr_data_size, sign_data, sign_data_size);
+    libspdm_req_asym_free(spdm_context->connection_info.algorithm.req_base_asym_alg, context);
+#else
+    if (slot_id == 0xFF) {
+        result = libspdm_req_asym_get_public_key_from_der(
+            spdm_context->connection_info.algorithm.req_base_asym_alg,
+            spdm_context->local_context.peer_public_key_provision,
+            spdm_context->local_context.peer_public_key_provision_size,
+            &context);
+        if (!result) {
+            return false;
+        }
 
         result = libspdm_req_asym_verify_hash(
             spdm_context->connection_info.version, SPDM_FINISH,
             spdm_context->connection_info.algorithm.req_base_asym_alg,
-            spdm_context->connection_info.algorithm.base_hash_algo, context,
-            hash_data, hash_size, sign_data, sign_data_size);
+            spdm_context->connection_info.algorithm.base_hash_algo,
+            context, hash_data, hash_size, sign_data, sign_data_size);
         libspdm_req_asym_free(spdm_context->connection_info.algorithm.req_base_asym_alg, context);
+    } else {
+        result = libspdm_req_asym_verify_hash(
+            spdm_context->connection_info.version, SPDM_FINISH,
+            spdm_context->connection_info.algorithm.req_base_asym_alg,
+            spdm_context->connection_info.algorithm.base_hash_algo,
+            spdm_context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key,
+            hash_data, hash_size, sign_data, sign_data_size);
     }
 #endif
 
@@ -255,6 +284,7 @@ bool libspdm_generate_finish_rsp_hmac(libspdm_context_t *spdm_context,
     size_t hash_size;
     bool result;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    uint8_t slot_id;
     uint8_t *cert_chain_buffer;
     size_t cert_chain_buffer_size;
     uint8_t *mut_cert_chain_buffer;
@@ -267,18 +297,35 @@ bool libspdm_generate_finish_rsp_hmac(libspdm_context_t *spdm_context,
     hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    result = libspdm_get_local_cert_chain_buffer(
-        spdm_context, (const void **)&cert_chain_buffer, &cert_chain_buffer_size);
-    if (!result) {
-        return false;
+    slot_id = spdm_context->connection_info.local_used_cert_chain_slot_id;
+
+    if (slot_id == 0xFF) {
+        result = libspdm_get_local_public_key_buffer(
+            spdm_context, (const void **)&cert_chain_buffer, &cert_chain_buffer_size);
+        if (!result) {
+            return false;
+        }
+    } else {
+        result = libspdm_get_local_cert_chain_buffer(
+            spdm_context, (const void **)&cert_chain_buffer, &cert_chain_buffer_size);
+        if (!result) {
+            return false;
+        }
     }
 
     if (session_info->mut_auth_requested) {
-        result = libspdm_get_peer_cert_chain_buffer(
-            spdm_context, (const void **)&mut_cert_chain_buffer,
-            &mut_cert_chain_buffer_size);
-        if (!result) {
-            return false;
+        if (slot_id == 0xFF) {
+            result = libspdm_get_peer_public_key_buffer(
+                spdm_context, (const void **)&mut_cert_chain_buffer, &mut_cert_chain_buffer_size);
+            if (!result) {
+                return false;
+            }
+        } else {
+            result = libspdm_get_peer_cert_chain_buffer(
+                spdm_context, (const void **)&mut_cert_chain_buffer, &mut_cert_chain_buffer_size);
+            if (!result) {
+                return false;
+            }
         }
     } else {
         mut_cert_chain_buffer = NULL;
@@ -435,10 +482,9 @@ libspdm_return_t libspdm_get_response_finish(void *context, size_t request_size,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
     }
-    if (req_slot_id == 0xFF) {
-        req_slot_id = spdm_context->encap_context.req_slot_id;
-    }
-    if (req_slot_id != spdm_context->encap_context.req_slot_id) {
+
+    if (session_info->mut_auth_requested &&
+        (req_slot_id != spdm_context->encap_context.req_slot_id)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);

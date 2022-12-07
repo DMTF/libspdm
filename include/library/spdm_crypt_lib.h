@@ -325,6 +325,24 @@ bool libspdm_asym_get_public_key_from_x509(uint32_t base_asym_algo,
                                            void **context);
 
 /**
+ * Retrieve the Public key from the DER key data.
+ *
+ * @param  base_asym_algo  SPDM base_asym_algo
+ * @param  der_data        Pointer to the DER-encoded key data to be retrieved.
+ * @param  der_size        Size of the DER key data in bytes.
+ * @param  context         Pointer to new-generated asymmetric context which contain the retrieved
+ *                         public key component. Use libspdm_asym_free() function to
+ *                         free the resource.
+ *
+ * @retval  true   Private key was retrieved successfully.
+ * @retval  false  Invalid DER key data.
+ **/
+bool libspdm_asym_get_public_key_from_der(uint32_t base_asym_algo,
+                                          const uint8_t *der_data,
+                                          size_t der_size,
+                                          void **context);
+
+/**
  * Release the specified asymmetric context, based upon negotiated asymmetric algorithm.
  *
  * @param  base_asym_algo  SPDM base_asym_algo
@@ -453,6 +471,24 @@ bool libspdm_req_asym_get_public_key_from_x509(uint16_t req_base_asym_alg,
                                                const uint8_t *cert,
                                                size_t cert_size,
                                                void **context);
+
+/**
+ * Retrieve the Public key from the DER key data.
+ *
+ * @param  req_base_asym_alg  SPDM req_base_asym_alg
+ * @param  der_data           Pointer to the DER-encoded key data to be retrieved.
+ * @param  der_size           Size of the DER key data in bytes.
+ * @param  context            Pointer to new-generated asymmetric context which contain the
+ *                            retrieved public key component. Use libspdm_req_asym_free() function
+ *                            to free the resource.
+ *
+ * @retval  true   Public key was retrieved successfully.
+ * @retval  false  Invalid DER key data.
+ **/
+bool libspdm_req_asym_get_public_key_from_der(uint16_t req_base_asym_alg,
+                                              const uint8_t *der_data,
+                                              size_t der_size,
+                                              void **context);
 
 /**
  * Release the specified asymmetric context, based upon negotiated requester asymmetric algorithm.

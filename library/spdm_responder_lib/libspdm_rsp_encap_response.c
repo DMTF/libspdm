@@ -198,9 +198,8 @@ void libspdm_init_mut_auth_encap_state(libspdm_context_t *spdm_context, uint8_t 
 
     /* Possible Sequence:
      * 2. Session Mutual Auth: (spdm_context->last_spdm_request_session_id_valid)
-     *    2.1 GET_DIGEST/GET_CERTIFICATE (spdm_context->encap_context.req_slot_id != 0xFF)
-     *    2.2 GET_DIGEST (spdm_context->encap_context.req_slot_id == 0xFF)
-     *    2.3 N/A (SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP)*/
+     *    2.1 N/A (SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP)
+     *    2.2 GET_DIGEST/GET_CERTIFICATE (spdm_context->encap_context.req_slot_id != 0xFF) */
 
     libspdm_zero_mem(spdm_context->encap_context.request_op_code_sequence,
                      sizeof(spdm_context->encap_context.request_op_code_sequence));
@@ -212,16 +211,10 @@ void libspdm_init_mut_auth_encap_state(libspdm_context_t *spdm_context, uint8_t 
          SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED)) {
         /* no encap is required*/
         spdm_context->encap_context.request_op_code_count = 0;
-    } else if (spdm_context->encap_context.req_slot_id != 0xFF) {
-        spdm_context->encap_context.request_op_code_count = 2;
-        spdm_context->encap_context.request_op_code_sequence[0] =
-            SPDM_GET_DIGESTS;
-        spdm_context->encap_context.request_op_code_sequence[1] =
-            SPDM_GET_CERTIFICATE;
     } else {
-        spdm_context->encap_context.request_op_code_count = 1;
-        spdm_context->encap_context.request_op_code_sequence[0] =
-            SPDM_GET_DIGESTS;
+        spdm_context->encap_context.request_op_code_count = 2;
+        spdm_context->encap_context.request_op_code_sequence[0] = SPDM_GET_DIGESTS;
+        spdm_context->encap_context.request_op_code_sequence[1] = SPDM_GET_CERTIFICATE;
     }
 }
 

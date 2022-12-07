@@ -98,34 +98,35 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
    libspdm_set_data (spdm_context, LIBSPDM_DATA_KEY_SCHEDULE, &parameter, &key_schedule, sizeof(key_schedule));
    ```
 
-   1.4, if responder verification is required, deploy the peer public root hash or peer public certificate chain.
+   1.4, if responder verification is required, deploy the peer public root certificate based upon need.
    ```
    parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
-   if (!deploy_cert_chain) {
-     libspdm_set_data (spdm_context, LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert, peer_root_cert_size);
-   } else {
-     libspdm_set_data (spdm_context, LIBSPDM_DATA_PEER_PUBLIC_CERT_CHAIN, &parameter, peer_cert_chain, peer_cert_chain_size);
-   }
+   libspdm_set_data (spdm_context, LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert, peer_root_cert_size);
    ```
    If there are many peer root certs to set, you can set the peer root certs in order. Note: the max number of peer root certs is LIBSPDM_MAX_ROOT_CERT_SUPPORT.
    ```
    parameter.location = SPDM_DATA_LOCATION_LOCAL;
-   if (!deploy_cert_chain) {
-     spdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert1, peer_root_cert_size1);
-     spdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert2, peer_root_cert_size2);
-     spdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert3, peer_root_cert_size3);
-   } else {
-     spdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_CERT_CHAIN, &parameter, peer_cert_chain, peer_cert_chain_size);
-   }
+   libspdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert1, peer_root_cert_size1);
+   libspdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert2, peer_root_cert_size2);
+   libspdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert3, peer_root_cert_size3);
    ```
 
-   1.5, if mutual authentication is supported, deploy slot number, public certificate chain.
+   1.5, if raw public key is provisioned instead of certificate, deploy the public key.
+        the public key data is DER encoded ASN.1 public key as describes in RFC7250, namely, the SubjectPublicKeyInfo
+        structure of a X.509 certificate.
+   ```
+   parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
+   libspdm_set_data (spdm_context, LIBSPDM_DATA_PEER_PUBLIC_KEY, &parameter, peer_public_key, peer_public_key_size);
+   libspdm_set_data (spdm_context, LIBSPDM_DATA_LOCAL_PUBLIC_KEY, &parameter, local_public_key, local_public_key_size);
+   ```
+
+   1.6, if mutual authentication is supported, deploy slot number, public certificate chain.
    ```
    parameter.additional_data[0] = slot_id;
    libspdm_set_data (spdm_context, LIBSPDM_DATA_LOCAL_PUBLIC_CERT_CHAIN, &parameter, my_public_cert_chains, my_public_cert_chains_size);
    ```
 
-   1.6, if PSK is required, optionally deploy PSK Hint.
+   1.7, if PSK is required, optionally deploy PSK Hint.
    ```
    libspdm_set_data (spdm_context, LIBSPDM_DATA_PSK_HINT, NULL, psk_hint, psk_hint_size);
    ```
@@ -341,28 +342,29 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
    libspdm_set_data (spdm_context, LIBSPDM_DATA_LOCAL_PUBLIC_CERT_CHAIN, &parameter, my_public_cert_chains, my_public_cert_chains_size);
    ```
 
-   1.5, if mutual authentication (requester verification) is required, deploy the peer public root hash or peer public certificate chain.
+   1.5, if mutual authentication (requester verification) is required, deploy the peer public root certificate based upon need.
    ```
    parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
-   if (!deploy_cert_chain) {
-     libspdm_set_data (spdm_context, LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert, peer_root_cert_size);
-   } else {
-     libspdm_set_data (spdm_context, LIBSPDM_DATA_PEER_PUBLIC_CERT_CHAIN, &parameter, peer_cert_chain, peer_cert_chain_size);
-   }
+   libspdm_set_data (spdm_context, LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert, peer_root_cert_size);
    ```
    If there are many peer root certs to set, you can set the peer root certs in order. Note: the max number of peer root certs is LIBSPDM_MAX_ROOT_CERT_SUPPORT.
    ```
    parameter.location = SPDM_DATA_LOCATION_LOCAL;
-   if (!deploy_cert_chain) {
-     spdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert1, peer_root_cert_size1);
-     spdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert2, peer_root_cert_size2);
-     spdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert3, peer_root_cert_size3);
-   } else {
-     spdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_CERT_CHAIN, &parameter, peer_cert_chain, peer_cert_chain_size);
-   }
+   libspdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert1, peer_root_cert_size1);
+   libspdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert2, peer_root_cert_size2);
+   libspdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert3, peer_root_cert_size3);
    ```
 
-   1.6, if PSK is required, optionally deploy PSK Hint.
+   1.6, if raw public key is provisioned instead of certificate, deploy the public key.
+        the public key data is DER encoded ASN.1 public key as describes in RFC7250, namely, the SubjectPublicKeyInfo
+        structure of a X.509 certificate.
+   ```
+   parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
+   libspdm_set_data (spdm_context, LIBSPDM_DATA_PEER_PUBLIC_KEY, &parameter, peer_public_key, peer_public_key_size);
+   libspdm_set_data (spdm_context, LIBSPDM_DATA_LOCAL_PUBLIC_KEY, &parameter, local_public_key, local_public_key_size);
+   ```
+
+   1.7, if PSK is required, optionally deploy PSK Hint.
    ```
    libspdm_set_data (spdm_context, LIBSPDM_DATA_PSK_HINT, NULL, psk_hint, psk_hint_size);
    ```

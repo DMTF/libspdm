@@ -123,15 +123,11 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
                         (uint8_t)(0xFF));
 
         digest = (void *)(spdm_response + 1);
-        /*send all eight certchains digest
-         * but only No.7 is right*/
         libspdm_zero_mem (digest,
-                          libspdm_get_hash_size(m_libspdm_use_hash_algo) *
-                          (SPDM_MAX_SLOT_COUNT - 1));
-        digest += libspdm_get_hash_size(m_libspdm_use_hash_algo) * (SPDM_MAX_SLOT_COUNT - 2);
+                          libspdm_get_hash_size(m_libspdm_use_hash_algo) * SPDM_MAX_SLOT_COUNT);
         libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_certificate_chain,
                          LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, &digest[0]);
-        spdm_response->header.param2 |= (0xFF << 0);
+        spdm_response->header.param2 |= (0x01 << 0);
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, spdm_response_size,
@@ -740,7 +736,7 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
         ((libspdm_context_t *)spdm_context)->connection_info.algorithm.base_hash_algo =
             m_libspdm_use_hash_algo;
         spdm_response_size = sizeof(spdm_digest_response_t) +
-                             libspdm_get_hash_size(m_libspdm_use_hash_algo) * SPDM_MAX_SLOT_COUNT;
+                             libspdm_get_hash_size(m_libspdm_use_hash_algo);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -752,15 +748,9 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
                         (uint8_t)(0xFF));
 
         digest = (void *)(spdm_response + 1);
-        /*send all eight certchains digest
-         * but only No.7 is right*/
-        digest += libspdm_get_hash_size(m_libspdm_use_hash_algo) * (SPDM_MAX_SLOT_COUNT - 2);
         libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_certificate_chain,
                          LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, &digest[0]);
-        spdm_response->header.param2 |= (0xFF << 0);
-
-        spdm_response_size = sizeof(spdm_digest_response_t) +
-                             libspdm_get_hash_size(m_libspdm_use_hash_algo) * SPDM_MAX_SLOT_COUNT;
+        spdm_response->header.param2 |= (0x01 << 0);
 
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer) - m_libspdm_local_buffer_size,
@@ -794,19 +784,22 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
             spdm_response->header.param1 = 0;
             spdm_response->header.request_response_code = SPDM_DIGESTS;
             spdm_response->header.param2 = 0;
-            libspdm_set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
-                            (uint8_t)(0xFF));
 
+           if (m_libspdm_local_certificate_chain_test_cert == NULL) {
+                libspdm_read_responder_public_certificate_chain(
+                    m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
+                    &m_libspdm_local_certificate_chain_test_cert,
+                    &m_libspdm_local_certificate_chain_size, NULL, NULL);
+            }
+            if (m_libspdm_local_certificate_chain_test_cert == NULL) {
+                return LIBSPDM_STATUS_RECEIVE_FAIL;
+            }
             digest = (void *)(spdm_response + 1);
-            /*send all eight certchains digest
-             * but only No.7 is right*/
-            libspdm_zero_mem (digest,
-                              libspdm_get_hash_size(m_libspdm_use_hash_algo) *
-                              (SPDM_MAX_SLOT_COUNT - 1));
-            digest += libspdm_get_hash_size(m_libspdm_use_hash_algo) * (SPDM_MAX_SLOT_COUNT - 2);
-            libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_certificate_chain,
-                             LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, &digest[0]);
-            spdm_response->header.param2 |= (0xFF << 0);
+            libspdm_zero_mem(digest,
+                             libspdm_get_hash_size(m_libspdm_use_hash_algo) * SPDM_MAX_SLOT_COUNT);
+            libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_certificate_chain_test_cert,
+                             m_libspdm_local_certificate_chain_size, &digest[0]);
+            spdm_response->header.param2 |= (0x01 << 0);
 
             libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                                   false, spdm_response_size,
@@ -895,7 +888,7 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
         ->connection_info.algorithm.base_hash_algo =
             m_libspdm_use_hash_algo;
         spdm_response_size = sizeof(spdm_digest_response_t) +
-                             libspdm_get_hash_size(m_libspdm_use_hash_algo) * SPDM_MAX_SLOT_COUNT;
+                             libspdm_get_hash_size(m_libspdm_use_hash_algo);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -912,15 +905,12 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
                         (uint8_t)(0xFF));
 
         digest = (void *)(spdm_response + 1);
-        /*send all eight certchains digest
-         * but only No.7 is right*/
+        /* send certchain digest of slot 7 */
         libspdm_zero_mem (digest,
-                          libspdm_get_hash_size(m_libspdm_use_hash_algo) *
-                          (SPDM_MAX_SLOT_COUNT - 1));
-        digest += libspdm_get_hash_size(m_libspdm_use_hash_algo) * (SPDM_MAX_SLOT_COUNT - 2);
+                          libspdm_get_hash_size(m_libspdm_use_hash_algo) * SPDM_MAX_SLOT_COUNT);
         libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_certificate_chain,
                          LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, &digest[0]);
-        spdm_response->header.param2 |= (0xFF << 0);
+        spdm_response->header.param2 |= (0x80 << 0);
 
         libspdm_copy_mem (scratch_buffer + transport_header_size,
                           scratch_buffer_size - transport_header_size,
@@ -980,8 +970,6 @@ static void libspdm_test_requester_get_digests_case2(void **state)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.peer_cert_chain_provision = m_libspdm_local_certificate_chain;
-    spdm_context->local_context.peer_cert_chain_provision_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
     libspdm_set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
                     (uint8_t)(0xFF));
     libspdm_reset_message_b(spdm_context);
@@ -994,10 +982,9 @@ static void libspdm_test_requester_get_digests_case2(void **state)
     status = libspdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
-    assert_int_equal(slot_mask, 0xFF);
+    assert_int_equal(slot_mask, 0x01);
     libspdm_zero_mem(my_total_digest_buffer, sizeof(my_total_digest_buffer));
     digest = my_total_digest_buffer;
-    digest += libspdm_get_hash_size(m_libspdm_use_hash_algo) * (SPDM_MAX_SLOT_COUNT - 2);
     libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_certificate_chain,
                      LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, digest);
     assert_memory_equal (total_digest_buffer, my_total_digest_buffer,
@@ -1008,14 +995,13 @@ static void libspdm_test_requester_get_digests_case2(void **state)
                               NULL, &slot_mask, &data_return_size);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(data_return_size, sizeof(uint8_t));
-    assert_int_equal(slot_mask, 0xFF);
+    assert_int_equal(slot_mask, 0x01);
 
     data_return_size = sizeof(total_digest_buffer);
     status = libspdm_get_data(spdm_context, LIBSPDM_DATA_PEER_TOTAL_DIGEST_BUFFER,
                               NULL, total_digest_buffer, &data_return_size);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(data_return_size, libspdm_get_hash_size(
-                         m_libspdm_use_hash_algo) * SPDM_MAX_SLOT_COUNT);
+    assert_int_equal(data_return_size, libspdm_get_hash_size(m_libspdm_use_hash_algo));
     assert_memory_equal (total_digest_buffer, my_total_digest_buffer,
                          sizeof(my_total_digest_buffer));
 
@@ -1024,8 +1010,7 @@ static void libspdm_test_requester_get_digests_case2(void **state)
         spdm_context->transcript.message_b.buffer_size,
         sizeof(spdm_get_digest_request_t) +
         sizeof(spdm_digest_response_t) +
-        libspdm_get_hash_size(spdm_context->connection_info
-                              .algorithm.base_hash_algo) * SPDM_MAX_SLOT_COUNT);
+        libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo));
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
 }
@@ -1215,8 +1200,6 @@ static void libspdm_test_requester_get_digests_case23(void **state)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.peer_cert_chain_provision = m_libspdm_local_certificate_chain;
-    spdm_context->local_context.peer_cert_chain_provision_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
     libspdm_set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
                     (uint8_t)(0xFF));
     libspdm_reset_message_b(spdm_context);
@@ -1274,12 +1257,6 @@ static void libspdm_test_requester_get_digests_case24(void **state)
     spdm_context->connection_info.algorithm.req_base_asym_alg =
         m_libspdm_use_req_asym_algo;
 
-    spdm_context->local_context.peer_cert_chain_provision = m_libspdm_local_certificate_chain;
-    spdm_context->local_context.peer_cert_chain_provision_size =
-        LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
-    libspdm_set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
-                    (uint8_t)(0xFF));
-
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, &hash, &hash_size);
@@ -1302,12 +1279,17 @@ static void libspdm_test_requester_get_digests_case24(void **state)
     /* first GetDigest */
     status = libspdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(slot_mask, 0xFF);
+    assert_int_equal(slot_mask, 0x01);
     libspdm_zero_mem(my_total_digest_buffer, sizeof(my_total_digest_buffer));
     digest = my_total_digest_buffer;
-    digest += libspdm_get_hash_size(m_libspdm_use_hash_algo) * (SPDM_MAX_SLOT_COUNT - 2);
-    libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_certificate_chain,
-                     LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, digest);
+    if (m_libspdm_local_certificate_chain_test_cert == NULL) {
+        libspdm_read_responder_public_certificate_chain(
+            m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
+            &m_libspdm_local_certificate_chain_test_cert,
+            &m_libspdm_local_certificate_chain_size, NULL, NULL);
+    }
+    libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_certificate_chain_test_cert,
+                     m_libspdm_local_certificate_chain_size, digest);
     assert_memory_equal(total_digest_buffer, my_total_digest_buffer,
                         sizeof(my_total_digest_buffer));
     data_return_size = sizeof(uint8_t);
@@ -1315,14 +1297,13 @@ static void libspdm_test_requester_get_digests_case24(void **state)
                               NULL, &slot_mask, &data_return_size);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(data_return_size, sizeof(uint8_t));
-    assert_int_equal(slot_mask, 0xFF);
+    assert_int_equal(slot_mask, 0x01);
 
     data_return_size = sizeof(total_digest_buffer);
     status = libspdm_get_data(spdm_context, LIBSPDM_DATA_PEER_TOTAL_DIGEST_BUFFER,
                               NULL, total_digest_buffer, &data_return_size);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(data_return_size, libspdm_get_hash_size(
-                         m_libspdm_use_hash_algo) * SPDM_MAX_SLOT_COUNT);
+    assert_int_equal(data_return_size, libspdm_get_hash_size(m_libspdm_use_hash_algo));
     assert_memory_equal (total_digest_buffer, my_total_digest_buffer,
                          sizeof(my_total_digest_buffer));
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -1330,8 +1311,7 @@ static void libspdm_test_requester_get_digests_case24(void **state)
         spdm_context->transcript.message_b.buffer_size,
         sizeof(spdm_get_digest_request_t) +
         sizeof(spdm_digest_response_t) +
-        libspdm_get_hash_size(spdm_context->connection_info
-                              .algorithm.base_hash_algo) * SPDM_MAX_SLOT_COUNT);
+        libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo));
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
 
@@ -1359,12 +1339,11 @@ static void libspdm_test_requester_get_digests_case24(void **state)
     /* second GetDigest */
     status = libspdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(slot_mask, 0xFF);
+    assert_int_equal(slot_mask, 0x01);
     libspdm_zero_mem(my_total_digest_buffer, sizeof(my_total_digest_buffer));
     digest = my_total_digest_buffer;
-    digest += libspdm_get_hash_size(m_libspdm_use_hash_algo) * (SPDM_MAX_SLOT_COUNT - 2);
-    libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_certificate_chain,
-                     LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, digest);
+    libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_certificate_chain_test_cert,
+                     m_libspdm_local_certificate_chain_size, digest);
     assert_memory_equal (total_digest_buffer, my_total_digest_buffer,
                          sizeof(my_total_digest_buffer));
     data_return_size = sizeof(uint8_t);
@@ -1372,13 +1351,12 @@ static void libspdm_test_requester_get_digests_case24(void **state)
                               NULL, &slot_mask, &data_return_size);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(data_return_size, sizeof(uint8_t));
-    assert_int_equal(slot_mask, 0xFF);
+    assert_int_equal(slot_mask, 0x01);
     data_return_size = sizeof(total_digest_buffer);
     status = libspdm_get_data(spdm_context, LIBSPDM_DATA_PEER_TOTAL_DIGEST_BUFFER,
                               NULL, total_digest_buffer, &data_return_size);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(data_return_size, libspdm_get_hash_size(
-                         m_libspdm_use_hash_algo) * SPDM_MAX_SLOT_COUNT);
+    assert_int_equal(data_return_size, libspdm_get_hash_size(m_libspdm_use_hash_algo));
     assert_memory_equal (total_digest_buffer, my_total_digest_buffer,
                          sizeof(my_total_digest_buffer));
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -1386,9 +1364,11 @@ static void libspdm_test_requester_get_digests_case24(void **state)
         spdm_context->transcript.message_b.buffer_size,
         sizeof(spdm_get_digest_request_t) +
         sizeof(spdm_digest_response_t) +
-        libspdm_get_hash_size(spdm_context->connection_info
-                              .algorithm.base_hash_algo) * SPDM_MAX_SLOT_COUNT);
+        libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo));
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = 0;
+#else
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size = 0;
 #endif
 }
 
@@ -1435,8 +1415,6 @@ static void libspdm_test_requester_get_digests_case25(void **state)
         m_libspdm_use_aead_algo;
 
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.peer_cert_chain_provision = m_libspdm_local_certificate_chain;
-    spdm_context->local_context.peer_cert_chain_provision_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
@@ -1457,10 +1435,9 @@ static void libspdm_test_requester_get_digests_case25(void **state)
                                            &total_digest_buffer);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
-    assert_int_equal(slot_mask, 0xFF);
+    assert_int_equal(slot_mask, 0x80);
     libspdm_zero_mem(my_total_digest_buffer, sizeof(my_total_digest_buffer));
     digest = my_total_digest_buffer;
-    digest += libspdm_get_hash_size(m_libspdm_use_hash_algo) * (SPDM_MAX_SLOT_COUNT - 2);
     libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_certificate_chain,
                      LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, digest);
     assert_memory_equal (total_digest_buffer, my_total_digest_buffer,
@@ -1471,14 +1448,13 @@ static void libspdm_test_requester_get_digests_case25(void **state)
                               NULL, &slot_mask, &data_return_size);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(data_return_size, sizeof(uint8_t));
-    assert_int_equal(slot_mask, 0xFF);
+    assert_int_equal(slot_mask, 0x80);
 
     data_return_size = sizeof(total_digest_buffer);
     status = libspdm_get_data(spdm_context, LIBSPDM_DATA_PEER_TOTAL_DIGEST_BUFFER,
                               NULL, total_digest_buffer, &data_return_size);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(data_return_size, libspdm_get_hash_size(
-                         m_libspdm_use_hash_algo) * SPDM_MAX_SLOT_COUNT);
+    assert_int_equal(data_return_size, libspdm_get_hash_size(m_libspdm_use_hash_algo));
     assert_memory_equal (total_digest_buffer, my_total_digest_buffer,
                          sizeof(my_total_digest_buffer));
 

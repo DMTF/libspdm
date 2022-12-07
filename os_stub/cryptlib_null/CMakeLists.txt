@@ -14,6 +14,7 @@ SET(src_cryptlib_null
     cipher/aead_aes_gcm.c
     cipher/aead_chacha20_poly1305.c
     cipher/aead_sm4_gcm.c
+    der/der.c
     hash/sha.c
     hash/sha3.c
     hash/sm3.c

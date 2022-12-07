@@ -45,6 +45,12 @@ spdm_challenge_request_t m_libspdm_challenge_request6 = {
 };
 size_t m_libspdm_challenge_request6_size = sizeof(m_libspdm_challenge_request6);
 
+spdm_challenge_request_t m_libspdm_challenge_request7 = {
+    { SPDM_MESSAGE_VERSION_11, SPDM_CHALLENGE, 0xFF,
+      SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH },
+};
+size_t m_libspdm_challenge_request7_size = sizeof(m_libspdm_challenge_request7);
+
 uint8_t m_opaque_challenge_auth_rsp[8] = "libspdm";
 
 /**
@@ -991,6 +997,79 @@ void libspdm_test_responder_challenge_auth_case15(void **state)
     free(data1);
 }
 
+/**
+ * Test 16: receiving a correct CHALLENGE message from the requester with
+ * slot number 0xFF.
+ * Expected behavior: the responder accepts the request and produces a valid
+ * CHALLENGE_AUTH response message.
+ **/
+void libspdm_test_responder_challenge_auth_case16(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    spdm_challenge_auth_response_t *spdm_response;
+    void *data1;
+    size_t data_size1;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x10;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->local_context.capability.flags = 0;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PUB_KEY_ID_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo =
+        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec =
+        m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    libspdm_read_responder_public_key(m_libspdm_use_asym_algo, &data1, &data_size1);
+    spdm_context->local_context.local_public_key_provision = data1;
+    spdm_context->local_context.local_public_key_provision_size = data_size1;
+
+    spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
+    libspdm_reset_message_c(spdm_context);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->transcript.message_m.buffer_size =
+        spdm_context->transcript.message_m.max_buffer_size;
+#endif
+
+    response_size = sizeof(response);
+    libspdm_get_random_number(SPDM_NONCE_SIZE,
+                              m_libspdm_challenge_request7.nonce);
+    status = libspdm_get_response_challenge_auth(
+        spdm_context, m_libspdm_challenge_request7_size,
+        &m_libspdm_challenge_request7, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size,
+                     sizeof(spdm_challenge_auth_response_t) +
+                     libspdm_get_hash_size(m_libspdm_use_hash_algo) +
+                     SPDM_NONCE_SIZE + 0 + sizeof(uint16_t) + 0 +
+                     libspdm_get_asym_signature_size(m_libspdm_use_asym_algo));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_CHALLENGE_AUTH);
+    assert_int_equal(spdm_response->header.param1, 0xF);
+    assert_int_equal(spdm_response->header.param2, 0);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    assert_int_equal(spdm_context->transcript.message_m.buffer_size,
+                     0);
+#endif
+    free(data1);
+}
+
 libspdm_test_context_t m_libspdm_responder_challenge_auth_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     false,
@@ -1021,6 +1100,8 @@ int libspdm_responder_challenge_auth_test_main(void)
         cmocka_unit_test(libspdm_test_responder_challenge_auth_case14),
         /* Buffer verification*/
         cmocka_unit_test(libspdm_test_responder_challenge_auth_case15),
+        /* using provisioned public key (slot_id 0xFF) */
+        cmocka_unit_test(libspdm_test_responder_challenge_auth_case16),
     };
 
     libspdm_setup_test_context(&m_libspdm_responder_challenge_auth_test_context);

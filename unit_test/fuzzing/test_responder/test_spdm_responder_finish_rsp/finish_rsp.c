@@ -405,8 +405,6 @@ void libspdm_test_responder_finish_case8(void **State)
                                                     m_libspdm_use_req_asym_algo,
                                                     &data2,
                                                     &data_size2, NULL, NULL);
-    spdm_context->local_context.peer_cert_chain_provision = data2;
-    spdm_context->local_context.peer_cert_chain_provision_size = data_size2;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
                      sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
