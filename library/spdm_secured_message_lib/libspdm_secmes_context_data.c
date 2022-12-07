@@ -186,15 +186,6 @@ bool libspdm_secured_message_import_dhe_secret(void *spdm_secured_message_contex
     return true;
 }
 
-/**
- * Export the export_master_secret from an SPDM secured message context.
- *
- * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- * @param  export_master_secret           Indicate the buffer to store the export_master_secret.
- * @param  export_master_secret_size       The size in bytes of the export_master_secret.
- *
- * @retval RETURN_SUCCESS  export_master_secret is exported.
- */
 bool libspdm_secured_message_export_master_secret(
     void *spdm_secured_message_context, void *export_master_secret,
     size_t *export_master_secret_size)
@@ -202,14 +193,15 @@ bool libspdm_secured_message_export_master_secret(
     libspdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
-    if (*export_master_secret_size < secured_message_context->hash_size) {
-        *export_master_secret_size = secured_message_context->hash_size;
-        return false;
-    }
+
     libspdm_copy_mem(export_master_secret, *export_master_secret_size,
                      secured_message_context->export_master_secret,
-                     secured_message_context->hash_size);
-    *export_master_secret_size = secured_message_context->hash_size;
+                     sizeof(secured_message_context->export_master_secret));
+
+    if (*export_master_secret_size > secured_message_context->hash_size) {
+        *export_master_secret_size = secured_message_context->hash_size;
+    }
+
     return true;
 }
 
