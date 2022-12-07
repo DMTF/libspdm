@@ -50,11 +50,15 @@ bool libspdm_get_peer_cert_chain_data(void *context,
                                       const void **cert_chain_data,
                                       size_t *cert_chain_data_size)
 {
+    bool result;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     libspdm_context_t *spdm_context;
-    bool result;
     size_t hash_size;
+#endif
 
+    result = false;
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context = context;
     result = libspdm_get_peer_cert_chain_buffer(spdm_context, cert_chain_data,
                                                 cert_chain_data_size);
@@ -66,9 +70,8 @@ bool libspdm_get_peer_cert_chain_data(void *context,
 
     *cert_chain_data = (const uint8_t *)*cert_chain_data + sizeof(spdm_cert_chain_t) + hash_size;
     *cert_chain_data_size = *cert_chain_data_size - (sizeof(spdm_cert_chain_t) + hash_size);
-    return true;
 #endif
-    return false;
+    return result;
 }
 
 /**
