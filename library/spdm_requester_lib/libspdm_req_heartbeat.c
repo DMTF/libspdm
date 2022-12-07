@@ -38,7 +38,9 @@ static libspdm_return_t libspdm_try_heartbeat(void *context, uint32_t session_id
 
     /* -=[Check Parameters Phase]=- */
     session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
-    LIBSPDM_ASSERT (session_info != NULL);
+    if (session_info == NULL) {
+        return LIBSPDM_STATUS_INVALID_PARAMETER;
+    }
 
     /* -=[Verify State Phase]=- */
     if (!libspdm_is_capabilities_flag_supported(
