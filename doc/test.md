@@ -16,42 +16,7 @@ Linux support only.
 
 1) Install compiler:
 
-```
-sudo apt-get install gcc-arm-linux-gnueabi
-sudo apt-get install gcc-aarch64-linux-gnu
-sudo apt-get install gcc-riscv64-linux-gnu
-```
-    Build riscv32 compiler:
-
-```
-sudo apt-get install autoconf automake autotools-dev curl python3 libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev
-git clone --recursive https://github.com/riscv/riscv-gnu-toolchain
-cd riscv-gnu-toolchain
-./configure --prefix=/opt/riscv32 --with-arch=rv32gc --with-abi=ilp32d
-sudo make linux
-sudo ln -s /opt/riscv32/bin/* /usr/bin
-```
-   Build arc compiler:
-
-```
-sudo apt-get install -y texinfo byacc flex libncurses5-dev zlib1g-dev libexpat1-dev texlive build-essential git wget gawk bison xz-utils make python3 rsync locales
-mkdir arc_gnu
-cd arc_gnu
-git clone https://github.com/foss-for-synopsys-dwc-arc-processors/toolchain.git
-git clone https://github.com/foss-for-synopsys-dwc-arc-processors/binutils-gdb.git binutils
-git clone https://github.com/foss-for-synopsys-dwc-arc-processors/gcc.git
-git clone --reference binutils https://github.com/foss-for-synopsys-dwc-arc-processors/binutils-gdb.git gdb
-git clone https://github.com/foss-for-synopsys-dwc-arc-processors/newlib.git
-git clone https://github.com/wbx-github/uclibc-ng.git # For For Linux uClibc toolchain
-git clone https://github.com/foss-for-synopsys-dwc-arc-processors/glibc.git # For Linux glibc toolchain
-git clone https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux
-
-cd toolchain
-./build-all.sh --no-elf32 --cpu hs38 --install-dir $INSTALL_ROOT
-# This command will build toolchain for arc HS Linux development, for other arc cores refer to https://github.com/foss-for-synopsys-dwc-arc-processors/toolchain/blob/arc-releases/README.md
-
-sudo ln -s /<work_dir>/arc_gnu/toolchain/bin/* /usr/bin
-```
+Please refer to [build](https://github.com/DMTF/libspdm/blob/main/doc/build.md).
 
 2) Install [qemu](https://qemu.org).
 
@@ -67,13 +32,13 @@ sudo ln -s /usr/local/qemu/bin/* /usr/local/bin
 
 3) Run test
 
-For arm: `qemu-arm -L /usr/arm-linux-gnueabi <TestBinary>`
+For arm (ARM_GCC): `qemu-arm -L /usr/arm-linux-gnueabi <TestBinary>`
 
-For aarch64: `qemu-aarch64 -L /usr/aarch64-linux-gnu <TestBinary>`
+For aarch64 (AARCH64_GCC): `qemu-aarch64 -L /usr/aarch64-linux-gnu <TestBinary>`
 
-For riscv32: `qemu-riscv32 -L /opt/riscv32/sysroot <TestBinary>`
+For riscv32 (RISCV GNU): `qemu-riscv32 -L /opt/riscv32/sysroot <TestBinary>`
 
-For riscv64: `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
+For riscv64 (RISCV64 GCC): `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
 
 ### Collect Code Coverage
 

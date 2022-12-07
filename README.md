@@ -105,41 +105,22 @@
 
 ### Build Tools for Windows
 
-1) Compiler (Choose one)
+1) Compiler for IA32/X64 (Choose one)
 
-    a) [Visual Studio 2022](https://visualstudio.microsoft.com/vs/older-downloads/)
+    a) [Visual Studio 2022](https://visualstudio.microsoft.com/vs/older-downloads/), [Visual Studio 2019](https://visualstudio.microsoft.com/vs/older-downloads/), [Visual Studio 2015](https://visualstudio.microsoft.com/vs/older-downloads/)
 
-    b) [Visual Studio 2019](https://visualstudio.microsoft.com/vs/older-downloads/)
-
-    c) [Visual Studio 2015](https://visualstudio.microsoft.com/vs/older-downloads/)
-
-    d) [LLVM](https://llvm.org/) (LLVM13)
-    - Install [LLVM-13.0.0-win64.exe](https://github.com/llvm/llvm-project/releases/tag/llvmorg-13.0.0). Please change LLVM install path to C:/LLVM, and add LLVM in PATH environment.
+    b) [LLVM](https://llvm.org/) (LLVM13)
+    - Install [LLVM-13.0.0-win64.exe](https://github.com/llvm/llvm-project/releases/tag/llvmorg-13.0.0). Please change LLVM install path to `C:\LLVM`, and add LLVM in PATH environment.
     - LLVM13 works good for clang and [libfuzzer](https://llvm.org/docs/LibFuzzer.html) build. Other versions are not validated for clang build.
     - Because the libfuzzer lib path is hard coded in CMakeLists, other versions may fail for libfuzzer build.
 
-    e) [ARM Developerment Studio 2022](https://developer.arm.com/downloads/-/arm-development-studio-downloads) for ARM/AARCH64.
-    - Install [MSYS2](https://www.msys2.org/).
-    - Install ARM DS2022. Please change the default installation path C:\ArmStudio.
-    - Launch MSYS2 -> MSYS2 MINGW64.
-    - Install cmake and make, with `pacman -S mingw-w64-x86_64-cmake` and `pacman -S make`.
-    - Setup build environment
-      ```
-      export PATH=$PATH:/c/ArmStudio/sw/ARMCompiler6.18/bin
-      export CC=/c/ArmStudio/sw/ARMCompiler6.18/bin/armclang.exe
-      export ARM_PRODUCT_DEF=/c/ArmStudio/sw/mappings/gold.elmap
-      export ARMLMD_LICENSE_FILE=<license file>
-      ```
-    - Apply below work around for Windows ARM DS2022 build
-      - Add set(CMAKE_SYSTEM_ARCH "armv8-a") on the top of `C:\msys64\mingw64\share\cmake\Modules\Compiler\ARMClang.cmake`. The CMAKE_SYSTEM_ARCH is the target arch.
-      - Change `set(libs ${libs} ws2_32)` to `#set(libs ${libs} ws2_32)` in `libspdm\os_stub\mbedtlslib\mbedtls\library\CMakeLists.txt`. ws2_32 is the socket lib, and the armclang does not support it. 
-    - Implement the TBD features. `libspdm_sleep` and `libspdm_get_random_number_64` need to be implemented before it can run on a real system.
+For other architectures, please refer to [build](https://github.com/DMTF/libspdm/blob/main/doc/build.md).
 
 2) [CMake](https://cmake.org/) (Version [3.17.2](https://github.com/Kitware/CMake/releases/tag/v3.17.2) is known to work. Newer versions may fail).
 
 ### Build Tools for Linux
 
-1) Compiler (Choose one)
+1) Compiler for IA32/X64 (Choose one)
 
     a) [GCC](https://gcc.gnu.org/) (above GCC5)
 
@@ -148,45 +129,7 @@
     - Use `llvm-ar -version` and `clang -v` to confirm the LLVM version.
     - If LLVM installation fails or LLVM installation version is low, you can update Linux version to fix the issue.
 
-    c) [ARM Developerment Studio 2022](https://developer.arm.com/downloads/-/arm-development-studio-downloads) for ARM/AARCH64.
-    - Follow the [Arm Development Studio Getting Started Guide](https://developer.arm.com/documentation/101469/2022-1/Installing-and-configuring-Arm-Development-Studio/Installing-on-Linux) to install Linux version.
-    - Setup build environment
-      ```
-      echo 'export PATH=$PATH:/opt/arm/developmentstudio-2022.1/sw/ARMCompiler6.18/bin' | sudo tee -a ~/.bashrc
-      echo 'export ARM_PRODUCT_DEF=/opt/arm/developmentstudio-2022.1/sw/mappings/gold.elmap' | sudo tee -a ~/.bashrc
-      echo 'export ARMLMD_LICENSE_FILE=<license file>' | sudo tee -a ~/.bashrc
-      source ~/.bashrc
-      ```
-    - Implement the TBD features. `libspdm_sleep` and `libspdm_get_random_number_64` need to be implemented before it can run on a real system.
-
-    d) [ARM GNU](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads).
-    - Download 11.2-2022.02: GNU/Linux target (arm-none-linux-gnueabihf, aarch64-none-linux-gnu), and unzip it.
-    - Add <tool_path>/bin to the $PATH environment. For example:
-      ```
-      echo 'export PATH=~/gcc-arm-11.2-2022.02-x86_64-arm-none-linux-gnueabihf/bin:$PATH' | sudo tee -a ~/.bashrc
-      echo 'export PATH=~/gcc-arm-11.2-2022.02-x86_64-aarch64-none-linux-gnu/bin:$PATH' | sudo tee -a ~/.bashrc
-      source ~/.bashrc
-      ```
-
-    e) [ARM GNU bare metal](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads).
-    - Download 11.2-2022.02: GNU/Linux target (arm-none-eabi, aarch64-none-elf), and unzip it.
-    - Add <tool_path>/bin to the $PATH environment. For example:
-      ```
-      echo 'export PATH=~/gcc-arm-11.2-2022.02-x86_64-arm-none-eabi/bin:$PATH' | sudo tee -a ~/.bashrc
-      echo 'export PATH=~/gcc-arm-11.2-2022.02-x86_64-aarch64-none-elf/bin:$PATH' | sudo tee -a ~/.bashrc
-      source ~/.bashrc
-      ```
-
-    f) [RISCV_XPACK](https://github.com/xpack-dev-tools/riscv-none-elf-gcc-xpack/releases/).
-    - Download xPack GNU RISC-V Embedded GCC v12.2.0-1(xpack-riscv-none-elf-gcc-12.1.0-2-linux-x64.tar.gz), and unzip it.
-    - Add <tool_path>/bin to the $PATH environment. For example:
-      ```
-      echo 'export PATH=~/xpack-riscv-none-elf-gcc-12.2.0-1/bin:$PATH' | sudo tee -a ~/.bashrc
-      source ~/.bashrc
-      ```
-    - Test install successfully. Use `riscv-none-elf-gcc --version`, then the successful install can see `riscv-none-elf-gcc (xPack GNU RISC-V Embedded GCC x86_64) 12.1.0`.
-
-
+For other architectures, please refer to [build](https://github.com/DMTF/libspdm/blob/main/doc/build.md).
 
 2) [CMake](https://cmake.org/).
 
@@ -209,7 +152,7 @@
    To get a fully buildable repository, use `git submodule update --init`.
    If there is an update for submodules, use `git submodule update`.
 
-### Windows Builds
+### Windows Builds for IA32/X64
    For ia32 builds, use a `x86 Native Tools Command Prompt for Visual Studio...` command prompt.
 
    For x64 builds, use a `x64 Native Tools Command Prompt for Visual Studio...` command prompt.
@@ -257,31 +200,9 @@
    cmake -G"Visual Studio 16 2019" -DARCH=x64 -DTOOLCHAIN=VS2019 -DTARGET=Release -DCRYPTO=openssl -DENABLE_BINARY_BUILD=1 -DCOMPILED_LIBCRYPTO_PATH=<OPENSSL_PATH>/libcrypto.lib -DCOMPILED_LIBSSL_PATH=<OPENSSL_PATH>/libssl.lib ..
    ```
 
-#### Windows Builds with ARM DS2022
+For other architectures, please refer to [build](https://github.com/DMTF/libspdm/blob/main/doc/build.md).
 
-   For ARM DS2022 build (arm or aarch64) on Windows, Launch `MSYS2 -> MSYS2 MINGW64` command prompt.
-   ```
-   cd libspdm
-   mkdir build
-   cd build
-   cmake -G"MSYS Makefiles" -DARCH=<arm|aarch64> -DTOOLCHAIN=ARM_DS2022 -DTARGET=<Debug|Release> -DCRYPTO=<mbedtls|openssl> ..
-   make copy_sample_key
-   make
-   ```
-
-   Example CMake commands:
-
-   ```
-   cmake -G"MSYS Makefiles" -DARCH=arm -DTOOLCHAIN=ARM_DS2022 -DTARGET=Debug -DCRYPTO=mbedtls ..
-   ```
-
-   ```
-   cmake -G"MSYS Makefiles" -DARCH=aarch64 -DTOOLCHAIN=ARM_DS2022 -DTARGET=Release -DCRYPTO=mbedtls ..
-   ```
-
-   Note: `make -j` can be used to accelerate the build.
-
-### Linux Builds
+### Linux Builds for IA32/X64
    If ia32 builds run on a 64-bit Linux machine, then install `sudo apt-get install gcc-multilib`.
 
    General build steps: (Note the `..` at the end of the cmake command).
@@ -318,98 +239,7 @@ Example CMake commands:
    cmake -DARCH=x64 -DTOOLCHAIN=GCC -DTARGET=Release -DCRYPTO=openssl -DENABLE_BINARY_BUILD=1 -DCOMPILED_LIBCRYPTO_PATH=<OPENSSL_PATH>/libcrypto.a -DCOMPILED_LIBSSL_PATH=<OPENSSL_PATH>/libssl.a ..
    ```
 
-#### Linux Builds with ARM DS2022
-
-   For ARM DS2022 build (arm or aarch64) on Linux,
-   ```
-   cd libspdm
-   mkdir build
-   cd build
-   cmake -DARCH=<arm|aarch64> -DTOOLCHAIN=ARM_DS2022 -DTARGET=<Debug|Release> -DCRYPTO=<mbedtls|openssl> ..
-   make copy_sample_key
-   make
-   ```
-
-   Example CMake commands:
-
-   ```
-   cmake -DARCH=arm -DTOOLCHAIN=ARM_DS2022 -DTARGET=Debug -DCRYPTO=mbedtls ..
-   ```
-
-   ```
-   cmake -DARCH=aarch64 -DTOOLCHAIN=ARM_DS2022 -DTARGET=Release -DCRYPTO=mbedtls ..
-   ```
-
-   Note: `make -j` can be used to accelerate the build.
-
-#### Linux Builds with ARM GNU Toolchain
-
-   For ARM GNU toolchain GNU/Linux target (arm-none-linux-gnueabihf, aarch64-none-linux-gnu) build on Linux, 
-   ```
-   cd libspdm
-   mkdir build
-   cd build
-   cmake -DARCH=<arm|aarch64> -DTOOLCHAIN=ARM_GNU -DTARGET=<Debug|Release> -DCRYPTO=<mbedtls|openssl> ..
-   make copy_sample_key
-   make
-   ```
-
-   Example CMake commands:
-
-   ```
-   cmake -DARCH=arm -DTOOLCHAIN=ARM_GNU -DTARGET=Debug -DCRYPTO=mbedtls ..
-   ```
-
-   ```
-   cmake -DARCH=aarch64 -DTOOLCHAIN=ARM_GNU -DTARGET=Release -DCRYPTO=mbedtls ..
-   ```
-
-   Note: `make -j` can be used to accelerate the build.
-
-#### Linux Builds with ARM_GNU_bare_metal Toolchain
-
-   For ARM_GNU_bare_metal toolchain GNU/Linux target (arm-none-eabi, aarch64-none-elf) build on Linux, 
-   ```
-   cd libspdm
-   mkdir build
-   cd build
-   cmake -DARCH=<arm|aarch64> -DTOOLCHAIN=ARM_GNU_BARE_METAL -DTARGET=<Debug|Release> -DCRYPTO=<mbedtls|openssl> ..
-   make copy_sample_key
-   make
-   ```
-
-   Example CMake commands:
-
-   ```
-   cmake -DARCH=arm -DTOOLCHAIN=ARM_GNU_BARE_METAL -DTARGET=Debug -DCRYPTO=mbedtls ..
-   ```
-   ```
-   cmake -DARCH=aarch64 -DTOOLCHAIN=ARM_GNU_BARE_METAL -DTARGET=Release -DCRYPTO=mbedtls ..
-   ```
-
-   Note: `make -j` can be used to accelerate the build.
-
-#### Linux Builds with RISCV_XPACK Toolchain
-
-   For RISCV_XPACK toolchain GNU/Linux target (riscv-none-elf-gcc-12.1.0-2-linux-x64) build on Linux, 
-   (The riscv64 arch is not supported now.)
-   ```
-   cd libspdm
-   mkdir build
-   cd build
-   cmake -DARCH=<riscv32> -DTOOLCHAIN=RISCV_XPACK -DTARGET=<Debug|Release> -DCRYPTO=<mbedtls|openssl> ..
-   make copy_sample_key
-   make
-   ```
-
-   Example CMake commands:
-   ```
-   cmake -DARCH=riscv32 -DTOOLCHAIN=RISCV_XPACK -DTARGET=Debug -DCRYPTO=mbedtls ..
-   ```
-   ```
-   cmake -DARCH=riscv32 -DTOOLCHAIN=RISCV_XPACK -DTARGET=Release -DCRYPTO=mbedtls ..
-   ```
-   Note: `make -j` can be used to accelerate the build.
+For other architectures, please refer to [build](https://github.com/DMTF/libspdm/blob/main/doc/build.md).
 
 ## Run Test
 
