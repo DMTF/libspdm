@@ -194,13 +194,13 @@ bool libspdm_secured_message_export_master_secret(
 
     secured_message_context = spdm_secured_message_context;
 
-    libspdm_copy_mem(export_master_secret, *export_master_secret_size,
-                     secured_message_context->export_master_secret,
-                     sizeof(secured_message_context->export_master_secret));
-
     if (*export_master_secret_size > secured_message_context->hash_size) {
         *export_master_secret_size = secured_message_context->hash_size;
     }
+
+    libspdm_copy_mem(export_master_secret, *export_master_secret_size,
+                     secured_message_context->export_master_secret,
+                     secured_message_context->hash_size);
 
     return true;
 }
