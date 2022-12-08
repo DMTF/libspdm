@@ -70,6 +70,7 @@ libspdm_return_t libspdm_get_response_algorithms(void *context,
     uint8_t fixed_alg_size;
     uint8_t ext_alg_count;
     uint16_t ext_alg_total_count;
+    uint8_t alg_type_pre;
 
     uint32_t hash_priority_table[] = {
     #if LIBSPDM_SHA512_SUPPORT
@@ -269,6 +270,7 @@ libspdm_return_t libspdm_get_response_algorithms(void *context,
                             sizeof(uint32_t) * spdm_request->ext_asym_count +
                             sizeof(uint32_t) * spdm_request->ext_hash_count);
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
+        alg_type_pre = struct_table->alg_type;
         for (index = 0; index < spdm_request->header.param1; index++) {
             if ((size_t)spdm_request + request_size < (size_t)struct_table) {
                 return libspdm_generate_error_response(
@@ -283,6 +285,14 @@ libspdm_return_t libspdm_get_response_algorithms(void *context,
                     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                     response_size, response);
             }
+            /* AlgType shall monotonically increase for subsequent entries. */
+            if ((index != 0) && (struct_table->alg_type <= alg_type_pre)) {
+                return libspdm_generate_error_response(
+                    spdm_context,
+                    SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                    response_size, response);
+            }
+            alg_type_pre = struct_table->alg_type;
             fixed_alg_size = (struct_table->alg_count >> 4) & 0xF;
             ext_alg_count = struct_table->alg_count & 0xF;
             ext_alg_total_count += ext_alg_count;
