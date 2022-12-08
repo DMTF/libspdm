@@ -6,7 +6,7 @@
 
 #include "test_crypt.h"
 
-#if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)
+#if (LIBSPDM_RSA_SSA_SUPPORT_TEST) || (LIBSPDM_RSA_PSS_SUPPORT_TEST)
 
 #define LIBSPDM_RSA_MODULUS_LENGTH 512
 
@@ -353,7 +353,7 @@ bool libspdm_validate_crypt_rsa(void)
 
     free_pool(KeyBuffer);
 
-    #ifdef LIBSPDM_SHA256_SUPPORT
+    #ifdef LIBSPDM_SHA256_SUPPORT_TEST
     /* SHA-256 digest message for PKCS#1 signature*/
     libspdm_my_print("hash Original message ... ");
     hash_size = LIBSPDM_SHA256_DIGEST_SIZE;
@@ -392,7 +392,7 @@ bool libspdm_validate_crypt_rsa(void)
 
     libspdm_sha256_free(sha256_ctx);
 
-    #if LIBSPDM_RSA_SSA_SUPPORT
+    #if LIBSPDM_RSA_SSA_SUPPORT_TEST
     /* Sign RSA PKCS#1-encoded signature*/
     libspdm_my_print("PKCS#1 signature ... ");
 
@@ -470,9 +470,9 @@ bool libspdm_validate_crypt_rsa(void)
     }
 
     free_pool(signature);
-    #endif /* LIBSPDM_RSA_SSA_SUPPORT */
+    #endif /* LIBSPDM_RSA_SSA_SUPPORT_TEST */
 
-    #if LIBSPDM_RSA_PSS_SUPPORT
+    #if LIBSPDM_RSA_PSS_SUPPORT_TEST
     /* Sign RSA PSS-encoded signature*/
     libspdm_my_print("PSS signature ... ");
 
@@ -542,16 +542,16 @@ bool libspdm_validate_crypt_rsa(void)
     }
 
     free_pool(signature);
-    #endif /* LIBSPDM_RSA_PSS_SUPPORT */
+    #endif /* LIBSPDM_RSA_PSS_SUPPORT_TEST */
 
     /* Release Resources*/
     libspdm_rsa_free(rsa);
     libspdm_my_print("Release RSA context ... [Pass]");
 
     libspdm_my_print("\n");
-    #endif /* LIBSPDM_SHA256_SUPPORT */
+    #endif /* LIBSPDM_SHA256_SUPPORT_TEST */
 
     return true;
 }
 
-#endif /* (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT) */
+#endif /* (LIBSPDM_RSA_SSA_SUPPORT_TEST) || (LIBSPDM_RSA_PSS_SUPPORT_TEST) */

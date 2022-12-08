@@ -56,19 +56,19 @@ bool libspdm_cryptest_main(void)
         return status;
     }
 
-    #if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)
+    #if (LIBSPDM_RSA_SSA_SUPPORT_TEST) || (LIBSPDM_RSA_PSS_SUPPORT_TEST)
     status = libspdm_validate_crypt_rsa();
     if (!status) {
         return status;
     }
-    #endif /* (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT) */
+    #endif /* (LIBSPDM_RSA_SSA_SUPPORT_TEST) || (LIBSPDM_RSA_PSS_SUPPORT_TEST) */
 
-    #if LIBSPDM_RSA_SSA_SUPPORT
+    #if LIBSPDM_RSA_SSA_SUPPORT_TEST
     status = libspdm_validate_crypt_rsa_2();
     if (!status) {
         return status;
     }
-    #endif /* LIBSPDM_RSA_SSA_SUPPORT */
+    #endif /* LIBSPDM_RSA_SSA_SUPPORT_TEST */
 
     status = libspdm_validate_crypt_x509("ecp256", sizeof("ecp256"));
     if (!status) {
@@ -95,7 +95,7 @@ bool libspdm_cryptest_main(void)
         return status;
     }
 
-    #if LIBSPDM_ECDSA_SUPPORT
+    #if LIBSPDM_ECDSA_SUPPORT_TEST
     status = libspdm_validate_crypt_ec();
     if (!status) {
         return status;
@@ -105,9 +105,9 @@ bool libspdm_cryptest_main(void)
     if (!status) {
         return status;
     }
-    #endif /* LIBSPDM_ECDSA_SUPPORT */
+    #endif /* LIBSPDM_ECDSA_SUPPORT_TEST */
 
-    #if (LIBSPDM_EDDSA_ED25519_SUPPORT) || (LIBSPDM_EDDSA_ED448_SUPPORT)
+    #if (LIBSPDM_EDDSA_ED25519_SUPPORT_TEST) || (LIBSPDM_EDDSA_ED448_SUPPORT_TEST)
     status = libspdm_validate_crypt_ecd();
     if (!status) {
         return status;
@@ -117,19 +117,21 @@ bool libspdm_cryptest_main(void)
     if (!status) {
         return status;
     }
-    #endif /* (LIBSPDM_EDDSA_ED25519_SUPPORT) || (LIBSPDM_EDDSA_ED448_SUPPORT) */
+    #endif /* (LIBSPDM_EDDSA_ED25519_SUPPORT_TEST) || (LIBSPDM_EDDSA_ED448_SUPPORT_TEST) */
 
-    #if LIBSPDM_SM2_DSA_SUPPORT
+    #if LIBSPDM_SM2_KEY_EXCHANGE_SUPPORT_TEST
     status = libspdm_validate_crypt_sm2();
     if (!status) {
         return status;
     }
+    #endif /*LIBSPDM_SM2_KEY_EXCHANGE_SUPPORT_TEST*/
 
+    #if LIBSPDM_SM2_DSA_SUPPORT_TEST
     status = libspdm_validate_crypt_sm2_2();
     if (!status) {
         return status;
     }
-    #endif /* LIBSPDM_SM2_DSA_SUPPORT */
+    #endif /* LIBSPDM_SM2_DSA_SUPPORT_TEST */
 
     status = libspdm_validate_crypt_prng();
     if (!status) {
@@ -150,7 +152,7 @@ int main(void)
 {
     int return_value = 0;
 
-    if (libspdm_cryptest_main() != 0) {
+    if (!libspdm_cryptest_main()) {
         return_value = 1;
     }
 

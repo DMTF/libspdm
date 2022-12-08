@@ -30,12 +30,10 @@ bool libspdm_validate_crypt_ecd(void)
     ecd1 = libspdm_ecd_new_by_nid(LIBSPDM_CRYPTO_NID_EDDSA_ED25519);
     if (ecd1 == NULL) {
         libspdm_my_print("[Fail]");
-        goto Exit;
+        return false;
     }
 
-
     /* Verify Ed-DSA*/
-
     sig1_size = sizeof(signature1);
     libspdm_my_print("\n- Ed-DSA Signing ... ");
     status = libspdm_eddsa_sign(ecd1, LIBSPDM_CRYPTO_NID_NULL, NULL, 0, message, sizeof(message),
@@ -43,7 +41,7 @@ bool libspdm_validate_crypt_ecd(void)
     if (!status) {
         libspdm_my_print("[Fail]");
         libspdm_ecd_free(ecd1);
-        goto Exit;
+        return false;
     }
 
     libspdm_my_print("Ed-DSA Verification ... ");
@@ -52,7 +50,7 @@ bool libspdm_validate_crypt_ecd(void)
     if (!status) {
         libspdm_my_print("[Fail]");
         libspdm_ecd_free(ecd1);
-        goto Exit;
+        return false;
     } else {
         libspdm_my_print("[Pass]\n");
     }
@@ -62,7 +60,7 @@ bool libspdm_validate_crypt_ecd(void)
     ecd2 = libspdm_ecd_new_by_nid(LIBSPDM_CRYPTO_NID_EDDSA_ED448);
     if (ecd2 == NULL) {
         libspdm_my_print("[Fail]");
-        goto Exit;
+        return false;
     }
 
     sig2_size = sizeof(signature2);
@@ -72,7 +70,7 @@ bool libspdm_validate_crypt_ecd(void)
     if (!status) {
         libspdm_my_print("[Fail]");
         libspdm_ecd_free(ecd2);
-        goto Exit;
+        return false;
     }
 
     libspdm_my_print("Ed-DSA Verification ... ");
@@ -81,13 +79,12 @@ bool libspdm_validate_crypt_ecd(void)
     if (!status) {
         libspdm_my_print("[Fail]");
         libspdm_ecd_free(ecd2);
-        goto Exit;
+        return false;
     } else {
         libspdm_my_print("[Pass]\n");
     }
 
     libspdm_ecd_free(ecd2);
 
-Exit:
     return true;
 }
