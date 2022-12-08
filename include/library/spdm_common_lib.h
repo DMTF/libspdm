@@ -312,7 +312,7 @@ size_t libspdm_get_context_size_without_secured_context(void);
  *                       The caller is responsible for having either implicit or explicit ownership
  *                       of the buffer. The message pointer shall be inside of
  *                       [msg_buf_ptr, msg_buf_ptr + max_msg_size] from acquired sender_buffer.
- * @param  timeout       The timeout, in 100ns units, to use for the execution of the message. A
+ * @param  timeout       The timeout, in us units, to use for the execution of the message. A
  *                       timeout value of 0 means that this function will wait indefinitely for the
  *                       message to execute. If timeout is greater than zero, then this function
  *                       will return RETURN_TIMEOUT if the time required to execute the message is
@@ -345,7 +345,7 @@ typedef libspdm_return_t (*libspdm_device_send_message_func)(void *spdm_context,
  *                       of the buffer. On input, the message pointer shall be msg_buf_ptr from
  *                       acquired receiver_buffer. On output, the message pointer shall be inside of
  *                       [msg_buf_ptr, msg_buf_ptr + max_msg_size] from acquired receiver_buffer.
- * @param  timeout       The timeout, in 100ns units, to use for the execution of the message. A
+ * @param  timeout       The timeout, in us units, to use for the execution of the message. A
  *                       timeout value of 0 means that this function will wait indefinitely for the
  *                       message to execute. If timeout is greater than zero, then this function
  *                       will return RETURN_TIMEOUT if the time required to execute the message is
