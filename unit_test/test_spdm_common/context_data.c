@@ -1281,6 +1281,7 @@ static void libspdm_test_export_master_secret_case19(void **state)
     result = libspdm_secured_message_export_master_secret(&secured_message_context,
                                                           &target_buffer,
                                                           &export_master_secret_size);
+    assert_int_equal(result, true);
 
     libspdm_secured_message_clear_export_master_secret(&secured_message_context);
 
@@ -1302,6 +1303,7 @@ static void libspdm_test_export_master_secret_case19(void **state)
     result = libspdm_secured_message_export_master_secret(&secured_message_context,
                                                           &target_buffer,
                                                           &export_master_secret_size);
+    assert_int_equal(result, true);
 
     for (int index = 0; index < LIBSPDM_MAX_HASH_SIZE; index++) {
         assert_int_equal(target_buffer[index], index);
@@ -1320,6 +1322,7 @@ static void libspdm_test_export_master_secret_case19(void **state)
     result = libspdm_secured_message_export_master_secret(&secured_message_context,
                                                           &target_buffer,
                                                           &export_master_secret_size);
+    assert_int_equal(result, true);
 
     for (int index = 0; index < LIBSPDM_MAX_HASH_SIZE; index++) {
         if (index < LIBSPDM_MAX_HASH_SIZE - 4) {
