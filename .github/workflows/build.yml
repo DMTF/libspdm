@@ -186,6 +186,11 @@ jobs:
         run: |
           cd build/bin
           ./test_spdm_crypt
+      - name: Test Crypt
+        if: matrix.toolchain != 'LIBFUZZER' && matrix.toolchain != 'ARM_GNU'
+        run: |
+          cd build/bin
+          ./test_crypt
       - name: Fuzz test with initial seed
         if: matrix.os == 'ubuntu-latest' && matrix.arch == 'x64'
         run: |
