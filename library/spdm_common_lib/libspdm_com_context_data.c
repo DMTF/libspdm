@@ -1423,7 +1423,7 @@ libspdm_return_t libspdm_append_message_k(void *context, void *session_info,
                             spdm_context, (const void **)&cert_chain_buffer,
                             &cert_chain_buffer_size);
                         if (!result) {
-                            return LIBSPDM_STATUS_CRYPTO_ERROR;
+                            return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
                         }
 
                         result = libspdm_hash_all(
@@ -1446,7 +1446,7 @@ libspdm_return_t libspdm_append_message_k(void *context, void *session_info,
                             spdm_context, (const void **)&cert_chain_buffer,
                             &cert_chain_buffer_size);
                         if (!result) {
-                            return LIBSPDM_STATUS_CRYPTO_ERROR;
+                            return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
                         }
 
                         result = libspdm_hash_all(
@@ -1591,7 +1591,7 @@ libspdm_return_t libspdm_append_message_f(void *context, void *session_info,
                             (const void **)&mut_cert_chain_buffer,
                             &mut_cert_chain_buffer_size);
                         if (!result) {
-                            return false;
+                            return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
                         }
                     } else {
                         result = libspdm_get_local_cert_chain_buffer(
@@ -1617,7 +1617,7 @@ libspdm_return_t libspdm_append_message_f(void *context, void *session_info,
                             (const void **)&mut_cert_chain_buffer,
                             &mut_cert_chain_buffer_size);
                         if (!result) {
-                            return false;
+                            return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
                         }
 
                         result = libspdm_hash_all(
