@@ -1282,7 +1282,7 @@ static void libspdm_test_export_master_secret_case19(void **state)
                                                           &target_buffer,
                                                           &export_master_secret_size);
 
-   libspdm_secured_message_clear_export_master_secret(&secured_message_context);
+    libspdm_secured_message_clear_export_master_secret(&secured_message_context);
 
     for (int index = 0; index < LIBSPDM_MAX_HASH_SIZE; index++) {
         assert_int_equal(target_buffer[index], index);
