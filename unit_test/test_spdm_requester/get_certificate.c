@@ -3298,7 +3298,7 @@ void libspdm_test_requester_get_certificate_case22(void **state)
         root_cert_size);
     spdm_context->local_context.peer_root_cert_provision_size[0] =
         root_cert_size;
-    spdm_context->local_context.peer_root_cert_provision[0] = root_cert;;
+    spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
     libspdm_reset_message_b(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
