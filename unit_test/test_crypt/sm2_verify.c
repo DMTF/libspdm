@@ -34,22 +34,18 @@ bool libspdm_validate_crypt_sm2(void)
 
     libspdm_my_print("\nCrypto SM2 key Exchange Testing:\n");
 
-
     /* Initialize key length*/
-
     public1_length = sizeof(public1);
     public2_length = sizeof(public2);
     key1_length = sizeof(key1);
     key2_length = sizeof(key2);
 
-
     /* Generate & Initialize SM2 context*/
-
     libspdm_my_print("- Context1 ... ");
     Sm2_1 = libspdm_sm2_key_exchange_new_by_nid(LIBSPDM_CRYPTO_NID_SM2_KEY_EXCHANGE_P256);
     if (Sm2_1 == NULL) {
         libspdm_my_print("[Fail]");
-        goto Exit;
+        return false;
     }
 
     libspdm_my_print("Context2 ... ");
@@ -57,7 +53,7 @@ bool libspdm_validate_crypt_sm2(void)
     if (Sm2_2 == NULL) {
         libspdm_my_print("[Fail]");
         libspdm_sm2_key_exchange_free(Sm2_1);
-        goto Exit;
+        return false;
     }
 
     libspdm_my_print("Initialize key1 ... ");
@@ -67,7 +63,7 @@ bool libspdm_validate_crypt_sm2(void)
         libspdm_my_print("[Fail]");
         libspdm_sm2_key_exchange_free(Sm2_1);
         libspdm_sm2_key_exchange_free(Sm2_2);
-        goto Exit;
+        return false;
     }
 
     libspdm_my_print("Initialize key1 ... ");
@@ -77,19 +73,17 @@ bool libspdm_validate_crypt_sm2(void)
         libspdm_my_print("[Fail]");
         libspdm_sm2_key_exchange_free(Sm2_1);
         libspdm_sm2_key_exchange_free(Sm2_2);
-        goto Exit;
+        return false;
     }
 
-
     /* Verify SM2-KeyExchange*/
-
     libspdm_my_print("Generate key1 ... ");
     status = libspdm_sm2_key_exchange_generate_key(Sm2_1, public1, &public1_length);
     if (!status || public1_length != 32 * 2) {
         libspdm_my_print("[Fail]");
         libspdm_sm2_key_exchange_free(Sm2_1);
         libspdm_sm2_key_exchange_free(Sm2_2);
-        goto Exit;
+        return false;
     }
 
     libspdm_my_print("Generate key2 ... ");
@@ -98,7 +92,7 @@ bool libspdm_validate_crypt_sm2(void)
         libspdm_my_print("[Fail]");
         libspdm_sm2_key_exchange_free(Sm2_1);
         libspdm_sm2_key_exchange_free(Sm2_2);
-        goto Exit;
+        return false;
     }
 
     libspdm_my_print("Compute key1 ... ");
@@ -109,7 +103,7 @@ bool libspdm_validate_crypt_sm2(void)
         libspdm_my_print("[Fail]");
         libspdm_sm2_key_exchange_free(Sm2_1);
         libspdm_sm2_key_exchange_free(Sm2_2);
-        goto Exit;
+        return false;
     }
 
     libspdm_my_print("Compute key2 ... ");
@@ -120,7 +114,7 @@ bool libspdm_validate_crypt_sm2(void)
         libspdm_my_print("[Fail]");
         libspdm_sm2_key_exchange_free(Sm2_1);
         libspdm_sm2_key_exchange_free(Sm2_2);
-        goto Exit;
+        return false;
     }
 
     libspdm_my_print("Compare Keys ... ");
@@ -129,7 +123,7 @@ bool libspdm_validate_crypt_sm2(void)
         libspdm_my_print("[Fail]");
         libspdm_sm2_key_exchange_free(Sm2_1);
         libspdm_sm2_key_exchange_free(Sm2_2);
-        goto Exit;
+        return false;
     } else {
         libspdm_my_print("[Pass]\n");
     }
@@ -145,7 +139,7 @@ bool libspdm_validate_crypt_sm2(void)
     Sm2_1 = libspdm_sm2_dsa_new_by_nid(LIBSPDM_CRYPTO_NID_SM2_DSA_P256);
     if (Sm2_1 == NULL) {
         libspdm_my_print("[Fail]");
-        goto Exit;
+        return false;
     }
 
     libspdm_my_print("Compute key1 ... ");
@@ -153,12 +147,10 @@ bool libspdm_validate_crypt_sm2(void)
     if (!status) {
         libspdm_my_print("[Fail]");
         libspdm_sm2_dsa_free(Sm2_1);
-        goto Exit;
+        return false;
     }
 
-
     /* Verify SM2 signing/verification*/
-
     sig_size = sizeof(signature);
     libspdm_my_print("\n- SM2 Signing ... ");
     status =
@@ -169,7 +161,7 @@ bool libspdm_validate_crypt_sm2(void)
     if (!status) {
         libspdm_my_print("[Fail]");
         libspdm_sm2_dsa_free(Sm2_1);
-        goto Exit;
+        return false;
     }
 
     libspdm_my_print("SM2 Verification ... ");
@@ -181,7 +173,7 @@ bool libspdm_validate_crypt_sm2(void)
     if (!status) {
         libspdm_my_print("[Fail]");
         libspdm_sm2_dsa_free(Sm2_1);
-        goto Exit;
+        return false;
     } else {
         libspdm_my_print("[Pass]\n");
     }
@@ -196,7 +188,7 @@ bool libspdm_validate_crypt_sm2(void)
     Sm2_1 = libspdm_sm2_dsa_new_by_nid(LIBSPDM_CRYPTO_NID_SM2_DSA_P256);
     if (Sm2_1 == NULL) {
         libspdm_my_print("[Fail]");
-        goto Exit;
+        return false;
     }
 
     libspdm_my_print("Context2 ... ");
@@ -204,7 +196,7 @@ bool libspdm_validate_crypt_sm2(void)
     if (Sm2_2 == NULL) {
         libspdm_my_print("[Fail]");
         libspdm_sm2_dsa_free(Sm2_1);
-        goto Exit;
+        return false;
     }
 
     libspdm_my_print("Compute key in Context1 ... ");
@@ -213,7 +205,7 @@ bool libspdm_validate_crypt_sm2(void)
         libspdm_my_print("[Fail]");
         libspdm_sm2_dsa_free(Sm2_1);
         libspdm_sm2_dsa_free(Sm2_2);
-        goto Exit;
+        return false;
     }
 
     libspdm_my_print("Export key in Context1 ... ");
@@ -222,7 +214,7 @@ bool libspdm_validate_crypt_sm2(void)
         libspdm_my_print("[Fail]");
         libspdm_sm2_dsa_free(Sm2_1);
         libspdm_sm2_dsa_free(Sm2_2);
-        goto Exit;
+        return false;
     }
 
     libspdm_my_print("Import key in Context2 ... ");
@@ -231,12 +223,10 @@ bool libspdm_validate_crypt_sm2(void)
         libspdm_my_print("[Fail]");
         libspdm_sm2_dsa_free(Sm2_1);
         libspdm_sm2_dsa_free(Sm2_2);
-        goto Exit;
+        return false;
     }
 
-
     /* Verify EC-DSA*/
-
     sig_size = sizeof(signature);
     libspdm_my_print("\n- sm2 Signing in Context1 ... ");
     status =
@@ -248,7 +238,7 @@ bool libspdm_validate_crypt_sm2(void)
         libspdm_my_print("[Fail]");
         libspdm_sm2_dsa_free(Sm2_1);
         libspdm_sm2_dsa_free(Sm2_2);
-        goto Exit;
+        return false;
     }
 
     libspdm_my_print("sm2 Verification in Context2 ... ");
@@ -261,7 +251,7 @@ bool libspdm_validate_crypt_sm2(void)
         libspdm_my_print("[Fail]");
         libspdm_sm2_dsa_free(Sm2_1);
         libspdm_sm2_dsa_free(Sm2_2);
-        goto Exit;
+        return false;
     } else {
         libspdm_my_print("[Pass]\n");
     }
@@ -269,6 +259,5 @@ bool libspdm_validate_crypt_sm2(void)
     libspdm_sm2_dsa_free(Sm2_1);
     libspdm_sm2_dsa_free(Sm2_2);
 
-Exit:
     return true;
 }

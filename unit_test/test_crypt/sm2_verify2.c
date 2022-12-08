@@ -6,7 +6,7 @@
 
 #include "test_crypt.h"
 
-#if LIBSPDM_SM2_DSA_SUPPORT
+#if LIBSPDM_SM2_DSA_SUPPORT_TEST
 
 #define DEFAULT_SM2_ID "1234567812345678"
 
@@ -102,7 +102,7 @@ bool libspdm_validate_crypt_sm2_2(void)
                                                   &sm2_priv_key);
     if (!status) {
         libspdm_my_print("[Fail]");
-        goto Exit;
+        return false;
     } else {
         libspdm_my_print("[Pass]");
     }
@@ -114,7 +114,7 @@ bool libspdm_validate_crypt_sm2_2(void)
     if (!status) {
         libspdm_my_print("[Fail]");
         libspdm_sm2_dsa_free(sm2_priv_key);
-        goto Exit;
+        return false;
     } else {
         libspdm_my_print("[Pass]");
     }
@@ -130,7 +130,7 @@ bool libspdm_validate_crypt_sm2_2(void)
         libspdm_my_print("[Fail]");
         libspdm_sm2_dsa_free(sm2_priv_key);
         libspdm_sm2_dsa_free(sm2_pub_key);
-        goto Exit;
+        return false;
     } else {
         libspdm_my_print("[Pass]");
     }
@@ -144,16 +144,14 @@ bool libspdm_validate_crypt_sm2_2(void)
         libspdm_my_print("[Fail]");
         libspdm_sm2_dsa_free(sm2_priv_key);
         libspdm_sm2_dsa_free(sm2_pub_key);
-        goto Exit;
+        return false;
     } else {
         libspdm_my_print("[Pass]\n");
     }
 
     libspdm_sm2_dsa_free(sm2_priv_key);
     libspdm_sm2_dsa_free(sm2_pub_key);
-
-Exit:
     return true;
 }
 
-#endif /* LIBSPDM_SM2_DSA_SUPPORT */
+#endif /* LIBSPDM_SM2_DSA_SUPPORT_TEST */

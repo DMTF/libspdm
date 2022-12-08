@@ -46,17 +46,13 @@ bool libspdm_validate_crypt_ec(void)
 
     libspdm_my_print("\nCrypto EC-DH key Exchange Testing:\n");
 
-
     /* Initialize key length*/
-
     public1_length = sizeof(public1);
     public2_length = sizeof(public2);
     key1_length = sizeof(key1);
     key2_length = sizeof(key2);
 
-
     /* Generate & Initialize EC context*/
-
     libspdm_my_print("- Context1 ... ");
     ec1 = libspdm_ec_new_by_nid(LIBSPDM_CRYPTO_NID_SECP384R1);
     if (ec1 == NULL) {
@@ -133,17 +129,13 @@ bool libspdm_validate_crypt_ec(void)
     libspdm_ec_free(ec1);
     libspdm_ec_free(ec2);
 
-
     /* Initialize key length*/
-
     public1_length = sizeof(public1);
     public2_length = sizeof(public2);
     key1_length = sizeof(key1);
     key2_length = sizeof(key2);
 
-
     /* Generate & Initialize EC context*/
-
     libspdm_my_print("- Context1 ... ");
     ec1 = libspdm_ec_new_by_nid(LIBSPDM_CRYPTO_NID_SECP521R1);
     if (ec1 == NULL) {
@@ -159,9 +151,7 @@ bool libspdm_validate_crypt_ec(void)
         return false;
     }
 
-
     /* Verify EC-DH*/
-
     libspdm_my_print("Generate key1 ... ");
     status = libspdm_ec_generate_key(ec1, public1, &public1_length);
     if (!status || public1_length != 66 * 2) {
@@ -360,9 +350,7 @@ bool libspdm_validate_crypt_ec(void)
         return false;
     }
 
-
     /* Verify EC-DSA*/
-
     hash_size = sizeof(hash_value);
     sig_size = sizeof(signature);
     libspdm_my_print("\n- EC-DSA Signing in Context1 ... ");

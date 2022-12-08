@@ -130,8 +130,8 @@ uint8_t m_libspdm_sm4_gcm_tag[] = {
  **/
 bool libspdm_validate_crypt_aead_cipher(void)
 {
-    #if (LIBSPDM_AEAD_GCM_SUPPORT) || (LIBSPDM_AEAD_CHACHA20_POLY1305_SUPPORT) || \
-    (LIBSPDM_AEAD_SM4_SUPPORT)
+    #if (LIBSPDM_AEAD_GCM_SUPPORT_TEST) || (LIBSPDM_AEAD_CHACHA20_POLY1305_SUPPORT_TEST) || \
+    (LIBSPDM_AEAD_SM4_SUPPORT_TEST)
     bool status;
     uint8_t OutBuffer[1024];
     size_t OutBufferSize;
@@ -140,10 +140,10 @@ bool libspdm_validate_crypt_aead_cipher(void)
 
     libspdm_my_print("\nCrypto AEAD Testing: ");
     #else
-    goto Exit;
+    return true;
     #endif
 
-    #if LIBSPDM_AEAD_GCM_SUPPORT
+    #if LIBSPDM_AEAD_GCM_SUPPORT_TEST
     libspdm_my_print("\n- AES-GCM Encryption: ");
 
     OutBufferSize = sizeof(OutBuffer);
@@ -191,9 +191,9 @@ bool libspdm_validate_crypt_aead_cipher(void)
     }
 
     libspdm_my_print("[Pass]");
-    #endif /* LIBSPDM_AEAD_GCM_SUPPORT */
+    #endif /* LIBSPDM_AEAD_GCM_SUPPORT_TEST */
 
-    #if LIBSPDM_AEAD_CHACHA20_POLY1305_SUPPORT
+    #if LIBSPDM_AEAD_CHACHA20_POLY1305_SUPPORT_TEST
     libspdm_my_print("\n- ChaCha20Poly1305 Encryption: ");
 
     OutBufferSize = sizeof(OutBuffer);
@@ -247,9 +247,9 @@ bool libspdm_validate_crypt_aead_cipher(void)
     }
 
     libspdm_my_print("[Pass]");
-    #endif /* LIBSPDM_AEAD_CHACHA20_POLY1305_SUPPORT */
+    #endif /* LIBSPDM_AEAD_CHACHA20_POLY1305_SUPPORT_TEST */
 
-    #if LIBSPDM_AEAD_SM4_SUPPORT
+    #if LIBSPDM_AEAD_SM4_SUPPORT_TEST
     libspdm_my_print("\n- SM4-GCM Encryption: ");
 
     OutBufferSize = sizeof(OutBuffer);
@@ -262,21 +262,21 @@ bool libspdm_validate_crypt_aead_cipher(void)
                                      OutTagSize, OutBuffer, &OutBufferSize);
     if (!status) {
         libspdm_my_print("[Fail]");
-        goto Exit;
+        return false;
     }
     if (OutBufferSize != sizeof(m_libspdm_sm4_gcm_ct)) {
         libspdm_my_print("[Fail]");
-        goto Exit;
+        return false;
     }
     if (libspdm_const_compare_mem(OutBuffer, m_libspdm_sm4_gcm_ct,
                                   sizeof(m_libspdm_sm4_gcm_ct)) != 0) {
         libspdm_my_print("[Fail]");
-        goto Exit;
+        return false;
     }
     if (libspdm_const_compare_mem(OutTag, m_libspdm_sm4_gcm_tag,
                                   sizeof(m_libspdm_sm4_gcm_tag)) != 0) {
         libspdm_my_print("[Fail]");
-        goto Exit;
+        return false;
     }
     libspdm_my_print("[Pass]");
 
@@ -289,21 +289,20 @@ bool libspdm_validate_crypt_aead_cipher(void)
                                           OutBuffer, &OutBufferSize);
     if (!status) {
         libspdm_my_print("[Fail]");
-        goto Exit;
+        return false;
     }
     if (OutBufferSize != sizeof(m_libspdm_sm4_gcm_pt)) {
         libspdm_my_print("[Fail]");
-        goto Exit;
+        return false;
     }
     if (libspdm_const_compare_mem(OutBuffer, m_libspdm_sm4_gcm_pt,
                                   sizeof(m_libspdm_sm4_gcm_pt)) != 0) {
         libspdm_my_print("[Fail]");
-        goto Exit;
+        return false;
     }
 
     libspdm_my_print("[Pass]");
-Exit:
-    #endif /* LIBSPDM_AEAD_SM4_SUPPORT */
+    #endif /* LIBSPDM_AEAD_SM4_SUPPORT_TEST */
 
     libspdm_my_print("\n");
 
