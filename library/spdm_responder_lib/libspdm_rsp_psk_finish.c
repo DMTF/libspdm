@@ -224,8 +224,8 @@ libspdm_return_t libspdm_get_response_psk_finish(void *context,
             session_id, spdm_context->local_context.heartbeat_period * 2);
         if (!result) {
             return libspdm_generate_error_response(spdm_context,
-                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,
-                                                response_size, response);
+                                                   SPDM_ERROR_CODE_UNSPECIFIED, 0,
+                                                   response_size, response);
         }
     }
     #endif /* LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP */

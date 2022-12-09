@@ -778,9 +778,9 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
                                       LIBSPDM_SESSION_STATE_NOT_STARTED);
             #if LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP
             if (libspdm_is_capabilities_flag_supported(
-                spdm_context, false,
-                SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP,
-                SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP)) {
+                    spdm_context, false,
+                    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP,
+                    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP)) {
                 result = libspdm_stop_watchdog(*session_id);
                 if (!result) {
                     LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "libspdm_stop_watchdog error\n"));
