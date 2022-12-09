@@ -446,13 +446,16 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
     libspdm_session_info_t *session_info;
     spdm_message_header_t *spdm_request;
     spdm_message_header_t *spdm_response;
-    bool result;
     size_t transport_header_size;
     uint8_t *scratch_buffer;
     size_t scratch_buffer_size;
     uint8_t request_response_code;
 
-    #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP || LIBSPDM_ENABLE_CHUNK_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP
+    bool result;
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP */
+
+    #if (LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP) || (LIBSPDM_ENABLE_CHUNK_CAP)
     uint8_t *large_buffer;
     size_t large_buffer_size;
     libspdm_chunk_info_t* get_info;
@@ -773,20 +776,34 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
         case SPDM_END_SESSION_ACK:
             libspdm_set_session_state(spdm_context, *session_id,
                                       LIBSPDM_SESSION_STATE_NOT_STARTED);
-            result = libspdm_stop_watchdog(*session_id);
-            if (!result) {
-                LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "libspdm_stop_watchdog error\n"));
-                /* No need return error for internal watchdog error */
+            #if LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP
+            if (libspdm_is_capabilities_flag_supported(
+                spdm_context, false,
+                SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP,
+                SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP)) {
+                result = libspdm_stop_watchdog(*session_id);
+                if (!result) {
+                    LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "libspdm_stop_watchdog error\n"));
+                    /* No need to return error for internal watchdog error. */
+                }
             }
+            #endif /* LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP */
             libspdm_free_session_id(spdm_context, *session_id);
             break;
         default:
-            /* reset watchdog in any session messages. */
-            result = libspdm_reset_watchdog(*session_id);
-            if (!result) {
-                LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "libspdm_reset_watchdog error\n"));
-                /* No need return error for internal watchdog error */
+            #if LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP
+            if (libspdm_is_capabilities_flag_supported(
+                    spdm_context, false,
+                    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP,
+                    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP)) {
+                /* reset watchdog in any session messages. */
+                result = libspdm_reset_watchdog(*session_id);
+                if (!result) {
+                    LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "libspdm_reset_watchdog error\n"));
+                    /* No need to return error for internal watchdog error. */
+                }
             }
+            #endif /* LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP */
             break;
         }
     } else {
