@@ -6,6 +6,9 @@
 #ifndef PLATFORM_LIB_H
 #define PLATFORM_LIB_H
 
+#include "hal/base.h"
+#include "internal/libspdm_lib_config.h"
+
 /**
  * Suspends the execution of the current thread until the time-out interval elapses.
  *
@@ -14,6 +17,7 @@
  **/
 void libspdm_sleep(uint64_t milliseconds);
 
+#if LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP
 /**
  * If no heartbeat arrives in seconds, the watchdog timeout event
  * should terminate the session.
@@ -39,5 +43,6 @@ bool libspdm_stop_watchdog(uint32_t session_id);
  *
  **/
 bool libspdm_reset_watchdog(uint32_t session_id);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP */
 
 #endif /* PLATFORM_LIB_H */

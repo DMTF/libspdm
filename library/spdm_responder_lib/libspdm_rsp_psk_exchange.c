@@ -239,7 +239,14 @@ libspdm_return_t libspdm_get_response_psk_exchange(void *context,
 
     spdm_response->header.spdm_version = spdm_request->header.spdm_version;
     spdm_response->header.request_response_code = SPDM_PSK_EXCHANGE_RSP;
-    spdm_response->header.param1 = spdm_context->local_context.heartbeat_period;
+    if (libspdm_is_capabilities_flag_supported(
+            spdm_context, false,
+            SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP,
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP)) {
+        spdm_response->header.param1 = spdm_context->local_context.heartbeat_period;
+    } else {
+        spdm_response->header.param1 = 0x00;
+    }
 
     req_session_id = spdm_request->req_session_id;
     rsp_session_id = libspdm_allocate_rsp_session_id(spdm_context);
@@ -408,7 +415,14 @@ libspdm_return_t libspdm_get_response_psk_exchange(void *context,
         libspdm_set_session_state(spdm_context, session_id, LIBSPDM_SESSION_STATE_ESTABLISHED);
     }
 
-    session_info->heartbeat_period = spdm_context->local_context.heartbeat_period;
+    if (libspdm_is_capabilities_flag_supported(
+            spdm_context, false,
+            SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP,
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP)) {
+        session_info->heartbeat_period = spdm_context->local_context.heartbeat_period;
+    } else {
+        session_info->heartbeat_period = 0x00;
+    }
 
     return LIBSPDM_STATUS_SUCCESS;
 }
