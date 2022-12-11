@@ -407,4 +407,8 @@
 #define LIBSPDM_ENABLE_MSG_LOG 1
 #endif
 
+#ifndef LIBSPDM_CHECK_MACRO
+#define LIBSPDM_CHECK_MACRO 0
+#endif
+
 #endif /* SPDM_LIB_CONFIG_H */

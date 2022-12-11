@@ -64,4 +64,8 @@
 #define LIBSPDM_DEBUG_BLOCK_ENABLE 0
 #endif /* defined(LIBSPDM_DEBUG_ENABLE) */
 
+#if LIBSPDM_CHECK_MACRO
+#include "internal/libspdm_macro_check.h"
+#endif /* LIBSPDM_CHECK_MACRO */
+
 #endif /* LIBSPDM_LIB_CONFIG_H */
