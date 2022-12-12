@@ -22,7 +22,7 @@ typedef struct {
 
 typedef struct {
     uint8_t ct_exponent;
-    uint8_t rtt;
+    uint64_t rtt;
     uint32_t st1;
     uint32_t flags;
     uint32_t data_transfer_size;
