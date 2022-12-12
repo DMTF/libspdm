@@ -354,8 +354,7 @@ typedef struct {
 
     /* Register spdm_connection_state_callback function (responder only)
      * Register can know the connection state such as negotiated. */
-    size_t spdm_connection_state_callback
-    [LIBSPDM_MAX_CONNECTION_STATE_CALLBACK_NUM];
+    size_t spdm_connection_state_callback[LIBSPDM_MAX_CONNECTION_STATE_CALLBACK_NUM];
 
     /* Register libspdm_key_update_callback function (responder only)
      * Register can know when session keys are updated during KEY_UPDATE operations. */
