@@ -29,6 +29,7 @@ libspdm_return_t libspdm_get_response_challenge_auth(void *context,
     libspdm_return_t status;
     size_t response_capacity;
     uint8_t slot_mask;
+    libspdm_session_info_t *session_info;
 
     spdm_context = context;
     spdm_request = request;
@@ -44,6 +45,13 @@ libspdm_return_t libspdm_get_response_challenge_auth(void *context,
             spdm_request->header.request_response_code,
             response_size, response);
     }
+    session_info = libspdm_get_session_info_via_session_id(
+        spdm_context, spdm_context->last_spdm_request_session_id);
+    if (session_info != NULL) {
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
+                                               response_size, response);
+    }
     if (!libspdm_is_capabilities_flag_supported(
             spdm_context, false, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP)) {
@@ -51,8 +59,7 @@ libspdm_return_t libspdm_get_response_challenge_auth(void *context,
             spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
             SPDM_CHALLENGE, response_size, response);
     }
-    if (spdm_context->connection_info.connection_state <
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
+    if (spdm_context->connection_info.connection_state < LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNEXPECTED_REQUEST,
                                                0, response_size, response);
@@ -76,16 +83,14 @@ libspdm_return_t libspdm_get_response_challenge_auth(void *context,
 
     slot_id = spdm_request->header.param1;
 
-    if ((slot_id != 0xFF) &&
-        (slot_id >= SPDM_MAX_SLOT_COUNT)) {
+    if ((slot_id != 0xFF) && (slot_id >= SPDM_MAX_SLOT_COUNT)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
     }
 
     if (slot_id != 0xFF) {
-        if (spdm_context->local_context
-            .local_cert_chain_provision[slot_id] == NULL) {
+        if (spdm_context->local_context.local_cert_chain_provision[slot_id] == NULL) {
             return libspdm_generate_error_response(
                 spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
                 0, response_size, response);
@@ -94,8 +99,7 @@ libspdm_return_t libspdm_get_response_challenge_auth(void *context,
 
     signature_size = libspdm_get_asym_signature_size(
         spdm_context->connection_info.algorithm.base_asym_algo);
-    hash_size = libspdm_get_hash_size(
-        spdm_context->connection_info.algorithm.base_hash_algo);
+    hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
     measurement_summary_hash_size = libspdm_get_measurement_summary_hash_size(
         spdm_context, false, spdm_request->header.param2);
     if ((measurement_summary_hash_size == 0) &&
@@ -108,8 +112,7 @@ libspdm_return_t libspdm_get_response_challenge_auth(void *context,
         sizeof(spdm_challenge_auth_response_t) + hash_size +
         SPDM_NONCE_SIZE + measurement_summary_hash_size +
         sizeof(uint16_t) +
-        spdm_context->local_context.opaque_challenge_auth_rsp_size +
-        signature_size;
+        spdm_context->local_context.opaque_challenge_auth_rsp_size + signature_size;
 
     LIBSPDM_ASSERT(*response_size >= total_size);
     response_capacity = *response_size;
@@ -225,8 +228,7 @@ libspdm_return_t libspdm_get_response_challenge_auth(void *context,
 
     /* Calc Sign*/
 
-    status = libspdm_append_message_c(spdm_context, spdm_request,
-                                      request_size);
+    status = libspdm_append_message_c(spdm_context, spdm_request, request_size);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,
@@ -241,8 +243,7 @@ libspdm_return_t libspdm_get_response_challenge_auth(void *context,
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,
                                                response_size, response);
     }
-    result = libspdm_generate_challenge_auth_signature(spdm_context, false,
-                                                       ptr);
+    result = libspdm_generate_challenge_auth_signature(spdm_context, false, ptr);
     if (!result) {
         libspdm_reset_message_c(spdm_context);
         return libspdm_generate_error_response(
@@ -262,4 +263,4 @@ libspdm_return_t libspdm_get_response_challenge_auth(void *context,
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-#endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP */
