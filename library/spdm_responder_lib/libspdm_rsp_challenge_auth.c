@@ -29,7 +29,6 @@ libspdm_return_t libspdm_get_response_challenge_auth(void *context,
     libspdm_return_t status;
     size_t response_capacity;
     uint8_t slot_mask;
-    libspdm_session_info_t *session_info;
 
     spdm_context = context;
     spdm_request = request;
@@ -45,9 +44,7 @@ libspdm_return_t libspdm_get_response_challenge_auth(void *context,
             spdm_request->header.request_response_code,
             response_size, response);
     }
-    session_info = libspdm_get_session_info_via_session_id(
-        spdm_context, spdm_context->last_spdm_request_session_id);
-    if (session_info != NULL) {
+    if (spdm_context->last_spdm_request_session_id_valid) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
                                                response_size, response);
