@@ -155,10 +155,10 @@ libspdm_return_t libspdm_set_data(void *context, libspdm_data_type_t data_type,
         spdm_context->local_context.capability.ct_exponent = *(uint8_t *)data;
         break;
     case LIBSPDM_DATA_CAPABILITY_RTT_US:
-        if (data_size != sizeof(uint8_t)) {
+        if (data_size != sizeof(uint64_t)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
-        spdm_context->local_context.capability.rtt = *(uint8_t *)data;
+        spdm_context->local_context.capability.rtt = *(uint64_t *)data;
         break;
     case LIBSPDM_DATA_CAPABILITY_DATA_TRANSFER_SIZE:
         if (data_size != sizeof(uint32_t)) {
