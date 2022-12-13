@@ -18,25 +18,25 @@
 static bool validate_responder_capability(uint32_t capabilities_flag, uint8_t version)
 {
     /*uint8_t cache_cap = (uint8_t)(capabilities_flag)&0x01;*/
-    uint8_t cert_cap = (uint8_t)(capabilities_flag >> 1) & 0x01;
-    uint8_t chal_cap = (uint8_t)(capabilities_flag >> 2) & 0x01;
-    uint8_t meas_cap = (uint8_t)(capabilities_flag >> 3) & 0x03;
-    uint8_t meas_fresh_cap = (uint8_t)(capabilities_flag >> 5) & 0x01;
-    uint8_t encrypt_cap = (uint8_t)(capabilities_flag >> 6) & 0x01;
-    uint8_t mac_cap = (uint8_t)(capabilities_flag >> 7) & 0x01;
-    uint8_t mut_auth_cap = (uint8_t)(capabilities_flag >> 8) & 0x01;
-    uint8_t key_ex_cap = (uint8_t)(capabilities_flag >> 9) & 0x01;
-    uint8_t psk_cap = (uint8_t)(capabilities_flag >> 10) & 0x03;
-    uint8_t encap_cap = (uint8_t)(capabilities_flag >> 12) & 0x01;
-    uint8_t hbeat_cap = (uint8_t)(capabilities_flag >> 13) & 0x01;
-    uint8_t key_upd_cap = (uint8_t)(capabilities_flag >> 14) & 0x01;
-    uint8_t handshake_in_the_clear_cap = (uint8_t)(capabilities_flag >> 15) & 0x01;
-    uint8_t pub_key_id_cap = (uint8_t)(capabilities_flag >> 16) & 0x01;
+    const uint8_t cert_cap = (uint8_t)(capabilities_flag >> 1) & 0x01;
+    const uint8_t chal_cap = (uint8_t)(capabilities_flag >> 2) & 0x01;
+    const uint8_t meas_cap = (uint8_t)(capabilities_flag >> 3) & 0x03;
+    const uint8_t meas_fresh_cap = (uint8_t)(capabilities_flag >> 5) & 0x01;
+    const uint8_t encrypt_cap = (uint8_t)(capabilities_flag >> 6) & 0x01;
+    const uint8_t mac_cap = (uint8_t)(capabilities_flag >> 7) & 0x01;
+    const uint8_t mut_auth_cap = (uint8_t)(capabilities_flag >> 8) & 0x01;
+    const uint8_t key_ex_cap = (uint8_t)(capabilities_flag >> 9) & 0x01;
+    const uint8_t psk_cap = (uint8_t)(capabilities_flag >> 10) & 0x03;
+    const uint8_t encap_cap = (uint8_t)(capabilities_flag >> 12) & 0x01;
+    const uint8_t hbeat_cap = (uint8_t)(capabilities_flag >> 13) & 0x01;
+    const uint8_t key_upd_cap = (uint8_t)(capabilities_flag >> 14) & 0x01;
+    const uint8_t handshake_in_the_clear_cap = (uint8_t)(capabilities_flag >> 15) & 0x01;
+    const uint8_t pub_key_id_cap = (uint8_t)(capabilities_flag >> 16) & 0x01;
     /* uint8_t chunk_cap = (uint8_t)(capabilities_flag >> 17) & 0x01; */
-    uint8_t alias_cert_cap = (uint8_t)(capabilities_flag >> 18) & 0x01;
-    uint8_t set_cert_cap = (uint8_t)(capabilities_flag >> 19) & 0x01;
-    uint8_t csr_cap = (uint8_t)(capabilities_flag >> 20) & 0x01;
-    uint8_t cert_install_reset_cap = (uint8_t)(capabilities_flag >> 21) & 0x01;
+    const uint8_t alias_cert_cap = (uint8_t)(capabilities_flag >> 18) & 0x01;
+    const uint8_t set_cert_cap = (uint8_t)(capabilities_flag >> 19) & 0x01;
+    const uint8_t csr_cap = (uint8_t)(capabilities_flag >> 20) & 0x01;
+    const uint8_t cert_install_reset_cap = (uint8_t)(capabilities_flag >> 21) & 0x01;
 
     /* Checks common to all SPDM versions. */
 
