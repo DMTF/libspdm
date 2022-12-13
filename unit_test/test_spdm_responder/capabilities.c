@@ -715,94 +715,14 @@ void libspdm_test_responder_capabilities_case9(void **state)
 
 void libspdm_test_responder_capabilities_case10(void **state)
 {
-    libspdm_return_t status;
-    libspdm_test_context_t *spdm_test_context;
-    libspdm_context_t *spdm_context;
-    size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    spdm_capabilities_response_t *spdm_response;
-
-    spdm_test_context = *state;
-    spdm_context = spdm_test_context->spdm_context;
-    spdm_test_context->case_id = 0xa;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
-
-    response_size = sizeof(response);
-    status = libspdm_get_response_capabilities(
-        spdm_context, m_libspdm_get_capabilities_request6_size,
-        &m_libspdm_get_capabilities_request6, &response_size, response);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(response_size, sizeof(spdm_error_response_t));
-    spdm_response = (void *)response;
-    assert_int_equal(m_libspdm_get_capabilities_request6.header.spdm_version,
-                     spdm_response->header.spdm_version);
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_INVALID_REQUEST);
-    assert_int_equal(spdm_response->header.param2, 0);
 }
 
 void libspdm_test_responder_capabilities_case11(void **state)
 {
-    libspdm_return_t status;
-    libspdm_test_context_t *spdm_test_context;
-    libspdm_context_t *spdm_context;
-    size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    spdm_capabilities_response_t *spdm_response;
-
-    spdm_test_context = *state;
-    spdm_context = spdm_test_context->spdm_context;
-    spdm_test_context->case_id = 0xb;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
-
-    response_size = sizeof(response);
-    status = libspdm_get_response_capabilities(
-        spdm_context, m_libspdm_get_capabilities_request7_size,
-        &m_libspdm_get_capabilities_request7, &response_size, response);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(response_size, sizeof(spdm_error_response_t));
-    spdm_response = (void *)response;
-    assert_int_equal(m_libspdm_get_capabilities_request7.header.spdm_version,
-                     spdm_response->header.spdm_version);
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_INVALID_REQUEST);
-    assert_int_equal(spdm_response->header.param2, 0);
 }
 
 void libspdm_test_responder_capabilities_case12(void **state)
 {
-    libspdm_return_t status;
-    libspdm_test_context_t *spdm_test_context;
-    libspdm_context_t *spdm_context;
-    size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    spdm_capabilities_response_t *spdm_response;
-
-    spdm_test_context = *state;
-    spdm_context = spdm_test_context->spdm_context;
-    spdm_test_context->case_id = 0xc;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
-
-    response_size = sizeof(response);
-    status = libspdm_get_response_capabilities(
-        spdm_context, m_libspdm_get_capabilities_request8_size,
-        &m_libspdm_get_capabilities_request8, &response_size, response);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(response_size, sizeof(spdm_capabilities_response_t) -
-                     sizeof(spdm_response->data_transfer_size) -
-                     sizeof(spdm_response->max_spdm_msg_size));
-    spdm_response = (void *)response;
-    assert_int_equal(m_libspdm_get_capabilities_request4.header.spdm_version,
-                     spdm_response->header.spdm_version);
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_CAPABILITIES);
 }
 
 void libspdm_test_responder_capabilities_case13(void **state)
@@ -1248,11 +1168,11 @@ int libspdm_responder_capabilities_test_main(void)
         cmocka_unit_test(libspdm_test_responder_capabilities_case8),
         /* Requester capabilities flag bit 0 is set. reserved value should ne ignored*/
         cmocka_unit_test(libspdm_test_responder_capabilities_case9),
-        /* meas_cap is set (meas_cap shall be cleared)*/
+        /* Can be populated with new test. */
         cmocka_unit_test(libspdm_test_responder_capabilities_case10),
-        /* meas_fresh_cap is set (meas_fresh_cap shall be cleared)*/
+        /* Can be populated with new test. */
         cmocka_unit_test(libspdm_test_responder_capabilities_case11),
-        /* Requester capabilities flag byte 2 bit 1 is set. reserved value should ne ignored*/
+        /* Can be populated with new test. */
         cmocka_unit_test(libspdm_test_responder_capabilities_case12),
         /* pub_key_id_cap and cert_cap set (flags are mutually exclusive)*/
         cmocka_unit_test(libspdm_test_responder_capabilities_case13),

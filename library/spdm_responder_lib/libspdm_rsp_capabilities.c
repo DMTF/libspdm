@@ -35,7 +35,7 @@ static bool libspdm_check_request_version_compability(libspdm_context_t *spdm_co
 }
 
 /**
- * This function checks the compability of the received CAPABILITES flag.
+ * This function checks the compability of the received GET_CAPABILITES flag.
  * Some flags are mutually inclusive/exclusive.
  *
  * @param  capabilities_flag  The received CAPABILITIES Flag.
@@ -47,76 +47,69 @@ static bool libspdm_check_request_version_compability(libspdm_context_t *spdm_co
  **/
 static bool libspdm_check_request_flag_compability(uint32_t capabilities_flag, uint8_t version)
 {
-    uint8_t cert_cap = (uint8_t)(capabilities_flag >> 1) & 0x01;
-    uint8_t meas_cap = (uint8_t)(capabilities_flag >> 3) & 0x03;
-    uint8_t meas_fresh_cap = (uint8_t)(capabilities_flag >> 5) & 0x01;
-    uint8_t encrypt_cap = (uint8_t)(capabilities_flag >> 6) & 0x01;
-    uint8_t mac_cap = (uint8_t)(capabilities_flag >> 7) & 0x01;
-    uint8_t mut_auth_cap = (uint8_t)(capabilities_flag >> 8) & 0x01;
-    uint8_t key_ex_cap = (uint8_t)(capabilities_flag >> 9) & 0x01;
-    uint8_t psk_cap = (uint8_t)(capabilities_flag >> 10) & 0x03;
-    uint8_t encap_cap = (uint8_t)(capabilities_flag >> 12) & 0x01;
-    uint8_t handshake_in_the_clear_cap = (uint8_t)(capabilities_flag >> 15) & 0x01;
-    uint8_t pub_key_id_cap = (uint8_t)(capabilities_flag >> 16) & 0x01;
+    const uint8_t cert_cap = (uint8_t)(capabilities_flag >> 1) & 0x01;
+    const uint8_t chal_cap = (uint8_t)(capabilities_flag >> 2) & 0x01;
+    const uint8_t encrypt_cap = (uint8_t)(capabilities_flag >> 6) & 0x01;
+    const uint8_t mac_cap = (uint8_t)(capabilities_flag >> 7) & 0x01;
+    const uint8_t mut_auth_cap = (uint8_t)(capabilities_flag >> 8) & 0x01;
+    const uint8_t key_ex_cap = (uint8_t)(capabilities_flag >> 9) & 0x01;
+    const uint8_t psk_cap = (uint8_t)(capabilities_flag >> 10) & 0x03;
+    const uint8_t encap_cap = (uint8_t)(capabilities_flag >> 12) & 0x01;
+    const uint8_t hbeat_cap = (uint8_t)(capabilities_flag >> 13) & 0x01;
+    const uint8_t key_upd_cap = (uint8_t)(capabilities_flag >> 14) & 0x01;
+    const uint8_t handshake_in_the_clear_cap = (uint8_t)(capabilities_flag >> 15) & 0x01;
+    const uint8_t pub_key_id_cap = (uint8_t)(capabilities_flag >> 16) & 0x01;
 
-    switch (version) {
-    case SPDM_MESSAGE_VERSION_10:
-        return true;
+    /* Checks common to 1.1 and 1.2. */
+    if ((version == SPDM_MESSAGE_VERSION_11) || (version == SPDM_MESSAGE_VERSION_12)) {
+        /* Illegal to return reserved values. */
+        if ((psk_cap == 2) || (psk_cap == 3)) {
+            return false;
+        }
 
-    case SPDM_MESSAGE_VERSION_11:
-    case SPDM_MESSAGE_VERSION_12:
-    {
-        /*meas_cap shall be set to 00b*/
-        if (meas_cap != 0) {
-            return false;
+        /* Checks that originate from key exchange capabilities. */
+        if ((key_ex_cap == 1) || (psk_cap == 1)) {
+            if ((mac_cap == 0) && (encrypt_cap == 0)) {
+                return false;
+            }
+        } else {
+            if ((mac_cap == 1) || (encrypt_cap == 1) || (handshake_in_the_clear_cap == 1) ||
+                (hbeat_cap == 1) || (key_upd_cap == 1) || (mut_auth_cap == 1)) {
+                return false;
+            }
         }
-        /*meas_fresh_cap shall be set to 0b*/
-        if (meas_fresh_cap != 0) {
-            return false;
+        if ((key_ex_cap == 0) && (psk_cap == 1)) {
+            if (handshake_in_the_clear_cap == 1) {
+                return false;
+            }
         }
-        /*Encrypt_cap set and psk_cap+key_ex_cap cleared*/
-        if (encrypt_cap != 0 && (psk_cap == 0 && key_ex_cap == 0)) {
-            return false;
-        }
-        /*MAC_cap set and psk_cap+key_ex_cap cleared*/
-        if (mac_cap != 0 && (psk_cap == 0 && key_ex_cap == 0)) {
-            return false;
-        }
-        /*Key_ex_cap set and encrypt_cap+mac_cap cleared*/
-        if (key_ex_cap != 0 && (encrypt_cap == 0 && mac_cap == 0)) {
-            return false;
-        }
-        /*PSK_cap set and encrypt_cap+mac_cap cleared*/
-        if (psk_cap != 0 && (encrypt_cap == 0 && mac_cap == 0)) {
-            return false;
-        }
-        /*Muth_auth_cap set and encap_cap cleared*/
-        if (mut_auth_cap != 0 && encap_cap == 0) {
-            return false;
-        }
-        /*Handshake_in_the_clear_cap set and key_ex_cap cleared*/
-        if (handshake_in_the_clear_cap != 0 && key_ex_cap == 0) {
-            return false;
-        }
-        /*Case "Handshake_in_the_clear_cap set and encrypt_cap+mac_cap cleared"
-         * It will be verified by "Key_ex_cap set and encrypt_cap+mac_cap cleared" and
-         *"Handshake_in_the_clear_cap set and key_ex_cap cleared" in above if statement,
-         * so we don't add new if statement.*/
 
-        /*Pub_key_id_cap set and cert_cap set*/
-        if (pub_key_id_cap != 0 && cert_cap != 0) {
-            return false;
+        /* Checks that originate from certificate or public key capabilities. */
+        if ((cert_cap == 1) || (pub_key_id_cap == 1)) {
+            /* Certificate capabilities and public key capabilities cannot both be set. */
+            if ((cert_cap == 1) && (pub_key_id_cap == 1)) {
+                return false;
+            }
+            if ((chal_cap == 0) && (key_ex_cap == 0)) {
+                return false;
+            }
+        } else {
+            /* If certificates or public keys are not enabled then these capabilities
+             * cannot be enabled. */
+            if ((chal_cap == 1) || (key_ex_cap == 1) || (mut_auth_cap == 1)) {
+                return false;
+            }
         }
-        /*reserved values selected in flags*/
-        if (psk_cap == 2 || psk_cap == 3) {
+    }
+
+    /* Checks specific to 1.1. */
+    if (version == SPDM_MESSAGE_VERSION_11) {
+        if ((mut_auth_cap == 1) && (encap_cap == 0)) {
             return false;
         }
     }
-        return true;
 
-    default:
-        return true;
-    }
+    return true;
 }
 
 libspdm_return_t libspdm_get_response_capabilities(void *context,
@@ -136,9 +129,7 @@ libspdm_return_t libspdm_get_response_capabilities(void *context,
     /* -=[Verify State Phase]=- */
     if (spdm_context->response_state != LIBSPDM_RESPONSE_STATE_NORMAL) {
         return libspdm_responder_handle_response_state(
-            spdm_context,
-            spdm_request->header.request_response_code,
-            response_size, response);
+            spdm_context, spdm_request->header.request_response_code,  response_size, response);
     }
     if (spdm_context->connection_info.connection_state != LIBSPDM_CONNECTION_STATE_AFTER_VERSION) {
         return libspdm_generate_error_response(spdm_context,
@@ -154,23 +145,20 @@ libspdm_return_t libspdm_get_response_capabilities(void *context,
                                                response_size, response);
     }
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
-        if (request_size != sizeof(spdm_get_capabilities_request_t)) {
+        if (request_size > sizeof(spdm_get_capabilities_request_t)) {
             return libspdm_generate_error_response(
-                spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
-                0, response_size, response);
+                spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0, response_size, response);
         }
     } else if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
-        if (request_size != sizeof(spdm_get_capabilities_request_t) -
+        if (request_size > sizeof(spdm_get_capabilities_request_t) -
             sizeof(spdm_request->data_transfer_size) - sizeof(spdm_request->max_spdm_msg_size)) {
             return libspdm_generate_error_response(
-                spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
-                0, response_size, response);
+                spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0, response_size, response);
         }
     } else {
-        if (request_size != sizeof(spdm_message_header_t)) {
+        if (request_size > sizeof(spdm_message_header_t)) {
             return libspdm_generate_error_response(
-                spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
-                0, response_size, response);
+                spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0, response_size, response);
         }
     }
     if (!libspdm_check_request_flag_compability(
@@ -227,8 +215,7 @@ libspdm_return_t libspdm_get_response_capabilities(void *context,
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,
                                                response_size, response);
     }
-    status = libspdm_append_message_a(spdm_context,
-                                      spdm_response, *response_size);
+    status = libspdm_append_message_a(spdm_context, spdm_response, *response_size);
 
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return libspdm_generate_error_response(spdm_context,
