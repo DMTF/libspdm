@@ -158,7 +158,8 @@ libspdm_return_t libspdm_get_response_capabilities(void *context,
                 spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0, response_size, response);
         } else {
             request_size = sizeof(spdm_get_capabilities_request_t) -
-            sizeof(spdm_request->data_transfer_size) - sizeof(spdm_request->max_spdm_msg_size);
+                           sizeof(spdm_request->data_transfer_size) -
+                           sizeof(spdm_request->max_spdm_msg_size);
         }
     } else {
         if (request_size < sizeof(spdm_message_header_t)) {
