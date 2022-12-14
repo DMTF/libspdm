@@ -145,20 +145,27 @@ libspdm_return_t libspdm_get_response_capabilities(void *context,
                                                response_size, response);
     }
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
-        if (request_size > sizeof(spdm_get_capabilities_request_t)) {
+        if (request_size < sizeof(spdm_get_capabilities_request_t)) {
             return libspdm_generate_error_response(
                 spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0, response_size, response);
+        } else {
+            request_size = sizeof(spdm_get_capabilities_request_t);
         }
     } else if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
-        if (request_size > sizeof(spdm_get_capabilities_request_t) -
+        if (request_size < sizeof(spdm_get_capabilities_request_t) -
             sizeof(spdm_request->data_transfer_size) - sizeof(spdm_request->max_spdm_msg_size)) {
             return libspdm_generate_error_response(
                 spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0, response_size, response);
+        } else {
+            request_size = sizeof(spdm_get_capabilities_request_t) -
+            sizeof(spdm_request->data_transfer_size) - sizeof(spdm_request->max_spdm_msg_size);
         }
     } else {
-        if (request_size > sizeof(spdm_message_header_t)) {
+        if (request_size < sizeof(spdm_message_header_t)) {
             return libspdm_generate_error_response(
                 spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0, response_size, response);
+        } else {
+            request_size = sizeof(spdm_message_header_t);
         }
     }
     if (!libspdm_check_request_flag_compability(
