@@ -659,7 +659,7 @@ bool libspdm_get_responder_private_key_from_raw_data(uint32_t base_asym_algo, vo
 
 bool libspdm_get_requester_private_key_from_raw_data(uint32_t base_asym_algo, void **context)
 {
-    bool reqult;
+    bool result;
 
 #if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)
     void *rsa_context;
@@ -751,18 +751,18 @@ bool libspdm_get_requester_private_key_from_raw_data(uint32_t base_asym_algo, vo
         if (rsa_context == NULL) {
             return false;
         }
-        reqult = libspdm_rsa_set_key(rsa_context, LIBSPDM_RSA_KEY_N, rsa_n, rsa_n_size);
-        if (!reqult) {
+        result = libspdm_rsa_set_key(rsa_context, LIBSPDM_RSA_KEY_N, rsa_n, rsa_n_size);
+        if (!result) {
             libspdm_rsa_free(rsa_context);
             return false;
         }
-        reqult = libspdm_rsa_set_key(rsa_context, LIBSPDM_RSA_KEY_E, rsa_e, rsa_e_size);
-        if (!reqult) {
+        result = libspdm_rsa_set_key(rsa_context, LIBSPDM_RSA_KEY_E, rsa_e, rsa_e_size);
+        if (!result) {
             libspdm_rsa_free(rsa_context);
             return false;
         }
-        reqult = libspdm_rsa_set_key(rsa_context, LIBSPDM_RSA_KEY_D, rsa_d, rsa_d_size);
-        if (!reqult) {
+        result = libspdm_rsa_set_key(rsa_context, LIBSPDM_RSA_KEY_D, rsa_d, rsa_d_size);
+        if (!result) {
             libspdm_rsa_free(rsa_context);
             return false;
         }
@@ -780,13 +780,13 @@ bool libspdm_get_requester_private_key_from_raw_data(uint32_t base_asym_algo, vo
         if (ec_context == NULL) {
             return false;
         }
-        reqult = libspdm_ec_set_pub_key(ec_context, ec_public, ec_public_size);
-        if (!reqult) {
+        result = libspdm_ec_set_pub_key(ec_context, ec_public, ec_public_size);
+        if (!result) {
             libspdm_ec_free(ec_context);
             return false;
         }
-        reqult = libspdm_ec_set_priv_key(ec_context, ec_private, ec_private_size);
-        if (!reqult) {
+        result = libspdm_ec_set_priv_key(ec_context, ec_private, ec_private_size);
+        if (!result) {
             libspdm_ec_free(ec_context);
             return false;
         }
