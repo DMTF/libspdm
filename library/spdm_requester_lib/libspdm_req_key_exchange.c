@@ -193,6 +193,7 @@ bool libspdm_verify_key_exchange_rsp_signature(
     libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo, context);
 #else
     slot_id = spdm_context->connection_info.peer_used_cert_chain_slot_id;
+    LIBSPDM_ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
     if (spdm_context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key != NULL) {
         result = libspdm_asym_verify_hash(
             spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,

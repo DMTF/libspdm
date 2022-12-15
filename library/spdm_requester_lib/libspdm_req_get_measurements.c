@@ -88,6 +88,7 @@ bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
     libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo, context);
 #else
     slot_id = spdm_context->connection_info.peer_used_cert_chain_slot_id;
+    LIBSPDM_ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
     if (spdm_context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key != NULL) {
         result = libspdm_asym_verify_hash(
             spdm_context->connection_info.version, SPDM_MEASUREMENTS,
