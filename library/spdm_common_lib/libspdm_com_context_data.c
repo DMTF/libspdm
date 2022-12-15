@@ -301,6 +301,15 @@ libspdm_return_t libspdm_set_data(void *context, libspdm_data_type_t data_type,
         spdm_context->local_context.local_cert_chain_provision_size[slot_id] = data_size;
         spdm_context->local_context.local_cert_chain_provision[slot_id] = data;
         break;
+    case LIBSPDM_DATA_LOCAL_PUBLIC_CERT_CHAIN_DEFAULT_SLOT_ID:
+        if (data_size != sizeof(uint8_t)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        if (*(uint8_t *)data >= SPDM_MAX_SLOT_COUNT) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        spdm_context->local_context.provisioned_slot_id = *(uint8_t *)data;
+        break;
     case LIBSPDM_DATA_LOCAL_USED_CERT_CHAIN_BUFFER:
         if (data_size > LIBSPDM_MAX_CERT_CHAIN_SIZE) {
             return LIBSPDM_STATUS_BUFFER_FULL;
