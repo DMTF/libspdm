@@ -93,6 +93,8 @@ typedef enum {
     /* VCA cached for CACHE_CAP in 1.2 for transcript. */
     LIBSPDM_DATA_VCA_CACHE,
 
+    /* My provisioned certificate slot_id (for slot_id - 0xFF, default 0)*/
+    LIBSPDM_DATA_LOCAL_PUBLIC_CERT_CHAIN_DEFAULT_SLOT_ID,
     /* MAX */
     LIBSPDM_DATA_MAX
 } libspdm_data_type_t;
