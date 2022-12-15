@@ -242,6 +242,7 @@ libspdm_return_t libspdm_get_response_key_exchange(void *context,
         slot_id = spdm_context->local_context.provisioned_slot_id;
     }
 
+    LIBSPDM_ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
     signature_size = libspdm_get_asym_signature_size(
         spdm_context->connection_info.algorithm.base_asym_algo);
     hmac_size = libspdm_get_hash_size(

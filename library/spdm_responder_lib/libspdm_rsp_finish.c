@@ -198,6 +198,7 @@ bool libspdm_verify_finish_req_signature(libspdm_context_t *spdm_context,
     libspdm_req_asym_free(spdm_context->connection_info.algorithm.req_base_asym_alg, context);
 #else
     slot_id = spdm_context->connection_info.peer_used_cert_chain_slot_id;
+    LIBSPDM_ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
     if (spdm_context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key != NULL) {
         result = libspdm_req_asym_verify_hash(
             spdm_context->connection_info.version, SPDM_FINISH,

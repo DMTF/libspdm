@@ -174,6 +174,7 @@ libspdm_return_t libspdm_process_encap_response_certificate(
     spdm_context->connection_info.peer_used_cert_chain_slot_id =
         spdm_context->encap_context.req_slot_id;
     slot_id = spdm_context->encap_context.req_slot_id;
+    LIBSPDM_ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer_size =
         libspdm_get_managed_buffer_size(

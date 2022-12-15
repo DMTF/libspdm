@@ -369,6 +369,7 @@ static libspdm_return_t libspdm_try_send_receive_finish(libspdm_context_t *spdm_
     }
 
     if (session_info->mut_auth_requested) {
+        LIBSPDM_ASSERT(req_slot_id_param < SPDM_MAX_SLOT_COUNT);
         spdm_context->connection_info.local_used_cert_chain_buffer =
             spdm_context->local_context.local_cert_chain_provision[req_slot_id_param];
         spdm_context->connection_info.local_used_cert_chain_buffer_size =

@@ -1407,6 +1407,7 @@ libspdm_return_t libspdm_append_message_k(void *context, void *session_info,
 
         if (spdm_session_info->session_transcript.digest_context_th == NULL) {
             if (!spdm_session_info->use_psk) {
+                LIBSPDM_ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
                 if (is_requester) {
                     if(spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer_hash_size
                        != 0) {
@@ -1575,6 +1576,7 @@ libspdm_return_t libspdm_append_message_f(void *context, void *session_info,
                         return LIBSPDM_STATUS_CRYPTO_ERROR;
                     }
                 } else {
+                    LIBSPDM_ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
                     if (spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer_hash_size
                         != 0) {
                         hash_size =
