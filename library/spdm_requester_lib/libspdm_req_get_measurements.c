@@ -88,50 +88,56 @@ bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
     libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo, context);
 #else
     slot_id = spdm_context->connection_info.peer_used_cert_chain_slot_id;
-    LIBSPDM_ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
-    if (spdm_context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key != NULL) {
-        result = libspdm_asym_verify_hash(
-            spdm_context->connection_info.version, SPDM_MEASUREMENTS,
-            spdm_context->connection_info.algorithm.base_asym_algo,
-            spdm_context->connection_info.algorithm.base_hash_algo,
-            spdm_context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key,
-            l1l2_hash, l1l2_hash_size, sign_data, sign_data_size);
-        if (!result) {
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_measurement_signature - FAIL !!!\n"));
+    if (slot_id < SPDM_MAX_SLOT_COUNT) {
+        if (spdm_context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key !=
+            NULL) {
+            result = libspdm_asym_verify_hash(
+                spdm_context->connection_info.version, SPDM_MEASUREMENTS,
+                spdm_context->connection_info.algorithm.base_asym_algo,
+                spdm_context->connection_info.algorithm.base_hash_algo,
+                spdm_context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key,
+                l1l2_hash, l1l2_hash_size, sign_data, sign_data_size);
+            if (!result) {
+                LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                               "!!! verify_measurement_signature - FAIL !!!\n"));
+                return false;
+            }
+
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_measurement_signature - PASS !!!\n"));
+            return true;
+        } else {
             return false;
         }
 
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_measurement_signature - PASS !!!\n"));
-        return true;
-    }
+    } else {
+        result = libspdm_get_peer_cert_chain_data(
+            spdm_context, (const void **)&cert_chain_data, &cert_chain_data_size);
+        if (!result) {
+            return false;
+        }
 
-    result = libspdm_get_peer_cert_chain_data(
-        spdm_context, (const void **)&cert_chain_data, &cert_chain_data_size);
-    if (!result) {
-        return false;
-    }
+        /* Get leaf cert from cert chain */
+        result = libspdm_x509_get_cert_from_cert_chain(cert_chain_data,
+                                                       cert_chain_data_size, -1,
+                                                       &cert_buffer, &cert_buffer_size);
+        if (!result) {
+            return false;
+        }
 
-    /* Get leaf cert from cert chain */
-    result = libspdm_x509_get_cert_from_cert_chain(cert_chain_data,
-                                                   cert_chain_data_size, -1,
-                                                   &cert_buffer, &cert_buffer_size);
-    if (!result) {
-        return false;
-    }
+        result = libspdm_asym_get_public_key_from_x509(
+            spdm_context->connection_info.algorithm.base_asym_algo,
+            cert_buffer, cert_buffer_size, &context);
+        if (!result) {
+            return false;
+        }
 
-    result = libspdm_asym_get_public_key_from_x509(
-        spdm_context->connection_info.algorithm.base_asym_algo,
-        cert_buffer, cert_buffer_size, &context);
-    if (!result) {
-        return false;
+        result = libspdm_asym_verify_hash(
+            spdm_context->connection_info.version, SPDM_MEASUREMENTS,
+            spdm_context->connection_info.algorithm.base_asym_algo,
+            spdm_context->connection_info.algorithm.base_hash_algo, context,
+            l1l2_hash, l1l2_hash_size, sign_data, sign_data_size);
+        libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo, context);
     }
-
-    result = libspdm_asym_verify_hash(
-        spdm_context->connection_info.version, SPDM_MEASUREMENTS,
-        spdm_context->connection_info.algorithm.base_asym_algo,
-        spdm_context->connection_info.algorithm.base_hash_algo, context,
-        l1l2_hash, l1l2_hash_size, sign_data, sign_data_size);
-    libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo, context);
 #endif
     if (!result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_measurement_signature - FAIL !!!\n"));
