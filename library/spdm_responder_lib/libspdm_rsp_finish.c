@@ -436,6 +436,7 @@ libspdm_return_t libspdm_get_response_finish(void *context, size_t request_size,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
     }
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
     if (req_slot_id == 0xFF) {
         req_slot_id = spdm_context->encap_context.req_slot_id;
     }
@@ -444,6 +445,7 @@ libspdm_return_t libspdm_get_response_finish(void *context, size_t request_size,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
     }
+#endif
 
     libspdm_reset_message_buffer_via_request_code(spdm_context, session_info,
                                                   spdm_request->header.request_response_code);
