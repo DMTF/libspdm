@@ -33,15 +33,16 @@ uint8_t m_libspdm_hmac_sha256_digest[] = {
  **/
 bool libspdm_validate_crypt_hmac(void)
 {
-    #if (LIBSPDM_SHA256_SUPPORT) || (LIBSPDM_SHA3_256_SUPPORT) || (LIBSPDM_SM3_256_SUPPORT)
+    #if (LIBSPDM_SHA256_SUPPORT_TEST) || (LIBSPDM_SHA3_256_SUPPORT_TEST) || \
+    (LIBSPDM_SM3_256_SUPPORT_TEST)
     void *hmac_ctx;
     uint8_t digest[MAX_DIGEST_SIZE];
     bool status;
 
     libspdm_my_print(" \nCrypto HMAC Engine Testing:\n");
-    #endif /* (LIBSPDM_SHA256_SUPPORT) || (LIBSPDM_SHA3_256_SUPPORT) || (LIBSPDM_SM3_256_SUPPORT) */
+    #endif /* (LIBSPDM_SHA256_SUPPORT_TEST) || (LIBSPDM_SHA3_256_SUPPORT_TEST) || (LIBSPDM_SM3_256_SUPPORT_TEST) */
 
-    #if LIBSPDM_SHA256_SUPPORT
+    #if LIBSPDM_SHA256_SUPPORT_TEST
     /* HMAC-SHA-256 validation. */
     libspdm_my_print("- HMAC-SHA-256: ");
 
@@ -85,9 +86,9 @@ bool libspdm_validate_crypt_hmac(void)
     }
 
     libspdm_my_print("[Pass]\n");
-    #endif /* LIBSPDM_SHA256_SUPPORT */
+    #endif /* LIBSPDM_SHA256_SUPPORT_TEST */
 
-    #if LIBSPDM_SHA3_256_SUPPORT
+    #if LIBSPDM_SHA3_256_SUPPORT_TEST
     /* HMAC-SHA3-256 digest Validation*/
     libspdm_my_print("- HMAC-SHA3-256: ");
 
@@ -123,9 +124,9 @@ bool libspdm_validate_crypt_hmac(void)
 
     free_pool(hmac_ctx);
     libspdm_my_print("[Pass]\n");
-    #endif /* LIBSPDM_SHA3_256_SUPPORT */
+    #endif /* LIBSPDM_SHA3_256_SUPPORT_TEST */
 
-    #if LIBSPDM_SM3_256_SUPPORT
+    #if LIBSPDM_SM3_256_SUPPORT_TEST
     /* HMAC-SM3-256 digest Validation*/
     libspdm_my_print("- HMAC-SM3-256: ");
 
@@ -133,7 +134,7 @@ bool libspdm_validate_crypt_hmac(void)
     hmac_ctx = libspdm_hmac_sm3_256_new();
     if (hmac_ctx == NULL) {
         libspdm_my_print("[Fail]\n");
-        return true;
+        return false;
     }
 
     status = libspdm_hmac_sm3_256_set_key(hmac_ctx, m_libspdm_hmac_sha256_key, 20);
@@ -161,7 +162,7 @@ bool libspdm_validate_crypt_hmac(void)
 
     free_pool(hmac_ctx);
     libspdm_my_print("[Pass]\n");
-    #endif /* LIBSPDM_SM3_256_SUPPORT */
+    #endif /* LIBSPDM_SM3_256_SUPPORT_TEST */
 
     return true;
 }

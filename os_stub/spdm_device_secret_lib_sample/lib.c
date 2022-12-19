@@ -28,11 +28,10 @@
 #include "library/memlib.h"
 #include "spdm_device_secret_lib_internal.h"
 
-#ifndef LIBSPDM_PRIVATE_KEY_USE_PEM
-#define LIBSPDM_PRIVATE_KEY_USE_PEM 1
-#endif
-
-#if !LIBSPDM_PRIVATE_KEY_USE_PEM
+/* "g_private_key_mode = 1" means use the PEM mode
+ * "g_private_key_mode = 0" means use the RAW mode
+ **/
+bool g_private_key_mode = 1;
 
 #if LIBSPDM_ECDSA_SUPPORT
 /*ecp256 key for responder: https://lapo.it/asn1js/#MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgA-LbmJWXV0yozX6-mbTl9gXB8CC340M4Dzyh9fm-ymahRANCAATbwrK3gzzIheQ94fO64vKQjjAlFOH3qYIp2512L4ARMu6r4mjRIue9tHEnyHn73HyeM6ZnwhBHNjLFoaprK6rJ */
@@ -660,7 +659,7 @@ bool libspdm_get_responder_private_key_from_raw_data(uint32_t base_asym_algo, vo
 
 bool libspdm_get_requester_private_key_from_raw_data(uint32_t base_asym_algo, void **context)
 {
-    bool reqult;
+    bool result;
 
 #if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)
     void *rsa_context;
@@ -752,18 +751,18 @@ bool libspdm_get_requester_private_key_from_raw_data(uint32_t base_asym_algo, vo
         if (rsa_context == NULL) {
             return false;
         }
-        reqult = libspdm_rsa_set_key(rsa_context, LIBSPDM_RSA_KEY_N, rsa_n, rsa_n_size);
-        if (!reqult) {
+        result = libspdm_rsa_set_key(rsa_context, LIBSPDM_RSA_KEY_N, rsa_n, rsa_n_size);
+        if (!result) {
             libspdm_rsa_free(rsa_context);
             return false;
         }
-        reqult = libspdm_rsa_set_key(rsa_context, LIBSPDM_RSA_KEY_E, rsa_e, rsa_e_size);
-        if (!reqult) {
+        result = libspdm_rsa_set_key(rsa_context, LIBSPDM_RSA_KEY_E, rsa_e, rsa_e_size);
+        if (!result) {
             libspdm_rsa_free(rsa_context);
             return false;
         }
-        reqult = libspdm_rsa_set_key(rsa_context, LIBSPDM_RSA_KEY_D, rsa_d, rsa_d_size);
-        if (!reqult) {
+        result = libspdm_rsa_set_key(rsa_context, LIBSPDM_RSA_KEY_D, rsa_d, rsa_d_size);
+        if (!result) {
             libspdm_rsa_free(rsa_context);
             return false;
         }
@@ -781,13 +780,13 @@ bool libspdm_get_requester_private_key_from_raw_data(uint32_t base_asym_algo, vo
         if (ec_context == NULL) {
             return false;
         }
-        reqult = libspdm_ec_set_pub_key(ec_context, ec_public, ec_public_size);
-        if (!reqult) {
+        result = libspdm_ec_set_pub_key(ec_context, ec_public, ec_public_size);
+        if (!result) {
             libspdm_ec_free(ec_context);
             return false;
         }
-        reqult = libspdm_ec_set_priv_key(ec_context, ec_private, ec_private_size);
-        if (!reqult) {
+        result = libspdm_ec_set_priv_key(ec_context, ec_private, ec_private_size);
+        if (!result) {
             libspdm_ec_free(ec_context);
             return false;
         }
@@ -802,7 +801,6 @@ bool libspdm_get_requester_private_key_from_raw_data(uint32_t base_asym_algo, vo
     return false;
 }
 
-#else
 bool libspdm_read_responder_private_key(uint32_t base_asym_algo,
                                         void **data, size_t *size)
 {
@@ -894,8 +892,6 @@ bool libspdm_read_requester_private_key(uint16_t req_base_asym_alg,
     return res;
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
-
-#endif /*LIBSPDM_PRIVATE_KEY_USE_PEM*/
 
 bool libspdm_read_responder_public_key(uint32_t base_asym_algo,
                                        void **data, size_t *size)
@@ -1116,10 +1112,6 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
                      size_t *csr_len, uint8_t **csr_pointer)
 {
     bool result;
-#if LIBSPDM_PRIVATE_KEY_USE_PEM
-    void *prikey;
-    size_t prikey_size;
-#endif
     size_t hash_nid;
     size_t asym_nid;
     void *context;
@@ -1172,40 +1164,50 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
             }
         }
     }
-#if LIBSPDM_PRIVATE_KEY_USE_PEM
-    result = libspdm_read_responder_private_key(
-        base_asym_algo, &prikey, &prikey_size);
-    if (!result) {
-        return false;
-    }
 
-    result = libspdm_asym_get_private_key_from_pem(
-        base_asym_algo, prikey, prikey_size, NULL, &context);
-    if (!result) {
+    if (g_private_key_mode) {
+        void *prikey;
+        size_t prikey_size;
+
+        result = libspdm_read_responder_private_key(
+            base_asym_algo, &prikey, &prikey_size);
+        if (!result) {
+            return false;
+        }
+
+        result = libspdm_asym_get_private_key_from_pem(
+            base_asym_algo, prikey, prikey_size, NULL, &context);
+        if (!result) {
+            free(prikey);
+            return false;
+        }
+        hash_nid = libspdm_get_hash_nid(base_hash_algo);
+        asym_nid = libspdm_get_aysm_nid(base_asym_algo);
+
+        char *subject_name = "C=NL,O=PolarSSL,CN=PolarSSL Server 1";
+
+        result = libspdm_gen_x509_csr(hash_nid, asym_nid,
+                                      requester_info, requester_info_length,
+                                      context, subject_name,
+                                      csr_len, csr_pointer);
+        libspdm_asym_free(base_asym_algo, context);
         free(prikey);
-        return false;
+    } else {
+        result = libspdm_get_responder_private_key_from_raw_data(base_asym_algo, &context);
+        if (!result) {
+            return false;
+        }
+        hash_nid = libspdm_get_hash_nid(base_hash_algo);
+        asym_nid = libspdm_get_aysm_nid(base_asym_algo);
+
+        char *subject_name = "C=NL,O=PolarSSL,CN=PolarSSL Server 1";
+
+        result = libspdm_gen_x509_csr(hash_nid, asym_nid,
+                                      requester_info, requester_info_length,
+                                      context, subject_name,
+                                      csr_len, csr_pointer);
+        libspdm_asym_free(base_asym_algo, context);
     }
-
-#else
-    result = libspdm_get_responder_private_key_from_raw_data(base_asym_algo, &context);
-    if (!result) {
-        return false;
-    }
-#endif
-
-    hash_nid = libspdm_get_hash_nid(base_hash_algo);
-    asym_nid = libspdm_get_aysm_nid(base_asym_algo);
-
-    char *subject_name = "C=NL,O=PolarSSL,CN=PolarSSL Server 1";
-
-    result = libspdm_gen_x509_csr(hash_nid, asym_nid,
-                                  requester_info, requester_info_length,
-                                  context, subject_name,
-                                  csr_len, csr_pointer);
-    libspdm_asym_free(base_asym_algo, context);
-#if LIBSPDM_PRIVATE_KEY_USE_PEM
-    free(prikey);
-#endif
 
     if (csr_buffer_size < *csr_len) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"csr buffer is too small to sotre generated csr! \n"));
@@ -1765,43 +1767,53 @@ bool libspdm_requester_data_sign(
     void *context;
     bool result;
 
-#if LIBSPDM_PRIVATE_KEY_USE_PEM
-    void *private_pem;
-    size_t private_pem_size;
+    if (g_private_key_mode) {
+        void *private_pem;
+        size_t private_pem_size;
 
-    result = libspdm_read_requester_private_key(
-        req_base_asym_alg, &private_pem, &private_pem_size);
-    if (!result) {
-        return false;
-    }
+        result = libspdm_read_requester_private_key(
+            req_base_asym_alg, &private_pem, &private_pem_size);
+        if (!result) {
+            return false;
+        }
 
-    result = libspdm_req_asym_get_private_key_from_pem(req_base_asym_alg,
-                                                       private_pem,
-                                                       private_pem_size, NULL,
-                                                       &context);
-    if (!result) {
+        result = libspdm_req_asym_get_private_key_from_pem(req_base_asym_alg,
+                                                           private_pem,
+                                                           private_pem_size, NULL,
+                                                           &context);
+        if (!result) {
+            free(private_pem);
+            return false;
+        }
+
+        if (is_data_hash) {
+            result = libspdm_req_asym_sign_hash(spdm_version, op_code, req_base_asym_alg,
+                                                base_hash_algo, context,
+                                                message, message_size, signature, sig_size);
+        } else {
+            result = libspdm_req_asym_sign(spdm_version, op_code, req_base_asym_alg, base_hash_algo,
+                                           context,
+                                           message, message_size, signature, sig_size);
+        }
+        libspdm_req_asym_free(req_base_asym_alg, context);
         free(private_pem);
-        return false;
-    }
-#else
-    result = libspdm_get_requester_private_key_from_raw_data(req_base_asym_alg, &context);
-    if (!result) {
-        return false;
-    }
-#endif
-    if (is_data_hash) {
-        result = libspdm_req_asym_sign_hash(spdm_version, op_code, req_base_asym_alg,
-                                            base_hash_algo, context,
-                                            message, message_size, signature, sig_size);
     } else {
-        result = libspdm_req_asym_sign(spdm_version, op_code, req_base_asym_alg, base_hash_algo,
-                                       context,
-                                       message, message_size, signature, sig_size);
+        result = libspdm_get_requester_private_key_from_raw_data(req_base_asym_alg, &context);
+        if (!result) {
+            return false;
+        }
+
+        if (is_data_hash) {
+            result = libspdm_req_asym_sign_hash(spdm_version, op_code, req_base_asym_alg,
+                                                base_hash_algo, context,
+                                                message, message_size, signature, sig_size);
+        } else {
+            result = libspdm_req_asym_sign(spdm_version, op_code, req_base_asym_alg, base_hash_algo,
+                                           context,
+                                           message, message_size, signature, sig_size);
+        }
+        libspdm_req_asym_free(req_base_asym_alg, context);
     }
-    libspdm_req_asym_free(req_base_asym_alg, context);
-#if LIBSPDM_PRIVATE_KEY_USE_PEM
-    free(private_pem);
-#endif
 
     return result;
 }
@@ -1816,41 +1828,51 @@ bool libspdm_responder_data_sign(
 {
     void *context;
     bool result;
-#if LIBSPDM_PRIVATE_KEY_USE_PEM
-    void *private_pem;
-    size_t private_pem_size;
+    if (g_private_key_mode) {
+        void *private_pem;
+        size_t private_pem_size;
 
-    result = libspdm_read_responder_private_key(
-        base_asym_algo, &private_pem, &private_pem_size);
-    if (!result) {
-        return false;
-    }
+        result = libspdm_read_responder_private_key(
+            base_asym_algo, &private_pem, &private_pem_size);
+        if (!result) {
+            return false;
+        }
 
-    result = libspdm_asym_get_private_key_from_pem(
-        base_asym_algo, private_pem, private_pem_size, NULL, &context);
-    if (!result) {
+        result = libspdm_asym_get_private_key_from_pem(
+            base_asym_algo, private_pem, private_pem_size, NULL, &context);
+        if (!result) {
+            free(private_pem);
+            return false;
+        }
+
+        if (is_data_hash) {
+            result = libspdm_asym_sign_hash(spdm_version, op_code, base_asym_algo, base_hash_algo,
+                                            context,
+                                            message, message_size, signature, sig_size);
+        } else {
+            result = libspdm_asym_sign(spdm_version, op_code, base_asym_algo, base_hash_algo,
+                                       context,
+                                       message, message_size, signature, sig_size);
+        }
+        libspdm_asym_free(base_asym_algo, context);
         free(private_pem);
-        return false;
-    }
-#else
-    result = libspdm_get_responder_private_key_from_raw_data(base_asym_algo, &context);
-    if (!result) {
-        return false;
-    }
-#endif
-
-    if (is_data_hash) {
-        result = libspdm_asym_sign_hash(spdm_version, op_code, base_asym_algo, base_hash_algo,
-                                        context,
-                                        message, message_size, signature, sig_size);
     } else {
-        result = libspdm_asym_sign(spdm_version, op_code, base_asym_algo, base_hash_algo, context,
-                                   message, message_size, signature, sig_size);
+        result = libspdm_get_responder_private_key_from_raw_data(base_asym_algo, &context);
+        if (!result) {
+            return false;
+        }
+
+        if (is_data_hash) {
+            result = libspdm_asym_sign_hash(spdm_version, op_code, base_asym_algo, base_hash_algo,
+                                            context,
+                                            message, message_size, signature, sig_size);
+        } else {
+            result = libspdm_asym_sign(spdm_version, op_code, base_asym_algo, base_hash_algo,
+                                       context,
+                                       message, message_size, signature, sig_size);
+        }
+        libspdm_asym_free(base_asym_algo, context);
     }
-    libspdm_asym_free(base_asym_algo, context);
-#if LIBSPDM_PRIVATE_KEY_USE_PEM
-    free(private_pem);
-#endif
 
     return result;
 }

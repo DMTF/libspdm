@@ -4,8 +4,10 @@
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
-#include <base.h>
+#include "base.h"
+#include "internal/libspdm_lib_config.h"
 
+#if LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP
 /**
  * If no heartbeat arrives in seconds, the watchdog timeout event
  * should terminate the session.
@@ -40,3 +42,4 @@ bool libspdm_reset_watchdog(uint32_t session_id)
 {
     return true;
 }
+#endif /* LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP */

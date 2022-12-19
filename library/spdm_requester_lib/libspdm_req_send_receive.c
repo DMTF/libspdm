@@ -130,7 +130,7 @@ libspdm_return_t libspdm_receive_response(void *context, const uint32_t *session
 
     if (spdm_context->crypto_request) {
         timeout = spdm_context->local_context.capability.rtt +
-                  ((uint64_t)2 << spdm_context->local_context.capability.ct_exponent);
+                  ((uint64_t)2 << spdm_context->connection_info.capability.ct_exponent);
     } else {
         timeout = spdm_context->local_context.capability.rtt +
                   spdm_context->local_context.capability.st1;
@@ -172,6 +172,8 @@ libspdm_return_t libspdm_receive_response(void *context, const uint32_t *session
         false, message_size, message, response_size, response);
 
     reset_key_update = false;
+    temp_session_context = NULL;
+
     if (status == LIBSPDM_STATUS_SESSION_TRY_DISCARD_KEY_UPDATE) {
         /* Failed to decode, but have backup keys. Try rolling back before aborting.
          * message_session_id must be valid for us to have attempted decryption. */

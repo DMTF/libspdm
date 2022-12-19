@@ -29,9 +29,6 @@ bool libspdm_validate_crypt_dh(void)
 
     libspdm_my_print("\nCrypto DH Engine Testing:\n");
 
-
-
-
     ff_public_key1_length = sizeof(ff_public_key1);
     ff_public_key2_length = sizeof(ff_public_key2);
     ff_key1_length = sizeof(ff_key1);

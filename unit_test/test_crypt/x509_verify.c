@@ -184,9 +184,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
         goto cleanup;
     }
 
-
     /* X509 Certificate Verification.*/
-
     libspdm_my_print("\n- X509 Certificate Verification with Trusted CA ...");
     status = libspdm_x509_verify_cert(test_cert, test_cert_len, test_ca_cert,
                                       test_ca_cert_len);
@@ -211,9 +209,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
         libspdm_my_print("[Pass]\n");
     }
 
-
     /* X509 Get leaf certificate from cert_chain Verificate*/
-
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                    "- X509 Certificate Chain get leaf certificate Verification ... "));
     status = libspdm_x509_get_cert_from_cert_chain(test_bundle_cert,
@@ -234,9 +230,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
         libspdm_my_print("[Pass]\n");
     }
 
-
     /* X509 Get leaf certificate from cert_chain Verificate*/
-
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                    "- X509 Certificate Chain get leaf certificate Verification ... "));
     status = libspdm_x509_get_cert_from_cert_chain(test_bundle_cert,
@@ -257,9 +251,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
         libspdm_my_print("[Pass]\n");
     }
 
-
     /* X509 Get root certificate from cert_chain Verificate*/
-
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                    "- X509 Certificate Chain get root certificate Verification ... "));
     status = libspdm_x509_get_cert_from_cert_chain(test_bundle_cert,
@@ -280,9 +272,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
         libspdm_my_print("[Pass]\n");
     }
 
-
     /* X509 Certificate subject Retrieving.*/
-
     libspdm_my_print("- X509 Certificate subject Bytes Retrieving ... ");
     subject_size = 0;
     status = libspdm_x509_get_subject_name(test_cert, test_cert_len, NULL,
@@ -301,7 +291,6 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
     libspdm_my_print("\n- X509 Certificate context Retrieving ... ");
 
     /* Get common_name from X509 Certificate subject*/
-
     common_name_size = 64;
     libspdm_zero_mem(common_name, common_name_size);
     status = libspdm_x509_get_common_name(test_cert, test_cert_len, common_name,
@@ -316,9 +305,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
         libspdm_my_print(" - [PASS]");
     }
 
-
     /* Get Issuer OrganizationName from X509 Certificate subject*/
-
     common_name_size = 64;
     libspdm_zero_mem(common_name, common_name_size);
     status = libspdm_x509_get_organization_name(test_cert, test_cert_len, common_name,
@@ -330,9 +317,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
         libspdm_my_print("\n  - Retrieving Oraganization name - [PASS]");
     }
 
-
     /* Get version from X509 Certificate*/
-
     cert_version = 0;
     status = libspdm_x509_get_version(test_cert, test_cert_len, &cert_version);
     if (!status) {
@@ -344,9 +329,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
         libspdm_my_print("[Pass]");
     }
 
-
     /* Get Serial from X509 Certificate*/
-
     asn1_buffer_len = 1024;
     libspdm_zero_mem(asn1_buffer, asn1_buffer_len);
     status = libspdm_x509_get_serial_number(test_cert, test_cert_len, asn1_buffer,
@@ -360,9 +343,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
         libspdm_my_print("[Pass]");
     }
 
-
     /* X509 Certificate subject Retrieving.*/
-
     libspdm_my_print("\n  - Retrieving issuer Bytes ... ");
     subject_size = 0;
     status = libspdm_x509_get_issuer_name(test_cert, test_cert_len, NULL,
@@ -378,9 +359,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
         libspdm_my_print(" - [Pass]");
     }
 
-
     /* Get Issuer common_name from X509 Certificate subject*/
-
     common_name_size = 64;
     libspdm_zero_mem(common_name, common_name_size);
     status = libspdm_x509_get_issuer_common_name(test_cert, test_cert_len, common_name,
@@ -395,9 +374,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
         libspdm_my_print("[Pass]");
     }
 
-
     /* Get Issuer OrganizationName from X509 Certificate subject*/
-
     common_name_size = 64;
     libspdm_zero_mem(common_name, common_name_size);
     status = libspdm_x509_get_issuer_orgnization_name(test_cert, test_cert_len,
@@ -409,9 +386,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
         libspdm_my_print("\n  - Retrieving Issuer Oraganization name - [Pass]");
     }
 
-
     /* Get X509GetSubjectAltName*/
-
     asn1_buffer_len = 1024;
     libspdm_zero_mem(asn1_buffer, asn1_buffer_len);
     status = libspdm_x509_get_extension_data(test_end_cert, test_end_cert_len,
@@ -428,9 +403,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
         libspdm_my_print("- [Pass]");
     }
 
-
     /* Get X509 Validity*/
-
     end_cert_from_len = 64;
     end_cert_to_len = 64;
     status = libspdm_x509_get_validity(test_end_cert, test_end_cert_len,
@@ -499,12 +472,13 @@ cleanup:
 bool libspdm_validate_crypt_x509_csr(void)
 {
     bool ret;
-    #if ((LIBSPDM_ECDSA_SUPPORT) && ((LIBSPDM_SHA384_SUPPORT) || (LIBSPDM_SHA256_SUPPORT))) || \
-    ((LIBSPDM_RSA_SSA_SUPPORT) && (LIBSPDM_SHA384_SUPPORT))
+    #if ((LIBSPDM_ECDSA_SUPPORT_TEST) && ((LIBSPDM_SHA384_SUPPORT_TEST) || \
+    (LIBSPDM_SHA256_SUPPORT_TEST))) || \
+    ((LIBSPDM_RSA_SSA_SUPPORT_TEST) && (LIBSPDM_SHA384_SUPPORT_TEST))
     bool need_reset;
     #endif
 
-    #if (LIBSPDM_RSA_SSA_SUPPORT) && (LIBSPDM_SHA384_SUPPORT)
+    #if (LIBSPDM_RSA_SSA_SUPPORT_TEST) && (LIBSPDM_SHA384_SUPPORT_TEST)
     libspdm_my_print("\nGen CSR test:\n");
     /*read private key to gen RSA CSR*/
     uint8_t rsa_csr_pointer[LIBSPDM_MAX_CSR_SIZE] = {0};
@@ -531,9 +505,9 @@ bool libspdm_validate_crypt_x509_csr(void)
         return ret;
     }
     libspdm_my_print("Gen and save RSA CSR successful !!!\n");
-    #endif /* (LIBSPDM_RSA_SSA_SUPPORT) && (LIBSPDM_SHA384_SUPPORT) */
+    #endif /* (LIBSPDM_RSA_SSA_SUPPORT_TEST) && (LIBSPDM_SHA384_SUPPORT_TEST) */
 
-    #if (LIBSPDM_ECDSA_SUPPORT) && (LIBSPDM_SHA384_SUPPORT)
+    #if (LIBSPDM_ECDSA_SUPPORT_TEST) && (LIBSPDM_SHA384_SUPPORT_TEST)
     /*read private key to gen ECC CSR*/
     uint8_t ecc_csr_pointer[LIBSPDM_MAX_CSR_SIZE];
     size_t ecc_csr_len;
@@ -557,9 +531,9 @@ bool libspdm_validate_crypt_x509_csr(void)
         return ret;
     }
     libspdm_my_print("Gen and save ECC CSR successful !!!\n");
-    #endif /* (LIBSPDM_ECDSA_SUPPORT) && (LIBSPDM_SHA384_SUPPORT) */
+    #endif /* (LIBSPDM_ECDSA_SUPPORT_TEST) && (LIBSPDM_SHA384_SUPPORT_TEST) */
 
-    #if (LIBSPDM_ECDSA_SUPPORT) && (LIBSPDM_SHA256_SUPPORT)
+    #if (LIBSPDM_ECDSA_SUPPORT_TEST) && (LIBSPDM_SHA256_SUPPORT_TEST)
     /*read private key to gen ECC 256 CSR*/
     uint8_t ecc256_csr_pointer[LIBSPDM_MAX_CSR_SIZE];
     size_t ecc256_csr_len;
@@ -584,24 +558,24 @@ bool libspdm_validate_crypt_x509_csr(void)
         return ret;
     }
     libspdm_my_print("Gen and save ECC_256 CSR with right_req_info successful !!!\n");
-    #endif /* (LIBSPDM_ECDSA_SUPPORT) && (LIBSPDM_SHA256_SUPPORT) */
+    #endif /* (LIBSPDM_ECDSA_SUPPORT_TEST) && (LIBSPDM_SHA256_SUPPORT_TEST) */
 
     libspdm_my_print("\nTest req_info verify function!!!\n");
     ret = libspdm_verify_req_info(right_req_info, sizeof(right_req_info));
     if (ret) {
-        libspdm_my_print("Test right req_info verify function  successful !!!\n");
-    } else {
-        return true;
-    }
-
-    ret = libspdm_verify_req_info(wrong_req_info, sizeof(wrong_req_info));
-    if (!ret) {
-        libspdm_my_print("Test wrong req_info verify function  successful !!!\n");
+        libspdm_my_print("Test right req_info verify function successful !!!\n");
     } else {
         return false;
     }
 
-    return ret;
+    ret = libspdm_verify_req_info(wrong_req_info, sizeof(wrong_req_info));
+    if (!ret) {
+        libspdm_my_print("Test wrong req_info verify function successful !!!\n");
+    } else {
+        return false;
+    }
+
+    return true;
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP */
 

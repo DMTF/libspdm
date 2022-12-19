@@ -8,6 +8,12 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
 
 0. Choose proper SPDM libraries.
 
+   0.0, choose proper macros in [spdm_lib_config](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_lib_config.h), including:
+    - Cryptography Configuration, such as `LIBSPDM_RSA_SSA_SUPPORT`, `LIBSPDM_FFDHE_SUPPORT`.
+    - Capability Configuration, such as `LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP`, `LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP`, `LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP`.
+    - Transport Configuration, such as `LIBSPDM_DATA_TRANSFER_SIZE`, `LIBSPDM_MAX_SPDM_MSG_SIZE`.
+    - Data Size Configuration, such as `LIBSPDM_MAX_CERT_CHAIN_SIZE`, `LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE`.
+
    0.1, implement a proper [spdm_device_secret_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_device_secret_lib.h).
 
    If the requester supports mutual authentication, implement libspdm_requester_data_sign().
@@ -26,7 +32,9 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
 
    0.4, choose required SPDM transport libs, such as [spdm_transport_mctp_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_mctp_lib.h) and [spdm_transport_pcidoe_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_pcidoe_lib.h)
 
-   0.5, implement required SPDM device IO functions - spdm_device_send_message_func and spdm_device_receive_message_func.
+   0.5, implement required SPDM device IO functions - `libspdm_device_send_message_func` and `libspdm_device_receive_message_func` according to [spdm_common_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_common_lib.h). The `timeout`, in microseconds (us) units, is for the execution of the message. For a requester, the timeout value to send a message is `RTT` and the timeout value to receive a message is `T1 = RTT + ST1` or `T2 = RTT + CT = RTT + 2^ct_exponent`.
+
+   0.6, implement a proper [platform_lib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/platform_lib.h).
 
 1. Initialize SPDM context
 
@@ -88,6 +96,8 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
    parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
    libspdm_set_data (spdm_context, LIBSPDM_DATA_CAPABILITY_CT_EXPONENT, &parameter, &ct_exponent, sizeof(ct_exponent));
    libspdm_set_data (spdm_context, LIBSPDM_DATA_CAPABILITY_FLAGS, &parameter, &cap_flags, sizeof(cap_flags));
+
+   libspdm_set_data (spdm_context, LIBSPDM_DATA_CAPABILITY_RTT_US, &parameter, &rtt, sizeof(rtt));
 
    libspdm_set_data (spdm_context, LIBSPDM_DATA_MEASUREMENT_SPEC, &parameter, &measurement_spec, sizeof(measurement_spec));
    libspdm_set_data (spdm_context, LIBSPDM_DATA_BASE_ASYM_ALGO, &parameter, &base_asym_algo, sizeof(base_asym_algo));
@@ -238,11 +248,23 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
    libspdm_send_receive_data (spdm_context, &session_id, TRUE, &request, request_size, &response, &response_size);
    ```
 
+7. Free the memory of contexts within the SPDM context when all flow is over.
+   This function doesn't free the SPDM context itself.
+   ```
+   libspdm_deinit_context(spdm_context);
+   ```
+
 ## SPDM Responder
 
 Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-emu/blob/main/spdm_emu/spdm_responder_emu/spdm_responder_spdm.c)
 
 0. Choose proper SPDM libraries.
+
+   0.0, choose proper macros in [spdm_lib_config](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_lib_config.h), including:
+    - Cryptography Configuration, such as `LIBSPDM_RSA_SSA_SUPPORT`, `LIBSPDM_FFDHE_SUPPORT`.
+    - Capability Configuration, such as `LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP`, `LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP`, `LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP`.
+    - Transport Configuration, such as `LIBSPDM_DATA_TRANSFER_SIZE`, `LIBSPDM_MAX_SPDM_MSG_SIZE`.
+    - Data Size Configuration, such as `LIBSPDM_MAX_CERT_CHAIN_SIZE`, `LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE`.
 
    0.1, implement a proper [spdm_device_secret_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_device_secret_lib.h).
 
@@ -262,7 +284,9 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
 
    0.4, choose required SPDM transport libs, such as [spdm_transport_mctp_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_mctp_lib.h) and [spdm_transport_pcidoe_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_pcidoe_lib.h)
 
-   0.5, implement required SPDM device IO functions - libspdm_device_send_message_func and libspdm_device_receive_message_func.
+   0.5, implement required SPDM device IO functions - `libspdm_device_send_message_func` and `libspdm_device_receive_message_func` according to [spdm_common_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_common_lib.h).
+
+   0.6, implement a proper [platform_lib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/platform_lib.h).
 
 0. Implement a proper spdm_device_secret_lib.
 
@@ -404,6 +428,12 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
    }
 
    libspdm_register_get_response_func (spdm_context, libspdm_get_response_vendor_defined_request);
+   ```
+
+4. Free the memory of contexts within the SPDM context when all flow is over.
+   This function doesn't free the SPDM context itself.
+   ```
+   libspdm_deinit_context(spdm_context);
    ```
 
 ## Message Logging

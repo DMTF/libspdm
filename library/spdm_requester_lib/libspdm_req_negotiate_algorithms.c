@@ -79,6 +79,7 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
     uint8_t *message;
     size_t message_size;
     size_t transport_header_size;
+    uint8_t alg_type_pre;
 
     /* -=[Verify State Phase]=- */
     if (spdm_context->connection_info.connection_state !=
@@ -226,6 +227,7 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
                  sizeof(uint32_t) * spdm_response->ext_asym_sel_count +
                  sizeof(uint32_t) * spdm_response->ext_hash_sel_count);
     if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
+        alg_type_pre = struct_table->alg_type;
         /* header.param1 is implictly checked through spdm_response_size. */
         for (index = 0; index < spdm_response->header.param1; index++) {
             if ((size_t)spdm_response + spdm_response_size < (size_t)struct_table) {
@@ -237,14 +239,20 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
                 status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
                 goto receive_done;
             }
-            fixed_alg_size = (struct_table->alg_count >> 4) & 0xF;
-            ext_alg_count = struct_table->alg_count & 0xF;
             if ((struct_table->alg_type < SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_DHE) ||
                 (struct_table->alg_type >
                  SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE)) {
                 status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
                 goto receive_done;
             }
+            /* AlgType shall monotonically increase for subsequent entries. */
+            if ((index != 0) && (struct_table->alg_type <= alg_type_pre)) {
+                status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                goto receive_done;
+            }
+            alg_type_pre = struct_table->alg_type;
+            fixed_alg_size = (struct_table->alg_count >> 4) & 0xF;
+            ext_alg_count = struct_table->alg_count & 0xF;
             if (fixed_alg_size != 2) {
                 status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
                 goto receive_done;

@@ -7,6 +7,7 @@
 #include "spdm_unit_test.h"
 #include "internal/libspdm_requester_lib.h"
 #include "internal/libspdm_responder_lib.h"
+#include "internal/libspdm_secured_message_lib.h"
 
 static uint32_t libspdm_opaque_data = 0xDEADBEEF;
 
@@ -1252,6 +1253,80 @@ void libspdm_test_secured_message_context_location_selection_case18(void **state
     }
 }
 
+static void libspdm_test_export_master_secret_case19(void **state)
+{
+    uint8_t target_buffer[LIBSPDM_MAX_HASH_SIZE];
+    bool result;
+    libspdm_secured_message_context_t secured_message_context;
+    size_t export_master_secret_size;
+
+    /* Get the entire EMS when the reported size of the target buffer is larger than the size of the
+     * EMS. */
+    for (int index = 0; index < LIBSPDM_MAX_HASH_SIZE; index++) {
+        secured_message_context.export_master_secret[index] = (uint8_t)index;
+        target_buffer[index] = 0x00;
+    }
+
+    secured_message_context.hash_size = LIBSPDM_MAX_HASH_SIZE;
+    export_master_secret_size = LIBSPDM_MAX_HASH_SIZE + 0x100;
+
+    result = libspdm_secured_message_export_master_secret(&secured_message_context,
+                                                          &target_buffer,
+                                                          &export_master_secret_size);
+    assert_int_equal(result, true);
+
+    libspdm_secured_message_clear_export_master_secret(&secured_message_context);
+
+    for (int index = 0; index < LIBSPDM_MAX_HASH_SIZE; index++) {
+        assert_int_equal(target_buffer[index], index);
+        assert_int_equal(secured_message_context.export_master_secret[index], 0x00);
+    }
+    assert_int_equal(export_master_secret_size, LIBSPDM_MAX_HASH_SIZE);
+
+    /* Get the entire EMS when the size of the target buffer is the same size as the EMS. */
+    for (int index = 0; index < LIBSPDM_MAX_HASH_SIZE; index++) {
+        secured_message_context.export_master_secret[index] = (uint8_t)index;
+        target_buffer[index] = 0x00;
+    }
+
+    secured_message_context.hash_size = LIBSPDM_MAX_HASH_SIZE;
+    export_master_secret_size = LIBSPDM_MAX_HASH_SIZE;
+
+    result = libspdm_secured_message_export_master_secret(&secured_message_context,
+                                                          &target_buffer,
+                                                          &export_master_secret_size);
+    assert_int_equal(result, true);
+
+    for (int index = 0; index < LIBSPDM_MAX_HASH_SIZE; index++) {
+        assert_int_equal(target_buffer[index], index);
+    }
+    assert_int_equal(export_master_secret_size, LIBSPDM_MAX_HASH_SIZE);
+
+    /* Get the truncated EMS when the size of the target buffer is less than the size of the EMS. */
+    for (int index = 0; index < LIBSPDM_MAX_HASH_SIZE; index++) {
+        secured_message_context.export_master_secret[index] = (uint8_t)index;
+        target_buffer[index] = 0x00;
+    }
+
+    secured_message_context.hash_size = LIBSPDM_MAX_HASH_SIZE;
+    export_master_secret_size = LIBSPDM_MAX_HASH_SIZE - 4;
+
+    result = libspdm_secured_message_export_master_secret(&secured_message_context,
+                                                          &target_buffer,
+                                                          &export_master_secret_size);
+    assert_int_equal(result, true);
+
+    for (int index = 0; index < LIBSPDM_MAX_HASH_SIZE; index++) {
+        if (index < LIBSPDM_MAX_HASH_SIZE - 4) {
+            assert_int_equal(target_buffer[index], index);
+        }
+        else {
+            assert_int_equal(target_buffer[index], 0x00);
+        }
+    }
+    assert_int_equal(export_master_secret_size, LIBSPDM_MAX_HASH_SIZE - 4);
+}
+
 static libspdm_test_context_t m_libspdm_common_context_data_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     true,
@@ -1293,6 +1368,9 @@ int libspdm_common_context_data_test_main(void)
 
         /* Successful initialization and setting of secured message context location. */
         cmocka_unit_test(libspdm_test_secured_message_context_location_selection_case18),
+
+        /* Test that the Export Master Secret can be exported and cleared. */
+        cmocka_unit_test(libspdm_test_export_master_secret_case19),
     };
 
     libspdm_setup_test_context(&m_libspdm_common_context_data_test_context);

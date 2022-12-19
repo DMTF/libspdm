@@ -29,7 +29,7 @@ libspdm_return_t libspdm_get_response_version(void *context, size_t request_size
     spdm_request = request;
 
     /* -=[Validate Request Phase]=- */
-    if (request_size != sizeof(spdm_get_version_request_t)) {
+    if (request_size < sizeof(spdm_get_version_request_t)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
@@ -62,6 +62,8 @@ libspdm_return_t libspdm_get_response_version(void *context, size_t request_size
     libspdm_reset_message_a(spdm_context);
     libspdm_reset_message_b(spdm_context);
     libspdm_reset_message_c(spdm_context);
+
+    request_size = sizeof(spdm_get_version_request_t);
     status = libspdm_append_message_a(spdm_context, spdm_request, request_size);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return libspdm_generate_error_response(spdm_context,
@@ -102,6 +104,9 @@ libspdm_return_t libspdm_get_response_version(void *context, size_t request_size
 
     /* -=[Update State Phase]=- */
     libspdm_set_connection_state(spdm_context, LIBSPDM_CONNECTION_STATE_AFTER_VERSION);
+
+    /*Set the role of device*/
+    spdm_context->local_context.is_requester = false;
 
     return LIBSPDM_STATUS_SUCCESS;
 }

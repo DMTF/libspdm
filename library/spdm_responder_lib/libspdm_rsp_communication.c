@@ -30,12 +30,11 @@ libspdm_return_t libspdm_responder_dispatch_message(void *context)
     }
     request = message;
     request_size = message_size;
-    #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP || LIBSPDM_ENABLE_CHUNK_CAP
+    #if (LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP) || (LIBSPDM_ENABLE_CHUNK_CAP)
     /* need get real receiver buffer, because acquire receiver buffer will return scratch buffer*/
     libspdm_get_receiver_buffer (spdm_context, (void **)&request, &request_size);
-    #endif
-    status = spdm_context->receive_message(spdm_context, &request_size,
-                                           (void **)&request, 0);
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
+    status = spdm_context->receive_message(spdm_context, &request_size, (void **)&request, 0);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_release_receiver_buffer (spdm_context);
         return status;
@@ -48,7 +47,7 @@ libspdm_return_t libspdm_responder_dispatch_message(void *context)
     }
 
     /* save the value of session_id */
-    if(session_id != NULL) {
+    if (session_id != NULL) {
         tmp_session_id = *session_id;
         session_id_ptr = &tmp_session_id;
     } else {
@@ -73,8 +72,7 @@ libspdm_return_t libspdm_responder_dispatch_message(void *context)
         return status;
     }
 
-    status = spdm_context->send_message(spdm_context, response_size,
-                                        response, 0);
+    status = spdm_context->send_message(spdm_context, response_size, response, 0);
 
     libspdm_release_sender_buffer (spdm_context);
 

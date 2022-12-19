@@ -26,6 +26,7 @@ bool libspdm_get_peer_cert_chain_buffer(void *context,
 
     spdm_context = context;
     slot_id = spdm_context->connection_info.peer_used_cert_chain_slot_id;
+    LIBSPDM_ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
     if (spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer_size != 0) {
         *cert_chain_buffer = spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer;
         *cert_chain_buffer_size = spdm_context->connection_info
@@ -928,6 +929,7 @@ bool libspdm_verify_certificate_chain_hash(libspdm_context_t *spdm_context,
     }
 #else
     slot_id = spdm_context->connection_info.peer_used_cert_chain_slot_id;
+    LIBSPDM_ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
     if (spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer_hash_size != 0) {
         if (spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer_hash_size !=
             certificate_chain_hash_size) {

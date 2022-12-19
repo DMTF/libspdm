@@ -129,20 +129,24 @@ libspdm_secured_message_import_dhe_secret(void *spdm_secured_message_context,
                                           size_t dhe_secret_size);
 
 /**
- * Export the export_master_secret from an SPDM secured message context.
+ * Export the Export Master Secret from an SPDM secured message context.
  *
- * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- * @param  export_master_secret           Indicate the buffer to store the export_master_secret.
- * @param  export_master_secret_size       The size in bytes of the export_master_secret.
+ * The size of the Export Master Secret is the size of the digest of the negotiated hash algorithm.
+ * If the size of the destination buffer is less than the size of the Export Master Secret then
+ * the first export_master_secret_size bytes are copied.
  *
- * @retval RETURN_SUCCESS  export_master_secret is exported.
+ * @param  spdm_secured_message_context  A pointer to the SPDM secured message context.
+ * @param  export_master_secret          A pointer to the buffer to store the export_master_secret.
+ * @param  export_master_secret_size     On input, the size of the destination buffer.
+ *                                       On output, the lesser of either the size of the destination
+ *                                       buffer or the size of the Export Master Secret.
  */
 bool libspdm_secured_message_export_master_secret(
     void *spdm_secured_message_context, void *export_master_secret,
     size_t *export_master_secret_size);
 
 /**
- * Erase the export master secret from an SPDM secured message context. This is typically called
+ * Erase the Export Master Secret from an SPDM secured message context. This is typically called
  * after libspdm_secured_message_export_master_secret().
  *
  * @param  spdm_secured_message_context  A pointer to the SPDM secured message context.

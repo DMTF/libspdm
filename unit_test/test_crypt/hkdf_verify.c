@@ -82,15 +82,16 @@ uint8_t m_libspdm_hkdf_sha384_okm[] = {
  **/
 bool libspdm_validate_crypt_hkdf(void)
 {
-    #if LIBSPDM_SHA256_SUPPORT ||  LIBSPDM_SHA3_256_SUPPORT || LIBSPDM_SM3_256_SUPPORT || \
-    LIBSPDM_SHA384_SUPPORT
+    #if LIBSPDM_SHA256_SUPPORT_TEST || LIBSPDM_SHA3_256_SUPPORT_TEST || \
+    LIBSPDM_SM3_256_SUPPORT_TEST || LIBSPDM_SHA384_SUPPORT_TEST
 
-    #if LIBSPDM_SHA256_SUPPORT ||  LIBSPDM_SHA3_256_SUPPORT || LIBSPDM_SM3_256_SUPPORT
+    #if LIBSPDM_SHA256_SUPPORT_TEST || LIBSPDM_SHA3_256_SUPPORT_TEST || \
+    LIBSPDM_SM3_256_SUPPORT_TEST
     uint8_t prk_out[32];
     uint8_t out[42];
     #endif
 
-    #if LIBSPDM_SHA384_SUPPORT
+    #if LIBSPDM_SHA384_SUPPORT_TEST
     uint8_t prk_out48[48];
     uint8_t out64[64];
     #endif
@@ -98,7 +99,7 @@ bool libspdm_validate_crypt_hkdf(void)
 
     libspdm_my_print(" \nCrypto HKDF Engine Testing:\n");
 
-    #if LIBSPDM_SHA256_SUPPORT
+    #if LIBSPDM_SHA256_SUPPORT_TEST
     /* HKDF-SHA-256 digest validation. */
     libspdm_my_print("- HKDF-SHA256: ");
 
@@ -164,9 +165,9 @@ bool libspdm_validate_crypt_hkdf(void)
     }
 
     libspdm_my_print("[Pass]\n");
-    #endif /* LIBSPDM_SHA256_SUPPORT */
+    #endif /* LIBSPDM_SHA256_SUPPORT_TEST */
 
-    #if LIBSPDM_SHA3_256_SUPPORT
+    #if LIBSPDM_SHA3_256_SUPPORT_TEST
     /* HKDF-SHA3-256 digest validation. */
     libspdm_my_print("- HKDF-SHA3_256: ");
 
@@ -208,9 +209,9 @@ bool libspdm_validate_crypt_hkdf(void)
     }
 
     libspdm_my_print("[Pass]\n");
-    #endif /* LIBSPDM_SHA3_256_SUPPORT */
+    #endif /* LIBSPDM_SHA3_256_SUPPORT_TEST */
 
-    #if LIBSPDM_SM3_256_SUPPORT
+    #if LIBSPDM_SM3_256_SUPPORT_TEST
     /* HKDF-SM3-256 digest validation. */
     libspdm_my_print("- HKDF-SM3_256: ");
 
@@ -223,7 +224,7 @@ bool libspdm_validate_crypt_hkdf(void)
         );
     if (!status) {
         libspdm_my_print("[Fail]\n");
-        return true;
+        return false;
     }
 
     libspdm_zero_mem(out, sizeof(out));
@@ -252,9 +253,9 @@ bool libspdm_validate_crypt_hkdf(void)
     }
 
     libspdm_my_print("[Pass]\n");
-    #endif /* LIBSPDM_SM3_256_SUPPORT */
+    #endif /* LIBSPDM_SM3_256_SUPPORT_TEST */
 
-    #if LIBSPDM_SHA384_SUPPORT
+    #if LIBSPDM_SHA384_SUPPORT_TEST
     /* HKDF-SHA-384 digest validation. */
     libspdm_my_print("- HKDF-SHA384: ");
 
@@ -320,8 +321,8 @@ bool libspdm_validate_crypt_hkdf(void)
     }
 
     libspdm_my_print("[Pass]\n");
-    #endif /* LIBSPDM_SHA384_SUPPORT */
-    #endif /* LIBSPDM_SHA256_SUPPORT ||  LIBSPDM_SHA3_256_SUPPORT ... */
+    #endif /* LIBSPDM_SHA384_SUPPORT_TEST */
+    #endif /* LIBSPDM_SHA256_SUPPORT_TEST ||  LIBSPDM_SHA3_256_SUPPORT_TEST ... */
 
     return true;
 }

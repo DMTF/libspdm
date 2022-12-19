@@ -362,7 +362,10 @@ static libspdm_return_t libspdm_try_send_receive_finish(libspdm_context_t *spdm_
 
     /* -=[Check Parameters Phase]=- */
     session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
-    LIBSPDM_ASSERT (session_info != NULL);
+    if (session_info == NULL) {
+        status = LIBSPDM_STATUS_INVALID_PARAMETER;
+        goto error;
+    }
 
     /* -=[Verify State Phase]=- */
     if (!libspdm_is_capabilities_flag_supported(

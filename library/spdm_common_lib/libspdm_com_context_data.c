@@ -155,10 +155,10 @@ libspdm_return_t libspdm_set_data(void *context, libspdm_data_type_t data_type,
         spdm_context->local_context.capability.ct_exponent = *(uint8_t *)data;
         break;
     case LIBSPDM_DATA_CAPABILITY_RTT_US:
-        if (data_size != sizeof(uint8_t)) {
+        if (data_size != sizeof(uint64_t)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
-        spdm_context->local_context.capability.rtt = *(uint8_t *)data;
+        spdm_context->local_context.capability.rtt = *(uint64_t *)data;
         break;
     case LIBSPDM_DATA_CAPABILITY_DATA_TRANSFER_SIZE:
         if (data_size != sizeof(uint32_t)) {
@@ -2250,6 +2250,47 @@ void libspdm_reset_context(void *context)
     spdm_context->msg_log.mode = 0;
     spdm_context->msg_log.status = 0;
     #endif /* LIBSPDM_ENABLE_MSG_LOG */
+}
+
+/**
+ * Free the memory of contexts within the SPDM context.
+ * These are typically contexts whose memory has been allocated by the cryptography library.
+ * This function does not free the SPDM context itself.
+ *
+ * @param[in]  spdm_context         A pointer to the SPDM context.
+ *
+ */
+void libspdm_deinit_context(void *context)
+{
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
+    libspdm_context_t *spdm_context;
+    void *pubkey_context;
+    bool is_requester;
+    uint8_t slot_index;
+
+    spdm_context = context;
+    is_requester = spdm_context->local_context.is_requester;
+
+    for (slot_index = 0; slot_index < SPDM_MAX_SLOT_COUNT; slot_index++) {
+        pubkey_context = spdm_context->connection_info.peer_used_cert_chain[slot_index].
+                         leaf_cert_public_key;
+
+        if (pubkey_context != NULL) {
+            if (is_requester) {
+                libspdm_asym_free(
+                    spdm_context->connection_info.algorithm.base_asym_algo, pubkey_context);
+            } else {
+                libspdm_req_asym_free(
+                    spdm_context->connection_info.algorithm.req_base_asym_alg, pubkey_context);
+            }
+
+            pubkey_context = NULL;
+            spdm_context->connection_info.peer_used_cert_chain[slot_index].
+            leaf_cert_public_key = NULL;
+        }
+    }
+
+#endif
 }
 
 /**

@@ -22,7 +22,7 @@ typedef struct {
 
 typedef struct {
     uint8_t ct_exponent;
-    uint8_t rtt;
+    uint64_t rtt;
     uint32_t st1;
     uint32_t flags;
     uint32_t data_transfer_size;
@@ -93,6 +93,9 @@ typedef struct {
     bool basic_mut_auth_requested;
     uint8_t mut_auth_requested;
     uint8_t heartbeat_period;
+
+    /*The device role*/
+    bool is_requester;
 } libspdm_local_context_t;
 
 typedef struct {
@@ -359,8 +362,7 @@ typedef struct {
 
     /* Register spdm_connection_state_callback function (responder only)
      * Register can know the connection state such as negotiated. */
-    size_t spdm_connection_state_callback
-    [LIBSPDM_MAX_CONNECTION_STATE_CALLBACK_NUM];
+    size_t spdm_connection_state_callback[LIBSPDM_MAX_CONNECTION_STATE_CALLBACK_NUM];
 
     /* Register libspdm_key_update_callback function (responder only)
      * Register can know when session keys are updated during KEY_UPDATE operations. */
