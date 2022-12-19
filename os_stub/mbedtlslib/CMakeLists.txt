@@ -64,7 +64,6 @@ endif()
 
 ADD_LIBRARY(mbedtlslib INTERFACE)
 TARGET_LINK_LIBRARIES(mbedtlslib INTERFACE
-    mbedtls
     mbedx509
     mbedcrypto
 )
