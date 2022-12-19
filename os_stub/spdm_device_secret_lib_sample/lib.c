@@ -28,10 +28,16 @@
 #include "library/memlib.h"
 #include "spdm_device_secret_lib_internal.h"
 
+/* "LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY = 1" means use the RAW private key only
+ * "LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY = 0" means controled by g_private_key_mode
+ **/
+#define LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY 0
 /* "g_private_key_mode = 1" means use the PEM mode
  * "g_private_key_mode = 0" means use the RAW mode
  **/
+#if !LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY
 bool g_private_key_mode = 1;
+#endif
 
 #if LIBSPDM_ECDSA_SUPPORT
 /*ecp256 key for responder: https://lapo.it/asn1js/#MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgA-LbmJWXV0yozX6-mbTl9gXB8CC340M4Dzyh9fm-ymahRANCAATbwrK3gzzIheQ94fO64vKQjjAlFOH3qYIp2512L4ARMu6r4mjRIue9tHEnyHn73HyeM6ZnwhBHNjLFoaprK6rJ */
@@ -801,6 +807,7 @@ bool libspdm_get_requester_private_key_from_raw_data(uint32_t base_asym_algo, vo
     return false;
 }
 
+#if !LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY
 bool libspdm_read_responder_private_key(uint32_t base_asym_algo,
                                         void **data, size_t *size)
 {
@@ -845,6 +852,7 @@ bool libspdm_read_responder_private_key(uint32_t base_asym_algo,
     res = libspdm_read_input_file(file, data, size);
     return res;
 }
+#endif
 
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
 bool libspdm_read_requester_private_key(uint16_t req_base_asym_alg,
@@ -1074,7 +1082,7 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
             }
         }
     }
-
+#if !LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY
     if (g_private_key_mode) {
         void *prikey;
         size_t prikey_size;
@@ -1103,6 +1111,7 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
         libspdm_asym_free(base_asym_algo, context);
         free(prikey);
     } else {
+#endif
         result = libspdm_get_responder_private_key_from_raw_data(base_asym_algo, &context);
         if (!result) {
             return false;
@@ -1117,7 +1126,9 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
                                       context, subject_name,
                                       csr_len, csr_pointer);
         libspdm_asym_free(base_asym_algo, context);
+#if !LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY
     }
+#endif
 
     if (csr_buffer_size < *csr_len) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"csr buffer is too small to sotre generated csr! \n"));
@@ -1677,6 +1688,7 @@ bool libspdm_requester_data_sign(
     void *context;
     bool result;
 
+#if !LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY
     if (g_private_key_mode) {
         void *private_pem;
         size_t private_pem_size;
@@ -1708,6 +1720,7 @@ bool libspdm_requester_data_sign(
         libspdm_req_asym_free(req_base_asym_alg, context);
         free(private_pem);
     } else {
+#endif
         result = libspdm_get_requester_private_key_from_raw_data(req_base_asym_alg, &context);
         if (!result) {
             return false;
@@ -1723,7 +1736,9 @@ bool libspdm_requester_data_sign(
                                            message, message_size, signature, sig_size);
         }
         libspdm_req_asym_free(req_base_asym_alg, context);
+#if !LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY
     }
+#endif
 
     return result;
 }
@@ -1738,6 +1753,7 @@ bool libspdm_responder_data_sign(
 {
     void *context;
     bool result;
+#if !LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY
     if (g_private_key_mode) {
         void *private_pem;
         size_t private_pem_size;
@@ -1767,6 +1783,7 @@ bool libspdm_responder_data_sign(
         libspdm_asym_free(base_asym_algo, context);
         free(private_pem);
     } else {
+#endif
         result = libspdm_get_responder_private_key_from_raw_data(base_asym_algo, &context);
         if (!result) {
             return false;
@@ -1782,7 +1799,9 @@ bool libspdm_responder_data_sign(
                                        message, message_size, signature, sig_size);
         }
         libspdm_asym_free(base_asym_algo, context);
+#if !LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY
     }
+#endif
 
     return result;
 }
