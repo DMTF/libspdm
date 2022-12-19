@@ -67,6 +67,12 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
    libspdm_init_context_with_secured_context(spdm_context, spdm_secured_contexts, num_sessions);
    ```
 
+   Optionally, the integrator may use `LIBSPDM_CONTEXT_SIZE_ALL`, or `LIBSPDM_CONTEXT_SIZE_WITHOUT_SECURED_CONTEXT` together with `LIBSPDM_SECURED_MESSAGE_CONTEXT_SIZE`, to preallocate the context buffer from a fixed memory region. In this case, the integrator need include below internal header files.
+   ```
+   #include "internal/libspdm_common_lib.h"
+   #include "internal/libspdm_secured_message_lib.h"
+   ```
+
    1.2, register the device io functions, transport layer functions, and device buffer functions.
    The libspdm provides the default [spdm_transport_mctp_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_mctp_lib.h) and [spdm_transport_pcidoe_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_pcidoe_lib.h).
    The SPDM device driver need provide device IO send/receive function.
@@ -317,6 +323,12 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
    spdm_secured_contexts[num_sessions] = (void *)pointer_to_secured_memory_num_sessions;
    spdm_context = (void *)malloc (libspdm_get_context_size_without_secured_context());
    libspdm_init_context_with_secured_context(spdm_context, spdm_secured_contexts, num_sessions);
+   ```
+
+   Optionally, the integrator may use `LIBSPDM_CONTEXT_SIZE_ALL`, or `LIBSPDM_CONTEXT_SIZE_WITHOUT_SECURED_CONTEXT` together with `LIBSPDM_SECURED_MESSAGE_CONTEXT_SIZE`, to preallocate the context buffer from a fixed memory region. In this case, the integrator need include below internal header files.
+   ```
+   #include "internal/libspdm_common_lib.h"
+   #include "internal/libspdm_secured_message_lib.h"
    ```
 
    1.2, register the device io functions, transport layer functions, and device buffer functions.
