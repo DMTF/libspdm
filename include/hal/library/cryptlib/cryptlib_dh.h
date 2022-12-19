@@ -12,6 +12,7 @@
  *=====================================================================================
  */
 
+#if LIBSPDM_FFDHE_SUPPORT
 /**
  * Allocates and initializes one Diffie-Hellman context for subsequent use with the NID.
  *
@@ -140,5 +141,5 @@ extern bool libspdm_dh_generate_key(void *dh_context, uint8_t *public_key, size_
 extern bool libspdm_dh_compute_key(void *dh_context, const uint8_t *peer_public_key,
                                    size_t peer_public_key_size, uint8_t *key,
                                    size_t *key_size);
-
+#endif /* LIBSPDM_FFDHE_SUPPORT */
 #endif /* CRYPTLIB_DH_H */

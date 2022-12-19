@@ -15,6 +15,8 @@
 #include <openssl/dh.h>
 #include <openssl/objects.h>
 
+#if LIBSPDM_FFDHE_SUPPORT
+
 /**
  * Allocates and Initializes one Diffie-Hellman context for subsequent use
  * with the NID.
@@ -336,3 +338,5 @@ bool libspdm_dh_compute_key(void *dh_context, const uint8_t *peer_public_key,
     *key_size = size;
     return true;
 }
+
+#endif /* LIBSPDM_FFDHE_SUPPORT */
