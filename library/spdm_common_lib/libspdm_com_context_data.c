@@ -5,6 +5,7 @@
  **/
 
 #include "internal/libspdm_common_lib.h"
+#include "internal/libspdm_secured_message_lib.h"
 
 /**
  * Returns if an SPDM data_type requires session info.
@@ -2273,8 +2274,12 @@ void libspdm_deinit_context(void *context)
  **/
 size_t libspdm_get_context_size(void)
 {
-    return sizeof(libspdm_context_t) +
+    size_t size;
+
+    size = sizeof(libspdm_context_t) +
            libspdm_secured_message_get_context_size() * LIBSPDM_MAX_SESSION_COUNT;
+    LIBSPDM_ASSERT (size == LIBSPDM_CONTEXT_SIZE_ALL);
+    return size;
 }
 
 /**
@@ -2286,7 +2291,11 @@ size_t libspdm_get_context_size(void)
  **/
 size_t libspdm_get_context_size_without_secured_context(void)
 {
-    return sizeof(libspdm_context_t);
+    size_t size;
+
+    size = sizeof(libspdm_context_t);
+    LIBSPDM_ASSERT (size == LIBSPDM_CONTEXT_SIZE_WITHOUT_SECURED_CONTEXT);
+    return size;
 }
 
 /**
