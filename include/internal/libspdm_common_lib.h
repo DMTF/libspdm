@@ -402,6 +402,10 @@ typedef struct {
 #endif /* LIBSPDM_ENABLE_MSG_LOG */
 } libspdm_context_t;
 
+#define LIBSPDM_CONTEXT_SIZE_WITHOUT_SECURED_CONTEXT (sizeof(libspdm_context_t))
+#define LIBSPDM_CONTEXT_SIZE_ALL (LIBSPDM_CONTEXT_SIZE_WITHOUT_SECURED_CONTEXT + \
+                                  LIBSPDM_SECURED_MESSAGE_CONTEXT_SIZE * LIBSPDM_MAX_SESSION_COUNT)
+
 #if LIBSPDM_DEBUG_PRINT_ENABLE
 /**
  * This function dump raw data.

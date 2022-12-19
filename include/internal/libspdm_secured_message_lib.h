@@ -74,4 +74,6 @@ typedef struct {
     libspdm_error_struct_t last_spdm_error;
 } libspdm_secured_message_context_t;
 
+#define LIBSPDM_SECURED_MESSAGE_CONTEXT_SIZE (sizeof(libspdm_secured_message_context_t))
+
 #endif /* SPDM_SECURED_MESSAGE_LIB_INTERNAL_H */
