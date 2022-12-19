@@ -44,7 +44,7 @@ SET(test_size_of_spdm_requester_LIBRARY
 #    cryptlib_${CRYPTO}
 #    rnglib_null
     cryptlib_null
-    malloclib_null
+    malloclib_simple
     spdm_crypt_lib
     spdm_secured_message_lib
     spdm_transport_mctp_lib
