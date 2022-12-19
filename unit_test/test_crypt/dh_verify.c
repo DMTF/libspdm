@@ -6,6 +6,8 @@
 
 #include "test_crypt.h"
 
+#if LIBSPDM_FFDHE_SUPPORT
+
 /**
  * Validate Crypto DH Interfaces.
  *
@@ -107,3 +109,5 @@ bool libspdm_validate_crypt_dh(void)
 
     return true;
 }
+
+#endif /* LIBSPDM_FFDHE_SUPPORT */

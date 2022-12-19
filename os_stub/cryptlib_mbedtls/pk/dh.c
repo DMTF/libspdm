@@ -15,6 +15,8 @@
 #include <mbedtls/bignum.h>
 #include <string.h>
 
+#if LIBSPDM_FFDHE_SUPPORT
+
 static const unsigned char m_ffehde2048_p[] =
     MBEDTLS_DHM_RFC7919_FFDHE2048_P_BIN;
 static const unsigned char m_ffehde3072_p[] =
@@ -329,3 +331,5 @@ bool libspdm_dh_compute_key(void *dh_context, const uint8_t *peer_public_key,
 
     return true;
 }
+
+#endif /* LIBSPDM_FFDHE_SUPPORT */

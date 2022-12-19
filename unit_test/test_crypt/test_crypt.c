@@ -90,10 +90,12 @@ bool libspdm_cryptest_main(void)
         return status;
     }
 
+    #if LIBSPDM_FFDHE_SUPPORT
     status = libspdm_validate_crypt_dh();
     if (!status) {
         return status;
     }
+    #endif /* LIBSPDM_FFDHE_SUPPORT */
 
     #if LIBSPDM_ECDSA_SUPPORT_TEST
     status = libspdm_validate_crypt_ec();
