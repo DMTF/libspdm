@@ -91,7 +91,12 @@ static libspdm_return_t libspdm_try_challenge(void *context, uint8_t slot_id,
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL, SPDM_CHALLENGE);
 
     /* -=[Construct Request Phase]=- */
-    spdm_context->connection_info.peer_used_cert_chain_slot_id = slot_id;
+    if (slot_id != 0xff) {
+        spdm_context->connection_info.peer_used_cert_chain_slot_id = slot_id;
+    } else {
+        spdm_context->connection_info.peer_used_cert_chain_slot_id =
+            spdm_context->local_context.provisioned_slot_id;
+    }
     transport_header_size = spdm_context->transport_get_header_size(spdm_context);
     status = libspdm_acquire_sender_buffer (spdm_context, &message_size, (void **)&message);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
