@@ -6,6 +6,8 @@
 
 #include "test_crypt.h"
 
+#if (LIBSPDM_ECDHE_SUPPORT_TEST) && (LIBSPDM_ECDSA_SUPPORT_TEST)
+
 /*ecp256 key: https://lapo.it/asn1js/#MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgjqRWI_stNQKCZwHIIL9pQLqos_cTSZ2Q3L5XaPaE-hGhRANCAAR-X9hTLdaMSJxS9gNglcAxjLCocVJ5I6msv8D7iLloQfRC_RsnQFl5UkTDAKfkavduNdy0AM2VR4XMmD6I9E1D*/
 uint8_t m_libspdm_ec_public_key[] = {
     0x7E, 0x5F, 0xD8, 0x53, 0x2D, 0xD6, 0x8C, 0x48, 0x9C, 0x52, 0xF6, 0x03, 0x60, 0x95, 0xC0, 0x31,
@@ -68,9 +70,7 @@ bool libspdm_validate_crypt_ec(void)
         return false;
     }
 
-
-    /* Verify EC-DH*/
-
+    /* Verify EC-DH */
     libspdm_my_print("Generate key1 ... ");
     status = libspdm_ec_generate_key(ec1, public1, &public1_length);
     if (!status || public1_length != 48 * 2) {
@@ -248,9 +248,7 @@ bool libspdm_validate_crypt_ec(void)
         return false;
     }
 
-
-    /* Verify EC-DSA*/
-
+    /* Verify EC-DSA */
     hash_size = sizeof(hash_value);
     sig_size = sizeof(signature);
     libspdm_my_print("\n- EC-DSA Signing ... ");
@@ -430,3 +428,4 @@ bool libspdm_validate_crypt_ec(void)
 
     return true;
 }
+#endif /* (LIBSPDM_ECDHE_SUPPORT_TEST) && (LIBSPDM_ECDSA_SUPPORT_TEST) */

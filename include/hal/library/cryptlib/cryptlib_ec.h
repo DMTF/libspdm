@@ -11,6 +11,7 @@
  *    Elliptic Curve Primitives
  *=====================================================================================*/
 
+#if (LIBSPDM_ECDHE_SUPPORT) || (LIBSPDM_ECDSA_SUPPORT)
 /**
  * Allocates and Initializes one Elliptic Curve context for subsequent use with the NID.
  *
@@ -27,73 +28,9 @@ extern void *libspdm_ec_new_by_nid(size_t nid);
  * @param[in]  ec_context  Pointer to the EC context to be released.
  **/
 extern void libspdm_ec_free(void *ec_context);
+#endif /* (LIBSPDM_ECDHE_SUPPORT) || (LIBSPDM_ECDSA_SUPPORT) */
 
-/**
- * Sets the public key component into the established EC context.
- *
- * For P-256, the public_size is 64. first 32-byte is X, second 32-byte is Y.
- * For P-384, the public_size is 96. first 48-byte is X, second 48-byte is Y.
- * For P-521, the public_size is 132. first 66-byte is X, second 66-byte is Y.
- *
- * @param[in, out]  ec_context   Pointer to EC context being set.
- * @param[in]       public       Pointer to the buffer to receive generated public X,Y.
- * @param[in]       public_size  The size of public buffer in bytes.
- *
- * @retval  true   EC public key component was set successfully.
- * @retval  false  Invalid EC public key component.
- **/
-extern bool libspdm_ec_set_pub_key(void *ec_context, const uint8_t *public_key,
-                                   size_t public_key_size);
-
-/**
- * Sets the private key component into the established EC context.
- *
- * For P-256, the private_key_size is 32 byte.
- * For P-384, the private_key_size is 48 byte.
- * For P-521, the private_key_size is 66 byte.
- *
- * @param[in, out]  ec_context       Pointer to EC context being set.
- * @param[in]       private_key      Pointer to the private key buffer.
- * @param[in]       private_key_size The size of private key buffer in bytes.
- *
- * @retval  true   EC private key component was set successfully.
- * @retval  false  Invalid EC private key component.
- *
- **/
-extern bool libspdm_ec_set_priv_key(void *ec_context, const uint8_t *private_key,
-                                    size_t private_key_size);
-
-/**
- * Gets the public key component from the established EC context.
- *
- * For P-256, the public_size is 64. first 32-byte is X, second 32-byte is Y.
- * For P-384, the public_size is 96. first 48-byte is X, second 48-byte is Y.
- * For P-521, the public_size is 132. first 66-byte is X, second 66-byte is Y.
- *
- * @param[in, out]  ec_context   Pointer to EC context being set.
- * @param[out]      public       Pointer to the buffer to receive generated public X,Y.
- * @param[in, out]  public_size  On input, the size of public buffer in bytes.
- *                               On output, the size of data returned in public buffer in bytes.
- *
- * @retval  true   EC key component was retrieved successfully.
- * @retval  false  Invalid EC key component.
- **/
-extern bool libspdm_ec_get_pub_key(void *ec_context, uint8_t *public_key, size_t *public_key_size);
-
-/**
- * Validates key components of EC context.
- * NOTE: This function performs integrity checks on all the EC key material, so
- *       the EC key structure must contain all the private key data.
- *
- * If ec_context is NULL, then return false.
- *
- * @param[in]  ec_context  Pointer to EC context to check.
- *
- * @retval  true   EC key components are valid.
- * @retval  false  EC key components are not valid.
- **/
-extern bool libspdm_ec_check_key(const void *ec_context);
-
+#if LIBSPDM_ECDHE_SUPPORT
 /**
  * Generates EC key and returns EC public key (X, Y).
  *
@@ -159,7 +96,9 @@ extern bool libspdm_ec_generate_key(void *ec_context, uint8_t *public_key, size_
 extern bool libspdm_ec_compute_key(void *ec_context, const uint8_t *peer_public,
                                    size_t peer_public_size, uint8_t *key,
                                    size_t *key_size);
+#endif /* LIBSPDM_ECDHE_SUPPORT */
 
+#if LIBSPDM_ECDSA_SUPPORT
 /**
  * Carries out the EC-DSA signature.
  *
@@ -219,5 +158,5 @@ extern bool libspdm_ecdsa_sign(void *ec_context, size_t hash_nid,
 extern bool libspdm_ecdsa_verify(void *ec_context, size_t hash_nid,
                                  const uint8_t *message_hash, size_t hash_size,
                                  const uint8_t *signature, size_t sig_size);
-
+#endif /* LIBSPDM_ECDSA_SUPPORT */
 #endif /* CRYPTLIB_EC_H */
