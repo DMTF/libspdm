@@ -1819,7 +1819,7 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
     mbedtls_x509write_csr_set_key(&req, &key);
 
     /*data is written at the end of the buffer*/
-    *csr_len = mbedtls_x509write_csr_der(&req, *csr_pointer, csr_buffer_size, NULL, NULL);
+    *csr_len = mbedtls_x509write_csr_der(&req, *csr_pointer, csr_buffer_size, libspdm_myrand, NULL);
     if (*csr_len <= 0) {
         ret = 1;
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"mbedtls_x509write_csr_der failed \n"));
