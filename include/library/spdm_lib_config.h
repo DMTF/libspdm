@@ -48,9 +48,6 @@
 #define LIBSPDM_MAX_ROOT_CERT_SUPPORT 10
 #endif
 
-#ifndef LIBSPDM_MAX_MEASUREMENT_BLOCK_COUNT
-#define LIBSPDM_MAX_MEASUREMENT_BLOCK_COUNT 8
-#endif
 /* If the Responder supports it a Requester is allowed to establish multiple secure sessions with
  * the Responder. This value specifies the maximum number of sessions libspdm can support.
  */
