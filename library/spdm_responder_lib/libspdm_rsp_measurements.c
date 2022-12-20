@@ -329,8 +329,6 @@ libspdm_return_t libspdm_get_response_measurements(void *context,
         }
     }
 
-    LIBSPDM_ASSERT(measurements_count <= LIBSPDM_MAX_MEASUREMENT_BLOCK_COUNT);
-
     switch (spdm_request->header.param2) {
     case SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_TOTAL_NUMBER_OF_MEASUREMENTS:
         spdm_response_size += 0; /* Just to match code pattern in other case blocks*/

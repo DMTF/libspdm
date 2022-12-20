@@ -8,21 +8,6 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 
-#pragma pack(1)
-typedef struct {
-    spdm_message_header_t header;
-    uint8_t number_of_blocks;
-    uint8_t measurement_record_length[3];
-    uint8_t measurement_record[(sizeof(spdm_measurement_block_dmtf_t) +
-                                LIBSPDM_MAX_HASH_SIZE) *
-                               LIBSPDM_MAX_MEASUREMENT_BLOCK_COUNT];
-    uint8_t nonce[SPDM_NONCE_SIZE];
-    uint16_t opaque_length;
-    uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
-    uint8_t signature[LIBSPDM_MAX_ASYM_KEY_SIZE];
-} libspdm_measurements_response_max_t;
-#pragma pack()
-
 bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
                                           libspdm_session_info_t *session_info,
                                           const void *sign_data,
@@ -180,7 +165,7 @@ static libspdm_return_t libspdm_try_get_measurement(void *context, const uint32_
     libspdm_return_t status;
     spdm_get_measurements_request_t *spdm_request;
     size_t spdm_request_size;
-    libspdm_measurements_response_max_t *spdm_response;
+    spdm_measurements_response_t *spdm_response;
     size_t spdm_response_size;
     uint32_t measurement_record_data_length;
     uint8_t *measurement_record_data;
@@ -337,7 +322,7 @@ static libspdm_return_t libspdm_try_get_measurement(void *context, const uint32_
             spdm_context, session_id,
             &spdm_response_size, (void **)&spdm_response,
             SPDM_GET_MEASUREMENTS, SPDM_MEASUREMENTS,
-            sizeof(libspdm_measurements_response_max_t));
+            message_size);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             goto receive_done;
         }
@@ -385,15 +370,11 @@ static libspdm_return_t libspdm_try_get_measurement(void *context, const uint32_
             status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
             goto receive_done;
         }
-        if (measurement_record_data_length >= sizeof(spdm_response->measurement_record)) {
-            status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
-            goto receive_done;
-        }
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "measurement_record_length - 0x%06x\n",
                        measurement_record_data_length));
     }
 
-    measurement_record_data = spdm_response->measurement_record;
+    measurement_record_data = (void *)(spdm_response + 1);
 
     if ((request_attribute & SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) != 0) {
         if (spdm_response_size <

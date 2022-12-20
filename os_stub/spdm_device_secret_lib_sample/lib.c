@@ -1582,9 +1582,6 @@ bool libspdm_generate_measurement_summary_hash(
             return false;
         }
 
-        LIBSPDM_ASSERT(device_measurement_count <=
-                       LIBSPDM_MAX_MEASUREMENT_BLOCK_COUNT);
-
         /* double confirm that MeasurmentData internal size is correct*/
         measurment_data_size = 0;
         cached_measurment_block = (void *)device_measurement;
