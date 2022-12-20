@@ -466,6 +466,12 @@ libspdm_return_t libspdm_set_data(void *context, libspdm_data_type_t data_type,
                          sizeof(spdm_context->transcript.message_a.buffer),
                          data, data_size);
         break;
+    case LIBSPDM_DATA_IS_REQUESTER:
+        if (data_size != sizeof(bool)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        spdm_context->local_context.is_requester = *(bool *)data;
+        break;
     default:
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         break;
