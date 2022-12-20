@@ -95,6 +95,14 @@ typedef enum {
 
     /* My provisioned certificate slot_id (for slot_id - 0xFF, default 0)*/
     LIBSPDM_DATA_LOCAL_PUBLIC_CERT_CHAIN_DEFAULT_SLOT_ID,
+
+    /* if the context is for a requester. It only needs to be set in VCA cache.
+     * In normal flow, the value is set in GET_VERSION or VERSION automatically.
+     * false means responder
+     * true means requester
+     **/
+    LIBSPDM_DATA_IS_REQUESTER,
+
     /* MAX */
     LIBSPDM_DATA_MAX
 } libspdm_data_type_t;
