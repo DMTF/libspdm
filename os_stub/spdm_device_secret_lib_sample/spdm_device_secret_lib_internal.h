@@ -14,6 +14,7 @@
 
 #include "library/spdm_crypt_lib.h"
 #include "spdm_crypt_ext_lib/spdm_crypt_ext_lib.h"
+#include "spdm_crypt_ext_lib/cryptlib_ext.h"
 #include "library/spdm_device_secret_lib.h"
 #include "hal/library/debuglib.h"
 

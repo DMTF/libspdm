@@ -11,6 +11,7 @@
  *    Edwards-Curve Primitives
  *=====================================================================================*/
 
+#if (LIBSPDM_EDDSA_ED25519_SUPPORT) || (LIBSPDM_EDDSA_ED448_SUPPORT)
 /**
  * Allocates and Initializes one Edwards-Curve context for subsequent use with the NID.
  *
@@ -27,75 +28,6 @@ extern void *libspdm_ecd_new_by_nid(size_t nid);
  * @param[in]  ecd_context  Pointer to the Ed context to be released.
  **/
 extern void libspdm_ecd_free(void *ecd_context);
-
-/**
- * Sets the public key component into the established Ed context.
- *
- * For ed25519, the public_size is 32.
- * For ed448, the public_size is 57.
- *
- * @param[in, out]  ecd_context    Pointer to Ed context being set.
- * @param[in]       public_key     Pointer to the buffer to receive generated public X,Y.
- * @param[in]       public_size    The size of public buffer in bytes.
- *
- * @retval  true   Ed public key component was set successfully.
- * @retval  false  Invalid EC public key component.
- **/
-extern bool libspdm_ecd_set_pub_key(void *ecd_context, const uint8_t *public_key,
-                                    size_t public_key_size);
-
-/**
- * Gets the public key component from the established Ed context.
- *
- * For ed25519, the public_size is 32.
- * For ed448, the public_size is 57.
- *
- * @param[in, out]  ecd_context    Pointer to Ed context being set.
- * @param[out]      public         Pointer to the buffer to receive generated public X,Y.
- * @param[in, out]  public_size    On input, the size of public buffer in bytes.
- *                                 On output, the size of data returned in public buffer in bytes.
- *
- * @retval  true   Ed key component was retrieved successfully.
- * @retval  false  Invalid EC public key component.
- **/
-extern bool libspdm_ecd_get_pub_key(void *ecd_context, uint8_t *public_key,
-                                    size_t *public_key_size);
-
-/**
- * Validates key components of Ed context.
- * NOTE: This function performs integrity checks on all the Ed key material, so
- *       the Ed key structure must contain all the private key data.
- *
- * If ecd_context is NULL, then return false.
- *
- * @param[in]  ecd_context  Pointer to Ed context to check.
- *
- * @retval  true   Ed key components are valid.
- * @retval  false  Ed key components are not valid.
- **/
-extern bool libspdm_ecd_check_key(const void *ecd_context);
-
-/**
- * Generates Ed key and returns Ed public key.
- *
- * For ed25519, the public_size is 32.
- * For ed448, the public_size is 57.
- *
- * If ecd_context is NULL, then return false.
- * If public_size is NULL, then return false.
- * If public_size is large enough but public is NULL, then return false.
- *
- * @param[in, out]  ecd_context      Pointer to the Ed context.
- * @param[out]      public_key       Pointer to the buffer to receive generated public key.
- * @param[in, out]  public_key_size  On input, the size of public buffer in bytes.
- *                                   On output, the size of data returned in public buffer in bytes.
- *
- * @retval true   Ed public key generation succeeded.
- * @retval false  Ed public key generation failed.
- * @retval false  public_size is not large enough.
- **/
-extern bool libspdm_ecd_generate_key(void *ecd_context, uint8_t *public_key,
-                                     size_t *public_key_size);
 
 /**
  * Carries out the Ed-DSA signature.
@@ -164,5 +96,5 @@ extern bool libspdm_eddsa_verify(const void *ecd_context, size_t hash_nid,
                                  const uint8_t *context, size_t context_size,
                                  const uint8_t *message, size_t size,
                                  const uint8_t *signature, size_t sig_size);
-
+#endif /* (LIBSPDM_EDDSA_ED25519_SUPPORT) || (LIBSPDM_EDDSA_ED448_SUPPORT) */
 #endif /* CRYPTLIB_ECD_H */

@@ -32,53 +32,6 @@ extern void *libspdm_dh_new_by_nid(size_t nid);
 void libspdm_dh_free(void *dh_context);
 
 /**
- * Generates DH parameter.
- *
- * Given generator g, and length of prime number p in bits, this function generates p,
- * and sets DH context according to value of g and p.
- *
- * If dh_context is NULL, then return false.
- * If prime is NULL, then return false.
- * If this interface is not supported, then return false.
- *
- * @param[in, out]  dh_context    Pointer to the DH context.
- * @param[in]       generator     Value of generator.
- * @param[in]       prime_length  Length in bits of prime to be generated.
- * @param[out]      prime         Pointer to the buffer to receive the generated prime number.
- *
- * @retval true   DH parameter generation succeeded.
- * @retval false  Value of generator is not supported.
- * @retval false  Random number generator fails to generate random prime number with prime_length.
- * @retval false  This interface is not supported.
- **/
-extern bool libspdm_dh_generate_parameter(void *dh_context, size_t generator,
-                                          size_t prime_length, uint8_t *prime);
-
-/**
- * Sets generator and prime parameters for DH.
- *
- * Given generator g, and prime number p, this function and sets DH context accordingly.
- *
- * If dh_context is NULL, then return false.
- * If prime is NULL, then return false.
- * If this interface is not supported, then return false.
- *
- * @param[in, out]  dh_context    Pointer to the DH context.
- * @param[in]       generator     Value of generator.
- * @param[in]       prime_length  Length in bits of prime to be generated.
- * @param[in]       prime         Pointer to the prime number.
- *
- * @retval true   DH parameter setting succeeded.
- * @retval false  Value of generator is not supported.
- * @retval false  Value of generator is not suitable for the prime.
- * @retval false  Value of prime is not a prime number.
- * @retval false  Value of prime is not a safe prime number.
- * @retval false  This interface is not supported.
- **/
-extern bool libspdm_dh_set_parameter(void *dh_context, size_t generator,
-                                     size_t prime_length, const uint8_t *prime);
-
-/**
  * Generates DH public key.
  *
  * This function generates random secret exponent, and computes the public key, which is
