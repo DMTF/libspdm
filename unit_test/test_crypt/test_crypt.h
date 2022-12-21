@@ -16,7 +16,7 @@
 #include <assert.h>
 
 #include "hal/base.h"
-#include "library/spdm_lib_config.h"
+#include "internal/libspdm_lib_config.h"
 
 #include "hal/library/debuglib.h"
 #include "hal/library/memlib.h"

@@ -4,7 +4,7 @@
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
-#include "library/spdm_lib_config.h"
+#include "internal/libspdm_lib_config.h"
 #include "spdm_crypt_ext_lib/spdm_crypt_ext_lib.h"
 #include "hal/library/cryptlib.h"
 #include "spdm_crypt_ext_lib/cryptlib_ext.h"
