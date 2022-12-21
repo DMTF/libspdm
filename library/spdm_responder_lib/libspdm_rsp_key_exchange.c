@@ -364,8 +364,14 @@ libspdm_return_t libspdm_get_response_key_exchange(void *context,
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
         libspdm_init_mut_auth_encap_state(
             context, spdm_response->mut_auth_requested);
-        spdm_response->req_slot_id_param =
-            (spdm_context->encap_context.req_slot_id & 0xF);
+        if (spdm_response->mut_auth_requested == SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED) {
+            /* no need to libspdm_init_mut_auth_encap_state() because of no ENCAP message */
+            spdm_response->req_slot_id_param =
+                (spdm_context->encap_context.req_slot_id & 0xF);
+        } else {
+            /* req_slot_id is always 0 if ENCAP message is needed */
+            spdm_response->req_slot_id_param = 0;
+        }
 #else
         spdm_response->mut_auth_requested = 0;
         spdm_response->req_slot_id_param = 0;

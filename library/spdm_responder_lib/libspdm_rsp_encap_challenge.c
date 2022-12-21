@@ -120,6 +120,13 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
             return LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
     }
+    if (spdm_context->encap_context.req_slot_id != 0xFF) {
+        spdm_context->connection_info.peer_used_cert_chain_slot_id =
+            spdm_context->encap_context.req_slot_id;
+    } else {
+        spdm_context->connection_info.peer_used_cert_chain_slot_id =
+            spdm_context->local_context.provisioned_slot_id;
+    }
     hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
     signature_size = libspdm_get_req_asym_signature_size(
         spdm_context->connection_info.algorithm.req_base_asym_alg);
