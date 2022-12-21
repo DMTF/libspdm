@@ -128,4 +128,4 @@ bool libspdm_validate_crypt_ecd_2(void)
     return true;
 }
 
-#endif
+#endif /* (LIBSPDM_EDDSA_ED25519_SUPPORT) || (LIBSPDM_EDDSA_ED448_SUPPORT) */
