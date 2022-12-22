@@ -14,7 +14,7 @@ typedef struct {
     spdm_message_header_t header;
     uint16_t length;
     uint8_t measurement_specification_sel;
-    uint8_t other_params_support;
+    uint8_t other_params_selection;
     uint32_t measurement_hash_algo;
     uint32_t base_asym_sel;
     uint32_t base_hash_sel;
@@ -485,7 +485,7 @@ libspdm_return_t libspdm_get_response_algorithms(void *context,
         spdm_context->connection_info.algorithm.key_schedule);
 
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
-        spdm_response->other_params_support = (uint8_t)libspdm_prioritize_algorithm(
+        spdm_response->other_params_selection = (uint8_t)libspdm_prioritize_algorithm(
             other_params_support_priority_table,
             LIBSPDM_ARRAY_SIZE(other_params_support_priority_table),
             spdm_context->local_context.algorithm.other_params_support,
@@ -579,7 +579,7 @@ libspdm_return_t libspdm_get_response_algorithms(void *context,
             spdm_response->struct_table[3].alg_supported;
         if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
             spdm_context->connection_info.algorithm.other_params_support =
-                spdm_response->other_params_support;
+                spdm_response->other_params_selection;
         } else {
             spdm_context->connection_info.algorithm.other_params_support = 0;
         }
