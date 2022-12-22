@@ -1448,8 +1448,8 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
             m_libspdm_use_measurement_hash_algo;
         signature_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
-        measurement_hash_size = libspdm_get_measurement_hash_size(
-            m_libspdm_use_measurement_hash_algo);
+        measurement_hash_size = libspdm_get_hash_size(
+            m_libspdm_use_hash_algo);
         hmac_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
         dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
         opaque_key_exchange_rsp_size =
@@ -1625,8 +1625,8 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
             m_libspdm_use_measurement_hash_algo;
         signature_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
-        measurement_hash_size = libspdm_get_measurement_hash_size(
-            m_libspdm_use_measurement_hash_algo);
+        measurement_hash_size = libspdm_get_hash_size(
+            m_libspdm_use_hash_algo);
         hmac_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
         dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
         opaque_key_exchange_rsp_size =
@@ -1801,8 +1801,8 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
             m_libspdm_use_measurement_hash_algo;
         signature_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
-        measurement_hash_size = libspdm_get_measurement_hash_size(
-            m_libspdm_use_measurement_hash_algo);
+        measurement_hash_size = libspdm_get_hash_size(
+            m_libspdm_use_hash_algo);
         hmac_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
         dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
         opaque_key_exchange_rsp_size =
@@ -2314,8 +2314,8 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
             m_libspdm_use_measurement_hash_algo;
         signature_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
-        measurement_hash_size = libspdm_get_measurement_hash_size(
-            m_libspdm_use_measurement_hash_algo);
+        measurement_hash_size = libspdm_get_hash_size(
+            m_libspdm_use_hash_algo);
         hmac_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
         dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
         opaque_key_exchange_rsp_size =
@@ -5621,7 +5621,7 @@ static void libspdm_test_requester_key_exchange_case12(void **state)
     assert_memory_equal(
         measurement_hash,
         m_libspdm_use_tcb_hash_value,
-        libspdm_get_measurement_hash_size(m_libspdm_use_measurement_hash_algo));
+        libspdm_get_hash_size(m_libspdm_use_hash_algo));
     assert_int_equal(
         libspdm_secured_message_get_session_state(
             spdm_context->session_info[0].secured_message_context),
@@ -5709,7 +5709,7 @@ static void libspdm_test_requester_key_exchange_case13(void **state)
     assert_memory_equal(
         measurement_hash,
         m_libspdm_zero_filled_buffer,
-        libspdm_get_measurement_hash_size(m_libspdm_use_measurement_hash_algo));
+        libspdm_get_hash_size(m_libspdm_use_hash_algo));
     assert_int_equal(
         libspdm_secured_message_get_session_state(
             spdm_context->session_info[0].secured_message_context),
@@ -5797,7 +5797,7 @@ static void libspdm_test_requester_key_exchange_case14(void **state)
     assert_memory_equal(
         measurement_hash,
         m_libspdm_use_tcb_hash_value,
-        libspdm_get_measurement_hash_size(m_libspdm_use_measurement_hash_algo));
+        libspdm_get_hash_size(m_libspdm_use_hash_algo));
     assert_int_equal(
         libspdm_secured_message_get_session_state(
             spdm_context->session_info[0].secured_message_context),

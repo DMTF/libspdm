@@ -1439,8 +1439,8 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
             m_libspdm_use_measurement_hash_algo;
         signature_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
-        measurement_hash_size = libspdm_get_measurement_hash_size(
-            m_libspdm_use_measurement_hash_algo);
+        measurement_hash_size = libspdm_get_hash_size(
+            m_libspdm_use_hash_algo);
         hmac_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
         dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
         opaque_key_exchange_rsp_size =
@@ -1616,8 +1616,8 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
             m_libspdm_use_measurement_hash_algo;
         signature_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
-        measurement_hash_size = libspdm_get_measurement_hash_size(
-            m_libspdm_use_measurement_hash_algo);
+        measurement_hash_size = libspdm_get_hash_size(
+            m_libspdm_use_hash_algo);
         hmac_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
         dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
         opaque_key_exchange_rsp_size =
@@ -1788,8 +1788,8 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
             m_libspdm_use_measurement_hash_algo;
         signature_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
-        measurement_hash_size = libspdm_get_measurement_hash_size(
-            m_libspdm_use_measurement_hash_algo);
+        measurement_hash_size = libspdm_get_hash_size(
+            m_libspdm_use_hash_algo);
         hmac_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
         dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
         opaque_key_exchange_rsp_size =
@@ -2299,8 +2299,8 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
             m_libspdm_use_measurement_hash_algo;
         signature_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
-        measurement_hash_size = libspdm_get_measurement_hash_size(
-            m_libspdm_use_measurement_hash_algo);
+        measurement_hash_size = libspdm_get_hash_size(
+            m_libspdm_use_hash_algo);
         hmac_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
         dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
         opaque_key_exchange_rsp_size =
