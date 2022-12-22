@@ -276,14 +276,16 @@ libspdm_return_t libspdm_get_response_key_exchange(void *context,
     request_size = sizeof(spdm_key_exchange_request_t) + dhe_key_size +
                    sizeof(uint16_t) + opaque_data_length;
 
-    cptr = (const uint8_t *)request + sizeof(spdm_key_exchange_request_t) +
-           dhe_key_size + sizeof(uint16_t);
-    status = libspdm_process_opaque_data_supported_version_data(
-        spdm_context, opaque_data_length, cptr);
-    if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-                                               response_size, response);
+    if (opaque_data_length != 0) {
+        cptr = (const uint8_t *)request + sizeof(spdm_key_exchange_request_t) +
+               dhe_key_size + sizeof(uint16_t);
+        status = libspdm_process_opaque_data_supported_version_data(
+            spdm_context, opaque_data_length, cptr);
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                                   response_size, response);
+        }
     }
 
     opaque_key_exchange_rsp_size =
