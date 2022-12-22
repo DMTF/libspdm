@@ -308,9 +308,9 @@ typedef struct {
      * param2 == RSVD*/
     uint16_t length;
     uint8_t measurement_specification_sel;
-    /* other_params_support is added in 1.2.
+    /* other_params_selection is added in 1.2.
      * BIT[0:3]=opaque_data_format select, BIT[4:7]=reserved*/
-    uint8_t other_params_support;
+    uint8_t other_params_selection;
     uint32_t measurement_hash_algo;
     uint32_t base_asym_sel;
     uint32_t base_hash_sel;

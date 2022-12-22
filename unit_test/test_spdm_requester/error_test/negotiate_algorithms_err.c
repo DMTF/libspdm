@@ -12,7 +12,7 @@ typedef struct {
     spdm_message_header_t header;
     uint16_t length;
     uint8_t measurement_specification_sel;
-    uint8_t other_params_support;
+    uint8_t other_params_selection;
     uint32_t measurement_hash_algo;
     uint32_t base_asym_sel;
     uint32_t base_hash_sel;
@@ -1236,7 +1236,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         spdm_response->length = sizeof(libspdm_algorithms_response_spdm11_t);
         spdm_response->measurement_specification_sel =
             SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
-        spdm_response->other_params_support = SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1;
+        spdm_response->other_params_selection = SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1;
         spdm_response->measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
         spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
         spdm_response->base_hash_sel = m_libspdm_use_hash_algo;
@@ -1283,7 +1283,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         spdm_response->length = sizeof(libspdm_algorithms_response_spdm11_t);
         spdm_response->measurement_specification_sel =
             SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
-        spdm_response->other_params_support = 0;
+        spdm_response->other_params_selection = 0;
         spdm_response->measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
         spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
         spdm_response->base_hash_sel = m_libspdm_use_hash_algo;
@@ -1585,7 +1585,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         spdm_response->measurement_specification_sel =
             SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
         /* Two bits set when only one should be set. */
-        spdm_response->other_params_support =
+        spdm_response->other_params_selection =
             SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_0 |
             SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1;
         spdm_response->measurement_hash_algo =

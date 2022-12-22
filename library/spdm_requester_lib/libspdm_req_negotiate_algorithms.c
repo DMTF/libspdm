@@ -25,7 +25,7 @@ typedef struct {
     spdm_message_header_t header;
     uint16_t length;
     uint8_t measurement_specification_sel;
-    uint8_t other_params_support;
+    uint8_t other_params_selection;
     uint32_t measurement_hash_algo;
     uint32_t base_asym_sel;
     uint32_t base_hash_sel;
@@ -301,7 +301,7 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
         spdm_response->measurement_specification_sel;
     if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
         spdm_context->connection_info.algorithm.other_params_support =
-            spdm_response->other_params_support;
+            spdm_response->other_params_selection;
     }
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         spdm_response->measurement_hash_algo;
