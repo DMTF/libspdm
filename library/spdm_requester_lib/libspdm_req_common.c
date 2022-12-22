@@ -162,6 +162,10 @@ libspdm_return_t libspdm_process_opaque_data_version_selection_data(libspdm_cont
             libspdm_get_version_from_version_number(
                 spdm_context->local_context.secured_message_version.spdm_version[
                     secured_message_version_index])) {
+            libspdm_copy_mem(&(spdm_context->connection_info.secured_message_version),
+                             sizeof(spdm_context->connection_info.secured_message_version),
+                             &(opaque_element_version_section->selected_version),
+                             sizeof(spdm_version_number_t));
             return LIBSPDM_STATUS_SUCCESS;
         }
     }
