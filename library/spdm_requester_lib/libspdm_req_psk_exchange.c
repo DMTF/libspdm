@@ -329,16 +329,6 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
     if (heartbeat_period != NULL) {
         *heartbeat_period = spdm_response->header.param1;
     }
-    rsp_session_id = spdm_response->rsp_session_id;
-    *session_id = libspdm_generate_session_id(req_session_id, rsp_session_id);
-    session_info = libspdm_assign_session_id(spdm_context, *session_id, true);
-    if (session_info == NULL) {
-        status = LIBSPDM_STATUS_SESSION_NUMBER_EXCEED;
-        goto receive_done;
-    }
-    libspdm_session_info_set_psk_hint(session_info,
-                                      spdm_context->local_context.psk_hint,
-                                      spdm_context->local_context.psk_hint_size);
 
     measurement_summary_hash_size = libspdm_get_measurement_summary_hash_size(
         spdm_context, true, measurement_hash_type);
@@ -349,7 +339,6 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
         sizeof(spdm_psk_exchange_response_t) +
         spdm_response->context_length + spdm_response->opaque_length +
         measurement_summary_hash_size + hmac_size) {
-        libspdm_free_session_id(spdm_context, *session_id);
         status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
     }
@@ -360,7 +349,6 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
         status = libspdm_process_opaque_data_version_selection_data(
             spdm_context, spdm_response->opaque_length, ptr);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
-            libspdm_free_session_id(spdm_context, *session_id);
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             goto receive_done;
         }
@@ -382,7 +370,6 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
     ptr += measurement_summary_hash_size;
 
     if ( spdm_response->opaque_length > SPDM_MAX_OPAQUE_DATA_SIZE) {
-        libspdm_free_session_id(spdm_context, *session_id);
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
@@ -402,6 +389,16 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
 
     ptr += spdm_response->opaque_length;
 
+    rsp_session_id = spdm_response->rsp_session_id;
+    *session_id = libspdm_generate_session_id(req_session_id, rsp_session_id);
+    session_info = libspdm_assign_session_id(spdm_context, *session_id, true);
+    if (session_info == NULL) {
+        status = LIBSPDM_STATUS_SESSION_NUMBER_EXCEED;
+        goto receive_done;
+    }
+    libspdm_session_info_set_psk_hint(session_info,
+                                      spdm_context->local_context.psk_hint,
+                                      spdm_context->local_context.psk_hint_size);
 
     /* Cache session data*/
 
