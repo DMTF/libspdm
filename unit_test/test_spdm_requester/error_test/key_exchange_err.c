@@ -2604,7 +2604,6 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         spdm_key_exchange_response_t *spdm_response;
         size_t dhe_key_size;
         uint32_t hash_size;
-        uint32_t measurement_hash_size;
         size_t signature_size;
         uint32_t hmac_size;
         uint8_t *ptr;
@@ -2614,7 +2613,6 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         size_t opaque_key_exchange_rsp_size;
         void *data;
         size_t data_size;
-        uint8_t measurement_hash_data[LIBSPDM_MAX_HASH_SIZE];
         uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
@@ -2647,14 +2645,12 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
             m_libspdm_use_measurement_hash_algo;
         signature_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
-        measurement_hash_size = libspdm_get_measurement_hash_size(
-            m_libspdm_use_measurement_hash_algo);
         hmac_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
         dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
         opaque_key_exchange_rsp_size =
             libspdm_get_opaque_data_version_selection_data_size(spdm_context);
         spdm_response_size = sizeof(spdm_key_exchange_response_t) +
-                             dhe_key_size + measurement_hash_size + sizeof(uint16_t) +
+                             dhe_key_size + 0 + sizeof(uint16_t) +
                              opaque_key_exchange_rsp_size + signature_size +
                              hmac_size;
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
@@ -2682,12 +2678,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
             dhe_key_size, final_key, &final_key_size);
         libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
         ptr += dhe_key_size;
-        /*Mock measurement hash as 0x00 array*/
-        libspdm_zero_mem(measurement_hash_data, measurement_hash_size);
-        libspdm_copy_mem(ptr, spdm_response_size - (ptr - (uint8_t *)spdm_response),
-                         measurement_hash_data, measurement_hash_size);
-        /*libspdm_zero_mem (ptr, measurement_hash_size);*/
-        ptr += measurement_hash_size;
+
         *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
@@ -2943,7 +2934,6 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         spdm_key_exchange_response_t *spdm_response;
         size_t dhe_key_size;
         uint32_t hash_size;
-        uint32_t measurement_hash_size;
         size_t signature_size;
         uint32_t hmac_size;
         uint8_t *ptr;
@@ -2953,7 +2943,6 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         size_t opaque_key_exchange_rsp_size;
         void *data;
         size_t data_size;
-        uint8_t measurement_hash_data[LIBSPDM_MAX_HASH_SIZE];
         uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
@@ -2983,14 +2972,12 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
             m_libspdm_use_measurement_hash_algo;
         signature_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
-        measurement_hash_size = libspdm_get_measurement_hash_size(
-            m_libspdm_use_measurement_hash_algo);
         hmac_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
         dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
         opaque_key_exchange_rsp_size =
             libspdm_get_opaque_data_version_selection_data_size(spdm_context);
         spdm_response_size = sizeof(spdm_key_exchange_response_t) +
-                             dhe_key_size + measurement_hash_size + sizeof(uint16_t) +
+                             dhe_key_size + 0 + sizeof(uint16_t) +
                              opaque_key_exchange_rsp_size + signature_size + hmac_size;
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
@@ -3016,12 +3003,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
             dhe_key_size, final_key, &final_key_size);
         libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
         ptr += dhe_key_size;
-        /*Mock measurement hash as 0x00 array*/
-        libspdm_zero_mem(measurement_hash_data, measurement_hash_size);
-        libspdm_copy_mem(ptr, spdm_response_size - (ptr - (uint8_t *)spdm_response),
-                         measurement_hash_data, measurement_hash_size);
-        /*libspdm_zero_mem (ptr, measurement_hash_size);*/
-        ptr += measurement_hash_size;
+
         *(uint16_t *)ptr = SPDM_MAX_OPAQUE_DATA_SIZE + 1;
         ptr += sizeof(uint16_t);
         libspdm_build_opaque_data_version_selection_data(
