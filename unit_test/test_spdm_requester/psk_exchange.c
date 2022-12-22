@@ -1410,8 +1410,8 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         ->connection_info.algorithm.measurement_hash_algo =
             m_libspdm_use_measurement_hash_algo;
         hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
-        measurement_hash_size = libspdm_get_measurement_hash_size(
-            m_libspdm_use_measurement_hash_algo);
+        measurement_hash_size = libspdm_get_hash_size(
+            m_libspdm_use_hash_algo);
         hmac_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
         opaque_psk_exchange_rsp_size =
             libspdm_get_opaque_data_version_selection_data_size(
@@ -1547,8 +1547,8 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         ->connection_info.algorithm.measurement_hash_algo =
             m_libspdm_use_measurement_hash_algo;
         hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
-        measurement_hash_size = libspdm_get_measurement_hash_size(
-            m_libspdm_use_measurement_hash_algo);
+        measurement_hash_size = libspdm_get_hash_size(
+            m_libspdm_use_hash_algo);
         hmac_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
         opaque_psk_exchange_rsp_size =
             libspdm_get_opaque_data_version_selection_data_size(
@@ -1683,8 +1683,8 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         ->connection_info.algorithm.measurement_hash_algo =
             m_libspdm_use_measurement_hash_algo;
         hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
-        measurement_hash_size = libspdm_get_measurement_hash_size(
-            m_libspdm_use_measurement_hash_algo);
+        measurement_hash_size = libspdm_get_hash_size(
+            m_libspdm_use_hash_algo);
         hmac_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
         opaque_psk_exchange_rsp_size =
             libspdm_get_opaque_data_version_selection_data_size(
@@ -2076,8 +2076,8 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         ->connection_info.algorithm.measurement_hash_algo =
             m_libspdm_use_measurement_hash_algo;
         hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
-        measurement_hash_size = libspdm_get_measurement_hash_size(
-            m_libspdm_use_measurement_hash_algo);
+        measurement_hash_size = libspdm_get_hash_size(
+            m_libspdm_use_hash_algo);
         hmac_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
         opaque_psk_exchange_rsp_size =
             libspdm_get_opaque_data_version_selection_data_size(
@@ -4002,7 +4002,7 @@ void libspdm_test_requester_psk_exchange_case14(void **state)
     assert_memory_equal(
         measurement_hash,
         m_libspdm_use_tcb_hash_value,
-        libspdm_get_measurement_hash_size(m_libspdm_use_measurement_hash_algo));
+        libspdm_get_hash_size(m_libspdm_use_hash_algo));
     assert_int_equal(
         libspdm_secured_message_get_session_state(
             spdm_context->session_info[0].secured_message_context),
@@ -4087,7 +4087,7 @@ void libspdm_test_requester_psk_exchange_case15(void **state)
     assert_memory_equal(
         measurement_hash,
         m_libspdm_zero_filled_buffer,
-        libspdm_get_measurement_hash_size(m_libspdm_use_measurement_hash_algo));
+        libspdm_get_hash_size(m_libspdm_use_hash_algo));
     assert_int_equal(
         libspdm_secured_message_get_session_state(
             spdm_context->session_info[0].secured_message_context),
@@ -4173,7 +4173,7 @@ void libspdm_test_requester_psk_exchange_case16(void **state)
     assert_memory_equal(
         measurement_hash,
         m_libspdm_use_tcb_hash_value,
-        libspdm_get_measurement_hash_size(m_libspdm_use_measurement_hash_algo));
+        libspdm_get_hash_size(m_libspdm_use_hash_algo));
     assert_int_equal(
         libspdm_secured_message_get_session_state(
             spdm_context->session_info[0].secured_message_context),
