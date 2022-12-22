@@ -92,3 +92,79 @@ libspdm_return_t libspdm_build_opaque_data_supported_version_data(libspdm_contex
 
     return LIBSPDM_STATUS_SUCCESS;
 }
+
+/**
+ * Process opaque data version selection.
+ *
+ * This function should be called in KEY_EXCHANGE/PSK_EXCHANGE response parsing in requester.
+ *
+ * @param  data_in_size                   size in bytes of the data_in.
+ * @param  data_in                       A pointer to the buffer to store the opaque data version selection.
+ *
+ * @retval RETURN_SUCCESS               The opaque data version selection is processed successfully.
+ * @retval RETURN_UNSUPPORTED           The data_in is NOT opaque data version selection.
+ **/
+libspdm_return_t libspdm_process_opaque_data_version_selection_data(libspdm_context_t *spdm_context,
+                                                                    size_t data_in_size,
+                                                                    void *data_in)
+{
+    const secured_message_opaque_element_table_header_t
+    *opaque_element_table_header;
+    const secured_message_opaque_element_version_selection_t
+    *opaque_element_version_section;
+
+    bool result;
+    uint8_t secured_message_version_index;
+    const void *get_element_ptr;
+    size_t get_element_len;
+
+    result = false;
+    get_element_ptr = NULL;
+
+    if (spdm_context->local_context.secured_message_version.spdm_version_count == 0) {
+        return LIBSPDM_STATUS_SUCCESS;
+    }
+
+    result = libspdm_get_element_from_opaque_data(
+        spdm_context, data_in_size,
+        data_in, SPDM_REGISTRY_ID_DMTF,
+        SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_VERSION_SELECTION,
+        &get_element_ptr, &get_element_len);
+    if ((!result) || (get_element_ptr == NULL)) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"get element error!\n"));
+        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+    }
+
+    opaque_element_table_header = (const secured_message_opaque_element_table_header_t*)
+                                  get_element_ptr;
+
+    /*check for selection vesion data*/
+    if ((opaque_element_table_header->vendor_len != 0) ||
+        (opaque_element_table_header->opaque_element_data_len !=
+         sizeof(secured_message_opaque_element_version_selection_t))) {
+        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+    }
+    opaque_element_version_section = (const void *)(opaque_element_table_header + 1);
+
+    if ((const uint8_t *)opaque_element_version_section +
+        sizeof(secured_message_opaque_element_version_selection_t) >
+        (const uint8_t *)opaque_element_table_header + get_element_len) {
+        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+    }
+
+    for (secured_message_version_index = 0;
+         secured_message_version_index <
+         spdm_context->local_context.secured_message_version.spdm_version_count;
+         secured_message_version_index++) {
+        if (libspdm_get_version_from_version_number(opaque_element_version_section->
+                                                    selected_version)
+            ==
+            libspdm_get_version_from_version_number(
+                spdm_context->local_context.secured_message_version.spdm_version[
+                    secured_message_version_index])) {
+            return LIBSPDM_STATUS_SUCCESS;
+        }
+    }
+
+    return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+}
