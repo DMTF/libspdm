@@ -580,13 +580,15 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
         status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
     }
-    status = libspdm_process_opaque_data_version_selection_data(
-        spdm_context, opaque_length, ptr);
-    if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        libspdm_secured_message_dhe_free(
-            spdm_context->connection_info.algorithm.dhe_named_group, dhe_context);
-        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-        goto receive_done;
+    if (opaque_length != 0) {
+        status = libspdm_process_opaque_data_version_selection_data(
+            spdm_context, opaque_length, ptr);
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
+            libspdm_secured_message_dhe_free(
+                spdm_context->connection_info.algorithm.dhe_named_group, dhe_context);
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+            goto receive_done;
+        }
     }
 
     ptr += opaque_length;
