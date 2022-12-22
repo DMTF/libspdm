@@ -519,17 +519,6 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
         goto receive_done;
     }
 
-    rsp_session_id = spdm_response->rsp_session_id;
-    *session_id = libspdm_generate_session_id(req_session_id, rsp_session_id);
-    session_info = libspdm_assign_session_id(spdm_context, *session_id, false);
-
-    if (session_info == NULL) {
-        libspdm_secured_message_dhe_free(
-            spdm_context->connection_info.algorithm.dhe_named_group, dhe_context);
-        status = LIBSPDM_STATUS_SESSION_NUMBER_EXCEED;
-        goto receive_done;
-    }
-
     signature_size = libspdm_get_asym_signature_size(
         spdm_context->connection_info.algorithm.base_asym_algo);
     measurement_summary_hash_size = libspdm_get_measurement_summary_hash_size(
@@ -546,7 +535,6 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
     if (spdm_response_size <
         sizeof(spdm_key_exchange_response_t) + dhe_key_size +
         measurement_summary_hash_size + sizeof(uint16_t) + signature_size + hmac_size) {
-        libspdm_free_session_id(spdm_context, *session_id);
         libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group, dhe_context);
         status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
@@ -577,7 +565,6 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
 
     opaque_length = *(uint16_t *)ptr;
     if (opaque_length > SPDM_MAX_OPAQUE_DATA_SIZE) {
-        libspdm_free_session_id(spdm_context, *session_id);
         libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group, dhe_context);
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
@@ -588,7 +575,6 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
         sizeof(spdm_key_exchange_response_t) + dhe_key_size +
         measurement_summary_hash_size + sizeof(uint16_t) +
         opaque_length + signature_size + hmac_size) {
-        libspdm_free_session_id(spdm_context, *session_id);
         libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group, dhe_context);
         status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
@@ -597,7 +583,6 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
     status = libspdm_process_opaque_data_version_selection_data(
         spdm_context, opaque_length, ptr);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        libspdm_free_session_id(spdm_context, *session_id);
         libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group, dhe_context);
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
@@ -610,6 +595,16 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
                          dhe_key_size + measurement_summary_hash_size +
                          sizeof(uint16_t) + opaque_length + signature_size + hmac_size;
 
+    rsp_session_id = spdm_response->rsp_session_id;
+    *session_id = libspdm_generate_session_id(req_session_id, rsp_session_id);
+    session_info = libspdm_assign_session_id(spdm_context, *session_id, false);
+
+    if (session_info == NULL) {
+        libspdm_secured_message_dhe_free(
+            spdm_context->connection_info.algorithm.dhe_named_group, dhe_context);
+        status = LIBSPDM_STATUS_SESSION_NUMBER_EXCEED;
+        goto receive_done;
+    }
 
     /* -=[Process Response Phase]=- */
     status = libspdm_append_message_k(spdm_context, session_info, true, spdm_request,
