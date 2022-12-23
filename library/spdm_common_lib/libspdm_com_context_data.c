@@ -2114,9 +2114,11 @@ libspdm_return_t libspdm_init_context_with_secured_context(void *context,
                                                           SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->local_context.version.spdm_version[2] = SPDM_MESSAGE_VERSION_12 <<
                                                           SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->local_context.secured_message_version.spdm_version_count = 1;
+    spdm_context->local_context.secured_message_version.spdm_version_count = 2;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
         SPDM_MESSAGE_VERSION_10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->local_context.secured_message_version.spdm_version[1] =
+        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->local_context.capability.st1 = SPDM_ST1_VALUE_US;
 
     spdm_context->encap_context.certificate_chain_buffer.max_buffer_size =
