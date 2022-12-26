@@ -12,16 +12,16 @@
 /**
  * Suspends the execution of the current thread until the time-out interval elapses.
  *
- * @param milliseconds     The time interval for which execution is to be suspended, in milliseconds.
+ * @param microseconds     The time interval for which execution is to be suspended, in milliseconds.
  *
  **/
-void libspdm_sleep(uint64_t milliseconds)
+void libspdm_sleep_in_us(uint64_t microseconds)
 {
     struct timeval tv;
     int err;
 
-    tv.tv_sec = milliseconds / 1000;
-    tv.tv_usec = (milliseconds % 1000) * 1000;
+    tv.tv_sec = microseconds / 1000000;
+    tv.tv_usec = (microseconds % 1000000);
 
     do {
         err=select(0, NULL, NULL, NULL, &tv);
