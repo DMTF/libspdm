@@ -36,6 +36,28 @@ typedef enum {
 extern void *libspdm_rsa_new(void);
 
 /**
+ * Generates RSA context from DER-encoded public key data.
+ *
+ * The public key is ASN.1 DER-encoded as RFC7250 describes,
+ * namely, the SubjectPublicKeyInfo structure of a X.509 certificate.
+ *
+ * @param[in]  der_data    Pointer to the DER-encoded public key data.
+ * @param[in]  der_size    Size of the DER-encoded public key data in bytes.
+ * @param[out] rsa_context Pointer to newly generated RSA context which contains the
+ *                         RSA public key component.
+ *                         Use libspdm_rsa_free() function to free the resource.
+ *
+ * If der_data is NULL, then return false.
+ * If rsa_context is NULL, then return false.
+ *
+ * @retval  true   RSA context was generated successfully.
+ * @retval  false  Invalid DER public key data.
+ **/
+extern bool libspdm_rsa_get_public_key_from_der(const uint8_t *der_data,
+                                                size_t der_size,
+                                                void **rsa_context);
+
+/**
  * Release the specified RSA context.
  *
  * If rsa_context is NULL, then return false.

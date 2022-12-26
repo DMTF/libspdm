@@ -313,6 +313,65 @@ void libspdm_asym_free(uint32_t base_asym_algo, void *context)
     }
 }
 
+static bool libspdm_asym_get_public_key_from_der_wrap(uint32_t base_asym_algo,
+                                                      const uint8_t *der_data,
+                                                      size_t der_size,
+                                                      void **context)
+{
+    switch (base_asym_algo) {
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
+#if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)
+        return libspdm_rsa_get_public_key_from_der(der_data, der_size, context);
+#else
+        LIBSPDM_ASSERT(false);
+        return false;
+#endif
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
+#if LIBSPDM_ECDSA_SUPPORT
+        return libspdm_ec_get_public_key_from_der(der_data, der_size, context);
+#else
+        LIBSPDM_ASSERT(false);
+        return false;
+#endif
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
+#if (LIBSPDM_EDDSA_ED25519_SUPPORT) || (LIBSPDM_EDDSA_ED448_SUPPORT)
+        return libspdm_ecd_get_public_key_from_der(der_data, der_size, context);
+#else
+        LIBSPDM_ASSERT(false);
+        return false;
+#endif
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
+#if LIBSPDM_SM2_DSA_SUPPORT
+        return libspdm_sm2_get_public_key_from_der(der_data, der_size, context);
+#else
+        LIBSPDM_ASSERT(false);
+        return false;
+#endif
+    default:
+        LIBSPDM_ASSERT(false);
+        return false;
+    }
+}
+
+bool libspdm_asym_get_public_key_from_der(uint32_t base_asym_algo,
+                                          const uint8_t *der_data,
+                                          size_t der_size,
+                                          void **context)
+{
+    return libspdm_asym_get_public_key_from_der_wrap(base_asym_algo,
+                                                     der_data,
+                                                     der_size,
+                                                     context);
+}
+
 /**
  * Return if asymmetric function need message hash.
  *
@@ -816,6 +875,17 @@ uint32_t libspdm_get_req_asym_signature_size(uint16_t req_base_asym_alg)
 void libspdm_req_asym_free(uint16_t req_base_asym_alg, void *context)
 {
     libspdm_asym_free(req_base_asym_alg, context);
+}
+
+bool libspdm_req_asym_get_public_key_from_der(uint16_t req_base_asym_alg,
+                                              const uint8_t *der_data,
+                                              size_t der_size,
+                                              void **context)
+{
+    return libspdm_asym_get_public_key_from_der_wrap(req_base_asym_alg,
+                                                     der_data,
+                                                     der_size,
+                                                     context);
 }
 
 bool libspdm_req_asym_func_need_hash(uint16_t req_base_asym_alg)

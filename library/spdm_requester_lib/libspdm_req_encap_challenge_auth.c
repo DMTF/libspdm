@@ -88,8 +88,6 @@ libspdm_return_t libspdm_get_encap_response_challenge_auth(
 
     if (slot_id == 0xFF) {
         spdm_response->header.param2 = 0;
-
-        slot_id = spdm_context->local_context.provisioned_slot_id;
     } else {
         slot_mask = libspdm_get_cert_slot_mask(spdm_context);
         if (slot_mask != 0) {
@@ -102,7 +100,11 @@ libspdm_return_t libspdm_get_encap_response_challenge_auth(
     }
 
     ptr = (void *)(spdm_response + 1);
-    result = libspdm_generate_cert_chain_hash(spdm_context, slot_id, ptr);
+    if (slot_id == 0xFF) {
+        result = libspdm_generate_public_key_hash(spdm_context, ptr);
+    } else {
+        result = libspdm_generate_cert_chain_hash(spdm_context, slot_id, ptr);
+    }
     if (!result) {
         return libspdm_generate_encap_error_response(
             spdm_context, SPDM_ERROR_CODE_UNSPECIFIED, 0,

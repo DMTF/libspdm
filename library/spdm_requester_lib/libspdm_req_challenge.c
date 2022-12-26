@@ -75,7 +75,7 @@ static libspdm_return_t libspdm_try_challenge(void *context, uint8_t slot_id,
     /* -=[Check Parameters Phase]=- */
     LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xff));
     LIBSPDM_ASSERT((slot_id != 0xff) ||
-                   (spdm_context->local_context.peer_cert_chain_provision_size != 0));
+                   (spdm_context->local_context.peer_public_key_provision_size != 0));
 
     /* -=[Verify State Phase]=- */
     if (!libspdm_is_capabilities_flag_supported(
@@ -91,12 +91,7 @@ static libspdm_return_t libspdm_try_challenge(void *context, uint8_t slot_id,
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL, SPDM_CHALLENGE);
 
     /* -=[Construct Request Phase]=- */
-    if (slot_id != 0xff) {
-        spdm_context->connection_info.peer_used_cert_chain_slot_id = slot_id;
-    } else {
-        spdm_context->connection_info.peer_used_cert_chain_slot_id =
-            spdm_context->local_context.provisioned_slot_id;
-    }
+    spdm_context->connection_info.peer_used_cert_chain_slot_id = slot_id;
     transport_header_size = spdm_context->transport_get_header_size(spdm_context);
     status = libspdm_acquire_sender_buffer (spdm_context, &message_size, (void **)&message);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
@@ -227,7 +222,11 @@ static libspdm_return_t libspdm_try_challenge(void *context, uint8_t slot_id,
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "cert_chain_hash (0x%x) - ", hash_size));
     LIBSPDM_INTERNAL_DUMP_DATA(cert_chain_hash, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
-    result = libspdm_verify_certificate_chain_hash(spdm_context, cert_chain_hash, hash_size);
+    if (slot_id == 0xFF) {
+        result = libspdm_verify_public_key_hash(spdm_context, cert_chain_hash, hash_size);
+    } else {
+        result = libspdm_verify_certificate_chain_hash(spdm_context, cert_chain_hash, hash_size);
+    }
     if (!result) {
         status = LIBSPDM_STATUS_VERIF_FAIL;
         goto receive_done;

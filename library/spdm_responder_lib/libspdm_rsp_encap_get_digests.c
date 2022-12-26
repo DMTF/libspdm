@@ -58,10 +58,8 @@ libspdm_return_t libspdm_process_encap_response_digest(
     libspdm_context_t *spdm_context, size_t encap_response_size,
     const void *encap_response, bool *need_continue)
 {
-    bool result;
     const spdm_digest_response_t *spdm_response;
     size_t spdm_response_size;
-    const uint8_t *digest;
     size_t digest_size;
     size_t digest_count;
     size_t index;
@@ -117,17 +115,11 @@ libspdm_return_t libspdm_process_encap_response_digest(
         return LIBSPDM_STATUS_BUFFER_FULL;
     }
 
-    digest = (const void *)(spdm_response + 1);
     for (index = 0; index < digest_count; index++) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "digest (0x%x) - ", index));
-        LIBSPDM_INTERNAL_DUMP_DATA(&digest[digest_size * index], digest_size);
+        LIBSPDM_INTERNAL_DUMP_DATA(
+            (const uint8_t *)(spdm_response + 1) + (digest_size * index), digest_size);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
-    }
-
-    result = libspdm_verify_peer_digests(spdm_context, digest,
-                                         digest_count);
-    if (!result) {
-        return LIBSPDM_STATUS_VERIF_FAIL;
     }
 
     *need_continue = false;

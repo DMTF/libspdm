@@ -78,6 +78,18 @@ uint8_t m_libspdm_sm2_test_pem_key[] = {
     0x2d, 0x0a,
 };
 
+/* DER key data for sm2 Public key Retrieving (Extracted from m_libspdm_sm2_test_pem_key). */
+uint8_t m_libspdm_sm2_test_pub_key_der[] = {
+    0x30, 0x59, 0x30, 0x13, 0x06, 0x07, 0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x02,
+    0x01, 0x06, 0x08, 0x2A, 0x81, 0x1C, 0xCF, 0x55, 0x01, 0x82, 0x2D, 0x03,
+    0x42, 0x00, 0x04, 0x3E, 0xC4, 0xAB, 0x29, 0xB0, 0x24, 0x75, 0xE2, 0xA9,
+    0xCC, 0x1A, 0x55, 0x93, 0x1A, 0x62, 0x0F, 0x97, 0xCC, 0x71, 0xC9, 0x7D,
+    0x24, 0xF3, 0xC4, 0x10, 0x8F, 0x11, 0xFB, 0x20, 0xC1, 0x99, 0x64, 0x73,
+    0x2D, 0x3B, 0x02, 0x23, 0x79, 0xE4, 0x48, 0x95, 0x0C, 0x0E, 0xDE, 0xA5,
+    0x31, 0xD5, 0x3B, 0xD2, 0x56, 0xCE, 0xB8, 0x53, 0x24, 0x6A, 0x3A, 0xA0,
+    0x06, 0x96, 0x3E, 0x1E, 0x3D, 0x02, 0x92,
+};
+
 /**
  * Validate Crypto sm2 key Retrieving (from PEM & X509) & signature Interfaces.
  *
@@ -96,7 +108,7 @@ bool libspdm_validate_crypt_sm2_2(void)
     libspdm_my_print("\nCrypto sm2 key Retrieving Testing: ");
 
     /* Retrieve Ed private key from PEM data. */
-    libspdm_my_print("\n- Retrieve sm2 Private key for PEM ...");
+    libspdm_my_print("\n- Retrieve sm2 Private key from PEM ...");
     status = libspdm_sm2_get_private_key_from_pem(m_libspdm_sm2_test_pem_key,
                                                   sizeof(m_libspdm_sm2_test_pem_key), NULL,
                                                   &sm2_priv_key);
@@ -107,8 +119,51 @@ bool libspdm_validate_crypt_sm2_2(void)
         libspdm_my_print("[Pass]");
     }
 
-    /* Retrieve sm2 public key from X509 Certificate. */
-    libspdm_my_print("\n- Retrieve sm2 public key from X509 ... ");
+    /* SM2 signing */
+    sig_size = sizeof(signature);
+    libspdm_my_print("\n- SM2 Signing ... ");
+    status =
+        libspdm_sm2_dsa_sign(sm2_priv_key, LIBSPDM_CRYPTO_NID_SM3_256, (uint8_t *)DEFAULT_SM2_ID,
+                             sizeof(DEFAULT_SM2_ID) - 1, message,
+                             sizeof(message), signature, &sig_size);
+    if (!status) {
+        libspdm_my_print("[Fail]");
+        libspdm_sm2_dsa_free(sm2_priv_key);
+        return false;
+    } else {
+        libspdm_my_print("[Pass]");
+    }
+
+    /* Retrieve sm2 Public key from DER data. */
+    libspdm_my_print("\n- Retrieve sm2 Public key from DER ... ");
+    status = libspdm_sm2_get_public_key_from_der(
+        m_libspdm_sm2_test_pub_key_der, sizeof(m_libspdm_sm2_test_pub_key_der), &sm2_pub_key);
+    if (!status) {
+        libspdm_my_print("[Fail]");
+        libspdm_sm2_dsa_free(sm2_priv_key);
+        return false;
+    } else {
+        libspdm_my_print("[Pass]");
+    }
+
+    /* SM2 signature verification */
+    libspdm_my_print("\n- SM2 Verification using Public key from DER ... ");
+    status =
+        libspdm_sm2_dsa_verify(sm2_pub_key, LIBSPDM_CRYPTO_NID_SM3_256, (uint8_t *)DEFAULT_SM2_ID,
+                               sizeof(DEFAULT_SM2_ID) - 1, message,
+                               sizeof(message), signature, sig_size);
+    if (!status) {
+        libspdm_my_print("[Fail]");
+        libspdm_sm2_dsa_free(sm2_priv_key);
+        libspdm_sm2_dsa_free(sm2_pub_key);
+        return false;
+    } else {
+        libspdm_my_print("[Pass]");
+    }
+
+    /* Retrieve sm2 Public key from X509 Certificate. */
+    libspdm_my_print("\n- Retrieve sm2 Public key from X509 ... ");
+    libspdm_sm2_dsa_free(sm2_pub_key);
     status = libspdm_sm2_get_public_key_from_x509(
         m_libspdm_sm2_test_root_cer, sizeof(m_libspdm_sm2_test_root_cer), &sm2_pub_key);
     if (!status) {
@@ -119,23 +174,8 @@ bool libspdm_validate_crypt_sm2_2(void)
         libspdm_my_print("[Pass]");
     }
 
-    /* Verify SM2 signing/verification */
-    sig_size = sizeof(signature);
-    libspdm_my_print("\n- SM2 Signing ... ");
-    status =
-        libspdm_sm2_dsa_sign(sm2_priv_key, LIBSPDM_CRYPTO_NID_SM3_256, (uint8_t *)DEFAULT_SM2_ID,
-                             sizeof(DEFAULT_SM2_ID) - 1, message,
-                             sizeof(message), signature, &sig_size);
-    if (!status) {
-        libspdm_my_print("[Fail]");
-        libspdm_sm2_dsa_free(sm2_priv_key);
-        libspdm_sm2_dsa_free(sm2_pub_key);
-        return false;
-    } else {
-        libspdm_my_print("[Pass]");
-    }
-
-    libspdm_my_print("\n- SM2 Verification ... ");
+    /* SM2 signature verification */
+    libspdm_my_print("\n- SM2 Verification using Public key from X509 ... ");
     status =
         libspdm_sm2_dsa_verify(sm2_pub_key, LIBSPDM_CRYPTO_NID_SM3_256, (uint8_t *)DEFAULT_SM2_ID,
                                sizeof(DEFAULT_SM2_ID) - 1, message,

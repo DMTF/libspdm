@@ -123,7 +123,6 @@ void libspdm_test_requester_get_digests_case1(void **State)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.peer_cert_chain_provision_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 
     libspdm_reset_message_b(spdm_context);
 
@@ -171,7 +170,6 @@ void libspdm_test_requester_get_digests_case2(void **State)
         m_libspdm_use_aead_algo;
 
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.peer_cert_chain_provision_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];

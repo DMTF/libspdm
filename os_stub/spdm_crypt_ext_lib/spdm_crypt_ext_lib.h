@@ -15,7 +15,7 @@
  * @param  pem_data  Pointer to the PEM-encoded key data to be retrieved.
  * @param  pem_size  Size of the PEM key data in bytes.
  * @param  password  NULL-terminated passphrase used for encrypted PEM key data.
- * @param  context   Pointer to new-generated asymmetric context which contain the retrieved private
+ * @param  context   Pointer to newly generated asymmetric context which contain the retrieved private
  *                   key component. Use libspdm_asym_free() function to free the resource.
  *
  * @retval  true   Private key was retrieved successfully.
@@ -33,7 +33,7 @@ typedef bool (*libspdm_asym_get_private_key_from_pem_func)(const uint8_t *pem_da
  * @param  pem_data        Pointer to the PEM-encoded key data to be retrieved.
  * @param  pem_size        Size of the PEM key data in bytes.
  * @param  password        NULL-terminated passphrase used for encrypted PEM key data.
- * @param  context         Pointer to new-generated asymmetric context which contain the retrieved
+ * @param  context         Pointer to newly generated asymmetric context which contain the retrieved
  *                         private key component.
  *                         Use libspdm_asym_free() function to free the resource.
  *
@@ -53,7 +53,7 @@ bool libspdm_asym_get_private_key_from_pem(uint32_t base_asym_algo,
  * @param  pem_data           Pointer to the PEM-encoded key data to be retrieved.
  * @param  pem_size           Size of the PEM key data in bytes.
  * @param  password           NULL-terminated passphrase used for encrypted PEM key data.
- * @param  context            Pointer to new-generated asymmetric context which contain the
+ * @param  context            Pointer to newly generated asymmetric context which contain the
  *                            retrieved private key component. Use libspdm_asym_free() function to
  *                            free the resource.
  *

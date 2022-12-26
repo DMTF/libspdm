@@ -123,10 +123,6 @@ libspdm_return_t libspdm_get_digest(void *spdm_context, uint8_t *slot_mask,
  *         The Responder returned a RequestResynch error message.
  * @retval LIBSPDM_STATUS_BUFFER_FULL
  *         The buffer used to store transcripts is exhausted.
- * @retval LIBSPDM_STATUS_VERIF_FAIL
- *         The digest of the stored certificate chain does not match the digest returned by
- *         the Responder.
- *         Note: This return value may be removed in the future.
  **/
 libspdm_return_t libspdm_get_digest_in_session(void *context, const uint32_t *session_id,
                                                uint8_t *slot_mask, void *total_digest_buffer);

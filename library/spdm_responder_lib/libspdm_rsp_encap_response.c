@@ -491,7 +491,8 @@ libspdm_return_t libspdm_get_response_encapsulated_response_ack(
     if (encap_request_size == 0) {
         spdm_response->header.param2 =
             SPDM_ENCAPSULATED_RESPONSE_ACK_RESPONSE_PAYLOAD_TYPE_ABSENT;
-        if (spdm_context->encap_context.req_slot_id != 0) {
+        if ((spdm_context->encap_context.req_slot_id != 0) &&
+            (spdm_context->encap_context.req_slot_id != 0xFF)) {
             spdm_response->header.param2 =
                 SPDM_ENCAPSULATED_RESPONSE_ACK_RESPONSE_PAYLOAD_TYPE_REQ_SLOT_NUMBER;
             *response_size = ack_header_size + 1;

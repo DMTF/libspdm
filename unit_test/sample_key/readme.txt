@@ -67,6 +67,10 @@ cat ca.cert.der inter.cert.der end_requester.cert.der > bundle_requester.certcha
 cat ca.cert.der inter.cert.der end_responder.cert.der > bundle_responder.certchain.der
 openssl rsa -inform PEM -outform DER -in end_responder.key -out end_responder.key.der
 openssl rsa -inform PEM -outform DER -in end_requester.key -out end_requester.key.der
+openssl pkey -in end_requester.key -inform PEM -pubout -outform PEM -out end_requester.key.pub
+openssl pkey -in end_requester.key -inform PEM -pubout -outform DER -out end_requester.key.pub.der
+openssl pkey -in end_responder.key -inform PEM -pubout -outform PEM -out end_responder.key.pub
+openssl pkey -in end_responder.key -inform PEM -pubout -outform DER -out end_responder.key.pub.der
 popd
 
 pushd rsa3072
@@ -86,6 +90,10 @@ cat ca.cert.der inter.cert.der end_requester.cert.der > bundle_requester.certcha
 cat ca.cert.der inter.cert.der end_responder.cert.der > bundle_responder.certchain.der
 openssl rsa -inform PEM -outform DER -in end_responder.key -out end_responder.key.der
 openssl rsa -inform PEM -outform DER -in end_requester.key -out end_requester.key.der
+openssl pkey -in end_requester.key -inform PEM -pubout -outform PEM -out end_requester.key.pub
+openssl pkey -in end_requester.key -inform PEM -pubout -outform DER -out end_requester.key.pub.der
+openssl pkey -in end_responder.key -inform PEM -pubout -outform PEM -out end_responder.key.pub
+openssl pkey -in end_responder.key -inform PEM -pubout -outform DER -out end_responder.key.pub.der
 popd
 
 pushd rsa4096
@@ -105,6 +113,10 @@ cat ca.cert.der inter.cert.der end_requester.cert.der > bundle_requester.certcha
 cat ca.cert.der inter.cert.der end_responder.cert.der > bundle_responder.certchain.der
 openssl rsa -inform PEM -outform DER -in end_responder.key -out end_responder.key.der
 openssl rsa -inform PEM -outform DER -in end_requester.key -out end_requester.key.der
+openssl pkey -in end_requester.key -inform PEM -pubout -outform PEM -out end_requester.key.pub
+openssl pkey -in end_requester.key -inform PEM -pubout -outform DER -out end_requester.key.pub.der
+openssl pkey -in end_responder.key -inform PEM -pubout -outform PEM -out end_responder.key.pub
+openssl pkey -in end_responder.key -inform PEM -pubout -outform DER -out end_responder.key.pub.der
 popd
 
 === EC Certificate Chains ===
@@ -129,6 +141,10 @@ openssl ec -inform PEM -outform DER -in end_responder.key -out end_responder.key
 openssl pkcs8 -in end_responder.key.der -inform DER -topk8 -nocrypt -outform DER > end_responder.key.p8
 openssl ec -inform PEM -outform DER -in end_requester.key -out end_requester.key.der
 openssl pkcs8 -in end_requester.key.der -inform DER -topk8 -nocrypt -outform DER > end_requester.key.p8
+openssl pkey -in end_requester.key -inform PEM -pubout -outform PEM -out end_requester.key.pub
+openssl pkey -in end_requester.key -inform PEM -pubout -outform DER -out end_requester.key.pub.der
+openssl pkey -in end_responder.key -inform PEM -pubout -outform PEM -out end_responder.key.pub
+openssl pkey -in end_responder.key -inform PEM -pubout -outform DER -out end_responder.key.pub.der
 popd
 
 pushd ecp384
@@ -151,6 +167,10 @@ openssl ec -inform PEM -outform DER -in end_responder.key -out end_responder.key
 openssl pkcs8 -in end_responder.key.der -inform DER -topk8 -nocrypt -outform DER > end_responder.key.p8
 openssl ec -inform PEM -outform DER -in end_requester.key -out end_requester.key.der
 openssl pkcs8 -in end_requester.key.der -inform DER -topk8 -nocrypt -outform DER > end_requester.key.p8
+openssl pkey -in end_requester.key -inform PEM -pubout -outform PEM -out end_requester.key.pub
+openssl pkey -in end_requester.key -inform PEM -pubout -outform DER -out end_requester.key.pub.der
+openssl pkey -in end_responder.key -inform PEM -pubout -outform PEM -out end_responder.key.pub
+openssl pkey -in end_responder.key -inform PEM -pubout -outform DER -out end_responder.key.pub.der
 popd
 
 pushd ecp521
@@ -173,6 +193,10 @@ openssl ec -inform PEM -outform DER -in end_responder.key -out end_responder.key
 openssl pkcs8 -in end_responder.key.der -inform DER -topk8 -nocrypt -outform DER > end_responder.key.p8
 openssl ec -inform PEM -outform DER -in end_requester.key -out end_requester.key.der
 openssl pkcs8 -in end_requester.key.der -inform DER -topk8 -nocrypt -outform DER > end_requester.key.p8
+openssl pkey -in end_requester.key -inform PEM -pubout -outform PEM -out end_requester.key.pub
+openssl pkey -in end_requester.key -inform PEM -pubout -outform DER -out end_requester.key.pub.der
+openssl pkey -in end_responder.key -inform PEM -pubout -outform PEM -out end_responder.key.pub
+openssl pkey -in end_responder.key -inform PEM -pubout -outform DER -out end_responder.key.pub.der
 popd
 
 === Ed Certificate Chains ===
@@ -199,6 +223,10 @@ openssl pkey -inform PEM -outform DER -in end_responder.key -out end_responder.k
 openssl pkcs8 -in end_responder.key.der -inform DER -topk8 -nocrypt -outform DER > end_responder.key.p8
 openssl pkey -inform PEM -outform DER -in end_requester.key -out end_requester.key.der
 openssl pkcs8 -in end_requester.key.der -inform DER -topk8 -nocrypt -outform DER > end_requester.key.p8
+openssl pkey -in end_requester.key -inform PEM -pubout -outform PEM -out end_requester.key.pub
+openssl pkey -in end_requester.key -inform PEM -pubout -outform DER -out end_requester.key.pub.der
+openssl pkey -in end_responder.key -inform PEM -pubout -outform PEM -out end_responder.key.pub
+openssl pkey -in end_responder.key -inform PEM -pubout -outform DER -out end_responder.key.pub.der
 popd
 
 pushd ed448
@@ -223,6 +251,10 @@ openssl pkey -inform PEM -outform DER -in end_responder.key -out end_responder.k
 openssl pkcs8 -in end_responder.key.der -inform DER -topk8 -nocrypt -outform DER > end_responder.key.p8
 openssl pkey -inform PEM -outform DER -in end_requester.key -out end_requester.key.der
 openssl pkcs8 -in end_carequester.key.der -inform DER -topk8 -nocrypt -outform DER > end_requester.key.p8
+openssl pkey -in end_requester.key -inform PEM -pubout -outform PEM -out end_requester.key.pub
+openssl pkey -in end_requester.key -inform PEM -pubout -outform DER -out end_requester.key.pub.der
+openssl pkey -in end_responder.key -inform PEM -pubout -outform PEM -out end_responder.key.pub
+openssl pkey -in end_responder.key -inform PEM -pubout -outform DER -out end_responder.key.pub.der
 popd
 
 === sm2 Certificate Chains ===
@@ -249,6 +281,10 @@ openssl pkey -inform PEM -outform DER -in end_responder.key -out end_responder.k
 openssl pkcs8 -in end_responder.key.der -inform DER -topk8 -nocrypt -outform DER > end_responder.key.p8
 openssl pkey -inform PEM -outform DER -in end_requester.key -out end_requester.key.der
 openssl pkcs8 -in end_requester.key.der -inform DER -topk8 -nocrypt -outform DER > end_requester.key.p8
+openssl pkey -in end_requester.key -inform PEM -pubout -outform PEM -out end_requester.key.pub
+openssl pkey -in end_requester.key -inform PEM -pubout -outform DER -out end_requester.key.pub.der
+openssl pkey -in end_responder.key -inform PEM -pubout -outform PEM -out end_responder.key.pub
+openssl pkey -in end_responder.key -inform PEM -pubout -outform DER -out end_responder.key.pub.der
 popd
 
 === long_chains Certificate Chains ===

@@ -405,13 +405,24 @@ void libspdm_test_responder_finish_case8(void **State)
                                                     m_libspdm_use_req_asym_algo,
                                                     &data2,
                                                     &data_size2, NULL, NULL);
-    spdm_context->local_context.peer_cert_chain_provision = data2;
-    spdm_context->local_context.peer_cert_chain_provision_size = data_size2;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
                      sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
                      data2, data_size2);
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = data_size2;
+#else
+    libspdm_hash_all(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        data2, data_size2,
+        spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash);
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size =
+        libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+    libspdm_get_leaf_cert_public_key_from_cert_chain(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        spdm_context->connection_info.algorithm.req_base_asym_alg,
+        data2,
+        data_size2,
+        &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
     session_id = 0xFFFFFEE;
     spdm_context->latest_session_id = session_id;
@@ -479,6 +490,14 @@ void libspdm_test_responder_finish_case8(void **State)
     }
     free(data1);
     free(data2);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = 0;
+#else
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size = 0;
+    libspdm_req_asym_free(
+        spdm_context->connection_info.algorithm.req_base_asym_alg,
+        spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+#endif
 }
 
 void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)

@@ -1511,7 +1511,7 @@ bool libspdm_x509_get_extended_basic_constraints(const uint8_t *cert,
  *
  * @param[in]  cert         Pointer to the DER-encoded X509 certificate.
  * @param[in]  cert_size     size of the X509 certificate in bytes.
- * @param[out] rsa_context   Pointer to new-generated RSA context which contain the retrieved
+ * @param[out] rsa_context   Pointer to newly generated RSA context which contain the retrieved
  *                         RSA public key component. Use libspdm_rsa_free() function to free the
  *                         resource.
  *
@@ -1587,7 +1587,7 @@ done:
  *
  * @param[in]  cert         Pointer to the DER-encoded X509 certificate.
  * @param[in]  cert_size     size of the X509 certificate in bytes.
- * @param[out] ec_context    Pointer to new-generated EC DSA context which contain the retrieved
+ * @param[out] ec_context    Pointer to newly generated EC DSA context which contain the retrieved
  *                         EC public key component. Use libspdm_ec_free() function to free the
  *                         resource.
  *
@@ -1661,7 +1661,7 @@ done:
  *
  * @param[in]  cert         Pointer to the DER-encoded X509 certificate.
  * @param[in]  cert_size     size of the X509 certificate in bytes.
- * @param[out] ecd_context    Pointer to new-generated Ed DSA context which contain the retrieved
+ * @param[out] ecd_context    Pointer to newly generated Ed DSA context which contain the retrieved
  *                         Ed public key component. Use libspdm_ecd_free() function to free the
  *                         resource.
  *
@@ -1732,7 +1732,7 @@ done:
  *
  * @param[in]  cert         Pointer to the DER-encoded X509 certificate.
  * @param[in]  cert_size     size of the X509 certificate in bytes.
- * @param[out] sm2_context   Pointer to new-generated sm2 context which contain the retrieved
+ * @param[out] sm2_context   Pointer to newly generated sm2 context which contain the retrieved
  *                         sm2 public key component. Use sm2_free() function to free the
  *                         resource.
  *

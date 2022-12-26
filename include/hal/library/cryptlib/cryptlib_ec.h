@@ -23,6 +23,29 @@
 extern void *libspdm_ec_new_by_nid(size_t nid);
 
 /**
+ * Generates Elliptic Curve context from DER-encoded public key data.
+ *
+ * The public key is ASN.1 DER-encoded as RFC7250 describes,
+ * namely, the SubjectPublicKeyInfo structure of a X.509 certificate.
+ *
+ * @param[in]  der_data    Pointer to the DER-encoded public key data.
+ * @param[in]  der_size    Size of the DER-encoded public key data in bytes.
+ * @param[out] ec_context  Pointer to newly generated EC context which contains the
+ *                         EC public key component.
+ *                         Use libspdm_ec_free() function to free the resource.
+ *
+ * If der_data is NULL, then return false.
+ * If ec_context is NULL, then return false.
+ *
+ * @retval  true   EC context was generated successfully.
+ * @retval  false  Invalid DER public key data.
+ *
+ **/
+extern bool libspdm_ec_get_public_key_from_der(const uint8_t *der_data,
+                                               size_t der_size,
+                                               void **ec_context);
+
+/**
  * Release the specified EC context.
  *
  * @param[in]  ec_context  Pointer to the EC context to be released.

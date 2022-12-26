@@ -65,8 +65,6 @@ void test_spdm_responder_encap_get_certificate_case1(void **state)
     spdm_context->local_context.peer_root_cert_provision_size[0] =
         root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
-    spdm_context->local_context.peer_cert_chain_provision = NULL;
-    spdm_context->local_context.peer_cert_chain_provision_size = 0;
     libspdm_reset_message_b(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
@@ -156,8 +154,6 @@ void test_spdm_responder_encap_get_certificate_case2(void **state)
     spdm_context->local_context.peer_root_cert_provision_size[0] =
         root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
-    spdm_context->local_context.peer_cert_chain_provision = NULL;
-    spdm_context->local_context.peer_cert_chain_provision_size = 0;
     libspdm_reset_message_b(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
@@ -221,8 +217,6 @@ void test_spdm_responder_encap_get_certificate_case3(void **state)
     spdm_context->local_context.peer_root_cert_provision_size[0] =
         root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
-    spdm_context->local_context.peer_cert_chain_provision = NULL;
-    spdm_context->local_context.peer_cert_chain_provision_size = 0;
     libspdm_reset_message_b(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
@@ -320,8 +314,6 @@ void test_spdm_responder_encap_get_certificate_case4(void **state)
     spdm_context->local_context.peer_root_cert_provision_size[0] =
         root_cert_size;
     spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
-    spdm_context->local_context.peer_cert_chain_provision = NULL;
-    spdm_context->local_context.peer_cert_chain_provision_size = 0;
     libspdm_reset_message_b(spdm_context);
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;

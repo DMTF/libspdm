@@ -17,7 +17,7 @@
  * @param[in]  pem_data      Pointer to the PEM-encoded key data to be retrieved.
  * @param[in]  pem_size      size of the PEM key data in bytes.
  * @param[in]  password     NULL-terminated passphrase used for encrypted PEM key data.
- * @param[out] rsa_context   Pointer to new-generated RSA context which contain the retrieved
+ * @param[out] rsa_context   Pointer to newly generated RSA context which contain the retrieved
  *                         RSA private key component. Use libspdm_rsa_free() function to free the
  *                         resource.
  *
@@ -44,7 +44,7 @@ bool libspdm_rsa_get_private_key_from_pem(const uint8_t *pem_data,
  * @param[in]  pem_data      Pointer to the PEM-encoded key data to be retrieved.
  * @param[in]  pem_size      size of the PEM key data in bytes.
  * @param[in]  password     NULL-terminated passphrase used for encrypted PEM key data.
- * @param[out] ec_context    Pointer to new-generated EC DSA context which contain the retrieved
+ * @param[out] ec_context    Pointer to newly generated EC DSA context which contain the retrieved
  *                         EC private key component. Use libspdm_ec_free() function to free the
  *                         resource.
  *
@@ -69,7 +69,7 @@ bool libspdm_ec_get_private_key_from_pem(const uint8_t *pem_data, size_t pem_siz
  * @param[in]  pem_data      Pointer to the PEM-encoded key data to be retrieved.
  * @param[in]  pem_size      size of the PEM key data in bytes.
  * @param[in]  password     NULL-terminated passphrase used for encrypted PEM key data.
- * @param[out] ecd_context    Pointer to new-generated Ed DSA context which contain the retrieved
+ * @param[out] ecd_context    Pointer to newly generated Ed DSA context which contain the retrieved
  *                         Ed private key component. Use libspdm_ecd_free() function to free the
  *                         resource.
  *
@@ -95,7 +95,7 @@ bool libspdm_ecd_get_private_key_from_pem(const uint8_t *pem_data,
  * @param[in]  pem_data      Pointer to the PEM-encoded key data to be retrieved.
  * @param[in]  pem_size      size of the PEM key data in bytes.
  * @param[in]  password     NULL-terminated passphrase used for encrypted PEM key data.
- * @param[out] sm2_context   Pointer to new-generated sm2 context which contain the retrieved
+ * @param[out] sm2_context   Pointer to newly generated sm2 context which contain the retrieved
  *                         sm2 private key component. Use sm2_free() function to free the
  *                         resource.
  *
