@@ -111,7 +111,7 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
         ->connection_info.algorithm.base_hash_algo =
             m_libspdm_use_hash_algo;
         spdm_response_size = sizeof(spdm_digest_response_t) +
-                             libspdm_get_hash_size(m_libspdm_use_hash_algo) * SPDM_MAX_SLOT_COUNT;
+                             libspdm_get_hash_size(m_libspdm_use_hash_algo);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -123,15 +123,12 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
                         (uint8_t)(0xFF));
 
         digest = (void *)(spdm_response + 1);
-        /*send all eight certchains digest
-         * but only No.7 is right*/
         libspdm_zero_mem (digest,
                           libspdm_get_hash_size(m_libspdm_use_hash_algo) *
                           (SPDM_MAX_SLOT_COUNT - 1));
-        digest += libspdm_get_hash_size(m_libspdm_use_hash_algo) * (SPDM_MAX_SLOT_COUNT - 2);
         libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_certificate_chain,
                          LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, &digest[0]);
-        spdm_response->header.param2 |= (0xFF << 0);
+        spdm_response->header.param2 |= (0x01 << 0);
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, spdm_response_size,
@@ -325,7 +322,7 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
         ((libspdm_context_t *)spdm_context)->connection_info.algorithm.base_hash_algo =
             m_libspdm_use_hash_algo;
         spdm_response_size = sizeof(spdm_digest_response_t) +
-                             libspdm_get_hash_size(m_libspdm_use_hash_algo) * SPDM_MAX_SLOT_COUNT;
+                             libspdm_get_hash_size(m_libspdm_use_hash_algo);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -338,12 +335,10 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
 
         digest = (void *)(spdm_response + 1);
         libspdm_zero_mem (digest,
-                          libspdm_get_hash_size(m_libspdm_use_hash_algo) *
-                          (SPDM_MAX_SLOT_COUNT - 1));
-        digest += libspdm_get_hash_size(m_libspdm_use_hash_algo) * (SPDM_MAX_SLOT_COUNT - 2);
+                          libspdm_get_hash_size(m_libspdm_use_hash_algo) * SPDM_MAX_SLOT_COUNT);
         libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_certificate_chain,
                          LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, &digest[0]);
-        spdm_response->header.param2 |= (0xFF << 0);
+        spdm_response->header.param2 |= (0x01 << 0);
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, spdm_response_size,
@@ -478,38 +473,7 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
     }
         return LIBSPDM_STATUS_SUCCESS;
 
-    case 0x11: {
-        spdm_digest_response_t *spdm_response;
-        uint8_t *digest;
-        size_t spdm_response_size;
-        size_t transport_header_size;
-
-        ((libspdm_context_t *)spdm_context)
-        ->connection_info.algorithm.base_hash_algo =
-            m_libspdm_use_hash_algo;
-        spdm_response_size = sizeof(spdm_digest_response_t) +
-                             libspdm_get_hash_size(m_libspdm_use_hash_algo);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
-        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
-
-        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
-        spdm_response->header.param1 = 0;
-        spdm_response->header.request_response_code = SPDM_DIGESTS;
-        spdm_response->header.param2 = 0;
-        libspdm_set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
-                        (uint8_t)(0xFF));
-
-        digest = (void *)(spdm_response + 1);
-        libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_certificate_chain,
-                         LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, &digest[0]);
-        digest[libspdm_get_hash_size(m_libspdm_use_hash_algo) - 1] = 0;
-        spdm_response->header.param2 |= (1 << 0);
-
-        libspdm_transport_test_encode_message(spdm_context, NULL, false,
-                                              false, spdm_response_size,
-                                              spdm_response, response_size,
-                                              response);
-    }
+    case 0x11:
         return LIBSPDM_STATUS_SUCCESS;
 
     case 0x12: {
@@ -712,7 +676,7 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
         ((libspdm_context_t *)spdm_context)->connection_info.algorithm.base_hash_algo =
             m_libspdm_use_hash_algo;
         spdm_response_size = sizeof(spdm_digest_response_t) +
-                             libspdm_get_hash_size(m_libspdm_use_hash_algo) * SPDM_MAX_SLOT_COUNT;
+                             libspdm_get_hash_size(m_libspdm_use_hash_algo);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -724,15 +688,8 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
                         (uint8_t)(0xFF));
 
         digest = (void *)(spdm_response + 1);
-        /*send all eight certchains digest
-         * but only No.7 is right*/
-        digest += libspdm_get_hash_size(m_libspdm_use_hash_algo) * (SPDM_MAX_SLOT_COUNT - 2);
-        libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_certificate_chain,
-                         LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, &digest[0]);
-        spdm_response->header.param2 |= (0xFF << 0);
-
-        spdm_response_size = sizeof(spdm_digest_response_t) +
-                             libspdm_get_hash_size(m_libspdm_use_hash_algo) * SPDM_MAX_SLOT_COUNT;
+        libspdm_set_mem(digest, libspdm_get_hash_size(m_libspdm_use_hash_algo), (uint8_t)(0xFF));
+        spdm_response->header.param2 |= (0x01 << 0);
 
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer) - m_libspdm_local_buffer_size,
@@ -757,8 +714,7 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
             ->connection_info.algorithm.base_hash_algo =
                 m_libspdm_use_hash_algo;
             spdm_response_size = sizeof(spdm_digest_response_t) +
-                                 libspdm_get_hash_size(m_libspdm_use_hash_algo) *
-                                 SPDM_MAX_SLOT_COUNT;
+                                 libspdm_get_hash_size(m_libspdm_use_hash_algo);
             transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -770,15 +726,11 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
                             (uint8_t)(0xFF));
 
             digest = (void *)(spdm_response + 1);
-            /*send all eight certchains digest
-             * but only No.7 is right*/
             libspdm_zero_mem (digest,
-                              libspdm_get_hash_size(m_libspdm_use_hash_algo) *
-                              (SPDM_MAX_SLOT_COUNT - 1));
-            digest += libspdm_get_hash_size(m_libspdm_use_hash_algo) * (SPDM_MAX_SLOT_COUNT - 2);
+                              libspdm_get_hash_size(m_libspdm_use_hash_algo) * SPDM_MAX_SLOT_COUNT);
             libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_certificate_chain,
                              LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, &digest[0]);
-            spdm_response->header.param2 |= (0xFF << 0);
+            spdm_response->header.param2 |= (0x01 << 0);
 
             libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                                   false, spdm_response_size,
@@ -867,7 +819,7 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
         ->connection_info.algorithm.base_hash_algo =
             m_libspdm_use_hash_algo;
         spdm_response_size = sizeof(spdm_digest_response_t) +
-                             libspdm_get_hash_size(m_libspdm_use_hash_algo) * SPDM_MAX_SLOT_COUNT;
+                             libspdm_get_hash_size(m_libspdm_use_hash_algo);
         transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -884,15 +836,11 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
                         (uint8_t)(0xFF));
 
         digest = (void *)(spdm_response + 1);
-        /*send all eight certchains digest
-         * but only No.7 is right*/
         libspdm_zero_mem (digest,
-                          libspdm_get_hash_size(m_libspdm_use_hash_algo) *
-                          (SPDM_MAX_SLOT_COUNT - 1));
-        digest += libspdm_get_hash_size(m_libspdm_use_hash_algo) * (SPDM_MAX_SLOT_COUNT - 2);
+                          libspdm_get_hash_size(m_libspdm_use_hash_algo) * SPDM_MAX_SLOT_COUNT);
         libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_certificate_chain,
                          LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, &digest[0]);
-        spdm_response->header.param2 |= (0xFF << 0);
+        spdm_response->header.param2 |= (0x01 << 0);
 
         libspdm_copy_mem (scratch_buffer + transport_header_size,
                           scratch_buffer_size - transport_header_size,
@@ -941,8 +889,6 @@ static void libspdm_test_requester_get_digests_err_case1(void **state)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.peer_cert_chain_provision = m_libspdm_local_certificate_chain;
-    spdm_context->local_context.peer_cert_chain_provision_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
     libspdm_set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
                     (uint8_t)(0xFF));
     libspdm_reset_message_b(spdm_context);
@@ -975,8 +921,6 @@ static void libspdm_test_requester_get_digests_err_case2(void **state)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.peer_cert_chain_provision = m_libspdm_local_certificate_chain;
-    spdm_context->local_context.peer_cert_chain_provision_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
     libspdm_set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
                     (uint8_t)(0xFF));
     libspdm_reset_message_b(spdm_context);
@@ -1011,8 +955,6 @@ static void libspdm_test_requester_get_digests_err_case3(void **state)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NOT_STARTED;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.peer_cert_chain_provision = m_libspdm_local_certificate_chain;
-    spdm_context->local_context.peer_cert_chain_provision_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
     libspdm_set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
                     (uint8_t)(0xFF));
     libspdm_reset_message_b(spdm_context);
@@ -1045,8 +987,6 @@ static void libspdm_test_requester_get_digests_err_case4(void **state)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.peer_cert_chain_provision = m_libspdm_local_certificate_chain;
-    spdm_context->local_context.peer_cert_chain_provision_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
     libspdm_set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
                     (uint8_t)(0xFF));
     libspdm_reset_message_b(spdm_context);
@@ -1079,8 +1019,6 @@ static void libspdm_test_requester_get_digests_err_case5(void **state)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.peer_cert_chain_provision = m_libspdm_local_certificate_chain;
-    spdm_context->local_context.peer_cert_chain_provision_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
     libspdm_set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
                     (uint8_t)(0xFF));
     libspdm_reset_message_b(spdm_context);
@@ -1113,8 +1051,6 @@ static void libspdm_test_requester_get_digests_err_case6(void **state)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.peer_cert_chain_provision = m_libspdm_local_certificate_chain;
-    spdm_context->local_context.peer_cert_chain_provision_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
     libspdm_set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
                     (uint8_t)(0xFF));
     libspdm_reset_message_b(spdm_context);
@@ -1149,8 +1085,6 @@ static void libspdm_test_requester_get_digests_err_case7(void **state)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.peer_cert_chain_provision = m_libspdm_local_certificate_chain;
-    spdm_context->local_context.peer_cert_chain_provision_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
     libspdm_set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
                     (uint8_t)(0xFF));
     libspdm_reset_message_b(spdm_context);
@@ -1186,8 +1120,6 @@ static void libspdm_test_requester_get_digests_err_case8(void **state)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.peer_cert_chain_provision = m_libspdm_local_certificate_chain;
-    spdm_context->local_context.peer_cert_chain_provision_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
     libspdm_set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
                     (uint8_t)(0xFF));
     libspdm_reset_message_b(spdm_context);
@@ -1217,8 +1149,6 @@ static void libspdm_test_requester_get_digests_err_case9(void **state)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.peer_cert_chain_provision = m_libspdm_local_certificate_chain;
-    spdm_context->local_context.peer_cert_chain_provision_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
     libspdm_set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
                     (uint8_t)(0xFF));
     libspdm_reset_message_b(spdm_context);
@@ -1250,8 +1180,6 @@ static void libspdm_test_requester_get_digests_err_case10(void **state)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags = 0;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.peer_cert_chain_provision = m_libspdm_local_certificate_chain;
-    spdm_context->local_context.peer_cert_chain_provision_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
     libspdm_set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
                     (uint8_t)(0xFF));
     libspdm_reset_message_b(spdm_context);
@@ -1284,8 +1212,6 @@ static void libspdm_test_requester_get_digests_err_case11(void **state)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.peer_cert_chain_provision = m_libspdm_local_certificate_chain;
-    spdm_context->local_context.peer_cert_chain_provision_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
     libspdm_set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
                     (uint8_t)(0xFF));
     libspdm_reset_message_b(spdm_context);
@@ -1327,8 +1253,6 @@ static void libspdm_test_requester_get_digests_err_case13(void **state)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.peer_cert_chain_provision = m_libspdm_local_certificate_chain;
-    spdm_context->local_context.peer_cert_chain_provision_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
     libspdm_set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
                     (uint8_t)(0xFF));
     libspdm_reset_message_b(spdm_context);
@@ -1361,8 +1285,6 @@ static void libspdm_test_requester_get_digests_err_case14(void **state)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.peer_cert_chain_provision = m_libspdm_local_certificate_chain;
-    spdm_context->local_context.peer_cert_chain_provision_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
     libspdm_set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
                     (uint8_t)(0xFF));
     libspdm_reset_message_b(spdm_context);
@@ -1406,8 +1328,6 @@ static void libspdm_test_requester_get_digests_err_case16(void **state)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.peer_cert_chain_provision = m_libspdm_local_certificate_chain;
-    spdm_context->local_context.peer_cert_chain_provision_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
     libspdm_set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
                     (uint8_t)(0xFF));
 
@@ -1419,34 +1339,11 @@ static void libspdm_test_requester_get_digests_err_case16(void **state)
 }
 
 /**
- * Test 17: a request message is successfully sent but the single digest received in the response message is invalid
- * Expected Behavior: requester returns the status LIBSPDM_STATUS_VERIF_FAIL, with error state LIBSPDM_STATUS_ERROR_CERTIFICATE_FAILURE
+ * Test 17:
+ * Expected Behavior:
  **/
 static void libspdm_test_requester_get_digests_err_case17(void **state)
 {
-    libspdm_return_t status;
-    libspdm_test_context_t *spdm_test_context;
-    libspdm_context_t *spdm_context;
-    uint8_t slot_mask;
-    uint8_t total_digest_buffer[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
-
-    spdm_test_context = *state;
-    spdm_context = spdm_test_context->spdm_context;
-    spdm_test_context->case_id = 0x11;
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
-                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.peer_cert_chain_provision = m_libspdm_local_certificate_chain;
-    spdm_context->local_context.peer_cert_chain_provision_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
-    libspdm_set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
-                    (uint8_t)(0xFF));
-    libspdm_reset_message_b(spdm_context);
-
-    libspdm_zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
-    status = libspdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
-    assert_int_equal(status, LIBSPDM_STATUS_VERIF_FAIL);
 }
 
 /**
@@ -1470,8 +1367,6 @@ static void libspdm_test_requester_get_digests_err_case18(void **state)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.peer_cert_chain_provision = m_libspdm_local_certificate_chain;
-    spdm_context->local_context.peer_cert_chain_provision_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
     libspdm_set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
                     (uint8_t)(0xFF));
     libspdm_reset_message_b(spdm_context);
@@ -1506,8 +1401,6 @@ static void libspdm_test_requester_get_digests_err_case19(void **state)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.peer_cert_chain_provision = m_libspdm_local_certificate_chain;
-    spdm_context->local_context.peer_cert_chain_provision_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
     libspdm_set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
                     (uint8_t)(0xFF));
     libspdm_reset_message_b(spdm_context);
@@ -1538,8 +1431,6 @@ static void libspdm_test_requester_get_digests_err_case20(void **state)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.peer_cert_chain_provision = m_libspdm_local_certificate_chain;
-    spdm_context->local_context.peer_cert_chain_provision_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
     libspdm_set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
                     (uint8_t)(0xFF));
     libspdm_reset_message_b(spdm_context);
@@ -1574,8 +1465,6 @@ static void libspdm_test_requester_get_digests_err_case21(void **state)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.peer_cert_chain_provision = m_libspdm_local_certificate_chain;
-    spdm_context->local_context.peer_cert_chain_provision_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
     libspdm_set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
                     (uint8_t)(0xFF));
     libspdm_reset_message_b(spdm_context);
@@ -1613,8 +1502,6 @@ static void libspdm_test_requester_get_digests_err_case22(void **state) {
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.peer_cert_chain_provision = m_libspdm_local_certificate_chain;
-    spdm_context->local_context.peer_cert_chain_provision_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
     libspdm_set_mem (m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
                      (uint8_t)(0xFF));
 

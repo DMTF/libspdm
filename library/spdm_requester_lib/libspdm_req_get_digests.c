@@ -40,16 +40,11 @@ typedef struct {
  *         The Responder returned a RequestResynch error message.
  * @retval LIBSPDM_STATUS_BUFFER_FULL
  *         The buffer used to store transcripts is exhausted.
- * @retval LIBSPDM_STATUS_VERIF_FAIL
- *         The digest of the stored certificate chain does not match the digest returned by
- *         the Responder.
- *         Note: This return value may be removed in the future.
  **/
 static libspdm_return_t libspdm_try_get_digest(void *context, const uint32_t *session_id,
                                                uint8_t *slot_mask,
                                                void *total_digest_buffer)
 {
-    bool result;
     libspdm_return_t status;
     spdm_get_digest_request_t *spdm_request;
     size_t spdm_request_size;
@@ -201,12 +196,6 @@ static libspdm_return_t libspdm_try_get_digest(void *context, const uint32_t *se
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "digest (0x%x) - ", index));
         LIBSPDM_INTERNAL_DUMP_DATA(&spdm_response->digest[digest_size * index], digest_size);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
-    }
-
-    result = libspdm_verify_peer_digests(spdm_context, spdm_response->digest, digest_count);
-    if (!result) {
-        status = LIBSPDM_STATUS_VERIF_FAIL;
-        goto receive_done;
     }
 
     if (total_digest_buffer != NULL) {

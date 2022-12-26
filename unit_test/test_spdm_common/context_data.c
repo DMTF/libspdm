@@ -524,8 +524,6 @@ void libspdm_test_verify_peer_cert_chain_buffer_case5(void **state)
                                           data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
                                           &root_cert, &root_cert_size);
 
-    spdm_context->local_context.peer_cert_chain_provision = NULL;
-    spdm_context->local_context.peer_cert_chain_provision_size = 0;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo= m_libspdm_use_asym_algo;
 
@@ -596,8 +594,6 @@ void libspdm_test_verify_peer_cert_chain_buffer_case6(void **state)
         data_size_test - sizeof(spdm_cert_chain_t) - hash_size_test, 0,
         &root_cert_test, &root_cert_size_test);
 
-    spdm_context->local_context.peer_cert_chain_provision = NULL;
-    spdm_context->local_context.peer_cert_chain_provision_size = 0;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo= m_libspdm_use_asym_algo;
 
@@ -682,8 +678,6 @@ void libspdm_test_verify_peer_cert_chain_buffer_case7(void **state)
         data_size_test - sizeof(spdm_cert_chain_t) - hash_size_test, 0,
         &root_cert_test, &root_cert_size_test);
 
-    spdm_context->local_context.peer_cert_chain_provision = NULL;
-    spdm_context->local_context.peer_cert_chain_provision_size = 0;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo= m_libspdm_use_asym_algo;
 
@@ -785,8 +779,6 @@ void libspdm_test_verify_peer_cert_chain_buffer_case8(void **state)
         data_size_test - sizeof(spdm_cert_chain_t) - hash_size_test, 0,
         &root_cert_test, &root_cert_size_test);
 
-    spdm_context->local_context.peer_cert_chain_provision = NULL;
-    spdm_context->local_context.peer_cert_chain_provision_size = 0;
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo= m_libspdm_use_asym_algo;
 

@@ -23,6 +23,29 @@
 extern void *libspdm_sm2_dsa_new_by_nid(size_t nid);
 
 /**
+ * Generates Shang-Mi2 context from DER-encoded public key data.
+ *
+ * The public key is ASN.1 DER-encoded as RFC7250 describes,
+ * namely, the SubjectPublicKeyInfo structure of a X.509 certificate.
+ *
+ * @param[in]  der_data    Pointer to the DER-encoded public key data.
+ * @param[in]  der_size    Size of the DER-encoded public key data in bytes.
+ * @param[out] sm2_context Pointer to newly generated SM2 context which contains the
+ *                         SM2 public key component.
+ *                         Use libspdm_sm2_free() function to free the resource.
+ *
+ * If der_data is NULL, then return false.
+ * If sm2_context is NULL, then return false.
+ *
+ * @retval  true   SM2 context was generated successfully.
+ * @retval  false  Invalid DER public key data.
+ *
+ **/
+extern bool libspdm_sm2_get_public_key_from_der(const uint8_t *der_data,
+                                                size_t der_size,
+                                                void **sm2_context);
+
+/**
  * Release the specified sm2 context.
  *
  * @param[in]  sm2_context  Pointer to the sm2 context to be released.

@@ -55,6 +55,14 @@ uint8_t m_libspdm_ecd_test_pem_key[] = {
     0x45, 0x20, 0x4b, 0x45, 0x59, 0x2d, 0x2d, 0x2d, 0x2d, 0x2d, 0x0a,
 };
 
+/* DER key data for Ed Public key Retrieving (Extracted from m_libspdm_ecd_test_pem_key). */
+uint8_t m_libspdm_ecd_test_pub_key_der[] = {
+    0x30, 0x2A, 0x30, 0x05, 0x06, 0x03, 0x2B, 0x65, 0x70, 0x03, 0x21, 0x00,
+    0x34, 0x35, 0x8C, 0xF3, 0xA3, 0x51, 0xDC, 0x61, 0x53, 0x5A, 0x2D, 0xEE,
+    0x56, 0x11, 0x2C, 0x6D, 0x27, 0x8B, 0xDD, 0x0B, 0xAE, 0xF8, 0x88, 0xC5,
+    0x40, 0x38, 0xF3, 0x3A, 0x08, 0x07, 0xA1, 0xD0,
+};
+
 /**
  * Validate Crypto Ed key Retrieving (from PEM & X509) & signature Interfaces.
  *
@@ -73,7 +81,7 @@ bool libspdm_validate_crypt_ecd_2(void)
     libspdm_my_print("\nCrypto Ed key Retrieving Testing: ");
 
     /* Retrieve Ed private key from PEM data. */
-    libspdm_my_print("\n- Retrieve Ed Private key for PEM ...");
+    libspdm_my_print("\n- Retrieve Ed Private key from PEM ...");
     status = libspdm_ecd_get_private_key_from_pem(m_libspdm_ecd_test_pem_key,
                                                   sizeof(m_libspdm_ecd_test_pem_key), NULL,
                                                   &ecd_priv_key);
@@ -84,8 +92,48 @@ bool libspdm_validate_crypt_ecd_2(void)
         libspdm_my_print("[Pass]");
     }
 
-    /* Retrieve Ed public key from X509 Certificate. */
-    libspdm_my_print("\n- Retrieve Ed public key from X509 ... ");
+    /* Sign Ed-DSA */
+    sig_size = sizeof(signature);
+    libspdm_my_print("\n- Ed-DSA Signing ... ");
+    status = libspdm_eddsa_sign(ecd_priv_key, LIBSPDM_CRYPTO_NID_NULL, NULL, 0, message,
+                                sizeof(message), signature, &sig_size);
+    if (!status) {
+        libspdm_my_print("[Fail]");
+        libspdm_ecd_free(ecd_priv_key);
+        return false;
+    } else {
+        libspdm_my_print("[Pass]");
+    }
+
+    /* Retrieve Ed Public key from DER data. */
+    libspdm_my_print("\n- Retrieve Ed Public key from DER ...");
+    status = libspdm_ecd_get_public_key_from_der(m_libspdm_ecd_test_pub_key_der,
+                                                 sizeof(m_libspdm_ecd_test_pub_key_der),
+                                                 &ecd_pub_key);
+    if (!status) {
+        libspdm_my_print("[Fail]");
+        libspdm_ecd_free(ecd_priv_key);
+        return false;
+    } else {
+        libspdm_my_print("[Pass]");
+    }
+
+    /* Verify Ed-DSA */
+    libspdm_my_print("\n- Ed-DSA Verification using Public from DER ... ");
+    status = libspdm_eddsa_verify(ecd_pub_key, LIBSPDM_CRYPTO_NID_NULL, NULL, 0, message,
+                                  sizeof(message), signature, sig_size);
+    if (!status) {
+        libspdm_my_print("[Fail]");
+        libspdm_ecd_free(ecd_priv_key);
+        libspdm_ecd_free(ecd_pub_key);
+        return false;
+    } else {
+        libspdm_my_print("[Pass]");
+    }
+
+    /* Retrieve Ed Public key from X509 Certificate. */
+    libspdm_my_print("\n- Retrieve Ed Public key from X509 ... ");
+    libspdm_ecd_free(ecd_pub_key);
     status = libspdm_ecd_get_public_key_from_x509(
         m_libspdm_ecd_test_root_cer, sizeof(m_libspdm_ecd_test_root_cer), &ecd_pub_key);
     if (!status) {
@@ -97,20 +145,7 @@ bool libspdm_validate_crypt_ecd_2(void)
     }
 
     /* Verify Ed-DSA */
-    sig_size = sizeof(signature);
-    libspdm_my_print("\n- Ed-DSA Signing ... ");
-    status = libspdm_eddsa_sign(ecd_priv_key, LIBSPDM_CRYPTO_NID_NULL, NULL, 0, message,
-                                sizeof(message), signature, &sig_size);
-    if (!status) {
-        libspdm_my_print("[Fail]");
-        libspdm_ecd_free(ecd_priv_key);
-        libspdm_ecd_free(ecd_pub_key);
-        return false;
-    } else {
-        libspdm_my_print("[Pass]");
-    }
-
-    libspdm_my_print("\n- Ed-DSA Verification ... ");
+    libspdm_my_print("\n- Ed-DSA Verification using Public from X509 ... ");
     status = libspdm_eddsa_verify(ecd_pub_key, LIBSPDM_CRYPTO_NID_NULL, NULL, 0, message,
                                   sizeof(message), signature, sig_size);
     if (!status) {

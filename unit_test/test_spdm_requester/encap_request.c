@@ -73,7 +73,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
         if (sub_index == 0)
         {
             temp_buf_size = sizeof(spdm_digest_response_t) +
-                            libspdm_get_hash_size(m_libspdm_use_hash_algo) * SPDM_MAX_SLOT_COUNT +
+                            libspdm_get_hash_size(m_libspdm_use_hash_algo) +
                             sizeof(spdm_get_encapsulated_request_request_t);
             temp_buf_ptr = temp_buf + sizeof(libspdm_test_message_header_t);
             libspdm_encapsulated_request_response = (void*) temp_buf_ptr;
@@ -93,12 +93,9 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
                             (uint8_t)(0xFF));
 
             digest = (void *)(spdm_response + 1);
-            /*send all eight certchains digest
-             * but only No.7 is right*/
-            digest += libspdm_get_hash_size(m_libspdm_use_hash_algo) * (SPDM_MAX_SLOT_COUNT - 2);
             libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_certificate_chain,
                              LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, &digest[0]);
-            spdm_response->header.param2 |= (0xFF << 0);
+            spdm_response->header.param2 |= (0x01 << 0);
             sub_index++;
         }
         else if (sub_index == 1)
@@ -135,7 +132,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
         if (sub_index == 0)
         {
             temp_buf_size = sizeof(spdm_digest_response_t) +
-                            libspdm_get_hash_size(m_libspdm_use_hash_algo) * SPDM_MAX_SLOT_COUNT +
+                            libspdm_get_hash_size(m_libspdm_use_hash_algo) +
                             sizeof(spdm_get_encapsulated_request_request_t);
 
             temp_buf_ptr = temp_buf + sizeof(libspdm_test_message_header_t);
@@ -156,12 +153,9 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
                             (uint8_t)(0xFF));
 
             digest = (void *)(spdm_response + 1);
-            /*send all eight certchains digest
-             * but only No.7 is right*/
-            digest += libspdm_get_hash_size(m_libspdm_use_hash_algo) * (SPDM_MAX_SLOT_COUNT - 2);
             libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_certificate_chain,
                              LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, &digest[0]);
-            spdm_response->header.param2 |= (0xFF << 0);
+            spdm_response->header.param2 |= (0x01 << 0);
             sub_index++;
         }
         else if (sub_index == 1)
@@ -218,7 +212,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
         if (sub_index == 0)
         {
             temp_buf_size = sizeof(spdm_digest_response_t) +
-                            libspdm_get_hash_size(m_libspdm_use_hash_algo) * SPDM_MAX_SLOT_COUNT +
+                            libspdm_get_hash_size(m_libspdm_use_hash_algo) +
                             sizeof(spdm_get_encapsulated_request_request_t);
             temp_buf_ptr = temp_buf + sizeof(libspdm_test_message_header_t);
             libspdm_encapsulated_request_response = (void *)temp_buf_ptr;
@@ -238,12 +232,9 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
                             (uint8_t)(0xFF));
 
             digest = (void *)(spdm_response + 1);
-            /*send all eight certchains digest
-             * but only No.7 is right*/
-            digest += libspdm_get_hash_size(m_libspdm_use_hash_algo) * (SPDM_MAX_SLOT_COUNT - 2);
             libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_certificate_chain,
                              LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, &digest[0]);
-            spdm_response->header.param2 |= (0xFF << 0);
+            spdm_response->header.param2 |= (0x01 << 0);
 
             libspdm_transport_test_encode_message(spdm_context, NULL, false, false,
                                                   temp_buf_size, temp_buf_ptr,
@@ -277,7 +268,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
         {
             temp_buf_size =
                 sizeof(spdm_digest_response_t) +
-                libspdm_get_hash_size(m_libspdm_use_hash_algo) * SPDM_MAX_SLOT_COUNT +
+                libspdm_get_hash_size(m_libspdm_use_hash_algo) +
                 sizeof(spdm_get_encapsulated_request_request_t);
             temp_buf_ptr = temp_buf + sizeof(libspdm_test_message_header_t);
 
@@ -298,12 +289,9 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
                             (uint8_t) (0xFF));
 
             digest = (void*) (spdm_response + 1);
-            /*send all eight certchains digest
-             * but only No.7 is right*/
-            digest += libspdm_get_hash_size(m_libspdm_use_hash_algo) * (SPDM_MAX_SLOT_COUNT - 2);
             libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_certificate_chain,
                              LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, &digest[0]);
-            spdm_response->header.param2 |= (0xFF << 0);
+            spdm_response->header.param2 |= (0x01 << 0);
             sub_index++;
         }
         else if (sub_index == 1)
@@ -338,7 +326,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
         if (sub_index == 0)
         {
             temp_buf_size = sizeof(spdm_digest_response_t) +
-                            libspdm_get_hash_size(m_libspdm_use_hash_algo) * SPDM_MAX_SLOT_COUNT +
+                            libspdm_get_hash_size(m_libspdm_use_hash_algo) +
                             sizeof(spdm_get_encapsulated_request_request_t);
             temp_buf_ptr = temp_buf + sizeof(libspdm_test_message_header_t);
             libspdm_encapsulated_request_response = (void *)temp_buf_ptr;
@@ -358,12 +346,9 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
                             (uint8_t)(0xFF));
 
             digest = (void *)(spdm_response + 1);
-            /*send all eight certchains digest
-             * but only No.7 is right*/
-            digest += libspdm_get_hash_size(m_libspdm_use_hash_algo) * (SPDM_MAX_SLOT_COUNT - 2);
             libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_certificate_chain,
                              LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, &digest[0]);
-            spdm_response->header.param2 |= (0xFF << 0);
+            spdm_response->header.param2 |= (0x01 << 0);
             sub_index++;
         }
         else if (sub_index == 1)

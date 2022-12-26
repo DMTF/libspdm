@@ -312,7 +312,7 @@ uint32_t libspdm_get_asym_signature_size(uint32_t base_asym_algo);
  * @param  base_asym_algo  SPDM base_asym_algo
  * @param  cert            Pointer to the DER-encoded X509 certificate.
  * @param  cert_size       Size of the X509 certificate in bytes.
- * @param  context         Pointer to new-generated asymmetric context which contain the retrieved
+ * @param  context         Pointer to newly generated asymmetric context which contain the retrieved
  *                         public key component. Use libspdm_asym_free() function to free the
  *                         resource.
  *
@@ -323,6 +323,25 @@ bool libspdm_asym_get_public_key_from_x509(uint32_t base_asym_algo,
                                            const uint8_t *cert,
                                            size_t cert_size,
                                            void **context);
+
+/**
+ * Retrieve the asymmetric public key from the DER-encoded public key data,
+ * based upon negotiated asymmetric algorithm.
+ *
+ * @param  base_asym_algo  SPDM base_asym_algo
+ * @param  der_data        Pointer to the DER-encoded public key data.
+ * @param  der_size        Size of the DER-encoded public key data in bytes.
+ * @param  context         Pointer to newly generated asymmetric context which contain the
+ *                         retrieved public key component.
+ *                         Use libspdm_asym_free() function to free the resource.
+ *
+ * @retval  true   Private key was retrieved successfully.
+ * @retval  false  Invalid DER key data.
+ **/
+bool libspdm_asym_get_public_key_from_der(uint32_t base_asym_algo,
+                                          const uint8_t *der_data,
+                                          size_t der_size,
+                                          void **context);
 
 /**
  * Release the specified asymmetric context, based upon negotiated asymmetric algorithm.
@@ -442,7 +461,7 @@ uint32_t libspdm_get_req_asym_signature_size(uint16_t req_base_asym_alg);
  * @param  req_base_asym_alg  SPDM req_base_asym_alg
  * @param  cert               Pointer to the DER-encoded X509 certificate.
  * @param  cert_size          Size of the X509 certificate in bytes.
- * @param  context            Pointer to new-generated asymmetric context which contain the
+ * @param  context            Pointer to newly generated asymmetric context which contain the
  *                            retrieved public key component. Use libspdm_asym_free() function to
  *                            free the resource.
  *
@@ -453,6 +472,25 @@ bool libspdm_req_asym_get_public_key_from_x509(uint16_t req_base_asym_alg,
                                                const uint8_t *cert,
                                                size_t cert_size,
                                                void **context);
+
+/**
+ * Retrieve the asymmetric public key from the DER-encoded public key data,
+ * based upon negotiated requester asymmetric algorithm.
+ *
+ * @param  req_base_asym_alg  SPDM req_base_asym_alg
+ * @param  der_data           Pointer to the DER-encoded public key data.
+ * @param  der_size           Size of the DER-encoded public key data in bytes.
+ * @param  context            Pointer to newly generated asymmetric context which contain the
+ *                            retrieved public key component.
+ *                            Use libspdm_req_asym_free() function to free the resource.
+ *
+ * @retval  true   Public key was retrieved successfully.
+ * @retval  false  Invalid DER key data.
+ **/
+bool libspdm_req_asym_get_public_key_from_der(uint16_t req_base_asym_alg,
+                                              const uint8_t *der_data,
+                                              size_t der_size,
+                                              void **context);
 
 /**
  * Release the specified asymmetric context, based upon negotiated requester asymmetric algorithm.
@@ -848,7 +886,7 @@ bool libspdm_verify_certificate_chain_buffer(uint32_t base_hash_algo, uint32_t b
  * @param  base_asym_alg         SPDM base_asym_algo or req_base_asym_alg.
  * @param  cert_chain_data       Certitiface chain data without spdm_cert_chain_t header.
  * @param  cert_chain_data_size  Size in bytes of the certitiface chain data.
- * @param  public_key            Pointer to new-generated asymmetric context which contain the
+ * @param  public_key            Pointer to newly generated asymmetric context which contain the
  *                               retrieved public key component.
  *
  * @retval  true   Public key was retrieved successfully.

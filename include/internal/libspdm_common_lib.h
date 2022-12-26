@@ -63,18 +63,16 @@ typedef struct {
     /* My Certificate */
     const void *local_cert_chain_provision[SPDM_MAX_SLOT_COUNT];
     size_t local_cert_chain_provision_size[SPDM_MAX_SLOT_COUNT];
-    /* My provisioned certificate (for slot_id - 0xFF, default 0)*/
-    uint8_t provisioned_slot_id;
+    /* My raw public key (slot_id - 0xFF) */
+    const void *local_public_key_provision;
+    size_t local_public_key_provision_size;
 
     /* Peer Root Certificate */
     const void *peer_root_cert_provision[LIBSPDM_MAX_ROOT_CERT_SUPPORT];
     size_t peer_root_cert_provision_size[LIBSPDM_MAX_ROOT_CERT_SUPPORT];
-
-    /* Peer CertificateChain
-     * Whether it contains the root certificate or not,
-     * it should be equal to the one returned from peer by get_certificate*/
-    const void *peer_cert_chain_provision;
-    size_t peer_cert_chain_provision_size;
+    /* Peer raw public key (slot_id - 0xFF) */
+    const void *peer_public_key_provision;
+    size_t peer_public_key_provision_size;
 
     /* Peer Cert verify*/
     libspdm_verify_spdm_cert_chain_func verify_peer_spdm_cert_chain;
@@ -119,6 +117,7 @@ typedef struct {
     /* Local Used CertificateChain (for responder, or requester in mut auth) */
     const uint8_t *local_used_cert_chain_buffer;
     size_t local_used_cert_chain_buffer_size;
+    uint8_t local_used_cert_chain_slot_id;
 } libspdm_connection_info_t;
 
 typedef struct {
@@ -570,17 +569,16 @@ bool libspdm_generate_cert_chain_hash(libspdm_context_t *spdm_context,
                                       size_t slot_id, uint8_t *hash);
 
 /**
- * This function verifies the digest.
+ * This function generates the public key hash.
  *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  digest                       The digest data buffer.
- * @param  digest_count                   size of the digest data buffer.
+ * @param  spdm_context               A pointer to the SPDM context.
+ * @param  hash                       The buffer to store the public key hash.
  *
- * @retval true  digest verification pass.
- * @retval false digest verification fail.
+ * @retval true  public key hash is generated.
+ * @retval false public key hash is not generated.
  **/
-bool libspdm_verify_peer_digests(libspdm_context_t *spdm_context,
-                                 const void *digest, size_t digest_count);
+bool libspdm_generate_public_key_hash(libspdm_context_t *spdm_context,
+                                      uint8_t *hash);
 
 /**
  * This function verifies peer certificate chain buffer including spdm_cert_chain_t header.
@@ -629,6 +627,20 @@ bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
 bool libspdm_verify_certificate_chain_hash(libspdm_context_t *spdm_context,
                                            const void *certificate_chain_hash,
                                            size_t certificate_chain_hash_size);
+
+/**
+ * This function verifies the public key hash.
+ *
+ * @param  spdm_context            A pointer to the SPDM context.
+ * @param  public_key_hash         The public key hash data buffer.
+ * @param  public_key_hash_size    size in bytes of the public key hash data buffer.
+ *
+ * @retval true  hash verification pass.
+ * @retval false hash verification fail.
+ **/
+bool libspdm_verify_public_key_hash(libspdm_context_t *spdm_context,
+                                    const void *public_key_hash,
+                                    size_t public_key_hash_size);
 
 /**
  * This function verifies the challenge signature based upon m1m2.

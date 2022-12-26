@@ -70,7 +70,7 @@
  *
  * @param  cert       Pointer to the DER-encoded X509 certificate.
  * @param  cert_size  Size of the X509 certificate in bytes.
- * @param  context    Pointer to new-generated asymmetric context which contain the retrieved public
+ * @param  context    Pointer to newly generated asymmetric context which contain the retrieved public
  *                    key component. Use libspdm_asym_free() function to free the resource.
  *
  * @retval  true   public key was retrieved successfully.
@@ -142,7 +142,7 @@ static libspdm_get_asym_get_public_key_from_x509(uint32_t base_asym_algo)
  * @param  base_asym_algo                 SPDM base_asym_algo
  * @param  cert                         Pointer to the DER-encoded X509 certificate.
  * @param  cert_size                     size of the X509 certificate in bytes.
- * @param  context                      Pointer to new-generated asymmetric context which contain the retrieved public key component.
+ * @param  context                      Pointer to newly generated asymmetric context which contain the retrieved public key component.
  *                                     Use libspdm_asym_free() function to free the resource.
  *
  * @retval  true   public key was retrieved successfully.
@@ -181,7 +181,7 @@ libspdm_get_req_asym_get_public_key_from_x509(uint16_t req_base_asym_alg)
  * @param  req_base_asym_alg               SPDM req_base_asym_alg
  * @param  cert                         Pointer to the DER-encoded X509 certificate.
  * @param  cert_size                     size of the X509 certificate in bytes.
- * @param  context                      Pointer to new-generated asymmetric context which contain the retrieved public key component.
+ * @param  context                      Pointer to newly generated asymmetric context which contain the retrieved public key component.
  *                                     Use libspdm_asym_free() function to free the resource.
  *
  * @retval  true   public key was retrieved successfully.

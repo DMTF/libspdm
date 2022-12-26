@@ -44,6 +44,7 @@ bool libspdm_verify_key_exchange_rsp_hmac(libspdm_context_t *spdm_context,
     uint8_t calc_hmac_data[LIBSPDM_MAX_HASH_SIZE];
     bool result;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    uint8_t slot_id;
     uint8_t *cert_chain_buffer;
     size_t cert_chain_buffer_size;
     uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
@@ -55,8 +56,15 @@ bool libspdm_verify_key_exchange_rsp_hmac(libspdm_context_t *spdm_context,
     LIBSPDM_ASSERT(hash_size == hmac_data_size);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    result = libspdm_get_peer_cert_chain_buffer(
-        spdm_context, (const void **)&cert_chain_buffer, &cert_chain_buffer_size);
+    slot_id = spdm_context->connection_info.peer_used_cert_chain_slot_id;
+    LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xFF));
+    if (slot_id == 0xFF) {
+        result = libspdm_get_peer_public_key_buffer(
+            spdm_context, (const void **)&cert_chain_buffer, &cert_chain_buffer_size);
+    } else {
+        result = libspdm_get_peer_cert_chain_buffer(
+            spdm_context, (const void **)&cert_chain_buffer, &cert_chain_buffer_size);
+    }
     if (!result) {
         return false;
     }
@@ -106,18 +114,17 @@ bool libspdm_verify_key_exchange_rsp_signature(
     const void *sign_data, const size_t sign_data_size)
 {
     bool result;
-    const uint8_t *cert_chain_data;
-    size_t cert_chain_data_size;
-    const uint8_t *cert_buffer;
-    size_t cert_buffer_size;
     void *context;
+    uint8_t slot_id;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     uint8_t *cert_chain_buffer;
     size_t cert_chain_buffer_size;
     uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     size_t th_curr_data_size;
-#else
-    uint8_t slot_id;
+    const uint8_t *cert_chain_data;
+    size_t cert_chain_data_size;
+    const uint8_t *cert_buffer;
+    size_t cert_buffer_size;
 #endif
 #if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) || (LIBSPDM_DEBUG_PRINT_ENABLE)
     size_t hash_size;
@@ -126,9 +133,17 @@ bool libspdm_verify_key_exchange_rsp_signature(
     hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
 #endif
 
+    slot_id = spdm_context->connection_info.peer_used_cert_chain_slot_id;
+    LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xFF));
+
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    result = libspdm_get_peer_cert_chain_buffer(
-        spdm_context, (const void **)&cert_chain_buffer, &cert_chain_buffer_size);
+    if (slot_id == 0xFF) {
+        result = libspdm_get_peer_public_key_buffer(
+            spdm_context, (const void **)&cert_chain_buffer, &cert_chain_buffer_size);
+    } else {
+        result = libspdm_get_peer_cert_chain_buffer(
+            spdm_context, (const void **)&cert_chain_buffer, &cert_chain_buffer_size);
+    }
     if (!result) {
         return false;
     }
@@ -164,53 +179,25 @@ bool libspdm_verify_key_exchange_rsp_signature(
     LIBSPDM_INTERNAL_DUMP_DATA(sign_data, sign_data_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
- #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    /* Get leaf cert from cert chain */
-    result = libspdm_get_peer_cert_chain_data(
-        spdm_context, (const void **)&cert_chain_data, &cert_chain_data_size);
-    if (!result) {
-        return false;
-    }
-    result = libspdm_x509_get_cert_from_cert_chain(cert_chain_data,
-                                                   cert_chain_data_size, -1,
-                                                   &cert_buffer, &cert_buffer_size);
-    if (!result) {
-        return false;
-    }
-
-    result = libspdm_asym_get_public_key_from_x509(
-        spdm_context->connection_info.algorithm.base_asym_algo,
-        cert_buffer, cert_buffer_size, &context);
-    if (!result) {
-        return false;
-    }
-
-    result = libspdm_asym_verify(
-        spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
-        spdm_context->connection_info.algorithm.base_asym_algo,
-        spdm_context->connection_info.algorithm.base_hash_algo, context,
-        th_curr_data, th_curr_data_size, sign_data, sign_data_size);
-    libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo, context);
-#else
-    slot_id = spdm_context->connection_info.peer_used_cert_chain_slot_id;
-    LIBSPDM_ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
-    if (spdm_context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key != NULL) {
-        result = libspdm_asym_verify_hash(
-            spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
+    if (slot_id == 0xFF) {
+        result = libspdm_asym_get_public_key_from_der(
             spdm_context->connection_info.algorithm.base_asym_algo,
-            spdm_context->connection_info.algorithm.base_hash_algo,
-            spdm_context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key,
-            hash_data, hash_size, sign_data, sign_data_size);
+            spdm_context->local_context.peer_public_key_provision,
+            spdm_context->local_context.peer_public_key_provision_size,
+            &context);
+        if (!result) {
+            return false;
+        }
     } else {
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
         /* Get leaf cert from cert chain*/
         result = libspdm_get_peer_cert_chain_data(
             spdm_context, (const void **)&cert_chain_data, &cert_chain_data_size);
         if (!result) {
             return false;
         }
-        result = libspdm_x509_get_cert_from_cert_chain(cert_chain_data,
-                                                       cert_chain_data_size, -1,
-                                                       &cert_buffer, &cert_buffer_size);
+        result = libspdm_x509_get_cert_from_cert_chain(
+            cert_chain_data, cert_chain_data_size, -1, &cert_buffer, &cert_buffer_size);
         if (!result) {
             return false;
         }
@@ -221,12 +208,26 @@ bool libspdm_verify_key_exchange_rsp_signature(
         if (!result) {
             return false;
         }
+#else
+        context = spdm_context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key;
+        LIBSPDM_ASSERT(context != NULL);
+#endif
+    }
 
-        result = libspdm_asym_verify_hash(
-            spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
-            spdm_context->connection_info.algorithm.base_asym_algo,
-            spdm_context->connection_info.algorithm.base_hash_algo, context,
-            hash_data, hash_size, sign_data, sign_data_size);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    result = libspdm_asym_verify(
+        spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
+        spdm_context->connection_info.algorithm.base_asym_algo,
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        context, th_curr_data, th_curr_data_size, sign_data, sign_data_size);
+    libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo, context);
+#else
+    result = libspdm_asym_verify_hash(
+        spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
+        spdm_context->connection_info.algorithm.base_asym_algo,
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        context, hash_data, hash_size, sign_data, sign_data_size);
+    if (slot_id == 0xFF) {
         libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo, context);
     }
 #endif
@@ -292,7 +293,7 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
     /* -=[Check Parameters Phase]=- */
     LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xff));
     LIBSPDM_ASSERT((slot_id != 0xff) ||
-                   (spdm_context->local_context.peer_cert_chain_provision_size != 0));
+                   (spdm_context->local_context.peer_public_key_provision_size != 0));
 
     /* -=[Verify State Phase]=- */
     if (!libspdm_is_capabilities_flag_supported(
@@ -314,12 +315,7 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL, SPDM_KEY_EXCHANGE);
 
     /* -=[Construct Request Phase]=- */
-    if (slot_id != 0xff) {
-        spdm_context->connection_info.peer_used_cert_chain_slot_id = slot_id;
-    } else {
-        spdm_context->connection_info.peer_used_cert_chain_slot_id =
-            spdm_context->local_context.provisioned_slot_id;
-    }
+    spdm_context->connection_info.peer_used_cert_chain_slot_id = slot_id;
     transport_header_size = spdm_context->transport_get_header_size(spdm_context);
     status = libspdm_acquire_sender_buffer (spdm_context, &message_size, (void **)&message);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {

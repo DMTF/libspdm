@@ -82,6 +82,18 @@ uint8_t m_libspdm_ecc_test_pem_key[] = {
     0x2d, 0x0a,
 };
 
+/* DER key data for ECC Public key Retrieving (Extracted from m_libspdm_ecc_test_pem_key). */
+uint8_t m_libspdm_ecc_test_pub_key_der[] = {
+    0x30, 0x59, 0x30, 0x13, 0x06, 0x07, 0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x02,
+    0x01, 0x06, 0x08, 0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x03, 0x01, 0x07, 0x03,
+    0x42, 0x00, 0x04, 0x11, 0xA4, 0x06, 0x65, 0xB6, 0x79, 0x6E, 0x72, 0xB6,
+    0xD8, 0x09, 0x84, 0x92, 0x86, 0x11, 0x09, 0xDE, 0xEA, 0xD0, 0x0C, 0x60,
+    0xF1, 0x8A, 0xFF, 0x7C, 0xDE, 0xCE, 0xEC, 0x07, 0xBA, 0xA5, 0xB8, 0xD5,
+    0x17, 0xE5, 0x62, 0x33, 0x2D, 0x88, 0xB1, 0x9A, 0xE6, 0xF3, 0x09, 0x43,
+    0x0E, 0xA9, 0xF7, 0x3C, 0xE9, 0x20, 0xBA, 0xBD, 0xB1, 0x3C, 0x03, 0x89,
+    0x1E, 0x2A, 0xFF, 0x6E, 0x08, 0xFF, 0x2E,
+};
+
 /* Payload for PKCS#7 Signing & Verification Validation. */
 const char *m_libspdm_ec_payload = "payload data for PKCS#7 EC Signing";
 
@@ -104,7 +116,7 @@ bool libspdm_validate_crypt_ec_2(void)
     libspdm_my_print("\nCrypto EC key Retrieving Testing: ");
 
     /* Retrieve EC private key from PEM data. */
-    libspdm_my_print("\n- Retrieve EC Private key for PEM ...");
+    libspdm_my_print("\n- Retrieve EC Private key from PEM ...");
     status = libspdm_ec_get_private_key_from_pem(m_libspdm_ecc_test_pem_key,
                                                  sizeof(m_libspdm_ecc_test_pem_key), NULL,
                                                  &ec_priv_key);
@@ -115,8 +127,49 @@ bool libspdm_validate_crypt_ec_2(void)
         libspdm_my_print("[Pass]");
     }
 
-    /* Retrieve EC public key from X509 Certificate. */
-    libspdm_my_print("\n- Retrieve EC public key from X509 ... ");
+    /* Sign EC-DSA */
+    hash_size = sizeof(hash_value);
+    sig_size = sizeof(signature);
+    libspdm_my_print("\n- EC-DSA Signing ... ");
+    status = libspdm_ecdsa_sign(ec_priv_key, LIBSPDM_CRYPTO_NID_SHA256, hash_value,
+                                hash_size, signature, &sig_size);
+    if (!status) {
+        libspdm_my_print("[Fail]");
+        libspdm_ec_free(ec_priv_key);
+        return false;
+    } else {
+        libspdm_my_print("[Pass]");
+    }
+
+    /* Retrieve EC Public key from DER data. */
+    libspdm_my_print("\n- Retrieve EC Public key from DER ...");
+    status = libspdm_ec_get_public_key_from_der(m_libspdm_ecc_test_pub_key_der,
+                                                sizeof(m_libspdm_ecc_test_pub_key_der),
+                                                &ec_pub_key);
+    if (!status) {
+        libspdm_my_print("[Fail]");
+        libspdm_ec_free(ec_priv_key);
+        return false;
+    } else {
+        libspdm_my_print("[Pass]");
+    }
+
+    /* Verify EC-DSA */
+    libspdm_my_print("\n- EC-DSA Verification using Public key from DER ... ");
+    status = libspdm_ecdsa_verify(ec_pub_key, LIBSPDM_CRYPTO_NID_SHA256, hash_value,
+                                  hash_size, signature, sig_size);
+    if (!status) {
+        libspdm_my_print("[Fail]");
+        libspdm_ec_free(ec_priv_key);
+        libspdm_ec_free(ec_pub_key);
+        return false;
+    } else {
+        libspdm_my_print("[Pass]");
+    }
+
+    /* Retrieve EC Public key from X509 Certificate. */
+    libspdm_my_print("\n- Retrieve EC Public key from X509 ... ");
+    libspdm_ec_free(ec_pub_key);
     status = libspdm_ec_get_public_key_from_x509(
         m_libspdm_ecc_test_root_cer, sizeof(m_libspdm_ecc_test_root_cer), &ec_pub_key);
     if (!status) {
@@ -128,21 +181,7 @@ bool libspdm_validate_crypt_ec_2(void)
     }
 
     /* Verify EC-DSA */
-    hash_size = sizeof(hash_value);
-    sig_size = sizeof(signature);
-    libspdm_my_print("\n- EC-DSA Signing ... ");
-    status = libspdm_ecdsa_sign(ec_priv_key, LIBSPDM_CRYPTO_NID_SHA256, hash_value,
-                                hash_size, signature, &sig_size);
-    if (!status) {
-        libspdm_my_print("[Fail]");
-        libspdm_ec_free(ec_priv_key);
-        libspdm_ec_free(ec_pub_key);
-        return false;
-    } else {
-        libspdm_my_print("[Pass]");
-    }
-
-    libspdm_my_print("\n- EC-DSA Verification ... ");
+    libspdm_my_print("\n- EC-DSA Verification using Public key from X509 ... ");
     status = libspdm_ecdsa_verify(ec_pub_key, LIBSPDM_CRYPTO_NID_SHA256, hash_value,
                                   hash_size, signature, sig_size);
     if (!status) {
