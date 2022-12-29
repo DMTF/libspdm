@@ -353,7 +353,7 @@ bool libspdm_validate_crypt_rsa(void)
 
     free_pool(KeyBuffer);
 
-    #ifdef LIBSPDM_SHA256_SUPPORT_TEST
+    #if LIBSPDM_SHA256_SUPPORT_TEST
     /* SHA-256 digest message for PKCS#1 signature*/
     libspdm_my_print("hash Original message ... ");
     hash_size = LIBSPDM_SHA256_DIGEST_SIZE;

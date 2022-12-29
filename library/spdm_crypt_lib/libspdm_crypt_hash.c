@@ -113,50 +113,50 @@ void libspdm_hash_free(uint32_t base_hash_algo, void *hash_context)
         libspdm_sha256_free(hash_context);
 #else
         LIBSPDM_ASSERT(false);
-        break;
 #endif
+        break;
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384:
 #if LIBSPDM_SHA384_SUPPORT
         libspdm_sha384_free(hash_context);
 #else
         LIBSPDM_ASSERT(false);
-        break;
 #endif
+        break;
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_512:
 #if LIBSPDM_SHA512_SUPPORT
         libspdm_sha512_free(hash_context);
 #else
         LIBSPDM_ASSERT(false);
-        break;
 #endif
+        break;
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_256:
 #if LIBSPDM_SHA3_256_SUPPORT
         libspdm_sha3_256_free(hash_context);
 #else
         LIBSPDM_ASSERT(false);
-        break;
 #endif
+        break;
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_384:
 #if LIBSPDM_SHA3_384_SUPPORT
         libspdm_sha3_384_free(hash_context);
 #else
         LIBSPDM_ASSERT(false);
-        break;
 #endif
+        break;
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_512:
 #if LIBSPDM_SHA3_512_SUPPORT
         libspdm_sha3_512_free(hash_context);
 #else
         LIBSPDM_ASSERT(false);
-        break;
 #endif
+        break;
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SM3_256:
 #if LIBSPDM_SM3_256_SUPPORT
         libspdm_sm3_256_free(hash_context);
 #else
         LIBSPDM_ASSERT(false);
-        break;
 #endif
+        break;
     default:
         LIBSPDM_ASSERT(false);
         break;

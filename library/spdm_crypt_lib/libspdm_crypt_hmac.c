@@ -72,50 +72,50 @@ void libspdm_hmac_free(uint32_t base_hash_algo, void *hmac_ctx)
         libspdm_hmac_sha256_free(hmac_ctx);
 #else
         LIBSPDM_ASSERT(false);
-        break;
 #endif
+        break;
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384:
 #if LIBSPDM_SHA384_SUPPORT
         libspdm_hmac_sha384_free(hmac_ctx);
 #else
         LIBSPDM_ASSERT(false);
-        break;
 #endif
+        break;
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_512:
 #if LIBSPDM_SHA512_SUPPORT
         libspdm_hmac_sha512_free(hmac_ctx);
 #else
         LIBSPDM_ASSERT(false);
-        break;
 #endif
+        break;
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_256:
 #if LIBSPDM_SHA3_256_SUPPORT
         libspdm_hmac_sha3_256_free(hmac_ctx);
 #else
         LIBSPDM_ASSERT(false);
-        break;
 #endif
+        break;
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_384:
 #if LIBSPDM_SHA3_384_SUPPORT
         libspdm_hmac_sha3_384_free(hmac_ctx);
 #else
         LIBSPDM_ASSERT(false);
-        break;
 #endif
+        break;
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_512:
 #if LIBSPDM_SHA3_512_SUPPORT
         libspdm_hmac_sha3_512_free(hmac_ctx);
 #else
         LIBSPDM_ASSERT(false);
-        break;
 #endif
+        break;
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SM3_256:
 #if LIBSPDM_SM3_256_SUPPORT
         libspdm_hmac_sm3_256_free(hmac_ctx);
 #else
         LIBSPDM_ASSERT(false);
-        break;
 #endif
+        break;
     default:
         LIBSPDM_ASSERT(false);
         break;
