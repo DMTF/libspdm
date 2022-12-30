@@ -1757,6 +1757,11 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"failed\n ! mbedtls_rsa_copy %d", ret));
             goto free_all;
         }
+        ret = mbedtls_rsa_complete(mbedtls_pk_rsa(key));
+        if (ret != 0) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"failed\n ! mbedtls_rsa_complete %d", ret));
+            goto free_all;
+        }
         break;
     case LIBSPDM_CRYPTO_NID_ECDSA_NIST_P256:
     case LIBSPDM_CRYPTO_NID_ECDSA_NIST_P384:
