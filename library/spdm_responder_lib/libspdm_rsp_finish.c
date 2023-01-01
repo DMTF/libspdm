@@ -190,7 +190,7 @@ bool libspdm_verify_finish_req_signature(libspdm_context_t *spdm_context,
         return false;
     }
 
-    result = libspdm_req_asym_verify(
+    result = libspdm_req_asym_verify_transcript(
         spdm_context->connection_info.version, SPDM_FINISH,
         spdm_context->connection_info.algorithm.req_base_asym_alg,
         spdm_context->connection_info.algorithm.base_hash_algo, context,

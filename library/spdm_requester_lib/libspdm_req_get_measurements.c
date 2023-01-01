@@ -65,7 +65,7 @@ bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
         return false;
     }
 
-    result = libspdm_asym_verify(
+    result = libspdm_asym_verify_transcript(
         spdm_context->connection_info.version, SPDM_MEASUREMENTS,
         spdm_context->connection_info.algorithm.base_asym_algo,
         spdm_context->connection_info.algorithm.base_hash_algo, context,

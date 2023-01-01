@@ -1710,7 +1710,7 @@ bool libspdm_requester_data_sign(
                                                 base_hash_algo, context,
                                                 message, message_size, signature, sig_size);
         } else {
-            result = libspdm_req_asym_sign(spdm_version, op_code, req_base_asym_alg, base_hash_algo,
+            result = libspdm_req_asym_sign_transcript(spdm_version, op_code, req_base_asym_alg, base_hash_algo,
                                            context,
                                            message, message_size, signature, sig_size);
         }
@@ -1728,7 +1728,7 @@ bool libspdm_requester_data_sign(
                                             base_hash_algo, context,
                                             message, message_size, signature, sig_size);
     } else {
-        result = libspdm_req_asym_sign(spdm_version, op_code, req_base_asym_alg, base_hash_algo,
+        result = libspdm_req_asym_sign_transcript(spdm_version, op_code, req_base_asym_alg, base_hash_algo,
                                        context,
                                        message, message_size, signature, sig_size);
     }
@@ -1773,7 +1773,7 @@ bool libspdm_responder_data_sign(
                                             context,
                                             message, message_size, signature, sig_size);
         } else {
-            result = libspdm_asym_sign(spdm_version, op_code, base_asym_algo, base_hash_algo,
+            result = libspdm_asym_sign_transcript(spdm_version, op_code, base_asym_algo, base_hash_algo,
                                        context,
                                        message, message_size, signature, sig_size);
         }
@@ -1791,7 +1791,7 @@ bool libspdm_responder_data_sign(
                                         context,
                                         message, message_size, signature, sig_size);
     } else {
-        result = libspdm_asym_sign(spdm_version, op_code, base_asym_algo, base_hash_algo,
+        result = libspdm_asym_sign_transcript(spdm_version, op_code, base_asym_algo, base_hash_algo,
                                    context,
                                    message, message_size, signature, sig_size);
     }
