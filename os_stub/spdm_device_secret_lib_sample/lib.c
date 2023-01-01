@@ -1710,9 +1710,10 @@ bool libspdm_requester_data_sign(
                                                 base_hash_algo, context,
                                                 message, message_size, signature, sig_size);
         } else {
-            result = libspdm_req_asym_sign_transcript(spdm_version, op_code, req_base_asym_alg, base_hash_algo,
-                                           context,
-                                           message, message_size, signature, sig_size);
+            result = libspdm_req_asym_sign_transcript(spdm_version, op_code, req_base_asym_alg,
+                                                      base_hash_algo, context,
+                                                      message, message_size,
+                                                      signature, sig_size);
         }
         libspdm_req_asym_free(req_base_asym_alg, context);
         free(private_pem);
@@ -1728,9 +1729,10 @@ bool libspdm_requester_data_sign(
                                             base_hash_algo, context,
                                             message, message_size, signature, sig_size);
     } else {
-        result = libspdm_req_asym_sign_transcript(spdm_version, op_code, req_base_asym_alg, base_hash_algo,
-                                       context,
-                                       message, message_size, signature, sig_size);
+        result = libspdm_req_asym_sign_transcript(spdm_version, op_code, req_base_asym_alg,
+                                                  base_hash_algo, context,
+                                                  message, message_size,
+                                                  signature, sig_size);
     }
     libspdm_req_asym_free(req_base_asym_alg, context);
 #if !LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY
@@ -1773,9 +1775,10 @@ bool libspdm_responder_data_sign(
                                             context,
                                             message, message_size, signature, sig_size);
         } else {
-            result = libspdm_asym_sign_transcript(spdm_version, op_code, base_asym_algo, base_hash_algo,
-                                       context,
-                                       message, message_size, signature, sig_size);
+            result = libspdm_asym_sign_transcript(spdm_version, op_code, base_asym_algo,
+                                                  base_hash_algo, context,
+                                                  message, message_size,
+                                                  signature, sig_size);
         }
         libspdm_asym_free(base_asym_algo, context);
         free(private_pem);
@@ -1791,9 +1794,10 @@ bool libspdm_responder_data_sign(
                                         context,
                                         message, message_size, signature, sig_size);
     } else {
-        result = libspdm_asym_sign_transcript(spdm_version, op_code, base_asym_algo, base_hash_algo,
-                                   context,
-                                   message, message_size, signature, sig_size);
+        result = libspdm_asym_sign_transcript(spdm_version, op_code, base_asym_algo,
+                                              base_hash_algo, context,
+                                              message, message_size,
+                                              signature, sig_size);
     }
     libspdm_asym_free(base_asym_algo, context);
 #if !LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY
