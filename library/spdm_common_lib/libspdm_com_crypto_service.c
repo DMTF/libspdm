@@ -992,7 +992,7 @@ bool libspdm_verify_challenge_auth_signature(libspdm_context_t *spdm_context,
             return false;
         }
 
-        result = libspdm_asym_verify(
+        result = libspdm_asym_verify_transcript(
             spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
             spdm_context->connection_info.algorithm.base_asym_algo,
             spdm_context->connection_info.algorithm.base_hash_algo,
@@ -1007,7 +1007,7 @@ bool libspdm_verify_challenge_auth_signature(libspdm_context_t *spdm_context,
             return false;
         }
 
-        result = libspdm_req_asym_verify(
+        result = libspdm_req_asym_verify_transcript(
             spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
             spdm_context->connection_info.algorithm.req_base_asym_alg,
             spdm_context->connection_info.algorithm.base_hash_algo,

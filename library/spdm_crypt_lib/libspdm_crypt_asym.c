@@ -6,71 +6,6 @@
 
 #include "internal/libspdm_crypt_lib.h"
 
-/**
- * Release the specified asymmetric context.
- *
- * @param  context  Pointer to the asymmetric context to be released.
- **/
-typedef void (*libspdm_asym_free_func)(void *context);
-
-/**
- * Verifies the asymmetric signature.
- *
- * For RSA/ECDSA, param is NULL.
- * For EdDSA, param is EdDSA context.
- * For EdDSA25519, param is NULL.
- * For EdDSA448, param is EdDSA448 context.
- * For SM2_DSA, param is SM2 IDa.
- *
- * @param  context       Pointer to asymmetric context for signature verification.
- * @param  hash_nid      Hash NID
- * @param  param         Algorithm specific parameter
- * @param  param_size    Algorithm specific parameter size
- * @param  message       Pointer to octet message to be checked (before hash).
- * @param  message_size  Size of the message in bytes.
- * @param  signature     Pointer to asymmetric signature to be verified.
- * @param  sig_size      Size of signature in bytes.
- *
- * @retval  true   Valid asymmetric signature.
- * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
- **/
-typedef bool (*libspdm_asym_verify_func)(void *context, size_t hash_nid,
-                                         const uint8_t *param, size_t param_size,
-                                         const uint8_t *message,
-                                         size_t message_size,
-                                         const uint8_t *signature,
-                                         size_t sig_size);
-
-/**
- * Carries out the signature generation.
- *
- * If the signature buffer is too small to hold the contents of signature, false
- * is returned and sig_size is set to the required buffer size to obtain the signature.
- *
- * For RSA/ECDSA/EdDSA25519, param is NULL.
- * For EdDSA448, param is EdDSA448 context.
- * For SM2_DSA, param is SM2 IDa.
- *
- * @param  context       Pointer to asymmetric context for signature generation.
- * @param  hash_nid      Hash NID
- * @param  param         Algorithm specific parameter
- * @param  param_size    Algorithm specific parameter size
- * @param  message       Pointer to octet message to be signed (before hash).
- * @param  message_size  Size of the message in bytes.
- * @param  signature     Pointer to buffer to receive signature.
- * @param  sig_size      On input, the size of signature buffer in bytes.
- *                       On output, the size of data returned in signature buffer in bytes.
- *
- * @retval  true   Signature successfully generated.
- * @retval  false  Signature generation failed.
- * @retval  false  Sig_size is too small.
- **/
-typedef bool (*libspdm_asym_sign_func)(void *context, size_t hash_nid,
-                                       const uint8_t *param, size_t param_size,
-                                       const uint8_t *message,
-                                       size_t message_size, uint8_t *signature,
-                                       size_t *sig_size);
-
 typedef struct {
     bool is_requester;
     uint8_t op_code;
@@ -264,74 +199,76 @@ uint32_t libspdm_get_asym_signature_size(uint32_t base_asym_algo)
     }
 }
 
-/**
- * Return asymmetric sign function, based upon the asymmetric algorithm.
- *
- * @param  base_asym_algo                 SPDM base_asym_algo
- *
- * @return asymmetric sign function
- **/
-static libspdm_asym_sign_func libspdm_get_asym_sign(uint32_t base_asym_algo)
+bool libspdm_asym_sign (void *context, size_t hash_nid, uint32_t base_asym_algo,
+                        const uint8_t *param, size_t param_size,
+                        const uint8_t *message, size_t message_size,
+                        uint8_t *signature, size_t *sig_size)
 {
     switch (base_asym_algo) {
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
 #if LIBSPDM_RSA_SSA_SUPPORT
-        return libspdm_rsa_pkcs1_sign_with_nid_wrap;
+        return libspdm_rsa_pkcs1_sign_with_nid_wrap(context, hash_nid,
+                                                    param, param_size,
+                                                    message, message_size,
+                                                    signature, sig_size);
 #else
         LIBSPDM_ASSERT(false);
-        break;
+        return false;
 #endif
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
 #if LIBSPDM_RSA_PSS_SUPPORT
-        return libspdm_rsa_pss_sign_wrap;
+        return libspdm_rsa_pss_sign_wrap(context, hash_nid,
+                                         param, param_size,
+                                         message, message_size,
+                                         signature, sig_size);
 #else
         LIBSPDM_ASSERT(false);
-        break;
+        return false;
 #endif
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
 #if LIBSPDM_ECDSA_SUPPORT
-        return libspdm_ecdsa_sign_wrap;
+        return libspdm_ecdsa_sign_wrap(context, hash_nid,
+                                       param, param_size,
+                                       message, message_size,
+                                       signature, sig_size);
 #else
         LIBSPDM_ASSERT(false);
-        break;
+        return false;
 #endif
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
 #if (LIBSPDM_EDDSA_ED25519_SUPPORT) || (LIBSPDM_EDDSA_ED448_SUPPORT)
-        return libspdm_eddsa_sign_wrap;
+        return libspdm_eddsa_sign_wrap(context, hash_nid,
+                                       param, param_size,
+                                       message, message_size,
+                                       signature, sig_size);
 #else
         LIBSPDM_ASSERT(false);
-        break;
+        return false;
 #endif
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
 #if LIBSPDM_SM2_DSA_SUPPORT
-        return libspdm_sm2_dsa_sign_wrap;
+        return libspdm_sm2_dsa_sign_wrap(context, hash_nid,
+                                         param, param_size,
+                                         message, message_size,
+                                         signature, sig_size);
 #else
         LIBSPDM_ASSERT(false);
-        break;
+        return false;
 #endif
     default:
         LIBSPDM_ASSERT(false);
-        break;
+        return false;
     }
-
-    return NULL;
 }
 
-/**
- * Return asymmetric free function, based upon the negotiated asymmetric algorithm.
- *
- * @param  base_asym_algo                 SPDM base_asym_algo
- *
- * @return asymmetric free function
- **/
-static libspdm_asym_free_func libspdm_get_asym_free(uint32_t base_asym_algo)
+void libspdm_asym_free(uint32_t base_asym_algo, void *context)
 {
     switch (base_asym_algo) {
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
@@ -341,51 +278,39 @@ static libspdm_asym_free_func libspdm_get_asym_free(uint32_t base_asym_algo)
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
 #if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)
-        return libspdm_rsa_free;
+        libspdm_rsa_free(context);
 #else
         LIBSPDM_ASSERT(false);
-        break;
 #endif
+        break;
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
 #if LIBSPDM_ECDSA_SUPPORT
-        return libspdm_ec_free;
+        libspdm_ec_free(context);
 #else
         LIBSPDM_ASSERT(false);
-        break;
 #endif
+        break;
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
 #if (LIBSPDM_EDDSA_ED25519_SUPPORT) || (LIBSPDM_EDDSA_ED448_SUPPORT)
-        return libspdm_ecd_free;
+        libspdm_ecd_free(context);
 #else
         LIBSPDM_ASSERT(false);
-        break;
 #endif
+        break;
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
 #if LIBSPDM_SM2_DSA_SUPPORT
-        return libspdm_sm2_dsa_free;
+        libspdm_sm2_dsa_free(context);
 #else
         LIBSPDM_ASSERT(false);
-        break;
 #endif
+        break;
     default:
         LIBSPDM_ASSERT(false);
         break;
     }
-
-    return NULL;
-}
-
-void libspdm_asym_free(uint32_t base_asym_algo, void *context)
-{
-    libspdm_asym_free_func free_function;
-    free_function = libspdm_get_asym_free(base_asym_algo);
-    if (free_function == NULL) {
-        return;
-    }
-    free_function(context);
 }
 
 /**
@@ -485,74 +410,83 @@ bool libspdm_sm2_dsa_verify_wrap (void *context, size_t hash_nid,
 }
 #endif
 
-/**
- * Return asymmetric verify function, based upon the negotiated asymmetric algorithm.
- *
- * @param  base_asym_algo                 SPDM base_asym_algo
- *
- * @return asymmetric verify function
- **/
-static libspdm_asym_verify_func libspdm_get_asym_verify(uint32_t base_asym_algo)
+bool libspdm_asym_verify(
+    void *context, size_t hash_nid, uint32_t base_asym_algo,
+    const uint8_t *param, size_t param_size,
+    const uint8_t *message, size_t message_size,
+    const uint8_t *signature, size_t sig_size)
 {
     switch (base_asym_algo) {
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
 #if LIBSPDM_RSA_SSA_SUPPORT
-        return libspdm_rsa_pkcs1_verify_with_nid_wrap;
+        return libspdm_rsa_pkcs1_verify_with_nid_wrap(context, hash_nid,
+                                                      param, param_size,
+                                                      message, message_size,
+                                                      signature, sig_size);
 #else
         LIBSPDM_ASSERT(false);
-        break;
+        return false;
 #endif
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
 #if LIBSPDM_RSA_PSS_SUPPORT
-        return libspdm_rsa_pss_verify_wrap;
+        return libspdm_rsa_pss_verify_wrap(context, hash_nid,
+                                           param, param_size,
+                                           message, message_size,
+                                           signature, sig_size);
 #else
         LIBSPDM_ASSERT(false);
-        break;
+        return false;
 #endif
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
 #if LIBSPDM_ECDSA_SUPPORT
-        return libspdm_ecdsa_verify_wrap;
+        return libspdm_ecdsa_verify_wrap(context, hash_nid,
+                                         param, param_size,
+                                         message, message_size,
+                                         signature, sig_size);
 #else
         LIBSPDM_ASSERT(false);
-        break;
+        return false;
 #endif
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
 #if (LIBSPDM_EDDSA_ED25519_SUPPORT) || (LIBSPDM_EDDSA_ED448_SUPPORT)
-        return libspdm_eddsa_verify_wrap;
+        return libspdm_eddsa_verify_wrap(context, hash_nid,
+                                         param, param_size,
+                                         message, message_size,
+                                         signature, sig_size);
 #else
         LIBSPDM_ASSERT(false);
-        break;
+        return false;
 #endif
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
 #if LIBSPDM_SM2_DSA_SUPPORT
-        return libspdm_sm2_dsa_verify_wrap;
+        return libspdm_sm2_dsa_verify_wrap(context, hash_nid,
+                                           param, param_size,
+                                           message, message_size,
+                                           signature, sig_size);
 #else
         LIBSPDM_ASSERT(false);
-        break;
+        return false;
 #endif
     default:
         LIBSPDM_ASSERT(false);
-        break;
+        return false;
     }
-
-    return NULL;
 }
 
-bool libspdm_asym_verify(
+bool libspdm_asym_verify_transcript(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint32_t base_asym_algo, uint32_t base_hash_algo,
     void *context, const uint8_t *message,
     size_t message_size, const uint8_t *signature,
     size_t sig_size)
 {
-    libspdm_asym_verify_func verify_function;
     bool need_hash;
     uint8_t message_hash[LIBSPDM_MAX_HASH_SIZE];
     size_t hash_size;
@@ -566,18 +500,11 @@ bool libspdm_asym_verify(
     hash_nid = libspdm_get_hash_nid(base_hash_algo);
     need_hash = libspdm_asym_func_need_hash(base_asym_algo);
 
-    verify_function = libspdm_get_asym_verify(base_asym_algo);
-    if (verify_function == NULL) {
-        return false;
-    }
-
     param = NULL;
     param_size = 0;
 
     if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11) {
-
-        /* Need use SPDM 1.2 signing*/
-
+        /* Need use SPDM 1.2 signing. */
         switch (base_asym_algo) {
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
             param = "";
@@ -605,28 +532,29 @@ bool libspdm_asym_verify(
             return false;
         }
 
-        /* re-assign message and message_size for signing*/
-
+        /* re-assign message and message_size for signing */
         hash_size = libspdm_get_hash_size(base_hash_algo);
         message = spdm12_signing_context_with_hash;
         message_size = SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + hash_size;
 
-        /* Passthru*/
-
+        /* Passthru */
     }
 
     if (need_hash) {
         hash_size = libspdm_get_hash_size(base_hash_algo);
-        result = libspdm_hash_all(base_hash_algo, message, message_size,
-                                  message_hash);
+        result = libspdm_hash_all(base_hash_algo, message, message_size, message_hash);
         if (!result) {
             return false;
         }
-        return verify_function(context, hash_nid, param, param_size, message_hash,
-                               hash_size, signature, sig_size);
+        return libspdm_asym_verify(context, hash_nid, base_asym_algo,
+                                   param, param_size,
+                                   message_hash, hash_size,
+                                   signature, sig_size);
     } else {
-        return verify_function(context, hash_nid, param, param_size, message, message_size,
-                               signature, sig_size);
+        return libspdm_asym_verify(context, hash_nid, base_asym_algo,
+                                   param, param_size,
+                                   message, message_size,
+                                   signature, sig_size);
     }
 }
 
@@ -637,7 +565,6 @@ bool libspdm_asym_verify_hash(
     size_t hash_size, const uint8_t *signature,
     size_t sig_size)
 {
-    libspdm_asym_verify_func verify_function;
     bool need_hash;
     uint8_t *message;
     size_t message_size;
@@ -653,18 +580,11 @@ bool libspdm_asym_verify_hash(
     need_hash = libspdm_asym_func_need_hash(base_asym_algo);
     LIBSPDM_ASSERT (hash_size == libspdm_get_hash_size(base_hash_algo));
 
-    verify_function = libspdm_get_asym_verify(base_asym_algo);
-    if (verify_function == NULL) {
-        return false;
-    }
-
     param = NULL;
     param_size = 0;
 
     if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11) {
-
-        /* Need use SPDM 1.2 signing*/
-
+        /* Need use SPDM 1.2 signing */
         switch (base_asym_algo) {
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
             param = "";
@@ -690,45 +610,47 @@ bool libspdm_asym_verify_hash(
                             - spdm12_signing_context_with_hash),
                          message_hash, hash_size);
 
-        /* assign message and message_size for signing*/
-
+        /* assign message and message_size for signing */
         message = spdm12_signing_context_with_hash;
         message_size = SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + hash_size;
 
         if (need_hash) {
-            result = libspdm_hash_all(base_hash_algo, message, message_size,
-                                      full_message_hash);
+            result = libspdm_hash_all(base_hash_algo, message, message_size, full_message_hash);
             if (!result) {
                 return false;
             }
-            return verify_function(context, hash_nid, param, param_size, full_message_hash,
-                                   hash_size, signature, sig_size);
+            return libspdm_asym_verify(context, hash_nid, base_asym_algo,
+                                       param, param_size,
+                                       full_message_hash, hash_size,
+                                       signature, sig_size);
         } else {
-            return verify_function(context, hash_nid, param, param_size, message, message_size,
-                                   signature, sig_size);
+            return libspdm_asym_verify(context, hash_nid, base_asym_algo,
+                                       param, param_size,
+                                       message, message_size,
+                                       signature, sig_size);
         }
 
-        /* SPDM 1.2 signing done.*/
-
+        /* SPDM 1.2 signing done. */
     }
 
     if (need_hash) {
-        return verify_function(context, hash_nid, param, param_size, message_hash,
-                               hash_size, signature, sig_size);
+        return libspdm_asym_verify(context, hash_nid, base_asym_algo,
+                                   param, param_size,
+                                   message_hash, hash_size,
+                                   signature, sig_size);
     } else {
         LIBSPDM_ASSERT(false);
         return false;
     }
 }
 
-bool libspdm_asym_sign(
+bool libspdm_asym_sign_transcript(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint32_t base_asym_algo, uint32_t base_hash_algo,
     void *context, const uint8_t *message,
     size_t message_size, uint8_t *signature,
     size_t *sig_size)
 {
-    libspdm_asym_sign_func asym_sign;
     bool need_hash;
     uint8_t message_hash[LIBSPDM_MAX_HASH_SIZE];
     size_t hash_size;
@@ -742,18 +664,11 @@ bool libspdm_asym_sign(
     hash_nid = libspdm_get_hash_nid(base_hash_algo);
     need_hash = libspdm_asym_func_need_hash(base_asym_algo);
 
-    asym_sign = libspdm_get_asym_sign(base_asym_algo);
-    if (asym_sign == NULL) {
-        return false;
-    }
-
     param = NULL;
     param_size = 0;
 
     if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11) {
-
-        /* Need use SPDM 1.2 signing*/
-
+        /* Need use SPDM 1.2 signing */
         switch (base_asym_algo) {
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
             param = "";
@@ -781,28 +696,29 @@ bool libspdm_asym_sign(
             return false;
         }
 
-        /* re-assign message and message_size for signing*/
-
+        /* re-assign message and message_size for signing */
         hash_size = libspdm_get_hash_size(base_hash_algo);
         message = spdm12_signing_context_with_hash;
         message_size = SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + hash_size;
 
         /* Passthru*/
-
     }
 
     if (need_hash) {
         hash_size = libspdm_get_hash_size(base_hash_algo);
-        result = libspdm_hash_all(base_hash_algo, message, message_size,
-                                  message_hash);
+        result = libspdm_hash_all(base_hash_algo, message, message_size, message_hash);
         if (!result) {
             return false;
         }
-        return asym_sign(context, hash_nid, param, param_size, message_hash, hash_size,
-                         signature, sig_size);
+        return libspdm_asym_sign(context, hash_nid, base_asym_algo,
+                                 param, param_size,
+                                 message_hash, hash_size,
+                                 signature, sig_size);
     } else {
-        return asym_sign(context, hash_nid, param, param_size, message, message_size,
-                         signature, sig_size);
+        return libspdm_asym_sign(context, hash_nid, base_asym_algo,
+                                 param, param_size,
+                                 message, message_size,
+                                 signature, sig_size);
     }
 }
 
@@ -813,7 +729,6 @@ bool libspdm_asym_sign_hash(
     size_t hash_size, uint8_t *signature,
     size_t *sig_size)
 {
-    libspdm_asym_sign_func asym_sign;
     bool need_hash;
     uint8_t *message;
     size_t message_size;
@@ -829,18 +744,11 @@ bool libspdm_asym_sign_hash(
     need_hash = libspdm_asym_func_need_hash(base_asym_algo);
     LIBSPDM_ASSERT (hash_size == libspdm_get_hash_size(base_hash_algo));
 
-    asym_sign = libspdm_get_asym_sign(base_asym_algo);
-    if (asym_sign == NULL) {
-        return false;
-    }
-
     param = NULL;
     param_size = 0;
 
     if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11) {
-
-        /* Need use SPDM 1.2 signing*/
-
+        /* Need use SPDM 1.2 signing */
         switch (base_asym_algo) {
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
             param = "";
@@ -866,31 +774,34 @@ bool libspdm_asym_sign_hash(
                             - spdm12_signing_context_with_hash),
                          message_hash, hash_size);
 
-        /* assign message and message_size for signing*/
-
+        /* assign message and message_size for signing */
         message = spdm12_signing_context_with_hash;
         message_size = SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + hash_size;
 
         if (need_hash) {
-            result = libspdm_hash_all(base_hash_algo, message, message_size,
-                                      full_message_hash);
+            result = libspdm_hash_all(base_hash_algo, message, message_size, full_message_hash);
             if (!result) {
                 return false;
             }
-            return asym_sign(context, hash_nid, param, param_size, full_message_hash, hash_size,
-                             signature, sig_size);
+            return libspdm_asym_sign(context, hash_nid, base_asym_algo,
+                                     param, param_size,
+                                     full_message_hash, hash_size,
+                                     signature, sig_size);
         } else {
-            return asym_sign(context, hash_nid, param, param_size, message, message_size,
-                             signature, sig_size);
+            return libspdm_asym_sign(context, hash_nid, base_asym_algo,
+                                     param, param_size,
+                                     message, message_size,
+                                     signature, sig_size);
         }
 
-        /* SPDM 1.2 signing done.*/
-
+        /* SPDM 1.2 signing done. */
     }
 
     if (need_hash) {
-        return asym_sign(context, hash_nid, param, param_size, message_hash, hash_size,
-                         signature, sig_size);
+        return libspdm_asym_sign(context, hash_nid, base_asym_algo,
+                                 param, param_size,
+                                 message_hash, hash_size,
+                                 signature, sig_size);
     } else {
         LIBSPDM_ASSERT (false);
         return false;
@@ -902,26 +813,9 @@ uint32_t libspdm_get_req_asym_signature_size(uint16_t req_base_asym_alg)
     return libspdm_get_asym_signature_size(req_base_asym_alg);
 }
 
-/**
- * Return requester asymmetric free function, based upon the negotiated requester asymmetric algorithm.
- *
- * @param  req_base_asym_alg               SPDM req_base_asym_alg
- *
- * @return requester asymmetric free function
- **/
-static libspdm_asym_free_func libspdm_get_req_asym_free(uint16_t req_base_asym_alg)
-{
-    return libspdm_get_asym_free(req_base_asym_alg);
-}
-
 void libspdm_req_asym_free(uint16_t req_base_asym_alg, void *context)
 {
-    libspdm_asym_free_func free_function;
-    free_function = libspdm_get_req_asym_free(req_base_asym_alg);
-    if (free_function == NULL) {
-        return;
-    }
-    free_function(context);
+    libspdm_asym_free(req_base_asym_alg, context);
 }
 
 bool libspdm_req_asym_func_need_hash(uint16_t req_base_asym_alg)
@@ -929,26 +823,13 @@ bool libspdm_req_asym_func_need_hash(uint16_t req_base_asym_alg)
     return libspdm_asym_func_need_hash(req_base_asym_alg);
 }
 
-/**
- * Return requester asymmetric verify function, based upon the negotiated requester asymmetric algorithm.
- *
- * @param  req_base_asym_alg               SPDM req_base_asym_alg
- *
- * @return requester asymmetric verify function
- **/
-static libspdm_asym_verify_func libspdm_get_req_asym_verify(uint16_t req_base_asym_alg)
-{
-    return libspdm_get_asym_verify(req_base_asym_alg);
-}
-
-bool libspdm_req_asym_verify(
+bool libspdm_req_asym_verify_transcript(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint16_t req_base_asym_alg,
     uint32_t base_hash_algo, void *context,
     const uint8_t *message, size_t message_size,
     const uint8_t *signature, size_t sig_size)
 {
-    libspdm_asym_verify_func verify_function;
     bool need_hash;
     uint8_t message_hash[LIBSPDM_MAX_HASH_SIZE];
     size_t hash_size;
@@ -962,18 +843,11 @@ bool libspdm_req_asym_verify(
     hash_nid = libspdm_get_hash_nid(base_hash_algo);
     need_hash = libspdm_req_asym_func_need_hash(req_base_asym_alg);
 
-    verify_function = libspdm_get_req_asym_verify(req_base_asym_alg);
-    if (verify_function == NULL) {
-        return false;
-    }
-
     param = NULL;
     param_size = 0;
 
     if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11) {
-
-        /* Need use SPDM 1.2 signing*/
-
+        /* Need use SPDM 1.2 signing */
         switch (req_base_asym_alg) {
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
             param = "";
@@ -1001,28 +875,29 @@ bool libspdm_req_asym_verify(
             return false;
         }
 
-        /* re-assign message and message_size for signing*/
-
+        /* re-assign message and message_size for signing */
         hash_size = libspdm_get_hash_size(base_hash_algo);
         message = spdm12_signing_context_with_hash;
         message_size = SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + hash_size;
 
-        /* Passthru*/
-
+        /* Passthru */
     }
 
     if (need_hash) {
         hash_size = libspdm_get_hash_size(base_hash_algo);
-        result = libspdm_hash_all(base_hash_algo, message, message_size,
-                                  message_hash);
+        result = libspdm_hash_all(base_hash_algo, message, message_size, message_hash);
         if (!result) {
             return false;
         }
-        return verify_function(context, hash_nid, param, param_size, message_hash,
-                               hash_size, signature, sig_size);
+        return libspdm_asym_verify(context, hash_nid, req_base_asym_alg,
+                                   param, param_size,
+                                   message_hash, hash_size,
+                                   signature, sig_size);
     } else {
-        return verify_function(context, hash_nid, param, param_size, message, message_size,
-                               signature, sig_size);
+        return libspdm_asym_verify(context, hash_nid, req_base_asym_alg,
+                                   param, param_size,
+                                   message, message_size,
+                                   signature, sig_size);
     }
 }
 
@@ -1033,7 +908,6 @@ bool libspdm_req_asym_verify_hash(
     const uint8_t *message_hash, size_t hash_size,
     const uint8_t *signature, size_t sig_size)
 {
-    libspdm_asym_verify_func verify_function;
     bool need_hash;
     uint8_t *message;
     size_t message_size;
@@ -1049,18 +923,11 @@ bool libspdm_req_asym_verify_hash(
     need_hash = libspdm_req_asym_func_need_hash(req_base_asym_alg);
     LIBSPDM_ASSERT (hash_size == libspdm_get_hash_size(base_hash_algo));
 
-    verify_function = libspdm_get_req_asym_verify(req_base_asym_alg);
-    if (verify_function == NULL) {
-        return false;
-    }
-
     param = NULL;
     param_size = 0;
 
     if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11) {
-
-        /* Need use SPDM 1.2 signing*/
-
+        /* Need use SPDM 1.2 signing */
         switch (req_base_asym_alg) {
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
             param = "";
@@ -1086,8 +953,7 @@ bool libspdm_req_asym_verify_hash(
                             - spdm12_signing_context_with_hash),
                          message_hash, hash_size);
 
-        /* assign message and message_size for signing*/
-
+        /* assign message and message_size for signing */
         message = spdm12_signing_context_with_hash;
         message_size = SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + hash_size;
 
@@ -1097,46 +963,37 @@ bool libspdm_req_asym_verify_hash(
             if (!result) {
                 return false;
             }
-            return verify_function(context, hash_nid, param, param_size, full_message_hash,
-                                   hash_size, signature, sig_size);
+            return libspdm_asym_verify(context, hash_nid, req_base_asym_alg,
+                                       param, param_size,
+                                       full_message_hash, hash_size,
+                                       signature, sig_size);
         } else {
-            return verify_function(context, hash_nid, param, param_size, message, message_size,
-                                   signature, sig_size);
+            return libspdm_asym_verify(context, hash_nid, req_base_asym_alg,
+                                       param, param_size,
+                                       message, message_size,
+                                       signature, sig_size);
         }
-
-        /* SPDM 1.2 signing done.*/
-
+        /* SPDM 1.2 signing done. */
     }
 
     if (need_hash) {
-        return verify_function(context, hash_nid, param, param_size, message_hash,
-                               hash_size, signature, sig_size);
+        return libspdm_asym_verify(context, hash_nid, req_base_asym_alg,
+                                   param, param_size,
+                                   message_hash, hash_size,
+                                   signature, sig_size);
     } else {
         LIBSPDM_ASSERT (false);
         return false;
     }
 }
 
-/**
- * Return asymmetric sign function, based upon the asymmetric algorithm.
- *
- * @param  req_base_asym_alg               SPDM req_base_asym_alg
- *
- * @return asymmetric sign function
- **/
-static libspdm_asym_sign_func libspdm_get_req_asym_sign(uint16_t req_base_asym_alg)
-{
-    return libspdm_get_asym_sign(req_base_asym_alg);
-}
-
-bool libspdm_req_asym_sign(
+bool libspdm_req_asym_sign_transcript(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint16_t req_base_asym_alg,
     uint32_t base_hash_algo, void *context,
     const uint8_t *message, size_t message_size,
     uint8_t *signature, size_t *sig_size)
 {
-    libspdm_asym_sign_func asym_sign;
     bool need_hash;
     uint8_t message_hash[LIBSPDM_MAX_HASH_SIZE];
     size_t hash_size;
@@ -1150,18 +1007,11 @@ bool libspdm_req_asym_sign(
     hash_nid = libspdm_get_hash_nid(base_hash_algo);
     need_hash = libspdm_req_asym_func_need_hash(req_base_asym_alg);
 
-    asym_sign = libspdm_get_req_asym_sign(req_base_asym_alg);
-    if (asym_sign == NULL) {
-        return false;
-    }
-
     param = NULL;
     param_size = 0;
 
     if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11) {
-
-        /* Need use SPDM 1.2 signing*/
-
+        /* Need use SPDM 1.2 signing */
         switch (req_base_asym_alg) {
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
             param = "";
@@ -1189,14 +1039,12 @@ bool libspdm_req_asym_sign(
             return false;
         }
 
-        /* re-assign message and message_size for signing*/
-
+        /* re-assign message and message_size for signing */
         hash_size = libspdm_get_hash_size(base_hash_algo);
         message = spdm12_signing_context_with_hash;
         message_size = SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + hash_size;
 
-        /* Passthru*/
-
+        /* Passthru */
     }
 
     if (need_hash) {
@@ -1206,11 +1054,15 @@ bool libspdm_req_asym_sign(
         if (!result) {
             return false;
         }
-        return asym_sign(context, hash_nid, param, param_size, message_hash, hash_size,
-                         signature, sig_size);
+        return libspdm_asym_sign(context, hash_nid, req_base_asym_alg,
+                                 param, param_size,
+                                 message_hash, hash_size,
+                                 signature, sig_size);
     } else {
-        return asym_sign(context, hash_nid, param, param_size, message, message_size,
-                         signature, sig_size);
+        return libspdm_asym_sign(context, hash_nid, req_base_asym_alg,
+                                 param, param_size,
+                                 message, message_size,
+                                 signature, sig_size);
     }
 }
 
@@ -1221,7 +1073,6 @@ bool libspdm_req_asym_sign_hash(
     const uint8_t *message_hash, size_t hash_size,
     uint8_t *signature, size_t *sig_size)
 {
-    libspdm_asym_sign_func asym_sign;
     bool need_hash;
     uint8_t *message;
     size_t message_size;
@@ -1237,18 +1088,11 @@ bool libspdm_req_asym_sign_hash(
     need_hash = libspdm_req_asym_func_need_hash(req_base_asym_alg);
     LIBSPDM_ASSERT (hash_size == libspdm_get_hash_size(base_hash_algo));
 
-    asym_sign = libspdm_get_req_asym_sign(req_base_asym_alg);
-    if (asym_sign == NULL) {
-        return false;
-    }
-
     param = NULL;
     param_size = 0;
 
     if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11) {
-
-        /* Need use SPDM 1.2 signing*/
-
+        /* Need use SPDM 1.2 signing */
         switch (req_base_asym_alg) {
         case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
             param = "";
@@ -1274,8 +1118,7 @@ bool libspdm_req_asym_sign_hash(
                             - spdm12_signing_context_with_hash),
                          message_hash, hash_size);
 
-        /* assign message and message_size for signing*/
-
+        /* assign message and message_size for signing */
         message = spdm12_signing_context_with_hash;
         message_size = SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + hash_size;
 
@@ -1285,20 +1128,25 @@ bool libspdm_req_asym_sign_hash(
             if (!result) {
                 return false;
             }
-            return asym_sign(context, hash_nid, param, param_size, full_message_hash, hash_size,
-                             signature, sig_size);
+            return libspdm_asym_sign(context, hash_nid, req_base_asym_alg,
+                                     param, param_size,
+                                     full_message_hash, hash_size,
+                                     signature, sig_size);
         } else {
-            return asym_sign(context, hash_nid, param, param_size, message, message_size,
-                             signature, sig_size);
+            return libspdm_asym_sign(context, hash_nid, req_base_asym_alg,
+                                     param, param_size,
+                                     message, message_size,
+                                     signature, sig_size);
         }
 
-        /* SPDM 1.2 signing done.*/
-
+        /* SPDM 1.2 signing done. */
     }
 
     if (need_hash) {
-        return asym_sign(context, hash_nid, param, param_size, message_hash, hash_size,
-                         signature, sig_size);
+        return libspdm_asym_sign(context, hash_nid, req_base_asym_alg,
+                                 param, param_size,
+                                 message_hash, hash_size,
+                                 signature, sig_size);
     } else {
         LIBSPDM_ASSERT (false);
         return false;
