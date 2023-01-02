@@ -185,7 +185,7 @@ bool libspdm_verify_key_exchange_rsp_signature(
         return false;
     }
 
-    result = libspdm_asym_verify_transcript(
+    result = libspdm_asym_verify(
         spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
         spdm_context->connection_info.algorithm.base_asym_algo,
         spdm_context->connection_info.algorithm.base_hash_algo, context,
