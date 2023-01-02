@@ -43,12 +43,6 @@ libspdm_return_t libspdm_get_response_set_certificate(void *context, size_t requ
                                                        response_size, response);
     }
 
-    if (request_size <= sizeof(spdm_set_certificate_request_t)) {
-        return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-                                               response_size, response);
-    }
-
     if (spdm_context->connection_info.connection_state <
         LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return libspdm_generate_error_response(
@@ -95,9 +89,27 @@ libspdm_return_t libspdm_get_response_set_certificate(void *context, size_t requ
     root_cert_hash_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
 
+    if (request_size < sizeof(spdm_set_certificate_request_t) +
+        sizeof(spdm_cert_chain_t) + root_cert_hash_size) {
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                               response_size, response);
+    }
+
     /*point to full SPDM certificate chain*/
     cert_chain = (const void*)(spdm_request + 1);
     cert_chain_header = cert_chain;
+
+    if (cert_chain_header->length < sizeof(spdm_cert_chain_t) + root_cert_hash_size) {
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                               response_size, response);
+    }
+    if (cert_chain_header->length > request_size - sizeof(spdm_set_certificate_request_t)) {
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                               response_size, response);
+    }
 
     /*get actual cert_chain size*/
     cert_chain_size = cert_chain_header->length - sizeof(spdm_cert_chain_t) - root_cert_hash_size;
@@ -105,12 +117,6 @@ libspdm_return_t libspdm_get_response_set_certificate(void *context, size_t requ
     /*point to actual cert_chain*/
     cert_chain = (const void*)((const uint8_t *)cert_chain
                                + sizeof(spdm_cert_chain_t) + root_cert_hash_size);
-
-    if ((request_size - sizeof(spdm_set_certificate_request_t)) < cert_chain_header->length) {
-        return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-                                               response_size, response);
-    }
 
     /* set certificate to NV*/
     result = libspdm_write_certificate_to_nvm(slot_id, cert_chain,
