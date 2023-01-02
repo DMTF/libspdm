@@ -199,10 +199,10 @@ uint32_t libspdm_get_asym_signature_size(uint32_t base_asym_algo)
     }
 }
 
-bool libspdm_asym_sign (void *context, size_t hash_nid, uint32_t base_asym_algo,
-                        const uint8_t *param, size_t param_size,
-                        const uint8_t *message, size_t message_size,
-                        uint8_t *signature, size_t *sig_size)
+static bool libspdm_asym_sign_wrap (void *context, size_t hash_nid, uint32_t base_asym_algo,
+                                    const uint8_t *param, size_t param_size,
+                                    const uint8_t *message, size_t message_size,
+                                    uint8_t *signature, size_t *sig_size)
 {
     switch (base_asym_algo) {
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
@@ -410,7 +410,7 @@ bool libspdm_sm2_dsa_verify_wrap (void *context, size_t hash_nid,
 }
 #endif
 
-bool libspdm_asym_verify(
+static bool libspdm_asym_verify_wrap(
     void *context, size_t hash_nid, uint32_t base_asym_algo,
     const uint8_t *param, size_t param_size,
     const uint8_t *message, size_t message_size,
@@ -480,7 +480,7 @@ bool libspdm_asym_verify(
     }
 }
 
-bool libspdm_asym_verify_transcript(
+bool libspdm_asym_verify(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint32_t base_asym_algo, uint32_t base_hash_algo,
     void *context, const uint8_t *message,
@@ -546,15 +546,15 @@ bool libspdm_asym_verify_transcript(
         if (!result) {
             return false;
         }
-        return libspdm_asym_verify(context, hash_nid, base_asym_algo,
-                                   param, param_size,
-                                   message_hash, hash_size,
-                                   signature, sig_size);
+        return libspdm_asym_verify_wrap(context, hash_nid, base_asym_algo,
+                                        param, param_size,
+                                        message_hash, hash_size,
+                                        signature, sig_size);
     } else {
-        return libspdm_asym_verify(context, hash_nid, base_asym_algo,
-                                   param, param_size,
-                                   message, message_size,
-                                   signature, sig_size);
+        return libspdm_asym_verify_wrap(context, hash_nid, base_asym_algo,
+                                        param, param_size,
+                                        message, message_size,
+                                        signature, sig_size);
     }
 }
 
@@ -619,32 +619,32 @@ bool libspdm_asym_verify_hash(
             if (!result) {
                 return false;
             }
-            return libspdm_asym_verify(context, hash_nid, base_asym_algo,
-                                       param, param_size,
-                                       full_message_hash, hash_size,
-                                       signature, sig_size);
+            return libspdm_asym_verify_wrap(context, hash_nid, base_asym_algo,
+                                            param, param_size,
+                                            full_message_hash, hash_size,
+                                            signature, sig_size);
         } else {
-            return libspdm_asym_verify(context, hash_nid, base_asym_algo,
-                                       param, param_size,
-                                       message, message_size,
-                                       signature, sig_size);
+            return libspdm_asym_verify_wrap(context, hash_nid, base_asym_algo,
+                                            param, param_size,
+                                            message, message_size,
+                                            signature, sig_size);
         }
 
         /* SPDM 1.2 signing done. */
     }
 
     if (need_hash) {
-        return libspdm_asym_verify(context, hash_nid, base_asym_algo,
-                                   param, param_size,
-                                   message_hash, hash_size,
-                                   signature, sig_size);
+        return libspdm_asym_verify_wrap(context, hash_nid, base_asym_algo,
+                                        param, param_size,
+                                        message_hash, hash_size,
+                                        signature, sig_size);
     } else {
         LIBSPDM_ASSERT(false);
         return false;
     }
 }
 
-bool libspdm_asym_sign_transcript(
+bool libspdm_asym_sign(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint32_t base_asym_algo, uint32_t base_hash_algo,
     void *context, const uint8_t *message,
@@ -710,15 +710,15 @@ bool libspdm_asym_sign_transcript(
         if (!result) {
             return false;
         }
-        return libspdm_asym_sign(context, hash_nid, base_asym_algo,
-                                 param, param_size,
-                                 message_hash, hash_size,
-                                 signature, sig_size);
+        return libspdm_asym_sign_wrap(context, hash_nid, base_asym_algo,
+                                      param, param_size,
+                                      message_hash, hash_size,
+                                      signature, sig_size);
     } else {
-        return libspdm_asym_sign(context, hash_nid, base_asym_algo,
-                                 param, param_size,
-                                 message, message_size,
-                                 signature, sig_size);
+        return libspdm_asym_sign_wrap(context, hash_nid, base_asym_algo,
+                                      param, param_size,
+                                      message, message_size,
+                                      signature, sig_size);
     }
 }
 
@@ -783,25 +783,25 @@ bool libspdm_asym_sign_hash(
             if (!result) {
                 return false;
             }
-            return libspdm_asym_sign(context, hash_nid, base_asym_algo,
-                                     param, param_size,
-                                     full_message_hash, hash_size,
-                                     signature, sig_size);
+            return libspdm_asym_sign_wrap(context, hash_nid, base_asym_algo,
+                                          param, param_size,
+                                          full_message_hash, hash_size,
+                                          signature, sig_size);
         } else {
-            return libspdm_asym_sign(context, hash_nid, base_asym_algo,
-                                     param, param_size,
-                                     message, message_size,
-                                     signature, sig_size);
+            return libspdm_asym_sign_wrap(context, hash_nid, base_asym_algo,
+                                          param, param_size,
+                                          message, message_size,
+                                          signature, sig_size);
         }
 
         /* SPDM 1.2 signing done. */
     }
 
     if (need_hash) {
-        return libspdm_asym_sign(context, hash_nid, base_asym_algo,
-                                 param, param_size,
-                                 message_hash, hash_size,
-                                 signature, sig_size);
+        return libspdm_asym_sign_wrap(context, hash_nid, base_asym_algo,
+                                      param, param_size,
+                                      message_hash, hash_size,
+                                      signature, sig_size);
     } else {
         LIBSPDM_ASSERT (false);
         return false;
@@ -823,7 +823,7 @@ bool libspdm_req_asym_func_need_hash(uint16_t req_base_asym_alg)
     return libspdm_asym_func_need_hash(req_base_asym_alg);
 }
 
-bool libspdm_req_asym_verify_transcript(
+bool libspdm_req_asym_verify(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint16_t req_base_asym_alg,
     uint32_t base_hash_algo, void *context,
@@ -889,15 +889,15 @@ bool libspdm_req_asym_verify_transcript(
         if (!result) {
             return false;
         }
-        return libspdm_asym_verify(context, hash_nid, req_base_asym_alg,
-                                   param, param_size,
-                                   message_hash, hash_size,
-                                   signature, sig_size);
+        return libspdm_asym_verify_wrap(context, hash_nid, req_base_asym_alg,
+                                        param, param_size,
+                                        message_hash, hash_size,
+                                        signature, sig_size);
     } else {
-        return libspdm_asym_verify(context, hash_nid, req_base_asym_alg,
-                                   param, param_size,
-                                   message, message_size,
-                                   signature, sig_size);
+        return libspdm_asym_verify_wrap(context, hash_nid, req_base_asym_alg,
+                                        param, param_size,
+                                        message, message_size,
+                                        signature, sig_size);
     }
 }
 
@@ -963,31 +963,31 @@ bool libspdm_req_asym_verify_hash(
             if (!result) {
                 return false;
             }
-            return libspdm_asym_verify(context, hash_nid, req_base_asym_alg,
-                                       param, param_size,
-                                       full_message_hash, hash_size,
-                                       signature, sig_size);
+            return libspdm_asym_verify_wrap(context, hash_nid, req_base_asym_alg,
+                                            param, param_size,
+                                            full_message_hash, hash_size,
+                                            signature, sig_size);
         } else {
-            return libspdm_asym_verify(context, hash_nid, req_base_asym_alg,
-                                       param, param_size,
-                                       message, message_size,
-                                       signature, sig_size);
+            return libspdm_asym_verify_wrap(context, hash_nid, req_base_asym_alg,
+                                            param, param_size,
+                                            message, message_size,
+                                            signature, sig_size);
         }
         /* SPDM 1.2 signing done. */
     }
 
     if (need_hash) {
-        return libspdm_asym_verify(context, hash_nid, req_base_asym_alg,
-                                   param, param_size,
-                                   message_hash, hash_size,
-                                   signature, sig_size);
+        return libspdm_asym_verify_wrap(context, hash_nid, req_base_asym_alg,
+                                        param, param_size,
+                                        message_hash, hash_size,
+                                        signature, sig_size);
     } else {
         LIBSPDM_ASSERT (false);
         return false;
     }
 }
 
-bool libspdm_req_asym_sign_transcript(
+bool libspdm_req_asym_sign(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint16_t req_base_asym_alg,
     uint32_t base_hash_algo, void *context,
@@ -1054,15 +1054,15 @@ bool libspdm_req_asym_sign_transcript(
         if (!result) {
             return false;
         }
-        return libspdm_asym_sign(context, hash_nid, req_base_asym_alg,
-                                 param, param_size,
-                                 message_hash, hash_size,
-                                 signature, sig_size);
+        return libspdm_asym_sign_wrap(context, hash_nid, req_base_asym_alg,
+                                      param, param_size,
+                                      message_hash, hash_size,
+                                      signature, sig_size);
     } else {
-        return libspdm_asym_sign(context, hash_nid, req_base_asym_alg,
-                                 param, param_size,
-                                 message, message_size,
-                                 signature, sig_size);
+        return libspdm_asym_sign_wrap(context, hash_nid, req_base_asym_alg,
+                                      param, param_size,
+                                      message, message_size,
+                                      signature, sig_size);
     }
 }
 
@@ -1128,25 +1128,25 @@ bool libspdm_req_asym_sign_hash(
             if (!result) {
                 return false;
             }
-            return libspdm_asym_sign(context, hash_nid, req_base_asym_alg,
-                                     param, param_size,
-                                     full_message_hash, hash_size,
-                                     signature, sig_size);
+            return libspdm_asym_sign_wrap(context, hash_nid, req_base_asym_alg,
+                                          param, param_size,
+                                          full_message_hash, hash_size,
+                                          signature, sig_size);
         } else {
-            return libspdm_asym_sign(context, hash_nid, req_base_asym_alg,
-                                     param, param_size,
-                                     message, message_size,
-                                     signature, sig_size);
+            return libspdm_asym_sign_wrap(context, hash_nid, req_base_asym_alg,
+                                          param, param_size,
+                                          message, message_size,
+                                          signature, sig_size);
         }
 
         /* SPDM 1.2 signing done. */
     }
 
     if (need_hash) {
-        return libspdm_asym_sign(context, hash_nid, req_base_asym_alg,
-                                 param, param_size,
-                                 message_hash, hash_size,
-                                 signature, sig_size);
+        return libspdm_asym_sign_wrap(context, hash_nid, req_base_asym_alg,
+                                      param, param_size,
+                                      message_hash, hash_size,
+                                      signature, sig_size);
     } else {
         LIBSPDM_ASSERT (false);
         return false;

@@ -346,7 +346,7 @@ void libspdm_asym_free(uint32_t base_asym_algo, void *context);
  * @retval  true   Valid asymmetric signature.
  * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
  **/
-bool libspdm_asym_verify_transcript(
+bool libspdm_asym_verify(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint32_t base_asym_algo, uint32_t base_hash_algo,
     void *context, const uint8_t *message,
@@ -393,7 +393,7 @@ bool libspdm_asym_verify_hash(
  * @retval  false  Signature generation failed.
  * @retval  false  sig_size is too small.
  **/
-bool libspdm_asym_sign_transcript(
+bool libspdm_asym_sign(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint32_t base_asym_algo, uint32_t base_hash_algo,
     void *context, const uint8_t *message,
@@ -476,7 +476,7 @@ void libspdm_req_asym_free(uint16_t req_base_asym_alg, void *context);
  * @retval  true   Valid asymmetric signature.
  * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
  **/
-bool libspdm_req_asym_verify_transcript(
+bool libspdm_req_asym_verify(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint16_t req_base_asym_alg,
     uint32_t base_hash_algo, void *context,
@@ -523,7 +523,7 @@ bool libspdm_req_asym_verify_hash(
  * @retval  false  Signature generation failed.
  * @retval  false  sig_size is too small.
  **/
-bool libspdm_req_asym_sign_transcript(
+bool libspdm_req_asym_sign(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint16_t req_base_asym_alg,
     uint32_t base_hash_algo, void *context,
