@@ -1128,18 +1128,20 @@ bool libspdm_verify_certificate_chain_buffer(uint32_t base_hash_algo, uint32_t b
     const uint8_t *leaf_cert_buffer;
     size_t leaf_cert_buffer_size;
     bool result;
+    const spdm_cert_chain_t *cert_chain_header;
 
     hash_size = libspdm_get_hash_size(base_hash_algo);
-
-    if (cert_chain_buffer_size > LIBSPDM_MAX_MESSAGE_BUFFER_SIZE) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                       "!!! VerifyCertificateChainBuffer - FAIL (buffer too large) !!!\n"));
-        return false;
-    }
 
     if (cert_chain_buffer_size <= sizeof(spdm_cert_chain_t) + hash_size) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "!!! VerifyCertificateChainBuffer - FAIL (buffer too small) !!!\n"));
+        return false;
+    }
+
+    cert_chain_header = cert_chain_buffer;
+    if (cert_chain_header->length != cert_chain_buffer_size) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                       "!!! VerifyCertificateChainBuffer - FAIL (cert_chain->length mismatch) !!!\n"));
         return false;
     }
 
