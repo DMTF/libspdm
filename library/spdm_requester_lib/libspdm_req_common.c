@@ -14,14 +14,14 @@ uint16_t libspdm_allocate_req_session_id(libspdm_context_t *spdm_context)
 
     session_info = spdm_context->session_info;
     for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index++) {
-        if ((session_info[index].session_id & 0xFFFF0000) == (INVALID_SESSION_ID & 0xFFFF0000)) {
+        if ((session_info[index].session_id & 0xFFFF) == (INVALID_SESSION_ID & 0xFFFF)) {
             req_session_id = (uint16_t)(0xFFFF - index);
             return req_session_id;
         }
     }
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "libspdm_allocate_req_session_id - MAX session_id\n"));
-    return (INVALID_SESSION_ID & 0xFFFF0000) >> 16;
+    return (INVALID_SESSION_ID & 0xFFFF);
 }
 
 libspdm_return_t libspdm_build_opaque_data_supported_version_data(libspdm_context_t *spdm_context,
