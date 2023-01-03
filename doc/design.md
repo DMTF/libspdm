@@ -276,12 +276,12 @@
    receive buffer before acquiring the send buffer. Because of this the send buffer and receive buffer
    may overlap or be the same buffer.
    * libspdm assumes that, when populating the send buffer or parsing the receive buffer, both buffers
-   cannot be modified by external agents. It is the library integrator's responsibility to ensure that
+   cannot be modified by external agents. It is the library Integrator's responsibility to ensure that
    the buffers cannot be tampered with while libspdm is accessing them.
 
 9) [spdm_lib_config.h](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_lib_config.h) provides an example of the configuration macros used in the libspdm library.
 
-   The integrator can override the use of this file by defining the `LIBSPDM_CONFIG` macro.
+   The Integrator can override the use of this file by defining the `LIBSPDM_CONFIG` macro.
 
 10) SPDM library depends upon the [HAL library](https://github.com/DMTF/libspdm/tree/main/include/hal).
 
@@ -297,7 +297,7 @@
 
    10.4.1) Sleep function
 
-   The sleep function delays the execution of a message flow instance for a defined period of time.
+   The sleep function delays the execution of a message flow instance for a specified period of time.
 
    10.4.2) Watchdog function
 

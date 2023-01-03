@@ -16,11 +16,11 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
 
    0.1, implement a proper [spdm_device_secret_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_device_secret_lib.h).
 
-   If the requester supports mutual authentication, implement libspdm_requester_data_sign().
+   If the Requester supports mutual authentication, implement libspdm_requester_data_sign().
 
-   If the requester supports measurement, implement libspdm_measurement_collection().
+   If the Requester supports measurement, implement libspdm_measurement_collection().
 
-   If the requester supports PSK exchange, implement libspdm_psk_handshake_secret_hkdf_expand() and libspdm_psk_master_secret_hkdf_expand().
+   If the Requester supports PSK exchange, implement libspdm_psk_handshake_secret_hkdf_expand() and libspdm_psk_master_secret_hkdf_expand().
 
    spdm_device_secret_lib must be in a secure environment.
 
@@ -32,7 +32,7 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
 
    0.4, choose required SPDM transport libs, such as [spdm_transport_mctp_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_mctp_lib.h) and [spdm_transport_pcidoe_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_pcidoe_lib.h)
 
-   0.5, implement required SPDM device IO functions - `libspdm_device_send_message_func` and `libspdm_device_receive_message_func` according to [spdm_common_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_common_lib.h). The `timeout`, in microseconds (us) units, is for the execution of the message. For a requester, the timeout value to send a message is `RTT` and the timeout value to receive a message is `T1 = RTT + ST1` or `T2 = RTT + CT = RTT + 2^ct_exponent`.
+   0.5, implement required SPDM device IO functions - `libspdm_device_send_message_func` and `libspdm_device_receive_message_func` according to [spdm_common_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_common_lib.h). The `timeout`, in microseconds (us) units, is for the execution of the message. For a Requester, the timeout value to send a message is `RTT` and the timeout value to receive a message is `T1 = RTT + ST1` or `T2 = RTT + CT = RTT + 2^ct_exponent`.
 
    0.6, implement a proper [platform_lib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/platform_lib.h).
 
@@ -67,7 +67,7 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
    libspdm_init_context_with_secured_context(spdm_context, spdm_secured_contexts, num_sessions);
    ```
 
-   Optionally, the integrator may use `LIBSPDM_CONTEXT_SIZE_ALL`, or `LIBSPDM_CONTEXT_SIZE_WITHOUT_SECURED_CONTEXT` together with `LIBSPDM_SECURED_MESSAGE_CONTEXT_SIZE`, to preallocate the context buffer from a fixed memory region. In this case, the integrator need include below internal header files.
+   Optionally, the Integrator may use `LIBSPDM_CONTEXT_SIZE_ALL`, or `LIBSPDM_CONTEXT_SIZE_WITHOUT_SECURED_CONTEXT` together with `LIBSPDM_SECURED_MESSAGE_CONTEXT_SIZE`, to preallocate the context buffer from a fixed memory region. In this case, the Integrator needs to include the following internal header files.
    ```
    #include "internal/libspdm_common_lib.h"
    #include "internal/libspdm_secured_message_lib.h"
@@ -77,7 +77,7 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
    The libspdm provides the default [spdm_transport_mctp_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_mctp_lib.h) and [spdm_transport_pcidoe_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_pcidoe_lib.h).
    The SPDM device driver need provide device IO send/receive function.
    The final sent and received message will be in the sender buffer and receiver buffer.
-   Please refer to [design](https://github.com/DMTF/libspdm/blob/main/doc/design.md) for the usage of those APIs.
+   Refer to [design](https://github.com/DMTF/libspdm/blob/main/doc/design.md) for the usage of those APIs.
 
    ```
    libspdm_register_device_io_func (
@@ -114,7 +114,7 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
    libspdm_set_data (spdm_context, LIBSPDM_DATA_KEY_SCHEDULE, &parameter, &key_schedule, sizeof(key_schedule));
    ```
 
-   1.4, if responder verification is required, deploy the peer public root hash or peer public certificate chain.
+   1.4, if Responder verification is required, deploy the peer public root hash or peer public certificate chain.
    ```
    parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
    if (!deploy_cert_chain) {
@@ -146,14 +146,14 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
    libspdm_set_data (spdm_context, LIBSPDM_DATA_PSK_HINT, NULL, psk_hint, psk_hint_size);
    ```
 
-2. Create connection with the responder
+2. Create connection with the Responder
 
    Send GET_VERSION, GET_CAPABILITIES and NEGOTIATE_ALGORITHM.
    ```
    libspdm_init_connection (spdm_context, FALSE);
    ```
 
-3. Authentication the responder
+3. Authentication the Responder
 
    Send GET_DIGESTES, GET_CERTIFICATES and CHALLENGE.
    ```
@@ -162,7 +162,7 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
    libspdm_challenge (spdm_context, slot_id, measurement_hash_type, measurement_hash);
    ```
 
-4. Get the measurement from the responder
+4. Get the measurement from the Responder
 
    4.1, Send GET_MEASUREMENT to query the total number of measurements available.
    ```
@@ -273,11 +273,11 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
 
    0.1, implement a proper [spdm_device_secret_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_device_secret_lib.h).
 
-   If the responder supports signing, implement libspdm_responder_data_sign().
+   If the Responder supports signing, implement libspdm_responder_data_sign().
 
-   If the responder supports measurement, implement libspdm_measurement_collection().
+   If the Responder supports measurement, implement libspdm_measurement_collection().
 
-   If the responder supports PSK exchange, implement libspdm_psk_handshake_secret_hkdf_expand() and libspdm_psk_master_secret_hkdf_expand().
+   If the Responder supports PSK exchange, implement libspdm_psk_handshake_secret_hkdf_expand() and libspdm_psk_master_secret_hkdf_expand().
 
    spdm_device_secret_lib must be in a secure environment.
 
@@ -295,7 +295,7 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
 
 0. Implement a proper spdm_device_secret_lib.
 
-1. Initialize SPDM context (similar to SPDM requester)
+1. Initialize SPDM context (similar to SPDM Requester)
 
    1.1, allocate buffer for the spdm_context, initialize it, and setup scratch_buffer.
    The spdm_context may include the decrypted secured message or session key.
@@ -310,7 +310,7 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
    LIBSPDM_ASSERT (scratch_buffer_size == LIBSPDM_SCRATCH_BUFFER_SIZE);
    libspdm_set_scratch_buffer (spdm_context, m_scratch_buffer, scratch_buffer_size);
    ```
-  
+
    The location of session keys can be separated from spdm_context if desired.
    Each session holds keys in a secured context, and the location of each can be
    directly specified.
@@ -325,7 +325,7 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
    libspdm_init_context_with_secured_context(spdm_context, spdm_secured_contexts, num_sessions);
    ```
 
-   Optionally, the integrator may use `LIBSPDM_CONTEXT_SIZE_ALL`, or `LIBSPDM_CONTEXT_SIZE_WITHOUT_SECURED_CONTEXT` together with `LIBSPDM_SECURED_MESSAGE_CONTEXT_SIZE`, to preallocate the context buffer from a fixed memory region. In this case, the integrator need include below internal header files.
+   Optionally, the Integrator may use `LIBSPDM_CONTEXT_SIZE_ALL`, or `LIBSPDM_CONTEXT_SIZE_WITHOUT_SECURED_CONTEXT` together with `LIBSPDM_SECURED_MESSAGE_CONTEXT_SIZE`, to preallocate the context buffer from a fixed memory region. In this case, the Integrator needs to include the following internal header files.
    ```
    #include "internal/libspdm_common_lib.h"
    #include "internal/libspdm_secured_message_lib.h"
@@ -335,7 +335,7 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
    The libspdm provides the default [spdm_transport_mctp_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_mctp_lib.h) and [spdm_transport_pcidoe_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_pcidoe_lib.h).
    The SPDM device driver need provide device IO send/receive function.
    The final sent and received message will be in the sender buffer and receiver buffer.
-   Please refer to [design](https://github.com/DMTF/libspdm/blob/main/doc/design.md) for the usage of those APIs.
+   Refer to [design](https://github.com/DMTF/libspdm/blob/main/doc/design.md) for the usage of those APIs.
 
    ```
    libspdm_register_device_io_func (
@@ -377,7 +377,7 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
    libspdm_set_data (spdm_context, LIBSPDM_DATA_LOCAL_PUBLIC_CERT_CHAIN, &parameter, my_public_cert_chains, my_public_cert_chains_size);
    ```
 
-   1.5, if mutual authentication (requester verification) is required, deploy the peer public root hash or peer public certificate chain.
+   1.5, if mutual authentication (Requester verification) is required, deploy the peer public root hash or peer public certificate chain.
    ```
    parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
    if (!deploy_cert_chain) {
@@ -447,7 +447,7 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
    ```
 
 ## Message Logging
-libspdm allows an integrator to log request and response messages to an integrator-provided buffer.
+libspdm allows an Integrator to log request and response messages to an Integrator-provided buffer.
 Message logging enables independent verification of message transcripts by a Verifier entity,
 and also aids in debugging. Message logging is enabled at compile time by setting the
 `LIBSPDM_ENABLE_MSG_LOG` macro to a value of `1`. Message logging is enabled at run time through the

@@ -16,7 +16,7 @@ Linux support only.
 
 1) Install compiler:
 
-Please refer to [build](https://github.com/DMTF/libspdm/blob/main/doc/build.md).
+Refer to [build](https://github.com/DMTF/libspdm/blob/main/doc/build.md).
 
 2) Install [qemu](https://qemu.org).
 
@@ -589,7 +589,7 @@ For riscv64 (RISCV64 GCC): `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    cov-analyze --dir C:\libspdm\coverity-output --all --rule --enable-constraint-fpp --enable-fnptr --enable-virtual --enable FORWARD_NULL
    cov-format-errors --dir C:\libspdm\coverity-output --html-output html-report
    ```
-   Please get the report from the folder `html-report`.
+   Retrieve the report from the folder `html-report`.
 
 3) Use [CodeQL](https://github.com/github/codeql) in CI.
 

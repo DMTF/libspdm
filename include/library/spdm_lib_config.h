@@ -22,7 +22,7 @@
  * response to the Requester, including duplicate entries. For a Requester this value specifies the
  * maximum number of entries that libspdm will tolerate in a `VERSION` response before returning an
  * error. A similiar macro, `SPDM_MAX_VERSION_COUNT`, exists for the Responder. However this macro
- * is not meant to be configured by the integrator.
+ * is not meant to be configured by the Integrator.
  */
 #ifndef LIBSPDM_MAX_VERSION_COUNT
 #define LIBSPDM_MAX_VERSION_COUNT 5
@@ -40,7 +40,7 @@
 #define LIBSPDM_PSK_MAX_HINT_LENGTH 16
 #endif
 
-/* libspdm allows an integrator to specify multiple root certificates as trust anchors when
+/* libspdm allows an Integrator to specify multiple root certificates as trust anchors when
  * verifying certificate chains from an endpoint. This value specifies the maximum number of root
  * certificates that libspdm can support.
  */

@@ -1845,7 +1845,7 @@ void libspdm_register_verify_spdm_cert_chain_func(
 /**
  * Get the size of required scratch buffer.
  *
- * The SPDM integrator must call libspdm_get_sizeof_required_scratch_buffer to get the size,
+ * The SPDM Integrator must call libspdm_get_sizeof_required_scratch_buffer to get the size,
  * then allocate enough scratch buffer and call libspdm_set_scratch_buffer().
  *
  * @param  context                  A pointer to the SPDM context.
