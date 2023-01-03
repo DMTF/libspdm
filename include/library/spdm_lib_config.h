@@ -400,10 +400,14 @@
 #define LIBSPDM_SCRATCH_BUFFER_SIZE (LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE)
 #endif
 
+/* Enable message logging.
+ * See https://github.com/DMTF/libspdm/blob/main/doc/user_guide.md#message-logging
+ * for more information */
 #ifndef LIBSPDM_ENABLE_MSG_LOG
 #define LIBSPDM_ENABLE_MSG_LOG 1
 #endif
 
+/* Enable macro checking during compilation. */
 #ifndef LIBSPDM_CHECK_MACRO
 #define LIBSPDM_CHECK_MACRO 0
 #endif
