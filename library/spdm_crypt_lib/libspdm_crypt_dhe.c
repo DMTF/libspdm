@@ -98,7 +98,7 @@ void *libspdm_dhe_new(spdm_version_number_t spdm_version,
         break;
     case SPDM_ALGORITHMS_DHE_NAMED_GROUP_SM2_P256:
 #if LIBSPDM_SM2_KEY_EXCHANGE_SUPPORT
-       context = libspdm_sm2_key_exchange_new_by_nid(nid);
+        context = libspdm_sm2_key_exchange_new_by_nid(nid);
 #else
         LIBSPDM_ASSERT(false);
         return NULL;
