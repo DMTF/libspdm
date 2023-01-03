@@ -24,7 +24,7 @@
 
 3) Programming Context
 
-   The core libraries in `libspdm/library` require only the C99 freestanding headers and so are suitable for embedded and systems programming. Any functionality beyond the freestanding headers is provided by `libspdm/os_stub` or by the library's integrator. All statically allocated memory in the core libraries is read-only. The core libraries do not dynamically allocate memory.
+   The core libraries in `libspdm/library` require only the C99 freestanding headers and so are suitable for embedded and systems programming. Any functionality beyond the freestanding headers is provided by `libspdm/os_stub` or by the library's Integrator. All statically allocated memory in the core libraries is read-only. The core libraries do not dynamically allocate memory.
 
 4) Implemented Requests and Responses
 
@@ -110,11 +110,11 @@
     a) [Visual Studio 2022](https://visualstudio.microsoft.com/vs/older-downloads/), [Visual Studio 2019](https://visualstudio.microsoft.com/vs/older-downloads/), [Visual Studio 2015](https://visualstudio.microsoft.com/vs/older-downloads/)
 
     b) [LLVM](https://llvm.org/) (LLVM13)
-    - Install [LLVM-13.0.0-win64.exe](https://github.com/llvm/llvm-project/releases/tag/llvmorg-13.0.0). Please change LLVM install path to `C:\LLVM`, and add LLVM in PATH environment.
+    - Install [LLVM-13.0.0-win64.exe](https://github.com/llvm/llvm-project/releases/tag/llvmorg-13.0.0). Change the LLVM install path to `C:\LLVM`, and add LLVM in PATH environment.
     - LLVM13 works good for clang and [libfuzzer](https://llvm.org/docs/LibFuzzer.html) build. Other versions are not validated for clang build.
     - Because the libfuzzer lib path is hard coded in CMakeLists, other versions may fail for libfuzzer build.
 
-For other architectures, please refer to [build](https://github.com/DMTF/libspdm/blob/main/doc/build.md).
+For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/main/doc/build.md).
 
 2) [CMake](https://cmake.org/) (Version [3.17.2](https://github.com/Kitware/CMake/releases/tag/v3.17.2) is known to work. Newer versions may fail).
 
@@ -129,7 +129,7 @@ For other architectures, please refer to [build](https://github.com/DMTF/libspdm
     - Use `llvm-ar -version` and `clang -v` to confirm the LLVM version.
     - If LLVM installation fails or LLVM installation version is low, you can update Linux version to fix the issue.
 
-For other architectures, please refer to [build](https://github.com/DMTF/libspdm/blob/main/doc/build.md).
+For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/main/doc/build.md).
 
 2) [CMake](https://cmake.org/).
 
@@ -147,7 +147,7 @@ For other architectures, please refer to [build](https://github.com/DMTF/libspdm
 
 ### Git Submodule
 
-   libspdm uses submodules for mbedtls, openssl, and cmocka.
+   libspdm uses submodules for Mbed TLS, OpenSSL, and cmocka.
 
    To get a fully buildable repository, use `git submodule update --init`.
    If there is an update for submodules, use `git submodule update`.
@@ -193,14 +193,14 @@ For other architectures, please refer to [build](https://github.com/DMTF/libspdm
    cmake -G"Visual Studio 16 2019" -DARCH=x64 -DTOOLCHAIN=VS2019 -DTARGET=Release -DCRYPTO=mbedtls ..
    ```
 
-   Support openssl binary build. For example:
+   Support OpenSSL binary build. For example:
 
    ```
-   Note: Please install the openssl with command `nmake install` before build libspdm.
+   Note: Install the OpenSSL with command `nmake install` before build libspdm.
    cmake -G"Visual Studio 16 2019" -DARCH=x64 -DTOOLCHAIN=VS2019 -DTARGET=Release -DCRYPTO=openssl -DENABLE_BINARY_BUILD=1 -DCOMPILED_LIBCRYPTO_PATH=<OPENSSL_PATH>/libcrypto.lib -DCOMPILED_LIBSSL_PATH=<OPENSSL_PATH>/libssl.lib ..
    ```
 
-For other architectures, please refer to [build](https://github.com/DMTF/libspdm/blob/main/doc/build.md).
+For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/main/doc/build.md).
 
 ### Linux Builds for IA32/X64
    If ia32 builds run on a 64-bit Linux machine, then install `sudo apt-get install gcc-multilib`.
@@ -233,13 +233,13 @@ Example CMake commands:
 
    ```
 
-   Support openssl binary build. For example:
+   Support OpenSSL binary build. For example:
    ```
-   Note: Please install the openssl with command `sudo make install` before build libspdm.
+   Note: Install OpenSSL with command `sudo make install` before build libspdm.
    cmake -DARCH=x64 -DTOOLCHAIN=GCC -DTARGET=Release -DCRYPTO=openssl -DENABLE_BINARY_BUILD=1 -DCOMPILED_LIBCRYPTO_PATH=<OPENSSL_PATH>/libcrypto.a -DCOMPILED_LIBSSL_PATH=<OPENSSL_PATH>/libssl.a ..
    ```
 
-For other architectures, please refer to [build](https://github.com/DMTF/libspdm/blob/main/doc/build.md).
+For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/main/doc/build.md).
 
 ## Run Test
 

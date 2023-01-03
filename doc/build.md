@@ -1,4 +1,4 @@
-# Build libspdm with other ARCH
+# Build libspdm
 
 ## Prerequisites
 
@@ -8,7 +8,7 @@
 
 a) [ARM Developerment Studio 2022](https://developer.arm.com/downloads/-/arm-development-studio-downloads) for ARM/AARCH64.
   - Install [MSYS2](https://www.msys2.org/).
-  - Install ARM DS2022. Please change the default installation path C:\ArmStudio.
+  - Install ARM DS2022. Change the default installation path C:\ArmStudio.
   - Launch MSYS2 -> MSYS2 MINGW64.
   - Install cmake and make, with `pacman -S mingw-w64-x86_64-cmake` and `pacman -S make`.
   - Setup build environment
@@ -20,7 +20,7 @@ a) [ARM Developerment Studio 2022](https://developer.arm.com/downloads/-/arm-dev
       ```
   - Apply below work around for Windows ARM DS2022 build
     - Add set(CMAKE_SYSTEM_ARCH "armv8-a") on the top of `C:\msys64\mingw64\share\cmake\Modules\Compiler\ARMClang.cmake`. The CMAKE_SYSTEM_ARCH is the target arch.
-    - Change `set(libs ${libs} ws2_32)` to `#set(libs ${libs} ws2_32)` in `libspdm\os_stub\mbedtlslib\mbedtls\library\CMakeLists.txt`. ws2_32 is the socket lib, and the armclang does not support it. 
+    - Change `set(libs ${libs} ws2_32)` to `#set(libs ${libs} ws2_32)` in `libspdm\os_stub\mbedtlslib\mbedtls\library\CMakeLists.txt`. ws2_32 is the socket lib, and the armclang does not support it.
   - Implement the TBD features. `libspdm_sleep` and `libspdm_get_random_number_64` need to be implemented before it can run on a real system.
 
 ### Build Tools for Linux
@@ -58,7 +58,7 @@ c) [ARM GNU bare metal](https://developer.arm.com/downloads/-/arm-gnu-toolchain-
 
 d) [ARM GCC](https://packages.ubuntu.com/bionic/gcc-arm-linux-gnueabi) for ARM only
   - `sudo apt-get install gcc-arm-linux-gnueabi`
-    
+
 e) [AARCH64 GCC](https://packages.ubuntu.com/bionic/gcc-aarch64-linux-gnu) for AARCH64 only
   - `sudo apt-get install gcc-aarch64-linux-gnu`
 
@@ -126,7 +126,7 @@ a) [ARC GNU](https://github.com/foss-for-synopsys-dwc-arc-processors).
 #### Compiler for NIOS-II
 
 a) [NIOS2 GNU](https://www.intel.com/content/www/us/en/docs/programmable/683689/current/gnu-command-line-tools.html).
-  - Please follow the NIOS II document.
+  - Follow the NIOS II document.
 
 ## Build
 
@@ -182,7 +182,7 @@ a) [NIOS2 GNU](https://www.intel.com/content/www/us/en/docs/programmable/683689/
 
 #### Linux Builds with ARM_GNU Toolchain
 
-   For ARM_GNU toolchain GNU/Linux target (arm-none-linux-gnueabihf, aarch64-none-linux-gnu) build on Linux, 
+   For ARM_GNU toolchain GNU/Linux target (arm-none-linux-gnueabihf, aarch64-none-linux-gnu) build on Linux,
    ```
    cd libspdm
    mkdir build
@@ -206,7 +206,7 @@ a) [NIOS2 GNU](https://www.intel.com/content/www/us/en/docs/programmable/683689/
 
 #### Linux Builds with ARM_GNU_BARE_METAL Toolchain
 
-   For ARM_GNU_BARE_METAL toolchain GNU/Linux target (arm-none-eabi, aarch64-none-elf) build on Linux, 
+   For ARM_GNU_BARE_METAL toolchain GNU/Linux target (arm-none-eabi, aarch64-none-elf) build on Linux,
    ```
    cd libspdm
    mkdir build
@@ -229,7 +229,7 @@ a) [NIOS2 GNU](https://www.intel.com/content/www/us/en/docs/programmable/683689/
 
 ### Linux Builds for RISCV32/RISCV64
 
-   For RISCV_XPACK toolchain GNU/Linux target (riscv-none-elf-gcc-12.1.0-2-linux-x64) build on Linux, 
+   For RISCV_XPACK toolchain GNU/Linux target (riscv-none-elf-gcc-12.1.0-2-linux-x64) build on Linux,
    (The riscv64 arch is not supported now.)
    ```
    cd libspdm
@@ -248,4 +248,3 @@ a) [NIOS2 GNU](https://www.intel.com/content/www/us/en/docs/programmable/683689/
    cmake -DARCH=riscv32 -DTOOLCHAIN=RISCV_XPACK -DTARGET=Release -DCRYPTO=mbedtls ..
    ```
    Note: `make -j` can be used to accelerate the build.
-
