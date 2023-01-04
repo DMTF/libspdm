@@ -7,6 +7,11 @@
 #ifndef SPDM_LIB_CONFIG_H
 #define SPDM_LIB_CONFIG_H
 
+/*Enalbe FIPS 140-3 Level 1 for Libspdm, the default is close the FIPS mode*/
+#ifndef LIBSPDM_FIPS_MODE
+#define LIBSPDM_FIPS_MODE 0
+#endif
+
 /* Enables assertions and debug printing. When `LIBSPDM_DEBUG_ENABLE` is defined it overrides or
  * sets the values of `LIBSPDM_DEBUG_PRINT_ENABLE`, `LIBSPDM_DEBUG_ASSERT_ENABLE`, and
  * `LIBSPDM_BLOCK_ENABLE` to the value of `LIBSPDM_DEBUG_ENABLE`.
