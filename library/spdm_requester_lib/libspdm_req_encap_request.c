@@ -20,7 +20,7 @@ void libspdm_register_get_encap_response_func(void *context,
     libspdm_context_t *spdm_context;
 
     spdm_context = context;
-    spdm_context->get_encap_response_func = (size_t)get_encap_response_func;
+    spdm_context->get_encap_response_func = (void *)get_encap_response_func;
 }
 
 /**
