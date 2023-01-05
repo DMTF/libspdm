@@ -14,6 +14,15 @@
 #define LIBSPDM_DHE_ALGO_SUPPORT \
     ((LIBSPDM_FFDHE_SUPPORT) || (LIBSPDM_ECDHE_SUPPORT) || (LIBSPDM_SM2_KEY_EXCHANGE_SUPPORT))
 
+#define LIBSPDM_AEAD_ALGO_SUPPORT \
+    ((LIBSPDM_AEAD_GCM_SUPPORT) || (LIBSPDM_AEAD_CHACHA20_POLY1305_SUPPORT) || \
+     (LIBSPDM_AEAD_SM4_SUPPORT))
+
+#define LIBSPDM_HASH_ALGO_SUPPORT \
+    ((LIBSPDM_SHA256_SUPPORT) || (LIBSPDM_SHA384_SUPPORT) || (LIBSPDM_SHA512_SUPPORT) || \
+     (LIBSPDM_SHA3_256_SUPPORT) || (LIBSPDM_SHA3_384_SUPPORT) || (LIBSPDM_SHA3_512_SUPPORT) || \
+     (LIBSPDM_SM3_256_SUPPORT))
+
 #if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) && !LIBSPDM_ASYM_ALGO_SUPPORT
     #error If KEY_EX_CAP is enabled then at least one asymmetric algorithm must also be enabled.
 #endif
@@ -30,6 +39,30 @@
     #error If KEY_EX_CAP is enabled then at least one DHE algorithm must also be enabled.
 #endif
 
+#if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) && !LIBSPDM_AEAD_ALGO_SUPPORT
+    #error If KEY_EX_CAP is enabled then at least one AEAD algorithm must also be enabled.
+#endif
+
+#if (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP) && !LIBSPDM_AEAD_ALGO_SUPPORT
+    #error If PSK_EX_CAP is enabled then at least one AEAD algorithm must also be enabled.
+#endif
+
+#if (LIBSPDM_ENABLE_CAPABILITY_CERT_CAP) && !LIBSPDM_HASH_ALGO_SUPPORT
+    #error If CERT_CAP is enabled then at least one HASH algorithm must also be enabled.
+#endif
+
+#if (LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP) && !LIBSPDM_HASH_ALGO_SUPPORT
+    #error If CHAL_CAP is enabled then at least one HASH algorithm must also be enabled.
+#endif
+
+#if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) && !LIBSPDM_HASH_ALGO_SUPPORT
+    #error If KEY_EX_CAP is enabled then at least one HASH algorithm must also be enabled.
+#endif
+
+#if (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP) && !LIBSPDM_HASH_ALGO_SUPPORT
+    #error If PSK_EX_CAP is enabled then at least one HASH algorithm must also be enabled.
+#endif
+
 #if ((LIBSPDM_MAX_VERSION_COUNT) == 0) || ((LIBSPDM_MAX_VERSION_COUNT) > 255)
     #error LIBSPDM_MAX_VERSION_COUNT must be between 1 and 255 inclusive.
 #endif
@@ -40,5 +73,7 @@
 
 #undef LIBSPDM_ASYM_ALGO_SUPPORT
 #undef LIBSPDM_DHE_ALGO_SUPPORT
+#undef LIBSPDM_AEAD_ALGO_SUPPORT
+#undef LIBSPDM_HASH_ALGO_SUPPORT
 
 #endif /* LIBSPDM_MACRO_CHECK_H */
