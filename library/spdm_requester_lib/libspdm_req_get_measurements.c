@@ -271,7 +271,7 @@ static libspdm_return_t libspdm_try_get_measurement(void *context, const uint32_
             libspdm_copy_mem(spdm_request->nonce, sizeof(spdm_request->nonce),
                              requester_nonce_in, SPDM_NONCE_SIZE);
         }
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ClientNonce - "));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "RequesterNonce - "));
         LIBSPDM_INTERNAL_DUMP_DATA(spdm_request->nonce, SPDM_NONCE_SIZE);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
         spdm_request->slot_id_param = slot_id_param;
