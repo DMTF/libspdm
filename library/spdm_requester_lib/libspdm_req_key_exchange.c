@@ -342,7 +342,7 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
         libspdm_copy_mem(spdm_request->random_data, sizeof(spdm_request->random_data),
                          requester_random_in, SPDM_RANDOM_DATA_SIZE);
     }
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ClientRandomData (0x%x) - ",
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "RequesterRandomData (0x%x) - ",
                    SPDM_RANDOM_DATA_SIZE));
     LIBSPDM_INTERNAL_DUMP_DATA(spdm_request->random_data, SPDM_RANDOM_DATA_SIZE);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
@@ -379,7 +379,7 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
         libspdm_release_sender_buffer (spdm_context);
         return LIBSPDM_STATUS_CRYPTO_ERROR;
     }
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ClientKey (0x%x):\n", dhe_key_size));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "RequesterKey (0x%x):\n", dhe_key_size));
     LIBSPDM_INTERNAL_DUMP_HEX(ptr, dhe_key_size);
     ptr += dhe_key_size;
 
@@ -541,7 +541,7 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
         goto receive_done;
     }
 
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ServerRandomData (0x%x) - ", SPDM_RANDOM_DATA_SIZE));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ResponderRandomData (0x%x) - ", SPDM_RANDOM_DATA_SIZE));
     LIBSPDM_INTERNAL_DUMP_DATA(spdm_response->random_data, SPDM_RANDOM_DATA_SIZE);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     if (responder_random != NULL) {
@@ -549,7 +549,7 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
                          spdm_response->random_data, SPDM_RANDOM_DATA_SIZE);
     }
 
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ServerKey (0x%x):\n", dhe_key_size));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ResponderKey (0x%x):\n", dhe_key_size));
     LIBSPDM_INTERNAL_DUMP_HEX(spdm_response->exchange_data, dhe_key_size);
 
     ptr = spdm_response->exchange_data;

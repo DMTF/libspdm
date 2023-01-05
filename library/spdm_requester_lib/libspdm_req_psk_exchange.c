@@ -246,7 +246,7 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
         libspdm_copy_mem(ptr, sizeof(spdm_request->context),
                          requester_context_in, spdm_request->context_length);
     }
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ClientContextData (0x%x) - ",
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "RequesterContextData (0x%x) - ",
                    spdm_request->context_length));
     LIBSPDM_INTERNAL_DUMP_DATA(ptr, spdm_request->context_length);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
@@ -373,7 +373,7 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ServerContextData (0x%x) - ",
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ResponderContextData (0x%x) - ",
                    spdm_response->context_length));
     LIBSPDM_INTERNAL_DUMP_DATA(ptr, spdm_response->context_length);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));

@@ -38,7 +38,7 @@ libspdm_return_t libspdm_get_encap_request_challenge(libspdm_context_t *spdm_con
     if(!libspdm_get_random_number(SPDM_NONCE_SIZE, spdm_request->nonce)) {
         return LIBSPDM_STATUS_LOW_ENTROPY;
     }
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Encap ClientNonce - "));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Encap RequesterNonce - "));
     LIBSPDM_INTERNAL_DUMP_DATA(spdm_request->nonce, SPDM_NONCE_SIZE);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
