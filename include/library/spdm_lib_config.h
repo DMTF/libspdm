@@ -7,7 +7,7 @@
 #ifndef SPDM_LIB_CONFIG_H
 #define SPDM_LIB_CONFIG_H
 
-/*Enalbe FIPS 140-3 Level 1 for Libspdm, the default is close the FIPS mode*/
+/* Enables FIPS 140-3 mode. */
 #ifndef LIBSPDM_FIPS_MODE
 #define LIBSPDM_FIPS_MODE 0
 #endif
