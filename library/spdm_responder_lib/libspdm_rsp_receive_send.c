@@ -827,7 +827,7 @@ void libspdm_register_get_response_func(void *context, libspdm_get_response_func
     libspdm_context_t *spdm_context;
 
     spdm_context = context;
-    spdm_context->get_response_func = (size_t)get_response_func;
+    spdm_context->get_response_func = (void *)get_response_func;
 }
 
 /**
@@ -850,9 +850,8 @@ libspdm_return_t libspdm_register_session_state_callback_func(
 
     spdm_context = context;
     for (index = 0; index < LIBSPDM_MAX_SESSION_STATE_CALLBACK_NUM; index++) {
-        if (spdm_context->spdm_session_state_callback[index] == 0) {
-            spdm_context->spdm_session_state_callback[index] =
-                (size_t)spdm_session_state_callback;
+        if (spdm_context->spdm_session_state_callback[index] == NULL) {
+            spdm_context->spdm_session_state_callback[index] = (void *)spdm_session_state_callback;
             return LIBSPDM_STATUS_SUCCESS;
         }
     }
@@ -880,11 +879,10 @@ libspdm_return_t libspdm_register_connection_state_callback_func(
     size_t index;
 
     spdm_context = context;
-    for (index = 0; index < LIBSPDM_MAX_CONNECTION_STATE_CALLBACK_NUM;
-         index++) {
-        if (spdm_context->spdm_connection_state_callback[index] == 0) {
+    for (index = 0; index < LIBSPDM_MAX_CONNECTION_STATE_CALLBACK_NUM; index++) {
+        if (spdm_context->spdm_connection_state_callback[index] == NULL) {
             spdm_context->spdm_connection_state_callback[index] =
-                (size_t)spdm_connection_state_callback;
+                (void *)spdm_connection_state_callback;
             return LIBSPDM_STATUS_SUCCESS;
         }
     }
@@ -912,9 +910,8 @@ libspdm_return_t libspdm_register_key_update_callback_func(
 
     spdm_context = context;
     for (index = 0; index < LIBSPDM_MAX_KEY_UPDATE_CALLBACK_NUM; index++) {
-        if (spdm_context->spdm_key_update_callback[index] == 0) {
-            spdm_context->spdm_key_update_callback[index] =
-                (size_t)spdm_key_update_callback;
+        if (spdm_context->spdm_key_update_callback[index] == NULL) {
+            spdm_context->spdm_key_update_callback[index] = (void *)spdm_key_update_callback;
             return LIBSPDM_STATUS_SUCCESS;
         }
     }

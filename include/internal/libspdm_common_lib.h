@@ -345,23 +345,23 @@ typedef struct {
     libspdm_error_struct_t last_spdm_error;
 
     /* Register GetResponse function (responder only) */
-    size_t get_response_func;
+    void *get_response_func;
 
     /* Register GetEncapResponse function (requester only) */
-    size_t get_encap_response_func;
+    void *get_encap_response_func;
     libspdm_encap_context_t encap_context;
 
     /* Register spdm_session_state_callback function (responder only)
     * Register can know the state after StartSession / EndSession. */
-    size_t spdm_session_state_callback[LIBSPDM_MAX_SESSION_STATE_CALLBACK_NUM];
+    void *spdm_session_state_callback[LIBSPDM_MAX_SESSION_STATE_CALLBACK_NUM];
 
     /* Register spdm_connection_state_callback function (responder only)
      * Register can know the connection state such as negotiated. */
-    size_t spdm_connection_state_callback[LIBSPDM_MAX_CONNECTION_STATE_CALLBACK_NUM];
+    void *spdm_connection_state_callback[LIBSPDM_MAX_CONNECTION_STATE_CALLBACK_NUM];
 
     /* Register libspdm_key_update_callback function (responder only)
      * Register can know when session keys are updated during KEY_UPDATE operations. */
-    size_t spdm_key_update_callback[LIBSPDM_MAX_KEY_UPDATE_CALLBACK_NUM];
+    void *spdm_key_update_callback[LIBSPDM_MAX_KEY_UPDATE_CALLBACK_NUM];
 
     libspdm_local_context_t local_context;
 
