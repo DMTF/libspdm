@@ -819,15 +819,6 @@ bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
         goto cleanup;
     }
 
-    /* 11. extended_key_usage*/
-    value = 0;
-    status = libspdm_x509_get_extended_key_usage(cert, cert_size, NULL, &value);
-    if (value == 0) {
-        status = false;
-        goto cleanup;
-    }
-    status = true;
-
 cleanup:
     libspdm_asym_free(base_asym_algo, context);
     return status;
