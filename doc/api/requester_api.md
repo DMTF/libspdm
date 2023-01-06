@@ -11,7 +11,7 @@ using libspdm.
 #### Description
 Sends an SPDM request message to an endpoint.
 
-#### Parameters asdasdsad
+#### Parameters
 
 **spdm_context**<br/>
 The SPDM context.<br/>
