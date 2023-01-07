@@ -820,7 +820,9 @@ bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
     }
 
 cleanup:
-    libspdm_asym_free(base_asym_algo, context);
+    if (context != NULL) {
+        libspdm_asym_free(base_asym_algo, context);
+    }
     return status;
 }
 
