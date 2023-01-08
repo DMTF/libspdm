@@ -353,15 +353,15 @@ typedef struct {
 
     /* Register spdm_session_state_callback function (responder only)
     * Register can know the state after StartSession / EndSession. */
-    void *spdm_session_state_callback[LIBSPDM_MAX_SESSION_STATE_CALLBACK_NUM];
+    void *spdm_session_state_callback;
 
     /* Register spdm_connection_state_callback function (responder only)
      * Register can know the connection state such as negotiated. */
-    void *spdm_connection_state_callback[LIBSPDM_MAX_CONNECTION_STATE_CALLBACK_NUM];
+    void *spdm_connection_state_callback;
 
     /* Register libspdm_key_update_callback function (responder only)
      * Register can know when session keys are updated during KEY_UPDATE operations. */
-    void *spdm_key_update_callback[LIBSPDM_MAX_KEY_UPDATE_CALLBACK_NUM];
+    void *spdm_key_update_callback;
 
     libspdm_local_context_t local_context;
 
