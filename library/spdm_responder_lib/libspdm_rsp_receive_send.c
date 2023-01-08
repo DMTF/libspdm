@@ -300,14 +300,9 @@ static void libspdm_trigger_session_state_callback(libspdm_context_t *spdm_conte
                                                    uint32_t session_id,
                                                    libspdm_session_state_t session_state)
 {
-    size_t index;
-
-    for (index = 0; index < LIBSPDM_MAX_SESSION_STATE_CALLBACK_NUM; index++) {
-        if (spdm_context->spdm_session_state_callback[index] != 0) {
-            ((libspdm_session_state_callback_func)spdm_context
-             ->spdm_session_state_callback[index])(
-                spdm_context, session_id, session_state);
-        }
+    if (spdm_context->spdm_session_state_callback != NULL) {
+        ((libspdm_session_state_callback_func)
+         spdm_context->spdm_session_state_callback)(spdm_context, session_id, session_state);
     }
 }
 
@@ -325,8 +320,7 @@ void libspdm_set_session_state(libspdm_context_t *spdm_context,
     libspdm_session_info_t *session_info;
     libspdm_session_state_t old_session_state;
 
-    session_info =
-        libspdm_get_session_info_via_session_id(spdm_context, session_id);
+    session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
     if (session_info == NULL) {
         LIBSPDM_ASSERT(false);
         return;
@@ -352,15 +346,9 @@ static void libspdm_trigger_connection_state_callback(libspdm_context_t *spdm_co
                                                       const libspdm_connection_state_t
                                                       connection_state)
 {
-    size_t index;
-
-    for (index = 0; index < LIBSPDM_MAX_CONNECTION_STATE_CALLBACK_NUM;
-         index++) {
-        if (spdm_context->spdm_connection_state_callback[index] != 0) {
-            ((libspdm_connection_state_callback_func)spdm_context
-             ->spdm_connection_state_callback[index])(
-                spdm_context, connection_state);
-        }
+    if (spdm_context->spdm_connection_state_callback != NULL) {
+        ((libspdm_connection_state_callback_func)
+         spdm_context->spdm_connection_state_callback)(spdm_context, connection_state);
     }
 }
 
@@ -373,37 +361,23 @@ static void libspdm_trigger_connection_state_callback(libspdm_context_t *spdm_co
 void libspdm_set_connection_state(libspdm_context_t *spdm_context,
                                   libspdm_connection_state_t connection_state)
 {
-    if (spdm_context->connection_info.connection_state !=
-        connection_state) {
-        spdm_context->connection_info.connection_state =
-            connection_state;
-        libspdm_trigger_connection_state_callback(spdm_context,
-                                                  connection_state);
+    if (spdm_context->connection_info.connection_state != connection_state) {
+        spdm_context->connection_info.connection_state = connection_state;
+        libspdm_trigger_connection_state_callback(spdm_context, connection_state);
     }
 }
 
-/**
- * Notify the key update operation to an SPDM context register.
- *
- * @param  spdm_context           A pointer to the SPDM context.
- * @param  session_id             Session ID for the keys being updated.
- * @param  key_update_operation   Indicate the key update operation.
- * @param  key_update_action      Indicate the direction of the key update.
- **/
 void libspdm_trigger_key_update_callback(void *context, uint32_t session_id,
                                          libspdm_key_update_operation_t key_update_op,
                                          libspdm_key_update_action_t key_update_action)
 {
     libspdm_context_t *spdm_context;
-    size_t index;
 
     spdm_context = context;
-    for (index = 0; index < LIBSPDM_MAX_KEY_UPDATE_CALLBACK_NUM; index++) {
-        if (spdm_context->spdm_key_update_callback[index] != 0) {
-            ((libspdm_key_update_callback_func)spdm_context
-             ->spdm_key_update_callback[index])(
-                spdm_context, session_id, key_update_op, key_update_action);
-        }
+    if (spdm_context->spdm_key_update_callback != NULL) {
+        ((libspdm_key_update_callback_func)
+         spdm_context->spdm_key_update_callback)(spdm_context, session_id, key_update_op,
+                                                 key_update_action);
     }
 }
 
@@ -813,15 +787,6 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-/**
- * Register an SPDM or APP message process function.
- *
- * If the default message process function cannot handle the message,
- * this function will be invoked.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  get_response_func              The function to process the encapsuled message.
- **/
 void libspdm_register_get_response_func(void *context, libspdm_get_response_func get_response_func)
 {
     libspdm_context_t *spdm_context;
@@ -830,92 +795,38 @@ void libspdm_register_get_response_func(void *context, libspdm_get_response_func
     spdm_context->get_response_func = (void *)get_response_func;
 }
 
-/**
- * Register an SPDM session state callback function.
- *
- * This function can be called multiple times to let different session APPs register its own callback.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  spdm_session_state_callback     The function to be called in SPDM session state change.
- *
- * @retval RETURN_SUCCESS          The callback is registered.
- * @retval RETURN_ALREADY_STARTED  No enough memory to register the callback.
- **/
-libspdm_return_t libspdm_register_session_state_callback_func(
+void libspdm_register_session_state_callback_func(
     void *context,
     libspdm_session_state_callback_func spdm_session_state_callback)
 {
     libspdm_context_t *spdm_context;
-    size_t index;
+
+    LIBSPDM_ASSERT(context != NULL);
 
     spdm_context = context;
-    for (index = 0; index < LIBSPDM_MAX_SESSION_STATE_CALLBACK_NUM; index++) {
-        if (spdm_context->spdm_session_state_callback[index] == NULL) {
-            spdm_context->spdm_session_state_callback[index] = (void *)spdm_session_state_callback;
-            return LIBSPDM_STATUS_SUCCESS;
-        }
-    }
-    LIBSPDM_ASSERT(false);
 
-    return LIBSPDM_STATUS_BUFFER_FULL;
+    spdm_context->spdm_session_state_callback = (void *)spdm_session_state_callback;
 }
 
-/**
- * Register an SPDM connection state callback function.
- *
- * This function can be called multiple times to let different register its own callback.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  spdm_connection_state_callback  The function to be called in SPDM connection state change.
- *
- * @retval RETURN_SUCCESS          The callback is registered.
- * @retval RETURN_ALREADY_STARTED  No enough memory to register the callback.
- **/
-libspdm_return_t libspdm_register_connection_state_callback_func(
+void libspdm_register_connection_state_callback_func(
     void *context,
     libspdm_connection_state_callback_func spdm_connection_state_callback)
 {
     libspdm_context_t *spdm_context;
-    size_t index;
+
+    LIBSPDM_ASSERT(context != NULL);
 
     spdm_context = context;
-    for (index = 0; index < LIBSPDM_MAX_CONNECTION_STATE_CALLBACK_NUM; index++) {
-        if (spdm_context->spdm_connection_state_callback[index] == NULL) {
-            spdm_context->spdm_connection_state_callback[index] =
-                (void *)spdm_connection_state_callback;
-            return LIBSPDM_STATUS_SUCCESS;
-        }
-    }
-    LIBSPDM_ASSERT(false);
-
-    return LIBSPDM_STATUS_BUFFER_FULL;
+    spdm_context->spdm_connection_state_callback = (void *)spdm_connection_state_callback;
 }
 
-/**
- * Register a key update callback function.
- *
- * This function can be called multiple times to register multiple callbacks.
- *
- * @param  spdm_context              A pointer to the SPDM context.
- * @param  spdm_key_update_callback  The function to be called in key update operation.
- *
- * @retval RETURN_SUCCESS          The callback is registered.
- * @retval RETURN_ALREADY_STARTED  No enough memory to register the callback.
- **/
-libspdm_return_t libspdm_register_key_update_callback_func(
+void libspdm_register_key_update_callback_func(
     void *context, libspdm_key_update_callback_func spdm_key_update_callback)
 {
     libspdm_context_t *spdm_context;
-    size_t index;
+
+    LIBSPDM_ASSERT(context != NULL);
 
     spdm_context = context;
-    for (index = 0; index < LIBSPDM_MAX_KEY_UPDATE_CALLBACK_NUM; index++) {
-        if (spdm_context->spdm_key_update_callback[index] == NULL) {
-            spdm_context->spdm_key_update_callback[index] = (void *)spdm_key_update_callback;
-            return LIBSPDM_STATUS_SUCCESS;
-        }
-    }
-    LIBSPDM_ASSERT(false);
-
-    return LIBSPDM_STATUS_BUFFER_FULL;
+    spdm_context->spdm_key_update_callback = (void *)spdm_key_update_callback;
 }

@@ -177,11 +177,8 @@ typedef void (*libspdm_session_state_callback_func)(
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  spdm_session_state_callback     The function to be called in SPDM session state change.
- *
- * @retval RETURN_SUCCESS          The callback is registered.
- * @retval RETURN_ALREADY_STARTED  No enough memory to register the callback.
  **/
-libspdm_return_t libspdm_register_session_state_callback_func(
+void libspdm_register_session_state_callback_func(
     void *spdm_context,
     libspdm_session_state_callback_func spdm_session_state_callback);
 
@@ -201,11 +198,8 @@ typedef void (*libspdm_connection_state_callback_func)(
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  spdm_connection_state_callback  The function to be called in SPDM connection state change.
- *
- * @retval RETURN_SUCCESS          The callback is registered.
- * @retval RETURN_ALREADY_STARTED  No enough memory to register the callback.
  **/
-libspdm_return_t libspdm_register_connection_state_callback_func(
+void libspdm_register_connection_state_callback_func(
     void *spdm_context,
     libspdm_connection_state_callback_func spdm_connection_state_callback);
 
@@ -240,11 +234,8 @@ void libspdm_trigger_key_update_callback(
  *
  * @param  spdm_context              A pointer to the SPDM context.
  * @param  spdm_key_update_callback  The function to be called in key update operation.
- *
- * @retval RETURN_SUCCESS          The callback is registered.
- * @retval RETURN_ALREADY_STARTED  No enough memory to register the callback.
  **/
-libspdm_return_t libspdm_register_key_update_callback_func(
+void libspdm_register_key_update_callback_func(
     void *spdm_context, libspdm_key_update_callback_func spdm_key_update_callback);
 
 /**
