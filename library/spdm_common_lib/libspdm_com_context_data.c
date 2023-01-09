@@ -705,6 +705,35 @@ libspdm_return_t libspdm_get_data(void *context, libspdm_data_type_t data_type,
     return LIBSPDM_STATUS_SUCCESS;
 }
 
+#if LIBSPDM_CHECK_SPDM_CONTEXT
+bool libspdm_check_context (void *context)
+{
+    libspdm_context_t *spdm_context;
+
+    spdm_context = context;
+
+    if (spdm_context->local_context.capability.data_transfer_size <
+        SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
+                       "LIBSPDM_DATA_CAPABILITY_DATA_TRANSFER_SIZE must be greater than or equal "
+                       "to %d.\n", SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12));
+        return false;
+    }
+
+    if (spdm_context->local_context.capability.max_spdm_msg_size <
+        spdm_context->local_context.capability.data_transfer_size) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
+                       "LIBSPDM_DATA_CAPABILITY_MAX_SPDM_MSG_SIZE (%d) must be greater than or "
+                       "equal to LIBSPDM_DATA_CAPABILITY_DATA_TRANSFER_SIZE (%d).\n",
+                       spdm_context->local_context.capability.max_spdm_msg_size,
+                       spdm_context->local_context.capability.data_transfer_size));
+        return false;
+    }
+
+    return true;
+}
+#endif /* LIBSPDM_CHECK_CONTEXT */
+
 /**
  * Reset message A cache in SPDM context.
  *
@@ -2188,8 +2217,7 @@ libspdm_return_t libspdm_init_context(void *context)
 
     for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index++)
     {
-        secured_contexts[index] =
-            (uint8_t *)secured_context + secured_context_size * index;
+        secured_contexts[index] = (uint8_t *)secured_context + secured_context_size * index;
     }
 
     return libspdm_init_context_with_secured_context(context,

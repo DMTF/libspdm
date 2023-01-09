@@ -221,6 +221,22 @@ libspdm_return_t libspdm_get_data(void *spdm_context,
                                   const libspdm_data_parameter_t *parameter,
                                   void *data, size_t *data_size);
 
+#if LIBSPDM_CHECK_SPDM_CONTEXT
+/**
+ * Check that the SPDM context is in a valid state.
+ *
+ * This is typically called after all context data has been populated via the libspdm_set_data
+ * function. The function returns on first failure. If LIBSPDM_DEBUG_ENABLE or
+ * LIBSPDM_DEBUG_PRINT_ENABLE are enabled then it also prints the failing condition.
+ *
+ * @param  spdm_context  A pointer to the SPDM context.
+ *
+ * @retval true   The SPDM context is in a valid state.
+ * @retval false  The SPDM context is in an invalid state.
+ **/
+bool libspdm_check_context (void *context);
+#endif /* LIBSPDM_CHECK_SPDM_CONTEXT */
+
 /**
  * Get the last SPDM error struct of an SPDM context.
  *
