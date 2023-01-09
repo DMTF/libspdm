@@ -1186,6 +1186,7 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
         result = libspdm_asym_get_private_key_from_pem(
             base_asym_algo, prikey, prikey_size, NULL, &context);
         if (!result) {
+            libspdm_zero_mem(prikey, prikey_size);
             free(prikey);
             return false;
         }
@@ -1199,6 +1200,7 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
                                       context, subject_name,
                                       csr_len, csr_pointer);
         libspdm_asym_free(base_asym_algo, context);
+        libspdm_zero_mem(prikey, prikey_size);
         free(prikey);
     } else {
 #endif
@@ -1791,6 +1793,7 @@ bool libspdm_requester_data_sign(
                                                            private_pem_size, NULL,
                                                            &context);
         if (!result) {
+            libspdm_zero_mem(private_pem, private_pem_size);
             free(private_pem);
             return false;
         }
@@ -1806,6 +1809,7 @@ bool libspdm_requester_data_sign(
                                            signature, sig_size);
         }
         libspdm_req_asym_free(req_base_asym_alg, context);
+        libspdm_zero_mem(private_pem, private_pem_size);
         free(private_pem);
     } else {
 #endif
@@ -1856,6 +1860,7 @@ bool libspdm_responder_data_sign(
         result = libspdm_asym_get_private_key_from_pem(
             base_asym_algo, private_pem, private_pem_size, NULL, &context);
         if (!result) {
+            libspdm_zero_mem(private_pem, private_pem_size);
             free(private_pem);
             return false;
         }
@@ -1871,6 +1876,7 @@ bool libspdm_responder_data_sign(
                                        signature, sig_size);
         }
         libspdm_asym_free(base_asym_algo, context);
+        libspdm_zero_mem(private_pem, private_pem_size);
         free(private_pem);
     } else {
 #endif
