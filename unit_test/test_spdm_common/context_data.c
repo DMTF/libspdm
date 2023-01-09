@@ -1335,6 +1335,45 @@ static void libspdm_test_export_master_secret_case19(void **state)
     assert_int_equal(export_master_secret_size, LIBSPDM_MAX_HASH_SIZE - 4);
 }
 
+static void libspdm_test_check_context_case20(void **state)
+{
+    void *context;
+    uint32_t data32;
+    libspdm_data_parameter_t parameter;
+    bool result;
+
+    context = (void *)malloc (libspdm_get_context_size());
+
+    libspdm_init_context (context);
+
+    result = libspdm_check_context (context);
+    assert_int_equal(true, result);
+
+    parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
+
+    data32 = SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12 - 1;
+    libspdm_set_data (context, LIBSPDM_DATA_CAPABILITY_DATA_TRANSFER_SIZE, &parameter, &data32,
+                      sizeof(data32));
+    result = libspdm_check_context (context);
+    assert_int_equal(false, result);
+
+    data32 = SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12;
+    libspdm_set_data (context, LIBSPDM_DATA_CAPABILITY_DATA_TRANSFER_SIZE, &parameter, &data32,
+                      sizeof(data32));
+    result = libspdm_check_context (context);
+    assert_int_equal(true, result);
+
+    data32 = SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12 + 10;
+    libspdm_set_data (context, LIBSPDM_DATA_CAPABILITY_DATA_TRANSFER_SIZE, &parameter, &data32,
+                      sizeof(data32));
+
+    data32 = SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12 + 5;
+    libspdm_set_data (context, LIBSPDM_DATA_CAPABILITY_MAX_SPDM_MSG_SIZE, &parameter, &data32,
+                      sizeof(data32));
+    result = libspdm_check_context (context);
+    assert_int_equal(false, result);
+}
+
 static libspdm_test_context_t m_libspdm_common_context_data_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     true,
@@ -1379,6 +1418,7 @@ int libspdm_common_context_data_test_main(void)
 
         /* Test that the Export Master Secret can be exported and cleared. */
         cmocka_unit_test(libspdm_test_export_master_secret_case19),
+        cmocka_unit_test(libspdm_test_check_context_case20),
     };
 
     libspdm_setup_test_context(&m_libspdm_common_context_data_test_context);

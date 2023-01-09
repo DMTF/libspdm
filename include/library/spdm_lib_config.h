@@ -417,4 +417,9 @@
 #define LIBSPDM_CHECK_MACRO 0
 #endif
 
+/* Enable checks to the SPDM context during runtime. */
+#ifndef LIBSPDM_CHECK_SPDM_CONTEXT
+#define LIBSPDM_CHECK_SPDM_CONTEXT 1
+#endif
+
 #endif /* SPDM_LIB_CONFIG_H */
