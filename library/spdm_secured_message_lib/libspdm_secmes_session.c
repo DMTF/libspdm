@@ -407,7 +407,7 @@ bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
             zero_filled_buffer, hash_size, salt1, hash_size,
             secured_message_context->master_secret.master_secret, hash_size);
         if (!status) {
-            return false;
+            goto cleanup;
         }
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "master_secret (0x%x) - ", hash_size));
         LIBSPDM_INTERNAL_DUMP_DATA(
@@ -437,7 +437,7 @@ bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
             hash_size);
 
         if (!status) {
-            return false;
+            goto cleanup;
         }
     }
     #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
@@ -450,7 +450,7 @@ bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
             hash_size);
 
         if (!status) {
-            return false;
+            goto cleanup;
         }
     }
 
@@ -480,7 +480,7 @@ bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
             hash_size);
 
         if (!status) {
-            return false;
+            goto cleanup;
         }
     }
     #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
@@ -493,7 +493,7 @@ bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
             hash_size);
 
         if (!status) {
-            return false;
+            goto cleanup;
         }
     }
 
@@ -524,7 +524,7 @@ bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
             hash_size);
 
         if (!status) {
-            return false;
+            goto cleanup;
         }
     }
     #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
@@ -537,7 +537,7 @@ bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
             hash_size);
 
         if (!status) {
-            return false;
+            goto cleanup;
         }
     }
 
@@ -552,7 +552,7 @@ bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
         secured_message_context->application_secret.request_data_encryption_key,
         secured_message_context->application_secret.request_data_salt);
     if (!status) {
-        return status;
+        goto cleanup;
     }
     secured_message_context->application_secret.request_data_sequence_number = 0;
 
@@ -562,11 +562,14 @@ bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
         secured_message_context->application_secret.response_data_encryption_key,
         secured_message_context->application_secret.response_data_salt);
     if (!status) {
-        return status;
+        goto cleanup;
     }
     secured_message_context->application_secret.response_data_sequence_number = 0;
 
-    return true;
+cleanup:
+    /*zero salt1 for security*/
+    libspdm_zero_mem(salt1, hash_size);
+    return status;
 }
 
 /**
