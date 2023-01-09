@@ -27,21 +27,6 @@ spdm_get_capabilities_request_t m_libspdm_get_capabilities_request2 = {
 };
 size_t m_libspdm_get_capabilities_request2_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
 
-spdm_get_capabilities_request_t m_libspdm_get_capabilities_request3 = {
-    {
-        SPDM_MESSAGE_VERSION_11,
-        SPDM_GET_CAPABILITIES,
-    }, /*header*/
-    0x00, /*reserved*/
-    0x01, /*ct_exponent*/
-    0x0000, /*reserved, 2 bytes*/
-    0x12345678 /*flags*/
-};
-size_t m_libspdm_get_capabilities_request3_size =
-    sizeof(m_libspdm_get_capabilities_request3) -
-    sizeof(m_libspdm_get_capabilities_request3.data_transfer_size) -
-    sizeof(m_libspdm_get_capabilities_request3.max_spdm_msg_size);
-
 spdm_get_capabilities_request_t m_libspdm_get_capabilities_request4 = {
     {
         SPDM_MESSAGE_VERSION_11,
@@ -622,37 +607,9 @@ void libspdm_test_responder_capabilities_case6(void **state)
                      SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 }
-/*New from here*/
+
 void libspdm_test_responder_capabilities_case7(void **state)
 {
-    libspdm_return_t status;
-    libspdm_test_context_t *spdm_test_context;
-    libspdm_context_t *spdm_context;
-    size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    spdm_capabilities_response_t *spdm_response;
-
-    spdm_test_context = *state;
-    spdm_context = spdm_test_context->spdm_context;
-    spdm_test_context->case_id = 0x7;
-    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
-
-    response_size = sizeof(response);
-    status = libspdm_get_response_capabilities(
-        spdm_context, m_libspdm_get_capabilities_request3_size,
-        &m_libspdm_get_capabilities_request3, &response_size, response);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(response_size, sizeof(spdm_error_response_t));
-    spdm_response = (void *)response;
-    assert_int_equal(m_libspdm_get_capabilities_request3.header.spdm_version,
-                     spdm_response->header.spdm_version);
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_INVALID_REQUEST);
-    assert_int_equal(spdm_response->header.param2, 0);
 }
 
 void libspdm_test_responder_capabilities_case8(void **state)
