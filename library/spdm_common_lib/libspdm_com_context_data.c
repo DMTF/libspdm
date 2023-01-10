@@ -2105,7 +2105,7 @@ libspdm_return_t libspdm_init_context_with_secured_context(void *context,
 
     spdm_context = context;
     libspdm_zero_mem(spdm_context, sizeof(libspdm_context_t));
-    spdm_context->version = libspdm_context_struct_version;
+    spdm_context->version = LIBSPDM_CONTEXT_STRUCT_VERSION;
     spdm_context->transcript.message_a.max_buffer_size =
         sizeof(spdm_context->transcript.message_a.buffer);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
