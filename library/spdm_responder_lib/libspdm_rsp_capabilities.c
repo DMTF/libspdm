@@ -74,7 +74,7 @@ static bool libspdm_check_request_flag_compability(uint32_t capabilities_flag, u
             }
         } else {
             if ((mac_cap == 1) || (encrypt_cap == 1) || (handshake_in_the_clear_cap == 1) ||
-                (hbeat_cap == 1) || (key_upd_cap == 1) || (mut_auth_cap == 1)) {
+                (hbeat_cap == 1) || (key_upd_cap == 1)) {
                 return false;
             }
         }
@@ -96,7 +96,7 @@ static bool libspdm_check_request_flag_compability(uint32_t capabilities_flag, u
         } else {
             /* If certificates or public keys are not enabled then these capabilities
              * cannot be enabled. */
-            if ((chal_cap == 1) || (key_ex_cap == 1) || (mut_auth_cap == 1)) {
+            if ((chal_cap == 1) || (mut_auth_cap == 1)) {
                 return false;
             }
         }
