@@ -296,7 +296,7 @@ typedef struct {
 } libspdm_msg_log_t;
 #endif /* LIBSPDM_ENABLE_MSG_LOG */
 
-#define libspdm_context_struct_version 0x2
+#define LIBSPDM_CONTEXT_STRUCT_VERSION 0x2
 
 typedef struct {
     uint32_t version;
