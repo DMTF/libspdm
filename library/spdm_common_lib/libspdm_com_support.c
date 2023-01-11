@@ -229,3 +229,28 @@ void libspdm_init_managed_buffer(void *m_buffer, size_t max_buffer_size)
 
     libspdm_reset_managed_buffer(m_buffer);
 }
+
+/**
+ * byte3 - libspdm major version
+ * byte2 - libspdm minor version
+ * byte1 - libspdm patch version
+ * byte0 - libspdm alpha
+ *         (office release with tag: 0, release candidate with tag: 1, non official release: 0xFF)
+ **/
+uint32_t libspdm_module_version(void)
+{
+    return (LIBSPDM_MAJOR_VERSION << 24) |
+           (LIBSPDM_MINOR_VERSION << 16) |
+           (LIBSPDM_PATCH_VERSION << 8) |
+           (LIBSPDM_ALPHA);
+}
+
+/*true: FIPS enabled, false: FIPS disabled*/
+bool libspdm_get_fips_mode(void)
+{
+#if LIBSPDM_FIPS_MODE
+    return true;
+#else
+    return false;
+#endif
+}

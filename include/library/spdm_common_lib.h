@@ -12,6 +12,11 @@
 #include "library/spdm_secured_message_lib.h"
 #include "library/spdm_return_status.h"
 
+#define LIBSPDM_MAJOR_VERSION 0x03
+#define LIBSPDM_MINOR_VERSION 0x00
+#define LIBSPDM_PATCH_VERSION 0x00
+#define LIBSPDM_ALPHA         0xff
+
 /* Connection: When a host sends messgages to a device, they create a connection.
  *             The host can and only can create one connection with one device.
  *             The host may create multiple connections with multiple devices at same time.
@@ -841,5 +846,17 @@ bool libspdm_get_peer_public_key_buffer(void *spdm_context,
 bool libspdm_get_local_public_key_buffer(void *spdm_context,
                                          const void **local_public_key_buffer,
                                          size_t *local_public_key_buffer_size);
+
+/**
+ * byte3 - libspdm major version
+ * byte2 - libspdm minor version
+ * byte1 - libspdm patch version
+ * byte0 - libspdm alpha
+ *         (office release with tag: 0, release candidate with tag: 1, non official release: 0xFF)
+ **/
+uint32_t libspdm_module_version(void);
+
+/*true: FIPS enabled, false: FIPS disabled*/
+bool libspdm_get_fips_mode(void);
 
 #endif /* SPDM_COMMON_LIB_H */
