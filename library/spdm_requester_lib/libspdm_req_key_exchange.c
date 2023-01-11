@@ -365,11 +365,6 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
     dhe_context = libspdm_secured_message_dhe_new(
         spdm_context->connection_info.version,
         spdm_context->connection_info.algorithm.dhe_named_group, true);
-    if (dhe_context == NULL) {
-        libspdm_release_sender_buffer (spdm_context);
-        return LIBSPDM_STATUS_CRYPTO_ERROR;
-    }
-
     result = libspdm_secured_message_dhe_generate_key(
         spdm_context->connection_info.algorithm.dhe_named_group,
         dhe_context, ptr, &dhe_key_size);
