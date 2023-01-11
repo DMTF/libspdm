@@ -240,6 +240,7 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
 
     if (requester_context_in == NULL) {
         if(!libspdm_get_random_number(LIBSPDM_PSK_CONTEXT_LENGTH, ptr)) {
+            libspdm_release_sender_buffer (spdm_context);
             return LIBSPDM_STATUS_LOW_ENTROPY;
         }
     } else {
