@@ -665,7 +665,8 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
     result = libspdm_calculate_th1_hash(spdm_context, session_info, true, th1_hash_data);
     if (!result) {
         libspdm_free_session_id(spdm_context, *session_id);
-        return LIBSPDM_STATUS_CRYPTO_ERROR;
+        status = LIBSPDM_STATUS_CRYPTO_ERROR;
+        goto receive_done;
     }
     result = libspdm_generate_session_handshake_key(
         session_info->secured_message_context, th1_hash_data);
