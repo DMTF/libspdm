@@ -665,7 +665,7 @@ libspdm_return_t libspdm_get_response_csr(void *context, size_t request_size,
                                           void *response);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP */
 
-#if LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP || LIBSPDM_ENABLE_SET_CERTIFICATE_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP
 /**
  * Process the SPDM SET_CERTIFICATE request and return the response.
  *
@@ -689,7 +689,7 @@ libspdm_return_t libspdm_get_response_set_certificate(void *context, size_t requ
                                                       void *response);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP */
 
-#if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP || LIBSPDM_ENABLE_CHUNK_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
 /**
  * Process the SPDM CHUNK_GET request and return the response.
  *

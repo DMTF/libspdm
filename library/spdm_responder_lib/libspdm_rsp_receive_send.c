@@ -74,11 +74,11 @@ libspdm_get_spdm_response_func libspdm_get_response_func_via_request_code(uint8_
         { SPDM_GET_CSR, libspdm_get_response_csr },
         #endif /*LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP*/
 
-        #if (LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP) || (LIBSPDM_ENABLE_SET_CERTIFICATE_CAP)
+        #if LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP
         { SPDM_SET_CERTIFICATE, libspdm_get_response_set_certificate },
         #endif /*LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP*/
 
-        #if (LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP) || (LIBSPDM_ENABLE_CHUNK_CAP)
+        #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
         { SPDM_CHUNK_GET, libspdm_get_response_chunk_get},
         { SPDM_CHUNK_SEND, libspdm_get_response_chunk_send},
         #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
@@ -164,7 +164,7 @@ libspdm_return_t libspdm_process_request(void *context, uint32_t **session_id,
      * if it is normal message, the response ptr will point to receiver buffer. */
     transport_header_size = spdm_context->transport_get_header_size(spdm_context);
     libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
-    #if (LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP) || (LIBSPDM_ENABLE_CHUNK_CAP)
+    #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
     decoded_message_ptr = scratch_buffer + LIBSPDM_SCRATCH_BUFFER_SECURE_MESSAGE_OFFSET +
                           transport_header_size;
     decoded_message_size = LIBSPDM_SCRATCH_BUFFER_SECURE_MESSAGE_CAPACITY - transport_header_size;
@@ -421,7 +421,7 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
     bool result;
     #endif /* LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP */
 
-    #if (LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP) || (LIBSPDM_ENABLE_CHUNK_CAP)
+    #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
     uint8_t *large_buffer;
     size_t large_buffer_size;
     libspdm_chunk_info_t* get_info;
@@ -437,7 +437,7 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
     transport_header_size = spdm_context->transport_get_header_size(spdm_context);
     if (session_id != NULL) {
         libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
-        #if (LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP) || (LIBSPDM_ENABLE_CHUNK_CAP)
+        #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
         my_response = scratch_buffer + LIBSPDM_SCRATCH_BUFFER_SECURE_MESSAGE_OFFSET +
                       transport_header_size;
         my_response_size = LIBSPDM_SCRATCH_BUFFER_SECURE_MESSAGE_CAPACITY - transport_header_size;
@@ -536,7 +536,7 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
     if (!is_app_message) {
         get_response_func = libspdm_get_response_func_via_last_request(spdm_context);
 
-        #if (LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP) || (LIBSPDM_ENABLE_CHUNK_CAP)
+        #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
         /* If responder is expecting chunk_get or chunk_send requests
          * and gets other requests instead, drop out of chunking mode */
         if (spdm_context->chunk_context.get.chunk_in_use
@@ -561,7 +561,7 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
             spdm_context->chunk_context.send.large_message_size = 0;
             spdm_context->chunk_context.send.chunk_bytes_transferred = 0;
         }
-        #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP*/
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
 
         if (get_response_func != NULL) {
             status = get_response_func(
@@ -588,7 +588,7 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
         libspdm_is_capabilities_flag_supported(
             spdm_context, false, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP)) {
-        #if (LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP) || (LIBSPDM_ENABLE_CHUNK_CAP)
+        #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
 
         get_info = &spdm_context->chunk_context.get;
 
@@ -695,7 +695,7 @@ libspdm_return_t libspdm_build_response(void *context, const uint32_t *session_i
 
     spdm_response = (void *)my_response;
     request_response_code = spdm_response->request_response_code;
-    #if (LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP) || (LIBSPDM_ENABLE_CHUNK_CAP)
+    #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
     switch (request_response_code) {
     case SPDM_CHUNK_SEND_ACK:
         if (my_response_size > sizeof(spdm_chunk_send_ack_response_t)) {

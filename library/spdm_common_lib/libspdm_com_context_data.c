@@ -1964,7 +1964,7 @@ libspdm_return_t libspdm_acquire_sender_buffer (
     }
     spdm_context->sender_buffer = *msg_buf_ptr;
     spdm_context->sender_buffer_size = *max_msg_size;
-    #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP || LIBSPDM_ENABLE_CHUNK_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
     /* it return scratch buffer, because the requester need build message there.*/
     *msg_buf_ptr = spdm_context->scratch_buffer +
                    LIBSPDM_SCRATCH_BUFFER_LARGE_SENDER_RECEIVER_OFFSET;
@@ -2029,7 +2029,7 @@ libspdm_return_t libspdm_acquire_receiver_buffer (
     }
     spdm_context->receiver_buffer = *msg_buf_ptr;
     spdm_context->receiver_buffer_size = *max_msg_size;
-    #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP || LIBSPDM_ENABLE_CHUNK_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
     /* it return scratch buffer, because the requester need build message there.*/
     *msg_buf_ptr = spdm_context->scratch_buffer +
                    LIBSPDM_SCRATCH_BUFFER_LARGE_SENDER_RECEIVER_OFFSET;
