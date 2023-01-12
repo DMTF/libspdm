@@ -66,6 +66,9 @@ void *libspdm_hmac_new(uint32_t base_hash_algo)
 
 void libspdm_hmac_free(uint32_t base_hash_algo, void *hmac_ctx)
 {
+    if (hmac_ctx == NULL) {
+        return;
+    }
     switch (base_hash_algo) {
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256:
 #if LIBSPDM_SHA256_SUPPORT

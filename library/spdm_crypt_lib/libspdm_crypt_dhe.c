@@ -149,6 +149,9 @@ void *libspdm_dhe_new(spdm_version_number_t spdm_version,
 
 void libspdm_dhe_free(uint16_t dhe_named_group, void *context)
 {
+    if (context == NULL) {
+        return;
+    }
     switch (dhe_named_group) {
     case SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_2048:
     case SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_3072:

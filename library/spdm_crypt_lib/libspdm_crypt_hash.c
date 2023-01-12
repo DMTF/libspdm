@@ -107,6 +107,9 @@ void *libspdm_hash_new(uint32_t base_hash_algo)
 
 void libspdm_hash_free(uint32_t base_hash_algo, void *hash_context)
 {
+    if (hash_context == NULL) {
+        return;
+    }
     switch (base_hash_algo) {
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256:
 #if LIBSPDM_SHA256_SUPPORT
