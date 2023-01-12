@@ -270,6 +270,9 @@ static bool libspdm_asym_sign_wrap (void *context, size_t hash_nid, uint32_t bas
 
 void libspdm_asym_free(uint32_t base_asym_algo, void *context)
 {
+    if (context == NULL) {
+        return;
+    }
     switch (base_asym_algo) {
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
