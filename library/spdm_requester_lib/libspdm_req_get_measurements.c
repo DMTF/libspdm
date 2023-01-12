@@ -95,7 +95,7 @@ bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
         spdm_context->connection_info.algorithm.base_asym_algo,
         spdm_context->connection_info.algorithm.base_hash_algo,
         context, l1l2_hash, l1l2_hash_size, sign_data, sign_data_size);
-    if (slot_id == 0xFF) {
+    if (slot_id == 0xF) {
         libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo, context);
     }
 #endif
