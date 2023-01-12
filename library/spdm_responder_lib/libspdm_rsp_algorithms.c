@@ -288,6 +288,14 @@ libspdm_return_t libspdm_get_response_algorithms(void *context,
                     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                     response_size, response);
             }
+            if ((struct_table->alg_type < SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_DHE) ||
+                (struct_table->alg_type >
+                 SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE)) {
+                return libspdm_generate_error_response(
+                    spdm_context,
+                    SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                    response_size, response);
+            }
             /* AlgType shall monotonically increase for subsequent entries. */
             if ((index != 0) && (struct_table->alg_type <= alg_type_pre)) {
                 return libspdm_generate_error_response(
