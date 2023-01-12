@@ -36,7 +36,7 @@ libspdm_return_t libspdm_send_request(void *context, const uint32_t *session_id,
      * Did not want to modify ally request handlers to pass this information,
      * so just making the determination here by examining scratch/sender buffers.
      * This may be something that should be refactored in the future. */
-    #if (LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP) || (LIBSPDM_ENABLE_CHUNK_CAP)
+    #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
     if ((uint8_t*) request >= sender_buffer &&
         (uint8_t*)request < sender_buffer + sender_buffer_size) {
         message = sender_buffer;
@@ -155,7 +155,7 @@ libspdm_return_t libspdm_receive_response(void *context, const uint32_t *session
      * if it is normal message, the response ptr will point to receiver buffer. */
     transport_header_size = spdm_context->transport_get_header_size(spdm_context);
     libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
-    #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP || LIBSPDM_ENABLE_CHUNK_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
     *response = scratch_buffer + LIBSPDM_SCRATCH_BUFFER_SECURE_MESSAGE_OFFSET +
                 transport_header_size;
     *response_size = LIBSPDM_SCRATCH_BUFFER_SECURE_MESSAGE_CAPACITY - transport_header_size;
@@ -276,7 +276,7 @@ error:
     }
 }
 
-#if (LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP) || (LIBSPDM_ENABLE_CHUNK_CAP)
+#if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
 libspdm_return_t libspdm_handle_large_request(
     libspdm_context_t *spdm_context,
     const uint32_t *session_id,
@@ -544,7 +544,7 @@ libspdm_return_t libspdm_send_spdm_request(libspdm_context_t *spdm_context,
         && spdm_context->connection_info.capability.data_transfer_size != 0
         && request_size > spdm_context->connection_info.capability.data_transfer_size) {
 
-        #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP || LIBSPDM_ENABLE_CHUNK_CAP
+        #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
         /* libspdm_send_request is not called with the original request in this flow.
          * This leads to the last_spdm_request field not having the original request value.
          * The caller assumes the request has been copied to last_spdm_request,
@@ -589,7 +589,7 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
 
-    #if (LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP) || (LIBSPDM_ENABLE_CHUNK_CAP)
+    #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
     spdm_message_header_t *spdm_response;
     size_t response_capacity;
     libspdm_chunk_info_t *send_info;
@@ -614,7 +614,7 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
         }
     }
 
-    #if !(LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP) && !(LIBSPDM_ENABLE_CHUNK_CAP)
+    #if !(LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP)
     status = libspdm_receive_response(spdm_context, session_id, false, response_size, response);
     #else /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
     send_info = &spdm_context->chunk_context.send;

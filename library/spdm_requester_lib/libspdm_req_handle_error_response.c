@@ -180,7 +180,7 @@ static libspdm_return_t libspdm_handle_response_not_ready(libspdm_context_t *spd
                                               expected_response_size);
 }
 
-#if (LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP) || (LIBSPDM_ENABLE_CHUNK_CAP)
+#if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
 libspdm_return_t libspdm_handle_error_large_response(
     libspdm_context_t *spdm_context,
     const uint32_t *session_id,
