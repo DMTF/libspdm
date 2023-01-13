@@ -779,6 +779,8 @@ libspdm_negotiate_algorithms_request_spdm12_t
         sizeof(libspdm_negotiate_algorithms_request_spdm12_t),
         SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
         SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1,
+        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+        SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
     },
     {
         {
@@ -819,6 +821,8 @@ libspdm_negotiate_algorithms_request_spdm12_t
         sizeof(libspdm_negotiate_algorithms_request_spdm12_t),
         SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
         SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1,
+        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+        SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
     },
     {
         {
@@ -2173,7 +2177,7 @@ void libspdm_test_responder_algorithms_case24(void **state)
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
-    spdm_test_context->case_id = 0x17;
+    spdm_test_context->case_id = 0x18;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
@@ -2239,7 +2243,7 @@ void libspdm_test_responder_algorithms_case25(void **state)
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
-    spdm_test_context->case_id = 0x18;
+    spdm_test_context->case_id = 0x19;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
@@ -2302,7 +2306,7 @@ void libspdm_test_responder_algorithms_case26(void **state)
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
-    spdm_test_context->case_id = 0x19;
+    spdm_test_context->case_id = 0x1A;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
