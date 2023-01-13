@@ -113,6 +113,8 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
         uint8_t *scratch_buffer;
         size_t scratch_buffer_size;
         size_t aead_tag_max_size;
+        uint64_t sequence_number;
+        uint8_t *salt;
 
         session_id = 0xFFFFFFFF;
         spdm_response_size = spdm_test_context->test_buffer_size;
@@ -154,6 +156,15 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
+        salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
+               ->application_secret.response_data_salt;
+        sequence_number = ((libspdm_secured_message_context_t
+                            *)(session_info->secured_message_context))
+                          ->application_secret.response_data_sequence_number;
+        if (sequence_number > 0) {
+            *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
+        }
+
     }
     return LIBSPDM_STATUS_SUCCESS;
 }
