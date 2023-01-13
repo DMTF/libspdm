@@ -65,14 +65,6 @@ bool libspdm_aead_encryption(const spdm_version_number_t secured_message_version
 {
     switch (aead_cipher_suite) {
     case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_128_GCM:
-#if LIBSPDM_AEAD_GCM_SUPPORT
-        return libspdm_aead_aes_gcm_encrypt(key, key_size, iv, iv_size, a_data,
-                                            a_data_size, data_in, data_in_size, tag_out,
-                                            tag_size, data_out, data_out_size);
-#else
-        LIBSPDM_ASSERT(false);
-        return false;
-#endif
     case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_256_GCM:
 #if LIBSPDM_AEAD_GCM_SUPPORT
         return libspdm_aead_aes_gcm_encrypt(key, key_size, iv, iv_size, a_data,
@@ -117,14 +109,6 @@ bool libspdm_aead_decryption(const spdm_version_number_t secured_message_version
 {
     switch (aead_cipher_suite) {
     case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_128_GCM:
-#if LIBSPDM_AEAD_GCM_SUPPORT
-        return libspdm_aead_aes_gcm_decrypt(key, key_size, iv, iv_size, a_data,
-                                            a_data_size, data_in, data_in_size, tag,
-                                            tag_size, data_out, data_out_size);
-#else
-        LIBSPDM_ASSERT(false);
-        return false;
-#endif
     case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_256_GCM:
 #if LIBSPDM_AEAD_GCM_SUPPORT
         return libspdm_aead_aes_gcm_decrypt(key, key_size, iv, iv_size, a_data,
