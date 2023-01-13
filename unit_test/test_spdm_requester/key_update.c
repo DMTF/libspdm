@@ -3854,6 +3854,7 @@ void libspdm_test_requester_key_update_case6(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x6;
 
+    spdm_context->retry_times = 3;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_set_standard_key_update_test_state(
@@ -4598,6 +4599,7 @@ void libspdm_test_requester_key_update_case19(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x13;
 
+    spdm_context->retry_times = 3;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_set_standard_key_update_test_state(
@@ -5268,6 +5270,7 @@ void libspdm_test_requester_key_update_case30(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x1E;
 
+    spdm_context->retry_times = 3;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_set_standard_key_update_test_state(

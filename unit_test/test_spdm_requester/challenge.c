@@ -1957,6 +1957,7 @@ void libspdm_test_requester_challenge_case6(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x6;
+    spdm_context->retry_times = 3;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags = 0;

@@ -467,6 +467,12 @@ libspdm_return_t libspdm_set_data(void *context, libspdm_data_type_t data_type,
         }
         spdm_context->local_context.is_requester = *(bool *)data;
         break;
+    case LIBSPDM_DATA_REQUEST_RETRY_TIMES:
+        if (data_size != sizeof(uint8_t)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        spdm_context->retry_times = *(uint8_t *)data;
+        break;
     default:
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         break;
@@ -2149,7 +2155,6 @@ libspdm_return_t libspdm_init_context_with_secured_context(void *context,
     spdm_context->transcript.message_m.max_buffer_size =
         sizeof(spdm_context->transcript.message_m.buffer);
 #endif
-    spdm_context->retry_times = LIBSPDM_MAX_REQUEST_RETRY_TIMES;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
     spdm_context->current_token = 0;
     spdm_context->local_context.version.spdm_version_count = 3;
@@ -2260,7 +2265,6 @@ void libspdm_reset_context(void *context)
     spdm_context->connection_info.local_used_cert_chain_buffer_size = 0;
     spdm_context->connection_info.local_used_cert_chain_buffer = NULL;
     spdm_context->cache_spdm_request_size = 0;
-    spdm_context->retry_times = LIBSPDM_MAX_REQUEST_RETRY_TIMES;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
     spdm_context->current_token = 0;
     spdm_context->last_spdm_request_session_id = INVALID_SESSION_ID;

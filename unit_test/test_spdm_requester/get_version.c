@@ -603,6 +603,7 @@ static void libspdm_test_requester_get_version_case6(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x6;
 
+    spdm_context->retry_times = 3;
     status = libspdm_get_version(spdm_context, NULL, NULL);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 }
