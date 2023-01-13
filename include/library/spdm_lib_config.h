@@ -86,15 +86,6 @@
 #define LIBSPDM_MAX_MESSAGE_MEDIUM_BUFFER_SIZE 0x300 /* to hold message_k before finished_key is ready*/
 #endif
 
-/* If the Responder replies with a Busy `ERROR` response to a request then the Requester is free to
- * retry sending the request. This value specifies the maximum number of times libspdm will retry
- * sending the request before returning an error. If its value is 0 then libspdm will not send any
- * retry requests.
- */
-#ifndef LIBSPDM_MAX_REQUEST_RETRY_TIMES
-#define LIBSPDM_MAX_REQUEST_RETRY_TIMES 3
-#endif
-
 #ifndef LIBSPDM_MAX_CSR_SIZE
 #define LIBSPDM_MAX_CSR_SIZE 0x1000
 #endif

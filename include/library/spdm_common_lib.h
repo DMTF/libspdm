@@ -101,6 +101,14 @@ typedef enum {
      **/
     LIBSPDM_DATA_IS_REQUESTER,
 
+    /* If the Responder replies with a Busy `ERROR` response to a request
+     * then the Requester is free to retry sending the request.
+     * This value specifies the maximum number of times libspdm will retry
+     * sending the request before returning an error.
+     * If its value is 0 then libspdm will not send any retry requests.
+     **/
+    LIBSPDM_DATA_REQUEST_RETRY_TIMES,
+
     /* MAX */
     LIBSPDM_DATA_MAX
 } libspdm_data_type_t;
