@@ -227,6 +227,7 @@ void libspdm_test_responder_digests_case4(void **state)
                      LIBSPDM_RESPONSE_STATE_NEED_RESYNC);
 }
 
+#if LIBSPDM_RESPOND_IF_READY_SUPPORT
 /**
  * Test 5: receives a valid GET_DIGESTS request message from Requester, but Responder cannot produce the response message in time
  * Expected Behavior: produces an ERROR response message with error code = ResponseNotReady
@@ -247,12 +248,9 @@ void libspdm_test_responder_digests_case5(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NOT_READY;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->local_context.local_cert_chain_provision[0] =
         m_libspdm_local_certificate_chain;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
@@ -270,8 +268,7 @@ void libspdm_test_responder_digests_case5(void **state)
                      sizeof(spdm_error_response_t) +
                      sizeof(spdm_error_data_response_not_ready_t));
     spdm_response = (void *)response;
-    error_data =
-        (spdm_error_data_response_not_ready_t *)(spdm_response + 1);
+    error_data = (spdm_error_data_response_not_ready_t *)(spdm_response + 1);
     assert_int_equal(spdm_response->header.request_response_code,
                      SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1,
@@ -281,6 +278,7 @@ void libspdm_test_responder_digests_case5(void **state)
                      LIBSPDM_RESPONSE_STATE_NOT_READY);
     assert_int_equal(error_data->request_code, SPDM_GET_DIGESTS);
 }
+#endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
 
 /**
  * Test 6: receives a valid GET_DIGESTS request message from Requester, but connection_state equals to zero and makes the check fail,
@@ -464,8 +462,10 @@ int libspdm_responder_digests_test_main(void)
         cmocka_unit_test(libspdm_test_responder_digests_case3),
         /* response_state: LIBSPDM_RESPONSE_STATE_NEED_RESYNC*/
         cmocka_unit_test(libspdm_test_responder_digests_case4),
+        #if LIBSPDM_RESPOND_IF_READY_SUPPORT
         /* response_state: LIBSPDM_RESPONSE_STATE_NOT_READY*/
         cmocka_unit_test(libspdm_test_responder_digests_case5),
+        #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
         /* connection_state Check*/
         cmocka_unit_test(libspdm_test_responder_digests_case6),
         /* No digest to send*/

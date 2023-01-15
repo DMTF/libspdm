@@ -1806,11 +1806,16 @@ void libspdm_test_requester_psk_finish_case9(void **state)
     libspdm_secured_message_set_dummy_finished_key (session_info->secured_message_context);
 
     status = libspdm_send_receive_psk_finish(spdm_context, session_id);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(
-        libspdm_secured_message_get_session_state(
-            spdm_context->session_info[0].secured_message_context),
-        LIBSPDM_SESSION_STATE_ESTABLISHED);
+    if (LIBSPDM_RESPOND_IF_READY_SUPPORT) {
+        assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+        assert_int_equal(
+            libspdm_secured_message_get_session_state(
+                spdm_context->session_info[0].secured_message_context),
+            LIBSPDM_SESSION_STATE_ESTABLISHED);
+    } else {
+        assert_int_equal(status, LIBSPDM_STATUS_NOT_READY_PEER);
+    }
+
     free(data);
 }
 

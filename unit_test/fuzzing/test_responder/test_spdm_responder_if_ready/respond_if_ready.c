@@ -9,6 +9,7 @@
 #include "spdm_device_secret_lib_internal.h"
 #include "internal/libspdm_responder_lib.h"
 
+#if LIBSPDM_RESPOND_IF_READY_SUPPORT
 
 #define LIBSPDM_MY_TEST_TOKEN 0x30
 
@@ -93,3 +94,13 @@ void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
     libspdm_unit_test_group_teardown(&State);
 
 }
+#else
+size_t libspdm_get_max_buffer_size(void)
+{
+    return 0;
+}
+
+void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size){
+
+}
+#endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */

@@ -7,6 +7,7 @@
 #include "internal/libspdm_requester_lib.h"
 #include "hal/library/platform_lib.h"
 
+#if LIBSPDM_RESPOND_IF_READY_SUPPORT
 /**
  * This function sends RESPOND_IF_READY and receives an expected SPDM response.
  *
@@ -57,8 +58,7 @@ static libspdm_return_t libspdm_requester_respond_if_ready(libspdm_context_t *sp
     spdm_request->header.param1 = spdm_context->error_data.request_code;
     spdm_request->header.param2 = spdm_context->error_data.token;
     spdm_request_size = sizeof(spdm_response_if_ready_request_t);
-    status = libspdm_send_spdm_request(spdm_context, session_id,
-                                       spdm_request_size, spdm_request);
+    status = libspdm_send_spdm_request(spdm_context, session_id, spdm_request_size, spdm_request);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_release_sender_buffer (spdm_context);
         /* need acquire response buffer, so that the caller can release it */
@@ -103,6 +103,7 @@ static libspdm_return_t libspdm_requester_respond_if_ready(libspdm_context_t *sp
     }
     return LIBSPDM_STATUS_SUCCESS;
 }
+#endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
 
 libspdm_return_t libspdm_handle_simple_error_response(void *context, uint8_t error_code)
 {
@@ -119,14 +120,14 @@ libspdm_return_t libspdm_handle_simple_error_response(void *context, uint8_t err
     }
 
     if (error_code == SPDM_ERROR_CODE_REQUEST_RESYNCH) {
-        spdm_context->connection_info.connection_state =
-            LIBSPDM_CONNECTION_STATE_NOT_STARTED;
+        spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NOT_STARTED;
         return LIBSPDM_STATUS_RESYNCH_PEER;
     }
 
     return LIBSPDM_STATUS_ERROR_PEER;
 }
 
+#if LIBSPDM_RESPOND_IF_READY_SUPPORT
 /**
  * This function handles RESPONSE_NOT_READY error code.
  *
@@ -159,11 +160,9 @@ static libspdm_return_t libspdm_handle_response_not_ready(libspdm_context_t *spd
     }
 
     spdm_response = *response;
-    extend_error_data =
-        (spdm_error_data_response_not_ready_t *)(spdm_response + 1);
+    extend_error_data = (spdm_error_data_response_not_ready_t *)(spdm_response + 1);
     LIBSPDM_ASSERT(spdm_response->header.request_response_code == SPDM_ERROR);
-    LIBSPDM_ASSERT(spdm_response->header.param1 ==
-                   SPDM_ERROR_CODE_RESPONSE_NOT_READY);
+    LIBSPDM_ASSERT(spdm_response->header.param1 == SPDM_ERROR_CODE_RESPONSE_NOT_READY);
     if (extend_error_data->request_code != original_request_code) {
         return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
@@ -179,6 +178,7 @@ static libspdm_return_t libspdm_handle_response_not_ready(libspdm_context_t *spd
                                               expected_response_code,
                                               expected_response_size);
 }
+#endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
 
 #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
 libspdm_return_t libspdm_handle_error_large_response(
@@ -401,18 +401,20 @@ libspdm_return_t libspdm_handle_error_response_main(
     spdm_response = *response;
     LIBSPDM_ASSERT(spdm_response->request_response_code == SPDM_ERROR);
 
-    if ((spdm_response->param1 == SPDM_ERROR_CODE_DECRYPT_ERROR) &&
-        (session_id != NULL)) {
+    if ((spdm_response->param1 == SPDM_ERROR_CODE_DECRYPT_ERROR) && (session_id != NULL)) {
         libspdm_free_session_id(spdm_context, *session_id);
         return LIBSPDM_STATUS_SESSION_MSG_ERROR;
     } else if(spdm_response->param1 == SPDM_ERROR_CODE_RESPONSE_NOT_READY) {
+        #if LIBSPDM_RESPOND_IF_READY_SUPPORT
         return libspdm_handle_response_not_ready(spdm_context, session_id,
                                                  response_size, response,
                                                  original_request_code,
                                                  expected_response_code,
                                                  expected_response_size);
+        #else
+        return LIBSPDM_STATUS_NOT_READY_PEER;
+        #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
     } else {
-        return libspdm_handle_simple_error_response(spdm_context,
-                                                    spdm_response->param1);
+        return libspdm_handle_simple_error_response(spdm_context, spdm_response->param1);
     }
 }

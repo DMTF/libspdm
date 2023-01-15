@@ -435,6 +435,7 @@ void libspdm_test_responder_key_update_case4(void **state)
                         m_rsp_secret_buffer, secured_message_context->hash_size);
 }
 
+#if LIBSPDM_RESPOND_IF_READY_SUPPORT
 /**
  * Test 5: receiving a correct KEY_UPDATE from the requester, but the
  * responder could not produce the response in time.
@@ -509,6 +510,7 @@ void libspdm_test_responder_key_update_case5(void **state)
                         ->application_secret.response_data_secret,
                         m_rsp_secret_buffer, secured_message_context->hash_size);
 }
+#endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
 
 /**
  * Test 6: receiving a correct KEY_UPDATE from the requester, but the
@@ -2170,8 +2172,10 @@ int libspdm_responder_key_update_test_main(void)
         cmocka_unit_test(libspdm_test_responder_key_update_case3),
         /* response_state: SPDM_RESPONSE_STATE_NEED_RESYNC*/
         cmocka_unit_test(libspdm_test_responder_key_update_case4),
+        #if LIBSPDM_RESPOND_IF_READY_SUPPORT
         /* response_state: SPDM_RESPONSE_STATE_NOT_READY*/
         cmocka_unit_test(libspdm_test_responder_key_update_case5),
+        #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
         /* connection_state Check*/
         cmocka_unit_test(libspdm_test_responder_key_update_case6),
         /* Buffer reset*/

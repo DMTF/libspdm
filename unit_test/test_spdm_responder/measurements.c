@@ -338,6 +338,7 @@ void libspdm_test_responder_measurements_case4(void **state)
 #endif
 }
 
+#if LIBSPDM_RESPOND_IF_READY_SUPPORT
 /**
  * Test 5: Force response_state = SPDM_RESPONSE_STATE_NOT_READY when asked GET_MEASUREMENTS
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_RESPONSE_NOT_READY
@@ -399,6 +400,7 @@ void libspdm_test_responder_measurements_case5(void **state)
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
 }
+#endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
 
 /**
  * Test 6: simulate wrong connection_state when asked GET_MEASUREMENTS
@@ -1857,8 +1859,10 @@ int libspdm_responder_measurements_test_main(void)
         cmocka_unit_test(libspdm_test_responder_measurements_case3),
         /* response_state: SPDM_RESPONSE_STATE_NEED_RESYNC*/
         cmocka_unit_test(libspdm_test_responder_measurements_case4),
+        #if LIBSPDM_RESPOND_IF_READY_SUPPORT
         /* response_state: SPDM_RESPONSE_STATE_NOT_READY*/
         cmocka_unit_test(libspdm_test_responder_measurements_case5),
+        #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
         /* connection_state Check*/
         cmocka_unit_test(libspdm_test_responder_measurements_case6),
         /* Success Case to get measurement number with signature*/

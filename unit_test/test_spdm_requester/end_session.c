@@ -1442,8 +1442,7 @@ void libspdm_test_requester_end_session_case9(void **state)
     spdm_context->connection_info.algorithm.aead_cipher_suite =
         m_libspdm_use_aead_algo;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
-        data_size;
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
                      sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
                      data, data_size);
@@ -1451,8 +1450,7 @@ void libspdm_test_requester_end_session_case9(void **state)
     libspdm_zero_mem(m_local_psk_hint, 32);
     libspdm_copy_mem(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
                      LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
-    spdm_context->local_context.psk_hint_size =
-        sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
+    spdm_context->local_context.psk_hint_size = sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
     spdm_context->local_context.psk_hint = m_local_psk_hint;
 
     session_id = 0xFFFFFFFF;
@@ -1479,18 +1477,20 @@ void libspdm_test_requester_end_session_case9(void **state)
     libspdm_secured_message_set_response_data_salt(
         session_info->secured_message_context, m_dummy_salt_buffer,
         ((libspdm_secured_message_context_t
-          *)(session_info->secured_message_context))
-        ->aead_iv_size);
-    ((libspdm_secured_message_context_t *)(session_info
-                                           ->secured_message_context))
+          *)(session_info->secured_message_context))->aead_iv_size);
+    ((libspdm_secured_message_context_t *)(session_info->secured_message_context))
     ->application_secret.response_data_sequence_number = 0;
 
     status = libspdm_send_receive_end_session(spdm_context, session_id, 0);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(
-        libspdm_secured_message_get_session_state(
-            spdm_context->session_info[0].secured_message_context),
-        LIBSPDM_SESSION_STATE_NOT_STARTED);
+    if (LIBSPDM_RESPOND_IF_READY_SUPPORT) {
+        assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+        assert_int_equal(
+            libspdm_secured_message_get_session_state(
+                spdm_context->session_info[0].secured_message_context),
+            LIBSPDM_SESSION_STATE_NOT_STARTED);
+    } else {
+        assert_int_equal(status, LIBSPDM_STATUS_NOT_READY_PEER);
+    }
     free(data);
 }
 

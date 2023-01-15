@@ -6,6 +6,8 @@
 
 #include "internal/libspdm_responder_lib.h"
 
+#if LIBSPDM_RESPOND_IF_READY_SUPPORT
+
 libspdm_return_t libspdm_get_response_respond_if_ready(void *context,
                                                        size_t request_size,
                                                        const void *request,
@@ -55,8 +57,7 @@ libspdm_return_t libspdm_get_response_respond_if_ready(void *context,
     }
 
     get_response_func = NULL;
-    get_response_func =
-        libspdm_get_response_func_via_request_code(spdm_request->param1);
+    get_response_func = libspdm_get_response_func_via_request_code(spdm_request->param1);
     if (get_response_func == NULL) {
         return libspdm_generate_error_response(
             spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
@@ -69,3 +70,5 @@ libspdm_return_t libspdm_get_response_respond_if_ready(void *context,
 
     return status;
 }
+
+#endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */

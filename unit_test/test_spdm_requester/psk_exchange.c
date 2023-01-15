@@ -3613,12 +3613,17 @@ void libspdm_test_requester_psk_exchange_case9(void **state)
         spdm_context,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(session_id, 0xFFFDFFFD);
-    assert_int_equal(
-        libspdm_secured_message_get_session_state(
-            spdm_context->session_info[0].secured_message_context),
-        LIBSPDM_SESSION_STATE_HANDSHAKING);
+    if (LIBSPDM_RESPOND_IF_READY_SUPPORT) {
+        assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+        assert_int_equal(session_id, 0xFFFDFFFD);
+        assert_int_equal(
+            libspdm_secured_message_get_session_state(
+                spdm_context->session_info[0].secured_message_context),
+            LIBSPDM_SESSION_STATE_HANDSHAKING);
+    } else {
+        assert_int_equal(status, LIBSPDM_STATUS_NOT_READY_PEER);
+    }
+
     free(data);
 }
 

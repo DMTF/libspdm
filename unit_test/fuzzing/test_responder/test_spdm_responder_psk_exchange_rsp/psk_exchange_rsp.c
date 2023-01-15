@@ -168,6 +168,7 @@ void libspdm_test_responder_psk_exchange_case2(void **State)
     free(data);
 }
 
+#if LIBSPDM_RESPOND_IF_READY_SUPPORT
 void libspdm_test_responder_psk_exchange_case3(void **State)
 {
     libspdm_test_context_t *spdm_test_context;
@@ -244,6 +245,7 @@ void libspdm_test_responder_psk_exchange_case3(void **State)
                                       response);
     free(data);
 }
+#endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
 
 void libspdm_test_responder_psk_exchange_case4(void **State)
 {
@@ -517,10 +519,12 @@ void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
     libspdm_test_responder_psk_exchange_case2(&State);
     libspdm_unit_test_group_teardown(&State);
 
+    #if LIBSPDM_RESPOND_IF_READY_SUPPORT
     /* response_state: SPDM_RESPONSE_STATE_NOT_READY*/
     libspdm_unit_test_group_setup(&State);
     libspdm_test_responder_psk_exchange_case3(&State);
     libspdm_unit_test_group_teardown(&State);
+    #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
 
     /* capability.flags: SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT */
     libspdm_unit_test_group_setup(&State);

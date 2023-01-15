@@ -413,6 +413,7 @@ void libspdm_test_responder_key_exchange_case4(void **state)
     free(data1);
 }
 
+#if LIBSPDM_RESPOND_IF_READY_SUPPORT
 void libspdm_test_responder_key_exchange_case5(void **state)
 {
     libspdm_return_t status;
@@ -502,6 +503,7 @@ void libspdm_test_responder_key_exchange_case5(void **state)
     assert_int_equal(error_data->request_code, SPDM_KEY_EXCHANGE);
     free(data1);
 }
+#endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
 
 void libspdm_test_responder_key_exchange_case6(void **state)
 {
@@ -1504,8 +1506,10 @@ int libspdm_responder_key_exchange_test_main(void)
         cmocka_unit_test(libspdm_test_responder_key_exchange_case3),
         /* response_state: SPDM_RESPONSE_STATE_NEED_RESYNC*/
         cmocka_unit_test(libspdm_test_responder_key_exchange_case4),
+        #if LIBSPDM_RESPOND_IF_READY_SUPPORT
         /* response_state: SPDM_RESPONSE_STATE_NOT_READY*/
         cmocka_unit_test(libspdm_test_responder_key_exchange_case5),
+        #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
         /* connection_state Check*/
         cmocka_unit_test(libspdm_test_responder_key_exchange_case6),
         /* Buffer reset*/

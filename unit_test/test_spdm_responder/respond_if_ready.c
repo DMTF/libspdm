@@ -9,10 +9,10 @@
 #include "internal/libspdm_requester_lib.h"
 #include "internal/libspdm_secured_message_lib.h"
 
-#if (LIBSPDM_ENABLE_CAPABILITY_CERT_CAP ||                                     \
-     LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP ||                                     \
-     LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP ||                                     \
-     LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP ||                                   \
+#if LIBSPDM_RESPOND_IF_READY_SUPPORT
+
+#if (LIBSPDM_ENABLE_CAPABILITY_CERT_CAP || LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP || \
+     LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP || LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || \
      LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP)
 
 #define LIBSPDM_MY_TEST_TOKEN            0x30
@@ -1447,4 +1447,5 @@ int libspdm_responder_respond_if_ready_test_main(void) {
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }
-#endif /*LIBSPDM_ENABLE_CAPABILITY_*_CAP*/
+#endif /* LIBSPDM_ENABLE_CAPABILITY_*_CAP */
+#endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */

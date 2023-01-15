@@ -31,11 +31,11 @@ libspdm_return_t libspdm_responder_handle_response_state(void *context,
         libspdm_set_connection_state(spdm_context,
                                      LIBSPDM_CONNECTION_STATE_NOT_STARTED);
         return LIBSPDM_STATUS_SUCCESS;
+    #if LIBSPDM_RESPOND_IF_READY_SUPPORT
     case LIBSPDM_RESPONSE_STATE_NOT_READY:
         /*do not update ErrorData if a previous request has not been completed*/
         if(request_code != SPDM_RESPOND_IF_READY) {
-            spdm_context->cache_spdm_request_size =
-                spdm_context->last_spdm_request_size;
+            spdm_context->cache_spdm_request_size = spdm_context->last_spdm_request_size;
             libspdm_copy_mem(spdm_context->cache_spdm_request,
                              sizeof(spdm_context->cache_spdm_request),
                              spdm_context->last_spdm_request,
@@ -50,6 +50,7 @@ libspdm_return_t libspdm_responder_handle_response_state(void *context,
             sizeof(spdm_error_data_response_not_ready_t),
             (uint8_t *)(void *)&spdm_context->error_data,
             response_size, response);
+    #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
     /* NOTE: Need to reset status to Normal in up level*/
     case LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP:
         return libspdm_generate_error_response(spdm_context,
