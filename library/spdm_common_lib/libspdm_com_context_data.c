@@ -2156,7 +2156,6 @@ libspdm_return_t libspdm_init_context_with_secured_context(void *context,
         sizeof(spdm_context->transcript.message_m.buffer);
 #endif
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
-    spdm_context->current_token = 0;
     spdm_context->local_context.version.spdm_version_count = 3;
     spdm_context->local_context.version.spdm_version[0] = SPDM_MESSAGE_VERSION_10 <<
                                                           SPDM_VERSION_NUMBER_SHIFT_BIT;
@@ -2185,8 +2184,7 @@ libspdm_return_t libspdm_init_context_with_secured_context(void *context,
 
         spdm_context->session_info[index].secured_message_context = secured_contexts[index];
         libspdm_secured_message_init_context(
-            spdm_context->session_info[index]
-            .secured_message_context);
+            spdm_context->session_info[index].secured_message_context);
     }
 
     return LIBSPDM_STATUS_SUCCESS;
