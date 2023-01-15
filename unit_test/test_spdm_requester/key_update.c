@@ -4010,8 +4010,7 @@ void libspdm_test_requester_key_update_case9(void **state)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state(spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
 
@@ -4028,20 +4027,23 @@ void libspdm_test_requester_key_update_case9(void **state)
                                   sizeof(m_req_secret_buffer));
     /*response side *not* updated*/
 
-    status = libspdm_key_update(
-        spdm_context, session_id, true);
+    status = libspdm_key_update(spdm_context, session_id, true);
 
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_memory_equal(((libspdm_secured_message_context_t
-                          *)(session_info->secured_message_context))
-                        ->application_secret.request_data_secret,
-                        m_req_secret_buffer, ((libspdm_secured_message_context_t
-                                               *)(session_info->secured_message_context))->hash_size);
-    assert_memory_equal(((libspdm_secured_message_context_t
-                          *)(session_info->secured_message_context))
-                        ->application_secret.response_data_secret,
-                        m_rsp_secret_buffer, ((libspdm_secured_message_context_t
-                                               *)(session_info->secured_message_context))->hash_size);
+    if (LIBSPDM_RESPOND_IF_READY_SUPPORT) {
+        assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+        assert_memory_equal(((libspdm_secured_message_context_t *)
+                             (session_info->secured_message_context))->application_secret.request_data_secret,
+                            m_req_secret_buffer, ((libspdm_secured_message_context_t *)
+                                                  (session_info->secured_message_context))->hash_size);
+
+        assert_memory_equal(((libspdm_secured_message_context_t *)
+                             (session_info->secured_message_context))->application_secret.response_data_secret,
+                            m_rsp_secret_buffer, ((libspdm_secured_message_context_t *)
+                                                  (session_info->secured_message_context))->hash_size);
+    } else {
+        assert_int_equal(status, LIBSPDM_STATUS_NOT_READY_PEER);
+    }
+
 }
 
 /**
@@ -4484,8 +4486,7 @@ void libspdm_test_requester_key_update_case17(void **state)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state(spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
 
@@ -4502,8 +4503,7 @@ void libspdm_test_requester_key_update_case17(void **state)
                                   sizeof(m_req_secret_buffer));
     /*response side *not* updated*/
 
-    status = libspdm_key_update(
-        spdm_context, session_id, true);
+    status = libspdm_key_update(spdm_context, session_id, true);
 
     assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
     assert_memory_equal(((libspdm_secured_message_context_t
@@ -4778,20 +4778,23 @@ void libspdm_test_requester_key_update_case22(void **state)
                                   sizeof(m_req_secret_buffer));
     /*response side *not* updated*/
 
-    status = libspdm_key_update(
-        spdm_context, session_id, true);
+    status = libspdm_key_update(spdm_context, session_id, true);
 
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_memory_equal(((libspdm_secured_message_context_t
-                          *)(session_info->secured_message_context))
-                        ->application_secret.request_data_secret,
-                        m_req_secret_buffer, ((libspdm_secured_message_context_t
-                                               *)(session_info->secured_message_context))->hash_size);
-    assert_memory_equal(((libspdm_secured_message_context_t
-                          *)(session_info->secured_message_context))
-                        ->application_secret.response_data_secret,
-                        m_rsp_secret_buffer, ((libspdm_secured_message_context_t
-                                               *)(session_info->secured_message_context))->hash_size);
+    if (LIBSPDM_RESPOND_IF_READY_SUPPORT) {
+        assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+        assert_memory_equal(((libspdm_secured_message_context_t
+                              *)(session_info->secured_message_context))
+                            ->application_secret.request_data_secret,
+                            m_req_secret_buffer, ((libspdm_secured_message_context_t
+                                                   *)(session_info->secured_message_context))->hash_size);
+        assert_memory_equal(((libspdm_secured_message_context_t
+                              *)(session_info->secured_message_context))
+                            ->application_secret.response_data_secret,
+                            m_rsp_secret_buffer, ((libspdm_secured_message_context_t
+                                                   *)(session_info->secured_message_context))->hash_size);
+    } else {
+        assert_int_equal(status, LIBSPDM_STATUS_NOT_READY_PEER);
+    }
 }
 
 /**
@@ -5476,8 +5479,7 @@ void libspdm_test_requester_key_update_case33(void **state)
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_set_standard_key_update_test_state(
-        spdm_context, &session_id);
+    libspdm_set_standard_key_update_test_state(spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
     secured_message_context = session_info->secured_message_context;
@@ -5512,20 +5514,23 @@ void libspdm_test_requester_key_update_case33(void **state)
                                   m_rsp_secret_buffer, m_rsp_secret_buffer,
                                   sizeof(m_rsp_secret_buffer));
 
-    status = libspdm_key_update(
-        spdm_context, session_id, false);
+    status = libspdm_key_update(spdm_context, session_id, false);
 
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_memory_equal(((libspdm_secured_message_context_t
-                          *)(session_info->secured_message_context))
-                        ->application_secret.request_data_secret,
-                        m_req_secret_buffer, ((libspdm_secured_message_context_t
-                                               *)(session_info->secured_message_context))->hash_size);
-    assert_memory_equal(((libspdm_secured_message_context_t
-                          *)(session_info->secured_message_context))
-                        ->application_secret.response_data_secret,
-                        m_rsp_secret_buffer, ((libspdm_secured_message_context_t
-                                               *)(session_info->secured_message_context))->hash_size);
+    if (LIBSPDM_RESPOND_IF_READY_SUPPORT) {
+        assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+        assert_memory_equal(((libspdm_secured_message_context_t
+                              *)(session_info->secured_message_context))
+                            ->application_secret.request_data_secret,
+                            m_req_secret_buffer, ((libspdm_secured_message_context_t
+                                                   *)(session_info->secured_message_context))->hash_size);
+        assert_memory_equal(((libspdm_secured_message_context_t
+                              *)(session_info->secured_message_context))
+                            ->application_secret.response_data_secret,
+                            m_rsp_secret_buffer, ((libspdm_secured_message_context_t
+                                                   *)(session_info->secured_message_context))->hash_size);
+    } else {
+        assert_int_equal(status, LIBSPDM_STATUS_NOT_READY_PEER);
+    }
 }
 
 /**

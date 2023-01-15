@@ -132,6 +132,7 @@ void libspdm_test_get_response_encapsulated_request_case3(void **State)
     libspdm_reset_message_mut_c(spdm_context);
 }
 
+#if LIBSPDM_RESPOND_IF_READY_SUPPORT
 void libspdm_test_get_response_encapsulated_request_case4(void **State)
 {
     libspdm_test_context_t *spdm_test_context;
@@ -165,6 +166,7 @@ void libspdm_test_get_response_encapsulated_request_case4(void **State)
                                               response);
     libspdm_reset_message_mut_c(spdm_context);
 }
+#endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
 
 void libspdm_test_get_response_encapsulated_request_case5(void **State)
 {
@@ -332,6 +334,7 @@ void libspdm_test_get_response_encapsulated_response_ack_case4(void **State)
                                                    response);
 }
 
+#if LIBSPDM_RESPOND_IF_READY_SUPPORT
 void libspdm_test_get_response_encapsulated_response_ack_case5(void **State)
 {
     libspdm_test_context_t *spdm_test_context;
@@ -353,6 +356,7 @@ void libspdm_test_get_response_encapsulated_response_ack_case5(void **State)
                                                    spdm_test_context->test_buffer, &response_size,
                                                    response);
 }
+#endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
 
 void libspdm_test_get_response_encapsulated_response_ack_case6(void **State)
 {
@@ -421,10 +425,12 @@ void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
     libspdm_test_get_response_encapsulated_request_case3(&State);
     libspdm_unit_test_group_teardown(&State);
 
+    #if SPDM_RESPONSE_STATE_NOT_READY
     /*response_state : LIBSPDM_RESPONSE_STATE_NOT_READY */
     libspdm_unit_test_group_setup(&State);
     libspdm_test_get_response_encapsulated_request_case4(&State);
     libspdm_unit_test_group_teardown(&State);
+    #endif /* SPDM_RESPONSE_STATE_NOT_READY */
 
     /* current_request_op_code: NULL */
     libspdm_unit_test_group_setup(&State);
@@ -451,10 +457,12 @@ void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
     libspdm_test_get_response_encapsulated_response_ack_case4(&State);
     libspdm_unit_test_group_teardown(&State);
 
+    #if SPDM_RESPONSE_STATE_NOT_READY
     /*response_state : LIBSPDM_RESPONSE_STATE_NOT_READY */
     libspdm_unit_test_group_setup(&State);
     libspdm_test_get_response_encapsulated_response_ack_case5(&State);
     libspdm_unit_test_group_teardown(&State);
+    #endif /* SPDM_RESPONSE_STATE_NOT_READY */
 
     /*Success Case  When version is greater than V1.2 */
     libspdm_unit_test_group_setup(&State);

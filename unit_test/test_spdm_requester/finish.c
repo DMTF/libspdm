@@ -2370,8 +2370,7 @@ void libspdm_test_requester_finish_case9(void **state)
     spdm_test_context->case_id = 0x9;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
     spdm_context->connection_info.capability.flags |=
@@ -2388,18 +2387,13 @@ void libspdm_test_requester_finish_case9(void **state)
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, &hash, &hash_size);
     libspdm_reset_message_a(spdm_context);
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.dhe_named_group =
-        m_libspdm_use_dhe_algo;
-    spdm_context->connection_info.algorithm.aead_cipher_suite =
-        m_libspdm_use_aead_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
-        data_size;
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
                      sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
                      data, data_size);
@@ -2424,8 +2418,7 @@ void libspdm_test_requester_finish_case9(void **state)
     hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
     libspdm_set_mem(m_libspdm_dummy_buffer, hash_size, (uint8_t)(0xFF));
     libspdm_secured_message_set_response_finished_key(
-        session_info->secured_message_context, m_libspdm_dummy_buffer,
-        hash_size);
+        session_info->secured_message_context, m_libspdm_dummy_buffer, hash_size);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_HANDSHAKING);
@@ -2435,13 +2428,17 @@ void libspdm_test_requester_finish_case9(void **state)
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
     req_slot_id_param = 0;
-    status = libspdm_send_receive_finish(spdm_context, session_id,
-                                         req_slot_id_param);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(
-        libspdm_secured_message_get_session_state(
-            spdm_context->session_info[0].secured_message_context),
-        LIBSPDM_SESSION_STATE_ESTABLISHED);
+    status = libspdm_send_receive_finish(spdm_context, session_id, req_slot_id_param);
+    if (LIBSPDM_RESPOND_IF_READY_SUPPORT) {
+        assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+        assert_int_equal(
+            libspdm_secured_message_get_session_state(
+                spdm_context->session_info[0].secured_message_context),
+            LIBSPDM_SESSION_STATE_ESTABLISHED);
+    } else {
+        assert_int_equal(status, LIBSPDM_STATUS_NOT_READY_PEER);
+    }
+
     free(data);
 }
 

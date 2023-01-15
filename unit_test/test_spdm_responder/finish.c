@@ -518,6 +518,7 @@ void libspdm_test_responder_finish_case4(void **state)
     free(data1);
 }
 
+#if LIBSPDM_RESPOND_IF_READY_SUPPORT
 /**
  * Test 5: receiving a correct FINISH from the requester, but the responder
  * could not produce the response in time.
@@ -642,6 +643,7 @@ void libspdm_test_responder_finish_case5(void **state)
     assert_int_equal(error_data->request_code, SPDM_FINISH);
     free(data1);
 }
+#endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
 
 /**
  * Test 6: receiving a correct FINISH from the requester, but the responder
@@ -2300,8 +2302,10 @@ int libspdm_responder_finish_test_main(void)
         cmocka_unit_test(libspdm_test_responder_finish_case3),
         /* response_state: SPDM_RESPONSE_STATE_NEED_RESYNC*/
         cmocka_unit_test(libspdm_test_responder_finish_case4),
+        #if LIBSPDM_RESPOND_IF_READY_SUPPORT
         /* response_state: LIBSPDM_RESPONSE_STATE_NOT_READY*/
         cmocka_unit_test(libspdm_test_responder_finish_case5),
+        #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
         /* connection_state Check*/
         cmocka_unit_test(libspdm_test_responder_finish_case6),
         /* Buffer reset*/

@@ -54,7 +54,9 @@ libspdm_get_spdm_response_func libspdm_get_response_func_via_request_code(uint8_
         { SPDM_DELIVER_ENCAPSULATED_RESPONSE, libspdm_get_response_encapsulated_response_ack },
         #endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)*/
 
+        #if LIBSPDM_RESPOND_IF_READY_SUPPORT
         { SPDM_RESPOND_IF_READY, libspdm_get_response_respond_if_ready },
+        #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
 
         #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
         { SPDM_FINISH, libspdm_get_response_finish },

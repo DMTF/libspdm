@@ -311,6 +311,7 @@ void libspdm_test_responder_challenge_auth_case4(void **state)
     free(data1);
 }
 
+#if LIBSPDM_RESPOND_IF_READY_SUPPORT
 /**
  * Test 5: receiving a correct CHALLENGE from the requester, but the responder could not
  * produce the response in time.
@@ -333,17 +334,13 @@ void libspdm_test_responder_challenge_auth_case5(void **state)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x5;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NOT_READY;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->local_context.capability.flags = 0;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.measurement_spec =
-        m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
 
@@ -353,15 +350,13 @@ void libspdm_test_responder_challenge_auth_case5(void **state)
                                                     m_libspdm_use_asym_algo, &data1,
                                                     &data_size1, NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
-    spdm_context->local_context.local_cert_chain_provision_size[0] =
-        data_size1;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
 
     spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
     libspdm_reset_message_c(spdm_context);
 
     response_size = sizeof(response);
-    libspdm_get_random_number(SPDM_NONCE_SIZE,
-                              m_libspdm_challenge_request1.nonce);
+    libspdm_get_random_number(SPDM_NONCE_SIZE, m_libspdm_challenge_request1.nonce);
     status = libspdm_get_response_challenge_auth(
         spdm_context, m_libspdm_challenge_request1_size,
         &m_libspdm_challenge_request1, &response_size, response);
@@ -370,18 +365,15 @@ void libspdm_test_responder_challenge_auth_case5(void **state)
                      sizeof(spdm_error_response_t) +
                      sizeof(spdm_error_data_response_not_ready_t));
     spdm_response = (void *)response;
-    error_data =
-        (spdm_error_data_response_not_ready_t *)(spdm_response + 1);
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_RESPONSE_NOT_READY);
+    error_data = (spdm_error_data_response_not_ready_t *)(spdm_response + 1);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_RESPONSE_NOT_READY);
     assert_int_equal(spdm_response->header.param2, 0);
-    assert_int_equal(spdm_context->response_state,
-                     LIBSPDM_RESPONSE_STATE_NOT_READY);
+    assert_int_equal(spdm_context->response_state, LIBSPDM_RESPONSE_STATE_NOT_READY);
     assert_int_equal(error_data->request_code, SPDM_CHALLENGE);
     free(data1);
 }
+#endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
 
 /**
  * Test 6: receiving a correct CHALLENGE from the requester, but the responder is not set
@@ -1130,8 +1122,10 @@ int libspdm_responder_challenge_auth_test_main(void)
         cmocka_unit_test(libspdm_test_responder_challenge_auth_case3),
         /* response_state: LIBSPDM_RESPONSE_STATE_NEED_RESYNC*/
         cmocka_unit_test(libspdm_test_responder_challenge_auth_case4),
+        #if LIBSPDM_RESPOND_IF_READY_SUPPORT
         /* response_state: LIBSPDM_RESPONSE_STATE_NOT_READY*/
         cmocka_unit_test(libspdm_test_responder_challenge_auth_case5),
+        #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
         /* connection_state Check*/
         cmocka_unit_test(libspdm_test_responder_challenge_auth_case6),
         cmocka_unit_test(libspdm_test_responder_challenge_auth_case7),

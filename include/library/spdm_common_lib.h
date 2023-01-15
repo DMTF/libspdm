@@ -172,8 +172,10 @@ typedef enum {
     /* Other component is busy. */
     LIBSPDM_RESPONSE_STATE_BUSY,
 
+    #if LIBSPDM_RESPOND_IF_READY_SUPPORT
     /* Hardware is not ready. */
     LIBSPDM_RESPONSE_STATE_NOT_READY,
+    #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
 
     /* Firmware Update is done. Need resync. */
     LIBSPDM_RESPONSE_STATE_NEED_RESYNC,
