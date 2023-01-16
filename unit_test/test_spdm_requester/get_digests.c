@@ -979,7 +979,7 @@ static void libspdm_test_requester_get_digests_case2(void **state)
         spdm_context->transcript.message_m.max_buffer_size;
 #endif
     libspdm_zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
-    status = libspdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
+    status = libspdm_get_digest(spdm_context, NULL, &slot_mask, &total_digest_buffer);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
     assert_int_equal(slot_mask, 0x01);
@@ -1205,7 +1205,7 @@ static void libspdm_test_requester_get_digests_case23(void **state)
     libspdm_reset_message_b(spdm_context);
 
     libspdm_zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
-    status = libspdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
+    status = libspdm_get_digest(spdm_context, NULL, &slot_mask, &total_digest_buffer);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     arbitrary_size = 8;
@@ -1277,7 +1277,7 @@ static void libspdm_test_requester_get_digests_case24(void **state)
 #endif
     libspdm_zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
     /* first GetDigest */
-    status = libspdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
+    status = libspdm_get_digest(spdm_context, NULL, &slot_mask, &total_digest_buffer);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(slot_mask, 0x01);
     libspdm_zero_mem(my_total_digest_buffer, sizeof(my_total_digest_buffer));
@@ -1322,7 +1322,7 @@ static void libspdm_test_requester_get_digests_case24(void **state)
 #endif
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -1337,7 +1337,7 @@ static void libspdm_test_requester_get_digests_case24(void **state)
 #endif
     libspdm_zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
     /* second GetDigest */
-    status = libspdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
+    status = libspdm_get_digest(spdm_context, NULL, &slot_mask, &total_digest_buffer);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(slot_mask, 0x01);
     libspdm_zero_mem(my_total_digest_buffer, sizeof(my_total_digest_buffer));
@@ -1431,8 +1431,7 @@ static void libspdm_test_requester_get_digests_case25(void **state)
         session_info->session_transcript.message_m.max_buffer_size;
 #endif
     libspdm_zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
-    status = libspdm_get_digest_in_session(spdm_context, &session_id, &slot_mask,
-                                           &total_digest_buffer);
+    status = libspdm_get_digest(spdm_context, &session_id, &slot_mask, &total_digest_buffer);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
     assert_int_equal(slot_mask, 0x80);

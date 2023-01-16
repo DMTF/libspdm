@@ -73,32 +73,9 @@ libspdm_return_t libspdm_init_connection(void *spdm_context, bool get_version_on
 /**
  * This function sends GET_DIGEST to get all digest of the certificate chains from device.
  *
- * If the peer certificate chain is deployed, this function also verifies the digest with the
- * certificate chain.
- *
  * TotalDigestSize = sizeof(digest) * count in slot_mask
  *
  * @param  spdm_context         A pointer to the SPDM context.
- * @param  slot_mask            The slots which deploy the CertificateChain.
- * @param  total_digest_buffer  A pointer to a destination buffer to store the digest buffer.
- *
- * @retval RETURN_SUCCESS               The digests are got successfully.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
- **/
-libspdm_return_t libspdm_get_digest(void *spdm_context, uint8_t *slot_mask,
-                                    void *total_digest_buffer);
-
-/**
- * This function sends GET_DIGESTS and receives DIGESTS. It may retry GET_DIGESTS multiple times
- * if the Responder replies with a Busy error.
- *
- * If the peer certificate chain is deployed, this function also verifies the digest with the
- * certificate chain.
- *
- * TotalDigestSize = sizeof(digest) * count in slot_mask
- *
- * @param  context              A pointer to the SPDM context.
  * @param  session_id           Indicates if it is a secured message protected via SPDM session.
  *                              If session_id is NULL, it is a normal message.
  *                              If session_id is not NULL, it is a secured message.
@@ -124,8 +101,8 @@ libspdm_return_t libspdm_get_digest(void *spdm_context, uint8_t *slot_mask,
  * @retval LIBSPDM_STATUS_BUFFER_FULL
  *         The buffer used to store transcripts is exhausted.
  **/
-libspdm_return_t libspdm_get_digest_in_session(void *context, const uint32_t *session_id,
-                                               uint8_t *slot_mask, void *total_digest_buffer);
+libspdm_return_t libspdm_get_digest(void *spdm_context, const uint32_t *session_id,
+                                    uint8_t *slot_mask, void *total_digest_buffer);
 
 /**
  * This function sends GET_CERTIFICATE to get certificate chain in one slot from device.
@@ -137,152 +114,12 @@ libspdm_return_t libspdm_get_digest_in_session(void *context, const uint32_t *se
  * this function also verifies the digest with the root hash in the certificate chain.
  *
  * @param  spdm_context     A pointer to the SPDM context.
+ * @param  session_id       Indicates if it is a secured message protected via SPDM session.
+ *                          If session_id is NULL, it is a normal message.
  * @param  slot_id          The number of slot for the certificate chain.
  * @param  cert_chain_size  On input, indicate the size in bytes of the destination buffer to store the digest buffer.
  *                          On output, indicate the size in bytes of the certificate chain.
  * @param  cert_chain       A pointer to a destination buffer to store the certificate chain.
- *
- * @retval RETURN_SUCCESS               The certificate chain is got successfully.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
- **/
-libspdm_return_t libspdm_get_certificate(void *spdm_context, uint8_t slot_id,
-                                         size_t *cert_chain_size,
-                                         void *cert_chain);
-
-/**
- * This function sends GET_CERTIFICATE to get certificate chain in one slot from device.
- *
- * This function verify the integrity of the certificate chain.
- * root_hash -> Root certificate -> Intermediate certificate -> Leaf certificate.
- *
- * If the peer root certificate hash is deployed,
- * this function also verifies the digest with the root hash in the certificate chain.
- *
- * @param  spdm_context       A pointer to the SPDM context.
- * @param  slot_id            The number of slot for the certificate chain.
- * @param  cert_chain_size    On input, indicate the size in bytes of the destination buffer to store the digest buffer.
- *                            On output, indicate the size in bytes of the certificate chain.
- * @param  cert_chain         A pointer to a destination buffer to store the certificate chain.
- * @param  trust_anchor       A buffer to hold the trust_anchor which is used to validate the peer certificate, if not NULL.
- * @param  trust_anchor_size  A buffer to hold the trust_anchor_size, if not NULL.
- *
- * @retval RETURN_SUCCESS               The certificate chain is got successfully.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
- **/
-libspdm_return_t libspdm_get_certificate_ex(void *context, uint8_t slot_id,
-                                            size_t *cert_chain_size,
-                                            void *cert_chain,
-                                            const void **trust_anchor,
-                                            size_t *trust_anchor_size);
-
-/**
- * This function sends GET_CERTIFICATE to get certificate chain in one slot from device.
- *
- * This function verify the integrity of the certificate chain.
- * root_hash -> Root certificate -> Intermediate certificate -> Leaf certificate.
- *
- * If the peer root certificate hash is deployed,
- * this function also verifies the digest with the root hash in the certificate chain.
- *
- * @param  spdm_context       A pointer to the SPDM context.
- * @param  session_id         Indicates if it is a secured message protected via SPDM session.
- *                            If session_id is NULL, it is a normal message.
- *                            If session_id is NOT NULL, it is a secured message.
- * @param  slot_id            The number of slot for the certificate chain.
- * @param  cert_chain_size    On input, indicate the size in bytes of the destination buffer to store the digest buffer.
- *                            On output, indicate the size in bytes of the certificate chain.
- * @param  cert_chain         A pointer to a destination buffer to store the certificate chain.
- * @param  trust_anchor       A buffer to hold the trust_anchor which is used to validate the peer certificate, if not NULL.
- * @param  trust_anchor_size  A buffer to hold the trust_anchor_size, if not NULL.
- *
- * @retval RETURN_SUCCESS               The certificate chain is got successfully.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
- **/
-libspdm_return_t libspdm_get_certificate_in_session(void *context, const uint32_t *session_id,
-                                                    uint8_t slot_id,
-                                                    size_t *cert_chain_size,
-                                                    void *cert_chain,
-                                                    const void **trust_anchor,
-                                                    size_t *trust_anchor_size);
-
-/**
- * This function sends GET_CERTIFICATE to get certificate chain in one slot from device.
- *
- * This function verify the integrity of the certificate chain.
- * root_hash -> Root certificate -> Intermediate certificate -> Leaf certificate.
- *
- * If the peer root certificate hash is deployed,
- * this function also verifies the digest with the root hash in the certificate chain.
- *
- * @param  spdm_context     A pointer to the SPDM context.
- * @param  slot_id          The number of slot for the certificate chain.
- * @param  length           LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN.
- * @param  cert_chain_size  On input, indicate the size in bytes of the destination buffer to store the digest buffer.
- *                          On output, indicate the size in bytes of the certificate chain.
- * @param  cert_chain       A pointer to a destination buffer to store the certificate chain.
- *
- * @retval RETURN_SUCCESS               The certificate chain is got successfully.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
- **/
-libspdm_return_t libspdm_get_certificate_choose_length(void *spdm_context,
-                                                       uint8_t slot_id,
-                                                       uint16_t length,
-                                                       size_t *cert_chain_size,
-                                                       void *cert_chain);
-
-/**
- * This function sends GET_CERTIFICATE to get certificate chain in one slot from device.
- *
- * This function verify the integrity of the certificate chain.
- * root_hash -> Root certificate -> Intermediate certificate -> Leaf certificate.
- *
- * If the peer root certificate hash is deployed,
- * this function also verifies the digest with the root hash in the certificate chain.
- *
- * @param  spdm_context       A pointer to the SPDM context.
- * @param  slot_id            The number of slot for the certificate chain.
- * @param  length             LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN.
- * @param  cert_chain_size    On input, indicate the size in bytes of the destination buffer to store the digest buffer.
- *                            On output, indicate the size in bytes of the certificate chain.
- * @param  cert_chain         A pointer to a destination buffer to store the certificate chain.
- * @param  trust_anchor       A buffer to hold the trust_anchor which is used to validate the peer certificate, if not NULL.
- * @param  trust_anchor_size  A buffer to hold the trust_anchor_size, if not NULL.
- *
- * @retval RETURN_SUCCESS               The certificate chain is got successfully.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
- **/
-libspdm_return_t libspdm_get_certificate_choose_length_ex(void *context,
-                                                          uint8_t slot_id,
-                                                          uint16_t length,
-                                                          size_t *cert_chain_size,
-                                                          void *cert_chain,
-                                                          const void **trust_anchor,
-                                                          size_t *trust_anchor_size);
-
-/**
- * This function sends GET_CERTIFICATE and receives CERTIFICATE. It may retry GET_CERTIFICATE
- * multiple times if the Responder replies with a Busy error.
- *
- * This function verify the integrity of the certificate chain.
- * root_hash -> Root certificate -> Intermediate certificate -> Leaf certificate.
- *
- * If the peer root certificate hash is deployed,
- * this function also verifies the digest with the root hash in the certificate chain.
- *
- * @param  spdm_context       A pointer to the SPDM context.
- * @param  slot_id            The number of slot for the certificate chain.
- * @param  cert_chain_size    On input, indicate the size in bytes of the destination buffer to store
- *                            the digest buffer.
- *                            On output, indicate the size in bytes of the certificate chain.
- * @param  cert_chain         A pointer to a destination buffer to store the certificate chain.
- * @param  trust_anchor       A buffer to hold the trust_anchor which is used to validate the peer
- *                            certificate, if not NULL.
- * @param  trust_anchor_size  A buffer to hold the trust_anchor_size, if not NULL.
  *
  * @retval LIBSPDM_STATUS_SUCCESS
  *         GET_CERTIFICATE was sent and CERTIFICATE was received.
@@ -309,14 +146,104 @@ libspdm_return_t libspdm_get_certificate_choose_length_ex(void *context,
  * @retval LIBSPDM_STATUS_CRYPTO_ERROR
  *         A generic cryptography error occurred.
  **/
-libspdm_return_t libspdm_get_certificate_choose_length_in_session(void *context,
-                                                                  const uint32_t *session_id,
-                                                                  uint8_t slot_id,
-                                                                  uint16_t length,
-                                                                  size_t *cert_chain_size,
-                                                                  void *cert_chain,
-                                                                  const void **trust_anchor,
-                                                                  size_t *trust_anchor_size);
+libspdm_return_t libspdm_get_certificate(void *spdm_context,
+                                         const uint32_t *session_id,
+                                         uint8_t slot_id,
+                                         size_t *cert_chain_size,
+                                         void *cert_chain);
+
+/**
+ * This function sends GET_CERTIFICATE to get certificate chain in one slot from device.
+ *
+ * This function verify the integrity of the certificate chain.
+ * root_hash -> Root certificate -> Intermediate certificate -> Leaf certificate.
+ *
+ * If the peer root certificate hash is deployed,
+ * this function also verifies the digest with the root hash in the certificate chain.
+ *
+ * @param  spdm_context       A pointer to the SPDM context.
+ * @param  session_id         Indicates if it is a secured message protected via SPDM session.
+ *                            If session_id is NULL, it is a normal message.
+ * @param  slot_id            The number of slot for the certificate chain.
+ * @param  cert_chain_size    On input, indicate the size in bytes of the destination buffer to store the digest buffer.
+ *                            On output, indicate the size in bytes of the certificate chain.
+ * @param  cert_chain         A pointer to a destination buffer to store the certificate chain.
+ * @param  trust_anchor       A buffer to hold the trust_anchor which is used to validate the peer certificate, if not NULL.
+ * @param  trust_anchor_size  A buffer to hold the trust_anchor_size, if not NULL.
+ *
+ * @retval RETURN_SUCCESS               The certificate chain is got successfully.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ **/
+libspdm_return_t libspdm_get_certificate_ex(void *spdm_context,
+                                            const uint32_t *session_id,
+                                            uint8_t slot_id,
+                                            size_t *cert_chain_size,
+                                            void *cert_chain,
+                                            const void **trust_anchor,
+                                            size_t *trust_anchor_size);
+
+/**
+ * This function sends GET_CERTIFICATE to get certificate chain in one slot from device.
+ *
+ * This function verify the integrity of the certificate chain.
+ * root_hash -> Root certificate -> Intermediate certificate -> Leaf certificate.
+ *
+ * If the peer root certificate hash is deployed,
+ * this function also verifies the digest with the root hash in the certificate chain.
+ *
+ * @param  spdm_context     A pointer to the SPDM context.
+ * @param  session_id       Indicates if it is a secured message protected via SPDM session.
+ *                          If session_id is NULL, it is a normal message.
+ * @param  slot_id          The number of slot for the certificate chain.
+ * @param  length           LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN.
+ * @param  cert_chain_size  On input, indicate the size in bytes of the destination buffer to store the digest buffer.
+ *                          On output, indicate the size in bytes of the certificate chain.
+ * @param  cert_chain       A pointer to a destination buffer to store the certificate chain.
+ *
+ * @retval RETURN_SUCCESS               The certificate chain is got successfully.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ **/
+libspdm_return_t libspdm_get_certificate_choose_length(void *spdm_context,
+                                                       const uint32_t *session_id,
+                                                       uint8_t slot_id,
+                                                       uint16_t length,
+                                                       size_t *cert_chain_size,
+                                                       void *cert_chain);
+
+/**
+ * This function sends GET_CERTIFICATE to get certificate chain in one slot from device.
+ *
+ * This function verify the integrity of the certificate chain.
+ * root_hash -> Root certificate -> Intermediate certificate -> Leaf certificate.
+ *
+ * If the peer root certificate hash is deployed,
+ * this function also verifies the digest with the root hash in the certificate chain.
+ *
+ * @param  spdm_context       A pointer to the SPDM context.
+ * @param  session_id         Indicates if it is a secured message protected via SPDM session.
+ *                            If session_id is NULL, it is a normal message.
+ * @param  slot_id            The number of slot for the certificate chain.
+ * @param  length             LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN.
+ * @param  cert_chain_size    On input, indicate the size in bytes of the destination buffer to store the digest buffer.
+ *                            On output, indicate the size in bytes of the certificate chain.
+ * @param  cert_chain         A pointer to a destination buffer to store the certificate chain.
+ * @param  trust_anchor       A buffer to hold the trust_anchor which is used to validate the peer certificate, if not NULL.
+ * @param  trust_anchor_size  A buffer to hold the trust_anchor_size, if not NULL.
+ *
+ * @retval RETURN_SUCCESS               The certificate chain is got successfully.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ **/
+libspdm_return_t libspdm_get_certificate_choose_length_ex(void *spdm_context,
+                                                          const uint32_t *session_id,
+                                                          uint8_t slot_id,
+                                                          uint16_t length,
+                                                          size_t *cert_chain_size,
+                                                          void *cert_chain,
+                                                          const void **trust_anchor,
+                                                          size_t *trust_anchor_size);
 
 /**
  * This function sends CHALLENGE to authenticate the device based upon the key in one slot.

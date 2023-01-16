@@ -2009,7 +2009,7 @@ void libspdm_test_requester_get_certificate_case1(void **state)
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_SEND_FAIL);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -2075,7 +2075,7 @@ void libspdm_test_requester_get_certificate_case2(void **state)
 #endif
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -2136,7 +2136,7 @@ void libspdm_test_requester_get_certificate_case3(void **state)
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_STATE_LOCAL);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -2191,7 +2191,7 @@ void libspdm_test_requester_get_certificate_case4(void **state)
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -2246,7 +2246,7 @@ void libspdm_test_requester_get_certificate_case5(void **state)
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_BUSY_PEER);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -2304,7 +2304,7 @@ void libspdm_test_requester_get_certificate_case6(void **state)
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -2364,7 +2364,7 @@ void libspdm_test_requester_get_certificate_case7(void **state)
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_RESYNCH_PEER);
     assert_int_equal(spdm_context->connection_info.connection_state,
@@ -2421,7 +2421,7 @@ void libspdm_test_requester_get_certificate_case8(void **state)
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_NOT_READY_PEER);
     free(data);
@@ -2476,7 +2476,7 @@ void libspdm_test_requester_get_certificate_case9(void **state)
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -2539,7 +2539,7 @@ void libspdm_test_requester_get_certificate_case10(void **state)
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -2606,7 +2606,7 @@ void libspdm_test_requester_get_certificate_case11(void **state)
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_VERIF_FAIL);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -2679,7 +2679,7 @@ void libspdm_test_requester_get_certificate_case12(void **state)
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_VERIF_FAIL);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -2746,7 +2746,7 @@ void libspdm_test_requester_get_certificate_case13(void **state)
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -2817,7 +2817,7 @@ void libspdm_test_requester_get_certificate_case14(void **state)
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate_choose_length(
-        spdm_context, 0, get_cert_length, &cert_chain_size, cert_chain);
+        spdm_context, NULL, 0, get_cert_length, &cert_chain_size, cert_chain);
     /* It may fail because the spdm does not support too many messages.
      * assert_int_equal (status, LIBSPDM_STATUS_SUCCESS);*/
     if (status == LIBSPDM_STATUS_SUCCESS) {
@@ -2888,7 +2888,7 @@ void libspdm_test_requester_get_certificate_case15(void **state)
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
                                      cert_chain);
     /* It may fail because the spdm does not support too long message.
      * assert_int_equal (status, LIBSPDM_STATUS_SUCCESS);*/
@@ -2954,7 +2954,7 @@ void libspdm_test_requester_get_certificate_case16(void **state) {
 
         cert_chain_size = sizeof(cert_chain);
         libspdm_zero_mem (cert_chain, sizeof(cert_chain));
-        status = libspdm_get_certificate (spdm_context, 0, &cert_chain_size, cert_chain);
+        status = libspdm_get_certificate (spdm_context, NULL, 0, &cert_chain_size, cert_chain);
         LIBSPDM_ASSERT_INT_EQUAL_CASE (status, LIBSPDM_STATUS_ERROR_PEER, error_code);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
         /* assert_int_equal (spdm_context->transcript.message_b.buffer_size, 0);*/
@@ -3023,7 +3023,7 @@ void libspdm_test_requester_get_certificate_case17(void **state)
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     free(data);
@@ -3075,7 +3075,7 @@ void libspdm_test_requester_get_certificate_case18(void **state)
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_VERIF_FAIL);
     free(data);
@@ -3136,7 +3136,7 @@ void libspdm_test_requester_get_certificate_case19(void **state)
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_VERIF_FAIL);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -3200,7 +3200,7 @@ void libspdm_test_requester_get_certificate_case20(void **state)
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     free(data);
@@ -3256,7 +3256,7 @@ void libspdm_test_requester_get_certificate_case21(void **state)
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     free(data);
@@ -3314,7 +3314,7 @@ void libspdm_test_requester_get_certificate_case22(void **state)
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     free(data);
@@ -3375,7 +3375,7 @@ void libspdm_test_requester_get_certificate_case23(void **state)
 #endif
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size, cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
@@ -3443,7 +3443,7 @@ void libspdm_test_requester_get_certificate_case24(void **state)
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size,
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_VERIF_FAIL);
     free(data);
@@ -3530,7 +3530,7 @@ void libspdm_test_requester_get_certificate_case25(void **state)
     for (slot_id = 0; slot_id < 2; slot_id++) {
         cert_chain_size = sizeof(cert_chain);
         libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-        status = libspdm_get_certificate(spdm_context, slot_id, &cert_chain_size,
+        status = libspdm_get_certificate(spdm_context, NULL, slot_id, &cert_chain_size,
                                          cert_chain);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_get_certificate - %p\n", status));
         assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
@@ -3635,9 +3635,9 @@ void libspdm_test_requester_get_certificate_case26(void **state)
 #endif
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate_in_session(spdm_context, &session_id,
-                                                0, &cert_chain_size,
-                                                cert_chain, NULL, 0);
+    status = libspdm_get_certificate_ex(spdm_context, &session_id,
+                                        0, &cert_chain_size,
+                                        cert_chain, NULL, 0);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(session_info->session_transcript.message_m.buffer_size, 0);
