@@ -582,7 +582,7 @@ void libspdm_test_requester_chunk_get_case1(void** state)
     #endif
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, 0, &cert_chain_size, cert_chain);
+    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_b.buffer_size,
@@ -803,7 +803,7 @@ void libspdm_test_requester_chunk_get_case4(void** state)
         spdm_context->transcript.message_m.max_buffer_size;
     #endif
     libspdm_zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
-    status = libspdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
+    status = libspdm_get_digest(spdm_context, NULL, &slot_mask, &total_digest_buffer);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
     assert_int_equal(slot_mask, 0xFF);

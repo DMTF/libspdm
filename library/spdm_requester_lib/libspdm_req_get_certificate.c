@@ -372,43 +372,30 @@ done:
     return status;
 }
 
-libspdm_return_t libspdm_get_certificate(void *context, uint8_t slot_id,
+libspdm_return_t libspdm_get_certificate(void *context, const uint32_t *session_id,
+                                         uint8_t slot_id,
                                          size_t *cert_chain_size,
                                          void *cert_chain)
 {
-    return libspdm_get_certificate_choose_length(context, slot_id,
+    return libspdm_get_certificate_choose_length(context, session_id, slot_id,
                                                  LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN,
                                                  cert_chain_size, cert_chain);
 }
 
-libspdm_return_t libspdm_get_certificate_ex(void *context, uint8_t slot_id,
+libspdm_return_t libspdm_get_certificate_ex(void *context, const uint32_t *session_id,
+                                            uint8_t slot_id,
                                             size_t *cert_chain_size,
                                             void *cert_chain,
                                             const void **trust_anchor,
                                             size_t *trust_anchor_size)
 {
-    return libspdm_get_certificate_choose_length_ex(context, slot_id,
+    return libspdm_get_certificate_choose_length_ex(context, session_id, slot_id,
                                                     LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN,
                                                     cert_chain_size, cert_chain,
                                                     trust_anchor, trust_anchor_size);
 }
 
-libspdm_return_t libspdm_get_certificate_in_session(void *context, const uint32_t *session_id,
-                                                    uint8_t slot_id,
-                                                    size_t *cert_chain_size,
-                                                    void *cert_chain,
-                                                    const void **trust_anchor,
-                                                    size_t *trust_anchor_size)
-{
-    return libspdm_get_certificate_choose_length_in_session(context,
-                                                            session_id,
-                                                            slot_id,
-                                                            LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN,
-                                                            cert_chain_size, cert_chain,
-                                                            trust_anchor, trust_anchor_size);
-}
-
-libspdm_return_t libspdm_get_certificate_choose_length(void *context,
+libspdm_return_t libspdm_get_certificate_choose_length(void *context, const uint32_t *session_id,
                                                        uint8_t slot_id,
                                                        uint16_t length,
                                                        size_t *cert_chain_size,
@@ -422,7 +409,7 @@ libspdm_return_t libspdm_get_certificate_choose_length(void *context,
     spdm_context->crypto_request = true;
     retry = spdm_context->retry_times;
     do {
-        status = libspdm_try_get_certificate(spdm_context, NULL, slot_id, length,
+        status = libspdm_try_get_certificate(spdm_context, session_id, slot_id, length,
                                              cert_chain_size, cert_chain, NULL, NULL);
         if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
@@ -432,41 +419,13 @@ libspdm_return_t libspdm_get_certificate_choose_length(void *context,
     return status;
 }
 
-libspdm_return_t libspdm_get_certificate_choose_length_ex(void *context,
+libspdm_return_t libspdm_get_certificate_choose_length_ex(void *context, const uint32_t *session_id,
                                                           uint8_t slot_id,
                                                           uint16_t length,
                                                           size_t *cert_chain_size,
                                                           void *cert_chain,
                                                           const void **trust_anchor,
                                                           size_t *trust_anchor_size)
-{
-    libspdm_context_t *spdm_context;
-    size_t retry;
-    libspdm_return_t status;
-
-    spdm_context = context;
-    spdm_context->crypto_request = true;
-    retry = spdm_context->retry_times;
-    do {
-        status = libspdm_try_get_certificate(spdm_context, NULL, slot_id, length,
-                                             cert_chain_size, cert_chain, trust_anchor,
-                                             trust_anchor_size);
-        if (status != LIBSPDM_STATUS_BUSY_PEER) {
-            return status;
-        }
-    } while (retry-- != 0);
-
-    return status;
-}
-
-libspdm_return_t libspdm_get_certificate_choose_length_in_session(void *context,
-                                                                  const uint32_t *session_id,
-                                                                  uint8_t slot_id,
-                                                                  uint16_t length,
-                                                                  size_t *cert_chain_size,
-                                                                  void *cert_chain,
-                                                                  const void **trust_anchor,
-                                                                  size_t *trust_anchor_size)
 {
     libspdm_context_t *spdm_context;
     size_t retry;

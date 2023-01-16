@@ -220,27 +220,8 @@ receive_done:
     return status;
 }
 
-libspdm_return_t libspdm_get_digest(void *context, uint8_t *slot_mask, void *total_digest_buffer)
-{
-    libspdm_context_t *spdm_context;
-    size_t retry;
-    libspdm_return_t status;
-
-    spdm_context = context;
-    spdm_context->crypto_request = true;
-    retry = spdm_context->retry_times;
-    do {
-        status = libspdm_try_get_digest(spdm_context, NULL, slot_mask, total_digest_buffer);
-        if (status != LIBSPDM_STATUS_BUSY_PEER) {
-            return status;
-        }
-    } while (retry-- != 0);
-
-    return status;
-}
-
-libspdm_return_t libspdm_get_digest_in_session(void *context, const uint32_t *session_id,
-                                               uint8_t *slot_mask, void *total_digest_buffer)
+libspdm_return_t libspdm_get_digest(void *context, const uint32_t *session_id,
+                                    uint8_t *slot_mask, void *total_digest_buffer)
 {
     libspdm_context_t *spdm_context;
     size_t retry;

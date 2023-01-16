@@ -158,8 +158,8 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
 
    Send GET_DIGESTES, GET_CERTIFICATES and CHALLENGE.
    ```
-   libspdm_get_digest (spdm_context, slot_mask, total_digest_buffer);
-   libspdm_get_certificate (spdm_context, slot_id, cert_chain_size, cert_chain);
+   libspdm_get_digest (spdm_context, NULL, slot_mask, total_digest_buffer);
+   libspdm_get_certificate (spdm_context, NULL, slot_id, cert_chain_size, cert_chain);
    libspdm_challenge (spdm_context, slot_id, measurement_hash_type, measurement_hash);
    ```
 

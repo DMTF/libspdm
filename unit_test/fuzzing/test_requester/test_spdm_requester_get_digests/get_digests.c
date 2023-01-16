@@ -132,7 +132,7 @@ void libspdm_test_requester_get_digests_case1(void **State)
 #endif
 
     libspdm_zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
-    libspdm_get_digest(spdm_context, &slot_mask, &total_digest_buffer);
+    libspdm_get_digest(spdm_context, NULL, &slot_mask, &total_digest_buffer);
     libspdm_reset_message_b(spdm_context);
 }
 
@@ -184,8 +184,7 @@ void libspdm_test_requester_get_digests_case2(void **State)
         session_info->session_transcript.message_m.max_buffer_size;
 #endif
     libspdm_zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
-    libspdm_get_digest_in_session(spdm_context, &session_id, &slot_mask,
-                                  &total_digest_buffer);
+    libspdm_get_digest(spdm_context, &session_id, &slot_mask, &total_digest_buffer);
 }
 
 libspdm_test_context_t m_libspdm_requester_get_diges_test_context = {

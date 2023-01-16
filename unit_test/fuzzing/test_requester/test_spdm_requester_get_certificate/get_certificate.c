@@ -117,7 +117,7 @@ void libspdm_test_requester_get_certificate_case1(void **State)
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
 
-    libspdm_get_certificate(spdm_context, 0, &cert_chain_size, cert_chain);
+    libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
     free(data);
     libspdm_reset_message_b(spdm_context);
 }
@@ -168,7 +168,7 @@ void libspdm_test_requester_get_certificate_case2(void **State)
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
 
-    libspdm_get_certificate(spdm_context, 0, &cert_chain_size, cert_chain);
+    libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size, cert_chain);
     free(data);
     libspdm_reset_message_b(spdm_context);
 }
@@ -218,7 +218,7 @@ void libspdm_test_requester_get_certificate_ex_case1(void **State)
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    libspdm_get_certificate_ex(spdm_context, 0, &cert_chain_size, cert_chain,NULL,NULL);
+    libspdm_get_certificate_ex(spdm_context, NULL, 0, &cert_chain_size, cert_chain,NULL,NULL);
 
     free(data);
     libspdm_reset_message_b(spdm_context);
@@ -303,8 +303,8 @@ void libspdm_test_requester_get_certificate_in_session_case1(void **State)
 #endif
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    libspdm_get_certificate_in_session(spdm_context, &session_id, 0, &cert_chain_size, cert_chain,
-                                       NULL,NULL);
+    libspdm_get_certificate_ex(spdm_context, &session_id, 0, &cert_chain_size, cert_chain,
+                               NULL, NULL);
 
     free(data);
     libspdm_reset_message_b(spdm_context);

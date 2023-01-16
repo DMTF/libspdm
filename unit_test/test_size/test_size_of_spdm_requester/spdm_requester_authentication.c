@@ -38,13 +38,13 @@ spdm_authentication(void *context, uint8_t *slot_mask,
     status = LIBSPDM_STATUS_SUCCESS;
 
     #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
-    status = libspdm_get_digest(context, slot_mask, total_digest_buffer);
+    status = libspdm_get_digest(context, NULL, slot_mask, total_digest_buffer);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return status;
     }
 
     if (slot_id != 0xFF) {
-        status = libspdm_get_certificate(context, slot_id, cert_chain_size,
+        status = libspdm_get_certificate(context, NULL, slot_id, cert_chain_size,
                                          cert_chain);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return status;
