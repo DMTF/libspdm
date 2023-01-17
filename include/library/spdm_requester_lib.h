@@ -289,7 +289,7 @@ libspdm_return_t libspdm_challenge(void *spdm_context, uint8_t slot_id,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-libspdm_return_t libspdm_challenge_ex(void *context, uint8_t slot_id,
+libspdm_return_t libspdm_challenge_ex(void *spdm_context, uint8_t slot_id,
                                       uint8_t measurement_hash_type,
                                       void *measurement_hash,
                                       uint8_t *slot_mask,
@@ -354,7 +354,7 @@ libspdm_return_t libspdm_get_measurement(void *spdm_context, const uint32_t *ses
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-libspdm_return_t libspdm_get_measurement_ex(void *context, const uint32_t *session_id,
+libspdm_return_t libspdm_get_measurement_ex(void *spdm_context, const uint32_t *session_id,
                                             uint8_t request_attribute,
                                             uint8_t measurement_operation,
                                             uint8_t slot_id,
@@ -641,7 +641,7 @@ libspdm_return_t libspdm_generate_encap_extended_error_response(
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-libspdm_return_t libspdm_get_csr(void *context,
+libspdm_return_t libspdm_get_csr(void *spdm_context,
                                  void *requester_info, uint16_t requester_info_length,
                                  void *opaque_data, uint16_t opaque_data_length,
                                  const uint32_t *session_id,
@@ -666,7 +666,7 @@ libspdm_return_t libspdm_get_csr(void *context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-libspdm_return_t libspdm_set_certificate(void * context, uint8_t slot_id,
+libspdm_return_t libspdm_set_certificate(void * spdm_context, uint8_t slot_id,
                                          void * cert_chain, size_t cert_chain_size,
                                          const uint32_t *session_id);
 
@@ -685,7 +685,7 @@ libspdm_return_t libspdm_set_certificate(void * context, uint8_t slot_id,
  * @param  msg_buffer       A pointer to a caller-provided buffer.
  * @param  msg_buffer_size  The size of the buffer in bytes. It must be greater than zero.
  **/
-void libspdm_init_msg_log (void *context, void *msg_buffer, size_t msg_buffer_size);
+void libspdm_init_msg_log (void *spdm_context, void *msg_buffer, size_t msg_buffer_size);
 
 /**
  * This function sets the mode in which the message logger operates.
@@ -694,7 +694,7 @@ void libspdm_init_msg_log (void *context, void *msg_buffer, size_t msg_buffer_si
  * @param  mode    A bitmask specifying the mode in which the message logger operates.
  *                 LIBSPDM_MSG_LOG_MODE_ENABLE - when set the message logger is active.
  */
-void libspdm_set_msg_log_mode (void *context, uint32_t mode);
+void libspdm_set_msg_log_mode (void *spdm_context, uint32_t mode);
 
 /**
  * This function returns the status of the message logger.
@@ -705,7 +705,7 @@ void libspdm_set_msg_log_mode (void *context, uint32_t mode);
  *                  LIBSPDM_MSG_LOG_STATUS_BUFFER_FULL - if set the message logging buffer has
  *                                                       reached capacity.
  */
-uint32_t libspdm_get_msg_log_status (void *context);
+uint32_t libspdm_get_msg_log_status (void *spdm_context);
 
 /**
  * This function returns the size of the message log.
@@ -713,7 +713,7 @@ uint32_t libspdm_get_msg_log_status (void *context);
  * @param  context  A pointer to the SPDM context.
  * @retval size_t   The size of the message log in bytes.
  */
-size_t libspdm_get_msg_log_size (void *context);
+size_t libspdm_get_msg_log_size (void *spdm_context);
 
 /**
  * This function resets the message log while retaining the message buffer and maximum size given in
@@ -721,7 +721,7 @@ size_t libspdm_get_msg_log_size (void *context);
  *
  * @param context  A pointer to the SPDM context.
  */
-void libspdm_reset_msg_log (void *context);
+void libspdm_reset_msg_log (void *spdm_context);
 #endif /* LIBSPDM_ENABLE_MSG_LOG */
 
 #endif /* SPDM_REQUESTER_LIB_H */

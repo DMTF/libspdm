@@ -7,64 +7,64 @@
 #include "internal/libspdm_common_lib.h"
 
 #if LIBSPDM_ENABLE_MSG_LOG
-void libspdm_init_msg_log (void *context, void *msg_buffer, size_t msg_buffer_size)
+void libspdm_init_msg_log (void *spdm_context, void *msg_buffer, size_t msg_buffer_size)
 {
-    libspdm_context_t *spdm_context;
+    libspdm_context_t *context;
 
-    LIBSPDM_ASSERT((context != NULL) && (msg_buffer != NULL));
+    LIBSPDM_ASSERT((spdm_context != NULL) && (msg_buffer != NULL));
     LIBSPDM_ASSERT(msg_buffer_size != 0);
 
-    spdm_context = context;
-    spdm_context->msg_log.buffer = msg_buffer;
-    spdm_context->msg_log.max_buffer_size = msg_buffer_size;
-    spdm_context->msg_log.buffer_size = 0;
-    spdm_context->msg_log.mode = 0;
-    spdm_context->msg_log.status = 0;
+    context = spdm_context;
+    context->msg_log.buffer = msg_buffer;
+    context->msg_log.max_buffer_size = msg_buffer_size;
+    context->msg_log.buffer_size = 0;
+    context->msg_log.mode = 0;
+    context->msg_log.status = 0;
 }
 
-void libspdm_set_msg_log_mode (void *context, uint32_t mode)
+void libspdm_set_msg_log_mode (void *spdm_context, uint32_t mode)
 {
-    libspdm_context_t *spdm_context;
+    libspdm_context_t *context;
 
-    LIBSPDM_ASSERT(context != NULL);
+    LIBSPDM_ASSERT(spdm_context != NULL);
 
-    spdm_context = context;
-    spdm_context->msg_log.mode = mode;
+    context = spdm_context;
+    context->msg_log.mode = mode;
 }
 
-uint32_t libspdm_get_msg_log_status (void *context)
+uint32_t libspdm_get_msg_log_status (void *spdm_context)
 {
-    libspdm_context_t *spdm_context;
+    libspdm_context_t *context;
 
-    LIBSPDM_ASSERT(context != NULL);
+    LIBSPDM_ASSERT(spdm_context != NULL);
 
-    spdm_context = context;
+    context = spdm_context;
 
-    return spdm_context->msg_log.status;
+    return context->msg_log.status;
 }
 
-size_t libspdm_get_msg_log_size (void *context)
+size_t libspdm_get_msg_log_size (void *spdm_context)
 {
-    libspdm_context_t *spdm_context;
+    libspdm_context_t *context;
 
-    LIBSPDM_ASSERT(context != NULL);
+    LIBSPDM_ASSERT(spdm_context != NULL);
 
-    spdm_context = context;
+    context = spdm_context;
 
-    return spdm_context->msg_log.buffer_size;
+    return context->msg_log.buffer_size;
 }
 
-void libspdm_reset_msg_log (void *context)
+void libspdm_reset_msg_log (void *spdm_context)
 {
-    libspdm_context_t *spdm_context;
+    libspdm_context_t *context;
 
-    LIBSPDM_ASSERT(context != NULL);
+    LIBSPDM_ASSERT(spdm_context != NULL);
 
-    spdm_context = context;
+    context = spdm_context;
 
-    spdm_context->msg_log.buffer_size = 0;
-    spdm_context->msg_log.mode = 0;
-    spdm_context->msg_log.status = 0;
+    context->msg_log.buffer_size = 0;
+    context->msg_log.mode = 0;
+    context->msg_log.status = 0;
 }
 
 void libspdm_append_msg_log(void *context, void *message, size_t message_size)

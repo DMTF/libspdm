@@ -20,21 +20,18 @@ typedef struct {
  * @param  session_id                    The session ID of the session.
  *
  **/
-static libspdm_return_t libspdm_try_heartbeat(void *context, uint32_t session_id)
+static libspdm_return_t libspdm_try_heartbeat(libspdm_context_t *spdm_context, uint32_t session_id)
 {
     libspdm_return_t status;
     spdm_heartbeat_request_t *spdm_request;
     size_t spdm_request_size;
     libspdm_heartbeat_response_mine_t *spdm_response;
     size_t spdm_response_size;
-    libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
     uint8_t *message;
     size_t message_size;
     size_t transport_header_size;
-
-    spdm_context = context;
 
     /* -=[Check Parameters Phase]=- */
     session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
@@ -137,17 +134,17 @@ receive_done:
     return status;
 }
 
-libspdm_return_t libspdm_heartbeat(void *context, uint32_t session_id)
+libspdm_return_t libspdm_heartbeat(void *spdm_context, uint32_t session_id)
 {
     size_t retry;
     libspdm_return_t status;
-    libspdm_context_t *spdm_context;
+    libspdm_context_t *context;
 
-    spdm_context = context;
-    spdm_context->crypto_request = true;
-    retry = spdm_context->retry_times;
+    context = spdm_context;
+    context->crypto_request = true;
+    retry = context->retry_times;
     do {
-        status = libspdm_try_heartbeat(spdm_context, session_id);
+        status = libspdm_try_heartbeat(context, session_id);
         if (LIBSPDM_STATUS_BUSY_PEER != status) {
             return status;
         }

@@ -6,11 +6,11 @@
 
 #include "internal/libspdm_requester_lib.h"
 
-libspdm_return_t libspdm_send_request(void *context, const uint32_t *session_id,
+libspdm_return_t libspdm_send_request(void *spdm_context, const uint32_t *session_id,
                                       bool is_app_message,
                                       size_t request_size, void *request)
 {
-    libspdm_context_t *spdm_context;
+    libspdm_context_t *context;
     libspdm_return_t status;
     uint8_t *message;
     size_t message_size;
@@ -21,15 +21,15 @@ libspdm_return_t libspdm_send_request(void *context, const uint32_t *session_id,
     uint8_t *sender_buffer;
     size_t sender_buffer_size;
 
-    spdm_context = context;
+    context = spdm_context;
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_send_spdm_request[%x] (0x%x): \n",
                    (session_id != NULL) ? *session_id : 0x0, request_size));
     LIBSPDM_INTERNAL_DUMP_HEX(request, request_size);
 
-    transport_header_size = spdm_context->transport_get_header_size(spdm_context);
-    libspdm_get_scratch_buffer(spdm_context, (void**) &scratch_buffer, &scratch_buffer_size);
-    libspdm_get_sender_buffer(spdm_context, (void**) &sender_buffer, &sender_buffer_size);
+    transport_header_size = context->transport_get_header_size(context);
+    libspdm_get_scratch_buffer(context, (void**) &scratch_buffer, &scratch_buffer_size);
+    libspdm_get_sender_buffer(context, (void**) &sender_buffer, &sender_buffer_size);
 
     /* This is a problem because original code assumes request is in the sender buffer,
      * when it can really be using the scratch space for chunking.
@@ -76,16 +76,16 @@ libspdm_return_t libspdm_send_request(void *context, const uint32_t *session_id,
     if (((const spdm_message_header_t *)request)->request_response_code != SPDM_RESPOND_IF_READY
         && ((const spdm_message_header_t *)request)->request_response_code != SPDM_CHUNK_GET
         && ((const spdm_message_header_t*) request)->request_response_code != SPDM_CHUNK_SEND) {
-        libspdm_copy_mem (spdm_context->last_spdm_request,
-                          sizeof(spdm_context->last_spdm_request),
+        libspdm_copy_mem (context->last_spdm_request,
+                          sizeof(context->last_spdm_request),
                           request,
                           request_size
                           );
-        spdm_context->last_spdm_request_size = request_size;
+        context->last_spdm_request_size = request_size;
     }
 
-    status = spdm_context->transport_encode_message(
-        spdm_context, session_id, is_app_message, true, request_size,
+    status = context->transport_encode_message(
+        context, session_id, is_app_message, true, request_size,
         request, &message_size, (void **)&message);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "transport_encode_message status - %p\n",
@@ -93,10 +93,10 @@ libspdm_return_t libspdm_send_request(void *context, const uint32_t *session_id,
         return status;
     }
 
-    timeout = spdm_context->local_context.capability.rtt;
+    timeout = context->local_context.capability.rtt;
 
-    status = spdm_context->send_message(spdm_context, message_size, message,
-                                        timeout);
+    status = context->send_message(context, message_size, message,
+                                   timeout);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_send_spdm_request[%x] status - %p\n",
                        (session_id != NULL) ? *session_id : 0x0, status));
@@ -105,12 +105,12 @@ libspdm_return_t libspdm_send_request(void *context, const uint32_t *session_id,
     return status;
 }
 
-libspdm_return_t libspdm_receive_response(void *context, const uint32_t *session_id,
+libspdm_return_t libspdm_receive_response(void *spdm_context, const uint32_t *session_id,
                                           bool is_app_message,
                                           size_t *response_size,
                                           void **response)
 {
-    libspdm_context_t *spdm_context;
+    libspdm_context_t *context;
     void *temp_session_context;
     libspdm_return_t status;
     uint8_t *message;
@@ -126,20 +126,20 @@ libspdm_return_t libspdm_receive_response(void *context, const uint32_t *session
     bool reset_key_update;
     bool result;
 
-    spdm_context = context;
+    context = spdm_context;
 
-    if (spdm_context->crypto_request) {
-        timeout = spdm_context->local_context.capability.rtt +
-                  ((uint64_t)2 << spdm_context->connection_info.capability.ct_exponent);
+    if (context->crypto_request) {
+        timeout = context->local_context.capability.rtt +
+                  ((uint64_t)2 << context->connection_info.capability.ct_exponent);
     } else {
-        timeout = spdm_context->local_context.capability.rtt +
-                  spdm_context->local_context.capability.st1;
+        timeout = context->local_context.capability.rtt +
+                  context->local_context.capability.st1;
     }
 
     message = *response;
     message_size = *response_size;
-    status = spdm_context->receive_message(spdm_context, &message_size,
-                                           (void **)&message, timeout);
+    status = context->receive_message(context, &message_size,
+                                      (void **)&message, timeout);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "libspdm_receive_spdm_response[%x] status - %p\n",
@@ -153,8 +153,8 @@ libspdm_return_t libspdm_receive_response(void *context, const uint32_t *session
     /* always use scratch buffer to response.
      * if it is secured message, this scratch buffer will be used.
      * if it is normal message, the response ptr will point to receiver buffer. */
-    transport_header_size = spdm_context->transport_get_header_size(spdm_context);
-    libspdm_get_scratch_buffer (spdm_context, (void **)&scratch_buffer, &scratch_buffer_size);
+    transport_header_size = context->transport_get_header_size(context);
+    libspdm_get_scratch_buffer (context, (void **)&scratch_buffer, &scratch_buffer_size);
     #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
     *response = scratch_buffer + LIBSPDM_SCRATCH_BUFFER_SECURE_MESSAGE_OFFSET +
                 transport_header_size;
@@ -167,8 +167,8 @@ libspdm_return_t libspdm_receive_response(void *context, const uint32_t *session
     backup_response = *response;
     backup_response_size = *response_size;
 
-    status = spdm_context->transport_decode_message(
-        spdm_context, &message_session_id, &is_message_app_message,
+    status = context->transport_decode_message(
+        context, &message_session_id, &is_message_app_message,
         false, message_size, message, response_size, response);
 
     reset_key_update = false;
@@ -181,7 +181,7 @@ libspdm_return_t libspdm_receive_response(void *context, const uint32_t *session
             return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
         }
         temp_session_context = libspdm_get_secured_message_context_via_session_id(
-            spdm_context, *message_session_id);
+            context, *message_session_id);
         if (temp_session_context == NULL) {
             return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
         }
@@ -198,8 +198,8 @@ libspdm_return_t libspdm_receive_response(void *context, const uint32_t *session
         is_message_app_message = false;
         *response = backup_response;
         *response_size = backup_response_size;
-        status = spdm_context->transport_decode_message(
-            spdm_context, &message_session_id, &is_message_app_message,
+        status = context->transport_decode_message(
+            context, &message_session_id, &is_message_app_message,
             false, message_size, message, response_size, response);
 
         reset_key_update = true;
@@ -269,7 +269,7 @@ libspdm_return_t libspdm_receive_response(void *context, const uint32_t *session
     return status;
 
 error:
-    if (spdm_context->last_spdm_error.error_code == SPDM_ERROR_CODE_DECRYPT_ERROR) {
+    if (context->last_spdm_error.error_code == SPDM_ERROR_CODE_DECRYPT_ERROR) {
         return LIBSPDM_STATUS_SESSION_MSG_ERROR;
     } else {
         return LIBSPDM_STATUS_RECEIVE_FAIL;

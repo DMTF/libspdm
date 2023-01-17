@@ -130,7 +130,8 @@ bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
  * @param  responder_nonce            If not NULL, a buffer to hold the responder nonce (32 bytes).
  *
  **/
-static libspdm_return_t libspdm_try_get_measurement(void *context, const uint32_t *session_id,
+static libspdm_return_t libspdm_try_get_measurement(libspdm_context_t *spdm_context,
+                                                    const uint32_t *session_id,
                                                     uint8_t request_attribute,
                                                     uint8_t measurement_operation,
                                                     uint8_t slot_id_param,
@@ -158,14 +159,11 @@ static libspdm_return_t libspdm_try_get_measurement(void *context, const uint32_
     uint16_t opaque_length;
     void *signature;
     size_t signature_size;
-    libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
     uint8_t *message;
     size_t message_size;
     size_t transport_header_size;
-
-    spdm_context = context;
 
     /* -=[Check Parameters Phase]=- */
     LIBSPDM_ASSERT((slot_id_param < SPDM_MAX_SLOT_COUNT) || (slot_id_param == 0xF));
@@ -589,7 +587,7 @@ receive_done:
     return status;
 }
 
-libspdm_return_t libspdm_get_measurement(void *context, const uint32_t *session_id,
+libspdm_return_t libspdm_get_measurement(void *spdm_context, const uint32_t *session_id,
                                          uint8_t request_attribute,
                                          uint8_t measurement_operation,
                                          uint8_t slot_id_param,
@@ -598,16 +596,16 @@ libspdm_return_t libspdm_get_measurement(void *context, const uint32_t *session_
                                          uint32_t *measurement_record_length,
                                          void *measurement_record)
 {
-    libspdm_context_t *spdm_context;
+    libspdm_context_t *context;
     size_t retry;
     libspdm_return_t status;
 
-    spdm_context = context;
-    spdm_context->crypto_request = true;
-    retry = spdm_context->retry_times;
+    context = spdm_context;
+    context->crypto_request = true;
+    retry = context->retry_times;
     do {
         status = libspdm_try_get_measurement(
-            spdm_context, session_id, request_attribute,
+            context, session_id, request_attribute,
             measurement_operation, slot_id_param, content_changed, number_of_blocks,
             measurement_record_length, measurement_record, NULL, NULL, NULL);
         if (LIBSPDM_STATUS_BUSY_PEER != status) {
@@ -618,7 +616,7 @@ libspdm_return_t libspdm_get_measurement(void *context, const uint32_t *session_
     return status;
 }
 
-libspdm_return_t libspdm_get_measurement_ex(void *context, const uint32_t *session_id,
+libspdm_return_t libspdm_get_measurement_ex(void *spdm_context, const uint32_t *session_id,
                                             uint8_t request_attribute,
                                             uint8_t measurement_operation,
                                             uint8_t slot_id_param,
@@ -630,16 +628,16 @@ libspdm_return_t libspdm_get_measurement_ex(void *context, const uint32_t *sessi
                                             void *requester_nonce,
                                             void *responder_nonce)
 {
-    libspdm_context_t *spdm_context;
+    libspdm_context_t *context;
     size_t retry;
     libspdm_return_t status;
 
-    spdm_context = context;
-    spdm_context->crypto_request = true;
-    retry = spdm_context->retry_times;
+    context = spdm_context;
+    context->crypto_request = true;
+    retry = context->retry_times;
     do {
         status = libspdm_try_get_measurement(
-            spdm_context, session_id, request_attribute,
+            context, session_id, request_attribute,
             measurement_operation, slot_id_param, content_changed, number_of_blocks,
             measurement_record_length, measurement_record,
             requester_nonce_in,

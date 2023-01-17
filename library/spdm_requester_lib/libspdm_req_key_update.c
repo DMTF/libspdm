@@ -30,7 +30,8 @@ typedef struct {
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-static libspdm_return_t libspdm_try_key_update(void *context, uint32_t session_id,
+static libspdm_return_t libspdm_try_key_update(libspdm_context_t *spdm_context,
+                                               uint32_t session_id,
                                                bool single_direction, bool *key_updated)
 {
     libspdm_return_t status;
@@ -39,14 +40,12 @@ static libspdm_return_t libspdm_try_key_update(void *context, uint32_t session_i
     size_t spdm_request_size;
     libspdm_key_update_response_mine_t *spdm_response;
     size_t spdm_response_size;
-    libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
     uint8_t *message;
     size_t message_size;
     size_t transport_header_size;
 
-    spdm_context = context;
     if (!libspdm_is_capabilities_flag_supported(
             spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_UPD_CAP,
@@ -302,20 +301,20 @@ static libspdm_return_t libspdm_try_key_update(void *context, uint32_t session_i
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-libspdm_return_t libspdm_key_update(void *context, uint32_t session_id,
+libspdm_return_t libspdm_key_update(void *spdm_context, uint32_t session_id,
                                     bool single_direction)
 {
-    libspdm_context_t *spdm_context;
+    libspdm_context_t *context;
     size_t retry;
     libspdm_return_t status;
     bool key_updated;
 
-    spdm_context = context;
+    context = spdm_context;
     key_updated = false;
-    spdm_context->crypto_request = true;
-    retry = spdm_context->retry_times;
+    context->crypto_request = true;
+    retry = context->retry_times;
     do {
-        status = libspdm_try_key_update(context, session_id,
+        status = libspdm_try_key_update(spdm_context, session_id,
                                         single_direction, &key_updated);
         if (LIBSPDM_STATUS_BUSY_PEER != status) {
             return status;

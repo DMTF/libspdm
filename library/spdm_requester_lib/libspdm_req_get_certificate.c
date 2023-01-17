@@ -61,7 +61,8 @@ typedef struct {
  * @retval LIBSPDM_STATUS_CRYPTO_ERROR
  *         A generic cryptography error occurred.
  **/
-static libspdm_return_t libspdm_try_get_certificate(void *context, const uint32_t *session_id,
+static libspdm_return_t libspdm_try_get_certificate(libspdm_context_t *spdm_context,
+                                                    const uint32_t *session_id,
                                                     uint8_t slot_id,
                                                     uint16_t length,
                                                     size_t *cert_chain_size,
@@ -76,7 +77,6 @@ static libspdm_return_t libspdm_try_get_certificate(void *context, const uint32_
     libspdm_certificate_response_max_t *spdm_response;
     size_t spdm_response_size;
     libspdm_large_managed_buffer_t certificate_chain_buffer;
-    libspdm_context_t *spdm_context;
     uint16_t total_responder_cert_chain_buffer_length;
     size_t cert_chain_capacity;
     uint16_t remainder_length;
@@ -91,7 +91,6 @@ static libspdm_return_t libspdm_try_get_certificate(void *context, const uint32_
     LIBSPDM_ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
 
     /* -=[Verify State Phase]=- */
-    spdm_context = context;
 
     if (!libspdm_is_capabilities_flag_supported(
             spdm_context, true, 0,
@@ -372,44 +371,45 @@ done:
     return status;
 }
 
-libspdm_return_t libspdm_get_certificate(void *context, const uint32_t *session_id,
+libspdm_return_t libspdm_get_certificate(void *spdm_context, const uint32_t *session_id,
                                          uint8_t slot_id,
                                          size_t *cert_chain_size,
                                          void *cert_chain)
 {
-    return libspdm_get_certificate_choose_length(context, session_id, slot_id,
+    return libspdm_get_certificate_choose_length(spdm_context, session_id, slot_id,
                                                  LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN,
                                                  cert_chain_size, cert_chain);
 }
 
-libspdm_return_t libspdm_get_certificate_ex(void *context, const uint32_t *session_id,
+libspdm_return_t libspdm_get_certificate_ex(void *spdm_context, const uint32_t *session_id,
                                             uint8_t slot_id,
                                             size_t *cert_chain_size,
                                             void *cert_chain,
                                             const void **trust_anchor,
                                             size_t *trust_anchor_size)
 {
-    return libspdm_get_certificate_choose_length_ex(context, session_id, slot_id,
+    return libspdm_get_certificate_choose_length_ex(spdm_context, session_id, slot_id,
                                                     LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN,
                                                     cert_chain_size, cert_chain,
                                                     trust_anchor, trust_anchor_size);
 }
 
-libspdm_return_t libspdm_get_certificate_choose_length(void *context, const uint32_t *session_id,
+libspdm_return_t libspdm_get_certificate_choose_length(void *spdm_context,
+                                                       const uint32_t *session_id,
                                                        uint8_t slot_id,
                                                        uint16_t length,
                                                        size_t *cert_chain_size,
                                                        void *cert_chain)
 {
-    libspdm_context_t *spdm_context;
+    libspdm_context_t *context;
     size_t retry;
     libspdm_return_t status;
 
-    spdm_context = context;
-    spdm_context->crypto_request = true;
-    retry = spdm_context->retry_times;
+    context = spdm_context;
+    context->crypto_request = true;
+    retry = context->retry_times;
     do {
-        status = libspdm_try_get_certificate(spdm_context, session_id, slot_id, length,
+        status = libspdm_try_get_certificate(context, session_id, slot_id, length,
                                              cert_chain_size, cert_chain, NULL, NULL);
         if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
@@ -419,7 +419,8 @@ libspdm_return_t libspdm_get_certificate_choose_length(void *context, const uint
     return status;
 }
 
-libspdm_return_t libspdm_get_certificate_choose_length_ex(void *context, const uint32_t *session_id,
+libspdm_return_t libspdm_get_certificate_choose_length_ex(void *spdm_context,
+                                                          const uint32_t *session_id,
                                                           uint8_t slot_id,
                                                           uint16_t length,
                                                           size_t *cert_chain_size,
@@ -427,15 +428,15 @@ libspdm_return_t libspdm_get_certificate_choose_length_ex(void *context, const u
                                                           const void **trust_anchor,
                                                           size_t *trust_anchor_size)
 {
-    libspdm_context_t *spdm_context;
+    libspdm_context_t *context;
     size_t retry;
     libspdm_return_t status;
 
-    spdm_context = context;
-    spdm_context->crypto_request = true;
-    retry = spdm_context->retry_times;
+    context = spdm_context;
+    context->crypto_request = true;
+    retry = context->retry_times;
     do {
-        status = libspdm_try_get_certificate(spdm_context, session_id, slot_id, length,
+        status = libspdm_try_get_certificate(context, session_id, slot_id, length,
                                              cert_chain_size, cert_chain, trust_anchor,
                                              trust_anchor_size);
         if (status != LIBSPDM_STATUS_BUSY_PEER) {
