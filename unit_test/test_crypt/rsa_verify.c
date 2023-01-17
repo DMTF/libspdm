@@ -112,11 +112,13 @@ uint8_t m_libspdm_default_public_key[] = { 0x01, 0x00, 0x01 };
 bool libspdm_validate_crypt_rsa(void)
 {
     void *rsa;
+    #if LIBSPDM_SHA256_SUPPORT_TEST
     uint8_t hash_value[LIBSPDM_SHA256_DIGEST_SIZE];
     size_t hash_size;
     void *sha256_ctx;
     uint8_t *signature;
     size_t sig_size;
+    #endif
     bool status;
     size_t key_size;
     uint8_t *KeyBuffer;
