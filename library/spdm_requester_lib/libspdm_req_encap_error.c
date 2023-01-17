@@ -8,7 +8,7 @@
 
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
 
-libspdm_return_t libspdm_generate_encap_error_response(const void *context,
+libspdm_return_t libspdm_generate_encap_error_response(const void *spdm_context,
                                                        uint8_t error_code,
                                                        uint8_t error_data,
                                                        size_t *response_size,
@@ -20,7 +20,7 @@ libspdm_return_t libspdm_generate_encap_error_response(const void *context,
     *response_size = sizeof(spdm_error_response_t);
     spdm_response = response;
 
-    spdm_response->header.spdm_version = libspdm_get_connection_version (context);
+    spdm_response->header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_response->header.request_response_code = SPDM_ERROR;
     spdm_response->header.param1 = error_code;
     spdm_response->header.param2 = error_data;
@@ -29,7 +29,7 @@ libspdm_return_t libspdm_generate_encap_error_response(const void *context,
 }
 
 libspdm_return_t libspdm_generate_encap_extended_error_response(
-    const void *context, uint8_t error_code, uint8_t error_data,
+    const void *spdm_context, uint8_t error_code, uint8_t error_data,
     size_t extended_error_data_size, const uint8_t *extended_error_data,
     size_t *response_size, void *response)
 {
@@ -38,7 +38,7 @@ libspdm_return_t libspdm_generate_encap_extended_error_response(
                    sizeof(spdm_error_response_t) + extended_error_data_size);
 
     spdm_response = response;
-    spdm_response->header.spdm_version = libspdm_get_connection_version (context);
+    spdm_response->header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_response->header.request_response_code = SPDM_ERROR;
     spdm_response->header.param1 = error_code;
     spdm_response->header.param2 = error_data;

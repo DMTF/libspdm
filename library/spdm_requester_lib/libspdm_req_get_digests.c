@@ -41,7 +41,8 @@ typedef struct {
  * @retval LIBSPDM_STATUS_BUFFER_FULL
  *         The buffer used to store transcripts is exhausted.
  **/
-static libspdm_return_t libspdm_try_get_digest(void *context, const uint32_t *session_id,
+static libspdm_return_t libspdm_try_get_digest(libspdm_context_t *spdm_context,
+                                               const uint32_t *session_id,
                                                uint8_t *slot_mask,
                                                void *total_digest_buffer)
 {
@@ -53,14 +54,11 @@ static libspdm_return_t libspdm_try_get_digest(void *context, const uint32_t *se
     size_t digest_size;
     size_t digest_count;
     size_t index;
-    libspdm_context_t *spdm_context;
     uint8_t *message;
     size_t message_size;
     size_t transport_header_size;
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
-
-    spdm_context = context;
 
     /* -=[Verify State Phase]=- */
     if (!libspdm_is_capabilities_flag_supported(
@@ -220,18 +218,18 @@ receive_done:
     return status;
 }
 
-libspdm_return_t libspdm_get_digest(void *context, const uint32_t *session_id,
+libspdm_return_t libspdm_get_digest(void *spdm_context, const uint32_t *session_id,
                                     uint8_t *slot_mask, void *total_digest_buffer)
 {
-    libspdm_context_t *spdm_context;
+    libspdm_context_t *context;
     size_t retry;
     libspdm_return_t status;
 
-    spdm_context = context;
-    spdm_context->crypto_request = true;
-    retry = spdm_context->retry_times;
+    context = spdm_context;
+    context->crypto_request = true;
+    retry = context->retry_times;
     do {
-        status = libspdm_try_get_digest(spdm_context, session_id, slot_mask, total_digest_buffer);
+        status = libspdm_try_get_digest(context, session_id, slot_mask, total_digest_buffer);
         if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
         }

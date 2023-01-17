@@ -24,14 +24,14 @@
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-static libspdm_return_t libspdm_try_set_certificate(void *context, uint8_t slot_id,
+static libspdm_return_t libspdm_try_set_certificate(libspdm_context_t *spdm_context,
+                                                    uint8_t slot_id,
                                                     void * cert_chain, size_t cert_chain_size,
                                                     const uint32_t *session_id)
 {
     libspdm_return_t status;
     spdm_set_certificate_request_t *spdm_request;
     size_t spdm_request_size;
-    libspdm_context_t *spdm_context;
     spdm_set_certificate_response_t *spdm_response;
     size_t spdm_response_size;
     size_t transport_header_size;
@@ -39,8 +39,6 @@ static libspdm_return_t libspdm_try_set_certificate(void *context, uint8_t slot_
     size_t message_size;
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
-
-    spdm_context = context;
 
     if (!libspdm_is_capabilities_flag_supported(
             spdm_context, true, 0,
@@ -158,19 +156,19 @@ receive_done:
     return status;
 }
 
-libspdm_return_t libspdm_set_certificate(void * context, uint8_t slot_id,
+libspdm_return_t libspdm_set_certificate(void * spdm_context, uint8_t slot_id,
                                          void * cert_chain, size_t cert_chain_size,
                                          const uint32_t *session_id)
 {
-    libspdm_context_t *spdm_context;
+    libspdm_context_t *context;
     size_t retry;
     libspdm_return_t status;
 
-    spdm_context = context;
-    spdm_context->crypto_request = true;
-    retry = spdm_context->retry_times;
+    context = spdm_context;
+    context->crypto_request = true;
+    retry = context->retry_times;
     do {
-        status = libspdm_try_set_certificate(spdm_context, slot_id,
+        status = libspdm_try_set_certificate(context, slot_id,
                                              cert_chain, cert_chain_size, session_id);
         if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;

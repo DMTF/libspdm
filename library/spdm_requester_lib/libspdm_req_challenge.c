@@ -41,7 +41,8 @@ typedef struct {
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-static libspdm_return_t libspdm_try_challenge(void *context, uint8_t slot_id,
+static libspdm_return_t libspdm_try_challenge(libspdm_context_t *spdm_context,
+                                              uint8_t slot_id,
                                               uint8_t measurement_hash_type,
                                               void *measurement_hash,
                                               uint8_t *slot_mask,
@@ -64,13 +65,10 @@ static libspdm_return_t libspdm_try_challenge(void *context, uint8_t slot_id,
     uint16_t opaque_length;
     void *signature;
     size_t signature_size;
-    libspdm_context_t *spdm_context;
     uint8_t auth_attribute;
     uint8_t *message;
     size_t message_size;
     size_t transport_header_size;
-
-    spdm_context = context;
 
     /* -=[Check Parameters Phase]=- */
     LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xff));
@@ -332,20 +330,20 @@ receive_done:
     return status;
 }
 
-libspdm_return_t libspdm_challenge(void *context, uint8_t slot_id,
+libspdm_return_t libspdm_challenge(void *spdm_context, uint8_t slot_id,
                                    uint8_t measurement_hash_type,
                                    void *measurement_hash,
                                    uint8_t *slot_mask)
 {
-    libspdm_context_t *spdm_context;
+    libspdm_context_t *context;
     size_t retry;
     libspdm_return_t status;
 
-    spdm_context = context;
-    spdm_context->crypto_request = true;
-    retry = spdm_context->retry_times;
+    context = spdm_context;
+    context->crypto_request = true;
+    retry = context->retry_times;
     do {
-        status = libspdm_try_challenge(spdm_context, slot_id,
+        status = libspdm_try_challenge(context, slot_id,
                                        measurement_hash_type,
                                        measurement_hash, slot_mask, NULL, NULL, NULL);
         if (LIBSPDM_STATUS_BUSY_PEER != status) {
@@ -356,7 +354,7 @@ libspdm_return_t libspdm_challenge(void *context, uint8_t slot_id,
     return status;
 }
 
-libspdm_return_t libspdm_challenge_ex(void *context, uint8_t slot_id,
+libspdm_return_t libspdm_challenge_ex(void *spdm_context, uint8_t slot_id,
                                       uint8_t measurement_hash_type,
                                       void *measurement_hash,
                                       uint8_t *slot_mask,
@@ -364,15 +362,15 @@ libspdm_return_t libspdm_challenge_ex(void *context, uint8_t slot_id,
                                       void *requester_nonce,
                                       void *responder_nonce)
 {
-    libspdm_context_t *spdm_context;
+    libspdm_context_t *context;
     size_t retry;
     libspdm_return_t status;
 
-    spdm_context = context;
-    spdm_context->crypto_request = true;
-    retry = spdm_context->retry_times;
+    context = spdm_context;
+    context->crypto_request = true;
+    retry = context->retry_times;
     do {
-        status = libspdm_try_challenge(spdm_context, slot_id,
+        status = libspdm_try_challenge(context, slot_id,
                                        measurement_hash_type,
                                        measurement_hash,
                                        slot_mask,

@@ -13,14 +13,14 @@ typedef struct {
     libspdm_get_encap_response_func get_encap_response_func;
 } libspdm_get_encap_response_struct_t;
 
-void libspdm_register_get_encap_response_func(void *context,
+void libspdm_register_get_encap_response_func(void *spdm_context,
                                               const libspdm_get_encap_response_func
                                               get_encap_response_func)
 {
-    libspdm_context_t *spdm_context;
+    libspdm_context_t *context;
 
-    spdm_context = context;
-    spdm_context->get_encap_response_func = (void *)get_encap_response_func;
+    context = spdm_context;
+    context->get_encap_response_func = (void *)get_encap_response_func;
 }
 
 /**

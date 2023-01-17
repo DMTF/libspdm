@@ -28,7 +28,7 @@
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-static libspdm_return_t libspdm_try_get_csr(void *context,
+static libspdm_return_t libspdm_try_get_csr(libspdm_context_t *spdm_context,
                                             void *requester_info, uint16_t requester_info_length,
                                             void *opaque_data, uint16_t opaque_data_length,
                                             const uint32_t *session_id,
@@ -37,7 +37,6 @@ static libspdm_return_t libspdm_try_get_csr(void *context,
     libspdm_return_t status;
     spdm_get_csr_request_t *spdm_request;
     size_t spdm_request_size;
-    libspdm_context_t *spdm_context;
     spdm_csr_response_t *spdm_response;
     size_t spdm_response_size;
     size_t transport_header_size;
@@ -45,8 +44,6 @@ static libspdm_return_t libspdm_try_get_csr(void *context,
     size_t message_size;
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
-
-    spdm_context = context;
 
     if (!libspdm_is_capabilities_flag_supported(
             spdm_context, true, 0,
@@ -170,21 +167,21 @@ receive_done:
     return status;
 }
 
-libspdm_return_t libspdm_get_csr(void * context,
+libspdm_return_t libspdm_get_csr(void * spdm_context,
                                  void * requester_info, uint16_t requester_info_length,
                                  void * opaque_data, uint16_t opaque_data_length,
                                  const uint32_t *session_id,
                                  void *csr, size_t *csr_len)
 {
-    libspdm_context_t *spdm_context;
+    libspdm_context_t *context;
     size_t retry;
     libspdm_return_t status;
 
-    spdm_context = context;
-    spdm_context->crypto_request = true;
-    retry = spdm_context->retry_times;
+    context = spdm_context;
+    context->crypto_request = true;
+    retry = context->retry_times;
     do {
-        status = libspdm_try_get_csr(spdm_context,
+        status = libspdm_try_get_csr(context,
                                      requester_info, requester_info_length,
                                      opaque_data, opaque_data_length,
                                      session_id, csr, csr_len);
