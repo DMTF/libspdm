@@ -2251,13 +2251,18 @@ void libspdm_reset_context(void *spdm_context)
  */
 void libspdm_deinit_context(void *spdm_context)
 {
-#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
+    uint32_t session_id;
     libspdm_context_t *context;
+    libspdm_session_info_t *session_info;
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
     void *pubkey_context;
     bool is_requester;
     uint8_t slot_index;
+#endif
 
     context = spdm_context;
+
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
     is_requester = context->local_context.is_requester;
 
     for (slot_index = 0; slot_index < SPDM_MAX_SLOT_COUNT; slot_index++) {
@@ -2278,8 +2283,19 @@ void libspdm_deinit_context(void *spdm_context)
             leaf_cert_public_key = NULL;
         }
     }
-
 #endif
+
+    libspdm_reset_message_a(context);
+    libspdm_reset_message_b(context);
+    libspdm_reset_message_c(context);
+    libspdm_reset_message_mut_b(context);
+    libspdm_reset_message_mut_c(context);
+    for (session_id = 0; session_id < LIBSPDM_MAX_SESSION_COUNT; session_id++) {
+        session_info = &context->session_info[session_id];
+        libspdm_reset_message_m(context, session_info);
+        libspdm_reset_message_k(context, session_info);
+        libspdm_reset_message_f(context, session_info);
+    }
 }
 
 /**
