@@ -103,9 +103,9 @@ void libspdm_session_info_set_psk_hint(libspdm_session_info_t *session_info,
  *
  * @return session info.
  **/
-void *libspdm_get_session_info_via_session_id(void *context, uint32_t session_id)
+void *libspdm_get_session_info_via_session_id(void *spdm_context, uint32_t session_id)
 {
-    libspdm_context_t *spdm_context;
+    libspdm_context_t *context;
     libspdm_session_info_t *session_info;
     size_t index;
 
@@ -116,9 +116,9 @@ void *libspdm_get_session_info_via_session_id(void *context, uint32_t session_id
         return NULL;
     }
 
-    spdm_context = context;
+    context = spdm_context;
 
-    session_info = (libspdm_session_info_t *)spdm_context->session_info;
+    session_info = (libspdm_session_info_t *)context->session_info;
     for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index++) {
         if (session_info[index].session_id == session_id) {
             return &session_info[index];

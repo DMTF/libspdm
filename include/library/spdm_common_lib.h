@@ -249,7 +249,7 @@ libspdm_return_t libspdm_get_data(void *spdm_context,
  * @retval true   The SPDM context is in a valid state.
  * @retval false  The SPDM context is in an invalid state.
  **/
-bool libspdm_check_context (void *context);
+bool libspdm_check_context (void *spdm_context);
 #endif /* LIBSPDM_CHECK_SPDM_CONTEXT */
 
 /**
