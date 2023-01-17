@@ -912,4 +912,12 @@ bool libspdm_get_leaf_cert_public_key_from_cert_chain(uint32_t base_hash_algo,
  **/
 bool libspdm_verify_req_info(uint8_t *req_info, uint16_t req_info_len);
 
+#if LIBSPDM_FIPS_MODE
+/*get the last fips self_test result*/
+bool libspdm_fips_get_selftest_result(void);
+
+/*run of all selftests and returns the results.*/
+bool libspdm_fips_run_selftest(void);
+#endif
+
 #endif /* SPDM_CRYPT_LIB_H */

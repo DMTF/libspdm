@@ -869,6 +869,7 @@ else()
         ADD_SUBDIRECTORY(unit_test/test_spdm_responder)
         ADD_SUBDIRECTORY(unit_test/test_crypt)
         ADD_SUBDIRECTORY(unit_test/test_spdm_crypt)
+        ADD_SUBDIRECTORY(unit_test/test_spdm_fips)
         endif()
 
         if((NOT TOOLCHAIN STREQUAL "ARM_DS2022") AND (NOT TOOLCHAIN STREQUAL "RISCV_XPACK"))
