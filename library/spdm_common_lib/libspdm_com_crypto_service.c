@@ -16,20 +16,20 @@
  * @retval true  Peer certificate chain buffer including spdm_cert_chain_t header is returned.
  * @retval false Peer certificate chain buffer including spdm_cert_chain_t header is not found.
  **/
-bool libspdm_get_peer_cert_chain_buffer(void *context,
+bool libspdm_get_peer_cert_chain_buffer(void *spdm_context,
                                         const void **cert_chain_buffer,
                                         size_t *cert_chain_buffer_size)
 {
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    libspdm_context_t *spdm_context;
+    libspdm_context_t *context;
     uint8_t slot_id;
 
-    spdm_context = context;
-    slot_id = spdm_context->connection_info.peer_used_cert_chain_slot_id;
+    context = spdm_context;
+    slot_id = context->connection_info.peer_used_cert_chain_slot_id;
     LIBSPDM_ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
-    if (spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer_size != 0) {
-        *cert_chain_buffer = spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer;
-        *cert_chain_buffer_size = spdm_context->connection_info
+    if (context->connection_info.peer_used_cert_chain[slot_id].buffer_size != 0) {
+        *cert_chain_buffer = context->connection_info.peer_used_cert_chain[slot_id].buffer;
+        *cert_chain_buffer_size = context->connection_info
                                   .peer_used_cert_chain[slot_id].buffer_size;
         return true;
     }
@@ -47,19 +47,19 @@ bool libspdm_get_peer_cert_chain_buffer(void *context,
  * @retval true  Peer certificate chain data without spdm_cert_chain_t header is returned.
  * @retval false Peer certificate chain data without spdm_cert_chain_t header is not found.
  **/
-bool libspdm_get_peer_cert_chain_data(void *context,
+bool libspdm_get_peer_cert_chain_data(void *spdm_context,
                                       const void **cert_chain_data,
                                       size_t *cert_chain_data_size)
 {
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    libspdm_context_t *spdm_context;
+    libspdm_context_t *context;
     size_t hash_size;
     bool result;
 
-    spdm_context = context;
-    hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+    context = spdm_context;
+    hash_size = libspdm_get_hash_size(context->connection_info.algorithm.base_hash_algo);
 
-    result = libspdm_get_peer_cert_chain_buffer(spdm_context, cert_chain_data,
+    result = libspdm_get_peer_cert_chain_buffer(context, cert_chain_data,
                                                 cert_chain_data_size);
     if (result) {
         *cert_chain_data =
@@ -82,16 +82,16 @@ bool libspdm_get_peer_cert_chain_data(void *context,
  * @retval true  Local used certificate chain buffer including spdm_cert_chain_t header is returned.
  * @retval false Local used certificate chain buffer including spdm_cert_chain_t header is not found.
  **/
-bool libspdm_get_local_cert_chain_buffer(void *context,
+bool libspdm_get_local_cert_chain_buffer(void *spdm_context,
                                          const void **cert_chain_buffer,
                                          size_t *cert_chain_buffer_size)
 {
-    libspdm_context_t *spdm_context;
+    libspdm_context_t *context;
 
-    spdm_context = context;
-    if (spdm_context->connection_info.local_used_cert_chain_buffer_size != 0) {
-        *cert_chain_buffer = spdm_context->connection_info.local_used_cert_chain_buffer;
-        *cert_chain_buffer_size = spdm_context->connection_info.local_used_cert_chain_buffer_size;
+    context = spdm_context;
+    if (context->connection_info.local_used_cert_chain_buffer_size != 0) {
+        *cert_chain_buffer = context->connection_info.local_used_cert_chain_buffer;
+        *cert_chain_buffer_size = context->connection_info.local_used_cert_chain_buffer_size;
         return true;
     }
     return false;
@@ -107,23 +107,23 @@ bool libspdm_get_local_cert_chain_buffer(void *context,
  * @retval true  Local used certificate chain data without spdm_cert_chain_t header is returned.
  * @retval false Local used certificate chain data without spdm_cert_chain_t header is not found.
  **/
-bool libspdm_get_local_cert_chain_data(void *context,
+bool libspdm_get_local_cert_chain_data(void *spdm_context,
                                        const void **cert_chain_data,
                                        size_t *cert_chain_data_size)
 {
-    libspdm_context_t *spdm_context;
+    libspdm_context_t *context;
     bool result;
     size_t hash_size;
 
-    spdm_context = context;
+    context = spdm_context;
 
-    result = libspdm_get_local_cert_chain_buffer(spdm_context, cert_chain_data,
+    result = libspdm_get_local_cert_chain_buffer(context, cert_chain_data,
                                                  cert_chain_data_size);
     if (!result) {
         return false;
     }
 
-    hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+    hash_size = libspdm_get_hash_size(context->connection_info.algorithm.base_hash_algo);
 
     *cert_chain_data = (const uint8_t *)*cert_chain_data + sizeof(spdm_cert_chain_t) + hash_size;
     *cert_chain_data_size = *cert_chain_data_size - (sizeof(spdm_cert_chain_t) + hash_size);
@@ -140,16 +140,16 @@ bool libspdm_get_local_cert_chain_data(void *context,
  * @retval true  Peer public key buffer is returned.
  * @retval false Peer public key buffer is not found.
  **/
-bool libspdm_get_peer_public_key_buffer(void *context,
+bool libspdm_get_peer_public_key_buffer(void *spdm_context,
                                         const void **peer_public_key_buffer,
                                         size_t *peer_public_key_buffer_size)
 {
-    libspdm_context_t *spdm_context;
+    libspdm_context_t *context;
 
-    spdm_context = context;
-    if (spdm_context->local_context.peer_public_key_provision_size != 0) {
-        *peer_public_key_buffer = spdm_context->local_context.peer_public_key_provision;
-        *peer_public_key_buffer_size = spdm_context->local_context.peer_public_key_provision_size;
+    context = spdm_context;
+    if (context->local_context.peer_public_key_provision_size != 0) {
+        *peer_public_key_buffer = context->local_context.peer_public_key_provision;
+        *peer_public_key_buffer_size = context->local_context.peer_public_key_provision_size;
         return true;
     }
     return false;
@@ -165,16 +165,16 @@ bool libspdm_get_peer_public_key_buffer(void *context,
  * @retval true  Local public key buffer is returned.
  * @retval false Local public key buffer is not found.
  **/
-bool libspdm_get_local_public_key_buffer(void *context,
+bool libspdm_get_local_public_key_buffer(void *spdm_context,
                                          const void **local_public_key_buffer,
                                          size_t *local_public_key_buffer_size)
 {
-    libspdm_context_t *spdm_context;
+    libspdm_context_t *context;
 
-    spdm_context = context;
-    if (spdm_context->local_context.peer_public_key_provision_size != 0) {
-        *local_public_key_buffer = spdm_context->local_context.local_public_key_provision;
-        *local_public_key_buffer_size = spdm_context->local_context.local_public_key_provision_size;
+    context = spdm_context;
+    if (context->local_context.peer_public_key_provision_size != 0) {
+        *local_public_key_buffer = context->local_context.local_public_key_provision;
+        *local_public_key_buffer_size = context->local_context.local_public_key_provision_size;
         return true;
     }
     return false;
