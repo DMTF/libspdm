@@ -33,7 +33,6 @@ SET(test_crypt_LIBRARY
     rnglib
     cryptlib_${CRYPTO}
     malloclib
-    spdm_device_secret_lib_sample
     spdm_crypt_lib
     spdm_crypt_ext_lib
 )

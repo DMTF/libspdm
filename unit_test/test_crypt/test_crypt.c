@@ -140,13 +140,6 @@ bool libspdm_cryptest_main(void)
         return status;
     }
 
-    #if LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP
-    status = libspdm_validate_crypt_x509_csr();
-    if (!status) {
-        return status;
-    }
-    #endif /* LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP **/
-
     return status;
 }
 
