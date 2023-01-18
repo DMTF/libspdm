@@ -15,17 +15,15 @@ typedef struct {
 } libspdm_version_response_mine_t;
 #pragma pack()
 
-libspdm_return_t libspdm_get_response_version(void *context, size_t request_size,
+libspdm_return_t libspdm_get_response_version(libspdm_context_t *spdm_context, size_t request_size,
                                               const void *request,
                                               size_t *response_size,
                                               void *response)
 {
     const spdm_get_version_request_t *spdm_request;
     libspdm_version_response_mine_t *spdm_response;
-    libspdm_context_t *spdm_context;
     libspdm_return_t status;
 
-    spdm_context = context;
     spdm_request = request;
 
     /* -=[Validate Request Phase]=- */

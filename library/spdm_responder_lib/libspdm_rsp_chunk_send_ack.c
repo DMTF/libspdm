@@ -8,7 +8,7 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
 
-libspdm_return_t libspdm_get_response_chunk_send(void *context,
+libspdm_return_t libspdm_get_response_chunk_send(libspdm_context_t *spdm_context,
                                                  size_t request_size,
                                                  const void *request,
                                                  size_t *response_size,
@@ -16,11 +16,8 @@ libspdm_return_t libspdm_get_response_chunk_send(void *context,
 {
     const spdm_chunk_send_request_t *spdm_request;
     spdm_chunk_send_ack_response_t *spdm_response;
-    libspdm_context_t *spdm_context;
-
     libspdm_chunk_info_t *send_info;
     libspdm_return_t status = LIBSPDM_STATUS_SUCCESS;
-
     const uint8_t *chunk;
     uint32_t large_message_size;
     uint32_t calc_max_chunk_size;
@@ -29,7 +26,6 @@ libspdm_return_t libspdm_get_response_chunk_send(void *context,
     uint8_t* chunk_response;
     size_t chunk_response_size;
 
-    spdm_context = context;
     spdm_request = (const spdm_chunk_send_request_t*) request;
 
     if ((spdm_context->local_context.capability.flags &

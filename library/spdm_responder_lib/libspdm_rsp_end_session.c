@@ -6,7 +6,7 @@
 
 #include "internal/libspdm_responder_lib.h"
 
-libspdm_return_t libspdm_get_response_end_session(void *context,
+libspdm_return_t libspdm_get_response_end_session(libspdm_context_t *spdm_context,
                                                   size_t request_size,
                                                   const void *request,
                                                   size_t *response_size,
@@ -14,11 +14,9 @@ libspdm_return_t libspdm_get_response_end_session(void *context,
 {
     spdm_end_session_response_t *spdm_response;
     const spdm_end_session_request_t *spdm_request;
-    libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
 
-    spdm_context = context;
     spdm_request = request;
 
     if (spdm_request->header.spdm_version != libspdm_get_connection_version(spdm_context)) {
@@ -39,7 +37,7 @@ libspdm_return_t libspdm_get_response_end_session(void *context,
     }
 
     if (!spdm_context->last_spdm_request_session_id_valid) {
-        return libspdm_generate_error_response(context,
+        return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_SESSION_REQUIRED, 0,
                                                response_size, response);
     }
@@ -59,7 +57,7 @@ libspdm_return_t libspdm_get_response_end_session(void *context,
     }
 
     if (request_size != sizeof(spdm_end_session_request_t)) {
-        return libspdm_generate_error_response(context,
+        return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
     }

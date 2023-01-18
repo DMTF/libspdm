@@ -65,7 +65,7 @@ bool libspdm_verify_psk_finish_req_hmac(libspdm_context_t *spdm_context,
     return true;
 }
 
-libspdm_return_t libspdm_get_response_psk_finish(void *context,
+libspdm_return_t libspdm_get_response_psk_finish(libspdm_context_t *spdm_context,
                                                  size_t request_size,
                                                  const void *request,
                                                  size_t *response_size,
@@ -75,14 +75,12 @@ libspdm_return_t libspdm_get_response_psk_finish(void *context,
     bool result;
     uint32_t hmac_size;
     spdm_psk_finish_response_t *spdm_response;
-    libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
     uint8_t th2_hash_data[LIBSPDM_MAX_HASH_SIZE];
     const spdm_psk_finish_request_t *spdm_request;
     libspdm_return_t status;
     libspdm_session_state_t session_state;
 
-    spdm_context = context;
     spdm_request = request;
 
     if (spdm_request->header.spdm_version != libspdm_get_connection_version(spdm_context)) {
@@ -111,7 +109,7 @@ libspdm_return_t libspdm_get_response_psk_finish(void *context,
     }
 
     if (!spdm_context->last_spdm_request_session_id_valid) {
-        return libspdm_generate_error_response(context,
+        return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_SESSION_REQUIRED, 0,
                                                response_size, response);
     }

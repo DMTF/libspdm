@@ -29,7 +29,7 @@
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 typedef libspdm_return_t (*libspdm_get_spdm_response_func)(
-    void *spdm_context, size_t request_size, const void *request,
+    libspdm_context_t *spdm_context, size_t request_size, const void *request,
     size_t *response_size, void *response);
 
 /**
@@ -48,7 +48,7 @@ typedef libspdm_return_t (*libspdm_get_spdm_response_func)(
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-libspdm_return_t libspdm_responder_handle_response_state(void *spdm_context,
+libspdm_return_t libspdm_responder_handle_response_state(libspdm_context_t *spdm_context,
                                                          uint8_t request_code,
                                                          size_t *response_size,
                                                          void *response);
@@ -70,7 +70,7 @@ libspdm_return_t libspdm_responder_handle_response_state(void *spdm_context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-libspdm_return_t libspdm_get_response_respond_if_ready(void *spdm_context,
+libspdm_return_t libspdm_get_response_respond_if_ready(libspdm_context_t *spdm_context,
                                                        size_t request_size,
                                                        const void *request,
                                                        size_t *response_size,
@@ -93,7 +93,7 @@ libspdm_return_t libspdm_get_response_respond_if_ready(void *spdm_context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-libspdm_return_t libspdm_get_response_version(void *spdm_context,
+libspdm_return_t libspdm_get_response_version(libspdm_context_t *spdm_context,
                                               size_t request_size, const void *request,
                                               size_t *response_size,
                                               void *response);
@@ -115,7 +115,7 @@ libspdm_return_t libspdm_get_response_version(void *spdm_context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-libspdm_return_t libspdm_get_response_capabilities(void *spdm_context,
+libspdm_return_t libspdm_get_response_capabilities(libspdm_context_t *spdm_context,
                                                    size_t request_size,
                                                    const void *request,
                                                    size_t *response_size,
@@ -138,7 +138,7 @@ libspdm_return_t libspdm_get_response_capabilities(void *spdm_context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-libspdm_return_t libspdm_get_response_algorithms(void *spdm_context,
+libspdm_return_t libspdm_get_response_algorithms(libspdm_context_t *spdm_context,
                                                  size_t request_size,
                                                  const void *request,
                                                  size_t *response_size,
@@ -162,7 +162,7 @@ libspdm_return_t libspdm_get_response_algorithms(void *spdm_context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-libspdm_return_t libspdm_get_response_digests(void *spdm_context,
+libspdm_return_t libspdm_get_response_digests(libspdm_context_t *spdm_context,
                                               size_t request_size, const void *request,
                                               size_t *response_size,
                                               void *response);
@@ -184,7 +184,7 @@ libspdm_return_t libspdm_get_response_digests(void *spdm_context,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 
-libspdm_return_t libspdm_get_response_certificate(void *spdm_context,
+libspdm_return_t libspdm_get_response_certificate(libspdm_context_t *spdm_context,
                                                   size_t request_size,
                                                   const void *request,
                                                   size_t *response_size,
@@ -209,7 +209,7 @@ libspdm_return_t libspdm_get_response_certificate(void *spdm_context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-libspdm_return_t libspdm_get_response_challenge_auth(void *spdm_context,
+libspdm_return_t libspdm_get_response_challenge_auth(libspdm_context_t *spdm_context,
                                                      size_t request_size,
                                                      const void *request,
                                                      size_t *response_size,
@@ -234,7 +234,7 @@ libspdm_return_t libspdm_get_response_challenge_auth(void *spdm_context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-libspdm_return_t libspdm_get_response_measurements(void *spdm_context,
+libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_context,
                                                    size_t request_size,
                                                    const void *request,
                                                    size_t *response_size,
@@ -259,7 +259,7 @@ libspdm_return_t libspdm_get_response_measurements(void *spdm_context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-libspdm_return_t libspdm_get_response_key_exchange(void *spdm_context,
+libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_context,
                                                    size_t request_size,
                                                    const void *request,
                                                    size_t *response_size,
@@ -282,7 +282,7 @@ libspdm_return_t libspdm_get_response_key_exchange(void *spdm_context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-libspdm_return_t libspdm_get_response_finish(void *spdm_context,
+libspdm_return_t libspdm_get_response_finish(libspdm_context_t *spdm_context,
                                              size_t request_size, const void *request,
                                              size_t *response_size,
                                              void *response);
@@ -306,7 +306,7 @@ libspdm_return_t libspdm_get_response_finish(void *spdm_context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-libspdm_return_t libspdm_get_response_psk_exchange(void *spdm_context,
+libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_context,
                                                    size_t request_size,
                                                    const void *request,
                                                    size_t *response_size,
@@ -329,7 +329,7 @@ libspdm_return_t libspdm_get_response_psk_exchange(void *spdm_context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-libspdm_return_t libspdm_get_response_psk_finish(void *spdm_context,
+libspdm_return_t libspdm_get_response_psk_finish(libspdm_context_t *spdm_context,
                                                  size_t request_size,
                                                  const void *request,
                                                  size_t *response_size,
@@ -354,7 +354,7 @@ libspdm_return_t libspdm_get_response_psk_finish(void *spdm_context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-libspdm_return_t libspdm_get_response_end_session(void *spdm_context,
+libspdm_return_t libspdm_get_response_end_session(libspdm_context_t *spdm_context,
                                                   size_t request_size,
                                                   const void *request,
                                                   size_t *response_size,
@@ -377,7 +377,7 @@ libspdm_return_t libspdm_get_response_end_session(void *spdm_context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-libspdm_return_t libspdm_get_response_key_update(void *spdm_context,
+libspdm_return_t libspdm_get_response_key_update(libspdm_context_t*spdm_context,
                                                  size_t request_size,
                                                  const void *request,
                                                  size_t *response_size,
@@ -400,7 +400,7 @@ libspdm_return_t libspdm_get_response_key_update(void *spdm_context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-libspdm_return_t libspdm_get_response_heartbeat(void *spdm_context,
+libspdm_return_t libspdm_get_response_heartbeat(libspdm_context_t *spdm_context,
                                                 size_t request_size,
                                                 const void *request,
                                                 size_t *response_size,
@@ -426,7 +426,7 @@ libspdm_return_t libspdm_get_response_heartbeat(void *spdm_context,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 libspdm_return_t libspdm_get_response_encapsulated_request(
-    void *spdm_context, size_t request_size, const void *request,
+    libspdm_context_t *spdm_context, size_t request_size, const void *request,
     size_t *response_size, void *response);
 
 /**
@@ -447,7 +447,7 @@ libspdm_return_t libspdm_get_response_encapsulated_request(
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 libspdm_return_t libspdm_get_response_encapsulated_response_ack(
-    void *spdm_context, size_t request_size, const void *request,
+    libspdm_context_t *spdm_context, size_t request_size, const void *request,
     size_t *response_size, void *response);
 
 /**
@@ -660,9 +660,9 @@ void libspdm_set_connection_state(libspdm_context_t *spdm_context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-libspdm_return_t libspdm_get_response_csr(void *context, size_t request_size,
-                                          const void *request, size_t *response_size,
-                                          void *response);
+libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
+                                          size_t request_size, const void *request,
+                                          size_t *response_size, void *response);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP
@@ -683,10 +683,9 @@ libspdm_return_t libspdm_get_response_csr(void *context, size_t request_size,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-libspdm_return_t libspdm_get_response_set_certificate(void *context, size_t request_size,
-                                                      const void *request,
-                                                      size_t *response_size,
-                                                      void *response);
+libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_context,
+                                                      size_t request_size, const void *request,
+                                                      size_t *response_size, void *response);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
@@ -707,7 +706,7 @@ libspdm_return_t libspdm_get_response_set_certificate(void *context, size_t requ
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-libspdm_return_t libspdm_get_response_chunk_get(void* context,
+libspdm_return_t libspdm_get_response_chunk_get(libspdm_context_t *spdm_context,
                                                 size_t request_size,
                                                 const void* request,
                                                 size_t* response_size,
@@ -730,7 +729,7 @@ libspdm_return_t libspdm_get_response_chunk_get(void* context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-libspdm_return_t libspdm_get_response_chunk_send(void* context,
+libspdm_return_t libspdm_get_response_chunk_send(libspdm_context_t *spdm_context,
                                                  size_t request_size,
                                                  const void* request,
                                                  size_t* response_size,

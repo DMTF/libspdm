@@ -9,13 +9,12 @@
 #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
 
 libspdm_return_t libspdm_get_response_chunk_get(
-    void* context,
+    libspdm_context_t *spdm_context,
     size_t request_size,
     const void* request,
     size_t* response_size,
     void* response)
 {
-    libspdm_context_t* spdm_context;
     libspdm_chunk_info_t* get_info;
 
     const spdm_chunk_get_request_t* spdm_request;
@@ -23,7 +22,6 @@ libspdm_return_t libspdm_get_response_chunk_get(
 
     uint8_t* spdm_chunk;
 
-    spdm_context = (libspdm_context_t*) context;
     spdm_request = (const spdm_chunk_get_request_t*) request;
     spdm_response = (spdm_chunk_response_response_t*) response;
     get_info = &spdm_context->chunk_context.get;

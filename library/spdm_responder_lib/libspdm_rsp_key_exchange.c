@@ -163,7 +163,7 @@ bool libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context
     return result;
 }
 
-libspdm_return_t libspdm_get_response_key_exchange(void *context,
+libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_context,
                                                    size_t request_size,
                                                    const void *request,
                                                    size_t *response_size,
@@ -184,14 +184,12 @@ libspdm_return_t libspdm_get_response_key_exchange(void *context,
     void *dhe_context;
     libspdm_session_info_t *session_info;
     size_t total_size;
-    libspdm_context_t *spdm_context;
     uint16_t req_session_id;
     uint16_t rsp_session_id;
     libspdm_return_t status;
     size_t opaque_key_exchange_rsp_size;
     uint8_t th1_hash_data[64];
 
-    spdm_context = context;
     spdm_request = request;
 
     if (spdm_request->header.spdm_version != libspdm_get_connection_version(spdm_context)) {
@@ -387,7 +385,7 @@ libspdm_return_t libspdm_get_response_key_exchange(void *context,
         spdm_context->connection_info.peer_used_cert_chain_slot_id =
             spdm_context->encap_context.req_slot_id;
         libspdm_init_mut_auth_encap_state(
-            context, spdm_response->mut_auth_requested);
+            spdm_context, spdm_response->mut_auth_requested);
         if (spdm_response->mut_auth_requested == SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED) {
             /* no need to libspdm_init_mut_auth_encap_state() because of no ENCAP message */
             spdm_response->req_slot_id_param =

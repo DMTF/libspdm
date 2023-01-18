@@ -140,7 +140,7 @@ static bool libspdm_create_measurement_signature(libspdm_context_t *spdm_context
     return result;
 }
 
-libspdm_return_t libspdm_get_response_measurements(void *context,
+libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_context,
                                                    size_t request_size,
                                                    const void *request,
                                                    size_t *response_size,
@@ -153,7 +153,6 @@ libspdm_return_t libspdm_get_response_measurements(void *context,
     size_t signature_size;
     size_t measurements_sig_size;
     size_t measurements_no_sig_size;
-    libspdm_context_t *spdm_context;
     uint8_t slot_id_param;
     uint8_t measurements_index;
     uint8_t *measurements;
@@ -165,7 +164,6 @@ libspdm_return_t libspdm_get_response_measurements(void *context,
     uint8_t content_changed;
     uint8_t *fill_response_ptr;
 
-    spdm_context = context;
     spdm_request = request;
 
     if (spdm_request->header.spdm_version != libspdm_get_connection_version(spdm_context)) {
