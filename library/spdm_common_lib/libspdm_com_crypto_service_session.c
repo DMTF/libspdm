@@ -20,11 +20,10 @@
  * @retval RETURN_SUCCESS  current TH data is calculated.
  */
 bool libspdm_calculate_th_for_exchange(
-    void *context, void *spdm_session_info, const uint8_t *cert_chain_buffer,
+    libspdm_context_t *spdm_context, void *spdm_session_info, const uint8_t *cert_chain_buffer,
     size_t cert_chain_buffer_size,
     size_t *th_data_buffer_size, void *th_data_buffer)
 {
-    libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
     uint8_t cert_chain_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
     uint32_t hash_size;
@@ -33,7 +32,6 @@ bool libspdm_calculate_th_for_exchange(
     bool result;
     size_t th_data_buffer_capacity;
 
-    spdm_context = context;
     session_info = spdm_session_info;
 
     hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
@@ -100,16 +98,14 @@ bool libspdm_calculate_th_for_exchange(
  * @retval RETURN_SUCCESS  current TH hash is calculated.
  */
 bool libspdm_calculate_th_hash_for_exchange(
-    void *context, void *spdm_session_info,
+    libspdm_context_t *spdm_context, void *spdm_session_info,
     size_t *th_hash_buffer_size, void *th_hash_buffer)
 {
-    libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
     uint32_t hash_size;
     void *digest_context_th;
     bool result;
 
-    spdm_context = context;
     session_info = spdm_session_info;
 
     hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
@@ -152,10 +148,9 @@ bool libspdm_calculate_th_hash_for_exchange(
  * @retval RETURN_SUCCESS  current TH hmac is calculated.
  */
 bool libspdm_calculate_th_hmac_for_exchange_rsp(
-    void *context, void *spdm_session_info, bool is_requester,
+    libspdm_context_t *spdm_context, void *spdm_session_info, bool is_requester,
     size_t *th_hmac_buffer_size, void *th_hmac_buffer)
 {
-    libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
     void *secured_message_context;
     uint32_t hash_size;
@@ -163,7 +158,6 @@ bool libspdm_calculate_th_hmac_for_exchange_rsp(
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     bool result;
 
-    spdm_context = context;
     session_info = spdm_session_info;
     secured_message_context = session_info->secured_message_context;
 
@@ -216,7 +210,7 @@ bool libspdm_calculate_th_hmac_for_exchange_rsp(
  *
  * @retval RETURN_SUCCESS  current TH data is calculated.
  */
-bool libspdm_calculate_th_for_finish(void *context,
+bool libspdm_calculate_th_for_finish(libspdm_context_t *spdm_context,
                                      void *spdm_session_info,
                                      const uint8_t *cert_chain_buffer,
                                      size_t cert_chain_buffer_size,
@@ -225,7 +219,6 @@ bool libspdm_calculate_th_for_finish(void *context,
                                      size_t *th_data_buffer_size,
                                      void *th_data_buffer)
 {
-    libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
     uint8_t cert_chain_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
     uint8_t mut_cert_chain_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
@@ -235,7 +228,6 @@ bool libspdm_calculate_th_for_finish(void *context,
     bool result;
     size_t th_data_buffer_capacity;
 
-    spdm_context = context;
     session_info = spdm_session_info;
 
     hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
@@ -329,18 +321,16 @@ bool libspdm_calculate_th_for_finish(void *context,
  *
  * @retval RETURN_SUCCESS  current TH hash is calculated.
  */
-bool libspdm_calculate_th_hash_for_finish(void *context,
+bool libspdm_calculate_th_hash_for_finish(libspdm_context_t *spdm_context,
                                           void *spdm_session_info,
                                           size_t *th_hash_buffer_size,
                                           void *th_hash_buffer)
 {
-    libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
     uint32_t hash_size;
     void *digest_context_th;
     bool result;
 
-    spdm_context = context;
     session_info = spdm_session_info;
 
     hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
@@ -382,12 +372,11 @@ bool libspdm_calculate_th_hash_for_finish(void *context,
  *
  * @retval RETURN_SUCCESS  current TH hmac is calculated.
  */
-bool libspdm_calculate_th_hmac_for_finish_rsp(void *context,
+bool libspdm_calculate_th_hmac_for_finish_rsp(libspdm_context_t *spdm_context,
                                               void *spdm_session_info,
                                               size_t *th_hmac_buffer_size,
                                               void *th_hmac_buffer)
 {
-    libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
     void *secured_message_context;
     uint32_t hash_size;
@@ -395,7 +384,6 @@ bool libspdm_calculate_th_hmac_for_finish_rsp(void *context,
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     bool result;
 
-    spdm_context = context;
     session_info = spdm_session_info;
     secured_message_context = session_info->secured_message_context;
 
@@ -443,12 +431,11 @@ bool libspdm_calculate_th_hmac_for_finish_rsp(void *context,
  *
  * @retval RETURN_SUCCESS  current TH hmac is calculated.
  */
-bool libspdm_calculate_th_hmac_for_finish_req(void *context,
+bool libspdm_calculate_th_hmac_for_finish_req(libspdm_context_t *spdm_context,
                                               void *spdm_session_info,
                                               size_t *th_hmac_buffer_size,
                                               void *th_hmac_buffer)
 {
-    libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
     void *secured_message_context;
     uint32_t hash_size;
@@ -456,7 +443,6 @@ bool libspdm_calculate_th_hmac_for_finish_req(void *context,
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     bool result;
 
-    spdm_context = context;
     session_info = spdm_session_info;
     secured_message_context = session_info->secured_message_context;
 
@@ -505,12 +491,11 @@ bool libspdm_calculate_th_hmac_for_finish_req(void *context,
  *
  * @retval RETURN_SUCCESS  th1 hash is calculated.
  */
-bool libspdm_calculate_th1_hash(void *context,
+bool libspdm_calculate_th1_hash(libspdm_context_t *spdm_context,
                                 void *spdm_session_info,
                                 bool is_requester,
                                 uint8_t *th1_hash_data)
 {
-    libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
     bool result;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -523,7 +508,6 @@ bool libspdm_calculate_th1_hash(void *context,
 #if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) || (LIBSPDM_DEBUG_PRINT_ENABLE)
     size_t hash_size;
 #endif
-    spdm_context = context;
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Calc th1 hash ...\n"));
 
@@ -604,12 +588,11 @@ bool libspdm_calculate_th1_hash(void *context,
  *
  * @retval RETURN_SUCCESS  th2 hash is calculated.
  */
-bool libspdm_calculate_th2_hash(void *context,
+bool libspdm_calculate_th2_hash(libspdm_context_t *spdm_context,
                                 void *spdm_session_info,
                                 bool is_requester,
                                 uint8_t *th2_hash_data)
 {
-    libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
     bool result;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -624,8 +607,6 @@ bool libspdm_calculate_th2_hash(void *context,
 #if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) || (LIBSPDM_DEBUG_PRINT_ENABLE)
     size_t hash_size;
 #endif
-
-    spdm_context = context;
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Calc th2 hash ...\n"));
 

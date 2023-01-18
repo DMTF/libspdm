@@ -192,14 +192,13 @@ bool libspdm_get_local_public_key_buffer(void *context,
  *
  * @retval RETURN_SUCCESS  l1l2 is calculated.
  */
-bool libspdm_calculate_l1l2(void *context, void *session_info,
+bool libspdm_calculate_l1l2(libspdm_context_t *spdm_context,
+                            void *session_info,
                             libspdm_large_managed_buffer_t *l1l2)
 {
-    libspdm_context_t *spdm_context;
     libspdm_return_t status;
     libspdm_session_info_t *spdm_session_info;
 
-    spdm_context = context;
     spdm_session_info = session_info;
 
     libspdm_init_managed_buffer(l1l2, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
@@ -276,16 +275,15 @@ bool libspdm_calculate_l1l2(void *context, void *session_info,
  *
  * @retval RETURN_SUCCESS  l1l2 is calculated.
  */
-bool libspdm_calculate_l1l2_hash(void *context, void *session_info,
+bool libspdm_calculate_l1l2_hash(libspdm_context_t *spdm_context,
+                                 void *session_info,
                                  size_t *l1l2_hash_size, void *l1l2_hash)
 {
-    libspdm_context_t *spdm_context;
     libspdm_session_info_t *spdm_session_info;
     bool result;
 
     uint32_t hash_size;
 
-    spdm_context = context;
     spdm_session_info = session_info;
 
     hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);

@@ -192,13 +192,10 @@ uint32_t libspdm_generate_session_id(uint16_t req_session_id, uint16_t rsp_sessi
  *
  * @return session info associated with this new session ID.
  **/
-void *libspdm_assign_session_id(void *context, uint32_t session_id, bool use_psk)
+void *libspdm_assign_session_id(libspdm_context_t *spdm_context, uint32_t session_id, bool use_psk)
 {
-    libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
     size_t index;
-
-    spdm_context = context;
 
     if (session_id == INVALID_SESSION_ID) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "libspdm_assign_session_id - Invalid session_id\n"));
@@ -237,13 +234,10 @@ void *libspdm_assign_session_id(void *context, uint32_t session_id, bool use_psk
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  session_id                    The SPDM session ID.
  **/
-void libspdm_free_session_id(void *context, uint32_t session_id)
+void libspdm_free_session_id(libspdm_context_t *spdm_context, uint32_t session_id)
 {
-    libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
     size_t index;
-
-    spdm_context = context;
 
     if (session_id == INVALID_SESSION_ID) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "libspdm_free_session_id - Invalid session_id\n"));

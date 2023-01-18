@@ -745,11 +745,8 @@ bool libspdm_check_context (void *context)
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  **/
-void libspdm_reset_message_a(void *context)
+void libspdm_reset_message_a(libspdm_context_t *spdm_context)
 {
-    libspdm_context_t *spdm_context;
-
-    spdm_context = context;
     libspdm_reset_managed_buffer(&spdm_context->transcript.message_a);
 }
 
@@ -758,11 +755,8 @@ void libspdm_reset_message_a(void *context)
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  **/
-void libspdm_reset_message_b(void *context)
+void libspdm_reset_message_b(libspdm_context_t *spdm_context)
 {
-    libspdm_context_t *spdm_context;
-
-    spdm_context = context;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     libspdm_reset_managed_buffer(&spdm_context->transcript.message_b);
 #else
@@ -779,11 +773,8 @@ void libspdm_reset_message_b(void *context)
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  **/
-void libspdm_reset_message_c(void *context)
+void libspdm_reset_message_c(libspdm_context_t *spdm_context)
 {
-    libspdm_context_t *spdm_context;
-
-    spdm_context = context;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     libspdm_reset_managed_buffer(&spdm_context->transcript.message_c);
 #else
@@ -800,11 +791,8 @@ void libspdm_reset_message_c(void *context)
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  **/
-void libspdm_reset_message_mut_b(void *context)
+void libspdm_reset_message_mut_b(libspdm_context_t *spdm_context)
 {
-    libspdm_context_t *spdm_context;
-
-    spdm_context = context;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     libspdm_reset_managed_buffer(&spdm_context->transcript.message_mut_b);
 #else
@@ -821,11 +809,8 @@ void libspdm_reset_message_mut_b(void *context)
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  **/
-void libspdm_reset_message_mut_c(void *context)
+void libspdm_reset_message_mut_c(libspdm_context_t *spdm_context)
 {
-    libspdm_context_t *spdm_context;
-
-    spdm_context = context;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     libspdm_reset_managed_buffer(&spdm_context->transcript.message_mut_c);
 #else
@@ -845,12 +830,10 @@ void libspdm_reset_message_mut_c(void *context)
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  session_info                  A pointer to the SPDM session context.
  **/
-void libspdm_reset_message_m(void *context, void *session_info)
+void libspdm_reset_message_m(libspdm_context_t *spdm_context, void *session_info)
 {
-    libspdm_context_t *spdm_context;
     libspdm_session_info_t *spdm_session_info;
 
-    spdm_context = context;
     spdm_session_info = session_info;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     if (spdm_session_info == NULL) {
@@ -881,7 +864,7 @@ void libspdm_reset_message_m(void *context, void *session_info)
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  spdm_session_info              A pointer to the SPDM session context.
  **/
-void libspdm_reset_message_k(void *context, void *session_info)
+void libspdm_reset_message_k(libspdm_context_t *spdm_context, void *session_info)
 {
     libspdm_session_info_t *spdm_session_info;
 
@@ -890,10 +873,6 @@ void libspdm_reset_message_k(void *context, void *session_info)
     libspdm_reset_managed_buffer(&spdm_session_info->session_transcript.message_k);
 #else
     {
-        libspdm_context_t *spdm_context;
-
-        spdm_context = context;
-
         if (spdm_session_info->session_transcript.digest_context_th != NULL) {
             libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
                                spdm_session_info->session_transcript.digest_context_th);
@@ -914,7 +893,7 @@ void libspdm_reset_message_k(void *context, void *session_info)
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  spdm_session_info              A pointer to the SPDM session context.
  **/
-void libspdm_reset_message_f(void *context, void *session_info)
+void libspdm_reset_message_f(libspdm_context_t *spdm_context, void *session_info)
 {
     libspdm_session_info_t *spdm_session_info;
 
@@ -923,10 +902,6 @@ void libspdm_reset_message_f(void *context, void *session_info)
     libspdm_reset_managed_buffer(&spdm_session_info->session_transcript.message_f);
 #else
     {
-        libspdm_context_t *spdm_context;
-
-        spdm_context = context;
-
         if (spdm_session_info->session_transcript.digest_context_th != NULL) {
             libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
                                spdm_session_info->session_transcript.digest_context_th);
@@ -1006,11 +981,9 @@ void libspdm_reset_message_buffer_via_request_code(void *context, void *session_
  * @return RETURN_SUCCESS          message is appended.
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
-libspdm_return_t libspdm_append_message_a(void *context, const void *message, size_t message_size)
+libspdm_return_t libspdm_append_message_a(libspdm_context_t *spdm_context, const void *message,
+                                          size_t message_size)
 {
-    libspdm_context_t *spdm_context;
-
-    spdm_context = context;
     return libspdm_append_managed_buffer(&spdm_context->transcript.message_a,
                                          message, message_size);
 }
@@ -1025,11 +998,9 @@ libspdm_return_t libspdm_append_message_a(void *context, const void *message, si
  * @return RETURN_SUCCESS          message is appended.
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
-libspdm_return_t libspdm_append_message_b(void *context, const void *message, size_t message_size)
+libspdm_return_t libspdm_append_message_b(libspdm_context_t *spdm_context, const void *message,
+                                          size_t message_size)
 {
-    libspdm_context_t *spdm_context;
-
-    spdm_context = context;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     return libspdm_append_managed_buffer(&spdm_context->transcript.message_b,
                                          message, message_size);
@@ -1090,11 +1061,9 @@ libspdm_return_t libspdm_append_message_b(void *context, const void *message, si
  * @return RETURN_SUCCESS          message is appended.
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
-libspdm_return_t libspdm_append_message_c(void *context, const void *message, size_t message_size)
+libspdm_return_t libspdm_append_message_c(libspdm_context_t *spdm_context, const void *message,
+                                          size_t message_size)
 {
-    libspdm_context_t *spdm_context;
-
-    spdm_context = context;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     return libspdm_append_managed_buffer(&spdm_context->transcript.message_c,
                                          message, message_size);
@@ -1155,12 +1124,9 @@ libspdm_return_t libspdm_append_message_c(void *context, const void *message, si
  * @return RETURN_SUCCESS          message is appended.
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
-libspdm_return_t libspdm_append_message_mut_b(void *context, const void *message,
+libspdm_return_t libspdm_append_message_mut_b(libspdm_context_t *spdm_context, const void *message,
                                               size_t message_size)
 {
-    libspdm_context_t *spdm_context;
-
-    spdm_context = context;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     return libspdm_append_managed_buffer(&spdm_context->transcript.message_mut_b,
                                          message, message_size);
@@ -1226,12 +1192,9 @@ libspdm_return_t libspdm_append_message_mut_b(void *context, const void *message
  * @return RETURN_SUCCESS          message is appended.
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
-libspdm_return_t libspdm_append_message_mut_c(void *context, const void *message,
+libspdm_return_t libspdm_append_message_mut_c(libspdm_context_t *spdm_context, const void *message,
                                               size_t message_size)
 {
-    libspdm_context_t *spdm_context;
-
-    spdm_context = context;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     return libspdm_append_managed_buffer(&spdm_context->transcript.message_mut_c,
                                          message, message_size);
@@ -1300,13 +1263,11 @@ libspdm_return_t libspdm_append_message_mut_c(void *context, const void *message
  * @return RETURN_SUCCESS          message is appended.
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
-libspdm_return_t libspdm_append_message_m(void *context, void *session_info,
+libspdm_return_t libspdm_append_message_m(libspdm_context_t *spdm_context, void *session_info,
                                           const void *message, size_t message_size)
 {
-    libspdm_context_t *spdm_context;
     libspdm_session_info_t *spdm_session_info;
 
-    spdm_context = context;
     spdm_session_info = session_info;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     if (spdm_session_info == NULL) {
@@ -1426,7 +1387,8 @@ libspdm_return_t libspdm_append_message_m(void *context, void *session_info,
  * @return RETURN_SUCCESS          message is appended.
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
-libspdm_return_t libspdm_append_message_k(void *context, void *session_info,
+libspdm_return_t libspdm_append_message_k(libspdm_context_t *spdm_context,
+                                          void *session_info,
                                           bool is_requester, const void *message,
                                           size_t message_size)
 {
@@ -1439,7 +1401,6 @@ libspdm_return_t libspdm_append_message_k(void *context, void *session_info,
         message_size);
 #else
     {
-        libspdm_context_t *spdm_context;
         uint8_t *cert_chain_buffer;
         size_t cert_chain_buffer_size;
         bool result;
@@ -1447,7 +1408,6 @@ libspdm_return_t libspdm_append_message_k(void *context, void *session_info,
         uint32_t hash_size;
         uint8_t slot_id;
 
-        spdm_context = context;
         hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
 
         if (spdm_session_info->session_transcript.digest_context_th == NULL) {
@@ -1574,7 +1534,8 @@ libspdm_return_t libspdm_append_message_k(void *context, void *session_info,
  * @return RETURN_SUCCESS          message is appended.
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
-libspdm_return_t libspdm_append_message_f(void *context, void *session_info,
+libspdm_return_t libspdm_append_message_f(libspdm_context_t *spdm_context,
+                                          void *session_info,
                                           bool is_requester, const void *message,
                                           size_t message_size)
 {
@@ -1587,7 +1548,6 @@ libspdm_return_t libspdm_append_message_f(void *context, void *session_info,
         message_size);
 #else
     {
-        libspdm_context_t *spdm_context;
         const uint8_t *mut_cert_chain_buffer;
         size_t mut_cert_chain_buffer_size;
         bool result;
@@ -1596,13 +1556,13 @@ libspdm_return_t libspdm_append_message_f(void *context, void *session_info,
         libspdm_return_t status;
         uint8_t slot_id;
 
-        spdm_context = context;
         hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
 
         if (!spdm_session_info->session_transcript.message_f_initialized) {
             /* digest_context_th might be NULL in unit test, where message_k is hardcoded. */
             if (spdm_session_info->session_transcript.digest_context_th == NULL) {
-                status = libspdm_append_message_k (context, session_info, is_requester, NULL, 0);
+                status =
+                    libspdm_append_message_k (spdm_context, session_info, is_requester, NULL, 0);
                 if (LIBSPDM_STATUS_IS_ERROR(status)) {
                     return status;
                 }

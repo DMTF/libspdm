@@ -683,7 +683,8 @@ uint32_t libspdm_get_measurement_summary_hash_size(libspdm_context_t *spdm_conte
  *
  * @retval RETURN_SUCCESS  l1l2 is calculated.
  */
-bool libspdm_calculate_l1l2(void *context, void *session_info,
+bool libspdm_calculate_l1l2(libspdm_context_t *spdm_context,
+                            void *session_info,
                             libspdm_large_managed_buffer_t *l1l2);
 
 /*
@@ -698,7 +699,8 @@ bool libspdm_calculate_l1l2(void *context, void *session_info,
  *
  * @retval RETURN_SUCCESS  l1l2 is calculated.
  */
-bool libspdm_calculate_l1l2_hash(void *context, void *session_info,
+bool libspdm_calculate_l1l2_hash(libspdm_context_t *spdm_context,
+                                 void *session_info,
                                  size_t *l1l2_hash_size, void *l1l2_hash);
 
 /**
@@ -875,7 +877,7 @@ uint8_t libspdm_get_cert_slot_mask (libspdm_context_t *spdm_context);
 uint8_t libspdm_get_cert_slot_count(libspdm_context_t *spdm_context);
 
 #if LIBSPDM_ENABLE_MSG_LOG
-void libspdm_append_msg_log(void *context, void *message, size_t message_size);
+void libspdm_append_msg_log(libspdm_context_t *spdm_context, void *message, size_t message_size);
 #endif
 
 /**
@@ -883,35 +885,35 @@ void libspdm_append_msg_log(void *context, void *message, size_t message_size);
  *
  * @param  spdm_context  A pointer to the SPDM context.
  **/
-void libspdm_reset_message_a(void *spdm_context);
+void libspdm_reset_message_a(libspdm_context_t *spdm_context);
 
 /**
  * Reset message B cache in SPDM context.
  *
  * @param  spdm_context  A pointer to the SPDM context.
  **/
-void libspdm_reset_message_b(void *spdm_context);
+void libspdm_reset_message_b(libspdm_context_t *spdm_context);
 
 /**
  * Reset message C cache in SPDM context.
  *
  * @param  spdm_context  A pointer to the SPDM context.
  **/
-void libspdm_reset_message_c(void *spdm_context);
+void libspdm_reset_message_c(libspdm_context_t *spdm_context);
 
 /**
  * Reset message MutB cache in SPDM context.
  *
  * @param  spdm_context  A pointer to the SPDM context.
  **/
-void libspdm_reset_message_mut_b(void *spdm_context);
+void libspdm_reset_message_mut_b(libspdm_context_t *spdm_context);
 
 /**
  * Reset message MutC cache in SPDM context.
  *
  * @param  spdm_context  A pointer to the SPDM context.
  **/
-void libspdm_reset_message_mut_c(void *spdm_context);
+void libspdm_reset_message_mut_c(libspdm_context_t *spdm_context);
 
 /**
  * Reset message M cache in SPDM context.
@@ -921,7 +923,7 @@ void libspdm_reset_message_mut_c(void *spdm_context);
  * @param  spdm_context  A pointer to the SPDM context.
  * @param  session_info  A pointer to the SPDM session context.
  **/
-void libspdm_reset_message_m(void *context, void *session_info);
+void libspdm_reset_message_m(libspdm_context_t *spdm_context, void *session_info);
 
 /**
  * Reset message K cache in SPDM context.
@@ -929,7 +931,7 @@ void libspdm_reset_message_m(void *context, void *session_info);
  * @param  spdm_context       A pointer to the SPDM context.
  * @param  spdm_session_info  A pointer to the SPDM session context.
  **/
-void libspdm_reset_message_k(void *context, void *spdm_session_info);
+void libspdm_reset_message_k(libspdm_context_t *spdm_context, void *spdm_session_info);
 
 /**
  * Reset message F cache in SPDM context.
@@ -937,7 +939,7 @@ void libspdm_reset_message_k(void *context, void *spdm_session_info);
  * @param  spdm_context       A pointer to the SPDM context.
  * @param  spdm_session_info  A pointer to the SPDM session context.
  **/
-void libspdm_reset_message_f(void *context, void *spdm_session_info);
+void libspdm_reset_message_f(libspdm_context_t *spdm_context, void *spdm_session_info);
 
 /**
  * Append message A cache in SPDM context.
@@ -949,7 +951,7 @@ void libspdm_reset_message_f(void *context, void *spdm_session_info);
  * @return RETURN_SUCCESS          message is appended.
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
-libspdm_return_t libspdm_append_message_a(void *spdm_context, const void *message,
+libspdm_return_t libspdm_append_message_a(libspdm_context_t *spdm_context, const void *message,
                                           size_t message_size);
 /**
  * Append message B cache in SPDM context.
@@ -961,7 +963,7 @@ libspdm_return_t libspdm_append_message_a(void *spdm_context, const void *messag
  * @return RETURN_SUCCESS          message is appended.
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
-libspdm_return_t libspdm_append_message_b(void *spdm_context, const void *message,
+libspdm_return_t libspdm_append_message_b(libspdm_context_t *spdm_context, const void *message,
                                           size_t message_size);
 
 /**
@@ -974,7 +976,7 @@ libspdm_return_t libspdm_append_message_b(void *spdm_context, const void *messag
  * @return RETURN_SUCCESS          message is appended.
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
-libspdm_return_t libspdm_append_message_c(void *spdm_context, const void *message,
+libspdm_return_t libspdm_append_message_c(libspdm_context_t *spdm_context, const void *message,
                                           size_t message_size);
 
 /**
@@ -987,7 +989,7 @@ libspdm_return_t libspdm_append_message_c(void *spdm_context, const void *messag
  * @return RETURN_SUCCESS          message is appended.
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
-libspdm_return_t libspdm_append_message_mut_b(void *spdm_context, const void *message,
+libspdm_return_t libspdm_append_message_mut_b(libspdm_context_t *spdm_context, const void *message,
                                               size_t message_size);
 
 /**
@@ -1000,7 +1002,7 @@ libspdm_return_t libspdm_append_message_mut_b(void *spdm_context, const void *me
  * @return RETURN_SUCCESS          message is appended.
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
-libspdm_return_t libspdm_append_message_mut_c(void *spdm_context, const void *message,
+libspdm_return_t libspdm_append_message_mut_c(libspdm_context_t *spdm_context, const void *message,
                                               size_t message_size);
 
 /**
@@ -1016,7 +1018,8 @@ libspdm_return_t libspdm_append_message_mut_c(void *spdm_context, const void *me
  * @return RETURN_SUCCESS          message is appended.
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
-libspdm_return_t libspdm_append_message_m(void *context, void *session_info,
+libspdm_return_t libspdm_append_message_m(libspdm_context_t *spdm_context,
+                                          void *session_info,
                                           const void *message, size_t message_size);
 
 /**
@@ -1031,7 +1034,8 @@ libspdm_return_t libspdm_append_message_m(void *context, void *session_info,
  * @return RETURN_SUCCESS          message is appended.
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
-libspdm_return_t libspdm_append_message_k(void *context, void *spdm_session_info,
+libspdm_return_t libspdm_append_message_k(libspdm_context_t *spdm_context,
+                                          void *spdm_session_info,
                                           bool is_requester, const void *message,
                                           size_t message_size);
 
@@ -1047,7 +1051,8 @@ libspdm_return_t libspdm_append_message_k(void *context, void *spdm_session_info
  * @return RETURN_SUCCESS          message is appended.
  * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
  **/
-libspdm_return_t libspdm_append_message_f(void *context, void *spdm_session_info,
+libspdm_return_t libspdm_append_message_f(libspdm_context_t *spdm_context,
+                                          void *spdm_session_info,
                                           bool is_requester, const void *message,
                                           size_t message_size);
 
@@ -1069,7 +1074,7 @@ uint32_t libspdm_generate_session_id(uint16_t req_session_id, uint16_t rsp_sessi
  *
  * @return session info associated with this new session ID.
  **/
-void *libspdm_assign_session_id(void *spdm_context, uint32_t session_id, bool use_psk);
+void *libspdm_assign_session_id(libspdm_context_t *spdm_context, uint32_t session_id, bool use_psk);
 
 /**
  * This function frees a session ID.
@@ -1077,7 +1082,7 @@ void *libspdm_assign_session_id(void *spdm_context, uint32_t session_id, bool us
  * @param  spdm_context  A pointer to the SPDM context.
  * @param  session_id    The SPDM session ID.
  **/
-void libspdm_free_session_id(void *spdm_context, uint32_t session_id);
+void libspdm_free_session_id(libspdm_context_t *spdm_context, uint32_t session_id);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 /*
@@ -1093,7 +1098,7 @@ void libspdm_free_session_id(void *spdm_context, uint32_t session_id);
  * @retval RETURN_SUCCESS  current TH data is calculated.
  */
 bool libspdm_calculate_th_for_exchange(
-    void *spdm_context, void *spdm_session_info,
+    libspdm_context_t *spdm_context, void *spdm_session_info,
     const uint8_t *cert_chain_buffer, size_t cert_chain_buffer_size,
     size_t *th_data_buffer_size, void *th_data_buffer);
 #else
@@ -1108,7 +1113,7 @@ bool libspdm_calculate_th_for_exchange(
  * @retval RETURN_SUCCESS  current TH hash is calculated.
  */
 bool libspdm_calculate_th_hash_for_exchange(
-    void *context, void *spdm_session_info,
+    libspdm_context_t *spdm_context, void *spdm_session_info,
     size_t *th_hash_buffer_size, void *th_hash_buffer);
 
 /*
@@ -1122,7 +1127,7 @@ bool libspdm_calculate_th_hash_for_exchange(
  * @retval RETURN_SUCCESS  current TH hmac is calculated.
  */
 bool libspdm_calculate_th_hmac_for_exchange_rsp(
-    void *context, void *spdm_session_info, bool is_requester,
+    libspdm_context_t *spdm_context, void *spdm_session_info, bool is_requester,
     size_t *th_hmac_buffer_size, void *th_hmac_buffer);
 #endif
 
@@ -1141,7 +1146,7 @@ bool libspdm_calculate_th_hmac_for_exchange_rsp(
  *
  * @retval RETURN_SUCCESS  current TH data is calculated.
  */
-bool libspdm_calculate_th_for_finish(void *spdm_context,
+bool libspdm_calculate_th_for_finish(libspdm_context_t *spdm_context,
                                      void *spdm_session_info,
                                      const uint8_t *cert_chain_buffer,
                                      size_t cert_chain_buffer_size,
@@ -1160,7 +1165,7 @@ bool libspdm_calculate_th_for_finish(void *spdm_context,
  *
  * @retval RETURN_SUCCESS  current TH hash is calculated.
  */
-bool libspdm_calculate_th_hash_for_finish(void *spdm_context,
+bool libspdm_calculate_th_hash_for_finish(libspdm_context_t *spdm_context,
                                           void *spdm_session_info,
                                           size_t *th_hash_buffer_size,
                                           void *th_hash_buffer);
@@ -1175,7 +1180,7 @@ bool libspdm_calculate_th_hash_for_finish(void *spdm_context,
  *
  * @retval RETURN_SUCCESS  current TH hmac is calculated.
  */
-bool libspdm_calculate_th_hmac_for_finish_rsp(void *spdm_context,
+bool libspdm_calculate_th_hmac_for_finish_rsp(libspdm_context_t *spdm_context,
                                               void *spdm_session_info,
                                               size_t *th_hmac_buffer_size,
                                               void *th_hmac_buffer);
@@ -1190,7 +1195,7 @@ bool libspdm_calculate_th_hmac_for_finish_rsp(void *spdm_context,
  *
  * @retval RETURN_SUCCESS  current TH hmac is calculated.
  */
-bool libspdm_calculate_th_hmac_for_finish_req(void *spdm_context,
+bool libspdm_calculate_th_hmac_for_finish_req(libspdm_context_t *spdm_context,
                                               void *spdm_session_info,
                                               size_t *th_hmac_buffer_size,
                                               void *th_hmac_buffer);
@@ -1206,7 +1211,7 @@ bool libspdm_calculate_th_hmac_for_finish_req(void *spdm_context,
  *
  * @retval RETURN_SUCCESS  th1 hash is calculated.
  */
-bool libspdm_calculate_th1_hash(void *spdm_context,
+bool libspdm_calculate_th1_hash(libspdm_context_t *spdm_context,
                                 void *spdm_session_info,
                                 bool is_requester,
                                 uint8_t *th1_hash_data);
@@ -1221,7 +1226,7 @@ bool libspdm_calculate_th1_hash(void *spdm_context,
  *
  * @retval RETURN_SUCCESS  th2 hash is calculated.
  */
-bool libspdm_calculate_th2_hash(void *spdm_context,
+bool libspdm_calculate_th2_hash(libspdm_context_t *spdm_context,
                                 void *spdm_session_info,
                                 bool is_requester,
                                 uint8_t *th2_hash_data);

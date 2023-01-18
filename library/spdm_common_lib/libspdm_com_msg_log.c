@@ -67,13 +67,9 @@ void libspdm_reset_msg_log (void *context)
     spdm_context->msg_log.status = 0;
 }
 
-void libspdm_append_msg_log(void *context, void *message, size_t message_size)
+void libspdm_append_msg_log(libspdm_context_t *spdm_context, void *message, size_t message_size)
 {
-    libspdm_context_t *spdm_context;
-
-    LIBSPDM_ASSERT((context != NULL) && (message != NULL));
-
-    spdm_context = context;
+    LIBSPDM_ASSERT((spdm_context != NULL) && (message != NULL));
 
     if (((spdm_context->msg_log.mode & LIBSPDM_MSG_LOG_MODE_ENABLE) != 0) &&
         ((spdm_context->msg_log.status & LIBSPDM_MSG_LOG_STATUS_BUFFER_FULL) == 0)) {
