@@ -7,7 +7,7 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
-libspdm_return_t libspdm_get_response_certificate(void *context,
+libspdm_return_t libspdm_get_response_certificate(libspdm_context_t *spdm_context,
                                                   size_t request_size,
                                                   const void *request,
                                                   size_t *response_size,
@@ -19,13 +19,11 @@ libspdm_return_t libspdm_get_response_certificate(void *context,
     uint16_t length;
     size_t remainder_length;
     uint8_t slot_id;
-    libspdm_context_t *spdm_context;
     libspdm_return_t status;
     size_t response_capacity;
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
 
-    spdm_context = context;
     spdm_request = request;
 
     if (spdm_request->header.spdm_version != libspdm_get_connection_version(spdm_context)) {

@@ -23,7 +23,7 @@
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-libspdm_return_t libspdm_get_response_key_update(void *context,
+libspdm_return_t libspdm_get_response_key_update(libspdm_context_t *spdm_context,
                                                  size_t request_size,
                                                  const void *request,
                                                  size_t *response_size,
@@ -33,13 +33,11 @@ libspdm_return_t libspdm_get_response_key_update(void *context,
     spdm_key_update_response_t *spdm_response;
     const spdm_key_update_request_t *spdm_request;
     spdm_key_update_request_t *prev_spdm_request;
-    libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
     spdm_key_update_request_t spdm_key_init_update_operation;
     bool result;
 
-    spdm_context = context;
     spdm_request = request;
 
     if (spdm_request->header.spdm_version != libspdm_get_connection_version(spdm_context)) {
@@ -70,7 +68,7 @@ libspdm_return_t libspdm_get_response_key_update(void *context,
     }
 
     if (!spdm_context->last_spdm_request_session_id_valid) {
-        return libspdm_generate_error_response(context,
+        return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_SESSION_REQUIRED, 0,
                                                response_size, response);
     }
@@ -78,7 +76,7 @@ libspdm_return_t libspdm_get_response_key_update(void *context,
     session_info =
         libspdm_get_session_info_via_session_id(spdm_context, session_id);
     if (session_info == NULL) {
-        return libspdm_generate_error_response(context,
+        return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_SESSION_REQUIRED, 0,
                                                response_size, response);
     }
@@ -91,7 +89,7 @@ libspdm_return_t libspdm_get_response_key_update(void *context,
     }
 
     if (request_size != sizeof(spdm_key_update_request_t)) {
-        return libspdm_generate_error_response(context,
+        return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
     }
@@ -107,7 +105,7 @@ libspdm_return_t libspdm_get_response_key_update(void *context,
         if(libspdm_const_compare_mem(prev_spdm_request,
                                      &spdm_key_init_update_operation,
                                      sizeof(spdm_key_update_request_t)) != 0) {
-            return libspdm_generate_error_response(context,
+            return libspdm_generate_error_response(spdm_context,
                                                    SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                    response_size, response);
         }
@@ -122,7 +120,7 @@ libspdm_return_t libspdm_get_response_key_update(void *context,
             return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         }
         libspdm_trigger_key_update_callback(
-            context, session_id, LIBSPDM_KEY_UPDATE_OPERATION_CREATE_UPDATE,
+            spdm_context, session_id, LIBSPDM_KEY_UPDATE_OPERATION_CREATE_UPDATE,
             LIBSPDM_KEY_UPDATE_ACTION_REQUESTER);
 
         /*save the last update operation*/
@@ -133,7 +131,7 @@ libspdm_return_t libspdm_get_response_key_update(void *context,
         if(libspdm_const_compare_mem(prev_spdm_request,
                                      &spdm_key_init_update_operation,
                                      sizeof(spdm_key_update_request_t)) != 0) {
-            return libspdm_generate_error_response(context,
+            return libspdm_generate_error_response(spdm_context,
                                                    SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                    response_size, response);
         }
@@ -148,7 +146,7 @@ libspdm_return_t libspdm_get_response_key_update(void *context,
             return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         }
         libspdm_trigger_key_update_callback(
-            context, session_id, LIBSPDM_KEY_UPDATE_OPERATION_CREATE_UPDATE,
+            spdm_context, session_id, LIBSPDM_KEY_UPDATE_OPERATION_CREATE_UPDATE,
             LIBSPDM_KEY_UPDATE_ACTION_REQUESTER);
 
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
@@ -161,7 +159,7 @@ libspdm_return_t libspdm_get_response_key_update(void *context,
             return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         }
         libspdm_trigger_key_update_callback(
-            context, session_id, LIBSPDM_KEY_UPDATE_OPERATION_CREATE_UPDATE,
+            spdm_context, session_id, LIBSPDM_KEY_UPDATE_OPERATION_CREATE_UPDATE,
             LIBSPDM_KEY_UPDATE_ACTION_RESPONDER);
 
         /* We can commit to Responder key. */
@@ -175,7 +173,7 @@ libspdm_return_t libspdm_get_response_key_update(void *context,
             return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         }
         libspdm_trigger_key_update_callback(
-            context, session_id, LIBSPDM_KEY_UPDATE_OPERATION_COMMIT_UPDATE,
+            spdm_context, session_id, LIBSPDM_KEY_UPDATE_OPERATION_COMMIT_UPDATE,
             LIBSPDM_KEY_UPDATE_ACTION_RESPONDER);
 
         /*save the last update operation*/
@@ -187,7 +185,7 @@ libspdm_return_t libspdm_get_response_key_update(void *context,
            SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY &&
            prev_spdm_request->header.param1 !=
            SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS) {
-            return libspdm_generate_error_response(context,
+            return libspdm_generate_error_response(spdm_context,
                                                    SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                    response_size, response);
         }
@@ -202,7 +200,7 @@ libspdm_return_t libspdm_get_response_key_update(void *context,
             return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         }
         libspdm_trigger_key_update_callback(
-            context, session_id, LIBSPDM_KEY_UPDATE_OPERATION_COMMIT_UPDATE,
+            spdm_context, session_id, LIBSPDM_KEY_UPDATE_OPERATION_COMMIT_UPDATE,
             LIBSPDM_KEY_UPDATE_ACTION_REQUESTER);
 
         /*clear last_key_update_request*/
@@ -210,7 +208,7 @@ libspdm_return_t libspdm_get_response_key_update(void *context,
         break;
     default:
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "espurious case\n"));
-        return libspdm_generate_error_response(context,
+        return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
     }

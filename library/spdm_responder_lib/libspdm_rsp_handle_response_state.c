@@ -6,15 +6,13 @@
 
 #include "internal/libspdm_responder_lib.h"
 
-libspdm_return_t libspdm_responder_handle_response_state(void *context,
+libspdm_return_t libspdm_responder_handle_response_state(libspdm_context_t *spdm_context,
                                                          uint8_t request_code,
                                                          size_t *response_size,
                                                          void *response)
 {
-    libspdm_context_t *spdm_context;
     libspdm_return_t status;
 
-    spdm_context = context;
     switch (spdm_context->response_state) {
     case LIBSPDM_RESPONSE_STATE_BUSY:
         return libspdm_generate_error_response(spdm_context, SPDM_ERROR_CODE_BUSY,

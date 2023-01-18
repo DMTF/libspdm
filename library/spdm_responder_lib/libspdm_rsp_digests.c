@@ -8,7 +8,7 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
-libspdm_return_t libspdm_get_response_digests(void *context, size_t request_size,
+libspdm_return_t libspdm_get_response_digests(libspdm_context_t *spdm_context, size_t request_size,
                                               const void *request,
                                               size_t *response_size,
                                               void *response)
@@ -19,7 +19,6 @@ libspdm_return_t libspdm_get_response_digests(void *context, size_t request_size
     bool no_local_cert_chain;
     uint32_t hash_size;
     uint8_t *digest;
-    libspdm_context_t *spdm_context;
     libspdm_return_t status;
     bool result;
     libspdm_session_info_t *session_info;
@@ -29,7 +28,6 @@ libspdm_return_t libspdm_get_response_digests(void *context, size_t request_size
     /*populated solt index*/
     uint8_t slot_index;
 
-    spdm_context = context;
     spdm_request = request;
 
     if (spdm_request->header.spdm_version != libspdm_get_connection_version(spdm_context)) {

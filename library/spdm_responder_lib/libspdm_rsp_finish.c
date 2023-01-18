@@ -351,7 +351,7 @@ bool libspdm_generate_finish_rsp_hmac(libspdm_context_t *spdm_context,
     return true;
 }
 
-libspdm_return_t libspdm_get_response_finish(void *context, size_t request_size,
+libspdm_return_t libspdm_get_response_finish(libspdm_context_t *spdm_context, size_t request_size,
                                              const void *request,
                                              size_t *response_size,
                                              void *response)
@@ -363,13 +363,11 @@ libspdm_return_t libspdm_get_response_finish(void *context, size_t request_size,
     uint8_t req_slot_id;
     const spdm_finish_request_t *spdm_request;
     spdm_finish_response_t *spdm_response;
-    libspdm_context_t *spdm_context;
     libspdm_session_info_t *session_info;
     uint8_t th2_hash_data[LIBSPDM_MAX_HASH_SIZE];
     libspdm_return_t status;
     libspdm_session_state_t session_state;
 
-    spdm_context = context;
     spdm_request = request;
 
     if (spdm_request->header.spdm_version != libspdm_get_connection_version(spdm_context)) {
@@ -403,13 +401,13 @@ libspdm_return_t libspdm_get_response_finish(void *context, size_t request_size,
         /* No handshake in clear, then it must be in a session.*/
         if (!spdm_context->last_spdm_request_session_id_valid) {
             return libspdm_generate_error_response(
-                context, SPDM_ERROR_CODE_SESSION_REQUIRED, 0, response_size, response);
+                spdm_context, SPDM_ERROR_CODE_SESSION_REQUIRED, 0, response_size, response);
         }
     } else {
         /* handshake in clear, then it must not be in a session.*/
         if (spdm_context->last_spdm_request_session_id_valid) {
             return libspdm_generate_error_response(
-                context, SPDM_ERROR_CODE_SESSION_REQUIRED, 0,
+                spdm_context, SPDM_ERROR_CODE_SESSION_REQUIRED, 0,
                 response_size, response);
         }
     }

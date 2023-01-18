@@ -9,13 +9,12 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP
 
-libspdm_return_t libspdm_get_response_csr(void *context, size_t request_size,
-                                          const void *request, size_t *response_size,
-                                          void *response)
+libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
+                                          size_t request_size, const void *request,
+                                          size_t *response_size, void *response)
 {
     const spdm_get_csr_request_t *spdm_request;
     spdm_csr_response_t *spdm_response;
-    libspdm_context_t *spdm_context;
     bool result;
 
     libspdm_session_info_t *session_info;
@@ -30,7 +29,6 @@ libspdm_return_t libspdm_get_response_csr(void *context, size_t request_size,
     uint8_t *requester_info;
     bool need_reset;
 
-    spdm_context = context;
     spdm_request = request;
 
     if (spdm_request->header.spdm_version != libspdm_get_connection_version(spdm_context)) {

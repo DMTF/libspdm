@@ -70,7 +70,7 @@ static bool libspdm_generate_psk_exchange_rsp_hmac(libspdm_context_t *spdm_conte
     return true;
 }
 
-libspdm_return_t libspdm_get_response_psk_exchange(void *context,
+libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_context,
                                                    size_t request_size,
                                                    const void *request,
                                                    size_t *response_size,
@@ -86,7 +86,6 @@ libspdm_return_t libspdm_get_response_psk_exchange(void *context,
     uint8_t *ptr;
     libspdm_session_info_t *session_info;
     size_t total_size;
-    libspdm_context_t *spdm_context;
     uint16_t req_session_id;
     uint16_t rsp_session_id;
     libspdm_return_t status;
@@ -98,7 +97,6 @@ libspdm_return_t libspdm_get_response_psk_exchange(void *context,
     const void *psk_hint;
     size_t psk_hint_size;
 
-    spdm_context = context;
     spdm_request = request;
 
     if (spdm_request->header.spdm_version != libspdm_get_connection_version(spdm_context)) {

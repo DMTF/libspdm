@@ -112,7 +112,7 @@ static bool libspdm_check_request_flag_compability(uint32_t capabilities_flag, u
     return true;
 }
 
-libspdm_return_t libspdm_get_response_capabilities(void *context,
+libspdm_return_t libspdm_get_response_capabilities(libspdm_context_t *spdm_context,
                                                    size_t request_size,
                                                    const void *request,
                                                    size_t *response_size,
@@ -120,10 +120,8 @@ libspdm_return_t libspdm_get_response_capabilities(void *context,
 {
     const spdm_get_capabilities_request_t *spdm_request;
     spdm_capabilities_response_t *spdm_response;
-    libspdm_context_t *spdm_context;
     libspdm_return_t status;
 
-    spdm_context = context;
     spdm_request = request;
 
     /* -=[Verify State Phase]=- */

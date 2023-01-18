@@ -303,17 +303,15 @@ void libspdm_init_key_update_encap_state(void *spdm_context)
 }
 
 libspdm_return_t libspdm_get_response_encapsulated_request(
-    void *context, size_t request_size, const void *request,
+    libspdm_context_t *spdm_context, size_t request_size, const void *request,
     size_t *response_size, void *response)
 {
     spdm_encapsulated_request_response_t *spdm_response;
-    libspdm_context_t *spdm_context;
     void *encap_request;
     size_t encap_request_size;
     libspdm_return_t status;
     const spdm_get_encapsulated_request_request_t *spdm_request;
 
-    spdm_context = context;
     spdm_request = request;
 
     if (!libspdm_is_capabilities_flag_supported(
@@ -362,7 +360,7 @@ libspdm_return_t libspdm_get_response_encapsulated_request(
     encap_request = spdm_response + 1;
 
     status = libspdm_process_encapsulated_response(
-        context, 0, NULL, &encap_request_size, encap_request);
+        spdm_context, 0, NULL, &encap_request_size, encap_request);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
         return libspdm_generate_error_response(
@@ -381,13 +379,12 @@ libspdm_return_t libspdm_get_response_encapsulated_request(
 }
 
 libspdm_return_t libspdm_get_response_encapsulated_response_ack(
-    void *context, size_t request_size, const void *request,
+    libspdm_context_t *spdm_context, size_t request_size, const void *request,
     size_t *response_size, void *response)
 {
     const spdm_deliver_encapsulated_response_request_t *spdm_request;
     size_t spdm_request_size;
     spdm_encapsulated_response_ack_response_t *spdm_response;
-    libspdm_context_t *spdm_context;
     const void *encap_response;
     size_t encap_response_size;
     void *encap_request;
@@ -395,7 +392,6 @@ libspdm_return_t libspdm_get_response_encapsulated_response_ack(
     libspdm_return_t status;
     size_t ack_header_size;
 
-    spdm_context = context;
     spdm_request = request;
 
     if (!libspdm_is_capabilities_flag_supported(
@@ -472,7 +468,7 @@ libspdm_return_t libspdm_get_response_encapsulated_response_ack(
                                                   spdm_request->header.request_response_code);
 
     status = libspdm_process_encapsulated_response(
-        context, encap_response_size, encap_response,
+        spdm_context, encap_response_size, encap_response,
         &encap_request_size, encap_request);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;

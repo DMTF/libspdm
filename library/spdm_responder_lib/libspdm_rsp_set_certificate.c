@@ -8,15 +8,13 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP
 
-libspdm_return_t libspdm_get_response_set_certificate(void *context, size_t request_size,
-                                                      const void *request,
-                                                      size_t *response_size,
-                                                      void *response)
+libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_context,
+                                                      size_t request_size, const void *request,
+                                                      size_t *response_size, void *response)
 {
     const spdm_set_certificate_request_t *spdm_request;
     spdm_set_certificate_response_t *spdm_response;
 
-    libspdm_context_t *spdm_context;
     bool result;
     uint8_t slot_id;
 
@@ -28,7 +26,6 @@ libspdm_return_t libspdm_get_response_set_certificate(void *context, size_t requ
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
 
-    spdm_context = context;
     spdm_request = request;
 
     if (spdm_request->header.spdm_version != libspdm_get_connection_version(spdm_context)) {

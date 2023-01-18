@@ -9,7 +9,7 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 
-libspdm_return_t libspdm_get_response_challenge_auth(void *context,
+libspdm_return_t libspdm_get_response_challenge_auth(libspdm_context_t *spdm_context,
                                                      size_t request_size,
                                                      const void *request,
                                                      size_t *response_size,
@@ -24,13 +24,11 @@ libspdm_return_t libspdm_get_response_challenge_auth(void *context,
     size_t measurement_summary_hash_size;
     uint8_t *ptr;
     size_t total_size;
-    libspdm_context_t *spdm_context;
     uint8_t auth_attribute;
     libspdm_return_t status;
     size_t response_capacity;
     uint8_t slot_mask;
 
-    spdm_context = context;
     spdm_request = request;
 
     if (spdm_request->header.spdm_version != libspdm_get_connection_version(spdm_context)) {
@@ -151,7 +149,7 @@ libspdm_return_t libspdm_get_response_challenge_auth(void *context,
         }
         if ((auth_attribute & SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_BASIC_MUT_AUTH_REQ) != 0) {
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
-            libspdm_init_basic_mut_auth_encap_state(context);
+            libspdm_init_basic_mut_auth_encap_state(spdm_context);
 #else
             auth_attribute =
                 (uint8_t)(auth_attribute &

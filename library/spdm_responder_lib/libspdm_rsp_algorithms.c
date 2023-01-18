@@ -53,7 +53,7 @@ static uint32_t libspdm_prioritize_algorithm(const uint32_t *priority_table,
     return 0;
 }
 
-libspdm_return_t libspdm_get_response_algorithms(void *context,
+libspdm_return_t libspdm_get_response_algorithms(libspdm_context_t *spdm_context,
                                                  size_t request_size,
                                                  const void *request,
                                                  size_t *response_size,
@@ -64,7 +64,6 @@ libspdm_return_t libspdm_get_response_algorithms(void *context,
     libspdm_algorithms_response_mine_t *spdm_response;
     spdm_negotiate_algorithms_common_struct_table_t *struct_table;
     size_t index;
-    libspdm_context_t *spdm_context;
     libspdm_return_t status;
     uint32_t algo_size;
     uint8_t fixed_alg_size;
@@ -221,7 +220,6 @@ libspdm_return_t libspdm_get_response_algorithms(void *context,
         SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1,
     };
 
-    spdm_context = context;
     spdm_request = request;
 
     ext_alg_total_count = 0;
