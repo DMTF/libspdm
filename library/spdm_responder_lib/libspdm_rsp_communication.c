@@ -6,10 +6,10 @@
 
 #include "internal/libspdm_responder_lib.h"
 
-libspdm_return_t libspdm_responder_dispatch_message(void *context)
+libspdm_return_t libspdm_responder_dispatch_message(void *spdm_context)
 {
     libspdm_return_t status;
-    libspdm_context_t *spdm_context;
+    libspdm_context_t *context;
     uint8_t *request;
     size_t request_size;
     uint8_t *response;
@@ -21,10 +21,10 @@ libspdm_return_t libspdm_responder_dispatch_message(void *context)
     void *message;
     size_t message_size;
 
-    spdm_context = context;
+    context = spdm_context;
 
     /* receive and process request message */
-    status = libspdm_acquire_receiver_buffer (spdm_context, &message_size, (void **)&message);
+    status = libspdm_acquire_receiver_buffer (context, &message_size, (void **)&message);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return status;
     }
@@ -32,17 +32,17 @@ libspdm_return_t libspdm_responder_dispatch_message(void *context)
     request_size = message_size;
     #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
     /* need get real receiver buffer, because acquire receiver buffer will return scratch buffer*/
-    libspdm_get_receiver_buffer (spdm_context, (void **)&request, &request_size);
+    libspdm_get_receiver_buffer (context, (void **)&request, &request_size);
     #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
-    status = spdm_context->receive_message(spdm_context, &request_size, (void **)&request, 0);
+    status = context->receive_message(context, &request_size, (void **)&request, 0);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        libspdm_release_receiver_buffer (spdm_context);
+        libspdm_release_receiver_buffer (context);
         return status;
     }
-    status = libspdm_process_request(spdm_context, &session_id, &is_app_message,
+    status = libspdm_process_request(context, &session_id, &is_app_message,
                                      request_size, request);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        libspdm_release_receiver_buffer (spdm_context);
+        libspdm_release_receiver_buffer (context);
         return status;
     }
 
@@ -54,10 +54,10 @@ libspdm_return_t libspdm_responder_dispatch_message(void *context)
         session_id_ptr = NULL;
     }
     /* release buffer after use session_id, before acquire buffer */
-    libspdm_release_receiver_buffer (spdm_context);
+    libspdm_release_receiver_buffer (context);
 
     /* build and send response message */
-    status = libspdm_acquire_sender_buffer (spdm_context, &message_size, (void **)&message);
+    status = libspdm_acquire_sender_buffer (context, &message_size, (void **)&message);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return status;
     }
@@ -65,16 +65,16 @@ libspdm_return_t libspdm_responder_dispatch_message(void *context)
     response_size = message_size;
     libspdm_zero_mem(response, response_size);
 
-    status = libspdm_build_response(spdm_context, session_id_ptr, is_app_message,
+    status = libspdm_build_response(context, session_id_ptr, is_app_message,
                                     &response_size, (void **)&response);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        libspdm_release_sender_buffer (spdm_context);
+        libspdm_release_sender_buffer (context);
         return status;
     }
 
-    status = spdm_context->send_message(spdm_context, response_size, response, 0);
+    status = context->send_message(context, response_size, response, 0);
 
-    libspdm_release_sender_buffer (spdm_context);
+    libspdm_release_sender_buffer (context);
 
     return status;
 }

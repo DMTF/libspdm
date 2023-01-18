@@ -155,7 +155,7 @@ libspdm_return_t libspdm_generate_error_response(const void *spdm_context,
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
 libspdm_return_t libspdm_generate_extended_error_response(
-    const void *context, uint8_t error_code, uint8_t error_data,
+    const void *spdm_context, uint8_t error_code, uint8_t error_data,
     size_t extended_error_data_size, const uint8_t *extended_error_data,
     size_t *spdm_response_size, void *spdm_response);
 

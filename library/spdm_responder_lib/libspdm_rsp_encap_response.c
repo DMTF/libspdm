@@ -278,27 +278,27 @@ void libspdm_init_basic_mut_auth_encap_state(libspdm_context_t *spdm_context)
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP;
 }
 
-void libspdm_init_key_update_encap_state(void *context)
+void libspdm_init_key_update_encap_state(void *spdm_context)
 {
-    libspdm_context_t *spdm_context;
+    libspdm_context_t *context;
 
-    spdm_context = context;
+    context = spdm_context;
 
-    spdm_context->encap_context.current_request_op_code = 0x00;
-    spdm_context->encap_context.request_id = 0;
-    spdm_context->encap_context.last_encap_request_size = 0;
-    libspdm_zero_mem(&spdm_context->encap_context.last_encap_request_header,
-                     sizeof(spdm_context->encap_context.last_encap_request_header));
-    spdm_context->encap_context.certificate_chain_buffer.buffer_size = 0;
-    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP;
+    context->encap_context.current_request_op_code = 0x00;
+    context->encap_context.request_id = 0;
+    context->encap_context.last_encap_request_size = 0;
+    libspdm_zero_mem(&context->encap_context.last_encap_request_header,
+                     sizeof(context->encap_context.last_encap_request_header));
+    context->encap_context.certificate_chain_buffer.buffer_size = 0;
+    context->response_state = LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP;
 
-    libspdm_reset_message_mut_b(spdm_context);
-    libspdm_reset_message_mut_c(spdm_context);
+    libspdm_reset_message_mut_b(context);
+    libspdm_reset_message_mut_c(context);
 
-    libspdm_zero_mem(spdm_context->encap_context.request_op_code_sequence,
-                     sizeof(spdm_context->encap_context.request_op_code_sequence));
-    spdm_context->encap_context.request_op_code_count = 1;
-    spdm_context->encap_context.request_op_code_sequence[0] =
+    libspdm_zero_mem(context->encap_context.request_op_code_sequence,
+                     sizeof(context->encap_context.request_op_code_sequence));
+    context->encap_context.request_op_code_count = 1;
+    context->encap_context.request_op_code_sequence[0] =
         SPDM_KEY_UPDATE;
 }
 
