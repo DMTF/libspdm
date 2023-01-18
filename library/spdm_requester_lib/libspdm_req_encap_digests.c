@@ -8,7 +8,7 @@
 
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
 
-libspdm_return_t libspdm_get_encap_response_digest(void *context,
+libspdm_return_t libspdm_get_encap_response_digest(void *spdm_context,
                                                    size_t request_size,
                                                    void *request,
                                                    size_t *response_size,
@@ -19,7 +19,7 @@ libspdm_return_t libspdm_get_encap_response_digest(void *context,
     size_t index;
     uint32_t hash_size;
     uint8_t *digest;
-    libspdm_context_t *spdm_context;
+    libspdm_context_t *context;
     libspdm_return_t status;
     bool result;
     /*total populated solt count*/
@@ -27,36 +27,36 @@ libspdm_return_t libspdm_get_encap_response_digest(void *context,
     /*populated solt index*/
     uint8_t slot_index;
 
-    spdm_context = context;
+    context = spdm_context;
     spdm_request = request;
 
-    if (spdm_request->header.spdm_version != libspdm_get_connection_version(spdm_context)) {
+    if (spdm_request->header.spdm_version != libspdm_get_connection_version(context)) {
         return libspdm_generate_encap_error_response(
-            spdm_context, SPDM_ERROR_CODE_VERSION_MISMATCH,
+            context, SPDM_ERROR_CODE_VERSION_MISMATCH,
             SPDM_GET_DIGESTS, response_size, response);
     }
 
     if (!libspdm_is_capabilities_flag_supported(
-            spdm_context, true,
+            context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP, 0)) {
         return libspdm_generate_encap_error_response(
-            spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
+            context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
             SPDM_GET_DIGESTS, response_size, response);
     }
 
     if (request_size != sizeof(spdm_get_digest_request_t)) {
         return libspdm_generate_encap_error_response(
-            spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+            context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
             response_size, response);
     }
 
-    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
+    libspdm_reset_message_buffer_via_request_code(context, NULL,
                                                   spdm_request->header.request_response_code);
 
     hash_size = libspdm_get_hash_size(
-        spdm_context->connection_info.algorithm.base_hash_algo);
+        context->connection_info.algorithm.base_hash_algo);
 
-    slot_count = libspdm_get_cert_slot_count(spdm_context);
+    slot_count = libspdm_get_cert_slot_count(context);
     LIBSPDM_ASSERT(*response_size >=
                    sizeof(spdm_digest_response_t) + hash_size * slot_count);
     *response_size = sizeof(spdm_digest_response_t) + hash_size * slot_count;
@@ -71,15 +71,15 @@ libspdm_return_t libspdm_get_encap_response_digest(void *context,
     digest = (void *)(spdm_response + 1);
     slot_index = 0;
     for (index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
-        if (spdm_context->local_context
+        if (context->local_context
             .local_cert_chain_provision[index] != NULL) {
             spdm_response->header.param2 |= (1 << index);
-            result = libspdm_generate_cert_chain_hash(spdm_context, index,
+            result = libspdm_generate_cert_chain_hash(context, index,
                                                       &digest[hash_size * slot_index]);
             slot_index++;
             if (!result) {
                 return libspdm_generate_encap_error_response(
-                    spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
+                    context, SPDM_ERROR_CODE_UNSPECIFIED,
                     0, response_size, response);
             }
         }
@@ -87,19 +87,19 @@ libspdm_return_t libspdm_get_encap_response_digest(void *context,
 
     /* Cache*/
 
-    status = libspdm_append_message_mut_b(spdm_context, spdm_request,
+    status = libspdm_append_message_mut_b(context, spdm_request,
                                           request_size);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return libspdm_generate_encap_error_response(
-            spdm_context, SPDM_ERROR_CODE_UNSPECIFIED, 0,
+            context, SPDM_ERROR_CODE_UNSPECIFIED, 0,
             response_size, response);
     }
 
-    status = libspdm_append_message_mut_b(spdm_context, spdm_response,
+    status = libspdm_append_message_mut_b(context, spdm_response,
                                           *response_size);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return libspdm_generate_encap_error_response(
-            spdm_context, SPDM_ERROR_CODE_UNSPECIFIED, 0,
+            context, SPDM_ERROR_CODE_UNSPECIFIED, 0,
             response_size, response);
     }
 

@@ -105,12 +105,9 @@ static libspdm_return_t libspdm_requester_respond_if_ready(libspdm_context_t *sp
 }
 #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
 
-libspdm_return_t libspdm_handle_simple_error_response(void *context, uint8_t error_code)
+libspdm_return_t libspdm_handle_simple_error_response(libspdm_context_t *spdm_context,
+                                                      uint8_t error_code)
 {
-    libspdm_context_t *spdm_context;
-
-    spdm_context = context;
-
     if (error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) {
         return LIBSPDM_STATUS_NOT_READY_PEER;
     }

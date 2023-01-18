@@ -8,7 +8,7 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
 
-libspdm_return_t libspdm_get_encap_response_key_update(void *context,
+libspdm_return_t libspdm_get_encap_response_key_update(void *spdm_context,
                                                        size_t request_size,
                                                        void *request,
                                                        size_t *response_size,
@@ -17,39 +17,39 @@ libspdm_return_t libspdm_get_encap_response_key_update(void *context,
     uint32_t session_id;
     spdm_key_update_response_t *spdm_response;
     spdm_key_update_request_t *spdm_request;
-    libspdm_context_t *spdm_context;
+    libspdm_context_t *context;
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
     spdm_key_update_request_t *prev_spdm_request;
     spdm_key_update_request_t spdm_key_init_update_operation;
     bool result;
 
-    spdm_context = context;
+    context = spdm_context;
     spdm_request = request;
 
-    if (spdm_request->header.spdm_version != libspdm_get_connection_version(spdm_context)) {
+    if (spdm_request->header.spdm_version != libspdm_get_connection_version(context)) {
         return libspdm_generate_encap_error_response(
-            spdm_context, SPDM_ERROR_CODE_VERSION_MISMATCH,
+            context, SPDM_ERROR_CODE_VERSION_MISMATCH,
             SPDM_KEY_UPDATE, response_size, response);
     }
 
     if (!libspdm_is_capabilities_flag_supported(
-            spdm_context, true,
+            context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_UPD_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_UPD_CAP)) {
         return libspdm_generate_encap_error_response(
-            spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
+            context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
             SPDM_KEY_UPDATE, response_size, response);
     }
 
-    if (!spdm_context->last_spdm_request_session_id_valid) {
+    if (!context->last_spdm_request_session_id_valid) {
         return libspdm_generate_encap_error_response(
             context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
             response_size, response);
     }
-    session_id = spdm_context->last_spdm_request_session_id;
+    session_id = context->last_spdm_request_session_id;
     session_info =
-        libspdm_get_session_info_via_session_id(spdm_context, session_id);
+        libspdm_get_session_info_via_session_id(context, session_id);
     if (session_info == NULL) {
         return libspdm_generate_encap_error_response(
             context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
@@ -59,13 +59,13 @@ libspdm_return_t libspdm_get_encap_response_key_update(void *context,
         session_info->secured_message_context);
     if (session_state != LIBSPDM_SESSION_STATE_ESTABLISHED) {
         return libspdm_generate_encap_error_response(
-            spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+            context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
             response_size, response);
     }
 
     if (request_size != sizeof(spdm_key_update_request_t)) {
         return libspdm_generate_encap_error_response(
-            spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+            context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
             response_size, response);
     }
 
@@ -121,11 +121,11 @@ libspdm_return_t libspdm_get_encap_response_key_update(void *context,
 
     if (!result) {
         return libspdm_generate_encap_error_response(
-            spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+            context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
             response_size, response);
     }
 
-    libspdm_reset_message_buffer_via_request_code(spdm_context, session_info,
+    libspdm_reset_message_buffer_via_request_code(context, session_info,
                                                   spdm_request->header.request_response_code);
 
     LIBSPDM_ASSERT(*response_size >= sizeof(spdm_key_update_response_t));

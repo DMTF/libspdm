@@ -20,7 +20,8 @@
  * @retval RETURN_NO_RESPONSE           If the error code is BUSY.
  * @retval RETURN_DEVICE_ERROR          If the error code is REQUEST_RESYNCH or others.
  **/
-libspdm_return_t libspdm_handle_simple_error_response(void *context, uint8_t error_code);
+libspdm_return_t libspdm_handle_simple_error_response(libspdm_context_t *spdm_context,
+                                                      uint8_t error_code);
 
 /**
  * This function handles the error response.
@@ -305,7 +306,7 @@ libspdm_return_t libspdm_encapsulated_request(libspdm_context_t *spdm_context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-libspdm_return_t libspdm_get_encap_response_digest(void *context,
+libspdm_return_t libspdm_get_encap_response_digest(void *spdm_context,
                                                    size_t request_size,
                                                    void *request,
                                                    size_t *response_size,
@@ -328,7 +329,7 @@ libspdm_return_t libspdm_get_encap_response_digest(void *context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-libspdm_return_t libspdm_get_encap_response_certificate(void *context,
+libspdm_return_t libspdm_get_encap_response_certificate(void *spdm_context,
                                                         size_t request_size,
                                                         void *request,
                                                         size_t *response_size,
@@ -352,7 +353,7 @@ libspdm_return_t libspdm_get_encap_response_certificate(void *context,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 libspdm_return_t libspdm_get_encap_response_challenge_auth(
-    void *context, size_t request_size, void *request,
+    void *spdm_context, size_t request_size, void *request,
     size_t *response_size, void *response);
 
 /**
@@ -372,7 +373,7 @@ libspdm_return_t libspdm_get_encap_response_challenge_auth(
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-libspdm_return_t libspdm_get_encap_response_key_update(void *context,
+libspdm_return_t libspdm_get_encap_response_key_update(void *spdm_context,
                                                        size_t request_size,
                                                        void *request,
                                                        size_t *response_size,
