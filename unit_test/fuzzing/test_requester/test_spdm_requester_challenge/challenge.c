@@ -163,7 +163,7 @@ void libspdm_test_requester_challenge_case1(void **State)
 #endif
 
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
-    libspdm_challenge(spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
+    libspdm_challenge(spdm_context, NULL, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
                       measurement_hash, NULL);
     free(data);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -224,7 +224,7 @@ void libspdm_test_requester_challenge_ex_case1(void **State)
 #endif
 
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
-    libspdm_challenge_ex(spdm_context, 0,
+    libspdm_challenge_ex(spdm_context, NULL, 0,
                          SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
                          measurement_hash, NULL, requester_nonce_in, requester_nonce,
                          responder_nonce);

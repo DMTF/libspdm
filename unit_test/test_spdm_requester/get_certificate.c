@@ -3550,7 +3550,7 @@ void libspdm_test_requester_get_certificate_case25(void **state)
     for (slot_id = 0; slot_id < 2; slot_id++) {
         libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
         status = libspdm_challenge(
-            spdm_context, slot_id,
+            spdm_context, NULL, slot_id,
             SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
             measurement_hash, NULL);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_challenge - %p\n", status));

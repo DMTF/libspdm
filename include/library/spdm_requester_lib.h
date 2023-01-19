@@ -254,6 +254,7 @@ libspdm_return_t libspdm_get_certificate_choose_length_ex(void *spdm_context,
  * this function also perform the basic mutual authentication.
  *
  * @param  spdm_context           A pointer to the SPDM context.
+ * @param  reserved               Reserved for session_id and is ignored.
  * @param  slot_id                The number of slot for the challenge.
  * @param  measurement_hash_type  The type of the measurement hash.
  * @param  measurement_hash       A pointer to a destination buffer to store the measurement hash.
@@ -263,7 +264,8 @@ libspdm_return_t libspdm_get_certificate_choose_length_ex(void *spdm_context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-libspdm_return_t libspdm_challenge(void *spdm_context, uint8_t slot_id,
+libspdm_return_t libspdm_challenge(void *spdm_context, void *reserved,
+                                   uint8_t slot_id,
                                    uint8_t measurement_hash_type,
                                    void *measurement_hash,
                                    uint8_t *slot_mask);
@@ -277,6 +279,7 @@ libspdm_return_t libspdm_challenge(void *spdm_context, uint8_t slot_id,
  * this function also perform the basic mutual authentication.
  *
  * @param  spdm_context           A pointer to the SPDM context.
+ * @param  reserved               Reserved for session_id and is ignored.
  * @param  slot_id                The number of slot for the challenge.
  * @param  measurement_hash_type  The type of the measurement hash.
  * @param  measurement_hash       A pointer to a destination buffer to store the measurement hash.
@@ -289,7 +292,8 @@ libspdm_return_t libspdm_challenge(void *spdm_context, uint8_t slot_id,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-libspdm_return_t libspdm_challenge_ex(void *spdm_context, uint8_t slot_id,
+libspdm_return_t libspdm_challenge_ex(void *spdm_context, void *reserved,
+                                      uint8_t slot_id,
                                       uint8_t measurement_hash_type,
                                       void *measurement_hash,
                                       uint8_t *slot_mask,
