@@ -630,13 +630,13 @@ libspdm_return_t libspdm_generate_encap_extended_error_response(
  * to get csr from the device.
  *
  * @param[in]  context                A pointer to the SPDM context.
+ * @param[in]  session_id             Indicates if it is a secured message protected via SPDM session.
+ *                                    If session_id is NULL, it is a normal message.
+ *                                    If session_id is NOT NULL, it is a secured message.
  * @param[in]  requester_info         Requester info to gen CSR
  * @param[in]  requester_info_length  The length of requester info
  * @param[in]  opaque_data            opaque data.
  * @param[in]  opaque_data_length     The length of opaque data.
- * @param[in]  session_id             Indicates if it is a secured message protected via SPDM session.
- *                                    If session_id is NULL, it is a normal message.
- *                                    If session_id is NOT NULL, it is a secured message.
  * @param[out] csr                    Address to store CSR.
  * @param[out] csr_len                On input, *csr_len indicates the max csr buffer size.
  *                                    On output, *csr_len indicates the actual csr buffer size.
@@ -646,9 +646,9 @@ libspdm_return_t libspdm_generate_encap_extended_error_response(
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 libspdm_return_t libspdm_get_csr(void *spdm_context,
+                                 const uint32_t *session_id,
                                  void *requester_info, uint16_t requester_info_length,
                                  void *opaque_data, uint16_t opaque_data_length,
-                                 const uint32_t *session_id,
                                  void *csr, size_t *csr_len);
 #endif /*LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP*/
 
@@ -658,21 +658,21 @@ libspdm_return_t libspdm_get_csr(void *spdm_context,
  * to set certificate from the device.
  *
  * @param  context          A pointer to the SPDM context.
+ * @param  session_id       Indicates if it is a secured message protected via SPDM session.
+ *                          If session_id is NULL, it is a normal message.
+ *                          If session_id is NOT NULL, it is a secured message.
  * @param  slot_id          The number of slot for the certificate chain.
  * @param  cert_chain       The pointer for the certificate chain to set.
  *                          The cert chain is a full SPDM certificate chain, including Length and Root Cert Hash.
  * @param  cert_chain_size  The size of the certificate chain to set.
- * @param  session_id       Indicates if it is a secured message protected via SPDM session.
- *                          If session_id is NULL, it is a normal message.
- *                          If session_id is NOT NULL, it is a secured message.
  *
  * @retval RETURN_SUCCESS               The measurement is got successfully.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
-libspdm_return_t libspdm_set_certificate(void * spdm_context, uint8_t slot_id,
-                                         void * cert_chain, size_t cert_chain_size,
-                                         const uint32_t *session_id);
+libspdm_return_t libspdm_set_certificate(void *spdm_context,
+                                         const uint32_t *session_id, uint8_t slot_id,
+                                         void *cert_chain, size_t cert_chain_size);
 
 #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP */
 

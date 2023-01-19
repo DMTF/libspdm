@@ -194,7 +194,7 @@ void libspdm_test_requester_set_certificate_case1(void **State)
                                                     m_libspdm_use_asym_algo,
                                                     &data, &data_size, NULL, NULL);
 
-    libspdm_set_certificate(spdm_context, 0, data, data_size, NULL);
+    libspdm_set_certificate(spdm_context, NULL, 0, data, data_size);
     free(data);
 }
 
@@ -243,7 +243,7 @@ void libspdm_test_requester_set_certificate_case2(void **State)
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
 
-    libspdm_set_certificate(spdm_context, 0, data, data_size, &session_id);
+    libspdm_set_certificate(spdm_context, &session_id, 0, data, data_size);
     free(data);
 }
 

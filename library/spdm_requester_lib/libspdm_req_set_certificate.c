@@ -12,22 +12,21 @@
  * to set certificate from the device.
  *
  * @param  context                      A pointer to the SPDM context.
+ * @param  session_id                   Indicates if it is a secured message protected via SPDM session.
+ *                                      If session_id is NULL, it is a normal message.
+ *                                      If session_id is NOT NULL, it is a secured message.
  * @param  slot_id                      The number of slot for the certificate chain.
  * @param  cert_chain                   The pointer for the certificate chain to set.
  *                                      The cert chain is a full SPDM certificate chain, including Length and Root Cert Hash.
  * @param  cert_chain_size              The size of the certificate chain to set.
- * @param  session_id                   Indicates if it is a secured message protected via SPDM session.
- *                                      If session_id is NULL, it is a normal message.
- *                                      If session_id is NOT NULL, it is a secured message.
  *
  * @retval RETURN_SUCCESS               The measurement is got successfully.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 static libspdm_return_t libspdm_try_set_certificate(libspdm_context_t *spdm_context,
-                                                    uint8_t slot_id,
-                                                    void * cert_chain, size_t cert_chain_size,
-                                                    const uint32_t *session_id)
+                                                    const uint32_t *session_id, uint8_t slot_id,
+                                                    void *cert_chain, size_t cert_chain_size)
 {
     libspdm_return_t status;
     spdm_set_certificate_request_t *spdm_request;
@@ -156,9 +155,9 @@ receive_done:
     return status;
 }
 
-libspdm_return_t libspdm_set_certificate(void * spdm_context, uint8_t slot_id,
-                                         void * cert_chain, size_t cert_chain_size,
-                                         const uint32_t *session_id)
+libspdm_return_t libspdm_set_certificate(void *spdm_context,
+                                         const uint32_t *session_id, uint8_t slot_id,
+                                         void *cert_chain, size_t cert_chain_size)
 {
     libspdm_context_t *context;
     size_t retry;
@@ -168,8 +167,8 @@ libspdm_return_t libspdm_set_certificate(void * spdm_context, uint8_t slot_id,
     context->crypto_request = true;
     retry = context->retry_times;
     do {
-        status = libspdm_try_set_certificate(context, slot_id,
-                                             cert_chain, cert_chain_size, session_id);
+        status = libspdm_try_set_certificate(context, session_id, slot_id,
+                                             cert_chain, cert_chain_size);
         if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
         }
