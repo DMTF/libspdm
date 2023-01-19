@@ -228,7 +228,7 @@ void libspdm_test_requester_set_certificate_case1(void **state)
                                                     m_libspdm_use_asym_algo,
                                                     &data, &data_size, NULL, NULL);
 
-    status = libspdm_set_certificate(spdm_context, 0, data, data_size, NULL);
+    status = libspdm_set_certificate(spdm_context, NULL, 0, data, data_size);
 
     assert_int_equal(status, LIBSPDM_STATUS_SEND_FAIL);
     free(data);
@@ -262,7 +262,7 @@ void libspdm_test_requester_set_certificate_case2(void **state)
                                                     m_libspdm_use_asym_algo,
                                                     &data, &data_size, NULL, NULL);
 
-    status = libspdm_set_certificate(spdm_context, 0, data, data_size, NULL);
+    status = libspdm_set_certificate(spdm_context, NULL, 0, data, data_size);
 
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     free(data);
@@ -289,7 +289,7 @@ void libspdm_test_requester_set_certificate_case3(void **state)
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP;
 
-    status = libspdm_set_certificate(spdm_context, 0, NULL, 0, NULL);
+    status = libspdm_set_certificate(spdm_context, NULL, 0, NULL, 0);
 
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_PARAMETER);
 }
@@ -323,7 +323,7 @@ void libspdm_test_requester_set_certificate_case4(void **state)
                                                     &data, &data_size, NULL, NULL);
 
     /* slot id is 1*/
-    status = libspdm_set_certificate(spdm_context, 1, data, data_size, NULL);
+    status = libspdm_set_certificate(spdm_context, NULL, 1, data, data_size);
 
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_PARAMETER);
     free(data);
@@ -382,7 +382,7 @@ void libspdm_test_requester_set_certificate_case5(void **state)
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
 
     /* slot id is 1*/
-    status = libspdm_set_certificate(spdm_context, 1, data, data_size, &session_id);
+    status = libspdm_set_certificate(spdm_context, &session_id, 1, data, data_size);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
     free(data);

@@ -194,7 +194,7 @@ void libspdm_test_requester_get_csr_case1(void **State)
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CSR_CAP;
 
-    libspdm_get_csr(spdm_context, NULL, 0, NULL, 0, NULL, (void *)&csr_form_get,
+    libspdm_get_csr(spdm_context, NULL, NULL, 0, NULL, 0, (void *)&csr_form_get,
                     &csr_len);
 }
 
@@ -244,7 +244,7 @@ void libspdm_test_requester_get_csr_case2(void **State)
     libspdm_secured_message_set_session_state(session_info->secured_message_context,
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
 
-    libspdm_get_csr(spdm_context, NULL, 0, NULL, 0, &session_id, (void *)&csr_form_get,
+    libspdm_get_csr(spdm_context, &session_id, NULL, 0, NULL, 0, (void *)&csr_form_get,
                     &csr_len);
 }
 

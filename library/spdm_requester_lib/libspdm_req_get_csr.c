@@ -13,13 +13,13 @@
  * to get csr from the device.
  *
  * @param[in]  context                      A pointer to the SPDM context.
+ * @param[in]  session_id                   Indicates if it is a secured message protected via SPDM session.
+ *                                          If session_id is NULL, it is a normal message.
+ *                                          If session_id is NOT NULL, it is a secured message.
  * @param[in]  requester_info               requester info to gen CSR
  * @param[in]  requester_info_length        The len of requester info
  * @param[in]  opaque_data                  opaque data
  * @param[in]  opaque_data_length           The len of opaque data
- * @param[in]  session_id                   Indicates if it is a secured message protected via SPDM session.
- *                                          If session_id is NULL, it is a normal message.
- *                                          If session_id is NOT NULL, it is a secured message.
  * @param[out] csr                          address to store CSR.
  * @param[out] csr_len                      on input, *csr_len indicates the max csr buffer size.
  *                                          on output, *csr_len indicates the actual csr buffer size.
@@ -29,9 +29,9 @@
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 static libspdm_return_t libspdm_try_get_csr(libspdm_context_t *spdm_context,
+                                            const uint32_t *session_id,
                                             void *requester_info, uint16_t requester_info_length,
                                             void *opaque_data, uint16_t opaque_data_length,
-                                            const uint32_t *session_id,
                                             void *csr, size_t *csr_len)
 {
     libspdm_return_t status;
@@ -168,9 +168,9 @@ receive_done:
 }
 
 libspdm_return_t libspdm_get_csr(void * spdm_context,
+                                 const uint32_t *session_id,
                                  void * requester_info, uint16_t requester_info_length,
                                  void * opaque_data, uint16_t opaque_data_length,
-                                 const uint32_t *session_id,
                                  void *csr, size_t *csr_len)
 {
     libspdm_context_t *context;
@@ -181,10 +181,10 @@ libspdm_return_t libspdm_get_csr(void * spdm_context,
     context->crypto_request = true;
     retry = context->retry_times;
     do {
-        status = libspdm_try_get_csr(context,
+        status = libspdm_try_get_csr(context, session_id,
                                      requester_info, requester_info_length,
                                      opaque_data, opaque_data_length,
-                                     session_id, csr, csr_len);
+                                     csr, csr_len);
         if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
         }
