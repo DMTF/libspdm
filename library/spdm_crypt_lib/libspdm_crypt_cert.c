@@ -17,8 +17,8 @@
  * len > 2 * (spdm id-DMTF-spdm size + 2)
  **/
 
-#ifndef SPDM_EXTENDSION_LEN
-#define SPDM_EXTENDSION_LEN 30
+#ifndef SPDM_EXTENSION_LEN
+#define SPDM_EXTENSION_LEN 30
 #endif
 
 /*max public key encryption algo oid len*/
@@ -651,7 +651,7 @@ static bool libspdm_verify_leaf_cert_eku_spdm_OID(const uint8_t *cert, size_t ce
 {
     bool status;
     bool find_sucessful;
-    uint8_t spdm_extension[SPDM_EXTENDSION_LEN];
+    uint8_t spdm_extension[SPDM_EXTENSION_LEN];
     size_t index;
     size_t len;
 
@@ -660,7 +660,7 @@ static bool libspdm_verify_leaf_cert_eku_spdm_OID(const uint8_t *cert, size_t ce
     uint8_t oid_spdm_extension[] = SPDM_OID_EXTENSION;
     uint8_t hardware_identity_oid[] = SPDM_OID_HARDWARE_IDENTITY;
 
-    len = SPDM_EXTENDSION_LEN;
+    len = SPDM_EXTENSION_LEN;
 
     if (cert == NULL || cert_size == 0) {
         return false;
