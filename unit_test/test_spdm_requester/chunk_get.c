@@ -749,7 +749,7 @@ void libspdm_test_requester_chunk_get_case3(void** state)
 
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_challenge(
-        spdm_context, 0,
+        spdm_context, NULL, 0,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
         measurement_hash, NULL);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);

@@ -1631,7 +1631,7 @@ void libspdm_test_requester_challenge_case1(void **state)
 
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_challenge(
-        spdm_context, 0,
+        spdm_context, NULL, 0,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
         measurement_hash, NULL);
     assert_int_equal(status, LIBSPDM_STATUS_SEND_FAIL);
@@ -1709,7 +1709,7 @@ void libspdm_test_requester_challenge_case2(void **state)
 
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_challenge(
-        spdm_context, 0,
+        spdm_context, NULL, 0,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
         measurement_hash, NULL);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
@@ -1785,7 +1785,7 @@ void libspdm_test_requester_challenge_case3(void **state)
 
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_challenge(
-        spdm_context, 0,
+        spdm_context, NULL, 0,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
         measurement_hash, NULL);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_STATE_LOCAL);
@@ -1856,7 +1856,7 @@ void libspdm_test_requester_challenge_case4(void **state)
 
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_challenge(
-        spdm_context, 0,
+        spdm_context, NULL, 0,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
         measurement_hash, NULL);
     assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
@@ -1927,7 +1927,7 @@ void libspdm_test_requester_challenge_case5(void **state)
 
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_challenge(
-        spdm_context, 0,
+        spdm_context, NULL, 0,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
         measurement_hash, NULL);
     assert_int_equal(status, LIBSPDM_STATUS_BUSY_PEER);
@@ -1999,7 +1999,7 @@ void libspdm_test_requester_challenge_case6(void **state)
 
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_challenge(
-        spdm_context, 0,
+        spdm_context, NULL, 0,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
         measurement_hash, NULL);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
@@ -2068,7 +2068,7 @@ void libspdm_test_requester_challenge_case7(void **state)
 
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_challenge(
-        spdm_context, 0,
+        spdm_context, NULL, 0,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
         measurement_hash, NULL);
     assert_int_equal(status, LIBSPDM_STATUS_RESYNCH_PEER);
@@ -2141,7 +2141,7 @@ void libspdm_test_requester_challenge_case8(void **state)
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
 
     status = libspdm_challenge(
-        spdm_context, 0,
+        spdm_context, NULL, 0,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
         measurement_hash, NULL);
     assert_int_equal(status, LIBSPDM_STATUS_NOT_READY_PEER);
@@ -2208,7 +2208,7 @@ void libspdm_test_requester_challenge_case9(void **state)
 
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_challenge(
-        spdm_context, 0,
+        spdm_context, NULL, 0,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
         measurement_hash, NULL);
     if (LIBSPDM_RESPOND_IF_READY_SUPPORT) {
@@ -2277,7 +2277,8 @@ void libspdm_test_requester_challenge_case10(void **state) {
 #endif
 
     libspdm_zero_mem (measurement_hash, sizeof(measurement_hash));
-    status = libspdm_challenge (spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
+    status = libspdm_challenge (spdm_context, NULL, 0,
+                                SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
                                 measurement_hash, NULL);
     assert_int_equal (status, LIBSPDM_STATUS_UNSUPPORTED_CAP);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -2341,7 +2342,8 @@ void libspdm_test_requester_challenge_case11(void **state) {
 #endif
 
     libspdm_zero_mem (measurement_hash, sizeof(measurement_hash));
-    status = libspdm_challenge (spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
+    status = libspdm_challenge (spdm_context, NULL, 0,
+                                SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
                                 measurement_hash, NULL);
     assert_int_equal (status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     free(data);
@@ -2403,7 +2405,8 @@ void libspdm_test_requester_challenge_case12(void **state) {
 #endif
 
     libspdm_zero_mem (measurement_hash, sizeof(measurement_hash));
-    status = libspdm_challenge (spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
+    status = libspdm_challenge (spdm_context, NULL, 0,
+                                SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
                                 measurement_hash, NULL);
     assert_int_equal (status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     free(data);
@@ -2466,7 +2469,8 @@ void libspdm_test_requester_challenge_case13(void **state) {
 #endif
 
     libspdm_zero_mem (measurement_hash, sizeof(measurement_hash));
-    status = libspdm_challenge (spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
+    status = libspdm_challenge (spdm_context, NULL, 0,
+                                SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
                                 measurement_hash, NULL);
     assert_int_equal (status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     free(data);
@@ -2528,7 +2532,8 @@ void libspdm_test_requester_challenge_case14(void **state) {
 #endif
 
     libspdm_zero_mem (measurement_hash, sizeof(measurement_hash));
-    status = libspdm_challenge (spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
+    status = libspdm_challenge (spdm_context, NULL, 0,
+                                SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
                                 measurement_hash, NULL);
     assert_int_equal (status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     free(data);
@@ -2603,7 +2608,8 @@ void libspdm_test_requester_challenge_case16(void **state) {
 #endif
 
     libspdm_zero_mem (measurement_hash, sizeof(measurement_hash));
-    status = libspdm_challenge (spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
+    status = libspdm_challenge (spdm_context, NULL, 0,
+                                SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
                                 measurement_hash, NULL);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     free(data);
@@ -2672,7 +2678,8 @@ void libspdm_test_requester_challenge_case17(void **state) {
 #endif
 
     libspdm_zero_mem (measurement_hash, sizeof(measurement_hash));
-    status = libspdm_challenge (spdm_context, 0, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
+    status = libspdm_challenge (spdm_context, NULL, 0,
+                                SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
                                 measurement_hash, NULL);
     assert_int_equal (status, LIBSPDM_STATUS_VERIF_FAIL);
     free(data);
@@ -2742,7 +2749,7 @@ void libspdm_test_requester_challenge_case18(void **state) {
 #endif
 
     libspdm_zero_mem (measurement_hash, sizeof(measurement_hash));
-    status = libspdm_challenge (spdm_context, 0,
+    status = libspdm_challenge (spdm_context, NULL, 0,
                                 SPDM_CHALLENGE_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH,
                                 measurement_hash, NULL);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
@@ -2812,7 +2819,8 @@ void libspdm_test_requester_challenge_case19(void **state) {
 #endif
 
     libspdm_zero_mem (measurement_hash, sizeof(measurement_hash));
-    status = libspdm_challenge (spdm_context, 0, SPDM_CHALLENGE_REQUEST_ALL_MEASUREMENTS_HASH,
+    status = libspdm_challenge (spdm_context, NULL, 0,
+                                SPDM_CHALLENGE_REQUEST_ALL_MEASUREMENTS_HASH,
                                 measurement_hash, NULL);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 }
@@ -2879,7 +2887,7 @@ void libspdm_test_requester_challenge_case20(void **state) {
         libspdm_reset_message_c(spdm_context);
 
         libspdm_zero_mem (measurement_hash, sizeof(measurement_hash));
-        status = libspdm_challenge (spdm_context, 0,
+        status = libspdm_challenge (spdm_context, NULL, 0,
                                     SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
                                     measurement_hash, NULL);
         LIBSPDM_ASSERT_INT_EQUAL_CASE (status, LIBSPDM_STATUS_ERROR_PEER, error_code);
@@ -2960,7 +2968,7 @@ void libspdm_test_requester_challenge_case21(void **state) {
     libspdm_zero_mem (measurement_hash, sizeof(measurement_hash));
 
     slot_id = 0;
-    status = libspdm_challenge (spdm_context, slot_id,
+    status = libspdm_challenge (spdm_context, NULL, slot_id,
                                 SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
                                 measurement_hash, &slot_mask);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
@@ -3039,7 +3047,7 @@ void libspdm_test_requester_challenge_case22(void **state)
 
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_challenge(
-        spdm_context, 0,
+        spdm_context, NULL, 0,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
         measurement_hash, NULL);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
@@ -3151,7 +3159,7 @@ void libspdm_test_requester_challenge_case23(void **state)
     for (slot_id = 0; slot_id < 2; slot_id++) {
         libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
         status = libspdm_challenge(
-            spdm_context, slot_id,
+            spdm_context, NULL, slot_id,
             SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
             measurement_hash, NULL);
         assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
@@ -3200,7 +3208,7 @@ void libspdm_test_requester_challenge_case24(void **state)
 
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_challenge(
-        spdm_context, 0xFF,
+        spdm_context, NULL, 0xFF,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
         measurement_hash, NULL);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);

@@ -330,7 +330,8 @@ receive_done:
     return status;
 }
 
-libspdm_return_t libspdm_challenge(void *spdm_context, uint8_t slot_id,
+libspdm_return_t libspdm_challenge(void *spdm_context, void *reserved,
+                                   uint8_t slot_id,
                                    uint8_t measurement_hash_type,
                                    void *measurement_hash,
                                    uint8_t *slot_mask)
@@ -354,7 +355,8 @@ libspdm_return_t libspdm_challenge(void *spdm_context, uint8_t slot_id,
     return status;
 }
 
-libspdm_return_t libspdm_challenge_ex(void *spdm_context, uint8_t slot_id,
+libspdm_return_t libspdm_challenge_ex(void *spdm_context, void *reserved,
+                                      uint8_t slot_id,
                                       uint8_t measurement_hash_type,
                                       void *measurement_hash,
                                       uint8_t *slot_mask,
