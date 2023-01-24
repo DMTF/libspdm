@@ -712,6 +712,11 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context, LIBSPDM_SESSION_STATE_HANDSHAKING);
 
+    /* -=[Log Message Phase]=- */
+    #if LIBSPDM_ENABLE_MSG_LOG
+    libspdm_append_msg_log(spdm_context, spdm_response, spdm_response_size);
+    #endif /* LIBSPDM_ENABLE_MSG_LOG */
+
     status = LIBSPDM_STATUS_SUCCESS;
 
 receive_done:

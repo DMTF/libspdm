@@ -209,6 +209,11 @@ static libspdm_return_t libspdm_try_key_update(libspdm_context_t *spdm_context,
             return LIBSPDM_STATUS_CRYPTO_ERROR;
         }
 
+        /* -=[Log Message Phase]=- */
+        #if LIBSPDM_ENABLE_MSG_LOG
+        libspdm_append_msg_log(spdm_context, spdm_response, spdm_response_size);
+        #endif /* LIBSPDM_ENABLE_MSG_LOG */
+
         libspdm_release_receiver_buffer (spdm_context);
     }
 
@@ -228,8 +233,7 @@ static libspdm_return_t libspdm_try_key_update(libspdm_context_t *spdm_context,
 
     spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request->header.request_response_code = SPDM_KEY_UPDATE;
-    spdm_request->header.param1 =
-        SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
+    spdm_request->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;
     spdm_request->header.param2 = 1;
     if(!libspdm_get_random_number(sizeof(spdm_request->header.param2),
                                   &spdm_request->header.param2)) {
@@ -296,6 +300,11 @@ static libspdm_return_t libspdm_try_key_update(libspdm_context_t *spdm_context,
         return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmVerifyKey[%x] Success\n", session_id));
+
+    /* -=[Log Message Phase]=- */
+    #if LIBSPDM_ENABLE_MSG_LOG
+    libspdm_append_msg_log(spdm_context, spdm_response, spdm_response_size);
+    #endif /* LIBSPDM_ENABLE_MSG_LOG */
 
     libspdm_release_receiver_buffer (spdm_context);
     return LIBSPDM_STATUS_SUCCESS;
