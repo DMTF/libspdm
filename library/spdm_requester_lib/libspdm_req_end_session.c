@@ -137,6 +137,11 @@ static libspdm_return_t libspdm_try_send_receive_end_session(libspdm_context_t *
 
     status = LIBSPDM_STATUS_SUCCESS;
 
+    /* -=[Log Message Phase]=- */
+    #if LIBSPDM_ENABLE_MSG_LOG
+    libspdm_append_msg_log(spdm_context, spdm_response, spdm_response_size);
+    #endif /* LIBSPDM_ENABLE_MSG_LOG */
+
 receive_done:
     libspdm_release_receiver_buffer (spdm_context);
     return status;

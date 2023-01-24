@@ -265,6 +265,11 @@ static libspdm_return_t libspdm_try_send_receive_psk_finish(libspdm_context_t *s
         session_info->secured_message_context,
         LIBSPDM_SESSION_STATE_ESTABLISHED);
 
+    /* -=[Log Message Phase]=- */
+    #if LIBSPDM_ENABLE_MSG_LOG
+    libspdm_append_msg_log(spdm_context, spdm_response, spdm_response_size);
+    #endif /* LIBSPDM_ENABLE_MSG_LOG */
+
     libspdm_release_receiver_buffer (spdm_context);
     return LIBSPDM_STATUS_SUCCESS;
 

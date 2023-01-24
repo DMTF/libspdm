@@ -149,6 +149,11 @@ static libspdm_return_t libspdm_try_set_certificate(libspdm_context_t *spdm_cont
         goto receive_done;
     }
 
+    /* -=[Log Message Phase]=- */
+    #if LIBSPDM_ENABLE_MSG_LOG
+    libspdm_append_msg_log(spdm_context, spdm_response, spdm_response_size);
+    #endif /* LIBSPDM_ENABLE_MSG_LOG */
+
     status = LIBSPDM_STATUS_SUCCESS;
 
 receive_done:

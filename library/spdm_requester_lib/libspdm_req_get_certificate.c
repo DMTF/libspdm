@@ -292,6 +292,11 @@ static libspdm_return_t libspdm_try_get_certificate(libspdm_context_t *spdm_cont
                 LIBSPDM_CONNECTION_STATE_AFTER_CERTIFICATE;
         }
 
+        /* -=[Log Message Phase]=- */
+        #if LIBSPDM_ENABLE_MSG_LOG
+        libspdm_append_msg_log(spdm_context, spdm_response, spdm_response_size);
+        #endif /* LIBSPDM_ENABLE_MSG_LOG */
+
         libspdm_release_receiver_buffer (spdm_context);
     } while (remainder_length != 0);
 
