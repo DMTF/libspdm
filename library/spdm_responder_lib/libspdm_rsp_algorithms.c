@@ -27,7 +27,7 @@ typedef struct {
 #pragma pack()
 
 /**
- * Select the preferred supproted algorithm according to the priority_table.
+ * Select the preferred supported algorithm according to the priority_table.
  *
  * @param  priority_table        The priority table.
  * @param  priority_table_count  The count of the priority table entry.

@@ -83,7 +83,7 @@ libspdm_return_t libspdm_init_connection(void *spdm_context, bool get_version_on
  * @param  total_digest_buffer  A pointer to a destination buffer to store the digests.
  *
  * @retval LIBSPDM_STATUS_SUCCESS
- *         GET_DIGETS was sent and DIGESTS was received.
+ *         GET_DIGESTS was sent and DIGESTS was received.
  * @retval LIBSPDM_STATUS_INVALID_STATE_LOCAL
  *         Cannot send GET_DIGESTS due to Requester's state.
  * @retval LIBSPDM_STATUS_UNSUPPORTED_CAP

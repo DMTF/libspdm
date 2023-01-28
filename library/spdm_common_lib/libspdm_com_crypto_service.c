@@ -10,8 +10,8 @@
  * This function returns peer certificate chain buffer including spdm_cert_chain_t header.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
- * @param  cert_chain_buffer              Certitiface chain buffer including spdm_cert_chain_t header.
- * @param  cert_chain_buffer_size          size in bytes of the certitiface chain buffer.
+ * @param  cert_chain_buffer              Certificate chain buffer including spdm_cert_chain_t header.
+ * @param  cert_chain_buffer_size          size in bytes of the certificate chain buffer.
  *
  * @retval true  Peer certificate chain buffer including spdm_cert_chain_t header is returned.
  * @retval false Peer certificate chain buffer including spdm_cert_chain_t header is not found.
@@ -41,8 +41,8 @@ bool libspdm_get_peer_cert_chain_buffer(void *spdm_context,
  * This function returns peer certificate chain data without spdm_cert_chain_t header.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
- * @param  cert_chain_data                Certitiface chain data without spdm_cert_chain_t header.
- * @param  cert_chain_data_size            size in bytes of the certitiface chain data.
+ * @param  cert_chain_data                Certificate chain data without spdm_cert_chain_t header.
+ * @param  cert_chain_data_size            size in bytes of the certificate chain data.
  *
  * @retval true  Peer certificate chain data without spdm_cert_chain_t header is returned.
  * @retval false Peer certificate chain data without spdm_cert_chain_t header is not found.
@@ -76,8 +76,8 @@ bool libspdm_get_peer_cert_chain_data(void *spdm_context,
  * This function returns local used certificate chain buffer including spdm_cert_chain_t header.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
- * @param  cert_chain_buffer              Certitiface chain buffer including spdm_cert_chain_t header.
- * @param  cert_chain_buffer_size          size in bytes of the certitiface chain buffer.
+ * @param  cert_chain_buffer              Certificate chain buffer including spdm_cert_chain_t header.
+ * @param  cert_chain_buffer_size          size in bytes of the certificate chain buffer.
  *
  * @retval true  Local used certificate chain buffer including spdm_cert_chain_t header is returned.
  * @retval false Local used certificate chain buffer including spdm_cert_chain_t header is not found.
@@ -101,8 +101,8 @@ bool libspdm_get_local_cert_chain_buffer(void *spdm_context,
  * This function returns local used certificate chain data without spdm_cert_chain_t header.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
- * @param  cert_chain_data                Certitiface chain data without spdm_cert_chain_t header.
- * @param  cert_chain_data_size            size in bytes of the certitiface chain data.
+ * @param  cert_chain_data                Certificate chain data without spdm_cert_chain_t header.
+ * @param  cert_chain_data_size            size in bytes of the certificate chain data.
  *
  * @retval true  Local used certificate chain data without spdm_cert_chain_t header is returned.
  * @retval false Local used certificate chain data without spdm_cert_chain_t header is not found.
@@ -578,8 +578,8 @@ uint8_t libspdm_get_cert_slot_count(libspdm_context_t *spdm_context)
  * This function verifies peer certificate chain buffer including spdm_cert_chain_t header.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
- * @param  cert_chain_buffer              Certitiface chain buffer including spdm_cert_chain_t header.
- * @param  cert_chain_buffer_size          size in bytes of the certitiface chain buffer.
+ * @param  cert_chain_buffer              Certificate chain buffer including spdm_cert_chain_t header.
+ * @param  cert_chain_buffer_size          size in bytes of the certificate chain buffer.
  * @param  trust_anchor                  A buffer to hold the trust_anchor which is used to validate the peer certificate, if not NULL.
  * @param  trust_anchor_size             A buffer to hold the trust_anchor_size, if not NULL.
  * @param  is_requester                   Indicates if it is a requester message.
