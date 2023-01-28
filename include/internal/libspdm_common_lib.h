@@ -149,11 +149,11 @@ typedef struct {
 
 /* M1/M2 = Concatenate (A, B, C)
  * A = Concatenate (GET_VERSION, VERSION, GET_CAPABILITIES, CAPABILITIES, NEGOTIATE_ALGORITHMS, ALGORITHMS)
- * B = Concatenate (GET_DIGEST, DIGEST, GET_CERTFICATE, CERTIFICATE)
+ * B = Concatenate (GET_DIGEST, DIGEST, GET_CERTIFICATE, CERTIFICATE)
  * C = Concatenate (CHALLENGE, CHALLENGE_AUTH\signature)*/
 
 /* Mut M1/M2 = Concatenate (MutB, MutC)
- * MutB = Concatenate (GET_DIGEST, DIGEST, GET_CERTFICATE, CERTIFICATE)
+ * MutB = Concatenate (GET_DIGEST, DIGEST, GET_CERTIFICATE, CERTIFICATE)
  * MutC = Concatenate (CHALLENGE, CHALLENGE_AUTH\signature)*/
 
 /* signature = Sign(SK, hash(L1))
@@ -307,7 +307,7 @@ typedef struct {
 
     /*
      * reserved for request and response in the main dispatch function in SPDM responder.
-     * this buffer is the transport message recived from spdm_context->receive_message()
+     * this buffer is the transport message received from spdm_context->receive_message()
      * or sent to spdm_context->send_message().
      * This message may be SPDM transport message or secured SPDM transport message.
      **/
@@ -425,7 +425,7 @@ void libspdm_internal_dump_data(const uint8_t *data, size_t size);
 #define LIBSPDM_INTERNAL_DUMP_DATA(data, size) libspdm_internal_dump_data(data, size)
 
 /**
- * This function dump raw data with colume format.
+ * This function dump raw data with column format.
  *
  * @param  data  raw data
  * @param  size  raw data size
@@ -540,15 +540,15 @@ bool libspdm_is_version_supported(const libspdm_context_t *spdm_context, uint8_t
 uint8_t libspdm_get_connection_version(const libspdm_context_t *spdm_context);
 
 /**
- * This function returns if a capablities flag is supported in current SPDM connection.
+ * This function returns if a capabilities flag is supported in current SPDM connection.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  is_requester                  Is the function called from a requester.
  * @param  requester_capabilities_flag    The requester capabilities flag to be checked
  * @param  responder_capabilities_flag    The responder capabilities flag to be checked
  *
- * @retval true  the capablities flag is supported.
- * @retval false the capablities flag is not supported.
+ * @retval true  the capabilities flag is supported.
+ * @retval false the capabilities flag is not supported.
  **/
 bool libspdm_is_capabilities_flag_supported(const libspdm_context_t *spdm_context,
                                             bool is_requester,
@@ -584,8 +584,8 @@ bool libspdm_generate_public_key_hash(libspdm_context_t *spdm_context,
  * This function verifies peer certificate chain buffer including spdm_cert_chain_t header.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
- * @param  cert_chain_buffer              Certitiface chain buffer including spdm_cert_chain_t header.
- * @param  cert_chain_buffer_size          size in bytes of the certitiface chain buffer.
+ * @param  cert_chain_buffer              Certificate chain buffer including spdm_cert_chain_t header.
+ * @param  cert_chain_buffer_size          size in bytes of the certificate chain buffer.
  * @param  trust_anchor                  A buffer to hold the trust_anchor which is used to validate the peer certificate, if not NULL.
  * @param  trust_anchor_size             A buffer to hold the trust_anchor_size, if not NULL.
  * @param  is_requester                   Indicates if it is a requester message.
@@ -736,11 +736,11 @@ size_t libspdm_get_untrusted_opaque_data_supported_version_data_size(
     libspdm_context_t *spdm_context, uint8_t version_count);
 
 /**
- * Return the size in bytes of opaque data supproted version.
+ * Return the size in bytes of opaque data supported version.
  *
  * This function should be called in KEY_EXCHANGE/PSK_EXCHANGE request generation.
  *
- * @return the size in bytes of opaque data supproted version.
+ * @return the size in bytes of opaque data supported version.
  **/
 size_t libspdm_get_opaque_data_supported_version_data_size(libspdm_context_t *spdm_context);
 
@@ -1090,8 +1090,8 @@ void libspdm_free_session_id(libspdm_context_t *spdm_context, uint32_t session_i
  *
  * @param  spdm_context            A pointer to the SPDM context.
  * @param  session_info            The SPDM session ID.
- * @param  cert_chain_buffer       Certitiface chain buffer with spdm_cert_chain_t header.
- * @param  cert_chain_buffer_size  Size in bytes of the certitiface chain buffer.
+ * @param  cert_chain_buffer       Certificate chain buffer with spdm_cert_chain_t header.
+ * @param  cert_chain_buffer_size  Size in bytes of the certificate chain buffer.
  * @param  th_data_buffer_size     Size in bytes of the th_data_buffer
  * @param  th_data_buffer          The buffer to store the th_data_buffer
  *
@@ -1137,10 +1137,10 @@ bool libspdm_calculate_th_hmac_for_exchange_rsp(
  *
  * @param  spdm_context                A pointer to the SPDM context.
  * @param  session_info                The SPDM session ID.
- * @param  cert_chain_buffer           Certitiface chain buffer with spdm_cert_chain_t header.
- * @param  cert_chain_buffer_size      Size in bytes of the certitiface chain buffer.
- * @param  mut_cert_chain_buffer       Certitiface chain buffer with spdm_cert_chain_t header in mutual authentication.
- * @param  mut_cert_chain_buffer_size  Size in bytes of the certitiface chain buffer in mutual authentication.
+ * @param  cert_chain_buffer           Certificate chain buffer with spdm_cert_chain_t header.
+ * @param  cert_chain_buffer_size      Size in bytes of the certificate chain buffer.
+ * @param  mut_cert_chain_buffer       Certificate chain buffer with spdm_cert_chain_t header in mutual authentication.
+ * @param  mut_cert_chain_buffer_size  Size in bytes of the certificate chain buffer in mutual authentication.
  * @param  th_data_buffer_size         Size in bytes of the th_data_buffer.
  * @param  th_data_buffer              The buffer to store the th_data_buffer
  *

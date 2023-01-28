@@ -26,7 +26,7 @@
 /* The SPDM specification allows a Responder to return up to 256 version entries in the `VERSION`
  * response to the Requester, including duplicate entries. For a Requester this value specifies the
  * maximum number of entries that libspdm will tolerate in a `VERSION` response before returning an
- * error. A similiar macro, `SPDM_MAX_VERSION_COUNT`, exists for the Responder. However this macro
+ * error. A similar macro, `SPDM_MAX_VERSION_COUNT`, exists for the Responder. However this macro
  * is not meant to be configured by the Integrator.
  */
 #ifndef LIBSPDM_MAX_VERSION_COUNT
@@ -179,7 +179,7 @@
 
 /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP - Enable/Disable single CERT capability.
  * LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP - Enable/Disable single CHAL capability.
- * LIBSPDM_ENABLE_CAPABILTIY_MEAS_CAP - Enable/Disables multiple MEAS capabilities:
+ * LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP - Enable/Disables multiple MEAS capabilities:
  *                                  (MEAS_CAP_NO_SIG, MEAS_CAP_SIG, MEAS_FRESH_CAP)*/
 
 /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP - Enable/Disable single Key Exchange capability.
@@ -294,7 +294,7 @@
  * | CHALLENGE 1.2            | 40                                       | 1       |
  * | CHALLENGE_AUTH 1.2       | 38 + H * 2 + S [+ O] = [166, 678]        | [6, 23] |
  * +--------------------------+------------------------------------------+---------+
- * | GET_MEASUREMENTS 1.2     | 5 + Nounce (0 or 32)                     | 1       |
+ * | GET_MEASUREMENTS 1.2     | 5 + Nonce (0 or 32)                      | 1       |
  * | MEASUREMENTS 1.2         | 42 + MeasRecLen (+ S) [+ O] = [106, 554] | [4, 19] |
  * +--------------------------+------------------------------------------+---------+
  * | KEY_EXCHANGE 1.2         | 42 + D [+ O] = [106, 554]                | [4, 19] |

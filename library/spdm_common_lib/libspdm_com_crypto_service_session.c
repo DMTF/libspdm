@@ -12,8 +12,8 @@
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  session_info                  The SPDM session ID.
- * @param  cert_chain_buffer                Certitiface chain buffer with spdm_cert_chain_t header.
- * @param  cert_chain_buffer_size            size in bytes of the certitiface chain buffer.
+ * @param  cert_chain_buffer                Certificate chain buffer with spdm_cert_chain_t header.
+ * @param  cert_chain_buffer_size            size in bytes of the certificate chain buffer.
  * @param  th_data_buffer_size             size in bytes of the th_data_buffer
  * @param  th_data_buffer                 The buffer to store the th_data_buffer
  *
@@ -201,10 +201,10 @@ bool libspdm_calculate_th_hmac_for_exchange_rsp(
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  session_info                  The SPDM session ID.
- * @param  cert_chain_buffer                Certitiface chain buffer with spdm_cert_chain_t header.
- * @param  cert_chain_buffer_size            size in bytes of the certitiface chain buffer.
- * @param  mut_cert_chain_buffer             Certitiface chain buffer with spdm_cert_chain_t header in mutual authentication.
- * @param  mut_cert_chain_buffer_size         size in bytes of the certitiface chain buffer in mutual authentication.
+ * @param  cert_chain_buffer                Certificate chain buffer with spdm_cert_chain_t header.
+ * @param  cert_chain_buffer_size            size in bytes of the certificate chain buffer.
+ * @param  mut_cert_chain_buffer             Certificate chain buffer with spdm_cert_chain_t header in mutual authentication.
+ * @param  mut_cert_chain_buffer_size         size in bytes of the certificate chain buffer in mutual authentication.
  * @param  th_data_buffer_size             size in bytes of the th_data_buffer
  * @param  th_data_buffer                 The buffer to store the th_data_buffer
  *

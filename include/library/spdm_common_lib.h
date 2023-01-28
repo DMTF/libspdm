@@ -769,8 +769,8 @@ void *libspdm_get_secured_message_context_via_session_info(void *spdm_session_in
  * This function returns peer certificate chain buffer including spdm_cert_chain_t header.
  *
  * @param  spdm_context            A pointer to the SPDM context.
- * @param  cert_chain_buffer       Certitiface chain buffer including spdm_cert_chain_t header.
- * @param  cert_chain_buffer_size  Size in bytes of the certitiface chain buffer.
+ * @param  cert_chain_buffer       Certificate chain buffer including spdm_cert_chain_t header.
+ * @param  cert_chain_buffer_size  Size in bytes of the certificate chain buffer.
  *
  * @retval true  Peer certificate chain buffer including spdm_cert_chain_t header is returned.
  * @retval false Peer certificate chain buffer including spdm_cert_chain_t header is not found.
@@ -783,8 +783,8 @@ bool libspdm_get_peer_cert_chain_buffer(void *spdm_context,
  * This function returns peer certificate chain data without spdm_cert_chain_t header.
  *
  * @param  spdm_context          A pointer to the SPDM context.
- * @param  cert_chain_data       Certitiface chain data without spdm_cert_chain_t header.
- * @param  cert_chain_data_size  Size in bytes of the certitiface chain data.
+ * @param  cert_chain_data       Certificate chain data without spdm_cert_chain_t header.
+ * @param  cert_chain_data_size  Size in bytes of the certificate chain data.
  *
  * @retval true  Peer certificate chain data without spdm_cert_chain_t header is returned.
  * @retval false Peer certificate chain data without spdm_cert_chain_t header is not found.
@@ -797,8 +797,8 @@ bool libspdm_get_peer_cert_chain_data(void *spdm_context,
  * This function returns local used certificate chain buffer including spdm_cert_chain_t header.
  *
  * @param  spdm_context            A pointer to the SPDM context.
- * @param  cert_chain_buffer       Certitiface chain buffer including spdm_cert_chain_t header.
- * @param  cert_chain_buffer_size  Size in bytes of the certitiface chain buffer.
+ * @param  cert_chain_buffer       Certificate chain buffer including spdm_cert_chain_t header.
+ * @param  cert_chain_buffer_size  Size in bytes of the certificate chain buffer.
  *
  * @retval true  Local used certificate chain buffer including spdm_cert_chain_t header is returned.
  * @retval false Local used certificate chain buffer including spdm_cert_chain_t header is not found.
@@ -811,8 +811,8 @@ bool libspdm_get_local_cert_chain_buffer(void *spdm_context,
  * This function returns local used certificate chain data without spdm_cert_chain_t header.
  *
  * @param  spdm_context          A pointer to the SPDM context.
- * @param  cert_chain_data       Certitiface chain data without spdm_cert_chain_t header.
- * @param  cert_chain_data_size  Size in bytes of the certitiface chain data.
+ * @param  cert_chain_data       Certificate chain data without spdm_cert_chain_t header.
+ * @param  cert_chain_data_size  Size in bytes of the certificate chain data.
  *
  * @retval true  Local used certificate chain data without spdm_cert_chain_t header is returned.
  * @retval false Local used certificate chain data without spdm_cert_chain_t header is not found.

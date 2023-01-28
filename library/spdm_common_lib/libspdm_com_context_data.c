@@ -1715,15 +1715,15 @@ uint8_t libspdm_get_connection_version(const libspdm_context_t *spdm_context)
 }
 
 /**
- * This function returns if a capablities flag is supported in current SPDM connection.
+ * This function returns if a capabilities flag is supported in current SPDM connection.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  is_requester                  Is the function called from a requester.
  * @param  requester_capabilities_flag    The requester capabilities flag to be checked
  * @param  responder_capabilities_flag    The responder capabilities flag to be checked
  *
- * @retval true  the capablities flag is supported.
- * @retval false the capablities flag is not supported.
+ * @retval true  the capabilities flag is supported.
+ * @retval false the capabilities flag is not supported.
  **/
 bool libspdm_is_capabilities_flag_supported(const libspdm_context_t *spdm_context,
                                             bool is_requester,

@@ -199,7 +199,7 @@ extern bool libspdm_x509_get_key_usage(const uint8_t *cert, size_t cert_size, si
  * @param[in]      cert        Pointer to the DER-encoded X509 certificate.
  * @param[in]      cert_size   Size of the X509 certificate in bytes.
  * @param[out]     usage       Key usage bytes.
- * @param[in, out] usage_size  Key usage buffer sizs in bytes.
+ * @param[in, out] usage_size  Key usage buffer size in bytes.
  *
  * @retval  true
  * @retval  false
@@ -214,7 +214,7 @@ extern bool libspdm_x509_get_extended_key_usage(const uint8_t *cert,
  * @param[in]      cert                     Pointer to the DER-encoded X509 certificate.
  * @param[in]      cert_size                Size of the X509 certificate in bytes.
  * @param[out]     basic_constraints        Basic constraints bytes.
- * @param[in, out] basic_constraints_size   Basic constraints buffer sizs in bytes.
+ * @param[in, out] basic_constraints_size   Basic constraints buffer size in bytes.
  *
  * @retval  true
  * @retval  false
@@ -250,16 +250,16 @@ extern bool libspdm_x509_verify_cert(const uint8_t *cert, size_t cert_size,
  *
  * @param[in]      cert_chain         One or more ASN.1 DER-encoded X.509 certificates
  *                                    where the first certificate is signed by the Root
- *                                    Certificate or is the Root Cerificate itself. and
- *                                    subsequent cerificate is signed by the preceding
- *                                    cerificate.
+ *                                    Certificate or is the Root Certificate itself. and
+ *                                    subsequent certificate is signed by the preceding
+ *                                    certificate.
  * @param[in]      cert_chain_length  Total length of the certificate chain, in bytes.
  *
  * @param[in]      root_cert          Trusted Root Certificate buffer.
  *
  * @param[in]      root_cert_length   Trusted Root Certificate buffer length.
  *
- * @retval  true   All cerificates were issued by the first certificate in X509Certchain.
+ * @retval  true   All certificates were issued by the first certificate in X509Certchain.
  * @retval  false  Invalid certificate or the certificate was not issued by the given
  *                 trusted CA.
  **/
@@ -272,9 +272,9 @@ extern bool libspdm_x509_verify_cert_chain(const uint8_t *root_cert, size_t root
  *
  * @param[in]      cert_chain         One or more ASN.1 DER-encoded X.509 certificates
  *                                    where the first certificate is signed by the Root
- *                                    Certificate or is the Root Cerificate itself. and
- *                                    subsequent cerificate is signed by the preceding
- *                                    cerificate.
+ *                                    Certificate or is the Root Certificate itself. and
+ *                                    subsequent certificate is signed by the preceding
+ *                                    certificate.
  * @param[in]      cert_chain_length  Total length of the certificate chain, in bytes.
  *
  * @param[in]      cert_index         Index of certificate. If index is -1 indecate the
