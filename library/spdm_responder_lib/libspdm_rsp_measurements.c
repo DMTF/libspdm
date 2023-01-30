@@ -75,8 +75,8 @@ static bool libspdm_create_measurement_opaque(libspdm_context_t *spdm_context,
     }
     *fill_response_ptr += SPDM_NONCE_SIZE;
 
-    *(uint16_t *)(*fill_response_ptr) =
-        (uint16_t)spdm_context->local_context.opaque_measurement_rsp_size;
+    libspdm_write_uint16(*fill_response_ptr,
+                         (uint16_t)spdm_context->local_context.opaque_measurement_rsp_size);
     *fill_response_ptr += sizeof(uint16_t);
 
     if (spdm_context->local_context.opaque_measurement_rsp != NULL) {
