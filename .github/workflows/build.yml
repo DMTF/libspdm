@@ -141,6 +141,7 @@ jobs:
           export PATH=~/gcc-arm-11.2-2022.02-x86_64-aarch64-none-linux-gnu/bin:$PATH
           mkdir build
           cd build
+          cmake --version
           cmake -E env CFLAGS="${{ matrix.configurations }} -DLIBSPDM_DEBUG_LIBSPDM_ASSERT_CONFIG=0" cmake -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ..
           make copy_sample_key
           make copy_seed
@@ -150,6 +151,7 @@ jobs:
         run: |
           mkdir build
           cd build
+          cmake --version
           cmake -E env CFLAGS="${{ matrix.configurations }} -DLIBSPDM_DEBUG_LIBSPDM_ASSERT_CONFIG=0" cmake -G"NMake Makefiles" -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ..
           nmake copy_sample_key
           nmake
@@ -159,6 +161,7 @@ jobs:
         run: |
           mkdir build
           cd build
+          cmake --version
           cmake -E env CFLAGS="${{ matrix.configurations }} -DLIBSPDM_DEBUG_LIBSPDM_ASSERT_CONFIG=0" cmake -G"MSYS Makefiles" -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ..
           make copy_sample_key
           make
@@ -167,6 +170,7 @@ jobs:
         run: |
           mkdir build_gcov
           cd build_gcov
+          cmake --version
           cmake -DARCH=x64 -DTOOLCHAIN=GCC -DTARGET=Debug -DCRYPTO=${{matrix.crypto}} -DGCOV=ON ..
           make copy_sample_key
           make -j`nproc`
