@@ -116,6 +116,60 @@ libspdm_return_t libspdm_get_capabilities(libspdm_context_t *spdm_context);
  **/
 libspdm_return_t libspdm_negotiate_algorithms(libspdm_context_t *spdm_context);
 
+/**
+ * This function sends GET_CERTIFICATE to get certificate chain in one slot from device.
+ *
+ * This function verify the integrity of the certificate chain.
+ * root_hash -> Root certificate -> Intermediate certificate -> Leaf certificate.
+ *
+ * If the peer root certificate hash is deployed,
+ * this function also verifies the digest with the root hash in the certificate chain.
+ *
+ * @param  spdm_context     A pointer to the SPDM context.
+ * @param  session_id       Indicates if it is a secured message protected via SPDM session.
+ *                          If session_id is NULL, it is a normal message.
+ * @param  slot_id          The number of slot for the certificate chain.
+ * @param  length           LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN.
+ * @param  cert_chain_size  On input, indicate the size in bytes of the destination buffer to store the digest buffer.
+ *                          On output, indicate the size in bytes of the certificate chain.
+ * @param  cert_chain       A pointer to a destination buffer to store the certificate chain.
+ **/
+libspdm_return_t libspdm_get_certificate_choose_length(void *spdm_context,
+                                                       const uint32_t *session_id,
+                                                       uint8_t slot_id,
+                                                       uint16_t length,
+                                                       size_t *cert_chain_size,
+                                                       void *cert_chain);
+
+/**
+ * This function sends GET_CERTIFICATE to get certificate chain in one slot from device.
+ *
+ * This function verify the integrity of the certificate chain.
+ * root_hash -> Root certificate -> Intermediate certificate -> Leaf certificate.
+ *
+ * If the peer root certificate hash is deployed,
+ * this function also verifies the digest with the root hash in the certificate chain.
+ *
+ * @param  spdm_context       A pointer to the SPDM context.
+ * @param  session_id         Indicates if it is a secured message protected via SPDM session.
+ *                            If session_id is NULL, it is a normal message.
+ * @param  slot_id            The number of slot for the certificate chain.
+ * @param  length             LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN.
+ * @param  cert_chain_size    On input, indicate the size in bytes of the destination buffer to store the digest buffer.
+ *                            On output, indicate the size in bytes of the certificate chain.
+ * @param  cert_chain         A pointer to a destination buffer to store the certificate chain.
+ * @param  trust_anchor       A buffer to hold the trust_anchor which is used to validate the peer certificate, if not NULL.
+ * @param  trust_anchor_size  A buffer to hold the trust_anchor_size, if not NULL.
+ **/
+libspdm_return_t libspdm_get_certificate_choose_length_ex(void *spdm_context,
+                                                          const uint32_t *session_id,
+                                                          uint8_t slot_id,
+                                                          uint16_t length,
+                                                          size_t *cert_chain_size,
+                                                          void *cert_chain,
+                                                          const void **trust_anchor,
+                                                          size_t *trust_anchor_size);
+
 #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 /**
  * This function sends KEY_EXCHANGE and receives KEY_EXCHANGE_RSP for SPDM key exchange.
