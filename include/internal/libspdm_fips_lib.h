@@ -19,4 +19,9 @@ bool libspdm_fips_selftest_hmac_sha384(void);
  **/
 bool libspdm_fips_selftest_hmac_sha512(void);
 
+/**
+ * AES_GCM self_test
+ **/
+bool libspdm_fips_selftest_aes_gcm(void);
+
 #endif

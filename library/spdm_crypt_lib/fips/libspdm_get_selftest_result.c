@@ -26,26 +26,26 @@ bool libspdm_fips_run_selftest(void)
     result = libspdm_fips_selftest_hmac_sha256();
     if (!result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "HMAC-SHA256 self_test failed\n"));
+        last_result = false;
     }
-
-    last_result = last_result && result;
-
     result = libspdm_fips_selftest_hmac_sha384();
     if (!result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "HMAC-SHA384 self_test failed\n"));
+        last_result = false;
     }
-
-    last_result = last_result && result;
-
     result = libspdm_fips_selftest_hmac_sha512();
     if (!result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "HMAC-SHA512 self_test failed\n"));
+        last_result = false;
     }
 
-    last_result = last_result && result;
-
+    result = libspdm_fips_selftest_aes_gcm();
+    if (!result) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "AES_GCM self_test failed\n"));
+        last_result = false;
+    }
 
     return last_result;
 }
 
-#endif
+#endif/*LIBSPDM_FIPS_MODE*/
