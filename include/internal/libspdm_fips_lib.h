@@ -24,4 +24,9 @@ bool libspdm_fips_selftest_hmac_sha512(void);
  **/
 bool libspdm_fips_selftest_aes_gcm(void);
 
-#endif
+/**
+ * RSA_SSA(RSASSA-PKCS1 v1.5) self_test
+ **/
+bool libspdm_fips_selftest_rsa_ssa(void);
+
+#endif/*LIBSPDM_FIPS_MODE*/

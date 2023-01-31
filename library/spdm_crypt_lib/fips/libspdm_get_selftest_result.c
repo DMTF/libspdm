@@ -45,6 +45,12 @@ bool libspdm_fips_run_selftest(void)
         last_result = false;
     }
 
+    result = libspdm_fips_selftest_rsa_ssa();
+    if (!result) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "RSA_SSA self_test failed\n"));
+        last_result = false;
+    }
+
     return last_result;
 }
 
