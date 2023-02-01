@@ -70,4 +70,9 @@ bool libspdm_fips_selftest_sha3_512(void);
  **/
 bool libspdm_fips_selftest_ffdh(void);
 
+/**
+ * ECDSA self_test
+ **/
+bool libspdm_fips_selftest_ecdsa(void);
+
 #endif/*LIBSPDM_FIPS_MODE*/

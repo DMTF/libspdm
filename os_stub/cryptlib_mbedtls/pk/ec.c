@@ -706,3 +706,121 @@ bool libspdm_ecdsa_verify(void *ec_context, size_t hash_nid,
 
     return true;
 }
+
+#if LIBSPDM_FIPS_MODE
+/**
+ * Carries out the EC-DSA signature with caller input random function. This API can be used for FIPS test.
+ *
+ * @param[in]       ec_context    Pointer to EC context for signature generation.
+ * @param[in]       hash_nid      hash NID
+ * @param[in]       message_hash  Pointer to octet message hash to be signed.
+ * @param[in]       hash_size     Size of the message hash in bytes.
+ * @param[out]      signature     Pointer to buffer to receive EC-DSA signature.
+ * @param[in, out]  sig_size      On input, the size of signature buffer in bytes.
+ *                                On output, the size of data returned in signature buffer in bytes.
+ * @param[in]       random_func   random number function
+ *
+ * @retval  true   signature successfully generated in EC-DSA.
+ * @retval  false  signature generation failed.
+ * @retval  false  sig_size is too small.
+ **/
+bool libspdm_ecdsa_sign_ex(void *ec_context, size_t hash_nid,
+                           const uint8_t *message_hash, size_t hash_size,
+                           uint8_t *signature, size_t *sig_size,
+                           int (*random_func)(void *, unsigned char *, size_t))
+{
+    int32_t ret;
+    mbedtls_ecdh_context *ctx;
+    mbedtls_mpi bn_r;
+    mbedtls_mpi bn_s;
+    size_t r_size;
+    size_t s_size;
+    size_t half_size;
+
+    if (ec_context == NULL || message_hash == NULL) {
+        return false;
+    }
+
+    if (signature == NULL) {
+        return false;
+    }
+
+    ctx = ec_context;
+    switch (ctx->grp.id) {
+    case MBEDTLS_ECP_DP_SECP256R1:
+        half_size = 32;
+        break;
+    case MBEDTLS_ECP_DP_SECP384R1:
+        half_size = 48;
+        break;
+    case MBEDTLS_ECP_DP_SECP521R1:
+        half_size = 66;
+        break;
+    default:
+        return false;
+    }
+    if (*sig_size < (size_t)(half_size * 2)) {
+        *sig_size = half_size * 2;
+        return false;
+    }
+    *sig_size = half_size * 2;
+    libspdm_zero_mem(signature, *sig_size);
+
+    switch (hash_nid) {
+    case LIBSPDM_CRYPTO_NID_SHA256:
+        if (hash_size != LIBSPDM_SHA256_DIGEST_SIZE) {
+            return false;
+        }
+        break;
+
+    case LIBSPDM_CRYPTO_NID_SHA384:
+        if (hash_size != LIBSPDM_SHA384_DIGEST_SIZE) {
+            return false;
+        }
+        break;
+
+    case LIBSPDM_CRYPTO_NID_SHA512:
+        if (hash_size != LIBSPDM_SHA512_DIGEST_SIZE) {
+            return false;
+        }
+        break;
+
+    default:
+        return false;
+    }
+
+    mbedtls_mpi_init(&bn_r);
+    mbedtls_mpi_init(&bn_s);
+
+    /*retrieve random number*/
+    ret = mbedtls_ecdsa_sign(&ctx->grp, &bn_r, &bn_s, &ctx->d, message_hash,
+                             hash_size, random_func, NULL);
+    if (ret != 0) {
+        return false;
+    }
+
+    r_size = mbedtls_mpi_size(&bn_r);
+    s_size = mbedtls_mpi_size(&bn_s);
+    LIBSPDM_ASSERT(r_size <= half_size && s_size <= half_size);
+
+    ret = mbedtls_mpi_write_binary(
+        &bn_r, &signature[0 + half_size - r_size], r_size);
+    if (ret != 0) {
+        mbedtls_mpi_free(&bn_r);
+        mbedtls_mpi_free(&bn_s);
+        return false;
+    }
+    ret = mbedtls_mpi_write_binary(
+        &bn_s, &signature[half_size + half_size - s_size], s_size);
+    if (ret != 0) {
+        mbedtls_mpi_free(&bn_r);
+        mbedtls_mpi_free(&bn_s);
+        return false;
+    }
+
+    mbedtls_mpi_free(&bn_r);
+    mbedtls_mpi_free(&bn_s);
+
+    return true;
+}
+#endif/*LIBSPDM_FIPS_MODE*/
