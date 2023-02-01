@@ -155,6 +155,29 @@ extern bool libspdm_ecdsa_sign(void *ec_context, size_t hash_nid,
                                const uint8_t *message_hash, size_t hash_size,
                                uint8_t *signature, size_t *sig_size);
 
+#if LIBSPDM_FIPS_MODE
+/**
+ * Carries out the EC-DSA signature with caller input random function. This API can be used for FIPS test.
+ *
+ * @param[in]       ec_context    Pointer to EC context for signature generation.
+ * @param[in]       hash_nid      hash NID
+ * @param[in]       message_hash  Pointer to octet message hash to be signed.
+ * @param[in]       hash_size     Size of the message hash in bytes.
+ * @param[out]      signature     Pointer to buffer to receive EC-DSA signature.
+ * @param[in, out]  sig_size      On input, the size of signature buffer in bytes.
+ *                                On output, the size of data returned in signature buffer in bytes.
+ * @param[in]       random_func   random number function
+ *
+ * @retval  true   signature successfully generated in EC-DSA.
+ * @retval  false  signature generation failed.
+ * @retval  false  sig_size is too small.
+ **/
+extern bool libspdm_ecdsa_sign_ex(void *ec_context, size_t hash_nid,
+                                  const uint8_t *message_hash, size_t hash_size,
+                                  uint8_t *signature, size_t *sig_size,
+                                  int (*random_func)(void *, unsigned char *, size_t));
+#endif/*LIBSPDM_FIPS_MODE*/
+
 /**
  * Verifies the EC-DSA signature.
  *

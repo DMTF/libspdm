@@ -846,3 +846,237 @@ bool libspdm_ecdsa_verify(void *ec_context, size_t hash_nid,
 
     return (result == 1);
 }
+
+#if LIBSPDM_FIPS_MODE
+/*setup random number*/
+static int libspdm_ecdsa_sign_setup_random(EC_KEY *eckey, BIGNUM **kinvp, BIGNUM **rp,
+                                           uint8_t* random, size_t random_len)
+{
+    BN_CTX *ctx = NULL;
+    BIGNUM *k = NULL, *r = NULL, *X = NULL;
+    const BIGNUM *order;
+    EC_POINT *tmp_point = NULL;
+    const EC_GROUP *group;
+    int ret = 0;
+    int order_bits;
+    const BIGNUM *priv_key;
+
+
+    if (eckey == NULL || (group = EC_KEY_get0_group(eckey)) == NULL) {
+        return 0;
+    }
+    if ((priv_key = EC_KEY_get0_private_key(eckey)) == NULL) {
+        return 0;
+    }
+
+    if (!EC_KEY_can_sign(eckey)) {
+        return 0;
+    }
+
+    ctx = BN_CTX_new();
+    if (ctx == NULL) {
+        return 0;
+    }
+
+    /* this value is later returned in *kinvp */
+    k = BN_new();
+    /* this value is later returned in *rp */
+    r = BN_new();
+    X = BN_new();
+
+    if (k == NULL || r == NULL || X == NULL) {
+        return 0;
+    }
+    if ((tmp_point = EC_POINT_new(group)) == NULL) {
+        return 0;
+    }
+    order = EC_GROUP_get0_order(group);
+
+    /* Preallocate space */
+    order_bits = BN_num_bits(order);
+    if (!BN_set_bit(k, order_bits)
+        || !BN_set_bit(r, order_bits)
+        || !BN_set_bit(X, order_bits)) {
+        goto err;
+    }
+
+    /*random number*/
+    k = BN_bin2bn(random, random_len, NULL);
+
+    /* compute r the x-coordinate of generator * k */
+    if (!EC_POINT_mul(group, tmp_point, k, NULL, NULL, ctx)) {
+        goto err;
+    }
+    if (!EC_POINT_get_affine_coordinates(group, tmp_point, X, NULL, ctx)) {
+        goto err;
+    }
+    if (!BN_nnmod(r, X, order, ctx)) {
+        goto err;
+    }
+
+    /* compute the inverse of k */
+    if (!ec_group_do_inverse_ord(group, k, k, ctx)) {
+        goto err;
+    }
+
+    /* clear old values if necessary */
+    BN_clear_free(*rp);
+    BN_clear_free(*kinvp);
+    /* save the pre-computed values  */
+    *rp = r;
+    *kinvp = k;
+    ret = 1;
+
+err:
+    if (!ret) {
+        BN_clear_free(k);
+        BN_clear_free(r);
+    }
+
+    BN_CTX_free(ctx);
+    EC_POINT_free(tmp_point);
+    BN_clear_free(X);
+    return ret;
+}
+
+/**
+ * Carries out the EC-DSA signature with caller input random function. This API can be used for FIPS test.
+ *
+ * @param[in]       ec_context    Pointer to EC context for signature generation.
+ * @param[in]       hash_nid      hash NID
+ * @param[in]       message_hash  Pointer to octet message hash to be signed.
+ * @param[in]       hash_size     Size of the message hash in bytes.
+ * @param[out]      signature     Pointer to buffer to receive EC-DSA signature.
+ * @param[in, out]  sig_size      On input, the size of signature buffer in bytes.
+ *                                On output, the size of data returned in signature buffer in bytes.
+ * @param[in]       random_func   random number function
+ *
+ * @retval  true   signature successfully generated in EC-DSA.
+ * @retval  false  signature generation failed.
+ * @retval  false  sig_size is too small.
+ **/
+bool libspdm_ecdsa_sign_ex(void *ec_context, size_t hash_nid,
+                           const uint8_t *message_hash, size_t hash_size,
+                           uint8_t *signature, size_t *sig_size,
+                           int (*random_func)(void *, unsigned char *, size_t))
+{
+    EC_KEY *ec_key;
+    ECDSA_SIG *ecdsa_sig;
+    int32_t openssl_nid;
+    uint8_t half_size;
+    BIGNUM *bn_r;
+    BIGNUM *bn_s;
+    int r_size;
+    int s_size;
+    /*random number*/
+    uint8_t random[32];
+    bool result;
+
+    result = true;
+
+    BIGNUM *kinv = NULL;
+    BIGNUM *rp = NULL;
+
+    kinv = NULL;
+    rp = NULL;
+
+    if (ec_context == NULL || message_hash == NULL) {
+        return false;
+    }
+
+    if (signature == NULL) {
+        return false;
+    }
+
+    ec_key = (EC_KEY *)ec_context;
+    openssl_nid = EC_GROUP_get_curve_name(EC_KEY_get0_group(ec_key));
+    switch (openssl_nid) {
+    case NID_X9_62_prime256v1:
+        half_size = 32;
+        break;
+    case NID_secp384r1:
+        half_size = 48;
+        break;
+    case NID_secp521r1:
+        half_size = 66;
+        break;
+    default:
+        return false;
+    }
+    if (*sig_size < (size_t)(half_size * 2)) {
+        *sig_size = half_size * 2;
+        return false;
+    }
+    *sig_size = half_size * 2;
+    libspdm_zero_mem(signature, *sig_size);
+
+    switch (hash_nid) {
+    case LIBSPDM_CRYPTO_NID_SHA256:
+        if (hash_size != LIBSPDM_SHA256_DIGEST_SIZE) {
+            return false;
+        }
+        break;
+
+    case LIBSPDM_CRYPTO_NID_SHA384:
+        if (hash_size != LIBSPDM_SHA384_DIGEST_SIZE) {
+            return false;
+        }
+        break;
+
+    case LIBSPDM_CRYPTO_NID_SHA512:
+        if (hash_size != LIBSPDM_SHA512_DIGEST_SIZE) {
+            return false;
+        }
+        break;
+
+    default:
+        return false;
+    }
+
+    /*retrieve random number for ecdsa sign*/
+    if (random_func(NULL, random, sizeof(random)) != 0) {
+        result = false;
+        goto cleanup;
+    }
+    if (!libspdm_ecdsa_sign_setup_random(ec_key, &kinv, &rp, random, sizeof(random))) {
+        result = false;
+        goto cleanup;
+    }
+
+    ecdsa_sig = ECDSA_do_sign_ex(message_hash, (uint32_t)hash_size, kinv, rp,
+                                 (EC_KEY *)ec_context);
+    if (ecdsa_sig == NULL) {
+        result = false;
+        goto cleanup;
+    }
+
+    ECDSA_SIG_get0(ecdsa_sig, (const BIGNUM **)&bn_r,
+                   (const BIGNUM **)&bn_s);
+
+    r_size = BN_num_bytes(bn_r);
+    s_size = BN_num_bytes(bn_s);
+    if (r_size <= 0 || s_size <= 0) {
+        ECDSA_SIG_free(ecdsa_sig);
+        result = false;
+        goto cleanup;
+    }
+    LIBSPDM_ASSERT((size_t)r_size <= half_size && (size_t)s_size <= half_size);
+
+    BN_bn2bin(bn_r, &signature[0 + half_size - r_size]);
+    BN_bn2bin(bn_s, &signature[half_size + half_size - s_size]);
+
+    ECDSA_SIG_free(ecdsa_sig);
+
+cleanup:
+    if (kinv != NULL) {
+        BN_clear_free(kinv);
+    }
+    if (rp != NULL) {
+        BN_clear_free(rp);
+    }
+
+    libspdm_zero_mem(random, sizeof(random));
+    return result;
+}
+
+#endif/*LIBSPDM_FIPS_MODE*/
