@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.8.12)
 
 INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include)
+INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/os_stub)
 
 SET(src_spdm_crypt_lib
     libspdm_crypt_hash.c
@@ -15,6 +16,7 @@ SET(src_spdm_crypt_lib
     fips/libspdm_selftest_hmac.c
     fips/libspdm_selftest_aes_gcm.c
     fips/libspdm_selftest_rsa_ssa.c
+    fips/libspdm_selftest_hkdf.c
 )
 
 ADD_LIBRARY(spdm_crypt_lib STATIC ${src_spdm_crypt_lib})

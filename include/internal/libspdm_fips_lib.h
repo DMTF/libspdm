@@ -29,4 +29,9 @@ bool libspdm_fips_selftest_aes_gcm(void);
  **/
 bool libspdm_fips_selftest_rsa_ssa(void);
 
+/**
+ * HKDF KAT test
+ **/
+bool libspdm_fips_selftest_hkdf(void);
+
 #endif/*LIBSPDM_FIPS_MODE*/
