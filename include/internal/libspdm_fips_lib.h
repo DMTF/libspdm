@@ -39,4 +39,17 @@ bool libspdm_fips_selftest_hkdf(void);
  **/
 bool libspdm_fips_selftest_ecdh(void);
 
+/**
+ * SHA256 KAT: HMAC-SHA256 KAT covers SHA256 KAT.
+ **/
+bool libspdm_fips_selftest_sha256(void);
+/**
+ * SHA384 KAT: HMAC-SHA384 KAT covers SHA384 KAT.
+ **/
+bool libspdm_fips_selftest_sha384(void);
+/**
+ * SHA512 KAT: HMAC-SHA512 KAT covers SHA512 KAT.
+ **/
+bool libspdm_fips_selftest_sha512(void);
+
 #endif/*LIBSPDM_FIPS_MODE*/

@@ -18,6 +18,7 @@ SET(src_spdm_crypt_lib
     fips/libspdm_selftest_rsa_ssa.c
     fips/libspdm_selftest_hkdf.c
     fips/libspdm_selftest_ecdh.c
+    fips/libspdm_selftest_sha2.c
 )
 
 ADD_LIBRARY(spdm_crypt_lib STATIC ${src_spdm_crypt_lib})

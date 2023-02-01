@@ -63,6 +63,22 @@ bool libspdm_fips_run_selftest(void)
         last_result = false;
     }
 
+    result = libspdm_fips_selftest_sha256();
+    if (!result) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SHA256 self_test failed\n"));
+        last_result = false;
+    }
+    result = libspdm_fips_selftest_sha384();
+    if (!result) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SHA384 self_test failed\n"));
+        last_result = false;
+    }
+    result = libspdm_fips_selftest_sha512();
+    if (!result) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SHA512 self_test failed\n"));
+        last_result = false;
+    }
+
     return last_result;
 }
 
