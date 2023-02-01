@@ -34,4 +34,9 @@ bool libspdm_fips_selftest_rsa_ssa(void);
  **/
 bool libspdm_fips_selftest_hkdf(void);
 
+/**
+ * ECDH self_test
+ **/
+bool libspdm_fips_selftest_ecdh(void);
+
 #endif/*LIBSPDM_FIPS_MODE*/
