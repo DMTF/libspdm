@@ -260,9 +260,8 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
     }
     ptr += spdm_request->context_length;
 
-    status = libspdm_build_opaque_data_supported_version_data(
+    libspdm_build_opaque_data_supported_version_data(
         spdm_context, &opaque_psk_exchange_req_size, ptr);
-    LIBSPDM_ASSERT(status == LIBSPDM_STATUS_SUCCESS);
     ptr += opaque_psk_exchange_req_size;
 
     spdm_request_size = (size_t)ptr - (size_t)spdm_request;

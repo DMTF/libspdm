@@ -493,13 +493,12 @@ uint16_t libspdm_allocate_req_session_id(libspdm_context_t *spdm_context);
  *
  * @param  data_out_size  Size in bytes of the data_out.
  *                        On input, it means the size in bytes of data_out buffer.
- *                        On output, it means the size in bytes of copied data_out buffer if RETURN_SUCCESS is returned,
- *                        and means the size in bytes of desired data_out buffer if RETURN_BUFFER_TOO_SMALL is returned.
- * @param  data_out       A pointer to the desination buffer to store the opaque data supported version.
+ *                        On output, it means the size in bytes of copied data_out buffer.
+ * @param  data_out       A pointer to the destination buffer to store the opaque data supported version.
  **/
-libspdm_return_t libspdm_build_opaque_data_supported_version_data(libspdm_context_t *spdm_context,
-                                                                  size_t *data_out_size,
-                                                                  void *data_out);
+void libspdm_build_opaque_data_supported_version_data(libspdm_context_t *spdm_context,
+                                                      size_t *data_out_size,
+                                                      void *data_out);
 
 /**
  * Process opaque data version selection.
