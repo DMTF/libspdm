@@ -406,6 +406,10 @@ typedef struct {
                                   LIBSPDM_SECURED_MESSAGE_CONTEXT_SIZE * LIBSPDM_MAX_SESSION_COUNT)
 
 #if LIBSPDM_DEBUG_PRINT_ENABLE
+#ifdef LIBSPDM_INTERNAL_DUMP_HEX_STR_OVERRIDE
+extern void LIBSPDM_INTERNAL_DUMP_HEX_STR_OVERRIDE(const uint8_t *data, size_t size);
+#define LIBSPDM_INTERNAL_DUMP_HEX_STR(data, size) LIBSPDM_INTERNAL_DUMP_HEX_STR_OVERRIDE(data, size)
+#else
 /**
  * This function dump raw data.
  *
@@ -414,7 +418,12 @@ typedef struct {
  **/
 void libspdm_internal_dump_hex_str(const uint8_t *data, size_t size);
 #define LIBSPDM_INTERNAL_DUMP_HEX_STR(data, size) libspdm_internal_dump_hex_str(data, size)
+#endif /* LIBSPDM_INTERNAL_DUMP_HEX_STR_OVERRIDE */
 
+#ifdef LIBSPDM_INTERNAL_DUMP_DATA_OVERRIDE
+extern void LIBSPDM_INTERNAL_DUMP_DATA_OVERRIDE(const uint8_t *data, size_t size);
+#define LIBSPDM_INTERNAL_DUMP_DATA(data, size) LIBSPDM_INTERNAL_DUMP_DATA_OVERRIDE(data, size)
+#else
 /**
  * This function dump raw data.
  *
@@ -423,7 +432,12 @@ void libspdm_internal_dump_hex_str(const uint8_t *data, size_t size);
  **/
 void libspdm_internal_dump_data(const uint8_t *data, size_t size);
 #define LIBSPDM_INTERNAL_DUMP_DATA(data, size) libspdm_internal_dump_data(data, size)
+#endif /* LIBSPDM_INTERNAL_DUMP_DATA_OVERRIDE */
 
+#ifdef LIBSPDM_INTERNAL_DUMP_HEX_OVERRIDE
+extern void LIBSPDM_INTERNAL_DUMP_HEX_OVERRIDE(const uint8_t *data, size_t size);
+#define LIBSPDM_INTERNAL_DUMP_HEX(data, size) LIBSPDM_INTERNAL_DUMP_HEX_OVERRIDE(data, size)
+#else
 /**
  * This function dump raw data with column format.
  *
@@ -432,6 +446,7 @@ void libspdm_internal_dump_data(const uint8_t *data, size_t size);
  **/
 void libspdm_internal_dump_hex(const uint8_t *data, size_t size);
 #define LIBSPDM_INTERNAL_DUMP_HEX(data, size) libspdm_internal_dump_hex(data, size)
+#endif /* LIBSPDM_INTERNAL_DUMP_HEX_OVERRIDE */
 
 #else /* LIBSPDM_DEBUG_PRINT_ENABLE */
 #define LIBSPDM_INTERNAL_DUMP_HEX(data, size)
