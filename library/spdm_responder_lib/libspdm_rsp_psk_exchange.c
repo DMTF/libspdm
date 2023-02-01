@@ -324,11 +324,10 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
         ptr += context_length;
     }
 
-    status = libspdm_build_opaque_data_version_selection_data(
+    libspdm_build_opaque_data_version_selection_data(
         spdm_context, &opaque_psk_exchange_rsp_size, ptr);
-    LIBSPDM_ASSERT(status == LIBSPDM_STATUS_SUCCESS);
-    ptr += opaque_psk_exchange_rsp_size;
 
+    ptr += opaque_psk_exchange_rsp_size;
 
     status = libspdm_append_message_k(spdm_context, session_info, false, request, request_size);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {

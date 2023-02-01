@@ -483,9 +483,8 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
 
     *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
     ptr += sizeof(uint16_t);
-    status = libspdm_build_opaque_data_version_selection_data(
+    libspdm_build_opaque_data_version_selection_data(
         spdm_context, &opaque_key_exchange_rsp_size, ptr);
-    LIBSPDM_ASSERT(status == LIBSPDM_STATUS_SUCCESS);
     ptr += opaque_key_exchange_rsp_size;
 
     if (slot_id != 0xFF) {

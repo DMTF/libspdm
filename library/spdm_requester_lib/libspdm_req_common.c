@@ -24,32 +24,26 @@ uint16_t libspdm_allocate_req_session_id(libspdm_context_t *spdm_context)
     return (INVALID_SESSION_ID & 0xFFFF);
 }
 
-libspdm_return_t libspdm_build_opaque_data_supported_version_data(libspdm_context_t *spdm_context,
-                                                                  size_t *data_out_size,
-                                                                  void *data_out)
+void libspdm_build_opaque_data_supported_version_data(libspdm_context_t *spdm_context,
+                                                      size_t *data_out_size,
+                                                      void *data_out)
 {
     size_t final_data_size;
-    secured_message_general_opaque_data_table_header_t
-    *general_opaque_data_table_header;
-    spdm_general_opaque_data_table_header_t
-    *spdm_general_opaque_data_table_header;
-    secured_message_opaque_element_table_header_t
-    *opaque_element_table_header;
-    secured_message_opaque_element_supported_version_t
-    *opaque_element_support_version;
+    secured_message_general_opaque_data_table_header_t *general_opaque_data_table_header;
+    spdm_general_opaque_data_table_header_t *spdm_general_opaque_data_table_header;
+    secured_message_opaque_element_table_header_t *opaque_element_table_header;
+    secured_message_opaque_element_supported_version_t *opaque_element_support_version;
     spdm_version_number_t *versions_list;
     void *end;
 
     if (spdm_context->local_context.secured_message_version.spdm_version_count == 0) {
         *data_out_size = 0;
-        return LIBSPDM_STATUS_SUCCESS;
+        return;
     }
 
     final_data_size = libspdm_get_opaque_data_supported_version_data_size(spdm_context);
-    if (*data_out_size < final_data_size) {
-        *data_out_size = final_data_size;
-        return LIBSPDM_STATUS_BUFFER_TOO_SMALL;
-    }
+    LIBSPDM_ASSERT(*data_out_size >= final_data_size);
+
     if (libspdm_get_connection_version (spdm_context) >= SPDM_MESSAGE_VERSION_12) {
         spdm_general_opaque_data_table_header = data_out;
         spdm_general_opaque_data_table_header->total_elements = 1;
@@ -89,8 +83,6 @@ libspdm_return_t libspdm_build_opaque_data_supported_version_data(libspdm_contex
     /* Zero Padding. *data_out_size does not need to be changed, because data is 0 padded */
     end = versions_list + spdm_context->local_context.secured_message_version.spdm_version_count;
     libspdm_zero_mem(end, (size_t)data_out + final_data_size - (size_t)end);
-
-    return LIBSPDM_STATUS_SUCCESS;
 }
 
 /**
