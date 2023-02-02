@@ -131,6 +131,8 @@ static libspdm_return_t libspdm_requester_get_capabilities_test_send_message(
         return LIBSPDM_STATUS_SUCCESS;
     case 0x24:
         return LIBSPDM_STATUS_SUCCESS;
+    case 0x25:
+        return LIBSPDM_STATUS_SUCCESS;
     default:
         return LIBSPDM_STATUS_SEND_FAIL;
     }
@@ -1029,6 +1031,32 @@ static libspdm_return_t libspdm_requester_get_capabilities_test_receive_message(
     }
         return LIBSPDM_STATUS_SUCCESS;
 
+    case 0x25: {
+        spdm_capabilities_response_t *spdm_response;
+        size_t spdm_response_size;
+        size_t transport_header_size;
+
+        spdm_response_size = sizeof(spdm_capabilities_response_t);
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        libspdm_zero_mem(spdm_response, spdm_response_size);
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_12;
+        spdm_response->header.request_response_code = SPDM_CAPABILITIES;
+        spdm_response->header.param1 = 0;
+        spdm_response->header.param2 = 0;
+        spdm_response->ct_exponent = 0;
+        spdm_response->flags = LIBSPDM_DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_12;
+        spdm_response->data_transfer_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+        spdm_response->max_spdm_msg_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE - 1;
+
+        libspdm_transport_test_encode_message(spdm_context, NULL, false,
+                                              false, spdm_response_size,
+                                              spdm_response,
+                                              response_size, response);
+    }
+        return LIBSPDM_STATUS_SUCCESS;
+
     default:
         return LIBSPDM_STATUS_RECEIVE_FAIL;
     }
@@ -1895,6 +1923,31 @@ static void libspdm_test_requester_get_capabilities_err_case38(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
+/**
+ * Test 39: Responder sets illegal MaxSPDMmsgSize that is less than DataTransferSize.
+ * Expected behavior: returns with status LIBSPDM_STATUS_INVALID_MSG_FIELD.
+ **/
+static void libspdm_test_requester_get_capabilities_err_case39(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x25;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+
+    spdm_context->local_context.capability.ct_exponent = 0;
+    spdm_context->local_context.capability.flags = LIBSPDM_DEFAULT_CAPABILITY_FLAG;
+
+    status = libspdm_get_capabilities(spdm_context);
+
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+}
+
 static libspdm_test_context_t m_libspdm_requester_get_capabilities_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     true,
@@ -1943,6 +1996,7 @@ int libspdm_requester_get_capabilities_error_test_main(void)
         cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case36),
         cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case37),
         cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case38),
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_err_case39),
     };
 
     libspdm_setup_test_context(&m_libspdm_requester_get_capabilities_test_context);
