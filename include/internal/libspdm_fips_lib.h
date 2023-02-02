@@ -52,4 +52,17 @@ bool libspdm_fips_selftest_sha384(void);
  **/
 bool libspdm_fips_selftest_sha512(void);
 
+/**
+ * SHA3_256 KAT
+ **/
+bool libspdm_fips_selftest_sha3_256(void);
+/**
+ * SHA3_384 KAT
+ **/
+bool libspdm_fips_selftest_sha3_384(void);
+/**
+ * SHA3_512 KAT
+ **/
+bool libspdm_fips_selftest_sha3_512(void);
+
 #endif/*LIBSPDM_FIPS_MODE*/

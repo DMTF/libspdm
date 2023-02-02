@@ -19,6 +19,13 @@ SET(src_spdm_crypt_lib
     fips/libspdm_selftest_hkdf.c
     fips/libspdm_selftest_ecdh.c
     fips/libspdm_selftest_sha2.c
+    fips/libspdm_selftest_sha3.c
 )
+
+if(CRYPTO STREQUAL "mbedtls")
+    add_definitions(-DLIBSPDM_SHA3_SUPPORT_TEST=0)
+elseif(CRYPTO STREQUAL "openssl")
+    add_definitions(-DLIBSPDM_SHA3_SUPPORT_TEST=1)
+endif()
 
 ADD_LIBRARY(spdm_crypt_lib STATIC ${src_spdm_crypt_lib})
