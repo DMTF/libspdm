@@ -1,5 +1,10 @@
 cmake_minimum_required(VERSION 2.8.12)
 
+if(LIB_INSTALL_DIR)
+else()
+    set(LIB_INSTALL_DIR lib)
+endif()
+
 ADD_SUBDIRECTORY(${CMAKE_CURRENT_LIST_DIR}/mbedtls/library)
 
 # mbedtls
