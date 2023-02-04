@@ -6,6 +6,7 @@
 
 #include "library/spdm_transport_pcidoe_lib.h"
 #include "industry_standard/pcidoe.h"
+#include "internal/libspdm_common_lib.h"
 #include "hal/library/debuglib.h"
 #include "hal/library/memlib.h"
 
@@ -68,6 +69,7 @@ libspdm_return_t libspdm_pci_doe_encode_message(const uint32_t *session_id,
 {
     size_t aligned_message_size;
     size_t alignment;
+    uint32_t data32;
     pci_doe_data_object_header_t *pci_doe_header;
 
     alignment = PCI_DOE_ALIGNMENT;
@@ -90,8 +92,9 @@ libspdm_return_t libspdm_pci_doe_encode_message(const uint32_t *session_id,
     if (session_id != NULL) {
         pci_doe_header->data_object_type =
             PCI_DOE_DATA_OBJECT_TYPE_SECURED_SPDM;
-        LIBSPDM_ASSERT(*session_id == *(uint32_t *)(message));
-        if (*session_id != *(uint32_t *)(message)) {
+        data32 = libspdm_read_uint32((const uint8_t *)message);
+        LIBSPDM_ASSERT(*session_id == data32);
+        if (*session_id != data32) {
             return LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
     } else {

@@ -49,10 +49,12 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
 {
     libspdm_context_t *context;
     uint32_t session_id;
+    uint32_t data32;
     libspdm_session_info_t *session_info;
     uint8_t slot_id;
     uint8_t mut_auth_requested;
     uint8_t root_cert_index;
+    uint16_t data16;
 #if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
     bool status;
 #endif
@@ -122,31 +124,33 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
 
+        data32 = libspdm_read_uint32((const uint8_t *)data);
+
     #if !(LIBSPDM_ENABLE_CAPABILITY_CERT_CAP)
-        LIBSPDM_ASSERT(((*(uint32_t *)data) & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP) == 0);
+        LIBSPDM_ASSERT((data32 & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP) == 0);
     #endif /* !LIBSPDM_ENABLE_CAPABILITY_CERT_CAP */
 
     #if !(LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP)
-        LIBSPDM_ASSERT(((*(uint32_t *)data) & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP) == 0);
+        LIBSPDM_ASSERT((data32 & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP) == 0);
     #endif /* !LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP */
 
     #if !(LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP)
-        LIBSPDM_ASSERT(((*(uint32_t *)data) & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP) == 0);
+        LIBSPDM_ASSERT((data32 & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP) == 0);
     #endif /* !LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
 
     #if !(LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP)
-        LIBSPDM_ASSERT(((*(uint32_t *)data) & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP) ==
+        LIBSPDM_ASSERT((data32 & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP) ==
                        0);
     #endif /* !LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP */
 
     #if !(LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP)
-        LIBSPDM_ASSERT(((*(uint32_t *)data) & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP) == 0);
+        LIBSPDM_ASSERT((data32 & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP) == 0);
     #endif /* !LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
 
         if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
-            context->connection_info.capability.flags = *(uint32_t *)data;
+            context->connection_info.capability.flags = data32;
         } else {
-            context->local_context.capability.flags = *(uint32_t *)data;
+            context->local_context.capability.flags = data32;
         }
         break;
     case LIBSPDM_DATA_CAPABILITY_CT_EXPONENT:
@@ -159,23 +163,25 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         if (data_size != sizeof(uint64_t)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
-        context->local_context.capability.rtt = *(uint64_t *)data;
+        context->local_context.capability.rtt = libspdm_read_uint64((const uint8_t *)data);
         break;
     case LIBSPDM_DATA_CAPABILITY_DATA_TRANSFER_SIZE:
         if (data_size != sizeof(uint32_t)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
+        data32 = libspdm_read_uint32((const uint8_t *)data);
         /* Only allow set smaller value*/
-        LIBSPDM_ASSERT (*(uint32_t *)data <= LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
-        context->local_context.capability.data_transfer_size = *(uint32_t *)data;
+        LIBSPDM_ASSERT (data32 <= LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+        context->local_context.capability.data_transfer_size = data32;
         break;
     case LIBSPDM_DATA_CAPABILITY_MAX_SPDM_MSG_SIZE:
         if (data_size != sizeof(uint32_t)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
+        data32 = libspdm_read_uint32((const uint8_t *)data);
         /* Only allow set smaller value. Need different value for CHUNK - TBD*/
-        LIBSPDM_ASSERT (*(uint32_t *)data <= LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
-        context->local_context.capability.max_spdm_msg_size = *(uint32_t *)data;
+        LIBSPDM_ASSERT (data32 <= LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+        context->local_context.capability.max_spdm_msg_size = data32;
         break;
     case LIBSPDM_DATA_MEASUREMENT_SPEC:
         if (data_size != sizeof(uint8_t)) {
@@ -191,70 +197,77 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         if (data_size != sizeof(uint32_t)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
+        data32 = libspdm_read_uint32((const uint8_t *)data);
         if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
-            context->connection_info.algorithm.measurement_hash_algo = *(uint32_t *)data;
+            context->connection_info.algorithm.measurement_hash_algo = data32;
         } else {
-            context->local_context.algorithm.measurement_hash_algo = *(uint32_t *)data;
+            context->local_context.algorithm.measurement_hash_algo = data32;
         }
         break;
     case LIBSPDM_DATA_BASE_ASYM_ALGO:
         if (data_size != sizeof(uint32_t)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
+        data32 = libspdm_read_uint32((const uint8_t *)data);
         if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
-            context->connection_info.algorithm.base_asym_algo = *(uint32_t *)data;
+            context->connection_info.algorithm.base_asym_algo = data32;
         } else {
-            context->local_context.algorithm.base_asym_algo = *(uint32_t *)data;
+            context->local_context.algorithm.base_asym_algo = data32;
         }
         break;
     case LIBSPDM_DATA_BASE_HASH_ALGO:
         if (data_size != sizeof(uint32_t)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
+        data32 = libspdm_read_uint32((const uint8_t *)data);
         if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
-            context->connection_info.algorithm.base_hash_algo = *(uint32_t *)data;
+            context->connection_info.algorithm.base_hash_algo = data32;
         } else {
-            context->local_context.algorithm.base_hash_algo = *(uint32_t *)data;
+            context->local_context.algorithm.base_hash_algo = data32;
         }
         break;
     case LIBSPDM_DATA_DHE_NAME_GROUP:
         if (data_size != sizeof(uint16_t)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
+        data16 = libspdm_read_uint16((const uint8_t *)data);
         if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
-            context->connection_info.algorithm.dhe_named_group = *(uint16_t *)data;
+            context->connection_info.algorithm.dhe_named_group = data16;
         } else {
-            context->local_context.algorithm.dhe_named_group = *(uint16_t *)data;
+            context->local_context.algorithm.dhe_named_group = data16;
         }
         break;
     case LIBSPDM_DATA_AEAD_CIPHER_SUITE:
         if (data_size != sizeof(uint16_t)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
+        data16 = libspdm_read_uint16((const uint8_t *)data);
         if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
-            context->connection_info.algorithm.aead_cipher_suite = *(uint16_t *)data;
+            context->connection_info.algorithm.aead_cipher_suite = data16;
         } else {
-            context->local_context.algorithm.aead_cipher_suite = *(uint16_t *)data;
+            context->local_context.algorithm.aead_cipher_suite = data16;
         }
         break;
     case LIBSPDM_DATA_REQ_BASE_ASYM_ALG:
         if (data_size != sizeof(uint16_t)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
+        data16 = libspdm_read_uint16((const uint8_t *)data);
         if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
-            context->connection_info.algorithm.req_base_asym_alg = *(uint16_t *)data;
+            context->connection_info.algorithm.req_base_asym_alg = data16;
         } else {
-            context->local_context.algorithm.req_base_asym_alg = *(uint16_t *)data;
+            context->local_context.algorithm.req_base_asym_alg = data16;
         }
         break;
     case LIBSPDM_DATA_KEY_SCHEDULE:
         if (data_size != sizeof(uint16_t)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
+        data16 = libspdm_read_uint16((const uint8_t *)data);
         if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
-            context->connection_info.algorithm.key_schedule = *(uint16_t *)data;
+            context->connection_info.algorithm.key_schedule = data16;
         } else {
-            context->local_context.algorithm.key_schedule = *(uint16_t *)data;
+            context->local_context.algorithm.key_schedule = data16;
         }
         break;
     case LIBSPDM_DATA_OTHER_PARAMS_SUPPORT:
@@ -271,13 +284,13 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         if (data_size != sizeof(uint32_t)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
-        context->connection_info.connection_state = *(uint32_t *)data;
+        context->connection_info.connection_state = libspdm_read_uint32((const uint8_t *)data);
         break;
     case LIBSPDM_DATA_RESPONSE_STATE:
         if (data_size != sizeof(uint32_t)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
-        context->response_state = *(uint32_t *)data;
+        context->response_state = libspdm_read_uint32((const uint8_t *)data);
         break;
     case LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT:
         root_cert_index = 0;

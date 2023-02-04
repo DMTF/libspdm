@@ -481,7 +481,7 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
     }
     ptr += measurement_summary_hash_size;
 
-    *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
+    libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_rsp_size);
     ptr += sizeof(uint16_t);
     libspdm_build_opaque_data_version_selection_data(
         spdm_context, &opaque_key_exchange_rsp_size, ptr);

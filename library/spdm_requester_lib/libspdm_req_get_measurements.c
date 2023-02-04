@@ -380,7 +380,7 @@ static libspdm_return_t libspdm_try_get_measurement(libspdm_context_t *spdm_cont
             libspdm_copy_mem(responder_nonce, SPDM_NONCE_SIZE, nonce, SPDM_NONCE_SIZE);
         }
 
-        opaque_length = *(uint16_t *)ptr;
+        opaque_length = libspdm_read_uint16((const uint8_t *)ptr);
         if (opaque_length > SPDM_MAX_OPAQUE_DATA_SIZE) {
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             goto receive_done;
@@ -454,7 +454,7 @@ static libspdm_return_t libspdm_try_get_measurement(libspdm_context_t *spdm_cont
             libspdm_copy_mem(responder_nonce, SPDM_NONCE_SIZE, nonce, SPDM_NONCE_SIZE);
         }
 
-        opaque_length = *(uint16_t *)ptr;
+        opaque_length = libspdm_read_uint16((const uint8_t *)ptr);
         if (opaque_length > SPDM_MAX_OPAQUE_DATA_SIZE) {
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             goto receive_done;

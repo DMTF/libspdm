@@ -53,6 +53,7 @@ libspdm_return_t libspdm_encode_secured_message(
     uint8_t *salt;
     uint64_t sequence_number;
     uint64_t sequence_num_in_header;
+    uint64_t data64;
     uint8_t sequence_num_in_header_size;
     libspdm_session_type_t session_type;
     uint32_t rand_count;
@@ -118,7 +119,9 @@ libspdm_return_t libspdm_encode_secured_message(
     }
 
     if (sequence_number > 0) {
-        *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
+        data64 = libspdm_read_uint64((const uint8_t *)salt) ^
+                 (sequence_number - 1) ^ sequence_number;
+        libspdm_write_uint64(salt, data64);
     }
 
     sequence_num_in_header = 0;
@@ -308,6 +311,7 @@ libspdm_return_t libspdm_decode_secured_message(
     uint8_t *salt;
     uint64_t sequence_number;
     uint64_t sequence_num_in_header;
+    uint64_t data64;
     uint8_t sequence_num_in_header_size;
     libspdm_session_type_t session_type;
     libspdm_session_state_t session_state;
@@ -380,7 +384,9 @@ libspdm_return_t libspdm_decode_secured_message(
     }
 
     if (sequence_number > 0) {
-        *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
+        data64 = libspdm_read_uint64((const uint8_t *)salt) ^
+                 (sequence_number - 1) ^ sequence_number;
+        libspdm_write_uint64(salt, data64);
     }
 
     sequence_num_in_header = 0;
