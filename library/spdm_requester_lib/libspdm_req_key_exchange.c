@@ -381,7 +381,7 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
 
     opaque_key_exchange_req_size =
         libspdm_get_opaque_data_supported_version_data_size(spdm_context);
-    *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+    libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
     ptr += sizeof(uint16_t);
     libspdm_build_opaque_data_supported_version_data(
         spdm_context, &opaque_key_exchange_req_size, ptr);
@@ -558,7 +558,7 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
 
     ptr += measurement_summary_hash_size;
 
-    opaque_length = *(uint16_t *)ptr;
+    opaque_length = libspdm_read_uint16((const uint8_t *)ptr);
     if (opaque_length > SPDM_MAX_OPAQUE_DATA_SIZE) {
         libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group, dhe_context);

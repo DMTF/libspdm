@@ -6,6 +6,7 @@
 
 #include "library/spdm_transport_mctp_lib.h"
 #include "industry_standard/mctp.h"
+#include "internal/libspdm_common_lib.h"
 #include "hal/library/debuglib.h"
 #include "hal/library/memlib.h"
 
@@ -68,6 +69,7 @@ libspdm_return_t libspdm_mctp_encode_message(const uint32_t *session_id, size_t 
 {
     size_t aligned_message_size;
     size_t alignment;
+    uint32_t data32;
     mctp_message_header_t *mctp_message_header;
 
     alignment = MCTP_ALIGNMENT;
@@ -81,8 +83,9 @@ libspdm_return_t libspdm_mctp_encode_message(const uint32_t *session_id, size_t 
     if (session_id != NULL) {
         mctp_message_header->message_type =
             MCTP_MESSAGE_TYPE_SECURED_MCTP;
-        LIBSPDM_ASSERT(*session_id == *(uint32_t *)(message));
-        if (*session_id != *(uint32_t *)(message)) {
+        data32 = libspdm_read_uint32((const uint8_t *)message);
+        LIBSPDM_ASSERT(*session_id == data32);
+        if (*session_id != data32) {
             return LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
     } else {

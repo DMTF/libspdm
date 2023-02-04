@@ -246,7 +246,7 @@ static libspdm_return_t libspdm_try_challenge(libspdm_context_t *spdm_context,
     LIBSPDM_INTERNAL_DUMP_DATA(measurement_summary_hash, measurement_summary_hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
-    opaque_length = *(uint16_t *)ptr;
+    opaque_length = libspdm_read_uint16((const uint8_t *)ptr);
     if (opaque_length > SPDM_MAX_OPAQUE_DATA_SIZE) {
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
