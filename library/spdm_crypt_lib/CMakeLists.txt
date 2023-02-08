@@ -20,6 +20,7 @@ SET(src_spdm_crypt_lib
     fips/libspdm_selftest_ecdh.c
     fips/libspdm_selftest_sha2.c
     fips/libspdm_selftest_sha3.c
+    fips/libspdm_selftest_ffdh.c
 )
 
 if(CRYPTO STREQUAL "mbedtls")

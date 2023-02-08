@@ -65,4 +65,9 @@ bool libspdm_fips_selftest_sha3_384(void);
  **/
 bool libspdm_fips_selftest_sha3_512(void);
 
+/**
+ * FFDH self_test
+ **/
+bool libspdm_fips_selftest_ffdh(void);
+
 #endif/*LIBSPDM_FIPS_MODE*/
