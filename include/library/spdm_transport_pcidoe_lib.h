@@ -65,6 +65,21 @@ libspdm_return_t libspdm_transport_pci_doe_encode_message(
     size_t *transport_message_size, void **transport_message);
 
 /**
+ * Encode a DOE discovery message.
+ *
+ * @param  message_size                         Size in bytes of the message data buffer.
+ * @param  message                              A pointer to a source buffer to store the message.
+ * @param  transport_message_size               Size in bytes of the transport message data buffer.
+ * @param  transport_message                    A pointer to a destination buffer to store the transport message.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS               The message is encoded successfully.
+ * @retval LIBSPDM_STATUS_INVALID_PARAMETER     The message is NULL or the message_size is zero.
+ **/
+libspdm_return_t libspdm_pci_doe_encode_discovery(size_t message_size, void *message,
+                                                  size_t *transport_message_size,
+                                                  void **transport_message);
+
+/**
  * Decode an SPDM or APP message from a transport layer message.
  *
  * For normal SPDM message, it removes the transport layer wrapper,
