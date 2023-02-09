@@ -128,6 +128,50 @@ libspdm_return_t libspdm_pci_doe_encode_message(const uint32_t *session_id,
     return LIBSPDM_STATUS_SUCCESS;
 }
 
+libspdm_return_t libspdm_pci_doe_encode_discovery(size_t message_size, void *message,
+                                                  size_t *transport_message_size,
+                                                  void **transport_message)
+{
+    size_t aligned_message_size;
+    size_t alignment;
+    pci_doe_data_object_header_t *pci_doe_header;
+
+    alignment = LIBSPDM_PCI_DOE_ALIGNMENT;
+    aligned_message_size =
+        (message_size + (alignment - 1)) & ~(alignment - 1);
+
+    LIBSPDM_ASSERT(*transport_message_size >=
+                   aligned_message_size + sizeof(pci_doe_data_object_header_t));
+    if (*transport_message_size <
+        aligned_message_size + sizeof(pci_doe_data_object_header_t)) {
+        *transport_message_size = aligned_message_size +
+                                  sizeof(pci_doe_data_object_header_t);
+        return LIBSPDM_STATUS_BUFFER_TOO_SMALL;
+    }
+
+    *transport_message_size =
+        aligned_message_size + sizeof(pci_doe_data_object_header_t);
+    *transport_message = (uint8_t *)message - sizeof(pci_doe_data_object_header_t);
+    pci_doe_header = *transport_message;
+    pci_doe_header->vendor_id = PCI_DOE_VENDOR_ID_PCISIG;
+    pci_doe_header->data_object_type = PCI_DOE_DATA_OBJECT_TYPE_DOE_DISCOVERY;
+    pci_doe_header->reserved = 0;
+
+    if (*transport_message_size > PCI_DOE_MAX_SIZE_IN_BYTE) {
+        return LIBSPDM_STATUS_BUFFER_FULL;
+    } else if (*transport_message_size == PCI_DOE_MAX_SIZE_IN_BYTE) {
+        pci_doe_header->length = 0;
+    } else {
+        pci_doe_header->length =
+            (uint32_t)*transport_message_size / sizeof(uint32_t);
+    }
+
+    libspdm_zero_mem((uint8_t *)message + message_size,
+                     aligned_message_size - message_size);
+
+    return LIBSPDM_STATUS_SUCCESS;
+}
+
 /**
  * Decode a transport message to a normal message or secured message.
  *
