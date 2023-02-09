@@ -2500,7 +2500,7 @@ void libspdm_test_requester_get_certificate_case9(void **state)
 }
 
 /**
- * Test 10: Normal case, request a certificate chain. Validates certificate by using a prelaoded chain instead of root hash
+ * Test 10: Normal case, request a certificate chain. Validates certificate by using a preloaded chain instead of root hash
  * Expected Behavior: receives the correct number of Certificate messages
  **/
 void libspdm_test_requester_get_certificate_case10(void **state)
@@ -2987,7 +2987,7 @@ void libspdm_test_requester_get_certificate_case16(void **state) {
 }
 
 /**
- * Test 17: Normal case, get a certificate chain start not with root cert. Validates certificate by using a prelaoded chain.
+ * Test 17: Normal case, get a certificate chain start not with root cert. Validates certificate by using a preloaded chain.
  * Expected Behavior: receives the correct number of Certificate messages
  **/
 void libspdm_test_requester_get_certificate_case17(void **state)
@@ -3039,7 +3039,7 @@ void libspdm_test_requester_get_certificate_case17(void **state)
 }
 
 /**
- * Test 18: Fail case, get a certificate chain start not with root cert and with wrong signature. Validates certificate by using a prelaoded chain.
+ * Test 18: Fail case, get a certificate chain start not with root cert and with wrong signature. Validates certificate by using a preloaded chain.
  * Expected Behavior: receives the correct number of Certificate messages
  **/
 void libspdm_test_requester_get_certificate_case18(void **state)
