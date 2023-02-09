@@ -162,9 +162,43 @@ bool libspdm_dh_generate_parameter(void *dh_context, size_t generator,
 bool libspdm_dh_set_parameter(void *dh_context, size_t generator,
                               size_t prime_length, const uint8_t *prime)
 {
-    return false;
-}
+    mbedtls_dhm_context *ctx;
+    mbedtls_mpi bn_p;
+    mbedtls_mpi bn_g;
+    bool status;
 
+    if ((dh_context == NULL) || (prime == NULL) || (prime_length > INT_MAX)) {
+        return false;
+    }
+
+    /* Set the generator and prime parameters for DH object.*/
+    ctx  = (mbedtls_dhm_context *)dh_context;
+    mbedtls_mpi_init(&bn_p);
+    mbedtls_mpi_init(&bn_g);
+
+    if (mbedtls_mpi_read_binary(&bn_p, (const unsigned char *)prime,
+                                (int)(prime_length / 8)) != 0) {
+        status = false;
+        goto error;
+    }
+
+    if (mbedtls_mpi_read_binary(&bn_g, (const unsigned char *)&generator, 1) != 0) {
+        status = false;
+        goto error;
+    }
+
+    if (mbedtls_dhm_set_group (ctx, &bn_p, &bn_g) != 0) {
+        status = false;
+        goto error;
+    }
+
+    status = true;
+
+error:
+    mbedtls_mpi_free(&bn_p);
+    mbedtls_mpi_free(&bn_g);
+    return status;
+}
 /**
  * Generates DH public key.
  *
