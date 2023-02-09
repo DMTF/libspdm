@@ -42,6 +42,33 @@ libspdm_test_context_t m_libspdm_transport_pci_doe_test_context = {
     false,
 };
 
+void libspdm_test_transport_pci_doe_decode_discovery(void **State)
+{
+    libspdm_test_context_t *spdm_test_context;
+    bool is_requester;
+
+    spdm_test_context = *State;
+    is_requester = spdm_test_context->is_requester;
+
+    if (is_requester) {
+        uint8_t index = 0;
+
+        libspdm_pci_doe_decode_discovery_request(spdm_test_context->test_buffer_size,
+                                                 spdm_test_context->test_buffer,
+                                                 &index);
+    } else {
+        uint16_t vendor_id = 0;
+        uint8_t protocol = 0;
+        uint8_t next_index = 0;
+
+        libspdm_pci_doe_decode_discovery_response(spdm_test_context->test_buffer_size,
+                                                  spdm_test_context->test_buffer,
+                                                  &vendor_id,
+                                                  &protocol,
+                                                  &next_index);
+    }
+}
+
 void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
 {
     void *State;
@@ -54,6 +81,8 @@ void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
     libspdm_unit_test_group_setup(&State);
 
     libspdm_test_transport_pci_doe_decode_message(&State);
+
+    libspdm_test_transport_pci_doe_decode_discovery(&State);
 
     libspdm_unit_test_group_teardown(&State);
 }

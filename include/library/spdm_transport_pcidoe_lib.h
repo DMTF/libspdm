@@ -101,6 +101,51 @@ libspdm_return_t libspdm_transport_pci_doe_decode_message(
     size_t *message_size, void **message);
 
 /**
+ * Decode a DOE discovery request message.
+ *
+ * @param  transport_message_size               Size in bytes of the transport message data buffer.
+ * @param  transport_message                    A pointer to a source buffer to store the transport message.
+ * @param  index                                A pointer to a destination to store the index.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS               The message is encoded successfully.
+ * @retval LIBSPDM_STATUS_INVALID_PARAMETER     The message is NULL or the message_size is zero.
+ **/
+libspdm_return_t libspdm_pci_doe_decode_discovery_request(size_t transport_message_size,
+                                                          const void *transport_message,
+                                                          uint8_t *index);
+/**
+ * Decode a DOE discovery response message.
+ *
+ * @param  transport_message_size               Size in bytes of the transport message data buffer.
+ * @param  transport_message                    A pointer to a source buffer to store the transport message.
+ * @param  vendor_id                            A pointer to a destination to store the vendor_id.
+ * @param  protocol                             A pointer to a destination to store the protocol.
+ * @param  next_index                           A pointer to a destination to store the next_index.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS               The message is encoded successfully.
+ * @retval LIBSPDM_STATUS_INVALID_PARAMETER     The message is NULL or the message_size is zero.
+ **/
+libspdm_return_t libspdm_pci_doe_decode_discovery_response(size_t transport_message_size,
+                                                           void *transport_message,
+                                                           uint16_t *vendor_id,
+                                                           uint8_t *protocol,
+                                                           uint8_t *next_index);
+
+/**
+ * Return the maximum transport layer message header size.
+ *   Transport Message Header Size + sizeof(spdm_secured_message_cipher_header_t))
+ *
+ *   For MCTP, Transport Message Header Size = sizeof(mctp_message_header_t)
+ *   For PCI_DOE, Transport Message Header Size = sizeof(pci_doe_data_object_header_t)
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ *
+ * @return size of maximum transport layer message header size
+ **/
+uint32_t libspdm_transport_pci_doe_get_header_size(
+    void *spdm_context);
+
+/**
  * Get sequence number in an SPDM secure message.
  *
  * This value is transport layer specific.
