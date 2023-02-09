@@ -204,3 +204,132 @@ libspdm_return_t libspdm_pci_doe_decode_message(uint32_t **session_id,
     *message = (uint8_t *)transport_message + sizeof(pci_doe_data_object_header_t);
     return LIBSPDM_STATUS_SUCCESS;
 }
+
+libspdm_return_t libspdm_pci_doe_decode_discovery_request(size_t transport_message_size,
+                                                          const void *transport_message,
+                                                          uint8_t *index)
+{
+    const pci_doe_data_object_header_t *pci_doe_header;
+    uint32_t length;
+    const uint8_t *message;
+
+    LIBSPDM_ASSERT(transport_message_size > sizeof(pci_doe_data_object_header_t));
+    if (transport_message_size <= sizeof(pci_doe_data_object_header_t)) {
+        return LIBSPDM_STATUS_INVALID_MSG_SIZE;
+    }
+
+    pci_doe_header = transport_message;
+    if (pci_doe_header->vendor_id != PCI_DOE_VENDOR_ID_PCISIG) {
+        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+    }
+
+    switch (pci_doe_header->data_object_type) {
+    case PCI_DOE_DATA_OBJECT_TYPE_DOE_DISCOVERY:
+        /*
+         * Check to see if we received a DOE discovery message.
+         * DOE discovery is not part of the SPDM spec, instead it's part
+         * of the PCIe DOE spec. DOE discovery is mandatory for all
+         * implementations.
+         */
+        message = (const uint8_t *)transport_message + sizeof(pci_doe_data_object_header_t);
+        if (index != NULL) {
+            *index = *message;
+        }
+        break;
+    default:
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+    }
+
+    if (pci_doe_header->reserved != 0) {
+        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+    }
+    if (pci_doe_header->length >= PCI_DOE_MAX_SIZE_IN_DW) {
+        return LIBSPDM_STATUS_INVALID_MSG_SIZE;
+    } else if (pci_doe_header->length == 0) {
+        length = PCI_DOE_MAX_SIZE_IN_BYTE;
+    } else {
+        length = pci_doe_header->length * sizeof(uint32_t);
+    }
+    if (length != transport_message_size) {
+        return LIBSPDM_STATUS_INVALID_MSG_SIZE;
+    }
+
+    return LIBSPDM_STATUS_SUCCESS;
+}
+
+libspdm_return_t libspdm_pci_doe_decode_discovery_response(size_t transport_message_size,
+                                                           void *transport_message,
+                                                           uint16_t *vendor_id,
+                                                           uint8_t *protocol,
+                                                           uint8_t *next_index)
+{
+    const pci_doe_data_object_header_t *pci_doe_header;
+    uint32_t length;
+    uint8_t *message;
+
+    LIBSPDM_ASSERT(transport_message_size > sizeof(pci_doe_data_object_header_t));
+    if (transport_message_size <= sizeof(pci_doe_data_object_header_t)) {
+        return LIBSPDM_STATUS_INVALID_MSG_SIZE;
+    }
+
+    pci_doe_header = transport_message;
+    if (pci_doe_header->vendor_id != PCI_DOE_VENDOR_ID_PCISIG) {
+        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+    }
+
+    switch (pci_doe_header->data_object_type) {
+    case PCI_DOE_DATA_OBJECT_TYPE_DOE_DISCOVERY:
+        /*
+         * Check to see if we received a DOE discovery message.
+         * DOE discovery is not part of the SPDM spec, instead it's part
+         * of the PCIe DOE spec. DOE discovery is mandatory for all
+         * implementations.
+         */
+        message = (uint8_t *)transport_message + sizeof(pci_doe_data_object_header_t);
+        if (vendor_id != NULL) {
+            *vendor_id = *message;
+        }
+        if (protocol != NULL) {
+            *protocol = *(message + sizeof(uint16_t));
+        }
+        if (next_index != NULL) {
+            *next_index = *(message + sizeof(uint16_t) + sizeof(uint8_t));
+        }
+        break;
+    default:
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+    }
+
+    if (pci_doe_header->reserved != 0) {
+        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+    }
+    if (pci_doe_header->length >= PCI_DOE_MAX_SIZE_IN_DW) {
+        return LIBSPDM_STATUS_INVALID_MSG_SIZE;
+    } else if (pci_doe_header->length == 0) {
+        length = PCI_DOE_MAX_SIZE_IN_BYTE;
+    } else {
+        length = pci_doe_header->length * sizeof(uint32_t);
+    }
+    if (length != transport_message_size) {
+        return LIBSPDM_STATUS_INVALID_MSG_SIZE;
+    }
+
+    return LIBSPDM_STATUS_SUCCESS;
+}
+
+/**
+ * Return the maximum transport layer message header size.
+ *   Transport Message Header Size + sizeof(spdm_secured_message_cipher_header_t))
+ *
+ *   For MCTP, Transport Message Header Size = sizeof(mctp_message_header_t)
+ *   For PCI_DOE, Transport Message Header Size = sizeof(pci_doe_data_object_header_t)
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ *
+ * @return size of maximum transport layer message header size
+ **/
+uint32_t libspdm_transport_pci_doe_get_header_size(
+    void *spdm_context)
+{
+    return sizeof(pci_doe_data_object_header_t) + sizeof(spdm_secured_message_cipher_header_t);
+}
