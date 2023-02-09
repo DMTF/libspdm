@@ -257,7 +257,7 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
     if (spdm_request->psk_hint_length == 0) {
         psk_hint_size = 0;
         psk_hint = NULL;
-    } else if(spdm_request->psk_hint_length < LIBSPDM_PSK_MAX_HINT_LENGTH ) {
+    } else if(spdm_request->psk_hint_length <= LIBSPDM_PSK_MAX_HINT_LENGTH ) {
         psk_hint_size = spdm_request->psk_hint_length;
         psk_hint = (const uint8_t *)request +
                    sizeof(spdm_psk_exchange_request_t);
