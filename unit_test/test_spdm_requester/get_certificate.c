@@ -1096,31 +1096,32 @@ libspdm_return_t libspdm_requester_get_certificate_test_receive_message(
             if (m_libspdm_local_certificate_chain == NULL) {
                 return LIBSPDM_STATUS_RECEIVE_FAIL;
             }
-            /* read root certificate size*/
-            libspdm_read_responder_root_public_certificate(
-                m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
-                &root_cert_data,
-                &root_cert_size, NULL, NULL);
-            /* load certificate*/
-            hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
-            root_cert_size = root_cert_size -
-                             sizeof(spdm_cert_chain_t) - hash_size;
-            cert_buffer = (uint8_t *)m_libspdm_local_certificate_chain +
-                          sizeof(spdm_cert_chain_t) + hash_size + root_cert_size;
-            cert_buffer_size = m_libspdm_local_certificate_chain_size -
-                               sizeof(spdm_cert_chain_t) -
-                               hash_size - root_cert_size;
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                           "root_cert_size %d \n",root_cert_size));
-            if (!libspdm_x509_get_cert_from_cert_chain(
-                    cert_buffer, cert_buffer_size, -1,
-                    &leaf_cert_buffer,
-                    &leaf_cert_buffer_size)) {
-                LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                               "!!! VerifyCertificateChain - FAIL (get leaf certificate failed)!!!\n"));
-                return LIBSPDM_STATUS_RECEIVE_FAIL;
-            }
         }
+
+        /* read root certificate size*/
+        libspdm_read_responder_root_public_certificate(
+            m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
+            &root_cert_data,
+            &root_cert_size, NULL, NULL);
+        /* load certificate*/
+        hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
+        root_cert_size = root_cert_size - sizeof(spdm_cert_chain_t) - hash_size;
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "root_cert_size %d \n", root_cert_size));
+        cert_buffer = (uint8_t *)m_libspdm_local_certificate_chain +
+                      sizeof(spdm_cert_chain_t) + hash_size + root_cert_size;
+        cert_buffer_size = m_libspdm_local_certificate_chain_size -
+                           sizeof(spdm_cert_chain_t) -
+                           hash_size - root_cert_size;
+
+        if (!libspdm_x509_get_cert_from_cert_chain(
+                cert_buffer, cert_buffer_size, -1,
+                &leaf_cert_buffer,
+                &leaf_cert_buffer_size)) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "!!! VerifyCertificateChain - FAIL (get leaf certificate failed)!!!\n"));
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
+        }
+
         libspdm_copy_mem(cert_chain_without_root,
                          sizeof(cert_chain_without_root),
                          m_libspdm_local_certificate_chain,
@@ -1175,10 +1176,11 @@ libspdm_return_t libspdm_requester_get_certificate_test_receive_message(
         if (calling_index == count) {
             calling_index = 0;
             free(m_libspdm_local_certificate_chain);
-            free(root_cert_data);
             m_libspdm_local_certificate_chain = NULL;
             m_libspdm_local_certificate_chain_size = 0;
         }
+
+        free(root_cert_data);
     }
         return LIBSPDM_STATUS_SUCCESS;
 
@@ -1213,34 +1215,35 @@ libspdm_return_t libspdm_requester_get_certificate_test_receive_message(
             if (m_libspdm_local_certificate_chain == NULL) {
                 return LIBSPDM_STATUS_RECEIVE_FAIL;
             }
-            /* read root certificate size*/
-            libspdm_read_responder_root_public_certificate(
-                m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
-                &root_cert_data,
-                &root_cert_size, NULL, NULL);
-            /* load certificate*/
-            hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
-            root_cert_size = root_cert_size -
-                             sizeof(spdm_cert_chain_t) - hash_size;
-            cert_buffer = (uint8_t *)m_libspdm_local_certificate_chain +
-                          sizeof(spdm_cert_chain_t) + hash_size + root_cert_size;
-            cert_buffer_size = m_libspdm_local_certificate_chain_size -
-                               sizeof(spdm_cert_chain_t) -
-                               hash_size - root_cert_size;
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                           "root_cert_size %d \n",root_cert_size));
-            if (!libspdm_x509_get_cert_from_cert_chain(
-                    cert_buffer, cert_buffer_size, -1,
-                    &leaf_cert_buffer,
-                    &leaf_cert_buffer_size)) {
-                LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                               "!!! VerifyCertificateChain - FAIL (get leaf certificate failed)!!!\n"));
-                return LIBSPDM_STATUS_RECEIVE_FAIL;
-            }
-            /* tamper certificate signature on purpose
-             * arbitrarily change the last byte of the certificate signature*/
-            cert_buffer[cert_buffer_size - 1]++;
         }
+
+        /* read root certificate size*/
+        libspdm_read_responder_root_public_certificate(
+            m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
+            &root_cert_data,
+            &root_cert_size, NULL, NULL);
+        /* load certificate*/
+        hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
+        root_cert_size = root_cert_size - sizeof(spdm_cert_chain_t) - hash_size;
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "root_cert_size %d \n", root_cert_size));
+        cert_buffer = (uint8_t *)m_libspdm_local_certificate_chain +
+                      sizeof(spdm_cert_chain_t) + hash_size + root_cert_size;
+        cert_buffer_size = m_libspdm_local_certificate_chain_size -
+                           sizeof(spdm_cert_chain_t) -
+                           hash_size - root_cert_size;
+
+        if (!libspdm_x509_get_cert_from_cert_chain(
+                cert_buffer, cert_buffer_size, -1,
+                &leaf_cert_buffer,
+                &leaf_cert_buffer_size)) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "!!! VerifyCertificateChain - FAIL (get leaf certificate failed)!!!\n"));
+            return LIBSPDM_STATUS_RECEIVE_FAIL;
+        }
+        /* tamper certificate signature on purpose
+         * arbitrarily change the last byte of the certificate signature*/
+        cert_buffer[cert_buffer_size - 1]++;
+
         libspdm_copy_mem(cert_chain_without_root,
                          sizeof(cert_chain_without_root),
                          m_libspdm_local_certificate_chain,
@@ -1295,10 +1298,11 @@ libspdm_return_t libspdm_requester_get_certificate_test_receive_message(
         if (calling_index == count) {
             calling_index = 0;
             free(m_libspdm_local_certificate_chain);
-            free(root_cert_data);
             m_libspdm_local_certificate_chain = NULL;
             m_libspdm_local_certificate_chain_size = 0;
         }
+
+        free(root_cert_data);
     }
         return LIBSPDM_STATUS_SUCCESS;
 
@@ -2791,6 +2795,13 @@ void libspdm_test_requester_get_certificate_case13(void **state)
     size_t count;
 #endif
 
+    /* This case requires a short certificate chain (fits in 1 message) for testing,
+     * so skip when m_libspdm_use_asym_algo is other than ECC_P256 */
+    if (m_libspdm_use_asym_algo !=
+        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256) {
+        return;
+    }
+
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xD;
@@ -3835,8 +3846,11 @@ int libspdm_requester_get_certificate_test_main(void)
         cmocka_unit_test(libspdm_test_requester_get_certificate_case22),
         /* Buffer verification*/
         cmocka_unit_test(libspdm_test_requester_get_certificate_case23),
-        /* hardware identify OID is found in AliasCert model cert */
+#if 0
+        /* hardware identify OID is found in AliasCert model cert
+         * This case would be enabled once https://github.com/DMTF/libspdm/issues/1594 is solved.*/
         cmocka_unit_test(libspdm_test_requester_get_certificate_case24),
+#endif
 #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
         /* GetCert (0), GetCert(1) and Challenge(0) */
         cmocka_unit_test(libspdm_test_requester_get_certificate_case25),

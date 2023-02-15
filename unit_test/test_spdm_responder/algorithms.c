@@ -2557,7 +2557,7 @@ int libspdm_responder_algorithms_test_main(void)
     m_libspdm_negotiate_algorithm_request3.spdm_request_version10.base_hash_algo =
         m_libspdm_use_hash_algo;
     m_libspdm_negotiate_algorithm_request4.spdm_request_version10.base_asym_algo =
-        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521;
+        (m_libspdm_use_asym_algo >> 1);
     m_libspdm_negotiate_algorithm_request4.spdm_request_version10.base_hash_algo =
         m_libspdm_use_hash_algo;
     m_libspdm_negotiate_algorithm_request5.spdm_request_version10.base_asym_algo =
@@ -2620,6 +2620,8 @@ int libspdm_responder_algorithms_test_main(void)
         m_libspdm_use_asym_algo;
     m_libspdm_negotiate_algorithm_request18.spdm_request_version10.base_hash_algo =
         m_libspdm_use_hash_algo;
+    m_libspdm_negotiate_algorithm_request24.spdm_request_version10.base_asym_algo =
+        m_libspdm_use_asym_algo;
     libspdm_setup_test_context(&m_libspdm_responder_algorithms_test_context);
 
     return cmocka_run_group_tests(spdm_responder_algorithms_tests,

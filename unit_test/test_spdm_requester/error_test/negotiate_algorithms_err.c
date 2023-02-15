@@ -592,7 +592,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         spdm_response->measurement_specification_sel =
             SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
         spdm_response->measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
-        spdm_response->base_asym_sel = SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521;
+        spdm_response->base_asym_sel = m_libspdm_use_asym_algo >> 1;
         spdm_response->base_hash_sel = m_libspdm_use_hash_algo;
         spdm_response->ext_asym_sel_count = 0;
         spdm_response->ext_hash_sel_count = 0;
@@ -683,8 +683,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         spdm_response->measurement_specification_sel =
             SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
         spdm_response->measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
-        spdm_response->base_asym_sel = m_libspdm_use_asym_algo|
-                                       SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521;
+        spdm_response->base_asym_sel = m_libspdm_use_asym_algo | (m_libspdm_use_asym_algo << 1);
         spdm_response->base_hash_sel = m_libspdm_use_hash_algo;
         spdm_response->ext_asym_sel_count = 0;
         spdm_response->ext_hash_sel_count = 0;
