@@ -799,6 +799,13 @@ void libspdm_test_responder_certificate_case11(void **state)
     size_t expected_chunk_size;
     size_t expected_remainder;
 
+    /* This case requires a short certificate chain (fits in 1 message) for testing,
+     * so skip when m_libspdm_use_asym_algo is other than ECC_P256 */
+    if (m_libspdm_use_asym_algo !=
+        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256) {
+        return;
+    }
+
     /* Setting up the spdm_context and loading a sample certificate chain*/
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
