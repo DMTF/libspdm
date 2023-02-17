@@ -76,6 +76,12 @@ libspdm_key_exchange_request_mine_t m_libspdm_key_exchange_request8 = {
 };
 size_t m_libspdm_key_exchange_request8_size = sizeof(m_libspdm_key_exchange_request8);
 
+libspdm_key_exchange_request_mine_t m_libspdm_key_exchange_request9 = {
+    { SPDM_MESSAGE_VERSION_11, SPDM_KEY_EXCHANGE,
+      SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 9 },
+};
+size_t m_libspdm_key_exchange_request9_size = sizeof(m_libspdm_key_exchange_request9);
+
 void libspdm_test_responder_key_exchange_case1(void **state)
 {
     libspdm_return_t status;
@@ -1490,6 +1496,93 @@ void libspdm_test_responder_key_exchange_case17(void **state)
     free(data1);
 }
 
+/**
+ * Test 18: SlotID in KEY_EXCHANGE request message is 9, but it should be 0xFF or between 0 and 7 inclusive.
+ * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_INVALID_REQUEST.
+ **/
+void libspdm_test_responder_key_exchange_case18(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    spdm_key_exchange_response_t *spdm_response;
+    void *data1;
+    size_t data_size1;
+    uint8_t *ptr;
+    size_t dhe_key_size;
+    void *dhe_context;
+    size_t opaque_key_exchange_req_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x12;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo =
+        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec =
+        m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group =
+        m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite =
+        m_libspdm_use_aead_algo;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data1,
+                                                    &data_size1, NULL, NULL);
+    spdm_context->local_context.local_cert_chain_provision[0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0] =
+        data_size1;
+
+    libspdm_reset_message_a(spdm_context);
+    spdm_context->local_context.mut_auth_requested = 0;
+
+    spdm_context->local_context.secured_message_version.spdm_version_count = 1;
+
+    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
+                              m_libspdm_key_exchange_request9.random_data);
+    m_libspdm_key_exchange_request9.req_session_id = 0xFFFF;
+    m_libspdm_key_exchange_request9.reserved = 0;
+    ptr = m_libspdm_key_exchange_request9.exchange_data;
+    dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
+    dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_libspdm_use_dhe_algo,
+                                  false);
+    libspdm_dhe_generate_key(m_libspdm_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
+    ptr += dhe_key_size;
+    libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
+    opaque_key_exchange_req_size =
+        libspdm_get_opaque_data_supported_version_data_size(spdm_context);
+    *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+    ptr += sizeof(uint16_t);
+    libspdm_build_opaque_data_supported_version_data(
+        spdm_context, &opaque_key_exchange_req_size, ptr);
+    ptr += opaque_key_exchange_req_size;
+    response_size = sizeof(response);
+    status = libspdm_get_response_key_exchange(
+        spdm_context, m_libspdm_key_exchange_request9_size,
+        &m_libspdm_key_exchange_request9, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1,
+                     SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.param2, 0);
+    free(data1);
+}
+
 libspdm_test_context_t m_libspdm_responder_key_exchange_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     false,
@@ -1530,6 +1623,8 @@ int libspdm_responder_key_exchange_test_main(void)
         cmocka_unit_test(libspdm_test_responder_key_exchange_case16),
         /* Successful response V1.2*/
         cmocka_unit_test(libspdm_test_responder_key_exchange_case17),
+        /* Invalid SlotID in KEY_EXCHANGE request message*/
+        cmocka_unit_test(libspdm_test_responder_key_exchange_case18),
     };
 
     libspdm_setup_test_context(&m_libspdm_responder_key_exchange_test_context);
