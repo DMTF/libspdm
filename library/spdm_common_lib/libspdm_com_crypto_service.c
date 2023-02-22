@@ -575,34 +575,26 @@ uint8_t libspdm_get_cert_slot_count(libspdm_context_t *spdm_context)
 }
 
 /**
- * This function verifies peer certificate chain buffer including spdm_cert_chain_t header.
+ * This function verifies the integrity of peer certificate chain buffer including
+ * spdm_cert_chain_t header.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  cert_chain_buffer              Certificate chain buffer including spdm_cert_chain_t header.
  * @param  cert_chain_buffer_size          size in bytes of the certificate chain buffer.
- * @param  trust_anchor                  A buffer to hold the trust_anchor which is used to validate the peer certificate, if not NULL.
- * @param  trust_anchor_size             A buffer to hold the trust_anchor_size, if not NULL.
- * @param  is_requester                   Indicates if it is a requester message.
  *
- * @retval true  Peer certificate chain buffer verification passed.
- * @retval false Peer certificate chain buffer verification failed.
+ * @retval true  Peer certificate chain buffer integrity verification passed.
+ * @retval false Peer certificate chain buffer integrity verification failed.
  **/
-bool libspdm_verify_peer_cert_chain_buffer(libspdm_context_t *spdm_context,
-                                           const void *cert_chain_buffer,
-                                           size_t cert_chain_buffer_size,
-                                           const void **trust_anchor,
-                                           size_t *trust_anchor_size,
-                                           bool is_requester)
+bool libspdm_verify_peer_cert_chain_buffer_integrity(libspdm_context_t *spdm_context,
+                                                     const void *cert_chain_buffer,
+                                                     size_t cert_chain_buffer_size)
 {
-    const uint8_t *root_cert;
-    size_t root_cert_size;
-    uint8_t root_cert_hash[LIBSPDM_MAX_HASH_SIZE];
-    size_t root_cert_hash_size;
-    const uint8_t *received_root_cert;
-    size_t received_root_cert_size;
     bool result;
-    uint8_t root_cert_index;
     bool is_device_cert_model;
+    bool is_peer_requester;
+
+    /*is_requester always specifies the local entity. This is backwards.*/
+    is_peer_requester = !spdm_context->local_context.is_requester;
 
     if((spdm_context->connection_info.capability.flags &
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP) == 0) {
@@ -611,7 +603,7 @@ bool libspdm_verify_peer_cert_chain_buffer(libspdm_context_t *spdm_context,
         is_device_cert_model = false;
     }
 
-    if (is_requester) {
+    if (is_peer_requester) {
         result = libspdm_verify_certificate_chain_buffer(
             spdm_context->connection_info.algorithm.base_hash_algo,
             spdm_context->connection_info.algorithm.base_asym_algo,
@@ -622,9 +614,37 @@ bool libspdm_verify_peer_cert_chain_buffer(libspdm_context_t *spdm_context,
             spdm_context->connection_info.algorithm.req_base_asym_alg,
             cert_chain_buffer, cert_chain_buffer_size, is_device_cert_model);
     }
-    if (!result) {
-        return false;
-    }
+
+    return result;
+}
+
+/**
+ * This function verifies peer certificate chain authority.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  cert_chain_buffer              Certificate chain buffer including spdm_cert_chain_t header.
+ * @param  cert_chain_buffer_size          size in bytes of the certificate chain buffer.
+ * @param  trust_anchor                  A buffer to hold the trust_anchor which is used to validate the peer certificate, if not NULL.
+ * @param  trust_anchor_size             A buffer to hold the trust_anchor_size, if not NULL.
+ *
+ * @retval true  Peer certificate chain buffer authority verification passed.
+ *               Or there is no root_cert in local_context.
+ * @retval false Peer certificate chain buffer authority verification failed.
+ **/
+bool libspdm_verify_peer_cert_chain_buffer_authority(libspdm_context_t *spdm_context,
+                                                     const void *cert_chain_buffer,
+                                                     size_t cert_chain_buffer_size,
+                                                     const void **trust_anchor,
+                                                     size_t *trust_anchor_size)
+{
+    const uint8_t *root_cert;
+    size_t root_cert_size;
+    uint8_t root_cert_index;
+    size_t root_cert_hash_size;
+    uint8_t root_cert_hash[LIBSPDM_MAX_HASH_SIZE];
+    const uint8_t *received_root_cert;
+    size_t received_root_cert_size;
+    bool result;
 
     root_cert_index = 0;
     root_cert = spdm_context->local_context.peer_root_cert_provision[root_cert_index];
@@ -706,6 +726,44 @@ bool libspdm_verify_peer_cert_chain_buffer(libspdm_context_t *spdm_context,
      * No root_cert means the caller wants to verify the trust anchor of the cert chain.
      */
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_peer_cert_chain_buffer - PASS !!!\n"));
+
+    return true;
+}
+
+/**
+ * This function verifies peer certificate chain buffer including spdm_cert_chain_t header.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  cert_chain_buffer              Certificate chain buffer including spdm_cert_chain_t header.
+ * @param  cert_chain_buffer_size          size in bytes of the certificate chain buffer.
+ * @param  trust_anchor                  A buffer to hold the trust_anchor which is used to validate the peer certificate, if not NULL.
+ * @param  trust_anchor_size             A buffer to hold the trust_anchor_size, if not NULL.
+ *
+ * @retval true  Peer certificate chain buffer verification passed.
+ * @retval false Peer certificate chain buffer verification failed.
+ **/
+bool libspdm_verify_peer_cert_chain_buffer(libspdm_context_t *spdm_context,
+                                           const void *cert_chain_buffer,
+                                           size_t cert_chain_buffer_size,
+                                           const void **trust_anchor,
+                                           size_t *trust_anchor_size)
+{
+    bool result;
+
+    /*verify peer cert chain integrity*/
+    result = libspdm_verify_peer_cert_chain_buffer_integrity(spdm_context, cert_chain_buffer,
+                                                             cert_chain_buffer_size);
+    if (!result) {
+        return false;
+    }
+
+    /*verify peer cert chain authority*/
+    result = libspdm_verify_peer_cert_chain_buffer_authority(spdm_context, cert_chain_buffer,
+                                                             cert_chain_buffer_size, trust_anchor,
+                                                             trust_anchor_size);
+    if (!result) {
+        return false;
+    }
 
     return true;
 }
