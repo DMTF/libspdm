@@ -159,16 +159,27 @@ libspdm_return_t libspdm_process_encap_response_certificate(
             return LIBSPDM_STATUS_VERIF_FAIL;
         }
     } else {
-        result = libspdm_verify_peer_cert_chain_buffer(
+        result = libspdm_verify_peer_cert_chain_buffer_integrity(
             spdm_context,
             libspdm_get_managed_buffer(
                 &spdm_context->encap_context.certificate_chain_buffer),
             libspdm_get_managed_buffer_size(
-                &spdm_context->encap_context.certificate_chain_buffer),
-            NULL, NULL, false);
+                &spdm_context->encap_context.certificate_chain_buffer));
         if (!result) {
             return LIBSPDM_STATUS_VERIF_FAIL;
         }
+    }
+
+    /*verify peer cert chain authority*/
+    result = libspdm_verify_peer_cert_chain_buffer_authority(
+        spdm_context,
+        libspdm_get_managed_buffer(
+            &spdm_context->encap_context.certificate_chain_buffer),
+        libspdm_get_managed_buffer_size(
+            &spdm_context->encap_context.certificate_chain_buffer),
+        NULL, NULL);
+    if (!result) {
+        return LIBSPDM_STATUS_VERIF_NO_AUTHORITY;
     }
 
     spdm_context->connection_info.peer_used_cert_chain_slot_id =

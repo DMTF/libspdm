@@ -146,6 +146,10 @@ typedef uint32_t libspdm_return_t;
 #define LIBSPDM_STATUS_SEQUENCE_NUMBER_OVERFLOW \
     LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CRYPTO, 0x0002)
 
+/* Provided cert is valid but is not authoritative(mismatch the root cert). */
+#define LIBSPDM_STATUS_VERIF_NO_AUTHORITY \
+    LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CRYPTO, 0x0003)
+
 /* - Certificate Parsing Errors - */
 
 /* Certificate is malformed or does not comply to x.509 standard. */

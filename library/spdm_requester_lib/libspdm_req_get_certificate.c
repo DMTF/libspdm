@@ -310,14 +310,23 @@ static libspdm_return_t libspdm_try_get_certificate(libspdm_context_t *spdm_cont
             goto done;
         }
     } else {
-        result = libspdm_verify_peer_cert_chain_buffer(
+        result = libspdm_verify_peer_cert_chain_buffer_integrity(
             spdm_context, libspdm_get_managed_buffer(&certificate_chain_buffer),
-            libspdm_get_managed_buffer_size(&certificate_chain_buffer),
-            trust_anchor, trust_anchor_size, true);
+            libspdm_get_managed_buffer_size(&certificate_chain_buffer));
         if (!result) {
             status = LIBSPDM_STATUS_VERIF_FAIL;
             goto done;
         }
+    }
+
+    /*verify peer cert chain authority*/
+    result = libspdm_verify_peer_cert_chain_buffer_authority(
+        spdm_context, libspdm_get_managed_buffer(&certificate_chain_buffer),
+        libspdm_get_managed_buffer_size(&certificate_chain_buffer),
+        trust_anchor, trust_anchor_size);
+    if (!result) {
+        status = LIBSPDM_STATUS_VERIF_NO_AUTHORITY;
+        goto done;
     }
 
     spdm_context->connection_info.peer_used_cert_chain_slot_id = slot_id;
