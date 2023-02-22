@@ -730,10 +730,12 @@ libspdm_return_t libspdm_send_receive_key_exchange(
     uint8_t *req_slot_id_param, void *measurement_hash)
 {
     size_t retry;
+    uint64_t retry_delay_time;
     libspdm_return_t status;
 
     spdm_context->crypto_request = true;
     retry = spdm_context->retry_times;
+    retry_delay_time = spdm_context->retry_delay_time;
     do {
         status = libspdm_try_send_receive_key_exchange(
             spdm_context, measurement_hash_type, slot_id, session_policy,
@@ -742,6 +744,8 @@ libspdm_return_t libspdm_send_receive_key_exchange(
         if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
         }
+
+        libspdm_sleep_in_us(retry_delay_time);
     } while (retry-- != 0);
 
     return status;
@@ -757,10 +761,12 @@ libspdm_return_t libspdm_send_receive_key_exchange_ex(
     void *responder_random)
 {
     size_t retry;
+    uint64_t retry_delay_time;
     libspdm_return_t status;
 
     spdm_context->crypto_request = true;
     retry = spdm_context->retry_times;
+    retry_delay_time = spdm_context->retry_delay_time;
     do {
         status = libspdm_try_send_receive_key_exchange(
             spdm_context, measurement_hash_type, slot_id, session_policy,
@@ -770,6 +776,8 @@ libspdm_return_t libspdm_send_receive_key_exchange_ex(
         if (LIBSPDM_STATUS_BUSY_PEER != status) {
             return status;
         }
+
+        libspdm_sleep_in_us(retry_delay_time);
     } while (retry-- != 0);
 
     return status;

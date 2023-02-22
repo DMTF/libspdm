@@ -338,11 +338,13 @@ libspdm_return_t libspdm_challenge(void *spdm_context, void *reserved,
 {
     libspdm_context_t *context;
     size_t retry;
+    uint64_t retry_delay_time;
     libspdm_return_t status;
 
     context = spdm_context;
     context->crypto_request = true;
     retry = context->retry_times;
+    retry_delay_time = context->retry_delay_time;
     do {
         status = libspdm_try_challenge(context, slot_id,
                                        measurement_hash_type,
@@ -350,6 +352,8 @@ libspdm_return_t libspdm_challenge(void *spdm_context, void *reserved,
         if (LIBSPDM_STATUS_BUSY_PEER != status) {
             return status;
         }
+
+        libspdm_sleep_in_us(retry_delay_time);
     } while (retry-- != 0);
 
     return status;
@@ -366,11 +370,13 @@ libspdm_return_t libspdm_challenge_ex(void *spdm_context, void *reserved,
 {
     libspdm_context_t *context;
     size_t retry;
+    uint64_t retry_delay_time;
     libspdm_return_t status;
 
     context = spdm_context;
     context->crypto_request = true;
     retry = context->retry_times;
+    retry_delay_time = context->retry_delay_time;
     do {
         status = libspdm_try_challenge(context, slot_id,
                                        measurement_hash_type,
@@ -381,6 +387,8 @@ libspdm_return_t libspdm_challenge_ex(void *spdm_context, void *reserved,
         if (LIBSPDM_STATUS_BUSY_PEER != status) {
             return status;
         }
+
+        libspdm_sleep_in_us(retry_delay_time);
     } while (retry-- != 0);
 
     return status;

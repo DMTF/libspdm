@@ -166,17 +166,21 @@ libspdm_return_t libspdm_set_certificate(void *spdm_context,
 {
     libspdm_context_t *context;
     size_t retry;
+    uint64_t retry_delay_time;
     libspdm_return_t status;
 
     context = spdm_context;
     context->crypto_request = true;
     retry = context->retry_times;
+    retry_delay_time = context->retry_delay_time;
     do {
         status = libspdm_try_set_certificate(context, session_id, slot_id,
                                              cert_chain, cert_chain_size);
         if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
         }
+
+        libspdm_sleep_in_us(retry_delay_time);
     } while (retry-- != 0);
 
     return status;

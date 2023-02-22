@@ -10,6 +10,7 @@
 #include "library/spdm_requester_lib.h"
 #include "library/spdm_secured_message_lib.h"
 #include "internal/libspdm_common_lib.h"
+#include "hal/library/platform_lib.h"
 
 /**
  * This function handles simple error code.

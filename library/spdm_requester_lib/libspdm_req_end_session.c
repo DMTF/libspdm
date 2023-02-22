@@ -152,16 +152,20 @@ libspdm_return_t libspdm_send_receive_end_session(libspdm_context_t *spdm_contex
                                                   uint8_t end_session_attributes)
 {
     size_t retry;
+    uint64_t retry_delay_time;
     libspdm_return_t status;
 
     spdm_context->crypto_request = true;
     retry = spdm_context->retry_times;
+    retry_delay_time = spdm_context->retry_delay_time;
     do {
         status = libspdm_try_send_receive_end_session(
             spdm_context, session_id, end_session_attributes);
         if (LIBSPDM_STATUS_BUSY_PEER != status) {
             return status;
         }
+
+        libspdm_sleep_in_us(retry_delay_time);
     } while (retry-- != 0);
 
     return status;

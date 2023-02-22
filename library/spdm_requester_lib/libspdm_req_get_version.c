@@ -206,16 +206,20 @@ libspdm_return_t libspdm_get_version(libspdm_context_t *spdm_context,
                                      spdm_version_number_t *version_number_entry)
 {
     size_t retry;
+    uint64_t retry_delay_time;
     libspdm_return_t status;
 
     spdm_context->crypto_request = false;
     retry = spdm_context->retry_times;
+    retry_delay_time = spdm_context->retry_delay_time;
     do {
         status = libspdm_try_get_version(spdm_context,
                                          version_number_entry_count, version_number_entry);
         if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
         }
+
+        libspdm_sleep_in_us(retry_delay_time);
     } while (retry-- != 0);
 
     return status;

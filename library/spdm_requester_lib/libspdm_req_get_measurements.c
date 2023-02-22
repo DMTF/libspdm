@@ -598,11 +598,13 @@ libspdm_return_t libspdm_get_measurement(void *spdm_context, const uint32_t *ses
 {
     libspdm_context_t *context;
     size_t retry;
+    uint64_t retry_delay_time;
     libspdm_return_t status;
 
     context = spdm_context;
     context->crypto_request = true;
     retry = context->retry_times;
+    retry_delay_time = context->retry_delay_time;
     do {
         status = libspdm_try_get_measurement(
             context, session_id, request_attribute,
@@ -611,6 +613,8 @@ libspdm_return_t libspdm_get_measurement(void *spdm_context, const uint32_t *ses
         if (LIBSPDM_STATUS_BUSY_PEER != status) {
             return status;
         }
+
+        libspdm_sleep_in_us(retry_delay_time);
     } while (retry-- != 0);
 
     return status;
@@ -630,11 +634,13 @@ libspdm_return_t libspdm_get_measurement_ex(void *spdm_context, const uint32_t *
 {
     libspdm_context_t *context;
     size_t retry;
+    uint64_t retry_delay_time;
     libspdm_return_t status;
 
     context = spdm_context;
     context->crypto_request = true;
     retry = context->retry_times;
+    retry_delay_time = context->retry_delay_time;
     do {
         status = libspdm_try_get_measurement(
             context, session_id, request_attribute,
@@ -645,6 +651,8 @@ libspdm_return_t libspdm_get_measurement_ex(void *spdm_context, const uint32_t *
         if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
         }
+
+        libspdm_sleep_in_us(retry_delay_time);
     } while (retry-- != 0);
 
     return status;
