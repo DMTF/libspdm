@@ -114,6 +114,13 @@ typedef enum {
      **/
     LIBSPDM_DATA_REQUEST_RETRY_TIMES,
 
+    /* If the Responder replies with a Busy `ERROR` response to a request
+     * then the Requester is free to retry sending the request.
+     * This value specifies the delay time in microseconds between each retry requests.
+     * If its value is 0 then libspdm will send retry request immediately.
+     **/
+    LIBSPDM_DATA_REQUEST_RETRY_DELAY_TIME,
+
     /* MAX */
     LIBSPDM_DATA_MAX
 } libspdm_data_type_t;

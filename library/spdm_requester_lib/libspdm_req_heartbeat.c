@@ -142,17 +142,21 @@ receive_done:
 libspdm_return_t libspdm_heartbeat(void *spdm_context, uint32_t session_id)
 {
     size_t retry;
+    uint64_t retry_delay_time;
     libspdm_return_t status;
     libspdm_context_t *context;
 
     context = spdm_context;
     context->crypto_request = true;
     retry = context->retry_times;
+    retry_delay_time = context->retry_delay_time;
     do {
         status = libspdm_try_heartbeat(context, session_id);
         if (LIBSPDM_STATUS_BUSY_PEER != status) {
             return status;
         }
+
+        libspdm_sleep_in_us(retry_delay_time);
     } while (retry-- != 0);
 
     return status;

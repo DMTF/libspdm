@@ -602,16 +602,20 @@ libspdm_return_t libspdm_send_receive_finish(libspdm_context_t *spdm_context,
                                              uint8_t req_slot_id_param)
 {
     size_t retry;
+    uint64_t retry_delay_time;
     libspdm_return_t status;
 
     spdm_context->crypto_request = true;
     retry = spdm_context->retry_times;
+    retry_delay_time = spdm_context->retry_delay_time;
     do {
         status = libspdm_try_send_receive_finish(spdm_context, session_id,
                                                  req_slot_id_param);
         if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
         }
+
+        libspdm_sleep_in_us(retry_delay_time);
     } while (retry-- != 0);
 
     return status;

@@ -516,15 +516,19 @@ receive_done:
 libspdm_return_t libspdm_negotiate_algorithms(libspdm_context_t *spdm_context)
 {
     size_t retry;
+    uint64_t retry_delay_time;
     libspdm_return_t status;
 
     spdm_context->crypto_request = false;
     retry = spdm_context->retry_times;
+    retry_delay_time = spdm_context->retry_delay_time;
     do {
         status = libspdm_try_negotiate_algorithms(spdm_context);
         if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
         }
+
+        libspdm_sleep_in_us(retry_delay_time);
     } while (retry-- != 0);
 
     return status;

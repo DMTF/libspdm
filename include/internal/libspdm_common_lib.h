@@ -383,6 +383,9 @@ typedef struct {
 
     /* Register for the retry times when receive "BUSY" Error response (requester only) */
     uint8_t retry_times;
+    /* Register for the delay time in microseconds between retry requests
+     * when receive "BUSY" Error response (requester only) */
+    uint64_t retry_delay_time;
     bool crypto_request;
 
     /* App context data for use by application */

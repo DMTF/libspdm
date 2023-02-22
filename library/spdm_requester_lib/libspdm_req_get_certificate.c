@@ -408,17 +408,21 @@ libspdm_return_t libspdm_get_certificate_choose_length(void *spdm_context,
 {
     libspdm_context_t *context;
     size_t retry;
+    uint64_t retry_delay_time;
     libspdm_return_t status;
 
     context = spdm_context;
     context->crypto_request = true;
     retry = context->retry_times;
+    retry_delay_time = context->retry_delay_time;
     do {
         status = libspdm_try_get_certificate(context, session_id, slot_id, length,
                                              cert_chain_size, cert_chain, NULL, NULL);
         if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
         }
+
+        libspdm_sleep_in_us(retry_delay_time);
     } while (retry-- != 0);
 
     return status;
@@ -435,11 +439,13 @@ libspdm_return_t libspdm_get_certificate_choose_length_ex(void *spdm_context,
 {
     libspdm_context_t *context;
     size_t retry;
+    uint64_t retry_delay_time;
     libspdm_return_t status;
 
     context = spdm_context;
     context->crypto_request = true;
     retry = context->retry_times;
+    retry_delay_time = context->retry_delay_time;
     do {
         status = libspdm_try_get_certificate(context, session_id, slot_id, length,
                                              cert_chain_size, cert_chain, trust_anchor,
@@ -447,6 +453,8 @@ libspdm_return_t libspdm_get_certificate_choose_length_ex(void *spdm_context,
         if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
         }
+
+        libspdm_sleep_in_us(retry_delay_time);
     } while (retry-- != 0);
 
     return status;

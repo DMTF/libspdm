@@ -486,6 +486,12 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         }
         context->retry_times = *(uint8_t *)data;
         break;
+    case LIBSPDM_DATA_REQUEST_RETRY_DELAY_TIME:
+        if (data_size != sizeof(uint64_t)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        context->retry_delay_time = *(uint64_t *)data;
+        break;
     default:
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         break;

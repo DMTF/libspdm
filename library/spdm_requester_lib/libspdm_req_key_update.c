@@ -315,6 +315,7 @@ libspdm_return_t libspdm_key_update(void *spdm_context, uint32_t session_id,
 {
     libspdm_context_t *context;
     size_t retry;
+    uint64_t retry_delay_time;
     libspdm_return_t status;
     bool key_updated;
 
@@ -322,12 +323,15 @@ libspdm_return_t libspdm_key_update(void *spdm_context, uint32_t session_id,
     key_updated = false;
     context->crypto_request = true;
     retry = context->retry_times;
+    retry_delay_time = context->retry_delay_time;
     do {
         status = libspdm_try_key_update(spdm_context, session_id,
                                         single_direction, &key_updated);
         if (LIBSPDM_STATUS_BUSY_PEER != status) {
             return status;
         }
+
+        libspdm_sleep_in_us(retry_delay_time);
     } while (retry-- != 0);
 
     return status;

@@ -228,16 +228,20 @@ libspdm_return_t libspdm_get_digest(void *spdm_context, const uint32_t *session_
 {
     libspdm_context_t *context;
     size_t retry;
+    uint64_t retry_delay_time;
     libspdm_return_t status;
 
     context = spdm_context;
     context->crypto_request = true;
     retry = context->retry_times;
+    retry_delay_time = context->retry_delay_time;
     do {
         status = libspdm_try_get_digest(context, session_id, slot_mask, total_digest_buffer);
         if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
         }
+
+        libspdm_sleep_in_us(retry_delay_time);
     } while (retry-- != 0);
 
     return status;
