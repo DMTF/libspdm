@@ -559,4 +559,8 @@ SET(src_openssllib
     rand_pool.c
 )
 
+if ((ARCH STREQUAL "arm") OR (ARCH STREQUAL "aarch64"))
+    ADD_COMPILE_OPTIONS(-DLIBSPDM_CPU_ARM)
+endif()
+
 ADD_LIBRARY(openssllib STATIC ${src_openssllib})
