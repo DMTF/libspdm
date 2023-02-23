@@ -149,6 +149,10 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
     size_t message_size;
     size_t transport_header_size;
 
+    LIBSPDM_ASSERT(measurement_hash_type == SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH ||
+                   measurement_hash_type == SPDM_CHALLENGE_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH ||
+                   measurement_hash_type == SPDM_CHALLENGE_REQUEST_ALL_MEASUREMENTS_HASH);
+
     /* Check capabilities even if GET_CAPABILITIES is not sent.
      * Assuming capabilities are provisioned.*/
     if (!libspdm_is_capabilities_flag_supported(
@@ -157,10 +161,8 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP)) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
-    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
-                                                  SPDM_PSK_EXCHANGE);
-    if (spdm_context->connection_info.connection_state <
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
+    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL, SPDM_PSK_EXCHANGE);
+    if (spdm_context->connection_info.connection_state < LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
 
