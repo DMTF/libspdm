@@ -2703,7 +2703,7 @@ void libspdm_test_requester_get_certificate_case11(void **state)
 
 /**
  * Test 12: Normal procedure, but the retrieved root certificate does not match
- * Expected Behavior: get a LIBSPDM_STATUS_VERIF_FAIL, and receives the correct number of Certificate messages
+ * Expected Behavior: get a LIBSPDM_STATUS_VERIF_NO_AUTHORITY, and receives the correct number of Certificate messages
  **/
 void libspdm_test_requester_get_certificate_case12(void **state)
 {
@@ -2762,7 +2762,7 @@ void libspdm_test_requester_get_certificate_case12(void **state)
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
     status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
                                      cert_chain);
-    assert_int_equal(status, LIBSPDM_STATUS_VERIF_FAIL);
+    assert_int_equal(status, LIBSPDM_STATUS_VERIF_NO_AUTHORITY);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     count = (data_size + LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN - 1) /
             LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
