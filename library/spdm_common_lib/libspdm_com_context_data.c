@@ -950,7 +950,7 @@ void libspdm_reset_message_buffer_via_request_code(void *context, void *session_
     /**
      * If the Requester issued GET_MEASUREMENTS or KEY_EXCHANGE or FINISH or PSK_EXCHANGE
      * or PSK_FINISH or KEY_UPDATE or HEARTBEAT or GET_ENCAPSULATED_REQUEST or DELIVER_ENCAPSULATED_RESPONSE
-     * or END_SESSSION request(s) and skipped CHALLENGE completion, M1 and M2 are reset to null.
+     * or END_SESSION request(s) and skipped CHALLENGE completion, M1 and M2 are reset to null.
      */
     switch (request_code)
     {

@@ -17,7 +17,7 @@
 #define LIBSPDM_PATCH_VERSION 0x00
 #define LIBSPDM_ALPHA         0xff
 
-/* Connection: When a host sends messgages to a device, they create a connection.
+/* Connection: When a host sends messages to a device, they create a connection.
  *             The host can and only can create one connection with one device.
  *             The host may create multiple connections with multiple devices at same time.
  *             A connection can be unique identified by the connected device.
@@ -138,7 +138,7 @@ typedef enum {
 typedef struct {
     libspdm_data_location_t location;
     /* data_type specific:
-     *   session_id for the negoatiated key.
+     *   session_id for the negotiated key.
      *   SlotId for the certificate.
      *   req_slot_id + measurement_hash_type for LIBSPDM_DATA_MUT_AUTH_REQUESTED*/
     uint8_t additional_data[4];
@@ -163,7 +163,7 @@ typedef enum {
     /* After GET_CERTIFICATE/CERTIFICATE */
     LIBSPDM_CONNECTION_STATE_AFTER_CERTIFICATE,
 
-    /* After CHALLENGE/CHALLENGE_AUTH, and ENCAP CALLENGE/CHALLENG_AUTH if MUT_AUTH is enabled. */
+    /* After CHALLENGE/CHALLENGE_AUTH, and ENCAP CHALLENGE/CHALLENGE_AUTH if MUT_AUTH is enabled. */
     LIBSPDM_CONNECTION_STATE_AUTHENTICATED,
 
     /* MAX */

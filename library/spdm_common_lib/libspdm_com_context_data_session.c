@@ -170,7 +170,7 @@ void *libspdm_get_secured_message_context_via_session_info(void *spdm_session_in
 }
 
 /**
- * This function generate a new session ID by concatnating req_session_id and rsp_session_id.
+ * This function generate a new session ID by concatenating req_session_id and rsp_session_id.
  *
  * @param[in]  req_session_id
  * @param[in]  rsp_session_id
