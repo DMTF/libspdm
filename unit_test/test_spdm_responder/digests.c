@@ -374,7 +374,7 @@ void libspdm_test_responder_digests_case7(void **state)
                      SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1,
                      SPDM_ERROR_CODE_UNSPECIFIED);
-    assert_int_equal(spdm_response->header.param2, SPDM_GET_DIGESTS);
+    assert_int_equal(spdm_response->header.param2, 0);
 }
 
 /**

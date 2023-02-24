@@ -94,7 +94,7 @@ libspdm_return_t libspdm_get_response_digests(libspdm_context_t *spdm_context, s
     if (no_local_cert_chain) {
         return libspdm_generate_error_response(
             spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
-            SPDM_GET_DIGESTS, response_size, response);
+            0, response_size, response);
     }
 
     hash_size = libspdm_get_hash_size(
