@@ -42,10 +42,6 @@ typedef uint32_t libspdm_return_t;
 #define LIBSPDM_SOURCE_CORE 0x01
 #define LIBSPDM_SOURCE_CRYPTO 0x02
 #define LIBSPDM_SOURCE_CERT_PARSE 0x03
-
-/*LIBSPSM_SOURCE_TRANSPORT is deprecated. Do not use it. Reserved only.*/
-#define LIBSPSM_SOURCE_TRANSPORT 0x04
-
 #define LIBSPDM_SOURCE_TRANSPORT 0x04
 #define LIBSPDM_SOURCE_MEAS_COLLECT 0x05
 #define LIBSPDM_SOURCE_RNG 0x06
