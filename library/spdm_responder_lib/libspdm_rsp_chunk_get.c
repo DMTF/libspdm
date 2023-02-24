@@ -61,7 +61,7 @@ libspdm_return_t libspdm_get_response_chunk_get(
     if (spdm_request->header.spdm_version < SPDM_MESSAGE_VERSION_12) {
         return libspdm_generate_error_response(
             spdm_context,
-            SPDM_ERROR_CODE_UNSUPPORTED_REQUEST, 0,
+            SPDM_ERROR_CODE_UNSUPPORTED_REQUEST, SPDM_CHUNK_GET,
             response_size, response);
     }
 

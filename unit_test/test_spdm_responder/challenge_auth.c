@@ -854,7 +854,7 @@ void libspdm_test_responder_challenge_auth_case13(void **state) {
  * receives a correct CHALLENGE message from the requester with
  * no opaque data, all measurement hashes, and slot number 0.
  * Expected behavior: the responder refuses the CHALLENGE message and produces an
- * ERROR message indicating the UnsupportedRequest.
+ * ERROR message indicating the InvalidRequest.
  **/
 void libspdm_test_responder_challenge_auth_case14(void **state) {
     libspdm_return_t status;
@@ -901,7 +901,7 @@ void libspdm_test_responder_challenge_auth_case14(void **state) {
     spdm_response = (void *)response;
     assert_int_equal (spdm_response->header.request_response_code, SPDM_ERROR);
     assert_int_equal (spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
-    assert_int_equal (spdm_response->header.param2, SPDM_CHALLENGE);
+    assert_int_equal (spdm_response->header.param2, 0);
     free(data1);
 }
 

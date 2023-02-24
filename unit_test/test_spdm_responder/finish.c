@@ -1171,7 +1171,7 @@ void libspdm_test_responder_finish_case9(void **state)
                      SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1,
                      SPDM_ERROR_CODE_UNSUPPORTED_REQUEST);
-    assert_int_equal(spdm_response->header.param2, SPDM_KEY_EXCHANGE);
+    assert_int_equal(spdm_response->header.param2, SPDM_FINISH);
     free(data1);
 }
 

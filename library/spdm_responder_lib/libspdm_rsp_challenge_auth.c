@@ -72,7 +72,7 @@ libspdm_return_t libspdm_get_response_challenge_auth(libspdm_context_t *spdm_con
             (spdm_context->connection_info.algorithm.measurement_spec == 0) ||
             (spdm_context->connection_info.algorithm.measurement_hash_algo == 0) ) {
             return libspdm_generate_error_response (spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
-                                                    SPDM_CHALLENGE, response_size, response);
+                                                    0, response_size, response);
         }
     }
 

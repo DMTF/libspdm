@@ -100,7 +100,7 @@ libspdm_return_t libspdm_get_response_psk_finish(libspdm_context_t *spdm_context
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER_WITH_CONTEXT)) {
         return libspdm_generate_error_response(
             spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
-            SPDM_PSK_EXCHANGE, response_size, response);
+            SPDM_PSK_FINISH, response_size, response);
     }
     if (spdm_context->connection_info.connection_state < LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return libspdm_generate_error_response(spdm_context,

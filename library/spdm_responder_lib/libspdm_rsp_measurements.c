@@ -257,7 +257,7 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG)) {
             return libspdm_generate_error_response(
                 spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
-                0, response_size, response);
+                SPDM_GET_MEASUREMENTS, response_size, response);
         }
     }
 

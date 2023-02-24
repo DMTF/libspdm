@@ -604,7 +604,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case5(void** state)
     assert_int_equal(error_response->header.spdm_version, SPDM_MESSAGE_VERSION_12);
     assert_int_equal(error_response->header.request_response_code, SPDM_ERROR);
     assert_int_equal(error_response->header.param1, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST);
-    assert_int_equal(error_response->header.param2, 0);
+    assert_int_equal(error_response->header.param2, SPDM_CHUNK_SEND);
 }
 /**
  * Test 6: Responder receives a CHUNK_SEND request with wrong SPDM version.
@@ -752,7 +752,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case7(void** state)
     assert_int_equal(error_response->header.spdm_version, SPDM_MESSAGE_VERSION_12);
     assert_int_equal(error_response->header.request_response_code, SPDM_ERROR);
     assert_int_equal(error_response->header.param1, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST);
-    assert_int_equal(error_response->header.param2, 0);
+    assert_int_equal(error_response->header.param2, SPDM_CHUNK_SEND);
 
     spdm_context->chunk_context.get.chunk_in_use = false;
 }

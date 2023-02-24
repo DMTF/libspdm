@@ -36,7 +36,7 @@ libspdm_return_t libspdm_get_response_heartbeat(libspdm_context_t *spdm_context,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
-                                               0, response_size, response);
+                                               SPDM_HEARTBEAT, response_size, response);
     }
     if (spdm_context->connection_info.connection_state < LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return libspdm_generate_error_response(spdm_context,
