@@ -473,6 +473,15 @@ static libspdm_return_t libspdm_try_get_measurement(libspdm_context_t *spdm_cont
                              SPDM_NONCE_SIZE + sizeof(uint16_t) +
                              opaque_length;
 
+        /* If a signature is not requested then content_changed must be 0. */
+        if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+            if ((spdm_response->header.param2 & SPDM_MEASUREMENTS_RESPONSE_CONTENT_CHANGE_MASK)
+                != 0) {
+                status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                goto receive_done;
+            }
+        }
+
         status = libspdm_append_message_m(spdm_context, session_info, spdm_request,
                                           spdm_request_size);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
