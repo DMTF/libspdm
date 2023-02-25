@@ -522,9 +522,9 @@ typedef struct {
 
 /* SPDM MEASUREMENTS device mode */
 typedef struct {
-    uint32_t operational_mode_capabilties;
+    uint32_t operational_mode_capabilities;
     uint32_t operational_mode_state;
-    uint32_t device_mode_capabilties;
+    uint32_t device_mode_capabilities;
     uint32_t device_mode_state;
 } spdm_measurements_device_mode_t;
 

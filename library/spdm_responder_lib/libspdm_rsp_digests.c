@@ -23,9 +23,9 @@ libspdm_return_t libspdm_get_response_digests(libspdm_context_t *spdm_context, s
     bool result;
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
-    /*total populated solt count*/
+    /*total populated slot count*/
     uint8_t slot_count;
-    /*populated solt index*/
+    /*populated slot index*/
     uint8_t slot_index;
 
     spdm_request = request;

@@ -1392,7 +1392,7 @@ size_t libspdm_fill_measurement_device_mode_block (
     .measurement_specification =
         SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
 
-    device_mode.operational_mode_capabilties =
+    device_mode.operational_mode_capabilities =
         SPDM_MEASUREMENT_DEVICE_OPERATION_MODE_MANUFACTURING_MODE |
         SPDM_MEASUREMENT_DEVICE_OPERATION_MODE_VALIDATION_MODE |
         SPDM_MEASUREMENT_DEVICE_OPERATION_MODE_NORMAL_MODE |
@@ -1401,7 +1401,7 @@ size_t libspdm_fill_measurement_device_mode_block (
         SPDM_MEASUREMENT_DEVICE_OPERATION_MODE_DECOMMISSIONED_MODE;
     device_mode.operational_mode_state =
         SPDM_MEASUREMENT_DEVICE_OPERATION_MODE_NORMAL_MODE;
-    device_mode.device_mode_capabilties =
+    device_mode.device_mode_capabilities =
         SPDM_MEASUREMENT_DEVICE_MODE_NON_INVASIVE_DEBUG_MODE_IS_ACTIVE |
         SPDM_MEASUREMENT_DEVICE_MODE_INVASIVE_DEBUG_MODE_IS_ACTIVE |
         SPDM_MEASUREMENT_DEVICE_MODE_NON_INVASIVE_DEBUG_MODE_HAS_BEEN_ACTIVE |
