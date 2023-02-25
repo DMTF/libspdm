@@ -18,7 +18,7 @@
  * @retval false  The received SPDM version is invalid.
  **/
 static bool libspdm_check_request_version_compatibility(libspdm_context_t *spdm_context,
-                                                      uint8_t version)
+                                                        uint8_t version)
 {
     uint8_t local_ver;
     size_t index;
