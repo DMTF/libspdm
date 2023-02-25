@@ -109,20 +109,20 @@ static bool libspdm_create_measurement_signature(libspdm_context_t *spdm_context
                                                  size_t response_message_size)
 {
     uint8_t *fill_response_ptr;
-    size_t measurment_sig_size;
+    size_t measurement_sig_size;
     size_t signature_size;
     bool result;
     libspdm_return_t status;
 
     signature_size = libspdm_get_asym_signature_size(
         spdm_context->connection_info.algorithm.base_asym_algo);
-    measurment_sig_size =
+    measurement_sig_size =
         SPDM_NONCE_SIZE + sizeof(uint16_t) +
         spdm_context->local_context.opaque_measurement_rsp_size +
         signature_size;
-    LIBSPDM_ASSERT(response_message_size > measurment_sig_size);
+    LIBSPDM_ASSERT(response_message_size > measurement_sig_size);
     fill_response_ptr = (uint8_t *)response_message + response_message_size -
-                        measurment_sig_size;
+                        measurement_sig_size;
 
     if(!libspdm_create_measurement_opaque(spdm_context, response_message,
                                           response_message_size, &fill_response_ptr)) {
@@ -289,7 +289,7 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
      * followed by the actual measurements, followed by the signature,
      * if there is one. Here we calculate the maximum size allowed for
      * measurements and store it in "measurements_size", by subtracting
-     * out "spdm_responze_size", which contains the sizeof the
+     * out "spdm_response_size", which contains the sizeof the
      * spdm_measurements_response_t + signature if there is one.*/
 
     measurements_size = *response_size;

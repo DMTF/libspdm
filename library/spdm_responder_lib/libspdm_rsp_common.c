@@ -117,7 +117,7 @@ libspdm_process_opaque_data_supported_version_data(libspdm_context_t *spdm_conte
     opaque_element_table_header = (const secured_message_opaque_element_table_header_t*)
                                   get_element_ptr;
 
-    /*check for supported vesion data*/
+    /*check for supported version data*/
     opaque_element_support_version = (const void *)(opaque_element_table_header + 1);
 
     if ((const uint8_t *)opaque_element_support_version +

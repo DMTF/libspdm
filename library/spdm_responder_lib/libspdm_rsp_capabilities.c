@@ -7,7 +7,7 @@
 #include "internal/libspdm_responder_lib.h"
 
 /**
- * This function checks the compability of the received SPDM version,
+ * This function checks the compatibility of the received SPDM version,
  * if received version is valid, subsequent spdm communication will follow this version.
  *
  * @param  spdm_context  A pointer to the SPDM context.
@@ -17,7 +17,7 @@
  * @retval true   The received SPDM version is valid.
  * @retval false  The received SPDM version is invalid.
  **/
-static bool libspdm_check_request_version_compability(libspdm_context_t *spdm_context,
+static bool libspdm_check_request_version_compatibility(libspdm_context_t *spdm_context,
                                                       uint8_t version)
 {
     uint8_t local_ver;
@@ -35,7 +35,7 @@ static bool libspdm_check_request_version_compability(libspdm_context_t *spdm_co
 }
 
 /**
- * This function checks the compability of the received GET_CAPABILITES flag.
+ * This function checks the compatibility of the received GET_CAPABILITES flag.
  * Some flags are mutually inclusive/exclusive.
  *
  * @param  capabilities_flag  The received CAPABILITIES Flag.
@@ -45,7 +45,7 @@ static bool libspdm_check_request_version_compability(libspdm_context_t *spdm_co
  * @retval true   The received Capabilities flag is valid.
  * @retval false  The received Capabilities flag is invalid.
  **/
-static bool libspdm_check_request_flag_compability(uint32_t capabilities_flag, uint8_t version)
+static bool libspdm_check_request_flag_compatibility(uint32_t capabilities_flag, uint8_t version)
 {
     const uint8_t cert_cap = (uint8_t)(capabilities_flag >> 1) & 0x01;
     const uint8_t chal_cap = (uint8_t)(capabilities_flag >> 2) & 0x01;
@@ -136,7 +136,7 @@ libspdm_return_t libspdm_get_response_capabilities(libspdm_context_t *spdm_conte
     }
 
     /* -=[Validate Request Phase]=- */
-    if (!libspdm_check_request_version_compability(
+    if (!libspdm_check_request_version_compatibility(
             spdm_context, spdm_request->header.spdm_version)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_VERSION_MISMATCH, 0,
@@ -167,7 +167,7 @@ libspdm_return_t libspdm_get_response_capabilities(libspdm_context_t *spdm_conte
             request_size = sizeof(spdm_message_header_t);
         }
     }
-    if (!libspdm_check_request_flag_compability(
+    if (!libspdm_check_request_flag_compatibility(
             spdm_request->flags, spdm_request->header.spdm_version)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,

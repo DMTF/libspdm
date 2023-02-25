@@ -277,7 +277,7 @@ extern bool libspdm_x509_verify_cert_chain(const uint8_t *root_cert, size_t root
  *                                    certificate.
  * @param[in]      cert_chain_length  Total length of the certificate chain, in bytes.
  *
- * @param[in]      cert_index         Index of certificate. If index is -1 indecate the
+ * @param[in]      cert_index         Index of certificate. If index is -1 indicates the
  *                                    last certificate in cert_chain.
  *
  * @param[out]     cert              The certificate at the index of cert_chain.
