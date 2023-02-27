@@ -21,6 +21,7 @@
 #endif
 #define OPENSSLDIR ""
 #define ENGINESDIR ""
+#define MODULESDIR ""
 
 #define MAX_STRING_SIZE 0x1000
 
@@ -211,8 +212,10 @@ typedef char *LIBSPDM_VA_LIST;
 
 #define EINVAL 22 /* Invalid argument */
 #define INT_MAX 0x7FFFFFFF /* Maximum (signed) int value */
+#define INT_MIN       (-INT_MAX-1)    /* Minimum (signed) int value */
 #define LONG_MAX 0X7FFFFFFFL /* max value for a long */
 #define LONG_MIN (-LONG_MAX - 1) /* min value for a long */
+#define UINT_MAX      0xFFFFFFFF      /* Maximum unsigned int value */
 #define ULONG_MAX 0xFFFFFFFF /* Maximum unsigned long value */
 #define CHAR_BIT 8 /* Number of bits in a char */
 
@@ -265,6 +268,21 @@ struct tm {
     char *tm_zone; /* timezone abbreviation */
 };
 
+struct timeval {
+    long tv_sec; /* time value, in seconds */
+    long tv_usec; /* time value, in microseconds */
+};
+
+struct sockaddr {
+    __uint8_t sa_len; /* total length */
+    sa_family_t sa_family; /* address family */
+    char sa_data[14]; /* actually longer; address value */
+};
+
+
+/* Global variables*/
+
+extern int errno;
 extern FILE *stderr;
 
 
@@ -323,6 +341,7 @@ size_t strlen(const char *string);
 char *strcpy(char *dest, const char *src);
 char *strncpy(char *destinin, const char *source, size_t maxlen);
 char *strcat(char *dest, const char *src);
+char *strstr(const char *str1, const char *str2);
 int strncmp(const char *str1, const char *str2, size_t n);
 int strcasecmp(const char *s1, const char *s2);
 int sprintf(char *string, const char *format, ...);
