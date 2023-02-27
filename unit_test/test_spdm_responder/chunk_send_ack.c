@@ -751,8 +751,8 @@ void libspdm_test_responder_chunk_send_ack_rsp_case7(void** state)
     error_response = (spdm_error_response_t*) response;
     assert_int_equal(error_response->header.spdm_version, SPDM_MESSAGE_VERSION_12);
     assert_int_equal(error_response->header.request_response_code, SPDM_ERROR);
-    assert_int_equal(error_response->header.param1, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST);
-    assert_int_equal(error_response->header.param2, SPDM_CHUNK_SEND);
+    assert_int_equal(error_response->header.param1, SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
+    assert_int_equal(error_response->header.param2, 0);
 
     spdm_context->chunk_context.get.chunk_in_use = false;
 }
