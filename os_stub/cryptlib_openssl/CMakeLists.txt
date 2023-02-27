@@ -5,6 +5,7 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/os_stub/include
                     ${LIBSPDM_DIR}/os_stub/cryptlib_openssl
                     ${LIBSPDM_DIR}/os_stub/openssllib/include
+                    ${LIBSPDM_DIR}/os_stub/openssllib/openssl_gen
                     ${LIBSPDM_DIR}/os_stub/openssllib/openssl/include
                     ${LIBSPDM_DIR}/os_stub/openssllib/openssl/crypto/include
                     ${LIBSPDM_DIR}/os_stub/openssllib/openssl

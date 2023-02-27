@@ -238,9 +238,7 @@ bool libspdm_sm2_get_public_key_from_der(const uint8_t *der_data,
     bool status;
     BIO *der_bio;
     EVP_PKEY *pkey;
-    int32_t result;
-    EC_KEY *ec_key;
-    int32_t openssl_nid;
+    int result;
 
     /* Check input parameters.*/
 
@@ -267,12 +265,7 @@ bool libspdm_sm2_get_public_key_from_der(const uint8_t *der_data,
     if (pkey == NULL) {
         goto done;
     }
-    ec_key = EVP_PKEY_get0_EC_KEY(pkey);
-    openssl_nid = EC_GROUP_get_curve_name(EC_KEY_get0_group(ec_key));
-    if (openssl_nid != NID_sm2) {
-        goto done;
-    }
-    result = EVP_PKEY_set_alias_type(pkey, EVP_PKEY_SM2);
+    result = EVP_PKEY_is_a(pkey,"SM2");
     if (result == 0) {
         goto done;
     }
