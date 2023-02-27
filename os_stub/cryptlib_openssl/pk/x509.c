@@ -99,8 +99,6 @@ bool libspdm_x509_construct_certificate_stack_v(uint8_t **x509_stack,
     X509 *x509_cert;
     STACK_OF(X509) * cert_stack;
     bool res;
-    size_t index;
-
 
     /* Check input parameters.*/
 
@@ -121,7 +119,7 @@ bool libspdm_x509_construct_certificate_stack_v(uint8_t **x509_stack,
         }
     }
 
-    for (index = 0;; index++) {
+    for (;;) {
 
         /* If cert is NULL, then it is the end of the list.*/
 

@@ -74,7 +74,6 @@ static bool libspdm_x509_construct_certificate_stack_v(uint8_t **x509_stack,
 {
     uint8_t *cert;
     size_t cert_size;
-    int32_t index;
     int32_t ret;
 
     if (x509_stack == NULL) {
@@ -92,7 +91,7 @@ static bool libspdm_x509_construct_certificate_stack_v(uint8_t **x509_stack,
         *x509_stack = (uint8_t *)crt;
     }
 
-    for (index = 0;; index++) {
+    for (;;) {
 
         /* If cert is NULL, then it is the end of the list.*/
 
