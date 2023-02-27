@@ -33,7 +33,7 @@ void *libspdm_sm2_dsa_new_by_nid(size_t nid)
     int32_t result;
     EVP_PKEY *params;
 
-    pkey_ctx = EVP_PKEY_CTX_new_id(EVP_PKEY_EC, NULL);
+    pkey_ctx = EVP_PKEY_CTX_new_from_name(NULL, "SM2", NULL);
     if (pkey_ctx == NULL) {
         return NULL;
     }
@@ -56,7 +56,7 @@ void *libspdm_sm2_dsa_new_by_nid(size_t nid)
     }
     EVP_PKEY_CTX_free(pkey_ctx);
 
-    key_ctx = EVP_PKEY_CTX_new(params, NULL);
+    key_ctx = EVP_PKEY_CTX_new_from_pkey(NULL, params, NULL);
     if (key_ctx == NULL) {
         EVP_PKEY_free(params);
         return NULL;
@@ -76,8 +76,8 @@ void *libspdm_sm2_dsa_new_by_nid(size_t nid)
     }
     EVP_PKEY_CTX_free(key_ctx);
 
-    result = EVP_PKEY_set_alias_type(pkey, EVP_PKEY_SM2);
-    if (result == 0) {
+    result = EVP_PKEY_is_a(pkey, "SM2");
+    if (result != 1) {
         EVP_PKEY_free(pkey);
         return NULL;
     }
@@ -130,9 +130,7 @@ bool libspdm_sm2_dsa_set_pub_key(void *sm2_context, const uint8_t *public_key,
     if (EVP_PKEY_id(pkey) != EVP_PKEY_SM2) {
         return false;
     }
-    EVP_PKEY_set_alias_type(pkey, EVP_PKEY_EC);
-    ec_key = EVP_PKEY_get0_EC_KEY(pkey);
-    EVP_PKEY_set_alias_type(pkey, EVP_PKEY_SM2);
+    ec_key = (void *)EVP_PKEY_get0_EC_KEY(pkey);
 
     openssl_nid = EC_GROUP_get_curve_name(EC_KEY_get0_group(ec_key));
     switch (openssl_nid) {
@@ -228,9 +226,7 @@ bool libspdm_sm2_dsa_get_pub_key(void *sm2_context, uint8_t *public_key,
     if (EVP_PKEY_id(pkey) != EVP_PKEY_SM2) {
         return false;
     }
-    EVP_PKEY_set_alias_type(pkey, EVP_PKEY_EC);
-    ec_key = EVP_PKEY_get0_EC_KEY(pkey);
-    EVP_PKEY_set_alias_type(pkey, EVP_PKEY_SM2);
+    ec_key = (void *)EVP_PKEY_get0_EC_KEY(pkey);
 
     openssl_nid = EC_GROUP_get_curve_name(EC_KEY_get0_group(ec_key));
     switch (openssl_nid) {
@@ -317,9 +313,7 @@ bool libspdm_sm2_dsa_check_key(const void *sm2_context)
     if (EVP_PKEY_id(pkey) != EVP_PKEY_SM2) {
         return false;
     }
-    EVP_PKEY_set_alias_type(pkey, EVP_PKEY_EC);
-    ec_key = EVP_PKEY_get0_EC_KEY(pkey);
-    EVP_PKEY_set_alias_type(pkey, EVP_PKEY_SM2);
+    ec_key = (void *)EVP_PKEY_get0_EC_KEY(pkey);
 
     ret_val = (bool)EC_KEY_check_key(ec_key);
     if (!ret_val) {
@@ -383,9 +377,7 @@ bool libspdm_sm2_dsa_generate_key(void *sm2_context, uint8_t *public_data,
     if (EVP_PKEY_id(pkey) != EVP_PKEY_SM2) {
         return false;
     }
-    EVP_PKEY_set_alias_type(pkey, EVP_PKEY_EC);
-    ec_key = EVP_PKEY_get0_EC_KEY(pkey);
-    EVP_PKEY_set_alias_type(pkey, EVP_PKEY_SM2);
+    ec_key = (void *)EVP_PKEY_get0_EC_KEY(pkey);
 
     ret_val = (bool)EC_KEY_generate_key(ec_key);
     if (!ret_val) {
@@ -751,6 +743,7 @@ bool libspdm_sm2_dsa_sign(const void *sm2_context, size_t hash_nid,
     default:
         return false;
     }
+
     if (*sig_size < (size_t)(half_size * 2)) {
         *sig_size = half_size * 2;
         return false;
@@ -775,13 +768,17 @@ bool libspdm_sm2_dsa_sign(const void *sm2_context, size_t hash_nid,
         EVP_MD_CTX_free(ctx);
         return false;
     }
-    result = EVP_PKEY_CTX_set1_id(pkey_ctx, id_a,
-                                  id_a_size);
-    if (result <= 0) {
-        EVP_MD_CTX_free(ctx);
-        EVP_PKEY_CTX_free(pkey_ctx);
-        return false;
+
+    if (id_a_size != 0) {
+        result = EVP_PKEY_CTX_set1_id(pkey_ctx, id_a,
+                                      id_a_size);
+        if (result <= 0) {
+            EVP_MD_CTX_free(ctx);
+            EVP_PKEY_CTX_free(pkey_ctx);
+            return false;
+        }
     }
+
     EVP_MD_CTX_set_pkey_ctx(ctx, pkey_ctx);
 
     result = EVP_DigestSignInit(ctx, NULL, EVP_sm3(), NULL, pkey);
@@ -860,6 +857,7 @@ bool libspdm_sm2_dsa_verify(const void *sm2_context, size_t hash_nid,
     default:
         return false;
     }
+
     if (sig_size != (size_t)(half_size * 2)) {
         return false;
     }
@@ -885,12 +883,15 @@ bool libspdm_sm2_dsa_verify(const void *sm2_context, size_t hash_nid,
         EVP_MD_CTX_free(ctx);
         return false;
     }
-    result = EVP_PKEY_CTX_set1_id(pkey_ctx, id_a,
-                                  id_a_size);
-    if (result <= 0) {
-        EVP_MD_CTX_free(ctx);
-        EVP_PKEY_CTX_free(pkey_ctx);
-        return false;
+
+    if (id_a_size != 0) {
+        result = EVP_PKEY_CTX_set1_id(pkey_ctx, id_a,
+                                      id_a_size);
+        if (result <= 0) {
+            EVP_MD_CTX_free(ctx);
+            EVP_PKEY_CTX_free(pkey_ctx);
+            return false;
+        }
     }
     EVP_MD_CTX_set_pkey_ctx(ctx, pkey_ctx);
 

@@ -915,7 +915,7 @@ static int libspdm_ecdsa_sign_setup_random(EC_KEY *eckey, BIGNUM **kinvp, BIGNUM
     }
 
     /* compute the inverse of k */
-    if (!ec_group_do_inverse_ord(group, k, k, ctx)) {
+    if (!ossl_ec_group_do_inverse_ord(group, k, k, ctx)) {
         goto err;
     }
 
