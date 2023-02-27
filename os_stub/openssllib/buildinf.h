@@ -5,6 +5,6 @@
  **/
 
 #define PLATFORM "LIBSPDM"
-#define DATE "Thu 07/01/2021"
+#define DATE "Thu 21/01/2023"
 
 const char *compiler_flags = "compiler: information not available from libspdm";
