@@ -465,7 +465,82 @@ For riscv64 (RISCV64 GCC): `qemu-riscv64 -L /usr/riscv64-linux-gnu <TestBinary>`
    #libspdm/unit_test/fuzzing/out_<CRYPTO>_<GitLogHash>_<TIMESTAMP>/coverage_log/index.html
    libspdm/unit_test/fuzzing/out_mbedtls_ac992f_2022-06-23_08-45-48/coverage_log/index.html
    ```
+7) Fuzzing in Linux with [AFLplusplus](https://github.com/AFLplusplus/AFLplusplus)
 
+   #### Install crypto libs then clone the repository and build the AFLplusplus code
+   ```
+   sudo apt-get install libssl-dev
+   git clone https://github.com/AFLplusplus/AFLplusplus.git
+   cd AFLplusplus/
+   make
+   cp afl-fuzz afl-plusplus-fuzz
+   export AFL_PATH=~/AFLplusplus/
+   export PATH=$PATH:$AFL_PATH
+   ```
+   > Build it with make & ensure AFLplusplus binary is in PATH environment variable.
+
+   Then run commands as root (every time reboot the OS):
+   ```
+   sudo bash -c 'echo core >/proc/sys/kernel/core_pattern'
+   cd /sys/devices/system/cpu/
+   sudo bash -c 'echo performance | tee cpu*/cpufreq/scaling_governor'
+   ```
+
+   Known issue: Above command cannot run in Windows Linux Subsystem.
+
+   Build cases with AFL toolchain `-DTOOLCHAIN=AFL`. For example:
+   ```
+   cd libspdm
+   mkdir build
+   cd build
+   cmake -DARCH=x64 -DTOOLCHAIN=AFL -DTARGET=Release -DCRYPTO=mbedtls ..
+   make copy_sample_key
+   make
+   ```
+
+   Run cases:
+   ```
+   mkdir testcase_dir
+   mkdir /dev/shm/findings_dir
+   cp <seed> testcase_dir
+   afl-plusplus-fuzz -i testcase_dir -o /dev/shm/findings_dir <test_app> @@
+   ```
+   Note: /dev/shm is tmpfs.
+
+   Fuzzing Code Coverage in Linux with [AFLplusplus](https://github.com/AFLplusplus/AFLplusplus) and [lcov](https://github.com/linux-test-project/lcov/releases).
+   Install lcov `sudo apt-get install lcov`.
+
+   Build cases with AFL toolchain `-DTOOLCHAIN=AFL -DGCOV=ON`.
+   ```
+   cd libspdm
+   mkdir build
+   cd build
+   cmake -DARCH=x64 -DTOOLCHAIN=AFL -DTARGET=Release -DCRYPTO=mbedtls -DGCOV=ON ..
+   make copy_sample_key
+   make
+   ```
+   You can launch the script `fuzzing_AFLplusplus.sh` to run a duration for each fuzzing test case. If you want to run a specific case modify the cmd tuple in the script.
+
+   First install [screen](https://www.gnu.org/software/screen/) `sudo apt install screen`.
+
+   The usage of the script `fuzzing_AFLplusplus.sh` is as following:
+   ```
+   libspdm/unit_test/fuzzing/fuzzing_AFLplusplus.sh <CRYPTO> <GCOV> <duration>
+   <CRYPTO> means selected Crypto library: mbedtls or openssl
+   <GCOV> means enable Code Coverage or not: ON or OFF
+   <duration> means the duration of every program keep fuzzing: NUMBER seconds
+   ```
+   For example: build with `mbedtls`, enable Code Coverage and every test case run 60 seconds.
+   ```
+   libspdm/unit_test/fuzzing/fuzzing_AFLplusplus.sh mbedtls ON 60
+   ```
+   Fuzzing output path and code coverage output path of the script `fuzzing_AFLplusplus.sh`:
+   ```
+   #libspdm/unit_test/fuzzing/out_<CRYPTO>_<GitLogHash>_<TIMESTAMP>/SummaryList.csv
+   libspdm/unit_test/fuzzing/out_mbedtls/SummaryList.csv
+   #libspdm/unit_test/fuzzing/out_<CRYPTO>_<GitLogHash>_<TIMESTAMP>/coverage_log/index.html
+   libspdm/unit_test/fuzzing/out_mbedtls/coverage_log/index.html
+   ```
 ### Run Symbolic Execution
 
 1) [KLEE](https://klee.github.io/)
