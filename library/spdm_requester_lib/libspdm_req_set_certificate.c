@@ -176,7 +176,7 @@ libspdm_return_t libspdm_set_certificate(void *spdm_context,
     do {
         status = libspdm_try_set_certificate(context, session_id, slot_id,
                                              cert_chain, cert_chain_size);
-        if (status != LIBSPDM_STATUS_BUSY_PEER) {
+        if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
             return status;
         }
 

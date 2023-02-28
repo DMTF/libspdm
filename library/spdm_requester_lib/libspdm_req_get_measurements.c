@@ -619,7 +619,7 @@ libspdm_return_t libspdm_get_measurement(void *spdm_context, const uint32_t *ses
             context, session_id, request_attribute,
             measurement_operation, slot_id_param, content_changed, number_of_blocks,
             measurement_record_length, measurement_record, NULL, NULL, NULL);
-        if (LIBSPDM_STATUS_BUSY_PEER != status) {
+        if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
             return status;
         }
 
@@ -657,7 +657,7 @@ libspdm_return_t libspdm_get_measurement_ex(void *spdm_context, const uint32_t *
             measurement_record_length, measurement_record,
             requester_nonce_in,
             requester_nonce, responder_nonce);
-        if (status != LIBSPDM_STATUS_BUSY_PEER) {
+        if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
             return status;
         }
 

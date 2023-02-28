@@ -237,7 +237,7 @@ libspdm_return_t libspdm_get_digest(void *spdm_context, const uint32_t *session_
     retry_delay_time = context->retry_delay_time;
     do {
         status = libspdm_try_get_digest(context, session_id, slot_mask, total_digest_buffer);
-        if (status != LIBSPDM_STATUS_BUSY_PEER) {
+        if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
             return status;
         }
 

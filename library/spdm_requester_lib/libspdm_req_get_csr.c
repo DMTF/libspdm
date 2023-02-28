@@ -187,7 +187,7 @@ libspdm_return_t libspdm_get_csr(void * spdm_context,
                                      requester_info, requester_info_length,
                                      opaque_data, opaque_data_length,
                                      csr, csr_len);
-        if (status != LIBSPDM_STATUS_BUSY_PEER) {
+        if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
             return status;
         }
 

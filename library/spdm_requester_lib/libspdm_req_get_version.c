@@ -215,7 +215,7 @@ libspdm_return_t libspdm_get_version(libspdm_context_t *spdm_context,
     do {
         status = libspdm_try_get_version(spdm_context,
                                          version_number_entry_count, version_number_entry);
-        if (status != LIBSPDM_STATUS_BUSY_PEER) {
+        if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
             return status;
         }
 

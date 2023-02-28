@@ -161,7 +161,7 @@ libspdm_return_t libspdm_send_receive_end_session(libspdm_context_t *spdm_contex
     do {
         status = libspdm_try_send_receive_end_session(
             spdm_context, session_id, end_session_attributes);
-        if (LIBSPDM_STATUS_BUSY_PEER != status) {
+        if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
             return status;
         }
 
