@@ -352,7 +352,7 @@ libspdm_return_t libspdm_challenge(void *spdm_context, void *reserved,
         status = libspdm_try_challenge(context, slot_id,
                                        measurement_hash_type,
                                        measurement_hash, slot_mask, NULL, NULL, NULL);
-        if (LIBSPDM_STATUS_BUSY_PEER != status) {
+        if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
             return status;
         }
 
@@ -387,7 +387,7 @@ libspdm_return_t libspdm_challenge_ex(void *spdm_context, void *reserved,
                                        slot_mask,
                                        requester_nonce_in,
                                        requester_nonce, responder_nonce);
-        if (LIBSPDM_STATUS_BUSY_PEER != status) {
+        if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
             return status;
         }
 

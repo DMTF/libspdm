@@ -744,7 +744,7 @@ libspdm_return_t libspdm_send_receive_key_exchange(
             spdm_context, measurement_hash_type, slot_id, session_policy,
             session_id, heartbeat_period, req_slot_id_param,
             measurement_hash, NULL, NULL, NULL);
-        if (status != LIBSPDM_STATUS_BUSY_PEER) {
+        if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
             return status;
         }
 
@@ -776,7 +776,7 @@ libspdm_return_t libspdm_send_receive_key_exchange_ex(
             session_id, heartbeat_period, req_slot_id_param,
             measurement_hash, requester_random_in,
             requester_random, responder_random);
-        if (LIBSPDM_STATUS_BUSY_PEER != status) {
+        if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
             return status;
         }
 

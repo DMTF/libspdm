@@ -526,7 +526,7 @@ libspdm_return_t libspdm_send_receive_psk_exchange(libspdm_context_t *spdm_conte
             spdm_context, measurement_hash_type, session_policy, session_id,
             heartbeat_period, measurement_hash,
             NULL, 0, NULL, NULL, NULL, NULL);
-        if (LIBSPDM_STATUS_BUSY_PEER != status) {
+        if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
             return status;
         }
 
@@ -563,7 +563,7 @@ libspdm_return_t libspdm_send_receive_psk_exchange_ex(libspdm_context_t *spdm_co
             requester_context_in, requester_context_in_size,
             requester_context, requester_context_size,
             responder_context, responder_context_size);
-        if (LIBSPDM_STATUS_BUSY_PEER != status) {
+        if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
             return status;
         }
 

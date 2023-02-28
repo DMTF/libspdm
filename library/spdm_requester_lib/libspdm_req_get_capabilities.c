@@ -330,7 +330,7 @@ libspdm_return_t libspdm_get_capabilities(libspdm_context_t *spdm_context)
     retry_delay_time = spdm_context->retry_delay_time;
     do {
         status = libspdm_try_get_capabilities(spdm_context);
-        if (status != LIBSPDM_STATUS_BUSY_PEER) {
+        if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
             return status;
         }
 

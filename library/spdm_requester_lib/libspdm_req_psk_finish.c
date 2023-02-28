@@ -295,7 +295,7 @@ libspdm_return_t libspdm_send_receive_psk_finish(libspdm_context_t *spdm_context
     do {
         status = libspdm_try_send_receive_psk_finish(spdm_context,
                                                      session_id);
-        if (LIBSPDM_STATUS_BUSY_PEER != status) {
+        if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
             return status;
         }
 
