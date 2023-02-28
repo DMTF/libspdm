@@ -30,7 +30,7 @@ libspdm_return_t libspdm_get_encap_response_certificate(void *spdm_context,
     if (spdm_request->header.spdm_version != libspdm_get_connection_version(context)) {
         return libspdm_generate_encap_error_response(
             context, SPDM_ERROR_CODE_VERSION_MISMATCH,
-            SPDM_GET_CERTIFICATE, response_size, response);
+            0, response_size, response);
     }
 
     if (!libspdm_is_capabilities_flag_supported(
