@@ -126,17 +126,6 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
     free(test_buffer);
     return 0;
 }
-int LLVMFuzzerInitialize(int *argc, char ***argv)
-{
-    char *file_name;
-    if (*argc <= 1) {
-        printf("info - missing input file\n");
-    }
-    else{
-        file_name = (*argv)[1];
-    }
-    return 0;
-}
 #else
 int main(int argc, char **argv)
 {
