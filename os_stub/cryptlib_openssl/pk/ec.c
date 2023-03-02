@@ -15,6 +15,7 @@
 #include <openssl/bn.h>
 #include <openssl/ec.h>
 #include <openssl/objects.h>
+#include <crypto/ec.h>
 
 /**
  * Allocates and Initializes one Elliptic Curve context for subsequent use
