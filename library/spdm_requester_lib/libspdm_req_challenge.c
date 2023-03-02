@@ -356,7 +356,7 @@ libspdm_return_t libspdm_challenge(void *spdm_context, void *reserved,
             return status;
         }
 
-        libspdm_sleep_in_us(retry_delay_time);
+        libspdm_sleep(retry_delay_time);
     } while (retry-- != 0);
 
     return status;
@@ -391,7 +391,7 @@ libspdm_return_t libspdm_challenge_ex(void *spdm_context, void *reserved,
             return status;
         }
 
-        libspdm_sleep_in_us(retry_delay_time);
+        libspdm_sleep(retry_delay_time);
     } while (retry-- != 0);
 
     return status;

@@ -748,7 +748,7 @@ libspdm_return_t libspdm_send_receive_key_exchange(
             return status;
         }
 
-        libspdm_sleep_in_us(retry_delay_time);
+        libspdm_sleep(retry_delay_time);
     } while (retry-- != 0);
 
     return status;
@@ -780,7 +780,7 @@ libspdm_return_t libspdm_send_receive_key_exchange_ex(
             return status;
         }
 
-        libspdm_sleep_in_us(retry_delay_time);
+        libspdm_sleep(retry_delay_time);
     } while (retry-- != 0);
 
     return status;

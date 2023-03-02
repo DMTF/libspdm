@@ -431,7 +431,7 @@ libspdm_return_t libspdm_get_certificate_choose_length(void *spdm_context,
             return status;
         }
 
-        libspdm_sleep_in_us(retry_delay_time);
+        libspdm_sleep(retry_delay_time);
     } while (retry-- != 0);
 
     return status;
@@ -463,7 +463,7 @@ libspdm_return_t libspdm_get_certificate_choose_length_ex(void *spdm_context,
             return status;
         }
 
-        libspdm_sleep_in_us(retry_delay_time);
+        libspdm_sleep(retry_delay_time);
     } while (retry-- != 0);
 
     return status;
