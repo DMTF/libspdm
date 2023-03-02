@@ -17,11 +17,11 @@
 /**
  * Suspends the execution of the current thread until the time-out interval elapses.
  *
- * @param microseconds     The time interval for which execution is to be suspended, in milliseconds.
+ * @param microseconds     The time interval for which execution is to be suspended, in microseconds.
  *
  **/
 
-void libspdm_sleep_in_us(uint64_t microseconds)
+void libspdm_sleep(uint64_t microseconds)
 {
     /*the feature for armclang build is TBD*/
     LIBSPDM_ASSERT(false);

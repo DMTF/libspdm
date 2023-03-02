@@ -169,7 +169,7 @@ static libspdm_return_t libspdm_handle_response_not_ready(libspdm_context_t *spd
     spdm_context->error_data.token = extend_error_data->token;
     spdm_context->error_data.rd_tm = extend_error_data->rd_tm;
 
-    libspdm_sleep_in_us((2 << extend_error_data->rd_exponent));
+    libspdm_sleep((2 << extend_error_data->rd_exponent));
     return libspdm_requester_respond_if_ready(spdm_context, session_id,
                                               response_size, response,
                                               expected_response_code,
