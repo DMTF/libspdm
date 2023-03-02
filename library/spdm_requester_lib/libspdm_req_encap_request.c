@@ -76,7 +76,6 @@ static libspdm_return_t libspdm_process_encapsulated_request(libspdm_context_t *
                                                              void *encap_response)
 {
     libspdm_get_encap_response_func get_encap_response_func;
-    libspdm_return_t status;
     spdm_message_header_t *spdm_requester;
 
     spdm_requester = encap_request;
@@ -95,20 +94,15 @@ static libspdm_return_t libspdm_process_encapsulated_request(libspdm_context_t *
             spdm_context->get_encap_response_func;
     }
     if (get_encap_response_func != NULL) {
-        status = get_encap_response_func(
+        return get_encap_response_func(
             spdm_context, encap_request_size, encap_request,
             encap_response_size, encap_response);
     } else {
-        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-    }
-    if (status != LIBSPDM_STATUS_SUCCESS) {
         return libspdm_generate_encap_error_response(
-            spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
-            spdm_requester->request_response_code,
+            spdm_context, SPDM_ERROR_CODE_UNEXPECTED_REQUEST,
+            0,
             encap_response_size, encap_response);
     }
-
-    return LIBSPDM_STATUS_SUCCESS;
 }
 
 libspdm_return_t libspdm_encapsulated_request(libspdm_context_t *spdm_context,
