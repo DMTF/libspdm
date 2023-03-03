@@ -20,7 +20,7 @@ cd ../
 # Exclude non-libspdm submodules.
 EXCLUDE_PATH1="./unit_test/test_size/intrinsiclib/ia32/*"
 EXCLUDE_PATH2="./os_stub/mbedtlslib/mbedtls/*"
-EXCLUDE_PATH3="./os_stub/openssllib/openssl/*"
+EXCLUDE_PATH3="./os_stub/openssllib/*"
 EXCLUDE_PATH4="./unit_test/cmockalib/cmocka/*"
 
 # Run uncrustify.
