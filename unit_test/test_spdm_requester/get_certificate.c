@@ -2132,6 +2132,7 @@ void libspdm_test_requester_get_certificate_case2(void **state)
         LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->local_context.is_requester = true;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, &hash, &hash_size);
@@ -2369,6 +2370,7 @@ void libspdm_test_requester_get_certificate_case6(void **state)
         LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->local_context.is_requester = true;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, &hash, &hash_size);
@@ -2551,6 +2553,7 @@ void libspdm_test_requester_get_certificate_case9(void **state)
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
     spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
+    spdm_context->local_context.is_requester = true;
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
@@ -2617,6 +2620,7 @@ void libspdm_test_requester_get_certificate_case10(void **state)
         m_libspdm_use_asym_algo;
     spdm_context->connection_info.algorithm.req_base_asym_alg =
         m_libspdm_use_req_asym_algo;
+    spdm_context->local_context.is_requester = true;
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
@@ -2756,7 +2760,7 @@ void libspdm_test_requester_get_certificate_case12(void **state)
     /* Reseting message buffer*/
     libspdm_reset_message_b(spdm_context);
     /* Calculating expected number of messages received*/
-
+    spdm_context->local_context.is_requester = true;
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
@@ -2828,6 +2832,7 @@ void libspdm_test_requester_get_certificate_case13(void **state)
         m_libspdm_use_asym_algo;
     spdm_context->connection_info.algorithm.req_base_asym_alg =
         m_libspdm_use_req_asym_algo;
+    spdm_context->local_context.is_requester = true;
     /* Reseting message buffer*/
     libspdm_reset_message_b(spdm_context);
     /* Calculating expected number of messages received*/
@@ -3108,6 +3113,7 @@ void libspdm_test_requester_get_certificate_case17(void **state)
         m_libspdm_use_asym_algo;
     spdm_context->connection_info.algorithm.req_base_asym_alg =
         m_libspdm_use_req_asym_algo;
+    spdm_context->local_context.is_requester = true;
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
@@ -3454,6 +3460,7 @@ void libspdm_test_requester_get_certificate_case23(void **state)
     spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
     spdm_context->connection_info.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
+    spdm_context->local_context.is_requester = true;
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     /*filling B with arbitrary data*/
@@ -3585,6 +3592,7 @@ void libspdm_test_requester_get_certificate_case25(void **state)
         m_libspdm_use_asym_algo;
     spdm_context->connection_info.algorithm.req_base_asym_alg =
         m_libspdm_use_req_asym_algo;
+    spdm_context->local_context.is_requester = true;
 
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
@@ -3710,6 +3718,7 @@ void libspdm_test_requester_get_certificate_case26(void **state)
         m_libspdm_use_asym_algo;
     spdm_context->connection_info.algorithm.req_base_asym_alg =
         m_libspdm_use_req_asym_algo;
+    spdm_context->local_context.is_requester = true;
 
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
