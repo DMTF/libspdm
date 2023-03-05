@@ -591,10 +591,9 @@ bool libspdm_verify_peer_cert_chain_buffer_integrity(libspdm_context_t *spdm_con
 {
     bool result;
     bool is_device_cert_model;
-    bool is_peer_requester;
+    bool is_requester;
 
-    /*is_requester always specifies the local entity. This is backwards.*/
-    is_peer_requester = !spdm_context->local_context.is_requester;
+    is_requester = spdm_context->local_context.is_requester;
 
     if((spdm_context->connection_info.capability.flags &
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP) == 0) {
@@ -603,7 +602,7 @@ bool libspdm_verify_peer_cert_chain_buffer_integrity(libspdm_context_t *spdm_con
         is_device_cert_model = false;
     }
 
-    if (is_peer_requester) {
+    if (is_requester) {
         result = libspdm_verify_certificate_chain_buffer(
             spdm_context->connection_info.algorithm.base_hash_algo,
             spdm_context->connection_info.algorithm.base_asym_algo,
