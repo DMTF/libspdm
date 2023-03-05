@@ -557,6 +557,7 @@ void libspdm_test_requester_chunk_get_case1(void** state)
     spdm_context->local_context.capability.flags |=  SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
     spdm_context->local_context.capability.data_transfer_size
         = CHUNK_GET_REQUESTER_UNIT_TEST_DATA_TRANSFER_SIZE;
+    spdm_context->local_context.is_requester = true;
 
     libspdm_read_responder_public_certificate_chain(
         m_libspdm_use_hash_algo,

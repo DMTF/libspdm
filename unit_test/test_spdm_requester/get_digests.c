@@ -1256,6 +1256,7 @@ static void libspdm_test_requester_get_digests_case24(void **state)
         m_libspdm_use_asym_algo;
     spdm_context->connection_info.algorithm.req_base_asym_alg =
         m_libspdm_use_req_asym_algo;
+    spdm_context->local_context.is_requester = true;
 
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
