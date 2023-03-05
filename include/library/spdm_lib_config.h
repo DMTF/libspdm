@@ -166,6 +166,11 @@
 #define LIBSPDM_SM3_256_SUPPORT 1
 #endif
 
+/* This can be set to 0 for the device which does not need X509 parser.*/
+#ifndef LIBSPDM_CERT_PARSE_SUPPORT
+#define LIBSPDM_CERT_PARSE_SUPPORT 1
+#endif
+
 /* Code space optimization for Optional request/response messages.*/
 
 /* Consumers of libspdm may wish to not fully implement all of the optional
