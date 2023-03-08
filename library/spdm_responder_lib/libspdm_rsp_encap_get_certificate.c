@@ -179,7 +179,7 @@ libspdm_return_t libspdm_process_encap_response_certificate(
             &spdm_context->encap_context.certificate_chain_buffer),
         NULL, NULL);
     if (!result) {
-        return LIBSPDM_STATUS_VERIF_NO_AUTHORITY;
+        status = LIBSPDM_STATUS_VERIF_NO_AUTHORITY;
     }
 
     spdm_context->connection_info.peer_used_cert_chain_slot_id =
@@ -222,8 +222,12 @@ libspdm_return_t libspdm_process_encap_response_certificate(
         return LIBSPDM_STATUS_INVALID_CERT;
     }
 #endif
+    if (status != LIBSPDM_STATUS_VERIF_NO_AUTHORITY) {
+        return LIBSPDM_STATUS_SUCCESS;
+    } else {
+        return LIBSPDM_STATUS_VERIF_NO_AUTHORITY;
+    }
 
-    return LIBSPDM_STATUS_SUCCESS;
 }
 
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)*/

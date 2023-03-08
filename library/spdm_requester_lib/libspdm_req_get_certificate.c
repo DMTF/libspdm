@@ -326,7 +326,6 @@ static libspdm_return_t libspdm_try_get_certificate(libspdm_context_t *spdm_cont
         trust_anchor, trust_anchor_size);
     if (!result) {
         status = LIBSPDM_STATUS_VERIF_NO_AUTHORITY;
-        goto done;
     }
 
     spdm_context->connection_info.peer_used_cert_chain_slot_id = slot_id;
@@ -379,8 +378,9 @@ static libspdm_return_t libspdm_try_get_certificate(libspdm_context_t *spdm_cont
                              libspdm_get_managed_buffer_size(&certificate_chain_buffer));
         }
     }
-
-    status = LIBSPDM_STATUS_SUCCESS;
+    if (status != LIBSPDM_STATUS_VERIF_NO_AUTHORITY) {
+        status = LIBSPDM_STATUS_SUCCESS;
+    }
 done:
     return status;
 }
