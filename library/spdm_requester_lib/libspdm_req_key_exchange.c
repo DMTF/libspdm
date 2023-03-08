@@ -100,7 +100,7 @@ bool libspdm_verify_key_exchange_rsp_hmac(libspdm_context_t *spdm_context,
     LIBSPDM_INTERNAL_DUMP_DATA(calc_hmac_data, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
-    if (libspdm_const_compare_mem(calc_hmac_data, hmac_data, hash_size) != 0) {
+    if (!libspdm_const_compare_mem(calc_hmac_data, hmac_data, hash_size)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_key_exchange_hmac - FAIL !!!\n"));
         return false;
     }

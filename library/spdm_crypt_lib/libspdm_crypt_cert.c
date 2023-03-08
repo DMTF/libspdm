@@ -620,16 +620,16 @@ static bool libspdm_verify_leaf_cert_basic_constraints(const uint8_t *cert, size
     }
 
     if ((len == sizeof(basic_constraints_case1)) &&
-        (!libspdm_const_compare_mem(cert_basic_constraints,
-                                    basic_constraints_case1,
-                                    sizeof(basic_constraints_case1)))) {
+        (libspdm_const_compare_mem(cert_basic_constraints,
+                                   basic_constraints_case1,
+                                   sizeof(basic_constraints_case1)))) {
         return true;
     }
 
     if ((len == sizeof(basic_constraints_case2)) &&
-        (!libspdm_const_compare_mem(cert_basic_constraints,
-                                    basic_constraints_case2,
-                                    sizeof(basic_constraints_case2)))) {
+        (libspdm_const_compare_mem(cert_basic_constraints,
+                                   basic_constraints_case2,
+                                   sizeof(basic_constraints_case2)))) {
         return true;
     }
 
@@ -863,7 +863,7 @@ bool libspdm_is_root_certificate(const uint8_t *cert, size_t cert_size)
     if (issuer_name_len != subject_name_len) {
         return false;
     }
-    if (libspdm_const_compare_mem(issuer_name, subject_name, issuer_name_len) != 0) {
+    if (!libspdm_const_compare_mem(issuer_name, subject_name, issuer_name_len)) {
         return false;
     }
 
@@ -1154,9 +1154,9 @@ bool libspdm_verify_certificate_chain_buffer(uint32_t base_hash_algo, uint32_t b
                            "!!! VerifyCertificateChainBuffer - FAIL (hash calculation fail) !!!\n"));
             return false;
         }
-        if (libspdm_const_compare_mem((const uint8_t *)cert_chain_buffer +
-                                      sizeof(spdm_cert_chain_t),
-                                      calc_root_cert_hash, hash_size) != 0) {
+        if (!libspdm_const_compare_mem((const uint8_t *)cert_chain_buffer +
+                                       sizeof(spdm_cert_chain_t),
+                                       calc_root_cert_hash, hash_size)) {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                            "!!! VerifyCertificateChainBuffer - FAIL (cert root hash mismatch) !!!\n"));
             return false;

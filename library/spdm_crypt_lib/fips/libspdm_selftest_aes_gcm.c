@@ -105,13 +105,13 @@ bool libspdm_fips_selftest_aes_gcm(void)
         return false;
     }
 
-    if (libspdm_const_compare_mem(output_ciphertext, expected_ciphertext,
-                                  sizeof(expected_ciphertext))) {
+    if (!libspdm_const_compare_mem(output_ciphertext, expected_ciphertext,
+                                   sizeof(expected_ciphertext))) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "aes_gcm KAT failed \n"));
         return false;
     }
 
-    if (libspdm_const_compare_mem(output_tag, expected_tag, sizeof(expected_tag))) {
+    if (!libspdm_const_compare_mem(output_tag, expected_tag, sizeof(expected_tag))) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "aes_gcm KAT failed \n"));
         return false;
     }
@@ -131,7 +131,7 @@ bool libspdm_fips_selftest_aes_gcm(void)
         return false;
     }
 
-    if (libspdm_const_compare_mem(output_plaintext, input, sizeof(input))) {
+    if (!libspdm_const_compare_mem(output_plaintext, input, sizeof(input))) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "aes_gcm selftest failed \n"));
         return false;
     }

@@ -1132,7 +1132,7 @@ libspdm_internal_x509_find_extension_data(uint8_t *start, uint8_t *end, const ui
             break;
         }
 
-        if (ret == 0 && libspdm_const_compare_mem(ptr, oid, oid_size) == 0) {
+        if (ret == 0 && libspdm_const_compare_mem(ptr, oid, oid_size)) {
             ptr += obj_len;
 
             ret = mbedtls_asn1_get_tag(&ptr, end, &obj_len,

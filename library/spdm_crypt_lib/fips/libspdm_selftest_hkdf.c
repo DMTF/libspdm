@@ -62,7 +62,7 @@ bool libspdm_fips_selftest_hkdf(void)
         return false;
     }
 
-    if (libspdm_const_compare_mem(prk_out, hkdf_sha256_prk, sizeof(hkdf_sha256_prk)) != 0) {
+    if (!libspdm_const_compare_mem(prk_out, hkdf_sha256_prk, sizeof(hkdf_sha256_prk))) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "HKDF KAT failed \n"));
         return false;
     }
@@ -76,7 +76,7 @@ bool libspdm_fips_selftest_hkdf(void)
         return false;
     }
 
-    if (libspdm_const_compare_mem(out, hkdf_sha256_okm, sizeof(hkdf_sha256_okm)) != 0) {
+    if (!libspdm_const_compare_mem(out, hkdf_sha256_okm, sizeof(hkdf_sha256_okm))) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "HKDF KAT failed \n"));
         return false;
     }
@@ -91,7 +91,7 @@ bool libspdm_fips_selftest_hkdf(void)
         return false;
     }
 
-    if (libspdm_const_compare_mem(out, hkdf_sha256_okm, sizeof(hkdf_sha256_okm)) != 0) {
+    if (!libspdm_const_compare_mem(out, hkdf_sha256_okm, sizeof(hkdf_sha256_okm))) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "HKDF KAT failed \n"));
         return false;
     }

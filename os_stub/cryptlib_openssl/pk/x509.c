@@ -1400,8 +1400,8 @@ bool libspdm_x509_get_extension_data(const uint8_t *cert, size_t cert_size,
         obj_length = OBJ_length(asn1_obj);
         oct_length = ASN1_STRING_length(asn1_oct);
 
-        if (oid_size == obj_length &&
-            libspdm_const_compare_mem(OBJ_get0_data(asn1_obj), oid, oid_size) == 0) {
+        if ((oid_size == obj_length) &&
+            libspdm_const_compare_mem(OBJ_get0_data(asn1_obj), oid, oid_size)) {
 
             /* Extension Found*/
 
@@ -2203,7 +2203,7 @@ char *libspdm_strstr(char *src, char *dst)
 
     for (index = 0; index < libspdm_get_str_len(src) - libspdm_get_str_len(dst); index++) {
         if ((*(src + index) == *dst) &&
-            (libspdm_const_compare_mem(src + index, dst, libspdm_get_str_len(dst)) == 0)) {
+            libspdm_const_compare_mem(src + index, dst, libspdm_get_str_len(dst))) {
             return (src + index);
         }
     }
