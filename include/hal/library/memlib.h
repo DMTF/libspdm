@@ -94,20 +94,15 @@ void *libspdm_zero_mem(void *buffer, size_t length);
  * value returned is the first mismatched byte in source_buffer subtracted from the first
  * mismatched byte in destination_buffer.
  *
- * If length > 0 and destination_buffer is NULL, then ASSERT().
- * If length > 0 and source_buffer is NULL, then ASSERT().
- * If length is greater than (MAX_ADDRESS - destination_buffer + 1), then ASSERT().
- * If length is greater than (MAX_ADDRESS - source_buffer + 1), then ASSERT().
  *
- * @param  destination_buffer A pointer to the destination buffer to compare.
- * @param  source_buffer      A pointer to the source buffer to compare.
- * @param  length            The number of bytes to compare.
+ * @param  destination_buffer  A pointer to the destination buffer to compare.
+ * @param  source_buffer       A pointer to the source buffer to compare.
+ * @param  length              The number of bytes to compare.
  *
- * @return 0                 All length bytes of the two buffers are identical.
- * @retval Non-zero          There is mismatched between source_buffer and destination_buffer.
- *
+ * @return true   The contents of the two buffers are the same.
+ * @retval false  The contents of the two buffers are not the same. *
  **/
-int32_t libspdm_const_compare_mem(const void *destination_buffer,
-                                  const void *source_buffer, size_t length);
+bool libspdm_const_compare_mem(const void *destination_buffer,
+                               const void *source_buffer, size_t length);
 
 #endif /* BASE_MEMORY_LIB */

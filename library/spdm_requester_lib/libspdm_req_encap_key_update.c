@@ -80,9 +80,9 @@ libspdm_return_t libspdm_get_encap_response_key_update(void *spdm_context,
     result = true;
     switch (spdm_request->header.param1) {
     case SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY:
-        if(libspdm_const_compare_mem(prev_spdm_request,
-                                     &spdm_key_init_update_operation,
-                                     sizeof(spdm_key_update_request_t)) != 0) {
+        if(!libspdm_const_compare_mem(prev_spdm_request,
+                                      &spdm_key_init_update_operation,
+                                      sizeof(spdm_key_update_request_t))) {
             result = false;
             break;
         }

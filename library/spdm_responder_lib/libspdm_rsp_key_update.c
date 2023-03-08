@@ -104,9 +104,9 @@ libspdm_return_t libspdm_get_response_key_update(libspdm_context_t *spdm_context
 
     switch (spdm_request->header.param1) {
     case SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY:
-        if(libspdm_const_compare_mem(prev_spdm_request,
-                                     &spdm_key_init_update_operation,
-                                     sizeof(spdm_key_update_request_t)) != 0) {
+        if(!libspdm_const_compare_mem(prev_spdm_request,
+                                      &spdm_key_init_update_operation,
+                                      sizeof(spdm_key_update_request_t))) {
             return libspdm_generate_error_response(spdm_context,
                                                    SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                    response_size, response);
@@ -130,9 +130,9 @@ libspdm_return_t libspdm_get_response_key_update(libspdm_context_t *spdm_context
                          spdm_request, request_size);
         break;
     case SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_ALL_KEYS:
-        if(libspdm_const_compare_mem(prev_spdm_request,
-                                     &spdm_key_init_update_operation,
-                                     sizeof(spdm_key_update_request_t)) != 0) {
+        if(!libspdm_const_compare_mem(prev_spdm_request,
+                                      &spdm_key_init_update_operation,
+                                      sizeof(spdm_key_update_request_t))) {
             return libspdm_generate_error_response(spdm_context,
                                                    SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                    response_size, response);

@@ -182,8 +182,8 @@ bool libspdm_fips_selftest_rsa_ssa(void)
         return false;
     }
 
-    if (libspdm_const_compare_mem(signature, expected_sig,
-                                  sizeof(expected_sig))) {
+    if (!libspdm_const_compare_mem(signature, expected_sig,
+                                   sizeof(expected_sig))) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "RSA_PSS KAT failed \n"));
         libspdm_rsa_free(rsa);
         return false;
