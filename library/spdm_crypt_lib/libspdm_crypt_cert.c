@@ -572,10 +572,10 @@ static bool libspdm_verify_cert_subject_public_key_info(const uint8_t *cert, siz
     /*get public key encrypt algo OID from cert*/
     status = libspdm_get_public_key_oid(cert, cert_size, cert_public_key_crypt_algo_oid, oid_len,
                                         base_asym_algo);
-    if (!status || (libspdm_const_compare_mem(cert_public_key_crypt_algo_oid,
-                                              libspdm_public_key_crypt_algo_oid, oid_len) &&
-                    libspdm_const_compare_mem(cert_public_key_crypt_algo_oid,
-                                              libspdm_public_key_crypt_algo_oid_other, oid_len))) {
+    if (!status || (!libspdm_const_compare_mem(cert_public_key_crypt_algo_oid,
+                                               libspdm_public_key_crypt_algo_oid, oid_len) &&
+                    !libspdm_const_compare_mem(cert_public_key_crypt_algo_oid,
+                                               libspdm_public_key_crypt_algo_oid_other, oid_len))) {
         return false;
     }
 
