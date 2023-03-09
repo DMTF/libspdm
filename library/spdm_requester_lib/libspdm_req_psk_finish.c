@@ -225,8 +225,7 @@ static libspdm_return_t libspdm_try_send_receive_psk_finish(libspdm_context_t *s
         status = libspdm_handle_error_response_main(
             spdm_context, &session_id,
             &spdm_response_size, (void **)&spdm_response,
-            SPDM_PSK_FINISH, SPDM_PSK_FINISH_RSP,
-            sizeof(libspdm_psk_finish_response_max_t));
+            SPDM_PSK_FINISH, SPDM_PSK_FINISH_RSP);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             goto receive_done;
         }
@@ -235,6 +234,8 @@ static libspdm_return_t libspdm_try_send_receive_psk_finish(libspdm_context_t *s
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
+    /* this message can only be in secured session
+     * thus don't need to consider transport layer padding, just check its exact size */
     if (spdm_response_size != sizeof(spdm_psk_finish_response_t)) {
         status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;

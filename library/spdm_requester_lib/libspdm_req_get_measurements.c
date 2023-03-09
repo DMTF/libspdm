@@ -300,8 +300,7 @@ static libspdm_return_t libspdm_try_get_measurement(libspdm_context_t *spdm_cont
         status = libspdm_handle_error_response_main(
             spdm_context, session_id,
             &spdm_response_size, (void **)&spdm_response,
-            SPDM_GET_MEASUREMENTS, SPDM_MEASUREMENTS,
-            message_size);
+            SPDM_GET_MEASUREMENTS, SPDM_MEASUREMENTS);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             goto receive_done;
         }

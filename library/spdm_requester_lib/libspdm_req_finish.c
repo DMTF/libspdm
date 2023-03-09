@@ -506,8 +506,7 @@ static libspdm_return_t libspdm_try_send_receive_finish(libspdm_context_t *spdm_
         status = libspdm_handle_error_response_main(
             spdm_context, &session_id,
             &spdm_response_size, (void **)&spdm_response,
-            SPDM_FINISH, SPDM_FINISH_RSP,
-            sizeof(libspdm_finish_response_mine_t));
+            SPDM_FINISH, SPDM_FINISH_RSP);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             goto receive_done;
         }
@@ -523,7 +522,7 @@ static libspdm_return_t libspdm_try_send_receive_finish(libspdm_context_t *spdm_
         hmac_size = 0;
     }
 
-    if (spdm_response_size != sizeof(spdm_finish_response_t) + hmac_size) {
+    if (spdm_response_size < sizeof(spdm_finish_response_t) + hmac_size) {
         status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
     }

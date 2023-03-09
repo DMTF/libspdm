@@ -122,65 +122,11 @@ void test_libspdm_requester_encap_challenge_auth_case1(void **state)
 }
 
 /**
- * Test 2: receiving a CHALLENGE message larger than specified.
- * Expected behavior: the requester refuses the CHALLENGE message and produces an
- * ERROR message indicating the InvalidRequest.
+ * Test 2:
+ * Expected behavior:
  **/
 void test_libspdm_requester_encap_challenge_auth_case2(void **state)
 {
-    libspdm_return_t status;
-    libspdm_test_context_t *spdm_test_context;
-    libspdm_context_t *spdm_context;
-    size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    spdm_challenge_auth_response_t *spdm_response;
-    void *data;
-    size_t data_size;
-
-    spdm_test_context = *state;
-    spdm_context = spdm_test_context->spdm_context;
-    spdm_test_context->case_id = 0x2;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->local_context.capability.flags = 0;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.measurement_spec =
-        m_libspdm_use_measurement_spec;
-    spdm_context->connection_info.algorithm.measurement_hash_algo =
-        m_libspdm_use_measurement_hash_algo;
-
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
-                                            << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size, NULL, NULL);
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] =
-        data_size;
-
-    spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
-    libspdm_reset_message_c(spdm_context);
-
-    response_size = sizeof(response);
-    libspdm_get_random_number(SPDM_NONCE_SIZE,
-                              m_spdm_challenge_request2.nonce);
-    status = libspdm_get_encap_response_challenge_auth(
-        spdm_context, m_spdm_challenge_request2_size,
-        &m_spdm_challenge_request2, &response_size, response);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(response_size, sizeof(spdm_error_response_t));
-    spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_INVALID_REQUEST);
-    assert_int_equal(spdm_response->header.param2, 0);
-    free(data);
 }
 
 /**
@@ -422,7 +368,7 @@ int libspdm_requester_encap_challenge_auth_test_main(void)
     const struct CMUnitTest spdm_requester_challenge_auth_tests[] = {
         /* Success Case*/
         cmocka_unit_test(test_libspdm_requester_encap_challenge_auth_case1),
-        /* Bad request size*/
+        /* Can be populated with new test.*/
         cmocka_unit_test(test_libspdm_requester_encap_challenge_auth_case2),
         /* connection_state Check*/
         cmocka_unit_test(test_libspdm_requester_encap_challenge_auth_case3),

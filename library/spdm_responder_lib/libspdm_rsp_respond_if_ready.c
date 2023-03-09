@@ -32,7 +32,7 @@ libspdm_return_t libspdm_get_response_respond_if_ready(libspdm_context_t *spdm_c
             response_size, response);
     }
 
-    if (request_size != sizeof(spdm_message_header_t)) {
+    if (request_size < sizeof(spdm_message_header_t)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);

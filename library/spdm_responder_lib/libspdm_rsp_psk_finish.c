@@ -133,6 +133,8 @@ libspdm_return_t libspdm_get_response_psk_finish(libspdm_context_t *spdm_context
     hmac_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
 
+    /* this message can only be in secured session
+     * thus don't need to consider transport layer padding, just check its exact size */
     if (request_size != sizeof(spdm_psk_finish_request_t) + hmac_size) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,

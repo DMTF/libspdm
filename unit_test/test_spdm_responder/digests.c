@@ -84,49 +84,11 @@ void libspdm_test_responder_digests_case1(void **state)
 }
 
 /**
- * Test 2: receives a GET_DIGESTS request message with bad size from Requester
- * Expected Behavior: produces an ERROR response message with error code = InvalidRequest
+ * Test 2:
+ * Expected Behavior:
  **/
 void libspdm_test_responder_digests_case2(void **state)
 {
-    libspdm_return_t status;
-    libspdm_test_context_t *spdm_test_context;
-    libspdm_context_t *spdm_context;
-    size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    spdm_digest_response_t *spdm_response;
-
-    spdm_test_context = *state;
-    spdm_context = spdm_test_context->spdm_context;
-    spdm_test_context->case_id = 0x2;
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
-                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->local_context.local_cert_chain_provision[0] =
-        m_libspdm_local_certificate_chain;
-    spdm_context->local_context.local_cert_chain_provision_size[0] =
-        LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
-    libspdm_set_mem(m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
-                    (uint8_t)(0xFF));
-
-    response_size = sizeof(response);
-    status = libspdm_get_response_digests(spdm_context,
-                                          m_libspdm_get_digests_request2_size,
-                                          &m_libspdm_get_digests_request2,
-                                          &response_size, response);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(response_size, sizeof(spdm_error_response_t));
-    spdm_response = (void *)response;
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_INVALID_REQUEST);
-    assert_int_equal(spdm_response->header.param2, 0);
 }
 
 /**
@@ -456,7 +418,7 @@ int libspdm_responder_digests_test_main(void)
     const struct CMUnitTest spdm_responder_digests_tests[] = {
         /* Success Case*/
         cmocka_unit_test(libspdm_test_responder_digests_case1),
-        /* Bad request size*/
+        /* Can be populated with new test.*/
         cmocka_unit_test(libspdm_test_responder_digests_case2),
         /* response_state: SPDM_RESPONSE_STATE_BUSY*/
         cmocka_unit_test(libspdm_test_responder_digests_case3),

@@ -161,8 +161,7 @@ static libspdm_return_t libspdm_try_challenge(libspdm_context_t *spdm_context,
         status = libspdm_handle_error_response_main(
             spdm_context, NULL,
             &spdm_response_size,
-            (void **)&spdm_response, SPDM_CHALLENGE, SPDM_CHALLENGE_AUTH,
-            sizeof(libspdm_challenge_auth_response_max_t));
+            (void **)&spdm_response, SPDM_CHALLENGE, SPDM_CHALLENGE_AUTH);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             goto receive_done;
         }
