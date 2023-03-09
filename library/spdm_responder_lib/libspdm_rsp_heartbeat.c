@@ -64,6 +64,8 @@ libspdm_return_t libspdm_get_response_heartbeat(libspdm_context_t *spdm_context,
                                                response_size, response);
     }
 
+    /* this message can only be in secured session
+     * thus don't need to consider transport layer padding, just check its exact size */
     if (request_size != sizeof(spdm_heartbeat_request_t)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,

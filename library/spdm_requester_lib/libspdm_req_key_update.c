@@ -140,16 +140,17 @@ static libspdm_return_t libspdm_try_key_update(libspdm_context_t *spdm_context,
             spdm_context, &session_id, &spdm_response_size, (void **)&spdm_response);
 
         if (!LIBSPDM_STATUS_IS_ERROR(status)) {
-            if (spdm_response_size < sizeof(spdm_message_header_t)) {
-                status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
-            } else if (spdm_response->header.spdm_version != spdm_request->header.spdm_version) {
-                status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-            } else if (spdm_response->header.request_response_code == SPDM_ERROR) {
+            if (spdm_response->header.request_response_code == SPDM_ERROR) {
                 status = libspdm_handle_error_response_main(
                     spdm_context, &session_id,
                     &spdm_response_size, (void **)&spdm_response,
-                    SPDM_KEY_UPDATE, SPDM_KEY_UPDATE_ACK,
-                    sizeof(libspdm_key_update_response_mine_t));
+                    SPDM_KEY_UPDATE, SPDM_KEY_UPDATE_ACK);
+            } else if (spdm_response_size != sizeof(spdm_key_update_response_t)) {
+                /* this message can only be in secured session thus
+                 * don't need to consider transport layer padding, just check its exact size */
+                status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+            } else if (spdm_response->header.spdm_version != spdm_request->header.spdm_version) {
+                status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             } else if ((spdm_response->header.request_response_code !=
                         SPDM_KEY_UPDATE_ACK) ||
                        (spdm_response->header.param1 != spdm_request->header.param1) ||
@@ -268,7 +269,22 @@ static libspdm_return_t libspdm_try_key_update(libspdm_context_t *spdm_context,
         libspdm_release_receiver_buffer (spdm_context);
         return status;
     }
-    if (spdm_response_size < sizeof(spdm_message_header_t)) {
+
+    if (spdm_response->header.request_response_code == SPDM_ERROR) {
+        status = libspdm_handle_error_response_main(
+            spdm_context, &session_id,
+            &spdm_response_size, (void **)&spdm_response,
+            SPDM_KEY_UPDATE, SPDM_KEY_UPDATE_ACK);
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmVerifyKey[%x] Failed\n", session_id));
+            libspdm_release_receiver_buffer (spdm_context);
+            return status;
+        }
+    }
+
+    /* this message can only be in secured session
+     * thus don't need to consider transport layer padding, just check its exact size */
+    if (spdm_response_size != sizeof(spdm_key_update_response_t)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmVerifyKey[%x] Failed\n", session_id));
         libspdm_release_receiver_buffer (spdm_context);
         return LIBSPDM_STATUS_INVALID_MSG_SIZE;
@@ -277,18 +293,6 @@ static libspdm_return_t libspdm_try_key_update(libspdm_context_t *spdm_context,
     if (spdm_response->header.spdm_version != spdm_request->header.spdm_version) {
         libspdm_release_receiver_buffer (spdm_context);
         return LIBSPDM_STATUS_INVALID_MSG_FIELD;
-    }
-    if (spdm_response->header.request_response_code == SPDM_ERROR) {
-        status = libspdm_handle_error_response_main(
-            spdm_context, &session_id,
-            &spdm_response_size, (void **)&spdm_response,
-            SPDM_KEY_UPDATE, SPDM_KEY_UPDATE_ACK,
-            sizeof(libspdm_key_update_response_mine_t));
-        if (LIBSPDM_STATUS_IS_ERROR(status)) {
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmVerifyKey[%x] Failed\n", session_id));
-            libspdm_release_receiver_buffer (spdm_context);
-            return status;
-        }
     }
 
     if ((spdm_response->header.request_response_code !=

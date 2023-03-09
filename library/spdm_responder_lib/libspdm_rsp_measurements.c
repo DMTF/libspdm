@@ -243,7 +243,7 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
                            sizeof(spdm_request->slot_id_param);
         }
     } else {
-        if (request_size != sizeof(spdm_message_header_t)) {
+        if (request_size < sizeof(spdm_message_header_t)) {
             return libspdm_generate_error_response(
                 spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
                 0, response_size, response);

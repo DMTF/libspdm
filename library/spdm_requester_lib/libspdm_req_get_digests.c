@@ -139,8 +139,7 @@ static libspdm_return_t libspdm_try_get_digest(libspdm_context_t *spdm_context,
         status = libspdm_handle_error_response_main(
             spdm_context, session_id,
             &spdm_response_size,
-            (void **)&spdm_response, SPDM_GET_DIGESTS, SPDM_DIGESTS,
-            sizeof(libspdm_digests_response_max_t));
+            (void **)&spdm_response, SPDM_GET_DIGESTS, SPDM_DIGESTS);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             goto receive_done;
         }

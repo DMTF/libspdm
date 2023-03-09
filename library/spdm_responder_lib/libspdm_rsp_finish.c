@@ -450,7 +450,7 @@ libspdm_return_t libspdm_get_response_finish(libspdm_context_t *spdm_context, si
     }
 #endif
 
-    if (request_size !=
+    if (request_size <
         sizeof(spdm_finish_request_t) + signature_size + hmac_size) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,

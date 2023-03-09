@@ -134,8 +134,7 @@ static libspdm_return_t libspdm_try_set_certificate(libspdm_context_t *spdm_cont
         status = libspdm_handle_error_response_main(
             spdm_context, NULL,
             &spdm_response_size,
-            (void **)&spdm_response, SPDM_SET_CERTIFICATE, SPDM_SET_CERTIFICATE_RSP,
-            sizeof(spdm_set_certificate_response_t));
+            (void **)&spdm_response, SPDM_SET_CERTIFICATE, SPDM_SET_CERTIFICATE_RSP);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             goto receive_done;
         }

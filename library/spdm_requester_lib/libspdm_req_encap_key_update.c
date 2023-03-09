@@ -63,6 +63,8 @@ libspdm_return_t libspdm_get_encap_response_key_update(void *spdm_context,
             response_size, response);
     }
 
+    /* this message can only be in secured session
+     * thus don't need to consider transport layer padding, just check its exact size */
     if (request_size != sizeof(spdm_key_update_request_t)) {
         return libspdm_generate_encap_error_response(
             context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,

@@ -114,8 +114,7 @@ static libspdm_return_t libspdm_try_send_receive_end_session(libspdm_context_t *
     if (spdm_response->header.request_response_code == SPDM_ERROR) {
         status = libspdm_handle_error_response_main(
             spdm_context, &session_id, &spdm_response_size,
-            (void **)&spdm_response, SPDM_END_SESSION, SPDM_END_SESSION_ACK,
-            sizeof(libspdm_end_session_response_mine_t));
+            (void **)&spdm_response, SPDM_END_SESSION, SPDM_END_SESSION_ACK);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             goto receive_done;
         }
@@ -123,6 +122,8 @@ static libspdm_return_t libspdm_try_send_receive_end_session(libspdm_context_t *
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
+    /* this message can only be in secured session
+     * thus don't need to consider transport layer padding, just check its exact size */
     if (spdm_response_size != sizeof(spdm_end_session_response_t)) {
         status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;

@@ -1033,60 +1033,10 @@ void libspdm_test_responder_respond_if_ready_case8(void **state) {
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
 /**
- * Test 9: receiving a RESPOND_IF_READY message larger than specified (more parameters
- * than the header), after a GET_DIGESTS could not be processed.
- * Expected behavior: the responder refuses the RESPOND_IF_READY message and produces an
- * ERROR message indicating the InvalidRequest.
+ * Test 9:
+ * Expected behavior:
  **/
 void libspdm_test_responder_respond_if_ready_case9(void **state) {
-    libspdm_return_t status;
-    libspdm_test_context_t    *spdm_test_context;
-    libspdm_context_t  *spdm_context;
-    size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    spdm_digest_response_t *spdm_response; /*response to the original request (DIGESTS)*/
-
-    spdm_test_context = *state;
-    spdm_context = spdm_test_context->spdm_context;
-    spdm_test_context->case_id = 0x9;
-    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
-
-    /*state for the the original request (GET_DIGESTS)*/
-    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.local_cert_chain_provision[0] = m_libspdm_local_certificate_chain;
-    spdm_context->local_context.local_cert_chain_provision_size[0] =
-        LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
-    libspdm_set_mem (m_libspdm_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
-                     (uint8_t)(0xFF));
-
-    spdm_context->last_spdm_request_size = m_libspdm_get_digest_request_size;
-    libspdm_copy_mem(spdm_context->last_spdm_request, sizeof(spdm_context->last_spdm_request),
-                     &m_libspdm_get_digest_request, m_libspdm_get_digest_request_size);
-
-    /*RESPOND_IF_READY specific data*/
-    spdm_context->cache_spdm_request_size = spdm_context->last_spdm_request_size;
-    libspdm_copy_mem(spdm_context->cache_spdm_request, sizeof(spdm_context->cache_spdm_request),
-                     spdm_context->last_spdm_request, spdm_context->last_spdm_request_size);
-    spdm_context->error_data.rd_exponent = 1;
-    spdm_context->error_data.rd_tm        = 1;
-    spdm_context->error_data.request_code = SPDM_GET_DIGESTS;
-    spdm_context->error_data.token       = LIBSPDM_MY_TEST_TOKEN;
-
-    /*check ERROR response*/
-    response_size = sizeof(response);
-    status = libspdm_get_response_respond_if_ready(spdm_context,
-                                                   m_libspdm_respond_if_ready_request9_size,
-                                                   &m_libspdm_respond_if_ready_request9,
-                                                   &response_size,
-                                                   response);
-    assert_int_equal (status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal (response_size, sizeof(spdm_error_response_t));
-    spdm_response = (void *)response;
-    assert_int_equal (spdm_response->header.request_response_code, SPDM_ERROR);
-    assert_int_equal (spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
-    assert_int_equal (spdm_response->header.param2, 0);
 }
 
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/

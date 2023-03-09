@@ -440,7 +440,7 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
         status = libspdm_handle_error_response_main(
             spdm_context, NULL, &spdm_response_size,
             (void **)&spdm_response, SPDM_KEY_EXCHANGE,
-            SPDM_KEY_EXCHANGE_RSP, sizeof(libspdm_key_exchange_response_max_t));
+            SPDM_KEY_EXCHANGE_RSP);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             libspdm_secured_message_dhe_free(
                 spdm_context->connection_info.algorithm.dhe_named_group, dhe_context);

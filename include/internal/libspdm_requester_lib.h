@@ -44,7 +44,6 @@ libspdm_return_t libspdm_handle_simple_error_response(libspdm_context_t *spdm_co
  * @param  response                     The SPDM response message.
  * @param  original_request_code          Indicate the original request code.
  * @param  expected_response_code         Indicate the expected response code.
- * @param  expected_response_size         Indicate the expected response size.
  *
  * @retval RETURN_SUCCESS               The error code is RESPONSE_NOT_READY. The RESPOND_IF_READY is sent and an expected SPDM response is received.
  * @retval RETURN_NO_RESPONSE           The error code is BUSY.
@@ -55,8 +54,7 @@ libspdm_return_t libspdm_handle_simple_error_response(libspdm_context_t *spdm_co
 libspdm_return_t libspdm_handle_error_response_main(
     libspdm_context_t *spdm_context, const uint32_t *session_id,
     size_t *response_size, void **response,
-    uint8_t original_request_code, uint8_t expected_response_code,
-    size_t expected_response_size);
+    uint8_t original_request_code, uint8_t expected_response_code);
 
 /**
  * This function handles the error response handling for large responses.

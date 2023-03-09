@@ -304,8 +304,7 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
         status = libspdm_handle_error_response_main(
             spdm_context, NULL, &spdm_response_size,
             (void **)&spdm_response, SPDM_PSK_EXCHANGE,
-            SPDM_PSK_EXCHANGE_RSP,
-            sizeof(libspdm_psk_exchange_response_max_t));
+            SPDM_PSK_EXCHANGE_RSP);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             goto receive_done;
         }

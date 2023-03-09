@@ -337,7 +337,7 @@ libspdm_return_t libspdm_get_response_encapsulated_request(
             response_size, response);
     }
 
-    if (request_size != sizeof(spdm_get_encapsulated_request_request_t)) {
+    if (request_size < sizeof(spdm_get_encapsulated_request_request_t)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);

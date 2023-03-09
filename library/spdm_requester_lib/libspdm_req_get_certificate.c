@@ -206,8 +206,7 @@ static libspdm_return_t libspdm_try_get_certificate(libspdm_context_t *spdm_cont
                 spdm_context, session_id,
                 &spdm_response_size,
                 (void **)&spdm_response, SPDM_GET_CERTIFICATE,
-                SPDM_CERTIFICATE,
-                sizeof(libspdm_certificate_response_max_t));
+                SPDM_CERTIFICATE);
             if (LIBSPDM_STATUS_IS_ERROR(status)) {
                 libspdm_release_receiver_buffer (spdm_context);
                 goto done;

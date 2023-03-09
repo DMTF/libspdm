@@ -177,6 +177,8 @@ libspdm_return_t libspdm_process_encap_response_key_update(
         }
     }
 
+    /* this message can only be in secured session
+     * thus don't need to consider transport layer padding, just check its exact size */
     if ((spdm_response_size != sizeof(spdm_key_update_response_t)) ||
         (spdm_response->header.request_response_code !=
          SPDM_KEY_UPDATE_ACK) ||
