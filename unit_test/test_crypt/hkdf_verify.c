@@ -116,7 +116,7 @@ bool libspdm_validate_crypt_hkdf(void)
     }
 
     libspdm_my_print("Check value... ");
-    if (libspdm_const_compare_mem(prk_out, m_libspdm_hkdf_sha256_prk,
+    if (memcmp(prk_out, m_libspdm_hkdf_sha256_prk,
                                   sizeof(m_libspdm_hkdf_sha256_prk)) !=
         0) {
         libspdm_my_print("[Fail]");
@@ -136,7 +136,7 @@ bool libspdm_validate_crypt_hkdf(void)
     }
 
     libspdm_my_print("Check value... ");
-    if (libspdm_const_compare_mem(out, m_libspdm_hkdf_sha256_okm,
+    if (memcmp(out, m_libspdm_hkdf_sha256_okm,
                                   sizeof(m_libspdm_hkdf_sha256_okm)) !=
         0) {
         libspdm_my_print("[Fail]");
@@ -157,7 +157,7 @@ bool libspdm_validate_crypt_hkdf(void)
     }
 
     libspdm_my_print("Check value... ");
-    if (libspdm_const_compare_mem(out, m_libspdm_hkdf_sha256_okm,
+    if (memcmp(out, m_libspdm_hkdf_sha256_okm,
                                   sizeof(m_libspdm_hkdf_sha256_okm)) !=
         0) {
         libspdm_my_print("[Fail]");
@@ -272,7 +272,7 @@ bool libspdm_validate_crypt_hkdf(void)
     }
 
     libspdm_my_print("Check value... ");
-    if (libspdm_const_compare_mem(prk_out48, m_libspdm_hkdf_sha384_prk,
+    if (memcmp(prk_out48, m_libspdm_hkdf_sha384_prk,
                                   sizeof(m_libspdm_hkdf_sha384_prk)) !=
         0) {
         libspdm_my_print("[Fail]");
@@ -292,7 +292,7 @@ bool libspdm_validate_crypt_hkdf(void)
     }
 
     libspdm_my_print("Check value... ");
-    if (libspdm_const_compare_mem(out64, m_libspdm_hkdf_sha384_okm,
+    if (memcmp(out64, m_libspdm_hkdf_sha384_okm,
                                   sizeof(m_libspdm_hkdf_sha384_okm)) !=
         0) {
         libspdm_my_print("[Fail]");
@@ -313,7 +313,7 @@ bool libspdm_validate_crypt_hkdf(void)
     }
 
     libspdm_my_print("Check value... ");
-    if (libspdm_const_compare_mem(out64, m_libspdm_hkdf_sha384_okm,
+    if (memcmp(out64, m_libspdm_hkdf_sha384_okm,
                                   sizeof(m_libspdm_hkdf_sha384_okm)) !=
         0) {
         libspdm_my_print("[Fail]");

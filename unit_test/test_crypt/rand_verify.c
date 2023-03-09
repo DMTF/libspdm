@@ -33,7 +33,7 @@ bool libspdm_validate_crypt_prng(void)
             return false;
         }
 
-        if (libspdm_const_compare_mem(m_libspdm_previous_random_buffer, m_libspdm_random_buffer,
+        if (memcmp(m_libspdm_previous_random_buffer, m_libspdm_random_buffer,
                                       LIBSPDM_RANDOM_NUMBER_SIZE) == 0) {
             libspdm_my_print("[Fail]");
             return false;
