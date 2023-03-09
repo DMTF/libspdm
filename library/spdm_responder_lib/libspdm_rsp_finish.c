@@ -431,9 +431,11 @@ libspdm_return_t libspdm_get_response_finish(libspdm_context_t *spdm_context, si
     }
 
     if (((session_info->mut_auth_requested == 0) &&
-         (spdm_request->header.param1 != 0)) ||
+         ((spdm_request->header.param1 & SPDM_FINISH_REQUEST_ATTRIBUTES_SIGNATURE_INCLUDED) !=
+          0)) ||
         ((session_info->mut_auth_requested != 0) &&
-         (spdm_request->header.param1 == 0))) {
+         ((spdm_request->header.param1 & SPDM_FINISH_REQUEST_ATTRIBUTES_SIGNATURE_INCLUDED) ==
+          0))) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
@@ -455,19 +457,29 @@ libspdm_return_t libspdm_get_response_finish(libspdm_context_t *spdm_context, si
                                                response_size, response);
     }
 
-    req_slot_id = spdm_request->header.param2;
-    if ((req_slot_id != 0xFF) &&
-        (req_slot_id >= SPDM_MAX_SLOT_COUNT)) {
-        return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-                                               response_size, response);
-    }
+    if ((spdm_request->header.param1 & SPDM_FINISH_REQUEST_ATTRIBUTES_SIGNATURE_INCLUDED) != 0) {
+        req_slot_id = spdm_request->header.param2;
+        if ((req_slot_id != 0xFF) &&
+            (req_slot_id >= SPDM_MAX_SLOT_COUNT)) {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                                   response_size, response);
+        }
 
-    if (session_info->mut_auth_requested &&
-        (req_slot_id != spdm_context->encap_context.req_slot_id)) {
-        return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-                                               response_size, response);
+        if (libspdm_is_capabilities_flag_supported(
+                spdm_context, false,
+                SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP,
+                SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)) {
+            if (((session_info->mut_auth_requested ==
+                  SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST) ||
+                 (session_info->mut_auth_requested ==
+                  SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS)) &&
+                (req_slot_id != spdm_context->encap_context.req_slot_id)) {
+                return libspdm_generate_error_response(spdm_context,
+                                                       SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                                       response_size, response);
+            }
+        }
     }
 
     libspdm_reset_message_buffer_via_request_code(spdm_context, session_info,
