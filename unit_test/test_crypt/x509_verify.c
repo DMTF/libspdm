@@ -28,24 +28,24 @@ bool libspdm_write_csr_to_file(const void * csr_pointer, size_t csr_len, uint32_
     switch (base_asym_algo) {
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048:
-        file_name = "rsa2048_csr";
+        file_name = "rsa2048.csr";
         break;
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
-        file_name = "rsa3072_csr";
+        file_name = "rsa3072.csr";
         break;
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
-        file_name = "rsa4096_csr";
+        file_name = "rsa4096.csr";
         break;
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
-        file_name = "ecc256_csr";
+        file_name = "ecp256.csr";
         break;
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
-        file_name = "ecc384_csr";
+        file_name = "ecp384.csr";
         break;
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
-        file_name = "ecc521_csr";
+        file_name = "ecp521.csr";
         break;
     default:
         return false;

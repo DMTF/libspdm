@@ -19,7 +19,7 @@ bool libspdm_read_requester_gen_csr(void **csr_data, size_t *csr_len)
     char *file;
     bool res;
 
-    file = "test_csr/ecc384_csr";
+    file = "test_csr/ecp384.csr";
     res = libspdm_read_input_file(file, csr_data, csr_len);
     if (!res) {
         return res;
