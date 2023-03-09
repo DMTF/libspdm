@@ -87,20 +87,17 @@ void *libspdm_set_mem(void *buffer, size_t length, uint8_t value);
 void *libspdm_zero_mem(void *buffer, size_t length);
 
 /**
- * Compares the contents of two buffers in const time.
+ * Compares the contents of two buffers in constant time.
  *
- * This function compares length bytes of source_buffer to length bytes of destination_buffer.
- * If all length bytes of the two buffers are identical, then 0 is returned.  Otherwise, the
- * value returned is the first mismatched byte in source_buffer subtracted from the first
- * mismatched byte in destination_buffer.
- *
+ * For a given length, the time to complete the comparison is always the same regardless of the
+ * contents of the two buffers.
  *
  * @param  destination_buffer  A pointer to the destination buffer to compare.
  * @param  source_buffer       A pointer to the source buffer to compare.
  * @param  length              The number of bytes to compare.
  *
  * @return true   The contents of the two buffers are the same.
- * @retval false  The contents of the two buffers are not the same. *
+ * @retval false  The contents of the two buffers are not the same.
  **/
 bool libspdm_const_compare_mem(const void *destination_buffer,
                                const void *source_buffer, size_t length);
