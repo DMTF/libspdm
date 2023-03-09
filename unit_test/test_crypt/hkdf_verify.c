@@ -116,9 +116,7 @@ bool libspdm_validate_crypt_hkdf(void)
     }
 
     libspdm_my_print("Check value... ");
-    if (memcmp(prk_out, m_libspdm_hkdf_sha256_prk,
-                                  sizeof(m_libspdm_hkdf_sha256_prk)) !=
-        0) {
+    if (memcmp(prk_out, m_libspdm_hkdf_sha256_prk, sizeof(m_libspdm_hkdf_sha256_prk)) != 0) {
         libspdm_my_print("[Fail]");
         return false;
     }
@@ -136,9 +134,7 @@ bool libspdm_validate_crypt_hkdf(void)
     }
 
     libspdm_my_print("Check value... ");
-    if (memcmp(out, m_libspdm_hkdf_sha256_okm,
-                                  sizeof(m_libspdm_hkdf_sha256_okm)) !=
-        0) {
+    if (memcmp(out, m_libspdm_hkdf_sha256_okm, sizeof(m_libspdm_hkdf_sha256_okm)) != 0) {
         libspdm_my_print("[Fail]");
         return false;
     }
@@ -157,9 +153,7 @@ bool libspdm_validate_crypt_hkdf(void)
     }
 
     libspdm_my_print("Check value... ");
-    if (memcmp(out, m_libspdm_hkdf_sha256_okm,
-                                  sizeof(m_libspdm_hkdf_sha256_okm)) !=
-        0) {
+    if (memcmp(out, m_libspdm_hkdf_sha256_okm, sizeof(m_libspdm_hkdf_sha256_okm)) != 0) {
         libspdm_my_print("[Fail]");
         return false;
     }
@@ -272,9 +266,7 @@ bool libspdm_validate_crypt_hkdf(void)
     }
 
     libspdm_my_print("Check value... ");
-    if (memcmp(prk_out48, m_libspdm_hkdf_sha384_prk,
-                                  sizeof(m_libspdm_hkdf_sha384_prk)) !=
-        0) {
+    if (memcmp(prk_out48, m_libspdm_hkdf_sha384_prk, sizeof(m_libspdm_hkdf_sha384_prk)) != 0) {
         libspdm_my_print("[Fail]");
         return false;
     }
@@ -292,9 +284,7 @@ bool libspdm_validate_crypt_hkdf(void)
     }
 
     libspdm_my_print("Check value... ");
-    if (memcmp(out64, m_libspdm_hkdf_sha384_okm,
-                                  sizeof(m_libspdm_hkdf_sha384_okm)) !=
-        0) {
+    if (memcmp(out64, m_libspdm_hkdf_sha384_okm, sizeof(m_libspdm_hkdf_sha384_okm)) != 0) {
         libspdm_my_print("[Fail]");
         return false;
     }
@@ -313,9 +303,7 @@ bool libspdm_validate_crypt_hkdf(void)
     }
 
     libspdm_my_print("Check value... ");
-    if (memcmp(out64, m_libspdm_hkdf_sha384_okm,
-                                  sizeof(m_libspdm_hkdf_sha384_okm)) !=
-        0) {
+    if (memcmp(out64, m_libspdm_hkdf_sha384_okm, sizeof(m_libspdm_hkdf_sha384_okm)) != 0) {
         libspdm_my_print("[Fail]");
         return false;
     }

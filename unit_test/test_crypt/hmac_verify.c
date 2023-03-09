@@ -79,8 +79,7 @@ bool libspdm_validate_crypt_hmac(void)
     free_pool(hmac_ctx);
 
     libspdm_my_print("Check value... ");
-    if (memcmp(digest, m_libspdm_hmac_sha256_digest,
-                                  LIBSPDM_SHA256_DIGEST_SIZE) != 0) {
+    if (memcmp(digest, m_libspdm_hmac_sha256_digest, LIBSPDM_SHA256_DIGEST_SIZE) != 0) {
         libspdm_my_print("[Fail]");
         return false;
     }
