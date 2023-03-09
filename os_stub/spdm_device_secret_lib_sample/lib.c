@@ -1087,24 +1087,24 @@ bool libspdm_read_cached_csr(uint32_t base_asym_algo, uint8_t **csr_pointer, siz
     switch (base_asym_algo) {
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048:
-        file = "rsa2048_csr";
+        file = "test_csr/rsa2048.csr";
         break;
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
-        file = "rsa3072_csr";
+        file = "test_csr/rsa3072.csr";
         break;
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
-        file = "rsa4096_csr";
+        file = "test_csr/rsa4096.csr";
         break;
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
-        file = "ecp256_csr";
+        file = "test_csr/ecp256.csr";
         break;
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
-        file = "ecp384_csr";
+        file = "test_csr/ecp384.csr";
         break;
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
-        file = "ecp521_csr";
+        file = "test_csr/ecp521.csr";
         break;
     default:
         LIBSPDM_ASSERT(false);
@@ -1171,6 +1171,8 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
             if (!result) {
                 return result;
             }
+
+            return true;
         }
     }
 #if !LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY
