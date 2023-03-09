@@ -213,12 +213,12 @@ bool libspdm_validate_crypt_aead_cipher(void)
         return false;
     }
     if (memcmp(OutBuffer, m_libspdm_chacha20_poly1305_ct,
-                                  sizeof(m_libspdm_chacha20_poly1305_ct)) != 0) {
+               sizeof(m_libspdm_chacha20_poly1305_ct)) != 0) {
         libspdm_my_print("[Fail]");
         return false;
     }
     if (memcmp(OutTag, m_libspdm_chacha20_poly1305_tag,
-                                  sizeof(m_libspdm_chacha20_poly1305_tag)) != 0) {
+               sizeof(m_libspdm_chacha20_poly1305_tag)) != 0) {
         libspdm_my_print("[Fail]");
         return false;
     }
@@ -241,7 +241,7 @@ bool libspdm_validate_crypt_aead_cipher(void)
         return false;
     }
     if (memcmp(OutBuffer, m_libspdm_chacha20_poly1305_pt,
-                                  sizeof(m_libspdm_chacha20_poly1305_pt)) != 0) {
+               sizeof(m_libspdm_chacha20_poly1305_pt)) != 0) {
         libspdm_my_print("[Fail]");
         return false;
     }
@@ -268,13 +268,11 @@ bool libspdm_validate_crypt_aead_cipher(void)
         libspdm_my_print("[Fail]");
         return false;
     }
-    if (memcmp(OutBuffer, m_libspdm_sm4_gcm_ct,
-                                  sizeof(m_libspdm_sm4_gcm_ct)) != 0) {
+    if (memcmp(OutBuffer, m_libspdm_sm4_gcm_ct, sizeof(m_libspdm_sm4_gcm_ct)) != 0) {
         libspdm_my_print("[Fail]");
         return false;
     }
-    if (memcmp(OutTag, m_libspdm_sm4_gcm_tag,
-                                  sizeof(m_libspdm_sm4_gcm_tag)) != 0) {
+    if (memcmp(OutTag, m_libspdm_sm4_gcm_tag, sizeof(m_libspdm_sm4_gcm_tag)) != 0) {
         libspdm_my_print("[Fail]");
         return false;
     }
@@ -295,8 +293,7 @@ bool libspdm_validate_crypt_aead_cipher(void)
         libspdm_my_print("[Fail]");
         return false;
     }
-    if (memcmp(OutBuffer, m_libspdm_sm4_gcm_pt,
-                                  sizeof(m_libspdm_sm4_gcm_pt)) != 0) {
+    if (memcmp(OutBuffer, m_libspdm_sm4_gcm_pt, sizeof(m_libspdm_sm4_gcm_pt)) != 0) {
         libspdm_my_print("[Fail]");
         return false;
     }

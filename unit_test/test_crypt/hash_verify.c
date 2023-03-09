@@ -131,8 +131,7 @@ bool libspdm_validate_crypt_digest(void)
     libspdm_sha256_free(hash_ctx);
 
     libspdm_my_print("Check value... ");
-    if (memcmp(digest, m_libspdm_sha256_digest,
-                                  LIBSPDM_SHA256_DIGEST_SIZE) != 0) {
+    if (memcmp(digest, m_libspdm_sha256_digest, LIBSPDM_SHA256_DIGEST_SIZE) != 0) {
         libspdm_my_print("[Fail]");
         return false;
     }
@@ -144,8 +143,7 @@ bool libspdm_validate_crypt_digest(void)
         libspdm_my_print("[Fail]");
         return false;
     }
-    if (memcmp(digest, m_libspdm_sha256_digest,
-                                  LIBSPDM_SHA256_DIGEST_SIZE) != 0) {
+    if (memcmp(digest, m_libspdm_sha256_digest, LIBSPDM_SHA256_DIGEST_SIZE) != 0) {
         libspdm_my_print("[Fail]");
         return false;
     }
@@ -191,8 +189,7 @@ bool libspdm_validate_crypt_digest(void)
     libspdm_sha384_free(hash_ctx);
 
     libspdm_my_print("Check value... ");
-    if (memcmp(digest, m_libspdm_sha384_digest,
-                                  LIBSPDM_SHA384_DIGEST_SIZE) != 0) {
+    if (memcmp(digest, m_libspdm_sha384_digest, LIBSPDM_SHA384_DIGEST_SIZE) != 0) {
         libspdm_my_print("[Fail]");
         return false;
     }
@@ -204,8 +201,7 @@ bool libspdm_validate_crypt_digest(void)
         libspdm_my_print("[Fail]");
         return false;
     }
-    if (memcmp(digest, m_libspdm_sha384_digest,
-                                  LIBSPDM_SHA384_DIGEST_SIZE) != 0) {
+    if (memcmp(digest, m_libspdm_sha384_digest, LIBSPDM_SHA384_DIGEST_SIZE) != 0) {
         libspdm_my_print("[Fail]");
         return false;
     }
@@ -251,8 +247,7 @@ bool libspdm_validate_crypt_digest(void)
     libspdm_sha512_free(hash_ctx);
 
     libspdm_my_print("Check value... ");
-    if (memcmp(digest, m_libspdm_sha512_digest,
-                                  LIBSPDM_SHA512_DIGEST_SIZE) != 0) {
+    if (memcmp(digest, m_libspdm_sha512_digest, LIBSPDM_SHA512_DIGEST_SIZE) != 0) {
         libspdm_my_print("[Fail]");
         return false;
     }
@@ -264,8 +259,7 @@ bool libspdm_validate_crypt_digest(void)
         libspdm_my_print("[Fail]");
         return false;
     }
-    if (memcmp(digest, m_libspdm_sha512_digest,
-                                  LIBSPDM_SHA512_DIGEST_SIZE) != 0) {
+    if (memcmp(digest, m_libspdm_sha512_digest, LIBSPDM_SHA512_DIGEST_SIZE) != 0) {
         libspdm_my_print("[Fail]");
         return false;
     }
@@ -296,8 +290,7 @@ bool libspdm_validate_crypt_digest(void)
 
     if (status) {
         libspdm_my_print("Check value... ");
-        if (memcmp(digest, m_libspdm_sha3_256_digest,
-                                      LIBSPDM_SHA3_256_DIGEST_SIZE) == 0) {
+        if (memcmp(digest, m_libspdm_sha3_256_digest, LIBSPDM_SHA3_256_DIGEST_SIZE) == 0) {
             status = true;
         } else {
             status = false;
@@ -344,8 +337,7 @@ bool libspdm_validate_crypt_digest(void)
 
     if (status) {
         libspdm_my_print("Check value... ");
-        if (memcmp(digest, m_libspdm_sha3_384_digest,
-                                      LIBSPDM_SHA3_384_DIGEST_SIZE) == 0) {
+        if (memcmp(digest, m_libspdm_sha3_384_digest, LIBSPDM_SHA3_384_DIGEST_SIZE) == 0) {
             status = true;
         } else {
             status = false;
@@ -392,8 +384,7 @@ bool libspdm_validate_crypt_digest(void)
 
     if (status) {
         libspdm_my_print("Check value... ");
-        if (memcmp(digest, m_libspdm_sha3_512_digest,
-                                      LIBSPDM_SHA3_512_DIGEST_SIZE) == 0) {
+        if (memcmp(digest, m_libspdm_sha3_512_digest, LIBSPDM_SHA3_512_DIGEST_SIZE) == 0) {
             status = true;
         } else {
             status = false;
@@ -425,8 +416,7 @@ bool libspdm_validate_crypt_digest(void)
     libspdm_zero_mem(digest, LIBSPDM_SM3_256_DIGEST_SIZE);
     status = libspdm_sm3_256_hash_all(m_libspdm_hash_data, data_size, digest);
     if (status) {
-        if (memcmp(digest, m_libspdm_sm3_256_digest,
-                                      LIBSPDM_SM3_256_DIGEST_SIZE) == 0) {
+        if (memcmp(digest, m_libspdm_sm3_256_digest, LIBSPDM_SM3_256_DIGEST_SIZE) == 0) {
             status = true;
         } else {
             status = false;
