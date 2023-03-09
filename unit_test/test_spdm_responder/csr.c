@@ -71,8 +71,82 @@ bool libspdm_find_buffer(char *src, size_t src_len, char *dst, size_t dst_len)
     return false;
 }
 
+/*get the cached csr*/
+bool libspdm_test_read_cached_csr(uint32_t base_asym_algo, uint8_t **csr_pointer, size_t *csr_len)
+{
+    bool res;
+    char *file;
+
+    if (base_asym_algo == 0) {
+        return false;
+    }
+
+    switch (base_asym_algo) {
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048:
+        file = "test_csr/rsa2048.csr";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
+        file = "test_csr/rsa3072.csr";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
+        file = "test_csr/rsa4096.csr";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
+        file = "test_csr/ecp256.csr";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
+        file = "test_csr/ecp384.csr";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
+        file = "test_csr/ecp521.csr";
+        break;
+    default:
+        LIBSPDM_ASSERT(false);
+        return false;
+    }
+
+    res = libspdm_read_input_file(file, (void **)csr_pointer, csr_len);
+    return res;
+}
+
+/*clan the cached req_info*/
+void libspdm_test_clear_cached_req_info(uint32_t base_asym_algo)
+{
+    char *file;
+
+    switch (base_asym_algo) {
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048:
+        file = "rsa2048_req_info";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
+        file = "rsa3072_req_info";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
+        file = "rsa4096_req_info";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
+        file = "ecp256_req_info";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
+        file = "ecp384_req_info";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
+        file = "ecp521_req_info";
+        break;
+    }
+
+    libspdm_write_output_file(file, NULL, 0);
+}
+
+
 /**
- * Test 1: receives a valid GET_CSR request message from Requester to set cert in slot_id:0
+ * Test 1: receives a valid GET_CSR request message from Requester
  * Expected Behavior: produces a valid CSR response message
  **/
 void libspdm_test_responder_csr_case1(void **state)
@@ -83,7 +157,7 @@ void libspdm_test_responder_csr_case1(void **state)
     size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_csr_response_t *spdm_response;
-    spdm_get_csr_request_t *m_libspdm_set_certificate_request;
+    spdm_get_csr_request_t *m_libspdm_get_csr_request;
     uint8_t wrong_csr[LIBSPDM_MAX_CSR_SIZE];
     libspdm_zero_mem(wrong_csr, LIBSPDM_MAX_CSR_SIZE);
 
@@ -103,22 +177,22 @@ void libspdm_test_responder_csr_case1(void **state)
         m_libspdm_use_asym_algo;
 
 
-    m_libspdm_set_certificate_request = malloc(sizeof(spdm_get_csr_request_t));
+    m_libspdm_get_csr_request = malloc(sizeof(spdm_get_csr_request_t));
 
-    m_libspdm_set_certificate_request->header.spdm_version = SPDM_MESSAGE_VERSION_12;
-    m_libspdm_set_certificate_request->header.request_response_code = SPDM_GET_CSR;
-    m_libspdm_set_certificate_request->header.param1 = 0;
-    m_libspdm_set_certificate_request->header.param2 = 0;
+    m_libspdm_get_csr_request->header.spdm_version = SPDM_MESSAGE_VERSION_12;
+    m_libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
+    m_libspdm_get_csr_request->header.param1 = 0;
+    m_libspdm_get_csr_request->header.param2 = 0;
 
-    m_libspdm_set_certificate_request->opaque_data_length = 0;
-    m_libspdm_set_certificate_request->requester_info_length = 0;
+    m_libspdm_get_csr_request->opaque_data_length = 0;
+    m_libspdm_get_csr_request->requester_info_length = 0;
 
-    size_t m_libspdm_set_certificate_request_size = sizeof(spdm_get_csr_request_t);
+    size_t m_libspdm_get_csr_request_size = sizeof(spdm_get_csr_request_t);
 
     response_size = sizeof(response);
     status = libspdm_get_response_csr(spdm_context,
-                                      m_libspdm_set_certificate_request_size,
-                                      m_libspdm_set_certificate_request,
+                                      m_libspdm_get_csr_request_size,
+                                      m_libspdm_get_csr_request,
                                       &response_size, response);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
@@ -130,7 +204,7 @@ void libspdm_test_responder_csr_case1(void **state)
     /*check returned CSR not zero */
     assert_memory_not_equal(spdm_response + 1, wrong_csr, spdm_response->csr_length);
 
-    free(m_libspdm_set_certificate_request);
+    free(m_libspdm_get_csr_request);
 }
 
 /**
@@ -145,7 +219,7 @@ void libspdm_test_responder_csr_case2(void **state)
     size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_csr_response_t *spdm_response;
-    spdm_get_csr_request_t *m_libspdm_set_certificate_request;
+    spdm_get_csr_request_t *m_libspdm_get_csr_request;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -163,23 +237,23 @@ void libspdm_test_responder_csr_case2(void **state)
         m_libspdm_use_asym_algo;
 
 
-    m_libspdm_set_certificate_request = malloc(sizeof(spdm_get_csr_request_t));
+    m_libspdm_get_csr_request = malloc(sizeof(spdm_get_csr_request_t));
 
-    m_libspdm_set_certificate_request->header.spdm_version = SPDM_MESSAGE_VERSION_12;
-    m_libspdm_set_certificate_request->header.request_response_code = SPDM_GET_CSR;
-    m_libspdm_set_certificate_request->header.param1 = 0;
-    m_libspdm_set_certificate_request->header.param2 = 0;
+    m_libspdm_get_csr_request->header.spdm_version = SPDM_MESSAGE_VERSION_12;
+    m_libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
+    m_libspdm_get_csr_request->header.param1 = 0;
+    m_libspdm_get_csr_request->header.param2 = 0;
 
-    m_libspdm_set_certificate_request->opaque_data_length = 0;
-    m_libspdm_set_certificate_request->requester_info_length = 0;
+    m_libspdm_get_csr_request->opaque_data_length = 0;
+    m_libspdm_get_csr_request->requester_info_length = 0;
 
     /* Bad request size*/
-    size_t m_libspdm_set_certificate_request_size = sizeof(spdm_get_csr_request_t) - 1;
+    size_t m_libspdm_get_csr_request_size = sizeof(spdm_get_csr_request_t) - 1;
 
     response_size = sizeof(response);
     status = libspdm_get_response_csr(spdm_context,
-                                      m_libspdm_set_certificate_request_size,
-                                      m_libspdm_set_certificate_request,
+                                      m_libspdm_get_csr_request_size,
+                                      m_libspdm_get_csr_request,
                                       &response_size, response);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
@@ -191,11 +265,11 @@ void libspdm_test_responder_csr_case2(void **state)
                      SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 
-    free(m_libspdm_set_certificate_request);
+    free(m_libspdm_get_csr_request);
 }
 
 /**
- * Test 3: receives a valid GET_CSR request message from Requester with non-null right req_info to set cert in slot_id:0
+ * Test 3: receives a valid GET_CSR request message from Requester with non-null right req_info
  * Expected Behavior: produces a valid CSR response message
  **/
 void libspdm_test_responder_csr_case3(void **state)
@@ -206,7 +280,7 @@ void libspdm_test_responder_csr_case3(void **state)
     size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_csr_response_t *spdm_response;
-    spdm_get_csr_request_t *m_libspdm_set_certificate_request;
+    spdm_get_csr_request_t *m_libspdm_get_csr_request;
     uint8_t wrong_csr[LIBSPDM_MAX_CSR_SIZE];
     libspdm_zero_mem(wrong_csr, LIBSPDM_MAX_CSR_SIZE);
     char *csr;
@@ -226,27 +300,27 @@ void libspdm_test_responder_csr_case3(void **state)
     spdm_context->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
 
-    m_libspdm_set_certificate_request = malloc(sizeof(spdm_get_csr_request_t) +
-                                               sizeof(right_req_info));
+    m_libspdm_get_csr_request = malloc(sizeof(spdm_get_csr_request_t) +
+                                       sizeof(right_req_info));
 
-    m_libspdm_set_certificate_request->header.spdm_version = SPDM_MESSAGE_VERSION_12;
-    m_libspdm_set_certificate_request->header.request_response_code = SPDM_GET_CSR;
-    m_libspdm_set_certificate_request->header.param1 = 0;
-    m_libspdm_set_certificate_request->header.param2 = 0;
+    m_libspdm_get_csr_request->header.spdm_version = SPDM_MESSAGE_VERSION_12;
+    m_libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
+    m_libspdm_get_csr_request->header.param1 = 0;
+    m_libspdm_get_csr_request->header.param2 = 0;
 
-    m_libspdm_set_certificate_request->opaque_data_length = 0;
-    m_libspdm_set_certificate_request->requester_info_length = sizeof(right_req_info);
+    m_libspdm_get_csr_request->opaque_data_length = 0;
+    m_libspdm_get_csr_request->requester_info_length = sizeof(right_req_info);
 
-    libspdm_copy_mem(m_libspdm_set_certificate_request + 1, sizeof(right_req_info),
+    libspdm_copy_mem(m_libspdm_get_csr_request + 1, sizeof(right_req_info),
                      right_req_info, sizeof(right_req_info));
 
-    size_t m_libspdm_set_certificate_request_size = sizeof(spdm_get_csr_request_t) +
-                                                    sizeof(right_req_info);
+    size_t m_libspdm_get_csr_request_size = sizeof(spdm_get_csr_request_t) +
+                                            sizeof(right_req_info);
 
     response_size = sizeof(response);
     status = libspdm_get_response_csr(spdm_context,
-                                      m_libspdm_set_certificate_request_size,
-                                      m_libspdm_set_certificate_request,
+                                      m_libspdm_get_csr_request_size,
+                                      m_libspdm_get_csr_request,
                                       &response_size, response);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
@@ -262,11 +336,11 @@ void libspdm_test_responder_csr_case3(void **state)
     assert_true(libspdm_find_buffer(csr, spdm_response->csr_length,
                                     right_req_info_string, sizeof(right_req_info_string)));
 
-    free(m_libspdm_set_certificate_request);
+    free(m_libspdm_get_csr_request);
 }
 
 /**
- * Test 4: receives a valid GET_CSR request message from Requester with non-null opaque_data to set cert in slot_id:0
+ * Test 4: receives a valid GET_CSR request message from Requester with non-null opaque_data
  * Expected Behavior: produces a valid CSR response message
  **/
 void libspdm_test_responder_csr_case4(void **state)
@@ -277,7 +351,7 @@ void libspdm_test_responder_csr_case4(void **state)
     size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_csr_response_t *spdm_response;
-    spdm_get_csr_request_t *m_libspdm_set_certificate_request;
+    spdm_get_csr_request_t *m_libspdm_get_csr_request;
     uint8_t wrong_csr[LIBSPDM_MAX_CSR_SIZE];
     libspdm_zero_mem(wrong_csr, LIBSPDM_MAX_CSR_SIZE);
 
@@ -296,27 +370,27 @@ void libspdm_test_responder_csr_case4(void **state)
     spdm_context->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
 
-    m_libspdm_set_certificate_request = malloc(sizeof(spdm_get_csr_request_t) +
-                                               sizeof(m_csr_opaque_data));
+    m_libspdm_get_csr_request = malloc(sizeof(spdm_get_csr_request_t) +
+                                       sizeof(m_csr_opaque_data));
 
-    m_libspdm_set_certificate_request->header.spdm_version = SPDM_MESSAGE_VERSION_12;
-    m_libspdm_set_certificate_request->header.request_response_code = SPDM_GET_CSR;
-    m_libspdm_set_certificate_request->header.param1 = 0;
-    m_libspdm_set_certificate_request->header.param2 = 0;
+    m_libspdm_get_csr_request->header.spdm_version = SPDM_MESSAGE_VERSION_12;
+    m_libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
+    m_libspdm_get_csr_request->header.param1 = 0;
+    m_libspdm_get_csr_request->header.param2 = 0;
 
-    m_libspdm_set_certificate_request->opaque_data_length = sizeof(m_csr_opaque_data);
-    m_libspdm_set_certificate_request->requester_info_length = 0;
+    m_libspdm_get_csr_request->opaque_data_length = sizeof(m_csr_opaque_data);
+    m_libspdm_get_csr_request->requester_info_length = 0;
 
-    libspdm_copy_mem(m_libspdm_set_certificate_request + 1, sizeof(m_csr_opaque_data),
+    libspdm_copy_mem(m_libspdm_get_csr_request + 1, sizeof(m_csr_opaque_data),
                      m_csr_opaque_data, sizeof(m_csr_opaque_data));
 
-    size_t m_libspdm_set_certificate_request_size = sizeof(spdm_get_csr_request_t) +
-                                                    sizeof(m_csr_opaque_data);
+    size_t m_libspdm_get_csr_request_size = sizeof(spdm_get_csr_request_t) +
+                                            sizeof(m_csr_opaque_data);
 
     response_size = sizeof(response);
     status = libspdm_get_response_csr(spdm_context,
-                                      m_libspdm_set_certificate_request_size,
-                                      m_libspdm_set_certificate_request,
+                                      m_libspdm_get_csr_request_size,
+                                      m_libspdm_get_csr_request,
                                       &response_size, response);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
@@ -328,12 +402,12 @@ void libspdm_test_responder_csr_case4(void **state)
     /*check returned CSR not zero */
     assert_memory_not_equal(spdm_response + 1, wrong_csr, spdm_response->csr_length);
 
-    free(m_libspdm_set_certificate_request);
+    free(m_libspdm_get_csr_request);
 }
 
 /**
- * Test 5: receives a valid GET_CSR request message from Requester with non-null wrong req_info to set cert in slot_id:0
- * Expected Behavior: produces a valid CSR response message
+ * Test 5: receives a valid GET_CSR request message from Requester with non-null wrong req_info
+ * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_INVALID_REQUEST
  **/
 void libspdm_test_responder_csr_case5(void **state)
 {
@@ -343,7 +417,7 @@ void libspdm_test_responder_csr_case5(void **state)
     size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     spdm_csr_response_t *spdm_response;
-    spdm_get_csr_request_t *m_libspdm_set_certificate_request;
+    spdm_get_csr_request_t *m_libspdm_get_csr_request;
     uint8_t wrong_csr[LIBSPDM_MAX_CSR_SIZE];
     libspdm_zero_mem(wrong_csr, LIBSPDM_MAX_CSR_SIZE);
 
@@ -362,27 +436,27 @@ void libspdm_test_responder_csr_case5(void **state)
     spdm_context->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
 
-    m_libspdm_set_certificate_request = malloc(sizeof(spdm_get_csr_request_t) +
-                                               sizeof(wrong_req_info));
+    m_libspdm_get_csr_request = malloc(sizeof(spdm_get_csr_request_t) +
+                                       sizeof(wrong_req_info));
 
-    m_libspdm_set_certificate_request->header.spdm_version = SPDM_MESSAGE_VERSION_12;
-    m_libspdm_set_certificate_request->header.request_response_code = SPDM_GET_CSR;
-    m_libspdm_set_certificate_request->header.param1 = 0;
-    m_libspdm_set_certificate_request->header.param2 = 0;
+    m_libspdm_get_csr_request->header.spdm_version = SPDM_MESSAGE_VERSION_12;
+    m_libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
+    m_libspdm_get_csr_request->header.param1 = 0;
+    m_libspdm_get_csr_request->header.param2 = 0;
 
-    m_libspdm_set_certificate_request->opaque_data_length = 0;
-    m_libspdm_set_certificate_request->requester_info_length = sizeof(wrong_req_info);
+    m_libspdm_get_csr_request->opaque_data_length = 0;
+    m_libspdm_get_csr_request->requester_info_length = sizeof(wrong_req_info);
 
-    libspdm_copy_mem(m_libspdm_set_certificate_request + 1, sizeof(wrong_req_info),
+    libspdm_copy_mem(m_libspdm_get_csr_request + 1, sizeof(wrong_req_info),
                      wrong_req_info, sizeof(wrong_req_info));
 
-    size_t m_libspdm_set_certificate_request_size = sizeof(spdm_get_csr_request_t) +
-                                                    sizeof(wrong_req_info);
+    size_t m_libspdm_get_csr_request_size = sizeof(spdm_get_csr_request_t) +
+                                            sizeof(wrong_req_info);
 
     response_size = sizeof(response);
     status = libspdm_get_response_csr(spdm_context,
-                                      m_libspdm_set_certificate_request_size,
-                                      m_libspdm_set_certificate_request,
+                                      m_libspdm_get_csr_request_size,
+                                      m_libspdm_get_csr_request,
                                       &response_size, response);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
@@ -394,7 +468,119 @@ void libspdm_test_responder_csr_case5(void **state)
                      SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 
-    free(m_libspdm_set_certificate_request);
+    free(m_libspdm_get_csr_request);
+}
+
+/**
+ * Test 6: receives a valid GET_CSR request message from Requester with need_reset
+ * Expected Behavior: the first get_csr: responder return need reset;
+ *                    the second get_csr: get the cached valid csr;
+ **/
+void libspdm_test_responder_csr_case6(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    spdm_csr_response_t *spdm_response;
+    spdm_get_csr_request_t *m_libspdm_get_csr_request;
+    uint8_t cached_csr[LIBSPDM_MAX_CSR_SIZE];
+    libspdm_zero_mem(cached_csr, LIBSPDM_MAX_CSR_SIZE);
+
+    uint8_t *csr_pointer;
+    size_t csr_len;
+
+    if (!libspdm_test_read_cached_csr(m_libspdm_use_asym_algo, &csr_pointer, &csr_len)) {
+        assert_false(true);
+    }
+
+    libspdm_copy_mem(cached_csr, LIBSPDM_MAX_CSR_SIZE, csr_pointer, csr_len);
+    free(csr_pointer);
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x6;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CSR_CAP;
+
+    /*set responder need reset*/
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_INSTALL_RESET_CAP;
+
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo =
+        m_libspdm_use_asym_algo;
+
+    m_libspdm_get_csr_request = malloc(sizeof(spdm_get_csr_request_t) +
+                                       sizeof(right_req_info));
+
+    m_libspdm_get_csr_request->header.spdm_version = SPDM_MESSAGE_VERSION_12;
+    m_libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
+    m_libspdm_get_csr_request->header.param1 = 0;
+    m_libspdm_get_csr_request->header.param2 = 0;
+
+    m_libspdm_get_csr_request->opaque_data_length = 0;
+    m_libspdm_get_csr_request->requester_info_length = sizeof(right_req_info);
+
+    libspdm_copy_mem(m_libspdm_get_csr_request + 1, sizeof(right_req_info),
+                     right_req_info, sizeof(right_req_info));
+
+    size_t m_libspdm_get_csr_request_size = sizeof(spdm_get_csr_request_t) +
+                                            sizeof(right_req_info);
+
+    response_size = sizeof(response);
+
+    status = libspdm_get_response_csr(spdm_context,
+                                      m_libspdm_get_csr_request_size,
+                                      m_libspdm_get_csr_request,
+                                      &response_size, response);
+    /*first get_csr: the responder need reset*/
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1,
+                     SPDM_ERROR_CODE_RESET_REQUIRED);
+    assert_int_equal(spdm_response->header.param2, 0);
+
+
+    m_libspdm_get_csr_request->header.spdm_version = SPDM_MESSAGE_VERSION_12;
+    m_libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
+    m_libspdm_get_csr_request->header.param1 = 0;
+    m_libspdm_get_csr_request->header.param2 = 0;
+
+    m_libspdm_get_csr_request->opaque_data_length = 0;
+    m_libspdm_get_csr_request->requester_info_length = sizeof(right_req_info);
+    libspdm_copy_mem(m_libspdm_get_csr_request + 1, sizeof(right_req_info),
+                     right_req_info, sizeof(right_req_info));
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_csr(spdm_context,
+                                      m_libspdm_get_csr_request_size,
+                                      m_libspdm_get_csr_request,
+                                      &response_size, response);
+    /*second get_csr: get the responder cached csr*/
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    spdm_response = (void *)response;
+    assert_int_equal(response_size, sizeof(spdm_csr_response_t) + spdm_response->csr_length);
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_CSR);
+
+    /*check returned CSR is equal the cached CSR */
+    assert_memory_equal(spdm_response + 1, cached_csr, spdm_response->csr_length);
+
+    /*clear cached req_info*/
+    libspdm_test_clear_cached_req_info(m_libspdm_use_asym_algo);
+    free(m_libspdm_get_csr_request);
 }
 
 libspdm_test_context_t m_libspdm_responder_csr_test_context = {
@@ -415,6 +601,8 @@ int libspdm_responder_csr_test_main(void)
         cmocka_unit_test(libspdm_test_responder_csr_case4),
         /* Failed Case for csr response with non-null wrong req_info */
         cmocka_unit_test(libspdm_test_responder_csr_case5),
+        /* Responder need reset to gen csr*/
+        cmocka_unit_test(libspdm_test_responder_csr_case6),
     };
 
     libspdm_setup_test_context(&m_libspdm_responder_csr_test_context);
