@@ -166,7 +166,7 @@ bool libspdm_validate_crypt_rsa(void)
         return false;
     }
 
-    if (libspdm_const_compare_mem(KeyBuffer, m_libspdm_rsa_n, key_size) != 0) {
+    if (memcmp(KeyBuffer, m_libspdm_rsa_n, key_size) != 0) {
         libspdm_my_print("[Fail]");
         free_pool(KeyBuffer);
         libspdm_rsa_free(rsa);
@@ -205,7 +205,7 @@ bool libspdm_validate_crypt_rsa(void)
         return false;
     }
 
-    if (libspdm_const_compare_mem(KeyBuffer, m_libspdm_rsa_e, key_size) != 0) {
+    if (memcmp(KeyBuffer, m_libspdm_rsa_e, key_size) != 0) {
         libspdm_my_print("[Fail]");
         free_pool(KeyBuffer);
         libspdm_rsa_free(rsa);
@@ -275,7 +275,7 @@ bool libspdm_validate_crypt_rsa(void)
     }
 
     if (key_size != 3 ||
-        libspdm_const_compare_mem(KeyBuffer, m_libspdm_default_public_key, 3) != 0) {
+        memcmp(KeyBuffer, m_libspdm_default_public_key, 3) != 0) {
         libspdm_my_print("[Fail]");
         free_pool(KeyBuffer);
         libspdm_rsa_free(rsa);
@@ -452,7 +452,7 @@ bool libspdm_validate_crypt_rsa(void)
     }
 
     if (sig_size != sizeof(m_libspdm_rsa_pkcs1_signature) ||
-        libspdm_const_compare_mem(m_libspdm_rsa_pkcs1_signature, signature, sig_size)) {
+        memcmp(m_libspdm_rsa_pkcs1_signature, signature, sig_size)) {
         libspdm_my_print("[Fail]");
         free_pool(signature);
         libspdm_rsa_free(rsa);

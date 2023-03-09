@@ -187,7 +187,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
         libspdm_my_print("[Fail]\n");
         goto cleanup;
     }
-    if (libspdm_const_compare_mem(leaf_cert, test_end_cert, leaf_cert_len) != 0) {
+    if (memcmp(leaf_cert, test_end_cert, leaf_cert_len) != 0) {
         libspdm_my_print("[Fail]\n");
         goto cleanup;
     } else {
@@ -208,7 +208,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
         libspdm_my_print("[Fail]\n");
         goto cleanup;
     }
-    if (libspdm_const_compare_mem(leaf_cert, test_end_cert, leaf_cert_len) != 0) {
+    if (memcmp(leaf_cert, test_end_cert, leaf_cert_len) != 0) {
         libspdm_my_print("[Fail]\n");
         goto cleanup;
     } else {
@@ -229,7 +229,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
         libspdm_my_print("[Fail]\n");
         goto cleanup;
     }
-    if (libspdm_const_compare_mem(leaf_cert, test_ca_cert, leaf_cert_len) != 0) {
+    if (memcmp(leaf_cert, test_ca_cert, leaf_cert_len) != 0) {
         libspdm_my_print("[Fail]\n");
         goto cleanup;
     } else {

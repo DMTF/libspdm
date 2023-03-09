@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
+#include <string.h>
 
 #include "hal/base.h"
 #include "internal/libspdm_lib_config.h"

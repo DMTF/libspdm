@@ -126,7 +126,7 @@ bool libspdm_validate_crypt_sm2(void)
 
     libspdm_my_print("Compare Keys ... ");
 
-    if (libspdm_const_compare_mem(key1, key2, key1_length) != 0) {
+    if (memcmp(key1, key2, key1_length) != 0) {
         libspdm_my_print("[Fail]");
         libspdm_sm2_key_exchange_free(Sm2_1);
         libspdm_sm2_key_exchange_free(Sm2_2);
