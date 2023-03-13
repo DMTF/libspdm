@@ -282,8 +282,11 @@ libspdm_return_t libspdm_process_request(void *spdm_context, uint32_t **session_
         context->last_spdm_request_session_id_valid = true;
     }
 
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmReceiveRequest[%x] (0x%x): \n",
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmReceiveRequest[%x] msg %s(0x%x), size (0x%x): \n",
                    (message_session_id != NULL) ? *message_session_id : 0,
+                   libspdm_get_code_str(((spdm_message_header_t *)context->last_spdm_request)->
+                                        request_response_code),
+                   ((spdm_message_header_t *)context->last_spdm_request)->request_response_code,
                    context->last_spdm_request_size));
     LIBSPDM_INTERNAL_DUMP_HEX((uint8_t *)context->last_spdm_request,
                               context->last_spdm_request_size);
@@ -453,6 +456,8 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
     }
     libspdm_zero_mem(my_response, my_response_size);
 
+    spdm_response = (void *)my_response;
+
     if (context->last_spdm_error.error_code != 0) {
 
         /* Error in libspdm_process_request(), and we need send error message directly.*/
@@ -492,8 +497,11 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
             return status;
         }
 
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmSendResponse[%x] (0x%x): \n",
-                       (session_id != NULL) ? *session_id : 0, my_response_size));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmSendResponse[%x]: msg %s(0x%x), size (0x%x): \n",
+                       (session_id != NULL) ? *session_id : 0,
+                       libspdm_get_code_str(spdm_response->request_response_code),
+                       spdm_response->request_response_code,
+                       my_response_size));
         LIBSPDM_INTERNAL_DUMP_HEX(my_response, my_response_size);
 
         status = context->transport_encode_message(
@@ -683,8 +691,11 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
         }
     }
 
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmSendResponse[%x] (0x%x): \n",
-                   (session_id != NULL) ? *session_id : 0, my_response_size));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmSendResponse[%x]: msg %s(0x%x), size (0x%x): \n",
+                   (session_id != NULL) ? *session_id : 0,
+                   libspdm_get_code_str(spdm_response->request_response_code),
+                   spdm_response->request_response_code,
+                   my_response_size));
     LIBSPDM_INTERNAL_DUMP_HEX(my_response, my_response_size);
 
     status = context->transport_encode_message(
@@ -695,7 +706,6 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
         return status;
     }
 
-    spdm_response = (void *)my_response;
     request_response_code = spdm_response->request_response_code;
     #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
     switch (request_response_code) {

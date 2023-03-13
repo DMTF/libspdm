@@ -23,8 +23,13 @@ libspdm_return_t libspdm_send_request(void *spdm_context, const uint32_t *sessio
 
     context = spdm_context;
 
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_send_spdm_request[%x] (0x%x): \n",
-                   (session_id != NULL) ? *session_id : 0x0, request_size));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                   "libspdm_send_spdm_request[%x] msg %s(0x%x), size (0x%x): \n",
+                   (session_id != NULL) ? *session_id : 0x0,
+                   libspdm_get_code_str(((spdm_message_header_t *)request)->
+                                        request_response_code),
+                   ((spdm_message_header_t *)request)->request_response_code,
+                   request_size));
     LIBSPDM_INTERNAL_DUMP_HEX(request, request_size);
 
     transport_header_size = context->transport_get_header_size(context);
@@ -237,13 +242,18 @@ libspdm_return_t libspdm_receive_response(void *spdm_context, const uint32_t *se
         goto error;
     }
 
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_receive_spdm_response[%x] (0x%x): \n",
-                   (session_id != NULL) ? *session_id : 0x0, *response_size));
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "libspdm_receive_spdm_response[%x] status - %p\n",
                        (session_id != NULL) ? *session_id : 0x0, status));
     } else {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                       "libspdm_receive_spdm_response[%x] msg %s(0x%x), size (0x%x): \n",
+                       (session_id != NULL) ? *session_id : 0x0,
+                       libspdm_get_code_str(((spdm_message_header_t *)*response)->
+                                            request_response_code),
+                       ((spdm_message_header_t *)*response)->request_response_code,
+                       *response_size));
         LIBSPDM_INTERNAL_DUMP_HEX(*response, *response_size);
     }
 
