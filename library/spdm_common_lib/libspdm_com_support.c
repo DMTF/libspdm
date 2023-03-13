@@ -7,6 +7,79 @@
 #include "internal/libspdm_common_lib.h"
 
 #if LIBSPDM_DEBUG_PRINT_ENABLE
+typedef struct {
+    uint8_t code;
+    const char *code_str;
+} libspdm_code_str_struct_t;
+
+const char *libspdm_get_code_str(uint8_t request_code)
+{
+    size_t index;
+
+    static libspdm_code_str_struct_t code_str_struct[] = {
+        /* SPDM response code (1.0) */
+        { SPDM_DIGESTS, "SPDM_DIGESTS" },
+        { SPDM_CERTIFICATE, "SPDM_CERTIFICATE" },
+        { SPDM_CHALLENGE_AUTH, "SPDM_CHALLENGE_AUTH" },
+        { SPDM_VERSION, "SPDM_VERSION" },
+        { SPDM_MEASUREMENTS, "SPDM_MEASUREMENTS" },
+        { SPDM_CAPABILITIES, "SPDM_CAPABILITIES" },
+        { SPDM_ALGORITHMS, "SPDM_ALGORITHMS" },
+        { SPDM_VENDOR_DEFINED_RESPONSE, "SPDM_VENDOR_DEFINED_RESPONSE" },
+        { SPDM_ERROR, "SPDM_ERROR" },
+        /* SPDM response code (1.1) */
+        { SPDM_KEY_EXCHANGE_RSP, "SPDM_KEY_EXCHANGE_RSP" },
+        { SPDM_FINISH_RSP, "SPDM_FINISH_RSP" },
+        { SPDM_PSK_EXCHANGE_RSP, "SPDM_PSK_EXCHANGE_RSP" },
+        { SPDM_PSK_FINISH_RSP, "SPDM_PSK_FINISH_RSP" },
+        { SPDM_HEARTBEAT_ACK, "SPDM_HEARTBEAT_ACK" },
+        { SPDM_KEY_UPDATE_ACK, "SPDM_KEY_UPDATE_ACK" },
+        { SPDM_ENCAPSULATED_REQUEST, "SPDM_ENCAPSULATED_REQUEST" },
+        { SPDM_ENCAPSULATED_RESPONSE_ACK, "SPDM_ENCAPSULATED_RESPONSE_ACK" },
+        { SPDM_END_SESSION_ACK, "SPDM_END_SESSION_ACK" },
+        /* SPDM response code (1.2) */
+        { SPDM_CSR, "SPDM_CSR" },
+        { SPDM_SET_CERTIFICATE_RSP, "SPDM_SET_CERTIFICATE_RSP" },
+        { SPDM_CHUNK_SEND_ACK, "SPDM_CHUNK_SEND_ACK" },
+        { SPDM_CHUNK_RESPONSE, "SPDM_CHUNK_RESPONSE" },
+        /* SPDM request code (1.0) */
+        { SPDM_GET_DIGESTS, "SPDM_GET_DIGESTS" },
+        { SPDM_GET_CERTIFICATE, "SPDM_GET_CERTIFICATE" },
+        { SPDM_CHALLENGE, "SPDM_CHALLENGE" },
+        { SPDM_GET_VERSION, "SPDM_GET_VERSION" },
+        { SPDM_GET_MEASUREMENTS, "SPDM_GET_MEASUREMENTS" },
+        { SPDM_GET_CAPABILITIES, "SPDM_GET_CAPABILITIES" },
+        { SPDM_NEGOTIATE_ALGORITHMS, "SPDM_NEGOTIATE_ALGORITHMS" },
+        { SPDM_VENDOR_DEFINED_REQUEST, "SPDM_VENDOR_DEFINED_REQUEST" },
+        { SPDM_RESPOND_IF_READY, "SPDM_RESPOND_IF_READY" },
+        /* SPDM request code (1.1) */
+        { SPDM_KEY_EXCHANGE, "SPDM_KEY_EXCHANGE" },
+        { SPDM_FINISH, "SPDM_FINISH" },
+        { SPDM_PSK_EXCHANGE, "SPDM_PSK_EXCHANGE" },
+        { SPDM_PSK_FINISH, "SPDM_PSK_FINISH" },
+        { SPDM_HEARTBEAT, "SPDM_HEARTBEAT" },
+        { SPDM_KEY_UPDATE, "SPDM_KEY_UPDATE" },
+        { SPDM_GET_ENCAPSULATED_REQUEST, "SPDM_GET_ENCAPSULATED_REQUEST" },
+        { SPDM_DELIVER_ENCAPSULATED_RESPONSE, "SPDM_DELIVER_ENCAPSULATED_RESPONSE" },
+        { SPDM_END_SESSION, "SPDM_END_SESSION" },
+        /* SPDM request code (1.2) */
+        { SPDM_GET_CSR, "SPDM_GET_CSR" },
+        { SPDM_SET_CERTIFICATE, "SPDM_SET_CERTIFICATE" },
+        { SPDM_CHUNK_SEND, "SPDM_CHUNK_SEND" },
+        { SPDM_CHUNK_GET, "SPDM_CHUNK_GET" }
+    };
+
+    for (index = 0; index < LIBSPDM_ARRAY_SIZE(code_str_struct); index++) {
+        if (request_code == code_str_struct[index].code) {
+            return code_str_struct[index].code_str;
+        }
+    }
+
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "msg code 0x%x not found!!!\n", request_code));
+
+    return "<unknown>";
+}
+
 void libspdm_internal_dump_hex_str(const uint8_t *data, size_t size)
 {
     size_t index;

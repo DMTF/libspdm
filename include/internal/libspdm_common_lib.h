@@ -409,6 +409,15 @@ typedef struct {
                                   LIBSPDM_SECURED_MESSAGE_CONTEXT_SIZE * LIBSPDM_MAX_SESSION_COUNT)
 
 #if LIBSPDM_DEBUG_PRINT_ENABLE
+/**
+ * Return the request code name based on given request code.
+ *
+ * @param  request_code                  The SPDM request code.
+ *
+ * @return request code name according to the request code.
+ **/
+const char *libspdm_get_code_str(uint8_t request_code);
+
 #ifdef LIBSPDM_INTERNAL_DUMP_HEX_STR_OVERRIDE
 extern void LIBSPDM_INTERNAL_DUMP_HEX_STR_OVERRIDE(const uint8_t *data, size_t size);
 #define LIBSPDM_INTERNAL_DUMP_HEX_STR(data, size) LIBSPDM_INTERNAL_DUMP_HEX_STR_OVERRIDE(data, size)
