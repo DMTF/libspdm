@@ -951,6 +951,92 @@ void libspdm_test_get_response_encapsulated_response_ack_case8(void **State)
     free(data);
 }
 
+/**
+ * Test 9: In an encapsulated request flow, a Responder issue an encapsulated request that can take up to CT time to
+ * fulfill, then the Requester deliver an encapsulated ERROR message with a ResponseNotReady error code.
+ * Expected behavior: the Responder shall not encapsulate another request by setting Param2 in ENCAPSULATED_RESPONSE_ACK
+ * to a value of zero.
+ **/
+void libspdm_test_get_response_encapsulated_response_ack_case9(void **State)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    spdm_encapsulated_response_ack_response_t *spdm_response;
+    spdm_deliver_encapsulated_response_request_t *spdm_request;
+    spdm_error_response_data_response_not_ready_t *EncapsulatedResponse;
+    uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    size_t spdm_request_size;
+    size_t EncapsulatedResponse_size;
+    size_t response_size;
+
+    spdm_test_context = *State;
+    spdm_context = spdm_test_context->spdm_context;
+
+    spdm_context->encap_context.request_id = 0xFF;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
+    spdm_context->encap_context.request_op_code_count =
+        LIBSPDM_MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT;
+
+    spdm_context->encap_context.current_request_op_code = SPDM_GET_DIGESTS;
+    spdm_context->encap_context.request_op_code_sequence[0] = SPDM_GET_DIGESTS;
+
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    libspdm_reset_message_b(spdm_context);
+
+    spdm_request_size = sizeof(spdm_deliver_encapsulated_response_request_t) +
+                        sizeof(spdm_error_response_data_response_not_ready_t);
+
+    spdm_request = (void *)temp_buf;
+    libspdm_copy_mem(spdm_request,
+                     m_libspdm_m_deliver_encapsulated_response_request_t2_size,
+                     &m_libspdm_m_deliver_encapsulated_response_request_t2,
+                     m_libspdm_m_deliver_encapsulated_response_request_t2_size);
+
+    EncapsulatedResponse_size = sizeof(spdm_error_response_data_response_not_ready_t);
+    EncapsulatedResponse =
+        (void *)(temp_buf + sizeof(spdm_deliver_encapsulated_response_request_t));
+    EncapsulatedResponse->header.spdm_version = SPDM_MESSAGE_VERSION_12;
+    EncapsulatedResponse->header.request_response_code = SPDM_ERROR;
+    EncapsulatedResponse->header.param1 =
+        SPDM_ERROR_CODE_RESPONSE_NOT_READY;
+    EncapsulatedResponse->header.param2 = 0;
+    EncapsulatedResponse->extend_error_data.rd_exponent = 1;
+    EncapsulatedResponse->extend_error_data.rd_tm = 1;
+    EncapsulatedResponse->extend_error_data.request_code =
+        SPDM_GET_DIGESTS;
+    EncapsulatedResponse->extend_error_data.token = 0;
+
+    libspdm_copy_mem(spdm_request + 1,
+                     EncapsulatedResponse_size,
+                     EncapsulatedResponse,
+                     EncapsulatedResponse_size);
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_encapsulated_response_ack(spdm_context,
+                                                            spdm_request_size,
+                                                            spdm_request, &response_size,
+                                                            response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_encapsulated_response_ack_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.spdm_version,
+                     SPDM_MESSAGE_VERSION_12);
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_ENCAPSULATED_RESPONSE_ACK);
+    assert_int_equal(spdm_response->header.param1, 0);
+    assert_int_equal(spdm_response->header.param2,
+                     SPDM_ENCAPSULATED_RESPONSE_ACK_RESPONSE_PAYLOAD_TYPE_ABSENT);
+    assert_int_equal(spdm_response->ack_request_id,
+                     m_libspdm_m_deliver_encapsulated_response_request_t2.header.param1);
+}
+
 libspdm_test_context_t m_libspdm_response_encapsulated_request_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     false,
@@ -996,6 +1082,8 @@ int libspdm_responder_encapsulated_response_test_main(void)
         /*Success Case  When version is greater than V1.2 */
         cmocka_unit_test(libspdm_test_get_response_encapsulated_response_ack_case8),
 #endif
+        /*When the Requester delivers an encapsulated ERROR message with a ResponseNotReady error code */
+        cmocka_unit_test(libspdm_test_get_response_encapsulated_response_ack_case9),
     };
 
     libspdm_setup_test_context(&m_libspdm_response_encapsulated_request_test_context);
