@@ -32,7 +32,7 @@ bool libspdm_fips_selftest_sha3_256(void)
         return false;
     }
 
-    if (!libspdm_const_compare_mem(sha3_256_result, sha3_256_answer,
+    if (!libspdm_consttime_is_mem_equal(sha3_256_result, sha3_256_answer,
                                    sizeof(sha3_256_answer))) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "sha3_256 KAT failed \n"));
         return false;
@@ -69,7 +69,7 @@ bool libspdm_fips_selftest_sha3_384(void)
         return false;
     }
 
-    if (!libspdm_const_compare_mem(sha3_384_result, sha3_384_answer,
+    if (!libspdm_consttime_is_mem_equal(sha3_384_result, sha3_384_answer,
                                    sizeof(sha3_384_answer))) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "sha3_384 KAT failed \n"));
         return false;
@@ -108,7 +108,7 @@ bool libspdm_fips_selftest_sha3_512(void)
         return false;
     }
 
-    if (!libspdm_const_compare_mem(sha3_512_result, sha3_512_answer,
+    if (!libspdm_consttime_is_mem_equal(sha3_512_result, sha3_512_answer,
                                    sizeof(sha3_512_answer))) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "sha3_512 KAT failed \n"));
         return false;

@@ -1132,7 +1132,7 @@ libspdm_internal_x509_find_extension_data(uint8_t *start, uint8_t *end, const ui
             break;
         }
 
-        if (ret == 0 && libspdm_const_compare_mem(ptr, oid, oid_size)) {
+        if (ret == 0 && libspdm_consttime_is_mem_equal(ptr, oid, oid_size)) {
             ptr += obj_len;
 
             ret = mbedtls_asn1_get_tag(&ptr, end, &obj_len,
@@ -1561,7 +1561,7 @@ int32_t libspdm_x509_compare_date_time(const void *date_time1, const void *date_
     if (date_time1 == NULL || date_time2 == NULL) {
         return -2;
     }
-    if (libspdm_const_compare_mem(date_time2, date_time1, sizeof(mbedtls_x509_time)) ==
+    if (libspdm_consttime_is_mem_equal(date_time2, date_time1, sizeof(mbedtls_x509_time)) ==
         0) {
         return 0;
     }

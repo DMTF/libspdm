@@ -1139,7 +1139,7 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
         /*get the cached requester info and csr*/
         if ((result) &&
             (cached_req_info_length == requester_info_length) &&
-            (libspdm_const_compare_mem(cached_req_info, requester_info, requester_info_length)) &&
+            (libspdm_consttime_is_mem_equal(cached_req_info, requester_info, requester_info_length)) &&
             (libspdm_read_cached_csr(base_asym_algo, &cached_csr, csr_len))) {
 
             /*get and save cached csr*/

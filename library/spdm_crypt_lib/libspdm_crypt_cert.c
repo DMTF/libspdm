@@ -572,9 +572,9 @@ static bool libspdm_verify_cert_subject_public_key_info(const uint8_t *cert, siz
     /*get public key encrypt algo OID from cert*/
     status = libspdm_get_public_key_oid(cert, cert_size, cert_public_key_crypt_algo_oid, oid_len,
                                         base_asym_algo);
-    if (!status || (!libspdm_const_compare_mem(cert_public_key_crypt_algo_oid,
+    if (!status || (!libspdm_consttime_is_mem_equal(cert_public_key_crypt_algo_oid,
                                                libspdm_public_key_crypt_algo_oid, oid_len) &&
-                    !libspdm_const_compare_mem(cert_public_key_crypt_algo_oid,
+                    !libspdm_consttime_is_mem_equal(cert_public_key_crypt_algo_oid,
                                                libspdm_public_key_crypt_algo_oid_other, oid_len))) {
         return false;
     }
@@ -620,14 +620,14 @@ static bool libspdm_verify_leaf_cert_basic_constraints(const uint8_t *cert, size
     }
 
     if ((len == sizeof(basic_constraints_case1)) &&
-        (libspdm_const_compare_mem(cert_basic_constraints,
+        (libspdm_consttime_is_mem_equal(cert_basic_constraints,
                                    basic_constraints_case1,
                                    sizeof(basic_constraints_case1)))) {
         return true;
     }
 
     if ((len == sizeof(basic_constraints_case2)) &&
-        (libspdm_const_compare_mem(cert_basic_constraints,
+        (libspdm_consttime_is_mem_equal(cert_basic_constraints,
                                    basic_constraints_case2,
                                    sizeof(basic_constraints_case2)))) {
         return true;
@@ -681,7 +681,7 @@ static bool libspdm_verify_leaf_cert_eku_spdm_OID(const uint8_t *cert, size_t ce
     /*find the spdm hardware identity OID*/
     find_sucessful = false;
     for(index = 0; index <= len - sizeof(hardware_identity_oid); index++) {
-        if (!libspdm_const_compare_mem(spdm_extension + index, hardware_identity_oid,
+        if (!libspdm_consttime_is_mem_equal(spdm_extension + index, hardware_identity_oid,
                                        sizeof(hardware_identity_oid))) {
             find_sucessful = true;
             break;
@@ -863,7 +863,7 @@ bool libspdm_is_root_certificate(const uint8_t *cert, size_t cert_size)
     if (issuer_name_len != subject_name_len) {
         return false;
     }
-    if (!libspdm_const_compare_mem(issuer_name, subject_name, issuer_name_len)) {
+    if (!libspdm_consttime_is_mem_equal(issuer_name, subject_name, issuer_name_len)) {
         return false;
     }
 
@@ -1154,7 +1154,7 @@ bool libspdm_verify_certificate_chain_buffer(uint32_t base_hash_algo, uint32_t b
                            "!!! VerifyCertificateChainBuffer - FAIL (hash calculation fail) !!!\n"));
             return false;
         }
-        if (!libspdm_const_compare_mem((const uint8_t *)cert_chain_buffer +
+        if (!libspdm_consttime_is_mem_equal((const uint8_t *)cert_chain_buffer +
                                        sizeof(spdm_cert_chain_t),
                                        calc_root_cert_hash, hash_size)) {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,

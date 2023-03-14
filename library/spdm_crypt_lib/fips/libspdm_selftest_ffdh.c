@@ -88,7 +88,7 @@ bool libspdm_fips_selftest_ffdh(void)
         return false;
     }
 
-    if (!libspdm_const_compare_mem(ff_key1, ff_key2, ff_key1_length)) {
+    if (!libspdm_consttime_is_mem_equal(ff_key1, ff_key2, ff_key1_length)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "FFDH self_test failed \n"));
         libspdm_dh_free(dh1);
         libspdm_dh_free(dh2);

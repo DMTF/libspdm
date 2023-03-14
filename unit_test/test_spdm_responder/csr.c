@@ -63,7 +63,7 @@ bool libspdm_find_buffer(char *src, size_t src_len, char *dst, size_t dst_len)
 
     for (index = 0; index < src_len - dst_len; index++) {
         if ((*(src + index) == *dst) &&
-            (libspdm_const_compare_mem(src + index, dst, dst_len) == 0)) {
+            (libspdm_consttime_is_mem_equal(src + index, dst, dst_len) == 0)) {
             return true;
         }
     }

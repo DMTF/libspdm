@@ -79,7 +79,7 @@ bool libspdm_fips_selftest_ecdh(void)
         return false;
     }
 
-    if (!libspdm_const_compare_mem(common_key, expected_ecdh_secret,
+    if (!libspdm_consttime_is_mem_equal(common_key, expected_ecdh_secret,
                                    sizeof(expected_ecdh_secret))) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ECDH KAT failed \n"));
         return false;
