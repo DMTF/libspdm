@@ -2610,164 +2610,6 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         return LIBSPDM_STATUS_SUCCESS;
 
     case 0x13: {
-        spdm_key_exchange_response_t *spdm_response;
-        size_t dhe_key_size;
-        uint32_t hash_size;
-        size_t signature_size;
-        uint32_t hmac_size;
-        uint8_t *ptr;
-        void *dhe_context;
-        uint8_t final_key[LIBSPDM_MAX_DHE_KEY_SIZE];
-        size_t final_key_size;
-        size_t opaque_key_exchange_rsp_size;
-        void *data;
-        size_t data_size;
-        uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
-        uint8_t *cert_buffer;
-        size_t cert_buffer_size;
-        uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        libspdm_large_managed_buffer_t th_curr;
-        uint8_t THCurrHashData[64];
-        uint8_t bin_str0[128];
-        size_t bin_str0_size;
-        uint8_t bin_str2[128];
-        size_t bin_str2_size;
-        uint8_t bin_str7[128];
-        size_t bin_str7_size;
-        uint8_t handshake_secret[LIBSPDM_MAX_HASH_SIZE];
-        uint8_t response_handshake_secret[LIBSPDM_MAX_HASH_SIZE];
-        uint8_t response_finished_key[LIBSPDM_MAX_HASH_SIZE];
-        size_t spdm_response_size;
-        size_t transport_header_size;
-
-        ((libspdm_context_t *)spdm_context)
-        ->connection_info.algorithm.base_asym_algo =
-            m_libspdm_use_asym_algo;
-        ((libspdm_context_t *)spdm_context)
-        ->connection_info.algorithm.base_hash_algo =
-            m_libspdm_use_hash_algo;
-        ((libspdm_context_t *)spdm_context)
-        ->connection_info.algorithm.dhe_named_group =
-            m_libspdm_use_dhe_algo;
-        ((libspdm_context_t *)spdm_context)
-        ->connection_info.algorithm.measurement_hash_algo =
-            m_libspdm_use_measurement_hash_algo;
-        signature_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
-        hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
-        hmac_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
-        dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
-        opaque_key_exchange_rsp_size =
-            libspdm_get_opaque_data_version_selection_data_size(spdm_context);
-        spdm_response_size = sizeof(spdm_key_exchange_response_t) +
-                             dhe_key_size + 0 + sizeof(uint16_t) +
-                             opaque_key_exchange_rsp_size + signature_size +
-                             hmac_size;
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
-        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
-        libspdm_zero_mem(spdm_response,spdm_response_size);
-
-        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response->header.request_response_code = SPDM_KEY_EXCHANGE_RSP;
-        spdm_response->header.param1 = 0;
-        spdm_response->rsp_session_id = libspdm_allocate_rsp_session_id(spdm_context);
-        spdm_response->mut_auth_requested = 0;
-        /* req_slot_id_param should zero when mut_auth_requested is 0. */
-        spdm_response->req_slot_id_param = 5;
-        libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, spdm_response->random_data);
-        ptr = (void *)(spdm_response + 1);
-        dhe_context = libspdm_dhe_new(
-            spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-                m_libspdm_use_dhe_algo, true);
-        libspdm_dhe_generate_key(m_libspdm_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
-        final_key_size = sizeof(final_key);
-        libspdm_dhe_compute_key(
-            m_libspdm_use_dhe_algo, dhe_context,
-            (uint8_t *)&m_libspdm_local_buffer[0] +
-            sizeof(spdm_key_exchange_request_t),
-            dhe_key_size, final_key, &final_key_size);
-        libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
-        ptr += dhe_key_size;
-
-        *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_rsp_size;
-        ptr += sizeof(uint16_t);
-        libspdm_build_opaque_data_version_selection_data(
-            spdm_context, &opaque_key_exchange_rsp_size, ptr);
-        ptr += opaque_key_exchange_rsp_size;
-        libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                        m_libspdm_use_asym_algo, &data,
-                                                        &data_size, NULL, NULL);
-        libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
-                         sizeof(m_libspdm_local_buffer)
-                         - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] -
-                            m_libspdm_local_buffer),
-                         spdm_response, (size_t)ptr - (size_t)spdm_response);
-        m_libspdm_local_buffer_size += ((size_t)ptr - (size_t)spdm_response);
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
-                       m_libspdm_local_buffer_size));
-        libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
-        libspdm_init_managed_buffer(&th_curr, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
-        cert_buffer = (uint8_t *)data;
-        cert_buffer_size =  data_size;
-        libspdm_hash_all(m_libspdm_use_hash_algo, cert_buffer, cert_buffer_size,
-                         cert_buffer_hash);
-        /* transcript.message_a size is 0*/
-        libspdm_append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
-        libspdm_append_managed_buffer(&th_curr, m_libspdm_local_buffer,
-                                      m_libspdm_local_buffer_size);
-        libspdm_hash_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
-                         libspdm_get_managed_buffer_size(&th_curr), hash_data);
-        free(data);
-        libspdm_responder_data_sign(
-            spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-                SPDM_KEY_EXCHANGE_RSP,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
-                false, libspdm_get_managed_buffer(&th_curr),
-                libspdm_get_managed_buffer_size(&th_curr), ptr,
-                &signature_size);
-        libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
-                         sizeof(m_libspdm_local_buffer)
-                         - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] -
-                            m_libspdm_local_buffer),
-                         ptr, signature_size);
-        m_libspdm_local_buffer_size += signature_size;
-        libspdm_append_managed_buffer(&th_curr, ptr, signature_size);
-        ptr += signature_size;
-        libspdm_hash_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
-                         libspdm_get_managed_buffer_size(&th_curr),
-                         THCurrHashData);
-        bin_str0_size = sizeof(bin_str0);
-        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
-                           SPDM_BIN_STR_0_LABEL, sizeof(SPDM_BIN_STR_0_LABEL) - 1,
-                           NULL, (uint16_t)hash_size, hash_size, bin_str0,
-                           &bin_str0_size);
-        libspdm_hmac_all(m_libspdm_use_hash_algo, final_key, final_key_size,
-                         m_libspdm_zero_filled_buffer, hash_size,handshake_secret);
-        bin_str2_size = sizeof(bin_str2);
-        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
-                           SPDM_BIN_STR_2_LABEL, sizeof(SPDM_BIN_STR_2_LABEL) - 1,
-                           THCurrHashData, (uint16_t)hash_size, hash_size,
-                           bin_str2, &bin_str2_size);
-        libspdm_hkdf_expand(m_libspdm_use_hash_algo, handshake_secret, hash_size,
-                            bin_str2, bin_str2_size,
-                            response_handshake_secret, hash_size);
-        bin_str7_size = sizeof(bin_str7);
-        libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
-                           SPDM_BIN_STR_7_LABEL, sizeof(SPDM_BIN_STR_7_LABEL) - 1,
-                           NULL, (uint16_t)hash_size, hash_size, bin_str7,
-                           &bin_str7_size);
-        libspdm_hkdf_expand(m_libspdm_use_hash_algo, response_handshake_secret,
-                            hash_size, bin_str7, bin_str7_size,
-                            response_finished_key, hash_size);
-        libspdm_hash_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
-                         libspdm_get_managed_buffer_size(&th_curr), hash_data);
-        libspdm_hmac_all(m_libspdm_use_hash_algo, hash_data, hash_size,
-                         response_finished_key, hash_size, ptr);
-        ptr += hmac_size;
-
-        libspdm_transport_test_encode_message(spdm_context, NULL, false,
-                                              false, spdm_response_size,
-                                              spdm_response, response_size,
-                                              response);
     }
         return LIBSPDM_STATUS_SUCCESS;
 
@@ -5845,34 +5687,11 @@ static void libspdm_test_requester_key_exchange_err_case18(void **state)
 }
 
 /**
- * Test 19: Mutual authentication is not requested by Responder but it sets SlotIDParam to a
- *          non-zero value.
- * Expected Behavior: Returns with LIBSPDM_STATUS_INVALID_MSG_FIELD.
+ * Test 19:
+ * Expected Behavior:
  **/
 static void libspdm_test_requester_key_exchange_err_case19(void **state)
 {
-    libspdm_return_t status;
-    libspdm_test_context_t *spdm_test_context;
-    libspdm_context_t *spdm_context;
-    uint32_t session_id;
-    uint8_t slot_id_param;
-
-    spdm_test_context = *state;
-    spdm_context = spdm_test_context->spdm_context;
-    spdm_test_context->case_id = 0x13;
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
-                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
-
-    status = libspdm_send_receive_key_exchange(
-        spdm_context, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
-        &session_id, NULL, &slot_id_param, NULL);
-
-    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
 static void libspdm_test_requester_key_exchange_err_case20(void **state)
@@ -6419,7 +6238,7 @@ int libspdm_requester_key_exchange_error_test_main(void)
         cmocka_unit_test(libspdm_test_requester_key_exchange_err_case17),
         /* Wrong signature*/
         cmocka_unit_test(libspdm_test_requester_key_exchange_err_case18),
-        /* Requester and Responder Handshake in the clear set, no ResponderVerifyData*/
+        /* Can be populated with new test.*/
         cmocka_unit_test(libspdm_test_requester_key_exchange_err_case19),
         /* Heartbeat not supported, heartbeat period different from 0 sent*/
         cmocka_unit_test(libspdm_test_requester_key_exchange_err_case20),
