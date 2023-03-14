@@ -94,7 +94,7 @@ bool libspdm_verify_finish_req_hmac(libspdm_context_t *spdm_context,
     LIBSPDM_INTERNAL_DUMP_DATA(hmac_data, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
-    if (!libspdm_const_compare_mem(hmac, hmac_data, hash_size)) {
+    if (!libspdm_consttime_is_mem_equal(hmac, hmac_data, hash_size)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_finish_req_hmac - FAIL !!!\n"));
         return false;
     }

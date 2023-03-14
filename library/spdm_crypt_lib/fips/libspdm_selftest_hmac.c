@@ -33,7 +33,7 @@ bool libspdm_fips_selftest_hmac_sha256(void)
         return false;
     }
 
-    if (!libspdm_const_compare_mem(hmac_256_result, hmac_sha256_answer,
+    if (!libspdm_consttime_is_mem_equal(hmac_256_result, hmac_sha256_answer,
                                    sizeof(hmac_sha256_answer))) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "hmac_sha256 KAT failed \n"));
         return false;
@@ -71,7 +71,7 @@ bool libspdm_fips_selftest_hmac_sha384(void)
         return false;
     }
 
-    if (!libspdm_const_compare_mem(hmac_384_result, hmac_sha384_answer,
+    if (!libspdm_consttime_is_mem_equal(hmac_384_result, hmac_sha384_answer,
                                    sizeof(hmac_sha384_answer))) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "hmac_sha384 KAT failed \n"));
         return false;
@@ -111,7 +111,7 @@ bool libspdm_fips_selftest_hmac_sha512(void)
         return false;
     }
 
-    if (!libspdm_const_compare_mem(hmac_512_result, hmac_sha512_answer,
+    if (!libspdm_consttime_is_mem_equal(hmac_512_result, hmac_sha512_answer,
                                    sizeof(hmac_sha512_answer))) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "hmac_sha512 KAT failed \n"));
         return false;

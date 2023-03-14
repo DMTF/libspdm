@@ -6,7 +6,7 @@
 
 #include "base.h"
 
-bool libspdm_const_compare_mem(const void *destination_buffer,
+bool libspdm_consttime_is_mem_equal(const void *destination_buffer,
                                const void *source_buffer, size_t length)
 {
     const volatile uint8_t *pointer_dst;
