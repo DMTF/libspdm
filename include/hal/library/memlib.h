@@ -100,6 +100,6 @@ void *libspdm_zero_mem(void *buffer, size_t length);
  * @retval false  The contents of the two buffers are not the same.
  **/
 bool libspdm_consttime_is_mem_equal(const void *destination_buffer,
-                               const void *source_buffer, size_t length);
+                                    const void *source_buffer, size_t length);
 
 #endif /* BASE_MEMORY_LIB */

@@ -106,7 +106,7 @@ bool libspdm_fips_selftest_aes_gcm(void)
     }
 
     if (!libspdm_consttime_is_mem_equal(output_ciphertext, expected_ciphertext,
-                                   sizeof(expected_ciphertext))) {
+                                        sizeof(expected_ciphertext))) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "aes_gcm KAT failed \n"));
         return false;
     }
