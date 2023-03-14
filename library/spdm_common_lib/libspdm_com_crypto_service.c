@@ -664,8 +664,8 @@ bool libspdm_verify_peer_cert_chain_buffer_authority(libspdm_context_t *spdm_con
             }
 
             if (libspdm_consttime_is_mem_equal((const uint8_t *)cert_chain_buffer +
-                                          sizeof(spdm_cert_chain_t),
-                                          root_cert_hash, root_cert_hash_size)) {
+                                               sizeof(spdm_cert_chain_t),
+                                               root_cert_hash, root_cert_hash_size)) {
                 break;
             }
 
@@ -902,7 +902,7 @@ bool libspdm_verify_certificate_chain_hash(libspdm_context_t *spdm_context,
         return false;
     }
     if (!libspdm_consttime_is_mem_equal(certificate_chain_hash, cert_chain_buffer_hash,
-                                   certificate_chain_hash_size)) {
+                                        certificate_chain_hash_size)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_certificate_chain_hash - FAIL !!!\n"));
         return false;
     }
@@ -920,8 +920,8 @@ bool libspdm_verify_certificate_chain_hash(libspdm_context_t *spdm_context,
     }
 
     if (!libspdm_consttime_is_mem_equal(certificate_chain_hash,
-                                   spdm_context->connection_info.peer_used_cert_chain[slot_id].
-                                   buffer_hash, certificate_chain_hash_size)) {
+                                        spdm_context->connection_info.peer_used_cert_chain[slot_id].
+                                        buffer_hash, certificate_chain_hash_size)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_certificate_chain_hash - FAIL !!!\n"));
         return false;
     }
@@ -965,7 +965,7 @@ bool libspdm_verify_public_key_hash(libspdm_context_t *spdm_context,
         return false;
     }
     if (!libspdm_consttime_is_mem_equal(public_key_hash, public_key_buffer_hash,
-                                   public_key_hash_size)) {
+                                        public_key_hash_size)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_public_key_hash - FAIL !!!\n"));
         return false;
     }

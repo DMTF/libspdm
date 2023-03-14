@@ -437,7 +437,7 @@ libspdm_return_t libspdm_decode_secured_message(
             return LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
         if (!libspdm_consttime_is_mem_equal(record_header1 + 1, &sequence_num_in_header,
-                                       sequence_num_in_header_size) != 0) {
+                                            sequence_num_in_header_size) != 0) {
             libspdm_secured_message_set_last_spdm_error_struct(
                 spdm_secured_message_context, &spdm_error);
             return LIBSPDM_STATUS_INVALID_MSG_FIELD;
@@ -509,7 +509,7 @@ libspdm_return_t libspdm_decode_secured_message(
             return LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
         if (!libspdm_consttime_is_mem_equal(record_header1 + 1, &sequence_num_in_header,
-                                       sequence_num_in_header_size)) {
+                                            sequence_num_in_header_size)) {
             libspdm_secured_message_set_last_spdm_error_struct(
                 spdm_secured_message_context, &spdm_error);
             return LIBSPDM_STATUS_INVALID_MSG_FIELD;

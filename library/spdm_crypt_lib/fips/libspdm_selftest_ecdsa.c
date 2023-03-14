@@ -117,7 +117,7 @@ bool libspdm_fips_selftest_ecdsa(void)
     }
 
     if (!libspdm_consttime_is_mem_equal(signature, expected_signature,
-                                   sizeof(expected_signature))) {
+                                        sizeof(expected_signature))) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ECDSA KAT failed \n"));
         libspdm_ec_free(ec_context);
         return false;
