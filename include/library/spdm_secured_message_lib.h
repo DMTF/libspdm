@@ -556,7 +556,7 @@ typedef uint8_t (*libspdm_secured_message_get_sequence_number_func)(
  * This value is transport layer specific.
  *
  * @return Max random number count in an SPDM secured message.
- *        0 means no randum number is required.
+ *        0 means no random number is required.
  **/
 typedef uint32_t (*libspdm_secured_message_get_max_random_number_count_func)(void);
 

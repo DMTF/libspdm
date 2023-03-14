@@ -115,7 +115,7 @@ uint8_t libspdm_mctp_get_sequence_number(uint64_t sequence_number,
  * This value is transport layer specific.
  *
  * @return Max random number count in an SPDM secured message.
- *        0 means no randum number is required.
+ *        0 means no random number is required.
  **/
 uint32_t libspdm_mctp_get_max_random_number_count(void);
 
