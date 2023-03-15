@@ -322,7 +322,7 @@ static libspdm_return_t libspdm_try_get_measurement(libspdm_context_t *spdm_cont
         }
     } else if (measurement_operation ==
                SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_ALL_MEASUREMENTS) {
-        if (spdm_response->number_of_blocks == 0) {
+        if ((spdm_response->number_of_blocks == 0) || (spdm_response->number_of_blocks == 0xff)) {
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             goto receive_done;
         }
