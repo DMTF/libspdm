@@ -574,7 +574,7 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
         }
     }
     if (is_app_message || (get_response_func == NULL)) {
-        if (context->get_response_func != 0) {
+        if (context->get_response_func != NULL) {
             status = ((libspdm_get_response_func) context->get_response_func)(
                 context, session_id, is_app_message,
                 context->last_spdm_request_size,
