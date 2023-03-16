@@ -27,9 +27,10 @@ bool libspdm_random_bytes(uint8_t *output, size_t size)
 {
     bool ret;
     uint64_t temp_rand;
-    size_t dst_size = size;
+    size_t dst_size;
 
     ret = false;
+    dst_size = size;
 
     while (size > 0) {
         /* Use rnglib to get random number*/
@@ -43,6 +44,7 @@ bool libspdm_random_bytes(uint8_t *output, size_t size)
             libspdm_copy_mem(output, dst_size, &temp_rand, sizeof(uint64_t));
             output += sizeof(uint64_t);
             size -= sizeof(uint64_t);
+            dst_size -= sizeof(uint64_t);
         } else {
             libspdm_copy_mem(output, dst_size, &temp_rand, size);
             size = 0;
