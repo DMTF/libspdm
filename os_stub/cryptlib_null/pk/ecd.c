@@ -61,6 +61,26 @@ bool libspdm_ecd_set_pub_key(void *ecd_context, const uint8_t *public_key,
 }
 
 /**
+ * Sets the private key component into the established Ed context.
+ *
+ * For ed25519, the private_size is 32.
+ * For ed448, the private_size is 57.
+ *
+ * @param[in, out]  ecd_context      Pointer to Ed context being set.
+ * @param[in]       private         Pointer to the buffer to receive generated private X,Y.
+ * @param[in]       private_size     The size of private buffer in bytes.
+ *
+ * @retval  true   Ed private key component was set successfully.
+ * @retval  false  Invalid EC private key component.
+ *
+ **/
+bool libspdm_ecd_set_pri_key(void *ecd_context, const uint8_t *private_key,
+                             size_t private_key_size)
+{
+    return false;
+}
+
+/**
  * Gets the public key component from the established Ed context.
  *
  * For ed25519, the public_size is 32.

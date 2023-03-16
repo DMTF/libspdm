@@ -53,6 +53,56 @@ extern bool libspdm_ecd_get_public_key_from_der(const uint8_t *der_data,
 extern void libspdm_ecd_free(void *ecd_context);
 
 /**
+ * Sets the public key component into the established Ed context.
+ *
+ * For ed25519, the public_size is 32.
+ * For ed448, the public_size is 57.
+ *
+ * @param[in, out]  ecd_context    Pointer to Ed context being set.
+ * @param[in]       public_key     Pointer to the buffer to receive generated public X,Y.
+ * @param[in]       public_size    The size of public buffer in bytes.
+ *
+ * @retval  true   Ed public key component was set successfully.
+ * @retval  false  Invalid EC public key component.
+ **/
+extern bool libspdm_ecd_set_pub_key(void *ecd_context, const uint8_t *public_key,
+                                    size_t public_key_size);
+
+/**
+ * Sets the private key component into the established Ed context.
+ *
+ * For ed25519, the private_size is 32.
+ * For ed448, the private_size is 57.
+ *
+ * @param[in, out]  ecd_context      Pointer to Ed context being set.
+ * @param[in]       private         Pointer to the buffer to receive generated private X,Y.
+ * @param[in]       private_size     The size of private buffer in bytes.
+ *
+ * @retval  true   Ed private key component was set successfully.
+ * @retval  false  Invalid EC private key component.
+ *
+ **/
+bool libspdm_ecd_set_pri_key(void *ecd_context, const uint8_t *private_key,
+                             size_t private_key_size);
+
+/**
+ * Gets the public key component from the established Ed context.
+ *
+ * For ed25519, the public_size is 32.
+ * For ed448, the public_size is 57.
+ *
+ * @param[in, out]  ecd_context    Pointer to Ed context being set.
+ * @param[out]      public         Pointer to the buffer to receive generated public X,Y.
+ * @param[in, out]  public_size    On input, the size of public buffer in bytes.
+ *                                 On output, the size of data returned in public buffer in bytes.
+ *
+ * @retval  true   Ed key component was retrieved successfully.
+ * @retval  false  Invalid EC public key component.
+ **/
+extern bool libspdm_ecd_get_pub_key(void *ecd_context, uint8_t *public_key,
+                                    size_t *public_key_size);
+
+/**
  * Carries out the Ed-DSA signature.
  *
  * This function carries out the Ed-DSA signature.
