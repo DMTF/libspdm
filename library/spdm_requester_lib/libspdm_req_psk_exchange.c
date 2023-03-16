@@ -83,7 +83,7 @@ bool libspdm_verify_psk_exchange_rsp_hmac(libspdm_context_t *spdm_context,
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
     if (!libspdm_consttime_is_mem_equal(calc_hmac_data, hmac_data, hash_size)) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_psk_exchange_rsp_hmac - FAIL !!!\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "!!! verify_psk_exchange_rsp_hmac - FAIL !!!\n"));
         return false;
     }
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_psk_exchange_rsp_hmac - PASS !!!\n"));

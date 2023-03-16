@@ -100,7 +100,7 @@ bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
     }
 #endif
     if (!result) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_measurement_signature - FAIL !!!\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "!!! verify_measurement_signature - FAIL !!!\n"));
         return false;
     }
 

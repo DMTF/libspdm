@@ -658,7 +658,7 @@ bool libspdm_verify_peer_cert_chain_buffer_authority(libspdm_context_t *spdm_con
                 spdm_context->connection_info.algorithm.base_hash_algo,
                 root_cert, root_cert_size, root_cert_hash);
             if (!result) {
-                LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
                                "!!! verify_peer_cert_chain_buffer - FAIL (hash calculation) !!!\n"));
                 return false;
             }
@@ -680,7 +680,7 @@ bool libspdm_verify_peer_cert_chain_buffer_authority(libspdm_context_t *spdm_con
             } else
             #endif /* LIBSPDM_MAX_ROOT_CERT_SUPPORT */
             {
-                LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
                                "!!! verify_peer_cert_chain_buffer - "
                                "FAIL (all root cert hash mismatch) !!!\n"));
                 return false;
@@ -692,14 +692,14 @@ bool libspdm_verify_peer_cert_chain_buffer_authority(libspdm_context_t *spdm_con
             cert_chain_buffer_size - sizeof(spdm_cert_chain_t) - root_cert_hash_size,
             0, &received_root_cert, &received_root_cert_size);
         if (!result) {
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
                            "!!! verify_peer_cert_chain_buffer - FAIL (cert retrieval fail) !!!\n"));
             return false;
         }
         if (libspdm_is_root_certificate(received_root_cert, received_root_cert_size)) {
             if ((root_cert != NULL) &&
                 !libspdm_consttime_is_mem_equal(received_root_cert, root_cert, root_cert_size)) {
-                LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
                                "!!! verify_peer_cert_chain_buffer - "
                                "FAIL (root cert mismatch) !!!\n"));
                 return false;
@@ -707,7 +707,7 @@ bool libspdm_verify_peer_cert_chain_buffer_authority(libspdm_context_t *spdm_con
         } else {
             if (!libspdm_x509_verify_cert(received_root_cert, received_root_cert_size,
                                           root_cert, root_cert_size)) {
-                LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
                                "!!! verify_peer_cert_chain_buffer - "
                                "FAIL (received root cert verify failed)!!!\n"));
                 return false;
@@ -892,18 +892,18 @@ bool libspdm_verify_certificate_chain_hash(libspdm_context_t *spdm_context,
                               cert_chain_buffer, cert_chain_buffer_size,
                               cert_chain_buffer_hash);
     if (!result) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
                        "!!! verify_certificate_chain_hash - FAIL (hash calculation) !!!\n"));
         return false;
     }
 
     if (hash_size != certificate_chain_hash_size) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_certificate_chain_hash - FAIL !!!\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "!!! verify_certificate_chain_hash - FAIL !!!\n"));
         return false;
     }
     if (!libspdm_consttime_is_mem_equal(certificate_chain_hash, cert_chain_buffer_hash,
                                         certificate_chain_hash_size)) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_certificate_chain_hash - FAIL !!!\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "!!! verify_certificate_chain_hash - FAIL !!!\n"));
         return false;
     }
 #else
@@ -915,14 +915,14 @@ bool libspdm_verify_certificate_chain_hash(libspdm_context_t *spdm_context,
 
     if (spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer_hash_size !=
         certificate_chain_hash_size) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_certificate_chain_hash - FAIL !!!\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "!!! verify_certificate_chain_hash - FAIL !!!\n"));
         return false;
     }
 
     if (!libspdm_consttime_is_mem_equal(certificate_chain_hash,
                                         spdm_context->connection_info.peer_used_cert_chain[slot_id].
                                         buffer_hash, certificate_chain_hash_size)) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_certificate_chain_hash - FAIL !!!\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "!!! verify_certificate_chain_hash - FAIL !!!\n"));
         return false;
     }
 #endif
@@ -955,18 +955,18 @@ bool libspdm_verify_public_key_hash(libspdm_context_t *spdm_context,
                               spdm_context->local_context.peer_public_key_provision_size,
                               public_key_buffer_hash);
     if (!result) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
                        "!!! verify_public_key_hash - FAIL (hash calculation) !!!\n"));
         return false;
     }
 
     if (hash_size != public_key_hash_size) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_public_key_hash - FAIL !!!\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "!!! verify_public_key_hash - FAIL !!!\n"));
         return false;
     }
     if (!libspdm_consttime_is_mem_equal(public_key_hash, public_key_buffer_hash,
                                         public_key_hash_size)) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_public_key_hash - FAIL !!!\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "!!! verify_public_key_hash - FAIL !!!\n"));
         return false;
     }
 
@@ -1120,7 +1120,7 @@ bool libspdm_verify_challenge_auth_signature(libspdm_context_t *spdm_context,
 #endif
     }
     if (!result) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
                        "!!! verify_challenge_signature - FAIL !!!\n"));
         return false;
     }
