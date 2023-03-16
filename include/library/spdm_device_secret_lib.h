@@ -211,7 +211,7 @@ bool libspdm_psk_master_secret_hkdf_expand(
     size_t out_size);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
 
-#if LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
 /**
  * This function sends SET_CERTIFICATE
  * to set certificate from the device.
@@ -226,7 +226,7 @@ bool libspdm_psk_master_secret_hkdf_expand(
  **/
 bool libspdm_write_certificate_to_nvm(uint8_t slot_id, const void * cert_chain,
                                       size_t cert_chain_size);
-#endif /* LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP */
+#endif /* LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP
 /**
