@@ -75,4 +75,9 @@ bool libspdm_fips_selftest_ffdh(void);
  **/
 bool libspdm_fips_selftest_ecdsa(void);
 
+/**
+ * EDDSA self_test
+ **/
+bool libspdm_fips_selftest_eddsa(void);
+
 #endif/*LIBSPDM_FIPS_MODE*/
