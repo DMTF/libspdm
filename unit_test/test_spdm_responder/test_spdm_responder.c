@@ -173,11 +173,11 @@ int main(void)
     }
     #endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP*/
 
-    #if LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
     if (libspdm_responder_set_certificate_rsp_test_main() != 0) {
         return_value = 1;
     }
-    #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP */
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP */
 
     #if LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP
     if (libspdm_responder_csr_test_main() != 0) {

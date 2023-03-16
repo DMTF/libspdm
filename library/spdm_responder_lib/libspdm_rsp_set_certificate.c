@@ -6,7 +6,7 @@
 
 #include "internal/libspdm_responder_lib.h"
 
-#if LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
 
 libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_context,
                                                       size_t request_size, const void *request,
@@ -146,4 +146,4 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-#endif /*LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP*/
+#endif /*LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP*/

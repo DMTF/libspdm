@@ -7,7 +7,7 @@
 #include "spdm_unit_test.h"
 #include "internal/libspdm_responder_lib.h"
 
-#if LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
 
 /**
  * Test 1: receives a valid SET_CERTIFICATE request message from Requester to set cert in slot_id:0
@@ -386,4 +386,4 @@ int libspdm_responder_set_certificate_rsp_test_main(void)
                                   libspdm_unit_test_group_teardown);
 }
 
-#endif /* LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP*/
+#endif /* LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP*/

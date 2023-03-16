@@ -76,9 +76,9 @@ libspdm_get_spdm_response_func libspdm_get_response_func_via_request_code(uint8_
         { SPDM_GET_CSR, libspdm_get_response_csr },
         #endif /*LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP*/
 
-        #if LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP
+        #if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
         { SPDM_SET_CERTIFICATE, libspdm_get_response_set_certificate },
-        #endif /*LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP*/
+        #endif /*LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP*/
 
         #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
         { SPDM_CHUNK_GET, libspdm_get_response_chunk_get},

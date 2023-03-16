@@ -6,7 +6,7 @@
 
 #include "internal/libspdm_requester_lib.h"
 
-#if LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
 /**
  * This function sends SET_CERTIFICATE
  * to set certificate from the device.
@@ -185,4 +185,4 @@ libspdm_return_t libspdm_set_certificate(void *spdm_context,
     return status;
 }
 
-#endif /*LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP*/
+#endif /*LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP*/

@@ -590,7 +590,7 @@ libspdm_return_t libspdm_get_csr(void *spdm_context,
                                  void *csr, size_t *csr_len);
 #endif /*LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP*/
 
-#if LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
 /**
  * This function try to send SET_CERTIFICATE
  * to set certificate from the device.
@@ -612,7 +612,7 @@ libspdm_return_t libspdm_set_certificate(void *spdm_context,
                                          const uint32_t *session_id, uint8_t slot_id,
                                          void *cert_chain, size_t cert_chain_size);
 
-#endif /* LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP */
+#endif /* LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP */
 
 #if LIBSPDM_ENABLE_MSG_LOG
 /* For now these functions are only available to the Requester. They may become available to the
