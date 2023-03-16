@@ -36,7 +36,6 @@ libspdm_return_t libspdm_encode_secured_message(
     size_t total_secured_message_size;
     size_t plain_text_size;
     size_t cipher_text_size;
-    size_t aead_pad_size;
     size_t aead_tag_size;
     size_t aead_key_size;
     size_t aead_iv_size;
@@ -170,7 +169,6 @@ libspdm_return_t libspdm_encode_secured_message(
         plain_text_size = sizeof(spdm_secured_message_cipher_header_t) + app_message_size +
                           rand_count;
         cipher_text_size = plain_text_size;
-        aead_pad_size = cipher_text_size - plain_text_size;
         total_secured_message_size = record_header_size + cipher_text_size + aead_tag_size;
 
         LIBSPDM_ASSERT(*secured_message_size >= total_secured_message_size);
@@ -201,7 +199,6 @@ libspdm_return_t libspdm_encode_secured_message(
         if (!result) {
             return LIBSPDM_STATUS_LOW_ENTROPY;
         }
-        libspdm_zero_mem((uint8_t *)enc_msg_header + plain_text_size, aead_pad_size);
 
         a_data = (uint8_t *)record_header1;
         enc_msg = (uint8_t *)(record_header2 + 1);
