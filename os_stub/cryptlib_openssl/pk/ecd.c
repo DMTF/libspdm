@@ -13,6 +13,7 @@
 
 #include "internal_crypt_lib.h"
 #include <openssl/evp.h>
+#include <crypto/evp.h>
 
 /**
  * Allocates and Initializes one Edwards-Curve context for subsequent use
@@ -92,8 +93,102 @@ void libspdm_ecd_free(void *ecd_context)
 bool libspdm_ecd_set_pub_key(void *ecd_context, const uint8_t *public_key,
                              size_t public_key_size)
 {
-    /* TBD*/
-    return false;
+    uint32_t final_pub_key_size;
+    EVP_PKEY *evp_key;
+    EVP_PKEY *new_evp_key;
+
+    if ((ecd_context == NULL) || (public_key == NULL)) {
+        return false;
+    }
+
+    evp_key = (EVP_PKEY *)ecd_context;
+
+    switch (EVP_PKEY_id(evp_key)) {
+    case EVP_PKEY_ED25519:
+        final_pub_key_size = 32;
+        break;
+    case EVP_PKEY_ED448:
+        final_pub_key_size = 57;
+        break;
+    default:
+        return false;
+    }
+
+    if (final_pub_key_size != public_key_size) {
+        return false;
+    }
+
+    new_evp_key = EVP_PKEY_new_raw_public_key(EVP_PKEY_id(evp_key), NULL,
+                                              public_key, public_key_size);
+
+    if (new_evp_key == NULL) {
+        return false;
+    }
+
+    if (evp_pkey_copy_downgraded(&evp_key, new_evp_key) != 1) {
+        EVP_PKEY_free(new_evp_key);
+        return false;
+    }
+
+    EVP_PKEY_free(new_evp_key);
+    return true;
+}
+
+/**
+ * Sets the private key component into the established Ed context.
+ *
+ * For ed25519, the private_size is 32.
+ * For ed448, the private_size is 57.
+ *
+ * @param[in, out]  ecd_context      Pointer to Ed context being set.
+ * @param[in]       private         Pointer to the buffer to receive generated private X,Y.
+ * @param[in]       private_size     The size of private buffer in bytes.
+ *
+ * @retval  true   Ed private key component was set successfully.
+ * @retval  false  Invalid EC private key component.
+ *
+ **/
+bool libspdm_ecd_set_pri_key(void *ecd_context, const uint8_t *private_key,
+                             size_t private_key_size)
+{
+    uint32_t final_pri_key_size;
+    EVP_PKEY *evp_key;
+    EVP_PKEY *new_evp_key;
+
+    if ((ecd_context == NULL) || (private_key == NULL)) {
+        return false;
+    }
+
+    evp_key = (EVP_PKEY *)ecd_context;
+
+    switch (EVP_PKEY_id(evp_key)) {
+    case EVP_PKEY_ED25519:
+        final_pri_key_size = 32;
+        break;
+    case EVP_PKEY_ED448:
+        final_pri_key_size = 57;
+        break;
+    default:
+        return false;
+    }
+
+    if (final_pri_key_size != private_key_size) {
+        return false;
+    }
+
+    new_evp_key = EVP_PKEY_new_raw_private_key(EVP_PKEY_id(evp_key), NULL,
+                                               private_key, private_key_size);
+    if (new_evp_key == NULL) {
+        return false;
+    }
+
+    if (evp_pkey_copy_downgraded(&evp_key, new_evp_key) != 1) {
+        EVP_PKEY_free(new_evp_key);
+        return false;
+    }
+
+    EVP_PKEY_free(new_evp_key);
+    return true;
 }
 
 /**
