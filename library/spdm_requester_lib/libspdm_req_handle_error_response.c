@@ -248,7 +248,7 @@ libspdm_return_t libspdm_handle_error_large_response(
         spdm_request->chunk_seq_no = chunk_seq_no;
         spdm_request_size = sizeof(spdm_chunk_get_request_t);
 
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "CHUNK_GET Handle %d SeqNo %d\n", chunk_handle, chunk_seq_no));
 
         status = libspdm_send_spdm_request(spdm_context, session_id,
