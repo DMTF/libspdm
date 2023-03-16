@@ -58,7 +58,7 @@ bool libspdm_verify_psk_finish_req_hmac(libspdm_context_t *spdm_context,
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
     if (!libspdm_consttime_is_mem_equal(hmac, hmac_data, hash_size)) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_psk_finish_req_hmac - FAIL !!!\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "!!! verify_psk_finish_req_hmac - FAIL !!!\n"));
         return false;
     }
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_psk_finish_req_hmac - PASS !!!\n"));

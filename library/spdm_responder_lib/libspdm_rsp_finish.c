@@ -95,7 +95,7 @@ bool libspdm_verify_finish_req_hmac(libspdm_context_t *spdm_context,
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
     if (!libspdm_consttime_is_mem_equal(hmac, hmac_data, hash_size)) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_finish_req_hmac - FAIL !!!\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "!!! verify_finish_req_hmac - FAIL !!!\n"));
         return false;
     }
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_finish_req_hmac - PASS !!!\n"));
@@ -253,7 +253,7 @@ bool libspdm_verify_finish_req_signature(libspdm_context_t *spdm_context,
 #endif
 
     if (!result) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! VerifyFinishSignature - FAIL !!!\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "!!! VerifyFinishSignature - FAIL !!!\n"));
         return false;
     }
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! VerifyFinishSignature - PASS !!!\n"));
