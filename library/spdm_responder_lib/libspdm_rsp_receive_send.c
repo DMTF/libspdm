@@ -87,7 +87,6 @@ libspdm_get_spdm_response_func libspdm_get_response_func_via_request_code(uint8_
         #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
     };
 
-    LIBSPDM_ASSERT(request_code != SPDM_RESPOND_IF_READY);
     for (index = 0; index < sizeof(get_response_struct) / sizeof(get_response_struct[0]); index++) {
         if (request_code == get_response_struct[index].request_response_code) {
             return get_response_struct[index].get_response_func;
