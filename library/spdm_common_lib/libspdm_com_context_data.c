@@ -281,13 +281,13 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         }
         break;
     case LIBSPDM_DATA_CONNECTION_STATE:
-        if (data_size != sizeof(uint32_t)) {
+        if (data_size != sizeof(libspdm_connection_state_t)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         context->connection_info.connection_state = libspdm_read_uint32((const uint8_t *)data);
         break;
     case LIBSPDM_DATA_RESPONSE_STATE:
-        if (data_size != sizeof(uint32_t)) {
+        if (data_size != sizeof(libspdm_response_state_t)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         context->response_state = libspdm_read_uint32((const uint8_t *)data);
@@ -666,11 +666,11 @@ libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_t
         if (parameter->location != LIBSPDM_DATA_LOCATION_CONNECTION) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
-        target_data_size = sizeof(uint32_t);
+        target_data_size = sizeof(libspdm_connection_state_t);
         target_data = &context->connection_info.connection_state;
         break;
     case LIBSPDM_DATA_RESPONSE_STATE:
-        target_data_size = sizeof(uint32_t);
+        target_data_size = sizeof(libspdm_response_state_t);
         target_data = &context->response_state;
         break;
     case LIBSPDM_DATA_PEER_SLOT_MASK:
