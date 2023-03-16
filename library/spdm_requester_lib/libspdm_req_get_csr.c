@@ -73,7 +73,10 @@ static libspdm_return_t libspdm_try_get_csr(libspdm_context_t *spdm_context,
     }
 
     transport_header_size = spdm_context->transport_get_header_size(spdm_context);
-    libspdm_acquire_sender_buffer (spdm_context, &message_size, (void **)&message);
+    status = libspdm_acquire_sender_buffer (spdm_context, &message_size, (void **)&message);
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
+        return status;
+    }
     LIBSPDM_ASSERT (message_size >= transport_header_size);
     spdm_request = (void *)(message + transport_header_size);
     spdm_request_size = message_size - transport_header_size;
@@ -112,7 +115,10 @@ static libspdm_return_t libspdm_try_get_csr(libspdm_context_t *spdm_context,
     spdm_request = (void *)spdm_context->last_spdm_request;
 
     /* receive */
-    libspdm_acquire_receiver_buffer (spdm_context, &message_size, (void **)&message);
+    status = libspdm_acquire_receiver_buffer (spdm_context, &message_size, (void **)&message);
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
+        return status;
+    }
     LIBSPDM_ASSERT (message_size >= transport_header_size);
     spdm_response = (void *)(message);
     spdm_response_size = message_size;
