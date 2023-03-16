@@ -29,6 +29,10 @@ typedef uint32_t libspdm_return_t;
 #define LIBSPDM_STATUS_IS_ERROR(status) \
     (LIBSPDM_STATUS_SEVERITY(status) == LIBSPDM_SEVERITY_ERROR)
 
+/* Returns 1 if severity is LIBSPDM_SEVERITY_WARNING else it returns 0. */
+#define LIBSPDM_STATUS_IS_WARNING(status) \
+    (LIBSPDM_STATUS_SEVERITY(status) == LIBSPDM_SEVERITY_WARNING)
+
 /* Returns the severity of the status. */
 #define LIBSPDM_STATUS_SEVERITY(status) (((status) >> 28) & 0xf)
 
@@ -36,6 +40,7 @@ typedef uint32_t libspdm_return_t;
 #define LIBSPDM_STATUS_SOURCE(status) (((status) >> 16) & 0xff)
 
 #define LIBSPDM_SEVERITY_SUCCESS 0x0
+#define LIBSPDM_SEVERITY_WARNING 0x4
 #define LIBSPDM_SEVERITY_ERROR 0x8
 
 #define LIBSPDM_SOURCE_SUCCESS 0x00
@@ -148,7 +153,7 @@ typedef uint32_t libspdm_return_t;
 
 /* Provided cert is valid but is not authoritative(mismatch the root cert). */
 #define LIBSPDM_STATUS_VERIF_NO_AUTHORITY \
-    LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CRYPTO, 0x0003)
+    LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_WARNING, LIBSPDM_SOURCE_CRYPTO, 0x0003)
 
 /* - Certificate Parsing Errors - */
 
