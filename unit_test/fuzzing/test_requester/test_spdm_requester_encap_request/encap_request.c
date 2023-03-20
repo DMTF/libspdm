@@ -157,6 +157,7 @@ void libspdm_test_requester_encap_request(void **State)
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
@@ -187,6 +188,7 @@ void libspdm_test_requester_encap_request(void **State)
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
     libspdm_register_get_encap_response_func(spdm_context,libspdm_get_encap_response_digest);
     libspdm_send_receive_encap_request(spdm_context, &session_id);
+    libspdm_reset_message_mut_b(spdm_context);
     free(data);
 }
 
@@ -211,6 +213,7 @@ void libspdm_test_requester_encap_request_case2(void **State)
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
@@ -241,6 +244,7 @@ void libspdm_test_requester_encap_request_case2(void **State)
                                               LIBSPDM_SESSION_STATE_ESTABLISHED);
     libspdm_register_get_encap_response_func(spdm_context,libspdm_get_encap_response_digest);
     libspdm_send_receive_encap_request(spdm_context, &session_id);
+    libspdm_reset_message_mut_b(spdm_context);
     free(data);
 }
 
