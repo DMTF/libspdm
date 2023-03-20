@@ -142,7 +142,16 @@ static libspdm_return_t libspdm_process_encapsulated_response(
             spdm_context, encap_response_size, encap_response,
             &need_continue);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
-            return status;
+            /* if the Requester delivers an encapsulated ERROR message with a ResponseNotReady error code,
+             * the Responder shall terminates the encapsulated request flow by setting Param2 in
+             * the later corresponding ENCAPSULATED_RESPONSE_ACK response message to a value of zero. */
+            if (status == LIBSPDM_STATUS_NOT_READY_PEER) {
+                *encap_request_size = 0;
+                spdm_context->encap_context.current_request_op_code = 0;
+                return LIBSPDM_STATUS_SUCCESS;
+            } else {
+                return status;
+            }
         }
     }
 
@@ -485,6 +494,7 @@ libspdm_return_t libspdm_get_response_encapsulated_response_ack(
     }
 
     if (encap_request_size == 0) {
+        spdm_response->header.param1 = 0;
         spdm_response->header.param2 =
             SPDM_ENCAPSULATED_RESPONSE_ACK_RESPONSE_PAYLOAD_TYPE_ABSENT;
         if ((spdm_context->encap_context.req_slot_id != 0) &&
@@ -504,9 +514,9 @@ libspdm_return_t libspdm_get_response_encapsulated_response_ack(
 libspdm_return_t libspdm_handle_encap_error_response_main(
     libspdm_context_t *spdm_context, uint8_t error_code)
 {
-
-    /* According to "Timing Specification for SPDM messages", RESPONSE_NOT_READY is only for responder.
-     * RESPONSE_NOT_READY should not be sent by requester. No need to check it.*/
+    if (error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) {
+        return LIBSPDM_STATUS_NOT_READY_PEER;
+    }
 
     return LIBSPDM_STATUS_UNSUPPORTED_CAP;
 }
