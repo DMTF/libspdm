@@ -239,6 +239,17 @@ static libspdm_return_t libspdm_try_get_certificate(libspdm_context_t *spdm_cont
             status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
             goto done;
         }
+        if (spdm_response->portion_length > 0xFFFF - spdm_request->offset) {
+            libspdm_release_receiver_buffer (spdm_context);
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+            goto done;
+        }
+        if (spdm_response->remainder_length > 0xFFFF - spdm_request->offset -
+            spdm_response->portion_length) {
+            libspdm_release_receiver_buffer (spdm_context);
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+            goto done;
+        }
         if (spdm_request->offset == 0) {
             total_responder_cert_chain_buffer_length = spdm_response->portion_length +
                                                        spdm_response->remainder_length;
