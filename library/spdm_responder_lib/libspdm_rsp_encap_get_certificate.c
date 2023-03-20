@@ -100,6 +100,13 @@ libspdm_return_t libspdm_process_encap_response_certificate(
     }
     request_offset = (uint16_t)libspdm_get_managed_buffer_size(
         &spdm_context->encap_context.certificate_chain_buffer);
+    if (spdm_response->portion_length > 0xFFFF - request_offset) {
+        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+    }
+    if (spdm_response->remainder_length > 0xFFFF - request_offset -
+        spdm_response->portion_length) {
+        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+    }
     if (request_offset == 0) {
         spdm_context->encap_context.cert_chain_total_len = spdm_response->portion_length +
                                                            spdm_response->remainder_length;
