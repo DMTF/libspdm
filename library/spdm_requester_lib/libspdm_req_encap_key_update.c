@@ -5,6 +5,7 @@
  **/
 
 #include "internal/libspdm_requester_lib.h"
+#include "internal/libspdm_secured_message_lib.h"
 
 #if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
 

@@ -5,6 +5,7 @@
  **/
 
 #include "internal/libspdm_responder_lib.h"
+#include "internal/libspdm_secured_message_lib.h"
 
 /**
  * Process the SPDM KEY_UPDATE request and return the response.

@@ -24,6 +24,7 @@
 #include "library/spdm_transport_test_lib.h"
 #include "internal/libspdm_common_lib.h"
 #include "spdm_device_secret_lib_internal.h"
+#include "internal/libspdm_secured_message_lib.h"
 
 extern uint8_t m_libspdm_use_measurement_spec;
 extern uint32_t m_libspdm_use_measurement_hash_algo;
