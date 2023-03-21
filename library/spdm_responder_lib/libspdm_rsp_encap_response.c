@@ -142,9 +142,9 @@ static libspdm_return_t libspdm_process_encapsulated_response(
             spdm_context, encap_response_size, encap_response,
             &need_continue);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
-            /* if the Requester delivers an encapsulated ERROR message with a ResponseNotReady error code,
-             * the Responder shall terminates the encapsulated request flow by setting Param2 in
-             * the later corresponding ENCAPSULATED_RESPONSE_ACK response message to a value of zero. */
+            /* If the Requester delivers an encapsulated ERROR message with a ResponseNotReady error code,
+             * the Responder shall terminate the encapsulated request flow by setting Param2 in
+             * the corresponding ENCAPSULATED_RESPONSE_ACK response message to a value of zero. */
             if (status == LIBSPDM_STATUS_NOT_READY_PEER) {
                 *encap_request_size = 0;
                 spdm_context->encap_context.current_request_op_code = 0;
