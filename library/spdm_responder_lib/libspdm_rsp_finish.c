@@ -396,6 +396,11 @@ libspdm_return_t libspdm_get_response_finish(void *context, size_t request_size,
                                                SPDM_ERROR_CODE_SESSION_REQUIRED, 0,
                                                response_size, response);
     }
+    if (session_info->use_psk) {
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
+                                               response_size, response);
+    }
     session_state = libspdm_secured_message_get_session_state(
         session_info->secured_message_context);
     if (session_state != LIBSPDM_SESSION_STATE_HANDSHAKING) {
