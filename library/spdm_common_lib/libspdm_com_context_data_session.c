@@ -4,7 +4,7 @@
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
-#include "internal/libspdm_common_lib.h"
+#include "internal/libspdm_secured_message_lib.h"
 
 /**
  * This function initializes the session info.

@@ -8,6 +8,7 @@
 #define SPDM_RESPONDER_LIB_H
 
 #include "library/spdm_common_lib.h"
+#include "library/spdm_secured_message_lib.h"
 
 /**
  * Process the SPDM or APP request and return the response.

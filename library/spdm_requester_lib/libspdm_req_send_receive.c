@@ -5,6 +5,7 @@
  **/
 
 #include "internal/libspdm_requester_lib.h"
+#include "internal/libspdm_secured_message_lib.h"
 
 libspdm_return_t libspdm_send_request(void *spdm_context, const uint32_t *session_id,
                                       bool is_app_message,
