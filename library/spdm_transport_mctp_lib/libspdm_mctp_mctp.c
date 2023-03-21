@@ -76,14 +76,6 @@ libspdm_return_t libspdm_mctp_encode_message(const uint32_t *session_id, size_t 
     aligned_message_size =
         (message_size + (alignment - 1)) & ~(alignment - 1);
 
-    LIBSPDM_ASSERT(*transport_message_size >=
-                   aligned_message_size + sizeof(mctp_message_header_t));
-    if (*transport_message_size <
-        aligned_message_size + sizeof(mctp_message_header_t)) {
-        *transport_message_size = aligned_message_size +
-                                  sizeof(mctp_message_header_t);
-        return LIBSPDM_STATUS_BUFFER_TOO_SMALL;
-    }
     *transport_message_size =
         aligned_message_size + sizeof(mctp_message_header_t);
     *transport_message = (uint8_t *)message - sizeof(mctp_message_header_t);
