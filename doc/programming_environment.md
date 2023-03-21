@@ -22,6 +22,7 @@ dynamically allocate memory.
 libspdm has the following assumptions against the compiler, target hardware architecture, and target
 operating environment.
 - The endianness of the target architecture is little-endian.
+- The target architecture is a 32-bit or 64-bit system.
 - The compiler supports the `#pragma pack()` directive.
 - If a pointer has been `memset` to a value of `0` then the pointer is equal to `NULL`.
 - Characters are encoded as ASCII so that, for example, `('A' == 65)` evaluates to `1`.
