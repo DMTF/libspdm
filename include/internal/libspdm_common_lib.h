@@ -344,6 +344,21 @@ typedef struct {
 } libspdm_msg_log_t;
 #endif /* LIBSPDM_ENABLE_MSG_LOG */
 
+#if LIBSPDM_FIPS_MODE
+typedef struct {
+    /**
+     * Tested algo flag: 0 represents that the algo is not tested.
+     * See LIBSPDM_FIPS_SELF_TEST_xxx;
+     **/
+    uint32_t tested_algo;
+    /**
+     * Flag for the result of run algo self_test, 0 represents the result is failed.
+     * See LIBSPDM_FIPS_SELF_TEST_xxx;
+     **/
+    uint32_t self_test_result;
+} libspdm_fips_selftest_context;
+#endif /* LIBSPDM_FIPS_MODE */
+
 #define LIBSPDM_CONTEXT_STRUCT_VERSION 0x3
 
 typedef struct {
@@ -461,6 +476,10 @@ typedef struct {
 #if LIBSPDM_ENABLE_MSG_LOG
     libspdm_msg_log_t msg_log;
 #endif /* LIBSPDM_ENABLE_MSG_LOG */
+
+#if LIBSPDM_FIPS_MODE
+    libspdm_fips_selftest_context fips_selftest_context;
+#endif /* LIBSPDM_FIPS_MODE */
 } libspdm_context_t;
 
 #define LIBSPDM_CONTEXT_SIZE_WITHOUT_SECURED_CONTEXT (sizeof(libspdm_context_t))

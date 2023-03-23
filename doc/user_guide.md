@@ -47,6 +47,12 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
    spdm_context = (void *)malloc (libspdm_get_context_size());
    libspdm_init_context (spdm_context);
 
+   #if LIBSPDM_FIPS_MODE
+   spdm_fips_selftest_context = (void *)malloc(libspdm_get_fips_selftest_context_size());//user only calls the function once when device start.
+   libspdm_init_fips_selftest_context(spdm_fips_selftest_context); //user only calls the function once when device start.
+   libspdm_import_fips_selftest_context_to_spdm_context(void *spdm_context, void *fips_selftest_context, size_t fips_selftest_context_size);
+   #endif
+
    scratch_buffer_size = libspdm_get_sizeof_required_scratch_buffer(m_spdm_context);
    LIBSPDM_ASSERT (scratch_buffer_size == LIBSPDM_SCRATCH_BUFFER_SIZE);
    scratch_buffer = (void *)malloc(scratch_buffer_size);
@@ -257,6 +263,9 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
 7. Free the memory of contexts within the SPDM context when all flow is over.
    This function doesn't free the SPDM context itself.
    ```
+   #if LIBSPDM_FIPS_MODE
+   libspdm_export_fips_selftest_context_from_spdm_context(void *spdm_context, void *fips_selftest_context, size_t fips_selftest_context_size);
+   #endif
    libspdm_deinit_context(spdm_context);
    ```
 
@@ -306,6 +315,12 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
    ```
    spdm_context = (void *)malloc (spdm_get_context_size());
    libspdm_init_context (spdm_context);
+
+  #if LIBSPDM_FIPS_MODE
+   spdm_fips_selftest_context = (void *)malloc(libspdm_get_fips_selftest_context_size());//user only calls the function once when device start.
+   libspdm_init_fips_selftest_context(spdm_fips_selftest_context); //user only calls the function once when device start.
+   libspdm_import_fips_selftest_context_to_spdm_context(void *spdm_context, void *fips_selftest_context, size_t fips_selftest_context_size);
+  #endif
 
    scratch_buffer_size = libspdm_get_sizeof_required_scratch_buffer(m_spdm_context);
    LIBSPDM_ASSERT (scratch_buffer_size == LIBSPDM_SCRATCH_BUFFER_SIZE);
@@ -445,6 +460,9 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
 4. Free the memory of contexts within the SPDM context when all flow is over.
    This function doesn't free the SPDM context itself.
    ```
+   #if LIBSPDM_FIPS_MODE
+   libspdm_export_fips_selftest_context_from_spdm_context(void *spdm_context, void *fips_selftest_context, size_t fips_selftest_context_size);
+   #endif
    libspdm_deinit_context(spdm_context);
    ```
 

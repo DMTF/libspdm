@@ -306,6 +306,65 @@ libspdm_return_t libspdm_init_context_with_secured_context(void *spdm_context,
                                                            void **secured_contexts,
                                                            size_t num_secured_contexts);
 
+#if LIBSPDM_FIPS_MODE
+/**
+ * Initialize an libspdm_fips_selftest_context.
+ *
+ * The
+ *
+ * @param  spdm_context         A pointer to the SPDM context.
+ *
+ * @retval RETURN_SUCCESS       context is initialized.
+ * @retval RETURN_DEVICE_ERROR  context initialization failed.
+ */
+libspdm_return_t libspdm_init_fips_selftest_context(void *fips_selftest_context);
+
+/**
+ * Return the size in bytes of the fips_selftest_context.
+ *
+ * @return the size in bytes of the fips_selftest_context.
+ **/
+size_t libspdm_get_fips_selftest_context_size(void);
+
+/**
+ * import fips_selftest_context to spdm_context;
+ *
+ * @param[in,out]  spdm_context                A pointer to the spdm_context.
+ * @param[in]      fips_selftest_context       A pointer to the fips_selftest_context.
+ * @param[in]      fips_selftest_context_size  The size of fips_selftest_context.
+ *
+ * @retval true   import fips_selftest_context successful.
+ * @retval false  spdm_context or fips_selftest_context is null.
+ */
+bool libspdm_import_fips_selftest_context_to_spdm_context(void *spdm_context,
+                                                          void *fips_selftest_context,
+                                                          size_t fips_selftest_context_size);
+
+/**
+ * export fips_selftest_context from spdm_context;
+ *
+ * @param[in]          spdm_context                A pointer to the spdm_context.
+ * @param[in,out]      fips_selftest_context       A pointer to the fips_selftest_context.
+ * @param[in]          fips_selftest_context_size  The size of fips_selftest_context.
+ *
+ * @retval true   export fips_selftest_context successful.
+ * @retval false  spdm_context or fips_selftest_context is null.
+ */
+bool libspdm_export_fips_selftest_context_from_spdm_context(void *spdm_context,
+                                                            void *fips_selftest_context,
+                                                            size_t fips_selftest_context_size);
+
+/**
+ * update fips_selftest_context in spdm_context;
+ *
+ * @param[in]    spdm_context                A pointer to the spdm_context.
+ *
+ * @retval true   run FIPS self_test successfully;
+ * @retval false  run FIPS self_test failed;
+ */
+bool libspdm_update_fips_selftest_context(void *spdm_context);
+#endif /* LIBSPDM_FIPS_MODE */
+
 /**
  * Initialize an SPDM context, as well as secured message contexts.
  * The secured message contexts are appended to the context structure.
