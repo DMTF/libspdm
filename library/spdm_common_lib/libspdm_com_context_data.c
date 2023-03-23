@@ -6,6 +6,7 @@
 
 #include "internal/libspdm_common_lib.h"
 #include "internal/libspdm_secured_message_lib.h"
+#include "internal/libspdm_fips_lib.h"
 
 #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
 /* first section */
@@ -2304,6 +2305,469 @@ void libspdm_set_last_spdm_error_struct(void *spdm_context, libspdm_error_struct
     libspdm_copy_mem(&context->last_spdm_error, sizeof(context->last_spdm_error),
                      last_spdm_error, sizeof(libspdm_error_struct_t));
 }
+
+#if LIBSPDM_FIPS_MODE
+/**
+ * Initialize an libspdm_fips_selftest_context.
+ *
+ * @param  fips_selftest_context       A pointer to the fips_selftest_context.
+ *
+ * @retval RETURN_SUCCESS       context is initialized.
+ * @retval RETURN_DEVICE_ERROR  context initialization failed.
+ */
+libspdm_return_t libspdm_init_fips_selftest_context(void *fips_selftest_context)
+{
+    libspdm_fips_selftest_context *context;
+    LIBSPDM_ASSERT(fips_selftest_context != NULL);
+
+    context = fips_selftest_context;
+
+    /*No tested for every uesd algo*/
+    context->tested_algo = 0;
+    /*self_test reuslt is false for every uesd algo*/
+    context->self_test_result = 0;
+
+    return LIBSPDM_STATUS_SUCCESS;
+}
+
+/**
+ * Return the size in bytes of the fips_selftest_context.
+ *
+ * @return the size in bytes of the fips_selftest_context.
+ **/
+size_t libspdm_get_fips_selftest_context_size(void)
+{
+    size_t size;
+
+    size = sizeof(libspdm_fips_selftest_context);
+    return size;
+}
+
+/**
+ * import fips_selftest_context to spdm_context;
+ *
+ * @param[in,out]  spdm_context                A pointer to the spdm_context.
+ * @param[in]      fips_selftest_context       A pointer to the fips_selftest_context.
+ * @param[in]      fips_selftest_context_size  The size of fips_selftest_context.
+ *
+ * @retval true   import fips_selftest_context successful.
+ * @retval false  spdm_context or fips_selftest_context is null.
+ */
+bool libspdm_import_fips_selftest_context_to_spdm_context(void *spdm_context,
+                                                          void *fips_selftest_context,
+                                                          size_t fips_selftest_context_size)
+{
+    libspdm_fips_selftest_context *libspdm_fips_selftest_context;
+    libspdm_context_t *libspdm_context;
+
+    libspdm_context = spdm_context;
+    libspdm_fips_selftest_context = fips_selftest_context;
+
+    if ((libspdm_context == NULL) || (libspdm_fips_selftest_context == NULL)) {
+        return false;
+    }
+    if (fips_selftest_context_size != sizeof(libspdm_fips_selftest_context)) {
+        return false;
+    }
+
+    libspdm_copy_mem(&(libspdm_context->fips_selftest_context),
+                     sizeof(libspdm_fips_selftest_context),
+                     libspdm_fips_selftest_context, sizeof(libspdm_fips_selftest_context));
+    return true;
+}
+
+/**
+ * export fips_selftest_context from spdm_context;
+ *
+ * @param[in]          spdm_context                A pointer to the spdm_context.
+ * @param[in,out]      fips_selftest_context       A pointer to the fips_selftest_context.
+ * @param[in]          fips_selftest_context_size  The size of fips_selftest_context.
+ *
+ * @retval true   export fips_selftest_context successful.
+ * @retval false  spdm_context or fips_selftest_context is null.
+ */
+bool libspdm_export_fips_selftest_context_from_spdm_context(void *spdm_context,
+                                                            void *fips_selftest_context,
+                                                            size_t fips_selftest_context_size)
+{
+    libspdm_fips_selftest_context *libspdm_fips_selftest_context;
+    libspdm_context_t *libspdm_context;
+
+    libspdm_context = spdm_context;
+    libspdm_fips_selftest_context = fips_selftest_context;
+
+    if ((libspdm_context == NULL) || (libspdm_fips_selftest_context == NULL)) {
+        return false;
+    }
+    if (fips_selftest_context_size != sizeof(libspdm_fips_selftest_context)) {
+        return false;
+    }
+
+    libspdm_copy_mem(libspdm_fips_selftest_context,
+                     sizeof(libspdm_fips_selftest_context),
+                     &(libspdm_context->fips_selftest_context),
+                     sizeof(libspdm_fips_selftest_context));
+    return true;
+}
+
+/**
+ * update fips_selftest_context in spdm_context;
+ *
+ * @param[in]    spdm_context                A pointer to the spdm_context.
+ *
+ * @retval true   run FIPS self_test successfully;
+ * @retval false  run FIPS self_test failed;
+ */
+bool libspdm_update_fips_selftest_context(void *spdm_context)
+{
+    libspdm_context_t *context;
+    bool result;
+
+    result = true;
+    context = spdm_context;
+    if (context == NULL) {
+        result = false;
+    }
+
+#if LIBSPDM_FIPS_TEST_AT_LOAD
+    if (context->fips_selftest_context.tested_algo == 0) {
+        if (!libspdm_fips_run_selftest()) {
+            result = false;
+        } else {
+            /*all algos are tested and the all results passed*/
+            context->fips_selftest_context.tested_algo |=
+#if LIBSPDM_SHA256_SUPPORT
+                LIBSPDM_FIPS_SELF_TEST_HMAC_SHA256 |
+#endif/*LIBSPDM_SHA256_SUPPORT*/
+
+#if LIBSPDM_SHA384_SUPPORT
+                LIBSPDM_FIPS_SELF_TEST_HMAC_SHA384 |
+#endif/*LIBSPDM_SHA384_SUPPORT*/
+
+#if LIBSPDM_SHA512_SUPPORT
+                LIBSPDM_FIPS_SELF_TEST_HMAC_SHA512 |
+#endif/*LIBSPDM_SHA512_SUPPORT*/
+
+#if LIBSPDM_AEAD_GCM_SUPPORT
+                LIBSPDM_FIPS_SELF_TEST_AES_GCM |
+#endif/*LIBSPDM_AEAD_GCM_SUPPORT*/
+
+#if LIBSPDM_RSA_SSA_SUPPORT
+                LIBSPDM_FIPS_SELF_TEST_RSA_SSA |
+#endif/*LIBSPDM_RSA_SSA_SUPPORT*/
+
+#if LIBSPDM_SHA256_SUPPORT
+                LIBSPDM_FIPS_SELF_TEST_HKDF |
+#endif/*LIBSPDM_SHA256_SUPPORT*/
+
+#if LIBSPDM_ECDHE_SUPPORT
+                LIBSPDM_FIPS_SELF_TEST_ECDH |
+#endif/*LIBSPDM_ECDHE_SUPPORT*/
+
+#if LIBSPDM_SHA256_SUPPORT
+                LIBSPDM_FIPS_SELF_TEST_SHA256 |
+#endif/*LIBSPDM_SHA256_SUPPORT*/
+
+#if LIBSPDM_SHA384_SUPPORT
+                LIBSPDM_FIPS_SELF_TEST_SHA384 |
+#endif/*LIBSPDM_SHA384_SUPPORT*/
+
+#if LIBSPDM_SHA512_SUPPORT
+                LIBSPDM_FIPS_SELF_TEST_SHA512 |
+#endif/*LIBSPDM_SHA512_SUPPORT*/
+
+#if (LIBSPDM_SHA3_SUPPORT_TEST && LIBSPDM_SHA3_256_SUPPORT)
+                LIBSPDM_FIPS_SELF_TEST_SHA3_256 |
+#endif/*(LIBSPDM_SHA3_SUPPORT_TEST && LIBSPDM_SHA3_256_SUPPORT)*/
+
+#if (LIBSPDM_SHA3_SUPPORT_TEST && LIBSPDM_SHA3_384_SUPPORT)
+                LIBSPDM_FIPS_SELF_TEST_SHA3_384 |
+#endif/*(LIBSPDM_SHA3_SUPPORT_TEST && LIBSPDM_SHA3_384_SUPPORT)*/
+
+#if (LIBSPDM_SHA3_SUPPORT_TEST && LIBSPDM_SHA3_512_SUPPORT)
+                LIBSPDM_FIPS_SELF_TEST_SHA3_512 |
+#endif/*(LIBSPDM_SHA3_SUPPORT_TEST && LIBSPDM_SHA3_512_SUPPORT)*/
+
+#if LIBSPDM_FFDHE_SUPPORT
+                LIBSPDM_FIPS_SELF_TEST_FFDH |
+#endif/*LIBSPDM_FFDHE_SUPPORT*/
+
+#if LIBSPDM_ECDSA_SUPPORT
+                LIBSPDM_FIPS_SELF_TEST_ECDSA |
+#endif/*LIBSPDM_ECDSA_SUPPORT*/
+
+#if LIBSPDM_EDDSA_SUPPORT_TEST
+                LIBSPDM_FIPS_SELF_TEST_EDDSA |
+#endif/*LIBSPDM_EDDSA_SUPPORT_TEST*/
+
+                /*when all algos are not supported */
+                0;
+            context->fips_selftest_context.self_test_result =
+                context->fips_selftest_context.tested_algo;
+        }
+    }
+#endif/*LIBSPDM_FIPS_TEST_AT_LOAD*/
+
+#if LIBSPDM_SHA256_SUPPORT
+    if ((context->fips_selftest_context.tested_algo &
+         LIBSPDM_FIPS_SELF_TEST_HMAC_SHA256) == 0) {
+        if (!libspdm_fips_selftest_hmac_sha256()) {
+            context->fips_selftest_context.tested_algo |=
+                LIBSPDM_FIPS_SELF_TEST_HMAC_SHA256;
+            result = false;
+        } else {
+            context->fips_selftest_context.tested_algo |=
+                LIBSPDM_FIPS_SELF_TEST_HMAC_SHA256;
+            context->fips_selftest_context.self_test_result |=
+                LIBSPDM_FIPS_SELF_TEST_HMAC_SHA256;
+        }
+    }
+#endif/*LIBSPDM_SHA256_SUPPORT*/
+
+#if LIBSPDM_SHA384_SUPPORT
+    if ((context->fips_selftest_context.tested_algo &
+         LIBSPDM_FIPS_SELF_TEST_HMAC_SHA384) == 0) {
+        if (!libspdm_fips_selftest_hmac_sha384()) {
+            context->fips_selftest_context.tested_algo |=
+                LIBSPDM_FIPS_SELF_TEST_HMAC_SHA384;
+            result = false;
+        } else {
+            context->fips_selftest_context.tested_algo |=
+                LIBSPDM_FIPS_SELF_TEST_HMAC_SHA384;
+            context->fips_selftest_context.self_test_result |=
+                LIBSPDM_FIPS_SELF_TEST_HMAC_SHA384;
+        }
+    }
+#endif/*LIBSPDM_SHA384_SUPPORT*/
+
+#if LIBSPDM_SHA512_SUPPORT
+    if ((context->fips_selftest_context.tested_algo &
+         LIBSPDM_FIPS_SELF_TEST_HMAC_SHA512) == 0) {
+        if (!libspdm_fips_selftest_hmac_sha512()) {
+            context->fips_selftest_context.tested_algo |=
+                LIBSPDM_FIPS_SELF_TEST_HMAC_SHA512;
+            result = false;
+        } else {
+            context->fips_selftest_context.tested_algo |=
+                LIBSPDM_FIPS_SELF_TEST_HMAC_SHA512;
+            context->fips_selftest_context.self_test_result |=
+                LIBSPDM_FIPS_SELF_TEST_HMAC_SHA512;
+        }
+    }
+#endif/*LIBSPDM_SHA512_SUPPORT*/
+
+#if LIBSPDM_AEAD_GCM_SUPPORT
+    if ((context->fips_selftest_context.tested_algo &
+         LIBSPDM_FIPS_SELF_TEST_AES_GCM) == 0) {
+        if (!libspdm_fips_selftest_aes_gcm()) {
+            context->fips_selftest_context.tested_algo |=
+                LIBSPDM_FIPS_SELF_TEST_AES_GCM;
+            result = false;
+        } else {
+            context->fips_selftest_context.tested_algo |=
+                LIBSPDM_FIPS_SELF_TEST_AES_GCM;
+            context->fips_selftest_context.self_test_result |=
+                LIBSPDM_FIPS_SELF_TEST_AES_GCM;
+        }
+    }
+#endif/*LIBSPDM_AEAD_GCM_SUPPORT*/
+
+#if LIBSPDM_RSA_SSA_SUPPORT
+    if ((context->fips_selftest_context.tested_algo &
+         LIBSPDM_FIPS_SELF_TEST_RSA_SSA) == 0) {
+        if (!libspdm_fips_selftest_rsa_ssa()) {
+            context->fips_selftest_context.tested_algo |=
+                LIBSPDM_FIPS_SELF_TEST_RSA_SSA;
+            result = false;
+        } else {
+            context->fips_selftest_context.tested_algo |=
+                LIBSPDM_FIPS_SELF_TEST_RSA_SSA;
+            context->fips_selftest_context.self_test_result |=
+                LIBSPDM_FIPS_SELF_TEST_RSA_SSA;
+        }
+    }
+#endif/*LIBSPDM_RSA_SSA_SUPPORT*/
+
+#if LIBSPDM_SHA256_SUPPORT
+    if ((context->fips_selftest_context.tested_algo &
+         LIBSPDM_FIPS_SELF_TEST_HKDF) == 0) {
+        if (!libspdm_fips_selftest_hkdf()) {
+            context->fips_selftest_context.tested_algo |=
+                LIBSPDM_FIPS_SELF_TEST_HKDF;
+            result = false;
+        } else {
+            context->fips_selftest_context.tested_algo |=
+                LIBSPDM_FIPS_SELF_TEST_HKDF;
+            context->fips_selftest_context.self_test_result |=
+                LIBSPDM_FIPS_SELF_TEST_HKDF;
+        }
+    }
+#endif/*LIBSPDM_SHA256_SUPPORT*/
+
+#if LIBSPDM_ECDHE_SUPPORT
+    if ((context->fips_selftest_context.tested_algo &
+         LIBSPDM_FIPS_SELF_TEST_ECDH) == 0) {
+        if (!libspdm_fips_selftest_ecdh()) {
+            context->fips_selftest_context.tested_algo |=
+                LIBSPDM_FIPS_SELF_TEST_ECDH;
+            result = false;
+        } else {
+            context->fips_selftest_context.tested_algo |=
+                LIBSPDM_FIPS_SELF_TEST_ECDH;
+            context->fips_selftest_context.self_test_result |=
+                LIBSPDM_FIPS_SELF_TEST_ECDH;
+        }
+    }
+#endif/*LIBSPDM_ECDHE_SUPPORT*/
+
+#if LIBSPDM_SHA256_SUPPORT
+    if ((context->fips_selftest_context.tested_algo &
+         LIBSPDM_FIPS_SELF_TEST_SHA256) == 0) {
+        if (!libspdm_fips_selftest_sha256()) {
+            context->fips_selftest_context.tested_algo |=
+                LIBSPDM_FIPS_SELF_TEST_SHA256;
+            result = false;
+        } else {
+            context->fips_selftest_context.tested_algo |=
+                LIBSPDM_FIPS_SELF_TEST_SHA256;
+            context->fips_selftest_context.self_test_result |=
+                LIBSPDM_FIPS_SELF_TEST_SHA256;
+        }
+    }
+#endif/*LIBSPDM_SHA256_SUPPORT*/
+
+#if LIBSPDM_SHA384_SUPPORT
+    if ((context->fips_selftest_context.tested_algo &
+         LIBSPDM_FIPS_SELF_TEST_SHA384) == 0) {
+        if (!libspdm_fips_selftest_sha384()) {
+            context->fips_selftest_context.tested_algo |=
+                LIBSPDM_FIPS_SELF_TEST_SHA384;
+            result = false;
+        } else {
+            context->fips_selftest_context.tested_algo |=
+                LIBSPDM_FIPS_SELF_TEST_SHA384;
+            context->fips_selftest_context.self_test_result |=
+                LIBSPDM_FIPS_SELF_TEST_SHA384;
+        }
+    }
+#endif/*LIBSPDM_SHA384_SUPPORT*/
+
+#if LIBSPDM_SHA512_SUPPORT
+    if ((context->fips_selftest_context.tested_algo &
+         LIBSPDM_FIPS_SELF_TEST_SHA512) == 0) {
+        if (!libspdm_fips_selftest_sha512()) {
+            context->fips_selftest_context.tested_algo |=
+                LIBSPDM_FIPS_SELF_TEST_SHA512;
+            result = false;
+        } else {
+            context->fips_selftest_context.tested_algo |=
+                LIBSPDM_FIPS_SELF_TEST_SHA512;
+            context->fips_selftest_context.self_test_result |=
+                LIBSPDM_FIPS_SELF_TEST_SHA512;
+        }
+    }
+#endif/*LIBSPDM_SHA512_SUPPORT*/
+
+#if (LIBSPDM_SHA3_SUPPORT_TEST && LIBSPDM_SHA3_256_SUPPORT)
+    if ((context->fips_selftest_context.tested_algo &
+         LIBSPDM_FIPS_SELF_TEST_SHA3_256) == 0) {
+        if (!libspdm_fips_selftest_sha3_256()) {
+            context->fips_selftest_context.tested_algo |=
+                LIBSPDM_FIPS_SELF_TEST_SHA3_256;
+            result = false;
+        } else {
+            context->fips_selftest_context.tested_algo |=
+                LIBSPDM_FIPS_SELF_TEST_SHA3_256;
+            context->fips_selftest_context.self_test_result |=
+                LIBSPDM_FIPS_SELF_TEST_SHA3_256;
+        }
+    }
+#endif/*(LIBSPDM_SHA3_SUPPORT_TEST && LIBSPDM_SHA3_256_SUPPORT)*/
+
+#if (LIBSPDM_SHA3_SUPPORT_TEST && LIBSPDM_SHA3_384_SUPPORT)
+    if ((context->fips_selftest_context.tested_algo &
+         LIBSPDM_FIPS_SELF_TEST_SHA3_384) == 0) {
+        if (!libspdm_fips_selftest_sha3_384()) {
+            context->fips_selftest_context.tested_algo |=
+                LIBSPDM_FIPS_SELF_TEST_SHA3_384;
+            result = false;
+        } else {
+            context->fips_selftest_context.tested_algo |=
+                LIBSPDM_FIPS_SELF_TEST_SHA3_384;
+            context->fips_selftest_context.self_test_result |=
+                LIBSPDM_FIPS_SELF_TEST_SHA3_384;
+        }
+    }
+#endif/*(LIBSPDM_SHA3_SUPPORT_TEST && LIBSPDM_SHA3_384_SUPPORT)*/
+
+#if (LIBSPDM_SHA3_SUPPORT_TEST && LIBSPDM_SHA3_512_SUPPORT)
+    if ((context->fips_selftest_context.tested_algo &
+         LIBSPDM_FIPS_SELF_TEST_SHA3_512) == 0) {
+        if (!libspdm_fips_selftest_sha3_512()) {
+            context->fips_selftest_context.tested_algo |=
+                LIBSPDM_FIPS_SELF_TEST_SHA3_512;
+            result = false;
+        } else {
+            context->fips_selftest_context.tested_algo |=
+                LIBSPDM_FIPS_SELF_TEST_SHA3_512;
+            context->fips_selftest_context.self_test_result |=
+                LIBSPDM_FIPS_SELF_TEST_SHA3_512;
+        }
+    }
+#endif/*(LIBSPDM_SHA3_SUPPORT_TEST && LIBSPDM_SHA3_512_SUPPORT)*/
+
+#if LIBSPDM_FFDHE_SUPPORT
+    if ((context->fips_selftest_context.tested_algo &
+         LIBSPDM_FIPS_SELF_TEST_FFDH) == 0) {
+        if (!libspdm_fips_selftest_ffdh()) {
+            context->fips_selftest_context.tested_algo |=
+                LIBSPDM_FIPS_SELF_TEST_FFDH;
+            result = false;
+        } else {
+            context->fips_selftest_context.tested_algo |=
+                LIBSPDM_FIPS_SELF_TEST_FFDH;
+            context->fips_selftest_context.self_test_result |=
+                LIBSPDM_FIPS_SELF_TEST_FFDH;
+        }
+    }
+#endif/*LIBSPDM_FFDHE_SUPPORT*/
+
+#if LIBSPDM_ECDSA_SUPPORT
+    if ((context->fips_selftest_context.tested_algo &
+         LIBSPDM_FIPS_SELF_TEST_ECDSA) == 0) {
+        if (!libspdm_fips_selftest_ecdsa()) {
+            context->fips_selftest_context.tested_algo |=
+                LIBSPDM_FIPS_SELF_TEST_ECDSA;
+            result = false;
+        } else {
+            context->fips_selftest_context.tested_algo |=
+                LIBSPDM_FIPS_SELF_TEST_ECDSA;
+            context->fips_selftest_context.self_test_result |=
+                LIBSPDM_FIPS_SELF_TEST_ECDSA;
+        }
+    }
+#endif/*LIBSPDM_ECDSA_SUPPORT*/
+
+#if LIBSPDM_EDDSA_SUPPORT_TEST
+    if ((context->fips_selftest_context.tested_algo &
+         LIBSPDM_FIPS_SELF_TEST_EDDSA) == 0) {
+        if (!libspdm_fips_selftest_eddsa()) {
+            context->fips_selftest_context.tested_algo |=
+                LIBSPDM_FIPS_SELF_TEST_EDDSA;
+            result = false;
+        } else {
+            context->fips_selftest_context.tested_algo |=
+                LIBSPDM_FIPS_SELF_TEST_EDDSA;
+            context->fips_selftest_context.self_test_result |=
+                LIBSPDM_FIPS_SELF_TEST_EDDSA;
+        }
+    }
+#endif/*LIBSPDM_EDDSA_SUPPORT_TEST*/
+
+    return result;
+}
+
+#endif /* LIBSPDM_FIPS_MODE */
 
 /**
  * Initialize an SPDM context, as well as all secured message contexts,

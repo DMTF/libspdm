@@ -159,6 +159,10 @@ typedef uint32_t libspdm_return_t;
 #define LIBSPDM_STATUS_VERIF_NO_AUTHORITY \
     LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_WARNING, LIBSPDM_SOURCE_CRYPTO, 0x0003)
 
+/* FIPS test failed */
+#define LIBSPDM_STATUS_FIPS_FAIL \
+    LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CRYPTO, 0x0004)
+
 /* - Certificate Parsing Errors - */
 
 /* Certificate is malformed or does not comply to x.509 standard. */
