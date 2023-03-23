@@ -12,6 +12,15 @@
 #define LIBSPDM_FIPS_MODE 0
 #endif
 
+/**
+ * If LIBSPDM_FIPS_TEST_AT_LOAD, then libspdm runs libspdm_fips_run_selftest() at load time.
+ * If !LIBSPDM_FIPS_TEST_AT_LOAD, then libspdm runs individual libspdm_fips_selftest_xxx() when algo XXX is called and libspdm_fips_selftest_xxx() is not runs before.
+ * The integrator can always call libspdm_fips_run_selftest() at any time, regardless LIBSPDM_FIPS_TEST_AT_LOAD value.
+ **/
+#ifndef LIBSPDM_FIPS_TEST_AT_LOAD
+#define LIBSPDM_FIPS_TEST_AT_LOAD 0
+#endif
+
 /* Enables assertions and debug printing. When `LIBSPDM_DEBUG_ENABLE` is defined it overrides or
  * sets the values of `LIBSPDM_DEBUG_PRINT_ENABLE`, `LIBSPDM_DEBUG_ASSERT_ENABLE`, and
  * `LIBSPDM_BLOCK_ENABLE` to the value of `LIBSPDM_DEBUG_ENABLE`.
