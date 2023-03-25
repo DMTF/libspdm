@@ -23,7 +23,7 @@ typedef enum {
     /* Before send KEY_EXCHANGE/PSK_EXCHANGE or after END_SESSION */
     LIBSPDM_SESSION_STATE_NOT_STARTED,
 
-    /* After send KEY_EXHCNAGE, before send FINISH */
+    /* After send KEY_EXCHANGE, before send FINISH */
     LIBSPDM_SESSION_STATE_HANDSHAKING,
 
     /* After send FINISH, before END_SESSION */
