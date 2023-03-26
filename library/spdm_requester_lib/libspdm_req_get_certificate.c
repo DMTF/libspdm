@@ -76,9 +76,9 @@ static libspdm_return_t libspdm_try_get_certificate(libspdm_context_t *spdm_cont
     size_t spdm_request_size;
     libspdm_certificate_response_max_t *spdm_response;
     size_t spdm_response_size;
-    libspdm_large_managed_buffer_t certificate_chain_buffer;
     uint16_t total_responder_cert_chain_buffer_length;
     size_t cert_chain_capacity;
+    size_t cert_chain_size_internal;
     uint16_t remainder_length;
     uint8_t *message;
     size_t message_size;
@@ -89,9 +89,11 @@ static libspdm_return_t libspdm_try_get_certificate(libspdm_context_t *spdm_cont
 
     /* -=[Check Parameters Phase]=- */
     LIBSPDM_ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
+    LIBSPDM_ASSERT(cert_chain_size != NULL);
+    LIBSPDM_ASSERT(*cert_chain_size <= SPDM_MAX_CERTIFICATE_CHAIN_SIZE);
+    LIBSPDM_ASSERT(cert_chain != NULL);
 
     /* -=[Verify State Phase]=- */
-
     if (!libspdm_is_capabilities_flag_supported(
             spdm_context, true, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP)) {
@@ -103,8 +105,7 @@ static libspdm_return_t libspdm_try_get_certificate(libspdm_context_t *spdm_cont
 
     session_info = NULL;
     if (session_id != NULL) {
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context, *session_id);
+        session_info = libspdm_get_session_info_via_session_id(spdm_context, *session_id);
         if (session_info == NULL) {
             LIBSPDM_ASSERT(false);
             return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
@@ -117,8 +118,6 @@ static libspdm_return_t libspdm_try_get_certificate(libspdm_context_t *spdm_cont
     }
 
     libspdm_reset_message_buffer_via_request_code(spdm_context, session_info, SPDM_GET_CERTIFICATE);
-
-    libspdm_init_managed_buffer(&certificate_chain_buffer, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
 
     chunk_enabled =
         libspdm_is_capabilities_flag_supported(spdm_context, true,
@@ -133,6 +132,8 @@ static libspdm_return_t libspdm_try_get_certificate(libspdm_context_t *spdm_cont
 
     remainder_length = 0;
     total_responder_cert_chain_buffer_length = 0;
+    cert_chain_capacity = *cert_chain_size;
+    cert_chain_size_internal = 0;
 
     transport_header_size = spdm_context->transport_get_header_size(spdm_context);
 
@@ -150,7 +151,7 @@ static libspdm_return_t libspdm_try_get_certificate(libspdm_context_t *spdm_cont
         spdm_request->header.request_response_code = SPDM_GET_CERTIFICATE;
         spdm_request->header.param1 = slot_id;
         spdm_request->header.param2 = 0;
-        spdm_request->offset = (uint16_t)libspdm_get_managed_buffer_size(&certificate_chain_buffer);
+        spdm_request->offset = (uint16_t)cert_chain_size_internal;
         if (spdm_request->offset == 0) {
             spdm_request->length = length;
         } else {
@@ -211,8 +212,7 @@ static libspdm_return_t libspdm_try_get_certificate(libspdm_context_t *spdm_cont
                 libspdm_release_receiver_buffer (spdm_context);
                 goto done;
             }
-        } else if (spdm_response->header.request_response_code !=
-                   SPDM_CERTIFICATE) {
+        } else if (spdm_response->header.request_response_code != SPDM_CERTIFICATE) {
             libspdm_release_receiver_buffer (spdm_context);
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             goto done;
@@ -288,14 +288,19 @@ static libspdm_return_t libspdm_try_get_certificate(libspdm_context_t *spdm_cont
                        spdm_request->offset, spdm_response->portion_length));
         LIBSPDM_INTERNAL_DUMP_HEX(spdm_response->cert_chain, spdm_response->portion_length);
 
-        status = libspdm_append_managed_buffer(&certificate_chain_buffer,
-                                               spdm_response->cert_chain,
-                                               spdm_response->portion_length);
-        if (LIBSPDM_STATUS_IS_ERROR(status)) {
+        if (cert_chain_size_internal + spdm_response->portion_length > cert_chain_capacity) {
             libspdm_release_receiver_buffer (spdm_context);
             status = LIBSPDM_STATUS_BUFFER_FULL;
             goto done;
         }
+
+        libspdm_copy_mem((uint8_t *)cert_chain + cert_chain_size_internal,
+                         cert_chain_capacity - cert_chain_size_internal,
+                         spdm_response->cert_chain,
+                         spdm_response->portion_length);
+
+        cert_chain_size_internal += spdm_response->portion_length;
+
         if (spdm_context->connection_info.connection_state <
             LIBSPDM_CONNECTION_STATE_AFTER_CERTIFICATE) {
             spdm_context->connection_info.connection_state =
@@ -310,10 +315,11 @@ static libspdm_return_t libspdm_try_get_certificate(libspdm_context_t *spdm_cont
         libspdm_release_receiver_buffer (spdm_context);
     } while (remainder_length != 0);
 
+    *cert_chain_size = cert_chain_size_internal;
+
     if (spdm_context->local_context.verify_peer_spdm_cert_chain != NULL) {
         result = spdm_context->local_context.verify_peer_spdm_cert_chain (
-            spdm_context, slot_id, libspdm_get_managed_buffer_size(&certificate_chain_buffer),
-            libspdm_get_managed_buffer(&certificate_chain_buffer),
+            spdm_context, slot_id, cert_chain_size_internal, cert_chain,
             trust_anchor, trust_anchor_size);
         if (!result) {
             status = LIBSPDM_STATUS_VERIF_FAIL;
@@ -321,8 +327,7 @@ static libspdm_return_t libspdm_try_get_certificate(libspdm_context_t *spdm_cont
         }
     } else {
         result = libspdm_verify_peer_cert_chain_buffer_integrity(
-            spdm_context, libspdm_get_managed_buffer(&certificate_chain_buffer),
-            libspdm_get_managed_buffer_size(&certificate_chain_buffer));
+            spdm_context, cert_chain, cert_chain_size_internal);
         if (!result) {
             status = LIBSPDM_STATUS_VERIF_FAIL;
             goto done;
@@ -331,8 +336,7 @@ static libspdm_return_t libspdm_try_get_certificate(libspdm_context_t *spdm_cont
 
     /*verify peer cert chain authority*/
     result = libspdm_verify_peer_cert_chain_buffer_authority(
-        spdm_context, libspdm_get_managed_buffer(&certificate_chain_buffer),
-        libspdm_get_managed_buffer_size(&certificate_chain_buffer),
+        spdm_context, cert_chain,cert_chain_size_internal,
         trust_anchor, trust_anchor_size);
     if (!result) {
         status = LIBSPDM_STATUS_VERIF_NO_AUTHORITY;
@@ -341,16 +345,14 @@ static libspdm_return_t libspdm_try_get_certificate(libspdm_context_t *spdm_cont
     spdm_context->connection_info.peer_used_cert_chain_slot_id = slot_id;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer_size =
-        libspdm_get_managed_buffer_size(&certificate_chain_buffer);
+        cert_chain_size_internal;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer,
                      sizeof(spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer),
-                     libspdm_get_managed_buffer(&certificate_chain_buffer),
-                     libspdm_get_managed_buffer_size(&certificate_chain_buffer));
+                     cert_chain, cert_chain_size_internal);
 #else
     result = libspdm_hash_all(
         spdm_context->connection_info.algorithm.base_hash_algo,
-        libspdm_get_managed_buffer(&certificate_chain_buffer),
-        libspdm_get_managed_buffer_size(&certificate_chain_buffer),
+        cert_chain, cert_chain_size_internal,
         spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer_hash);
     if (!result) {
         status = LIBSPDM_STATUS_CRYPTO_ERROR;
@@ -363,8 +365,7 @@ static libspdm_return_t libspdm_try_get_certificate(libspdm_context_t *spdm_cont
     result = libspdm_get_leaf_cert_public_key_from_cert_chain(
         spdm_context->connection_info.algorithm.base_hash_algo,
         spdm_context->connection_info.algorithm.base_asym_algo,
-        libspdm_get_managed_buffer(&certificate_chain_buffer),
-        libspdm_get_managed_buffer_size(&certificate_chain_buffer),
+        cert_chain, cert_chain_size_internal,
         &spdm_context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key);
     if (!result) {
         status = LIBSPDM_STATUS_INVALID_CERT;
@@ -372,22 +373,6 @@ static libspdm_return_t libspdm_try_get_certificate(libspdm_context_t *spdm_cont
     }
 #endif
 
-    if (cert_chain_size != NULL) {
-        if (*cert_chain_size <
-            libspdm_get_managed_buffer_size(&certificate_chain_buffer)) {
-            *cert_chain_size = libspdm_get_managed_buffer_size(
-                &certificate_chain_buffer);
-            return LIBSPDM_STATUS_BUFFER_FULL;
-        }
-        cert_chain_capacity = *cert_chain_size;
-        *cert_chain_size = libspdm_get_managed_buffer_size(&certificate_chain_buffer);
-        if (cert_chain != NULL) {
-            libspdm_copy_mem(cert_chain,
-                             cert_chain_capacity,
-                             libspdm_get_managed_buffer(&certificate_chain_buffer),
-                             libspdm_get_managed_buffer_size(&certificate_chain_buffer));
-        }
-    }
     if (status != LIBSPDM_STATUS_VERIF_NO_AUTHORITY) {
         status = LIBSPDM_STATUS_SUCCESS;
     }
