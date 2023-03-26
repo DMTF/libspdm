@@ -82,6 +82,8 @@ The certificate chain slot number.
 **cert_chain_size**<br/>
 On input, indicates the size, in bytes, of the buffer in which the certificate chain will be stored.
 On output, indicates the size, in bytes, of the certificate chain.
+The maximum size of an SPDM certificate chain is given by `SPDM_MAX_CERTIFICATE_CHAIN_SIZE` and is
+64 KiB.
 
 **cert_chain**<br/>
 A pointer to a buffer of size `cert_chain_size` in which the certificate chain will be stored.
