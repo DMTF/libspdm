@@ -90,7 +90,7 @@ static libspdm_return_t libspdm_try_get_certificate(libspdm_context_t *spdm_cont
     /* -=[Check Parameters Phase]=- */
     LIBSPDM_ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
     LIBSPDM_ASSERT(cert_chain_size != NULL);
-    LIBSPDM_ASSERT(*cert_chain_size <= SPDM_MAX_CERTIFICATE_CHAIN_SIZE);
+    LIBSPDM_ASSERT(*cert_chain_size > 0);
     LIBSPDM_ASSERT(cert_chain != NULL);
 
     /* -=[Verify State Phase]=- */
@@ -316,6 +316,7 @@ static libspdm_return_t libspdm_try_get_certificate(libspdm_context_t *spdm_cont
     } while (remainder_length != 0);
 
     *cert_chain_size = cert_chain_size_internal;
+    LIBSPDM_ASSERT(*cert_chain_size <= SPDM_MAX_CERTIFICATE_CHAIN_SIZE);
 
     if (spdm_context->local_context.verify_peer_spdm_cert_chain != NULL) {
         result = spdm_context->local_context.verify_peer_spdm_cert_chain (
