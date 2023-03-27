@@ -85,7 +85,6 @@ The maximum size of an SPDM certificate chain is given by `SPDM_MAX_CERTIFICATE_
 65535 bytes.
 On output, indicates the size, in bytes, of the certificate chain.
 
-
 **cert_chain**<br/>
 A pointer to a buffer of size `cert_chain_size` in which the certificate chain will be stored.
 
