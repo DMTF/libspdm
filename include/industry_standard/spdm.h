@@ -425,7 +425,7 @@ typedef struct {
 } spdm_cert_chain_t;
 
 /* Maximum size, in bytes, of a certificate chain. */
-#define SPDM_MAX_CERTIFICATE_CHAIN_SIZE 65536
+#define SPDM_MAX_CERTIFICATE_CHAIN_SIZE 65535
 
 /* SPDM CHALLENGE request */
 typedef struct {
