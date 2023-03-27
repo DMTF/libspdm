@@ -16,6 +16,4 @@
 #include "library/memlib.h"
 #include "library/cryptlib.h"
 
-typedef size_t size_t;
-
 #endif

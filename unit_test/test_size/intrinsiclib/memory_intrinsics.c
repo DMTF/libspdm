@@ -11,8 +11,6 @@
 #include "hal/base.h"
 #include "hal/library/memlib.h"
 
-typedef size_t size_t;
-
 #if defined(__GNUC__) || defined(__clang__)
 #define GLOBAL_USED __attribute__((used))
 #else
