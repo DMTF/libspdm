@@ -574,6 +574,7 @@ uint8_t libspdm_get_cert_slot_count(libspdm_context_t *spdm_context)
     return slot_count;
 }
 
+#if LIBSPDM_CERT_PARSE_SUPPORT
 /**
  * This function verifies the integrity of peer certificate chain buffer including
  * spdm_cert_chain_t header.
@@ -766,6 +767,7 @@ bool libspdm_verify_peer_cert_chain_buffer(libspdm_context_t *spdm_context,
 
     return true;
 }
+#endif
 
 /**
  * This function generates the challenge signature based upon m1m2 for authentication.

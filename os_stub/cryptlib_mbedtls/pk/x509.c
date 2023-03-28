@@ -20,6 +20,8 @@
 #include <mbedtls/entropy.h>
 #include <mbedtls/ctr_drbg.h>
 
+#if LIBSPDM_CERT_PARSE_SUPPORT
+
 /* OID*/
 
 #define OID_COMMON_NAME       { 0x55, 0x04, 0x03 }
@@ -1841,3 +1843,5 @@ free_all:
 
     return(ret == 0);
 }
+
+#endif

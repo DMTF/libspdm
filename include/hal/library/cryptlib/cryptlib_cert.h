@@ -7,6 +7,8 @@
 #ifndef CRYPTLIB_CERT_H
 #define CRYPTLIB_CERT_H
 
+#if LIBSPDM_CERT_PARSE_SUPPORT
+
 /**
  * Retrieve the tag and length of the tag.
  *
@@ -412,5 +414,7 @@ extern bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
                                  void *context, char *subject_name,
                                  size_t *csr_len, uint8_t **csr_pointer);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP */
+
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
 
 #endif /* CRYPTLIB_CERT_H */
