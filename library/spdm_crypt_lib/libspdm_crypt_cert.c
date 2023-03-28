@@ -6,6 +6,8 @@
 
 #include "internal/libspdm_crypt_lib.h"
 
+#if LIBSPDM_CERT_PARSE_SUPPORT
+
 /**pathLenConstraint is optional.
  * In https://www.pkisolutions.com/basic-constraints-certificate-extension/:
  * pathLenConstraint: How many CAs are allowed in the chain below current CA certificate.
@@ -1315,3 +1317,5 @@ bool libspdm_verify_req_info(uint8_t *req_info, uint16_t req_info_len)
         return false;
     }
 }
+
+#endif

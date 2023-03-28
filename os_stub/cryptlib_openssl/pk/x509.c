@@ -18,6 +18,8 @@
 #include <openssl/pem.h>
 #include <openssl/bio.h>
 
+#if LIBSPDM_CERT_PARSE_SUPPORT
+
 /*buffer size to store subject object*/
 #define MAX_SBUJECT_NAME_LEN 0x100
 
@@ -2559,3 +2561,5 @@ free_all:
 
     return (ret != 0);
 }
+
+#endif

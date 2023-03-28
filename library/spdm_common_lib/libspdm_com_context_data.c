@@ -345,6 +345,7 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
             libspdm_get_hash_size(context->connection_info.algorithm.base_hash_algo);
 
         status = false;
+#if LIBSPDM_CERT_PARSE_SUPPORT
 #if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)
         if (!status) {
             status = libspdm_rsa_get_public_key_from_x509(
@@ -376,7 +377,10 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         if (!status) {
             return LIBSPDM_STATUS_INVALID_CERT;
         }
-#endif
+#else
+        LIBSPDM_ASSERT (false);
+#endif /* LIBSPDM_CERT_PARSE_SUPPORT */
+#endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
         break;
     case LIBSPDM_DATA_PEER_PUBLIC_KEY:
         context->local_context.peer_public_key_provision_size = data_size;

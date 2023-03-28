@@ -764,6 +764,8 @@ bool libspdm_aead_decryption(const spdm_version_number_t secured_message_version
  **/
 bool libspdm_get_random_number(size_t size, uint8_t *rand);
 
+#if LIBSPDM_CERT_PARSE_SUPPORT
+
 /**
  * Certificate Check for SPDM leaf cert.
  *
@@ -897,6 +899,8 @@ bool libspdm_get_leaf_cert_public_key_from_cert_chain(uint32_t base_hash_algo,
                                                       uint8_t *cert_chain_data,
                                                       size_t cert_chain_data_size,
                                                       void **public_key);
+
+#endif
 
 /**
  * Verify req info format refer to PKCS#10.
