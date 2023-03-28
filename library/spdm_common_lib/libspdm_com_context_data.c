@@ -2652,13 +2652,6 @@ libspdm_return_t libspdm_init_context(void *spdm_context)
                                                      LIBSPDM_MAX_SESSION_COUNT);
 }
 
-/**
- * Reset an SPDM context.
- *
- * The size in bytes of the spdm_context can be returned by libspdm_get_context_size.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- */
 void libspdm_reset_context(void *spdm_context)
 {
     libspdm_context_t *context;
