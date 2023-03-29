@@ -43,6 +43,8 @@ libspdm_return_t libspdm_requester_get_csr_test_send_message(
         return LIBSPDM_STATUS_SEND_FAIL;
     case 0x2:
         return LIBSPDM_STATUS_SUCCESS;
+    case 0x3:
+        return LIBSPDM_STATUS_SUCCESS;
 
     default:
         return LIBSPDM_STATUS_SEND_FAIL;
@@ -54,6 +56,7 @@ libspdm_return_t libspdm_requester_get_csr_test_receive_message(
     void **response, uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *context;
 
     spdm_test_context = libspdm_get_test_context();
     switch (spdm_test_context->case_id) {
@@ -79,6 +82,42 @@ libspdm_return_t libspdm_requester_get_csr_test_receive_message(
         spdm_response->reserved = 0;
 
         libspdm_copy_mem(spdm_response + 1, global_csr_len, csr_data_pointer, global_csr_len);
+
+        libspdm_transport_test_encode_message(spdm_context, NULL, false,
+                                              false, spdm_response_size,
+                                              spdm_response, response_size,
+                                              response);
+    }
+        return LIBSPDM_STATUS_SUCCESS;
+
+    case 0x3: {
+        spdm_csr_response_t *spdm_response;
+        size_t spdm_response_size;
+        size_t transport_header_size;
+
+        libspdm_read_requester_gen_csr((void *)&csr_data_pointer, &global_csr_len);
+
+        spdm_response_size = sizeof(spdm_csr_response_t) + global_csr_len;
+        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_12;
+        spdm_response->header.param2 = 0;
+        spdm_response->csr_length = (uint16_t)global_csr_len;
+        spdm_response->reserved = 0;
+
+        context = spdm_context;
+
+        if (context->connection_info.capability.flags &
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_INSTALL_RESET_CAP) {
+            spdm_response->header.request_response_code = SPDM_ERROR;
+            spdm_response->header.param1 = SPDM_ERROR_CODE_RESET_REQUIRED;
+        } else {
+            spdm_response->header.request_response_code = SPDM_CSR;
+            spdm_response->header.param1 = 0;
+
+            libspdm_copy_mem(spdm_response + 1, global_csr_len, csr_data_pointer, global_csr_len);
+        }
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, spdm_response_size,
@@ -158,6 +197,52 @@ void libspdm_test_requester_get_csr_case2(void **state)
     assert_memory_equal(csr_form_get, csr_data_pointer, global_csr_len);
 }
 
+/**
+ * Test 3: Successful response to set certificate for slot 0,
+ * with a reset required
+ * Expected Behavior: get a RETURN_SUCCESS return code
+ **/
+void libspdm_test_requester_get_csr_case3(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    uint8_t csr_form_get[LIBSPDM_MAX_CSR_SIZE] = {0};
+    size_t csr_len;
+
+    csr_len = LIBSPDM_MAX_CSR_SIZE;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x3;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CSR_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_INSTALL_RESET_CAP;
+
+    status = libspdm_get_csr(spdm_context, NULL, NULL, 0, NULL, 0, (void *)&csr_form_get,
+                             &csr_len);
+
+    assert_int_equal(status, LIBSPDM_STATUS_RESET_REQUIRED_PEER);
+
+    /* Let's reset the responder and send the request again */
+    spdm_context->connection_info.capability.flags &=
+        ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_INSTALL_RESET_CAP;
+
+    status = libspdm_get_csr(spdm_context, NULL, NULL, 0, NULL, 0, (void *)&csr_form_get,
+                             &csr_len);
+
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(csr_len, global_csr_len);
+    assert_memory_equal(csr_form_get, csr_data_pointer, global_csr_len);
+}
+
+
 libspdm_test_context_t m_libspdm_requester_get_csr_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     true,
@@ -172,6 +257,8 @@ int libspdm_requester_get_csr_test_main(void)
         cmocka_unit_test(libspdm_test_requester_get_csr_case1),
         /* Successful response to set certificate*/
         cmocka_unit_test(libspdm_test_requester_get_csr_case2),
+        /* Successful response to set certificate with a reset required */
+        cmocka_unit_test(libspdm_test_requester_get_csr_case3),
     };
 
     libspdm_setup_test_context(

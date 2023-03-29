@@ -103,12 +103,22 @@ static libspdm_return_t libspdm_requester_respond_if_ready(libspdm_context_t *sp
 libspdm_return_t libspdm_handle_simple_error_response(libspdm_context_t *spdm_context,
                                                       uint8_t error_code)
 {
+    spdm_set_certificate_request_t *last_spdm_request;
+
     if (error_code == SPDM_ERROR_CODE_RESPONSE_NOT_READY) {
         return LIBSPDM_STATUS_NOT_READY_PEER;
     }
 
     if (error_code == SPDM_ERROR_CODE_BUSY) {
         return LIBSPDM_STATUS_BUSY_PEER;
+    }
+
+    last_spdm_request = (void *)spdm_context->last_spdm_request;
+    if (last_spdm_request->header.request_response_code == SPDM_SET_CERTIFICATE ||
+        last_spdm_request->header.request_response_code == SPDM_GET_CSR) {
+        if (error_code == SPDM_ERROR_CODE_RESET_REQUIRED) {
+            return LIBSPDM_STATUS_RESET_REQUIRED_PEER;
+        }
     }
 
     if (error_code == SPDM_ERROR_CODE_REQUEST_RESYNCH) {

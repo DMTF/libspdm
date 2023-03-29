@@ -137,6 +137,10 @@ typedef uint32_t libspdm_return_t;
 #define LIBSPDM_STATUS_SESSION_TRY_DISCARD_KEY_UPDATE \
     LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CORE, 0x0011)
 
+/* The device needs a reset after the operation (such as set certificate). */
+#define LIBSPDM_STATUS_RESET_REQUIRED_PEER \
+    LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CORE, 0x0012)
+
 /* - Cryptography Errors - */
 
 /* Generic failure originating from the cryptography module. */
