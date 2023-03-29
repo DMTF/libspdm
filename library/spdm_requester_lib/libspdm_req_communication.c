@@ -289,27 +289,22 @@ libspdm_return_t libspdm_stop_session(void *spdm_context, uint32_t session_id,
 }
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP) */
 
-libspdm_return_t libspdm_send_receive_data(void *spdm_context, const uint32_t *session_id,
-                                           bool is_app_message,
-                                           const void *request, size_t request_size,
-                                           void *response,
-                                           size_t *response_size)
+libspdm_return_t libspdm_send_data(void *spdm_context, const uint32_t *session_id,
+                                   bool is_app_message,
+                                   const void *request, size_t request_size)
 {
     libspdm_return_t status;
     libspdm_context_t *context;
     spdm_message_header_t *spdm_request;
     size_t spdm_request_size;
-    spdm_error_response_t *spdm_response;
-    size_t spdm_response_size;
     uint8_t *message;
     size_t message_size;
     size_t transport_header_size;
 
     context = spdm_context;
-    spdm_response = response;
-
     transport_header_size = context->transport_get_header_size(context);
-    status = libspdm_acquire_sender_buffer (context, &message_size, (void **)&message);
+
+    status = libspdm_acquire_sender_buffer(context, &message_size, (void **)&message);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return status;
     }
@@ -321,19 +316,30 @@ libspdm_return_t libspdm_send_receive_data(void *spdm_context, const uint32_t *s
 
     status = libspdm_send_request(context, session_id, is_app_message,
                                   spdm_request_size, spdm_request);
+
+    libspdm_release_sender_buffer(context);
+
+    return status;
+}
+
+libspdm_return_t libspdm_receive_data(void *spdm_context, const uint32_t *session_id,
+                                      bool is_app_message,
+                                      void *response, size_t *response_size)
+{
+    libspdm_return_t status;
+    libspdm_context_t *context;
+    spdm_error_response_t *spdm_response;
+    size_t spdm_response_size;
+    uint8_t *message;
+    size_t message_size;
+
+    context = spdm_context;
+
+    status = libspdm_acquire_receiver_buffer(context, &message_size, (void **)&message);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        libspdm_release_sender_buffer (context);
         return status;
     }
-    libspdm_release_sender_buffer (context);
 
-    /* receive */
-
-    status = libspdm_acquire_receiver_buffer (context, &message_size, (void **)&message);
-    if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        return status;
-    }
-    LIBSPDM_ASSERT (message_size >= transport_header_size);
     spdm_response = (void *)(message);
     spdm_response_size = message_size;
 
@@ -362,7 +368,23 @@ libspdm_return_t libspdm_send_receive_data(void *spdm_context, const uint32_t *s
         return LIBSPDM_STATUS_BUFFER_TOO_SMALL;
     }
 
-    libspdm_release_receiver_buffer (context);
+    libspdm_release_receiver_buffer(context);
 
     return LIBSPDM_STATUS_SUCCESS;
+}
+
+libspdm_return_t libspdm_send_receive_data(void *spdm_context, const uint32_t *session_id,
+                                           bool is_app_message,
+                                           const void *request, size_t request_size,
+                                           void *response, size_t *response_size)
+{
+    libspdm_return_t status;
+
+    status = libspdm_send_data(spdm_context, session_id, is_app_message, request, request_size);
+
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
+        return status;
+    }
+
+    return libspdm_receive_data(spdm_context, session_id, is_app_message, response, response_size);
 }
