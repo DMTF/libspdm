@@ -410,23 +410,6 @@ extern bool libspdm_hkdf_sm3_256_extract_and_expand(const uint8_t *key, size_t k
                                                     uint8_t *out, size_t out_size);
 
 /**
- * Sets the public key component into the established EC context.
- *
- * For P-256, the public_size is 64. first 32-byte is X, second 32-byte is Y.
- * For P-384, the public_size is 96. first 48-byte is X, second 48-byte is Y.
- * For P-521, the public_size is 132. first 66-byte is X, second 66-byte is Y.
- *
- * @param[in, out]  ec_context   Pointer to EC context being set.
- * @param[in]       public       Pointer to the buffer to receive generated public X,Y.
- * @param[in]       public_size  The size of public buffer in bytes.
- *
- * @retval  true   EC public key component was set successfully.
- * @retval  false  Invalid EC public key component.
- **/
-extern bool libspdm_ec_set_pub_key(void *ec_context, const uint8_t *public_key,
-                                   size_t public_key_size);
-
-/**
  * Sets the private key component into the established EC context.
  *
  * For P-256, the private_key_size is 32 byte.
@@ -443,6 +426,23 @@ extern bool libspdm_ec_set_pub_key(void *ec_context, const uint8_t *public_key,
  **/
 extern bool libspdm_ec_set_priv_key(void *ec_context, const uint8_t *private_key,
                                     size_t private_key_size);
+
+/**
+ * Sets the public key component into the established EC context.
+ *
+ * For P-256, the public_size is 64. first 32-byte is X, second 32-byte is Y.
+ * For P-384, the public_size is 96. first 48-byte is X, second 48-byte is Y.
+ * For P-521, the public_size is 132. first 66-byte is X, second 66-byte is Y.
+ *
+ * @param[in, out]  ec_context   Pointer to EC context being set.
+ * @param[in]       public       Pointer to the buffer to receive generated public X,Y.
+ * @param[in]       public_size  The size of public buffer in bytes.
+ *
+ * @retval  true   EC public key component was set successfully.
+ * @retval  false  Invalid EC public key component.
+ **/
+extern bool libspdm_ec_set_pub_key(void *ec_context, const uint8_t *public_key,
+                                   size_t public_key_size);
 
 /**
  * Gets the public key component from the established EC context.
