@@ -10,52 +10,6 @@
 #include "library/spdm_common_lib.h"
 
 /**
- * Send an SPDM or an APP request to a device.
- *
- * @param  spdm_context    The SPDM context for the device.
- * @param  session_id      Indicate if the request is a secured message.
- *                         If session_id is NULL, it is a normal message.
- *                         If session_id is NOT NULL, it is a secured message.
- * @param  is_app_message  Indicates if it is an APP message or SPDM message.
- * @param  request_size    Size in bytes of the request data buffer.
- * @param  request         A pointer to a destination buffer to store the request.
- *                         The caller is responsible for having either implicit or explicit ownership
- *                         of the buffer.
- *                         For normal message, requester pointer point to transport_message + transport header size
- *                         For secured message, requester pointer will point to the scratch buffer + transport header size in spdm_context.
- *
- * @retval RETURN_SUCCESS               The SPDM request is sent successfully.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM request is sent to the device.
- **/
-libspdm_return_t libspdm_send_request(void *spdm_context, const uint32_t *session_id,
-                                      bool is_app_message,
-                                      size_t request_size, void *request);
-
-/**
- * Receive an SPDM or an APP response from a device.
- *
- * @param  spdm_context    The SPDM context for the device.
- * @param  session_id      Indicate if the response is a secured message.
- *                         If session_id is NULL, it is a normal message.
- *                         If session_id is NOT NULL, it is a secured message.
- * @param  is_app_message  Indicates if it is an APP message or SPDM message.
- * @param  response_size   Size in bytes of the response data buffer.
- * @param  response        A pointer to a destination buffer to store the response.
- *                         The caller is responsible for having either implicit or explicit
- *                         ownership of the buffer.
- *                         For normal message, response pointer still point to original transport_message.
- *                         For secured message, response pointer will point to the scratch buffer in spdm_context.
- *
- * @retval RETURN_SUCCESS               The SPDM response is received successfully.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is received from the device.
- **/
-libspdm_return_t libspdm_receive_response(void *spdm_context,
-                                          const uint32_t *session_id,
-                                          bool is_app_message,
-                                          size_t *response_size,
-                                          void **response);
-
-/**
  * This function sends GET_VERSION, GET_CAPABILITIES, NEGOTIATE_ALGORITHMS
  * to initialize the connection with SPDM responder.
  *
@@ -403,6 +357,53 @@ libspdm_return_t libspdm_stop_session(void *spdm_context, uint32_t session_id,
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP) */
 
 /**
+ * Send an SPDM or APP message.
+ *
+ * The SPDM message can be a normal message or a secured message in SPDM session.
+ *
+ * The APP message is encoded to a secured message directly in SPDM session.
+ * The APP message format is defined by the transport layer.
+ * Take MCTP as example: APP message == MCTP header (MCTP_MESSAGE_TYPE_SPDM) + SPDM message
+ *
+ * @param  spdm_context    A pointer to the SPDM context.
+ * @param  session_id      Indicates if it is a secured message protected via SPDM session.
+ *                         If session_id is NULL, it is a normal message.
+ *                         If session_id is NOT NULL, it is a secured message.
+ * @param  is_app_message  Indicates if it is an APP message or SPDM message.
+ * @param  request         A pointer to the request data.
+ * @param  request_size    Size in bytes of the request data.
+ **/
+libspdm_return_t libspdm_send_data(void *spdm_context, const uint32_t *session_id,
+                                   bool is_app_message,
+                                   const void *request, size_t request_size);
+
+/**
+ * Receive an SPDM or APP message.
+ *
+ * The SPDM message can be a normal message or a secured message in SPDM session.
+ *
+ * The APP message is encoded to a secured message directly in SPDM session.
+ * The APP message format is defined by the transport layer.
+ * Take MCTP as example: APP message == MCTP header (MCTP_MESSAGE_TYPE_SPDM) + SPDM message
+ *
+ * @param  spdm_context    A pointer to the SPDM context.
+ * @param  session_id      Indicates if it is a secured message protected via SPDM session.
+ *                         If session_id is NULL, it is a normal message.
+ *                         If session_id is NOT NULL, it is a secured message.
+ * @param  is_app_message  Indicates if it is an APP message or SPDM message.
+ * @param  response        A pointer to the response data.
+ * @param  response_size   Size in bytes of the response data.
+ *                         On input, it means the size in bytes of response data buffer.
+ *                         On output, it means the size in bytes of copied response data buffer if
+ *                         LIBSPDM_STATUS_SUCCESS is returned, and means the size in bytes of
+ *                         desired response data buffer if LIBSPDM_STATUS_BUFFER_TOO_SMALL is
+ *                         returned.
+ **/
+libspdm_return_t libspdm_receive_data(void *spdm_context, const uint32_t *session_id,
+                                      bool is_app_message,
+                                      void *response, size_t *response_size);
+
+/**
  * Send and receive an SPDM or APP message.
  *
  * The SPDM message can be a normal message or a secured message in SPDM session.
@@ -421,20 +422,16 @@ libspdm_return_t libspdm_stop_session(void *spdm_context, uint32_t session_id,
  * @param  response        A pointer to the response data.
  * @param  response_size   Size in bytes of the response data.
  *                         On input, it means the size in bytes of response data buffer.
- *                         On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                         and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
- *
- * @retval RETURN_SUCCESS               The SPDM request is set successfully.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ *                         On output, it means the size in bytes of copied response data buffer if
+ *                         LIBSPDM_STATUS_SUCCESS is returned, and means the size in bytes of
+ *                         desired response data buffer if LIBSPDM_STATUS_BUFFER_TOO_SMALL is
+ *                         returned.
  **/
 libspdm_return_t libspdm_send_receive_data(void *spdm_context,
                                            const uint32_t *session_id,
                                            bool is_app_message,
                                            const void *request, size_t request_size,
-                                           void *response,
-                                           size_t *response_size);
+                                           void *response, size_t *response_size);
 
 /**
  * This function sends HEARTBEAT
