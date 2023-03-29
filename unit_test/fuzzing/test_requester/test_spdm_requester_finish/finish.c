@@ -250,7 +250,6 @@ void libspdm_test_send_receive_finish_case3(void **State)
     uint32_t session_id;
     uint8_t req_slot_id_param;
     void *data;
-    /* void *cert_chain_data; */
     size_t data_size;
     void *hash;
     size_t hash_size;

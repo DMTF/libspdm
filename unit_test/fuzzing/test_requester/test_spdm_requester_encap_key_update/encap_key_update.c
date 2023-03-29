@@ -110,7 +110,8 @@ void libspdm_test_requester_encap_key_update(void **State)
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
-
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_set_standard_key_update_test_state(spdm_context, &session_id);
 
     session_info = &spdm_context->session_info[0];
