@@ -9,6 +9,8 @@
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
 
+static uint8_t m_libspdm_last_token;
+
 static void libspdm_set_standard_key_update_test_state(libspdm_context_t *spdm_context,
                                                        uint32_t *session_id)
 {
@@ -110,6 +112,52 @@ size_t libspdm_get_max_buffer_size(void)
 libspdm_return_t libspdm_device_send_message(void *spdm_context, size_t request_size,
                                              const void *request, uint64_t timeout)
 {
+    libspdm_return_t status;
+    uint8_t *decoded_message;
+    size_t decoded_message_size;
+    uint32_t session_id;
+    uint32_t              *message_session_id;
+    bool is_app_message;
+    libspdm_session_info_t *session_info;
+    uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint64_t sequence_number;
+    uint8_t *salt;
+
+    message_session_id = NULL;
+    session_id = 0xFFFFFFFF;
+
+    session_info = libspdm_get_session_info_via_session_id(
+        spdm_context, session_id);
+    if (session_info == NULL) {
+        return LIBSPDM_STATUS_SEND_FAIL;
+    }
+
+    memcpy(message_buffer, request, request_size);
+
+    ((libspdm_secured_message_context_t
+      *)(session_info->secured_message_context))
+    ->application_secret.request_data_sequence_number--;
+    salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
+           ->application_secret.request_data_salt;
+    sequence_number = ((libspdm_secured_message_context_t
+                        *)(session_info->secured_message_context))
+                      ->application_secret.request_data_sequence_number;
+    if (sequence_number > 0) {
+        *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
+    }
+    libspdm_get_scratch_buffer (spdm_context, (void **)&decoded_message, &decoded_message_size);
+    status = libspdm_transport_test_decode_message(spdm_context,
+                                                   &message_session_id, &is_app_message, true,
+                                                   request_size,
+                                                   message_buffer, &decoded_message_size,
+                                                   (void **)&decoded_message);
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
+        return LIBSPDM_STATUS_SEND_FAIL;
+    }
+
+    m_libspdm_last_token = ((spdm_key_update_request_t
+                             *) decoded_message)->header.param2;
+
     return LIBSPDM_STATUS_SUCCESS;
 }
 
@@ -117,7 +165,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
                                                 void **response, uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
-    uint8_t *spdm_response;
+    spdm_key_update_response_t *spdm_response;
     size_t spdm_response_size;
     size_t test_message_header_size;
     uint32_t session_id;
@@ -172,6 +220,8 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
                       (uint8_t *)spdm_test_context->test_buffer +
                       sizeof(spdm_key_update_response_t) * sub_index,
                       spdm_response_size);
+
+    spdm_response->header.param2 = m_libspdm_last_token;
 
     libspdm_transport_test_encode_message(spdm_context, &session_id, false, false,
                                           spdm_response_size,

@@ -25,6 +25,8 @@ void libspdm_test_responder_digests_case1(void **State)
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
+                                            << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->local_context.capability.flags |=
@@ -56,6 +58,8 @@ void libspdm_test_responder_digests_case2(void **State)
     spdm_test_context = *State;
 
     spdm_context = spdm_test_context->spdm_context;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
+                                            << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_BUSY;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
@@ -80,6 +84,8 @@ void libspdm_test_responder_digests_case3(void **State)
     spdm_test_context = *State;
 
     spdm_context = spdm_test_context->spdm_context;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
+                                            << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
     spdm_context->local_context.capability.flags |= 0;
     spdm_context->connection_info.connection_state =
@@ -103,6 +109,8 @@ void libspdm_test_responder_digests_case4(void **State)
     spdm_test_context = *State;
 
     spdm_context = spdm_test_context->spdm_context;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
+                                            << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
     spdm_context->local_context.capability.flags =
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
@@ -132,15 +140,23 @@ void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
     m_libspdm_responder_digests_test_context.test_buffer_size =
         test_buffer_size;
 
-    libspdm_unit_test_group_setup(&State);
-
     /* Success Case*/
+    libspdm_unit_test_group_setup(&State);
     libspdm_test_responder_digests_case1(&State);
+    libspdm_unit_test_group_teardown(&State);
+
     /* response_state: LIBSPDM_RESPONSE_STATE_BUSY*/
+    libspdm_unit_test_group_setup(&State);
     libspdm_test_responder_digests_case2(&State);
+    libspdm_unit_test_group_teardown(&State);
+
     /* response_state: LIBSPDM_RESPONSE_STATE_NORMAL*/
+    libspdm_unit_test_group_setup(&State);
     libspdm_test_responder_digests_case3(&State);
+    libspdm_unit_test_group_teardown(&State);
+
     /* capabilities.flag: SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP */
+    libspdm_unit_test_group_setup(&State);
     libspdm_test_responder_digests_case4(&State);
     libspdm_unit_test_group_teardown(&State);
 }

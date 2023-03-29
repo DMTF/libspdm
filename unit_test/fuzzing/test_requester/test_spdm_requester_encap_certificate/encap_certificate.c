@@ -20,32 +20,39 @@ void libspdm_test_requester_encap_certificate(void **State)
 {
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
+    spdm_get_certificate_request_t *spdm_request;
     size_t request_size;
     size_t response_size;
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     void *data;
     size_t data_size;
+    uint8_t slot_id;
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
+                                            << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
 
     spdm_context->connection_info.algorithm.base_hash_algo =
         SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256;
 
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size,
-                                                    NULL, NULL);
-
-    spdm_context->local_context.local_cert_chain_provision[0] = data;
-    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_request = (spdm_get_certificate_request_t *)spdm_test_context->test_buffer;
+    slot_id = spdm_request->header.param1;
 
     request_size = spdm_test_context->test_buffer_size;
     if (request_size > sizeof(spdm_get_certificate_request_t)) {
         request_size = sizeof(spdm_get_certificate_request_t);
     }
+
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size,
+                                                    NULL, NULL);
+
+    spdm_context->local_context.local_cert_chain_provision[slot_id] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[slot_id] = data_size;
 
     response_size = sizeof(response);
     libspdm_get_encap_response_certificate(spdm_context, request_size,
