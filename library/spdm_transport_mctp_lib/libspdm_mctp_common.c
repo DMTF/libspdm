@@ -109,8 +109,12 @@ libspdm_return_t libspdm_transport_mctp_encode_message(
             return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         }
 
+        transport_header_size = libspdm_transport_mctp_get_header_size(spdm_context);
+
         if (!is_app_message) {
             /* SPDM message to APP message*/
+            app_message = NULL;
+            app_message_size = transport_header_size + message_size;
             status = libspdm_mctp_encode_message(NULL, message_size,
                                                  message,
                                                  &app_message_size,
@@ -126,7 +130,6 @@ libspdm_return_t libspdm_transport_mctp_encode_message(
             app_message_size = message_size;
         }
         /* APP message to secured message*/
-        transport_header_size = libspdm_transport_mctp_get_header_size(spdm_context);
         secured_message = (uint8_t *)*transport_message + transport_header_size;
         secured_message_size = *transport_message_size - transport_header_size;
         status = libspdm_encode_secured_message(
