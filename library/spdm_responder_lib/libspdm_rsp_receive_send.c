@@ -596,9 +596,13 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
         }
     }
 
+    /* large SPDM message is the SPDM message whose size is greater than the DataTransferSize of the receiving
+     * SPDM endpoint or greater than the transmit buffer size of the sending SPDM endpoint */
     if ((status == LIBSPDM_STATUS_SUCCESS) &&
-        (context->connection_info.capability.data_transfer_size != 0) &&
-        (my_response_size > context->connection_info.capability.data_transfer_size) &&
+        (((context->connection_info.capability.data_transfer_size != 0) &&
+          (my_response_size > context->connection_info.capability.data_transfer_size)) ||
+         ((context->local_context.capability.sender_data_transfer_size != 0) &&
+          (my_response_size > context->local_context.capability.sender_data_transfer_size))) &&
         libspdm_is_capabilities_flag_supported(
             context, false, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP)) {
