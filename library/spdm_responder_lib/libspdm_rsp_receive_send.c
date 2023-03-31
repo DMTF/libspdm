@@ -592,7 +592,8 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
         }
     }
 
-    if ((context->connection_info.capability.data_transfer_size != 0) &&
+    if ((status == LIBSPDM_STATUS_SUCCESS) &&
+        (context->connection_info.capability.data_transfer_size != 0) &&
         (my_response_size > context->connection_info.capability.data_transfer_size) &&
         libspdm_is_capabilities_flag_supported(
             context, false, 0,
