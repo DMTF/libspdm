@@ -522,8 +522,12 @@ libspdm_return_t libspdm_send_spdm_request(libspdm_context_t *spdm_context,
     libspdm_session_state_t session_state;
     libspdm_return_t status;
 
-    if ((spdm_context->connection_info.capability.data_transfer_size != 0) &&
-        (request_size > spdm_context->connection_info.capability.data_transfer_size) &&
+    /* large SPDM message is the SPDM message whose size is greater than the DataTransferSize of the receiving
+     * SPDM endpoint or greater than the transmit buffer size of the sending SPDM endpoint */
+    if (((spdm_context->connection_info.capability.data_transfer_size != 0 &&
+          request_size > spdm_context->connection_info.capability.data_transfer_size) ||
+         (spdm_context->local_context.capability.sender_data_transfer_size != 0 &&
+          request_size > spdm_context->local_context.capability.sender_data_transfer_size)) &&
         !libspdm_is_capabilities_flag_supported(
             spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP,
@@ -550,10 +554,14 @@ libspdm_return_t libspdm_send_spdm_request(libspdm_context_t *spdm_context,
         }
     }
 
+    /* large SPDM message is the SPDM message whose size is greater than the DataTransferSize of the receiving
+     * SPDM endpoint or greater than the transmit buffer size of the sending SPDM endpoint */
     if (((const spdm_message_header_t*) request)->request_response_code != SPDM_GET_VERSION
         && ((const spdm_message_header_t*) request)->request_response_code != SPDM_GET_CAPABILITIES
-        && spdm_context->connection_info.capability.data_transfer_size != 0
-        && request_size > spdm_context->connection_info.capability.data_transfer_size) {
+        && ((spdm_context->connection_info.capability.data_transfer_size != 0 &&
+             request_size > spdm_context->connection_info.capability.data_transfer_size) ||
+            (spdm_context->local_context.capability.sender_data_transfer_size != 0 &&
+             request_size > spdm_context->local_context.capability.sender_data_transfer_size))) {
 
         #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
         /* libspdm_send_request is not called with the original request in this flow.
