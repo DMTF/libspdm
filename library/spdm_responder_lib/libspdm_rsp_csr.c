@@ -5,7 +5,6 @@
  **/
 
 #include "internal/libspdm_responder_lib.h"
-#include "library/spdm_device_secret_lib.h"
 
 #if LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP
 

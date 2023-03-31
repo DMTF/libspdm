@@ -9,7 +9,6 @@
 
 #include "library/spdm_secured_message_lib.h"
 #include "library/spdm_crypt_lib.h"
-#include "library/spdm_device_secret_lib.h"
 #include "internal/libspdm_common_lib.h"
 #include "hal/library/memlib.h"
 #include "hal/library/cryptlib.h"
