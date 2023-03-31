@@ -5,7 +5,6 @@
  **/
 
 #include "internal/libspdm_requester_lib.h"
-#include "hal/library/platform_lib.h"
 
 #if LIBSPDM_RESPOND_IF_READY_SUPPORT
 /**

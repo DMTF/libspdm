@@ -9,7 +9,8 @@
  * It follows the SPDM Specification.
  **/
 
-#include "library/spdm_device_secret_lib.h"
+#include "hal/library/responder_secretlib.h"
+#include "hal/library/requester_secretlib.h"
 
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 libspdm_return_t libspdm_measurement_collection(

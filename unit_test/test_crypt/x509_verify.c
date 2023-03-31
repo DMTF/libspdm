@@ -6,7 +6,6 @@
 #include "test_crypt.h"
 #include "industry_standard/spdm.h"
 #include "spdm_device_secret_lib_sample/spdm_device_secret_lib_internal.h"
-#include "library/spdm_device_secret_lib.h"
 
 static uint8_t m_libspdm_oid_subject_alt_name[] = { 0x55, 0x1D, 0x11 };
 

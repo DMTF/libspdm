@@ -15,8 +15,9 @@
 #include "library/spdm_crypt_lib.h"
 #include "spdm_crypt_ext_lib/spdm_crypt_ext_lib.h"
 #include "spdm_crypt_ext_lib/cryptlib_ext.h"
-#include "library/spdm_device_secret_lib.h"
+#include "hal/library/responder_secretlib.h"
 #include "hal/library/debuglib.h"
+#include "hal/library/cryptlib.h"
 
 #define LIBSPDM_MEASUREMENT_BLOCK_HASH_NUMBER 4
 #define LIBSPDM_MEASUREMENT_BLOCK_NUMBER (LIBSPDM_MEASUREMENT_BLOCK_HASH_NUMBER /*Index - 1~4*/ + \

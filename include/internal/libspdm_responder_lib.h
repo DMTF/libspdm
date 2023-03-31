@@ -10,6 +10,7 @@
 #include "library/spdm_responder_lib.h"
 #include "library/spdm_secured_message_lib.h"
 #include "internal/libspdm_common_lib.h"
+#include "hal/library/responder_platformlib.h"
 
 /**
  * Process the SPDM request and return the response.
