@@ -114,6 +114,8 @@ void libspdm_secured_message_set_session_type(void *spdm_secured_message_context
 void libspdm_secured_message_set_algorithms(void *spdm_secured_message_context,
                                             const spdm_version_number_t version,
                                             const spdm_version_number_t secured_message_version,
+                                            uint32_t req_capability_flags,
+                                            uint32_t rsp_capability_flags,
                                             uint32_t base_hash_algo,
                                             uint16_t dhe_named_group,
                                             uint16_t aead_cipher_suite,
@@ -124,6 +126,8 @@ void libspdm_secured_message_set_algorithms(void *spdm_secured_message_context,
     secured_message_context = spdm_secured_message_context;
     secured_message_context->version = version;
     secured_message_context->secured_message_version = secured_message_version;
+    secured_message_context->req_capability_flags = req_capability_flags;
+    secured_message_context->rsp_capability_flags = rsp_capability_flags;
     secured_message_context->base_hash_algo = base_hash_algo;
     secured_message_context->dhe_named_group = dhe_named_group;
     secured_message_context->aead_cipher_suite = aead_cipher_suite;

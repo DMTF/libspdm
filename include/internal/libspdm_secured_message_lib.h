@@ -48,6 +48,8 @@ typedef struct {
     libspdm_session_type_t session_type;
     spdm_version_number_t version;
     spdm_version_number_t secured_message_version;
+    uint32_t req_capability_flags;
+    uint32_t rsp_capability_flags;
     uint32_t base_hash_algo;
     uint16_t dhe_named_group;
     uint16_t aead_cipher_suite;
@@ -124,6 +126,8 @@ void libspdm_secured_message_set_session_type(void *spdm_secured_message_context
 void libspdm_secured_message_set_algorithms(void *spdm_secured_message_context,
                                             const spdm_version_number_t version,
                                             const spdm_version_number_t secured_message_version,
+                                            uint32_t req_capabilities_flags,
+                                            uint32_t rsp_capabilities_flags,
                                             uint32_t base_hash_algo,
                                             uint16_t dhe_named_group,
                                             uint16_t aead_cipher_suite,

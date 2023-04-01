@@ -18,6 +18,8 @@ void libspdm_session_info_init(libspdm_context_t *spdm_context,
 {
     libspdm_session_type_t session_type;
     uint32_t capabilities_flag;
+    uint32_t req_capabilities_flags;
+    uint32_t rsp_capabilities_flags;
 
     capabilities_flag = spdm_context->connection_info.capability.flags &
                         spdm_context->local_context.capability.flags;
@@ -52,6 +54,13 @@ void libspdm_session_info_init(libspdm_context_t *spdm_context,
         session_info->session_transcript.digest_context_th_backup = NULL;
     }
 #endif
+    if (spdm_context->local_context.is_requester) {
+        req_capabilities_flags = spdm_context->local_context.capability.flags;
+        rsp_capabilities_flags = spdm_context->connection_info.capability.flags;
+    } else {
+        req_capabilities_flags = spdm_context->connection_info.capability.flags;
+        rsp_capabilities_flags = spdm_context->local_context.capability.flags;
+    }
 
     libspdm_zero_mem (&(session_info->last_key_update_request), sizeof(spdm_key_update_request_t));
     libspdm_zero_mem(session_info, offsetof(libspdm_session_info_t, secured_message_context));
@@ -64,6 +73,8 @@ void libspdm_session_info_init(libspdm_context_t *spdm_context,
         session_info->secured_message_context,
         spdm_context->connection_info.version,
         spdm_context->connection_info.secured_message_version,
+        req_capabilities_flags,
+        rsp_capabilities_flags,
         spdm_context->connection_info.algorithm.base_hash_algo,
         spdm_context->connection_info.algorithm.dhe_named_group,
         spdm_context->connection_info.algorithm.aead_cipher_suite,
