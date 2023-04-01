@@ -42,7 +42,7 @@
  *                                      V
  * +---------------------------------+-------+---+
  * |SPDM_SECURED_MESSAGE_ADATA_HEADER|AppData|MAC|
- * | SessionId | SeqNum (T) | length |       |   |
+ * | SessionId | SeqNum (O) | length |       |   |
  * +---------------------------------+-------+---+
  * |                                         |   |
  *  ----------------------------------------- ---
@@ -51,6 +51,9 @@
  *                AssociatedData           AeadTag
  */
 
+/* the DSP0277 specification version */
+#define SECURED_SPDM_VERSION_10 0x10
+#define SECURED_SPDM_VERSION_11 0x11
 
 typedef struct {
     uint32_t session_id;

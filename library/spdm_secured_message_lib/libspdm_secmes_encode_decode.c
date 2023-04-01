@@ -58,8 +58,16 @@ libspdm_return_t libspdm_encode_secured_message(
     uint32_t rand_count;
     uint32_t max_rand_count;
     libspdm_session_state_t session_state;
+    spdm_version_number_t secured_spdm_version;
+    uint8_t version;
 
     secured_message_context = spdm_secured_message_context;
+    secured_spdm_version = spdm_secured_message_callbacks->get_secured_spdm_version(
+        secured_message_context->secured_message_version);
+    version = (uint8_t)(secured_spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT);
+    if (version > SECURED_SPDM_VERSION_11) {
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+    }
 
     session_type = secured_message_context->session_type;
     LIBSPDM_ASSERT((session_type == LIBSPDM_SESSION_TYPE_MAC_ONLY) ||
@@ -313,6 +321,8 @@ libspdm_return_t libspdm_decode_secured_message(
     libspdm_session_type_t session_type;
     libspdm_session_state_t session_state;
     libspdm_error_struct_t spdm_error;
+    spdm_version_number_t secured_spdm_version;
+    uint8_t version;
 
     spdm_error.error_code = 0;
     spdm_error.session_id = 0;
@@ -322,6 +332,12 @@ libspdm_return_t libspdm_decode_secured_message(
     spdm_error.session_id = session_id;
 
     secured_message_context = spdm_secured_message_context;
+    secured_spdm_version = spdm_secured_message_callbacks->get_secured_spdm_version(
+        secured_message_context->secured_message_version);
+    version = (uint8_t)(secured_spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT);
+    if (version > SECURED_SPDM_VERSION_11) {
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+    }
 
     session_type = secured_message_context->session_type;
     LIBSPDM_ASSERT((session_type == LIBSPDM_SESSION_TYPE_MAC_ONLY) ||

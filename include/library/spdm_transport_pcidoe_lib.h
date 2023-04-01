@@ -119,4 +119,16 @@ uint8_t libspdm_pci_doe_get_sequence_number(uint64_t sequence_number,
  **/
 uint32_t libspdm_pci_doe_get_max_random_number_count(void);
 
+/**
+ * This function translates the negotiated secured_message_version to a DSP0277 version.
+ *
+ * @param  secured_message_version  The version specified in binding specification and
+ *                                  negotiated in KEY_EXCHANGE/KEY_EXCHANGE_RSP.
+ *
+ * @return The DSP0277 version specified in binding specification,
+ *         which is bound to secured_message_version.
+ */
+spdm_version_number_t libspdm_pci_doe_get_secured_spdm_version(
+    spdm_version_number_t secured_message_version);
+
 #endif /* PCI_DOE_TRANSPORT_LIB_H */

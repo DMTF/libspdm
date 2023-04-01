@@ -207,12 +207,25 @@ typedef uint8_t (*libspdm_secured_message_get_sequence_number_func)(
  **/
 typedef uint32_t (*libspdm_secured_message_get_max_random_number_count_func)(void);
 
-#define SPDM_SECURED_MESSAGE_CALLBACKS_VERSION 1
+/**
+ * This function translates the negotiated secured_message_version to a DSP0277 version.
+ *
+ * @param  secured_message_version  The version specified in binding specification and
+ *                                  negotiated in KEY_EXCHANGE/KEY_EXCHANGE_RSP.
+ *
+ * @return The DSP0277 version specified in binding specification,
+ *         which is bound to secured_message_version.
+ */
+typedef spdm_version_number_t (*libspdm_secured_message_get_secured_spdm_version)(
+    spdm_version_number_t secured_message_version);
+
+#define SPDM_SECURED_MESSAGE_CALLBACKS_VERSION 2
 
 typedef struct {
     uint32_t version;
     libspdm_secured_message_get_sequence_number_func get_sequence_number;
     libspdm_secured_message_get_max_random_number_count_func get_max_random_number_count;
+    libspdm_secured_message_get_secured_spdm_version get_secured_spdm_version;
 } libspdm_secured_message_callbacks_t;
 
 typedef struct {
