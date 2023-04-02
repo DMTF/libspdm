@@ -44,6 +44,8 @@ void libspdm_test_encode_secured_message(void **State)
     spdm_secured_message_callbacks.get_sequence_number = libspdm_mctp_get_sequence_number;
     spdm_secured_message_callbacks.get_max_random_number_count =
         libspdm_mctp_get_max_random_number_count;
+    spdm_secured_message_callbacks.get_secured_spdm_version =
+        libspdm_mctp_get_secured_spdm_version;
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
     session_info = &spdm_context->session_info[0];

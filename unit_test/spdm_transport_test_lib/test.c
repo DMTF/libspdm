@@ -45,6 +45,21 @@ uint32_t libspdm_test_get_max_random_number_count(void)
 }
 
 /**
+ * This function translates the negotiated secured_message_version to a DSP0277 version.
+ *
+ * @param  secured_message_version  The version specified in binding specification and
+ *                                  negotiated in KEY_EXCHANGE/KEY_EXCHANGE_RSP.
+ *
+ * @return The DSP0277 version specified in binding specification,
+ *         which is bound to secured_message_version.
+ */
+spdm_version_number_t libspdm_test_get_secured_spdm_version(
+    spdm_version_number_t secured_message_version)
+{
+    return secured_message_version;
+}
+
+/**
  * Encode a normal message or secured message to a transport message.
  *
  * @param  session_id                    Indicates if it is a secured message protected via SPDM session.

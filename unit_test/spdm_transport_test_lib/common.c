@@ -95,6 +95,8 @@ libspdm_return_t libspdm_transport_test_encode_message(
         libspdm_test_get_sequence_number;
     spdm_secured_message_callbacks.get_max_random_number_count =
         libspdm_test_get_max_random_number_count;
+    spdm_secured_message_callbacks.get_secured_spdm_version =
+        libspdm_test_get_secured_spdm_version;
 
     if (is_app_message && (session_id == NULL)) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
@@ -218,6 +220,8 @@ libspdm_return_t libspdm_transport_test_decode_message(
         libspdm_test_get_sequence_number;
     spdm_secured_message_callbacks.get_max_random_number_count =
         libspdm_test_get_max_random_number_count;
+    spdm_secured_message_callbacks.get_secured_spdm_version =
+        libspdm_test_get_secured_spdm_version;
 
     if ((session_id == NULL) || (is_app_message == NULL)) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
