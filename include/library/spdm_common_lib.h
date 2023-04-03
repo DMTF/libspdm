@@ -199,6 +199,60 @@ typedef enum {
     LIBSPDM_RESPONSE_STATE_MAX
 } libspdm_response_state_t;
 
+/* Required scratch buffer size for libspdm internal usage.
+ * It may be used to hold the encrypted/decrypted message and/or last sent/received message.
+ * It may be used to hold the large request/response and intermediate send/receive buffer
+ * in case of chunking.
+ *
+ * If chunking is not supported, it may be just LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE.
+ * If chunking is supported, it should be at least below.
+ *
+ * +---------------+--------------+--------------------------+------------------------------+
+ * |SECURE_MESSAGE |LARGE_MESSAGE |    SENDER_RECEIVER       | LARGE_SENDER_RECEIVER        |
+ * +---------------+--------------+--------------------------+------------------------------+
+ * |<-Secure msg ->|<-Large msg ->|<-Snd/Rcv buf for chunk ->|<-Snd/Rcv buf for large msg ->|
+ *
+ * The value is NOT configurable.
+ * The value MAY be changed in different libspdm version.
+ * It is exposed here, just in case the libspdm consumer wants to configure the setting at build time.
+ */
+#if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
+
+/* first section */
+#define LIBSPDM_SCRATCH_BUFFER_SECURE_MESSAGE_OFFSET 0
+
+#define LIBSPDM_SCRATCH_BUFFER_SECURE_MESSAGE_CAPACITY (LIBSPDM_MAX_SPDM_MSG_SIZE)
+
+/* second section */
+#define LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_OFFSET (LIBSPDM_SCRATCH_BUFFER_SECURE_MESSAGE_CAPACITY)
+
+#define LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_CAPACITY (LIBSPDM_MAX_SPDM_MSG_SIZE)
+
+/* third section */
+#define LIBSPDM_SCRATCH_BUFFER_SENDER_RECEIVER_OFFSET  \
+    (LIBSPDM_SCRATCH_BUFFER_SECURE_MESSAGE_CAPACITY + \
+     LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_CAPACITY)
+
+#define LIBSPDM_SCRATCH_BUFFER_SENDER_RECEIVER_CAPACITY (LIBSPDM_MAX_SPDM_MSG_SIZE)
+
+/* fourth section */
+#define LIBSPDM_SCRATCH_BUFFER_LARGE_SENDER_RECEIVER_OFFSET  \
+    (LIBSPDM_SCRATCH_BUFFER_SECURE_MESSAGE_CAPACITY + \
+     LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_CAPACITY + \
+     LIBSPDM_SCRATCH_BUFFER_SENDER_RECEIVER_CAPACITY)
+
+#define LIBSPDM_SCRATCH_BUFFER_LARGE_SENDER_RECEIVER_CAPACITY (LIBSPDM_MAX_SPDM_MSG_SIZE)
+
+#define LIBSPDM_SCRATCH_BUFFER_SIZE (LIBSPDM_SCRATCH_BUFFER_SECURE_MESSAGE_CAPACITY + \
+                                     LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_CAPACITY + \
+                                     LIBSPDM_SCRATCH_BUFFER_SENDER_RECEIVER_CAPACITY + \
+                                     LIBSPDM_SCRATCH_BUFFER_LARGE_SENDER_RECEIVER_CAPACITY \
+                                     )
+
+#else
+#define LIBSPDM_SCRATCH_BUFFER_SIZE (LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE)
+#endif
+
 /**
  * Set an SPDM context data.
  *
