@@ -219,7 +219,7 @@ typedef uint32_t (*libspdm_secured_message_get_max_random_number_count_func)(voi
 typedef spdm_version_number_t (*libspdm_secured_message_get_secured_spdm_version)(
     spdm_version_number_t secured_message_version);
 
-#define SPDM_SECURED_MESSAGE_CALLBACKS_VERSION 2
+#define LIBSPDM_SECURED_MESSAGE_CALLBACKS_VERSION 2
 
 typedef struct {
     uint32_t version;
