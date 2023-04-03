@@ -16,7 +16,7 @@ static size_t m_libspdm_local_certificate_chain_size_test_case_1;
 static uint8_t m_libspdm_local_large_response_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
 static size_t m_libspdm_local_buffer_size;
-static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE];
+static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
 static uint8_t m_libspdm_local_certificate_chain_test_case_4[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
