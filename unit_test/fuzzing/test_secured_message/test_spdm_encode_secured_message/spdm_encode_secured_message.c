@@ -40,7 +40,7 @@ void libspdm_test_encode_secured_message(void **State)
     spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
     spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
     spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
-    spdm_secured_message_callbacks.version = SPDM_SECURED_MESSAGE_CALLBACKS_VERSION;
+    spdm_secured_message_callbacks.version = LIBSPDM_SECURED_MESSAGE_CALLBACKS_VERSION;
     spdm_secured_message_callbacks.get_sequence_number = libspdm_mctp_get_sequence_number;
     spdm_secured_message_callbacks.get_max_random_number_count =
         libspdm_mctp_get_max_random_number_count;
