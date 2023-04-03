@@ -135,12 +135,6 @@ typedef struct {
 typedef struct {
     size_t max_buffer_size;
     size_t buffer_size;
-    uint8_t buffer[LIBSPDM_MAX_MESSAGE_MEDIUM_BUFFER_SIZE];
-} libspdm_medium_managed_buffer_t;
-
-typedef struct {
-    size_t max_buffer_size;
-    size_t buffer_size;
     uint8_t buffer[LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE];
 } libspdm_small_managed_buffer_t;
 

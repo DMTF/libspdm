@@ -82,9 +82,6 @@
 #ifndef LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE
 #define LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE 0x100  /* to hold message_a before negotiate*/
 #endif
-#ifndef LIBSPDM_MAX_MESSAGE_MEDIUM_BUFFER_SIZE
-#define LIBSPDM_MAX_MESSAGE_MEDIUM_BUFFER_SIZE 0x300 /* to hold message_k before finished_key is ready*/
-#endif
 
 #ifndef LIBSPDM_MAX_CSR_SIZE
 #define LIBSPDM_MAX_CSR_SIZE 0x1000
