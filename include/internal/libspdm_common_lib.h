@@ -132,11 +132,55 @@ typedef struct {
     uint8_t buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 } libspdm_large_managed_buffer_t;
 
+/*
+ * +--------------------------+------------------------------------------+---------+
+ * | GET_VERSION              | 4                                        | 1       |
+ * | VERSION {1.0, 1.1, 1.2}  | 6 + 2 * 3 = 12                           | 1       |
+ * +--------------------------+------------------------------------------+---------+
+ * | GET_CAPABILITIES 1.2     | 20                                       | 1       |
+ * | CAPABILITIES 1.2         | 20                                       | 1       |
+ * +--------------------------+------------------------------------------+---------+
+ * | NEGOTIATE_ALGORITHMS 1.2 | 32 + 4 * 4 = 48                          | 2       |
+ * | ALGORITHMS 1.2           | 36 + 4 * 4 = 52                          | 2       |
+ * +--------------------------+------------------------------------------+---------+
+ */
+#define LIBSPDM_MAX_MESSAGE_VCA_BUFFER_SIZE (150 + 2 * LIBSPDM_MAX_VERSION_COUNT)
+
 typedef struct {
     size_t max_buffer_size;
     size_t buffer_size;
-    uint8_t buffer[LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE];
-} libspdm_small_managed_buffer_t;
+    uint8_t buffer[LIBSPDM_MAX_MESSAGE_VCA_BUFFER_SIZE];
+} libspdm_vca_managed_buffer_t;
+
+typedef struct {
+    size_t max_buffer_size;
+    size_t buffer_size;
+    uint8_t buffer[LIBSPDM_MAX_MESSAGE_B_BUFFER_SIZE];
+} libspdm_message_b_managed_buffer_t;
+
+typedef struct {
+    size_t max_buffer_size;
+    size_t buffer_size;
+    uint8_t buffer[LIBSPDM_MAX_MESSAGE_C_BUFFER_SIZE];
+} libspdm_message_c_managed_buffer_t;
+
+typedef struct {
+    size_t max_buffer_size;
+    size_t buffer_size;
+    uint8_t buffer[LIBSPDM_MAX_MESSAGE_M_BUFFER_SIZE];
+} libspdm_message_m_managed_buffer_t;
+
+typedef struct {
+    size_t max_buffer_size;
+    size_t buffer_size;
+    uint8_t buffer[LIBSPDM_MAX_MESSAGE_K_BUFFER_SIZE];
+} libspdm_message_k_managed_buffer_t;
+
+typedef struct {
+    size_t max_buffer_size;
+    size_t buffer_size;
+    uint8_t buffer[LIBSPDM_MAX_MESSAGE_F_BUFFER_SIZE];
+} libspdm_message_f_managed_buffer_t;
 
 /* signature = Sign(SK, hash(M1))
  * Verify(PK, hash(M2), signature)*/
@@ -158,13 +202,13 @@ typedef struct {
 
 typedef struct {
     /* the message_a must be plan text because we do not know the algorithm yet.*/
-    libspdm_small_managed_buffer_t message_a;
+    libspdm_vca_managed_buffer_t message_a;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    libspdm_large_managed_buffer_t message_b;
-    libspdm_small_managed_buffer_t message_c;
-    libspdm_large_managed_buffer_t message_mut_b;
-    libspdm_small_managed_buffer_t message_mut_c;
-    libspdm_large_managed_buffer_t message_m;
+    libspdm_message_b_managed_buffer_t message_b;
+    libspdm_message_c_managed_buffer_t message_c;
+    libspdm_message_b_managed_buffer_t message_mut_b;
+    libspdm_message_c_managed_buffer_t message_mut_c;
+    libspdm_message_m_managed_buffer_t message_m;
 #else
     void *digest_context_m1m2;
     void *digest_context_mut_m1m2;
@@ -222,9 +266,9 @@ typedef struct {
 
 typedef struct {
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    libspdm_large_managed_buffer_t message_k;
-    libspdm_large_managed_buffer_t message_f;
-    libspdm_large_managed_buffer_t message_m;
+    libspdm_message_k_managed_buffer_t message_k;
+    libspdm_message_f_managed_buffer_t message_f;
+    libspdm_message_m_managed_buffer_t message_m;
 #else
     bool message_f_initialized;
     void *digest_context_th;

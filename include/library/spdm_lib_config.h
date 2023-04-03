@@ -79,12 +79,77 @@
 #ifndef LIBSPDM_MAX_MESSAGE_BUFFER_SIZE
 #define LIBSPDM_MAX_MESSAGE_BUFFER_SIZE 0x1200
 #endif
-#ifndef LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE
-#define LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE 0x100  /* to hold message_a before negotiate*/
-#endif
 
 #ifndef LIBSPDM_MAX_CSR_SIZE
 #define LIBSPDM_MAX_CSR_SIZE 0x1000
+#endif
+
+/*
+ * +--------------------------+------------------------------------------+---------+
+ * | GET_DIGESTS 1.2          | 4                                        | 1       |
+ * | DIGESTS 1.2              | 4 + H * SlotNum = [36, 516]              | [1, 18] |
+ * +--------------------------+------------------------------------------+---------+
+ * | GET_CERTIFICATE 1.2      | 8                                        | 1       |
+ * | CERTIFICATE 1.2          | 8 + PortionLen                           | [1, ]   |
+ * +--------------------------+------------------------------------------+---------+
+ */
+#ifndef LIBSPDM_MAX_MESSAGE_B_BUFFER_SIZE
+#define LIBSPDM_MAX_MESSAGE_B_BUFFER_SIZE (24 + \
+                                           LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT + \
+                                           LIBSPDM_MAX_CERT_CHAIN_SIZE)
+#endif
+
+/*
+ * +--------------------------+------------------------------------------+---------+
+ * | CHALLENGE 1.2            | 40                                       | 1       |
+ * | CHALLENGE_AUTH 1.2       | 38 + H * 2 + S [+ O] = [166, 678]        | [6, 23] |
+ * +--------------------------+------------------------------------------+---------+
+ */
+#ifndef LIBSPDM_MAX_MESSAGE_C_BUFFER_SIZE
+#define LIBSPDM_MAX_MESSAGE_C_BUFFER_SIZE (78 + \
+                                           LIBSPDM_MAX_HASH_SIZE * 2 + \
+                                           LIBSPDM_MAX_ASYM_KEY_SIZE + SPDM_MAX_OPAQUE_DATA_SIZE)
+#endif
+
+/*
+ * +--------------------------+------------------------------------------+---------+
+ * | GET_MEASUREMENTS 1.2     | 5 + Nonce (0 or 32)                      | 1       |
+ * | MEASUREMENTS 1.2         | 42 + MeasRecLen (+ S) [+ O] = [106, 554] | [4, 19] |
+ * +--------------------------+------------------------------------------+---------+
+ */
+#ifndef LIBSPDM_MAX_MESSAGE_M_BUFFER_SIZE
+#define LIBSPDM_MAX_MESSAGE_M_BUFFER_SIZE (47 + SPDM_NONCE_SIZE + \
+                                           LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE + \
+                                           LIBSPDM_MAX_ASYM_KEY_SIZE + SPDM_MAX_OPAQUE_DATA_SIZE)
+#endif
+
+/*
+ * +--------------------------+------------------------------------------+---------+
+ * | KEY_EXCHANGE 1.2         | 42 + D [+ O] = [106, 554]                | [4, 19] |
+ * | KEY_EXCHANGE_RSP 1.2     | 42 + D + H + S (+ H) [+ O] = [234, 1194] | [8, 40] |
+ * +--------------------------+------------------------------------------+---------+
+ * | PSK_EXCHANGE 1.2         | 12 [+ PSKHint] + R [+ O] = 44            | 2       |
+ * | PSK_EXCHANGE_RSP 1.2     | 12 + R + H (+ H) [+ O] = [108, 172]      | [4, 6]  |
+ * +--------------------------+------------------------------------------+---------+
+ */
+#ifndef LIBSPDM_MAX_MESSAGE_K_BUFFER_SIZE
+#define LIBSPDM_MAX_MESSAGE_K_BUFFER_SIZE (84 + LIBSPDM_MAX_DHE_KEY_SIZE * 2 + \
+                                           LIBSPDM_MAX_HASH_SIZE * 2 + LIBSPDM_MAX_ASYM_KEY_SIZE + \
+                                           SPDM_MAX_OPAQUE_DATA_SIZE * 2)
+#endif
+
+/*
+ * +--------------------------+------------------------------------------+---------+
+ * | FINISH 1.2               | 4 (+ S) + H = [100, 580]                 | [4, 20] |
+ * | FINISH_RSP 1.2           | 4 (+ H) = [36, 69]                       | [1, 3]  |
+ * +--------------------------+------------------------------------------+---------+
+ * | PSK_FINISH 1.2           | 4 + H = [36, 68]                         | [1, 3]  |
+ * | PSK_FINISH_RSP 1.2       | 4                                        | 1       |
+ * +--------------------------+------------------------------------------+---------+
+ */
+#ifndef LIBSPDM_MAX_MESSAGE_F_BUFFER_SIZE
+#define LIBSPDM_MAX_MESSAGE_F_BUFFER_SIZE (8 + LIBSPDM_MAX_HASH_SIZE * 2 + \
+                                           LIBSPDM_MAX_ASYM_KEY_SIZE)
 #endif
 
 /* To ensure integrity in communication between the Requester and the Responder libspdm calculates
