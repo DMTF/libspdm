@@ -51,11 +51,11 @@ extendedKeyUsage = critical, serverAuth, clientAuth
 
 ```
 pushd rsa2048
-openssl req -nodes -x509 -days 3650 -newkey rsa:4096 -keyout ca.key -out ca.cert -sha256 -subj "/CN=intel test RSA CA"
+openssl req -nodes -x509 -days 3650 -newkey rsa:4096 -keyout ca.key -out ca.cert -sha256 -subj "//CN=DMTF libspdm RSA CA"
 openssl rsa -in ca.key -outform der -out ca.key.der
-openssl req -nodes -newkey rsa:3072 -keyout inter.key -out inter.req -sha256 -batch -subj "/CN=intel test RSA intermediate cert"
-openssl req -nodes -newkey rsa:2048 -keyout end_requester.key -out end_requester.req -sha256 -batch -subj "/CN=intel test RSA requseter cert"
-openssl req -nodes -newkey rsa:2048 -keyout end_responder.key -out end_responder.req -sha256 -batch -subj "/CN=intel test RSA responder cert"
+openssl req -nodes -newkey rsa:3072 -keyout inter.key -out inter.req -sha256 -batch -subj "//CN=DMTF libspdm RSA intermediate cert"
+openssl req -nodes -newkey rsa:2048 -keyout end_requester.key -out end_requester.req -sha256 -batch -subj "//CN=DMTF libspdm RSA requseter cert"
+openssl req -nodes -newkey rsa:2048 -keyout end_responder.key -out end_responder.req -sha256 -batch -subj "//CN=DMTF libspdm RSA responder cert"
 openssl x509 -req -in inter.req -out inter.cert -CA ca.cert -CAkey ca.key -sha256 -days 3650 -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
 openssl x509 -req -in end_requester.req -out end_requester.cert -CA inter.cert -CAkey inter.key -sha256 -days 3650 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
 openssl x509 -req -in end_responder.req -out end_responder.cert -CA inter.cert -CAkey inter.key -sha256 -days 3650 -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
@@ -74,11 +74,11 @@ openssl pkey -in end_responder.key -inform PEM -pubout -outform DER -out end_res
 popd
 
 pushd rsa3072
-openssl req -nodes -x509 -days 3650 -newkey rsa:4096 -keyout ca.key -out ca.cert -sha384 -subj "//CN=intel test RSA CA"
+openssl req -nodes -x509 -days 3650 -newkey rsa:4096 -keyout ca.key -out ca.cert -sha384 -subj "//CN=DMTF libspdm RSA CA"
 openssl rsa -in ca.key -outform der -out ca.key.der
-openssl req -nodes -newkey rsa:3072 -keyout inter.key -out inter.req -sha384 -batch -subj "//CN=intel test RSA intermediate cert"
-openssl req -nodes -newkey rsa:3072 -keyout end_requester.key -out end_requester.req -sha384 -batch -subj "//CN=intel test RSA requseter cert"
-openssl req -nodes -newkey rsa:3072 -keyout end_responder.key -out end_responder.req -sha384 -batch -subj "//CN=intel test RSA responder cert"
+openssl req -nodes -newkey rsa:3072 -keyout inter.key -out inter.req -sha384 -batch -subj "//CN=DMTF libspdm RSA intermediate cert"
+openssl req -nodes -newkey rsa:3072 -keyout end_requester.key -out end_requester.req -sha384 -batch -subj "//CN=DMTF libspdm RSA requseter cert"
+openssl req -nodes -newkey rsa:3072 -keyout end_responder.key -out end_responder.req -sha384 -batch -subj "//CN=DMTF libspdm RSA responder cert"
 openssl x509 -req -in inter.req -out inter.cert -CA ca.cert -CAkey ca.key -sha384 -days 3650 -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
 openssl x509 -req -in end_requester.req -out end_requester.cert -CA inter.cert -CAkey inter.key -sha384 -days 3650 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
 openssl x509 -req -in end_responder.req -out end_responder.cert -CA inter.cert -CAkey inter.key -sha384 -days 3650 -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
@@ -97,11 +97,11 @@ openssl pkey -in end_responder.key -inform PEM -pubout -outform DER -out end_res
 popd
 
 pushd rsa4096
-openssl req -nodes -x509 -days 3650 -newkey rsa:4096 -keyout ca.key -out ca.cert -sha512 -subj "//CN=intel test RSA CA"
+openssl req -nodes -x509 -days 3650 -newkey rsa:4096 -keyout ca.key -out ca.cert -sha512 -subj "//CN=DMTF libspdm RSA CA"
 openssl rsa -in ca.key -outform der -out ca.key.der
-openssl req -nodes -newkey rsa:3072 -keyout inter.key -out inter.req -sha512 -batch -subj "//CN=intel test RSA intermediate cert"
-openssl req -nodes -newkey rsa:4096 -keyout end_requester.key -out end_requester.req -sha512 -batch -subj "//CN=intel test RSA requseter cert"
-openssl req -nodes -newkey rsa:4096 -keyout end_responder.key -out end_responder.req -sha512 -batch -subj "//CN=intel test RSA responder cert"
+openssl req -nodes -newkey rsa:3072 -keyout inter.key -out inter.req -sha512 -batch -subj "//CN=DMTF libspdm RSA intermediate cert"
+openssl req -nodes -newkey rsa:4096 -keyout end_requester.key -out end_requester.req -sha512 -batch -subj "//CN=DMTF libspdm RSA requseter cert"
+openssl req -nodes -newkey rsa:4096 -keyout end_responder.key -out end_responder.req -sha512 -batch -subj "//CN=DMTF libspdm RSA responder cert"
 openssl x509 -req -in inter.req -out inter.cert -CA ca.cert -CAkey ca.key -sha512 -days 3650 -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
 openssl x509 -req -in end_requester.req -out end_requester.cert -CA inter.cert -CAkey inter.key -sha512 -days 3650 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
 openssl x509 -req -in end_responder.req -out end_responder.cert -CA inter.cert -CAkey inter.key -sha512 -days 3650 -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
@@ -123,11 +123,11 @@ popd
 
 pushd ecp256
 openssl genpkey -genparam -out param.pem -algorithm EC -pkeyopt ec_paramgen_curve:P-256
-openssl req -nodes -x509 -days 3650 -newkey ec:param.pem -keyout ca.key -out ca.cert -sha256 -subj "/CN=intel test ECP256 CA"
+openssl req -nodes -x509 -days 3650 -newkey ec:param.pem -keyout ca.key -out ca.cert -sha256 -subj "//CN=DMTF libspdm ECP256 CA"
 openssl pkey -in ca.key -outform der -out ca.key.der
-openssl req -nodes -newkey ec:param.pem -keyout inter.key -out inter.req -sha256 -batch -subj "/CN=intel test ECP256 intermediate cert"
-openssl req -nodes -newkey ec:param.pem -keyout end_requester.key -out end_requester.req -sha256 -batch -subj "/CN=intel test ECP256 requseter cert"
-openssl req -nodes -newkey ec:param.pem -keyout end_responder.key -out end_responder.req -sha256 -batch -subj "/CN=intel test ECP256 responder cert"
+openssl req -nodes -newkey ec:param.pem -keyout inter.key -out inter.req -sha256 -batch -subj "//CN=DMTF libspdm ECP256 intermediate cert"
+openssl req -nodes -newkey ec:param.pem -keyout end_requester.key -out end_requester.req -sha256 -batch -subj "//CN=DMTF libspdm ECP256 requseter cert"
+openssl req -nodes -newkey ec:param.pem -keyout end_responder.key -out end_responder.req -sha256 -batch -subj "//CN=DMTF libspdm ECP256 responder cert"
 openssl x509 -req -in inter.req -out inter.cert -CA ca.cert -CAkey ca.key -sha256 -days 3650 -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
 openssl x509 -req -in end_requester.req -out end_requester.cert -CA inter.cert -CAkey inter.key -sha256 -days 3650 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
 openssl x509 -req -in end_responder.req -out end_responder.cert -CA inter.cert -CAkey inter.key -sha256 -days 3650 -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
@@ -149,11 +149,11 @@ popd
 
 pushd ecp384
 openssl genpkey -genparam -out param.pem -algorithm EC -pkeyopt ec_paramgen_curve:P-384
-openssl req -nodes -x509 -days 3650 -newkey ec:param.pem -keyout ca.key -out ca.cert -sha384 -subj "/CN=intel test ECP256 CA"
+openssl req -nodes -x509 -days 3650 -newkey ec:param.pem -keyout ca.key -out ca.cert -sha384 -subj "//CN=DMTF libspdm ECP256 CA"
 openssl pkey -in ca.key -outform der -out ca.key.der
-openssl req -nodes -newkey ec:param.pem -keyout inter.key -out inter.req -sha384 -batch -subj "/CN=intel test ECP256 intermediate cert"
-openssl req -nodes -newkey ec:param.pem -keyout end_requester.key -out end_requester.req -sha384 -batch -subj "/CN=intel test ECP256 requseter cert"
-openssl req -nodes -newkey ec:param.pem -keyout end_responder.key -out end_responder.req -sha384 -batch -subj "/CN=intel test ECP256 responder cert"
+openssl req -nodes -newkey ec:param.pem -keyout inter.key -out inter.req -sha384 -batch -subj "//CN=DMTF libspdm ECP256 intermediate cert"
+openssl req -nodes -newkey ec:param.pem -keyout end_requester.key -out end_requester.req -sha384 -batch -subj "//CN=DMTF libspdm ECP256 requseter cert"
+openssl req -nodes -newkey ec:param.pem -keyout end_responder.key -out end_responder.req -sha384 -batch -subj "//CN=DMTF libspdm ECP256 responder cert"
 openssl x509 -req -in inter.req -out inter.cert -CA ca.cert -CAkey ca.key -sha384 -days 3650 -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
 openssl x509 -req -in end_requester.req -out end_requester.cert -CA inter.cert -CAkey inter.key -sha384 -days 3650 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
 openssl x509 -req -in end_responder.req -out end_responder.cert -CA inter.cert -CAkey inter.key -sha384 -days 3650 -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
@@ -175,11 +175,11 @@ popd
 
 pushd ecp521
 openssl genpkey -genparam -out param.pem -algorithm EC -pkeyopt ec_paramgen_curve:P-521
-openssl req -nodes -x509 -days 3650 -newkey ec:param.pem -keyout ca.key -out ca.cert -sha512 -subj "//CN=intel test ECP256 CA"
+openssl req -nodes -x509 -days 3650 -newkey ec:param.pem -keyout ca.key -out ca.cert -sha512 -subj "//CN=DMTF libspdm ECP256 CA"
 openssl pkey -in ca.key -outform der -out ca.key.der
-openssl req -nodes -newkey ec:param.pem -keyout inter.key -out inter.req -sha512 -batch -subj "//CN=intel test ECP256 intermediate cert"
-openssl req -nodes -newkey ec:param.pem -keyout end_requester.key -out end_requester.req -sha512 -batch -subj "//CN=intel test ECP256 requseter cert"
-openssl req -nodes -newkey ec:param.pem -keyout end_responder.key -out end_responder.req -sha512 -batch -subj "//CN=intel test ECP256 responder cert"
+openssl req -nodes -newkey ec:param.pem -keyout inter.key -out inter.req -sha512 -batch -subj "//CN=DMTF libspdm ECP256 intermediate cert"
+openssl req -nodes -newkey ec:param.pem -keyout end_requester.key -out end_requester.req -sha512 -batch -subj "//CN=DMTF libspdm ECP256 requseter cert"
+openssl req -nodes -newkey ec:param.pem -keyout end_responder.key -out end_responder.req -sha512 -batch -subj "//CN=DMTF libspdm ECP256 responder cert"
 openssl x509 -req -in inter.req -out inter.cert -CA ca.cert -CAkey ca.key -sha512 -days 3650 -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
 openssl x509 -req -in end_requester.req -out end_requester.cert -CA inter.cert -CAkey inter.key -sha512 -days 3650 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
 openssl x509 -req -in end_responder.req -out end_responder.cert -CA inter.cert -CAkey inter.key -sha512 -days 3650 -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
@@ -203,13 +203,13 @@ popd
 
 pushd ed25519
 openssl genpkey -algorithm ed25519 -out ca.key
-openssl req -nodes -x509 -days 3650 -key ca.key -out ca.cert -subj "/CN=intel test ED25519 CA"
+openssl req -nodes -x509 -days 3650 -key ca.key -out ca.cert -subj "//CN=DMTF libspdm ED25519 CA"
 openssl genpkey -algorithm ed25519 -out inter.key
 openssl genpkey -algorithm ed25519 -out end_requester.key
 openssl genpkey -algorithm ed25519 -out end_responder.key
-openssl req -new -key inter.key -out inter.req -batch -subj "/CN=intel test ED25519 intermediate cert"
-openssl req -new -key end_requester.key -out end_requester.req -batch -subj "/CN=intel test ED25519 requseter cert"
-openssl req -new -key end_responder.key -out end_responder.req -batch -subj "/CN=intel test ED25519 responder cert"
+openssl req -new -key inter.key -out inter.req -batch -subj "//CN=DMTF libspdm ED25519 intermediate cert"
+openssl req -new -key end_requester.key -out end_requester.req -batch -subj "//CN=DMTF libspdm ED25519 requseter cert"
+openssl req -new -key end_responder.key -out end_responder.req -batch -subj "//CN=DMTF libspdm ED25519 responder cert"
 openssl x509 -req -days 3650 -in inter.req -CA ca.cert -CAkey ca.key -out inter.cert -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
 openssl x509 -req -days 3650 -in end_requester.req -CA inter.cert -CAkey inter.key -out end_requester.cert -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
 openssl x509 -req -days 3650 -in end_responder.req -CA inter.cert -CAkey inter.key -out end_responder.cert -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
@@ -231,13 +231,13 @@ popd
 
 pushd ed448
 openssl genpkey -algorithm ed448 -out ca.key
-openssl req -nodes -x509 -days 3650 -key ca.key -out ca.cert -subj "/CN=intel test ED448 CA"
+openssl req -nodes -x509 -days 3650 -key ca.key -out ca.cert -subj "//CN=DMTF libspdm ED448 CA"
 openssl genpkey -algorithm ed448 -out inter.key
 openssl genpkey -algorithm ed448 -out end_requester.key
 openssl genpkey -algorithm ed448 -out end_responder.key
-openssl req -new -key inter.key -out inter.req -batch -subj "/CN=intel test ED448 intermediate cert"
-openssl req -new -key end_requester.key -out end_requester.req -batch -subj "/CN=intel test ED448 requseter cert"
-openssl req -new -key end_responder.key -out end_responder.req -batch -subj "/CN=intel test ED448 responder cert"
+openssl req -new -key inter.key -out inter.req -batch -subj "//CN=DMTF libspdm ED448 intermediate cert"
+openssl req -new -key end_requester.key -out end_requester.req -batch -subj "//CN=DMTF libspdm ED448 requseter cert"
+openssl req -new -key end_responder.key -out end_responder.req -batch -subj "//CN=DMTF libspdm ED448 responder cert"
 openssl x509 -req -days 3650 -in inter.req -CA ca.cert -CAkey ca.key -out inter.cert -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
 openssl x509 -req -days 3650 -in end_requester.req -CA inter.cert -CAkey inter.key -out end_requester.cert -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
 openssl x509 -req -days 3650 -in end_responder.req -CA inter.cert -CAkey inter.key -out end_responder.cert -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
@@ -261,13 +261,13 @@ popd
 
 pushd sm2
 openssl ecparam -genkey -name SM2 -out ca.key
-openssl req -nodes -x509 -days 3650 -key ca.key -out ca.cert -sha256 -subj "//CN=intel test SM2 CA"
+openssl req -nodes -x509 -days 3650 -key ca.key -out ca.cert -sha256 -subj "//CN=DMTF libspdm SM2 CA"
 openssl ecparam -genkey -name SM2 -out inter.key
 openssl ecparam -genkey -name SM2 -out end_requester.key
 openssl ecparam -genkey -name SM2 -out end_responder.key
-openssl req -new -key inter.key -out inter.req -sha256 -batch -subj '//CN=intel test SM2 intermediate cert'
-openssl req -new -key end_requester.key -out end_requester.req -sha256 -batch -subj '//CN=intel test SM2 requseter cert'
-openssl req -new -key end_responder.key -out end_responder.req -sha256 -batch -subj '//CN=intel test SM2 responder cert'
+openssl req -new -key inter.key -out inter.req -sha256 -batch -subj '//CN=DMTF libspdm SM2 intermediate cert'
+openssl req -new -key end_requester.key -out end_requester.req -sha256 -batch -subj '//CN=DMTF libspdm SM2 requseter cert'
+openssl req -new -key end_responder.key -out end_responder.req -sha256 -batch -subj '//CN=DMTF libspdm SM2 responder cert'
 openssl x509 -req -days 3650 -in inter.req -CA ca.cert -CAkey ca.key -out inter.cert -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
 openssl x509 -req -days 3650 -in end_requester.req -CA inter.cert -CAkey inter.key -out end_requester.cert -set_serial 2 -extensions v3_inter -extfile ../openssl.cnf
 openssl x509 -req -days 3650 -in end_responder.req -CA inter.cert -CAkey inter.key -out end_responder.cert -set_serial 3 -extensions v3_inter -extfile ../openssl.cnf
@@ -290,25 +290,25 @@ popd
 === long_chains Certificate Chains ===
 
 For CA cert:
-openssl ecparam -genkey -name long_chains -out ShorterMAXUINT16_ca.key
-openssl req -nodes -x509 -days 3650 -key ShorterMAXUINT16_ca.key -out ShorterMAXUINT16_ca.cert -sha256 -subj "/CN=intel test RSA CA"
+openssl genpkey -algorithm ed448 -out ShorterMAXUINT16_ca.key
+openssl req -nodes -x509 -days 3650 -key ShorterMAXUINT16_ca.key -out ShorterMAXUINT16_ca.cert -subj "//CN=DMTF libspdm ED448 CA"
 
 For inter cert:
-openssl ecparam -genkey -name long_chains -out ShorterMAXUINT16_inter1.key
-openssl req -new -key ShorterMAXUINT16_inter1.key -out ShorterMAXUINT16_inter1.req -sha256 -batch -subj '/CN=intel test RSA intermediate cert'
+openssl genpkey -algorithm ed448 -out ShorterMAXUINT16_inter1.key
+openssl req -new -key ShorterMAXUINT16_inter1.key -out ShorterMAXUINT16_inter1.req -batch -subj '//CN=DMTF libspdm ED448 intermediate cert'
 openssl x509 -req -days 3650 -in ShorterMAXUINT16_inter1.req -CA ShorterMAXUINT16_ca.cert -CAkey ShorterMAXUINT16_ca.key -out ShorterMAXUINT16_inter1.cert -set_serial 3 -extensions v3_inter -extfile ../openssl.cnf
 openssl asn1parse -in ShorterMAXUINT16_inter1.cert -out ShorterMAXUINT16_inter1.cert.der 
 
 // Generate the remain cert in order
 
-openssl ecparam -genkey -name long_chains -out ShorterMAXUINT16_inter47.key
-openssl req -new -key ShorterMAXUINT16_inter47.key -out ShorterMAXUINT16_inter47.req -sha256 -batch -subj '/CN=intel test RSA intermediate cert'
+openssl genpkey -algorithm ed448 -out ShorterMAXUINT16_inter47.key
+openssl req -new -key ShorterMAXUINT16_inter47.key -out ShorterMAXUINT16_inter47.req -batch -subj '//CN=DMTF libspdm ED448 intermediate cert'
 openssl x509 -req -days 3650 -in ShorterMAXUINT16_inter47.req -CA ShorterMAXUINT16_inter46.cert -CAkey ShorterMAXUINT16_inter46.key -out ShorterMAXUINT16_inter47.cert -set_serial 3 -extensions v3_inter -extfile ../openssl.cnf
 openssl asn1parse -in ShorterMAXUINT16_inter47.cert -out ShorterMAXUINT16_inter47.cert.der 
 
 For end cert:
-openssl ecparam -genkey -name long_chains -out ShorterMAXUINT16_end_responder.key
-openssl req -new -key horterMAXUINT16_end_responder.key -out ShorterMAXUINT16_end_responder.req -sha256 -batch -subj '/CN=intel test RSA responder cert'
+openssl genpkey -algorithm ed448 -out ShorterMAXUINT16_end_responder.key
+openssl req -new -key horterMAXUINT16_end_responder.key -out ShorterMAXUINT16_end_responder.req -batch -subj '//CN=DMTF libspdm ED448 responder cert'
 openssl x509 -req -days 3650 -in ShorterMAXUINT16_end_responder.req -CA ShorterMAXUINT16_inter47.cert -CAkey ShorterMAXUINT16_inter47.key -out ShorterMAXUINT16_end_responder.cert -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
 openssl asn1parse -in ShorterMAXUINT16_end_responder.cert -out ShorterMAXUINT16_end_responder.cert.der 
 
@@ -317,11 +317,11 @@ cat ShorterMAXUINT16_ca.cert.der ShorterMAXUINT16_inter*.cert.der ShorterMAXUINT
 
 pushd long_chains
 openssl genpkey -algorithm long_chains -out Shorter1024B_ca.key
-openssl req -nodes -x509 -days 3650 -key Shorter1024B_ca.key -out Shorter1024B_ca.cert -subj "//CN=intel test RSA CA"
+openssl req -nodes -x509 -days 3650 -key Shorter1024B_ca.key -out Shorter1024B_ca.cert -subj "//CN=DMTF libspdm test RSA CA"
 openssl genpkey -algorithm long_chains -out Shorter1024B_end_requester.key
 openssl genpkey -algorithm long_chains -out Shorter1024B_end_responder.key
-openssl req -new -key Shorter1024B_end_requester.key -out Shorter1024B_end_requester.req -batch -subj "//CN=intel test RSA requseter cert"
-openssl req -new -key Shorter1024B_end_responder.key -out Shorter1024B_end_responder.req -batch -subj "//CN=intel test RSA responder cert"
+openssl req -new -key Shorter1024B_end_requester.key -out Shorter1024B_end_requester.req -batch -subj "//CN=DMTF libspdm test RSA requseter cert"
+openssl req -new -key Shorter1024B_end_responder.key -out Shorter1024B_end_responder.req -batch -subj "//CN=DMTF libspdm test RSA responder cert"
 openssl x509 -req -days 3650 -in Shorter1024B_end_requester.req -CA Shorter1024B_ca.cert -CAkey Shorter1024B_ca.key -out Shorter1024B_end_requester.cert -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
 openssl x509 -req -days 3650 -in Shorter1024B_end_responder.req -CA Shorter1024B_ca.cert -CAkey Shorter1024B_ca.key -out Shorter1024B_end_responder.cert -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
 openssl asn1parse -in Shorter1024B_ca.cert -out Shorter1024B_ca.cert.der
@@ -339,7 +339,7 @@ As same as bundle_responder.certchain1.der.
 Gen new ca1.key; use old inter.key and end.key.
 
 === ecc256 Certificate Chains ===
-openssl req -nodes -x509 -days 3650 -newkey ec:param.pem -keyout ca1.key -out ca1.cert -sha256 -subj "/CN=intel test ECP256 CA"
+openssl req -nodes -x509 -days 3650 -newkey ec:param.pem -keyout ca1.key -out ca1.cert -sha256 -subj "//CN=DMTF libspdm ECP256 CA"
 openssl pkey -in ca1.key -outform der -out ca1.key.der
 openssl x509 -req -in inter.req -out inter1.cert -CA ca1.cert -CAkey ca1.key -sha256 -days 3650 -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
 openssl x509 -req -in end_requester.req -out end_requester1.cert -CA inter1.cert -CAkey inter.key -sha256  -days 3650 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
@@ -352,7 +352,7 @@ cat ca1.cert.der inter1.cert.der end_requester1.cert.der > bundle_requester.cert
 cat ca1.cert.der inter1.cert.der end_responder1.cert.der > bundle_responder.certchain1.der
 
 === ecc384 Certificate Chains ===
-openssl req -nodes -x509 -days 3650 -newkey ec:param.pem -keyout ca1.key -out ca1.cert -sha384 -subj "/CN=intel test ECP384 CA"
+openssl req -nodes -x509 -days 3650 -newkey ec:param.pem -keyout ca1.key -out ca1.cert -sha384 -subj "//CN=DMTF libspdm ECP384 CA"
 openssl pkey -in ca1.key -outform der -out ca1.key.der
 openssl x509 -req -in inter.req -out inter1.cert -CA ca1.cert -CAkey ca1.key -sha384 -days 3650 -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
 openssl x509 -req -in end_requester.req -out end_requester1.cert -CA inter1.cert -CAkey inter.key -sha384  -days 3650 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
@@ -365,7 +365,7 @@ cat ca1.cert.der inter1.cert.der end_requester1.cert.der > bundle_requester.cert
 cat ca1.cert.der inter1.cert.der end_responder1.cert.der > bundle_responder.certchain1.der
 
 === ecc521 Certificate Chains ===
-openssl req -nodes -x509 -days 3650 -newkey ec:param.pem -keyout ca1.key -out ca1.cert -sha512 -subj "/CN=intel test ECP521 CA"
+openssl req -nodes -x509 -days 3650 -newkey ec:param.pem -keyout ca1.key -out ca1.cert -sha512 -subj "//CN=DMTF libspdm ECP521 CA"
 openssl pkey -in ca1.key -outform der -out ca1.key.der
 openssl x509 -req -in inter.req -out inter1.cert -CA ca1.cert -CAkey ca1.key -sha512 -days 3650 -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
 openssl x509 -req -in end_requester.req -out end_requester1.cert -CA inter1.cert -CAkey inter.key -sha512  -days 3650 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
@@ -378,7 +378,7 @@ cat ca1.cert.der inter1.cert.der end_requester1.cert.der > bundle_requester.cert
 cat ca1.cert.der inter1.cert.der end_responder1.cert.der > bundle_responder.certchain1.der
 
 === rsa2048 Certificate Chains ===
-openssl req -nodes -x509 -days 3650 -newkey rsa:2048 -keyout ca1.key -out ca1.cert -sha256 -subj "//CN=intel test RSA CA"
+openssl req -nodes -x509 -days 3650 -newkey rsa:2048 -keyout ca1.key -out ca1.cert -sha256 -subj "//CN=DMTF libspdm RSA CA"
 openssl pkey -in ca1.key -outform der -out ca1.key.der
 openssl x509 -req -in inter.req -out inter1.cert -CA ca1.cert -CAkey ca1.key -sha256 -days 3650 -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
 openssl x509 -req -in end_requester.req -out end_requester1.cert -CA inter1.cert -CAkey inter.key -sha256  -days 3650 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
@@ -391,7 +391,7 @@ cat ca1.cert.der inter1.cert.der end_requester1.cert.der > bundle_requester.cert
 cat ca1.cert.der inter1.cert.der end_responder1.cert.der > bundle_responder.certchain1.der
 
 === rsa3072 Certificate Chains ===
-openssl req -nodes -x509 -days 3650 -newkey rsa:3072 -keyout ca1.key -out ca1.cert -sha384 -subj "//CN=intel test RSA CA"
+openssl req -nodes -x509 -days 3650 -newkey rsa:3072 -keyout ca1.key -out ca1.cert -sha384 -subj "//CN=DMTF libspdm RSA CA"
 openssl pkey -in ca1.key -outform der -out ca1.key.der
 openssl x509 -req -in inter.req -out inter1.cert -CA ca1.cert -CAkey ca1.key -sha384 -days 3650 -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
 openssl x509 -req -in end_requester.req -out end_requester1.cert -CA inter1.cert -CAkey inter.key -sha384  -days 3650 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
@@ -404,7 +404,7 @@ cat ca1.cert.der inter1.cert.der end_requester1.cert.der > bundle_requester.cert
 cat ca1.cert.der inter1.cert.der end_responder1.cert.der > bundle_responder.certchain1.der
 
 === rsa4096 Certificate Chains ===
-openssl req -nodes -x509 -days 3650 -newkey rsa:4096 -keyout ca1.key -out ca1.cert -sha512 -subj "//CN=intel test RSA CA"
+openssl req -nodes -x509 -days 3650 -newkey rsa:4096 -keyout ca1.key -out ca1.cert -sha512 -subj "//CN=DMTF libspdm RSA CA"
 openssl pkey -in ca1.key -outform der -out ca1.key.der
 openssl x509 -req -in inter.req -out inter1.cert -CA ca1.cert -CAkey ca1.key -sha512 -days 3650 -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
 openssl x509 -req -in end_requester.req -out end_requester1.cert -CA inter1.cert -CAkey inter.key -sha512  -days 3650 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
@@ -418,7 +418,7 @@ cat ca1.cert.der inter1.cert.der end_responder1.cert.der > bundle_responder.cert
 
 === ed25519 Certificate Chains ===
 openssl genpkey -algorithm ed25519 -out ca1.key
-openssl req -nodes -x509 -days 3650 -key ca1.key -out ca1.cert -subj "/CN=intel test ED25519 CA"
+openssl req -nodes -x509 -days 3650 -key ca1.key -out ca1.cert -subj "//CN=DMTF libspdm ED25519 CA"
 openssl pkey -in ca1.key -outform der -out ca1.key.der
 openssl x509 -req -in inter.req -out inter1.cert -CA ca1.cert -CAkey ca1.key -days 3650 -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
 openssl x509 -req -in end_requester.req -out end_requester1.cert -CA inter1.cert -CAkey inter.key -days 3650 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
@@ -432,7 +432,7 @@ cat ca1.cert.der inter1.cert.der end_responder1.cert.der > bundle_responder.cert
 
 === ed448 Certificate Chains ===
 openssl genpkey -algorithm ed448 -out ca1.key
-openssl req -nodes -x509 -days 3650 -key ca1.key -out ca1.cert -subj "/CN=intel test ED448 CA"
+openssl req -nodes -x509 -days 3650 -key ca1.key -out ca1.cert -subj "//CN=DMTF libspdm ED448 CA"
 openssl pkey -in ca1.key -outform der -out ca1.key.der
 openssl x509 -req -in inter.req -out inter1.cert -CA ca1.cert -CAkey ca1.key -days 3650 -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
 openssl x509 -req -in end_requester.req -out end_requester1.cert -CA inter1.cert -CAkey inter.key -days 3650 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
@@ -446,7 +446,7 @@ cat ca1.cert.der inter1.cert.der end_responder1.cert.der > bundle_responder.cert
 
 === sm2 Certificate Chains ===
 openssl ecparam -genkey -name SM2 -out ca1.key
-openssl req -nodes -x509 -days 3650 -key ca1.key -out ca1.cert -sha256 -subj "//CN=intel test SM2 CA"
+openssl req -nodes -x509 -days 3650 -key ca1.key -out ca1.cert -sha256 -subj "//CN=DMTF libspdm SM2 CA"
 openssl pkey -in ca1.key -outform der -out ca1.key.der
 openssl x509 -req -in inter.req -out inter1.cert -CA ca1.cert -CAkey ca1.key -sha256 -days 3650 -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
 openssl x509 -req -in end_requester.req -out end_requester1.cert -CA inter1.cert -CAkey inter.key -sha256  -days 3650 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
