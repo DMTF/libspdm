@@ -19,8 +19,12 @@
  * len > 2 * (spdm id-DMTF-spdm size + 2)
  **/
 
-#ifndef SPDM_EXTENSION_LEN
-#define SPDM_EXTENSION_LEN 30
+#ifndef LIBSPDM_MAX_EXTENSION_LEN
+#define LIBSPDM_MAX_EXTENSION_LEN 30
+#endif
+
+#ifndef LIBSPDM_MAX_NAME_SIZE
+#define LIBSPDM_MAX_NAME_SIZE 100
 #endif
 
 /*max public key encryption algo oid len*/
@@ -29,8 +33,8 @@
 #endif
 
 /*leaf cert basic constraints len,CA = false: 30 03 01 01 00*/
-#ifndef BASIC_CONSTRAINTS_CA_LEN
-#define BASIC_CONSTRAINTS_CA_LEN 5
+#ifndef LIBSPDM_MAX_BASIC_CONSTRAINTS_CA_LEN
+#define LIBSPDM_MAX_BASIC_CONSTRAINTS_CA_LEN 5
 #endif
 
 /**
@@ -599,7 +603,7 @@ static bool libspdm_verify_leaf_cert_basic_constraints(const uint8_t *cert, size
 {
     bool status;
     /*basic_constraints from cert*/
-    uint8_t cert_basic_constraints[BASIC_CONSTRAINTS_CA_LEN];
+    uint8_t cert_basic_constraints[LIBSPDM_MAX_BASIC_CONSTRAINTS_CA_LEN];
     size_t len;
 
     /*leaf cert basic_constraints case1: CA: false and CA object is excluded */
@@ -610,7 +614,7 @@ static bool libspdm_verify_leaf_cert_basic_constraints(const uint8_t *cert, size
     #define BASIC_CONSTRAINTS_STRING_CASE2 {0x30, 0x03, 0x01, 0x01, 0x00}
     uint8_t basic_constraints_case2[] = BASIC_CONSTRAINTS_STRING_CASE2;
 
-    len = BASIC_CONSTRAINTS_CA_LEN;
+    len = LIBSPDM_MAX_BASIC_CONSTRAINTS_CA_LEN;
 
     status = libspdm_x509_get_extended_basic_constraints(cert, cert_size,
                                                          cert_basic_constraints, &len);
@@ -654,7 +658,7 @@ static bool libspdm_verify_leaf_cert_eku_spdm_OID(const uint8_t *cert, size_t ce
 {
     bool status;
     bool find_sucessful;
-    uint8_t spdm_extension[SPDM_EXTENSION_LEN];
+    uint8_t spdm_extension[LIBSPDM_MAX_EXTENSION_LEN];
     size_t index;
     size_t len;
 
@@ -663,7 +667,7 @@ static bool libspdm_verify_leaf_cert_eku_spdm_OID(const uint8_t *cert, size_t ce
     uint8_t oid_spdm_extension[] = SPDM_OID_EXTENSION;
     uint8_t hardware_identity_oid[] = SPDM_OID_HARDWARE_IDENTITY;
 
-    len = SPDM_EXTENSION_LEN;
+    len = LIBSPDM_MAX_EXTENSION_LEN;
 
     if (cert == NULL || cert_size == 0) {
         return false;
@@ -839,9 +843,9 @@ cleanup:
  **/
 bool libspdm_is_root_certificate(const uint8_t *cert, size_t cert_size)
 {
-    uint8_t issuer_name[LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE];
+    uint8_t issuer_name[LIBSPDM_MAX_NAME_SIZE];
     size_t issuer_name_len;
-    uint8_t subject_name[LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE];
+    uint8_t subject_name[LIBSPDM_MAX_NAME_SIZE];
     size_t subject_name_len;
     bool result;
 
@@ -850,14 +854,14 @@ bool libspdm_is_root_certificate(const uint8_t *cert, size_t cert_size)
     }
 
     /* 1. issuer_name*/
-    issuer_name_len = LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE;
+    issuer_name_len = sizeof(issuer_name);
     result = libspdm_x509_get_issuer_name(cert, cert_size, issuer_name, &issuer_name_len);
     if (!result) {
         return false;
     }
 
     /* 2. subject_name*/
-    subject_name_len = LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE;
+    subject_name_len = sizeof(subject_name);
     result = libspdm_x509_get_subject_name(cert, cert_size, subject_name, &subject_name_len);
     if (!result) {
         return false;
