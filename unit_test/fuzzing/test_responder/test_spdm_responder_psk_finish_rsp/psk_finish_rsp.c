@@ -180,7 +180,7 @@ void libspdm_test_responder_psk_finish_rsp_case2(void **State)
     hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
     hmac_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
     ptr = spdm_test_psk_finish_request->verify_data;
-    libspdm_init_managed_buffer(&th_curr, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+    libspdm_init_managed_buffer(&th_curr, sizeof(th_curr.buffer));
 
     libspdm_append_managed_buffer(&th_curr, (uint8_t *)spdm_test_psk_finish_request,
                                   sizeof(spdm_psk_finish_request_t));

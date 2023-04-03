@@ -37,7 +37,7 @@ bool libspdm_calculate_th_for_exchange(
     hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
 
     LIBSPDM_ASSERT(*th_data_buffer_size >= LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
-    libspdm_init_managed_buffer(&th_curr, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+    libspdm_init_managed_buffer(&th_curr, sizeof(th_curr.buffer));
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_a data :\n"));
     LIBSPDM_INTERNAL_DUMP_HEX(
@@ -233,7 +233,7 @@ bool libspdm_calculate_th_for_finish(libspdm_context_t *spdm_context,
     hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
 
     LIBSPDM_ASSERT(*th_data_buffer_size >= LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
-    libspdm_init_managed_buffer(&th_curr, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+    libspdm_init_managed_buffer(&th_curr, sizeof(th_curr.buffer));
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_a data :\n"));
     LIBSPDM_INTERNAL_DUMP_HEX(
