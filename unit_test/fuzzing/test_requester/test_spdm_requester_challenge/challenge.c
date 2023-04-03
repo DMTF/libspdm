@@ -12,7 +12,7 @@
 #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 
 static size_t m_libspdm_local_buffer_size;
-static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE];
+static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
 size_t libspdm_get_max_buffer_size(void)
 {

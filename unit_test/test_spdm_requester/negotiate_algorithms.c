@@ -25,7 +25,7 @@ typedef struct {
 #pragma pack()
 
 static size_t m_libspdm_local_buffer_size;
-static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE];
+static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 
 static libspdm_return_t libspdm_requester_negotiate_algorithms_test_send_message(
     void *spdm_context, size_t request_size, const void *request, uint64_t timeout)
