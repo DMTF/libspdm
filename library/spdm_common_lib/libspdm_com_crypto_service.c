@@ -201,7 +201,7 @@ bool libspdm_calculate_l1l2(libspdm_context_t *spdm_context,
 
     spdm_session_info = session_info;
 
-    libspdm_init_managed_buffer(l1l2, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+    libspdm_init_managed_buffer(l1l2, sizeof(l1l2->buffer));
 
     if ((spdm_context->connection_info.version >> SPDM_VERSION_NUMBER_SHIFT_BIT) >
         SPDM_MESSAGE_VERSION_11) {
@@ -328,7 +328,7 @@ static bool libspdm_calculate_m1m2(void *context, bool is_mut,
 
     spdm_context = context;
 
-    libspdm_init_managed_buffer(m1m2, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+    libspdm_init_managed_buffer(m1m2, sizeof(m1m2->buffer));
 
     if (is_mut) {
         if ((spdm_context->connection_info.version >> SPDM_VERSION_NUMBER_SHIFT_BIT) >

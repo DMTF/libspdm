@@ -74,15 +74,17 @@ void libspdm_test_responder_encap_get_certificate_case1(void **State)
                      data, data_size);
     spdm_context->encap_context.certificate_chain_buffer.buffer_size = data_size;
     spdm_context->encap_context.certificate_chain_buffer.max_buffer_size =
-        LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+        sizeof(spdm_context->encap_context.certificate_chain_buffer.buffer);
 
     uint16_t cert_chain_total_len =
         (uint16_t)libspdm_get_managed_buffer_size(
             &spdm_context->encap_context.certificate_chain_buffer) +
         spdm_response->portion_length +
         spdm_response->remainder_length;
-    if (cert_chain_total_len > LIBSPDM_MAX_MESSAGE_BUFFER_SIZE) {
-        spdm_context->encap_context.cert_chain_total_len = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+    if (cert_chain_total_len >
+        sizeof(spdm_context->encap_context.certificate_chain_buffer.buffer)) {
+        spdm_context->encap_context.cert_chain_total_len =
+            sizeof(spdm_context->encap_context.certificate_chain_buffer.buffer);
     }
     spdm_context->encap_context.cert_chain_total_len = cert_chain_total_len;
 
@@ -149,16 +151,17 @@ void libspdm_test_responder_encap_get_certificate_case2(void **State)
                      data, data_size);
     spdm_context->encap_context.certificate_chain_buffer.buffer_size = data_size;
     spdm_context->encap_context.certificate_chain_buffer.max_buffer_size =
-        LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
-
+        sizeof(spdm_context->encap_context.certificate_chain_buffer.buffer);
 
     uint16_t cert_chain_total_len =
         (uint16_t)libspdm_get_managed_buffer_size(
             &spdm_context->encap_context.certificate_chain_buffer) +
         spdm_response->portion_length +
         spdm_response->remainder_length;
-    if (cert_chain_total_len > LIBSPDM_MAX_MESSAGE_BUFFER_SIZE) {
-        spdm_context->encap_context.cert_chain_total_len = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+    if (cert_chain_total_len >
+        sizeof(spdm_context->encap_context.certificate_chain_buffer.buffer)) {
+        spdm_context->encap_context.cert_chain_total_len =
+            sizeof(spdm_context->encap_context.certificate_chain_buffer.buffer);
     }
     spdm_context->encap_context.cert_chain_total_len = cert_chain_total_len;
 
@@ -226,15 +229,17 @@ void libspdm_test_responder_encap_get_certificate_case3(void **State)
                      data, data_size);
     spdm_context->encap_context.certificate_chain_buffer.buffer_size = data_size;
     spdm_context->encap_context.certificate_chain_buffer.max_buffer_size =
-        LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+        sizeof(spdm_context->encap_context.certificate_chain_buffer.buffer);
 
     uint16_t cert_chain_total_len =
         (uint16_t)libspdm_get_managed_buffer_size(
             &spdm_context->encap_context.certificate_chain_buffer) +
         spdm_response->portion_length +
         spdm_response->remainder_length;
-    if (cert_chain_total_len > LIBSPDM_MAX_MESSAGE_BUFFER_SIZE) {
-        spdm_context->encap_context.cert_chain_total_len = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+    if (cert_chain_total_len >
+        sizeof(spdm_context->encap_context.certificate_chain_buffer.buffer)) {
+        spdm_context->encap_context.cert_chain_total_len =
+            sizeof(spdm_context->encap_context.certificate_chain_buffer.buffer);
     }
     spdm_context->encap_context.cert_chain_total_len = cert_chain_total_len;
 

@@ -72,8 +72,9 @@ void test_spdm_responder_encap_get_certificate_case1(void **state)
     spdm_context->connection_info.algorithm.req_base_asym_alg =
         SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256;
 
-    libspdm_init_managed_buffer(&spdm_context->encap_context.certificate_chain_buffer,
-                                LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+    libspdm_init_managed_buffer(
+        &spdm_context->encap_context.certificate_chain_buffer,
+        sizeof(spdm_context->encap_context.certificate_chain_buffer.buffer));
 
     if (m_libspdm_local_certificate_chain == NULL)
     {
@@ -225,8 +226,9 @@ void test_spdm_responder_encap_get_certificate_case3(void **state)
     spdm_context->connection_info.algorithm.req_base_asym_alg =
         SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256;
 
-    libspdm_init_managed_buffer(&spdm_context->encap_context.certificate_chain_buffer,
-                                LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+    libspdm_init_managed_buffer(
+        &spdm_context->encap_context.certificate_chain_buffer,
+        sizeof(spdm_context->encap_context.certificate_chain_buffer.buffer));
 
     if (m_libspdm_local_certificate_chain == NULL)
     {
@@ -321,8 +323,9 @@ void test_spdm_responder_encap_get_certificate_case4(void **state)
     spdm_context->connection_info.algorithm.req_base_asym_alg =
         SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256;
 
-    libspdm_init_managed_buffer(&spdm_context->encap_context.certificate_chain_buffer,
-                                LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+    libspdm_init_managed_buffer(
+        &spdm_context->encap_context.certificate_chain_buffer,
+        sizeof(spdm_context->encap_context.certificate_chain_buffer.buffer));
 
     if (m_libspdm_local_certificate_chain == NULL)
     {
