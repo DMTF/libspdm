@@ -15,7 +15,7 @@ bool libspdm_generate_measurement_signature(libspdm_context_t *spdm_context,
     size_t signature_size;
     bool result;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    libspdm_large_managed_buffer_t l1l2;
+    libspdm_l1l2_managed_buffer_t l1l2;
     uint8_t *l1l2_buffer;
     size_t l1l2_buffer_size;
 #else

@@ -182,6 +182,31 @@ typedef struct {
     uint8_t buffer[LIBSPDM_MAX_MESSAGE_F_BUFFER_SIZE];
 } libspdm_message_f_managed_buffer_t;
 
+typedef struct {
+    size_t max_buffer_size;
+    size_t buffer_size;
+    uint8_t buffer[LIBSPDM_MAX_CERT_CHAIN_SIZE];
+} libspdm_cert_chain_managed_buffer_t;
+
+#define LIBSPDM_MAX_MESSAGE_L1L2_BUFFER_SIZE \
+    (LIBSPDM_MAX_MESSAGE_VCA_BUFFER_SIZE + LIBSPDM_MAX_MESSAGE_M_BUFFER_SIZE)
+
+typedef struct {
+    size_t max_buffer_size;
+    size_t buffer_size;
+    uint8_t buffer[LIBSPDM_MAX_MESSAGE_L1L2_BUFFER_SIZE];
+} libspdm_l1l2_managed_buffer_t;
+
+#define LIBSPDM_MAX_MESSAGE_M1M2_BUFFER_SIZE \
+    (LIBSPDM_MAX_MESSAGE_VCA_BUFFER_SIZE + \
+     LIBSPDM_MAX_MESSAGE_B_BUFFER_SIZE + LIBSPDM_MAX_MESSAGE_C_BUFFER_SIZE)
+
+typedef struct {
+    size_t max_buffer_size;
+    size_t buffer_size;
+    uint8_t buffer[LIBSPDM_MAX_MESSAGE_M1M2_BUFFER_SIZE];
+} libspdm_m1m2_managed_buffer_t;
+
 /* signature = Sign(SK, hash(M1))
  * Verify(PK, hash(M2), signature)*/
 
@@ -303,7 +328,7 @@ typedef struct {
     spdm_message_header_t last_encap_request_header;
     size_t last_encap_request_size;
     uint16_t cert_chain_total_len;
-    libspdm_large_managed_buffer_t certificate_chain_buffer;
+    libspdm_cert_chain_managed_buffer_t certificate_chain_buffer;
 } libspdm_encap_context_t;
 
 #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
@@ -782,7 +807,7 @@ uint32_t libspdm_get_measurement_summary_hash_size(libspdm_context_t *spdm_conte
  */
 bool libspdm_calculate_l1l2(libspdm_context_t *spdm_context,
                             void *session_info,
-                            libspdm_large_managed_buffer_t *l1l2);
+                            libspdm_l1l2_managed_buffer_t *l1l2);
 
 /*
  * This function calculates l1l2 hash.
