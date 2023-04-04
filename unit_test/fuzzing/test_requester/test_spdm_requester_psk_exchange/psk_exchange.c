@@ -16,6 +16,8 @@ static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
 static uint8_t m_libspdm_local_psk_hint[32];
 static size_t m_libspdm_local_buffer_size;
 
+static libspdm_th_managed_buffer_t th_curr;
+
 size_t libspdm_test_get_psk_exchange_request_size(const void *spdm_context, const void *buffer,
                                                   size_t buffer_size)
 {
@@ -86,7 +88,6 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
     uint8_t *cert_buffer;
     size_t cert_buffer_size;
     uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-    libspdm_th_managed_buffer_t th_curr;
     uint8_t bin_str2[128];
     size_t bin_str2_size;
     uint8_t bin_str7[128];
