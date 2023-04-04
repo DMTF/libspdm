@@ -13,7 +13,7 @@
 
 size_t libspdm_get_max_buffer_size(void)
 {
-    return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+    return LIBSPDM_MAX_SPDM_MSG_SIZE;
 }
 
 void libspdm_test_requester_encap_certificate(void **State)
@@ -23,7 +23,7 @@ void libspdm_test_requester_encap_certificate(void **State)
     spdm_get_certificate_request_t *spdm_request;
     size_t request_size;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     void *data;
     size_t data_size;
     uint8_t slot_id;

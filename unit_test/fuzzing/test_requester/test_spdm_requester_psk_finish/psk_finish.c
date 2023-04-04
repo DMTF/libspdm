@@ -47,7 +47,7 @@ void libspdm_secured_message_set_response_handshake_salt(void *spdm_secured_mess
 
 size_t libspdm_get_max_buffer_size(void)
 {
-    return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+    return LIBSPDM_MAX_SPDM_MSG_SIZE;
 }
 
 libspdm_return_t libspdm_device_send_message(void *spdm_context, size_t request_size,
@@ -88,9 +88,9 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
     spdm_response = (void *)(scratch_buffer + test_message_header_size);
     spdm_response_size = spdm_test_context->test_buffer_size;
     if (spdm_response_size >
-        LIBSPDM_MAX_MESSAGE_BUFFER_SIZE - test_message_header_size - aead_tag_max_size -
+        LIBSPDM_MAX_SPDM_MSG_SIZE - test_message_header_size - aead_tag_max_size -
         LIBSPDM_TEST_ALIGNMENT) {
-        spdm_response_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE - test_message_header_size -
+        spdm_response_size = LIBSPDM_MAX_SPDM_MSG_SIZE - test_message_header_size -
                              aead_tag_max_size -
                              LIBSPDM_TEST_ALIGNMENT;
     }

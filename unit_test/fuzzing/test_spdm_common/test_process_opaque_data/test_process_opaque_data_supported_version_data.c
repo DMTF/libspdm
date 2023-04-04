@@ -12,7 +12,7 @@
 
 size_t libspdm_get_max_buffer_size(void)
 {
-    return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+    return SPDM_MAX_OPAQUE_DATA_SIZE;
 }
 
 void libspdm_test_process_opaque_data_case1(void **State)

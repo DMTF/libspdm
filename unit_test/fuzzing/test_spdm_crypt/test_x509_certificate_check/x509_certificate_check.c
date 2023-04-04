@@ -10,7 +10,7 @@
 
 size_t libspdm_get_max_buffer_size(void)
 {
-    return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+    return LIBSPDM_MAX_CERT_CHAIN_SIZE;
 }
 
 void libspdm_test_x509_certificate_check(void **State)

@@ -12,7 +12,7 @@
 
 size_t libspdm_get_max_buffer_size(void)
 {
-    return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+    return LIBSPDM_MAX_SPDM_MSG_SIZE;
 }
 
 void libspdm_test_encode_secured_message(void **State)
@@ -76,7 +76,7 @@ void libspdm_test_encode_secured_message(void **State)
 
     transport_header_size = libspdm_transport_mctp_get_header_size(spdm_context);
     secured_message = (uint8_t *)spdm_test_context->test_buffer + transport_header_size;
-    secured_message_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE - transport_header_size;
+    secured_message_size = spdm_test_context->test_buffer_size - transport_header_size;
 
     libspdm_encode_secured_message(secured_message_context, session_id, is_requester,
                                    app_message_size,

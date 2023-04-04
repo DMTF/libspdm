@@ -12,7 +12,7 @@
 
 size_t libspdm_get_max_buffer_size(void)
 {
-    return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+    return LIBSPDM_MAX_SPDM_MSG_SIZE;
 }
 
 void libspdm_test_responder_chunk_send_ack_setup_algo_state(libspdm_context_t *spdm_context)
@@ -67,7 +67,7 @@ void libspdm_test_responder_chunk_send_ack_case1(void **State)
     size_t response_size;
 
     uint8_t *request;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
 
     spdm_chunk_send_request_t *chunk_send_request;
 
