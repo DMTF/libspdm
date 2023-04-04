@@ -17,7 +17,7 @@ bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
     void *context;
     uint8_t slot_id;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    libspdm_large_managed_buffer_t l1l2;
+    libspdm_l1l2_managed_buffer_t l1l2;
     uint8_t *l1l2_buffer;
     size_t l1l2_buffer_size;
     const uint8_t *cert_chain_data;

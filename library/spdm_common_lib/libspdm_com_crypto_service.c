@@ -194,7 +194,7 @@ bool libspdm_get_local_public_key_buffer(void *spdm_context,
  */
 bool libspdm_calculate_l1l2(libspdm_context_t *spdm_context,
                             void *session_info,
-                            libspdm_large_managed_buffer_t *l1l2)
+                            libspdm_l1l2_managed_buffer_t *l1l2)
 {
     libspdm_return_t status;
     libspdm_session_info_t *spdm_session_info;
@@ -321,7 +321,7 @@ bool libspdm_calculate_l1l2_hash(libspdm_context_t *spdm_context,
  * @retval RETURN_SUCCESS  m1m2 is calculated.
  */
 static bool libspdm_calculate_m1m2(void *context, bool is_mut,
-                                   libspdm_large_managed_buffer_t *m1m2)
+                                   libspdm_m1m2_managed_buffer_t *m1m2)
 {
     libspdm_context_t *spdm_context;
     libspdm_return_t status;
@@ -786,7 +786,7 @@ bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
     bool result;
     size_t signature_size;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    libspdm_large_managed_buffer_t m1m2;
+    libspdm_m1m2_managed_buffer_t m1m2;
     uint8_t *m1m2_buffer;
     size_t m1m2_buffer_size;
 #else
@@ -996,7 +996,7 @@ bool libspdm_verify_challenge_auth_signature(libspdm_context_t *spdm_context,
     void *context;
     uint8_t slot_id;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    libspdm_large_managed_buffer_t m1m2;
+    libspdm_m1m2_managed_buffer_t m1m2;
     uint8_t *m1m2_buffer;
     size_t m1m2_buffer_size;
     const uint8_t *cert_buffer;
