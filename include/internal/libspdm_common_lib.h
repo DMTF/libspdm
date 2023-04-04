@@ -379,7 +379,7 @@ typedef struct {
 
     /* Cached plain text command
      * If the command is cipher text, decrypt then cache it. */
-    uint8_t last_spdm_request[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t last_spdm_request[LIBSPDM_MAX_SPDM_MSG_SIZE];
     size_t last_spdm_request_size;
 
     /* scratch buffer */
@@ -433,7 +433,7 @@ typedef struct {
 
     /* Cached data for SPDM_ERROR_CODE_RESPONSE_NOT_READY/SPDM_RESPOND_IF_READY */
     spdm_error_data_response_not_ready_t error_data;
-    uint8_t cache_spdm_request[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t cache_spdm_request[LIBSPDM_MAX_SPDM_MSG_SIZE];
     size_t cache_spdm_request_size;
     uint8_t current_token;
 
