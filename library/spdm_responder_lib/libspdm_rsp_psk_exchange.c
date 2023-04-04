@@ -27,21 +27,22 @@ static bool libspdm_generate_psk_exchange_rsp_hmac(libspdm_context_t *spdm_conte
     size_t hash_size;
     bool result;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_TH_BUFFER_SIZE];
+    uint8_t *th_curr_data;
     size_t th_curr_data_size;
+    libspdm_th_managed_buffer_t th_curr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
 #endif
 
     hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    th_curr_data_size = sizeof(th_curr_data);
     result = libspdm_calculate_th_for_exchange(spdm_context, session_info,
-                                               NULL, 0, &th_curr_data_size,
-                                               th_curr_data);
+                                               NULL, 0, &th_curr);
     if (!result) {
         return false;
     }
+    th_curr_data = libspdm_get_managed_buffer(&th_curr);
+    th_curr_data_size = libspdm_get_managed_buffer_size(&th_curr);
 
     result = libspdm_hash_all (spdm_context->connection_info.algorithm.base_hash_algo,
                                th_curr_data, th_curr_data_size, hash_data);

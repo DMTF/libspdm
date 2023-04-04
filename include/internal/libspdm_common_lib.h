@@ -1215,7 +1215,7 @@ void libspdm_free_session_id(libspdm_context_t *spdm_context, uint32_t session_i
 bool libspdm_calculate_th_for_exchange(
     libspdm_context_t *spdm_context, void *spdm_session_info,
     const uint8_t *cert_chain_buffer, size_t cert_chain_buffer_size,
-    size_t *th_data_buffer_size, void *th_data_buffer);
+    libspdm_th_managed_buffer_t *th_curr);
 #else
 /*
  * This function calculates current TH hash with message A and message K.
@@ -1267,8 +1267,7 @@ bool libspdm_calculate_th_for_finish(libspdm_context_t *spdm_context,
                                      size_t cert_chain_buffer_size,
                                      const uint8_t *mut_cert_chain_buffer,
                                      size_t mut_cert_chain_buffer_size,
-                                     size_t *th_data_buffer_size,
-                                     void *th_data_buffer);
+                                     libspdm_th_managed_buffer_t *th_curr);
 #else
 /*
  * This function calculates current TH hash with message A, message K and message F.
