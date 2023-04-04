@@ -316,14 +316,13 @@ Generate cert chain:
 cat ShorterMAXUINT16_ca.cert.der ShorterMAXUINT16_inter*.cert.der ShorterMAXUINT16_end_responder.cert.der >ShorterMAXUINT16_bundle_responder.certchain.der
 
 pushd long_chains
-openssl genpkey -algorithm long_chains -out Shorter1024B_ca.key
-openssl req -nodes -x509 -days 3650 -key Shorter1024B_ca.key -out Shorter1024B_ca.cert -subj "//CN=DMTF libspdm test RSA CA"
-openssl genpkey -algorithm long_chains -out Shorter1024B_end_requester.key
-openssl genpkey -algorithm long_chains -out Shorter1024B_end_responder.key
-openssl req -new -key Shorter1024B_end_requester.key -out Shorter1024B_end_requester.req -batch -subj "//CN=DMTF libspdm test RSA requseter cert"
-openssl req -new -key Shorter1024B_end_responder.key -out Shorter1024B_end_responder.req -batch -subj "//CN=DMTF libspdm test RSA responder cert"
-openssl x509 -req -days 3650 -in Shorter1024B_end_requester.req -CA Shorter1024B_ca.cert -CAkey Shorter1024B_ca.key -out Shorter1024B_end_requester.cert -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
-openssl x509 -req -days 3650 -in Shorter1024B_end_responder.req -CA Shorter1024B_ca.cert -CAkey Shorter1024B_ca.key -out Shorter1024B_end_responder.cert -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
+openssl genpkey -genparam -out Shorter1024B_param.pem -algorithm EC -pkeyopt ec_paramgen_curve:P-256
+openssl req -nodes -x509 -days 3650 -newkey ec:Shorter1024B_param.pem -keyout Shorter1024B_ca.key -out Shorter1024B_ca.cert -sha256 -subj "//CN=DMTF libspdm ECP256 CA"
+openssl pkey -in Shorter1024B_ca.key -outform der -out Shorter1024B_ca.key.der
+openssl req -nodes -newkey ec:Shorter1024B_param.pem -keyout Shorter1024B_end_requester.key -out Shorter1024B_end_requester.req -sha256 -batch -subj "//CN=DMTF libspdm ECP256 requseter cert"
+openssl req -nodes -newkey ec:Shorter1024B_param.pem -keyout Shorter1024B_end_responder.key -out Shorter1024B_end_responder.req -sha256 -batch -subj "//CN=DMTF libspdm ECP256 responder cert"
+openssl x509 -req -in Shorter1024B_end_requester.req -out Shorter1024B_end_requester.cert -CA Shorter1024B_ca.cert -CAkey Shorter1024B_ca.key -sha256 -days 3650 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
+openssl x509 -req -in Shorter1024B_end_responder.req -out Shorter1024B_end_responder.cert -CA Shorter1024B_ca.cert -CAkey Shorter1024B_ca.key -sha256 -days 3650 -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
 openssl asn1parse -in Shorter1024B_ca.cert -out Shorter1024B_ca.cert.der
 openssl asn1parse -in Shorter1024B_end_requester.cert -out Shorter1024B_end_requester.cert.der
 openssl asn1parse -in Shorter1024B_end_responder.cert -out Shorter1024B_end_responder.cert.der
@@ -463,6 +462,39 @@ cat ca1.cert.der inter1.cert.der end_responder1.cert.der > bundle_responder.cert
 Gen ecp256/end_requester_ca_false.cert.der is same with ecp256/end_requester.cert.der, expect the openssl.cnf is follow:
 [ v3_end ]
 basicConstraints = critical,CA:true
+The command：
+openssl x509 -req -in end_requester.req -out end_requester_ca_false.cert -CA inter.cert -CAkey inter.key -sha256 -days 3650 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
+openssl asn1parse -in end_requester_ca_false.cert -out end_requester_ca_false.cert.der
+
 
 Gen ecp256/end_requester_without_basic_constraint.cert.der is same with ecp256/end_requester.cert.der, expect the
 basicConstraints is excluded in openssl.cnf [ v3_end ].
+The command：
+openssl x509 -req -in end_requester.req -out end_requester_without_basic_constraint.cert -CA inter.cert -CAkey inter.key -sha256 -days 3650 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
+openssl asn1parse -in end_requester_without_basic_constraint.cert -out end_requester_without_basic_constraint.cert.der
+
+
+Gen rsa3072_Expiration is same with rsa3072, expect the cert validaty time is 1 day.
+The command：
+pushd rsa3072
+openssl req -nodes -x509 -days 1 -newkey rsa:4096 -keyout ca.key -out ca.cert -sha384 -subj "//CN=DMTF libspdm RSA CA"
+openssl rsa -in ca.key -outform der -out ca.key.der
+openssl req -nodes -newkey rsa:3072 -keyout inter.key -out inter.req -sha384 -batch -subj "//CN=DMTF libspdm RSA intermediate cert"
+openssl req -nodes -newkey rsa:3072 -keyout end_requester.key -out end_requester.req -sha384 -batch -subj "//CN=DMTF libspdm RSA requseter cert"
+openssl req -nodes -newkey rsa:3072 -keyout end_responder.key -out end_responder.req -sha384 -batch -subj "//CN=DMTF libspdm RSA responder cert"
+openssl x509 -req -in inter.req -out inter.cert -CA ca.cert -CAkey ca.key -sha384 -days 1 -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
+openssl x509 -req -in end_requester.req -out end_requester.cert -CA inter.cert -CAkey inter.key -sha384 -days 1 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
+openssl x509 -req -in end_responder.req -out end_responder.cert -CA inter.cert -CAkey inter.key -sha384 -days 1 -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
+openssl asn1parse -in ca.cert -out ca.cert.der
+openssl asn1parse -in inter.cert -out inter.cert.der
+openssl asn1parse -in end_requester.cert -out end_requester.cert.der
+openssl asn1parse -in end_responder.cert -out end_responder.cert.der
+cat ca.cert.der inter.cert.der end_requester.cert.der > bundle_requester.certchain.der
+cat ca.cert.der inter.cert.der end_responder.cert.der > bundle_responder.certchain.der
+openssl rsa -inform PEM -outform DER -in end_responder.key -out end_responder.key.der
+openssl rsa -inform PEM -outform DER -in end_requester.key -out end_requester.key.der
+openssl pkey -in end_requester.key -inform PEM -pubout -outform PEM -out end_requester.key.pub
+openssl pkey -in end_requester.key -inform PEM -pubout -outform DER -out end_requester.key.pub.der
+openssl pkey -in end_responder.key -inform PEM -pubout -outform PEM -out end_responder.key.pub
+openssl pkey -in end_responder.key -inform PEM -pubout -outform DER -out end_responder.key.pub.der
+popd
