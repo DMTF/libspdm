@@ -386,7 +386,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        libspdm_large_managed_buffer_t th_curr;
+        libspdm_th_managed_buffer_t th_curr;
         uint8_t THCurrHashData[64];
         uint8_t bin_str0[128];
         size_t bin_str0_size;
@@ -555,7 +555,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        libspdm_large_managed_buffer_t th_curr;
+        libspdm_th_managed_buffer_t th_curr;
         uint8_t THCurrHashData[64];
         uint8_t bin_str0[128];
         size_t bin_str0_size;
@@ -786,7 +786,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
             uint8_t *cert_buffer;
             size_t cert_buffer_size;
             uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-            libspdm_large_managed_buffer_t th_curr;
+            libspdm_th_managed_buffer_t th_curr;
             uint8_t THCurrHashData[64];
             uint8_t bin_str0[128];
             size_t bin_str0_size;
@@ -1043,7 +1043,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
             uint8_t *cert_buffer;
             size_t cert_buffer_size;
             uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-            libspdm_large_managed_buffer_t th_curr;
+            libspdm_th_managed_buffer_t th_curr;
             uint8_t THCurrHashData[64];
             uint8_t bin_str0[128];
             size_t bin_str0_size;
@@ -1259,7 +1259,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        libspdm_large_managed_buffer_t th_curr;
+        libspdm_th_managed_buffer_t th_curr;
         uint8_t THCurrHashData[64];
         uint8_t bin_str0[128];
         size_t bin_str0_size;
@@ -1427,7 +1427,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        libspdm_large_managed_buffer_t th_curr;
+        libspdm_th_managed_buffer_t th_curr;
         uint8_t THCurrHashData[64];
         uint8_t bin_str0[128];
         size_t bin_str0_size;
@@ -1604,7 +1604,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        libspdm_large_managed_buffer_t th_curr;
+        libspdm_th_managed_buffer_t th_curr;
         uint8_t THCurrHashData[64];
         uint8_t bin_str0[128];
         size_t bin_str0_size;
@@ -1780,7 +1780,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        libspdm_large_managed_buffer_t th_curr;
+        libspdm_th_managed_buffer_t th_curr;
         uint8_t THCurrHashData[64];
         uint8_t bin_str0[128];
         size_t bin_str0_size;
@@ -1955,7 +1955,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        libspdm_large_managed_buffer_t th_curr;
+        libspdm_th_managed_buffer_t th_curr;
         uint8_t THCurrHashData[64];
         uint8_t bin_str0[128];
         size_t bin_str0_size;
@@ -2123,7 +2123,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        libspdm_large_managed_buffer_t th_curr;
+        libspdm_th_managed_buffer_t th_curr;
         uint8_t THCurrHashData[64];
         uint8_t bin_str0[128];
         size_t bin_str0_size;
@@ -2293,7 +2293,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        libspdm_large_managed_buffer_t th_curr;
+        libspdm_th_managed_buffer_t th_curr;
         uint8_t THCurrHashData[64];
         uint8_t bin_str0[128];
         size_t bin_str0_size;
@@ -2469,7 +2469,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        libspdm_large_managed_buffer_t th_curr;
+        libspdm_th_managed_buffer_t th_curr;
         uint8_t THCurrHashData[64];
         uint8_t bin_str0[128];
         size_t bin_str0_size;
@@ -2639,7 +2639,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        libspdm_large_managed_buffer_t th_curr;
+        libspdm_th_managed_buffer_t th_curr;
         size_t spdm_response_size;
         size_t transport_header_size;
 
@@ -2766,7 +2766,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        libspdm_large_managed_buffer_t th_curr;
+        libspdm_th_managed_buffer_t th_curr;
         uint8_t THCurrHashData[64];
         uint8_t bin_str0[128];
         size_t bin_str0_size;
@@ -2934,7 +2934,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        libspdm_large_managed_buffer_t th_curr;
+        libspdm_th_managed_buffer_t th_curr;
         uint8_t THCurrHashData[64];
         uint8_t bin_str0[128];
         size_t bin_str0_size;
@@ -3102,7 +3102,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        libspdm_large_managed_buffer_t th_curr;
+        libspdm_th_managed_buffer_t th_curr;
         uint8_t THCurrHashData[64];
         uint8_t bin_str0[128];
         size_t bin_str0_size;
@@ -3270,7 +3270,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        libspdm_large_managed_buffer_t th_curr;
+        libspdm_th_managed_buffer_t th_curr;
         uint8_t THCurrHashData[64];
         uint8_t bin_str0[128];
         size_t bin_str0_size;
@@ -3439,7 +3439,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        libspdm_large_managed_buffer_t th_curr;
+        libspdm_th_managed_buffer_t th_curr;
         uint8_t THCurrHashData[64];
         uint8_t bin_str0[128];
         size_t bin_str0_size;
@@ -3598,7 +3598,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        libspdm_large_managed_buffer_t th_curr;
+        libspdm_th_managed_buffer_t th_curr;
         uint8_t THCurrHashData[64];
         uint8_t bin_str0[128];
         size_t bin_str0_size;
@@ -3758,7 +3758,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        libspdm_large_managed_buffer_t th_curr;
+        libspdm_th_managed_buffer_t th_curr;
         uint8_t THCurrHashData[64];
         uint8_t bin_str0[128];
         size_t bin_str0_size;
@@ -3928,7 +3928,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        libspdm_large_managed_buffer_t th_curr;
+        libspdm_th_managed_buffer_t th_curr;
         uint8_t THCurrHashData[64];
         uint8_t bin_str0[128];
         size_t bin_str0_size;
@@ -4098,7 +4098,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        libspdm_large_managed_buffer_t th_curr;
+        libspdm_th_managed_buffer_t th_curr;
         uint8_t THCurrHashData[64];
         uint8_t bin_str0[128];
         size_t bin_str0_size;
@@ -4268,7 +4268,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        libspdm_large_managed_buffer_t th_curr;
+        libspdm_th_managed_buffer_t th_curr;
         uint8_t THCurrHashData[64];
         uint8_t bin_str0[128];
         size_t bin_str0_size;
@@ -4419,7 +4419,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        libspdm_large_managed_buffer_t th_curr;
+        libspdm_th_managed_buffer_t th_curr;
         uint8_t THCurrHashData[64];
         uint8_t bin_str0[128];
         size_t bin_str0_size;
@@ -4588,7 +4588,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        libspdm_large_managed_buffer_t th_curr;
+        libspdm_th_managed_buffer_t th_curr;
         uint8_t THCurrHashData[64];
         uint8_t bin_str0[128];
         size_t bin_str0_size;
@@ -4747,7 +4747,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        libspdm_large_managed_buffer_t th_curr;
+        libspdm_th_managed_buffer_t th_curr;
         uint8_t THCurrHashData[64];
         uint8_t bin_str0[128];
         size_t bin_str0_size;

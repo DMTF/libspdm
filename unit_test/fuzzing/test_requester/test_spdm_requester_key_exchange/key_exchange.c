@@ -117,7 +117,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        libspdm_large_managed_buffer_t th_curr;
+        libspdm_th_managed_buffer_t th_curr;
         uint8_t THCurrHashData[64];
         uint8_t bin_str0[128];
         size_t bin_str0_size;

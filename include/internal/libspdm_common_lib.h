@@ -126,12 +126,6 @@ typedef struct {
     /*uint8_t   buffer[max_buffer_size];*/
 } libspdm_managed_buffer_t;
 
-typedef struct {
-    size_t max_buffer_size;
-    size_t buffer_size;
-    uint8_t buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-} libspdm_large_managed_buffer_t;
-
 /*
  * +--------------------------+------------------------------------------+---------+
  * | GET_VERSION              | 4                                        | 1       |
@@ -188,24 +182,23 @@ typedef struct {
     uint8_t buffer[LIBSPDM_MAX_CERT_CHAIN_SIZE];
 } libspdm_cert_chain_managed_buffer_t;
 
-#define LIBSPDM_MAX_MESSAGE_L1L2_BUFFER_SIZE \
-    (LIBSPDM_MAX_MESSAGE_VCA_BUFFER_SIZE + LIBSPDM_MAX_MESSAGE_M_BUFFER_SIZE)
-
 typedef struct {
     size_t max_buffer_size;
     size_t buffer_size;
     uint8_t buffer[LIBSPDM_MAX_MESSAGE_L1L2_BUFFER_SIZE];
 } libspdm_l1l2_managed_buffer_t;
 
-#define LIBSPDM_MAX_MESSAGE_M1M2_BUFFER_SIZE \
-    (LIBSPDM_MAX_MESSAGE_VCA_BUFFER_SIZE + \
-     LIBSPDM_MAX_MESSAGE_B_BUFFER_SIZE + LIBSPDM_MAX_MESSAGE_C_BUFFER_SIZE)
-
 typedef struct {
     size_t max_buffer_size;
     size_t buffer_size;
     uint8_t buffer[LIBSPDM_MAX_MESSAGE_M1M2_BUFFER_SIZE];
 } libspdm_m1m2_managed_buffer_t;
+
+typedef struct {
+    size_t max_buffer_size;
+    size_t buffer_size;
+    uint8_t buffer[LIBSPDM_MAX_MESSAGE_TH_BUFFER_SIZE];
+} libspdm_th_managed_buffer_t;
 
 /* signature = Sign(SK, hash(M1))
  * Verify(PK, hash(M2), signature)*/

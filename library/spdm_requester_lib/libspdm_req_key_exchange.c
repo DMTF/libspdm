@@ -48,7 +48,7 @@ bool libspdm_verify_key_exchange_rsp_hmac(libspdm_context_t *spdm_context,
     uint8_t slot_id;
     uint8_t *cert_chain_buffer;
     size_t cert_chain_buffer_size;
-    uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_TH_BUFFER_SIZE];
     size_t th_curr_data_size;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
 #endif
@@ -120,7 +120,7 @@ bool libspdm_verify_key_exchange_rsp_signature(
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     uint8_t *cert_chain_buffer;
     size_t cert_chain_buffer_size;
-    uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_TH_BUFFER_SIZE];
     size_t th_curr_data_size;
     const uint8_t *cert_chain_data;
     size_t cert_chain_data_size;

@@ -152,6 +152,25 @@
                                            LIBSPDM_MAX_ASYM_KEY_SIZE)
 #endif
 
+#ifndef LIBSPDM_MAX_MESSAGE_L1L2_BUFFER_SIZE
+#define LIBSPDM_MAX_MESSAGE_L1L2_BUFFER_SIZE \
+    (LIBSPDM_MAX_MESSAGE_VCA_BUFFER_SIZE + LIBSPDM_MAX_MESSAGE_M_BUFFER_SIZE)
+#endif
+
+#ifndef LIBSPDM_MAX_MESSAGE_M1M2_BUFFER_SIZE
+#define LIBSPDM_MAX_MESSAGE_M1M2_BUFFER_SIZE \
+    (LIBSPDM_MAX_MESSAGE_VCA_BUFFER_SIZE + \
+     LIBSPDM_MAX_MESSAGE_B_BUFFER_SIZE + LIBSPDM_MAX_MESSAGE_C_BUFFER_SIZE)
+#endif
+
+/* Just add one LIBSPDM_MAX_CERT_CHAIN_SIZE to reduce the TH buffer size by default */
+#ifndef LIBSPDM_MAX_MESSAGE_TH_BUFFER_SIZE
+#define LIBSPDM_MAX_MESSAGE_TH_BUFFER_SIZE \
+    (LIBSPDM_MAX_MESSAGE_VCA_BUFFER_SIZE + \
+     LIBSPDM_MAX_CERT_CHAIN_SIZE + LIBSPDM_MAX_MESSAGE_K_BUFFER_SIZE + \
+     LIBSPDM_MAX_MESSAGE_F_BUFFER_SIZE)
+#endif
+
 /* To ensure integrity in communication between the Requester and the Responder libspdm calculates
  * cryptographic digests and signatures over multiple requests and responses. This value specifies
  * whether libspdm will use a running calculation over the transcript, where requests and responses
