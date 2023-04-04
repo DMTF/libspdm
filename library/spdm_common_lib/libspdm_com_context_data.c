@@ -171,7 +171,7 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         }
         data32 = libspdm_read_uint32((const uint8_t *)data);
         /* Only allow set smaller value*/
-        LIBSPDM_ASSERT (data32 <= LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+        LIBSPDM_ASSERT (data32 <= LIBSPDM_DATA_TRANSFER_SIZE);
         context->local_context.capability.data_transfer_size = data32;
         break;
     case LIBSPDM_DATA_CAPABILITY_MAX_SPDM_MSG_SIZE:
@@ -180,7 +180,7 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         }
         data32 = libspdm_read_uint32((const uint8_t *)data);
         /* Only allow set smaller value. Need different value for CHUNK - TBD*/
-        LIBSPDM_ASSERT (data32 <= LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+        LIBSPDM_ASSERT (data32 <= LIBSPDM_MAX_SPDM_MSG_SIZE);
         context->local_context.capability.max_spdm_msg_size = data32;
         break;
     case LIBSPDM_DATA_MEASUREMENT_SPEC:

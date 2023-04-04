@@ -408,13 +408,13 @@
  * If chunk is supported, it must be larger than LIBSPDM_DATA_TRANSFER_SIZE.
  * It matches MaxSPDMmsgSize in SPDM specification. */
 #ifndef LIBSPDM_MAX_SPDM_MSG_SIZE
-#define LIBSPDM_MAX_SPDM_MSG_SIZE LIBSPDM_MAX_MESSAGE_BUFFER_SIZE
+#define LIBSPDM_MAX_SPDM_MSG_SIZE 0x1200
 #endif
 
 /* Maximum size of a single SPDM message.
  * It matches DataTransferSize in SPDM specification. */
 #ifndef LIBSPDM_DATA_TRANSFER_SIZE
-#define LIBSPDM_DATA_TRANSFER_SIZE LIBSPDM_MAX_MESSAGE_BUFFER_SIZE
+#define LIBSPDM_DATA_TRANSFER_SIZE 0x1200
 #endif
 
 /* Required sender/receive buffer in device io.
