@@ -15,12 +15,6 @@ spdm_get_measurements_request_t m_libspdm_get_measurements_request1 = {
 };
 size_t m_libspdm_get_measurements_request1_size = sizeof(spdm_message_header_t);
 
-spdm_get_measurements_request_t m_libspdm_get_measurements_request2 = {
-    { SPDM_MESSAGE_VERSION_10, SPDM_GET_MEASUREMENTS, 0,
-      SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_TOTAL_NUMBER_OF_MEASUREMENTS },
-};
-size_t m_libspdm_get_measurements_request2_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
-
 spdm_get_measurements_request_t m_libspdm_get_measurements_request3 = {
     { SPDM_MESSAGE_VERSION_10, SPDM_GET_MEASUREMENTS,
       SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE, 1 },
@@ -127,7 +121,7 @@ void libspdm_test_responder_measurements_case1(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_measurements_response_t *spdm_response;
 
     spdm_test_context = *state;
@@ -192,7 +186,7 @@ void libspdm_test_responder_measurements_case3(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_measurements_response_t *spdm_response;
 
     spdm_test_context = *state;
@@ -247,7 +241,7 @@ void libspdm_test_responder_measurements_case4(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_measurements_response_t *spdm_response;
 
     spdm_test_context = *state;
@@ -304,7 +298,7 @@ void libspdm_test_responder_measurements_case5(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_measurements_response_t *spdm_response;
     spdm_error_data_response_not_ready_t *error_data;
 
@@ -368,7 +362,7 @@ void libspdm_test_responder_measurements_case6(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_measurements_response_t *spdm_response;
 
     spdm_test_context = *state;
@@ -422,7 +416,7 @@ void libspdm_test_responder_measurements_case7(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_measurements_response_t *spdm_response;
     size_t measurment_sig_size;
 
@@ -478,7 +472,7 @@ void libspdm_test_responder_measurements_case8(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_measurements_response_t *spdm_response;
     size_t measurment_sig_size;
 
@@ -535,7 +529,7 @@ void libspdm_test_responder_measurements_case9(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_measurements_response_t *spdm_response;
 
     spdm_test_context = *state;
@@ -588,7 +582,7 @@ void libspdm_test_responder_measurements_case10(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_measurements_response_t *spdm_response;
 
     spdm_test_context = *state;
@@ -649,7 +643,7 @@ void libspdm_test_responder_measurements_case11(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_measurements_response_t *spdm_response;
     size_t measurment_sig_size;
 
@@ -716,7 +710,7 @@ void libspdm_test_responder_measurements_case12(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_measurements_response_t *spdm_response;
 
     spdm_test_context = *state;
@@ -801,7 +795,7 @@ void libspdm_test_responder_measurements_case14(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_measurements_response_t *spdm_response;
     uint16_t TestMsgSizes[3];
 
@@ -871,7 +865,7 @@ void libspdm_test_responder_measurements_case15(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_measurements_response_t *spdm_response;
     /* size_t                measurment_sig_size;*/
 
@@ -926,7 +920,7 @@ void libspdm_test_responder_measurements_case16(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_measurements_response_t *spdm_response;
     /* size_t                measurment_sig_size;*/
 
@@ -979,7 +973,7 @@ void libspdm_test_responder_measurements_case17(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_measurements_response_t *spdm_response;
     /* size_t                measurment_sig_size;*/
 
@@ -1035,7 +1029,7 @@ void libspdm_test_responder_measurements_case18(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_measurements_response_t *spdm_response;
     void *data;
     size_t data_size;
@@ -1107,7 +1101,7 @@ void libspdm_test_responder_measurements_case19(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_measurements_response_t *spdm_response;
     /* size_t                measurment_sig_size;*/
 
@@ -1161,7 +1155,7 @@ void libspdm_test_responder_measurements_case21(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_measurements_response_t *spdm_response;
 
     spdm_test_context = *state;
@@ -1214,7 +1208,7 @@ void libspdm_test_responder_measurements_case22(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_measurements_response_t *spdm_response;
     size_t NumberOfMessages;
 #define TOTAL_MESSAGES 100
@@ -1297,7 +1291,7 @@ void libspdm_test_responder_measurements_case23(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_measurements_response_t *spdm_response;
     size_t measurment_sig_size;
     libspdm_session_info_t *session_info;
@@ -1374,7 +1368,7 @@ void libspdm_test_responder_measurements_case24(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_measurements_response_t *spdm_response;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     size_t arbitrary_size;
@@ -1453,7 +1447,7 @@ void libspdm_test_responder_measurements_case25(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_measurements_response_t *spdm_response;
 
     spdm_test_context = *state;
@@ -1508,7 +1502,7 @@ void libspdm_test_responder_measurements_case26(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_measurements_response_t *spdm_response;
     void *data;
     size_t data_size;
@@ -1580,7 +1574,7 @@ void libspdm_test_responder_measurements_case27(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_measurements_response_t *spdm_response;
     void *data;
     size_t data_size;
@@ -1663,7 +1657,7 @@ void libspdm_test_responder_measurements_case28(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_measurements_response_t *spdm_response;
     void *data;
     size_t data_size;

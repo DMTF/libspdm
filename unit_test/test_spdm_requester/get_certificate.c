@@ -14,7 +14,7 @@ static void *m_libspdm_local_certificate_chain;
 static size_t m_libspdm_local_certificate_chain_size;
 
 static size_t m_libspdm_local_buffer_size;
-static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_M1M2_BUFFER_SIZE];
 
 static bool m_get_cert;
 
@@ -1079,7 +1079,7 @@ libspdm_return_t libspdm_requester_get_certificate_test_receive_message(
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
         size_t hash_size;
-        uint8_t cert_chain_without_root[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+        uint8_t cert_chain_without_root[LIBSPDM_MAX_CERT_CHAIN_SIZE];
         size_t cert_chain_without_root_size;
         void *root_cert_data;
         size_t root_cert_size;
@@ -1198,7 +1198,7 @@ libspdm_return_t libspdm_requester_get_certificate_test_receive_message(
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
         size_t hash_size;
-        uint8_t cert_chain_without_root[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+        uint8_t cert_chain_without_root[LIBSPDM_MAX_CERT_CHAIN_SIZE];
         size_t cert_chain_without_root_size;
         void *root_cert_data;
         size_t root_cert_size;

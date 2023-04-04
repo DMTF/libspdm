@@ -10,7 +10,7 @@
 #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 
 static size_t m_libspdm_local_buffer_size;
-static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_M1M2_BUFFER_SIZE];
 
 libspdm_return_t libspdm_requester_challenge_test_send_message(void *spdm_context,
                                                                size_t request_size,

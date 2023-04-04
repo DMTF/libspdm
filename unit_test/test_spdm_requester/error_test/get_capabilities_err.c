@@ -48,9 +48,6 @@
      SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP | \
      SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP)
 
-/* static size_t m_libspdm_local_buffer_size;
- * static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE]; */
-
 static libspdm_return_t libspdm_requester_get_capabilities_test_send_message(
     void *spdm_context, size_t request_size, const void *request,
     uint64_t timeout)
@@ -945,8 +942,8 @@ static libspdm_return_t libspdm_requester_get_capabilities_test_receive_message(
         spdm_response->header.param2 = 0;
         spdm_response->ct_exponent = 0;
         spdm_response->flags = SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_INSTALL_RESET_CAP;
-        spdm_response->data_transfer_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
-        spdm_response->max_spdm_msg_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+        spdm_response->data_transfer_size = LIBSPDM_DATA_TRANSFER_SIZE;
+        spdm_response->max_spdm_msg_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, spdm_response_size,
                                               spdm_response,
@@ -969,8 +966,8 @@ static libspdm_return_t libspdm_requester_get_capabilities_test_receive_message(
         spdm_response->header.param2 = 0;
         spdm_response->ct_exponent = 0;
         spdm_response->flags = LIBSPDM_DEFAULT_CAPABILITY_FLAG;
-        spdm_response->data_transfer_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
-        spdm_response->max_spdm_msg_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+        spdm_response->data_transfer_size = LIBSPDM_DATA_TRANSFER_SIZE;
+        spdm_response->max_spdm_msg_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, spdm_response_size,
@@ -996,7 +993,7 @@ static libspdm_return_t libspdm_requester_get_capabilities_test_receive_message(
         spdm_response->ct_exponent = 0;
         spdm_response->flags = LIBSPDM_DEFAULT_CAPABILITY_FLAG;
         spdm_response->data_transfer_size = 0;
-        spdm_response->max_spdm_msg_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+        spdm_response->max_spdm_msg_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, spdm_response_size,
@@ -1021,8 +1018,8 @@ static libspdm_return_t libspdm_requester_get_capabilities_test_receive_message(
         spdm_response->header.param2 = 0;
         spdm_response->ct_exponent = 0;
         spdm_response->flags = LIBSPDM_DEFAULT_CAPABILITY_FLAG;
-        spdm_response->data_transfer_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE - 1;
-        spdm_response->max_spdm_msg_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+        spdm_response->data_transfer_size = LIBSPDM_DATA_TRANSFER_SIZE - 1;
+        spdm_response->max_spdm_msg_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, spdm_response_size,
@@ -1047,8 +1044,8 @@ static libspdm_return_t libspdm_requester_get_capabilities_test_receive_message(
         spdm_response->header.param2 = 0;
         spdm_response->ct_exponent = 0;
         spdm_response->flags = LIBSPDM_DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_12;
-        spdm_response->data_transfer_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
-        spdm_response->max_spdm_msg_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE - 1;
+        spdm_response->data_transfer_size = LIBSPDM_DATA_TRANSFER_SIZE;
+        spdm_response->max_spdm_msg_size = LIBSPDM_MAX_SPDM_MSG_SIZE - 1;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, spdm_response_size,

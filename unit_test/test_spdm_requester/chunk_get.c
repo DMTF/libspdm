@@ -13,12 +13,12 @@
 static void *m_libspdm_local_certificate_chain_test_case_1;
 static size_t m_libspdm_local_certificate_chain_size_test_case_1;
 
-static uint8_t m_libspdm_local_large_response_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+static uint8_t m_libspdm_local_large_response_buffer[LIBSPDM_MAX_SPDM_MSG_SIZE];
 
 static size_t m_libspdm_local_buffer_size;
-static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_M1M2_BUFFER_SIZE];
 
-static uint8_t m_libspdm_local_certificate_chain_test_case_4[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+static uint8_t m_libspdm_local_certificate_chain_test_case_4[LIBSPDM_MAX_CERT_CHAIN_SIZE];
 
 /* Override the LIBSPDM_DATA_TRANSFER_SIZE just for the unit tests in this file.
  * All other unit tests have the default data transfer size due to the specific
@@ -231,7 +231,7 @@ void libspdm_requester_chunk_get_test_case4_build_digest_response(
         libspdm_hash_all(
             m_libspdm_use_hash_algo,
             m_libspdm_local_certificate_chain_test_case_4,
-            LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, &digest[0]);
+            sizeof(m_libspdm_local_certificate_chain_test_case_4), &digest[0]);
         digest += libspdm_get_hash_size(m_libspdm_use_hash_algo);
     }
     spdm_response->header.param2 |= (0xFF << 0);
@@ -267,9 +267,6 @@ libspdm_return_t libspdm_requester_chunk_get_test_send_message(
     uint64_t timeout)
 {
     libspdm_test_context_t* spdm_test_context;
-    uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-
-    memcpy(message_buffer, request, request_size);
 
     spdm_test_context = libspdm_get_test_context();
     if (spdm_test_context->case_id == 0x1) {
@@ -795,7 +792,7 @@ void libspdm_test_requester_chunk_get_case4(void** state)
 
     libspdm_set_mem(
         m_libspdm_local_certificate_chain_test_case_4,
-        LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
+        sizeof(m_libspdm_local_certificate_chain_test_case_4),
         (uint8_t) (0xFF));
     libspdm_reset_message_b(spdm_context);
 
@@ -813,7 +810,7 @@ void libspdm_test_requester_chunk_get_case4(void** state)
     for (slot_id = 0; slot_id < SPDM_MAX_SLOT_COUNT; slot_id++) {
         libspdm_hash_all(m_libspdm_use_hash_algo,
                          m_libspdm_local_certificate_chain_test_case_4,
-                         LIBSPDM_MAX_MESSAGE_BUFFER_SIZE, digest);
+                         sizeof(m_libspdm_local_certificate_chain_test_case_4), digest);
         digest += libspdm_get_hash_size(m_libspdm_use_hash_algo);
     }
     assert_memory_equal(total_digest_buffer, my_total_digest_buffer,

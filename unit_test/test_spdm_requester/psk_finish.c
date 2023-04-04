@@ -15,7 +15,7 @@ static uint8_t m_libspdm_dummy_key_buffer[LIBSPDM_MAX_AEAD_KEY_SIZE];
 static uint8_t m_libspdm_dummy_salt_buffer[LIBSPDM_MAX_AEAD_IV_SIZE];
 
 static size_t m_libspdm_local_buffer_size;
-static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_TH_BUFFER_SIZE];
 
 static void libspdm_secured_message_set_dummy_finished_key(
     void *spdm_secured_message_context)
@@ -95,7 +95,7 @@ libspdm_return_t libspdm_requester_psk_finish_test_send_message(void *spdm_conte
         uint32_t *message_session_id;
         bool is_app_message;
         libspdm_session_info_t *session_info;
-        uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+        uint8_t message_buffer[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
 
         message_session_id = NULL;
         session_id = 0xFFFFFFFF;

@@ -121,8 +121,8 @@ void libspdm_test_responder_chunk_send_ack_rsp_case0(void** state)
     size_t request_size;
     size_t response_size;
 
-    uint8_t request[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t request[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
 
     spdm_chunk_send_request_t *chunk_send_request;
     spdm_chunk_send_ack_response_t* chunk_send_ack_response;
@@ -238,8 +238,8 @@ void libspdm_test_responder_chunk_send_ack_rsp_case1(void** state)
     size_t request_size;
     size_t response_size;
 
-    uint8_t request[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t request[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
 
     spdm_chunk_send_request_t* chunk_send_request;
     spdm_error_response_t* error_response;
@@ -316,8 +316,8 @@ void libspdm_test_responder_chunk_send_ack_rsp_case2(void** state)
     size_t request_size;
     size_t response_size;
 
-    uint8_t request[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t request[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
 
     spdm_chunk_send_request_t* chunk_send_request;
     spdm_error_response_t* error_response;
@@ -393,8 +393,8 @@ void libspdm_test_responder_chunk_send_ack_rsp_case3(void** state)
     size_t request_size;
     size_t response_size;
 
-    uint8_t request[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t request[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
 
     spdm_chunk_send_request_t* chunk_send_request;
     spdm_error_response_t* error_response;
@@ -472,8 +472,8 @@ void libspdm_test_responder_chunk_send_ack_rsp_case4(void** state)
     size_t request_size;
     size_t response_size;
 
-    uint8_t request[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t request[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
 
     spdm_chunk_send_request_t* chunk_send_request;
     spdm_error_response_t* error_response;
@@ -547,8 +547,8 @@ void libspdm_test_responder_chunk_send_ack_rsp_case5(void** state)
     size_t request_size;
     size_t response_size;
 
-    uint8_t request[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t request[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
 
     spdm_chunk_send_request_t* chunk_send_request;
     spdm_error_response_t* error_response;
@@ -621,8 +621,8 @@ void libspdm_test_responder_chunk_send_ack_rsp_case6(void** state)
     size_t request_size;
     size_t response_size;
 
-    uint8_t request[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t request[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
 
     spdm_chunk_send_request_t* chunk_send_request;
     spdm_error_response_t* error_response;
@@ -694,8 +694,8 @@ void libspdm_test_responder_chunk_send_ack_rsp_case7(void** state)
     size_t request_size;
     size_t response_size;
 
-    uint8_t request[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t request[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
 
     spdm_chunk_send_request_t* chunk_send_request;
     spdm_error_response_t* error_response;
@@ -770,8 +770,8 @@ void libspdm_test_responder_chunk_send_ack_rsp_case8(void** state)
     size_t request_size;
     size_t response_size;
 
-    uint8_t request[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t request[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
 
     spdm_chunk_send_request_t *chunk_send_request;
     spdm_chunk_send_ack_response_t *chunk_send_ack_response;
@@ -847,8 +847,8 @@ void libspdm_test_responder_chunk_send_ack_rsp_case9(void** state)
     size_t request_size;
     size_t response_size;
 
-    uint8_t request[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t request[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
 
     spdm_chunk_send_request_t* chunk_send_request;
     spdm_chunk_send_ack_response_t* chunk_send_ack_response;
@@ -926,8 +926,8 @@ void libspdm_test_responder_chunk_send_ack_rsp_case10(void** state)
     size_t request_size;
     size_t response_size;
 
-    uint8_t request[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t request[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
 
     spdm_chunk_send_request_t* chunk_send_request;
     spdm_chunk_send_ack_response_t* chunk_send_ack_response;
@@ -1004,8 +1004,8 @@ void libspdm_test_responder_chunk_send_ack_rsp_case11(void** state)
     size_t request_size;
     size_t response_size;
 
-    uint8_t request[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t request[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
 
     spdm_chunk_send_request_t* chunk_send_request;
     spdm_chunk_send_ack_response_t* chunk_send_ack_response;
@@ -1080,8 +1080,8 @@ void libspdm_test_responder_chunk_send_ack_rsp_case12(void** state)
     size_t request_size;
     size_t response_size;
 
-    uint8_t request[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t request[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
 
     spdm_chunk_send_request_t* chunk_send_request;
     spdm_chunk_send_ack_response_t* chunk_send_ack_response;
@@ -1171,8 +1171,8 @@ void libspdm_test_responder_chunk_send_ack_rsp_case13(void** state)
     size_t request_size;
     size_t response_size;
 
-    uint8_t request[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t request[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
 
     spdm_chunk_send_request_t* chunk_send_request;
     spdm_chunk_send_ack_response_t* chunk_send_ack_response;
@@ -1249,8 +1249,8 @@ void libspdm_test_responder_chunk_send_ack_rsp_case14(void** state)
     size_t request_size;
     size_t response_size;
 
-    uint8_t request[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t request[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
 
     spdm_chunk_send_request_t* chunk_send_request;
     spdm_chunk_send_ack_response_t* chunk_send_ack_response;
@@ -1326,8 +1326,8 @@ void libspdm_test_responder_chunk_send_ack_rsp_case15(void** state)
     size_t request_size;
     size_t response_size;
 
-    uint8_t request[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t request[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
 
     spdm_chunk_send_request_t* chunk_send_request;
     spdm_chunk_send_ack_response_t* chunk_send_ack_response;
@@ -1405,8 +1405,8 @@ void libspdm_test_responder_chunk_send_ack_rsp_case16(void** state)
     size_t request_size;
     size_t response_size;
 
-    uint8_t request[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t request[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
 
     spdm_chunk_send_request_t* chunk_send_request;
     spdm_chunk_send_ack_response_t* chunk_send_ack_response;
@@ -1482,8 +1482,8 @@ void libspdm_test_responder_chunk_send_ack_rsp_case17(void** state)
     size_t request_size;
     size_t response_size;
 
-    uint8_t request[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t request[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
 
     spdm_chunk_send_request_t* chunk_send_request;
     spdm_chunk_send_ack_response_t* chunk_send_ack_response;
@@ -1559,8 +1559,8 @@ void libspdm_test_responder_chunk_send_ack_rsp_case18(void** state)
     size_t request_size;
     size_t response_size;
 
-    uint8_t request[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t request[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
 
     spdm_chunk_send_request_t* chunk_send_request;
     spdm_chunk_send_ack_response_t* chunk_send_ack_response;
@@ -1636,8 +1636,8 @@ void libspdm_test_responder_chunk_send_ack_rsp_case19(void** state)
     size_t request_size;
     size_t response_size;
 
-    uint8_t request[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t request[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
 
     spdm_chunk_send_request_t* chunk_send_request;
     spdm_chunk_send_ack_response_t* chunk_send_ack_response;

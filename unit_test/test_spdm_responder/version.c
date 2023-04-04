@@ -26,14 +26,6 @@ spdm_get_version_request_t m_libspdm_get_version_request1 = {
 };
 size_t m_libspdm_get_version_request1_size = sizeof(m_libspdm_get_version_request1);
 
-spdm_get_version_request_t m_libspdm_get_version_request2 = {
-    {
-        SPDM_MESSAGE_VERSION_10,
-        SPDM_GET_VERSION,
-    },
-};
-size_t m_libspdm_get_version_request2_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
-
 spdm_get_version_request_t m_libspdm_get_version_request3 = {
     {
         SPDM_MESSAGE_VERSION_11,
@@ -61,7 +53,7 @@ void libspdm_test_responder_version_case1(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_version_response_t *spdm_response;
 
     spdm_test_context = *state;
@@ -106,7 +98,7 @@ void libspdm_test_responder_version_case3(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_version_response_t *spdm_response;
 
     spdm_test_context = *state;
@@ -142,7 +134,7 @@ void libspdm_test_responder_version_case4(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_version_response_t *spdm_response;
 
     spdm_test_context = *state;
@@ -179,7 +171,7 @@ void libspdm_test_responder_version_case6(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_version_response_t *spdm_response;
 
     spdm_test_context = *state;
@@ -225,7 +217,7 @@ void libspdm_test_responder_version_case8(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_version_response_t *spdm_response;
 
     spdm_test_context = *state;

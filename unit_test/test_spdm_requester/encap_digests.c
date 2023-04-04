@@ -16,15 +16,7 @@ spdm_get_digest_request_t m_spdm_get_digests_request1 = {
 };
 size_t m_spdm_get_digests_request1_size = sizeof(m_spdm_get_digests_request1);
 
-spdm_get_digest_request_t m_spdm_get_digests_request2 = {
-    {
-        SPDM_MESSAGE_VERSION_10,
-        SPDM_GET_DIGESTS,
-    },
-};
-size_t m_spdm_get_digests_request2_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
-
-static uint8_t m_local_certificate_chain[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+static uint8_t m_local_certificate_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
 
 /**
  * Test 1: receives a valid GET_DIGESTS request message from Requester
@@ -36,7 +28,7 @@ void test_spdm_requester_challenge_auth_case1(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_digest_response_t *spdm_response;
 
     spdm_test_context = *state;
@@ -53,8 +45,8 @@ void test_spdm_requester_challenge_auth_case1(void **state)
     spdm_context->local_context.local_cert_chain_provision[0] =
         m_local_certificate_chain;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
-        LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
-    libspdm_set_mem(m_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
+        sizeof(m_local_certificate_chain);
+    libspdm_set_mem(m_local_certificate_chain, sizeof(m_local_certificate_chain),
                     (uint8_t)(0xFF));
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -100,7 +92,7 @@ void test_spdm_requester_challenge_auth_case3(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_digest_response_t *spdm_response;
 #endif
@@ -118,8 +110,8 @@ void test_spdm_requester_challenge_auth_case3(void **state)
     spdm_context->local_context.local_cert_chain_provision[0] =
         m_local_certificate_chain;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
-        LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
-    libspdm_set_mem(m_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
+        sizeof(m_local_certificate_chain);
+    libspdm_set_mem(m_local_certificate_chain, sizeof(m_local_certificate_chain),
                     (uint8_t)(0xFF));
 
     response_size = sizeof(response);
@@ -158,7 +150,7 @@ void test_spdm_requester_challenge_auth_case4(void **state)
     libspdm_context_t *spdm_context;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     libspdm_return_t status;
     spdm_digest_response_t *spdm_response;
 #endif
@@ -177,8 +169,8 @@ void test_spdm_requester_challenge_auth_case4(void **state)
     spdm_context->local_context.local_cert_chain_provision[0] =
         m_local_certificate_chain;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
-        LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
-    libspdm_set_mem(m_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
+        sizeof(m_local_certificate_chain);
+    libspdm_set_mem(m_local_certificate_chain, sizeof(m_local_certificate_chain),
                     (uint8_t)(0xFF));
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT

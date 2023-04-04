@@ -49,7 +49,7 @@
      SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP)
 
 static size_t m_libspdm_local_buffer_size;
-static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_VCA_BUFFER_SIZE];
 
 static libspdm_return_t libspdm_requester_get_capabilities_test_send_message(
     void *spdm_context, size_t request_size, const void *request,
@@ -946,8 +946,8 @@ static libspdm_return_t libspdm_requester_get_capabilities_test_receive_message(
         spdm_response->header.param2 = 0;
         spdm_response->ct_exponent = 0;
         spdm_response->flags = LIBSPDM_DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_12;
-        spdm_response->data_transfer_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
-        spdm_response->max_spdm_msg_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+        spdm_response->data_transfer_size = LIBSPDM_DATA_TRANSFER_SIZE;
+        spdm_response->max_spdm_msg_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, spdm_response_size,
                                               spdm_response,
@@ -970,8 +970,8 @@ static libspdm_return_t libspdm_requester_get_capabilities_test_receive_message(
         spdm_response->header.param2 = 0;
         spdm_response->ct_exponent = 0;
         spdm_response->flags = LIBSPDM_DEFAULT_CAPABILITY_FLAG;
-        spdm_response->data_transfer_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
-        spdm_response->max_spdm_msg_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+        spdm_response->data_transfer_size = LIBSPDM_DATA_TRANSFER_SIZE;
+        spdm_response->max_spdm_msg_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, spdm_response_size,
@@ -1342,9 +1342,9 @@ static void libspdm_test_requester_get_capabilities_case33(void **state)
     status = libspdm_get_capabilities(spdm_context);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(spdm_context->connection_info.capability.max_spdm_msg_size,
-                     LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+                     LIBSPDM_MAX_SPDM_MSG_SIZE);
     assert_int_equal(spdm_context->connection_info.capability.data_transfer_size,
-                     LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+                     LIBSPDM_DATA_TRANSFER_SIZE);
     assert_int_equal(spdm_context->connection_info.capability.ct_exponent, 0);
     assert_int_equal(spdm_context->connection_info.capability.flags,
                      LIBSPDM_DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_12);

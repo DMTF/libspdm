@@ -19,7 +19,7 @@ void libspdm_test_responder_set_cetificate_rsp_case1(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_set_certificate_response_t *spdm_response;
     void *cert_chain;
     size_t cert_chain_size;
@@ -82,7 +82,7 @@ void libspdm_test_responder_set_cetificate_rsp_case2(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_set_certificate_response_t *spdm_response;
     void *cert_chain;
     size_t cert_chain_size;
@@ -149,7 +149,7 @@ void libspdm_test_responder_set_cetificate_rsp_case3(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_set_certificate_response_t *spdm_response;
     void *cert_chain;
     size_t cert_chain_size;
@@ -219,7 +219,7 @@ void libspdm_test_responder_set_cetificate_rsp_case4(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_set_certificate_response_t *spdm_response;
     void *cert_chain;
     size_t cert_chain_size;
@@ -288,7 +288,7 @@ void libspdm_test_responder_set_cetificate_rsp_case5(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_set_certificate_response_t *spdm_response;
     void *cert_chain;
     size_t cert_chain_size;
