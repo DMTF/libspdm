@@ -106,7 +106,7 @@ static void libspdm_set_standard_key_update_test_secrets(
 
 size_t libspdm_get_max_buffer_size(void)
 {
-    return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+    return LIBSPDM_MAX_SPDM_MSG_SIZE;
 }
 
 libspdm_return_t libspdm_device_send_message(void *spdm_context, size_t request_size,
@@ -119,7 +119,7 @@ libspdm_return_t libspdm_device_send_message(void *spdm_context, size_t request_
     uint32_t              *message_session_id;
     bool is_app_message;
     libspdm_session_info_t *session_info;
-    uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t message_buffer[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
     uint64_t sequence_number;
     uint8_t *salt;
 
@@ -200,9 +200,9 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
     spdm_response = (void *)(scratch_buffer + test_message_header_size);
     spdm_response_size = spdm_test_context->test_buffer_size;
     if (spdm_response_size >
-        LIBSPDM_MAX_MESSAGE_BUFFER_SIZE - test_message_header_size - aead_tag_max_size -
+        LIBSPDM_MAX_SPDM_MSG_SIZE - test_message_header_size - aead_tag_max_size -
         LIBSPDM_TEST_ALIGNMENT) {
-        spdm_response_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE - test_message_header_size -
+        spdm_response_size = LIBSPDM_MAX_SPDM_MSG_SIZE - test_message_header_size -
                              aead_tag_max_size -
                              LIBSPDM_TEST_ALIGNMENT;
     }

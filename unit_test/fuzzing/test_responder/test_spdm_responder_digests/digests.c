@@ -12,7 +12,7 @@
 
 size_t libspdm_get_max_buffer_size(void)
 {
-    return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+    return LIBSPDM_MAX_SPDM_MSG_SIZE;
 }
 
 void libspdm_test_responder_digests_case1(void **State)
@@ -20,8 +20,8 @@ void libspdm_test_responder_digests_case1(void **State)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-    uint8_t m_local_certificate_chain[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    uint8_t m_local_certificate_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
@@ -36,8 +36,8 @@ void libspdm_test_responder_digests_case1(void **State)
     spdm_context->local_context.local_cert_chain_provision[0] =
         m_local_certificate_chain;
     spdm_context->local_context.local_cert_chain_provision_size[0] =
-        LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
-    libspdm_set_mem(m_local_certificate_chain, LIBSPDM_MAX_MESSAGE_BUFFER_SIZE,
+        sizeof(m_local_certificate_chain);
+    libspdm_set_mem(m_local_certificate_chain, sizeof(m_local_certificate_chain),
                     (uint8_t)(0xFF));
 
     response_size = sizeof(response);
@@ -52,7 +52,7 @@ void libspdm_test_responder_digests_case2(void **State)
 {
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     size_t response_size;
 
     spdm_test_context = *State;
@@ -78,7 +78,7 @@ void libspdm_test_responder_digests_case3(void **State)
 {
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     size_t response_size;
 
     spdm_test_context = *State;
@@ -103,7 +103,7 @@ void libspdm_test_responder_digests_case4(void **State)
 {
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     size_t response_size;
 
     spdm_test_context = *State;

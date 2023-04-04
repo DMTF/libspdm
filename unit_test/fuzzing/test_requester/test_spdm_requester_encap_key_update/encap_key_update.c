@@ -92,7 +92,7 @@ static void libspdm_compute_secret_update(spdm_version_number_t spdm_version,
 
 size_t libspdm_get_max_buffer_size(void)
 {
-    return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+    return LIBSPDM_MAX_SPDM_MSG_SIZE;
 }
 
 void libspdm_test_requester_encap_key_update(void **State)
@@ -104,7 +104,7 @@ void libspdm_test_requester_encap_key_update(void **State)
     libspdm_secured_message_context_t *secured_message_context;
     size_t request_size;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     uint8_t m_req_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
     uint8_t m_rsp_secret_buffer[LIBSPDM_MAX_HASH_SIZE];
 

@@ -12,7 +12,7 @@
 
 size_t libspdm_get_max_buffer_size(void)
 {
-    return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+    return LIBSPDM_MAX_SPDM_MSG_SIZE;
 }
 
 void libspdm_test_transport_pci_doe_encode_message(void **State)
@@ -39,7 +39,7 @@ void libspdm_test_transport_pci_doe_encode_message(void **State)
                              0; /* PCI_DOE_MAX_RANDOM_NUMBER_COUNT */
     LIBSPDM_ASSERT(spdm_test_context->test_buffer_size > record_header_max_size);
 
-    transport_message_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+    transport_message_size = spdm_test_context->test_buffer_size;
     transport_message = spdm_test_context->test_buffer;
 
     libspdm_transport_pci_doe_encode_message(spdm_context, NULL, is_app_message, is_requester,

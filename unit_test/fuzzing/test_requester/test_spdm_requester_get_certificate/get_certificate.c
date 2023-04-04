@@ -26,7 +26,7 @@ bool libspdm_test_verify_spdm_cert_chain(void *spdm_context, uint8_t slot_id,
 
 size_t libspdm_get_max_buffer_size(void)
 {
-    return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+    return LIBSPDM_MAX_SPDM_MSG_SIZE;
 }
 
 libspdm_return_t libspdm_device_send_message(void *spdm_context, size_t request_size,
@@ -42,7 +42,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
     spdm_certificate_response_t *spdm_response;
 
     size_t spdm_response_size;
-    uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t temp_buf[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
     size_t test_message_header_size;
     uint16_t portion_length;
     uint16_t remainder_length;

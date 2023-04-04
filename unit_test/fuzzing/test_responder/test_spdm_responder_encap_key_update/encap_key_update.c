@@ -91,7 +91,7 @@ static void libspdm_compute_secret_update(spdm_version_number_t spdm_version,
 
 size_t libspdm_get_max_buffer_size(void)
 {
-    return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+    return LIBSPDM_MAX_SPDM_MSG_SIZE;
 }
 
 libspdm_test_context_t m_libspdm_responder_encap_get_digests_test_context = {

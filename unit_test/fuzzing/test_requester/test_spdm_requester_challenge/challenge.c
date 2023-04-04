@@ -12,11 +12,11 @@
 #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 
 static size_t m_libspdm_local_buffer_size;
-static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_M1M2_BUFFER_SIZE];
 
 size_t libspdm_get_max_buffer_size(void)
 {
-    return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+    return LIBSPDM_MAX_SPDM_MSG_SIZE;
 }
 
 libspdm_return_t libspdm_device_send_message(void *spdm_context, size_t request_size,
@@ -39,7 +39,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
     libspdm_test_context_t *spdm_test_context;
     spdm_challenge_auth_response_t *spdm_response;
     size_t spdm_response_size;
-    uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t temp_buf[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
     size_t test_message_header_size;
     void *data;
     size_t data_size;

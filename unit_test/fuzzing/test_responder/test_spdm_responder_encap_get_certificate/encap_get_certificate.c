@@ -21,7 +21,7 @@ bool libspdm_test_verify_spdm_cert_chain(void *spdm_context, uint8_t slot_id,
 
 size_t libspdm_get_max_buffer_size(void)
 {
-    return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+    return LIBSPDM_MAX_SPDM_MSG_SIZE;
 }
 
 libspdm_test_context_t m_libspdm_responder_encap_get_certificate_test_context = {

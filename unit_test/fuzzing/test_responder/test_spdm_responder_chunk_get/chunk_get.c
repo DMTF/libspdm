@@ -14,7 +14,7 @@
 
 size_t libspdm_get_max_buffer_size(void)
 {
-    return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+    return LIBSPDM_MAX_SPDM_MSG_SIZE;
 }
 
 void libspdm_test_responder_chunk_get_case1(void **State)
@@ -22,7 +22,7 @@ void libspdm_test_responder_chunk_get_case1(void **State)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_chunk_get_request_t *spdm_request;
 
     void* scratch_buffer;
@@ -52,8 +52,7 @@ void libspdm_test_responder_chunk_get_case1(void **State)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
 
     libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
-    LIBSPDM_ASSERT(scratch_buffer_size >= LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE
-                   + LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+    LIBSPDM_ASSERT(scratch_buffer_size >= LIBSPDM_SCRATCH_BUFFER_SIZE);
 
     scratch_buffer = (((uint8_t*) scratch_buffer) + LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE);
     scratch_buffer_size = scratch_buffer_size - LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE;
@@ -91,7 +90,7 @@ void libspdm_test_responder_chunk_get_case2(void **State)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
 
     void* scratch_buffer;
     size_t scratch_buffer_size;
@@ -120,8 +119,7 @@ void libspdm_test_responder_chunk_get_case2(void **State)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
 
     libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
-    LIBSPDM_ASSERT(scratch_buffer_size >= LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE
-                   + LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+    LIBSPDM_ASSERT(scratch_buffer_size >= LIBSPDM_SCRATCH_BUFFER_SIZE);
 
     scratch_buffer = (((uint8_t*) scratch_buffer) + LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE);
     scratch_buffer_size = scratch_buffer_size - LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE;
@@ -157,7 +155,7 @@ void libspdm_test_responder_chunk_get_case3(void **State)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
 
     void* scratch_buffer;
     size_t scratch_buffer_size;
@@ -186,8 +184,7 @@ void libspdm_test_responder_chunk_get_case3(void **State)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
 
     libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
-    LIBSPDM_ASSERT(scratch_buffer_size >= LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE
-                   + LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+    LIBSPDM_ASSERT(scratch_buffer_size >= LIBSPDM_SCRATCH_BUFFER_SIZE);
 
     scratch_buffer = (((uint8_t*) scratch_buffer) + LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE);
     scratch_buffer_size = scratch_buffer_size - LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE;
@@ -223,7 +220,7 @@ void libspdm_test_responder_chunk_get_case4(void **State)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_chunk_get_request_t *spdm_request;
 
     void* scratch_buffer;
@@ -253,8 +250,7 @@ void libspdm_test_responder_chunk_get_case4(void **State)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
 
     libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
-    LIBSPDM_ASSERT(scratch_buffer_size >= LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE
-                   + LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+    LIBSPDM_ASSERT(scratch_buffer_size >= LIBSPDM_SCRATCH_BUFFER_SIZE);
 
     scratch_buffer = (((uint8_t*) scratch_buffer) + LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE);
     scratch_buffer_size = scratch_buffer_size - LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE;

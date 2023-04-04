@@ -14,11 +14,11 @@
 bool m_secured_on_off;
 static uint8_t m_libspdm_local_psk_hint[32];
 static size_t m_libspdm_local_buffer_size;
-static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_L1L2_BUFFER_SIZE];
 
 size_t libspdm_get_max_buffer_size(void)
 {
-    return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
+    return LIBSPDM_MAX_SPDM_MSG_SIZE;
 }
 
 size_t libspdm_test_get_measurement_request_size(const void *spdm_context, const void *buffer,
@@ -83,7 +83,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
     libspdm_test_context_t *spdm_test_context;
     uint8_t *spdm_response;
     size_t spdm_response_size;
-    uint8_t temp_buf[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t temp_buf[LIBSPDM_MAX_SPDM_MSG_SIZE];
     size_t test_message_header_size;
 
     spdm_test_context = libspdm_get_test_context();
@@ -132,9 +132,9 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
         spdm_response = (void *)(scratch_buffer + test_message_header_size);
         spdm_response_size = spdm_test_context->test_buffer_size;
         if (spdm_response_size >
-            LIBSPDM_MAX_MESSAGE_BUFFER_SIZE - test_message_header_size - aead_tag_max_size -
+            LIBSPDM_MAX_SPDM_MSG_SIZE - test_message_header_size - aead_tag_max_size -
             LIBSPDM_TEST_ALIGNMENT) {
-            spdm_response_size = LIBSPDM_MAX_MESSAGE_BUFFER_SIZE - test_message_header_size -
+            spdm_response_size = LIBSPDM_MAX_SPDM_MSG_SIZE - test_message_header_size -
                                  aead_tag_max_size -
                                  LIBSPDM_TEST_ALIGNMENT;
         }
