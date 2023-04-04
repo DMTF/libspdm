@@ -28,7 +28,7 @@ bool libspdm_calculate_th_for_exchange(
     uint8_t cert_chain_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
     uint32_t hash_size;
     libspdm_return_t status;
-    libspdm_large_managed_buffer_t th_curr;
+    libspdm_th_managed_buffer_t th_curr;
     bool result;
     size_t th_data_buffer_capacity;
 
@@ -36,7 +36,7 @@ bool libspdm_calculate_th_for_exchange(
 
     hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
 
-    LIBSPDM_ASSERT(*th_data_buffer_size >= LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+    LIBSPDM_ASSERT(*th_data_buffer_size >= sizeof(th_curr.buffer));
     libspdm_init_managed_buffer(&th_curr, sizeof(th_curr.buffer));
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_a data :\n"));
@@ -224,7 +224,7 @@ bool libspdm_calculate_th_for_finish(libspdm_context_t *spdm_context,
     uint8_t mut_cert_chain_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
     uint32_t hash_size;
     libspdm_return_t status;
-    libspdm_large_managed_buffer_t th_curr;
+    libspdm_th_managed_buffer_t th_curr;
     bool result;
     size_t th_data_buffer_capacity;
 
@@ -232,7 +232,7 @@ bool libspdm_calculate_th_for_finish(libspdm_context_t *spdm_context,
 
     hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
 
-    LIBSPDM_ASSERT(*th_data_buffer_size >= LIBSPDM_MAX_MESSAGE_BUFFER_SIZE);
+    LIBSPDM_ASSERT(*th_data_buffer_size >= sizeof(th_curr.buffer));
     libspdm_init_managed_buffer(&th_curr, sizeof(th_curr.buffer));
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_a data :\n"));
@@ -502,7 +502,7 @@ bool libspdm_calculate_th1_hash(libspdm_context_t *spdm_context,
     uint8_t slot_id;
     uint8_t *cert_chain_buffer;
     size_t cert_chain_buffer_size;
-    uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_TH_BUFFER_SIZE];
     size_t th_curr_data_size;
 #endif
 #if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) || (LIBSPDM_DEBUG_PRINT_ENABLE)
@@ -601,7 +601,7 @@ bool libspdm_calculate_th2_hash(libspdm_context_t *spdm_context,
     size_t cert_chain_buffer_size;
     uint8_t *mut_cert_chain_buffer;
     size_t mut_cert_chain_buffer_size;
-    uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_TH_BUFFER_SIZE];
     size_t th_curr_data_size;
 #endif
 #if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) || (LIBSPDM_DEBUG_PRINT_ENABLE)

@@ -694,7 +694,7 @@ void libspdm_test_responder_respond_if_ready_case6(void **state) {
     uint8_t                *cert_buffer;
     size_t cert_buffer_size;
     uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-    libspdm_large_managed_buffer_t th_curr;
+    libspdm_th_managed_buffer_t th_curr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_info_t    *session_info;
@@ -924,7 +924,7 @@ void libspdm_test_responder_respond_if_ready_case8(void **state) {
     uint8_t                *ptr;
     uint8_t local_psk_hint[32];
     uint8_t dummy_buffer[LIBSPDM_MAX_HASH_SIZE];
-    libspdm_large_managed_buffer_t th_curr;
+    libspdm_th_managed_buffer_t th_curr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_info_t    *session_info;

@@ -39,7 +39,7 @@ bool libspdm_generate_psk_exchange_req_hmac(libspdm_context_t *spdm_context,
     uint8_t calc_hmac_data[LIBSPDM_MAX_HASH_SIZE];
     bool result;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t th_curr_data[LIBSPDM_MAX_MESSAGE_TH_BUFFER_SIZE];
     size_t th_curr_data_size;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
 #endif
