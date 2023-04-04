@@ -453,7 +453,7 @@ libspdm_negotiate_algorithms_request_spdm11_t
         {
             SPDM_MESSAGE_VERSION_11,
             SPDM_NEGOTIATE_ALGORITHMS,
-            11,
+            3,
             0
         },
         sizeof(libspdm_negotiate_algorithms_request_spdm11_t)-
@@ -488,17 +488,17 @@ size_t m_libspdm_negotiate_algorithm_request13_size =
     sizeof(
         spdm_negotiate_algorithms_common_struct_table_t);
 
-libspdm_negotiate_algorithms_request_spdm11_multiple_tables_t
+libspdm_negotiate_algorithms_request_spdm11_t
     m_libspdm_negotiate_algorithm_request14 =
 {
     {
         {
             SPDM_MESSAGE_VERSION_11,
             SPDM_NEGOTIATE_ALGORITHMS,
-            13,
+            5,
             0
         },
-        sizeof(libspdm_negotiate_algorithms_request_spdm11_multiple_tables_t)+
+        sizeof(libspdm_negotiate_algorithms_request_spdm11_t)+
         sizeof(spdm_negotiate_algorithms_common_struct_table_t),
         SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
     },
@@ -523,46 +523,6 @@ libspdm_negotiate_algorithms_request_spdm11_multiple_tables_t
             0x20,
             SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH
         },
-        {
-            SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_DHE,
-            0x20,
-            SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_3072
-        },
-        {
-            SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_AEAD,
-            0x20,
-            SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_CHACHA20_POLY1305
-        },
-        {
-            SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_REQ_BASE_ASYM_ALG,
-            0x20,
-            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384
-        },
-        {
-            SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE,
-            0x20,
-            SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH
-        },
-        {
-            SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_DHE,
-            0x20,
-            SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_256_R1
-        },
-        {
-            SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_AEAD,
-            0x20,
-            SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_256_GCM
-        },
-        {
-            SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_REQ_BASE_ASYM_ALG,
-            0x20,
-            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048
-        },
-        {
-            SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE,
-            0x20,
-            SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH
-        }
     }
 };
 size_t m_libspdm_negotiate_algorithm_request14_size =
@@ -2620,6 +2580,8 @@ int libspdm_responder_algorithms_test_main(void)
         m_libspdm_use_asym_algo;
     m_libspdm_negotiate_algorithm_request18.spdm_request_version10.base_hash_algo =
         m_libspdm_use_hash_algo;
+    m_libspdm_negotiate_algorithm_request18.spdm_request_version10.base_asym_algo =
+        m_libspdm_use_asym_algo;
     m_libspdm_negotiate_algorithm_request24.spdm_request_version10.base_asym_algo =
         m_libspdm_use_asym_algo;
     libspdm_setup_test_context(&m_libspdm_responder_algorithms_test_context);
