@@ -14,7 +14,7 @@
 #define LIBSPDM_BIN_STR_7_LABEL "finished"
 
 static size_t m_libspdm_local_buffer_size;
-static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_TH_BUFFER_SIZE];
 static uint8_t m_libspdm_local_psk_hint[32];
 static uint8_t m_libspdm_zero_filled_buffer[64];
 

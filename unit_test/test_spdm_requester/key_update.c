@@ -140,7 +140,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
         uint32_t              *message_session_id;
         bool is_app_message;
         libspdm_session_info_t *session_info;
-        uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+        uint8_t message_buffer[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
         uint64_t sequence_number;
         uint8_t *salt;
 
@@ -191,7 +191,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             uint32_t              *message_session_id;
             bool is_app_message;
             libspdm_session_info_t *session_info;
-            uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+            uint8_t message_buffer[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
             uint64_t sequence_number;
             uint8_t *salt;
 
@@ -247,7 +247,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             uint32_t              *message_session_id;
             bool is_app_message;
             libspdm_session_info_t *session_info;
-            uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+            uint8_t message_buffer[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
             uint64_t sequence_number;
             uint8_t *salt;
 
@@ -303,7 +303,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             uint32_t              *message_session_id;
             bool is_app_message;
             libspdm_session_info_t *session_info;
-            uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+            uint8_t message_buffer[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
             uint64_t sequence_number;
             uint8_t *salt;
 
@@ -359,7 +359,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             uint32_t              *message_session_id;
             bool is_app_message;
             libspdm_session_info_t *session_info;
-            uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+            uint8_t message_buffer[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
             uint64_t sequence_number;
             uint8_t *salt;
 
@@ -418,7 +418,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             uint32_t *message_session_id;
             bool is_app_message;
             libspdm_session_info_t    *session_info;
-            uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+            uint8_t message_buffer[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
             uint64_t sequence_number;
             uint8_t *salt;
 
@@ -483,7 +483,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
         uint32_t              *message_session_id;
         bool is_app_message;
         libspdm_session_info_t *session_info;
-        uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+        uint8_t message_buffer[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
         uint64_t sequence_number;
         uint8_t *salt;
 
@@ -534,7 +534,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             uint32_t *message_session_id;
             bool is_app_message;
             libspdm_session_info_t    *session_info;
-            uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+            uint8_t message_buffer[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
             uint64_t sequence_number;
             uint8_t *salt;
 
@@ -592,7 +592,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             uint32_t *message_session_id;
             bool is_app_message;
             libspdm_session_info_t    *session_info;
-            uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+            uint8_t message_buffer[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
             uint64_t sequence_number;
             uint8_t *salt;
 
@@ -649,7 +649,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
         uint32_t              *message_session_id;
         bool is_app_message;
         libspdm_session_info_t *session_info;
-        uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+        uint8_t message_buffer[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
         uint64_t sequence_number;
         uint8_t *salt;
 
@@ -697,7 +697,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
         uint32_t              *message_session_id;
         bool is_app_message;
         libspdm_session_info_t *session_info;
-        uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+        uint8_t message_buffer[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
         uint64_t sequence_number;
         uint8_t *salt;
 
@@ -748,7 +748,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             uint32_t              *message_session_id;
             bool is_app_message;
             libspdm_session_info_t *session_info;
-            uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+            uint8_t message_buffer[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
             uint64_t sequence_number;
             uint8_t *salt;
 
@@ -804,7 +804,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             uint32_t              *message_session_id;
             bool is_app_message;
             libspdm_session_info_t *session_info;
-            uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+            uint8_t message_buffer[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
             uint64_t sequence_number;
             uint8_t *salt;
 
@@ -860,7 +860,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             uint32_t              *message_session_id;
             bool is_app_message;
             libspdm_session_info_t *session_info;
-            uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+            uint8_t message_buffer[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
             uint64_t sequence_number;
             uint8_t *salt;
 
@@ -919,7 +919,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             uint32_t *message_session_id;
             bool is_app_message;
             libspdm_session_info_t    *session_info;
-            uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+            uint8_t message_buffer[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
             uint64_t sequence_number;
             uint8_t *salt;
 

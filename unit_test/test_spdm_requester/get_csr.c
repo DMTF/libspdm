@@ -33,9 +33,6 @@ libspdm_return_t libspdm_requester_get_csr_test_send_message(
     uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
-    uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
-
-    memcpy(message_buffer, request, request_size);
 
     spdm_test_context = libspdm_get_test_context();
     switch (spdm_test_context->case_id) {

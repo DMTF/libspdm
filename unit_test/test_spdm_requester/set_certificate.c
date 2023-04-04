@@ -21,7 +21,7 @@ libspdm_return_t libspdm_requester_set_certificate_test_send_message(
     bool is_app_message;
     uint8_t *app_message;
     size_t app_message_size;
-    uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t message_buffer[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
 
     memcpy(message_buffer, request, request_size);
 

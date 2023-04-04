@@ -14,9 +14,9 @@
 #define LIBSPDM_LARGE_MEASUREMENT_SIZE ((1 << 24) - 1)
 
 static size_t m_libspdm_local_buffer_size;
-static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_L1L2_BUFFER_SIZE];
 static uint8_t m_libspdm_local_psk_hint[32];
-static uint8_t m_libspdm_msg_log_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE * 2];
+static uint8_t m_libspdm_msg_log_buffer[LIBSPDM_MAX_MESSAGE_L1L2_BUFFER_SIZE * 2];
 
 static size_t libspdm_test_get_measurement_request_size(const void *spdm_context,
                                                         const void *buffer,
@@ -75,7 +75,7 @@ static libspdm_return_t libspdm_requester_get_measurements_test_send_message(
     bool is_app_message;
     uint8_t *app_message;
     size_t app_message_size;
-    uint8_t message_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t message_buffer[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
 
     memcpy(message_buffer, request, request_size);
 

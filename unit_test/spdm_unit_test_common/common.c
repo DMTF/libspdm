@@ -9,7 +9,7 @@
 static libspdm_test_context_t *m_spdm_test_context;
 
 static bool m_send_receive_buffer_acquired = false;
-static uint8_t m_send_receive_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+static uint8_t m_send_receive_buffer[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
 
 static bool m_error_acquire_sender_buffer = false;
 static bool m_error_acquire_receiver_buffer = false;

@@ -11,7 +11,7 @@
 #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
 static size_t m_libspdm_local_buffer_size;
-static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_TH_BUFFER_SIZE];
 static uint8_t m_libspdm_zero_filled_buffer[64];
 
 static size_t libspdm_test_get_key_exchange_request_size(const void *spdm_context,

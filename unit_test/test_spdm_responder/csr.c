@@ -155,7 +155,7 @@ void libspdm_test_responder_csr_case1(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_csr_response_t *spdm_response;
     spdm_get_csr_request_t *m_libspdm_get_csr_request;
     uint8_t wrong_csr[LIBSPDM_MAX_CSR_SIZE];
@@ -217,7 +217,7 @@ void libspdm_test_responder_csr_case2(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_csr_response_t *spdm_response;
     spdm_get_csr_request_t *m_libspdm_get_csr_request;
 
@@ -278,7 +278,7 @@ void libspdm_test_responder_csr_case3(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_csr_response_t *spdm_response;
     spdm_get_csr_request_t *m_libspdm_get_csr_request;
     uint8_t wrong_csr[LIBSPDM_MAX_CSR_SIZE];
@@ -349,7 +349,7 @@ void libspdm_test_responder_csr_case4(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_csr_response_t *spdm_response;
     spdm_get_csr_request_t *m_libspdm_get_csr_request;
     uint8_t wrong_csr[LIBSPDM_MAX_CSR_SIZE];
@@ -415,7 +415,7 @@ void libspdm_test_responder_csr_case5(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_csr_response_t *spdm_response;
     spdm_get_csr_request_t *m_libspdm_get_csr_request;
     uint8_t wrong_csr[LIBSPDM_MAX_CSR_SIZE];
@@ -482,7 +482,7 @@ void libspdm_test_responder_csr_case6(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
-    uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_csr_response_t *spdm_response;
     spdm_get_csr_request_t *m_libspdm_get_csr_request;
     uint8_t cached_csr[LIBSPDM_MAX_CSR_SIZE];
