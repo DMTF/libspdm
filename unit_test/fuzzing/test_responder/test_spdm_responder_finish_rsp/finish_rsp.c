@@ -11,6 +11,8 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
+static libspdm_th_managed_buffer_t th_curr;
+
 size_t libspdm_get_max_buffer_size(void)
 {
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
@@ -52,7 +54,6 @@ void libspdm_test_responder_finish_case1(void **State)
     uint8_t *cert_buffer;
     size_t cert_buffer_size;
     uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-    libspdm_th_managed_buffer_t th_curr;
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_info_t *session_info;
     uint32_t session_id;
@@ -357,7 +358,6 @@ void libspdm_test_responder_finish_case8(void **State)
     size_t cert_buffer_size;
     uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
     uint8_t req_cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-    libspdm_th_managed_buffer_t th_curr;
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_info_t *session_info;
     uint32_t session_id;

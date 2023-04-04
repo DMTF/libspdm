@@ -11,6 +11,8 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
+static libspdm_th_managed_buffer_t th_curr;
+
 size_t libspdm_get_max_buffer_size(void)
 {
     return LIBSPDM_MAX_MESSAGE_BUFFER_SIZE;
@@ -118,7 +120,6 @@ void libspdm_test_responder_psk_finish_rsp_case2(void **State)
     uint8_t response[LIBSPDM_MAX_MESSAGE_BUFFER_SIZE];
     void *data1;
     size_t data_size1;
-    libspdm_th_managed_buffer_t th_curr;
     static uint8_t m_dummy_buffer[LIBSPDM_MAX_HASH_SIZE];
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
