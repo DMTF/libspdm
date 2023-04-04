@@ -52,6 +52,8 @@ uint8_t m_dummy_buffer[LIBSPDM_MAX_HASH_SIZE];
 
 #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
+static libspdm_th_managed_buffer_t th_curr;
+
 void libspdm_secured_message_set_request_finished_key(
     void *spdm_secured_message_context, const void *key, size_t key_size)
 {
@@ -85,7 +87,6 @@ void libspdm_test_responder_finish_case1(void **state)
     uint8_t *cert_buffer;
     size_t cert_buffer_size;
     uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-    libspdm_th_managed_buffer_t th_curr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_info_t *session_info;
@@ -207,7 +208,6 @@ void libspdm_test_responder_finish_case3(void **state)
     uint8_t *cert_buffer;
     size_t cert_buffer_size;
     uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-    libspdm_th_managed_buffer_t th_curr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_info_t *session_info;
@@ -325,7 +325,6 @@ void libspdm_test_responder_finish_case4(void **state)
     uint8_t *cert_buffer;
     size_t cert_buffer_size;
     uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-    libspdm_th_managed_buffer_t th_curr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_info_t *session_info;
@@ -445,7 +444,6 @@ void libspdm_test_responder_finish_case5(void **state)
     uint8_t *cert_buffer;
     size_t cert_buffer_size;
     uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-    libspdm_th_managed_buffer_t th_curr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_info_t *session_info;
@@ -573,7 +571,6 @@ void libspdm_test_responder_finish_case6(void **state)
     uint8_t *cert_buffer;
     size_t cert_buffer_size;
     uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-    libspdm_th_managed_buffer_t th_curr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_info_t *session_info;
@@ -684,7 +681,6 @@ void libspdm_test_responder_finish_case7(void **state)
     uint8_t *cert_buffer;
     size_t cert_buffer_size;
     uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-    libspdm_th_managed_buffer_t th_curr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_info_t *session_info;
@@ -823,7 +819,6 @@ void libspdm_test_responder_finish_case8(void **state)
     size_t cert_buffer_size;
     uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
     uint8_t req_cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-    libspdm_th_managed_buffer_t th_curr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_info_t *session_info;
@@ -984,7 +979,6 @@ void libspdm_test_responder_finish_case9(void **state)
     uint8_t *cert_buffer;
     size_t cert_buffer_size;
     uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-    libspdm_th_managed_buffer_t th_curr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_info_t *session_info;
@@ -1102,7 +1096,6 @@ void libspdm_test_responder_finish_case10(void **state)
     uint8_t *cert_buffer;
     size_t cert_buffer_size;
     uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-    libspdm_th_managed_buffer_t th_curr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_info_t *session_info;
@@ -1424,7 +1417,6 @@ void libspdm_test_responder_finish_case14(void **state)
     uint8_t *cert_buffer;
     size_t cert_buffer_size;
     uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-    libspdm_th_managed_buffer_t th_curr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_info_t *session_info;
@@ -1544,7 +1536,6 @@ void libspdm_test_responder_finish_case15(void **state)
     size_t cert_buffer_size;
     uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
     uint8_t req_cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-    libspdm_th_managed_buffer_t th_curr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_info_t *session_info;
@@ -1699,7 +1690,6 @@ void libspdm_test_responder_finish_case16(void **state)
     uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
     uint8_t req_cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
     uint8_t random_buffer[LIBSPDM_MAX_HASH_SIZE];
-    libspdm_th_managed_buffer_t th_curr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_info_t *session_info;
@@ -1848,7 +1838,6 @@ void libspdm_test_responder_finish_case17(void **state)
     uint8_t *cert_buffer;
     size_t cert_buffer_size;
     uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-    libspdm_th_managed_buffer_t th_curr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_info_t *session_info;
@@ -1962,7 +1951,6 @@ void libspdm_test_responder_finish_case18(void **state)
     size_t cert_buffer_size;
     uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
     uint8_t req_cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-    libspdm_th_managed_buffer_t th_curr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_info_t *session_info;
@@ -2105,7 +2093,6 @@ void libspdm_test_responder_finish_case19(void **state)
     size_t cert_buffer_size;
     uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
     uint8_t req_cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-    libspdm_th_managed_buffer_t th_curr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_info_t *session_info;
@@ -2271,7 +2258,6 @@ void libspdm_test_responder_finish_case20(void **state)
     size_t cert_buffer_size;
     uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
     uint8_t req_cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-    libspdm_th_managed_buffer_t th_curr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_info_t *session_info;
@@ -2436,7 +2422,6 @@ void libspdm_test_responder_finish_case21(void **state)
     uint8_t *cert_buffer;
     size_t cert_buffer_size;
     uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-    libspdm_th_managed_buffer_t th_curr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_info_t *session_info;
@@ -2555,7 +2540,6 @@ void libspdm_test_responder_finish_case22(void **state)
     size_t cert_buffer_size;
     uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
     uint8_t req_cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-    libspdm_th_managed_buffer_t th_curr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_info_t *session_info;

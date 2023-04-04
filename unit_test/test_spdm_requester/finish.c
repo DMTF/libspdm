@@ -16,6 +16,8 @@ static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_TH_BUFFER_SIZE];
 static uint8_t m_libspdm_dummy_buffer[LIBSPDM_MAX_HASH_SIZE];
 static const uint8_t m_libspdm_zero_buffer[LIBSPDM_MAX_HASH_SIZE] = {0};
 
+static libspdm_th_managed_buffer_t th_curr;
+
 void libspdm_secured_message_set_response_finished_key(
     void *spdm_secured_message_context, const void *key, size_t key_size)
 {
@@ -204,7 +206,6 @@ libspdm_return_t libspdm_requester_finish_test_receive_message(
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        libspdm_th_managed_buffer_t th_curr;
         uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
         uint8_t response_finished_key[LIBSPDM_MAX_HASH_SIZE];
         size_t spdm_response_size;
@@ -277,7 +278,6 @@ libspdm_return_t libspdm_requester_finish_test_receive_message(
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        libspdm_th_managed_buffer_t th_curr;
         uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
         uint8_t response_finished_key[LIBSPDM_MAX_HASH_SIZE];
         size_t spdm_response_size;
@@ -414,7 +414,6 @@ libspdm_return_t libspdm_requester_finish_test_receive_message(
             uint8_t *cert_buffer;
             size_t cert_buffer_size;
             uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-            libspdm_th_managed_buffer_t th_curr;
             uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
             uint8_t response_finished_key[LIBSPDM_MAX_HASH_SIZE];
             size_t spdm_response_size;
@@ -569,7 +568,6 @@ libspdm_return_t libspdm_requester_finish_test_receive_message(
             uint8_t *cert_buffer;
             size_t cert_buffer_size;
             uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-            libspdm_th_managed_buffer_t th_curr;
             uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
             uint8_t response_finished_key[LIBSPDM_MAX_HASH_SIZE];
             size_t spdm_response_size;
@@ -685,7 +683,6 @@ libspdm_return_t libspdm_requester_finish_test_receive_message(
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        libspdm_th_managed_buffer_t th_curr;
         uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
         uint8_t response_finished_key[LIBSPDM_MAX_HASH_SIZE];
         size_t spdm_response_size;
@@ -758,7 +755,6 @@ libspdm_return_t libspdm_requester_finish_test_receive_message(
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        libspdm_th_managed_buffer_t th_curr;
         uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
         uint8_t response_finished_key[LIBSPDM_MAX_HASH_SIZE];
         size_t spdm_response_size;
@@ -831,7 +827,6 @@ libspdm_return_t libspdm_requester_finish_test_receive_message(
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        libspdm_th_managed_buffer_t th_curr;
         uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
         uint8_t response_finished_key[LIBSPDM_MAX_HASH_SIZE];
         size_t spdm_response_size;
@@ -904,7 +899,6 @@ libspdm_return_t libspdm_requester_finish_test_receive_message(
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        libspdm_th_managed_buffer_t th_curr;
         uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
         uint8_t response_finished_key[LIBSPDM_MAX_HASH_SIZE];
         size_t spdm_response_size;
@@ -978,7 +972,6 @@ libspdm_return_t libspdm_requester_finish_test_receive_message(
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        libspdm_th_managed_buffer_t th_curr;
         uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
         uint8_t response_finished_key[LIBSPDM_MAX_HASH_SIZE];
         size_t spdm_response_size;
@@ -1052,7 +1045,6 @@ libspdm_return_t libspdm_requester_finish_test_receive_message(
         size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
         uint8_t req_cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        libspdm_th_managed_buffer_t th_curr;
         uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
         uint8_t response_finished_key[LIBSPDM_MAX_HASH_SIZE];
         size_t spdm_response_size;
@@ -1233,7 +1225,6 @@ libspdm_return_t libspdm_requester_finish_test_receive_message(
         size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
         uint8_t req_cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        libspdm_th_managed_buffer_t th_curr;
         uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
         uint8_t response_finished_key[LIBSPDM_MAX_HASH_SIZE];
         size_t spdm_response_size;
@@ -1342,7 +1333,6 @@ libspdm_return_t libspdm_requester_finish_test_receive_message(
         size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
         uint8_t req_cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        libspdm_th_managed_buffer_t th_curr;
         uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
         uint8_t response_finished_key[LIBSPDM_MAX_HASH_SIZE];
         size_t spdm_response_size;
@@ -1421,7 +1411,6 @@ libspdm_return_t libspdm_requester_finish_test_receive_message(
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        libspdm_th_managed_buffer_t th_curr;
         uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
         uint8_t response_finished_key[LIBSPDM_MAX_HASH_SIZE];
         size_t spdm_response_size;

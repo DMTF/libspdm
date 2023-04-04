@@ -16,6 +16,8 @@ typedef struct {
 } libspdm_psk_finish_request_mine_t;
 #pragma pack()
 
+static libspdm_th_managed_buffer_t th_curr;
+
 libspdm_psk_finish_request_mine_t m_libspdm_psk_finish_request1 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_PSK_FINISH, 0, 0 },
 };
@@ -58,7 +60,6 @@ void libspdm_test_responder_psk_finish_case1(void **state)
     void *data1;
     size_t data_size1;
     uint8_t *ptr;
-    libspdm_th_managed_buffer_t th_curr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_info_t *session_info;
@@ -170,7 +171,6 @@ void libspdm_test_responder_psk_finish_case2(void **state)
     void *data1;
     size_t data_size1;
     uint8_t *ptr;
-    libspdm_th_managed_buffer_t th_curr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_info_t *session_info;
@@ -282,7 +282,6 @@ void libspdm_test_responder_psk_finish_case3(void **state)
     void *data1;
     size_t data_size1;
     uint8_t *ptr;
-    libspdm_th_managed_buffer_t th_curr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_info_t *session_info;
@@ -400,7 +399,6 @@ void libspdm_test_responder_psk_finish_case4(void **state)
     void *data1;
     size_t data_size1;
     uint8_t *ptr;
-    libspdm_th_managed_buffer_t th_curr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_info_t *session_info;
@@ -520,7 +518,6 @@ void libspdm_test_responder_psk_finish_case5(void **state)
     void *data1;
     size_t data_size1;
     uint8_t *ptr;
-    libspdm_th_managed_buffer_t th_curr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_info_t *session_info;
@@ -648,7 +645,6 @@ void libspdm_test_responder_psk_finish_case6(void **state)
     void *data1;
     size_t data_size1;
     uint8_t *ptr;
-    libspdm_th_managed_buffer_t th_curr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_info_t *session_info;
@@ -759,7 +755,6 @@ void libspdm_test_responder_psk_finish_case7(void **state)
     void *data1;
     size_t data_size1;
     uint8_t *ptr;
-    libspdm_th_managed_buffer_t th_curr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_info_t *session_info;
@@ -894,7 +889,6 @@ void libspdm_test_responder_psk_finish_case8(void **state)
     void *data1;
     size_t data_size1;
     uint8_t *ptr;
-    libspdm_th_managed_buffer_t th_curr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_info_t *session_info;
@@ -1011,7 +1005,6 @@ void libspdm_test_responder_psk_finish_case9(void **state)
     void *data1;
     size_t data_size1;
     uint8_t *ptr;
-    libspdm_th_managed_buffer_t th_curr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_info_t *session_info;
@@ -1341,7 +1334,6 @@ void libspdm_test_responder_psk_finish_case12(void **state)
     void *data1;
     size_t data_size1;
     uint8_t *ptr;
-    libspdm_th_managed_buffer_t th_curr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_info_t *session_info;
@@ -1459,7 +1451,6 @@ void libspdm_test_responder_psk_finish_case13(void **state)
     void *data1;
     size_t data_size1;
     uint8_t *ptr;
-    libspdm_th_managed_buffer_t th_curr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_info_t *session_info;
@@ -1575,7 +1566,6 @@ void libspdm_test_responder_psk_finish_case14(void **state)
     void *data1;
     size_t data_size1;
     uint8_t *ptr;
-    libspdm_th_managed_buffer_t th_curr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_info_t *session_info;

@@ -18,6 +18,8 @@
 #define LIBSPDM_MY_TEST_TOKEN            0x30
 #define LIBSPDM_MY_WRONG_TEST_TOKEN      0x2F
 
+static libspdm_th_managed_buffer_t th_curr;
+
 spdm_response_if_ready_request_t m_libspdm_respond_if_ready_request1 = {
     {
         SPDM_MESSAGE_VERSION_11,
@@ -684,7 +686,6 @@ void libspdm_test_responder_respond_if_ready_case6(void **state) {
     uint8_t                *cert_buffer;
     size_t cert_buffer_size;
     uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-    libspdm_th_managed_buffer_t th_curr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_info_t    *session_info;
@@ -914,7 +915,6 @@ void libspdm_test_responder_respond_if_ready_case8(void **state) {
     uint8_t                *ptr;
     uint8_t local_psk_hint[32];
     uint8_t dummy_buffer[LIBSPDM_MAX_HASH_SIZE];
-    libspdm_th_managed_buffer_t th_curr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
     libspdm_session_info_t    *session_info;
