@@ -126,20 +126,6 @@ typedef struct {
     /*uint8_t   buffer[max_buffer_size];*/
 } libspdm_managed_buffer_t;
 
-/*
- * +--------------------------+------------------------------------------+---------+
- * | GET_VERSION              | 4                                        | 1       |
- * | VERSION {1.0, 1.1, 1.2}  | 6 + 2 * 3 = 12                           | 1       |
- * +--------------------------+------------------------------------------+---------+
- * | GET_CAPABILITIES 1.2     | 20                                       | 1       |
- * | CAPABILITIES 1.2         | 20                                       | 1       |
- * +--------------------------+------------------------------------------+---------+
- * | NEGOTIATE_ALGORITHMS 1.2 | 32 + 4 * 4 = 48                          | 2       |
- * | ALGORITHMS 1.2           | 36 + 4 * 4 = 52                          | 2       |
- * +--------------------------+------------------------------------------+---------+
- */
-#define LIBSPDM_MAX_MESSAGE_VCA_BUFFER_SIZE (150 + 2 * LIBSPDM_MAX_VERSION_COUNT)
-
 typedef struct {
     size_t max_buffer_size;
     size_t buffer_size;
