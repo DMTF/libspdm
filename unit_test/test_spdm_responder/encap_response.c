@@ -385,7 +385,7 @@ void libspdm_test_get_response_encapsulated_response_ack_case1(void **State)
     libspdm_context_t *spdm_context;
     spdm_deliver_encapsulated_response_request_t *spdm_response_requester;
     spdm_digest_response_t *spdm_response_requester_digest;
-    uint8_t temp_buf[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
+    uint8_t temp_buf[LIBSPDM_MAX_SPDM_MSG_SIZE];
     uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     size_t spdm_response_requester_size;
     size_t spdm_response_requester_digest_size;
@@ -427,7 +427,7 @@ void libspdm_test_get_response_encapsulated_response_ack_case1(void **State)
 
     spdm_response_requester = (void *)temp_buf;
     libspdm_copy_mem(spdm_response_requester,
-                     m_libspdm_m_deliver_encapsulated_response_request_t1_size,
+                     sizeof(temp_buf),
                      &m_libspdm_m_deliver_encapsulated_response_request_t1,
                      m_libspdm_m_deliver_encapsulated_response_request_t1_size);
 
@@ -470,7 +470,7 @@ void libspdm_test_get_response_encapsulated_response_ack_case2(void **State)
     libspdm_context_t *spdm_context;
     spdm_deliver_encapsulated_response_request_t *spdm_response_requester;
     spdm_certificate_response_t *spdm_response_requester_certificate;
-    uint8_t temp_buf[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
+    uint8_t temp_buf[LIBSPDM_MAX_SPDM_MSG_SIZE];
     uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     size_t spdm_response_requester_size;
     size_t data_size;
@@ -512,7 +512,7 @@ void libspdm_test_get_response_encapsulated_response_ack_case2(void **State)
 
     spdm_response_requester = (void *)temp_buf;
     libspdm_copy_mem(spdm_response_requester,
-                     m_libspdm_m_deliver_encapsulated_response_request_t1_size,
+                     sizeof(temp_buf),
                      &m_libspdm_m_deliver_encapsulated_response_request_t1,
                      m_libspdm_m_deliver_encapsulated_response_request_t1_size);
 
@@ -563,7 +563,7 @@ void libspdm_test_get_response_encapsulated_response_ack_case3(void **State)
     libspdm_context_t *spdm_context;
     spdm_deliver_encapsulated_response_request_t *spdm_response_requester;
     spdm_key_update_response_t *spdm_response_requester_key_update;
-    uint8_t temp_buf[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
+    uint8_t temp_buf[LIBSPDM_MAX_SPDM_MSG_SIZE];
     uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     size_t spdm_response_requester_size;
     size_t data_size;
@@ -619,7 +619,7 @@ void libspdm_test_get_response_encapsulated_response_ack_case3(void **State)
 
     spdm_response_requester = (void *)temp_buf;
     libspdm_copy_mem(spdm_response_requester,
-                     m_libspdm_m_deliver_encapsulated_response_request_t1_size,
+                     sizeof(temp_buf),
                      &m_libspdm_m_deliver_encapsulated_response_request_t1,
                      m_libspdm_m_deliver_encapsulated_response_request_t1_size);
 
@@ -763,7 +763,7 @@ void libspdm_test_get_response_encapsulated_response_ack_case7(void **State)
     libspdm_context_t *spdm_context;
     spdm_deliver_encapsulated_response_request_t *spdm_response_requester;
     spdm_certificate_response_t *spdm_response_requester_certificate;
-    uint8_t temp_buf[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
+    uint8_t temp_buf[LIBSPDM_MAX_SPDM_MSG_SIZE];
     uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     size_t spdm_response_requester_size;
     size_t data_size;
@@ -805,7 +805,7 @@ void libspdm_test_get_response_encapsulated_response_ack_case7(void **State)
 
     spdm_response_requester = (void *)temp_buf;
     libspdm_copy_mem(spdm_response_requester,
-                     m_libspdm_m_deliver_encapsulated_response_request_t1_size,
+                     sizeof(temp_buf),
                      &m_libspdm_m_deliver_encapsulated_response_request_t1,
                      m_libspdm_m_deliver_encapsulated_response_request_t1_size);
 
@@ -864,7 +864,7 @@ void libspdm_test_get_response_encapsulated_response_ack_case8(void **State)
     spdm_encapsulated_response_ack_response_t *spdm_response;
     spdm_deliver_encapsulated_response_request_t *spdm_response_requester;
     spdm_digest_response_t *spdm_response_requester_digest;
-    uint8_t temp_buf[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
+    uint8_t temp_buf[LIBSPDM_MAX_SPDM_MSG_SIZE];
     uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     size_t spdm_response_requester_size;
     size_t spdm_response_requester_digest_size;
@@ -906,7 +906,7 @@ void libspdm_test_get_response_encapsulated_response_ack_case8(void **State)
 
     spdm_response_requester = (void *)temp_buf;
     libspdm_copy_mem(spdm_response_requester,
-                     m_libspdm_m_deliver_encapsulated_response_request_t2_size,
+                     sizeof(temp_buf),
                      &m_libspdm_m_deliver_encapsulated_response_request_t2,
                      m_libspdm_m_deliver_encapsulated_response_request_t2_size);
 
@@ -967,7 +967,7 @@ void libspdm_test_get_response_encapsulated_response_ack_case9(void **State)
     spdm_encapsulated_response_ack_response_t *spdm_response;
     spdm_deliver_encapsulated_response_request_t *spdm_request;
     spdm_error_response_data_response_not_ready_t *EncapsulatedResponse;
-    uint8_t temp_buf[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
+    uint8_t temp_buf[LIBSPDM_MAX_SPDM_MSG_SIZE];
     uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     size_t spdm_request_size;
     size_t EncapsulatedResponse_size;
@@ -997,7 +997,7 @@ void libspdm_test_get_response_encapsulated_response_ack_case9(void **State)
 
     spdm_request = (void *)temp_buf;
     libspdm_copy_mem(spdm_request,
-                     m_libspdm_m_deliver_encapsulated_response_request_t2_size,
+                     sizeof(temp_buf),
                      &m_libspdm_m_deliver_encapsulated_response_request_t2,
                      m_libspdm_m_deliver_encapsulated_response_request_t2_size);
 

@@ -23,7 +23,7 @@ void test_spdm_responder_encap_get_digests_case1(void **state)
     libspdm_context_t *spdm_context;
     spdm_digest_response_t *spdm_response;
     uint8_t *digest;
-    uint8_t temp_buf[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
+    uint8_t temp_buf[LIBSPDM_MAX_SPDM_MSG_SIZE];
     size_t spdm_response_size;
     bool need_continue;
 
@@ -135,7 +135,7 @@ void test_spdm_responder_encap_get_digests_case3(void **state)
     libspdm_reset_message_b(spdm_context);
 
     spdm_digest_response_t *spdm_response;
-    uint8_t temp_buf[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE] = {0};
+    uint8_t temp_buf[LIBSPDM_MAX_SPDM_MSG_SIZE] = {0};
     size_t spdm_response_size;
 
     spdm_response_size = 0;
@@ -171,7 +171,7 @@ void test_spdm_responder_encap_get_digests_case4(void **state)
 
     spdm_digest_response_t *spdm_response;
     uint8_t *digest;
-    uint8_t temp_buf[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
+    uint8_t temp_buf[LIBSPDM_MAX_SPDM_MSG_SIZE];
     size_t spdm_response_size;
 
     spdm_response_size = sizeof(spdm_digest_response_t) +
@@ -207,7 +207,7 @@ void test_spdm_responder_encap_get_digests_case5(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     spdm_digest_response_t *spdm_response;
-    uint8_t temp_buf[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE] = {0};
+    uint8_t temp_buf[LIBSPDM_MAX_SPDM_MSG_SIZE] = {0};
     size_t spdm_response_size;
     bool need_continue;
 

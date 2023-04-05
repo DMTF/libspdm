@@ -33,7 +33,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context,
     libspdm_test_context_t *spdm_test_context;
     static uint8_t *spdm_response;
     size_t spdm_response_size;
-    uint8_t temp_buf[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
+    uint8_t temp_buf[LIBSPDM_RECEIVER_BUFFER_SIZE];
     size_t test_message_header_size;
     static bool error_large_response_sent = false;
     static size_t chunk_rsp_buf = 0;

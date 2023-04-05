@@ -12,7 +12,7 @@
 
 size_t libspdm_get_max_buffer_size(void)
 {
-    return LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE;
+    return LIBSPDM_RECEIVER_BUFFER_SIZE;
 }
 
 void libspdm_test_decode_secured_message(void **State)
