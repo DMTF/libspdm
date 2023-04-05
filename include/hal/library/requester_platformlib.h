@@ -7,7 +7,6 @@
 #define REQUESTER_PLATFORMLIB_H
 
 #include "hal/base.h"
-#include "internal/libspdm_lib_config.h"
 
 /**
  * Suspends the execution of the current thread until the interval elapses.
