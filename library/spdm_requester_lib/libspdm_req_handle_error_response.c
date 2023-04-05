@@ -232,7 +232,7 @@ libspdm_return_t libspdm_handle_error_large_response(
     libspdm_get_scratch_buffer(spdm_context, (void**)&scratch_buffer, &scratch_buffer_size);
     LIBSPDM_ASSERT(scratch_buffer_size >= LIBSPDM_SCRATCH_BUFFER_SIZE);
 
-    /* The first LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE bytes of the scratch
+    /* The first section of the scratch
      * buffer may be used for other purposes. Use only after that section. */
     large_response = scratch_buffer + LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_OFFSET;
     large_response_capacity = LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_CAPACITY;
