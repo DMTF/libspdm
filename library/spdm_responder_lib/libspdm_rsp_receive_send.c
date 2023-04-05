@@ -613,7 +613,7 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
         libspdm_get_scratch_buffer(context, (void **)&scratch_buffer, &scratch_buffer_size);
         LIBSPDM_ASSERT(scratch_buffer_size >= LIBSPDM_SCRATCH_BUFFER_SIZE);
 
-        /* The first LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE bytes of the scratch
+        /* The first section of the scratch
          * buffer may be used for other purposes. Use only after that section. */
 
         large_buffer = (((uint8_t*) scratch_buffer) + LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_OFFSET);

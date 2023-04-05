@@ -204,7 +204,7 @@ typedef enum {
  * It may be used to hold the large request/response and intermediate send/receive buffer
  * in case of chunking.
  *
- * If chunking is not supported, it may be just LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE.
+ * If chunking is not supported, it may be just LIBSPDM_MAX_SENDER_RECEIVER_BUFFER_SIZE.
  * If chunking is supported, it should be at least below.
  *
  * +---------------+--------------+--------------------------+------------------------------+
@@ -221,7 +221,8 @@ typedef enum {
 /* first section */
 #define LIBSPDM_SCRATCH_BUFFER_SECURE_MESSAGE_OFFSET 0
 
-#define LIBSPDM_SCRATCH_BUFFER_SECURE_MESSAGE_CAPACITY (LIBSPDM_MAX_SPDM_MSG_SIZE)
+#define LIBSPDM_SCRATCH_BUFFER_SECURE_MESSAGE_CAPACITY (LIBSPDM_MAX_SPDM_MSG_SIZE + \
+                                                        LIBSPDM_TRANSPORT_ADDITIONAL_SIZE)
 
 /* second section */
 #define LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_OFFSET (LIBSPDM_SCRATCH_BUFFER_SECURE_MESSAGE_CAPACITY)
@@ -252,7 +253,7 @@ typedef enum {
                                      )
 
 #else
-#define LIBSPDM_SCRATCH_BUFFER_SIZE (LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE)
+#define LIBSPDM_SCRATCH_BUFFER_SIZE (LIBSPDM_MAX_SENDER_RECEIVER_BUFFER_SIZE)
 #endif
 
 /**
