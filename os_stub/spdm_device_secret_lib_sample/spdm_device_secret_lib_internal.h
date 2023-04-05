@@ -16,6 +16,7 @@
 #include "spdm_crypt_ext_lib/spdm_crypt_ext_lib.h"
 #include "spdm_crypt_ext_lib/cryptlib_ext.h"
 #include "hal/library/responder_secretlib.h"
+#include "hal/library/requester_secretlib.h"
 #include "hal/library/debuglib.h"
 #include "hal/library/cryptlib.h"
 
