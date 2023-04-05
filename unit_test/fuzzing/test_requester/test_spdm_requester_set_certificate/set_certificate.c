@@ -27,7 +27,7 @@ libspdm_return_t libspdm_device_send_message(void *spdm_context,
     bool is_app_message;
     uint8_t *app_message;
     size_t app_message_size;
-    uint8_t message_buffer[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
+    uint8_t message_buffer[LIBSPDM_SENDER_BUFFER_SIZE];
     uint64_t sequence_number;
     uint8_t *salt;
 
@@ -82,7 +82,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context,
         libspdm_test_context_t *spdm_test_context;
         uint8_t *spdm_response;
         size_t spdm_response_size;
-        uint8_t temp_buf[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
+        uint8_t temp_buf[LIBSPDM_RECEIVER_BUFFER_SIZE];
         size_t test_message_header_size;
 
         spdm_test_context = libspdm_get_test_context();

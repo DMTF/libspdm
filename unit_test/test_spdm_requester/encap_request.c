@@ -21,13 +21,13 @@ libspdm_return_t libspdm_requester_encap_request_test_send_message(void *spdm_co
     spdm_test_context = libspdm_get_test_context();
     static uint8_t sub_index = 0;
     spdm_deliver_encapsulated_response_request_t *spdm_deliver_encapsulated_response_request;
-    uint8_t temp_buf[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
+    uint8_t temp_buf[LIBSPDM_SENDER_BUFFER_SIZE];
     size_t decode_message_size;
     spdm_error_response_t *spdm_response;
     libspdm_return_t status;
     uint32_t *message_session_id;
     bool is_message_app_message;
-    uint8_t message_buffer[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
+    uint8_t message_buffer[LIBSPDM_SENDER_BUFFER_SIZE];
 
     memcpy(message_buffer, request, request_size);
 
@@ -103,7 +103,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
     libspdm_test_context_t *spdm_test_context;
     spdm_encapsulated_request_response_t *libspdm_encapsulated_request_response;
     uint8_t *digest;
-    uint8_t temp_buf[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
+    uint8_t temp_buf[LIBSPDM_RECEIVER_BUFFER_SIZE];
     size_t temp_buf_size;
     uint8_t *temp_buf_ptr;
 

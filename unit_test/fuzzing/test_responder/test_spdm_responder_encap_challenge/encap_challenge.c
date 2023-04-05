@@ -29,7 +29,7 @@ void libspdm_test_responder_encap_challenge_case1(void **State)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     spdm_challenge_auth_response_t *spdm_response;
-    uint8_t temp_buf[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
+    uint8_t temp_buf[LIBSPDM_MAX_SPDM_MSG_SIZE];
 
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t *ptr;

@@ -76,7 +76,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
     spdm_psk_exchange_response_t *spdm_response;
     libspdm_test_context_t *spdm_test_context;
     size_t spdm_response_size;
-    uint8_t temp_buf[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
+    uint8_t temp_buf[LIBSPDM_RECEIVER_BUFFER_SIZE];
     size_t test_message_header_size;
     uint32_t hash_size;
     uint32_t hmac_size;

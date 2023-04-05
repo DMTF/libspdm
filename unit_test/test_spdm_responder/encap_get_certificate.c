@@ -39,7 +39,7 @@ void test_spdm_responder_encap_get_certificate_case1(void **state)
     size_t root_cert_size;
     bool need_continue;
     spdm_certificate_response_t *spdm_response;
-    uint8_t temp_buf[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
+    uint8_t temp_buf[LIBSPDM_MAX_SPDM_MSG_SIZE];
     size_t temp_buf_size;
     uint16_t portion_length;
     uint16_t remainder_length;
@@ -192,7 +192,7 @@ void test_spdm_responder_encap_get_certificate_case3(void **state)
     size_t root_cert_size;
     bool need_continue;
     spdm_certificate_response_t *spdm_response;
-    uint8_t temp_buf[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
+    uint8_t temp_buf[LIBSPDM_MAX_SPDM_MSG_SIZE];
     size_t temp_buf_size;
     uint16_t portion_length;
     uint16_t remainder_length;
@@ -290,7 +290,7 @@ void test_spdm_responder_encap_get_certificate_case4(void **state)
     size_t root_cert_size;
     bool need_continue;
     spdm_certificate_response_t *spdm_response;
-    uint8_t temp_buf[LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE];
+    uint8_t temp_buf[LIBSPDM_MAX_SPDM_MSG_SIZE];
     size_t temp_buf_size;
     uint16_t portion_length;
     uint16_t remainder_length;
