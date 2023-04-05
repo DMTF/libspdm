@@ -7,10 +7,10 @@
 #ifndef RESPONDER_SECRETLIB_H
 #define RESPONDER_SECRETLIB_H
 
+#include "hal/base.h"
 #include "internal/libspdm_lib_config.h"
 #include "library/spdm_return_status.h"
 #include "industry_standard/spdm.h"
-#include "hal/library/secretlib/secretlib.h"
 
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 /**
@@ -36,7 +36,7 @@
  * on the single measurement. An invalid measurement index will cause
  * "measurements_count" to return 0.
  *
- * A value of [0xFF] requests all measurements be returned.
+ * A value of 0xFF requests all measurements be returned.
  * On success, "measurements_count", "measurements", and "measurements_size"
  * fields will be set with data from all measurements.
  *
@@ -98,6 +98,51 @@ extern bool libspdm_generate_measurement_summary_hash(
     uint8_t *measurement_summary_hash,
     size_t *measurement_summary_hash_size);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
+
+#if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+/**
+ * Derive HMAC-based Expand key Derivation Function (HKDF) Expand, based upon the negotiated HKDF
+ * algorithm.
+ *
+ * @param  base_hash_algo  Indicates the hash algorithm.
+ * @param  psk_hint        Pointer to the peer-provided PSK Hint.
+ * @param  psk_hint_size   PSK Hint size in bytes.
+ * @param  info            Pointer to the application specific info.
+ * @param  info_size       Info size in bytes.
+ * @param  out             Pointer to buffer to receive HKDF value.
+ * @param  out_size        Size of HKDF bytes to generate.
+ *
+ * @retval true   HKDF generated successfully.
+ * @retval false  HKDF generation failed.
+ **/
+extern bool libspdm_psk_handshake_secret_hkdf_expand(
+    spdm_version_number_t spdm_version,
+    uint32_t base_hash_algo, const uint8_t *psk_hint,
+    size_t psk_hint_size, const uint8_t *info,
+    size_t info_size, uint8_t *out, size_t out_size);
+
+/**
+ * Derive HMAC-based Expand key Derivation Function (HKDF) Expand, based upon the negotiated HKDF
+ * algorithm.
+ *
+ * @param  base_hash_algo  Indicates the hash algorithm.
+ * @param  psk_hint        Pointer to the peer-provided PSK Hint.
+ * @param  psk_hint_size   PSK Hint size in bytes.
+ * @param  info            Pointer to the application specific info.
+ * @param  info_size       Info size in bytes.
+ * @param  out             Pointer to buffer to receive HKDF value.
+ * @param  out_size        Size of HKDF bytes to generate.
+ *
+ * @retval true   HKDF generated successfully.
+ * @retval false  HKDF generation failed.
+ **/
+extern bool libspdm_psk_master_secret_hkdf_expand(
+    spdm_version_number_t spdm_version,
+    uint32_t base_hash_algo,
+    const uint8_t *psk_hint, size_t psk_hint_size,
+    const uint8_t *info, size_t info_size,
+    uint8_t *out, size_t out_size);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
 
 /**
  * Sign an SPDM message data.
