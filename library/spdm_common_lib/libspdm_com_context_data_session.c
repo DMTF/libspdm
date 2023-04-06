@@ -21,16 +21,14 @@ void libspdm_session_info_init(libspdm_context_t *spdm_context,
 
     if (session_id != INVALID_SESSION_ID) {
         if (use_psk) {
-            if (spdm_context->max_psk_session_count != 0) {
-                LIBSPDM_ASSERT(spdm_context->current_psk_session_count <
-                               spdm_context->max_psk_session_count);
-            }
+            LIBSPDM_ASSERT((spdm_context->max_psk_session_count == 0) ||
+                           (spdm_context->current_psk_session_count <
+                            spdm_context->max_psk_session_count));
             spdm_context->current_psk_session_count++;
         } else {
-            if (spdm_context->max_dhe_session_count != 0) {
-                LIBSPDM_ASSERT(spdm_context->current_dhe_session_count <
-                               spdm_context->max_dhe_session_count);
-            }
+            LIBSPDM_ASSERT((spdm_context->max_dhe_session_count == 0) ||
+                           (spdm_context->current_dhe_session_count <
+                            spdm_context->max_dhe_session_count));
             spdm_context->current_dhe_session_count++;
         }
     } else {
