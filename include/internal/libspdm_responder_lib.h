@@ -744,7 +744,7 @@ libspdm_return_t libspdm_get_response_chunk_send(libspdm_context_t *spdm_context
  *
  * @return half of session ID for a responder.
  **/
-uint16_t libspdm_allocate_rsp_session_id(const libspdm_context_t *spdm_context);
+uint16_t libspdm_allocate_rsp_session_id(const libspdm_context_t *spdm_context, bool use_psk);
 
 /**
  * Build opaque data version selection.

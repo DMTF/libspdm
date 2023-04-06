@@ -6,11 +6,27 @@
 
 #include "internal/libspdm_responder_lib.h"
 
-uint16_t libspdm_allocate_rsp_session_id(const libspdm_context_t *spdm_context)
+uint16_t libspdm_allocate_rsp_session_id(const libspdm_context_t *spdm_context, bool use_psk)
 {
     uint16_t rsp_session_id;
     const libspdm_session_info_t *session_info;
     size_t index;
+
+    if (use_psk) {
+        if ((spdm_context->max_psk_session_count != 0) &&
+            (spdm_context->current_psk_session_count >= spdm_context->max_psk_session_count)) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
+                           "libspdm_allocate_req_session_id - MAX PSK session\n"));
+            return (INVALID_SESSION_ID & 0xFFFF0000) >> 16;
+        }
+    } else {
+        if ((spdm_context->max_dhe_session_count != 0) &&
+            (spdm_context->current_dhe_session_count >= spdm_context->max_dhe_session_count)) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
+                           "libspdm_allocate_req_session_id - MAX DHE session\n"));
+            return (INVALID_SESSION_ID & 0xFFFF0000) >> 16;
+        }
+    }
 
     session_info = spdm_context->session_info;
     for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index++) {

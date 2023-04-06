@@ -346,8 +346,8 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
     }
 
     req_session_id = spdm_request->req_session_id;
-    rsp_session_id = libspdm_allocate_rsp_session_id(spdm_context);
-    if (rsp_session_id == (INVALID_SESSION_ID & 0xFFFF)) {
+    rsp_session_id = libspdm_allocate_rsp_session_id(spdm_context, false);
+    if (rsp_session_id == ((INVALID_SESSION_ID & 0xFFFF0000) >> 16)) {
         return libspdm_generate_error_response(
             spdm_context, SPDM_ERROR_CODE_SESSION_LIMIT_EXCEEDED, 0,
             response_size, response);

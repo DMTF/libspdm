@@ -425,7 +425,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
             SPDM_KEY_EXCHANGE_RSP;
         spdm_response->header.param1 = 0;
         spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context);
+            libspdm_allocate_rsp_session_id(spdm_context, false);
         spdm_response->mut_auth_requested = 0;
         spdm_response->req_slot_id_param = 0;
         libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
@@ -591,7 +591,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
             SPDM_KEY_EXCHANGE_RSP;
         spdm_response->header.param1 = 0;
         spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context);
+            libspdm_allocate_rsp_session_id(spdm_context, false);
         spdm_response->mut_auth_requested = 0;
         spdm_response->req_slot_id_param = 0;
         libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
@@ -825,7 +825,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                 SPDM_KEY_EXCHANGE_RSP;
             spdm_response->header.param1 = 0;
             spdm_response->rsp_session_id =
-                libspdm_allocate_rsp_session_id(spdm_context);
+                libspdm_allocate_rsp_session_id(spdm_context, false);
             spdm_response->mut_auth_requested = 0;
             spdm_response->req_slot_id_param = 0;
             libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
@@ -1081,7 +1081,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                 SPDM_KEY_EXCHANGE_RSP;
             spdm_response->header.param1 = 0;
             spdm_response->rsp_session_id =
-                libspdm_allocate_rsp_session_id(spdm_context);
+                libspdm_allocate_rsp_session_id(spdm_context, false);
             spdm_response->mut_auth_requested = 0;
             spdm_response->req_slot_id_param = 0;
             libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
@@ -1292,7 +1292,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
             SPDM_KEY_EXCHANGE_RSP;
         spdm_response->header.param1 = 0;
         spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context);
+            libspdm_allocate_rsp_session_id(spdm_context, false);
         spdm_response->mut_auth_requested = 0;
         spdm_response->req_slot_id_param = 0;
         libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
@@ -1462,7 +1462,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         spdm_response->header.request_response_code = SPDM_KEY_EXCHANGE_RSP;
         spdm_response->header.param1 = 0;
         spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context);
+            libspdm_allocate_rsp_session_id(spdm_context, false);
         spdm_response->mut_auth_requested = 0;
         spdm_response->req_slot_id_param = 0;
         libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
@@ -1637,7 +1637,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         /* Incorrect response code. */
         spdm_response->header.request_response_code = SPDM_DIGESTS;
         spdm_response->header.param1 = 0;
-        spdm_response->rsp_session_id = libspdm_allocate_rsp_session_id(spdm_context);
+        spdm_response->rsp_session_id = libspdm_allocate_rsp_session_id(spdm_context, false);
         spdm_response->mut_auth_requested = 0;
         spdm_response->req_slot_id_param = 0;
         libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, spdm_response->random_data);
@@ -1807,7 +1807,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response->header.request_response_code = SPDM_KEY_EXCHANGE_RSP;
         spdm_response->header.param1 = 0;
-        spdm_response->rsp_session_id = libspdm_allocate_rsp_session_id(spdm_context);
+        spdm_response->rsp_session_id = libspdm_allocate_rsp_session_id(spdm_context, false);
         /* Mutual authentication is requested even though it is not supported. */
         spdm_response->mut_auth_requested = 1;
         spdm_response->req_slot_id_param = 0;
@@ -1979,7 +1979,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
             SPDM_KEY_EXCHANGE_RSP;
         spdm_response->header.param1 = 0;
         spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context);
+            libspdm_allocate_rsp_session_id(spdm_context, false);
         spdm_response->mut_auth_requested = 0;
         spdm_response->req_slot_id_param = 0;
         libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
@@ -2146,7 +2146,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
             SPDM_KEY_EXCHANGE_RSP;
         spdm_response->header.param1 = 0;
         spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context);
+            libspdm_allocate_rsp_session_id(spdm_context, false);
         spdm_response->mut_auth_requested = 0;
         spdm_response->req_slot_id_param = 0;
         libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
@@ -2317,7 +2317,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
             SPDM_KEY_EXCHANGE_RSP;
         spdm_response->header.param1 = 0;
         spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context);
+            libspdm_allocate_rsp_session_id(spdm_context, false);
         spdm_response->mut_auth_requested = 0;
         spdm_response->req_slot_id_param = 0;
         libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
@@ -2491,7 +2491,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
             SPDM_KEY_EXCHANGE_RSP;
         spdm_response->header.param1 = 0;
         spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context);
+            libspdm_allocate_rsp_session_id(spdm_context, false);
         spdm_response->mut_auth_requested = 0;
         spdm_response->req_slot_id_param = 0;
         libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
@@ -2663,7 +2663,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
             SPDM_KEY_EXCHANGE_RSP;
         spdm_response->header.param1 = 5;
         spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context);
+            libspdm_allocate_rsp_session_id(spdm_context, false);
         spdm_response->mut_auth_requested = 0;
         spdm_response->req_slot_id_param = 0;
         libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
@@ -2823,7 +2823,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response->header.request_response_code = SPDM_KEY_EXCHANGE_RSP;
         spdm_response->header.param1 = 0;
-        spdm_response->rsp_session_id = libspdm_allocate_rsp_session_id(spdm_context);
+        spdm_response->rsp_session_id = libspdm_allocate_rsp_session_id(spdm_context, false);
         spdm_response->mut_auth_requested = 0;
         spdm_response->req_slot_id_param = 0;
         libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, spdm_response->random_data);
@@ -2986,7 +2986,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
             SPDM_KEY_EXCHANGE_RSP;
         spdm_response->header.param1 = 0;
         spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context);
+            libspdm_allocate_rsp_session_id(spdm_context, false);
         spdm_response->mut_auth_requested = 0;
         spdm_response->req_slot_id_param = 0;
         libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
@@ -3153,7 +3153,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
             SPDM_KEY_EXCHANGE_RSP;
         spdm_response->header.param1 = 0;
         spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context);
+            libspdm_allocate_rsp_session_id(spdm_context, false);
         spdm_response->mut_auth_requested =
             SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
         spdm_response->req_slot_id_param = 0xF;
@@ -3321,7 +3321,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
             SPDM_KEY_EXCHANGE_RSP;
         spdm_response->header.param1 = 0;
         spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context);
+            libspdm_allocate_rsp_session_id(spdm_context, false);
         spdm_response->mut_auth_requested =
             SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST;
         spdm_response->req_slot_id_param = 0xF;
@@ -3489,7 +3489,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
             SPDM_KEY_EXCHANGE_RSP;
         spdm_response->header.param1 = 0;
         spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context);
+            libspdm_allocate_rsp_session_id(spdm_context, false);
         spdm_response->mut_auth_requested =
             SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS;
         spdm_response->req_slot_id_param = 0xF;
@@ -3657,7 +3657,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
             SPDM_KEY_EXCHANGE_RSP;
         spdm_response->header.param1 = 0;
         spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context);
+            libspdm_allocate_rsp_session_id(spdm_context, false);
         spdm_response->mut_auth_requested =
             SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED |
             SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST;
@@ -3826,7 +3826,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
             SPDM_KEY_EXCHANGE_RSP;
         spdm_response->header.param1 = 0;
         spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context);
+            libspdm_allocate_rsp_session_id(spdm_context, false);
         spdm_response->mut_auth_requested =
             SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED |
             SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS;
@@ -3995,7 +3995,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
             SPDM_KEY_EXCHANGE_RSP;
         spdm_response->header.param1 = 0;
         spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context);
+            libspdm_allocate_rsp_session_id(spdm_context, false);
         spdm_response->mut_auth_requested =
             SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST |
             SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS;
@@ -4156,7 +4156,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response->header.request_response_code = SPDM_KEY_EXCHANGE_RSP;
         spdm_response->header.param1 = 0;
-        spdm_response->rsp_session_id = libspdm_allocate_rsp_session_id(spdm_context);
+        spdm_response->rsp_session_id = libspdm_allocate_rsp_session_id(spdm_context, false);
         spdm_response->mut_auth_requested = 0;
         spdm_response->req_slot_id_param = 0;
         libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, spdm_response->random_data);
@@ -4315,7 +4315,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
             SPDM_KEY_EXCHANGE_RSP;
         spdm_response->header.param1 = 0;
         spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context);
+            libspdm_allocate_rsp_session_id(spdm_context, false);
         spdm_response->mut_auth_requested = 0;
         spdm_response->req_slot_id_param = 0;
         libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
@@ -4482,7 +4482,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
             SPDM_KEY_EXCHANGE_RSP;
         spdm_response->header.param1 = 0;
         spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context);
+            libspdm_allocate_rsp_session_id(spdm_context, false);
         spdm_response->mut_auth_requested =
             SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
         spdm_response->req_slot_id_param = 9;  /* Invalid SlotID */
