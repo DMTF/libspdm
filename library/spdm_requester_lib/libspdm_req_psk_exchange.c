@@ -118,7 +118,9 @@ bool libspdm_verify_psk_exchange_rsp_hmac(libspdm_context_t *spdm_context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
 static libspdm_return_t libspdm_try_send_receive_psk_exchange(
-    libspdm_context_t *spdm_context, uint8_t measurement_hash_type,
+    libspdm_context_t *spdm_context,
+    const void *psk_hint, uint16_t psk_hint_size,
+    uint8_t measurement_hash_type,
     uint8_t session_policy,
     uint32_t *session_id, uint8_t *heartbeat_period,
     void *measurement_hash,
@@ -219,8 +221,7 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
     } else {
         spdm_request->header.param2 = 0;
     }
-    spdm_request->psk_hint_length =
-        (uint16_t)spdm_context->local_context.psk_hint_size;
+    spdm_request->psk_hint_length = psk_hint_size;
     if (requester_context_in == NULL) {
         spdm_request->context_length = LIBSPDM_PSK_CONTEXT_LENGTH;
     } else {
@@ -234,9 +235,11 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
     spdm_request->req_session_id = req_session_id;
 
     ptr = spdm_request->psk_hint;
-    libspdm_copy_mem(ptr, sizeof(spdm_request->psk_hint),
-                     spdm_context->local_context.psk_hint,
-                     spdm_context->local_context.psk_hint_size);
+    if ((psk_hint != NULL) && (psk_hint_size > 0)) {
+        libspdm_copy_mem(ptr, sizeof(spdm_request->psk_hint),
+                         psk_hint,
+                         psk_hint_size);
+    }
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "psk_hint (0x%x) - ", spdm_request->psk_hint_length));
     LIBSPDM_INTERNAL_DUMP_DATA(ptr, spdm_request->psk_hint_length);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
@@ -400,8 +403,8 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
         goto receive_done;
     }
     libspdm_session_info_set_psk_hint(session_info,
-                                      spdm_context->local_context.psk_hint,
-                                      spdm_context->local_context.psk_hint_size);
+                                      psk_hint,
+                                      psk_hint_size);
 
     /* Cache session data*/
 
@@ -509,6 +512,8 @@ receive_done:
 }
 
 libspdm_return_t libspdm_send_receive_psk_exchange(libspdm_context_t *spdm_context,
+                                                   const void *psk_hint,
+                                                   uint16_t psk_hint_size,
                                                    uint8_t measurement_hash_type,
                                                    uint8_t session_policy,
                                                    uint32_t *session_id,
@@ -524,7 +529,8 @@ libspdm_return_t libspdm_send_receive_psk_exchange(libspdm_context_t *spdm_conte
     retry_delay_time = spdm_context->retry_delay_time;
     do {
         status = libspdm_try_send_receive_psk_exchange(
-            spdm_context, measurement_hash_type, session_policy, session_id,
+            spdm_context, psk_hint, psk_hint_size,
+            measurement_hash_type, session_policy, session_id,
             heartbeat_period, measurement_hash,
             NULL, 0, NULL, NULL, NULL, NULL);
         if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
@@ -538,6 +544,8 @@ libspdm_return_t libspdm_send_receive_psk_exchange(libspdm_context_t *spdm_conte
 }
 
 libspdm_return_t libspdm_send_receive_psk_exchange_ex(libspdm_context_t *spdm_context,
+                                                      const void *psk_hint,
+                                                      uint16_t psk_hint_size,
                                                       uint8_t measurement_hash_type,
                                                       uint8_t session_policy,
                                                       uint32_t *session_id,
@@ -559,7 +567,8 @@ libspdm_return_t libspdm_send_receive_psk_exchange_ex(libspdm_context_t *spdm_co
     retry_delay_time = spdm_context->retry_delay_time;
     do {
         status = libspdm_try_send_receive_psk_exchange(
-            spdm_context, measurement_hash_type, session_policy, session_id,
+            spdm_context, psk_hint, psk_hint_size,
+            measurement_hash_type, session_policy, session_id,
             heartbeat_period, measurement_hash,
             requester_context_in, requester_context_in_size,
             requester_context, requester_context_size,

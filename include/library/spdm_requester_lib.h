@@ -285,6 +285,8 @@ libspdm_return_t libspdm_get_measurement_ex(void *spdm_context, const uint32_t *
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 libspdm_return_t libspdm_start_session(void *spdm_context, bool use_psk,
+                                       const void *psk_hint,
+                                       uint16_t psk_hint_size,
                                        uint8_t measurement_hash_type,
                                        uint8_t slot_id,
                                        uint8_t session_policy,
@@ -328,6 +330,8 @@ libspdm_return_t libspdm_start_session(void *spdm_context, bool use_psk,
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 libspdm_return_t libspdm_start_session_ex(void *spdm_context, bool use_psk,
+                                          const void *psk_hint,
+                                          uint16_t psk_hint_size,
                                           uint8_t measurement_hash_type,
                                           uint8_t slot_id,
                                           uint8_t session_policy,

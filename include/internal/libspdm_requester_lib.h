@@ -286,6 +286,8 @@ libspdm_return_t libspdm_send_receive_finish(libspdm_context_t *spdm_context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
 libspdm_return_t libspdm_send_receive_psk_exchange(libspdm_context_t *spdm_context,
+                                                   const void *psk_hint,
+                                                   uint16_t psk_hint_size,
                                                    uint8_t measurement_hash_type,
                                                    uint8_t session_policy,
                                                    uint32_t *session_id,
@@ -317,6 +319,8 @@ libspdm_return_t libspdm_send_receive_psk_exchange(libspdm_context_t *spdm_conte
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
 libspdm_return_t libspdm_send_receive_psk_exchange_ex(libspdm_context_t *spdm_context,
+                                                      const void *psk_hint,
+                                                      uint16_t psk_hint_size,
                                                       uint8_t measurement_hash_type,
                                                       uint8_t session_policy,
                                                       uint32_t *session_id,

@@ -74,11 +74,6 @@ typedef enum {
     LIBSPDM_DATA_PEER_SLOT_MASK,
     LIBSPDM_DATA_PEER_TOTAL_DIGEST_BUFFER,
 
-    /* Pre-shared key Hint
-     * If PSK is present, then PSK_EXCHANGE is used.
-     * Otherwise, the KEY_EXCHANGE is used. */
-    LIBSPDM_DATA_PSK_HINT,
-
     /* SessionData */
     LIBSPDM_DATA_SESSION_USE_PSK,
     LIBSPDM_DATA_SESSION_MUT_AUTH_REQUESTED,
