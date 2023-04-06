@@ -433,30 +433,6 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         context->local_context.psk_hint_size = data_size;
         context->local_context.psk_hint = data;
         break;
-    case LIBSPDM_DATA_SESSION_USE_PSK:
-        if (data_size != sizeof(bool)) {
-            return LIBSPDM_STATUS_INVALID_PARAMETER;
-        }
-        session_info->use_psk = *(bool *)data;
-        break;
-    case LIBSPDM_DATA_SESSION_MUT_AUTH_REQUESTED:
-        if (data_size != sizeof(uint8_t)) {
-            return LIBSPDM_STATUS_INVALID_PARAMETER;
-        }
-        session_info->mut_auth_requested = *(uint8_t *)data;
-        break;
-    case LIBSPDM_DATA_SESSION_END_SESSION_ATTRIBUTES:
-        if (data_size != sizeof(uint8_t)) {
-            return LIBSPDM_STATUS_INVALID_PARAMETER;
-        }
-        session_info->end_session_attributes = *(uint8_t *)data;
-        break;
-    case LIBSPDM_DATA_SESSION_POLICY:
-        if (data_size != sizeof(uint8_t)) {
-            return LIBSPDM_STATUS_INVALID_PARAMETER;
-        }
-        session_info->session_policy = *(uint8_t *)data;
-        break;
     case LIBSPDM_DATA_APP_CONTEXT_DATA:
         if (data_size != sizeof(void *) || *(void **)data == NULL) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
