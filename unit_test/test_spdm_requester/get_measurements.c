@@ -15,7 +15,6 @@
 
 static size_t m_libspdm_local_buffer_size;
 static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_L1L2_BUFFER_SIZE];
-static uint8_t m_libspdm_local_psk_hint[32];
 static uint8_t m_libspdm_msg_log_buffer[LIBSPDM_MAX_MESSAGE_L1L2_BUFFER_SIZE * 2];
 
 static size_t libspdm_test_get_measurement_request_size(const void *spdm_context,
@@ -5439,12 +5438,6 @@ static void libspdm_test_requester_get_measurements_case34(void **state)
         m_libspdm_use_aead_algo;
     spdm_context->local_context.algorithm.measurement_spec =
         SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
-    libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
-    libspdm_copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
-                     LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
-    spdm_context->local_context.psk_hint_size =
-        sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
-    spdm_context->local_context.psk_hint = m_libspdm_local_psk_hint;
     session_id = 0xFFFFFFFF;
     session_info = &spdm_context->session_info[0];
     libspdm_session_info_init(spdm_context, session_info, session_id, true);

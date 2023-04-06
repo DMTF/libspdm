@@ -805,7 +805,6 @@ void libspdm_test_responder_respond_if_ready_case7(void **state) {
     void                 *data;
     size_t data_size;
     uint8_t                *ptr;
-    static uint8_t local_psk_hint[32];
     size_t opaque_psk_exchange_req_size;
 
     spdm_test_context = *state;
@@ -838,14 +837,8 @@ void libspdm_test_responder_respond_if_ready_case7(void **state) {
     spdm_context->connection_info.local_used_cert_chain_buffer = data;
     spdm_context->connection_info.local_used_cert_chain_buffer_size = data_size;
 
-    libspdm_zero_mem (local_psk_hint, 32);
-    libspdm_copy_mem(&local_psk_hint[0], sizeof(local_psk_hint),
-                     LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
-    spdm_context->local_context.psk_hint_size = sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
-    spdm_context->local_context.psk_hint = local_psk_hint;
-
     m_libspdm_psk_exchange_request.psk_hint_length =
-        (uint16_t)spdm_context->local_context.psk_hint_size;
+        (uint16_t)sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
     m_libspdm_psk_exchange_request.requester_context_length = LIBSPDM_PSK_CONTEXT_LENGTH;
     opaque_psk_exchange_req_size =
         libspdm_get_opaque_data_supported_version_data_size (spdm_context);
@@ -853,8 +846,8 @@ void libspdm_test_responder_respond_if_ready_case7(void **state) {
     m_libspdm_psk_exchange_request.req_session_id = 0xFFFF;
     ptr = m_libspdm_psk_exchange_request.psk_hint;
     libspdm_copy_mem(ptr, sizeof(m_libspdm_psk_exchange_request.psk_hint),
-                     spdm_context->local_context.psk_hint,
-                     spdm_context->local_context.psk_hint_size);
+                     LIBSPDM_TEST_PSK_HINT_STRING,
+                     sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
     ptr += m_libspdm_psk_exchange_request.psk_hint_length;
     libspdm_get_random_number (LIBSPDM_PSK_CONTEXT_LENGTH, ptr);
     ptr += m_libspdm_psk_exchange_request.requester_context_length;
@@ -913,7 +906,6 @@ void libspdm_test_responder_respond_if_ready_case8(void **state) {
     void                 *data;
     size_t data_size;
     uint8_t                *ptr;
-    uint8_t local_psk_hint[32];
     uint8_t dummy_buffer[LIBSPDM_MAX_HASH_SIZE];
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
@@ -955,11 +947,6 @@ void libspdm_test_responder_respond_if_ready_case8(void **state) {
     spdm_context->connection_info.local_used_cert_chain_buffer_size = data_size;
 
     spdm_context->local_context.mut_auth_requested = 0;
-    libspdm_zero_mem (local_psk_hint, 32);
-    libspdm_copy_mem(&local_psk_hint[0], sizeof(local_psk_hint),
-                     LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
-    spdm_context->local_context.psk_hint_size = sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
-    spdm_context->local_context.psk_hint = local_psk_hint;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;

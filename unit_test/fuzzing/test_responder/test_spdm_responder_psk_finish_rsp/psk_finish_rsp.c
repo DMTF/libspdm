@@ -50,7 +50,6 @@ void libspdm_test_responder_psk_finish_rsp_case1(void **State)
     size_t data_size1;
     static uint8_t m_dummy_buffer[LIBSPDM_MAX_HASH_SIZE];
 
-    uint8_t m_local_psk_hint[32];
     libspdm_session_info_t *session_info;
     uint32_t session_id;
     uint32_t hash_size;
@@ -81,11 +80,6 @@ void libspdm_test_responder_psk_finish_rsp_case1(void **State)
 
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
-    libspdm_zero_mem(m_local_psk_hint, 32);
-    libspdm_copy_mem(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
-                     LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
-    spdm_context->local_context.psk_hint_size = sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
-    spdm_context->local_context.psk_hint = m_local_psk_hint;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -123,7 +117,6 @@ void libspdm_test_responder_psk_finish_rsp_case2(void **State)
     static uint8_t m_dummy_buffer[LIBSPDM_MAX_HASH_SIZE];
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
     uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
-    uint8_t m_local_psk_hint[32];
     uint8_t *ptr;
     libspdm_session_info_t *session_info;
     uint32_t session_id;
@@ -159,11 +152,6 @@ void libspdm_test_responder_psk_finish_rsp_case2(void **State)
 
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
-    libspdm_zero_mem(m_local_psk_hint, 32);
-    libspdm_copy_mem(&m_local_psk_hint[0], sizeof(m_local_psk_hint),
-                     LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
-    spdm_context->local_context.psk_hint_size = sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
-    spdm_context->local_context.psk_hint = m_local_psk_hint;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;

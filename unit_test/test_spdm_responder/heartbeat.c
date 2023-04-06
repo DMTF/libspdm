@@ -20,7 +20,6 @@ spdm_heartbeat_request_t m_libspdm_heartbeat_request2 = {
 };
 size_t m_libspdm_heartbeat_request2_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
 
-static uint8_t m_libspdm_local_psk_hint[32];
 
 void libspdm_test_responder_heartbeat_case1(void **state)
 {
@@ -60,11 +59,6 @@ void libspdm_test_responder_heartbeat_case1(void **state)
 
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
-    libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
-    libspdm_copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
-                     LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
-    spdm_context->local_context.psk_hint_size = sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
-    spdm_context->local_context.psk_hint = m_libspdm_local_psk_hint;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -137,12 +131,6 @@ void libspdm_test_responder_heartbeat_case2(void **state)
 
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
-    libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
-    libspdm_copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
-                     LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
-    spdm_context->local_context.psk_hint_size =
-        sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
-    spdm_context->local_context.psk_hint = m_libspdm_local_psk_hint;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -219,12 +207,6 @@ void libspdm_test_responder_heartbeat_case3(void **state)
 
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
-    libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
-    libspdm_copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
-                     LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
-    spdm_context->local_context.psk_hint_size =
-        sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
-    spdm_context->local_context.psk_hint = m_libspdm_local_psk_hint;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -302,12 +284,6 @@ void libspdm_test_responder_heartbeat_case4(void **state)
 
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
-    libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
-    libspdm_copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
-                     LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
-    spdm_context->local_context.psk_hint_size =
-        sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
-    spdm_context->local_context.psk_hint = m_libspdm_local_psk_hint;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -388,12 +364,6 @@ void libspdm_test_responder_heartbeat_case5(void **state)
 
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
-    libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
-    libspdm_copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
-                     LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
-    spdm_context->local_context.psk_hint_size =
-        sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
-    spdm_context->local_context.psk_hint = m_libspdm_local_psk_hint;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -478,12 +448,6 @@ void libspdm_test_responder_heartbeat_case6(void **state)
 
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
-    libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
-    libspdm_copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
-                     LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
-    spdm_context->local_context.psk_hint_size =
-        sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
-    spdm_context->local_context.psk_hint = m_libspdm_local_psk_hint;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -559,12 +523,6 @@ void libspdm_test_responder_heartbeat_case7(void **state)
 
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
-    libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
-    libspdm_copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
-                     LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
-    spdm_context->local_context.psk_hint_size =
-        sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
-    spdm_context->local_context.psk_hint = m_libspdm_local_psk_hint;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -642,11 +600,6 @@ void libspdm_test_responder_heartbeat_case8(void **state)
 
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
-    libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
-    libspdm_copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
-                     LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
-    spdm_context->local_context.psk_hint_size = sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
-    spdm_context->local_context.psk_hint = m_libspdm_local_psk_hint;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
