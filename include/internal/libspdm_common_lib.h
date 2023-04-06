@@ -81,10 +81,6 @@ typedef struct {
     /* Peer Cert verify*/
     libspdm_verify_spdm_cert_chain_func verify_peer_spdm_cert_chain;
 
-    /* PSK provision locally*/
-    size_t psk_hint_size;
-    const void *psk_hint;
-
     /* opaque_data provision locally*/
     size_t opaque_challenge_auth_rsp_size;
     uint8_t *opaque_challenge_auth_rsp;

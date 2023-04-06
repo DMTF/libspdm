@@ -426,13 +426,6 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         }
         context->local_context.heartbeat_period = *(uint8_t *)data;
         break;
-    case LIBSPDM_DATA_PSK_HINT:
-        if (data_size > LIBSPDM_PSK_MAX_HINT_LENGTH) {
-            return LIBSPDM_STATUS_INVALID_PARAMETER;
-        }
-        context->local_context.psk_hint_size = data_size;
-        context->local_context.psk_hint = data;
-        break;
     case LIBSPDM_DATA_APP_CONTEXT_DATA:
         if (data_size != sizeof(void *) || *(void **)data == NULL) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
