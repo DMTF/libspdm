@@ -1371,6 +1371,125 @@ static void libspdm_test_check_context_case20(void **state)
     assert_int_equal(false, result);
 }
 
+static void libspdm_test_max_session_count_case21(void **state)
+{
+    libspdm_context_t *spdm_context;
+    libspdm_data_parameter_t parameter;
+    size_t index;
+    size_t round;
+    uint16_t req_id;
+    uint16_t rsp_id;
+    uint32_t session_id;
+    void *session_info;
+    uint32_t dhe_session_count;
+    uint32_t psk_session_count;
+
+    for (round = 0; round <= 5; round++) {
+        /* prepare parameter */
+        switch (round) {
+        case 0:
+            dhe_session_count = 1;
+            psk_session_count = 1;
+            break;
+        case 1:
+            dhe_session_count = LIBSPDM_MAX_SESSION_COUNT / 2;
+            psk_session_count = LIBSPDM_MAX_SESSION_COUNT - dhe_session_count;
+            break;
+        case 2:
+            dhe_session_count = 1;
+            psk_session_count = LIBSPDM_MAX_SESSION_COUNT - 1;
+            break;
+        case 3:
+            dhe_session_count = LIBSPDM_MAX_SESSION_COUNT - 1;
+            psk_session_count = 1;
+            break;
+        case 4:
+            dhe_session_count = 0;
+            psk_session_count = LIBSPDM_MAX_SESSION_COUNT;
+            break;
+        case 5:
+            dhe_session_count = LIBSPDM_MAX_SESSION_COUNT;
+            psk_session_count = 0;
+            break;
+        default:
+            dhe_session_count = 0;
+            psk_session_count = 0;
+            break;
+        }
+
+        /* test */
+        spdm_context = (libspdm_context_t *)malloc(libspdm_get_context_size());
+        libspdm_init_context (spdm_context);
+        spdm_context->connection_info.capability.flags =
+            SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP |
+            SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+        spdm_context->local_context.capability.flags =
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP |
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+        spdm_context->connection_info.algorithm.base_hash_algo =
+            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256;
+        spdm_context->connection_info.algorithm.dhe_named_group =
+            SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_256_R1;
+        spdm_context->connection_info.algorithm.aead_cipher_suite =
+            SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_256_GCM;
+        spdm_context->connection_info.algorithm.key_schedule =
+            SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH;
+
+        libspdm_zero_mem(&parameter, sizeof(parameter));
+        parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
+        if (dhe_session_count != 0) {
+            libspdm_set_data (spdm_context, LIBSPDM_DATA_MAX_DHE_SESSION_COUNT, &parameter,
+                              &dhe_session_count, sizeof(dhe_session_count));
+        }
+        if (psk_session_count != 0) {
+            libspdm_set_data (spdm_context, LIBSPDM_DATA_MAX_PSK_SESSION_COUNT, &parameter,
+                              &psk_session_count, sizeof(psk_session_count));
+        }
+
+        if (dhe_session_count != 0) {
+            for (index = 0; index < dhe_session_count; index++)
+            {
+                req_id = libspdm_allocate_req_session_id (spdm_context, false);
+                assert_int_not_equal (req_id, INVALID_SESSION_ID & 0xFFFF);
+
+                rsp_id = libspdm_allocate_rsp_session_id (spdm_context, false);
+                assert_int_not_equal (rsp_id, (INVALID_SESSION_ID & 0xFFFF0000) >> 16);
+
+                session_id = libspdm_generate_session_id (req_id, rsp_id);
+                session_info = libspdm_assign_session_id (spdm_context, session_id, false);
+                assert_ptr_not_equal (session_info, NULL);
+            }
+            req_id = libspdm_allocate_req_session_id (spdm_context, false);
+            assert_int_equal (req_id, INVALID_SESSION_ID & 0xFFFF);
+
+            rsp_id = libspdm_allocate_rsp_session_id (spdm_context, false);
+            assert_int_equal (rsp_id, (INVALID_SESSION_ID & 0xFFFF0000) >> 16);
+        }
+
+        if (psk_session_count != 0) {
+            for (index = 0; index < psk_session_count; index++)
+            {
+                req_id = libspdm_allocate_req_session_id (spdm_context, true);
+                assert_int_not_equal (req_id, INVALID_SESSION_ID & 0xFFFF);
+
+                rsp_id = libspdm_allocate_rsp_session_id (spdm_context, true);
+                assert_int_not_equal (rsp_id, (INVALID_SESSION_ID & 0xFFFF0000) >> 16);
+
+                session_id = libspdm_generate_session_id (req_id, rsp_id);
+                session_info = libspdm_assign_session_id (spdm_context, session_id, true);
+                assert_ptr_not_equal (session_info, NULL);
+            }
+            req_id = libspdm_allocate_req_session_id (spdm_context, true);
+            assert_int_equal (req_id, INVALID_SESSION_ID & 0xFFFF);
+
+            rsp_id = libspdm_allocate_rsp_session_id (spdm_context, true);
+            assert_int_equal (rsp_id, (INVALID_SESSION_ID & 0xFFFF0000) >> 16);
+        }
+
+        free(spdm_context);
+    }
+}
+
 static libspdm_test_context_t m_libspdm_common_context_data_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     true,
@@ -1416,6 +1535,9 @@ int libspdm_common_context_data_test_main(void)
         /* Test that the Export Master Secret can be exported and cleared. */
         cmocka_unit_test(libspdm_test_export_master_secret_case19),
         cmocka_unit_test(libspdm_test_check_context_case20),
+
+        /* Test the max DHE/PSK session count */
+        cmocka_unit_test(libspdm_test_max_session_count_case21),
     };
 
     libspdm_setup_test_context(&m_libspdm_common_context_data_test_context);
