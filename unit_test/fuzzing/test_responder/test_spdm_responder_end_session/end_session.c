@@ -16,7 +16,6 @@ size_t libspdm_get_max_buffer_size(void)
     return LIBSPDM_MAX_SPDM_MSG_SIZE;
 }
 
-static uint8_t m_libspdm_local_psk_hint[32];
 
 libspdm_test_context_t m_libspdm_responder_end_session_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
@@ -66,12 +65,6 @@ void libspdm_test_responder_end_session(void **State)
 
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 0;
-    libspdm_zero_mem(m_libspdm_local_psk_hint, 32);
-    libspdm_copy_mem(&m_libspdm_local_psk_hint[0], sizeof(m_libspdm_local_psk_hint),
-                     LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING));
-    spdm_context->local_context.psk_hint_size =
-        sizeof(LIBSPDM_TEST_PSK_HINT_STRING);
-    spdm_context->local_context.psk_hint = m_libspdm_local_psk_hint;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
