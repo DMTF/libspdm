@@ -521,7 +521,7 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
  *
  * @return half of session ID for a requester.
  **/
-uint16_t libspdm_allocate_req_session_id(libspdm_context_t *spdm_context);
+uint16_t libspdm_allocate_req_session_id(libspdm_context_t *spdm_context, bool use_psk);
 
 /**
  * Build opaque data supported version.

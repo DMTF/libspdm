@@ -440,6 +440,15 @@ typedef struct {
     /* See LIBSPDM_DATA_HANDLE_ERROR_RETURN_POLICY_*. */
     uint8_t handle_error_return_policy;
 
+    /* Max session count for DHE session and PSK session
+     * Set via LIBSPDM_DATA_MAX_DHE_SESSION_COUNT and LIBSPDM_DATA_MAX_PSK_SESSION_COUNT */
+    uint32_t max_dhe_session_count;
+    uint32_t max_psk_session_count;
+
+    /* Current session count for DHE session and PSK session */
+    uint32_t current_dhe_session_count;
+    uint32_t current_psk_session_count;
+
 #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
     /* Chunk specific context */
     libspdm_chunk_context_t chunk_context;

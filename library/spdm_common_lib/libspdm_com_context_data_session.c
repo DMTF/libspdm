@@ -19,6 +19,32 @@ void libspdm_session_info_init(libspdm_context_t *spdm_context,
     libspdm_session_type_t session_type;
     uint32_t capabilities_flag;
 
+    if (session_id != INVALID_SESSION_ID) {
+        if (use_psk) {
+            if (spdm_context->max_psk_session_count != 0) {
+                LIBSPDM_ASSERT(spdm_context->current_psk_session_count <
+                               spdm_context->max_psk_session_count);
+            }
+            spdm_context->current_psk_session_count++;
+        } else {
+            if (spdm_context->max_dhe_session_count != 0) {
+                LIBSPDM_ASSERT(spdm_context->current_dhe_session_count <
+                               spdm_context->max_dhe_session_count);
+            }
+            spdm_context->current_dhe_session_count++;
+        }
+    } else {
+        if (use_psk) {
+            if (spdm_context->current_psk_session_count > 0) {
+                spdm_context->current_psk_session_count--;
+            }
+        } else {
+            if (spdm_context->current_dhe_session_count > 0) {
+                spdm_context->current_dhe_session_count--;
+            }
+        }
+    }
+
     capabilities_flag = spdm_context->connection_info.capability.flags &
                         spdm_context->local_context.capability.flags;
     switch (capabilities_flag &

@@ -168,8 +168,8 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
         return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
 
-    req_session_id = libspdm_allocate_req_session_id(spdm_context);
-    if (req_session_id == ((INVALID_SESSION_ID & 0xFFFF0000) >> 16))
+    req_session_id = libspdm_allocate_req_session_id(spdm_context, true);
+    if (req_session_id == (INVALID_SESSION_ID & 0xFFFF))
     {
         return LIBSPDM_STATUS_SESSION_NUMBER_EXCEED;
     }

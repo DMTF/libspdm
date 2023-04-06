@@ -472,6 +472,24 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         }
         context->retry_delay_time = *(uint64_t *)data;
         break;
+    case LIBSPDM_DATA_MAX_DHE_SESSION_COUNT:
+        if (data_size != sizeof(uint32_t)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        if (*(uint32_t *)data > LIBSPDM_MAX_SESSION_COUNT - context->max_psk_session_count) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        context->max_dhe_session_count = *(uint32_t *)data;
+        break;
+    case LIBSPDM_DATA_MAX_PSK_SESSION_COUNT:
+        if (data_size != sizeof(uint32_t)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        if (*(uint32_t *)data > LIBSPDM_MAX_SESSION_COUNT - context->max_dhe_session_count) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        context->max_psk_session_count = *(uint32_t *)data;
+        break;
     default:
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         break;
@@ -691,6 +709,14 @@ libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_t
     case LIBSPDM_DATA_HANDLE_ERROR_RETURN_POLICY:
         target_data_size = sizeof(uint8_t);
         target_data = &context->handle_error_return_policy;
+        break;
+    case LIBSPDM_DATA_MAX_DHE_SESSION_COUNT:
+        target_data_size = sizeof(uint32_t);
+        target_data = &context->max_dhe_session_count;
+        break;
+    case LIBSPDM_DATA_MAX_PSK_SESSION_COUNT:
+        target_data_size = sizeof(uint32_t);
+        target_data = &context->max_psk_session_count;
         break;
     case LIBSPDM_DATA_VCA_CACHE:
         target_data_size = context->transcript.message_a.buffer_size;
@@ -2230,6 +2256,8 @@ void libspdm_reset_context(void *spdm_context)
     context->last_spdm_request_size = 0;
     context->encap_context.certificate_chain_buffer.max_buffer_size =
         sizeof(context->encap_context.certificate_chain_buffer.buffer);
+    context->current_dhe_session_count = 0;
+    context->current_psk_session_count = 0;
 
     #if LIBSPDM_ENABLE_MSG_LOG
     context->msg_log.buffer = NULL;

@@ -363,7 +363,7 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context);
+            libspdm_allocate_rsp_session_id(spdm_context, true);
         spdm_response->reserved = 0;
         spdm_response->context_length = LIBSPDM_PSK_CONTEXT_LENGTH;
         spdm_response->opaque_length =
@@ -486,7 +486,7 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context);
+            libspdm_allocate_rsp_session_id(spdm_context, true);
         spdm_response->reserved = 0;
         spdm_response->context_length = LIBSPDM_PSK_CONTEXT_LENGTH;
         spdm_response->opaque_length =
@@ -676,7 +676,7 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
             spdm_response->header.param1 = 0;
             spdm_response->header.param2 = 0;
             spdm_response->rsp_session_id =
-                libspdm_allocate_rsp_session_id(spdm_context);
+                libspdm_allocate_rsp_session_id(spdm_context, true);
             spdm_response->reserved = 0;
             spdm_response->context_length = LIBSPDM_PSK_CONTEXT_LENGTH;
             spdm_response->opaque_length =
@@ -887,7 +887,7 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
             spdm_response->header.param1 = 0;
             spdm_response->header.param2 = 0;
             spdm_response->rsp_session_id =
-                libspdm_allocate_rsp_session_id(spdm_context);
+                libspdm_allocate_rsp_session_id(spdm_context, true);
             spdm_response->reserved = 0;
             spdm_response->context_length = LIBSPDM_PSK_CONTEXT_LENGTH;
             spdm_response->opaque_length =
@@ -1055,7 +1055,7 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context);
+            libspdm_allocate_rsp_session_id(spdm_context, true);
         spdm_response->reserved = 0;
         spdm_response->context_length = LIBSPDM_PSK_CONTEXT_LENGTH;
         spdm_response->opaque_length =
@@ -1171,7 +1171,7 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         spdm_response->header.request_response_code = SPDM_PSK_EXCHANGE_RSP;
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
-        spdm_response->rsp_session_id = libspdm_allocate_rsp_session_id(spdm_context);
+        spdm_response->rsp_session_id = libspdm_allocate_rsp_session_id(spdm_context, true);
         spdm_response->reserved = 0;
         spdm_response->context_length = LIBSPDM_PSK_CONTEXT_LENGTH;
         spdm_response->opaque_length = (uint16_t)opaque_psk_exchange_rsp_size;
@@ -1292,7 +1292,7 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context);
+            libspdm_allocate_rsp_session_id(spdm_context, true);
         spdm_response->reserved = 0;
         spdm_response->context_length = LIBSPDM_PSK_CONTEXT_LENGTH;
         spdm_response->opaque_length =
@@ -1422,7 +1422,7 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context);
+            libspdm_allocate_rsp_session_id(spdm_context, true);
         spdm_response->reserved = 0;
         spdm_response->context_length = LIBSPDM_PSK_CONTEXT_LENGTH;
         spdm_response->opaque_length =
@@ -1558,7 +1558,7 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context);
+            libspdm_allocate_rsp_session_id(spdm_context, true);
         spdm_response->reserved = 0;
         spdm_response->context_length = LIBSPDM_PSK_CONTEXT_LENGTH;
         spdm_response->opaque_length =
@@ -1693,7 +1693,7 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context);
+            libspdm_allocate_rsp_session_id(spdm_context, true);
         spdm_response->reserved = 0;
         spdm_response->context_length = LIBSPDM_PSK_CONTEXT_LENGTH;
         spdm_response->opaque_length =
@@ -1825,7 +1825,7 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context);
+            libspdm_allocate_rsp_session_id(spdm_context, true);
         spdm_response->reserved = 0;
         spdm_response->context_length = LIBSPDM_PSK_CONTEXT_LENGTH;
         spdm_response->opaque_length =
@@ -1952,7 +1952,7 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context);
+            libspdm_allocate_rsp_session_id(spdm_context, true);
         spdm_response->reserved = 0;
         spdm_response->context_length = LIBSPDM_PSK_CONTEXT_LENGTH;
         spdm_response->opaque_length =
@@ -2083,7 +2083,7 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context);
+            libspdm_allocate_rsp_session_id(spdm_context, true);
         spdm_response->reserved = 0;
         spdm_response->context_length = LIBSPDM_PSK_CONTEXT_LENGTH;
         spdm_response->opaque_length =
@@ -2213,7 +2213,7 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         spdm_response->header.param1 = 5;
         spdm_response->header.param2 = 0;
         spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context);
+            libspdm_allocate_rsp_session_id(spdm_context, true);
         spdm_response->reserved = 0;
         spdm_response->context_length = LIBSPDM_PSK_CONTEXT_LENGTH;
         spdm_response->opaque_length =
@@ -2338,7 +2338,7 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         spdm_response->header.param1 = 5;
         spdm_response->header.param2 = 0;
         spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context);
+            libspdm_allocate_rsp_session_id(spdm_context, true);
         spdm_response->reserved = 0;
         spdm_response->context_length = LIBSPDM_PSK_CONTEXT_LENGTH;
         spdm_response->opaque_length =
@@ -2463,7 +2463,7 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context);
+            libspdm_allocate_rsp_session_id(spdm_context, true);
         spdm_response->reserved = 0;
         spdm_response->context_length = LIBSPDM_PSK_CONTEXT_LENGTH;
         spdm_response->opaque_length =
@@ -2588,7 +2588,7 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context);
+            libspdm_allocate_rsp_session_id(spdm_context, true);
         spdm_response->reserved = 0;
         spdm_response->context_length = LIBSPDM_PSK_CONTEXT_LENGTH;
         spdm_response->opaque_length =
@@ -2716,7 +2716,7 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context);
+            libspdm_allocate_rsp_session_id(spdm_context, true);
         spdm_response->reserved = 0;
         spdm_response->context_length = 0;
         spdm_response->opaque_length =
@@ -2839,7 +2839,7 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context);
+            libspdm_allocate_rsp_session_id(spdm_context, true);
         spdm_response->reserved = 0;
         spdm_response->context_length = LIBSPDM_PSK_CONTEXT_LENGTH;
         spdm_response->opaque_length =
@@ -2962,7 +2962,7 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
         spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context);
+            libspdm_allocate_rsp_session_id(spdm_context, true);
         spdm_response->reserved = 0;
         spdm_response->context_length = 0;
         spdm_response->opaque_length =
