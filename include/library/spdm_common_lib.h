@@ -121,12 +121,14 @@ typedef enum {
      **/
     LIBSPDM_DATA_REQUEST_RETRY_DELAY_TIME,
 
-    /* Below two entries are used to limite the number of DHE session and PSK session separately.
+    /* Below two entries are used to limit the number of DHE session and PSK session separately.
      * When set a new value, below rule is applied:
      *     new MaxDheSessionCount <= LIBSPDM_MAX_SESSION_COUNT - current MaxPskSessionCount
      *     new MaxPskSessionCount <= LIBSPDM_MAX_SESSION_COUNT - current MaxDheSessionCount
      * 0 means no limiation for the specific DHE or PSK session, as long as
      *     PskSessionCount + DheSessionCount <= LIBSPDM_MAX_SESSION_COUNT.
+     * If these values are modified while there are active sessions then the active sessions
+     * aren't terminated.
      **/
     LIBSPDM_DATA_MAX_DHE_SESSION_COUNT,
     LIBSPDM_DATA_MAX_PSK_SESSION_COUNT,
