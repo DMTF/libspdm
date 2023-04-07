@@ -16,7 +16,7 @@ static size_t m_libspdm_local_buffer_size;
 static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_TH_BUFFER_SIZE];
 static uint8_t m_libspdm_test_case_id;
 
-static uint8_t m_libspdm_zero_filled_buffer[64];
+static uint8_t m_libspdm_zero_filled_buffer[LIBSPDM_MAX_HASH_SIZE];
 
 static libspdm_th_managed_buffer_t th_curr;
 
@@ -119,7 +119,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
         uint8_t *cert_buffer;
         size_t cert_buffer_size;
         uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
-        uint8_t THCurrHashData[64];
+        uint8_t th_curr_hash_data[LIBSPDM_MAX_HASH_SIZE];
         uint8_t bin_str0[128];
         size_t bin_str0_size;
         uint8_t bin_str2[128];
@@ -214,7 +214,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
         ptr += signature_size;
         libspdm_hash_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
                          libspdm_get_managed_buffer_size(&th_curr),
-                         THCurrHashData);
+                         th_curr_hash_data);
         bin_str0_size = sizeof(bin_str0);
         libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
                            SPDM_BIN_STR_0_LABEL, sizeof(SPDM_BIN_STR_0_LABEL) - 1,
@@ -225,7 +225,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
         bin_str2_size = sizeof(bin_str2);
         libspdm_bin_concat(((libspdm_context_t *)spdm_context)->connection_info.version,
                            SPDM_BIN_STR_2_LABEL, sizeof(SPDM_BIN_STR_2_LABEL) - 1,
-                           THCurrHashData, (uint16_t)hash_size, hash_size,
+                           th_curr_hash_data, (uint16_t)hash_size, hash_size,
                            bin_str2, &bin_str2_size);
         libspdm_hkdf_expand(m_libspdm_use_hash_algo, handshake_secret, hash_size,
                             bin_str2, bin_str2_size,
