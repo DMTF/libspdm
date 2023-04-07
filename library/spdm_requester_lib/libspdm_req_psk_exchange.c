@@ -379,6 +379,21 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
+
+    if (libspdm_is_capabilities_flag_supported(
+            spdm_context, true, 0,
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER)) {
+        if (spdm_response->context_length != 0) {
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+            goto receive_done;
+        }
+    } else {
+        if (spdm_response->context_length == 0) {
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+            goto receive_done;
+        }
+    }
+
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ResponderContextData (0x%x) - ",
                    spdm_response->context_length));
     LIBSPDM_INTERNAL_DUMP_DATA(ptr, spdm_response->context_length);
