@@ -15,7 +15,7 @@
 
 static size_t m_libspdm_local_buffer_size;
 static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_TH_BUFFER_SIZE];
-static uint8_t m_libspdm_zero_filled_buffer[64];
+static uint8_t m_libspdm_zero_filled_buffer[LIBSPDM_MAX_HASH_SIZE];
 
 static libspdm_th_managed_buffer_t th_curr;
 
