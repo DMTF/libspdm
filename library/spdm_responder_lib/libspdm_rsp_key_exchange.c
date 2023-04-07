@@ -193,7 +193,7 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
     uint16_t rsp_session_id;
     libspdm_return_t status;
     size_t opaque_key_exchange_rsp_size;
-    uint8_t th1_hash_data[64];
+    uint8_t th1_hash_data[LIBSPDM_MAX_HASH_SIZE];
 
     spdm_request = request;
 

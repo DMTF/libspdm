@@ -355,7 +355,7 @@ bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
 {
     bool status;
     size_t hash_size;
-    uint8_t salt1[64];
+    uint8_t salt1[LIBSPDM_MAX_HASH_SIZE];
     uint8_t bin_str0[128];
     size_t bin_str0_size;
     uint8_t bin_str3[128];
