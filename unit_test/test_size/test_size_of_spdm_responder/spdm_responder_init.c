@@ -6,6 +6,12 @@
 
 #include "spdm_responder.h"
 
+#if (LIBSPDM_SENDER_BUFFER_SIZE > LIBSPDM_RECEIVER_BUFFER_SIZE)
+#define LIBSPDM_MAX_SENDER_RECEIVER_BUFFER_SIZE LIBSPDM_SENDER_BUFFER_SIZE
+#else
+#define LIBSPDM_MAX_SENDER_RECEIVER_BUFFER_SIZE LIBSPDM_RECEIVER_BUFFER_SIZE
+#endif
+
 libspdm_return_t spdm_responder_send_message(void *spdm_context,
                                              size_t message_size, const void *message,
                                              uint64_t timeout)
