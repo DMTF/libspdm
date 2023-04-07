@@ -26,6 +26,49 @@
 #include "spdm_device_secret_lib_internal.h"
 #include "internal/libspdm_secured_message_lib.h"
 
+/* need redefine MAX_MESSAGE_x_BUFFER_SIZE macro if TRANSCRIPT_DATA_SUPPORT is 0,
+ * because unit test uses it own way to track transcript. */
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT == 0
+
+#define LIBSPDM_MAX_MESSAGE_B_BUFFER_SIZE (24 + \
+                                           LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT + \
+                                           LIBSPDM_MAX_CERT_CHAIN_SIZE)
+
+#define LIBSPDM_MAX_MESSAGE_C_BUFFER_SIZE (78 + \
+                                           LIBSPDM_MAX_HASH_SIZE * 2 + \
+                                           LIBSPDM_MAX_ASYM_KEY_SIZE + SPDM_MAX_OPAQUE_DATA_SIZE)
+
+#define LIBSPDM_MAX_MESSAGE_M_BUFFER_SIZE (47 + SPDM_NONCE_SIZE + \
+                                           LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE + \
+                                           LIBSPDM_MAX_ASYM_KEY_SIZE + SPDM_MAX_OPAQUE_DATA_SIZE)
+
+#define LIBSPDM_MAX_MESSAGE_K_BUFFER_SIZE (84 + LIBSPDM_MAX_DHE_KEY_SIZE * 2 + \
+                                           LIBSPDM_MAX_HASH_SIZE * 2 + LIBSPDM_MAX_ASYM_KEY_SIZE + \
+                                           SPDM_MAX_OPAQUE_DATA_SIZE * 2)
+
+#define LIBSPDM_MAX_MESSAGE_F_BUFFER_SIZE (8 + LIBSPDM_MAX_HASH_SIZE * 2 + \
+                                           LIBSPDM_MAX_ASYM_KEY_SIZE)
+
+#define LIBSPDM_MAX_MESSAGE_L1L2_BUFFER_SIZE \
+    (LIBSPDM_MAX_MESSAGE_VCA_BUFFER_SIZE + LIBSPDM_MAX_MESSAGE_M_BUFFER_SIZE)
+
+#define LIBSPDM_MAX_MESSAGE_M1M2_BUFFER_SIZE \
+    (LIBSPDM_MAX_MESSAGE_VCA_BUFFER_SIZE + \
+     LIBSPDM_MAX_MESSAGE_B_BUFFER_SIZE + LIBSPDM_MAX_MESSAGE_C_BUFFER_SIZE)
+
+#define LIBSPDM_MAX_MESSAGE_TH_BUFFER_SIZE \
+    (LIBSPDM_MAX_MESSAGE_VCA_BUFFER_SIZE + \
+     LIBSPDM_MAX_CERT_CHAIN_SIZE + LIBSPDM_MAX_MESSAGE_K_BUFFER_SIZE + \
+     LIBSPDM_MAX_MESSAGE_F_BUFFER_SIZE)
+
+typedef struct {
+    size_t max_buffer_size;
+    size_t buffer_size;
+    uint8_t buffer[LIBSPDM_MAX_MESSAGE_TH_BUFFER_SIZE];
+} libspdm_th_managed_buffer_t;
+
+#endif
+
 extern uint8_t m_libspdm_use_measurement_spec;
 extern uint32_t m_libspdm_use_measurement_hash_algo;
 extern uint32_t m_libspdm_use_hash_algo;
