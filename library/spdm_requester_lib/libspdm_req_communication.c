@@ -55,7 +55,6 @@ libspdm_return_t libspdm_start_session(void *spdm_context, bool use_psk,
 
     if (!use_psk) {
     #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
-        LIBSPDM_ASSERT((psk_hint == NULL) && (psk_hint_size == 0));
         status = libspdm_send_receive_key_exchange(
             context, measurement_hash_type, slot_id, session_policy,
             session_id, heartbeat_period, &req_slot_id_param,
@@ -182,7 +181,6 @@ libspdm_return_t libspdm_start_session_ex(void *spdm_context, bool use_psk,
             requester_random_size == NULL || *requester_random_size == SPDM_RANDOM_DATA_SIZE);
         LIBSPDM_ASSERT (
             responder_random_size == NULL || *responder_random_size == SPDM_RANDOM_DATA_SIZE);
-        LIBSPDM_ASSERT((psk_hint == NULL) && (psk_hint_size == 0));
         status = libspdm_send_receive_key_exchange_ex(
             context, measurement_hash_type, slot_id, session_policy,
             session_id, heartbeat_period, &req_slot_id_param,
