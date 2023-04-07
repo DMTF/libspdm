@@ -174,26 +174,77 @@ uint32_t libspdm_get_asym_signature_size(uint32_t base_asym_algo)
 {
     switch (base_asym_algo) {
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048:
+#if LIBSPDM_RSA_SSA_2048_SUPPORT
         return 256;
+#else
+        return 0;
+#endif
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048:
+#if LIBSPDM_RSA_PSS_2048_SUPPORT
+        return 256;
+#else
+        return 0;
+#endif
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
+#if LIBSPDM_RSA_SSA_3072_SUPPORT
         return 384;
+#else
+        return 0;
+#endif
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
+#if LIBSPDM_RSA_PSS_3072_SUPPORT
+        return 384;
+#else
+        return 0;
+#endif
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
+#if LIBSPDM_RSA_SSA_4096_SUPPORT
         return 512;
+#else
+        return 0;
+#endif
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
+#if LIBSPDM_RSA_PSS_4096_SUPPORT
+        return 512;
+#else
+        return 0;
+#endif
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
+#if LIBSPDM_ECDSA_P256_SUPPORT
         return 32 * 2;
+#else
+        return 0;
+#endif
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
+#if LIBSPDM_ECDSA_P384_SUPPORT
         return 48 * 2;
+#else
+        return 0;
+#endif
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
+#if LIBSPDM_ECDSA_P521_SUPPORT
         return 66 * 2;
+#else
+        return 0;
+#endif
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
+#if LIBSPDM_SM2_DSA_P256_SUPPORT
         return 32 * 2;
+#else
+        return 0;
+#endif
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519:
+#if LIBSPDM_EDDSA_ED25519_SUPPORT
         return 32 * 2;
+#else
+        return 0;
+#endif
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
+#if LIBSPDM_EDDSA_ED448_SUPPORT
         return 57 * 2;
+#else
+        return 0;
+#endif
     default:
         return 0;
     }
@@ -221,6 +272,12 @@ static bool libspdm_asym_sign_wrap (void *context, size_t hash_nid, uint32_t bas
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
 #if LIBSPDM_RSA_PSS_SUPPORT
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048) ||
+                       LIBSPDM_RSA_PSS_2048_SUPPORT);
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072) ||
+                       LIBSPDM_RSA_PSS_3072_SUPPORT);
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096) ||
+                       LIBSPDM_RSA_PSS_4096_SUPPORT);
         return libspdm_rsa_pss_sign_wrap(context, hash_nid,
                                          param, param_size,
                                          message, message_size,
@@ -233,6 +290,12 @@ static bool libspdm_asym_sign_wrap (void *context, size_t hash_nid, uint32_t bas
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
 #if LIBSPDM_ECDSA_SUPPORT
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256) ||
+                       LIBSPDM_ECDSA_P256_SUPPORT);
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384) ||
+                       LIBSPDM_ECDSA_P384_SUPPORT);
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521) ||
+                       LIBSPDM_ECDSA_P521_SUPPORT);
         return libspdm_ecdsa_sign_wrap(context, hash_nid,
                                        param, param_size,
                                        message, message_size,
@@ -244,6 +307,10 @@ static bool libspdm_asym_sign_wrap (void *context, size_t hash_nid, uint32_t bas
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
 #if (LIBSPDM_EDDSA_ED25519_SUPPORT) || (LIBSPDM_EDDSA_ED448_SUPPORT)
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519) ||
+                       LIBSPDM_EDDSA_ED25519_SUPPORT);
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448) ||
+                       LIBSPDM_EDDSA_ED448_SUPPORT);
         return libspdm_eddsa_sign_wrap(context, hash_nid,
                                        param, param_size,
                                        message, message_size,
@@ -329,6 +396,18 @@ static bool libspdm_asym_get_public_key_from_der_wrap(uint32_t base_asym_algo,
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
 #if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048) ||
+                       LIBSPDM_RSA_SSA_2048_SUPPORT);
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072) ||
+                       LIBSPDM_RSA_SSA_3072_SUPPORT);
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096) ||
+                       LIBSPDM_RSA_SSA_4096_SUPPORT);
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048) ||
+                       LIBSPDM_RSA_PSS_2048_SUPPORT);
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072) ||
+                       LIBSPDM_RSA_PSS_3072_SUPPORT);
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096) ||
+                       LIBSPDM_RSA_PSS_4096_SUPPORT);
         return libspdm_rsa_get_public_key_from_der(der_data, der_size, context);
 #else
         LIBSPDM_ASSERT(false);
@@ -338,6 +417,12 @@ static bool libspdm_asym_get_public_key_from_der_wrap(uint32_t base_asym_algo,
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
 #if LIBSPDM_ECDSA_SUPPORT
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256) ||
+                       LIBSPDM_ECDSA_P256_SUPPORT);
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384) ||
+                       LIBSPDM_ECDSA_P384_SUPPORT);
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521) ||
+                       LIBSPDM_ECDSA_P521_SUPPORT);
         return libspdm_ec_get_public_key_from_der(der_data, der_size, context);
 #else
         LIBSPDM_ASSERT(false);
@@ -353,6 +438,10 @@ static bool libspdm_asym_get_public_key_from_der_wrap(uint32_t base_asym_algo,
 #endif
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
 #if LIBSPDM_SM2_DSA_SUPPORT
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519) ||
+                       LIBSPDM_EDDSA_ED25519_SUPPORT);
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448) ||
+                       LIBSPDM_EDDSA_ED448_SUPPORT);
         return libspdm_sm2_get_public_key_from_der(der_data, der_size, context);
 #else
         LIBSPDM_ASSERT(false);
@@ -483,6 +572,12 @@ static bool libspdm_asym_verify_wrap(
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
 #if LIBSPDM_RSA_SSA_SUPPORT
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048) ||
+                       LIBSPDM_RSA_SSA_2048_SUPPORT);
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072) ||
+                       LIBSPDM_RSA_SSA_3072_SUPPORT);
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096) ||
+                       LIBSPDM_RSA_SSA_4096_SUPPORT);
         return libspdm_rsa_pkcs1_verify_with_nid_wrap(context, hash_nid,
                                                       param, param_size,
                                                       message, message_size,
@@ -495,6 +590,12 @@ static bool libspdm_asym_verify_wrap(
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
 #if LIBSPDM_RSA_PSS_SUPPORT
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048) ||
+                       LIBSPDM_RSA_PSS_2048_SUPPORT);
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072) ||
+                       LIBSPDM_RSA_PSS_3072_SUPPORT);
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096) ||
+                       LIBSPDM_RSA_PSS_4096_SUPPORT);
         return libspdm_rsa_pss_verify_wrap(context, hash_nid,
                                            param, param_size,
                                            message, message_size,
@@ -507,6 +608,12 @@ static bool libspdm_asym_verify_wrap(
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
 #if LIBSPDM_ECDSA_SUPPORT
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256) ||
+                       LIBSPDM_ECDSA_P256_SUPPORT);
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384) ||
+                       LIBSPDM_ECDSA_P384_SUPPORT);
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521) ||
+                       LIBSPDM_ECDSA_P521_SUPPORT);
         return libspdm_ecdsa_verify_wrap(context, hash_nid,
                                          param, param_size,
                                          message, message_size,
@@ -518,6 +625,10 @@ static bool libspdm_asym_verify_wrap(
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
 #if (LIBSPDM_EDDSA_ED25519_SUPPORT) || (LIBSPDM_EDDSA_ED448_SUPPORT)
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519) ||
+                       LIBSPDM_EDDSA_ED25519_SUPPORT);
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448) ||
+                       LIBSPDM_EDDSA_ED448_SUPPORT);
         return libspdm_eddsa_verify_wrap(context, hash_nid,
                                          param, param_size,
                                          message, message_size,

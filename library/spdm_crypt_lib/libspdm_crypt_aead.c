@@ -10,13 +10,29 @@ uint32_t libspdm_get_aead_key_size(uint16_t aead_cipher_suite)
 {
     switch (aead_cipher_suite) {
     case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_128_GCM:
+#if LIBSPDM_AEAD_AES_128_GCM_SUPPORT
         return 16;
+#else
+        return 0;
+#endif
     case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_256_GCM:
+#if LIBSPDM_AEAD_AES_256_GCM_SUPPORT
         return 32;
+#else
+        return 0;
+#endif
     case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_CHACHA20_POLY1305:
+#if LIBSPDM_AEAD_CHACHA20_POLY1305_SUPPORT
         return 32;
+#else
+        return 0;
+#endif
     case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AEAD_SM4_GCM:
+#if LIBSPDM_AEAD_SM4_128_GCM_SUPPORT
         return 16;
+#else
+        return 0;
+#endif
     default:
         return 0;
     }
@@ -26,13 +42,29 @@ uint32_t libspdm_get_aead_iv_size(uint16_t aead_cipher_suite)
 {
     switch (aead_cipher_suite) {
     case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_128_GCM:
+#if LIBSPDM_AEAD_AES_128_GCM_SUPPORT
         return 12;
+#else
+        return 0;
+#endif
     case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_256_GCM:
+#if LIBSPDM_AEAD_AES_256_GCM_SUPPORT
         return 12;
+#else
+        return 0;
+#endif
     case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_CHACHA20_POLY1305:
+#if LIBSPDM_AEAD_CHACHA20_POLY1305_SUPPORT
         return 12;
+#else
+        return 0;
+#endif
     case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AEAD_SM4_GCM:
+#if LIBSPDM_AEAD_SM4_128_GCM_SUPPORT
         return 12;
+#else
+        return 0;
+#endif
     default:
         return 0;
     }
@@ -42,13 +74,29 @@ uint32_t libspdm_get_aead_tag_size(uint16_t aead_cipher_suite)
 {
     switch (aead_cipher_suite) {
     case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_128_GCM:
+#if LIBSPDM_AEAD_AES_128_GCM_SUPPORT
         return 16;
+#else
+        return 0;
+#endif
     case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_256_GCM:
+#if LIBSPDM_AEAD_AES_256_GCM_SUPPORT
         return 16;
+#else
+        return 0;
+#endif
     case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_CHACHA20_POLY1305:
+#if LIBSPDM_AEAD_CHACHA20_POLY1305_SUPPORT
         return 16;
+#else
+        return 0;
+#endif
     case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AEAD_SM4_GCM:
+#if LIBSPDM_AEAD_SM4_128_GCM_SUPPORT
         return 16;
+#else
+        return 0;
+#endif
     default:
         return 0;
     }
@@ -67,6 +115,10 @@ bool libspdm_aead_encryption(const spdm_version_number_t secured_message_version
     case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_128_GCM:
     case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_256_GCM:
 #if LIBSPDM_AEAD_GCM_SUPPORT
+        LIBSPDM_ASSERT((aead_cipher_suite != SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_128_GCM) ||
+                       LIBSPDM_AEAD_AES_128_GCM_SUPPORT);
+        LIBSPDM_ASSERT((aead_cipher_suite != SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_256_GCM) ||
+                       LIBSPDM_AEAD_AES_256_GCM_SUPPORT);
         return libspdm_aead_aes_gcm_encrypt(key, key_size, iv, iv_size, a_data,
                                             a_data_size, data_in, data_in_size, tag_out,
                                             tag_size, data_out, data_out_size);
@@ -111,6 +163,10 @@ bool libspdm_aead_decryption(const spdm_version_number_t secured_message_version
     case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_128_GCM:
     case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_256_GCM:
 #if LIBSPDM_AEAD_GCM_SUPPORT
+        LIBSPDM_ASSERT((aead_cipher_suite != SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_128_GCM) ||
+                       LIBSPDM_AEAD_AES_128_GCM_SUPPORT);
+        LIBSPDM_ASSERT((aead_cipher_suite != SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_256_GCM) ||
+                       LIBSPDM_AEAD_AES_256_GCM_SUPPORT);
         return libspdm_aead_aes_gcm_decrypt(key, key_size, iv, iv_size, a_data,
                                             a_data_size, data_in, data_in_size, tag,
                                             tag_size, data_out, data_out_size);
