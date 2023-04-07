@@ -42,14 +42,21 @@
  * 0x82 indicates that the length is expressed in two bytes;
  * 0x01 and 0x01 are rsa key len;
  **/
+#if (LIBSPDM_RSA_SSA_2048_SUPPORT) || (LIBSPDM_RSA_PSS_2048_SUPPORT)
 #define KEY_ENCRY_ALGO_RSA2048_FLAG {0x02, 0x82, 0x01, 0x01}
-#define KEY_ENCRY_ALGO_RSA3072_FLAG {0x02, 0x82, 0x01, 0x81}
-#define KEY_ENCRY_ALGO_RSA4096_FLAG {0x02, 0x82, 0x02, 0x01}
-
 /* the other case is ASN1 code different when integer is 1 on highest position*/
 #define KEY_ENCRY_ALGO_RSA2048_FLAG_OTHER {0x02, 0x82, 0x01, 0x00}
+#endif
+#if (LIBSPDM_RSA_SSA_3072_SUPPORT) || (LIBSPDM_RSA_PSS_3072_SUPPORT)
+#define KEY_ENCRY_ALGO_RSA3072_FLAG {0x02, 0x82, 0x01, 0x81}
+/* the other case is ASN1 code different when integer is 1 on highest position*/
 #define KEY_ENCRY_ALGO_RSA3072_FLAG_OTHER {0x02, 0x82, 0x01, 0x80}
+#endif
+#if (LIBSPDM_RSA_SSA_4096_SUPPORT) || (LIBSPDM_RSA_PSS_4096_SUPPORT)
+#define KEY_ENCRY_ALGO_RSA4096_FLAG {0x02, 0x82, 0x02, 0x01}
+/* the other case is ASN1 code different when integer is 1 on highest position*/
 #define KEY_ENCRY_ALGO_RSA4096_FLAG_OTHER {0x02, 0x82, 0x02, 0x00}
+#endif
 
 /**
  * https://oidref.com/1.2.840.10045.3.1.7
@@ -59,17 +66,27 @@
  * https://oidref.com/1.3.132.0.35
  * ECC521 curve OID: 1.3.132.0.35
  **/
+#if LIBSPDM_ECDSA_P256_SUPPORT
 #define KEY_ENCRY_ALGO_ECC256_OID {0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x03, 0x01, 0x07}
+#endif
+#if LIBSPDM_ECDSA_P384_SUPPORT
 #define KEY_ENCRY_ALGO_ECC384_OID {0x2B, 0x81, 0x04, 0x00, 0x22}
+#endif
+#if LIBSPDM_ECDSA_P521_SUPPORT
 #define KEY_ENCRY_ALGO_ECC521_OID {0x2B, 0x81, 0x04, 0x00, 0x23}
+#endif
 
 /**
  * EDxxx OID: https://datatracker.ietf.org/doc/html/rfc8420
  * ED448 OID: 1.3.101.113
  * ED25519 OID: 1.3.101.112
  **/
+#if LIBSPDM_EDDSA_ED25519_SUPPORT
 #define ENCRY_ALGO_ED25519_OID {0x2B, 0x65, 0x70}
+#endif
+#if LIBSPDM_EDDSA_ED448_SUPPORT
 #define ENCRY_ALGO_ED448_OID {0x2B, 0x65, 0x71}
+#endif
 
 /**
  * Retrieve the asymmetric public key from one DER-encoded X509 certificate.
@@ -104,6 +121,18 @@ static libspdm_get_asym_get_public_key_from_x509(uint32_t base_asym_algo)
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
 #if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048) ||
+                       LIBSPDM_RSA_SSA_2048_SUPPORT);
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072) ||
+                       LIBSPDM_RSA_SSA_3072_SUPPORT);
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096) ||
+                       LIBSPDM_RSA_SSA_4096_SUPPORT);
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048) ||
+                       LIBSPDM_RSA_PSS_2048_SUPPORT);
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072) ||
+                       LIBSPDM_RSA_PSS_3072_SUPPORT);
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096) ||
+                       LIBSPDM_RSA_PSS_4096_SUPPORT);
         return libspdm_rsa_get_public_key_from_x509;
 #else
         LIBSPDM_ASSERT(false);
@@ -113,6 +142,12 @@ static libspdm_get_asym_get_public_key_from_x509(uint32_t base_asym_algo)
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
 #if LIBSPDM_ECDSA_SUPPORT
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256) ||
+                       LIBSPDM_ECDSA_P256_SUPPORT);
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384) ||
+                       LIBSPDM_ECDSA_P384_SUPPORT);
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521) ||
+                       LIBSPDM_ECDSA_P521_SUPPORT);
         return libspdm_ec_get_public_key_from_x509;
 #else
         LIBSPDM_ASSERT(false);
@@ -121,6 +156,10 @@ static libspdm_get_asym_get_public_key_from_x509(uint32_t base_asym_algo)
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
 #if (LIBSPDM_EDDSA_ED25519_SUPPORT) || (LIBSPDM_EDDSA_ED448_SUPPORT)
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519) ||
+                       LIBSPDM_EDDSA_ED25519_SUPPORT);
+        LIBSPDM_ASSERT((base_asym_algo != SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448) ||
+                       LIBSPDM_EDDSA_ED448_SUPPORT);
         return libspdm_ecd_get_public_key_from_x509;
 #else
         LIBSPDM_ASSERT(false);
@@ -270,23 +309,74 @@ static uint32_t libspdm_get_public_key_algo_OID_len(uint32_t base_asym_algo)
 {
     switch (base_asym_algo) {
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
+#if LIBSPDM_RSA_SSA_2048_SUPPORT
         return 4;
+#else
+        return 0;
+#endif
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048:
+#if LIBSPDM_RSA_PSS_2048_SUPPORT
+        return 4;
+#else
+        return 0;
+#endif
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
+#if LIBSPDM_RSA_SSA_3072_SUPPORT
+        return 4;
+#else
+        return 0;
+#endif
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
+#if LIBSPDM_RSA_PSS_3072_SUPPORT
+        return 4;
+#else
+        return 0;
+#endif
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
+#if LIBSPDM_RSA_SSA_4096_SUPPORT
+        return 4;
+#else
+        return 0;
+#endif
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
+#if LIBSPDM_RSA_PSS_4096_SUPPORT
+        return 4;
+#else
+        return 0;
+#endif
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
+#if LIBSPDM_ECDSA_P256_SUPPORT
         return 8;
+#else
+        return 0;
+#endif
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
+#if LIBSPDM_ECDSA_P384_SUPPORT
         return 5;
+#else
+        return 0;
+#endif
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
+#if LIBSPDM_ECDSA_P521_SUPPORT
+        return 5;
+#else
+        return 0;
+#endif
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
+#if LIBSPDM_EDDSA_ED25519_SUPPORT
         return 3;
+#else
+        return 0;
+#endif
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
+#if LIBSPDM_EDDSA_ED448_SUPPORT
+        return 3;
+#else
+        return 0;
+#endif
     default:
         LIBSPDM_ASSERT(false);
-        return false;
+        return 0;
     }
 }
 
@@ -306,47 +396,74 @@ static bool libspdm_get_public_key_algo_OID(uint32_t base_asym_algo, uint8_t *oi
 {
     uint32_t oid_len;
     oid_len = libspdm_get_public_key_algo_OID_len(base_asym_algo);
+    if(oid_len == 0) {
+        return false;
+    }
 
     switch (base_asym_algo) {
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048: {
+#if (LIBSPDM_RSA_SSA_2048_SUPPORT) || (LIBSPDM_RSA_PSS_2048_SUPPORT)
         uint8_t encry_algo_oid_rsa2048[] = KEY_ENCRY_ALGO_RSA2048_FLAG;
         uint8_t encry_algo_oid_rsa2048_ohter[] = KEY_ENCRY_ALGO_RSA2048_FLAG_OTHER;
         libspdm_copy_mem(oid, oid_len, encry_algo_oid_rsa2048, oid_len);
         libspdm_copy_mem(oid_other, oid_len, encry_algo_oid_rsa2048_ohter, oid_len);
         break;
+#else
+        return false;
+#endif
     }
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072: {
+#if (LIBSPDM_RSA_SSA_3072_SUPPORT) || (LIBSPDM_RSA_PSS_3072_SUPPORT)
         uint8_t encry_algo_oid_rsa3072[] = KEY_ENCRY_ALGO_RSA3072_FLAG;
         uint8_t encry_algo_oid_rsa3072_ohter[] = KEY_ENCRY_ALGO_RSA3072_FLAG_OTHER;
         libspdm_copy_mem(oid, oid_len, encry_algo_oid_rsa3072, oid_len);
         libspdm_copy_mem(oid_other, oid_len, encry_algo_oid_rsa3072_ohter, oid_len);
         break;
+#else
+        return false;
+#endif
     }
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096: {
+#if (LIBSPDM_RSA_SSA_4096_SUPPORT) || (LIBSPDM_RSA_PSS_4096_SUPPORT)
         uint8_t encry_algo_oid_rsa4096[] = KEY_ENCRY_ALGO_RSA4096_FLAG;
         uint8_t encry_algo_oid_rsa4096_ohter[] = KEY_ENCRY_ALGO_RSA4096_FLAG_OTHER;
         libspdm_copy_mem(oid, oid_len, encry_algo_oid_rsa4096, oid_len);
         libspdm_copy_mem(oid_other, oid_len, encry_algo_oid_rsa4096_ohter, oid_len);
         break;
+#else
+        return false;
+#endif
     }
 
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256: {
+#if LIBSPDM_ECDSA_P256_SUPPORT
         uint8_t encry_algo_oid_ecc256[] = KEY_ENCRY_ALGO_ECC256_OID;
         libspdm_copy_mem(oid, oid_len, encry_algo_oid_ecc256, oid_len);
         break;
+#else
+        return false;
+#endif
     }
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384: {
+#if LIBSPDM_ECDSA_P384_SUPPORT
         uint8_t encry_algo_oid_ecc384[] = KEY_ENCRY_ALGO_ECC384_OID;
         libspdm_copy_mem(oid, oid_len, encry_algo_oid_ecc384, oid_len);
         break;
+#else
+        return false;
+#endif
     }
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521: {
+#if LIBSPDM_ECDSA_P521_SUPPORT
         uint8_t encry_algo_oid_ecc521[] = KEY_ENCRY_ALGO_ECC521_OID;
         libspdm_copy_mem(oid, oid_len, encry_algo_oid_ecc521, oid_len);
         break;
+#else
+        return false;
+#endif
     }
 
     /*sm2 oid  TBD*/
@@ -354,13 +471,21 @@ static bool libspdm_get_public_key_algo_OID(uint32_t base_asym_algo, uint8_t *oi
         return true;
 
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519: {
+#if LIBSPDM_EDDSA_ED25519_SUPPORT
         uint8_t encry_algo_oid_ed25519[] = ENCRY_ALGO_ED25519_OID;
         libspdm_copy_mem(oid, oid_len, encry_algo_oid_ed25519, oid_len);
+#else
+        return false;
+#endif
         break;
     }
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448: {
+#if LIBSPDM_EDDSA_ED448_SUPPORT
         uint8_t encry_algo_oid_ed448[] = ENCRY_ALGO_ED448_OID;
         libspdm_copy_mem(oid, oid_len, encry_algo_oid_ed448, oid_len);
+#else
+        return false;
+#endif
         break;
     }
 
