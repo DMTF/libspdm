@@ -10,16 +10,47 @@ uint32_t libspdm_get_hash_size(uint32_t base_hash_algo)
 {
     switch (base_hash_algo) {
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256:
+#if LIBSPDM_SHA256_SUPPORT
+        return 32;
+#else
+        return 0;
+#endif
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_256:
+#if LIBSPDM_SHA3_256_SUPPORT
         return 32;
+#else
+        return 0;
+#endif
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384:
-    case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_384:
+#if LIBSPDM_SHA256_SUPPORT
         return 48;
+#else
+        return 0;
+#endif
+    case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_384:
+#if LIBSPDM_SHA3_384_SUPPORT
+        return 48;
+#else
+        return 0;
+#endif
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_512:
-    case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_512:
+#if LIBSPDM_SHA512_SUPPORT
         return 64;
+#else
+        return 0;
+#endif
+    case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_512:
+#if LIBSPDM_SHA3_512_SUPPORT
+        return 64;
+#else
+        return 0;
+#endif
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SM3_256:
+#if LIBSPDM_SM3_256_SUPPORT
         return 32;
+#else
+        return 0;
+#endif
     default:
         return 0;
     }
