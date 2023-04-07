@@ -69,6 +69,12 @@ typedef struct {
 
 #endif
 
+#if (LIBSPDM_SENDER_BUFFER_SIZE > LIBSPDM_RECEIVER_BUFFER_SIZE)
+#define LIBSPDM_MAX_SENDER_RECEIVER_BUFFER_SIZE LIBSPDM_SENDER_BUFFER_SIZE
+#else
+#define LIBSPDM_MAX_SENDER_RECEIVER_BUFFER_SIZE LIBSPDM_RECEIVER_BUFFER_SIZE
+#endif
+
 extern uint8_t m_libspdm_use_measurement_spec;
 extern uint32_t m_libspdm_use_measurement_hash_algo;
 extern uint32_t m_libspdm_use_hash_algo;

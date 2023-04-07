@@ -457,12 +457,6 @@
     #define LIBSPDM_MAX_SPDM_MSG_SIZE LIBSPDM_DATA_TRANSFER_SIZE
 #endif
 
-#if (LIBSPDM_SENDER_BUFFER_SIZE > LIBSPDM_RECEIVER_BUFFER_SIZE)
-#define LIBSPDM_MAX_SENDER_RECEIVER_BUFFER_SIZE LIBSPDM_SENDER_BUFFER_SIZE
-#else
-#define LIBSPDM_MAX_SENDER_RECEIVER_BUFFER_SIZE LIBSPDM_RECEIVER_BUFFER_SIZE
-#endif
-
 /* Enable message logging.
  * See https://github.com/DMTF/libspdm/blob/main/doc/user_guide.md#message-logging
  * for more information */
