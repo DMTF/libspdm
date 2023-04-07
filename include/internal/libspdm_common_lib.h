@@ -136,6 +136,8 @@ typedef struct {
     uint8_t buffer[LIBSPDM_MAX_MESSAGE_VCA_BUFFER_SIZE];
 } libspdm_vca_managed_buffer_t;
 
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+
 typedef struct {
     size_t max_buffer_size;
     size_t buffer_size;
@@ -169,12 +171,6 @@ typedef struct {
 typedef struct {
     size_t max_buffer_size;
     size_t buffer_size;
-    uint8_t buffer[LIBSPDM_MAX_CERT_CHAIN_SIZE];
-} libspdm_cert_chain_managed_buffer_t;
-
-typedef struct {
-    size_t max_buffer_size;
-    size_t buffer_size;
     uint8_t buffer[LIBSPDM_MAX_MESSAGE_L1L2_BUFFER_SIZE];
 } libspdm_l1l2_managed_buffer_t;
 
@@ -189,6 +185,14 @@ typedef struct {
     size_t buffer_size;
     uint8_t buffer[LIBSPDM_MAX_MESSAGE_TH_BUFFER_SIZE];
 } libspdm_th_managed_buffer_t;
+
+#endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
+
+typedef struct {
+    size_t max_buffer_size;
+    size_t buffer_size;
+    uint8_t buffer[LIBSPDM_MAX_CERT_CHAIN_SIZE];
+} libspdm_cert_chain_managed_buffer_t;
 
 /* signature = Sign(SK, hash(M1))
  * Verify(PK, hash(M2), signature)*/
@@ -786,6 +790,7 @@ uint32_t libspdm_get_measurement_summary_hash_size(libspdm_context_t *spdm_conte
                                                    bool is_requester,
                                                    uint8_t measurement_summary_hash_type);
 
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 /*
  * This function calculates l1l2.
  * If session_info is NULL, this function will use M cache of SPDM context,
@@ -800,7 +805,7 @@ uint32_t libspdm_get_measurement_summary_hash_size(libspdm_context_t *spdm_conte
 bool libspdm_calculate_l1l2(libspdm_context_t *spdm_context,
                             void *session_info,
                             libspdm_l1l2_managed_buffer_t *l1l2);
-
+#else
 /*
  * This function calculates l1l2 hash.
  * If session_info is NULL, this function will use M cache of SPDM context,
@@ -816,6 +821,7 @@ bool libspdm_calculate_l1l2(libspdm_context_t *spdm_context,
 bool libspdm_calculate_l1l2_hash(libspdm_context_t *spdm_context,
                                  void *session_info,
                                  size_t *l1l2_hash_size, void *l1l2_hash);
+#endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
 
 /**
  * Get element from multi element opaque data by element id.

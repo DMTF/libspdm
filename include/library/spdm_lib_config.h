@@ -80,6 +80,16 @@
 #define LIBSPDM_MAX_CSR_SIZE 0x1000
 #endif
 
+/* To ensure integrity in communication between the Requester and the Responder libspdm calculates
+ * cryptographic digests and signatures over multiple requests and responses. This value specifies
+ * whether libspdm will use a running calculation over the transcript, where requests and responses
+ * are discarded as they are cryptographically consumed, or whether libspdm will buffer the entire
+ * transcript before calculating the digest or signature.
+ */
+#ifndef LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+#define LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT 0
+#endif
+
 /*
  * +--------------------------+------------------------------------------+---------+
  * | GET_VERSION              | 4                                        | 1       |
@@ -93,6 +103,8 @@
  * +--------------------------+------------------------------------------+---------+
  */
 #define LIBSPDM_MAX_MESSAGE_VCA_BUFFER_SIZE (150 + 2 * LIBSPDM_MAX_VERSION_COUNT)
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 
 /*
  * +--------------------------+------------------------------------------+---------+
@@ -181,16 +193,7 @@
      LIBSPDM_MAX_MESSAGE_F_BUFFER_SIZE)
 #endif
 
-/* To ensure integrity in communication between the Requester and the Responder libspdm calculates
- * cryptographic digests and signatures over multiple requests and responses. This value specifies
- * whether libspdm will use a running calculation over the transcript, where requests and responses
- * are discarded as they are cryptographically consumed, or whether libspdm will buffer the entire
- * transcript before calculating the digest or signature.
- */
-#ifndef LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-#define LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT 0
-#endif
-
+#endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
 
 /* Cryptography Configuration
  * In each category, at least one should be selected.
