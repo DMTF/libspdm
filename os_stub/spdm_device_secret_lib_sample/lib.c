@@ -1908,7 +1908,7 @@ bool libspdm_responder_data_sign(
 
 #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
 
-uint8_t m_libspdm_my_zero_filled_buffer[64];
+uint8_t m_libspdm_my_zero_filled_buffer[LIBSPDM_MAX_HASH_SIZE];
 uint8_t m_libspdm_bin_str0[0x11] = {
     0x00, 0x00, /* length - to be filled*/
     /* SPDM_VERSION_1_1_BIN_CONCAT_LABEL */
@@ -1930,7 +1930,7 @@ bool libspdm_psk_handshake_secret_hkdf_expand(
     size_t psk_size;
     size_t hash_size;
     bool result;
-    uint8_t handshake_secret[64];
+    uint8_t handshake_secret[LIBSPDM_MAX_HASH_SIZE];
 
     if (psk_hint_size == 0) {
         psk = LIBSPDM_TEST_PSK_DATA_STRING;
@@ -1975,9 +1975,9 @@ bool libspdm_psk_master_secret_hkdf_expand(
     size_t psk_size;
     size_t hash_size;
     bool result;
-    uint8_t handshake_secret[64];
-    uint8_t salt1[64];
-    uint8_t master_secret[64];
+    uint8_t handshake_secret[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t salt1[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t master_secret[LIBSPDM_MAX_HASH_SIZE];
 
     if (psk_hint_size == 0) {
         psk = LIBSPDM_TEST_PSK_DATA_STRING;
