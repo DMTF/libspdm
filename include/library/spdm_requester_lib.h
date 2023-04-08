@@ -273,6 +273,8 @@ libspdm_return_t libspdm_get_measurement_ex(void *spdm_context, const uint32_t *
  * @param  spdm_context           A pointer to the SPDM context.
  * @param  use_psk                False means to use KEY_EXCHANGE/FINISH to start a session.
  *                                True means to use PSK_EXCHANGE/PSK_FINISH to start a session.
+ * @param  psk_hint               The psk_hint in PSK_EXCHANGE. It is ignored if use_psk is false.
+ * @param  psk_hint_size          The size in bytes of psk_hint. It is ignored if use_psk is false.
  * @param  measurement_hash_type  The type of the measurement hash.
  * @param  slot_id                The number of slot for the certificate chain.
  * @param  session_policy         The policy for the session.
@@ -303,6 +305,8 @@ libspdm_return_t libspdm_start_session(void *spdm_context, bool use_psk,
  * @param  spdm_context              A pointer to the SPDM context.
  * @param  use_psk                   False means to use KEY_EXCHANGE/FINISH to start a session.
  *                                   True means to use PSK_EXCHANGE/PSK_FINISH to start a session.
+ * @param  psk_hint                  The psk_hint in PSK_EXCHANGE. It is ignored if use_psk is false.
+ * @param  psk_hint_size             The size in bytes of psk_hint. It is ignored if use_psk is false.
  * @param  measurement_hash_type     The type of the measurement hash.
  * @param  slot_id                   The number of slot for the certificate chain.
  * @param  session_policy            The policy for the session.
