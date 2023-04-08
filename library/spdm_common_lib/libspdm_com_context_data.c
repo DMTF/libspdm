@@ -170,8 +170,8 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         data32 = libspdm_read_uint32((const uint8_t *)data);
-        /* Only allow set smaller value*/
-        LIBSPDM_ASSERT (data32 <= LIBSPDM_DATA_TRANSFER_SIZE);
+        LIBSPDM_ASSERT (data32 <= LIBSPDM_MAX_SPDM_MSG_SIZE);
+        LIBSPDM_ASSERT (data32 >= SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12);
         context->local_context.capability.data_transfer_size = data32;
         break;
     case LIBSPDM_DATA_CAPABILITY_MAX_SPDM_MSG_SIZE:
@@ -179,8 +179,8 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         data32 = libspdm_read_uint32((const uint8_t *)data);
-        /* Only allow set smaller value. Need different value for CHUNK - TBD*/
         LIBSPDM_ASSERT (data32 <= LIBSPDM_MAX_SPDM_MSG_SIZE);
+        LIBSPDM_ASSERT (data32 >= SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12);
         context->local_context.capability.max_spdm_msg_size = data32;
         break;
     case LIBSPDM_DATA_MEASUREMENT_SPEC:
@@ -740,18 +740,47 @@ bool libspdm_check_context (void *spdm_context)
     if (context->local_context.capability.data_transfer_size <
         SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
-                       "LIBSPDM_DATA_CAPABILITY_DATA_TRANSFER_SIZE must be greater than or equal "
-                       "to %d.\n", SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12));
+                       "data_transfer_size must be greater than or equal "
+                       "to SPDM_MIN_DATA_TRANSFER_SIZE (%d).\n",
+                       SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12));
         return false;
     }
 
     if (context->local_context.capability.max_spdm_msg_size <
         context->local_context.capability.data_transfer_size) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
-                       "LIBSPDM_DATA_CAPABILITY_MAX_SPDM_MSG_SIZE (%d) must be greater than or "
-                       "equal to LIBSPDM_DATA_CAPABILITY_DATA_TRANSFER_SIZE (%d).\n",
+                       "max_spdm_msg_size (%d) must be greater than or "
+                       "equal to data_transfer_size (%d).\n",
                        context->local_context.capability.max_spdm_msg_size,
                        context->local_context.capability.data_transfer_size));
+        return false;
+    }
+
+    if (context->local_context.capability.sender_data_transfer_size <
+        SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
+                       "sender_data_transfer_size must be greater than or equal "
+                       "to %d.\n", SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12));
+        return false;
+    }
+
+    if (context->local_context.capability.max_spdm_msg_size <
+        context->local_context.capability.sender_data_transfer_size) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
+                       "max_spdm_msg_size (%d) must be greater than or "
+                       "equal to sender_data_transfer_size (%d).\n",
+                       context->local_context.capability.max_spdm_msg_size,
+                       context->local_context.capability.sender_data_transfer_size));
+        return false;
+    }
+
+    if (context->local_context.capability.max_spdm_msg_size >
+        LIBSPDM_MAX_SPDM_MSG_SIZE) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
+                       "max_spdm_msg_size (%d) must be smaller than or "
+                       "equal to LIBSPDM_MAX_SPDM_MSG_SIZE (%d).\n",
+                       context->local_context.capability.max_spdm_msg_size,
+                       LIBSPDM_MAX_SPDM_MSG_SIZE));
         return false;
     }
 
@@ -1810,12 +1839,34 @@ void libspdm_register_device_buffer_func(
     libspdm_device_release_receiver_buffer_func release_receiver_buffer)
 {
     libspdm_context_t *context;
+    size_t data_transfer_size;
+    void *data_ptr;
 
     context = spdm_context;
     context->acquire_sender_buffer = acquire_sender_buffer;
     context->release_sender_buffer = release_sender_buffer;
     context->acquire_receiver_buffer = acquire_receiver_buffer;
     context->release_receiver_buffer = release_receiver_buffer;
+
+    data_transfer_size = 0;
+    data_ptr = NULL;
+    acquire_sender_buffer (context, &data_transfer_size, &data_ptr);
+    LIBSPDM_ASSERT (data_transfer_size >= LIBSPDM_TRANSPORT_ADDITIONAL_SIZE);
+    data_transfer_size -= LIBSPDM_TRANSPORT_ADDITIONAL_SIZE;
+    LIBSPDM_ASSERT (data_transfer_size >= SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12);
+    LIBSPDM_ASSERT (data_transfer_size <= LIBSPDM_MAX_SPDM_MSG_SIZE);
+    context->local_context.capability.sender_data_transfer_size = (uint32_t)data_transfer_size;
+    release_sender_buffer (context, data_ptr);
+
+    data_transfer_size = 0;
+    data_ptr = NULL;
+    acquire_receiver_buffer (context, &data_transfer_size, &data_ptr);
+    LIBSPDM_ASSERT(data_transfer_size >= LIBSPDM_TRANSPORT_ADDITIONAL_SIZE);
+    data_transfer_size -= LIBSPDM_TRANSPORT_ADDITIONAL_SIZE;
+    LIBSPDM_ASSERT (data_transfer_size >= SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12);
+    LIBSPDM_ASSERT (data_transfer_size <= LIBSPDM_MAX_SPDM_MSG_SIZE);
+    context->local_context.capability.data_transfer_size = (uint32_t)data_transfer_size;
+    release_receiver_buffer (context, data_ptr);
 }
 
 /**
@@ -2152,8 +2203,10 @@ libspdm_return_t libspdm_init_context_with_secured_context(void *spdm_context,
     context->encap_context.certificate_chain_buffer.max_buffer_size =
         sizeof(context->encap_context.certificate_chain_buffer.buffer);
 
-    /* From the config.h, need different value for CHUNK - TBD*/
-    context->local_context.capability.data_transfer_size = LIBSPDM_DATA_TRANSFER_SIZE;
+    /* To be updated in libspdm_register_device_buffer_func */
+    context->local_context.capability.data_transfer_size = 0;
+    context->local_context.capability.sender_data_transfer_size = 0;
+    /* From the config.h */
     context->local_context.capability.max_spdm_msg_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
 
     for (index = 0; index < num_secured_contexts; index++) {

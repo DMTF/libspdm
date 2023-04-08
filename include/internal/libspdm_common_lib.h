@@ -30,6 +30,7 @@ typedef struct {
     uint32_t st1;
     uint32_t flags;
     uint32_t data_transfer_size;
+    uint32_t sender_data_transfer_size;
     uint32_t max_spdm_msg_size;
 } libspdm_device_capability_t;
 
@@ -342,7 +343,7 @@ typedef struct {
 } libspdm_msg_log_t;
 #endif /* LIBSPDM_ENABLE_MSG_LOG */
 
-#define LIBSPDM_CONTEXT_STRUCT_VERSION 0x2
+#define LIBSPDM_CONTEXT_STRUCT_VERSION 0x3
 
 typedef struct {
     uint32_t version;
