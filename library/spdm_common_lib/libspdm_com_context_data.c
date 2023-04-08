@@ -183,6 +183,15 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         LIBSPDM_ASSERT (data32 >= SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12);
         context->local_context.capability.max_spdm_msg_size = data32;
         break;
+    case LIBSPDM_DATA_CAPABILITY_SENDER_DATA_TRANSFER_SIZE:
+        if (data_size != sizeof(uint32_t)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        data32 = libspdm_read_uint32((const uint8_t *)data);
+        LIBSPDM_ASSERT (data32 <= LIBSPDM_MAX_SPDM_MSG_SIZE);
+        LIBSPDM_ASSERT (data32 >= SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12);
+        context->local_context.capability.sender_data_transfer_size = data32;
+        break;
     case LIBSPDM_DATA_MEASUREMENT_SPEC:
         if (data_size != sizeof(uint8_t)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
@@ -588,6 +597,14 @@ libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_t
             target_data = &context->connection_info.capability.max_spdm_msg_size;
         } else {
             target_data = &context->local_context.capability.max_spdm_msg_size;
+        }
+        break;
+    case LIBSPDM_DATA_CAPABILITY_SENDER_DATA_TRANSFER_SIZE:
+        target_data_size = sizeof(uint32_t);
+        if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        } else {
+            target_data = &context->local_context.capability.sender_data_transfer_size;
         }
         break;
     case LIBSPDM_DATA_MEASUREMENT_SPEC:
