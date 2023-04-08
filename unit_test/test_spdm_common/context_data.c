@@ -9,6 +9,16 @@
 #include "internal/libspdm_responder_lib.h"
 #include "internal/libspdm_secured_message_lib.h"
 
+libspdm_return_t spdm_device_acquire_sender_buffer (
+    void *context, size_t *max_msg_size, void **msg_buf_ptr);
+
+void spdm_device_release_sender_buffer (void *context, const void *msg_buf_ptr);
+
+libspdm_return_t spdm_device_acquire_receiver_buffer (
+    void *context, size_t *max_msg_size, void **msg_buf_ptr);
+
+void spdm_device_release_receiver_buffer (void *context, const void *msg_buf_ptr);
+
 static uint32_t libspdm_opaque_data = 0xDEADBEEF;
 
 /**
@@ -1344,15 +1354,18 @@ static void libspdm_test_check_context_case20(void **state)
     libspdm_init_context (context);
 
     result = libspdm_check_context (context);
+    assert_int_equal(false, result);
+
+    libspdm_register_device_buffer_func(context,
+                                        spdm_device_acquire_sender_buffer,
+                                        spdm_device_release_sender_buffer,
+                                        spdm_device_acquire_receiver_buffer,
+                                        spdm_device_release_receiver_buffer);
+
+    result = libspdm_check_context (context);
     assert_int_equal(true, result);
 
     parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
-
-    data32 = SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12 - 1;
-    libspdm_set_data (context, LIBSPDM_DATA_CAPABILITY_DATA_TRANSFER_SIZE, &parameter, &data32,
-                      sizeof(data32));
-    result = libspdm_check_context (context);
-    assert_int_equal(false, result);
 
     data32 = SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12;
     libspdm_set_data (context, LIBSPDM_DATA_CAPABILITY_DATA_TRANSFER_SIZE, &parameter, &data32,
