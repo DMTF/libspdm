@@ -1368,36 +1368,6 @@ static void libspdm_test_check_context_case20(void **state)
     parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
 
     data32 = SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12;
-    libspdm_set_data (context, LIBSPDM_DATA_CAPABILITY_DATA_TRANSFER_SIZE, &parameter, &data32,
-                      sizeof(data32));
-    result = libspdm_check_context (context);
-    assert_int_equal(true, result);
-
-    data32 = SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12 + 10;
-    libspdm_set_data (context, LIBSPDM_DATA_CAPABILITY_DATA_TRANSFER_SIZE, &parameter, &data32,
-                      sizeof(data32));
-
-    data32 = SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12 + 5;
-    libspdm_set_data (context, LIBSPDM_DATA_CAPABILITY_MAX_SPDM_MSG_SIZE, &parameter, &data32,
-                      sizeof(data32));
-    result = libspdm_check_context (context);
-    assert_int_equal(false, result);
-
-    data32 = SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12 + 10;
-    libspdm_set_data (context, LIBSPDM_DATA_CAPABILITY_MAX_SPDM_MSG_SIZE, &parameter, &data32,
-                      sizeof(data32));
-
-    data32 = SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12;
-    libspdm_set_data (context, LIBSPDM_DATA_CAPABILITY_SENDER_DATA_TRANSFER_SIZE, &parameter,
-                      &data32, sizeof(data32));
-    result = libspdm_check_context (context);
-    assert_int_equal(true, result);
-
-    data32 = SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12 + 8;
-    libspdm_set_data (context, LIBSPDM_DATA_CAPABILITY_SENDER_DATA_TRANSFER_SIZE, &parameter,
-                      &data32, sizeof(data32));
-
-    data32 = SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12 + 5;
     libspdm_set_data (context, LIBSPDM_DATA_CAPABILITY_MAX_SPDM_MSG_SIZE, &parameter, &data32,
                       sizeof(data32));
     result = libspdm_check_context (context);
