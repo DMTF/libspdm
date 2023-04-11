@@ -1855,6 +1855,8 @@ void libspdm_register_device_io_func(
  *          max alignment pad size = 3
  *
  * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  sender_buffer_size            Size in bytes of the sender buffer.
+ * @param  receiver_buffer_size          Size in bytes of the receiver buffer.
  * @param  acquire_sender_buffer         The fuction to acquire transport layer sender buffer.
  * @param  release_sender_buffer         The fuction to release transport layer sender buffer.
  * @param  acquire_receiver_buffer       The fuction to acquire transport layer receiver buffer.
