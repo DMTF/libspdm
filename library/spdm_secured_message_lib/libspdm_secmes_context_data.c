@@ -13,11 +13,7 @@
  **/
 size_t libspdm_secured_message_get_context_size(void)
 {
-    size_t size;
-
-    size = sizeof(libspdm_secured_message_context_t);
-    LIBSPDM_ASSERT (size == LIBSPDM_SECURED_MESSAGE_CONTEXT_SIZE);
-    return size;
+    return sizeof(libspdm_secured_message_context_t);
 }
 
 /**
