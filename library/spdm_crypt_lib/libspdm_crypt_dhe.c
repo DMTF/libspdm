@@ -108,12 +108,15 @@ void *libspdm_dhe_new(spdm_version_number_t spdm_version,
     case SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_3072:
     case SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_4096:
 #if LIBSPDM_FFDHE_SUPPORT
-        LIBSPDM_ASSERT((dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_2048) ||
-                       LIBSPDM_FFDHE_2048_SUPPORT);
-        LIBSPDM_ASSERT((dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_3072) ||
-                       LIBSPDM_FFDHE_3072_SUPPORT);
-        LIBSPDM_ASSERT((dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_4096) ||
-                       LIBSPDM_FFDHE_4096_SUPPORT);
+#if !LIBSPDM_FFDHE_2048_SUPPORT
+        LIBSPDM_ASSERT(dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_2048);
+#endif
+#if !LIBSPDM_FFDHE_3072_SUPPORT
+        LIBSPDM_ASSERT(dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_3072);
+#endif
+#if !LIBSPDM_FFDHE_4096_SUPPORT
+        LIBSPDM_ASSERT(dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_4096);
+#endif
         context = libspdm_dh_new_by_nid(nid);
 #else
         LIBSPDM_ASSERT(false);
@@ -124,12 +127,15 @@ void *libspdm_dhe_new(spdm_version_number_t spdm_version,
     case SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_384_R1:
     case SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_521_R1:
 #if LIBSPDM_ECDHE_SUPPORT
-        LIBSPDM_ASSERT((dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_256_R1) ||
-                       LIBSPDM_ECDHE_P256_SUPPORT);
-        LIBSPDM_ASSERT((dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_384_R1) ||
-                       LIBSPDM_ECDHE_P384_SUPPORT);
-        LIBSPDM_ASSERT((dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_521_R1) ||
-                       LIBSPDM_ECDHE_P521_SUPPORT);
+#if !LIBSPDM_ECDHE_P256_SUPPORT
+        LIBSPDM_ASSERT(dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_256_R1);
+#endif
+#if !LIBSPDM_ECDHE_P384_SUPPORT
+        LIBSPDM_ASSERT(dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_384_R1);
+#endif
+#if !LIBSPDM_ECDHE_P521_SUPPORT
+        LIBSPDM_ASSERT(dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_521_R1);
+#endif
         context = libspdm_ec_new_by_nid(nid);
 #else
         LIBSPDM_ASSERT(false);
@@ -233,12 +239,15 @@ bool libspdm_dhe_generate_key(uint16_t dhe_named_group, void *context,
     case SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_3072:
     case SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_4096:
 #if LIBSPDM_FFDHE_SUPPORT
-        LIBSPDM_ASSERT((dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_2048) ||
-                       LIBSPDM_FFDHE_2048_SUPPORT);
-        LIBSPDM_ASSERT((dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_3072) ||
-                       LIBSPDM_FFDHE_3072_SUPPORT);
-        LIBSPDM_ASSERT((dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_4096) ||
-                       LIBSPDM_FFDHE_4096_SUPPORT);
+#if !LIBSPDM_FFDHE_2048_SUPPORT
+        LIBSPDM_ASSERT(dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_2048);
+#endif
+#if !LIBSPDM_FFDHE_3072_SUPPORT
+        LIBSPDM_ASSERT(dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_3072);
+#endif
+#if !LIBSPDM_FFDHE_4096_SUPPORT
+        LIBSPDM_ASSERT(dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_4096);
+#endif
         return libspdm_dh_generate_key(context, public_key, public_key_size);
 #else
         LIBSPDM_ASSERT(false);
@@ -248,12 +257,15 @@ bool libspdm_dhe_generate_key(uint16_t dhe_named_group, void *context,
     case SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_384_R1:
     case SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_521_R1:
 #if LIBSPDM_ECDHE_SUPPORT
-        LIBSPDM_ASSERT((dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_256_R1) ||
-                       LIBSPDM_ECDHE_P256_SUPPORT);
-        LIBSPDM_ASSERT((dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_384_R1) ||
-                       LIBSPDM_ECDHE_P384_SUPPORT);
-        LIBSPDM_ASSERT((dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_521_R1) ||
-                       LIBSPDM_ECDHE_P521_SUPPORT);
+#if !LIBSPDM_ECDHE_P256_SUPPORT
+        LIBSPDM_ASSERT(dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_256_R1);
+#endif
+#if !LIBSPDM_ECDHE_P384_SUPPORT
+        LIBSPDM_ASSERT(dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_384_R1);
+#endif
+#if !LIBSPDM_ECDHE_P521_SUPPORT
+        LIBSPDM_ASSERT(dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_521_R1);
+#endif
         return libspdm_ec_generate_key(context, public_key, public_key_size);
 #else
         LIBSPDM_ASSERT(false);
@@ -286,12 +298,15 @@ bool libspdm_dhe_compute_key(uint16_t dhe_named_group, void *context,
     case SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_3072:
     case SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_4096:
 #if LIBSPDM_FFDHE_SUPPORT
-        LIBSPDM_ASSERT((dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_2048) ||
-                       LIBSPDM_FFDHE_2048_SUPPORT);
-        LIBSPDM_ASSERT((dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_3072) ||
-                       LIBSPDM_FFDHE_3072_SUPPORT);
-        LIBSPDM_ASSERT((dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_4096) ||
-                       LIBSPDM_FFDHE_4096_SUPPORT);
+#if !LIBSPDM_FFDHE_2048_SUPPORT
+        LIBSPDM_ASSERT(dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_2048);
+#endif
+#if !LIBSPDM_FFDHE_3072_SUPPORT
+        LIBSPDM_ASSERT(dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_3072);
+#endif
+#if !LIBSPDM_FFDHE_4096_SUPPORT
+        LIBSPDM_ASSERT(dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_4096);
+#endif
         return libspdm_dh_compute_key(context, peer_public, peer_public_size, key, key_size);
 #else
         LIBSPDM_ASSERT(false);
@@ -301,12 +316,15 @@ bool libspdm_dhe_compute_key(uint16_t dhe_named_group, void *context,
     case SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_384_R1:
     case SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_521_R1:
 #if LIBSPDM_ECDHE_SUPPORT
-        LIBSPDM_ASSERT((dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_256_R1) ||
-                       LIBSPDM_ECDHE_P256_SUPPORT);
-        LIBSPDM_ASSERT((dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_384_R1) ||
-                       LIBSPDM_ECDHE_P384_SUPPORT);
-        LIBSPDM_ASSERT((dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_521_R1) ||
-                       LIBSPDM_ECDHE_P521_SUPPORT);
+#if !LIBSPDM_ECDHE_P256_SUPPORT
+        LIBSPDM_ASSERT(dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_256_R1);
+#endif
+#if !LIBSPDM_ECDHE_P384_SUPPORT
+        LIBSPDM_ASSERT(dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_384_R1);
+#endif
+#if !LIBSPDM_ECDHE_P521_SUPPORT
+        LIBSPDM_ASSERT(dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_521_R1);
+#endif
         return libspdm_ec_compute_key(context, peer_public, peer_public_size, key, key_size);
 #else
         LIBSPDM_ASSERT(false);
