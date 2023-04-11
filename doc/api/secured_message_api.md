@@ -127,8 +127,8 @@ This function should only be called after the session has been fully established
 
 The structure is packed and is layed out as
 - Struct Version (4 bytes)
-- AEAD Key Size (32 bytes)
-- AEAD IV Size (32 bytes)
+- AEAD Key Size (4 bytes)
+- AEAD IV Size (4 bytes)
 - Requester Direction Encryption Key (AEAD Key Size bytes)
 - Requester Direction Salt (AEAD IV Size bytes)
 - Requester Direction Sequence Number (8 bytes)
