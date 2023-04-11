@@ -1824,6 +1824,36 @@ void libspdm_register_device_io_func(
  *
  * This function must be called after libspdm_init_context, and before any SPDM communication.
  *
+ * The sender_buffer_size and receiver_buffer_size must be no smaller than
+ * MAX (non-secure Transport Message Header Size +
+ *          SPDM_CAPABILITIES.DataTransferSize +
+ *          max alignment pad size (transport specific),
+ *      secure Transport Message Header Size +
+ *          sizeof(spdm_secured_message_a_data_header1_t) +
+ *          length of sequence_number (transport specific) +
+ *          sizeof(spdm_secured_message_a_data_header2_t) +
+ *          sizeof(spdm_secured_message_cipher_header_t) +
+ *          App Message Header Size (transport specific) +
+ *          SPDM_CAPABILITIES.DataTransferSize +
+ *          maximum random data size (transport specific) +
+ *          AEAD MAC size (16) +
+ *          max alignment pad size (transport specific)).
+ *
+ * Finally, the SPDM_CAPABILITIES.DataTransferSize will be calculated based upon it.
+ *
+ *   For MCTP,
+ *          Transport Message Header Size = sizeof(mctp_message_header_t)
+ *          length of sequence_number = 2
+ *          App Message Header Size = sizeof(mctp_message_header_t)
+ *          maximum random data size = MCTP_MAX_RANDOM_NUMBER_COUNT
+ *          max alignment pad size = 0
+ *   For PCI_DOE,
+ *          Transport Message Header Size = sizeof(pci_doe_data_object_header_t)
+ *          length of sequence_number = 0
+ *          App Message Header Size = 0
+ *          maximum random data size = 0
+ *          max alignment pad size = 3
+ *
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  acquire_sender_buffer         The fuction to acquire transport layer sender buffer.
  * @param  release_sender_buffer         The fuction to release transport layer sender buffer.
@@ -1832,40 +1862,34 @@ void libspdm_register_device_io_func(
  **/
 void libspdm_register_device_buffer_func(
     void *spdm_context,
+    uint32_t sender_buffer_size,
+    uint32_t receiver_buffer_size,
     libspdm_device_acquire_sender_buffer_func acquire_sender_buffer,
     libspdm_device_release_sender_buffer_func release_sender_buffer,
     libspdm_device_acquire_receiver_buffer_func acquire_receiver_buffer,
     libspdm_device_release_receiver_buffer_func release_receiver_buffer)
 {
     libspdm_context_t *context;
-    size_t data_transfer_size;
-    void *data_ptr;
 
     context = spdm_context;
+    context->sender_buffer_size = sender_buffer_size;
+    context->receiver_buffer_size = receiver_buffer_size;
     context->acquire_sender_buffer = acquire_sender_buffer;
     context->release_sender_buffer = release_sender_buffer;
     context->acquire_receiver_buffer = acquire_receiver_buffer;
     context->release_receiver_buffer = release_receiver_buffer;
 
-    data_transfer_size = 0;
-    data_ptr = NULL;
-    acquire_sender_buffer (context, &data_transfer_size, &data_ptr);
-    LIBSPDM_ASSERT (data_transfer_size >= LIBSPDM_TRANSPORT_ADDITIONAL_SIZE);
-    data_transfer_size -= LIBSPDM_TRANSPORT_ADDITIONAL_SIZE;
-    LIBSPDM_ASSERT (data_transfer_size >= SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12);
-    LIBSPDM_ASSERT (data_transfer_size <= LIBSPDM_MAX_SPDM_MSG_SIZE);
-    context->local_context.capability.sender_data_transfer_size = (uint32_t)data_transfer_size;
-    release_sender_buffer (context, data_ptr);
+    LIBSPDM_ASSERT (sender_buffer_size >= LIBSPDM_TRANSPORT_ADDITIONAL_SIZE);
+    sender_buffer_size -= LIBSPDM_TRANSPORT_ADDITIONAL_SIZE;
+    LIBSPDM_ASSERT (sender_buffer_size >= SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12);
+    LIBSPDM_ASSERT (sender_buffer_size <= LIBSPDM_MAX_SPDM_MSG_SIZE);
+    context->local_context.capability.sender_data_transfer_size = sender_buffer_size;
 
-    data_transfer_size = 0;
-    data_ptr = NULL;
-    acquire_receiver_buffer (context, &data_transfer_size, &data_ptr);
-    LIBSPDM_ASSERT(data_transfer_size >= LIBSPDM_TRANSPORT_ADDITIONAL_SIZE);
-    data_transfer_size -= LIBSPDM_TRANSPORT_ADDITIONAL_SIZE;
-    LIBSPDM_ASSERT (data_transfer_size >= SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12);
-    LIBSPDM_ASSERT (data_transfer_size <= LIBSPDM_MAX_SPDM_MSG_SIZE);
-    context->local_context.capability.data_transfer_size = (uint32_t)data_transfer_size;
-    release_receiver_buffer (context, data_ptr);
+    LIBSPDM_ASSERT(receiver_buffer_size >= LIBSPDM_TRANSPORT_ADDITIONAL_SIZE);
+    receiver_buffer_size -= LIBSPDM_TRANSPORT_ADDITIONAL_SIZE;
+    LIBSPDM_ASSERT (receiver_buffer_size >= SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12);
+    LIBSPDM_ASSERT (receiver_buffer_size <= LIBSPDM_MAX_SPDM_MSG_SIZE);
+    context->local_context.capability.data_transfer_size = receiver_buffer_size;
 }
 
 /**
@@ -1981,7 +2005,6 @@ void libspdm_get_scratch_buffer (
  * Acquire a device sender buffer for transport layer message.
  *
  * @param  context                       A pointer to the SPDM context.
- * @param  max_msg_size                  size in bytes of the maximum size of sender buffer.
  * @param  msg_buf_ptr                   A pointer to a sender buffer.
  *
  * @retval RETURN_SUCCESS               The sender buffer is acquired.
@@ -1992,13 +2015,13 @@ libspdm_return_t libspdm_acquire_sender_buffer (
     libspdm_return_t status;
 
     LIBSPDM_ASSERT (spdm_context->sender_buffer == NULL);
-    LIBSPDM_ASSERT (spdm_context->sender_buffer_size == 0);
-    status = spdm_context->acquire_sender_buffer (spdm_context, max_msg_size, msg_buf_ptr);
+    LIBSPDM_ASSERT (spdm_context->sender_buffer_size != 0);
+    status = spdm_context->acquire_sender_buffer (spdm_context, msg_buf_ptr);
     if (status != LIBSPDM_STATUS_SUCCESS) {
         return status;
     }
     spdm_context->sender_buffer = *msg_buf_ptr;
-    spdm_context->sender_buffer_size = *max_msg_size;
+    *max_msg_size = spdm_context->sender_buffer_size;
     #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
     /* it return scratch buffer, because the requester need build message there.*/
     *msg_buf_ptr = spdm_context->scratch_buffer +
@@ -2022,7 +2045,6 @@ void libspdm_release_sender_buffer (libspdm_context_t *spdm_context)
 
     spdm_context->release_sender_buffer (spdm_context, spdm_context->sender_buffer);
     spdm_context->sender_buffer = NULL;
-    spdm_context->sender_buffer_size = 0;
 }
 
 /**
@@ -2057,13 +2079,13 @@ libspdm_return_t libspdm_acquire_receiver_buffer (
     libspdm_return_t status;
 
     LIBSPDM_ASSERT (spdm_context->receiver_buffer == NULL);
-    LIBSPDM_ASSERT (spdm_context->receiver_buffer_size == 0);
-    status = spdm_context->acquire_receiver_buffer (spdm_context, max_msg_size, msg_buf_ptr);
+    LIBSPDM_ASSERT (spdm_context->receiver_buffer_size != 0);
+    status = spdm_context->acquire_receiver_buffer (spdm_context, msg_buf_ptr);
     if (status != LIBSPDM_STATUS_SUCCESS) {
         return status;
     }
     spdm_context->receiver_buffer = *msg_buf_ptr;
-    spdm_context->receiver_buffer_size = *max_msg_size;
+    *max_msg_size = spdm_context->receiver_buffer_size;
     #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
     /* it return scratch buffer, because the requester need build message there.*/
     *msg_buf_ptr = spdm_context->scratch_buffer +
@@ -2087,7 +2109,6 @@ void libspdm_release_receiver_buffer (libspdm_context_t *spdm_context)
 
     spdm_context->release_receiver_buffer (spdm_context, spdm_context->receiver_buffer);
     spdm_context->receiver_buffer = NULL;
-    spdm_context->receiver_buffer_size = 0;
 }
 
 /**
