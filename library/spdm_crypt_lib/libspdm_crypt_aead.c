@@ -115,10 +115,12 @@ bool libspdm_aead_encryption(const spdm_version_number_t secured_message_version
     case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_128_GCM:
     case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_256_GCM:
 #if LIBSPDM_AEAD_GCM_SUPPORT
-        LIBSPDM_ASSERT((aead_cipher_suite != SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_128_GCM) ||
-                       LIBSPDM_AEAD_AES_128_GCM_SUPPORT);
-        LIBSPDM_ASSERT((aead_cipher_suite != SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_256_GCM) ||
-                       LIBSPDM_AEAD_AES_256_GCM_SUPPORT);
+#if !LIBSPDM_AEAD_AES_128_GCM_SUPPORT
+        LIBSPDM_ASSERT(aead_cipher_suite != SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_128_GCM);
+#endif
+#if !LIBSPDM_AEAD_AES_256_GCM_SUPPORT
+        LIBSPDM_ASSERT(aead_cipher_suite != SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_256_GCM);
+#endif
         return libspdm_aead_aes_gcm_encrypt(key, key_size, iv, iv_size, a_data,
                                             a_data_size, data_in, data_in_size, tag_out,
                                             tag_size, data_out, data_out_size);
@@ -163,10 +165,12 @@ bool libspdm_aead_decryption(const spdm_version_number_t secured_message_version
     case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_128_GCM:
     case SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_256_GCM:
 #if LIBSPDM_AEAD_GCM_SUPPORT
-        LIBSPDM_ASSERT((aead_cipher_suite != SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_128_GCM) ||
-                       LIBSPDM_AEAD_AES_128_GCM_SUPPORT);
-        LIBSPDM_ASSERT((aead_cipher_suite != SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_256_GCM) ||
-                       LIBSPDM_AEAD_AES_256_GCM_SUPPORT);
+#if !LIBSPDM_AEAD_AES_128_GCM_SUPPORT
+        LIBSPDM_ASSERT(aead_cipher_suite != SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_128_GCM);
+#endif
+#if !LIBSPDM_AEAD_AES_256_GCM_SUPPORT
+        LIBSPDM_ASSERT(aead_cipher_suite != SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_256_GCM);
+#endif
         return libspdm_aead_aes_gcm_decrypt(key, key_size, iv, iv_size, a_data,
                                             a_data_size, data_in, data_in_size, tag,
                                             tag_size, data_out, data_out_size);
