@@ -89,7 +89,7 @@ libspdm_return_t libspdm_send_request(void *spdm_context, const uint32_t *sessio
         && ((const spdm_message_header_t *)request)->request_response_code != SPDM_CHUNK_GET
         && ((const spdm_message_header_t*) request)->request_response_code != SPDM_CHUNK_SEND) {
         libspdm_copy_mem (context->last_spdm_request,
-                          sizeof(context->last_spdm_request),
+                          libspdm_get_scratch_buffer_last_spdm_request_capacity(context),
                           request,
                           request_size
                           );
@@ -574,7 +574,8 @@ libspdm_return_t libspdm_send_spdm_request(libspdm_context_t *spdm_context,
             && ((const spdm_message_header_t*) request)->request_response_code != SPDM_CHUNK_GET
             && ((const spdm_message_header_t*) request)->request_response_code != SPDM_CHUNK_SEND) {
             libspdm_copy_mem(
-                spdm_context->last_spdm_request, sizeof(spdm_context->last_spdm_request),
+                spdm_context->last_spdm_request,
+                libspdm_get_scratch_buffer_last_spdm_request_capacity(spdm_context),
                 request, request_size);
             spdm_context->last_spdm_request_size = request_size;
         }

@@ -272,7 +272,7 @@ libspdm_return_t libspdm_encapsulated_request(libspdm_context_t *spdm_context,
             spdm_response_size - sizeof(spdm_encapsulated_request_response_t);
 
         libspdm_copy_mem (spdm_context->last_spdm_request,
-                          sizeof(spdm_context->last_spdm_request),
+                          libspdm_get_scratch_buffer_last_spdm_request_capacity(spdm_context),
                           encapsulated_request,
                           encapsulated_request_size);
         spdm_context->last_spdm_request_size = encapsulated_request_size;
@@ -421,7 +421,7 @@ libspdm_return_t libspdm_encapsulated_request(libspdm_context_t *spdm_context,
         encapsulated_request_size = spdm_response_size - ack_header_size;
 
         libspdm_copy_mem (spdm_context->last_spdm_request,
-                          sizeof(spdm_context->last_spdm_request),
+                          libspdm_get_scratch_buffer_last_spdm_request_capacity(spdm_context),
                           encapsulated_request,
                           encapsulated_request_size
                           );
