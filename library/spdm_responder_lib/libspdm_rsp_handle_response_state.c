@@ -35,7 +35,7 @@ libspdm_return_t libspdm_responder_handle_response_state(libspdm_context_t *spdm
         if(request_code != SPDM_RESPOND_IF_READY) {
             spdm_context->cache_spdm_request_size = spdm_context->last_spdm_request_size;
             libspdm_copy_mem(spdm_context->cache_spdm_request,
-                             sizeof(spdm_context->cache_spdm_request),
+                             libspdm_get_scratch_buffer_cache_spdm_request_capacity(spdm_context),
                              spdm_context->last_spdm_request,
                              spdm_context->last_spdm_request_size);
             spdm_context->error_data.rd_exponent = 1;

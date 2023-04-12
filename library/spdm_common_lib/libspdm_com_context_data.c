@@ -58,6 +58,39 @@ uint32_t libspdm_get_scratch_buffer_large_sender_receiver_capacity(libspdm_conte
 }
 #endif
 
+/* fifth section */
+uint32_t libspdm_get_scratch_buffer_last_spdm_request_offset(libspdm_context_t *spdm_context) {
+    return 0 +
+#if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
+           libspdm_get_scratch_buffer_secure_message_capacity(spdm_context) +
+           libspdm_get_scratch_buffer_large_message_capacity(spdm_context) +
+#endif
+           libspdm_get_scratch_buffer_sender_receiver_capacity(spdm_context) +
+#if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
+           libspdm_get_scratch_buffer_large_sender_receiver_capacity(spdm_context) +
+#endif
+           0;
+}
+
+uint32_t libspdm_get_scratch_buffer_last_spdm_request_capacity(libspdm_context_t *spdm_context) {
+    return LIBSPDM_MAX_SPDM_MSG_SIZE;
+}
+
+#if LIBSPDM_RESPOND_IF_READY_SUPPORT
+/* sixth section */
+uint32_t libspdm_get_scratch_buffer_cache_spdm_request_offset(libspdm_context_t *spdm_context) {
+    return libspdm_get_scratch_buffer_secure_message_capacity(spdm_context) +
+           libspdm_get_scratch_buffer_large_message_capacity(spdm_context) +
+           libspdm_get_scratch_buffer_sender_receiver_capacity(spdm_context) +
+           libspdm_get_scratch_buffer_large_sender_receiver_capacity(spdm_context) +
+           libspdm_get_scratch_buffer_last_spdm_request_capacity(spdm_context);
+}
+
+uint32_t libspdm_get_scratch_buffer_cache_spdm_request_capacity(libspdm_context_t *spdm_context) {
+    return LIBSPDM_MAX_SPDM_MSG_SIZE;
+}
+#endif
+
 /* combination */
 uint32_t libspdm_get_scratch_buffer_capacity(libspdm_context_t *spdm_context) {
     return 0 +
@@ -68,6 +101,10 @@ uint32_t libspdm_get_scratch_buffer_capacity(libspdm_context_t *spdm_context) {
            libspdm_get_scratch_buffer_sender_receiver_capacity(spdm_context) +
 #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
            libspdm_get_scratch_buffer_large_sender_receiver_capacity(spdm_context) +
+#endif
+           libspdm_get_scratch_buffer_last_spdm_request_capacity(spdm_context) +
+#if LIBSPDM_RESPOND_IF_READY_SUPPORT
+           libspdm_get_scratch_buffer_cache_spdm_request_capacity(spdm_context) +
 #endif
            0;
 }
@@ -2049,6 +2086,12 @@ void libspdm_set_scratch_buffer (
     LIBSPDM_ASSERT (scratch_buffer_size >= libspdm_get_scratch_buffer_capacity(spdm_context));
     context->scratch_buffer = scratch_buffer;
     context->scratch_buffer_size = scratch_buffer_size;
+    context->last_spdm_request = (uint8_t *)scratch_buffer +
+                                 libspdm_get_scratch_buffer_last_spdm_request_offset(spdm_context);
+#if LIBSPDM_RESPOND_IF_READY_SUPPORT
+    context->cache_spdm_request = (uint8_t *)scratch_buffer +
+                                  libspdm_get_scratch_buffer_cache_spdm_request_offset(spdm_context);
+#endif
 }
 
 /**
@@ -2072,6 +2115,11 @@ void libspdm_get_scratch_buffer (
                     libspdm_get_scratch_buffer_capacity(spdm_context));
     *scratch_buffer = context->scratch_buffer;
     *scratch_buffer_size = context->scratch_buffer_size;
+    /* need to remove last 2 sections, because they are for libspdm internal state track. */
+    *scratch_buffer_size -= libspdm_get_scratch_buffer_last_spdm_request_capacity(spdm_context);
+#if LIBSPDM_RESPOND_IF_READY_SUPPORT
+    *scratch_buffer_size -= libspdm_get_scratch_buffer_cache_spdm_request_capacity(spdm_context);
+#endif
 }
 
 /**
@@ -2387,7 +2435,9 @@ void libspdm_reset_context(void *spdm_context)
     libspdm_zero_mem(&context->encap_context, sizeof(libspdm_encap_context_t));
     context->connection_info.local_used_cert_chain_buffer_size = 0;
     context->connection_info.local_used_cert_chain_buffer = NULL;
+#if LIBSPDM_RESPOND_IF_READY_SUPPORT
     context->cache_spdm_request_size = 0;
+#endif
     context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
     context->current_token = 0;
     context->last_spdm_request_session_id = INVALID_SESSION_ID;

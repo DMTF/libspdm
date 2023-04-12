@@ -370,7 +370,7 @@ typedef struct {
 
     /* Cached plain text command
      * If the command is cipher text, decrypt then cache it. */
-    uint8_t last_spdm_request[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    uint8_t *last_spdm_request;
     size_t last_spdm_request_size;
 
     /* scratch buffer */
@@ -424,8 +424,10 @@ typedef struct {
 
     /* Cached data for SPDM_ERROR_CODE_RESPONSE_NOT_READY/SPDM_RESPOND_IF_READY */
     spdm_error_data_response_not_ready_t error_data;
-    uint8_t cache_spdm_request[LIBSPDM_MAX_SPDM_MSG_SIZE];
+#if LIBSPDM_RESPOND_IF_READY_SUPPORT
+    uint8_t *cache_spdm_request;
     size_t cache_spdm_request_size;
+#endif
     uint8_t current_token;
 
     /* Register for the retry times when receive "BUSY" Error response (requester only) */
@@ -528,17 +530,17 @@ void libspdm_internal_dump_hex(const uint8_t *data, size_t size);
  * in case of chunking.
  *
  * If chunking is not supported, it should be at least below.
- * +--------------------------+
- * |    SENDER_RECEIVER       |
- * +--------------------------+
- * |<-Snd/Rcv buf for chunk ->|
+ * +--------------------------+-----------------+-----------------+
+ * |    SENDER_RECEIVER       |MAX_SPDM_MSG_SIZE|MAX_SPDM_MSG_SIZE|
+ * +--------------------------+-----------------+-----------------+
+ * |<-Snd/Rcv buf for chunk ->|<-last request ->|<-cache request->|
  *
  *
  * If chunking is supported, it should be at least below.
- * +---------------+--------------+--------------------------+------------------------------+
- * |SECURE_MESSAGE |LARGE_MESSAGE |    SENDER_RECEIVER       | LARGE SENDER_RECEIVER        |
- * +---------------+--------------+--------------------------+------------------------------+
- * |<-Secure msg ->|<-Large msg ->|<-Snd/Rcv buf for chunk ->|<-Snd/Rcv buf for large msg ->|
+ * +---------------+--------------+--------------------------+------------------------------+-----------------+-----------------+
+ * |SECURE_MESSAGE |LARGE_MESSAGE |    SENDER_RECEIVER       | LARGE SENDER_RECEIVER        |MAX_SPDM_MSG_SIZE|MAX_SPDM_MSG_SIZE|
+ * +---------------+--------------+--------------------------+------------------------------+-----------------+-----------------+
+ * |<-Secure msg ->|<-Large msg ->|<-Snd/Rcv buf for chunk ->|<-Snd/Rcv buf for large msg ->|<-last request ->|<-cache request->|
  *
  *
  * The value is NOT configurable.
@@ -563,6 +565,16 @@ uint32_t libspdm_get_scratch_buffer_sender_receiver_capacity(libspdm_context_t *
 /* fourth section */
 uint32_t libspdm_get_scratch_buffer_large_sender_receiver_offset(libspdm_context_t *spdm_context);
 uint32_t libspdm_get_scratch_buffer_large_sender_receiver_capacity(libspdm_context_t *spdm_context);
+#endif
+
+/* fifth section */
+uint32_t libspdm_get_scratch_buffer_last_spdm_request_offset(libspdm_context_t *spdm_context);
+uint32_t libspdm_get_scratch_buffer_last_spdm_request_capacity(libspdm_context_t *spdm_context);
+
+#if LIBSPDM_RESPOND_IF_READY_SUPPORT
+/* sixth section */
+uint32_t libspdm_get_scratch_buffer_cache_spdm_request_offset(libspdm_context_t *spdm_context);
+uint32_t libspdm_get_scratch_buffer_cache_spdm_request_capacity(libspdm_context_t *spdm_context);
 #endif
 
 /* combination */

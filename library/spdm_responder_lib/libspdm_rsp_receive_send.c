@@ -158,7 +158,8 @@ libspdm_return_t libspdm_process_request(void *spdm_context, uint32_t **session_
 
     message_session_id = NULL;
     context->last_spdm_request_session_id_valid = false;
-    context->last_spdm_request_size = sizeof(context->last_spdm_request);
+    context->last_spdm_request_size =
+        libspdm_get_scratch_buffer_last_spdm_request_capacity(context);
 
     /* always use scratch buffer to response.
      * if it is secured message, this scratch buffer will be used.
@@ -261,7 +262,7 @@ libspdm_return_t libspdm_process_request(void *spdm_context, uint32_t **session_
 
     context->last_spdm_request_size = decoded_message_size;
     libspdm_copy_mem (context->last_spdm_request,
-                      sizeof(context->last_spdm_request),
+                      libspdm_get_scratch_buffer_last_spdm_request_capacity(context),
                       decoded_message_ptr,
                       decoded_message_size);
 
