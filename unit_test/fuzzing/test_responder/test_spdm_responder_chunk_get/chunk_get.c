@@ -52,10 +52,11 @@ void libspdm_test_responder_chunk_get_case1(void **State)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
 
     libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
-    LIBSPDM_ASSERT(scratch_buffer_size >= LIBSPDM_SCRATCH_BUFFER_SIZE);
 
-    scratch_buffer = (((uint8_t*) scratch_buffer) + LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_OFFSET);
-    scratch_buffer_size = scratch_buffer_size - LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_OFFSET;
+    scratch_buffer = (uint8_t*)scratch_buffer +
+                     libspdm_get_scratch_buffer_large_message_offset(spdm_context);
+    scratch_buffer_size = scratch_buffer_size -
+                          libspdm_get_scratch_buffer_large_message_offset(spdm_context);
     libspdm_zero_mem(scratch_buffer, scratch_buffer_size);
 
     first_chunk_size = data_transfer_size -
@@ -119,10 +120,11 @@ void libspdm_test_responder_chunk_get_case2(void **State)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
 
     libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
-    LIBSPDM_ASSERT(scratch_buffer_size >= LIBSPDM_SCRATCH_BUFFER_SIZE);
 
-    scratch_buffer = (((uint8_t*) scratch_buffer) + LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_OFFSET);
-    scratch_buffer_size = scratch_buffer_size - LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_OFFSET;
+    scratch_buffer = (uint8_t*)scratch_buffer +
+                     libspdm_get_scratch_buffer_large_message_offset(spdm_context);
+    scratch_buffer_size = scratch_buffer_size -
+                          libspdm_get_scratch_buffer_large_message_offset(spdm_context);
     libspdm_zero_mem(scratch_buffer, scratch_buffer_size);
 
     first_chunk_size = data_transfer_size -
@@ -184,10 +186,11 @@ void libspdm_test_responder_chunk_get_case3(void **State)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
 
     libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
-    LIBSPDM_ASSERT(scratch_buffer_size >= LIBSPDM_SCRATCH_BUFFER_SIZE);
 
-    scratch_buffer = (((uint8_t*) scratch_buffer) + LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_OFFSET);
-    scratch_buffer_size = scratch_buffer_size - LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_OFFSET;
+    scratch_buffer = (uint8_t*)scratch_buffer +
+                     libspdm_get_scratch_buffer_large_message_offset(spdm_context);
+    scratch_buffer_size = scratch_buffer_size -
+                          libspdm_get_scratch_buffer_large_message_offset(spdm_context);
     libspdm_zero_mem(scratch_buffer, scratch_buffer_size);
 
     first_chunk_size = data_transfer_size -
@@ -250,10 +253,11 @@ void libspdm_test_responder_chunk_get_case4(void **State)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
 
     libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
-    LIBSPDM_ASSERT(scratch_buffer_size >= LIBSPDM_SCRATCH_BUFFER_SIZE);
 
-    scratch_buffer = (((uint8_t*) scratch_buffer) + LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_OFFSET);
-    scratch_buffer_size = scratch_buffer_size - LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_OFFSET;
+    scratch_buffer = (uint8_t*)scratch_buffer +
+                     libspdm_get_scratch_buffer_large_message_offset(spdm_context);
+    scratch_buffer_size = scratch_buffer_size -
+                          libspdm_get_scratch_buffer_large_message_offset(spdm_context);
     libspdm_zero_mem(scratch_buffer, scratch_buffer_size);
 
     first_chunk_size = data_transfer_size -
