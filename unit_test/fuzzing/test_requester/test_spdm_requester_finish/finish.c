@@ -12,6 +12,7 @@
 #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
 uint8_t m_dummy_buffer[LIBSPDM_MAX_HASH_SIZE];
+uint8_t temp_buf[LIBSPDM_RECEIVER_BUFFER_SIZE];
 
 void libspdm_secured_message_set_response_finished_key(void *spdm_secured_message_context,
                                                        const void *key, size_t key_size)
@@ -42,7 +43,6 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
     libspdm_test_context_t *spdm_test_context;
     uint8_t *spdm_response;
     size_t spdm_response_size;
-    uint8_t temp_buf[LIBSPDM_RECEIVER_BUFFER_SIZE];
     size_t test_message_header_size;
 
     spdm_test_context = libspdm_get_test_context();

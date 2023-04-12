@@ -12,6 +12,7 @@
 #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
 
 static bool m_libspdm_chunk_send_last_chunk = true;
+uint8_t temp_buf[LIBSPDM_RECEIVER_BUFFER_SIZE];
 
 size_t libspdm_get_max_buffer_size(void)
 {
@@ -44,7 +45,6 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context,
 
     uint8_t *spdm_response;
     size_t spdm_response_size;
-    uint8_t temp_buf[LIBSPDM_RECEIVER_BUFFER_SIZE];
     size_t test_message_header_size;
 
     test_message_header_size = libspdm_transport_test_get_header_size(context);
