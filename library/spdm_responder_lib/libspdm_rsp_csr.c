@@ -93,8 +93,15 @@ libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
                                                response_size, response);
     }
 
-    if(requester_info_length >
-       LIBSPDM_MAX_SPDM_MSG_SIZE - sizeof(spdm_get_csr_request_t) - opaque_data_length) {
+    if (opaque_data_length >
+        request_size - sizeof(spdm_get_csr_request_t)) {
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                               response_size, response);
+    }
+
+    if (requester_info_length >
+        request_size - sizeof(spdm_get_csr_request_t) - opaque_data_length) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
