@@ -57,12 +57,14 @@ void libspdm_test_responder_respond_if_ready(void **State)
                     (uint8_t)(0xFF));
 
     spdm_context->last_spdm_request_size = spdm_test_get_digest_request_size;
-    libspdm_copy_mem(spdm_context->last_spdm_request, sizeof(spdm_context->last_spdm_request),
+    libspdm_copy_mem(spdm_context->last_spdm_request,
+                     libspdm_get_scratch_buffer_last_spdm_request_capacity(spdm_context),
                      &spdm_test_get_digest_request,  spdm_test_get_digest_request_size);
 
     spdm_context->cache_spdm_request_size =
         spdm_context->last_spdm_request_size;
-    libspdm_copy_mem(spdm_context->cache_spdm_request, sizeof(spdm_context->cache_spdm_request),
+    libspdm_copy_mem(spdm_context->cache_spdm_request,
+                     libspdm_get_scratch_buffer_cache_spdm_request_capacity(spdm_context),
                      spdm_context->last_spdm_request, spdm_context->last_spdm_request_size);
     spdm_context->error_data.rd_exponent = 1;
     spdm_context->error_data.rd_tm = 1;

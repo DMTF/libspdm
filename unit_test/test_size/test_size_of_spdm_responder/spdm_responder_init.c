@@ -52,10 +52,20 @@
 #define LIBSPDM_SCRATCH_BUFFER_LARGE_SENDER_RECEIVER_CAPACITY 0
 #endif
 
+#define LIBSPDM_SCRATCH_BUFFER_LAST_SPDM_REQUEST_CAPACITY (LIBSPDM_MAX_SPDM_MSG_SIZE)
+
+#if LIBSPDM_RESPOND_IF_READY_SUPPORT
+#define LIBSPDM_SCRATCH_BUFFER_CACHE_SPDM_REQUEST_CAPACITY (LIBSPDM_MAX_SPDM_MSG_SIZE)
+#else
+#define LIBSPDM_SCRATCH_BUFFER_CACHE_SPDM_REQUEST_CAPACITY 0
+#endif
+
 #define LIBSPDM_SCRATCH_BUFFER_SIZE (LIBSPDM_SCRATCH_BUFFER_SECURE_MESSAGE_CAPACITY + \
                                      LIBSPDM_SCRATCH_BUFFER_LARGE_MESSAGE_CAPACITY + \
                                      LIBSPDM_SCRATCH_BUFFER_SENDER_RECEIVER_CAPACITY + \
-                                     LIBSPDM_SCRATCH_BUFFER_LARGE_SENDER_RECEIVER_CAPACITY)
+                                     LIBSPDM_SCRATCH_BUFFER_LARGE_SENDER_RECEIVER_CAPACITY + \
+                                     LIBSPDM_SCRATCH_BUFFER_LAST_SPDM_REQUEST_CAPACITY + \
+                                     LIBSPDM_SCRATCH_BUFFER_CACHE_SPDM_REQUEST_CAPACITY)
 
 libspdm_return_t spdm_responder_send_message(void *spdm_context,
                                              size_t message_size, const void *message,
