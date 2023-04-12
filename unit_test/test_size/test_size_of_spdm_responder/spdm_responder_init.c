@@ -29,6 +29,14 @@
 #define LIBSPDM_MAX_SENDER_RECEIVER_BUFFER_SIZE LIBSPDM_RECEIVER_BUFFER_SIZE
 #endif
 
+/* Maximum size of a large SPDM message.
+ * If chunk is unsupported, it must be same as DATA_TRANSFER_SIZE.
+ * If chunk is supported, it must be larger than DATA_TRANSFER_SIZE.
+ * It matches MaxSPDMmsgSize in SPDM specification. */
+#ifndef LIBSPDM_MAX_SPDM_MSG_SIZE
+#define LIBSPDM_MAX_SPDM_MSG_SIZE 0x1200
+#endif
+
 #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
 #define LIBSPDM_SCRATCH_BUFFER_SECURE_MESSAGE_CAPACITY (LIBSPDM_MAX_SPDM_MSG_SIZE + \
                                                         LIBSPDM_TRANSPORT_ADDITIONAL_SIZE)
