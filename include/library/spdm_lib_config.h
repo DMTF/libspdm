@@ -382,14 +382,6 @@
 #define LIBSPDM_TRANSPORT_ADDITIONAL_SIZE    64
 #endif
 
-/* Maximum size of a large SPDM message.
- * If chunk is unsupported, it must be same as DATA_TRANSFER_SIZE.
- * If chunk is supported, it must be larger than DATA_TRANSFER_SIZE.
- * It matches MaxSPDMmsgSize in SPDM specification. */
-#ifndef LIBSPDM_MAX_SPDM_MSG_SIZE
-#define LIBSPDM_MAX_SPDM_MSG_SIZE 0x1200
-#endif
-
 /* Enable message logging.
  * See https://github.com/DMTF/libspdm/blob/main/doc/user_guide.md#message-logging
  * for more information */

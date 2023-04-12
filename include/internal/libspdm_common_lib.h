@@ -543,7 +543,7 @@ void libspdm_internal_dump_hex(const uint8_t *data, size_t size);
  * |<-Secure msg ->|<-Large msg ->|<-Snd/Rcv buf for chunk ->|<-Snd/Rcv buf for large msg ->|<-last request ->|<-cache request->|
  *
  *
- * The value is NOT configurable.
+ * The value is configurable based on max_spdm_msg_size.
  * The value MAY be changed in different libspdm version.
  * It is exposed here, just in case the libspdm consumer wants to configure the setting at build time.
  */
