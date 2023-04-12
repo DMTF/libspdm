@@ -11,6 +11,7 @@
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
 bool m_secured_on_off;
+uint8_t temp_buf[LIBSPDM_RECEIVER_BUFFER_SIZE];
 
 size_t libspdm_get_max_buffer_size(void)
 {
@@ -32,7 +33,6 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context,
     libspdm_test_context_t *spdm_test_context;
     uint8_t *spdm_response;
     size_t spdm_response_size;
-    uint8_t temp_buf[LIBSPDM_RECEIVER_BUFFER_SIZE];
     size_t test_message_header_size;
 
     spdm_test_context = libspdm_get_test_context();

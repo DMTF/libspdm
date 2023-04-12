@@ -20,6 +20,8 @@ static uint8_t m_libspdm_zero_filled_buffer[LIBSPDM_MAX_HASH_SIZE];
 
 static libspdm_th_managed_buffer_t th_curr;
 
+uint8_t temp_buf[LIBSPDM_RECEIVER_BUFFER_SIZE];
+
 size_t libspdm_test_get_key_exchange_request_size(const void *spdm_context, const void *buffer,
                                                   size_t buffer_size)
 {
@@ -87,7 +89,6 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
     libspdm_test_context_t *spdm_test_context;
     spdm_key_exchange_response_t *spdm_response;
     size_t spdm_response_size;
-    uint8_t temp_buf[LIBSPDM_RECEIVER_BUFFER_SIZE];
     size_t test_message_header_size;
 
     spdm_test_context = libspdm_get_test_context();

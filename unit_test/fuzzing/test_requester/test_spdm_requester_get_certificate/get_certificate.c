@@ -14,6 +14,8 @@
 static void *m_libspdm_local_certificate_chain;
 static size_t m_libspdm_local_certificate_chain_size;
 
+uint8_t temp_buf[LIBSPDM_RECEIVER_BUFFER_SIZE];
+
 size_t calling_index = 0;
 
 bool libspdm_test_verify_spdm_cert_chain(void *spdm_context, uint8_t slot_id,
@@ -42,7 +44,6 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
     spdm_certificate_response_t *spdm_response;
 
     size_t spdm_response_size;
-    uint8_t temp_buf[LIBSPDM_RECEIVER_BUFFER_SIZE];
     size_t test_message_header_size;
     uint16_t portion_length;
     uint16_t remainder_length;
