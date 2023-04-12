@@ -92,6 +92,14 @@ typedef struct {
 #define LIBSPDM_MAX_SENDER_RECEIVER_BUFFER_SIZE LIBSPDM_RECEIVER_BUFFER_SIZE
 #endif
 
+/* Maximum size of a large SPDM message.
+ * If chunk is unsupported, it must be same as DATA_TRANSFER_SIZE.
+ * If chunk is supported, it must be larger than DATA_TRANSFER_SIZE.
+ * It matches MaxSPDMmsgSize in SPDM specification. */
+#ifndef LIBSPDM_MAX_SPDM_MSG_SIZE
+#define LIBSPDM_MAX_SPDM_MSG_SIZE 0x1200
+#endif
+
 extern uint8_t m_libspdm_use_measurement_spec;
 extern uint32_t m_libspdm_use_measurement_hash_algo;
 extern uint32_t m_libspdm_use_hash_algo;
