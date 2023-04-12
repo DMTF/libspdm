@@ -14,7 +14,7 @@ uint32_t libspdm_get_scratch_buffer_secure_message_offset(libspdm_context_t *spd
 }
 
 uint32_t libspdm_get_scratch_buffer_secure_message_capacity(libspdm_context_t *spdm_context) {
-    return LIBSPDM_MAX_SPDM_MSG_SIZE +
+    return spdm_context->local_context.capability.max_spdm_msg_size +
            LIBSPDM_TRANSPORT_ADDITIONAL_SIZE;
 }
 
@@ -24,7 +24,7 @@ uint32_t libspdm_get_scratch_buffer_large_message_offset(libspdm_context_t *spdm
 }
 
 uint32_t libspdm_get_scratch_buffer_large_message_capacity(libspdm_context_t *spdm_context) {
-    return LIBSPDM_MAX_SPDM_MSG_SIZE;
+    return spdm_context->local_context.capability.max_spdm_msg_size;
 }
 #endif
 
@@ -39,7 +39,7 @@ uint32_t libspdm_get_scratch_buffer_sender_receiver_offset(libspdm_context_t *sp
 }
 
 uint32_t libspdm_get_scratch_buffer_sender_receiver_capacity(libspdm_context_t *spdm_context) {
-    return LIBSPDM_MAX_SPDM_MSG_SIZE +
+    return spdm_context->local_context.capability.max_spdm_msg_size +
            LIBSPDM_TRANSPORT_ADDITIONAL_SIZE;
 }
 
@@ -53,7 +53,7 @@ uint32_t libspdm_get_scratch_buffer_large_sender_receiver_offset(libspdm_context
 
 uint32_t libspdm_get_scratch_buffer_large_sender_receiver_capacity(libspdm_context_t *spdm_context)
 {
-    return LIBSPDM_MAX_SPDM_MSG_SIZE +
+    return spdm_context->local_context.capability.max_spdm_msg_size +
            LIBSPDM_TRANSPORT_ADDITIONAL_SIZE;
 }
 #endif
@@ -73,7 +73,7 @@ uint32_t libspdm_get_scratch_buffer_last_spdm_request_offset(libspdm_context_t *
 }
 
 uint32_t libspdm_get_scratch_buffer_last_spdm_request_capacity(libspdm_context_t *spdm_context) {
-    return LIBSPDM_MAX_SPDM_MSG_SIZE;
+    return spdm_context->local_context.capability.max_spdm_msg_size;
 }
 
 #if LIBSPDM_RESPOND_IF_READY_SUPPORT
@@ -87,7 +87,7 @@ uint32_t libspdm_get_scratch_buffer_cache_spdm_request_offset(libspdm_context_t 
 }
 
 uint32_t libspdm_get_scratch_buffer_cache_spdm_request_capacity(libspdm_context_t *spdm_context) {
-    return LIBSPDM_MAX_SPDM_MSG_SIZE;
+    return spdm_context->local_context.capability.max_spdm_msg_size;
 }
 #endif
 
@@ -272,7 +272,6 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         data32 = libspdm_read_uint32((const uint8_t *)data);
-        LIBSPDM_ASSERT (data32 <= LIBSPDM_MAX_SPDM_MSG_SIZE);
         LIBSPDM_ASSERT (data32 >= SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12);
         context->local_context.capability.max_spdm_msg_size = data32;
         break;
@@ -874,17 +873,6 @@ bool libspdm_check_context (void *spdm_context)
                        context->local_context.capability.sender_data_transfer_size));
         return false;
     }
-
-    if (context->local_context.capability.max_spdm_msg_size >
-        LIBSPDM_MAX_SPDM_MSG_SIZE) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
-                       "max_spdm_msg_size (%d) must be smaller than or "
-                       "equal to LIBSPDM_MAX_SPDM_MSG_SIZE (%d).\n",
-                       context->local_context.capability.max_spdm_msg_size,
-                       LIBSPDM_MAX_SPDM_MSG_SIZE));
-        return false;
-    }
-
     return true;
 }
 #endif /* LIBSPDM_CHECK_CONTEXT */
@@ -1986,14 +1974,18 @@ void libspdm_register_device_buffer_func(
     LIBSPDM_ASSERT (sender_buffer_size >= LIBSPDM_TRANSPORT_ADDITIONAL_SIZE);
     sender_buffer_size -= LIBSPDM_TRANSPORT_ADDITIONAL_SIZE;
     LIBSPDM_ASSERT (sender_buffer_size >= SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12);
-    LIBSPDM_ASSERT (sender_buffer_size <= LIBSPDM_MAX_SPDM_MSG_SIZE);
     context->local_context.capability.sender_data_transfer_size = sender_buffer_size;
 
     LIBSPDM_ASSERT(receiver_buffer_size >= LIBSPDM_TRANSPORT_ADDITIONAL_SIZE);
     receiver_buffer_size -= LIBSPDM_TRANSPORT_ADDITIONAL_SIZE;
     LIBSPDM_ASSERT (receiver_buffer_size >= SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12);
-    LIBSPDM_ASSERT (receiver_buffer_size <= LIBSPDM_MAX_SPDM_MSG_SIZE);
     context->local_context.capability.data_transfer_size = receiver_buffer_size;
+
+    /* make it same by default */
+    if (context->local_context.capability.max_spdm_msg_size == 0) {
+        context->local_context.capability.max_spdm_msg_size =
+            context->local_context.capability.data_transfer_size;
+    }
 }
 
 /**
@@ -2055,12 +2047,13 @@ void libspdm_register_verify_spdm_cert_chain_func(
  * @return the size of required scratch buffer.
  **/
 size_t libspdm_get_sizeof_required_scratch_buffer (
-    void *spdm_context)
+    void *spdm_context, uint32_t max_spdm_msg_size)
 {
     libspdm_context_t *context;
     size_t scratch_buffer_size;
 
     context = spdm_context;
+    context->local_context.capability.max_spdm_msg_size = max_spdm_msg_size;
     scratch_buffer_size = libspdm_get_scratch_buffer_capacity(context);
     return scratch_buffer_size;
 }
@@ -2083,6 +2076,7 @@ void libspdm_set_scratch_buffer (
     libspdm_context_t *context;
 
     context = spdm_context;
+    LIBSPDM_ASSERT (context->local_context.capability.max_spdm_msg_size != 0);
     LIBSPDM_ASSERT (scratch_buffer_size >= libspdm_get_scratch_buffer_capacity(spdm_context));
     context->scratch_buffer = scratch_buffer;
     context->scratch_buffer_size = scratch_buffer_size;
@@ -2347,8 +2341,7 @@ libspdm_return_t libspdm_init_context_with_secured_context(void *spdm_context,
     /* To be updated in libspdm_register_device_buffer_func */
     context->local_context.capability.data_transfer_size = 0;
     context->local_context.capability.sender_data_transfer_size = 0;
-    /* From the config.h */
-    context->local_context.capability.max_spdm_msg_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
+    context->local_context.capability.max_spdm_msg_size = 0;
 
     for (index = 0; index < num_secured_contexts; index++) {
         if (secured_contexts[index] == NULL) {
