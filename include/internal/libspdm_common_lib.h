@@ -522,6 +522,52 @@ void libspdm_internal_dump_hex(const uint8_t *data, size_t size);
 #define LIBSPDM_INTERNAL_DUMP_DATA(data, size)
 #endif /* LIBSPDM_DEBUG_PRINT_ENABLE */
 
+/* Required scratch buffer size for libspdm internal usage.
+ * It may be used to hold the encrypted/decrypted message and/or last sent/received message.
+ * It may be used to hold the large request/response and intermediate send/receive buffer
+ * in case of chunking.
+ *
+ * If chunking is not supported, it should be at least below.
+ * +--------------------------+
+ * |    SENDER_RECEIVER       |
+ * +--------------------------+
+ * |<-Snd/Rcv buf for chunk ->|
+ *
+ *
+ * If chunking is supported, it should be at least below.
+ * +---------------+--------------+--------------------------+------------------------------+
+ * |SECURE_MESSAGE |LARGE_MESSAGE |    SENDER_RECEIVER       | LARGE SENDER_RECEIVER        |
+ * +---------------+--------------+--------------------------+------------------------------+
+ * |<-Secure msg ->|<-Large msg ->|<-Snd/Rcv buf for chunk ->|<-Snd/Rcv buf for large msg ->|
+ *
+ *
+ * The value is NOT configurable.
+ * The value MAY be changed in different libspdm version.
+ * It is exposed here, just in case the libspdm consumer wants to configure the setting at build time.
+ */
+#if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
+/* first section */
+uint32_t libspdm_get_scratch_buffer_secure_message_offset(libspdm_context_t *spdm_context);
+uint32_t libspdm_get_scratch_buffer_secure_message_capacity(libspdm_context_t *spdm_context);
+
+/* second section */
+uint32_t libspdm_get_scratch_buffer_large_message_offset(libspdm_context_t *spdm_context);
+uint32_t libspdm_get_scratch_buffer_large_message_capacity(libspdm_context_t *spdm_context);
+#endif
+
+/* third section */
+uint32_t libspdm_get_scratch_buffer_sender_receiver_offset(libspdm_context_t *spdm_context);
+uint32_t libspdm_get_scratch_buffer_sender_receiver_capacity(libspdm_context_t *spdm_context);
+
+#if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
+/* fourth section */
+uint32_t libspdm_get_scratch_buffer_large_sender_receiver_offset(libspdm_context_t *spdm_context);
+uint32_t libspdm_get_scratch_buffer_large_sender_receiver_capacity(libspdm_context_t *spdm_context);
+#endif
+
+/* combination */
+uint32_t libspdm_get_scratch_buffer_capacity(libspdm_context_t *spdm_context);
+
 /**
  * Append a new data buffer to the managed buffer.
  *
