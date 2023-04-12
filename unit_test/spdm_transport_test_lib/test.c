@@ -5,6 +5,7 @@
  **/
 
 #include "library/spdm_transport_test_lib.h"
+#include "internal/libspdm_common_lib.h"
 
 /**
  * Get sequence number in an SPDM secure message.
@@ -76,11 +77,21 @@ libspdm_return_t libspdm_test_encode_message(const uint32_t *session_id, size_t 
 {
     size_t aligned_message_size;
     size_t alignment;
+    uint32_t data32;
     libspdm_test_message_header_t *test_message_header;
 
     alignment = LIBSPDM_TEST_ALIGNMENT;
     aligned_message_size =
         (message_size + (alignment - 1)) & ~(alignment - 1);
+
+    LIBSPDM_ASSERT(*transport_message_size >=
+                   aligned_message_size + sizeof(libspdm_test_message_header_t));
+    if (*transport_message_size <
+        aligned_message_size + sizeof(libspdm_test_message_header_t)) {
+        *transport_message_size = aligned_message_size +
+                                  sizeof(libspdm_test_message_header_t);
+        return LIBSPDM_STATUS_BUFFER_TOO_SMALL;
+    }
 
     *transport_message_size =
         aligned_message_size + sizeof(libspdm_test_message_header_t);
@@ -89,8 +100,9 @@ libspdm_return_t libspdm_test_encode_message(const uint32_t *session_id, size_t 
     if (session_id != NULL) {
         test_message_header->message_type =
             LIBSPDM_TEST_MESSAGE_TYPE_SECURED_TEST;
-        LIBSPDM_ASSERT(*session_id == *(uint32_t *)(message));
-        if (*session_id != *(uint32_t *)(message)) {
+        data32 = libspdm_read_uint32((const uint8_t *)message);
+        LIBSPDM_ASSERT(*session_id == data32);
+        if (*session_id != data32) {
             return LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
     } else {
