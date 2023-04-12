@@ -745,7 +745,6 @@ bool libspdm_asym_verify(
         }
 
         /* re-assign message and message_size for signing */
-        hash_size = libspdm_get_hash_size(base_hash_algo);
         message = spdm12_signing_context_with_hash;
         message_size = SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + hash_size;
 
@@ -909,7 +908,6 @@ bool libspdm_asym_sign(
         }
 
         /* re-assign message and message_size for signing */
-        hash_size = libspdm_get_hash_size(base_hash_algo);
         message = spdm12_signing_context_with_hash;
         message_size = SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + hash_size;
 
@@ -1099,7 +1097,6 @@ bool libspdm_req_asym_verify(
         }
 
         /* re-assign message and message_size for signing */
-        hash_size = libspdm_get_hash_size(base_hash_algo);
         message = spdm12_signing_context_with_hash;
         message_size = SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + hash_size;
 
@@ -1263,7 +1260,6 @@ bool libspdm_req_asym_sign(
         }
 
         /* re-assign message and message_size for signing */
-        hash_size = libspdm_get_hash_size(base_hash_algo);
         message = spdm12_signing_context_with_hash;
         message_size = SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + hash_size;
 
