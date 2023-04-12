@@ -92,7 +92,7 @@ libspdm_return_t libspdm_get_response_chunk_send(libspdm_context_t *spdm_context
         if (spdm_request->chunk_seq_no != 0
             || spdm_request->chunk_size > calc_max_chunk_size
             || (uint32_t)request_size != spdm_context->local_context.capability.data_transfer_size
-            || large_message_size >= LIBSPDM_MAX_SPDM_MSG_SIZE
+            || large_message_size >= spdm_context->local_context.capability.max_spdm_msg_size
             || (spdm_request->header.param1 & SPDM_CHUNK_SEND_REQUEST_ATTRIBUTE_LAST_CHUNK)
             ) {
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
