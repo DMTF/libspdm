@@ -8,6 +8,25 @@
 #define SPDM_MCTP_TRANSPORT_LIB_H
 
 #include "library/spdm_common_lib.h"
+#include "library/spdm_crypt_lib.h"
+
+#define LIBSPDM_MCTP_ALIGNMENT 1
+#define LIBSPDM_MCTP_SEQUENCE_NUMBER_COUNT 2
+#define LIBSPDM_MCTP_MAX_RANDOM_NUMBER_COUNT 32
+
+/* Required sender/receive buffer in device io.
+ * +-------+--------+---------------------------+------+--+------+---+--------+-----+
+ * | TYPE  |TransHdr|      EncryptionHeader     |AppHdr|  |Random|MAC|AlignPad|FINAL|
+ * |       |        |SessionId|SeqNum|Len|AppLen|      |  |      |   |        |     |
+ * +-------+--------+---------------------------+------+  +------+---+--------+-----+
+ * | MCTP  |    1   |    4    |   2  | 2 |   2  |   1  |  |  32  | 16|   0    |  60 |
+ * +-------+--------+---------------------------+------+--+------+---+--------+-----+
+ */
+#define LIBSPDM_MCTP_TRANSPORT_ADDITIONAL_SIZE    (10 + \
+                                                   LIBSPDM_MCTP_SEQUENCE_NUMBER_COUNT + \
+                                                   LIBSPDM_MCTP_MAX_RANDOM_NUMBER_COUNT + \
+                                                   LIBSPDM_MAX_AEAD_TAG_SIZE + \
+                                                   (LIBSPDM_MCTP_ALIGNMENT - 1))
 
 /**
  * Encode an SPDM or APP message to a transport layer message.

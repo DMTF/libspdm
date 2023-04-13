@@ -10,10 +10,6 @@
 #include "hal/library/debuglib.h"
 #include "hal/library/memlib.h"
 
-#define MCTP_ALIGNMENT 1
-#define MCTP_SEQUENCE_NUMBER_COUNT 2
-#define MCTP_MAX_RANDOM_NUMBER_COUNT 32
-
 /**
  * Get sequence number in an SPDM secure message.
  *
@@ -30,9 +26,9 @@
 uint8_t libspdm_mctp_get_sequence_number(uint64_t sequence_number,
                                          uint8_t *sequence_number_buffer)
 {
-    libspdm_copy_mem(sequence_number_buffer, MCTP_SEQUENCE_NUMBER_COUNT,
-                     &sequence_number, MCTP_SEQUENCE_NUMBER_COUNT);
-    return MCTP_SEQUENCE_NUMBER_COUNT;
+    libspdm_copy_mem(sequence_number_buffer, LIBSPDM_MCTP_SEQUENCE_NUMBER_COUNT,
+                     &sequence_number, LIBSPDM_MCTP_SEQUENCE_NUMBER_COUNT);
+    return LIBSPDM_MCTP_SEQUENCE_NUMBER_COUNT;
 }
 
 /**
@@ -45,7 +41,7 @@ uint8_t libspdm_mctp_get_sequence_number(uint64_t sequence_number,
  **/
 uint32_t libspdm_mctp_get_max_random_number_count(void)
 {
-    return MCTP_MAX_RANDOM_NUMBER_COUNT;
+    return LIBSPDM_MCTP_MAX_RANDOM_NUMBER_COUNT;
 }
 
 /**
@@ -88,7 +84,7 @@ libspdm_return_t libspdm_mctp_encode_message(const uint32_t *session_id, size_t 
     uint32_t data32;
     mctp_message_header_t *mctp_message_header;
 
-    alignment = MCTP_ALIGNMENT;
+    alignment = LIBSPDM_MCTP_ALIGNMENT;
     aligned_message_size =
         (message_size + (alignment - 1)) & ~(alignment - 1);
 
@@ -172,7 +168,7 @@ libspdm_return_t libspdm_mctp_decode_message(uint32_t **session_id,
     }
 
     LIBSPDM_ASSERT(((transport_message_size - sizeof(mctp_message_header_t)) &
-                    (MCTP_ALIGNMENT - 1)) == 0);
+                    (LIBSPDM_MCTP_ALIGNMENT - 1)) == 0);
 
     *message_size = transport_message_size - sizeof(mctp_message_header_t);
     *message = (uint8_t *)transport_message + sizeof(mctp_message_header_t);
