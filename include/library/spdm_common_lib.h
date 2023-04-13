@@ -647,7 +647,8 @@ void libspdm_register_transport_layer_func(
  *
  * @return the size of required scratch buffer.
  **/
-size_t libspdm_get_sizeof_required_scratch_buffer (void *spdm_context, uint32_t max_spdm_msg_size);
+size_t libspdm_get_sizeof_required_scratch_buffer (
+    void *spdm_context, uint32_t max_spdm_msg_size, uint32_t transport_additional_size);
 
 /**
  * Set the scratch buffer.
