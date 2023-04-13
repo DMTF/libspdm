@@ -8,6 +8,25 @@
 #define PCI_DOE_TRANSPORT_LIB_H
 
 #include "library/spdm_common_lib.h"
+#include "library/spdm_crypt_lib.h"
+
+#define LIBSPDM_PCI_DOE_ALIGNMENT 4
+#define LIBSPDM_PCI_DOE_SEQUENCE_NUMBER_COUNT 0
+#define LIBSPDM_PCI_DOE_MAX_RANDOM_NUMBER_COUNT 0
+
+/* Required sender/receive buffer in device io.
+ * +-------+--------+---------------------------+------+--+------+---+--------+-----+
+ * | TYPE  |TransHdr|      EncryptionHeader     |AppHdr|  |Random|MAC|AlignPad|FINAL|
+ * |       |        |SessionId|SeqNum|Len|AppLen|      |  |      |   |        |     |
+ * +-------+--------+---------------------------+------+  +------+---+--------+-----+
+ * |PCI_DOE|    8   |    4    |   0  | 2 |   2  |   0  |  |   0  | 16|   3    |  35 |
+ * +-------+--------+---------------------------+------+--+------+---+--------+-----+
+ */
+#define LIBSPDM_PCI_DOE_TRANSPORT_ADDITIONAL_SIZE    (16 + \
+                                                      LIBSPDM_PCI_DOE_SEQUENCE_NUMBER_COUNT + \
+                                                      LIBSPDM_PCI_DOE_MAX_RANDOM_NUMBER_COUNT + \
+                                                      LIBSPDM_MAX_AEAD_TAG_SIZE + \
+                                                      (LIBSPDM_PCI_DOE_ALIGNMENT - 1))
 
 /**
  * Encode an SPDM or APP message to a transport layer message.
