@@ -8,8 +8,27 @@
 #define __SPDM_TEST_TRANSPORT_LIB_H__
 
 #include "library/spdm_common_lib.h"
+#include "library/spdm_crypt_lib.h"
 #include "hal/library/debuglib.h"
 #include "hal/library/memlib.h"
+
+#define LIBSPDM_TEST_ALIGNMENT 4
+#define LIBSPDM_TEST_SEQUENCE_NUMBER_COUNT 2
+#define LIBSPDM_TEST_MAX_RANDOM_NUMBER_COUNT 32
+
+/* Required sender/receive buffer in device io.
+ * +-------+--------+---------------------------+------+--+------+---+--------+-----+
+ * | TYPE  |TransHdr|      EncryptionHeader     |AppHdr|  |Random|MAC|AlignPad|FINAL|
+ * |       |        |SessionId|SeqNum|Len|AppLen|      |  |      |   |        |     |
+ * +-------+--------+---------------------------+------+  +------+---+--------+-----+
+ * | TEST  |    1   |    4    |   2  | 2 |   2  |   1  |  |  32  | 16|   3    |  63 |
+ * +-------+--------+---------------------------+------+--+------+---+--------+-----+
+ */
+#define LIBSPDM_TEST_TRANSPORT_ADDITIONAL_SIZE    (10 + \
+                                                   LIBSPDM_TEST_SEQUENCE_NUMBER_COUNT + \
+                                                   LIBSPDM_TEST_MAX_RANDOM_NUMBER_COUNT + \
+                                                   LIBSPDM_MAX_AEAD_TAG_SIZE + \
+                                                   (LIBSPDM_TEST_ALIGNMENT - 1))
 
 #define LIBSPDM_TEST_MESSAGE_TYPE_SPDM 0x01
 #define LIBSPDM_TEST_MESSAGE_TYPE_SECURED_TEST 0x02
