@@ -6,10 +6,6 @@
 
 #include "library/spdm_transport_test_lib.h"
 
-#define LIBSPDM_TEST_ALIGNMENT 4
-#define TEST_SEQUENCE_NUMBER_COUNT 2
-#define TEST_MAX_RANDOM_NUMBER_COUNT 32
-
 /**
  * Get sequence number in an SPDM secure message.
  *
@@ -26,9 +22,9 @@
 uint8_t libspdm_test_get_sequence_number(uint64_t sequence_number,
                                          uint8_t *sequence_number_buffer)
 {
-    libspdm_copy_mem(sequence_number_buffer, TEST_SEQUENCE_NUMBER_COUNT,
-                     &sequence_number, TEST_SEQUENCE_NUMBER_COUNT);
-    return TEST_SEQUENCE_NUMBER_COUNT;
+    libspdm_copy_mem(sequence_number_buffer, LIBSPDM_TEST_SEQUENCE_NUMBER_COUNT,
+                     &sequence_number, LIBSPDM_TEST_SEQUENCE_NUMBER_COUNT);
+    return LIBSPDM_TEST_SEQUENCE_NUMBER_COUNT;
 }
 
 /**
@@ -41,7 +37,7 @@ uint8_t libspdm_test_get_sequence_number(uint64_t sequence_number,
  **/
 uint32_t libspdm_test_get_max_random_number_count(void)
 {
-    return TEST_MAX_RANDOM_NUMBER_COUNT;
+    return LIBSPDM_TEST_MAX_RANDOM_NUMBER_COUNT;
 }
 
 /**
