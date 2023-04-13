@@ -85,7 +85,8 @@ int libspdm_unit_test_group_setup(void **state)
 
     libspdm_init_context(spdm_context);
     spdm_test_context->scratch_buffer_size =
-        libspdm_get_sizeof_required_scratch_buffer(spdm_context, LIBSPDM_MAX_SPDM_MSG_SIZE);
+        libspdm_get_sizeof_required_scratch_buffer(
+            spdm_context, LIBSPDM_MAX_SPDM_MSG_SIZE, LIBSPDM_TRANSPORT_ADDITIONAL_SIZE);
     spdm_test_context->scratch_buffer = (void *)malloc(spdm_test_context->scratch_buffer_size);
 
     libspdm_register_device_io_func(spdm_context,
