@@ -10,10 +10,6 @@
 #include "hal/library/debuglib.h"
 #include "hal/library/memlib.h"
 
-#define PCI_DOE_ALIGNMENT 4
-#define PCI_DOE_SEQUENCE_NUMBER_COUNT 0
-#define PCI_DOE_MAX_RANDOM_NUMBER_COUNT 0
-
 /**
  * Get sequence number in an SPDM secure message.
  *
@@ -30,9 +26,9 @@
 uint8_t libspdm_pci_doe_get_sequence_number(uint64_t sequence_number,
                                             uint8_t *sequence_number_buffer)
 {
-    libspdm_copy_mem(sequence_number_buffer, PCI_DOE_SEQUENCE_NUMBER_COUNT,
-                     &sequence_number, PCI_DOE_SEQUENCE_NUMBER_COUNT);
-    return PCI_DOE_SEQUENCE_NUMBER_COUNT;
+    libspdm_copy_mem(sequence_number_buffer, LIBSPDM_PCI_DOE_SEQUENCE_NUMBER_COUNT,
+                     &sequence_number, LIBSPDM_PCI_DOE_SEQUENCE_NUMBER_COUNT);
+    return LIBSPDM_PCI_DOE_SEQUENCE_NUMBER_COUNT;
 }
 
 /**
@@ -45,7 +41,7 @@ uint8_t libspdm_pci_doe_get_sequence_number(uint64_t sequence_number,
  **/
 uint32_t libspdm_pci_doe_get_max_random_number_count(void)
 {
-    return PCI_DOE_MAX_RANDOM_NUMBER_COUNT;
+    return LIBSPDM_PCI_DOE_MAX_RANDOM_NUMBER_COUNT;
 }
 
 /**
@@ -88,7 +84,7 @@ libspdm_return_t libspdm_pci_doe_encode_message(const uint32_t *session_id,
     uint32_t data32;
     pci_doe_data_object_header_t *pci_doe_header;
 
-    alignment = PCI_DOE_ALIGNMENT;
+    alignment = LIBSPDM_PCI_DOE_ALIGNMENT;
     aligned_message_size =
         (message_size + (alignment - 1)) & ~(alignment - 1);
 
@@ -202,7 +198,7 @@ libspdm_return_t libspdm_pci_doe_decode_message(uint32_t **session_id,
     }
 
     LIBSPDM_ASSERT(((transport_message_size - sizeof(pci_doe_data_object_header_t)) &
-                    (PCI_DOE_ALIGNMENT - 1)) == 0);
+                    (LIBSPDM_PCI_DOE_ALIGNMENT - 1)) == 0);
 
     *message_size = transport_message_size - sizeof(pci_doe_data_object_header_t);
     *message = (uint8_t *)transport_message + sizeof(pci_doe_data_object_header_t);
