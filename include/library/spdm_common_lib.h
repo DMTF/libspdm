@@ -633,6 +633,8 @@ typedef uint32_t (*libspdm_transport_get_header_size_func)(void *spdm_context);
  **/
 void libspdm_register_transport_layer_func(
     void *spdm_context,
+    uint32_t max_spdm_msg_size,
+    uint32_t transport_additional_size,
     libspdm_transport_encode_message_func transport_encode_message,
     libspdm_transport_decode_message_func transport_decode_message,
     libspdm_transport_get_header_size_func transport_get_header_size);
@@ -647,8 +649,7 @@ void libspdm_register_transport_layer_func(
  *
  * @return the size of required scratch buffer.
  **/
-size_t libspdm_get_sizeof_required_scratch_buffer (
-    void *spdm_context, uint32_t max_spdm_msg_size, uint32_t transport_additional_size);
+size_t libspdm_get_sizeof_required_scratch_buffer (void *spdm_context);
 
 /**
  * Set the scratch buffer.

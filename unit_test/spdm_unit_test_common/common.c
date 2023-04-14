@@ -84,15 +84,13 @@ int libspdm_unit_test_group_setup(void **state)
     spdm_test_context->case_id = 0xFFFFFFFF;
 
     libspdm_init_context(spdm_context);
-    spdm_test_context->scratch_buffer_size =
-        libspdm_get_sizeof_required_scratch_buffer(
-            spdm_context, LIBSPDM_MAX_SPDM_MSG_SIZE, LIBSPDM_TRANSPORT_ADDITIONAL_SIZE);
-    spdm_test_context->scratch_buffer = (void *)malloc(spdm_test_context->scratch_buffer_size);
 
     libspdm_register_device_io_func(spdm_context,
                                     spdm_test_context->send_message,
                                     spdm_test_context->receive_message);
     libspdm_register_transport_layer_func(spdm_context,
+                                          LIBSPDM_MAX_SPDM_MSG_SIZE,
+                                          LIBSPDM_TRANSPORT_ADDITIONAL_SIZE,
                                           libspdm_transport_test_encode_message,
                                           libspdm_transport_test_decode_message,
                                           libspdm_transport_test_get_header_size);
@@ -103,6 +101,10 @@ int libspdm_unit_test_group_setup(void **state)
                                         spdm_device_release_sender_buffer,
                                         spdm_device_acquire_receiver_buffer,
                                         spdm_device_release_receiver_buffer);
+
+    spdm_test_context->scratch_buffer_size =
+        libspdm_get_sizeof_required_scratch_buffer(spdm_context);
+    spdm_test_context->scratch_buffer = (void *)malloc(spdm_test_context->scratch_buffer_size);
     libspdm_set_scratch_buffer (spdm_context,
                                 spdm_test_context->scratch_buffer,
                                 spdm_test_context->scratch_buffer_size);

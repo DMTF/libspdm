@@ -1356,6 +1356,13 @@ static void libspdm_test_check_context_case20(void **state)
     result = libspdm_check_context (context);
     assert_int_equal(false, result);
 
+    libspdm_register_transport_layer_func(context,
+                                          LIBSPDM_MAX_SPDM_MSG_SIZE,
+                                          LIBSPDM_TRANSPORT_ADDITIONAL_SIZE,
+                                          libspdm_transport_test_encode_message,
+                                          libspdm_transport_test_decode_message,
+                                          libspdm_transport_test_get_header_size);
+
     libspdm_register_device_buffer_func(context,
                                         LIBSPDM_MAX_SENDER_RECEIVER_BUFFER_SIZE,
                                         LIBSPDM_MAX_SENDER_RECEIVER_BUFFER_SIZE,
