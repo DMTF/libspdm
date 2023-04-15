@@ -49,7 +49,7 @@ The SPDM context.
 Indicates if it is a secured message (non-NULL) or an unsecured message (NULL).
 
 **slot_mask**<br/>
-If non-NULL, a bit mask that indicates if a certificate chain slot is populated, where the least
+If non-NULL, a bitmask that indicates if a certificate chain slot is populated, where the least
 significant bit corresponds to slot 0 and the most significant bit corresponds to slot 7.
 
 **total_digest_buffer**<br/>
@@ -134,7 +134,7 @@ If non-NULL, a pointer to a buffer to store the measurement summary hash. The si
 should be at least as large as the negotiated hash algorithm.
 
 **slot_mask**<br/>
-A bit mask that indicates if a certificate chain slot is populated, where the least
+A bitmask that indicates if a certificate chain slot is populated, where the least
 significant bit corresponds to slot 0 and the most significant bit corresponds to slot 7. If the
 pointer provided is NULL then this parameter is not populated.
 
@@ -168,7 +168,7 @@ The SPDM context.
 Indicates if it is a secured message (non-NULL) or an unsecured message (NULL).
 
 **request_attribute**<br/>
-Species directives to the Responder. It is a bit mask and its value can contain any combination of
+Species directives to the Responder. It is a bitmask and its value can contain any combination of
 - `SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE`
     - If set then Responder will provide a signature.
 - `SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_RAW_BIT_STREAM_REQUESTED`
@@ -254,7 +254,7 @@ Specifies the type of measurement summary hash to be returned by the Responder. 
 The certificate chain slot number.
 
 **session_policy**<br/>
-Specifies the session policy for the session. It is a bit mask and its value can contain
+Specifies the session policy for the session. It is a bitmask and its value can contain
 - SPDM_KEY_EXCHANGE_REQUEST_SESSION_POLICY_TERMINATION_POLICY_RUNTIME_UPDATE
     - If not set then, if the Responder detects a change in its code or configuration (or other
       measurements), then it will terminate the session. If set then, if the Responder detects a
@@ -337,7 +337,7 @@ The SPDM context.
 The session to be terminated.
 
 **end_session_attributes**<br/>
-Specifies actions to be performed by the Responder at the end of the session. It is a bit mask and
+Specifies actions to be performed by the Responder at the end of the session. It is a bitmask and
 its value can contain
 - `SPDM_END_SESSION_REQUEST_ATTRIBUTES_PRESERVE_NEGOTIATED_STATE_CLEAR`
     - Only used if the Responder supports caching its negotiated state.
@@ -458,7 +458,7 @@ Sets the mode in which message logging operates.
 The SPDM context.
 
 **mode**<br/>
-Sets the mode in which the message logger operates. It is a bit mask and its value can contain
+Sets the mode in which the message logger operates. It is a bitmask and its value can contain
 - `LIBSPDM_MSG_LOG_MODE_ENABLE`
     - If set then message logger is enabled.
     - If not set then message logger is disabled.

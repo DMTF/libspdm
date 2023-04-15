@@ -216,21 +216,21 @@ The SPDM context.
 
 **connection_state**<br/>
 Specifies the state the connection has transitioned to. Its value is one of
-- LIBSPDM_CONNECTION_STATE_NOT_STARTED
+- `LIBSPDM_CONNECTION_STATE_NOT_STARTED`
     - The initial state after the SPDM context has been initialized or reset.
-- LIBSPDM_CONNECTION_STATE_AFTER_VERSION
+- `LIBSPDM_CONNECTION_STATE_AFTER_VERSION`
     - The state immediately after a successful `GET_VERSION` request and `VERSION` response.
-- LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES
+- `LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES`
     - The state immediately after a successful `GET_CAPABILITIES` request and `CAPABILITIES`
       response.
-- LIBSPDM_CONNECTION_STATE_NEGOTIATED
+- `LIBSPDM_CONNECTION_STATE_NEGOTIATED`
     - The state immediately after a successful `NEGOTIATE_ALGORITHMS` request and `ALGORITHMS`
       response.
-- LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS
+- `LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS`
     - The state immediately after a successful `GET_DIGESTS` request and `DIGESTS` response.
-- LIBSPDM_CONNECTION_STATE_AFTER_CERTIFICATE
+- `LIBSPDM_CONNECTION_STATE_AFTER_CERTIFICATE`
     - The state immediately after a successful `GET_CERTIFICATE` request and `CERTIFICATE` response.
-- LIBSPDM_CONNECTION_STATE_AUTHENTICATED
+- `LIBSPDM_CONNECTION_STATE_AUTHENTICATED`
     - The state immediately after a successful `CHALLENGE` request and `CHALLENGE_AUTH` response.
 
 ### Details
