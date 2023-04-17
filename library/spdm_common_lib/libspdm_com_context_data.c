@@ -201,7 +201,8 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         }
         break;
     case LIBSPDM_DATA_SECURED_MESSAGE_VERSION:
-        LIBSPDM_ASSERT (data_size <= sizeof(spdm_version_number_t) * SPDM_MAX_VERSION_COUNT);
+        LIBSPDM_ASSERT (data_size <=
+                        sizeof(spdm_version_number_t) * SECURED_SPDM_MAX_VERSION_COUNT);
         if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
             /* Only have one connected version */
             LIBSPDM_ASSERT (data_size == sizeof(spdm_version_number_t));

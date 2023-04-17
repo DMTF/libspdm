@@ -51,6 +51,8 @@
  *                AssociatedData           AeadTag
  */
 
+/* 2 means SPDM secured message version 1.0, 1.1 */
+#define SECURED_SPDM_MAX_VERSION_COUNT 2
 /* the DSP0277 specification version */
 #define SECURED_SPDM_VERSION_10 0x10
 #define SECURED_SPDM_VERSION_11 0x11
