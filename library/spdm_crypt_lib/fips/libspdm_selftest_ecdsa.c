@@ -5,7 +5,6 @@
  **/
 
 #include "internal/libspdm_crypt_lib.h"
-#include "spdm_crypt_ext_lib/cryptlib_ext.h"
 
 #if LIBSPDM_FIPS_MODE
 
