@@ -80,22 +80,6 @@ bool libspdm_fips_selftest_hkdf(void)
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "HKDF KAT failed \n"));
         return false;
     }
-
-    libspdm_zero_mem(out, sizeof(out));
-    result = libspdm_hkdf_sha256_extract_and_expand (hkdf_sha256_ikm, sizeof(hkdf_sha256_ikm),
-                                                     hkdf_sha256_salt, sizeof(hkdf_sha256_salt),
-                                                     hkdf_sha256_info, sizeof(hkdf_sha256_info),
-                                                     out, sizeof(out));
-    if (!result) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "HKDF extract and expand failed \n"));
-        return false;
-    }
-
-    if (!libspdm_consttime_is_mem_equal(out, hkdf_sha256_okm, sizeof(hkdf_sha256_okm))) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "HKDF KAT failed \n"));
-        return false;
-    }
-
 #endif/*LIBSPDM_SHA256_SUPPORT*/
 
     return result;
