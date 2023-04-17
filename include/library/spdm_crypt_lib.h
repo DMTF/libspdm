@@ -927,7 +927,7 @@ bool libspdm_verify_certificate_chain_buffer(uint32_t base_hash_algo, uint32_t b
  *
  * @param  base_hash_algo        SPDM base_hash_algo.
  * @param  base_asym_alg         SPDM base_asym_algo or req_base_asym_alg.
- * @param  cert_chain_data       Certificate chain data without spdm_cert_chain_t header.
+ * @param  cert_chain_data       Certificate chain data with spdm_cert_chain_t header.
  * @param  cert_chain_data_size  Size in bytes of the certificate chain data.
  * @param  public_key            Pointer to newly generated asymmetric context which contain the
  *                               retrieved public key component.
