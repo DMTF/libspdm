@@ -79,11 +79,17 @@ uint32_t libspdm_get_scratch_buffer_last_spdm_request_capacity(libspdm_context_t
 #if LIBSPDM_RESPOND_IF_READY_SUPPORT
 /* sixth section */
 uint32_t libspdm_get_scratch_buffer_cache_spdm_request_offset(libspdm_context_t *spdm_context) {
-    return libspdm_get_scratch_buffer_secure_message_capacity(spdm_context) +
+    return 0 +
+#if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
+           libspdm_get_scratch_buffer_secure_message_capacity(spdm_context) +
            libspdm_get_scratch_buffer_large_message_capacity(spdm_context) +
+#endif
            libspdm_get_scratch_buffer_sender_receiver_capacity(spdm_context) +
+#if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
            libspdm_get_scratch_buffer_large_sender_receiver_capacity(spdm_context) +
-           libspdm_get_scratch_buffer_last_spdm_request_capacity(spdm_context);
+#endif
+           libspdm_get_scratch_buffer_last_spdm_request_capacity(spdm_context) +
+           0;
 }
 
 uint32_t libspdm_get_scratch_buffer_cache_spdm_request_capacity(libspdm_context_t *spdm_context) {
