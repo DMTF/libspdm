@@ -165,6 +165,8 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
     uint16_t data16;
 #if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
     bool status;
+    const uint8_t *cert_buffer;
+    size_t cert_buffer_size;
 #endif
 
     if (spdm_context == NULL || data == NULL || data_type >= LIBSPDM_DATA_MAX) {
@@ -432,6 +434,7 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
                          sizeof(context->connection_info.peer_used_cert_chain[slot_id].buffer),
                          data, data_size);
 #else
+
         status = libspdm_hash_all(
             context->connection_info.algorithm.base_hash_algo,
             data, data_size,
@@ -443,33 +446,47 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         context->connection_info.peer_used_cert_chain[slot_id].buffer_hash_size =
             libspdm_get_hash_size(context->connection_info.algorithm.base_hash_algo);
 
+        /*process the SPDM cert header and hash*/
+        data = (uint8_t *)data + sizeof(spdm_cert_chain_t) +
+               libspdm_get_hash_size(context->connection_info.algorithm.base_hash_algo);
+        data_size = data_size -
+                    (sizeof(spdm_cert_chain_t) +
+                     libspdm_get_hash_size(context->connection_info.algorithm.base_hash_algo));
+
+        /* Get leaf cert from cert chain */
+        status = libspdm_x509_get_cert_from_cert_chain(data, data_size, -1,
+                                                       &cert_buffer, &cert_buffer_size);
+        if (!status) {
+            return LIBSPDM_STATUS_CRYPTO_ERROR;
+        }
+
         status = false;
 #if LIBSPDM_CERT_PARSE_SUPPORT
 #if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)
         if (!status) {
             status = libspdm_rsa_get_public_key_from_x509(
-                data, data_size,
+                cert_buffer, cert_buffer_size,
                 &context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key);
         }
 #endif
 #if LIBSPDM_ECDSA_SUPPORT
         if (!status) {
             status = libspdm_ec_get_public_key_from_x509(
-                data, data_size,
+                cert_buffer, cert_buffer_size,
                 &context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key);
         }
 #endif
 #if (LIBSPDM_EDDSA_ED25519_SUPPORT) || (LIBSPDM_EDDSA_ED448_SUPPORT)
         if (!status) {
             status = libspdm_ecd_get_public_key_from_x509(
-                data, data_size,
+                cert_buffer, cert_buffer_size,
                 &context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key);
         }
 #endif
 #if LIBSPDM_SM2_DSA_SUPPORT
         if (!status) {
             status = libspdm_sm2_get_public_key_from_x509(
-                data, data_size,
+                cert_buffer, cert_buffer_size,
                 &context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key);
         }
 #endif
