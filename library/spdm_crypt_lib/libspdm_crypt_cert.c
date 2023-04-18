@@ -780,6 +780,75 @@ static bool libspdm_verify_leaf_cert_basic_constraints(const uint8_t *cert, size
 }
 
 /**
+ * Verify leaf cert spdm defined extended key usage
+ *
+ * @param[in]  cert                  Pointer to the DER-encoded certificate data.
+ * @param[in]  cert_size             The size of certificate data in bytes.
+ * @param[in]  is_requester          Indicate of the cert is for a requester or a responder.
+ *
+ * @retval  true   verify pass, two cases:
+ *                 1. spdm defined eku is not present in cert;
+ *                 2. spdm defined eku is compliant with requester/responder identity;
+ * @retval  false  verify fail, two cases:
+ *                 1. requester's cert has only responder auth oid in eku;
+ *                 2. responder's cert has only requester auth oid in eku;
+ **/
+static bool libspdm_verify_leaf_cert_spdm_eku(const uint8_t *cert, size_t cert_size,
+                                              bool is_requester)
+{
+    bool status;
+    uint8_t eku[256];
+    size_t eku_size;
+    size_t index;
+    bool req_auth_oid_find_success;
+    bool rsp_auth_oid_find_success;
+
+    /* SPDM defined OID */
+    uint8_t eku_requester_auth_oid[] = SPDM_OID_DMTF_EKU_REQUESTER_AUTH;
+    uint8_t eku_responder_auth_oid[] = SPDM_OID_DMTF_EKU_RESPONDER_AUTH;
+
+    eku_size = sizeof(eku);
+    status = libspdm_x509_get_extended_key_usage(cert, cert_size, eku, &eku_size);
+    if (eku_size == 0) {
+        /* eku is not present in cert */
+        return true;
+    } else if (!status ) {
+        return false;
+    }
+
+    req_auth_oid_find_success = false;
+    rsp_auth_oid_find_success = false;
+
+    for(index = 0; index <= eku_size - sizeof(eku_requester_auth_oid); index++) {
+        if (libspdm_consttime_is_mem_equal(eku + index, eku_requester_auth_oid,
+                                           sizeof(eku_requester_auth_oid))) {
+            req_auth_oid_find_success = true;
+            break;
+        }
+    }
+
+    for(index = 0; index <= eku_size - sizeof(eku_responder_auth_oid); index++) {
+        if (libspdm_consttime_is_mem_equal(eku + index, eku_responder_auth_oid,
+                                           sizeof(eku_responder_auth_oid))) {
+            rsp_auth_oid_find_success = true;
+            break;
+        }
+    }
+
+    if (is_requester) {
+        if (!req_auth_oid_find_success && rsp_auth_oid_find_success) {
+            return false;
+        }
+    } else {
+        if (req_auth_oid_find_success && !rsp_auth_oid_find_success) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/**
  * Verify leaf cert extend spdm OID
  *
  * @param[in]  cert                  Pointer to the DER-encoded certificate data.
@@ -800,8 +869,8 @@ static bool libspdm_verify_leaf_cert_eku_spdm_OID(const uint8_t *cert, size_t ce
 
     /* SPDM defined OID */
 
-    uint8_t oid_spdm_extension[] = SPDM_OID_EXTENSION;
-    uint8_t hardware_identity_oid[] = SPDM_OID_HARDWARE_IDENTITY;
+    uint8_t oid_spdm_extension[] = SPDM_OID_DMTF_SPDM_EXTENSION;
+    uint8_t hardware_identity_oid[] = SPDM_OID_DMTF_HARDWARE_IDENTITY;
 
     len = LIBSPDM_MAX_EXTENSION_LEN;
 
@@ -846,6 +915,7 @@ static bool libspdm_verify_leaf_cert_eku_spdm_OID(const uint8_t *cert, size_t ce
  * @param[in]  cert_size             The size of certificate data in bytes.
  * @param[in]  base_asym_algo        SPDM base_asym_algo
  * @param[in]  base_hash_algo        SPDM base_hash_algo
+ * @param[in]  is_requester          Indicate of the cert is for a requester or a responder.
  * @param[in]  is_device_cert_model  If true, the cert chain is DeviceCert model;
  *                                   If false, the cert chain is AliasCert model;
  *
@@ -855,6 +925,7 @@ static bool libspdm_verify_leaf_cert_eku_spdm_OID(const uint8_t *cert, size_t ce
 bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
                                     uint32_t base_asym_algo,
                                     uint32_t base_hash_algo,
+                                    bool is_requester,
                                     bool is_device_cert_model)
 {
     uint8_t end_cert_from[64];
@@ -958,6 +1029,12 @@ bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
 
     /* 10. verify basic constraints*/
     status = libspdm_verify_leaf_cert_basic_constraints(cert, cert_size);
+    if (!status) {
+        goto cleanup;
+    }
+
+    /* 11. verify spdm defined extended key usage*/
+    status = libspdm_verify_leaf_cert_spdm_eku(cert, cert_size, is_requester);
     if (!status) {
         goto cleanup;
     }
@@ -1192,6 +1269,7 @@ bool libspdm_get_dmtf_subject_alt_name(const uint8_t *cert, const size_t cert_si
  * @param  cert_chain_data_size      size in bytes of the certificate chain data.
  * @param  base_hash_algo            SPDM base_hash_algo
  * @param  base_asym_algo            SPDM base_asym_algo
+ * @param  is_requester              Indicate of the cert is for a requester or a responder.
  * @param  is_device_cert_model      If true, the cert chain is DeviceCert model;
  *                                   If false, the cert chain is AliasCert model;
  *
@@ -1200,7 +1278,7 @@ bool libspdm_get_dmtf_subject_alt_name(const uint8_t *cert, const size_t cert_si
  **/
 bool libspdm_verify_cert_chain_data(uint8_t *cert_chain_data, size_t cert_chain_data_size,
                                     uint32_t base_asym_algo, uint32_t base_hash_algo,
-                                    bool is_device_cert_model)
+                                    bool is_requester, bool is_device_cert_model)
 {
     const uint8_t *root_cert_buffer;
     size_t root_cert_buffer_size;
@@ -1239,7 +1317,7 @@ bool libspdm_verify_cert_chain_data(uint8_t *cert_chain_data, size_t cert_chain_
 
     if (!libspdm_x509_certificate_check(leaf_cert_buffer, leaf_cert_buffer_size,
                                         base_asym_algo, base_hash_algo,
-                                        is_device_cert_model)) {
+                                        is_requester, is_device_cert_model)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "!!! VerifyCertificateChainData - FAIL (leaf certificate check failed)!!!\n"));
         return false;
@@ -1251,6 +1329,7 @@ bool libspdm_verify_cert_chain_data(uint8_t *cert_chain_data, size_t cert_chain_
 bool libspdm_verify_certificate_chain_buffer(uint32_t base_hash_algo, uint32_t base_asym_algo,
                                              const void *cert_chain_buffer,
                                              size_t cert_chain_buffer_size,
+                                             bool is_requester,
                                              bool is_device_cert_model)
 {
     const uint8_t *cert_chain_data;
@@ -1330,7 +1409,7 @@ bool libspdm_verify_certificate_chain_buffer(uint32_t base_hash_algo, uint32_t b
 
     if (!libspdm_x509_certificate_check(leaf_cert_buffer, leaf_cert_buffer_size,
                                         base_asym_algo, base_hash_algo,
-                                        is_device_cert_model)) {
+                                        is_requester, is_device_cert_model)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "!!! VerifyCertificateChainBuffer - FAIL (leaf certificate check failed)!!!\n"));
         return false;
