@@ -2119,8 +2119,12 @@ void libspdm_test_requester_get_certificate_case2(void **state)
     size_t hash_size;
     const uint8_t *root_cert;
     size_t root_cert_size;
+    libspdm_data_parameter_t parameter;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     size_t count;
+#else
+    uint8_t set_data_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
+    uint32_t set_data_buffer_hash_size;
 #endif
 
     spdm_test_context = *state;
@@ -2154,9 +2158,20 @@ void libspdm_test_requester_get_certificate_case2(void **state)
     spdm_context->connection_info.algorithm.req_base_asym_alg =
         m_libspdm_use_req_asym_algo;
 
+    libspdm_zero_mem(&parameter, sizeof(parameter));
+    parameter.additional_data[0] = 0;
+    libspdm_set_data(spdm_context, LIBSPDM_DATA_PEER_USED_CERT_CHAIN_BUFFER, &parameter,
+                     data, data_size);
+
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->transcript.message_m.buffer_size =
         spdm_context->transcript.message_m.max_buffer_size;
+#else
+    set_data_buffer_hash_size =
+        spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size;
+    libspdm_copy_mem(set_data_buffer_hash, set_data_buffer_hash_size,
+                     spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash,
+                     set_data_buffer_hash_size);
 #endif
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
@@ -2171,7 +2186,18 @@ void libspdm_test_requester_get_certificate_case2(void **state)
                      sizeof(spdm_certificate_response_t) * count +
                      data_size);
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
-#endif
+#else
+    /*
+     * libspdm_get_certificate will get leaf_cert_public_key when LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT is not enabled.
+     * The follow check is for libspdm_set_data.
+     **/
+    assert_int_equal(set_data_buffer_hash_size,
+                     spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size);
+
+    assert_memory_equal(set_data_buffer_hash,
+                        spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash,
+                        set_data_buffer_hash_size);
+#endif/*LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT*/
     free(data);
 }
 
