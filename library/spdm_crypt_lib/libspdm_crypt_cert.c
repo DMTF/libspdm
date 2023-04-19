@@ -1021,20 +1021,20 @@ bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
         goto cleanup;
     }
 
-    /* 9. verify spdm defined extension*/
-    status = libspdm_verify_leaf_cert_spdm_extension(cert, cert_size, is_device_cert_model);
-    if (!status) {
-        goto cleanup;
-    }
-
-    /* 10. verify basic constraints*/
+    /* 9. verify basic constraints*/
     status = libspdm_verify_leaf_cert_basic_constraints(cert, cert_size);
     if (!status) {
         goto cleanup;
     }
 
-    /* 11. verify spdm defined extended key usage*/
+    /* 10. verify spdm defined extended key usage*/
     status = libspdm_verify_leaf_cert_spdm_eku(cert, cert_size, is_requester);
+    if (!status) {
+        goto cleanup;
+    }
+
+    /* 11. verify spdm defined extension*/
+    status = libspdm_verify_leaf_cert_spdm_extension(cert, cert_size, is_device_cert_model);
     if (!status) {
         goto cleanup;
     }
