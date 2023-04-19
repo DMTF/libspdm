@@ -187,7 +187,7 @@ void libspdm_test_responder_receive_send_rsp_case2(void** state)
     spdm_request.header.request_response_code = SPDM_VENDOR_DEFINED_REQUEST;
 
     libspdm_copy_mem(spdm_context->last_spdm_request,
-                     sizeof(spdm_context->last_spdm_request),
+                     libspdm_get_scratch_buffer_last_spdm_request_capacity(spdm_context),
                      &spdm_request, sizeof(spdm_request));
     spdm_context->last_spdm_request_size = sizeof(spdm_request);
 
