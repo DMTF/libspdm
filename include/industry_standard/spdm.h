@@ -996,7 +996,7 @@ typedef struct {
 #define SPDM_OID_DMTF_SPDM \
     { /*0x06, 0x09,*/ 0x2B, 0x06, 0x01, 0x04, 0x01, 0x83, 0x1C, 0x82, 0x12 }
 /* id-DMTF-device-info, { id-DMTF-spdm 1 }, 1.3.6.1.4.1.412.274.1 */
-#define LIBSPDM_OID_DMTF_DEVICE_INFO \
+#define SPDM_OID_DMTF_DEVICE_INFO \
     { /*0x06, 0x0A,*/ 0x2B, 0x06, 0x01, 0x04, 0x01, 0x83, 0x1C, 0x82, 0x12, 0x01 }
 /* id-DMTF-hardware-identity, { id-DMTF-spdm 2 }, 1.3.6.1.4.1.412.274.2 */
 #define SPDM_OID_DMTF_HARDWARE_IDENTITY \

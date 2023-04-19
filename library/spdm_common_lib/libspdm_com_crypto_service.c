@@ -608,13 +608,13 @@ bool libspdm_verify_peer_cert_chain_buffer_integrity(libspdm_context_t *spdm_con
             spdm_context->connection_info.algorithm.base_hash_algo,
             spdm_context->connection_info.algorithm.base_asym_algo,
             cert_chain_buffer, cert_chain_buffer_size,
-            !is_requester, is_device_cert_model);
+            false, is_device_cert_model);
     } else {
         result = libspdm_verify_certificate_chain_buffer(
             spdm_context->connection_info.algorithm.base_hash_algo,
             spdm_context->connection_info.algorithm.req_base_asym_alg,
             cert_chain_buffer, cert_chain_buffer_size,
-            is_requester, is_device_cert_model);
+            true, is_device_cert_model);
     }
 
     return result;
