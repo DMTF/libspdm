@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2023 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -40,8 +40,6 @@ typedef enum {
  **/
 size_t libspdm_secured_message_get_context_size(void);
 
-
-
 /**
  * Return session_state of an SPDM secured message context.
  *
@@ -49,24 +47,19 @@ size_t libspdm_secured_message_get_context_size(void);
  *
  * @return the SPDM session state.
  */
-libspdm_session_state_t
-libspdm_secured_message_get_session_state(void *spdm_secured_message_context);
-
-
+libspdm_session_state_t libspdm_secured_message_get_session_state(
+    void *spdm_secured_message_context);
 
 /**
  * Import the DHE Secret to an SPDM secured message context.
  *
- * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
+ * @param  spdm_secured_message_context  A pointer to the SPDM secured message context.
  * @param  dhe_secret                    Indicate the DHE secret.
- * @param  dhe_secret_size                The size in bytes of the DHE secret.
- *
- * @retval RETURN_SUCCESS  DHE Secret is imported.
+ * @param  dhe_secret_size               The size, in bytes, of the DHE secret.
  */
-bool
-libspdm_secured_message_import_dhe_secret(void *spdm_secured_message_context,
-                                          const void *dhe_secret,
-                                          size_t dhe_secret_size);
+bool libspdm_secured_message_import_dhe_secret(void *spdm_secured_message_context,
+                                               const void *dhe_secret,
+                                               size_t dhe_secret_size);
 
 /**
  * Export the Export Master Secret from an SPDM secured message context.
@@ -86,8 +79,9 @@ bool libspdm_secured_message_export_master_secret(
     size_t *export_master_secret_size);
 
 /**
- * Erase the Export Master Secret from an SPDM secured message context. This is typically called
- * after libspdm_secured_message_export_master_secret().
+ * Erase the Export Master Secret from an SPDM secured message context.
+ *
+ * This is typically called after libspdm_secured_message_export_master_secret().
  *
  * @param  spdm_secured_message_context  A pointer to the SPDM secured message context.
  */
@@ -112,11 +106,11 @@ typedef struct {
 /**
  * Export the session_keys from an SPDM secured message context.
  *
- * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- * @param  session_keys                  Indicate the buffer to store the session_keys in libspdm_secure_session_keys_struct_t.
- * @param  session_keys_size              The size in bytes of the session_keys in libspdm_secure_session_keys_struct_t.
- *
- * @retval RETURN_SUCCESS  session_keys are exported.
+ * @param  spdm_secured_message_context  A pointer to the SPDM secured message context.
+ * @param  session_keys                  Indicate the buffer to store the session_keys in
+ *                                       libspdm_secure_session_keys_struct_t.
+ * @param  session_keys_size             The size in bytes of the session_keys in
+ *                                       libspdm_secure_session_keys_struct_t.
  */
 bool libspdm_secured_message_export_session_keys(void *spdm_secured_message_context,
                                                  void *session_keys,
@@ -125,17 +119,15 @@ bool libspdm_secured_message_export_session_keys(void *spdm_secured_message_cont
 /**
  * Import the session_keys from an SPDM secured message context.
  *
- * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- * @param  session_keys                  Indicate the buffer to store the session_keys in libspdm_secure_session_keys_struct_t.
- * @param  session_keys_size              The size in bytes of the session_keys in libspdm_secure_session_keys_struct_t.
- *
- * @retval RETURN_SUCCESS  session_keys are imported.
+ * @param  spdm_secured_message_context  A pointer to the SPDM secured message context.
+ * @param  session_keys                  Indicate the buffer to store the session_keys in
+ *                                       libspdm_secure_session_keys_struct_t.
+ * @param  session_keys_size             The size in bytes of the session_keys in
+ *                                       libspdm_secure_session_keys_struct_t.
  */
 bool libspdm_secured_message_import_session_keys(void *spdm_secured_message_context,
                                                  const void *session_keys,
                                                  size_t session_keys_size);
-
-
 
 /**
  * This function is used to clear handshake secret.
