@@ -893,8 +893,8 @@ static bool libspdm_verify_leaf_cert_eku_spdm_OID(const uint8_t *cert, size_t ce
     /*find the spdm hardware identity OID*/
     find_sucessful = false;
     for(index = 0; index <= len - sizeof(hardware_identity_oid); index++) {
-        if (!libspdm_consttime_is_mem_equal(spdm_extension + index, hardware_identity_oid,
-                                            sizeof(hardware_identity_oid))) {
+        if (libspdm_consttime_is_mem_equal(spdm_extension + index, hardware_identity_oid,
+                                           sizeof(hardware_identity_oid))) {
             find_sucessful = true;
             break;
         }
