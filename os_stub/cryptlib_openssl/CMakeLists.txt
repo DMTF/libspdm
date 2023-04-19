@@ -43,5 +43,9 @@ SET(src_cryptlib_openssl
     sys_call/crt_wrapper_host.c
 )
 
+if ((ARCH STREQUAL "arm") OR (ARCH STREQUAL "aarch64"))
+    ADD_COMPILE_OPTIONS(-DLIBSPDM_CPU_ARM)
+endif()
+
 ADD_LIBRARY(cryptlib_openssl STATIC ${src_cryptlib_openssl})
 TARGET_COMPILE_OPTIONS(cryptlib_openssl PRIVATE ${OPENSSL_FLAGS})
