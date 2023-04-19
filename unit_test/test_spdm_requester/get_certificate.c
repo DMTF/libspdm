@@ -3855,11 +3855,8 @@ int libspdm_requester_get_certificate_test_main(void)
         cmocka_unit_test(libspdm_test_requester_get_certificate_case22),
         /* Buffer verification*/
         cmocka_unit_test(libspdm_test_requester_get_certificate_case23),
-#if 0
-        /* hardware identify OID is found in AliasCert model cert
-         * This case would be enabled once https://github.com/DMTF/libspdm/issues/1594 is solved.*/
+        /* hardware identify OID is found in AliasCert model cert*/
         cmocka_unit_test(libspdm_test_requester_get_certificate_case24),
-#endif
 #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
         /* GetCert (0), GetCert(1) and Challenge(0) */
         cmocka_unit_test(libspdm_test_requester_get_certificate_case25),
