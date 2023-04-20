@@ -71,6 +71,18 @@ openssl pkey -in end_requester.key -inform PEM -pubout -outform PEM -out end_req
 openssl pkey -in end_requester.key -inform PEM -pubout -outform DER -out end_requester.key.pub.der
 openssl pkey -in end_responder.key -inform PEM -pubout -outform PEM -out end_responder.key.pub
 openssl pkey -in end_responder.key -inform PEM -pubout -outform DER -out end_responder.key.pub.der
+openssl x509 -req -in end_requester.req -out end_requester_with_spdm_req_rsp_eku.cert -CA inter.cert -CAkey inter.key -sha256 -days 3650 -set_serial 4 -extensions v3_end_with_spdm_req_rsp_eku -extfile ../openssl.cnf
+openssl x509 -req -in end_requester.req -out end_requester_with_spdm_req_eku.cert -CA inter.cert -CAkey inter.key -sha256 -days 3650 -set_serial 5 -extensions v3_end_with_spdm_req_eku -extfile ../openssl.cnf
+openssl x509 -req -in end_requester.req -out end_requester_with_spdm_rsp_eku.cert -CA inter.cert -CAkey inter.key -sha256 -days 3650 -set_serial 6 -extensions v3_end_with_spdm_rsp_eku -extfile ../openssl.cnf
+openssl asn1parse -in end_requester_with_spdm_req_rsp_eku.cert -out end_requester_with_spdm_req_rsp_eku.cert.der
+openssl asn1parse -in end_requester_with_spdm_req_eku.cert -out end_requester_with_spdm_req_eku.cert.der
+openssl asn1parse -in end_requester_with_spdm_rsp_eku.cert -out end_requester_with_spdm_rsp_eku.cert.der
+openssl x509 -req -in end_responder.req -out end_responder_with_spdm_req_rsp_eku.cert -CA inter.cert -CAkey inter.key -sha256 -days 3650 -set_serial 7 -extensions v3_end_with_spdm_req_rsp_eku -extfile ../openssl.cnf
+openssl x509 -req -in end_responder.req -out end_responder_with_spdm_req_eku.cert -CA inter.cert -CAkey inter.key -sha256 -days 3650 -set_serial 8 -extensions v3_end_with_spdm_req_eku -extfile ../openssl.cnf
+openssl x509 -req -in end_responder.req -out end_responder_with_spdm_rsp_eku.cert -CA inter.cert -CAkey inter.key -sha256 -days 3650 -set_serial 9 -extensions v3_end_with_spdm_rsp_eku -extfile ../openssl.cnf
+openssl asn1parse -in end_responder_with_spdm_req_rsp_eku.cert -out end_responder_with_spdm_req_rsp_eku.cert.der
+openssl asn1parse -in end_responder_with_spdm_req_eku.cert -out end_responder_with_spdm_req_eku.cert.der
+openssl asn1parse -in end_responder_with_spdm_rsp_eku.cert -out end_responder_with_spdm_rsp_eku.cert.der
 popd
 
 pushd rsa3072
@@ -94,6 +106,18 @@ openssl pkey -in end_requester.key -inform PEM -pubout -outform PEM -out end_req
 openssl pkey -in end_requester.key -inform PEM -pubout -outform DER -out end_requester.key.pub.der
 openssl pkey -in end_responder.key -inform PEM -pubout -outform PEM -out end_responder.key.pub
 openssl pkey -in end_responder.key -inform PEM -pubout -outform DER -out end_responder.key.pub.der
+openssl x509 -req -in end_requester.req -out end_requester_with_spdm_req_rsp_eku.cert -CA inter.cert -CAkey inter.key -sha384 -days 3650 -set_serial 4 -extensions v3_end_with_spdm_req_rsp_eku -extfile ../openssl.cnf
+openssl x509 -req -in end_requester.req -out end_requester_with_spdm_req_eku.cert -CA inter.cert -CAkey inter.key -sha384 -days 3650 -set_serial 5 -extensions v3_end_with_spdm_req_eku -extfile ../openssl.cnf
+openssl x509 -req -in end_requester.req -out end_requester_with_spdm_rsp_eku.cert -CA inter.cert -CAkey inter.key -sha384 -days 3650 -set_serial 6 -extensions v3_end_with_spdm_rsp_eku -extfile ../openssl.cnf
+openssl asn1parse -in end_requester_with_spdm_req_rsp_eku.cert -out end_requester_with_spdm_req_rsp_eku.cert.der
+openssl asn1parse -in end_requester_with_spdm_req_eku.cert -out end_requester_with_spdm_req_eku.cert.der
+openssl asn1parse -in end_requester_with_spdm_rsp_eku.cert -out end_requester_with_spdm_rsp_eku.cert.der
+openssl x509 -req -in end_responder.req -out end_responder_with_spdm_req_rsp_eku.cert -CA inter.cert -CAkey inter.key -sha384 -days 3650 -set_serial 7 -extensions v3_end_with_spdm_req_rsp_eku -extfile ../openssl.cnf
+openssl x509 -req -in end_responder.req -out end_responder_with_spdm_req_eku.cert -CA inter.cert -CAkey inter.key -sha384 -days 3650 -set_serial 8 -extensions v3_end_with_spdm_req_eku -extfile ../openssl.cnf
+openssl x509 -req -in end_responder.req -out end_responder_with_spdm_rsp_eku.cert -CA inter.cert -CAkey inter.key -sha384 -days 3650 -set_serial 9 -extensions v3_end_with_spdm_rsp_eku -extfile ../openssl.cnf
+openssl asn1parse -in end_responder_with_spdm_req_rsp_eku.cert -out end_responder_with_spdm_req_rsp_eku.cert.der
+openssl asn1parse -in end_responder_with_spdm_req_eku.cert -out end_responder_with_spdm_req_eku.cert.der
+openssl asn1parse -in end_responder_with_spdm_rsp_eku.cert -out end_responder_with_spdm_rsp_eku.cert.der
 popd
 
 pushd rsa4096
@@ -117,6 +141,18 @@ openssl pkey -in end_requester.key -inform PEM -pubout -outform PEM -out end_req
 openssl pkey -in end_requester.key -inform PEM -pubout -outform DER -out end_requester.key.pub.der
 openssl pkey -in end_responder.key -inform PEM -pubout -outform PEM -out end_responder.key.pub
 openssl pkey -in end_responder.key -inform PEM -pubout -outform DER -out end_responder.key.pub.der
+openssl x509 -req -in end_requester.req -out end_requester_with_spdm_req_rsp_eku.cert -CA inter.cert -CAkey inter.key -sha512 -days 3650 -set_serial 4 -extensions v3_end_with_spdm_req_rsp_eku -extfile ../openssl.cnf
+openssl x509 -req -in end_requester.req -out end_requester_with_spdm_req_eku.cert -CA inter.cert -CAkey inter.key -sha512 -days 3650 -set_serial 5 -extensions v3_end_with_spdm_req_eku -extfile ../openssl.cnf
+openssl x509 -req -in end_requester.req -out end_requester_with_spdm_rsp_eku.cert -CA inter.cert -CAkey inter.key -sha512 -days 3650 -set_serial 6 -extensions v3_end_with_spdm_rsp_eku -extfile ../openssl.cnf
+openssl asn1parse -in end_requester_with_spdm_req_rsp_eku.cert -out end_requester_with_spdm_req_rsp_eku.cert.der
+openssl asn1parse -in end_requester_with_spdm_req_eku.cert -out end_requester_with_spdm_req_eku.cert.der
+openssl asn1parse -in end_requester_with_spdm_rsp_eku.cert -out end_requester_with_spdm_rsp_eku.cert.der
+openssl x509 -req -in end_responder.req -out end_responder_with_spdm_req_rsp_eku.cert -CA inter.cert -CAkey inter.key -sha512 -days 3650 -set_serial 7 -extensions v3_end_with_spdm_req_rsp_eku -extfile ../openssl.cnf
+openssl x509 -req -in end_responder.req -out end_responder_with_spdm_req_eku.cert -CA inter.cert -CAkey inter.key -sha512 -days 3650 -set_serial 8 -extensions v3_end_with_spdm_req_eku -extfile ../openssl.cnf
+openssl x509 -req -in end_responder.req -out end_responder_with_spdm_rsp_eku.cert -CA inter.cert -CAkey inter.key -sha512 -days 3650 -set_serial 9 -extensions v3_end_with_spdm_rsp_eku -extfile ../openssl.cnf
+openssl asn1parse -in end_responder_with_spdm_req_rsp_eku.cert -out end_responder_with_spdm_req_rsp_eku.cert.der
+openssl asn1parse -in end_responder_with_spdm_req_eku.cert -out end_responder_with_spdm_req_eku.cert.der
+openssl asn1parse -in end_responder_with_spdm_rsp_eku.cert -out end_responder_with_spdm_rsp_eku.cert.der
 popd
 
 === EC Certificate Chains ===
@@ -145,15 +181,27 @@ openssl pkey -in end_requester.key -inform PEM -pubout -outform PEM -out end_req
 openssl pkey -in end_requester.key -inform PEM -pubout -outform DER -out end_requester.key.pub.der
 openssl pkey -in end_responder.key -inform PEM -pubout -outform PEM -out end_responder.key.pub
 openssl pkey -in end_responder.key -inform PEM -pubout -outform DER -out end_responder.key.pub.der
+openssl x509 -req -in end_requester.req -out end_requester_with_spdm_req_rsp_eku.cert -CA inter.cert -CAkey inter.key -sha256 -days 3650 -set_serial 4 -extensions v3_end_with_spdm_req_rsp_eku -extfile ../openssl.cnf
+openssl x509 -req -in end_requester.req -out end_requester_with_spdm_req_eku.cert -CA inter.cert -CAkey inter.key -sha256 -days 3650 -set_serial 5 -extensions v3_end_with_spdm_req_eku -extfile ../openssl.cnf
+openssl x509 -req -in end_requester.req -out end_requester_with_spdm_rsp_eku.cert -CA inter.cert -CAkey inter.key -sha256 -days 3650 -set_serial 6 -extensions v3_end_with_spdm_rsp_eku -extfile ../openssl.cnf
+openssl asn1parse -in end_requester_with_spdm_req_rsp_eku.cert -out end_requester_with_spdm_req_rsp_eku.cert.der
+openssl asn1parse -in end_requester_with_spdm_req_eku.cert -out end_requester_with_spdm_req_eku.cert.der
+openssl asn1parse -in end_requester_with_spdm_rsp_eku.cert -out end_requester_with_spdm_rsp_eku.cert.der
+openssl x509 -req -in end_responder.req -out end_responder_with_spdm_req_rsp_eku.cert -CA inter.cert -CAkey inter.key -sha256 -days 3650 -set_serial 7 -extensions v3_end_with_spdm_req_rsp_eku -extfile ../openssl.cnf
+openssl x509 -req -in end_responder.req -out end_responder_with_spdm_req_eku.cert -CA inter.cert -CAkey inter.key -sha256 -days 3650 -set_serial 8 -extensions v3_end_with_spdm_req_eku -extfile ../openssl.cnf
+openssl x509 -req -in end_responder.req -out end_responder_with_spdm_rsp_eku.cert -CA inter.cert -CAkey inter.key -sha256 -days 3650 -set_serial 9 -extensions v3_end_with_spdm_rsp_eku -extfile ../openssl.cnf
+openssl asn1parse -in end_responder_with_spdm_req_rsp_eku.cert -out end_responder_with_spdm_req_rsp_eku.cert.der
+openssl asn1parse -in end_responder_with_spdm_req_eku.cert -out end_responder_with_spdm_req_eku.cert.der
+openssl asn1parse -in end_responder_with_spdm_rsp_eku.cert -out end_responder_with_spdm_rsp_eku.cert.der
 popd
 
 pushd ecp384
 openssl genpkey -genparam -out param.pem -algorithm EC -pkeyopt ec_paramgen_curve:P-384
-openssl req -nodes -x509 -days 3650 -newkey ec:param.pem -keyout ca.key -out ca.cert -sha384 -subj "//CN=DMTF libspdm ECP256 CA"
+openssl req -nodes -x509 -days 3650 -newkey ec:param.pem -keyout ca.key -out ca.cert -sha384 -subj "//CN=DMTF libspdm ECP384 CA"
 openssl pkey -in ca.key -outform der -out ca.key.der
-openssl req -nodes -newkey ec:param.pem -keyout inter.key -out inter.req -sha384 -batch -subj "//CN=DMTF libspdm ECP256 intermediate cert"
-openssl req -nodes -newkey ec:param.pem -keyout end_requester.key -out end_requester.req -sha384 -batch -subj "//CN=DMTF libspdm ECP256 requseter cert"
-openssl req -nodes -newkey ec:param.pem -keyout end_responder.key -out end_responder.req -sha384 -batch -subj "//CN=DMTF libspdm ECP256 responder cert"
+openssl req -nodes -newkey ec:param.pem -keyout inter.key -out inter.req -sha384 -batch -subj "//CN=DMTF libspdm ECP384 intermediate cert"
+openssl req -nodes -newkey ec:param.pem -keyout end_requester.key -out end_requester.req -sha384 -batch -subj "//CN=DMTF libspdm ECP384 requseter cert"
+openssl req -nodes -newkey ec:param.pem -keyout end_responder.key -out end_responder.req -sha384 -batch -subj "//CN=DMTF libspdm ECP384 responder cert"
 openssl x509 -req -in inter.req -out inter.cert -CA ca.cert -CAkey ca.key -sha384 -days 3650 -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
 openssl x509 -req -in end_requester.req -out end_requester.cert -CA inter.cert -CAkey inter.key -sha384 -days 3650 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
 openssl x509 -req -in end_responder.req -out end_responder.cert -CA inter.cert -CAkey inter.key -sha384 -days 3650 -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
@@ -171,15 +219,27 @@ openssl pkey -in end_requester.key -inform PEM -pubout -outform PEM -out end_req
 openssl pkey -in end_requester.key -inform PEM -pubout -outform DER -out end_requester.key.pub.der
 openssl pkey -in end_responder.key -inform PEM -pubout -outform PEM -out end_responder.key.pub
 openssl pkey -in end_responder.key -inform PEM -pubout -outform DER -out end_responder.key.pub.der
+openssl x509 -req -in end_requester.req -out end_requester_with_spdm_req_rsp_eku.cert -CA inter.cert -CAkey inter.key -sha384 -days 3650 -set_serial 4 -extensions v3_end_with_spdm_req_rsp_eku -extfile ../openssl.cnf
+openssl x509 -req -in end_requester.req -out end_requester_with_spdm_req_eku.cert -CA inter.cert -CAkey inter.key -sha384 -days 3650 -set_serial 5 -extensions v3_end_with_spdm_req_eku -extfile ../openssl.cnf
+openssl x509 -req -in end_requester.req -out end_requester_with_spdm_rsp_eku.cert -CA inter.cert -CAkey inter.key -sha384 -days 3650 -set_serial 6 -extensions v3_end_with_spdm_rsp_eku -extfile ../openssl.cnf
+openssl asn1parse -in end_requester_with_spdm_req_rsp_eku.cert -out end_requester_with_spdm_req_rsp_eku.cert.der
+openssl asn1parse -in end_requester_with_spdm_req_eku.cert -out end_requester_with_spdm_req_eku.cert.der
+openssl asn1parse -in end_requester_with_spdm_rsp_eku.cert -out end_requester_with_spdm_rsp_eku.cert.der
+openssl x509 -req -in end_responder.req -out end_responder_with_spdm_req_rsp_eku.cert -CA inter.cert -CAkey inter.key -sha384 -days 3650 -set_serial 7 -extensions v3_end_with_spdm_req_rsp_eku -extfile ../openssl.cnf
+openssl x509 -req -in end_responder.req -out end_responder_with_spdm_req_eku.cert -CA inter.cert -CAkey inter.key -sha384 -days 3650 -set_serial 8 -extensions v3_end_with_spdm_req_eku -extfile ../openssl.cnf
+openssl x509 -req -in end_responder.req -out end_responder_with_spdm_rsp_eku.cert -CA inter.cert -CAkey inter.key -sha384 -days 3650 -set_serial 9 -extensions v3_end_with_spdm_rsp_eku -extfile ../openssl.cnf
+openssl asn1parse -in end_responder_with_spdm_req_rsp_eku.cert -out end_responder_with_spdm_req_rsp_eku.cert.der
+openssl asn1parse -in end_responder_with_spdm_req_eku.cert -out end_responder_with_spdm_req_eku.cert.der
+openssl asn1parse -in end_responder_with_spdm_rsp_eku.cert -out end_responder_with_spdm_rsp_eku.cert.der
 popd
 
 pushd ecp521
 openssl genpkey -genparam -out param.pem -algorithm EC -pkeyopt ec_paramgen_curve:P-521
-openssl req -nodes -x509 -days 3650 -newkey ec:param.pem -keyout ca.key -out ca.cert -sha512 -subj "//CN=DMTF libspdm ECP256 CA"
+openssl req -nodes -x509 -days 3650 -newkey ec:param.pem -keyout ca.key -out ca.cert -sha512 -subj "//CN=DMTF libspdm ECP521 CA"
 openssl pkey -in ca.key -outform der -out ca.key.der
-openssl req -nodes -newkey ec:param.pem -keyout inter.key -out inter.req -sha512 -batch -subj "//CN=DMTF libspdm ECP256 intermediate cert"
-openssl req -nodes -newkey ec:param.pem -keyout end_requester.key -out end_requester.req -sha512 -batch -subj "//CN=DMTF libspdm ECP256 requseter cert"
-openssl req -nodes -newkey ec:param.pem -keyout end_responder.key -out end_responder.req -sha512 -batch -subj "//CN=DMTF libspdm ECP256 responder cert"
+openssl req -nodes -newkey ec:param.pem -keyout inter.key -out inter.req -sha512 -batch -subj "//CN=DMTF libspdm ECP521 intermediate cert"
+openssl req -nodes -newkey ec:param.pem -keyout end_requester.key -out end_requester.req -sha512 -batch -subj "//CN=DMTF libspdm ECP521 requseter cert"
+openssl req -nodes -newkey ec:param.pem -keyout end_responder.key -out end_responder.req -sha512 -batch -subj "//CN=DMTF libspdm ECP521 responder cert"
 openssl x509 -req -in inter.req -out inter.cert -CA ca.cert -CAkey ca.key -sha512 -days 3650 -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
 openssl x509 -req -in end_requester.req -out end_requester.cert -CA inter.cert -CAkey inter.key -sha512 -days 3650 -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
 openssl x509 -req -in end_responder.req -out end_responder.cert -CA inter.cert -CAkey inter.key -sha512 -days 3650 -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
@@ -197,6 +257,18 @@ openssl pkey -in end_requester.key -inform PEM -pubout -outform PEM -out end_req
 openssl pkey -in end_requester.key -inform PEM -pubout -outform DER -out end_requester.key.pub.der
 openssl pkey -in end_responder.key -inform PEM -pubout -outform PEM -out end_responder.key.pub
 openssl pkey -in end_responder.key -inform PEM -pubout -outform DER -out end_responder.key.pub.der
+openssl x509 -req -in end_requester.req -out end_requester_with_spdm_req_rsp_eku.cert -CA inter.cert -CAkey inter.key -sha512 -days 3650 -set_serial 4 -extensions v3_end_with_spdm_req_rsp_eku -extfile ../openssl.cnf
+openssl x509 -req -in end_requester.req -out end_requester_with_spdm_req_eku.cert -CA inter.cert -CAkey inter.key -sha512 -days 3650 -set_serial 5 -extensions v3_end_with_spdm_req_eku -extfile ../openssl.cnf
+openssl x509 -req -in end_requester.req -out end_requester_with_spdm_rsp_eku.cert -CA inter.cert -CAkey inter.key -sha512 -days 3650 -set_serial 6 -extensions v3_end_with_spdm_rsp_eku -extfile ../openssl.cnf
+openssl asn1parse -in end_requester_with_spdm_req_rsp_eku.cert -out end_requester_with_spdm_req_rsp_eku.cert.der
+openssl asn1parse -in end_requester_with_spdm_req_eku.cert -out end_requester_with_spdm_req_eku.cert.der
+openssl asn1parse -in end_requester_with_spdm_rsp_eku.cert -out end_requester_with_spdm_rsp_eku.cert.der
+openssl x509 -req -in end_responder.req -out end_responder_with_spdm_req_rsp_eku.cert -CA inter.cert -CAkey inter.key -sha512 -days 3650 -set_serial 7 -extensions v3_end_with_spdm_req_rsp_eku -extfile ../openssl.cnf
+openssl x509 -req -in end_responder.req -out end_responder_with_spdm_req_eku.cert -CA inter.cert -CAkey inter.key -sha512 -days 3650 -set_serial 8 -extensions v3_end_with_spdm_req_eku -extfile ../openssl.cnf
+openssl x509 -req -in end_responder.req -out end_responder_with_spdm_rsp_eku.cert -CA inter.cert -CAkey inter.key -sha512 -days 3650 -set_serial 9 -extensions v3_end_with_spdm_rsp_eku -extfile ../openssl.cnf
+openssl asn1parse -in end_responder_with_spdm_req_rsp_eku.cert -out end_responder_with_spdm_req_rsp_eku.cert.der
+openssl asn1parse -in end_responder_with_spdm_req_eku.cert -out end_responder_with_spdm_req_eku.cert.der
+openssl asn1parse -in end_responder_with_spdm_rsp_eku.cert -out end_responder_with_spdm_rsp_eku.cert.der
 popd
 
 === Ed Certificate Chains ===
@@ -227,6 +299,18 @@ openssl pkey -in end_requester.key -inform PEM -pubout -outform PEM -out end_req
 openssl pkey -in end_requester.key -inform PEM -pubout -outform DER -out end_requester.key.pub.der
 openssl pkey -in end_responder.key -inform PEM -pubout -outform PEM -out end_responder.key.pub
 openssl pkey -in end_responder.key -inform PEM -pubout -outform DER -out end_responder.key.pub.der
+openssl x509 -req -days 3650 -in end_requester.req -CA inter.cert -CAkey inter.key -out end_requester_with_spdm_req_rsp_eku.cert -set_serial 4 -extensions v3_end_with_spdm_req_rsp_eku -extfile ../openssl.cnf
+openssl x509 -req -days 3650 -in end_requester.req -CA inter.cert -CAkey inter.key -out end_requester_with_spdm_req_eku.cert -set_serial 5 -extensions v3_end_with_spdm_req_eku -extfile ../openssl.cnf
+openssl x509 -req -days 3650 -in end_requester.req -CA inter.cert -CAkey inter.key -out end_requester_with_spdm_rsp_eku.cert -set_serial 6 -extensions v3_end_with_spdm_rsp_eku -extfile ../openssl.cnf
+openssl asn1parse -in end_requester_with_spdm_req_rsp_eku.cert -out end_requester_with_spdm_req_rsp_eku.cert.der
+openssl asn1parse -in end_requester_with_spdm_req_eku.cert -out end_requester_with_spdm_req_eku.cert.der
+openssl asn1parse -in end_requester_with_spdm_rsp_eku.cert -out end_requester_with_spdm_rsp_eku.cert.der
+openssl x509 -req -days 3650 -in end_responder.req -CA inter.cert -CAkey inter.key -out end_responder_with_spdm_req_rsp_eku.cert -set_serial 7 -extensions v3_end_with_spdm_req_rsp_eku -extfile ../openssl.cnf
+openssl x509 -req -days 3650 -in end_responder.req -CA inter.cert -CAkey inter.key -out end_responder_with_spdm_req_eku.cert -set_serial 8 -extensions v3_end_with_spdm_req_eku -extfile ../openssl.cnf
+openssl x509 -req -days 3650 -in end_responder.req -CA inter.cert -CAkey inter.key -out end_responder_with_spdm_rsp_eku.cert -set_serial 9 -extensions v3_end_with_spdm_rsp_eku -extfile ../openssl.cnf
+openssl asn1parse -in end_responder_with_spdm_req_rsp_eku.cert -out end_responder_with_spdm_req_rsp_eku.cert.der
+openssl asn1parse -in end_responder_with_spdm_req_eku.cert -out end_responder_with_spdm_req_eku.cert.der
+openssl asn1parse -in end_responder_with_spdm_rsp_eku.cert -out end_responder_with_spdm_rsp_eku.cert.der
 popd
 
 pushd ed448
@@ -255,6 +339,18 @@ openssl pkey -in end_requester.key -inform PEM -pubout -outform PEM -out end_req
 openssl pkey -in end_requester.key -inform PEM -pubout -outform DER -out end_requester.key.pub.der
 openssl pkey -in end_responder.key -inform PEM -pubout -outform PEM -out end_responder.key.pub
 openssl pkey -in end_responder.key -inform PEM -pubout -outform DER -out end_responder.key.pub.der
+openssl x509 -req -days 3650 -in end_requester.req -CA inter.cert -CAkey inter.key -out end_requester_with_spdm_req_rsp_eku.cert -set_serial 4 -extensions v3_end_with_spdm_req_rsp_eku -extfile ../openssl.cnf
+openssl x509 -req -days 3650 -in end_requester.req -CA inter.cert -CAkey inter.key -out end_requester_with_spdm_req_eku.cert -set_serial 5 -extensions v3_end_with_spdm_req_eku -extfile ../openssl.cnf
+openssl x509 -req -days 3650 -in end_requester.req -CA inter.cert -CAkey inter.key -out end_requester_with_spdm_rsp_eku.cert -set_serial 6 -extensions v3_end_with_spdm_rsp_eku -extfile ../openssl.cnf
+openssl asn1parse -in end_requester_with_spdm_req_rsp_eku.cert -out end_requester_with_spdm_req_rsp_eku.cert.der
+openssl asn1parse -in end_requester_with_spdm_req_eku.cert -out end_requester_with_spdm_req_eku.cert.der
+openssl asn1parse -in end_requester_with_spdm_rsp_eku.cert -out end_requester_with_spdm_rsp_eku.cert.der
+openssl x509 -req -days 3650 -in end_responder.req -CA inter.cert -CAkey inter.key -out end_responder_with_spdm_req_rsp_eku.cert -set_serial 7 -extensions v3_end_with_spdm_req_rsp_eku -extfile ../openssl.cnf
+openssl x509 -req -days 3650 -in end_responder.req -CA inter.cert -CAkey inter.key -out end_responder_with_spdm_req_eku.cert -set_serial 8 -extensions v3_end_with_spdm_req_eku -extfile ../openssl.cnf
+openssl x509 -req -days 3650 -in end_responder.req -CA inter.cert -CAkey inter.key -out end_responder_with_spdm_rsp_eku.cert -set_serial 9 -extensions v3_end_with_spdm_rsp_eku -extfile ../openssl.cnf
+openssl asn1parse -in end_responder_with_spdm_req_rsp_eku.cert -out end_responder_with_spdm_req_rsp_eku.cert.der
+openssl asn1parse -in end_responder_with_spdm_req_eku.cert -out end_responder_with_spdm_req_eku.cert.der
+openssl asn1parse -in end_responder_with_spdm_rsp_eku.cert -out end_responder_with_spdm_rsp_eku.cert.der
 popd
 
 === sm2 Certificate Chains ===
@@ -285,6 +381,18 @@ openssl pkey -in end_requester.key -inform PEM -pubout -outform PEM -out end_req
 openssl pkey -in end_requester.key -inform PEM -pubout -outform DER -out end_requester.key.pub.der
 openssl pkey -in end_responder.key -inform PEM -pubout -outform PEM -out end_responder.key.pub
 openssl pkey -in end_responder.key -inform PEM -pubout -outform DER -out end_responder.key.pub.der
+openssl x509 -req -days 3650 -in end_requester.req -CA inter.cert -CAkey inter.key -out end_requester_with_spdm_req_rsp_eku.cert -set_serial 4 -extensions v3_end_with_spdm_req_rsp_eku -extfile ../openssl.cnf
+openssl x509 -req -days 3650 -in end_requester.req -CA inter.cert -CAkey inter.key -out end_requester_with_spdm_req_eku.cert -set_serial 5 -extensions v3_end_with_spdm_req_eku -extfile ../openssl.cnf
+openssl x509 -req -days 3650 -in end_requester.req -CA inter.cert -CAkey inter.key -out end_requester_with_spdm_rsp_eku.cert -set_serial 6 -extensions v3_end_with_spdm_rsp_eku -extfile ../openssl.cnf
+openssl asn1parse -in end_requester_with_spdm_req_rsp_eku.cert -out end_requester_with_spdm_req_rsp_eku.cert.der
+openssl asn1parse -in end_requester_with_spdm_req_eku.cert -out end_requester_with_spdm_req_eku.cert.der
+openssl asn1parse -in end_requester_with_spdm_rsp_eku.cert -out end_requester_with_spdm_rsp_eku.cert.der
+openssl x509 -req -days 3650 -in end_responder.req -CA inter.cert -CAkey inter.key -out end_responder_with_spdm_req_rsp_eku.cert -set_serial 7 -extensions v3_end_with_spdm_req_rsp_eku -extfile ../openssl.cnf
+openssl x509 -req -days 3650 -in end_responder.req -CA inter.cert -CAkey inter.key -out end_responder_with_spdm_req_eku.cert -set_serial 8 -extensions v3_end_with_spdm_req_eku -extfile ../openssl.cnf
+openssl x509 -req -days 3650 -in end_responder.req -CA inter.cert -CAkey inter.key -out end_responder_with_spdm_rsp_eku.cert -set_serial 9 -extensions v3_end_with_spdm_rsp_eku -extfile ../openssl.cnf
+openssl asn1parse -in end_responder_with_spdm_req_rsp_eku.cert -out end_responder_with_spdm_req_rsp_eku.cert.der
+openssl asn1parse -in end_responder_with_spdm_req_eku.cert -out end_responder_with_spdm_req_eku.cert.der
+openssl asn1parse -in end_responder_with_spdm_rsp_eku.cert -out end_responder_with_spdm_rsp_eku.cert.der
 popd
 
 === long_chains Certificate Chains ===
@@ -497,4 +605,16 @@ openssl pkey -in end_requester.key -inform PEM -pubout -outform PEM -out end_req
 openssl pkey -in end_requester.key -inform PEM -pubout -outform DER -out end_requester.key.pub.der
 openssl pkey -in end_responder.key -inform PEM -pubout -outform PEM -out end_responder.key.pub
 openssl pkey -in end_responder.key -inform PEM -pubout -outform DER -out end_responder.key.pub.der
+openssl x509 -req -in end_requester.req -out end_requester_with_spdm_req_rsp_eku.cert -CA inter.cert -CAkey inter.key -sha384 -days 1 -set_serial 4 -extensions v3_end_with_spdm_req_rsp_eku -extfile ../openssl.cnf
+openssl x509 -req -in end_requester.req -out end_requester_with_spdm_req_eku.cert -CA inter.cert -CAkey inter.key -sha384 -days 1 -set_serial 5 -extensions v3_end_with_spdm_req_eku -extfile ../openssl.cnf
+openssl x509 -req -in end_requester.req -out end_requester_with_spdm_rsp_eku.cert -CA inter.cert -CAkey inter.key -sha384 -days 1 -set_serial 6 -extensions v3_end_with_spdm_rsp_eku -extfile ../openssl.cnf
+openssl asn1parse -in end_requester_with_spdm_req_rsp_eku.cert -out end_requester_with_spdm_req_rsp_eku.cert.der
+openssl asn1parse -in end_requester_with_spdm_req_eku.cert -out end_requester_with_spdm_req_eku.cert.der
+openssl asn1parse -in end_requester_with_spdm_rsp_eku.cert -out end_requester_with_spdm_rsp_eku.cert.der
+openssl x509 -req -in end_responder.req -out end_responder_with_spdm_req_rsp_eku.cert -CA inter.cert -CAkey inter.key -sha384 -days 1 -set_serial 7 -extensions v3_end_with_spdm_req_rsp_eku -extfile ../openssl.cnf
+openssl x509 -req -in end_responder.req -out end_responder_with_spdm_req_eku.cert -CA inter.cert -CAkey inter.key -sha384 -days 1 -set_serial 8 -extensions v3_end_with_spdm_req_eku -extfile ../openssl.cnf
+openssl x509 -req -in end_responder.req -out end_responder_with_spdm_rsp_eku.cert -CA inter.cert -CAkey inter.key -sha384 -days 1 -set_serial 9 -extensions v3_end_with_spdm_rsp_eku -extfile ../openssl.cnf
+openssl asn1parse -in end_responder_with_spdm_req_rsp_eku.cert -out end_responder_with_spdm_req_rsp_eku.cert.der
+openssl asn1parse -in end_responder_with_spdm_req_eku.cert -out end_responder_with_spdm_req_eku.cert.der
+openssl asn1parse -in end_responder_with_spdm_rsp_eku.cert -out end_responder_with_spdm_rsp_eku.cert.der
 popd
