@@ -263,6 +263,74 @@ void libspdm_test_crypt_spdm_x509_certificate_check(void **state)
         assert_true(status);
         free(file_buffer);
     }
+    if ((LIBSPDM_RSA_SSA_2048_SUPPORT) && (LIBSPDM_SHA256_SUPPORT)) {
+        /*check for leaf cert spdm defined eku*/
+        status = libspdm_read_input_file("rsa2048/end_requester_with_spdm_req_rsp_eku.cert.der",
+                                         (void **)&file_buffer, &file_buffer_size);
+        assert_true(status);
+
+        status = libspdm_x509_certificate_check(file_buffer, file_buffer_size,
+                                                SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
+                                                SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                                                true, true);
+        assert_true(status);
+        free(file_buffer);
+
+        status = libspdm_read_input_file("rsa2048/end_requester_with_spdm_req_eku.cert.der",
+                                         (void **)&file_buffer, &file_buffer_size);
+        assert_true(status);
+
+        status = libspdm_x509_certificate_check(file_buffer, file_buffer_size,
+                                                SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
+                                                SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                                                true, true);
+        assert_true(status);
+        free(file_buffer);
+
+        status = libspdm_read_input_file("rsa2048/end_requester_with_spdm_rsp_eku.cert.der",
+                                         (void **)&file_buffer, &file_buffer_size);
+        assert_true(status);
+
+        status = libspdm_x509_certificate_check(file_buffer, file_buffer_size,
+                                                SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
+                                                SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                                                true, true);
+        assert_false(status);
+        free(file_buffer);
+
+        status = libspdm_read_input_file("rsa2048/end_responder_with_spdm_req_rsp_eku.cert.der",
+                                         (void **)&file_buffer, &file_buffer_size);
+        assert_true(status);
+
+        status = libspdm_x509_certificate_check(file_buffer, file_buffer_size,
+                                                SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
+                                                SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                                                false, true);
+        assert_true(status);
+        free(file_buffer);
+
+        status = libspdm_read_input_file("rsa2048/end_requester_with_spdm_req_eku.cert.der",
+                                         (void **)&file_buffer, &file_buffer_size);
+        assert_true(status);
+
+        status = libspdm_x509_certificate_check(file_buffer, file_buffer_size,
+                                                SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
+                                                SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                                                false, true);
+        assert_false(status);
+        free(file_buffer);
+
+        status = libspdm_read_input_file("rsa2048/end_requester_with_spdm_rsp_eku.cert.der",
+                                         (void **)&file_buffer, &file_buffer_size);
+        assert_true(status);
+
+        status = libspdm_x509_certificate_check(file_buffer, file_buffer_size,
+                                                SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
+                                                SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                                                false, true);
+        assert_true(status);
+        free(file_buffer);
+    }
     if ((LIBSPDM_RSA_SSA_3072_SUPPORT) && (LIBSPDM_SHA256_SUPPORT)) {
         /* cert mismatched negotiated base_aysm_algo check */
         status = libspdm_read_input_file("rsa2048/end_requester.cert.der",
