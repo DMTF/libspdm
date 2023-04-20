@@ -70,9 +70,9 @@ jobs:
             toolchain: CLANG
           - crypto: mbedtls
             toolchain: CLANG
-          - configurations: "-DLIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT=0"
+          - configurations: "-DLIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT=0 -DLIBSPDM_FIPS_MODE=0"
             toolchain: CLANG
-          - configurations: "-DLIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT=1"
+          - configurations: "-DLIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT=1 -DLIBSPDM_FIPS_MODE=1"
             toolchain: CLANG
           - arch: aarch64
             toolchain: GCC
@@ -88,9 +88,9 @@ jobs:
             toolchain: ARM_GNU
           - arch: ia32
             toolchain: ARM_GNU
-          - configurations: "-DLIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT=0"
+          - configurations: "-DLIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT=0 -DLIBSPDM_FIPS_MODE=0"
             toolchain: ARM_GNU
-          - configurations: "-DLIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT=1"
+          - configurations: "-DLIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT=1 -DLIBSPDM_FIPS_MODE=1"
             toolchain: ARM_GNU
           - target: Debug
             toolchain: ARM_GNU
