@@ -269,6 +269,27 @@ Enumeration value used for the `libspdm_set_data` and/or `libspdm_get_data` func
     - Specifies the Responder's `HeartbeatPeriod` in units of seconds. This value is communicated to
       the Requester in the `KEY_EXCHANGE_RSP` and `PSK_EXCHANGE_RSP` messages. The actual timeout
       limit is twice the `HeartbeatPeriod`.
+- `LIBSPDM_DATA_BASIC_MUT_AUTH_REQUESTED`
+    - Specifies whether the Responder requires basic mutual authentication with the Requester via
+      the `CHALLENGE / CHALLENGE_AUTH` messages.
+        - If `true` then Responder requires basic mutual authentication.
+        - If `false` then Responder does not require basic mutual authentication.
+    - Note that basic mutual authentication was deprecated in SPDM 1.2 and should also be considered
+      deprecated in SPDM 1.1. If a Responder requires mutual authentication then it should use
+      session-based mutual authentication via symmetric or asymmetric key exchange.
+- `LIBSPDM_DATA_MUT_AUTH_REQUESTED`
+    - Specifies whether the Responder requires session-based mutual authentication with the
+      Requester via asymmetric key exchange. Its value can be one of
+        - `SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED`
+            - Used when the Responder is in possession of the Requester's public key and does not
+              want to issue encapsulated requests to get a certificate chain from the Requester.
+        - `SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST`
+            - Used when the Responder wants to issue `GET_CERTIFICATE` encapsulated requests to the
+              Requester to retrieve certificate chains.
+        - `SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS`
+            - Similar to `SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST` except
+              the Responder embeds a `GET_DIGESTS` request in its response to the Requester. This
+              may improve performance.
 
 ### Values that can only be `get`.
 
