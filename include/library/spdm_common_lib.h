@@ -60,8 +60,6 @@ typedef enum {
 
     /* Certificate info */
     LIBSPDM_DATA_LOCAL_PUBLIC_CERT_CHAIN,
-    /* LIBSPDM_DATA_LOCAL_SLOT_COUNT is deprecated. Do not use it. Reserved only. */
-    LIBSPDM_DATA_LOCAL_SLOT_COUNT,
     LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT,
     LIBSPDM_DATA_PEER_PUBLIC_KEY,
     LIBSPDM_DATA_LOCAL_PUBLIC_KEY,
