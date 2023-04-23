@@ -5,17 +5,32 @@
  **/
 
 #include "internal/libspdm_crypt_lib.h"
+#include "internal/libspdm_common_lib.h"
+#include "internal/libspdm_fips_lib.h"
 
 #if LIBSPDM_FIPS_MODE
 
 /**
  * HKDF KAT test
  **/
-bool libspdm_fips_selftest_hkdf(void)
+bool libspdm_fips_selftest_hkdf(void *fips_selftest_context)
 {
     bool result = true;
 
 #if LIBSPDM_SHA256_SUPPORT
+    libspdm_fips_selftest_context *context = fips_selftest_context;
+    LIBSPDM_ASSERT(fips_selftest_context != NULL);
+
+    /* any test fail cause the FIPS fail*/
+    if (context->tested_algo != context->self_test_result) {
+        return false;
+    }
+
+    /* check if run before.*/
+    if ((context->tested_algo & LIBSPDM_FIPS_SELF_TEST_HKDF) != 0) {
+        return true;
+    }
+
     uint8_t prk_out[32];
     uint8_t out[42];
 
@@ -58,12 +73,14 @@ bool libspdm_fips_selftest_hkdf(void)
         );
     if (!result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "HKDF extract failed \n"));
-        return false;
+        result = false;
+        goto update;
     }
 
     if (!libspdm_consttime_is_mem_equal(prk_out, hkdf_sha256_prk, sizeof(hkdf_sha256_prk))) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "HKDF KAT failed \n"));
-        return false;
+        result = false;
+        goto update;
     }
 
     libspdm_zero_mem(out, sizeof(out));
@@ -72,13 +89,27 @@ bool libspdm_fips_selftest_hkdf(void)
                                          out, sizeof(out));
     if (!result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "HKDF expand failed \n"));
-        return false;
+        result = false;
+        goto update;
     }
 
     if (!libspdm_consttime_is_mem_equal(out, hkdf_sha256_okm, sizeof(hkdf_sha256_okm))) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "HKDF KAT failed \n"));
-        return false;
+        result = false;
+        goto update;
     }
+
+update:
+    /* mark it as tested*/
+    context->tested_algo |= LIBSPDM_FIPS_SELF_TEST_HKDF;
+
+    /* record test result*/
+    if (result) {
+        context->self_test_result |= LIBSPDM_FIPS_SELF_TEST_HKDF;
+    } else {
+        context->self_test_result &= ~LIBSPDM_FIPS_SELF_TEST_HKDF;
+    }
+
 #endif/*LIBSPDM_SHA256_SUPPORT*/
 
     return result;

@@ -5,17 +5,32 @@
  **/
 
 #include "internal/libspdm_crypt_lib.h"
+#include "internal/libspdm_common_lib.h"
+#include "internal/libspdm_fips_lib.h"
 
 #if LIBSPDM_FIPS_MODE
 
 /**
  * SHA3_256 KAT
  **/
-bool libspdm_fips_selftest_sha3_256(void)
+bool libspdm_fips_selftest_sha3_256(void *fips_selftest_context)
 {
     bool result = true;
 
 #if (LIBSPDM_SHA3_SUPPORT_TEST && LIBSPDM_SHA3_256_SUPPORT)
+    libspdm_fips_selftest_context *context = fips_selftest_context;
+    LIBSPDM_ASSERT(fips_selftest_context != NULL);
+
+    /* any test fail cause the FIPS fail*/
+    if (context->tested_algo != context->self_test_result) {
+        return false;
+    }
+
+    /* check if run before.*/
+    if ((context->tested_algo & LIBSPDM_FIPS_SELF_TEST_SHA3_256) != 0) {
+        return true;
+    }
+
     const uint8_t msg[] = {0x7f, 0x94};
     /*Test Vectors: https://csrc.nist.gov/Projects/Cryptographic-Algorithm-Validation-Program/Secure-Hashing#sha3vsha3vss */
     uint8_t sha3_256_result[32];
@@ -29,13 +44,26 @@ bool libspdm_fips_selftest_sha3_256(void)
     result = libspdm_sha3_256_hash_all(msg, sizeof(msg), sha3_256_result);
     if (!result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "gen sha3_256 failed \n"));
-        return false;
+        result = false;
+        goto update;
     }
 
     if (!libspdm_consttime_is_mem_equal(sha3_256_result, sha3_256_answer,
                                         sizeof(sha3_256_answer))) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "sha3_256 KAT failed \n"));
-        return false;
+        result = false;
+        goto update;
+    }
+
+update:
+    /* mark it as tested*/
+    context->tested_algo |= LIBSPDM_FIPS_SELF_TEST_SHA3_256;
+
+    /* record test result*/
+    if (result) {
+        context->self_test_result |= LIBSPDM_FIPS_SELF_TEST_SHA3_256;
+    } else {
+        context->self_test_result &= ~LIBSPDM_FIPS_SELF_TEST_SHA3_256;
     }
 
 #endif/*(LIBSPDM_SHA3_SUPPORT_TEST && LIBSPDM_SHA3_256_SUPPORT)*/
@@ -46,11 +74,24 @@ bool libspdm_fips_selftest_sha3_256(void)
 /**
  * SHA3_384 KAT
  **/
-bool libspdm_fips_selftest_sha3_384(void)
+bool libspdm_fips_selftest_sha3_384(void *fips_selftest_context)
 {
     bool result = true;
 
 #if (LIBSPDM_SHA3_SUPPORT_TEST && LIBSPDM_SHA3_384_SUPPORT)
+    libspdm_fips_selftest_context *context = fips_selftest_context;
+    LIBSPDM_ASSERT(fips_selftest_context != NULL);
+
+    /* any test fail cause the FIPS fail*/
+    if (context->tested_algo != context->self_test_result) {
+        return false;
+    }
+
+    /* check if run before.*/
+    if ((context->tested_algo & LIBSPDM_FIPS_SELF_TEST_SHA3_384) != 0) {
+        return true;
+    }
+
     uint8_t sha3_384_result[48];
     /*Test Vectors: https://csrc.nist.gov/Projects/Cryptographic-Algorithm-Validation-Program/Secure-Hashing#sha3vsha3vss */
     const uint8_t msg[] = {0x89, 0xcc};
@@ -66,13 +107,26 @@ bool libspdm_fips_selftest_sha3_384(void)
     result = libspdm_sha3_384_hash_all(msg, sizeof(msg), sha3_384_result);
     if (!result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "gen sha3_384 failed \n"));
-        return false;
+        result = false;
+        goto update;
     }
 
     if (!libspdm_consttime_is_mem_equal(sha3_384_result, sha3_384_answer,
                                         sizeof(sha3_384_answer))) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "sha3_384 KAT failed \n"));
-        return false;
+        result = false;
+        goto update;
+    }
+
+update:
+    /* mark it as tested*/
+    context->tested_algo |= LIBSPDM_FIPS_SELF_TEST_SHA3_384;
+
+    /* record test result*/
+    if (result) {
+        context->self_test_result |= LIBSPDM_FIPS_SELF_TEST_SHA3_384;
+    } else {
+        context->self_test_result &= ~LIBSPDM_FIPS_SELF_TEST_SHA3_384;
     }
 
 #endif/*(LIBSPDM_SHA3_SUPPORT_TEST && LIBSPDM_SHA3_384_SUPPORT)*/
@@ -83,11 +137,24 @@ bool libspdm_fips_selftest_sha3_384(void)
 /**
  * SHA3_512 KAT
  **/
-bool libspdm_fips_selftest_sha3_512(void)
+bool libspdm_fips_selftest_sha3_512(void *fips_selftest_context)
 {
     bool result = true;
 
 #if (LIBSPDM_SHA3_SUPPORT_TEST && LIBSPDM_SHA3_512_SUPPORT)
+    libspdm_fips_selftest_context *context = fips_selftest_context;
+    LIBSPDM_ASSERT(fips_selftest_context != NULL);
+
+    /* any test fail cause the FIPS fail*/
+    if (context->tested_algo != context->self_test_result) {
+        return false;
+    }
+
+    /* check if run before.*/
+    if ((context->tested_algo & LIBSPDM_FIPS_SELF_TEST_SHA3_512) != 0) {
+        return true;
+    }
+
     uint8_t sha3_512_result[64];
     /*Test Vectors: https://csrc.nist.gov/Projects/Cryptographic-Algorithm-Validation-Program/Secure-Hashing#sha3vsha3vss */
     const uint8_t msg[] = {0xb1, 0x39};
@@ -105,13 +172,26 @@ bool libspdm_fips_selftest_sha3_512(void)
     result = libspdm_sha3_512_hash_all(msg, sizeof(msg), sha3_512_result);
     if (!result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "gen sha3_512 failed \n"));
-        return false;
+        result = false;
+        goto update;
     }
 
     if (!libspdm_consttime_is_mem_equal(sha3_512_result, sha3_512_answer,
                                         sizeof(sha3_512_answer))) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "sha3_512 KAT failed \n"));
-        return false;
+        result = false;
+        goto update;
+    }
+
+update:
+    /* mark it as tested*/
+    context->tested_algo |= LIBSPDM_FIPS_SELF_TEST_SHA3_512;
+
+    /* record test result*/
+    if (result) {
+        context->self_test_result |= LIBSPDM_FIPS_SELF_TEST_SHA3_512;
+    } else {
+        context->self_test_result &= ~LIBSPDM_FIPS_SELF_TEST_SHA3_512;
     }
 
 #endif/*(LIBSPDM_SHA3_SUPPORT_TEST && LIBSPDM_SHA3_512_SUPPORT)*/

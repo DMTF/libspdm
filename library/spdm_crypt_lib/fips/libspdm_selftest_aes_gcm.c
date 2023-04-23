@@ -5,17 +5,32 @@
  **/
 
 #include "internal/libspdm_crypt_lib.h"
+#include "internal/libspdm_common_lib.h"
+#include "internal/libspdm_fips_lib.h"
 
 #if LIBSPDM_FIPS_MODE
 
 /**
  * AES_GCM self_test
  **/
-bool libspdm_fips_selftest_aes_gcm(void)
+bool libspdm_fips_selftest_aes_gcm(void *fips_selftest_context)
 {
     bool result = true;
 
 #if LIBSPDM_AEAD_GCM_SUPPORT
+    libspdm_fips_selftest_context *context = fips_selftest_context;
+    LIBSPDM_ASSERT(fips_selftest_context != NULL);
+
+    /* any test fail cause the FIPS fail*/
+    if (context->tested_algo != context->self_test_result) {
+        return false;
+    }
+
+    /* check if run before.*/
+    if ((context->tested_algo & LIBSPDM_FIPS_SELF_TEST_AES_GCM) != 0) {
+        return true;
+    }
+
     uint8_t output_ciphertext[1024];
     uint8_t output_plaintext[1024];
     uint8_t output_tag[1024];
@@ -97,23 +112,26 @@ bool libspdm_fips_selftest_aes_gcm(void)
                                           output_ciphertext, &output_ciphertext_size);
     if (!result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "aes_gcm encrypt failed \n"));
-        return false;
+        goto update;
     }
 
     if (output_ciphertext_size != sizeof(expected_ciphertext)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "aes_gcm KAT failed \n"));
-        return false;
+        result = false;
+        goto update;
     }
 
     if (!libspdm_consttime_is_mem_equal(output_ciphertext, expected_ciphertext,
                                         sizeof(expected_ciphertext))) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "aes_gcm KAT failed \n"));
-        return false;
+        result = false;
+        goto update;
     }
 
     if (!libspdm_consttime_is_mem_equal(output_tag, expected_tag, sizeof(expected_tag))) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "aes_gcm KAT failed \n"));
-        return false;
+        result = false;
+        goto update;
     }
 
     libspdm_zero_mem(output_plaintext, sizeof(output_plaintext));
@@ -123,17 +141,31 @@ bool libspdm_fips_selftest_aes_gcm(void)
                                           output_plaintext, &output_plaintext_size);
     if (!result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "aes_gcm decrypt failed \n"));
-        return false;
+        result = false;
+        goto update;
     }
 
     if (output_plaintext_size != sizeof(input)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "aes_gcm selftest failed \n"));
-        return false;
+        result = false;
+        goto update;
     }
 
     if (!libspdm_consttime_is_mem_equal(output_plaintext, input, sizeof(input))) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "aes_gcm selftest failed \n"));
-        return false;
+        result = false;
+        goto update;
+    }
+
+update:
+    /* mark it as tested*/
+    context->tested_algo |= LIBSPDM_FIPS_SELF_TEST_AES_GCM;
+
+    /* record test result*/
+    if (result) {
+        context->self_test_result |= LIBSPDM_FIPS_SELF_TEST_AES_GCM;
+    } else {
+        context->self_test_result &= ~LIBSPDM_FIPS_SELF_TEST_AES_GCM;
     }
 
 #endif/*LIBSPDM_AEAD_GCM_SUPPORT*/

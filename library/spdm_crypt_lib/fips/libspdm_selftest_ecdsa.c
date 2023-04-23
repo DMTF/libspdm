@@ -5,6 +5,8 @@
  **/
 
 #include "internal/libspdm_crypt_lib.h"
+#include "internal/libspdm_common_lib.h"
+#include "internal/libspdm_fips_lib.h"
 
 #if LIBSPDM_FIPS_MODE
 
@@ -26,11 +28,24 @@ int libspdm_hardcode_random_number_ecdsa(void *rng_state, unsigned char *output,
 /**
  * ECDSA self_test
  **/
-bool libspdm_fips_selftest_ecdsa(void)
+bool libspdm_fips_selftest_ecdsa(void *fips_selftest_context)
 {
     bool result = true;
 
 #if LIBSPDM_ECDSA_SUPPORT
+    libspdm_fips_selftest_context *context = fips_selftest_context;
+    LIBSPDM_ASSERT(fips_selftest_context != NULL);
+
+    /* any test fail cause the FIPS fail*/
+    if (context->tested_algo != context->self_test_result) {
+        return false;
+    }
+
+    /* check if run before.*/
+    if ((context->tested_algo & LIBSPDM_FIPS_SELF_TEST_ECDSA) != 0) {
+        return true;
+    }
+
     uint8_t signature[32 * 2];
     size_t sig_size;
     void *ec_context;
@@ -81,21 +96,24 @@ bool libspdm_fips_selftest_ecdsa(void)
     ec_context = libspdm_ec_new_by_nid(LIBSPDM_CRYPTO_NID_ECDSA_NIST_P256);
     if (ec_context == NULL) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ec_context new failed \n"));
-        return false;
+        result = false;
+        goto update;
     }
 
     result = libspdm_ec_set_pub_key(ec_context, public_key, sizeof(public_key));
     if (!result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ec_context set pub_key failed \n"));
         libspdm_ec_free(ec_context);
-        return false;
+        result = false;
+        goto update;
     }
 
     result = libspdm_ec_set_priv_key(ec_context, priv_key, sizeof(priv_key));
     if (!result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ec_context set priv_key failed \n"));
         libspdm_ec_free(ec_context);
-        return false;
+        result = false;
+        goto update;
     }
 
     /*ECDSA KAT test*/
@@ -106,20 +124,23 @@ bool libspdm_fips_selftest_ecdsa(void)
     if (!result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ECDSA sign failed \n"));
         libspdm_ec_free(ec_context);
-        return false;
+        result = false;
+        goto update;
     }
 
     if (sig_size != sizeof(expected_signature)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ECDSA KAT failed \n"));
         libspdm_ec_free(ec_context);
-        return false;
+        result = false;
+        goto update;
     }
 
     if (!libspdm_consttime_is_mem_equal(signature, expected_signature,
                                         sizeof(expected_signature))) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ECDSA KAT failed \n"));
         libspdm_ec_free(ec_context);
-        return false;
+        result = false;
+        goto update;
     }
 
     result = libspdm_ecdsa_verify(ec_context, LIBSPDM_CRYPTO_NID_SHA256,
@@ -128,10 +149,23 @@ bool libspdm_fips_selftest_ecdsa(void)
     if (!result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ECDSA selftest failed \n"));
         libspdm_ec_free(ec_context);
-        return false;
+        result = false;
+        goto update;
     }
 
     libspdm_ec_free(ec_context);
+
+update:
+    /* mark it as tested*/
+    context->tested_algo |= LIBSPDM_FIPS_SELF_TEST_ECDSA;
+
+    /* record test result*/
+    if (result) {
+        context->self_test_result |= LIBSPDM_FIPS_SELF_TEST_ECDSA;
+    } else {
+        context->self_test_result &= ~LIBSPDM_FIPS_SELF_TEST_ECDSA;
+    }
+
 #endif/*LIBSPDM_ECDSA_SUPPORT*/
 
     return result;

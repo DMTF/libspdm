@@ -354,15 +354,6 @@ bool libspdm_export_fips_selftest_context_from_spdm_context(void *spdm_context,
                                                             void *fips_selftest_context,
                                                             size_t fips_selftest_context_size);
 
-/**
- * update fips_selftest_context in spdm_context;
- *
- * @param[in]    spdm_context                A pointer to the spdm_context.
- *
- * @retval true   run FIPS self_test successfully;
- * @retval false  run FIPS self_test failed;
- */
-bool libspdm_update_fips_selftest_context(void *spdm_context);
 #endif /* LIBSPDM_FIPS_MODE */
 
 /**

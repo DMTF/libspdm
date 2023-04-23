@@ -50,7 +50,8 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
    #if LIBSPDM_FIPS_MODE
    spdm_fips_selftest_context = (void *)malloc(libspdm_get_fips_selftest_context_size());//user only calls the function once when device start.
    libspdm_init_fips_selftest_context(spdm_fips_selftest_context); //user only calls the function once when device start.
-   libspdm_import_fips_selftest_context_to_spdm_context(void *spdm_context, void *fips_selftest_context, size_t fips_selftest_context_size);
+   libspdm_fips_run_selftest(spdm_fips_selftest_context);//Optional running. If run_selftest is successful，then call import_fips_self. If run_selftest is failed, eixt.
+   libspdm_import_fips_selftest_context_to_spdm_context(void *spdm_context, void *fips_selftest_context, size_t fips_selftest_context_size);//If libspdm_fips_run_selftest is not called, the import_fips_selftest_context is still needed.
    #endif
 
    scratch_buffer_size = libspdm_get_sizeof_required_scratch_buffer(m_spdm_context);
@@ -319,7 +320,8 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
   #if LIBSPDM_FIPS_MODE
    spdm_fips_selftest_context = (void *)malloc(libspdm_get_fips_selftest_context_size());//user only calls the function once when device start.
    libspdm_init_fips_selftest_context(spdm_fips_selftest_context); //user only calls the function once when device start.
-   libspdm_import_fips_selftest_context_to_spdm_context(void *spdm_context, void *fips_selftest_context, size_t fips_selftest_context_size);
+   libspdm_fips_run_selftest(spdm_fips_selftest_context);//Optional running. If run_selftest is successful，then call import_fips_self. If run_selftest is failed, eixt.
+   libspdm_import_fips_selftest_context_to_spdm_context(void *spdm_context, void *fips_selftest_context, size_t fips_selftest_context_size);//If libspdm_fips_run_selftest is not called, the import_fips_selftest_context is still needed.
   #endif
 
    scratch_buffer_size = libspdm_get_sizeof_required_scratch_buffer(m_spdm_context);
