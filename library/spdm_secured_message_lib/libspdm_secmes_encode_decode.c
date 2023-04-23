@@ -131,6 +131,9 @@ libspdm_return_t libspdm_encode_secured_message(
         libspdm_write_uint64(salt, data64);
     }
 
+    /*clear for security*/
+    data64 = 0;
+
     sequence_num_in_header = 0;
     sequence_num_in_header_size = spdm_secured_message_callbacks->get_sequence_number(
         sequence_number, (uint8_t *)&sequence_num_in_header);
@@ -401,6 +404,9 @@ libspdm_return_t libspdm_decode_secured_message(
                  (sequence_number - 1) ^ sequence_number;
         libspdm_write_uint64(salt, data64);
     }
+
+    /*clear for security*/
+    data64 = 0;
 
     sequence_num_in_header = 0;
     sequence_num_in_header_size =
