@@ -84,10 +84,6 @@
     #error LIBSPDM_MAX_SESSION_COUNT must be less than 65536.
 #endif
 
-#if (LIBSPDM_MAX_SPDM_MSG_SIZE < SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12)
-    #error LIBSPDM_MAX_SPDM_MSG_SIZE should be no less than SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12
-#endif
-
 #if (LIBSPDM_FIPS_TEST_AT_LOAD) && (!LIBSPDM_FIPS_MODE)
     #error LIBSPDM_FIPS_TEST_AT_LOAD must be used after enabling LIBSPDM_FIPS_MODE.
 #endif
