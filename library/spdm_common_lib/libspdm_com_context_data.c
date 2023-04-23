@@ -510,7 +510,11 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         }
         context->local_context.basic_mut_auth_requested = mut_auth_requested;
         context->encap_context.request_id = 0;
-        context->encap_context.req_slot_id = parameter->additional_data[0];
+        slot_id = parameter->additional_data[0];
+        if ((slot_id >= SPDM_MAX_SLOT_COUNT) && (slot_id != 0xFF)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        context->encap_context.req_slot_id = slot_id;
 
         #if LIBSPDM_DEBUG_PRINT_ENABLE
         if (mut_auth_requested) {
@@ -535,7 +539,11 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         }
         context->local_context.mut_auth_requested = mut_auth_requested;
         context->encap_context.request_id = 0;
-        context->encap_context.req_slot_id = parameter->additional_data[0];
+        slot_id = parameter->additional_data[0];
+        if ((slot_id >= SPDM_MAX_SLOT_COUNT) && (slot_id != 0xFF)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        context->encap_context.req_slot_id = slot_id;
         break;
     case LIBSPDM_DATA_HEARTBEAT_PERIOD:
         if (data_size != sizeof(uint8_t)) {
