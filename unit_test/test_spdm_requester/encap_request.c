@@ -10,6 +10,7 @@
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
 
 static uint8_t m_libspdm_local_certificate_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
+static uint8_t temp_buf[LIBSPDM_SENDER_BUFFER_SIZE];
 
 libspdm_return_t libspdm_requester_encap_request_test_send_message(void *spdm_context,
                                                                    size_t request_size,
@@ -103,7 +104,6 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
     libspdm_test_context_t *spdm_test_context;
     spdm_encapsulated_request_response_t *libspdm_encapsulated_request_response;
     uint8_t *digest;
-    uint8_t temp_buf[LIBSPDM_RECEIVER_BUFFER_SIZE];
     size_t temp_buf_size;
     uint8_t *temp_buf_ptr;
 
