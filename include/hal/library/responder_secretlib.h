@@ -50,14 +50,24 @@
  * is an invalid index not supported by the device, "measurements_count" will
  * return 0 and the function will return LIBSPDM_STATUS_MEAS_INVALID_INDEX.
  *
- * @param  measurements
- * A pointer to a destination buffer to store the concatenation of all device
- * measurement blocks. This buffer will only be modified if "measurement_index" is non-zero.
+ * @param  buffer
+ * A pointer to a destination buffer to store the device measurement blocks as well as any opaque
+ * data. There is a gap between the Measurements field and Opaque Data field that the caller will
+ * populate.
+ *
+ * | Measurements | Opaque Data Offset | Opaque Data |
+ *
+ * The Measurements field shall only be modified if "measurement_index" is non-zero.
  *
  * @param  measurements_size
- * On input, indicates the size in bytes of the destination buffer.
- * On output, indicates the total size in bytes of all device measurement
- * blocks in the buffer. This field should only be modified if "measurement_index" is non-zero.
+ * On input, indicates the size, in bytes, of the buffer that can be used to hold the measurements
+ * and opaque data.
+ * On output, indicates the size, in bytes, of the sum of the Measurements field and the Opaque
+ * Data field. measurements_size = sizeof(Measurements) + sizeof(Opaque Data)
+ *
+ * @param opaque_data_offset
+ * Specifies the size, in bytes, of the gap between the Measurements field and the Opaque Data
+ * field.
  **/
 extern libspdm_return_t libspdm_measurement_collection(
     spdm_version_number_t spdm_version,
@@ -67,8 +77,9 @@ extern libspdm_return_t libspdm_measurement_collection(
     uint8_t request_attribute,
     uint8_t *content_changed,
     uint8_t *measurements_count,
-    void *measurements,
-    size_t *measurements_size);
+    void *buffer,
+    size_t *buffer_size,
+    size_t opaque_data_offset);
 
 /**
  * This function calculates the measurement summary hash.
