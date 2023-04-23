@@ -23,12 +23,6 @@ libspdm_return_t libspdm_responder_dispatch_message(void *spdm_context)
 
     context = spdm_context;
 
-#if LIBSPDM_FIPS_MODE
-    if (!libspdm_update_fips_selftest_context(spdm_context)) {
-        return LIBSPDM_STATUS_FIPS_FAIL;
-    }
-#endif/* LIBSPDM_FIPS_MODE*/
-
     /* receive and process request message */
     status = libspdm_acquire_receiver_buffer (context, &message_size, (void **)&message);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {

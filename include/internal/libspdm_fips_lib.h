@@ -26,75 +26,75 @@
 /**
  * HMAC-SHA256 KAT covers SHA256 KAT.
  **/
-bool libspdm_fips_selftest_hmac_sha256(void);
+bool libspdm_fips_selftest_hmac_sha256(void *fips_selftest_context);
 /**
  * HMAC-SHA384 KAT covers SHA384 KAT.
  **/
-bool libspdm_fips_selftest_hmac_sha384(void);
+bool libspdm_fips_selftest_hmac_sha384(void *fips_selftest_context);
 /**
  * HMAC-SHA512 KAT covers SHA512 KAT.
  **/
-bool libspdm_fips_selftest_hmac_sha512(void);
+bool libspdm_fips_selftest_hmac_sha512(void *fips_selftest_context);
 
 /**
  * AES_GCM self_test
  **/
-bool libspdm_fips_selftest_aes_gcm(void);
+bool libspdm_fips_selftest_aes_gcm(void *fips_selftest_context);
 
 /**
  * RSA_SSA(RSASSA-PKCS1 v1.5) self_test
  **/
-bool libspdm_fips_selftest_rsa_ssa(void);
+bool libspdm_fips_selftest_rsa_ssa(void *fips_selftest_context);
 
 /**
  * HKDF KAT test
  **/
-bool libspdm_fips_selftest_hkdf(void);
+bool libspdm_fips_selftest_hkdf(void *fips_selftest_context);
 
 /**
  * ECDH self_test
  **/
-bool libspdm_fips_selftest_ecdh(void);
+bool libspdm_fips_selftest_ecdh(void *fips_selftest_context);
 
 /**
  * SHA256 KAT: HMAC-SHA256 KAT covers SHA256 KAT.
  **/
-bool libspdm_fips_selftest_sha256(void);
+bool libspdm_fips_selftest_sha256(void *fips_selftest_context);
 /**
  * SHA384 KAT: HMAC-SHA384 KAT covers SHA384 KAT.
  **/
-bool libspdm_fips_selftest_sha384(void);
+bool libspdm_fips_selftest_sha384(void *fips_selftest_context);
 /**
  * SHA512 KAT: HMAC-SHA512 KAT covers SHA512 KAT.
  **/
-bool libspdm_fips_selftest_sha512(void);
+bool libspdm_fips_selftest_sha512(void *fips_selftest_context);
 
 /**
  * SHA3_256 KAT
  **/
-bool libspdm_fips_selftest_sha3_256(void);
+bool libspdm_fips_selftest_sha3_256(void *fips_selftest_context);
 /**
  * SHA3_384 KAT
  **/
-bool libspdm_fips_selftest_sha3_384(void);
+bool libspdm_fips_selftest_sha3_384(void *fips_selftest_context);
 /**
  * SHA3_512 KAT
  **/
-bool libspdm_fips_selftest_sha3_512(void);
+bool libspdm_fips_selftest_sha3_512(void *fips_selftest_context);
 
 /**
  * FFDH self_test
  **/
-bool libspdm_fips_selftest_ffdh(void);
+bool libspdm_fips_selftest_ffdh(void *fips_selftest_context);
 
 /**
  * ECDSA self_test
  **/
-bool libspdm_fips_selftest_ecdsa(void);
+bool libspdm_fips_selftest_ecdsa(void *fips_selftest_context);
 
 /**
  * EDDSA self_test
  **/
-bool libspdm_fips_selftest_eddsa(void);
+bool libspdm_fips_selftest_eddsa(void *fips_selftest_context);
 
 #endif/*LIBSPDM_FIPS_MODE*/

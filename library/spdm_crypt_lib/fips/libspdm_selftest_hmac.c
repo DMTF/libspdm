@@ -5,17 +5,32 @@
  **/
 
 #include "internal/libspdm_crypt_lib.h"
+#include "internal/libspdm_common_lib.h"
+#include "internal/libspdm_fips_lib.h"
 
 #if LIBSPDM_FIPS_MODE
 
 /**
  * HMAC-SHA256 KAT covers SHA256 KAT.
  **/
-bool libspdm_fips_selftest_hmac_sha256(void)
+bool libspdm_fips_selftest_hmac_sha256(void *fips_selftest_context)
 {
     bool result = true;
 
 #if LIBSPDM_SHA256_SUPPORT
+    libspdm_fips_selftest_context *context = fips_selftest_context;
+    LIBSPDM_ASSERT(fips_selftest_context != NULL);
+
+    /* any test fail cause the FIPS fail*/
+    if (context->tested_algo != context->self_test_result) {
+        return false;
+    }
+
+    /* check if run before.*/
+    if ((context->tested_algo & LIBSPDM_FIPS_SELF_TEST_HMAC_SHA256) != 0) {
+        return true;
+    }
+
     const uint8_t key[32] = {0};
     const uint8_t msg[32] = {0};
 
@@ -30,13 +45,25 @@ bool libspdm_fips_selftest_hmac_sha256(void)
     result = libspdm_hmac_sha256_all(msg, sizeof(msg), key, sizeof(key), hmac_256_result);
     if (!result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "gen hmac_sha256 failed \n"));
-        return false;
+        goto update;
     }
 
     if (!libspdm_consttime_is_mem_equal(hmac_256_result, hmac_sha256_answer,
                                         sizeof(hmac_sha256_answer))) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "hmac_sha256 KAT failed \n"));
-        return false;
+        result = false;
+        goto update;
+    }
+
+update:
+    /* mark it as tested*/
+    context->tested_algo |= LIBSPDM_FIPS_SELF_TEST_HMAC_SHA256;
+
+    /* record test result*/
+    if (result) {
+        context->self_test_result |= LIBSPDM_FIPS_SELF_TEST_HMAC_SHA256;
+    } else {
+        context->self_test_result &= ~LIBSPDM_FIPS_SELF_TEST_HMAC_SHA256;
     }
 
 #endif/*LIBSPDM_SHA256_SUPPORT*/
@@ -47,11 +74,24 @@ bool libspdm_fips_selftest_hmac_sha256(void)
 /**
  * HMAC-SHA384 KAT covers SHA384 KAT.
  **/
-bool libspdm_fips_selftest_hmac_sha384(void)
+bool libspdm_fips_selftest_hmac_sha384(void *fips_selftest_context)
 {
     bool result = true;
 
 #if LIBSPDM_SHA384_SUPPORT
+    libspdm_fips_selftest_context *context = fips_selftest_context;
+    LIBSPDM_ASSERT(fips_selftest_context != NULL);
+
+    /* any test fail cause the FIPS fail*/
+    if (context->tested_algo != context->self_test_result) {
+        return false;
+    }
+
+    /* check if run before.*/
+    if ((context->tested_algo & LIBSPDM_FIPS_SELF_TEST_HMAC_SHA384) != 0) {
+        return true;
+    }
+
     const uint8_t key[32] = {0};
     const uint8_t msg[32] = {0};
 
@@ -68,13 +108,25 @@ bool libspdm_fips_selftest_hmac_sha384(void)
     result = libspdm_hmac_sha384_all(msg, sizeof(msg), key, sizeof(key), hmac_384_result);
     if (!result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "gen hmac_sha384 failed \n"));
-        return false;
+        goto update;
     }
 
     if (!libspdm_consttime_is_mem_equal(hmac_384_result, hmac_sha384_answer,
                                         sizeof(hmac_sha384_answer))) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "hmac_sha384 KAT failed \n"));
-        return false;
+        result = false;
+        goto update;
+    }
+
+update:
+    /* mark it as tested*/
+    context->tested_algo |= LIBSPDM_FIPS_SELF_TEST_HMAC_SHA384;
+
+    /* record test result*/
+    if (result) {
+        context->self_test_result |= LIBSPDM_FIPS_SELF_TEST_HMAC_SHA384;
+    } else {
+        context->self_test_result &= ~LIBSPDM_FIPS_SELF_TEST_HMAC_SHA384;
     }
 
 #endif/*LIBSPDM_SHA384_SUPPORT*/
@@ -85,11 +137,24 @@ bool libspdm_fips_selftest_hmac_sha384(void)
 /**
  * HMAC-SHA512 KAT covers SHA512 KAT.
  **/
-bool libspdm_fips_selftest_hmac_sha512(void)
+bool libspdm_fips_selftest_hmac_sha512(void *fips_selftest_context)
 {
     bool result = true;
 
 #if LIBSPDM_SHA512_SUPPORT
+    libspdm_fips_selftest_context *context = fips_selftest_context;
+    LIBSPDM_ASSERT(fips_selftest_context != NULL);
+
+    /* any test fail cause the FIPS fail*/
+    if (context->tested_algo != context->self_test_result) {
+        return false;
+    }
+
+    /* check if run before.*/
+    if ((context->tested_algo & LIBSPDM_FIPS_SELF_TEST_HMAC_SHA512) != 0) {
+        return true;
+    }
+
     const uint8_t key[32] = {0};
     const uint8_t msg[32] = {0};
 
@@ -108,13 +173,24 @@ bool libspdm_fips_selftest_hmac_sha512(void)
     result = libspdm_hmac_sha512_all(msg, sizeof(msg), key, sizeof(key), hmac_512_result);
     if (!result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "gen hmac_sha512 failed \n"));
-        return false;
+        goto update;
     }
 
     if (!libspdm_consttime_is_mem_equal(hmac_512_result, hmac_sha512_answer,
                                         sizeof(hmac_sha512_answer))) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "hmac_sha512 KAT failed \n"));
-        return false;
+        result = false;
+        goto update;
+    }
+update:
+    /* mark it as tested*/
+    context->tested_algo |= LIBSPDM_FIPS_SELF_TEST_HMAC_SHA512;
+
+    /* record test result*/
+    if (result) {
+        context->self_test_result |= LIBSPDM_FIPS_SELF_TEST_HMAC_SHA512;
+    } else {
+        context->self_test_result &= ~LIBSPDM_FIPS_SELF_TEST_HMAC_SHA512;
     }
 
 #endif/*LIBSPDM_SHA512_SUPPORT*/

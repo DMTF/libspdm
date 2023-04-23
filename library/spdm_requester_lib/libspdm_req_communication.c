@@ -13,12 +13,6 @@ libspdm_return_t libspdm_init_connection(void *spdm_context, bool get_version_on
 
     context = spdm_context;
 
-#if LIBSPDM_FIPS_MODE
-    if (!libspdm_update_fips_selftest_context(spdm_context)) {
-        return LIBSPDM_STATUS_FIPS_FAIL;
-    }
-#endif/* LIBSPDM_FIPS_MODE*/
-
     status = libspdm_get_version(context, NULL, NULL);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return status;

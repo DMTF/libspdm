@@ -5,17 +5,32 @@
  **/
 
 #include "internal/libspdm_crypt_lib.h"
+#include "internal/libspdm_common_lib.h"
+#include "internal/libspdm_fips_lib.h"
 
 #if LIBSPDM_FIPS_MODE
 
 /**
  * ECDH self_test
  **/
-bool libspdm_fips_selftest_ecdh(void)
+bool libspdm_fips_selftest_ecdh(void *fips_selftest_context)
 {
     bool result = true;
 
 #if LIBSPDM_ECDHE_SUPPORT
+    libspdm_fips_selftest_context *context = fips_selftest_context;
+    LIBSPDM_ASSERT(fips_selftest_context != NULL);
+
+    /* any test fail cause the FIPS fail*/
+    if (context->tested_algo != context->self_test_result) {
+        return false;
+    }
+
+    /* check if run before.*/
+    if ((context->tested_algo & LIBSPDM_FIPS_SELF_TEST_ECDH) != 0) {
+        return true;
+    }
+
     void *ec_context;
     uint8_t common_key[66];
     size_t common_key_length;
@@ -53,14 +68,16 @@ bool libspdm_fips_selftest_ecdh(void)
     ec_context = libspdm_ec_new_by_nid(LIBSPDM_CRYPTO_NID_ECDSA_NIST_P256);
     if (ec_context == NULL) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ECDH new failed \n"));
-        return false;
+        result = false;
+        goto update;
     }
 
     result = libspdm_ec_set_priv_key(ec_context, self_privkey, sizeof(self_privkey));
     if (!result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ECDH set private key failed \n"));
         libspdm_ec_free(ec_context);
-        return false;
+        result = false;
+        goto update;
     }
 
     result = libspdm_ec_compute_key(ec_context, peer_public, sizeof(peer_public), common_key,
@@ -68,20 +85,34 @@ bool libspdm_fips_selftest_ecdh(void)
     if (!result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ECDH compute key failed \n"));
         libspdm_ec_free(ec_context);
-        return false;
+        result = false;
+        goto update;
     }
 
     /*KAT test*/
     if (common_key_length != sizeof(expected_ecdh_secret)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ECDH KAT failed \n"));
         libspdm_ec_free(ec_context);
-        return false;
+        result = false;
+        goto update;
     }
 
     if (!libspdm_consttime_is_mem_equal(common_key, expected_ecdh_secret,
                                         sizeof(expected_ecdh_secret))) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ECDH KAT failed \n"));
-        return false;
+        result = false;
+        goto update;
+    }
+
+update:
+    /* mark it as tested*/
+    context->tested_algo |= LIBSPDM_FIPS_SELF_TEST_ECDH;
+
+    /* record test result*/
+    if (result) {
+        context->self_test_result |= LIBSPDM_FIPS_SELF_TEST_ECDH;
+    } else {
+        context->self_test_result &= ~LIBSPDM_FIPS_SELF_TEST_ECDH;
     }
 
 #endif/*LIBSPDM_ECDHE_SUPPORT*/

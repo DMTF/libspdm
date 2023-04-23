@@ -6,6 +6,7 @@
 
 #include "spdm_unit_test.h"
 #include "library/spdm_crypt_lib.h"
+#include "internal/libspdm_common_lib.h"
 
 void libspdm_test_fips(void **state)
 {
@@ -13,10 +14,12 @@ void libspdm_test_fips(void **state)
     status = false;
 
 #if LIBSPDM_FIPS_MODE
-    status = libspdm_fips_run_selftest();
-    assert_true(status);
 
-    status = libspdm_fips_get_selftest_result();
+    libspdm_fips_selftest_context fips_selftest_context;
+    fips_selftest_context.tested_algo = 0;
+    fips_selftest_context.self_test_result = 0;
+
+    status = libspdm_fips_run_selftest(&fips_selftest_context);
     assert_true(status);
 #else
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "test is valid only when LIBSPDM_FIPS_MODE is open.\n"));

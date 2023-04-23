@@ -5,17 +5,33 @@
  **/
 
 #include "internal/libspdm_crypt_lib.h"
+#include "internal/libspdm_common_lib.h"
+#include "internal/libspdm_fips_lib.h"
 
 #if LIBSPDM_FIPS_MODE
 
 /**
  * EDDSA self_test
  **/
-bool libspdm_fips_selftest_eddsa(void)
+bool libspdm_fips_selftest_eddsa(void *fips_selftest_context)
 {
-    bool status = true;
+    bool result = true;
 
-#if (LIBSPDM_EDDSA_ED25519_SUPPORT && LIBSPDM_EDDSA_SUPPORT_TEST)
+#if (LIBSPDM_EDDSA_SUPPORT_TEST && LIBSPDM_EDDSA_SUPPORT)
+    libspdm_fips_selftest_context *context = fips_selftest_context;
+    LIBSPDM_ASSERT(fips_selftest_context != NULL);
+
+    /* any test fail cause the FIPS fail*/
+    if (context->tested_algo != context->self_test_result) {
+        return false;
+    }
+
+    /* check if run before.*/
+    if ((context->tested_algo & LIBSPDM_FIPS_SELF_TEST_EDDSA) != 0) {
+        return true;
+    }
+
+#if LIBSPDM_EDDSA_ED25519_SUPPORT
 
     void *ecd_25519;
     uint8_t signature_25519[32 * 2];
@@ -52,73 +68,82 @@ bool libspdm_fips_selftest_eddsa(void)
     ecd_25519 = libspdm_ecd_new_by_nid(LIBSPDM_CRYPTO_NID_EDDSA_ED25519);
     if (ecd_25519 == NULL) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "EDDSA 25519 gen failed \n"));
-        return false;
+        result = false;
+        goto update;
     }
 
-    status = libspdm_ecd_set_pub_key(ecd_25519, public_key_25519, sizeof(public_key_25519));
-    if (!status) {
+    result = libspdm_ecd_set_pub_key(ecd_25519, public_key_25519, sizeof(public_key_25519));
+    if (!result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "EDDSA 25519 set public key failed \n"));
         libspdm_ecd_free(ecd_25519);
-        return false;
+        result = false;
+        goto update;
     }
 
-    status =  libspdm_ecd_get_pub_key(ecd_25519, get_pub_key_25519, &get_pub_key_25519_size);
-    if (!status) {
+    result =  libspdm_ecd_get_pub_key(ecd_25519, get_pub_key_25519, &get_pub_key_25519_size);
+    if (!result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "EDDSA 25519 get pub key failed \n"));
         libspdm_ecd_free(ecd_25519);
-        return false;
+        result = false;
+        goto update;
     }
 
     if (get_pub_key_25519_size != sizeof(public_key_25519)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "EDDSA 25519 get key size compare failed \n"));
         libspdm_ecd_free(ecd_25519);
-        return false;
+        result = false;
+        goto update;
     }
 
     if (!libspdm_consttime_is_mem_equal(get_pub_key_25519, public_key_25519,
                                         sizeof(public_key_25519))) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "EDDSA 25519 get key content compare failed \n"));
         libspdm_ecd_free(ecd_25519);
-        return false;
+        result = false;
+        goto update;
     }
 
-    status = libspdm_ecd_set_pri_key(ecd_25519, private_key_25519, sizeof(private_key_25519));
-    if (!status) {
+    result = libspdm_ecd_set_pri_key(ecd_25519, private_key_25519, sizeof(private_key_25519));
+    if (!result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "EDDSA 25519 set private key failed \n"));
         libspdm_ecd_free(ecd_25519);
-        return false;
+        result = false;
+        goto update;
     }
 
     /* Verify Ed-DSA*/
     sig25519_size = sizeof(signature_25519);
-    status = libspdm_eddsa_sign(ecd_25519, LIBSPDM_CRYPTO_NID_NULL, NULL, 0, message_25519,
+    result = libspdm_eddsa_sign(ecd_25519, LIBSPDM_CRYPTO_NID_NULL, NULL, 0, message_25519,
                                 sizeof(message_25519), signature_25519, &sig25519_size);
-    if (!status) {
+    if (!result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "EDDSA 25519 sign failed \n"));
         libspdm_ecd_free(ecd_25519);
-        return false;
+        result = false;
+        goto update;
     }
 
     if (!libspdm_consttime_is_mem_equal(signature_25519, expected_signature_25519,
                                         sizeof(expected_signature_25519))) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "EDDSA 25519 KAT failed \n"));
         libspdm_ecd_free(ecd_25519);
-        return false;
+        result = false;
+        goto update;
     }
 
-    status = libspdm_eddsa_verify(ecd_25519, LIBSPDM_CRYPTO_NID_NULL, NULL, 0, message_25519,
+    result = libspdm_eddsa_verify(ecd_25519, LIBSPDM_CRYPTO_NID_NULL, NULL, 0, message_25519,
                                   sizeof(message_25519), signature_25519, sig25519_size);
-    if (!status) {
+    if (!result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "EDDSA 25519 verify failed \n"));
         libspdm_ecd_free(ecd_25519);
-        return false;
+        result = false;
+        goto update;
     }
 
     libspdm_ecd_free(ecd_25519);
 
-#endif/*(LIBSPDM_EDDSA_ED25519_SUPPORT && LIBSPDM_EDDSA_SUPPORT_TEST)*/
+#endif/*LIBSPDM_EDDSA_ED25519_SUPPORT */
 
-#if (LIBSPDM_EDDSA_ED448_SUPPORT && LIBSPDM_EDDSA_SUPPORT_TEST)
+#if LIBSPDM_EDDSA_ED448_SUPPORT
     void *ecd_448;
     uint8_t signature_448[57 * 2];
     size_t sig448_size;
@@ -159,72 +184,93 @@ bool libspdm_fips_selftest_eddsa(void)
     ecd_448 = libspdm_ecd_new_by_nid(LIBSPDM_CRYPTO_NID_EDDSA_ED448);
     if (ecd_448 == NULL) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "EDDSA 448 gen failed \n"));
-        return false;
+        result = false;
+        goto update;
     }
 
-    status = libspdm_ecd_set_pub_key(ecd_448, public_key_448, sizeof(public_key_448));
-    if (!status) {
+    result = libspdm_ecd_set_pub_key(ecd_448, public_key_448, sizeof(public_key_448));
+    if (!result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "EDDSA 448 set public key failed \n"));
         libspdm_ecd_free(ecd_448);
-        return false;
+        result = false;
+        goto update;
     }
 
-    status =  libspdm_ecd_get_pub_key(ecd_448, get_edd48_key, &get_pub_key_448_size);
-    if (!status) {
+    result =  libspdm_ecd_get_pub_key(ecd_448, get_edd48_key, &get_pub_key_448_size);
+    if (!result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "EDDSA 448 get pub key failed \n"));
         libspdm_ecd_free(ecd_448);
-        return false;
+        result = false;
+        goto update;
     }
 
     if (get_pub_key_448_size != sizeof(public_key_448)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "EDDSA 448 get key compare failed \n"));
         libspdm_ecd_free(ecd_448);
-        return false;
+        result = false;
+        goto update;
     }
 
     if (!libspdm_consttime_is_mem_equal(get_edd48_key, public_key_448,
                                         sizeof(public_key_448))) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "EDDSA 448 get key compare failed \n"));
         libspdm_ecd_free(ecd_448);
-        return false;
+        result = false;
+        goto update;
     }
 
-    status = libspdm_ecd_set_pri_key(ecd_448, private_key_448, sizeof(private_key_448));
-    if (!status) {
+    result = libspdm_ecd_set_pri_key(ecd_448, private_key_448, sizeof(private_key_448));
+    if (!result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "EDDSA 448 set private key failed \n"));
         libspdm_ecd_free(ecd_448);
-        return false;
+        result = false;
+        goto update;
     }
 
     /* Verify Ed-DSA*/
     sig448_size = sizeof(signature_448);
-    status = libspdm_eddsa_sign(ecd_448, LIBSPDM_CRYPTO_NID_NULL, NULL, 0, message_448,
+    result = libspdm_eddsa_sign(ecd_448, LIBSPDM_CRYPTO_NID_NULL, NULL, 0, message_448,
                                 sizeof(message_448), signature_448, &sig448_size);
-    if (!status) {
+    if (!result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "EDDSA 448 sign failed \n"));
         libspdm_ecd_free(ecd_448);
-        return false;
+        result = false;
+        goto update;
     }
 
     if (!libspdm_consttime_is_mem_equal(signature_448, expected_signature_448,
                                         sizeof(expected_signature_448))) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "EDDSA 448 KAT failed \n"));
         libspdm_ecd_free(ecd_448);
-        return false;
+        result = false;
+        goto update;
     }
 
-    status = libspdm_eddsa_verify(ecd_448, LIBSPDM_CRYPTO_NID_NULL, NULL, 0, message_448,
+    result = libspdm_eddsa_verify(ecd_448, LIBSPDM_CRYPTO_NID_NULL, NULL, 0, message_448,
                                   sizeof(message_448), signature_448, sig448_size);
-    if (!status) {
+    if (!result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "EDDSA 448 verify failed \n"));
         libspdm_ecd_free(ecd_448);
-        return false;
+        result = false;
+        goto update;
     }
 
     libspdm_ecd_free(ecd_448);
-#endif/*(LIBSPDM_EDDSA_ED448_SUPPORT && LIBSPDM_EDDSA_SUPPORT_TEST)*/
+#endif/*LIBSPDM_EDDSA_ED448_SUPPORT*/
 
-    return status;
+update:
+    /* mark it as tested*/
+    context->tested_algo |= LIBSPDM_FIPS_SELF_TEST_EDDSA;
+
+    /* record test result*/
+    if (result) {
+        context->self_test_result |= LIBSPDM_FIPS_SELF_TEST_EDDSA;
+    } else {
+        context->self_test_result &= ~LIBSPDM_FIPS_SELF_TEST_EDDSA;
+    }
+
+#endif /*(LIBSPDM_EDDSA_SUPPORT_TEST && LIBSPDM_EDDSA_SUPPORT)*/
+    return result;
 }
 
 #endif/*LIBSPDM_FIPS_MODE*/

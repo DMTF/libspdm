@@ -84,10 +84,6 @@
     #error LIBSPDM_MAX_SESSION_COUNT must be less than 65536.
 #endif
 
-#if (LIBSPDM_FIPS_TEST_AT_LOAD) && (!LIBSPDM_FIPS_MODE)
-    #error LIBSPDM_FIPS_TEST_AT_LOAD must be used after enabling LIBSPDM_FIPS_MODE.
-#endif
-
 #if LIBSPDM_FIPS_MODE
 #if (LIBSPDM_ASYM_ALGO_SUPPORT) && !LIBSPDM_FIPS_ASYM_ALGO_SUPPORT
     #error ASYM algo is cleared after FIPS enforcement.
