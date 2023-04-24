@@ -96,6 +96,9 @@ void libspdm_test_responder_receive_send_rsp_case1(void** state)
     spdm_context->connection_info.capability.data_transfer_size =
         CHUNK_GET_UNIT_TEST_OVERRIDE_DATA_TRANSFER_SIZE;
 
+    spdm_context->connection_info.capability.max_spdm_msg_size =
+        LIBSPDM_MAX_SPDM_MSG_SIZE;
+
     libspdm_zero_mem(&spdm_request, sizeof(spdm_request));
     spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_12;
     spdm_request.header.request_response_code = SPDM_GET_MEASUREMENTS;
@@ -181,6 +184,9 @@ void libspdm_test_responder_receive_send_rsp_case2(void** state)
     /* The peer Requester buffer size for receiving a single and complete SPDM message */
     spdm_context->connection_info.capability.data_transfer_size =
         LIBSPDM_DATA_TRANSFER_SIZE;
+
+    spdm_context->connection_info.capability.max_spdm_msg_size =
+        LIBSPDM_MAX_SPDM_MSG_SIZE;
 
     libspdm_zero_mem(&spdm_request, sizeof(spdm_request));
     spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_12;
