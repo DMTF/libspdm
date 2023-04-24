@@ -434,6 +434,7 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
     libspdm_chunk_info_t* get_info;
     spdm_chunk_response_response_t *chunk_rsp;
     uint8_t *chunk_ptr;
+    uint32_t actual_size;
     #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
 
     context = spdm_context;
@@ -627,7 +628,15 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
                        libspdm_get_scratch_buffer_large_message_offset(spdm_context);
         large_buffer_size = libspdm_get_scratch_buffer_large_message_capacity(spdm_context);
 
-        if (my_response_size < large_buffer_size) {
+        if (my_response_size > context->connection_info.capability.max_spdm_msg_size) {
+            actual_size = (uint32_t)my_response_size;
+            status = libspdm_generate_extended_error_response(context,
+                                                              SPDM_ERROR_CODE_RESPONSE_TOO_LARGE,
+                                                              0,
+                                                              sizeof(uint32_t),
+                                                              (uint8_t *)&actual_size,
+                                                              &my_response_size, my_response);
+        } else {
             get_info->chunk_in_use = true;
             /* Increment chunk_handle here as opposed to end of chunk_get handler
              * in case requester never issues chunk_get. */
@@ -664,17 +673,15 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
                                                               &get_info->chunk_handle,
                                                               &my_response_size, my_response);
         }
-        else
-        #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
-        {
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
-                           "Warning: Could not save chunk. Scratch buffer too small.\n"));
+        #else
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
+                       "Warning: Could not save chunk. Scratch buffer too small.\n"));
 
-            status = libspdm_generate_error_response(context,
-                                                     SPDM_ERROR_CODE_LARGE_RESPONSE,
-                                                     spdm_request->request_response_code,
-                                                     &my_response_size, my_response);
-        }
+        status = libspdm_generate_extended_error_response(context,
+                                                          SPDM_ERROR_CODE_LARGE_RESPONSE,
+                                                          0, 0, NULL,
+                                                          &my_response_size, my_response);
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
 
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return status;
