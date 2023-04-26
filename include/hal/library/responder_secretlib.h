@@ -25,10 +25,10 @@
  * @param  measurement_hash_algo         Indicates the measurement hash algorithm.
  * Must be SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_* value in spdm.h.
  *
- * @param  measurement_index      The index of the measurement to collect. *
- * A value of 0x00 requests only the total number of measurements to be returned
- * in "measurements_count". The parameters "measurements" and
- * "measurements_size" will be left unmodified.
+ * @param  measurement_index      The index of the measurement to collect.
+ * A value of 0x00 requests only the total number of measurements to be returned in
+ * "measurements_count". The parameters "measurements" and "measurements_size" will be left
+ * unmodified.
  *
  * A value of [0x01 - 0xFE] requests a single measurement for that measurement index
  * be returned. On success, "measurements_count" will be set to 1 and the
@@ -69,6 +69,15 @@ extern libspdm_return_t libspdm_measurement_collection(
     uint8_t *measurements_count,
     void *measurements,
     size_t *measurements_size);
+
+extern bool libspdm_measurement_opaque_data(
+    spdm_version_number_t spdm_version,
+    uint8_t measurement_specification,
+    uint32_t measurement_hash_algo,
+    uint8_t measurement_index,
+    uint8_t request_attribute,
+    void *opaque_data,
+    size_t *opaque_data_size);
 
 /**
  * This function calculates the measurement summary hash.

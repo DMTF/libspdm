@@ -1635,6 +1635,31 @@ successful_return:
     return LIBSPDM_STATUS_SUCCESS;
 }
 
+size_t libspdm_secret_lib_meas_opaque_data_size;
+
+bool libspdm_measurement_opaque_data(
+    spdm_version_number_t spdm_version,
+    uint8_t measurement_specification,
+    uint32_t measurement_hash_algo,
+    uint8_t measurement_index,
+    uint8_t request_attribute,
+    void *opaque_data,
+    size_t *opaque_data_size)
+{
+    size_t index;
+
+    LIBSPDM_ASSERT(libspdm_secret_lib_meas_opaque_data_size <= *opaque_data_size);
+
+    *opaque_data_size = libspdm_secret_lib_meas_opaque_data_size;
+
+    for (index = 0; index < *opaque_data_size; index++)
+    {
+        ((uint8_t *)opaque_data)[index] = (uint8_t)index;
+    }
+
+    return true;
+}
+
 bool libspdm_generate_measurement_summary_hash(
     spdm_version_number_t spdm_version, uint32_t base_hash_algo,
     uint8_t measurement_specification, uint32_t measurement_hash_algo,

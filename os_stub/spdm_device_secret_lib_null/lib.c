@@ -27,6 +27,18 @@ libspdm_return_t libspdm_measurement_collection(
     return LIBSPDM_STATUS_UNSUPPORTED_CAP;
 }
 
+bool libspdm_measurement_opaque_data(
+    spdm_version_number_t spdm_version,
+    uint8_t measurement_specification,
+    uint32_t measurement_hash_algo,
+    uint8_t measurement_index,
+    uint8_t request_attribute,
+    void *opaque_data,
+    size_t *opaque_data_size)
+{
+    return false;
+}
+
 bool libspdm_generate_measurement_summary_hash(
     spdm_version_number_t spdm_version,
     uint32_t base_hash_algo,

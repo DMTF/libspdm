@@ -502,6 +502,8 @@ void libspdm_test_responder_respond_if_ready_case3(void **state) {
 
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 
+extern size_t libspdm_secret_lib_meas_opaque_data_size;
+
 void libspdm_test_responder_respond_if_ready_case4(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -528,8 +530,7 @@ void libspdm_test_responder_respond_if_ready_case4(void **state) {
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->local_context.opaque_measurement_rsp_size = 0;
-    spdm_context->local_context.opaque_measurement_rsp = NULL;
+    libspdm_secret_lib_meas_opaque_data_size = 0;
 
     spdm_context->last_spdm_request_size = m_libspdm_get_measurements_request_size;
     libspdm_copy_mem(spdm_context->last_spdm_request,
