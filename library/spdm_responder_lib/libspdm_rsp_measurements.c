@@ -226,7 +226,7 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
         }
     }
 
-    if (measurements_index == 0){
+    if (measurements_index == 0) {
         measurements_size = 0;
     }
 
