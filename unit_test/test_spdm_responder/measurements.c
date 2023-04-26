@@ -106,9 +106,9 @@ spdm_get_measurements_request_t m_libspdm_get_measurements_request16 = {
     { SPDM_MESSAGE_VERSION_12, SPDM_GET_MEASUREMENTS,
       SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE, 1 },
 };
-size_t m_libspdm_get_measurements_request16_size =
-    sizeof(m_libspdm_get_measurements_request16);
+size_t m_libspdm_get_measurements_request16_size = sizeof(m_libspdm_get_measurements_request16);
 
+extern size_t libspdm_secret_lib_meas_opaque_data_size;
 
 /**
  * Test 1: Successful response to get a number of measurements without signature
@@ -141,12 +141,11 @@ void libspdm_test_responder_measurements_case1(void **state)
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
     libspdm_reset_message_m(spdm_context, NULL);
-    spdm_context->local_context.opaque_measurement_rsp_size = 0;
-    spdm_context->local_context.opaque_measurement_rsp = NULL;
+
+    libspdm_secret_lib_meas_opaque_data_size = 0;
 
     response_size = sizeof(response);
-    libspdm_get_random_number(SPDM_NONCE_SIZE,
-                              m_libspdm_get_measurements_request1.nonce);
+
     status = libspdm_get_response_measurements(
         spdm_context, m_libspdm_get_measurements_request1_size,
         &m_libspdm_get_measurements_request1, &response_size, response);
@@ -207,8 +206,7 @@ void libspdm_test_responder_measurements_case3(void **state)
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
     libspdm_reset_message_m(spdm_context, NULL);
-    spdm_context->local_context.opaque_measurement_rsp_size = 0;
-    spdm_context->local_context.opaque_measurement_rsp = NULL;
+    libspdm_secret_lib_meas_opaque_data_size = 0;
 
     response_size = sizeof(response);
     libspdm_get_random_number(SPDM_NONCE_SIZE,
@@ -262,8 +260,7 @@ void libspdm_test_responder_measurements_case4(void **state)
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
     libspdm_reset_message_m(spdm_context, NULL);
-    spdm_context->local_context.opaque_measurement_rsp_size = 0;
-    spdm_context->local_context.opaque_measurement_rsp = NULL;
+    libspdm_secret_lib_meas_opaque_data_size = 0;
 
     response_size = sizeof(response);
     libspdm_get_random_number(SPDM_NONCE_SIZE,
@@ -320,8 +317,7 @@ void libspdm_test_responder_measurements_case5(void **state)
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
     libspdm_reset_message_m(spdm_context, NULL);
-    spdm_context->local_context.opaque_measurement_rsp_size = 0;
-    spdm_context->local_context.opaque_measurement_rsp = NULL;
+    libspdm_secret_lib_meas_opaque_data_size = 0;
 
     response_size = sizeof(response);
     libspdm_get_random_number(SPDM_NONCE_SIZE,
@@ -383,8 +379,7 @@ void libspdm_test_responder_measurements_case6(void **state)
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
     libspdm_reset_message_m(spdm_context, NULL);
-    spdm_context->local_context.opaque_measurement_rsp_size = 0;
-    spdm_context->local_context.opaque_measurement_rsp = NULL;
+    libspdm_secret_lib_meas_opaque_data_size = 0;
 
     response_size = sizeof(response);
     libspdm_get_random_number(SPDM_NONCE_SIZE,
@@ -437,8 +432,7 @@ void libspdm_test_responder_measurements_case7(void **state)
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
     libspdm_reset_message_m(spdm_context, NULL);
-    spdm_context->local_context.opaque_measurement_rsp_size = 0;
-    spdm_context->local_context.opaque_measurement_rsp = NULL;
+    libspdm_secret_lib_meas_opaque_data_size = 0;
     measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 +
                           libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
 
@@ -493,8 +487,7 @@ void libspdm_test_responder_measurements_case8(void **state)
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
     libspdm_reset_message_m(spdm_context, NULL);
-    spdm_context->local_context.opaque_measurement_rsp_size = 0;
-    spdm_context->local_context.opaque_measurement_rsp = NULL;
+    libspdm_secret_lib_meas_opaque_data_size = 0;
     measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 +
                           libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
     response_size = sizeof(response);
@@ -549,8 +542,7 @@ void libspdm_test_responder_measurements_case9(void **state)
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
     libspdm_reset_message_m(spdm_context, NULL);
-    spdm_context->local_context.opaque_measurement_rsp_size = 0;
-    spdm_context->local_context.opaque_measurement_rsp = NULL;
+    libspdm_secret_lib_meas_opaque_data_size = 0;
 
     response_size = sizeof(response);
     libspdm_get_random_number(SPDM_NONCE_SIZE,
@@ -602,8 +594,7 @@ void libspdm_test_responder_measurements_case10(void **state)
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
     libspdm_reset_message_m(spdm_context, NULL);
-    spdm_context->local_context.opaque_measurement_rsp_size = 0;
-    spdm_context->local_context.opaque_measurement_rsp = NULL;
+    libspdm_secret_lib_meas_opaque_data_size = 0;
 
     response_size = sizeof(response);
     libspdm_get_random_number(SPDM_NONCE_SIZE,
@@ -664,8 +655,7 @@ void libspdm_test_responder_measurements_case11(void **state)
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
     libspdm_reset_message_m(spdm_context, NULL);
-    spdm_context->local_context.opaque_measurement_rsp_size = 0;
-    spdm_context->local_context.opaque_measurement_rsp = NULL;
+    libspdm_secret_lib_meas_opaque_data_size = 0;
     measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 +
                           libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
 
@@ -730,8 +720,7 @@ void libspdm_test_responder_measurements_case12(void **state)
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
     libspdm_reset_message_m(spdm_context, NULL);
-    spdm_context->local_context.opaque_measurement_rsp_size = 0;
-    spdm_context->local_context.opaque_measurement_rsp = NULL;
+    libspdm_secret_lib_meas_opaque_data_size = 0;
 
     response_size = sizeof(response);
     libspdm_get_random_number(SPDM_NONCE_SIZE,
@@ -827,8 +816,7 @@ void libspdm_test_responder_measurements_case14(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_reset_message_m(spdm_context, NULL);
-    spdm_context->local_context.opaque_measurement_rsp_size = 0;
-    spdm_context->local_context.opaque_measurement_rsp = NULL;
+    libspdm_secret_lib_meas_opaque_data_size = 0;
 
     libspdm_get_random_number(SPDM_NONCE_SIZE,
                               m_libspdm_get_measurements_request10.nonce);
@@ -886,8 +874,7 @@ void libspdm_test_responder_measurements_case15(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_reset_message_m(spdm_context, NULL);
-    spdm_context->local_context.opaque_measurement_rsp_size = 0;
-    spdm_context->local_context.opaque_measurement_rsp = NULL;
+    libspdm_secret_lib_meas_opaque_data_size = 0;
     /* measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 + libspdm_get_asym_signature_size (m_libspdm_use_asym_algo);*/
 
     response_size = sizeof(response);
@@ -941,8 +928,7 @@ void libspdm_test_responder_measurements_case16(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_reset_message_m(spdm_context, NULL);
-    spdm_context->local_context.opaque_measurement_rsp_size = 0;
-    spdm_context->local_context.opaque_measurement_rsp = NULL;
+    libspdm_secret_lib_meas_opaque_data_size = 0;
     /* measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 + libspdm_get_asym_signature_size (m_libspdm_use_asym_algo);*/
 
     response_size = sizeof(response);
@@ -992,9 +978,7 @@ void libspdm_test_responder_measurements_case17(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_reset_message_m(spdm_context, NULL);
-    spdm_context->local_context.opaque_measurement_rsp_size = 0;
-    spdm_context->local_context.opaque_measurement_rsp = NULL;
-    ;
+    libspdm_secret_lib_meas_opaque_data_size = 0;
     /* measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 + libspdm_get_asym_signature_size (m_libspdm_use_asym_algo);*/
 
     response_size = sizeof(response);
@@ -1051,8 +1035,7 @@ void libspdm_test_responder_measurements_case18(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_reset_message_m(spdm_context, NULL);
-    spdm_context->local_context.opaque_measurement_rsp_size = 0;
-    spdm_context->local_context.opaque_measurement_rsp = NULL;
+    libspdm_secret_lib_meas_opaque_data_size = 0;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, NULL, NULL);
@@ -1121,8 +1104,7 @@ void libspdm_test_responder_measurements_case19(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_reset_message_m(spdm_context, NULL);
-    spdm_context->local_context.opaque_measurement_rsp_size = 0;
-    spdm_context->local_context.opaque_measurement_rsp = NULL;
+    libspdm_secret_lib_meas_opaque_data_size = 0;
     /* measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 + libspdm_get_asym_signature_size (m_libspdm_use_asym_algo);*/
 
     response_size = sizeof(response);
@@ -1174,8 +1156,7 @@ void libspdm_test_responder_measurements_case21(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_reset_message_m(spdm_context, NULL);
-    spdm_context->local_context.opaque_measurement_rsp_size = 0;
-    spdm_context->local_context.opaque_measurement_rsp = NULL;
+    libspdm_secret_lib_meas_opaque_data_size = 0;
 
     response_size = sizeof(response);
     libspdm_get_random_number(SPDM_NONCE_SIZE,
@@ -1229,11 +1210,9 @@ void libspdm_test_responder_measurements_case22(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_reset_message_m(spdm_context, NULL);
-    spdm_context->local_context.opaque_measurement_rsp_size = 0;
-    spdm_context->local_context.opaque_measurement_rsp = NULL;
+    libspdm_secret_lib_meas_opaque_data_size = 0;
 
-    for (NumberOfMessages = 1; NumberOfMessages <= TOTAL_MESSAGES;
-         NumberOfMessages++) {
+    for (NumberOfMessages = 1; NumberOfMessages <= TOTAL_MESSAGES; NumberOfMessages++) {
         libspdm_get_random_number(SPDM_NONCE_SIZE,
                                   m_libspdm_get_measurements_request6.nonce);
         response_size = sizeof(response);
@@ -1313,8 +1292,7 @@ void libspdm_test_responder_measurements_case23(void **state)
         m_libspdm_use_measurement_hash_algo;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->local_context.opaque_measurement_rsp_size = 0;
-    spdm_context->local_context.opaque_measurement_rsp = NULL;
+    libspdm_secret_lib_meas_opaque_data_size = 0;
     measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 +
                           libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
 
@@ -1380,8 +1358,7 @@ void libspdm_test_responder_measurements_case24(void **state)
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
     libspdm_reset_message_m(spdm_context, NULL);
-    spdm_context->local_context.opaque_measurement_rsp_size = 0;
-    spdm_context->local_context.opaque_measurement_rsp = NULL;
+    libspdm_secret_lib_meas_opaque_data_size = 0;
     spdm_context->last_spdm_request_session_id_valid = 0;
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -1461,8 +1438,7 @@ void libspdm_test_responder_measurements_case25(void **state)
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
     libspdm_reset_message_m(spdm_context, NULL);
-    spdm_context->local_context.opaque_measurement_rsp_size = 0;
-    spdm_context->local_context.opaque_measurement_rsp = NULL;
+    libspdm_secret_lib_meas_opaque_data_size = 0;
 
     response_size = sizeof(response);
     libspdm_get_random_number(SPDM_NONCE_SIZE,
@@ -1521,8 +1497,7 @@ void libspdm_test_responder_measurements_case26(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_reset_message_m(spdm_context, NULL);
-    spdm_context->local_context.opaque_measurement_rsp_size = 0;
-    spdm_context->local_context.opaque_measurement_rsp = NULL;
+    libspdm_secret_lib_meas_opaque_data_size = 0;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, NULL, NULL);
@@ -1572,7 +1547,6 @@ void libspdm_test_responder_measurements_case27(void **state)
     void *data;
     size_t data_size;
     size_t measurment_sig_size;
-    uint8_t opaque_data[8] = "libspdm";
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1596,27 +1570,21 @@ void libspdm_test_responder_measurements_case27(void **state)
     libspdm_reset_message_m(spdm_context, NULL);
 
     /*opaque data*/
-    spdm_context->local_context.opaque_measurement_rsp = opaque_data;
-    spdm_context->local_context.opaque_measurement_rsp_size = sizeof(
-        spdm_context->local_context.opaque_measurement_rsp
-        );
+    libspdm_secret_lib_meas_opaque_data_size = 0x20;
 
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, NULL, NULL);
     measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) +
-                          spdm_context->local_context.opaque_measurement_rsp_size +
+                          libspdm_secret_lib_meas_opaque_data_size +
                           libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
     for (int i = 1; i < SPDM_MAX_SLOT_COUNT; i++) {
-        spdm_context->local_context.local_cert_chain_provision_size[i] =
-            data_size;
-        spdm_context->local_context.local_cert_chain_provision[i] =
-            data;
+        spdm_context->local_context.local_cert_chain_provision_size[i] = data_size;
+        spdm_context->local_context.local_cert_chain_provision[i] = data;
     }
 
     response_size = sizeof(response);
-    libspdm_get_random_number(SPDM_NONCE_SIZE,
-                              m_libspdm_get_measurements_request15.nonce);
+    libspdm_get_random_number(SPDM_NONCE_SIZE, m_libspdm_get_measurements_request15.nonce);
     status = libspdm_get_response_measurements(
         spdm_context, m_libspdm_get_measurements_request15_size,
         &m_libspdm_get_measurements_request15, &response_size, response);
@@ -1624,8 +1592,7 @@ void libspdm_test_responder_measurements_case27(void **state)
     assert_int_equal(response_size,
                      sizeof(spdm_measurements_response_t) +
                      sizeof(spdm_measurement_block_dmtf_t) +
-                     libspdm_get_measurement_hash_size(
-                         m_libspdm_use_measurement_hash_algo) +
+                     libspdm_get_measurement_hash_size(m_libspdm_use_measurement_hash_algo) +
                      measurment_sig_size);
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
@@ -1655,7 +1622,6 @@ void libspdm_test_responder_measurements_case28(void **state)
     void *data;
     size_t data_size;
     size_t measurment_sig_size;
-    uint8_t opaque_data[8] = "libspdm";
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1681,16 +1647,14 @@ void libspdm_test_responder_measurements_case28(void **state)
     libspdm_reset_message_m(spdm_context, NULL);
 
     /*opaque data*/
-    spdm_context->local_context.opaque_measurement_rsp = opaque_data;
-    spdm_context->local_context.opaque_measurement_rsp_size =
-        sizeof(spdm_context->local_context.opaque_measurement_rsp);
+    libspdm_secret_lib_meas_opaque_data_size = 0x20;
 
     libspdm_read_responder_public_key(m_libspdm_use_asym_algo, &data, &data_size);
     spdm_context->local_context.local_public_key_provision = data;
     spdm_context->local_context.local_public_key_provision_size = data_size;
 
     measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) +
-                          spdm_context->local_context.opaque_measurement_rsp_size +
+                          libspdm_secret_lib_meas_opaque_data_size +
                           libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
     response_size = sizeof(response);
     libspdm_get_random_number(SPDM_NONCE_SIZE,
@@ -1701,10 +1665,8 @@ void libspdm_test_responder_measurements_case28(void **state)
         &m_libspdm_get_measurements_request16, &response_size, response);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size,
-                     sizeof(spdm_measurements_response_t) +
-                     sizeof(spdm_measurement_block_dmtf_t) +
-                     libspdm_get_measurement_hash_size(
-                         m_libspdm_use_measurement_hash_algo) +
+                     sizeof(spdm_measurements_response_t) + sizeof(spdm_measurement_block_dmtf_t) +
+                     libspdm_get_measurement_hash_size(m_libspdm_use_measurement_hash_algo) +
                      measurment_sig_size);
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,

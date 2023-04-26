@@ -18,6 +18,8 @@ size_t libspdm_get_max_buffer_size(void)
     return LIBSPDM_MAX_SPDM_MSG_SIZE;
 }
 
+extern size_t libspdm_secret_lib_meas_opaque_data_size;
+
 void libspdm_test_responder_measurements_case1(void **State)
 {
     libspdm_test_context_t *spdm_test_context;
@@ -40,8 +42,7 @@ void libspdm_test_responder_measurements_case1(void **State)
         m_libspdm_use_measurement_hash_algo;
 
     libspdm_reset_message_m(spdm_context, NULL);
-    spdm_context->local_context.opaque_measurement_rsp_size = 0;
-    spdm_context->local_context.opaque_measurement_rsp = NULL;
+    libspdm_secret_lib_meas_opaque_data_size = 0;
 
     response_size = sizeof(response);
     libspdm_get_response_measurements(spdm_context, spdm_test_context->test_buffer_size,
@@ -75,9 +76,7 @@ void libspdm_test_responder_measurements_case2(void **State)
         m_libspdm_use_measurement_hash_algo;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->local_context.opaque_measurement_rsp_size = 0;
-    spdm_context->local_context.opaque_measurement_rsp = NULL;
-
+    libspdm_secret_lib_meas_opaque_data_size = 0;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
@@ -123,8 +122,7 @@ void libspdm_test_responder_measurements_case3(void **State)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_reset_message_m(spdm_context, NULL);
-    spdm_context->local_context.opaque_measurement_rsp_size = 0;
-    spdm_context->local_context.opaque_measurement_rsp = NULL;
+    libspdm_secret_lib_meas_opaque_data_size = 0;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size,
@@ -172,8 +170,7 @@ void libspdm_test_responder_measurements_case4(void **State)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_reset_message_m(spdm_context, NULL);
-    spdm_context->local_context.opaque_measurement_rsp_size = 0;
-    spdm_context->local_context.opaque_measurement_rsp = NULL;
+    libspdm_secret_lib_meas_opaque_data_size = 0;
 
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
@@ -227,8 +224,7 @@ void libspdm_test_responder_measurements_case5(void **State)
         m_libspdm_use_measurement_hash_algo;
 
     libspdm_reset_message_m(spdm_context, NULL);
-    spdm_context->local_context.opaque_measurement_rsp_size = 0;
-    spdm_context->local_context.opaque_measurement_rsp = NULL;
+    libspdm_secret_lib_meas_opaque_data_size = 0;
 
     response_size = sizeof(response);
     libspdm_get_response_measurements(spdm_context, spdm_test_context->test_buffer_size,

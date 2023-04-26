@@ -86,8 +86,6 @@ typedef struct {
     /* opaque_data provision locally*/
     size_t opaque_challenge_auth_rsp_size;
     uint8_t *opaque_challenge_auth_rsp;
-    size_t opaque_measurement_rsp_size;
-    uint8_t *opaque_measurement_rsp;
 
     /* Responder policy*/
     bool basic_mut_auth_requested;
