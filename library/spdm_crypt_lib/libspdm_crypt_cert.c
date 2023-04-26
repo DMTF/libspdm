@@ -1269,8 +1269,8 @@ bool libspdm_get_dmtf_subject_alt_name(const uint8_t *cert, const size_t cert_si
  *
  * @param  cert_chain_data          The certificate chain data without spdm_cert_chain_t header.
  * @param  cert_chain_data_size      size in bytes of the certificate chain data.
- * @param  base_hash_algo            SPDM base_hash_algo
  * @param  base_asym_algo            SPDM base_asym_algo
+ * @param  base_hash_algo            SPDM base_hash_algo
  * @param  is_requester_cert         Is the function verifying requester or responder cert.
  * @param  is_device_cert_model      If true, the cert chain is DeviceCert model;
  *                                   If false, the cert chain is AliasCert model;
