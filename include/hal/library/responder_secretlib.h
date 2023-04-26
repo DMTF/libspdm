@@ -19,13 +19,15 @@
  * libspdm will call this function to retrieve the measurements for a device.
  * The "measurement_index" parameter indicates the measurement requested.
  *
- * @param  measurement_specification     Indicates the measurement specification.
+ * @param spdm_version  Indicates the negotiated SPDM version.
+ *
+ * @param  measurement_specification  Indicates the measurement specification.
  * Must be a SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_* value in spdm.h.
  *
- * @param  measurement_hash_algo         Indicates the measurement hash algorithm.
+ * @param  measurement_hash_algo  Indicates the measurement hash algorithm.
  * Must be SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_* value in spdm.h.
  *
- * @param  measurement_index      The index of the measurement to collect.
+ * @param  measurement_index  The index of the measurement to collect.
  * A value of 0x00 requests only the total number of measurements to be returned in
  * "measurements_count". The parameters "measurements" and "measurements_size" will be left
  * unmodified.
@@ -39,6 +41,8 @@
  * A value of 0xFF requests all measurements be returned.
  * On success, "measurements_count", "measurements", and "measurements_size"
  * fields will be set with data from all measurements.
+ *
+ * @param request_attribute A bitmask who fields are SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_*.
  *
  * @param  measurements_count
  * When "measurement_index" is zero, returns the total count of
@@ -70,6 +74,32 @@ extern libspdm_return_t libspdm_measurement_collection(
     void *measurements,
     size_t *measurements_size);
 
+/**
+ * This functions returns the opaque data in a MEASUREMENTS response.
+ *
+ * It is called immediately after libspdm_measurement_collection() is called and allows the opaque
+ * data field to vary based on the GET_MEASUREMENTS request.
+ *
+ * @param spdm_version  Indicates the negotiated SPDM version.
+ *
+ * @param  measurement_specification  Indicates the measurement specification.
+ * Must be a SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_* value in spdm.h.
+ *
+ * @param  measurement_hash_algo  Indicates the measurement hash algorithm.
+ * Must be SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_* value in spdm.h.
+ *
+ * @param  measurement_index  The index of the measurement to collect.
+ *
+ * @param request_attribute A bitmask who fields are SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_*.
+ *
+ * @param opaque_data
+ * A pointer to a destination buffer whose size, in bytes, is opaque_data_size. The opaque data is
+ * copied to this buffer.
+ *
+ * @param opaque_data_size
+ * On input, indicates the size, in bytes, of the destination buffer.
+ * On output, indicates the size of the opaque data.
+ **/
 extern bool libspdm_measurement_opaque_data(
     spdm_version_number_t spdm_version,
     uint8_t measurement_specification,
