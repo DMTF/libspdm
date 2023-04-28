@@ -361,7 +361,8 @@ void libspdm_test_requester_psk_exchange_ex_case1(void **State)
                                                   sizeof(LIBSPDM_TEST_PSK_HINT_STRING),
                                                   SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0,
                                                   &session_id, &heartbeat_period, measurement_hash, NULL, 0,
-                                                  NULL, NULL, NULL, NULL, opaque_data, &opaque_data_size);
+                                                  NULL, NULL, NULL, NULL, opaque_data,
+                                                  &opaque_data_size);
     if (status == LIBSPDM_STATUS_SUCCESS) {
         libspdm_reset_message_k(spdm_context, spdm_context->session_info);
     }
