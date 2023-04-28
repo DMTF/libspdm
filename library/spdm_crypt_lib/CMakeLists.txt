@@ -12,7 +12,7 @@ SET(src_spdm_crypt_lib
     libspdm_crypt_aead.c
     libspdm_crypt_dhe.c
     libspdm_crypt_rng.c
-    fips/libspdm_get_selftest_result.c
+    fips/libspdm_selftest.c
     fips/libspdm_selftest_hmac.c
     fips/libspdm_selftest_aes_gcm.c
     fips/libspdm_selftest_rsa_ssa.c
