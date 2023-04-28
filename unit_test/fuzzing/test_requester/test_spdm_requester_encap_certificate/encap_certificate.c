@@ -58,7 +58,11 @@ void libspdm_test_requester_encap_certificate(void **State)
     libspdm_get_encap_response_certificate(spdm_context, request_size,
                                            (uint8_t *)spdm_test_context->test_buffer,
                                            &response_size, response);
-    libspdm_reset_message_mut_b(spdm_context);
+    spdm_error_response_t *spdm_response = (spdm_error_response_t *)response;
+    if (spdm_response->header.request_response_code != SPDM_ERROR)
+    {
+        libspdm_reset_message_mut_b(spdm_context);
+    }
     free(data);
 }
 

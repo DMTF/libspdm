@@ -300,6 +300,71 @@ void libspdm_test_requester_psk_exchange_case2(void **State)
     free(data);
 }
 
+void libspdm_test_requester_psk_exchange_case3(void **State)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint32_t session_id;
+    uint8_t heartbeat_period;
+    uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
+    void *data;
+    size_t data_size;
+    void *hash;
+    size_t hash_size;
+
+    spdm_test_context = *State;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
+                                            << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags = 0;
+    spdm_context->connection_info.capability.flags &=
+        ~(SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP);
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP_RESPONDER;
+    spdm_context->local_context.capability.flags = 0;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP_REQUESTER;
+    spdm_context->local_context.secured_message_version.spdm_version_count = 1;
+    spdm_context->local_context.secured_message_version.spdm_version[0] =
+        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.secured_message_version =
+        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size,
+                                                    &hash, &hash_size);
+    libspdm_reset_message_a(spdm_context);
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group =
+        m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite =
+        m_libspdm_use_aead_algo;
+    spdm_context->connection_info.algorithm.key_schedule =
+        m_libspdm_use_key_schedule_algo;
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
+        data_size;
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
+                     data, data_size);
+#endif
+
+    heartbeat_period = 0;
+    libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
+    status = libspdm_send_receive_psk_exchange(spdm_context,
+                                               LIBSPDM_TEST_PSK_HINT_STRING,
+                                               sizeof(LIBSPDM_TEST_PSK_HINT_STRING),
+                                               SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
+                                               0, &session_id, &heartbeat_period, measurement_hash);
+    if (status == LIBSPDM_STATUS_SUCCESS) {
+        libspdm_reset_message_k(spdm_context, spdm_context->session_info);
+    }
+    free(data);
+}
+
 void libspdm_test_requester_psk_exchange_ex_case1(void **State)
 {
     libspdm_return_t status;
@@ -390,6 +455,11 @@ void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
 
     libspdm_unit_test_group_setup(&State);
     libspdm_test_requester_psk_exchange_ex_case1(&State);
+    libspdm_unit_test_group_teardown(&State);
+
+    /*  PSK_CAP and context check*/
+    libspdm_unit_test_group_setup(&State);
+    libspdm_test_requester_psk_exchange_case3(&State);
     libspdm_unit_test_group_teardown(&State);
 }
 #else
