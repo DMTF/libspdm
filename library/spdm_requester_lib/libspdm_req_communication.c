@@ -160,7 +160,9 @@ libspdm_return_t libspdm_start_session_ex(void *spdm_context, bool use_psk,
                                           void *requester_random,
                                           size_t *requester_random_size,
                                           void *responder_random,
-                                          size_t *responder_random_size)
+                                          size_t *responder_random_size,
+                                          void *opaque_data,
+                                          size_t *opaque_data_size)
 {
     libspdm_return_t status;
     libspdm_context_t *context;
@@ -185,7 +187,8 @@ libspdm_return_t libspdm_start_session_ex(void *spdm_context, bool use_psk,
             context, measurement_hash_type, slot_id, session_policy,
             session_id, heartbeat_period, &req_slot_id_param,
             measurement_hash, requester_random_in,
-            requester_random, responder_random);
+            requester_random, responder_random,
+            opaque_data, opaque_data_size);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                            "libspdm_start_session - libspdm_send_receive_key_exchange - %p\n",
@@ -254,7 +257,8 @@ libspdm_return_t libspdm_start_session_ex(void *spdm_context, bool use_psk,
             heartbeat_period, measurement_hash,
             requester_random_in, requester_random_in_size,
             requester_random, requester_random_size,
-            responder_random, responder_random_size);
+            responder_random, responder_random_size,
+            opaque_data, opaque_data_size);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                            "libspdm_start_session - libspdm_send_receive_psk_exchange - %p\n",

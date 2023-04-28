@@ -698,6 +698,8 @@ void libspdm_test_requester_key_exchange_ex_case1(void **State)
     uint8_t requester_random_in[LIBSPDM_MAX_BUFFER_SIZE];
     uint8_t requester_random[LIBSPDM_MAX_BUFFER_SIZE];
     uint8_t responder_random[LIBSPDM_MAX_BUFFER_SIZE];
+    uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
+    size_t opaque_data_size;
 
     spdm_test_context = *State;
     m_libspdm_test_case_id = 0x01;
@@ -743,12 +745,13 @@ void libspdm_test_requester_key_exchange_ex_case1(void **State)
 #endif
 
     heartbeat_period = 0;
+    opaque_data_size = sizeof(opaque_data);
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_send_receive_key_exchange_ex(spdm_context,
                                                   SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
                                                   &session_id, &heartbeat_period, &slot_id_param,
                                                   measurement_hash, requester_random_in, requester_random,
-                                                  responder_random);
+                                                  responder_random, opaque_data, &opaque_data_size);
     free(data);
     if (status == LIBSPDM_STATUS_SUCCESS) {
         libspdm_reset_message_k(spdm_context, spdm_context->session_info);

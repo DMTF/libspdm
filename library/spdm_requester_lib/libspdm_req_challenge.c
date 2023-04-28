@@ -48,7 +48,9 @@ static libspdm_return_t libspdm_try_challenge(libspdm_context_t *spdm_context,
                                               uint8_t *slot_mask,
                                               const void *requester_nonce_in,
                                               void *requester_nonce,
-                                              void *responder_nonce)
+                                              void *responder_nonce,
+                                              void *opaque_data,
+                                              size_t *opaque_data_size)
 {
     libspdm_return_t status;
     bool result;
@@ -84,8 +86,7 @@ static libspdm_return_t libspdm_try_challenge(libspdm_context_t *spdm_context,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP)) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
-    if (spdm_context->connection_info.connection_state <
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
+    if (spdm_context->connection_info.connection_state < LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
 
@@ -253,6 +254,7 @@ static libspdm_return_t libspdm_try_challenge(libspdm_context_t *spdm_context,
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
+
     ptr += sizeof(uint16_t);
 
     status = libspdm_append_message_c(spdm_context, spdm_request, spdm_request_size);
@@ -279,12 +281,15 @@ static libspdm_return_t libspdm_try_challenge(libspdm_context_t *spdm_context,
         goto receive_done;
     }
 
-    LIBSPDM_DEBUG_CODE(
-        void *opaque;
-        opaque = ptr;
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "opaque (0x%x):\n", opaque_length));
-        LIBSPDM_INTERNAL_DUMP_HEX(opaque, opaque_length);
-        );
+    if ((opaque_data != NULL) && (opaque_data_size != NULL)) {
+        if (opaque_length >= *opaque_data_size) {
+            status = LIBSPDM_STATUS_BUFFER_TOO_SMALL;
+            goto receive_done;
+        }
+        libspdm_copy_mem(opaque_data, *opaque_data_size, ptr, opaque_length);
+        *opaque_data_size = opaque_length;
+    }
+
     ptr += opaque_length;
 
     signature = ptr;
@@ -350,7 +355,8 @@ libspdm_return_t libspdm_challenge(void *spdm_context, void *reserved,
     do {
         status = libspdm_try_challenge(context, slot_id,
                                        measurement_hash_type,
-                                       measurement_hash, slot_mask, NULL, NULL, NULL);
+                                       measurement_hash, slot_mask,
+                                       NULL, NULL, NULL, NULL, NULL);
         if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
             return status;
         }
@@ -368,7 +374,9 @@ libspdm_return_t libspdm_challenge_ex(void *spdm_context, void *reserved,
                                       uint8_t *slot_mask,
                                       const void *requester_nonce_in,
                                       void *requester_nonce,
-                                      void *responder_nonce)
+                                      void *responder_nonce,
+                                      void *opaque_data,
+                                      size_t *opaque_data_size)
 {
     libspdm_context_t *context;
     size_t retry;
@@ -385,7 +393,9 @@ libspdm_return_t libspdm_challenge_ex(void *spdm_context, void *reserved,
                                        measurement_hash,
                                        slot_mask,
                                        requester_nonce_in,
-                                       requester_nonce, responder_nonce);
+                                       requester_nonce, responder_nonce,
+                                       opaque_data,
+                                       opaque_data_size);
         if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
             return status;
         }

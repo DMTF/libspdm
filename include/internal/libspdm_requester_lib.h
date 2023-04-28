@@ -253,8 +253,8 @@ libspdm_return_t libspdm_send_receive_key_exchange_ex(
     uint8_t *heartbeat_period,
     uint8_t *req_slot_id_param, void *measurement_hash,
     const void *requester_random_in,
-    void *requester_random,
-    void *responder_random);
+    void *requester_random, void *responder_random,
+    void *opaque_data, size_t *opaque_data_size);
 
 /**
  * This function sends FINISH and receives FINISH_RSP for SPDM finish.
@@ -314,9 +314,6 @@ libspdm_return_t libspdm_send_receive_psk_exchange(libspdm_context_t *spdm_conte
  * @param  responder_context_size        On input, the size of requester_context buffer.
  *                                      On output, the size of data returned in requester_context buffer.
  *                                      It could be 0 if device does not support context.
- *
- * @retval RETURN_SUCCESS               The PSK_EXCHANGE is sent and the PSK_EXCHANGE_RSP is received.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
 libspdm_return_t libspdm_send_receive_psk_exchange_ex(libspdm_context_t *spdm_context,
                                                       const void *psk_hint,
@@ -331,7 +328,9 @@ libspdm_return_t libspdm_send_receive_psk_exchange_ex(libspdm_context_t *spdm_co
                                                       void *requester_context,
                                                       size_t *requester_context_size,
                                                       void *responder_context,
-                                                      size_t *responder_context_size);
+                                                      size_t *responder_context_size,
+                                                      void *opaque_data,
+                                                      size_t *opaque_data_size);
 
 /**
  * This function sends PSK_FINISH and receives PSK_FINISH_RSP for SPDM PSK finish.

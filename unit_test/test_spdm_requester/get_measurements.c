@@ -561,7 +561,7 @@ static libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
         ->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
-        measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 +
+        measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) + strlen("libspdm") +
                               libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         spdm_response_size = sizeof(spdm_measurements_response_t) +
                              sizeof(spdm_measurement_block_dmtf_t) +
@@ -594,8 +594,13 @@ static libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
         ptr = (void *)((uint8_t *)spdm_response + spdm_response_size - measurment_sig_size);
         libspdm_set_mem(ptr, SPDM_NONCE_SIZE, 0x12);
         ptr += SPDM_NONCE_SIZE;
-        *(uint16_t *)ptr = 0;
+
+        *(uint16_t *)ptr = (uint16_t)strlen("libspdm");
         ptr += sizeof(uint16_t);
+        libspdm_copy_mem(ptr, strlen("libspdm"), "libspdm", strlen("libspdm"));
+
+        ptr += strlen("libspdm");
+
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer)
                          - (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] -
@@ -3149,6 +3154,8 @@ static void libspdm_test_requester_get_measurements_case3(void **state)
     uint8_t requester_nonce_in[SPDM_NONCE_SIZE];
     uint8_t requester_nonce[SPDM_NONCE_SIZE];
     uint8_t responder_nonce[SPDM_NONCE_SIZE];
+    uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
+    size_t opaque_data_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -3199,16 +3206,21 @@ static void libspdm_test_requester_get_measurements_case3(void **state)
         responder_nonce[index] = 0x00;
     }
 
+    opaque_data_size = sizeof(opaque_data);
+
     status = libspdm_get_measurement_ex(spdm_context, NULL, request_attribute, 1,
                                         0, NULL, &number_of_block,
                                         &measurement_record_length,
                                         measurement_record, requester_nonce_in,
-                                        requester_nonce, responder_nonce);
+                                        requester_nonce, responder_nonce,
+                                        opaque_data, &opaque_data_size);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     for (int index = 0; index < SPDM_NONCE_SIZE; index++) {
         assert_int_equal (requester_nonce_in[index], requester_nonce[index]);
         assert_int_equal (responder_nonce[index], 0x12);
     }
+    assert_int_equal(opaque_data_size, strlen("libspdm"));
+    assert_memory_equal(opaque_data, "libspdm", strlen("libspdm"));
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
