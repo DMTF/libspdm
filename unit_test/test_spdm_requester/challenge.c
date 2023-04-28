@@ -1044,7 +1044,8 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
          * Ptr += libspdm_get_hash_size (m_libspdm_use_hash_algo);*/
         *(uint16_t *)Ptr = (uint16_t)strlen("libspdm");
         Ptr += sizeof(uint16_t);
-        libspdm_copy_mem(Ptr, (size_t)(*response) + *response_size - (size_t)Ptr, "libspdm", strlen("libspdm"));
+        libspdm_copy_mem(Ptr, (size_t)(*response) + *response_size - (size_t)Ptr, "libspdm",
+                         strlen("libspdm"));
         Ptr += strlen("libspdm");
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer) -
