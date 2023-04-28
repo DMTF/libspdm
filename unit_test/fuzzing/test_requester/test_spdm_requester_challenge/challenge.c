@@ -185,6 +185,8 @@ void libspdm_test_requester_challenge_ex_case1(void **State)
     uint8_t requester_nonce_in[LIBSPDM_MAX_BUFFER_SIZE];
     uint8_t requester_nonce[LIBSPDM_MAX_BUFFER_SIZE];
     uint8_t responder_nonce[LIBSPDM_MAX_BUFFER_SIZE];
+    uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
+    size_t opaque_data_size;
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
@@ -223,11 +225,13 @@ void libspdm_test_requester_challenge_ex_case1(void **State)
         &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
 
+    opaque_data_size = sizeof(opaque_data);
+
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     libspdm_challenge_ex(spdm_context, NULL, 0,
                          SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
                          measurement_hash, NULL, requester_nonce_in, requester_nonce,
-                         responder_nonce);
+                         responder_nonce, opaque_data, &opaque_data_size);
     free(data);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 #else

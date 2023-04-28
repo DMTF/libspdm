@@ -141,7 +141,9 @@ static libspdm_return_t libspdm_try_get_measurement(libspdm_context_t *spdm_cont
                                                     void *measurement_record,
                                                     const void *requester_nonce_in,
                                                     void *requester_nonce,
-                                                    void *responder_nonce)
+                                                    void *responder_nonce,
+                                                    void *opaque_data,
+                                                    size_t *opaque_data_size)
 {
     bool result;
     libspdm_return_t status;
@@ -414,12 +416,14 @@ static libspdm_return_t libspdm_try_get_measurement(libspdm_context_t *spdm_cont
             goto receive_done;
         }
 
-        LIBSPDM_DEBUG_CODE(
-            void *opaque;
-            opaque = ptr;
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "opaque (0x%x):\n", opaque_length));
-            LIBSPDM_INTERNAL_DUMP_HEX(opaque, opaque_length);
-            );
+        if ((opaque_data != NULL) && (opaque_data_size != NULL)) {
+            if (opaque_length >= *opaque_data_size) {
+                status = LIBSPDM_STATUS_BUFFER_TOO_SMALL;
+                goto receive_done;
+            }
+            libspdm_copy_mem(opaque_data, *opaque_data_size, ptr, opaque_length);
+            *opaque_data_size = opaque_length;
+        }
         ptr += opaque_length;
 
         signature = ptr;
@@ -617,7 +621,8 @@ libspdm_return_t libspdm_get_measurement(void *spdm_context, const uint32_t *ses
         status = libspdm_try_get_measurement(
             context, session_id, request_attribute,
             measurement_operation, slot_id_param, content_changed, number_of_blocks,
-            measurement_record_length, measurement_record, NULL, NULL, NULL);
+            measurement_record_length, measurement_record,
+            NULL, NULL, NULL, NULL, NULL);
         if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
             return status;
         }
@@ -638,7 +643,9 @@ libspdm_return_t libspdm_get_measurement_ex(void *spdm_context, const uint32_t *
                                             void *measurement_record,
                                             const void *requester_nonce_in,
                                             void *requester_nonce,
-                                            void *responder_nonce)
+                                            void *responder_nonce,
+                                            void *opaque_data,
+                                            size_t *opaque_data_size)
 {
     libspdm_context_t *context;
     size_t retry;
@@ -655,7 +662,8 @@ libspdm_return_t libspdm_get_measurement_ex(void *spdm_context, const uint32_t *
             measurement_operation, slot_id_param, content_changed, number_of_blocks,
             measurement_record_length, measurement_record,
             requester_nonce_in,
-            requester_nonce, responder_nonce);
+            requester_nonce, responder_nonce,
+            opaque_data, opaque_data_size);
         if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
             return status;
         }

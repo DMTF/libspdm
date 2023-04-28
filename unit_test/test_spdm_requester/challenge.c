@@ -1042,10 +1042,10 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
         Ptr += SPDM_NONCE_SIZE;
         /* libspdm_zero_mem (Ptr, libspdm_get_hash_size (m_libspdm_use_hash_algo));
          * Ptr += libspdm_get_hash_size (m_libspdm_use_hash_algo);*/
-        *(uint16_t *)Ptr = 8;
+        *(uint16_t *)Ptr = (uint16_t)strlen("libspdm");
         Ptr += sizeof(uint16_t);
-        libspdm_copy_mem(Ptr, (size_t)(*response) + *response_size - (size_t)Ptr, "libspdm", 7);
-        Ptr += 8;
+        libspdm_copy_mem(Ptr, (size_t)(*response) + *response_size - (size_t)Ptr, "libspdm", strlen("libspdm"));
+        Ptr += strlen("libspdm");
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],
                          sizeof(m_libspdm_local_buffer) -
                          (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] -
@@ -2645,6 +2645,8 @@ void libspdm_test_requester_challenge_case16(void **state) {
     size_t data_size;
     void                 *hash;
     size_t hash_size;
+    uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
+    size_t opaque_data_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -2685,11 +2687,16 @@ void libspdm_test_requester_challenge_case16(void **state) {
         &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
 #endif
 
+    opaque_data_size = sizeof(opaque_data);
+
     libspdm_zero_mem (measurement_hash, sizeof(measurement_hash));
-    status = libspdm_challenge (spdm_context, NULL, 0,
-                                SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
-                                measurement_hash, NULL);
+    status = libspdm_challenge_ex (spdm_context, NULL, 0,
+                                   SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
+                                   measurement_hash, NULL, NULL, NULL, NULL,
+                                   opaque_data, &opaque_data_size);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(opaque_data_size, strlen("libspdm"));
+    assert_memory_equal(opaque_data, "libspdm", opaque_data_size);
     free(data);
 }
 

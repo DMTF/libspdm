@@ -266,8 +266,8 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
     uint8_t *heartbeat_period,
     uint8_t *req_slot_id_param, void *measurement_hash,
     const void *requester_random_in,
-    void *requester_random,
-    void *responder_random)
+    void *requester_random, void *responder_random,
+    void *opaque_data, size_t *opaque_data_size)
 {
     bool result;
     libspdm_return_t status;
@@ -584,6 +584,17 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
         }
     }
 
+    if ((opaque_data != NULL) && (opaque_data_size != NULL)) {
+        if (opaque_length >= *opaque_data_size) {
+            libspdm_secured_message_dhe_free(
+                spdm_context->connection_info.algorithm.dhe_named_group, dhe_context);
+            status = LIBSPDM_STATUS_BUFFER_TOO_SMALL;
+            goto receive_done;
+        }
+        libspdm_copy_mem(opaque_data, *opaque_data_size, ptr, opaque_length);
+        *opaque_data_size = opaque_length;
+    }
+
     ptr += opaque_length;
 
     spdm_response_size = sizeof(spdm_key_exchange_response_t) +
@@ -738,7 +749,8 @@ libspdm_return_t libspdm_send_receive_key_exchange(
         status = libspdm_try_send_receive_key_exchange(
             spdm_context, measurement_hash_type, slot_id, session_policy,
             session_id, heartbeat_period, req_slot_id_param,
-            measurement_hash, NULL, NULL, NULL);
+            measurement_hash,
+            NULL, NULL, NULL, NULL, NULL);
         if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
             return status;
         }
@@ -755,8 +767,8 @@ libspdm_return_t libspdm_send_receive_key_exchange_ex(
     uint8_t *heartbeat_period,
     uint8_t *req_slot_id_param, void *measurement_hash,
     const void *requester_random_in,
-    void *requester_random,
-    void *responder_random)
+    void *requester_random, void *responder_random,
+    void *opaque_data, size_t *opaque_data_size)
 {
     size_t retry;
     uint64_t retry_delay_time;
@@ -770,7 +782,8 @@ libspdm_return_t libspdm_send_receive_key_exchange_ex(
             spdm_context, measurement_hash_type, slot_id, session_policy,
             session_id, heartbeat_period, req_slot_id_param,
             measurement_hash, requester_random_in,
-            requester_random, responder_random);
+            requester_random, responder_random,
+            opaque_data, opaque_data_size);
         if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
             return status;
         }

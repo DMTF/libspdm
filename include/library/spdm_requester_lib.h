@@ -168,7 +168,7 @@ libspdm_return_t libspdm_challenge(void *spdm_context, void *reserved,
  * This function verifies the signature in the challenge auth.
  *
  * If basic mutual authentication is requested from the responder,
- * this function also perform the basic mutual authentication.
+ * this function also performs the basic mutual authentication.
  *
  * @param  spdm_context           A pointer to the SPDM context.
  * @param  reserved               Reserved for session_id and is ignored.
@@ -179,10 +179,10 @@ libspdm_return_t libspdm_challenge(void *spdm_context, void *reserved,
  * @param  requester_nonce_in     A buffer to hold the requester nonce (32 bytes) as input, if not NULL.
  * @param  requester_nonce        A buffer to hold the requester nonce (32 bytes), if not NULL.
  * @param  responder_nonce        A buffer to hold the responder nonce (32 bytes), if not NULL.
- *
- * @retval RETURN_SUCCESS               The challenge auth is got successfully.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @param  opaque_data            A buffer to hold the responder opaque data, if not NULL.
+ * @param  opaque_data_size       On input, the size of the opaque data buffer.
+ *                                Responder opaque data should be less than 1024 bytes.
+ *                                On output, the size of the opaque data.
  **/
 libspdm_return_t libspdm_challenge_ex(void *spdm_context, void *reserved,
                                       uint8_t slot_id,
@@ -191,7 +191,9 @@ libspdm_return_t libspdm_challenge_ex(void *spdm_context, void *reserved,
                                       uint8_t *slot_mask,
                                       const void *requester_nonce_in,
                                       void *requester_nonce,
-                                      void *responder_nonce);
+                                      void *responder_nonce,
+                                      void *opaque_data,
+                                      size_t *opaque_data_size);
 
 /**
  * This function sends GET_MEASUREMENT
@@ -245,10 +247,10 @@ libspdm_return_t libspdm_get_measurement(void *spdm_context, const uint32_t *ses
  * @param  requester_nonce_in         A buffer to hold the requester nonce (32 bytes) as input, if not NULL.
  * @param  requester_nonce            A buffer to hold the requester nonce (32 bytes), if not NULL.
  * @param  responder_nonce            A buffer to hold the responder nonce (32 bytes), if not NULL.
- *
- * @retval RETURN_SUCCESS               The measurement is got successfully.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @param  opaque_data                A buffer to hold the responder opaque data, if not NULL.
+ * @param  opaque_data_size           On input, the size of the opaque data buffer.
+ *                                    Responder opaque data should be less than 1024 bytes.
+ *                                    On output, the size of the opaque data.
  **/
 libspdm_return_t libspdm_get_measurement_ex(void *spdm_context, const uint32_t *session_id,
                                             uint8_t request_attribute,
@@ -260,7 +262,9 @@ libspdm_return_t libspdm_get_measurement_ex(void *spdm_context, const uint32_t *
                                             void *measurement_record,
                                             const void *requester_nonce_in,
                                             void *requester_nonce,
-                                            void *responder_nonce);
+                                            void *responder_nonce,
+                                            void *opaque_data,
+                                            size_t *opaque_data_size);
 
 #if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP)
 /**
@@ -328,10 +332,10 @@ libspdm_return_t libspdm_start_session(void *spdm_context, bool use_psk,
  *                                   On output, the size of data returned in requester_random buffer.
  *                                   If use_psk is false, it must be 32 bytes.
  *                                   If use_psk is true, it means the PSK context. It could be 0 if device does not support context.
- *
- * @retval RETURN_SUCCESS               The SPDM session is started.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ * @param  opaque_data               A buffer to hold the responder opaque data, if not NULL.
+ * @param  opaque_data_size          On input, the size of the opaque data buffer.
+ *                                   Responder opaque data should be less than 1024 bytes.
+ *                                   On output, the size of the opaque data.
  **/
 libspdm_return_t libspdm_start_session_ex(void *spdm_context, bool use_psk,
                                           const void *psk_hint,
@@ -347,7 +351,9 @@ libspdm_return_t libspdm_start_session_ex(void *spdm_context, bool use_psk,
                                           void *requester_random,
                                           size_t *requester_random_size,
                                           void *responder_random,
-                                          size_t *responder_random_size);
+                                          size_t *responder_random_size,
+                                          void *opaque_data,
+                                          size_t *opaque_data_size);
 
 /**
  * This function sends END_SESSION to stop an SPDM Session.
@@ -578,15 +584,11 @@ libspdm_return_t libspdm_generate_encap_extended_error_response(
  *                                    If session_id is NOT NULL, it is a secured message.
  * @param[in]  requester_info         Requester info to gen CSR
  * @param[in]  requester_info_length  The length of requester info
- * @param[in]  opaque_data            opaque data.
- * @param[in]  opaque_data_length     The length of opaque data.
+ * @param[in]  opaque_data            Opaque data from requester.
+ * @param[in]  opaque_data_length     The length of opaque_data.
  * @param[out] csr                    Address to store CSR.
  * @param[out] csr_len                On input, *csr_len indicates the max csr buffer size.
  *                                    On output, *csr_len indicates the actual csr buffer size.
- *
- * @retval RETURN_SUCCESS               The measurement is got successfully.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 libspdm_return_t libspdm_get_csr(void *spdm_context,
                                  const uint32_t *session_id,

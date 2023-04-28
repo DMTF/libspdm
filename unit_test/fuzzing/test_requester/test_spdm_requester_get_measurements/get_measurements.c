@@ -252,6 +252,8 @@ void libspdm_test_requester_get_measurement_case2(void **State)
     size_t data_size;
     void *hash;
     size_t hash_size;
+    uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
+    size_t opaque_data_size;
 
     m_secured_on_off = false;
     spdm_test_context = *State;
@@ -296,10 +298,13 @@ void libspdm_test_requester_get_measurement_case2(void **State)
     request_attribute = SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_RAW_BIT_STREAM_REQUESTED;
 
     measurement_record_length = sizeof(measurement_record);
+    opaque_data_size = sizeof(opaque_data);
+
     libspdm_get_measurement_ex(spdm_context, NULL, request_attribute, 1, 0, NULL,
                                &number_of_block,
-                               &measurement_record_length, measurement_record, NULL, NULL,
-                               NULL);
+                               &measurement_record_length, measurement_record,
+                               NULL, NULL, NULL,
+                               opaque_data, &opaque_data_size);
     free(data);
     libspdm_reset_message_m(spdm_context, NULL);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -476,6 +481,8 @@ void libspdm_test_requester_get_measurement_case5(void **State)
     void *hash;
     size_t hash_size;
     uint8_t content_changed[10];
+    uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
+    size_t opaque_data_size;
 
     m_secured_on_off = false;
     spdm_test_context = *State;
@@ -520,10 +527,13 @@ void libspdm_test_requester_get_measurement_case5(void **State)
     request_attribute = SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_RAW_BIT_STREAM_REQUESTED;
 
     measurement_record_length = sizeof(measurement_record);
+    opaque_data_size = sizeof(opaque_data);
+
     libspdm_get_measurement_ex(spdm_context, NULL, request_attribute, 1, 0, content_changed,
                                &number_of_block,
-                               &measurement_record_length, measurement_record, NULL, NULL,
-                               NULL);
+                               &measurement_record_length, measurement_record,
+                               NULL, NULL, NULL,
+                               opaque_data, &opaque_data_size);
     free(data);
     libspdm_reset_message_m(spdm_context, NULL);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
