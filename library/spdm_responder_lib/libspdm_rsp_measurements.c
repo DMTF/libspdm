@@ -321,6 +321,21 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
                     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                     response_size, response);
             }
+            if (slot_id_param != 0xF) {
+                if (spdm_context->local_context
+                    .local_cert_chain_provision[slot_id_param] == NULL) {
+                    return libspdm_generate_error_response(
+                        spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
+                        0, response_size, response);
+                }
+            } else {
+                if (spdm_context->local_context
+                    .local_public_key_provision == NULL) {
+                    return libspdm_generate_error_response(
+                        spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
+                        0, response_size, response);
+                }
+            }
             spdm_response->header.param2 = slot_id_param;
             if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
                 spdm_response->header.param2 = slot_id_param |
