@@ -69,7 +69,10 @@ static bool libspdm_check_request_flag_compatibility(uint32_t capabilities_flag,
 
         /* Checks that originate from key exchange capabilities. */
         if ((key_ex_cap == 1) || (psk_cap == 1)) {
-            if ((mac_cap == 0) && (encrypt_cap == 0)) {
+            /* While clearing MAC_CAP and setting ENCRYPT_CAP is legal according to DSP0274, libspdm
+             * also implements DSP0277 secure messages, which requires at least MAC_CAP to be set.
+             */
+            if (mac_cap == 0) {
                 return false;
             }
         } else {
