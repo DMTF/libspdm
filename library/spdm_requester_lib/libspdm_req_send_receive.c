@@ -318,6 +318,10 @@ libspdm_return_t libspdm_handle_large_request(
     size_t copy_size;
     libspdm_chunk_info_t *send_info;
 
+    if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_12) {
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+    }
+
     /* Fail if requester or responder does not support chunk cap */
     if (!libspdm_is_capabilities_flag_supported(
             spdm_context, true,
@@ -663,8 +667,7 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
         send_info->large_message_size = 0;
         send_info->large_message_capacity = 0;
         status = LIBSPDM_STATUS_SUCCESS;
-    }
-    else {
+    } else {
         response_capacity = *response_size;
         status = libspdm_receive_response(spdm_context, session_id, false,
                                           response_size, response);
@@ -682,7 +685,6 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
 
     if (spdm_response->request_response_code == SPDM_ERROR
         && spdm_response->param1 == SPDM_ERROR_CODE_LARGE_RESPONSE) {
-
         status = libspdm_handle_error_large_response(
             spdm_context, session_id,
             response_size, (void*) spdm_response, response_capacity);

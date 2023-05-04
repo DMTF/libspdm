@@ -45,6 +45,10 @@ static libspdm_return_t libspdm_try_get_csr(libspdm_context_t *spdm_context,
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
 
+    if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_12) {
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+    }
+
     if (!libspdm_is_capabilities_flag_supported(
             spdm_context, true, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CSR_CAP)) {

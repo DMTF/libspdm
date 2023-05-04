@@ -207,6 +207,10 @@ libspdm_return_t libspdm_handle_error_large_response(
     size_t large_response_size;
     size_t large_response_size_so_far;
 
+    if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_12) {
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+    }
+
     /* Fail if requester or responder does not support chunk cap */
     if (!libspdm_is_capabilities_flag_supported(
             spdm_context, true,
