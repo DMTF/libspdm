@@ -7387,8 +7387,10 @@ static void libspdm_test_requester_key_exchange_case31(void **state)
     uint8_t requester_random_in[SPDM_RANDOM_DATA_SIZE];
     uint8_t requester_random[SPDM_RANDOM_DATA_SIZE];
     uint8_t responder_random[SPDM_RANDOM_DATA_SIZE];
-    uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
-    size_t opaque_data_size;
+    uint8_t responder_opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
+    size_t responder_opaque_data_size;
+    uint8_t requester_opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
+    size_t requester_opaque_data_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -7446,14 +7448,16 @@ static void libspdm_test_requester_key_exchange_case31(void **state)
     }
 
     heartbeat_period = 0;
-    opaque_data_size = sizeof(opaque_data);
+    responder_opaque_data_size = sizeof(responder_opaque_data);
+    requester_opaque_data_size = sizeof(requester_opaque_data);
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_send_receive_key_exchange_ex(
         spdm_context,
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
         &session_id, &heartbeat_period, &slot_id_param,
         measurement_hash, requester_random_in, requester_random, responder_random,
-        opaque_data, &opaque_data_size);
+        requester_opaque_data, requester_opaque_data_size,
+        responder_opaque_data, &responder_opaque_data_size);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(session_id, 0xFFFFFFFF);
     assert_int_equal(

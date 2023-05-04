@@ -306,36 +306,40 @@ libspdm_return_t libspdm_start_session(void *spdm_context, bool use_psk,
  * If encapsulated mutual authentication is requested from the responder,
  * this function also perform the encapsulated mutual authentication.
  *
- * @param  spdm_context              A pointer to the SPDM context.
- * @param  use_psk                   False means to use KEY_EXCHANGE/FINISH to start a session.
- *                                   True means to use PSK_EXCHANGE/PSK_FINISH to start a session.
- * @param  psk_hint                  The psk_hint in PSK_EXCHANGE. It is ignored if use_psk is false.
- * @param  psk_hint_size             The size in bytes of psk_hint. It is ignored if use_psk is false.
- * @param  measurement_hash_type     The type of the measurement hash.
- * @param  slot_id                   The number of slot for the certificate chain.
- * @param  session_policy            The policy for the session.
- * @param  session_id                The session ID of the session.
- * @param  heartbeat_period          The heartbeat period for the session.
- * @param  measurement_hash          A pointer to a destination buffer to store the measurement hash.
- * @param  requester_random_in       A buffer to hold the requester random as input, if not NULL.
- * @param  requester_random_in_size  The size of requester_random_in.
- *                                   If use_psk is false, it must be 32 bytes.
- *                                   If use_psk is true, it means the PSK context and must be 32 bytes at least,
- *                                   but not exceed LIBSPDM_PSK_CONTEXT_LENGTH.
- * @param  requester_random          A buffer to hold the requester random, if not NULL.
- * @param  requester_random_size     On input, the size of requester_random buffer.
- *                                   On output, the size of data returned in requester_random buffer.
- *                                   If use_psk is false, it must be 32 bytes.
- *                                   If use_psk is true, it means the PSK context and must be 32 bytes at least.
- * @param  responder_random          A buffer to hold the responder random, if not NULL.
- * @param  responder_random_size     On input, the size of requester_random buffer.
- *                                   On output, the size of data returned in requester_random buffer.
- *                                   If use_psk is false, it must be 32 bytes.
- *                                   If use_psk is true, it means the PSK context. It could be 0 if device does not support context.
- * @param  opaque_data               A buffer to hold the responder opaque data, if not NULL.
- * @param  opaque_data_size          On input, the size of the opaque data buffer.
- *                                   Responder opaque data should be less than 1024 bytes.
- *                                   On output, the size of the opaque data.
+ * @param  spdm_context               A pointer to the SPDM context.
+ * @param  use_psk                    False means to use KEY_EXCHANGE/FINISH to start a session.
+ *                                    True means to use PSK_EXCHANGE/PSK_FINISH to start a session.
+ * @param  psk_hint                   The psk_hint in PSK_EXCHANGE. It is ignored if use_psk is false.
+ * @param  psk_hint_size              The size in bytes of psk_hint. It is ignored if use_psk is false.
+ * @param  measurement_hash_type      The type of the measurement hash.
+ * @param  slot_id                    The number of slot for the certificate chain.
+ * @param  session_policy             The policy for the session.
+ * @param  session_id                 The session ID of the session.
+ * @param  heartbeat_period           The heartbeat period for the session.
+ * @param  measurement_hash           A pointer to a destination buffer to store the measurement hash.
+ * @param  requester_random_in        A buffer to hold the requester random as input, if not NULL.
+ * @param  requester_random_in_size   The size of requester_random_in.
+ *                                    If use_psk is false, it must be 32 bytes.
+ *                                    If use_psk is true, it means the PSK context and must be 32 bytes at least,
+ *                                    but not exceed LIBSPDM_PSK_CONTEXT_LENGTH.
+ * @param  requester_random           A buffer to hold the requester random, if not NULL.
+ * @param  requester_random_size      On input, the size of requester_random buffer.
+ *                                    On output, the size of data returned in requester_random buffer.
+ *                                    If use_psk is false, it must be 32 bytes.
+ *                                    If use_psk is true, it means the PSK context and must be 32 bytes at least.
+ * @param  responder_random           A buffer to hold the responder random, if not NULL.
+ * @param  responder_random_size      On input, the size of requester_random buffer.
+ *                                    On output, the size of data returned in requester_random buffer.
+ *                                    If use_psk is false, it must be 32 bytes.
+ *                                    If use_psk is true, it means the PSK context. It could be 0 if device does not support context.
+ * @param  requester_opaque_data      A buffer to hold the requester opaque data, if not NULL.
+ *                                    If not NULL, this function will not generate any opaque data,
+ *                                    including secured message versions.
+ * @param  requester_opaque_data_size The size of the opaque data, if requester_opaque_data is not NULL.
+ * @param  responder_opaque_data      A buffer to hold the responder opaque data, if not NULL.
+ * @param  responder_opaque_data_size On input, the size of the opaque data buffer.
+ *                                    Opaque data should be less than 1024 bytes.
+ *                                    On output, the size of the opaque data.
  **/
 libspdm_return_t libspdm_start_session_ex(void *spdm_context, bool use_psk,
                                           const void *psk_hint,
@@ -352,8 +356,10 @@ libspdm_return_t libspdm_start_session_ex(void *spdm_context, bool use_psk,
                                           size_t *requester_random_size,
                                           void *responder_random,
                                           size_t *responder_random_size,
-                                          void *opaque_data,
-                                          size_t *opaque_data_size);
+                                          const void *requester_opaque_data,
+                                          size_t requester_opaque_data_size,
+                                          void *responder_opaque_data,
+                                          size_t *responder_opaque_data_size);
 
 /**
  * This function sends END_SESSION to stop an SPDM Session.

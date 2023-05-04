@@ -114,7 +114,7 @@ bool libspdm_verify_psk_exchange_rsp_hmac(libspdm_context_t *spdm_context,
  *                                   On output, the size of data returned in requester_context buffer.
  *                                   It could be 0 if device does not support context.
  * @param  opaque_data               A buffer to hold the responder opaque data, if not NULL.
- * @param  opaque_data_size          On input, the size of the opaque data buffer.
+ * @param  responder_opaque_data_size          On input, the size of the opaque data buffer.
  *                                   Responder opaque data should be less than 1024 bytes.
  *                                   On output, the size of the opaque data.
  **/
@@ -131,8 +131,10 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
     size_t *requester_context_size,
     void *responder_context,
     size_t *responder_context_size,
-    void *opaque_data,
-    size_t *opaque_data_size)
+    const void *requester_opaque_data,
+    size_t requester_opaque_data_size,
+    void *responder_opaque_data,
+    size_t *responder_opaque_data_size)
 {
     bool result;
     libspdm_return_t status;
@@ -230,8 +232,15 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
         LIBSPDM_ASSERT (requester_context_in_size <= LIBSPDM_PSK_CONTEXT_LENGTH);
         spdm_request->context_length = (uint16_t)requester_context_in_size;
     }
-    opaque_psk_exchange_req_size =
-        libspdm_get_opaque_data_supported_version_data_size(spdm_context);
+
+    if (requester_opaque_data != NULL) {
+        LIBSPDM_ASSERT(requester_opaque_data_size <= SPDM_MAX_OPAQUE_DATA_SIZE);
+
+        opaque_psk_exchange_req_size = (uint16_t)requester_opaque_data_size;
+    } else {
+        opaque_psk_exchange_req_size =
+            libspdm_get_opaque_data_supported_version_data_size(spdm_context);
+    }
     spdm_request->opaque_length = (uint16_t)opaque_psk_exchange_req_size;
 
     spdm_request->req_session_id = req_session_id;
@@ -269,8 +278,13 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
     }
     ptr += spdm_request->context_length;
 
+    if (requester_opaque_data != NULL) {
+        libspdm_copy_mem(ptr, opaque_psk_exchange_req_size,
+                         requester_opaque_data, opaque_psk_exchange_req_size);
+    } else {
     libspdm_build_opaque_data_supported_version_data(
         spdm_context, &opaque_psk_exchange_req_size, ptr);
+    }
     ptr += opaque_psk_exchange_req_size;
 
     spdm_request_size = (size_t)ptr - (size_t)spdm_request;
@@ -315,8 +329,7 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             goto receive_done;
         }
-    } else if (spdm_response->header.request_response_code !=
-               SPDM_PSK_EXCHANGE_RSP) {
+    } else if (spdm_response->header.request_response_code != SPDM_PSK_EXCHANGE_RSP) {
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
@@ -410,13 +423,14 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
 
     ptr += spdm_response->context_length;
 
-    if ((opaque_data != NULL) && (opaque_data_size != NULL)) {
-        if (spdm_response->opaque_length >= *opaque_data_size) {
+    if ((responder_opaque_data != NULL) && (responder_opaque_data_size != NULL)) {
+        if (spdm_response->opaque_length >= *responder_opaque_data_size) {
             status = LIBSPDM_STATUS_BUFFER_TOO_SMALL;
             goto receive_done;
         }
-        libspdm_copy_mem(opaque_data, *opaque_data_size, ptr, spdm_response->opaque_length);
-        *opaque_data_size = spdm_response->opaque_length;
+        libspdm_copy_mem(responder_opaque_data, *responder_opaque_data_size,
+                         ptr, spdm_response->opaque_length);
+        *responder_opaque_data_size = spdm_response->opaque_length;
     }
 
     ptr += spdm_response->opaque_length;
@@ -558,7 +572,7 @@ libspdm_return_t libspdm_send_receive_psk_exchange(libspdm_context_t *spdm_conte
             spdm_context, psk_hint, psk_hint_size,
             measurement_hash_type, session_policy, session_id,
             heartbeat_period, measurement_hash,
-            NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL);
+            NULL, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL);
         if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
             return status;
         }
@@ -583,8 +597,10 @@ libspdm_return_t libspdm_send_receive_psk_exchange_ex(libspdm_context_t *spdm_co
                                                       size_t *requester_context_size,
                                                       void *responder_context,
                                                       size_t *responder_context_size,
-                                                      void *opaque_data,
-                                                      size_t *opaque_data_size)
+                                                      const void *requester_opaque_data,
+                                                      size_t requester_opaque_data_size,
+                                                      void *responder_opaque_data,
+                                                      size_t *responder_opaque_data_size)
 {
     size_t retry;
     uint64_t retry_delay_time;
@@ -601,7 +617,8 @@ libspdm_return_t libspdm_send_receive_psk_exchange_ex(libspdm_context_t *spdm_co
             requester_context_in, requester_context_in_size,
             requester_context, requester_context_size,
             responder_context, responder_context_size,
-            opaque_data, opaque_data_size);
+            requester_opaque_data, requester_opaque_data_size,
+            responder_opaque_data, responder_opaque_data_size);
         if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
             return status;
         }
