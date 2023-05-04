@@ -862,7 +862,8 @@ static bool libspdm_verify_leaf_cert_spdm_eku(const uint8_t *cert, size_t cert_s
  *                                       2. hardware_identity_oid is found in AliasCert model;
  **/
 static bool libspdm_verify_leaf_cert_spdm_extension(const uint8_t *cert, size_t cert_size,
-                                                    bool is_requester_cert, bool is_device_cert_model)
+                                                    bool is_requester_cert,
+                                                    bool is_device_cert_model)
 {
     bool status;
     bool find_sucessful;
