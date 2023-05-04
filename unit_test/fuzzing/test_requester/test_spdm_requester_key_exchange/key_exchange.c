@@ -748,12 +748,14 @@ void libspdm_test_requester_key_exchange_ex_case1(void **State)
     responder_opaque_data_size = sizeof(responder_opaque_data);
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_send_receive_key_exchange_ex(spdm_context,
-                                                  SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
+                                                  SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
+                                                  0, 0,
                                                   &session_id, &heartbeat_period, &slot_id_param,
-                                                  measurement_hash, requester_random_in, requester_random,
-                                                  responder_random,
+                                                  measurement_hash, requester_random_in,
+                                                  requester_random, responder_random,
                                                   NULL, 0,
-                                                  responder_opaque_data, &responder_opaque_data_size);
+                                                  responder_opaque_data,
+                                                  &responder_opaque_data_size);
     free(data);
     if (status == LIBSPDM_STATUS_SUCCESS) {
         libspdm_reset_message_k(spdm_context, spdm_context->session_info);

@@ -396,7 +396,7 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
 
         libspdm_copy_mem(ptr,
                          (spdm_request_size - (sizeof(spdm_key_exchange_request_t) + dhe_key_size)),
-                          requester_opaque_data, requester_opaque_data_size);
+                         requester_opaque_data, requester_opaque_data_size);
         opaque_key_exchange_req_size = requester_opaque_data_size;
     } else {
         opaque_key_exchange_req_size =

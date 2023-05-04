@@ -282,8 +282,8 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
         libspdm_copy_mem(ptr, opaque_psk_exchange_req_size,
                          requester_opaque_data, opaque_psk_exchange_req_size);
     } else {
-    libspdm_build_opaque_data_supported_version_data(
-        spdm_context, &opaque_psk_exchange_req_size, ptr);
+        libspdm_build_opaque_data_supported_version_data(
+            spdm_context, &opaque_psk_exchange_req_size, ptr);
     }
     ptr += opaque_psk_exchange_req_size;
 
