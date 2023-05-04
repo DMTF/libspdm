@@ -19,6 +19,12 @@ libspdm_return_t libspdm_get_response_end_session(libspdm_context_t *spdm_contex
 
     spdm_request = request;
 
+    if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_11) {
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_UNSUPPORTED_REQUEST, 0,
+                                               response_size, response);
+    }
+
     if (spdm_request->header.spdm_version != libspdm_get_connection_version(spdm_context)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_VERSION_MISMATCH, 0,

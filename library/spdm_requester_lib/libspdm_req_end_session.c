@@ -41,6 +41,10 @@ static libspdm_return_t libspdm_try_send_receive_end_session(libspdm_context_t *
     size_t message_size;
     size_t transport_header_size;
 
+    if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_11) {
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+    }
+
     if (spdm_context->connection_info.connection_state <
         LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return LIBSPDM_STATUS_INVALID_STATE_LOCAL;

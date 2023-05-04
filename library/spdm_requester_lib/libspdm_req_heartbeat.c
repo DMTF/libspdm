@@ -34,6 +34,10 @@ static libspdm_return_t libspdm_try_heartbeat(libspdm_context_t *spdm_context, u
     size_t transport_header_size;
 
     /* -=[Check Parameters Phase]=- */
+    if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_11) {
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+    }
+
     session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
     if (session_info == NULL) {
         return LIBSPDM_STATUS_INVALID_PARAMETER;

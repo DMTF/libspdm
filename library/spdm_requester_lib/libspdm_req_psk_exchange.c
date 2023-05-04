@@ -162,6 +162,10 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
                    measurement_hash_type == SPDM_CHALLENGE_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH ||
                    measurement_hash_type == SPDM_CHALLENGE_REQUEST_ALL_MEASUREMENTS_HASH);
 
+    if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_11) {
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+    }
+
     /* Check capabilities even if GET_CAPABILITIES is not sent.
      * Assuming capabilities are provisioned.*/
     if (!libspdm_is_capabilities_flag_supported(

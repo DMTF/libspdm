@@ -323,6 +323,12 @@ libspdm_return_t libspdm_get_response_encapsulated_request(
 
     spdm_request = request;
 
+    if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_11) {
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_UNSUPPORTED_REQUEST, 0,
+                                               response_size, response);
+    }
+
     if (!libspdm_is_capabilities_flag_supported(
             spdm_context, false,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP,
@@ -402,6 +408,12 @@ libspdm_return_t libspdm_get_response_encapsulated_response_ack(
     size_t ack_header_size;
 
     spdm_request = request;
+
+    if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_11) {
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_UNSUPPORTED_REQUEST, 0,
+                                               response_size, response);
+    }
 
     if (!libspdm_is_capabilities_flag_supported(
             spdm_context, false,

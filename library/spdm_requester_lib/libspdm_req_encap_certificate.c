@@ -27,6 +27,12 @@ libspdm_return_t libspdm_get_encap_response_certificate(void *spdm_context,
     context = spdm_context;
     spdm_request = request;
 
+    if (libspdm_get_connection_version(context) < SPDM_MESSAGE_VERSION_11) {
+        return libspdm_generate_encap_error_response(
+            context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
+            0, response_size, response);
+    }
+
     if (spdm_request->header.spdm_version != libspdm_get_connection_version(context)) {
         return libspdm_generate_encap_error_response(
             context, SPDM_ERROR_CODE_VERSION_MISMATCH,

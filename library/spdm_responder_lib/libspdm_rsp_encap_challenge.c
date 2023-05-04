@@ -17,6 +17,10 @@ libspdm_return_t libspdm_get_encap_request_challenge(libspdm_context_t *spdm_con
 
     spdm_context->encap_context.last_encap_request_size = 0;
 
+    if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_11) {
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+    }
+
     if (!libspdm_is_capabilities_flag_supported(
             spdm_context, false,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP, 0)) {

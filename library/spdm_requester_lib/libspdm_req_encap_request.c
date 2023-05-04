@@ -138,6 +138,10 @@ libspdm_return_t libspdm_encapsulated_request(libspdm_context_t *spdm_context,
     spdm_get_digest_request_t *get_digests;
     #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
+    if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_11) {
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+    }
+
     if (!libspdm_is_capabilities_flag_supported(
             spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP,
