@@ -130,7 +130,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
             libspdm_zero_mem(temp_buf, LIBSPDM_RECEIVER_BUFFER_SIZE);
             temp_buf_ptr = temp_buf + sizeof(libspdm_test_message_header_t);
             libspdm_encapsulated_request_response = (void*) temp_buf_ptr;
-            libspdm_encapsulated_request_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+            libspdm_encapsulated_request_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             libspdm_encapsulated_request_response->header.request_response_code =
                 SPDM_ENCAPSULATED_REQUEST;
             libspdm_encapsulated_request_response->header.param1 = 0;
@@ -138,7 +138,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
 
             spdm_response = (void *)(temp_buf_ptr
                                      + sizeof(spdm_encapsulated_request_response_t));
-            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_GET_DIGESTS;
             spdm_response->header.param1 = 0;
             spdm_response->header.param2 = 0;
@@ -160,7 +160,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
             libspdm_zero_mem(temp_buf, LIBSPDM_RECEIVER_BUFFER_SIZE);
             temp_buf_ptr = temp_buf + sizeof(libspdm_test_message_header_t);
             spdm_encapsulated_response_ack_response = (void*) temp_buf_ptr;
-            spdm_encapsulated_response_ack_response->spdm_version = SPDM_MESSAGE_VERSION_10;
+            spdm_encapsulated_response_ack_response->spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_encapsulated_response_ack_response->request_response_code =
                 SPDM_ENCAPSULATED_RESPONSE_ACK;
             spdm_encapsulated_response_ack_response->param1 = 0;
@@ -192,7 +192,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
             libspdm_zero_mem(temp_buf, LIBSPDM_RECEIVER_BUFFER_SIZE);
             temp_buf_ptr = temp_buf + sizeof(libspdm_test_message_header_t);
             libspdm_encapsulated_request_response = (void *) temp_buf_ptr;
-            libspdm_encapsulated_request_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+            libspdm_encapsulated_request_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             libspdm_encapsulated_request_response->header.request_response_code =
                 SPDM_ENCAPSULATED_REQUEST;
             libspdm_encapsulated_request_response->header.param1 = 0;
@@ -200,7 +200,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
 
             spdm_response =
                 (void *)(temp_buf_ptr + sizeof(spdm_encapsulated_request_response_t));
-            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_GET_DIGESTS;
             spdm_response->header.param1 = 0;
             spdm_response->header.param2 = 0;
@@ -222,7 +222,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
             libspdm_zero_mem(temp_buf, LIBSPDM_RECEIVER_BUFFER_SIZE);
             temp_buf_ptr = temp_buf + sizeof(libspdm_test_message_header_t);
             spdm_encapsulated_response_ack_response = (void *) temp_buf_ptr;
-            spdm_encapsulated_response_ack_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+            spdm_encapsulated_response_ack_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_encapsulated_response_ack_response->header.request_response_code =
                 SPDM_ENCAPSULATED_RESPONSE_ACK;
             spdm_encapsulated_response_ack_response->header.param1 = 0;
@@ -250,7 +250,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
         libspdm_zero_mem(temp_buf, LIBSPDM_RECEIVER_BUFFER_SIZE);
         temp_buf_ptr = temp_buf + sizeof(libspdm_test_message_header_t);
         spdm_response = (void *) temp_buf_ptr;
-        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
         spdm_response->header.request_response_code = SPDM_ENCAPSULATED_REQUEST;
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
@@ -275,7 +275,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
             libspdm_zero_mem(temp_buf, LIBSPDM_RECEIVER_BUFFER_SIZE);
             temp_buf_ptr = temp_buf + sizeof(libspdm_test_message_header_t);
             libspdm_encapsulated_request_response = (void *)temp_buf_ptr;
-            libspdm_encapsulated_request_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+            libspdm_encapsulated_request_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             libspdm_encapsulated_request_response->header.request_response_code =
                 SPDM_ENCAPSULATED_REQUEST;
             libspdm_encapsulated_request_response->header.param1 = 0;
@@ -283,7 +283,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
 
             spdm_response =
                 (void *)(temp_buf_ptr + sizeof(spdm_encapsulated_request_response_t));
-            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_GET_DIGESTS;
             spdm_response->header.param1 = 0;
             spdm_response->header.param2 = 0;
@@ -334,7 +334,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
             temp_buf_ptr = temp_buf + sizeof(libspdm_test_message_header_t);
 
             libspdm_encapsulated_request_response = (void*) temp_buf_ptr;
-            libspdm_encapsulated_request_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+            libspdm_encapsulated_request_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             libspdm_encapsulated_request_response->header.request_response_code =
                 SPDM_ENCAPSULATED_REQUEST;
             libspdm_encapsulated_request_response->header.param1 = 0;
@@ -342,7 +342,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
 
             spdm_response =
                 (void*) (temp_buf_ptr + sizeof(spdm_encapsulated_request_response_t));
-            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_GET_DIGESTS;
             spdm_response->header.param1 = 0;
             spdm_response->header.param2 = 0;
@@ -363,7 +363,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
             libspdm_zero_mem(temp_buf, LIBSPDM_RECEIVER_BUFFER_SIZE);
             temp_buf_ptr = temp_buf + sizeof(libspdm_test_message_header_t);
             spdm_encapsulated_response_ack_response = (void*) temp_buf_ptr;
-            spdm_encapsulated_response_ack_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+            spdm_encapsulated_response_ack_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_encapsulated_response_ack_response->header.request_response_code =
                 SPDM_ENCAPSULATED_RESPONSE_ACK;
             spdm_encapsulated_response_ack_response->header.param1 = 0;
@@ -394,7 +394,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
             libspdm_zero_mem(temp_buf, LIBSPDM_RECEIVER_BUFFER_SIZE);
             temp_buf_ptr = temp_buf + sizeof(libspdm_test_message_header_t);
             libspdm_encapsulated_request_response = (void *)temp_buf_ptr;
-            libspdm_encapsulated_request_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+            libspdm_encapsulated_request_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             libspdm_encapsulated_request_response->header.request_response_code =
                 SPDM_ENCAPSULATED_REQUEST;
             libspdm_encapsulated_request_response->header.param1 = 0;
@@ -402,7 +402,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
 
             spdm_response =
                 (void *)(temp_buf_ptr + sizeof(spdm_encapsulated_request_response_t));
-            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_GET_DIGESTS;
             spdm_response->header.param1 = 0;
             spdm_response->header.param2 = 0;
@@ -423,7 +423,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
             libspdm_zero_mem(temp_buf, LIBSPDM_RECEIVER_BUFFER_SIZE);
             temp_buf_ptr = temp_buf + sizeof(libspdm_test_message_header_t);
             spdm_encapsulated_response_ack_response = (void *) temp_buf_ptr;
-            spdm_encapsulated_response_ack_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+            spdm_encapsulated_response_ack_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_encapsulated_response_ack_response->header.request_response_code =
                 SPDM_ENCAPSULATED_RESPONSE_ACK;
             spdm_encapsulated_response_ack_response->header.param1 = 0;
@@ -454,7 +454,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
             libspdm_zero_mem(temp_buf, LIBSPDM_RECEIVER_BUFFER_SIZE);
             temp_buf_ptr = temp_buf + sizeof(libspdm_test_message_header_t);
             libspdm_encapsulated_request_response = (void *)temp_buf_ptr;
-            libspdm_encapsulated_request_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+            libspdm_encapsulated_request_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             libspdm_encapsulated_request_response->header.request_response_code =
                 SPDM_ENCAPSULATED_REQUEST;
             libspdm_encapsulated_request_response->header.param1 = 0;
@@ -462,7 +462,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
 
             spdm_response =
                 (void *)(temp_buf_ptr + sizeof(spdm_encapsulated_request_response_t));
-            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_GET_CERTIFICATE;
             spdm_response->header.param1 = 0;
             spdm_response->header.param2 = 0;
@@ -478,7 +478,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
             libspdm_zero_mem(temp_buf, LIBSPDM_RECEIVER_BUFFER_SIZE);
             temp_buf_ptr = temp_buf + sizeof(libspdm_test_message_header_t);
             spdm_encapsulated_response_ack_response = (void *)temp_buf_ptr;
-            spdm_encapsulated_response_ack_response->spdm_version = SPDM_MESSAGE_VERSION_10;
+            spdm_encapsulated_response_ack_response->spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_encapsulated_response_ack_response->request_response_code =
                 SPDM_ENCAPSULATED_RESPONSE_ACK;
             spdm_encapsulated_response_ack_response->param1 = 0;
@@ -510,7 +510,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
             libspdm_zero_mem(temp_buf, LIBSPDM_RECEIVER_BUFFER_SIZE);
             temp_buf_ptr = temp_buf + sizeof(libspdm_test_message_header_t);
             libspdm_encapsulated_request_response = (void *)temp_buf_ptr;
-            libspdm_encapsulated_request_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+            libspdm_encapsulated_request_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             libspdm_encapsulated_request_response->header.request_response_code =
                 SPDM_ENCAPSULATED_REQUEST;
             libspdm_encapsulated_request_response->header.param1 = 0;
@@ -518,7 +518,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
 
             spdm_response =
                 (void *)(temp_buf_ptr + sizeof(spdm_encapsulated_request_response_t));
-            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_KEY_UPDATE;
             spdm_response->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_UPDATE_KEY;
             spdm_response->header.param2 = 0x3;
@@ -533,7 +533,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
             libspdm_zero_mem(temp_buf, LIBSPDM_RECEIVER_BUFFER_SIZE);
             temp_buf_ptr = temp_buf + sizeof(libspdm_test_message_header_t);
             spdm_encapsulated_response_ack_response = (void *)temp_buf_ptr;
-            spdm_encapsulated_response_ack_response->spdm_version = SPDM_MESSAGE_VERSION_10;
+            spdm_encapsulated_response_ack_response->spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_encapsulated_response_ack_response->request_response_code =
                 SPDM_ENCAPSULATED_RESPONSE_ACK;
             spdm_encapsulated_response_ack_response->param1 = 0;
@@ -564,7 +564,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
 
             /* The following is ENCAPSULATED_REQUEST response message */
             libspdm_encapsulated_request_response = (void *) temp_buf_ptr;
-            libspdm_encapsulated_request_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+            libspdm_encapsulated_request_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             libspdm_encapsulated_request_response->header.request_response_code =
                 SPDM_ENCAPSULATED_REQUEST;
             libspdm_encapsulated_request_response->header.param1 = 0;
@@ -573,7 +573,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
             /* The following is EncapsulatedRequest Field of the above ENCAPSULATED_REQUEST response message*/
             spdm_response =
                 (void *)(temp_buf_ptr + sizeof(spdm_get_encapsulated_request_request_t));
-            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_response->header.request_response_code = SPDM_GET_ENCAPSULATED_REQUEST;  /* Here invalid: GET_ENCAPSULATED_REQUEST is encapsulated */
             spdm_response->header.param1 = 0;
             spdm_response->header.param2 = 0;
@@ -587,7 +587,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
             libspdm_zero_mem(temp_buf, LIBSPDM_RECEIVER_BUFFER_SIZE);
             temp_buf_ptr = temp_buf + sizeof(libspdm_test_message_header_t);
             spdm_encapsulated_response_ack_response = (void *)temp_buf_ptr;
-            spdm_encapsulated_response_ack_response->spdm_version = SPDM_MESSAGE_VERSION_10;
+            spdm_encapsulated_response_ack_response->spdm_version = SPDM_MESSAGE_VERSION_11;
             spdm_encapsulated_response_ack_response->request_response_code =
                 SPDM_ENCAPSULATED_RESPONSE_ACK;
             spdm_encapsulated_response_ack_response->param1 = 0;
@@ -625,7 +625,7 @@ void libspdm_test_requester_encap_request_case1(void **State)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x1;
 
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
@@ -677,7 +677,7 @@ void libspdm_test_requester_encap_request_case2(void **State)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x2;
 
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
@@ -728,7 +728,7 @@ void libspdm_test_requester_encap_request_case3(void **State)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x3;
 
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
@@ -779,7 +779,7 @@ void libspdm_test_requester_encap_request_case4(void **State)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x4;
 
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
@@ -830,7 +830,7 @@ void libspdm_test_requester_encap_request_case5(void **State)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x5;
 
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
@@ -881,7 +881,7 @@ void libspdm_test_requester_encap_request_case6(void **State)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x6;
 
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
@@ -932,7 +932,7 @@ void libspdm_test_requester_encap_request_case7(void **State)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x7;
 
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
@@ -983,7 +983,7 @@ void libspdm_test_requester_encap_request_case8(void **State)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x8;
 
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
@@ -1039,7 +1039,7 @@ void libspdm_test_requester_encap_request_case9(void **State)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x9;
 
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
@@ -1096,7 +1096,7 @@ void libspdm_test_requester_encap_request_case10(void **State)
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xA;
 
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
