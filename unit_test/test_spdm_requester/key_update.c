@@ -1456,7 +1456,7 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             SPDM_ERROR_CODE_RESPONSE_NOT_READY;
         spdm_response->header.param2 = 0;
         spdm_response->extend_error_data.rd_exponent = 1;
-        spdm_response->extend_error_data.rd_tm = 1;
+        spdm_response->extend_error_data.rd_tm = 2;
         spdm_response->extend_error_data.request_code = SPDM_KEY_UPDATE;
         spdm_response->extend_error_data.token = 0;
 
@@ -1520,7 +1520,7 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
                 SPDM_ERROR_CODE_RESPONSE_NOT_READY;
             spdm_response->header.param2 = 0;
             spdm_response->extend_error_data.rd_exponent = 1;
-            spdm_response->extend_error_data.rd_tm = 1;
+            spdm_response->extend_error_data.rd_tm = 2;
             spdm_response->extend_error_data.request_code =
                 SPDM_KEY_UPDATE;
             spdm_response->extend_error_data.token = 1;
@@ -2681,7 +2681,7 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
                 SPDM_ERROR_CODE_RESPONSE_NOT_READY;
             spdm_response->header.param2 = 0;
             spdm_response->extend_error_data.rd_exponent = 1;
-            spdm_response->extend_error_data.rd_tm = 1;
+            spdm_response->extend_error_data.rd_tm = 2;
             spdm_response->extend_error_data.request_code = SPDM_KEY_UPDATE;
             spdm_response->extend_error_data.token = 0;
 
@@ -2794,7 +2794,7 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
                 SPDM_ERROR_CODE_RESPONSE_NOT_READY;
             spdm_response->header.param2 = 0;
             spdm_response->extend_error_data.rd_exponent = 1;
-            spdm_response->extend_error_data.rd_tm = 1;
+            spdm_response->extend_error_data.rd_tm = 2;
             spdm_response->extend_error_data.request_code = SPDM_KEY_UPDATE;
             spdm_response->extend_error_data.token = 0;
 
@@ -3789,7 +3789,7 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             SPDM_ERROR_CODE_RESPONSE_NOT_READY;
         spdm_response->header.param2 = 0;
         spdm_response->extend_error_data.rd_exponent = 1;
-        spdm_response->extend_error_data.rd_tm = 1;
+        spdm_response->extend_error_data.rd_tm = 2;
         spdm_response->extend_error_data.request_code = SPDM_KEY_UPDATE;
         spdm_response->extend_error_data.token = 0;
 
@@ -3887,7 +3887,7 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
                 SPDM_ERROR_CODE_RESPONSE_NOT_READY;
             spdm_response->header.param2 = 0;
             spdm_response->extend_error_data.rd_exponent = 1;
-            spdm_response->extend_error_data.rd_tm = 1;
+            spdm_response->extend_error_data.rd_tm = 2;
             spdm_response->extend_error_data.request_code =
                 SPDM_KEY_UPDATE;
             spdm_response->extend_error_data.token = 1;

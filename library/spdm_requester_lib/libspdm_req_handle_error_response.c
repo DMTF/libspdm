@@ -166,6 +166,10 @@ static libspdm_return_t libspdm_handle_response_not_ready(libspdm_context_t *spd
         return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
 
+    if (extend_error_data->rd_tm <= 1) {
+        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+    }
+
     spdm_context->error_data.rd_exponent = extend_error_data->rd_exponent;
     spdm_context->error_data.request_code = extend_error_data->request_code;
     spdm_context->error_data.token = extend_error_data->token;
