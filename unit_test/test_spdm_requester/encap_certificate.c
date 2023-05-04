@@ -18,7 +18,7 @@
 #endif
 
 spdm_get_certificate_request_t m_spdm_get_certificate_request1 = {
-    {SPDM_MESSAGE_VERSION_10, SPDM_GET_CERTIFICATE, 0, 0},
+    {SPDM_MESSAGE_VERSION_11, SPDM_GET_CERTIFICATE, 0, 0},
     0,
     LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN
 };
@@ -26,7 +26,7 @@ size_t m_spdm_get_certificate_request1_size =
     sizeof(m_spdm_get_certificate_request1);
 
 spdm_get_certificate_request_t m_spdm_get_certificate_request3 = {
-    {SPDM_MESSAGE_VERSION_10, SPDM_GET_CERTIFICATE, 0, 0}, 0, 0
+    {SPDM_MESSAGE_VERSION_11, SPDM_GET_CERTIFICATE, 0, 0}, 0, 0
 };
 size_t m_spdm_get_certificate_request3_size =
     sizeof(m_spdm_get_certificate_request3);
@@ -50,7 +50,7 @@ void libspdm_test_requester_encap_certificate_case1(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x1;
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
@@ -130,7 +130,7 @@ void libspdm_test_requester_encap_certificate_case3(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x3;
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
@@ -211,7 +211,7 @@ void libspdm_test_requester_encap_certificate_case4(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x4;
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
@@ -296,7 +296,7 @@ void libspdm_test_requester_encap_certificate_case5(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x5;
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
@@ -400,7 +400,7 @@ void libspdm_test_requester_encap_certificate_case6(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x6;
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;

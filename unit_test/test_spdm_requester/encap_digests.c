@@ -10,7 +10,7 @@
 
 spdm_get_digest_request_t m_spdm_get_digests_request1 = {
     {
-        SPDM_MESSAGE_VERSION_10,
+        SPDM_MESSAGE_VERSION_11,
         SPDM_GET_DIGESTS,
     },
 };
@@ -34,7 +34,7 @@ void test_spdm_requester_challenge_auth_case1(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x1;
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
@@ -99,7 +99,7 @@ void test_spdm_requester_challenge_auth_case3(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x3;
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
@@ -158,7 +158,7 @@ void test_spdm_requester_challenge_auth_case4(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x4;
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
