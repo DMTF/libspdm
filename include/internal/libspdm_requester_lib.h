@@ -254,7 +254,8 @@ libspdm_return_t libspdm_send_receive_key_exchange_ex(
     uint8_t *req_slot_id_param, void *measurement_hash,
     const void *requester_random_in,
     void *requester_random, void *responder_random,
-    void *opaque_data, size_t *opaque_data_size);
+    const void *requester_opaque_data, size_t requester_opaque_data_size,
+    void *responder_opaque_data, size_t *responder_opaque_data_size);
 
 /**
  * This function sends FINISH and receives FINISH_RSP for SPDM finish.
@@ -329,8 +330,10 @@ libspdm_return_t libspdm_send_receive_psk_exchange_ex(libspdm_context_t *spdm_co
                                                       size_t *requester_context_size,
                                                       void *responder_context,
                                                       size_t *responder_context_size,
-                                                      void *opaque_data,
-                                                      size_t *opaque_data_size);
+                                                      const void *requester_opaque_data,
+                                                      size_t requester_opaque_data_size,
+                                                      void *responder_opaque_data,
+                                                      size_t *responder_opaque_data_size);
 
 /**
  * This function sends PSK_FINISH and receives PSK_FINISH_RSP for SPDM PSK finish.
