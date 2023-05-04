@@ -1041,7 +1041,7 @@ void libspdm_test_responder_measurements_case18(void **state)
                                                     &data_size, NULL, NULL);
     measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 +
                           libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
-    for (int i = 1; i < SPDM_MAX_SLOT_COUNT; i++) {
+    for (int i = 0; i < SPDM_MAX_SLOT_COUNT; i++) {
         spdm_context->local_context.local_cert_chain_provision_size[i] =
             data_size;
         spdm_context->local_context.local_cert_chain_provision[i] =
@@ -1503,7 +1503,7 @@ void libspdm_test_responder_measurements_case26(void **state)
                                                     &data_size, NULL, NULL);
     measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 +
                           libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
-    for (int i = 1; i < SPDM_MAX_SLOT_COUNT; i++) {
+    for (int i = 0; i < SPDM_MAX_SLOT_COUNT; i++) {
         spdm_context->local_context.local_cert_chain_provision_size[i] =
             data_size;
         spdm_context->local_context.local_cert_chain_provision[i] =
@@ -1578,7 +1578,7 @@ void libspdm_test_responder_measurements_case27(void **state)
     measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) +
                           libspdm_secret_lib_meas_opaque_data_size +
                           libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
-    for (int i = 1; i < SPDM_MAX_SLOT_COUNT; i++) {
+    for (int i = 0; i < SPDM_MAX_SLOT_COUNT; i++) {
         spdm_context->local_context.local_cert_chain_provision_size[i] = data_size;
         spdm_context->local_context.local_cert_chain_provision[i] = data;
     }
