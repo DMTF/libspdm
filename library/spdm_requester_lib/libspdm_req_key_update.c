@@ -47,6 +47,10 @@ static libspdm_return_t libspdm_try_key_update(libspdm_context_t *spdm_context,
     size_t message_size;
     size_t transport_header_size;
 
+    if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_11) {
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+    }
+
     if (!libspdm_is_capabilities_flag_supported(
             spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_UPD_CAP,
