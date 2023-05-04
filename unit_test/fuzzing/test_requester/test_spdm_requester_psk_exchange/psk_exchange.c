@@ -251,8 +251,8 @@ void libspdm_test_requester_psk_exchange_case2(void **State)
     size_t data_size;
     void *hash;
     size_t hash_size;
-    uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
-    size_t opaque_data_size;
+    uint8_t responder_opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
+    size_t responder_opaque_data_size;
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
@@ -288,7 +288,7 @@ void libspdm_test_requester_psk_exchange_case2(void **State)
 #endif
 
     heartbeat_period = 0;
-    opaque_data_size = sizeof(opaque_data);
+    responder_opaque_data_size = sizeof(responder_opaque_data);
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
 
     status = libspdm_send_receive_psk_exchange_ex(spdm_context,
@@ -297,7 +297,8 @@ void libspdm_test_requester_psk_exchange_case2(void **State)
                                                   SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0,
                                                   &session_id, &heartbeat_period, measurement_hash, NULL, 0,
                                                   NULL, NULL, NULL, NULL,
-                                                  opaque_data, &opaque_data_size);
+                                                  NULL, 0,
+                                                  responder_opaque_data, &responder_opaque_data_size);
     if (status == LIBSPDM_STATUS_SUCCESS) {
         libspdm_reset_message_k(spdm_context, spdm_context->session_info);
     }
@@ -316,8 +317,8 @@ void libspdm_test_requester_psk_exchange_ex_case1(void **State)
     size_t data_size;
     void *hash;
     size_t hash_size;
-    uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
-    size_t opaque_data_size;
+    uint8_t responder_opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
+    size_t responder_opaque_data_size;
 
     spdm_test_context = *State;
     spdm_context = spdm_test_context->spdm_context;
@@ -353,7 +354,7 @@ void libspdm_test_requester_psk_exchange_ex_case1(void **State)
 #endif
 
     heartbeat_period = 0;
-    opaque_data_size = sizeof(opaque_data);
+    responder_opaque_data_size = sizeof(responder_opaque_data);
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
 
     status = libspdm_send_receive_psk_exchange_ex(spdm_context,
@@ -361,8 +362,10 @@ void libspdm_test_requester_psk_exchange_ex_case1(void **State)
                                                   sizeof(LIBSPDM_TEST_PSK_HINT_STRING),
                                                   SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0,
                                                   &session_id, &heartbeat_period, measurement_hash, NULL, 0,
-                                                  NULL, NULL, NULL, NULL, opaque_data,
-                                                  &opaque_data_size);
+                                                  NULL, NULL, NULL, NULL,
+                                                  NULL, 0,
+                                                  responder_opaque_data,
+                                                  &responder_opaque_data_size);
     if (status == LIBSPDM_STATUS_SUCCESS) {
         libspdm_reset_message_k(spdm_context, spdm_context->session_info);
     }
