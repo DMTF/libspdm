@@ -596,11 +596,13 @@ bool libspdm_verify_peer_cert_chain_buffer_integrity(libspdm_context_t *spdm_con
 
     is_requester = spdm_context->local_context.is_requester;
 
-    if((spdm_context->connection_info.capability.flags &
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP) == 0) {
-        is_device_cert_model = true;
-    } else {
-        is_device_cert_model = false;
+    is_device_cert_model = false;
+    /* Responder does not determine Requester's certificate model */
+    if (is_requester) {
+        if((spdm_context->connection_info.capability.flags &
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP) == 0) {
+            is_device_cert_model = true;
+        }
     }
 
     if (is_requester) {

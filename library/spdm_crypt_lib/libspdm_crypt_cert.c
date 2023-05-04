@@ -855,13 +855,14 @@ static bool libspdm_verify_leaf_cert_spdm_eku(const uint8_t *cert, size_t cert_s
  *
  * @param[in]  cert                  Pointer to the DER-encoded certificate data.
  * @param[in]  cert_size             The size of certificate data in bytes.
+ * @param[in]  is_requester_cert     Is the function verifying requester or responder cert.
  *
  * @retval  true   verify pass
  * @retval  false  verify fail,two case: 1. return is not RETURN_SUCCESS or RETURN_NOT_FOUND;
  *                                       2. hardware_identity_oid is found in AliasCert model;
  **/
 static bool libspdm_verify_leaf_cert_spdm_extension(const uint8_t *cert, size_t cert_size,
-                                                    bool is_device_cert_model)
+                                                    bool is_requester_cert, bool is_device_cert_model)
 {
     bool status;
     bool find_sucessful;
@@ -902,12 +903,15 @@ static bool libspdm_verify_leaf_cert_spdm_extension(const uint8_t *cert, size_t 
         }
     }
 
-    if ((find_sucessful) && (!is_device_cert_model)) {
-        /* Hardware_identity_OID is found in alias cert model */
-        return false;
-    } else {
-        return true;
+    /* Responder does not determine Requester's certificate model */
+    if (!is_requester_cert) {
+        if ((find_sucessful) && (!is_device_cert_model)) {
+            /* Hardware_identity_OID is found in alias cert model */
+            return false;
+        }
     }
+
+    return true;
 }
 
 /**
@@ -1036,7 +1040,8 @@ bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
     }
 
     /* 11. verify spdm defined extension*/
-    status = libspdm_verify_leaf_cert_spdm_extension(cert, cert_size, is_device_cert_model);
+    status = libspdm_verify_leaf_cert_spdm_extension(cert, cert_size,
+                                                     is_requester_cert, is_device_cert_model);
     if (!status) {
         goto cleanup;
     }

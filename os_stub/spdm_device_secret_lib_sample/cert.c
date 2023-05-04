@@ -884,10 +884,10 @@ bool libspdm_read_responder_public_certificate_chain_by_size(
     const uint8_t *root_cert;
     size_t root_cert_len;
     size_t digest_size;
-    bool is_requester;
+    bool is_requester_cert;
     bool is_device_cert_model;
 
-    is_requester = false;
+    is_requester_cert = false;
 
     /*defalut is true*/
     is_device_cert_model = true;
@@ -936,7 +936,7 @@ bool libspdm_read_responder_public_certificate_chain_by_size(
 
     res = libspdm_verify_cert_chain_data(file_data, file_size,
                                          base_asym_algo, base_hash_algo,
-                                         is_requester, is_device_cert_model);
+                                         is_requester_cert, is_device_cert_model);
     if (!res) {
         free(file_data);
         free(cert_chain);
