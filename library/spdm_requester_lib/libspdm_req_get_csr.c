@@ -155,7 +155,7 @@ static libspdm_return_t libspdm_try_get_csr(libspdm_context_t *spdm_context,
         goto receive_done;
     }
 
-    if (spdm_response->csr_length <= 0) {
+    if (spdm_response->csr_length == 0) {
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }

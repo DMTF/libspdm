@@ -2547,11 +2547,13 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
         goto free_all;
     }
 
-    *csr_len = i2d_X509_REQ(x509_req, &csr_p);
-    if (*csr_len <= 0) {
+    ret = i2d_X509_REQ(x509_req, &csr_p);
+    if (ret <= 0) {
         ret = 0;
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"i2d_X509_REQ error\n"));
         goto free_all;
+    } else {
+        *csr_len = ret;
     }
 
     /*free*/
