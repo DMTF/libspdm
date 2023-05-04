@@ -26,6 +26,12 @@ libspdm_return_t libspdm_get_response_chunk_get(
     spdm_response = (spdm_chunk_response_response_t*) response;
     get_info = &spdm_context->chunk_context.get;
 
+    if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_12) {
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_UNSUPPORTED_REQUEST, 0,
+                                               response_size, response);
+    }
+
     if ((spdm_context->local_context.capability.flags &
          SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP) == 0) {
         return libspdm_generate_error_response(
