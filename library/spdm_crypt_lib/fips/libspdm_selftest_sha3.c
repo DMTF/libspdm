@@ -17,7 +17,7 @@ bool libspdm_fips_selftest_sha3_256(void *fips_selftest_context)
 {
     bool result = true;
 
-#if (LIBSPDM_SHA3_SUPPORT_TEST && LIBSPDM_SHA3_256_SUPPORT)
+#if LIBSPDM_SHA3_256_SUPPORT
     libspdm_fips_selftest_context *context = fips_selftest_context;
     LIBSPDM_ASSERT(fips_selftest_context != NULL);
 
@@ -66,7 +66,7 @@ update:
         context->self_test_result &= ~LIBSPDM_FIPS_SELF_TEST_SHA3_256;
     }
 
-#endif/*(LIBSPDM_SHA3_SUPPORT_TEST && LIBSPDM_SHA3_256_SUPPORT)*/
+#endif/* LIBSPDM_SHA3_256_SUPPORT */
 
     return result;
 }
@@ -78,7 +78,7 @@ bool libspdm_fips_selftest_sha3_384(void *fips_selftest_context)
 {
     bool result = true;
 
-#if (LIBSPDM_SHA3_SUPPORT_TEST && LIBSPDM_SHA3_384_SUPPORT)
+#if LIBSPDM_SHA3_384_SUPPORT
     libspdm_fips_selftest_context *context = fips_selftest_context;
     LIBSPDM_ASSERT(fips_selftest_context != NULL);
 
@@ -129,7 +129,7 @@ update:
         context->self_test_result &= ~LIBSPDM_FIPS_SELF_TEST_SHA3_384;
     }
 
-#endif/*(LIBSPDM_SHA3_SUPPORT_TEST && LIBSPDM_SHA3_384_SUPPORT)*/
+#endif/* LIBSPDM_SHA3_384_SUPPORT */
 
     return result;
 }
@@ -141,7 +141,7 @@ bool libspdm_fips_selftest_sha3_512(void *fips_selftest_context)
 {
     bool result = true;
 
-#if (LIBSPDM_SHA3_SUPPORT_TEST && LIBSPDM_SHA3_512_SUPPORT)
+#if LIBSPDM_SHA3_512_SUPPORT
     libspdm_fips_selftest_context *context = fips_selftest_context;
     LIBSPDM_ASSERT(fips_selftest_context != NULL);
 
@@ -194,7 +194,7 @@ update:
         context->self_test_result &= ~LIBSPDM_FIPS_SELF_TEST_SHA3_512;
     }
 
-#endif/*(LIBSPDM_SHA3_SUPPORT_TEST && LIBSPDM_SHA3_512_SUPPORT)*/
+#endif/* LIBSPDM_SHA3_512_SUPPORT */
 
     return result;
 }

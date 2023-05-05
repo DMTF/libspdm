@@ -56,19 +56,19 @@ bool libspdm_cryptest_main(void)
         return status;
     }
 
-    #if (LIBSPDM_RSA_SSA_SUPPORT_TEST) || (LIBSPDM_RSA_PSS_SUPPORT_TEST)
+    #if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)
     status = libspdm_validate_crypt_rsa();
     if (!status) {
         return status;
     }
-    #endif /* (LIBSPDM_RSA_SSA_SUPPORT_TEST) || (LIBSPDM_RSA_PSS_SUPPORT_TEST) */
+    #endif /* (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT) */
 
-    #if LIBSPDM_RSA_SSA_SUPPORT_TEST
+    #if LIBSPDM_RSA_SSA_SUPPORT
     status = libspdm_validate_crypt_rsa_2();
     if (!status) {
         return status;
     }
-    #endif /* LIBSPDM_RSA_SSA_SUPPORT_TEST */
+    #endif /* LIBSPDM_RSA_SSA_SUPPORT */
 
     status = libspdm_validate_crypt_x509("ecp256", sizeof("ecp256"));
     if (!status) {
@@ -90,14 +90,14 @@ bool libspdm_cryptest_main(void)
         return status;
     }
 
-    #if LIBSPDM_FFDHE_SUPPORT_TEST
+    #if LIBSPDM_FFDHE_SUPPORT
     status = libspdm_validate_crypt_dh();
     if (!status) {
         return status;
     }
-    #endif /* LIBSPDM_FFDHE_SUPPORT_TEST */
+    #endif /* LIBSPDM_FFDHE_SUPPORT */
 
-    #if (LIBSPDM_ECDHE_SUPPORT_TEST) && (LIBSPDM_ECDSA_SUPPORT_TEST)
+    #if (LIBSPDM_ECDHE_SUPPORT) && (LIBSPDM_ECDSA_SUPPORT)
     status = libspdm_validate_crypt_ec();
     if (!status) {
         return status;
@@ -107,9 +107,9 @@ bool libspdm_cryptest_main(void)
     if (!status) {
         return status;
     }
-    #endif /* (LIBSPDM_ECDHE_SUPPORT_TEST) && (LIBSPDM_ECDSA_SUPPORT_TEST) */
+    #endif /* (LIBSPDM_ECDHE_SUPPORT) && (LIBSPDM_ECDSA_SUPPORT) */
 
-    #if (LIBSPDM_EDDSA_ED25519_SUPPORT_TEST) || (LIBSPDM_EDDSA_ED448_SUPPORT_TEST)
+    #if (LIBSPDM_EDDSA_ED25519_SUPPORT) || (LIBSPDM_EDDSA_ED448_SUPPORT)
     status = libspdm_validate_crypt_ecd();
     if (!status) {
         return status;
@@ -119,21 +119,21 @@ bool libspdm_cryptest_main(void)
     if (!status) {
         return status;
     }
-    #endif /* (LIBSPDM_EDDSA_ED25519_SUPPORT_TEST) || (LIBSPDM_EDDSA_ED448_SUPPORT_TEST) */
+    #endif /* (LIBSPDM_EDDSA_ED25519_SUPPORT) || (LIBSPDM_EDDSA_ED448_SUPPORT) */
 
-    #if (LIBSPDM_SM2_DSA_SUPPORT_TEST) || (LIBSPDM_SM2_KEY_EXCHANGE_SUPPORT_TEST)
+    #if (LIBSPDM_SM2_DSA_SUPPORT) || (LIBSPDM_SM2_KEY_EXCHANGE_SUPPORT)
     status = libspdm_validate_crypt_sm2();
     if (!status) {
         return status;
     }
-    #endif /* (LIBSPDM_SM2_DSA_SUPPORT_TEST) || (LIBSPDM_SM2_KEY_EXCHANGE_SUPPORT_TEST) */
+    #endif /* (LIBSPDM_SM2_DSA_SUPPORT) || (LIBSPDM_SM2_KEY_EXCHANGE_SUPPORT) */
 
-    #if LIBSPDM_SM2_DSA_SUPPORT_TEST
+    #if LIBSPDM_SM2_DSA_SUPPORT
     status = libspdm_validate_crypt_sm2_2();
     if (!status) {
         return status;
     }
-    #endif /* LIBSPDM_SM2_DSA_SUPPORT_TEST */
+    #endif /* LIBSPDM_SM2_DSA_SUPPORT */
 
     status = libspdm_validate_crypt_prng();
     if (!status) {

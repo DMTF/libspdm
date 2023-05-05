@@ -6,7 +6,7 @@
 
 #include "test_crypt.h"
 
-#if (LIBSPDM_ECDHE_SUPPORT_TEST) && (LIBSPDM_ECDSA_SUPPORT_TEST)
+#if (LIBSPDM_ECDHE_SUPPORT) && (LIBSPDM_ECDSA_SUPPORT)
 
 /*ecp256 key: https://lapo.it/asn1js/#MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgjqRWI_stNQKCZwHIIL9pQLqos_cTSZ2Q3L5XaPaE-hGhRANCAAR-X9hTLdaMSJxS9gNglcAxjLCocVJ5I6msv8D7iLloQfRC_RsnQFl5UkTDAKfkavduNdy0AM2VR4XMmD6I9E1D*/
 uint8_t m_libspdm_ec_public_key[] = {
@@ -428,4 +428,4 @@ bool libspdm_validate_crypt_ec(void)
 
     return true;
 }
-#endif /* (LIBSPDM_ECDHE_SUPPORT_TEST) && (LIBSPDM_ECDSA_SUPPORT_TEST) */
+#endif /* (LIBSPDM_ECDHE_SUPPORT) && (LIBSPDM_ECDSA_SUPPORT) */

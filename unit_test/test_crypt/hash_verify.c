@@ -81,10 +81,10 @@ uint8_t m_libspdm_sm3_256_digest[LIBSPDM_SM3_256_DIGEST_SIZE] = {
  **/
 bool libspdm_validate_crypt_digest(void)
 {
-    #if (LIBSPDM_SHA256_SUPPORT_TEST) || (LIBSPDM_SHA384_SUPPORT_TEST) || \
-    (LIBSPDM_SHA512_SUPPORT_TEST) || (LIBSPDM_SHA3_256_SUPPORT_TEST)|| \
-    (LIBSPDM_SHA3_384_SUPPORT_TEST) || (LIBSPDM_SHA3_512_SUPPORT_TEST) || \
-    (LIBSPDM_SM3_256_SUPPORT_TEST)
+    #if (LIBSPDM_SHA256_SUPPORT) || (LIBSPDM_SHA384_SUPPORT) || \
+    (LIBSPDM_SHA512_SUPPORT) || (LIBSPDM_SHA3_256_SUPPORT)|| \
+    (LIBSPDM_SHA3_384_SUPPORT) || (LIBSPDM_SHA3_512_SUPPORT) || \
+    (LIBSPDM_SM3_256_SUPPORT)
     void *hash_ctx;
     size_t data_size;
     uint8_t digest[LIBSPDM_MAX_DIGEST_SIZE];
@@ -94,7 +94,7 @@ bool libspdm_validate_crypt_digest(void)
     data_size = libspdm_ascii_str_len(m_libspdm_hash_data);
 
     /* SHA-256 digest validation. */
-    #if LIBSPDM_SHA256_SUPPORT_TEST
+    #if LIBSPDM_SHA256_SUPPORT
     libspdm_my_print("- SHA-256: ");
 
     libspdm_zero_mem(digest, LIBSPDM_MAX_DIGEST_SIZE);
@@ -149,10 +149,10 @@ bool libspdm_validate_crypt_digest(void)
     }
 
     libspdm_my_print("[Pass]\n");
-    #endif /* LIBSPDM_SHA256_SUPPORT_TEST */
+    #endif /* LIBSPDM_SHA256_SUPPORT */
 
     /* SHA-384 digest validation. */
-    #if LIBSPDM_SHA384_SUPPORT_TEST
+    #if LIBSPDM_SHA384_SUPPORT
     libspdm_my_print("- SHA-384: ");
 
     libspdm_zero_mem(digest, LIBSPDM_MAX_DIGEST_SIZE);
@@ -207,9 +207,9 @@ bool libspdm_validate_crypt_digest(void)
     }
 
     libspdm_my_print("[Pass]\n");
-    #endif /* LIBSPDM_SHA384_SUPPORT_TEST */
+    #endif /* LIBSPDM_SHA384_SUPPORT */
 
-    #if LIBSPDM_SHA512_SUPPORT_TEST
+    #if LIBSPDM_SHA512_SUPPORT
     /* SHA-512 digest validation. */
     libspdm_my_print("- SHA-512: ");
 
@@ -267,7 +267,7 @@ bool libspdm_validate_crypt_digest(void)
     libspdm_my_print("[Pass]\n");
     #endif
 
-    #if LIBSPDM_SHA3_256_SUPPORT_TEST
+    #if LIBSPDM_SHA3_256_SUPPORT
     /* SHA3-256 digest validation. */
     libspdm_my_print("- SHA3-256: ");
 
@@ -312,9 +312,9 @@ bool libspdm_validate_crypt_digest(void)
         libspdm_my_print("[Failed]\n");
         return status;
     }
-    #endif /* LIBSPDM_SHA3_256_SUPPORT_TEST */
+    #endif /* LIBSPDM_SHA3_256_SUPPORT */
 
-    #if LIBSPDM_SHA3_384_SUPPORT_TEST
+    #if LIBSPDM_SHA3_384_SUPPORT
     /* SHA3-384 digest validation. */
     libspdm_my_print("- SHA3-384: ");
 
@@ -359,9 +359,9 @@ bool libspdm_validate_crypt_digest(void)
         libspdm_my_print("[Failed]\n");
         return status;
     }
-    #endif /* LIBSPDM_SHA3_384_SUPPORT_TEST */
+    #endif /* LIBSPDM_SHA3_384_SUPPORT */
 
-    #if LIBSPDM_SHA3_512_SUPPORT_TEST
+    #if LIBSPDM_SHA3_512_SUPPORT
     /* SHA3-512 digest validation. */
     libspdm_my_print("- SHA3-512: ");
 
@@ -406,9 +406,9 @@ bool libspdm_validate_crypt_digest(void)
         libspdm_my_print("[Failed]\n");
         return status;
     }
-    #endif /* LIBSPDM_SHA3_512_SUPPORT_TEST */
+    #endif /* LIBSPDM_SHA3_512_SUPPORT */
 
-    #if LIBSPDM_SM3_256_SUPPORT_TEST
+    #if LIBSPDM_SM3_256_SUPPORT
     /* SM3_256 digest validation. */
     libspdm_my_print("- SM3_256: ");
 
@@ -428,7 +428,7 @@ bool libspdm_validate_crypt_digest(void)
         libspdm_my_print("[Failed]\n");
         return status;
     }
-    #endif /* LIBSPDM_SM3_256_SUPPORT_TEST */
+    #endif /* LIBSPDM_SM3_256_SUPPORT */
     #endif
 
     return true;

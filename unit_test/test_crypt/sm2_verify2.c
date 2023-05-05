@@ -6,7 +6,7 @@
 
 #include "test_crypt.h"
 
-#if LIBSPDM_SM2_DSA_SUPPORT_TEST
+#if LIBSPDM_SM2_DSA_SUPPORT
 
 #define DEFAULT_SM2_ID "1234567812345678"
 
@@ -194,4 +194,4 @@ bool libspdm_validate_crypt_sm2_2(void)
     return true;
 }
 
-#endif /* LIBSPDM_SM2_DSA_SUPPORT_TEST */
+#endif /* LIBSPDM_SM2_DSA_SUPPORT */

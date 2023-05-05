@@ -17,7 +17,7 @@ bool libspdm_fips_selftest_eddsa(void *fips_selftest_context)
 {
     bool result = true;
 
-#if (LIBSPDM_EDDSA_SUPPORT_TEST && LIBSPDM_EDDSA_SUPPORT)
+#if LIBSPDM_EDDSA_SUPPORT
     libspdm_fips_selftest_context *context = fips_selftest_context;
     LIBSPDM_ASSERT(fips_selftest_context != NULL);
 
@@ -269,7 +269,7 @@ update:
         context->self_test_result &= ~LIBSPDM_FIPS_SELF_TEST_EDDSA;
     }
 
-#endif /*(LIBSPDM_EDDSA_SUPPORT_TEST && LIBSPDM_EDDSA_SUPPORT)*/
+#endif /* LIBSPDM_EDDSA_SUPPORT */
     return result;
 }
 
