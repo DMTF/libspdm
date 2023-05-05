@@ -300,6 +300,7 @@ libspdm_return_t libspdm_test_requester_chunk_send_generic_test_case(
     spdm_test_context->case_id = case_id;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.capability.max_spdm_msg_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
     spdm_context->connection_info.capability.flags |=

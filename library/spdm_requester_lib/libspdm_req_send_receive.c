@@ -592,8 +592,12 @@ libspdm_return_t libspdm_send_spdm_request(libspdm_context_t *spdm_context,
             spdm_context->last_spdm_request_size = request_size;
         }
 
-        status = libspdm_handle_large_request(
-            spdm_context, session_id, request_size, request);
+        if (request_size > spdm_context->connection_info.capability.max_spdm_msg_size) {
+            return LIBSPDM_STATUS_PEER_BUFFER_TOO_SMALL;
+        } else {
+            status = libspdm_handle_large_request(
+                spdm_context, session_id, request_size, request);
+        }
         #else  /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP*/
         status = LIBSPDM_STATUS_BUFFER_TOO_SMALL;
         #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP*/
