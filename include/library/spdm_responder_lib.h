@@ -246,4 +246,19 @@ void libspdm_register_key_update_callback_func(
  **/
 void libspdm_init_key_update_encap_state(void *spdm_context);
 
-#endif /*SPDM_RESPONDER_LIB_H */
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
+/**
+ * Register a buffer to store the Requester's certificate chain during mutual authentication.
+ *
+ * This is only required if the Requester is providing a certificate chain (Requester's CERT_CAP
+ * is 1) during mutual authentication.
+ *
+ * @param spdm_context                A pointer to the SPDM context.
+ * @param cert_chain_buffer           A pointer to a buffer to store the certificate chain.
+ * @param cert_chain_buffer_max_size  The maximum size, in bytes, of cert_chain_buffer.
+ */
+void libspdm_register_cert_chain_buffer(
+    void *spdm_context, void *cert_chain_buffer, size_t cert_chain_buffer_max_size);
+#endif
+
+#endif /* SPDM_RESPONDER_LIB_H */

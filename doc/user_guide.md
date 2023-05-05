@@ -395,11 +395,15 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
    libspdm_set_data (spdm_context, LIBSPDM_DATA_LOCAL_PUBLIC_CERT_CHAIN, &parameter, my_public_cert_chains, my_public_cert_chains_size);
    ```
 
-   1.5, if mutual authentication (Requester verification) is required, deploy the peer public root certificate based upon need.
+   1.5, if mutual authentication (Requester verification) through certificates is required, provide a buffer to store the Requester's certificate chain and deploy the peer public root certificate based upon need.
    ```
+   libspdm_register_cert_chain_buffer(spdm_context, cert_chain_buffer, cert_chain_buffer_max_size);
+
    parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
    libspdm_set_data (spdm_context, LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert, peer_root_cert_size);
    ```
+   The maximum size of an SPDM certificate chain is SPDM_MAX_CERTIFICATE_CHAIN_SIZE, which is approximately 64 KiB. However most certificate chains are smaller than that.
+
    If there are many peer root certs to set, you can set the peer root certs in order. Note: the max number of peer root certs is LIBSPDM_MAX_ROOT_CERT_SUPPORT.
    ```
    parameter.location = SPDM_DATA_LOCATION_LOCAL;
@@ -408,9 +412,9 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
    libspdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert3, peer_root_cert_size3);
    ```
 
-   1.6, if raw public key is provisioned for Responder verification or mutual authentication, deploy the public key.
-        The public key is ASN.1 DER-encoded as [RFC7250](https://www.rfc-editor.org/rfc/rfc7250) describes,
-        namely, the `SubjectPublicKeyInfo` structure of a X.509 certificate.
+   If Requester's raw public key is needed for mutual authentication, deploy the public key.
+   The public key is ASN.1 DER-encoded as [RFC7250](https://www.rfc-editor.org/rfc/rfc7250) describes,
+   namely, the `SubjectPublicKeyInfo` structure of a X.509 certificate.
    ```
    parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
    libspdm_set_data (spdm_context, LIBSPDM_DATA_PEER_PUBLIC_KEY, &parameter, peer_public_key, peer_public_key_size);
@@ -425,7 +429,7 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
 2. Dispatch SPDM messages.
 
    ```
-   while (TRUE) {
+   while (true) {
      status = libspdm_responder_dispatch_message (m_spdm_context);
      if (status != RETURN_UNSUPPORTED) {
        continue;

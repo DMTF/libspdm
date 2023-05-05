@@ -2493,8 +2493,7 @@ libspdm_return_t libspdm_init_context_with_secured_context(void *spdm_context,
         SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     context->local_context.capability.st1 = SPDM_ST1_VALUE_US;
 
-    context->encap_context.certificate_chain_buffer.max_buffer_size =
-        sizeof(context->encap_context.certificate_chain_buffer.buffer);
+    context->encap_context.certificate_chain_buffer_size = 0;
 
     /* To be updated in libspdm_register_device_buffer_func */
     context->local_context.capability.data_transfer_size = 0;
@@ -2594,8 +2593,7 @@ void libspdm_reset_context(void *spdm_context)
     context->last_spdm_request_session_id = INVALID_SESSION_ID;
     context->last_spdm_request_session_id_valid = false;
     context->last_spdm_request_size = 0;
-    context->encap_context.certificate_chain_buffer.max_buffer_size =
-        sizeof(context->encap_context.certificate_chain_buffer.buffer);
+    context->encap_context.certificate_chain_buffer_size = 0;
     context->current_dhe_session_count = 0;
     context->current_psk_session_count = 0;
 

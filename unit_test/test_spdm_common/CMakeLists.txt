@@ -40,6 +40,7 @@ SET(test_spdm_common_LIBRARY
     spdm_device_secret_lib_sample
     spdm_transport_test_lib
     cmockalib
+    platform_lib_null
 )
 
 if(TOOLCHAIN STREQUAL "ARM_DS2022")

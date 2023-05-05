@@ -12,6 +12,8 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 
+uint8_t m_cert_chain_buffer[SPDM_MAX_CERTIFICATE_CHAIN_SIZE];
+
 size_t libspdm_get_max_buffer_size(void)
 {
     return LIBSPDM_MAX_SPDM_MSG_SIZE;
@@ -272,6 +274,9 @@ void libspdm_test_responder_key_exchange_case4(void **State)
                                                     NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+
+    libspdm_register_cert_chain_buffer(spdm_context, m_cert_chain_buffer,
+                                       sizeof(m_cert_chain_buffer));
 
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = 1;

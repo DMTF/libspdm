@@ -857,3 +857,18 @@ void libspdm_register_key_update_callback_func(
     context = spdm_context;
     context->spdm_key_update_callback = (void *)spdm_key_update_callback;
 }
+
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
+void libspdm_register_cert_chain_buffer(
+    void *spdm_context, void *cert_chain_buffer, size_t cert_chain_buffer_max_size)
+{
+    libspdm_context_t *context;
+
+    LIBSPDM_ASSERT(spdm_context != NULL);
+
+    context = spdm_context;
+    context->encap_context.certificate_chain_buffer = cert_chain_buffer;
+    context->encap_context.certificate_chain_buffer_max_size = cert_chain_buffer_max_size;
+    context->encap_context.certificate_chain_buffer_size = 0;
+}
+#endif
