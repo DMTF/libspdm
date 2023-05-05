@@ -271,6 +271,10 @@ void libspdm_test_responder_receive_send_rsp_case3(void** state)
         m_libspdm_use_asym_algo, &data,
         &data_size,
         &hash, &hash_size);
+
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+    spdm_context->local_context.local_cert_chain_provision[0] = data;
+
     libspdm_reset_message_m(spdm_context, NULL);
 
     spdm_context->connection_info.algorithm.measurement_spec =
