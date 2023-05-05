@@ -22,7 +22,7 @@ elseif(ARCH STREQUAL "riscv32")
 elseif(ARCH STREQUAL "riscv64")
     ADD_COMPILE_OPTIONS(-DLIBSPDM_CPU_RISCV64)
 else()
-    MESSAGE(FATAL_ERROR "Unknown nARCH")
+    MESSAGE(FATAL_ERROR "Unknown ARCH")
 endif()
 
 SET(src_cryptlib_openssl
