@@ -381,7 +381,9 @@ typedef struct {
     spdm_message_header_t last_encap_request_header;
     size_t last_encap_request_size;
     uint16_t cert_chain_total_len;
-    libspdm_cert_chain_managed_buffer_t certificate_chain_buffer;
+    void *certificate_chain_buffer;
+    size_t certificate_chain_buffer_size;
+    size_t certificate_chain_buffer_max_size;
 } libspdm_encap_context_t;
 
 #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
