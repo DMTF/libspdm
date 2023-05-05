@@ -25,12 +25,4 @@ SET(src_spdm_crypt_lib
     fips/libspdm_selftest_eddsa.c
 )
 
-if(CRYPTO STREQUAL "mbedtls")
-    add_definitions(-DLIBSPDM_SHA3_SUPPORT_TEST=0)
-    add_definitions(-DLIBSPDM_EDDSA_SUPPORT_TEST=0)
-elseif(CRYPTO STREQUAL "openssl")
-    add_definitions(-DLIBSPDM_SHA3_SUPPORT_TEST=1)
-    add_definitions(-DLIBSPDM_EDDSA_SUPPORT_TEST=1)
-endif()
-
 ADD_LIBRARY(spdm_crypt_lib STATIC ${src_spdm_crypt_lib})

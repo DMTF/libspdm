@@ -6,7 +6,7 @@
 
 #include "test_crypt.h"
 
-#if (LIBSPDM_SM2_DSA_SUPPORT_TEST) || (LIBSPDM_SM2_KEY_EXCHANGE_SUPPORT_TEST)
+#if (LIBSPDM_SM2_DSA_SUPPORT) || (LIBSPDM_SM2_KEY_EXCHANGE_SUPPORT)
 
 #define DEFAULT_SM2_ID "1234567812345678"
 
@@ -25,20 +25,20 @@ bool libspdm_validate_crypt_sm2(void)
     size_t public1_length;
     uint8_t public2[66 * 2];
     size_t public2_length;
-    #if LIBSPDM_SM2_KEY_EXCHANGE_SUPPORT_TEST
+    #if LIBSPDM_SM2_KEY_EXCHANGE_SUPPORT
     uint8_t key1[66];
     size_t key1_length;
     uint8_t key2[66];
     size_t key2_length;
-    #endif /* LIBSPDM_SM2_KEY_EXCHANGE_SUPPORT_TEST */
+    #endif /* LIBSPDM_SM2_KEY_EXCHANGE_SUPPORT */
     #if LIBSPDM_SM2_DSA_SUPPORT
     uint8_t message[] = "Sm2Test";
     uint8_t signature[66 * 2];
     size_t sig_size;
-    #endif /* LIBSPDM_SM2_DSA_SUPPORT_TEST */
+    #endif /* LIBSPDM_SM2_DSA_SUPPORT */
     bool status;
 
-    #if LIBSPDM_SM2_KEY_EXCHANGE_SUPPORT_TEST
+    #if LIBSPDM_SM2_KEY_EXCHANGE_SUPPORT
     libspdm_my_print("\nCrypto SM2 key Exchange Testing:\n");
 
     /* Initialize key length*/
@@ -137,9 +137,9 @@ bool libspdm_validate_crypt_sm2(void)
 
     libspdm_sm2_key_exchange_free(Sm2_1);
     libspdm_sm2_key_exchange_free(Sm2_2);
-    #endif /* LIBSPDM_SM2_KEY_EXCHANGE_SUPPORT_TEST */
+    #endif /* LIBSPDM_SM2_KEY_EXCHANGE_SUPPORT */
 
-    #if LIBSPDM_SM2_DSA_SUPPORT_TEST
+    #if LIBSPDM_SM2_DSA_SUPPORT
     libspdm_my_print("\nCrypto sm2 Signing Verification Testing:\n");
 
     public1_length = sizeof(public1);
@@ -267,8 +267,8 @@ bool libspdm_validate_crypt_sm2(void)
 
     libspdm_sm2_dsa_free(Sm2_1);
     libspdm_sm2_dsa_free(Sm2_2);
-    #endif /* LIBSPDM_SM2_DSA_SUPPORT_TEST */
+    #endif /* LIBSPDM_SM2_DSA_SUPPORT */
 
     return true;
 }
-#endif /* (LIBSPDM_SM2_DSA_SUPPORT_TEST) || (LIBSPDM_SM2_KEY_EXCHANGE_SUPPORT_TEST) */
+#endif /* (LIBSPDM_SM2_DSA_SUPPORT) || (LIBSPDM_SM2_KEY_EXCHANGE_SUPPORT) */

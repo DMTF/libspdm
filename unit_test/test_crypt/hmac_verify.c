@@ -33,16 +33,16 @@ uint8_t m_libspdm_hmac_sha256_digest[] = {
  **/
 bool libspdm_validate_crypt_hmac(void)
 {
-    #if (LIBSPDM_SHA256_SUPPORT_TEST) || (LIBSPDM_SHA3_256_SUPPORT_TEST) || \
-    (LIBSPDM_SM3_256_SUPPORT_TEST)
+    #if (LIBSPDM_SHA256_SUPPORT) || (LIBSPDM_SHA3_256_SUPPORT) || \
+    (LIBSPDM_SM3_256_SUPPORT)
     void *hmac_ctx;
     uint8_t digest[MAX_DIGEST_SIZE];
     bool status;
 
     libspdm_my_print(" \nCrypto HMAC Engine Testing:\n");
-    #endif /* (LIBSPDM_SHA256_SUPPORT_TEST) || (LIBSPDM_SHA3_256_SUPPORT_TEST) || (LIBSPDM_SM3_256_SUPPORT_TEST) */
+    #endif /* (LIBSPDM_SHA256_SUPPORT) || (LIBSPDM_SHA3_256_SUPPORT) || (LIBSPDM_SM3_256_SUPPORT) */
 
-    #if LIBSPDM_SHA256_SUPPORT_TEST
+    #if LIBSPDM_SHA256_SUPPORT
     /* HMAC-SHA-256 validation. */
     libspdm_my_print("- HMAC-SHA-256: ");
 
@@ -85,9 +85,9 @@ bool libspdm_validate_crypt_hmac(void)
     }
 
     libspdm_my_print("[Pass]\n");
-    #endif /* LIBSPDM_SHA256_SUPPORT_TEST */
+    #endif /* LIBSPDM_SHA256_SUPPORT */
 
-    #if LIBSPDM_SHA3_256_SUPPORT_TEST
+    #if LIBSPDM_SHA3_256_SUPPORT
     /* HMAC-SHA3-256 digest Validation*/
     libspdm_my_print("- HMAC-SHA3-256: ");
 
@@ -123,9 +123,9 @@ bool libspdm_validate_crypt_hmac(void)
 
     free_pool(hmac_ctx);
     libspdm_my_print("[Pass]\n");
-    #endif /* LIBSPDM_SHA3_256_SUPPORT_TEST */
+    #endif /* LIBSPDM_SHA3_256_SUPPORT */
 
-    #if LIBSPDM_SM3_256_SUPPORT_TEST
+    #if LIBSPDM_SM3_256_SUPPORT
     /* HMAC-SM3-256 digest Validation*/
     libspdm_my_print("- HMAC-SM3-256: ");
 
@@ -161,7 +161,7 @@ bool libspdm_validate_crypt_hmac(void)
 
     free_pool(hmac_ctx);
     libspdm_my_print("[Pass]\n");
-    #endif /* LIBSPDM_SM3_256_SUPPORT_TEST */
+    #endif /* LIBSPDM_SM3_256_SUPPORT */
 
     return true;
 }
