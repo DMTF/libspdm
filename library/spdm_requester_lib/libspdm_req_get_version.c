@@ -51,6 +51,7 @@ static libspdm_return_t libspdm_try_get_version(libspdm_context_t *spdm_context,
     uint8_t *message;
     size_t message_size;
     size_t transport_header_size;
+    LIBSPDM_ASSERT(false);
 
     /* -=[Set State Phase]=- */
     libspdm_reset_message_a(spdm_context);

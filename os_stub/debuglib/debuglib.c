@@ -18,6 +18,7 @@
 #define LIBSPDM_DEBUG_LIBSPDM_ASSERT_NATIVE 0
 #define LIBSPDM_DEBUG_LIBSPDM_ASSERT_DEADLOOP 1
 #define LIBSPDM_DEBUG_LIBSPDM_ASSERT_BREAKPOINT 2
+#define LIBSPDM_DEBUG_LIBSPDM_ASSERT_EXIT 3
 
 #ifndef LIBSPDM_DEBUG_LIBSPDM_ASSERT_CONFIG
 #define LIBSPDM_DEBUG_LIBSPDM_ASSERT_CONFIG LIBSPDM_DEBUG_LIBSPDM_ASSERT_DEADLOOP
@@ -41,9 +42,11 @@ void libspdm_debug_assert(const char *file_name, size_t line_number, const char 
 #if defined(__GNUC__)
     __asm__ __volatile__ ("int $3");
 #endif
-#endif
-
+#elif (LIBSPDM_DEBUG_LIBSPDM_ASSERT_CONFIG == LIBSPDM_DEBUG_LIBSPDM_ASSERT_EXIT)
+    exit(1);
+#else
     assert(false);
+#endif
 }
 #endif /* LIBSPDM_DEBUG_ASSERT_ENABLE */
 
