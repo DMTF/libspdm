@@ -96,6 +96,9 @@ libspdm_return_t libspdm_requester_chunk_send_test_send_message(
         }
         return LIBSPDM_STATUS_SEND_FAIL;
     }
+    if (spdm_test_context->case_id == 11) {
+        return LIBSPDM_STATUS_SUCCESS;
+    }
     return LIBSPDM_STATUS_SEND_FAIL;
 }
 
@@ -114,7 +117,8 @@ libspdm_return_t libspdm_requester_chunk_send_test_receive_message(
     spdm_test_context = libspdm_get_test_context();
     spdm_context = context;
 
-    if ((spdm_test_context->case_id == 1) || (spdm_test_context->case_id == 10)) {
+    if ((spdm_test_context->case_id == 1) || (spdm_test_context->case_id == 10) ||
+        (spdm_test_context->case_id == 11)) {
         /* Successful chunk send of algorithms request */
         chunk_send_ack_rsp
             = (void*) ((uint8_t*) *response + sizeof(libspdm_test_message_header_t));
@@ -318,6 +322,10 @@ libspdm_return_t libspdm_test_requester_chunk_send_generic_test_case(
             = CHUNK_SEND_REQUESTER_UNIT_TEST_DATA_TRANSFER_SIZE;
     }
 
+    if (case_id == 11) {
+        spdm_context->connection_info.capability.max_spdm_msg_size = 42;
+    }
+
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
@@ -402,6 +410,14 @@ void libspdm_test_requester_chunk_send_case10(void** state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 }
 
+void libspdm_test_requester_chunk_send_case11(void** state)
+{
+    libspdm_return_t status;
+
+    status = libspdm_test_requester_chunk_send_generic_test_case(state, 11);
+    assert_int_equal(status, LIBSPDM_STATUS_PEER_BUFFER_TOO_SMALL);
+}
+
 libspdm_test_context_t m_libspdm_requester_chunk_send_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     true,
@@ -433,6 +449,8 @@ int libspdm_requester_chunk_send_test_main(void)
         cmocka_unit_test(libspdm_test_requester_chunk_send_case9),
         /* sent in chunks due to greater than the sending transmit buffer size. */
         cmocka_unit_test(libspdm_test_requester_chunk_send_case10),
+        /* requester message size greater than the responder max_spdm_msg_size, return LIBSPDM_STATUS_PEER_BUFFER_TOO_SMALL */
+        cmocka_unit_test(libspdm_test_requester_chunk_send_case11),
     };
 
     libspdm_setup_test_context(
