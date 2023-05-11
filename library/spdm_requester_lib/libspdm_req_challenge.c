@@ -250,13 +250,14 @@ static libspdm_return_t libspdm_try_challenge(libspdm_context_t *spdm_context,
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 
     opaque_length = libspdm_read_uint16((const uint8_t *)ptr);
-    if (opaque_length > SPDM_MAX_OPAQUE_DATA_SIZE) {
-        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-        goto receive_done;
-    }
-
     ptr += sizeof(uint16_t);
-
+    if (opaque_length != 0) {
+        result = libspdm_process_general_opaque_data_check(spdm_context, opaque_length, ptr);
+        if (!result) {
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+            goto receive_done;
+        }
+    }
     status = libspdm_append_message_c(spdm_context, spdm_request, spdm_request_size);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         status = LIBSPDM_STATUS_BUFFER_FULL;

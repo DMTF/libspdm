@@ -230,3 +230,47 @@ bool libspdm_get_element_from_opaque_data(libspdm_context_t *spdm_context,
 
     return result;
 }
+
+/**
+ *  Process general opaque data check
+ *
+ * @param  data_in_size                  size in bytes of the data_in.
+ * @param  data_in                       A pointer to the buffer to store the opaque data version selection.
+ *
+ * @retval RETURN_SUCCESS               Successfully processed the check for opaque data.
+ * @retval RETURN_UNSUPPORTED           The data_in is NOT opaque data .
+ **/
+bool libspdm_process_general_opaque_data_check(libspdm_context_t *spdm_context,
+                                               size_t data_in_size,
+                                               void *data_in)
+{
+    const secured_message_opaque_element_table_header_t
+    *opaque_element_table_header;
+    if (data_in_size > SPDM_MAX_OPAQUE_DATA_SIZE) {
+        return false;
+    }
+
+    if (libspdm_get_connection_version (spdm_context) >= SPDM_MESSAGE_VERSION_12) {
+        if(spdm_context->connection_info.algorithm.other_params_support ==
+           SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1) {
+            opaque_element_table_header =
+                (secured_message_opaque_element_table_header_t *)((uint8_t *)data_in + 4);
+            LIBSPDM_INTERNAL_DUMP_HEX(data_in, data_in_size);
+            if (opaque_element_table_header->id > SPDM_REGISTRY_ID_JEDEC)
+            {
+                return false;
+            }
+
+            if (((sizeof(opaque_element_table_header->id) +
+                  sizeof(opaque_element_table_header->vendor_len) +
+                  opaque_element_table_header->vendor_len  +
+                  2 +
+                  opaque_element_table_header->opaque_element_data_len) & 3) != 0)
+            {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}

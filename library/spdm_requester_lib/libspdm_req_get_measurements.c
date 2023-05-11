@@ -387,7 +387,13 @@ static libspdm_return_t libspdm_try_get_measurement(libspdm_context_t *spdm_cont
             goto receive_done;
         }
         ptr += sizeof(uint16_t);
-
+        if (opaque_length != 0) {
+            status = libspdm_process_general_opaque_data_check(spdm_context, opaque_length, ptr);
+            if (LIBSPDM_STATUS_IS_ERROR(status)) {
+                status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                goto receive_done;
+            }
+        }
         if (spdm_response_size <
             sizeof(spdm_measurements_response_t) +
             measurement_record_data_length + SPDM_NONCE_SIZE +
@@ -463,7 +469,13 @@ static libspdm_return_t libspdm_try_get_measurement(libspdm_context_t *spdm_cont
             goto receive_done;
         }
         ptr += sizeof(uint16_t);
-
+        if (opaque_length != 0) {
+            status = libspdm_process_general_opaque_data_check(spdm_context, opaque_length, ptr);
+            if (LIBSPDM_STATUS_IS_ERROR(status)) {
+                status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                goto receive_done;
+            }
+        }
         if (spdm_response_size <
             sizeof(spdm_measurements_response_t) +
             measurement_record_data_length + SPDM_NONCE_SIZE +
