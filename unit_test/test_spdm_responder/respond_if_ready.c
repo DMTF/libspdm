@@ -20,6 +20,8 @@
 
 static libspdm_th_managed_buffer_t th_curr;
 
+extern size_t libspdm_secret_lib_challenge_opaque_data_size;
+
 spdm_response_if_ready_request_t m_libspdm_respond_if_ready_request1 = {
     {
         SPDM_MESSAGE_VERSION_11,
@@ -456,7 +458,7 @@ void libspdm_test_responder_respond_if_ready_case3(void **state) {
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
 
-    spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
+    libspdm_secret_lib_challenge_opaque_data_size = 0;
 
     spdm_context->last_spdm_request_size = m_libspdm_challenge_request_size;
     libspdm_copy_mem(spdm_context->last_spdm_request,

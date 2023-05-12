@@ -21,13 +21,15 @@ libspdm_return_t libspdm_get_response_challenge_auth(libspdm_context_t *spdm_con
     size_t signature_size;
     uint8_t slot_id;
     uint32_t hash_size;
+    uint8_t *measurement_summary_hash;
     uint32_t measurement_summary_hash_size;
     uint8_t *ptr;
-    size_t total_size;
     uint8_t auth_attribute;
     libspdm_return_t status;
-    size_t response_capacity;
     uint8_t slot_mask;
+    uint8_t *opaque_data;
+    size_t opaque_data_size;
+    size_t spdm_response_size;
 
     spdm_request = request;
 
@@ -109,15 +111,12 @@ libspdm_return_t libspdm_get_response_challenge_auth(libspdm_context_t *spdm_con
                                                SPDM_ERROR_CODE_INVALID_REQUEST,
                                                0, response_size, response);
     }
-    total_size =
-        sizeof(spdm_challenge_auth_response_t) + hash_size +
-        SPDM_NONCE_SIZE + measurement_summary_hash_size +
-        sizeof(uint16_t) +
-        spdm_context->local_context.opaque_challenge_auth_rsp_size + signature_size;
 
-    LIBSPDM_ASSERT(*response_size >= total_size);
-    response_capacity = *response_size;
-    *response_size = total_size;
+    /* response_size should be large enough to hold a challenge response without opaque data. */
+    LIBSPDM_ASSERT(*response_size >= sizeof(spdm_challenge_auth_response_t) + hash_size +
+                   SPDM_NONCE_SIZE + measurement_summary_hash_size + sizeof(uint16_t) +
+                   signature_size);
+
     libspdm_zero_mem(response, *response_size);
     spdm_response = response;
 
@@ -194,6 +193,8 @@ libspdm_return_t libspdm_get_response_challenge_auth(libspdm_context_t *spdm_con
     }
     ptr += SPDM_NONCE_SIZE;
 
+    measurement_summary_hash = ptr;
+
     if (libspdm_is_capabilities_flag_supported(
             spdm_context, false, 0, SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
 
@@ -217,17 +218,41 @@ libspdm_return_t libspdm_get_response_challenge_auth(libspdm_context_t *spdm_con
     }
     ptr += measurement_summary_hash_size;
 
-    libspdm_write_uint16 (ptr, (uint16_t)spdm_context->local_context
-                          .opaque_challenge_auth_rsp_size);
+
+    opaque_data_size = *response_size - (sizeof(spdm_challenge_auth_response_t) + hash_size +
+                                         SPDM_NONCE_SIZE + measurement_summary_hash_size +
+                                         sizeof(uint16_t) + signature_size);
+    opaque_data =
+        (uint8_t*)response + sizeof(spdm_challenge_auth_response_t) + hash_size + SPDM_NONCE_SIZE +
+        measurement_summary_hash_size + sizeof(uint16_t);
+
+    result = libspdm_challenge_opaque_data(
+        spdm_context->connection_info.version,
+        slot_id,
+        measurement_summary_hash, measurement_summary_hash_size,
+        opaque_data, &opaque_data_size);
+    if (!result) {
+        return libspdm_generate_error_response(
+            spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
+            0, response_size, response);
+    }
+
+    /*write opaque_data_size*/
+    libspdm_write_uint16 (ptr, (uint16_t)opaque_data_size);
     ptr += sizeof(uint16_t);
 
-    if (spdm_context->local_context.opaque_challenge_auth_rsp != NULL) {
-        libspdm_copy_mem(ptr,
-                         response_capacity - (ptr - (uint8_t*)response),
-                         spdm_context->local_context.opaque_challenge_auth_rsp,
-                         spdm_context->local_context.opaque_challenge_auth_rsp_size);
-        ptr += spdm_context->local_context.opaque_challenge_auth_rsp_size;
-    }
+    /*the opaque_data is stored by libspdm_challenge_opaque_data*/
+    ptr += opaque_data_size;
+
+    /*get actual response size*/
+    spdm_response_size =
+        sizeof(spdm_challenge_auth_response_t) + hash_size +
+        SPDM_NONCE_SIZE + measurement_summary_hash_size +
+        sizeof(uint16_t) + opaque_data_size + signature_size;
+
+    LIBSPDM_ASSERT(*response_size >= spdm_response_size);
+
+    *response_size = spdm_response_size;
 
     /* Calc Sign*/
 

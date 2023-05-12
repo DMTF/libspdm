@@ -85,10 +85,6 @@ typedef struct {
     /* Peer Cert verify*/
     libspdm_verify_spdm_cert_chain_func verify_peer_spdm_cert_chain;
 
-    /* opaque_data provision locally*/
-    size_t opaque_challenge_auth_rsp_size;
-    uint8_t *opaque_challenge_auth_rsp;
-
     /* Responder policy*/
     bool basic_mut_auth_requested;
     uint8_t mut_auth_requested;

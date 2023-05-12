@@ -39,6 +39,17 @@ bool libspdm_measurement_opaque_data(
     return false;
 }
 
+bool libspdm_challenge_opaque_data(
+    spdm_version_number_t spdm_version,
+    uint8_t slot_id,
+    uint8_t *measurement_summary_hash,
+    size_t measurement_summary_hash_size,
+    void *opaque_data,
+    size_t *opaque_data_size)
+{
+    return false;
+}
+
 bool libspdm_generate_measurement_summary_hash(
     spdm_version_number_t spdm_version,
     uint32_t base_hash_algo,
