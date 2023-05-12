@@ -11,6 +11,8 @@
 
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
 
+extern size_t libspdm_secret_lib_challenge_opaque_data_size;
+
 size_t libspdm_get_max_buffer_size(void)
 {
     return LIBSPDM_MAX_SPDM_MSG_SIZE;
@@ -51,7 +53,7 @@ void libspdm_test_requester_encap_challenge(void **State)
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
 
-    spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
+    libspdm_secret_lib_challenge_opaque_data_size = 0;
     libspdm_reset_message_c(spdm_context);
 
     request_size = spdm_test_context->test_buffer_size;

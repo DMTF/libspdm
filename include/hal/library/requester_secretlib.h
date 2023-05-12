@@ -84,4 +84,32 @@ extern bool libspdm_psk_master_secret_hkdf_expand(
     uint8_t *out, size_t out_size);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
 
+#if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
+/**
+ * This functions returns the opaque data in a CHALLENGE_AUTH response.
+ *
+ * @param spdm_version  Indicates the negotiated s version.
+ *
+ * @param  slot_id       The number of slot for the certificate chain.
+ *
+ * @param  measurement_summary_hash        The measurement summary hash.
+ * @param  measurement_summary_hash_size   The size of measurement summary hash.
+ *
+ * @param opaque_data
+ * A pointer to a destination buffer whose size, in bytes, is opaque_data_size. The opaque data is
+ * copied to this buffer.
+ *
+ * @param opaque_data_size
+ * On input, indicates the size, in bytes, of the destination buffer.
+ * On output, indicates the size of the opaque data.
+ **/
+extern bool libspdm_challenge_opaque_data(
+    spdm_version_number_t spdm_version,
+    uint8_t slot_id,
+    uint8_t *measurement_summary_hash,
+    size_t measurement_summary_hash_size,
+    void *opaque_data,
+    size_t *opaque_data_size);
+#endif/*LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/
+
 #endif /* REQUESTER_SECRETLIB_H */

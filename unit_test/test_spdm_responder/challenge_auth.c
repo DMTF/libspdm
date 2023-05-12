@@ -45,7 +45,7 @@ spdm_challenge_request_t m_libspdm_challenge_request7 = {
 };
 size_t m_libspdm_challenge_request7_size = sizeof(m_libspdm_challenge_request7);
 
-uint8_t m_opaque_challenge_auth_rsp[8] = "libspdm";
+extern size_t libspdm_secret_lib_challenge_opaque_data_size;
 
 /**
  * Test 1: receiving a correct CHALLENGE message from the requester with
@@ -84,7 +84,7 @@ void libspdm_test_responder_challenge_auth_case1(void **state)
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
 
-    spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
+    libspdm_secret_lib_challenge_opaque_data_size = 0;
     libspdm_reset_message_c(spdm_context);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->transcript.message_m.buffer_size =
@@ -164,7 +164,7 @@ void libspdm_test_responder_challenge_auth_case3(void **state)
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
 
-    spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
+    libspdm_secret_lib_challenge_opaque_data_size = 0;
     libspdm_reset_message_c(spdm_context);
 
     response_size = sizeof(response);
@@ -229,7 +229,7 @@ void libspdm_test_responder_challenge_auth_case4(void **state)
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
 
-    spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
+    libspdm_secret_lib_challenge_opaque_data_size = 0;
     libspdm_reset_message_c(spdm_context);
 
     response_size = sizeof(response);
@@ -292,7 +292,7 @@ void libspdm_test_responder_challenge_auth_case5(void **state)
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
 
-    spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
+    libspdm_secret_lib_challenge_opaque_data_size = 0;
     libspdm_reset_message_c(spdm_context);
 
     response_size = sizeof(response);
@@ -360,7 +360,7 @@ void libspdm_test_responder_challenge_auth_case6(void **state)
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size1;
 
-    spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
+    libspdm_secret_lib_challenge_opaque_data_size = 0;
     libspdm_reset_message_c(spdm_context);
 
     response_size = sizeof(response);
@@ -417,7 +417,7 @@ void libspdm_test_responder_challenge_auth_case7(void **state) {
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
 
-    spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
+    libspdm_secret_lib_challenge_opaque_data_size = 0;
     libspdm_reset_message_c(spdm_context);
 
     response_size = sizeof(response);
@@ -471,7 +471,7 @@ void libspdm_test_responder_challenge_auth_case8(void **state) {
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
 
-    spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
+    libspdm_secret_lib_challenge_opaque_data_size = 0;
     libspdm_reset_message_c(spdm_context);
 
     response_size = sizeof(response);
@@ -526,7 +526,7 @@ void libspdm_test_responder_challenge_auth_case9(void **state) {
                                                      NULL, NULL);
     spdm_context->local_context.local_cert_chain_provision[1] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[1] = data_size1;
-    spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
+    libspdm_secret_lib_challenge_opaque_data_size = 0;
     libspdm_reset_message_c(spdm_context);
 
     response_size = sizeof(response);
@@ -597,7 +597,7 @@ void libspdm_test_responder_challenge_auth_case10(void **state) {
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
 
-    spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
+    libspdm_secret_lib_challenge_opaque_data_size = 0;
     libspdm_reset_message_c(spdm_context);
 
     response_size = sizeof(response);
@@ -651,8 +651,7 @@ void libspdm_test_responder_challenge_auth_case11(void **state) {
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
 
-    spdm_context->local_context.opaque_challenge_auth_rsp_size = 8;
-    spdm_context->local_context.opaque_challenge_auth_rsp = m_opaque_challenge_auth_rsp;
+    libspdm_secret_lib_challenge_opaque_data_size = 8;
     libspdm_reset_message_c(spdm_context);
 
     response_size = sizeof(response);
@@ -709,7 +708,7 @@ void libspdm_test_responder_challenge_auth_case12(void **state) {
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
 
-    spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
+    libspdm_secret_lib_challenge_opaque_data_size = 0;
     libspdm_reset_message_c(spdm_context);
 
     response_size = sizeof(response);
@@ -768,7 +767,7 @@ void libspdm_test_responder_challenge_auth_case13(void **state) {
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
 
-    spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
+    libspdm_secret_lib_challenge_opaque_data_size = 0;
     libspdm_reset_message_c(spdm_context);
 
     response_size = sizeof(response);
@@ -828,7 +827,7 @@ void libspdm_test_responder_challenge_auth_case14(void **state) {
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
 
-    spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
+    libspdm_secret_lib_challenge_opaque_data_size = 0;
     libspdm_reset_message_c(spdm_context);
 
     response_size = sizeof(response);
@@ -885,7 +884,7 @@ void libspdm_test_responder_challenge_auth_case15(void **state)
     spdm_context->local_context.local_cert_chain_provision[0] = data1;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
 
-    spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
+    libspdm_secret_lib_challenge_opaque_data_size = 0;
     libspdm_reset_message_c(spdm_context);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -1016,7 +1015,7 @@ void libspdm_test_responder_challenge_auth_case17(void **state)
     spdm_context->local_context.local_public_key_provision = data1;
     spdm_context->local_context.local_public_key_provision_size = data_size1;
 
-    spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
+    libspdm_secret_lib_challenge_opaque_data_size = 0;
     libspdm_reset_message_c(spdm_context);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->transcript.message_m.buffer_size =

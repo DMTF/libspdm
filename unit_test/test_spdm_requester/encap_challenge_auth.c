@@ -27,6 +27,8 @@ spdm_challenge_request_t m_spdm_challenge_request4 = {
 };
 size_t m_spdm_challenge_request4_size = sizeof(m_spdm_challenge_request4);
 
+extern size_t libspdm_secret_lib_challenge_opaque_data_size;
+
 /**
  * Test 1: receiving a correct CHALLENGE message from the requester with
  * no opaque data, no measurements, and slot number 0.
@@ -82,7 +84,7 @@ void test_libspdm_requester_encap_challenge_auth_case1(void **state)
     spdm_context->local_context.local_cert_chain_provision_size[0] =
         data_size;
 
-    spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
+    libspdm_secret_lib_challenge_opaque_data_size = 0;
     libspdm_reset_message_c(spdm_context);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->transcript.message_m.buffer_size =
@@ -100,7 +102,7 @@ void test_libspdm_requester_encap_challenge_auth_case1(void **state)
                      libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo) +
                      SPDM_NONCE_SIZE + 0 +
                      sizeof(uint16_t) +
-                     spdm_context->local_context.opaque_challenge_auth_rsp_size +
+                     libspdm_secret_lib_challenge_opaque_data_size +
                      libspdm_get_req_asym_signature_size(
                          spdm_context->connection_info.algorithm.req_base_asym_alg));
     spdm_response = (void *)response;
@@ -160,7 +162,7 @@ void test_libspdm_requester_encap_challenge_auth_case3(void **state)
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
 
-    spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
+    libspdm_secret_lib_challenge_opaque_data_size = 0;
     libspdm_reset_message_c(spdm_context);
 
     response_size = sizeof(response);
@@ -214,7 +216,7 @@ void test_libspdm_requester_encap_challenge_auth_case4(void **state)
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
 
-    spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
+    libspdm_secret_lib_challenge_opaque_data_size = 0;
     libspdm_reset_message_c(spdm_context);
 
     response_size = sizeof(response);
@@ -268,7 +270,7 @@ void test_libspdm_requester_encap_challenge_auth_case5(void **state)
     spdm_context->local_context.local_cert_chain_provision[0] = data;
     spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
 
-    spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
+    libspdm_secret_lib_challenge_opaque_data_size = 0;
     libspdm_reset_message_c(spdm_context);
 
     response_size = sizeof(response);
@@ -319,7 +321,7 @@ void test_libspdm_requester_encap_challenge_auth_case6(void **state)
     spdm_context->local_context.local_public_key_provision = data;
     spdm_context->local_context.local_public_key_provision_size = data_size;
 
-    spdm_context->local_context.opaque_challenge_auth_rsp_size = 0;
+    libspdm_secret_lib_challenge_opaque_data_size = 0;
     libspdm_reset_message_c(spdm_context);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
