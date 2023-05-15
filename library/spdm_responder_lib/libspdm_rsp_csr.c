@@ -20,8 +20,7 @@ libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
     libspdm_session_state_t session_state;
 
     size_t csr_len;
-    uint8_t csr_pointer[LIBSPDM_MAX_CSR_SIZE];
-    uint8_t *csr_p = csr_pointer;
+    uint8_t *csr_p;
     uint16_t requester_info_length;
     uint16_t opaque_data_length;
     uint8_t *opaque_data;
@@ -129,11 +128,18 @@ libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
             response_size, response);
     }
 
-    csr_len = LIBSPDM_MAX_CSR_SIZE;
+    LIBSPDM_ASSERT(*response_size >= sizeof(spdm_csr_response_t));
+
+    spdm_response = response;
+    libspdm_zero_mem(response, *response_size);
+
+    csr_len = *response_size - sizeof(spdm_csr_response_t);
+    csr_p = (uint8_t*)(spdm_response + 1);
     result = libspdm_gen_csr(spdm_context->connection_info.algorithm.base_hash_algo,
                              spdm_context->connection_info.algorithm.base_asym_algo,
                              &need_reset, requester_info, requester_info_length,
-                             &csr_len, &csr_p);
+                             opaque_data, opaque_data_length,
+                             &csr_len, csr_p);
     if (!result) {
         return libspdm_generate_error_response(
             spdm_context,
@@ -141,10 +147,8 @@ libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
             response_size, response);
     }
 
-    LIBSPDM_ASSERT(*response_size >= sizeof(spdm_csr_response_t) + LIBSPDM_MAX_CSR_SIZE);
+    LIBSPDM_ASSERT(*response_size >= sizeof(spdm_csr_response_t) + csr_len);
     *response_size = sizeof(spdm_csr_response_t) + csr_len;
-    libspdm_zero_mem(response, *response_size);
-    spdm_response = response;
 
     if (libspdm_is_capabilities_flag_supported(
             spdm_context, false, 0,
@@ -161,9 +165,6 @@ libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
         spdm_response->csr_length = (uint16_t)csr_len;
         spdm_response->reserved = 0;
     }
-
-    libspdm_copy_mem(spdm_response + 1, spdm_response->csr_length,
-                     csr_p, spdm_response->csr_length);
 
     return LIBSPDM_STATUS_SUCCESS;
 }

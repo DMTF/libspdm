@@ -2424,7 +2424,7 @@ bool libspdm_set_attribute_for_req(X509_REQ *req, uint8_t *req_info, size_t req_
 bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
                           uint8_t *requester_info, size_t requester_info_length,
                           void *context, char *subject_name,
-                          size_t *csr_len, uint8_t **csr_pointer)
+                          size_t *csr_len, uint8_t *csr_pointer)
 {
     int ret;
     int version;
@@ -2441,7 +2441,7 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
     x509_req = NULL;
     x509_name = NULL;
     md = NULL;
-    csr_p = *csr_pointer;
+    csr_p = csr_pointer;
 
     x509_req = X509_REQ_new();
     if (x509_req == NULL) {

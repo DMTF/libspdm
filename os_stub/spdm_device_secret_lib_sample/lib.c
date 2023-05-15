@@ -1055,7 +1055,8 @@ bool libspdm_read_cached_csr(uint32_t base_asym_algo, uint8_t **csr_pointer, siz
 
 bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *need_reset,
                      uint8_t *requester_info, size_t requester_info_length,
-                     size_t *csr_len, uint8_t **csr_pointer)
+                     uint8_t *opaque_data, uint16_t opaque_data_length,
+                     size_t *csr_len, uint8_t *csr_pointer)
 {
     bool result;
     size_t hash_nid;
@@ -1088,7 +1089,7 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
                                "csr buffer is too small to sotre cached csr! \n"));
                 return false;
             } else {
-                libspdm_copy_mem(*csr_pointer, csr_buffer_size, cached_csr, *csr_len);
+                libspdm_copy_mem(csr_pointer, csr_buffer_size, cached_csr, *csr_len);
             }
 
             /*device don't need reset this time*/

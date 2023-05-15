@@ -771,7 +771,7 @@ int32_t libspdm_x509_compare_date_time(const void *date_time1, const void *date_
 bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
                           uint8_t *requester_info, size_t requester_info_length,
                           void *context, char *subject_name,
-                          size_t *csr_len, uint8_t **csr_pointer)
+                          size_t *csr_len, uint8_t *csr_pointer)
 {
     LIBSPDM_ASSERT(false);
     return false;

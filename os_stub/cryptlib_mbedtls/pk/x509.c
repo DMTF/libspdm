@@ -19,6 +19,7 @@
 #include <mbedtls/x509_csr.h>
 #include <mbedtls/entropy.h>
 #include <mbedtls/ctr_drbg.h>
+#include <string.h>
 
 #if LIBSPDM_CERT_PARSE_SUPPORT
 
@@ -1724,7 +1725,7 @@ bool libspdm_set_attribute_for_req(mbedtls_x509write_csr *req, uint8_t *req_info
 bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
                           uint8_t *requester_info, size_t requester_info_length,
                           void *context, char *subject_name,
-                          size_t *csr_len, uint8_t **csr_pointer)
+                          size_t *csr_len, uint8_t *csr_pointer)
 {
     int ret;
     bool result;
@@ -1824,8 +1825,8 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
     /* Set key */
     mbedtls_x509write_csr_set_key(&req, &key);
 
-    /*data is written at the end of the buffer*/
-    ret = mbedtls_x509write_csr_der(&req, *csr_pointer, csr_buffer_size, libspdm_myrand, NULL);
+    /*csr data is written at the end of the buffer*/
+    ret = mbedtls_x509write_csr_der(&req, csr_pointer, csr_buffer_size, libspdm_myrand, NULL);
     if (ret <= 0) {
         ret = 1;
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"mbedtls_x509write_csr_der failed \n"));
@@ -1833,8 +1834,8 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
     }
 
     *csr_len = (size_t)ret;
-    /*change csr_pointer to start location*/
-    *csr_pointer = *csr_pointer + csr_buffer_size - *csr_len;
+    /*make csr_pointer store csr data*/
+    memmove(csr_pointer, csr_pointer + csr_buffer_size - *csr_len, *csr_len);
 
     ret = 0;
 free_all:

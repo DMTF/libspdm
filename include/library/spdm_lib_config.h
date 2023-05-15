@@ -76,10 +76,6 @@
 #define LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN 1024
 #endif
 
-#ifndef LIBSPDM_MAX_CSR_SIZE
-#define LIBSPDM_MAX_CSR_SIZE 0x1000
-#endif
-
 /* To ensure integrity in communication between the Requester and the Responder libspdm calculates
  * cryptographic digests and signatures over multiple requests and responses. This value specifies
  * whether libspdm will use a running calculation over the transcript, where requests and responses
