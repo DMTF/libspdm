@@ -378,43 +378,6 @@ extern bool libspdm_sm2_get_public_key_from_x509(const uint8_t *cert, size_t cer
                                                  void **sm2_context);
 #endif /* LIBSPDM_SM2_DSA_SUPPORT */
 
-#if LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP
-/**
- * Generate a CSR.
- *
- * @param[in]      hash_nid              hash algo for sign
- * @param[in]      asym_nid              asym algo for sign
- *
- * @param[in]      requester_info        requester info to gen CSR
- * @param[in]      requester_info_length The len of requester info
- *
- * @param[in]      context               Pointer to asymmetric context
- * @param[in]      subject_name          Subject name: should be break with ',' in the middle
- *                                       example: "C=AA,CN=BB"
- *
- * Subject names should contain a comma-separated list of OID types and values:
- * The valid OID type name is in:
- * {"CN", "commonName", "C", "countryName", "O", "organizationName","L",
- * "OU", "organizationalUnitName", "ST", "stateOrProvinceName", "emailAddress",
- * "serialNumber", "postalAddress", "postalCode", "dnQualifier", "title",
- * "SN","givenName","GN", "initials", "pseudonym", "generationQualifier", "domainComponent", "DC"}.
- * Note: The object of C and countryName should be CSR Supported Country Codes
- *
- * @param[in]      csr_len               For input, csr_len is the size of store CSR buffer.
- *                                       For output, csr_len is CSR len for DER format
- * @param[in]      csr_pointer           For input, csr_pointer is buffer address to store CSR.
- *                                       For output, csr_pointer is address for stored CSR.
- *                                       The csr_pointer address will be changed.
- *
- * @retval  true   Success.
- * @retval  false  Failed to gen CSR.
- **/
-extern bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
-                                 uint8_t *requester_info, size_t requester_info_length,
-                                 void *context, char *subject_name,
-                                 size_t *csr_len, uint8_t **csr_pointer);
-#endif /* LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP */
-
 #endif /* LIBSPDM_CERT_PARSE_SUPPORT */
 
 #endif /* CRYPTLIB_CERT_H */

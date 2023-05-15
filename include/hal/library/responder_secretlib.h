@@ -220,6 +220,9 @@ extern bool libspdm_responder_data_sign(
  * @param[in]      requester_info         Requester info to generate the CSR.
  * @param[in]      requester_info_length  The length of requester info.
  *
+ * @param[in]      opaque_data            opaque data to generate the CSR.
+ * @param[in]      opaque_data_length     The length of opaque data.
+ *
  * @param[in]      csr_len      For input, csr_len is the size of store CSR buffer.
  *                              For output, csr_len is CSR len for DER format
  * @param[in]      csr_pointer  On input, csr_pointer is buffer address to store CSR.
@@ -231,7 +234,8 @@ extern bool libspdm_responder_data_sign(
  **/
 extern bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *need_reset,
                             uint8_t *requester_info, size_t requester_info_length,
-                            size_t *csr_len, uint8_t **csr_pointer);
+                            uint8_t *opaque_data, uint16_t opaque_data_length,
+                            size_t *csr_len, uint8_t *csr_pointer);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP */
 
 #endif /* RESPONDER_SECRETLIB_H */
