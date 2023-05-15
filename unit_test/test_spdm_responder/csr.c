@@ -112,7 +112,7 @@ bool libspdm_test_read_cached_csr(uint32_t base_asym_algo, uint8_t **csr_pointer
     return res;
 }
 
-/*clan the cached req_info*/
+/*clean the cached req_info*/
 void libspdm_test_clear_cached_req_info(uint32_t base_asym_algo)
 {
     char *file;
