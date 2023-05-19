@@ -992,84 +992,22 @@ bool libspdm_read_requester_public_key(uint16_t req_base_asym_alg,
 }
 
 #if LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP
-bool libspdm_read_cached_requester_info(uint32_t base_asym_algo,
-                                        uint8_t **req_info, size_t *req_info_length)
+bool libspdm_read_cached_requester_info(uint8_t **req_info, size_t *req_info_length)
 {
     bool res;
     char *file;
 
-    if (base_asym_algo == 0) {
-        return false;
-    }
-
-    switch (base_asym_algo) {
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048:
-        file = "rsa2048_req_info";
-        break;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
-        file = "rsa3072_req_info";
-        break;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
-        file = "rsa4096_req_info";
-        break;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
-        file = "ecp256_req_info";
-        break;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
-        file = "ecp384_req_info";
-        break;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
-        file = "ecp521_req_info";
-        break;
-    default:
-        LIBSPDM_ASSERT(false);
-        return false;
-    }
-
+    file = "cached_req_info";
     res = libspdm_read_input_file(file, (void **)req_info, req_info_length);
     return res;
 }
 
-bool libspdm_cache_requester_info(uint32_t base_asym_algo,
-                                  uint8_t *req_info, size_t req_info_length)
+bool libspdm_cache_requester_info(uint8_t *req_info, size_t req_info_length)
 {
     bool res;
     char *file;
 
-    if (base_asym_algo == 0) {
-        return false;
-    }
-
-    switch (base_asym_algo) {
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048:
-        file = "rsa2048_req_info";
-        break;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
-        file = "rsa3072_req_info";
-        break;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
-        file = "rsa4096_req_info";
-        break;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
-        file = "ecp256_req_info";
-        break;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
-        file = "ecp384_req_info";
-        break;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
-        file = "ecp521_req_info";
-        break;
-    default:
-        LIBSPDM_ASSERT(false);
-        return false;
-    }
-
+    file = "cached_req_info";
     res = libspdm_write_output_file(file, req_info, req_info_length);
 
     return res;
@@ -1133,8 +1071,7 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
 
     /*device gen csr need reset*/
     if (*need_reset) {
-        result = libspdm_read_cached_requester_info(base_asym_algo,
-                                                    &cached_req_info, &cached_req_info_length);
+        result = libspdm_read_cached_requester_info(&cached_req_info, &cached_req_info_length);
 
         /*get the cached requester info and csr*/
         if ((result) &&
@@ -1166,8 +1103,7 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
             }
 
             /*device need reset this time: cache the req_info */
-            result = libspdm_cache_requester_info(base_asym_algo,
-                                                  requester_info, requester_info_length);
+            result = libspdm_cache_requester_info(requester_info, requester_info_length);
             if (!result) {
                 return result;
             }
