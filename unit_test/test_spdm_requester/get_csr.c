@@ -10,6 +10,8 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP
 
+#define LIBSPDM_MAX_CSR_SIZE 0x1000
+
 uint8_t csr_pointer[LIBSPDM_MAX_CSR_SIZE] = {0};
 uint8_t *csr_data_pointer = csr_pointer;
 size_t global_csr_len;

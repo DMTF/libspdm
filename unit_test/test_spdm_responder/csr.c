@@ -9,6 +9,8 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP
 
+#define LIBSPDM_MAX_CSR_SIZE 0x1000
+
 uint8_t m_csr_opaque_data[8] = "libspdm";
 
 /*ECC 256 req_info(include right req_info attribute)*/

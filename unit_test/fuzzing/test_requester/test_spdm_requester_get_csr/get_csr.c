@@ -11,6 +11,8 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP
 
+#define LIBSPDM_MAX_CSR_SIZE 0x1000
+
 bool m_secured_on_off;
 
 uint8_t temp_buf[LIBSPDM_RECEIVER_BUFFER_SIZE];
