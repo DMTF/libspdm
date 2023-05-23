@@ -134,34 +134,12 @@ bool libspdm_test_read_cached_csr(uint32_t base_asym_algo, uint8_t **csr_pointer
     return res;
 }
 
-/*clean the cached req_info*/
-void libspdm_test_clear_cached_req_info(uint32_t base_asym_algo)
+/*clean the cached last SPDM csr request*/
+void libspdm_test_clear_cached_last_request()
 {
     char *file;
 
-    switch (base_asym_algo) {
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048:
-        file = "rsa2048_req_info";
-        break;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
-        file = "rsa3072_req_info";
-        break;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
-        file = "rsa4096_req_info";
-        break;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
-        file = "ecp256_req_info";
-        break;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
-        file = "ecp384_req_info";
-        break;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
-        file = "ecp521_req_info";
-        break;
-    }
+    file = "cached_last_csr_request";
 
     libspdm_write_output_file(file, NULL, 0);
 }
@@ -602,7 +580,7 @@ void libspdm_test_responder_csr_case6(void **state)
     assert_memory_equal(spdm_response + 1, cached_csr, spdm_response->csr_length);
 
     /*clear cached req_info*/
-    libspdm_test_clear_cached_req_info(m_libspdm_use_asym_algo);
+    libspdm_test_clear_cached_last_request();
     free(m_libspdm_get_csr_request);
 }
 
