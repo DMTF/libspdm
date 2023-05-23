@@ -146,7 +146,8 @@ libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
     csr_p = (uint8_t*)(spdm_response + 1);
     result = libspdm_gen_csr(spdm_context->connection_info.algorithm.base_hash_algo,
                              spdm_context->connection_info.algorithm.base_asym_algo,
-                             &need_reset, requester_info, requester_info_length,
+                             &need_reset, request, request_size,
+                             requester_info, requester_info_length,
                              opaque_data, opaque_data_length,
                              &csr_len, csr_p);
     if (!result) {
