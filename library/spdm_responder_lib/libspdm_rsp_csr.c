@@ -112,9 +112,9 @@ libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
                                                response_size, response);
     }
 
-    opaque_data = (void*)((size_t)(spdm_request + 1));
+    requester_info = (void *)((size_t)(spdm_request + 1));
 
-    requester_info = (void*)(opaque_data + opaque_data_length);
+    opaque_data = (void *)(requester_info + requester_info_length);
 
     need_reset = libspdm_is_capabilities_flag_supported(
         spdm_context, false, 0,
