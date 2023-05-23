@@ -26,7 +26,6 @@ libspdm_return_t libspdm_get_response_csr(void *context, size_t request_size,
     uint8_t *csr_p = csr_pointer;
     uint16_t requester_info_length;
     uint16_t opaque_data_length;
-    uint8_t *opaque_data;
     uint8_t *requester_info;
     bool need_reset;
 
@@ -103,9 +102,7 @@ libspdm_return_t libspdm_get_response_csr(void *context, size_t request_size,
                                                response_size, response);
     }
 
-    opaque_data = (void*)((size_t)(spdm_request + 1));
-
-    requester_info = (void*)(opaque_data + opaque_data_length);
+    requester_info = (void *)((size_t)(spdm_request + 1));
 
     need_reset = libspdm_is_capabilities_flag_supported(
         spdm_context, false, 0,
