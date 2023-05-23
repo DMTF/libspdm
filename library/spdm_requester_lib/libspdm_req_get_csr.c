@@ -89,16 +89,16 @@ static libspdm_return_t libspdm_try_get_csr(void *context,
     spdm_request->opaque_data_length = opaque_data_length;
     spdm_request->requester_info_length = requester_info_length;
 
-    if (opaque_data_length != 0) {
+    if (requester_info_length != 0) {
         libspdm_copy_mem(spdm_request + 1,
                          spdm_request_size - sizeof(spdm_get_csr_request_t),
-                         (uint8_t *)opaque_data, opaque_data_length);
+                         (uint8_t *)requester_info, requester_info_length);
     }
 
-    if (requester_info_length != 0) {
-        libspdm_copy_mem((uint8_t *)(spdm_request + 1) + opaque_data_length,
-                         spdm_request_size - sizeof(spdm_get_csr_request_t),
-                         (uint8_t *)requester_info, requester_info_length);
+    if (opaque_data_length != 0) {
+        libspdm_copy_mem((uint8_t *)(spdm_request + 1) + requester_info_length,
+                         spdm_request_size - sizeof(spdm_get_csr_request_t) - requester_info_length,
+                         (uint8_t *)opaque_data, opaque_data_length);
     }
 
     LIBSPDM_ASSERT(spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12);
