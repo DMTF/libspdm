@@ -217,6 +217,9 @@ extern bool libspdm_responder_data_sign(
  * @param[in]      need_reset            If true, then device needs to be reset to complete the CSR.
  *                                       If false
  *
+ * @param[in]      request                A pointer to the SPDM request data.
+ * @param[in]      request_size           The size of SPDM request data.
+ *
  * @param[in]      requester_info         Requester info to generate the CSR.
  * @param[in]      requester_info_length  The length of requester info.
  *
@@ -233,6 +236,7 @@ extern bool libspdm_responder_data_sign(
  * @retval  false  Failed to gen CSR.
  **/
 extern bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *need_reset,
+                            const void *request, size_t request_size,
                             uint8_t *requester_info, size_t requester_info_length,
                             uint8_t *opaque_data, uint16_t opaque_data_length,
                             size_t *csr_len, uint8_t *csr_pointer);

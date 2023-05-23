@@ -992,23 +992,23 @@ bool libspdm_read_requester_public_key(uint16_t req_base_asym_alg,
 }
 
 #if LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP
-bool libspdm_read_cached_requester_info(uint8_t **req_info, size_t *req_info_length)
+bool libspdm_read_cached_last_csr_request(uint8_t **last_csr_request, size_t *last_csr_request_len)
 {
     bool res;
     char *file;
 
-    file = "cached_req_info";
-    res = libspdm_read_input_file(file, (void **)req_info, req_info_length);
+    file = "cached_last_csr_request";
+    res = libspdm_read_input_file(file, (void **)last_csr_request, last_csr_request_len);
     return res;
 }
 
-bool libspdm_cache_requester_info(uint8_t *req_info, size_t req_info_length)
+bool libspdm_cache_last_csr_request(const uint8_t *last_csr_request, size_t last_csr_request_len)
 {
     bool res;
     char *file;
 
-    file = "cached_req_info";
-    res = libspdm_write_output_file(file, req_info, req_info_length);
+    file = "cached_last_csr_request";
+    res = libspdm_write_output_file(file, last_csr_request, last_csr_request_len);
 
     return res;
 }
@@ -1054,6 +1054,7 @@ bool libspdm_read_cached_csr(uint32_t base_asym_algo, uint8_t **csr_pointer, siz
 }
 
 bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *need_reset,
+                     const void *request, size_t request_size,
                      uint8_t *requester_info, size_t requester_info_length,
                      uint8_t *opaque_data, uint16_t opaque_data_length,
                      size_t *csr_len, uint8_t *csr_pointer)
@@ -1063,8 +1064,8 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
     size_t asym_nid;
     void *context;
 
-    uint8_t *cached_req_info;
-    size_t cached_req_info_length;
+    uint8_t *cached_last_csr_request;
+    size_t cached_last_request_len;
     uint8_t *cached_csr;
     size_t csr_buffer_size;
 
@@ -1072,19 +1073,20 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
 
     /*device gen csr need reset*/
     if (*need_reset) {
-        result = libspdm_read_cached_requester_info(&cached_req_info, &cached_req_info_length);
+        result = libspdm_read_cached_last_csr_request(&cached_last_csr_request,
+                                                      &cached_last_request_len);
 
-        /*get the cached requester info and csr*/
+        /*get the cached last csr request and csr*/
         if ((result) &&
-            (cached_req_info_length == requester_info_length) &&
-            (libspdm_consttime_is_mem_equal(cached_req_info, requester_info,
-                                            requester_info_length)) &&
+            (cached_last_request_len == request_size) &&
+            (libspdm_consttime_is_mem_equal(cached_last_csr_request, request,
+                                            request_size)) &&
             (libspdm_read_cached_csr(base_asym_algo, &cached_csr, csr_len))) {
 
             /*get and save cached csr*/
             if (csr_buffer_size < *csr_len) {
                 free(cached_csr);
-                free(cached_req_info);
+                free(cached_last_csr_request);
                 LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                                "csr buffer is too small to sotre cached csr! \n"));
                 return false;
@@ -1096,15 +1098,15 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
             *need_reset = false;
 
             free(cached_csr);
-            free(cached_req_info);
+            free(cached_last_csr_request);
             return true;
         } else {
-            if (cached_req_info != NULL) {
-                free(cached_req_info);
+            if (cached_last_csr_request != NULL) {
+                free(cached_last_csr_request);
             }
 
-            /*device need reset this time: cache the req_info */
-            result = libspdm_cache_requester_info(requester_info, requester_info_length);
+            /*device need reset this time: cache the last_csr_request */
+            result = libspdm_cache_last_csr_request(request, request_size);
             if (!result) {
                 return result;
             }

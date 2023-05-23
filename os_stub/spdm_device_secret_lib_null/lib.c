@@ -110,6 +110,7 @@ bool libspdm_write_certificate_to_nvm(uint8_t slot_id, const void * cert_chain,
 
 #if LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP
 bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *need_reset,
+                     const void *request, size_t request_size,
                      uint8_t *requester_info, size_t requester_info_length,
                      uint8_t *opaque_data, uint16_t opaque_data_length,
                      size_t *csr_len, uint8_t *csr_pointer)
