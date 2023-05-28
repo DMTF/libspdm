@@ -190,6 +190,13 @@ libspdm_return_t libspdm_get_response_capabilities(libspdm_context_t *spdm_conte
                                                    response_size, response);
         }
     }
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
+        if (spdm_request->ct_exponent > LIBSPDM_MAX_CT_EXPONENT) {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                                   response_size, response);
+        }
+    }
 
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                                                   spdm_request->header.request_response_code);
