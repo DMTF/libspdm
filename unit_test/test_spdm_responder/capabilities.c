@@ -109,10 +109,9 @@ spdm_get_capabilities_request_t m_libspdm_get_capabilities_request7 = {
         SPDM_GET_CAPABILITIES,
     }, /*header*/
     0x00, /*reserved*/
-    0x01, /*ct_exponent*/
+    LIBSPDM_MAX_CT_EXPONENT + 1, /*Illegal ct_exponent*/
     0x0000, /*reserved, 2 bytes*/
-    (SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_FRESH_CAP |
-     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | /*flags*/
+    (0x100000 | SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP | /*flags*/
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP |
      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP |
@@ -623,8 +622,37 @@ void libspdm_test_responder_capabilities_case6(void **state)
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
+/**
+ * Test 7: Requester sets a CTExponent value that is larger than LIBSPDM_MAX_CT_EXPONENT.
+ * Expected behavior: returns with error code SPDM_ERROR_CODE_INVALID_REQUEST.
+ **/
 void libspdm_test_responder_capabilities_case7(void **state)
 {
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_capabilities_response_t *spdm_response;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x7;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_capabilities(
+        spdm_context, m_libspdm_get_capabilities_request7_size,
+        &m_libspdm_get_capabilities_request7, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(m_libspdm_get_capabilities_request7.header.spdm_version,
+                     spdm_response->header.spdm_version);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.param2, 0);
 }
 
 void libspdm_test_responder_capabilities_case8(void **state)
