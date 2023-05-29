@@ -1689,7 +1689,7 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
         m_libspdm_opaque_data_size = sizeof(spdm_general_opaque_data_table_header_t);
 
         for (element_index = 0; element_index < element_num; element_index++) {
-            opaque_element_table_header->id = SPDM_REGISTRY_ID_JEDEC;
+            opaque_element_table_header->id = SPDM_REGISTRY_ID_MAX;
             opaque_element_table_header->vendor_len = 0;
             opaque_element_data_len = (uint16_t)strlen("libspdm");;
 
