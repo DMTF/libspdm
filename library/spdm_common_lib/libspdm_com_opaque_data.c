@@ -135,7 +135,7 @@ bool libspdm_get_element_from_opaque_data(libspdm_context_t *spdm_context,
     result = false;
 
     /*check parameter in*/
-    if (element_id > SPDM_REGISTRY_ID_JEDEC) {
+    if (element_id > SPDM_REGISTRY_ID_MAX) {
         return false;
     }
     if ((data_in_size == 0) || (data_in == NULL)) {
@@ -183,7 +183,7 @@ bool libspdm_get_element_from_opaque_data(libspdm_context_t *spdm_context,
         }
 
         /*check element header id*/
-        if ((opaque_element_table_header->id > SPDM_REGISTRY_ID_JEDEC) ||
+        if ((opaque_element_table_header->id > SPDM_REGISTRY_ID_MAX) ||
             (opaque_element_table_header->vendor_len != 0)) {
             return false;
         }
@@ -290,7 +290,7 @@ bool libspdm_process_general_opaque_data_check(libspdm_context_t *spdm_context,
                 }
 
                 /*check element header id*/
-                if (opaque_element_table_header->id > SPDM_REGISTRY_ID_JEDEC) {
+                if (opaque_element_table_header->id > SPDM_REGISTRY_ID_MAX) {
                     return false;
                 }
 
