@@ -115,6 +115,15 @@ libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
     requester_info = (void *)((size_t)(spdm_request + 1));
 
     opaque_data = (void *)(requester_info + requester_info_length);
+    if (opaque_data_length != 0) {
+        result = libspdm_process_general_opaque_data_check(spdm_context, opaque_data_length,
+                                                           opaque_data);
+        if (!result) {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                                   response_size, response);
+        }
+    }
 
     need_reset = libspdm_is_capabilities_flag_supported(
         spdm_context, false, 0,

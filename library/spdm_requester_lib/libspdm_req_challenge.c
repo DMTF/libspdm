@@ -254,8 +254,14 @@ static libspdm_return_t libspdm_try_challenge(libspdm_context_t *spdm_context,
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
-
     ptr += sizeof(uint16_t);
+    if (opaque_length != 0) {
+        result = libspdm_process_general_opaque_data_check(spdm_context, opaque_length, ptr);
+        if (!result) {
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+            goto receive_done;
+        }
+    }
 
     status = libspdm_append_message_c(spdm_context, spdm_request, spdm_request_size);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {

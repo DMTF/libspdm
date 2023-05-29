@@ -989,6 +989,19 @@ bool libspdm_get_element_from_opaque_data(libspdm_context_t *spdm_context,
                                           const void **get_element_ptr, size_t *get_element_len);
 
 /**
+ *  Process general opaque data check
+ *
+ * @param  data_in_size                  size in bytes of the data_in.
+ * @param  data_in                       A pointer to the buffer to store the opaque data version selection.
+ *
+ * @retval true                           check opaque data successfully
+ * @retval false                          check opaque data failed
+ **/
+bool libspdm_process_general_opaque_data_check(libspdm_context_t *spdm_context,
+                                               size_t data_in_size,
+                                               void *data_in);
+
+/**
  * Return the size in bytes of opaque data supported version.
  *
  * This function should be called in libspdm_process_opaque_data_supported_version_data.
