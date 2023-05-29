@@ -957,7 +957,7 @@ void libspdm_test_process_opaque_data_supported_version_data_case11(void **state
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
 
     /*make element id wrong*/
-    element_num = 10;
+    element_num = SPDM_REGISTRY_ID_MAX + 2;
     opaque_data_size =
         libspdm_get_multi_element_opaque_data_supported_version_data_size(
             spdm_context,
@@ -1036,7 +1036,7 @@ void libspdm_test_process_opaque_data_supported_version_data_case13(void **state
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
 
     /*make element id wrong*/
-    element_num = 10;
+    element_num = SPDM_REGISTRY_ID_MAX + 2;
     opaque_data_size =
         libspdm_get_multi_element_opaque_data_supported_version_data_size(
             spdm_context,
@@ -1124,7 +1124,7 @@ void libspdm_test_process_opaque_data_selection_version_data_case15(void **state
         SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     /*make element id wrong*/
-    element_num = 10;
+    element_num = SPDM_REGISTRY_ID_MAX + 2;
     opaque_data_size =
         libspdm_get_multi_element_opaque_data_version_selection_data_size(
             spdm_context,
@@ -1210,7 +1210,7 @@ void libspdm_test_process_opaque_data_selection_version_data_case17(void **state
         SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     /*make element id wrong*/
-    element_num = 10;
+    element_num = SPDM_REGISTRY_ID_MAX + 2;
     opaque_data_size =
         libspdm_get_multi_element_opaque_data_version_selection_data_size(
             spdm_context,
