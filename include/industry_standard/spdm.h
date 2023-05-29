@@ -365,7 +365,9 @@ typedef struct {
 #define SPDM_REGISTRY_ID_MIPI 6
 #define SPDM_REGISTRY_ID_CXL 7
 #define SPDM_REGISTRY_ID_JEDEC 8
-#define SPDM_REGISTRY_ID_MAX  8
+#define SPDM_REGISTRY_ID_VESA 9
+#define SPDM_REGISTRY_ID_IANA_CBOR 0xa
+#define SPDM_REGISTRY_ID_MAX  0xa
 
 /* SPDM GET_DIGESTS request */
 typedef struct {
