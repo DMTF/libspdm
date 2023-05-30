@@ -449,7 +449,7 @@ spdm_get_capabilities_request_t m_libspdm_get_capabilities_request26 = {
     (SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP|
      SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP),
     LIBSPDM_DATA_TRANSFER_SIZE,
-    LIBSPDM_MAX_SPDM_MSG_SIZE - 1,
+    LIBSPDM_DATA_TRANSFER_SIZE - 1,
 };
 size_t m_libspdm_get_capabilities_request26_size = sizeof(m_libspdm_get_capabilities_request26);
 

@@ -1045,7 +1045,7 @@ static libspdm_return_t libspdm_requester_get_capabilities_test_receive_message(
         spdm_response->ct_exponent = 0;
         spdm_response->flags = LIBSPDM_DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_12;
         spdm_response->data_transfer_size = LIBSPDM_DATA_TRANSFER_SIZE;
-        spdm_response->max_spdm_msg_size = LIBSPDM_MAX_SPDM_MSG_SIZE - 1;
+        spdm_response->max_spdm_msg_size = LIBSPDM_DATA_TRANSFER_SIZE - 1;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, spdm_response_size,
