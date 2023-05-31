@@ -924,7 +924,7 @@ void libspdm_test_responder_psk_exchange_case10(void **state)
     size_t response_size;
     uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
-    size_t measurement_summary_hash_size;
+    uint32_t measurement_summary_hash_size;
     spdm_psk_exchange_response_t *spdm_response;
     void *data1;
     size_t data_size1;
@@ -1019,7 +1019,7 @@ void libspdm_test_responder_psk_exchange_case10(void **state)
         spdm_context->connection_info.algorithm.measurement_hash_algo,
         m_libspdm_psk_exchange_request4.header.param1,
         measurement_hash,
-        &measurement_summary_hash_size);
+        measurement_summary_hash_size);
     assert_memory_equal(
         (uint8_t *)response +
         sizeof(spdm_psk_exchange_response_t),
@@ -1041,7 +1041,7 @@ void libspdm_test_responder_psk_exchange_case11(void **state)
     size_t response_size;
     uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
-    size_t measurement_summary_hash_size;
+    uint32_t measurement_summary_hash_size;
     spdm_psk_exchange_response_t *spdm_response;
     void *data1;
     size_t data_size1;
@@ -1136,7 +1136,7 @@ void libspdm_test_responder_psk_exchange_case11(void **state)
         spdm_context->connection_info.algorithm.measurement_hash_algo,
         m_libspdm_psk_exchange_request5.header.param1,
         measurement_hash,
-        &measurement_summary_hash_size);
+        measurement_summary_hash_size);
     assert_memory_equal(
         (uint8_t *)response +
         sizeof(spdm_psk_exchange_response_t),

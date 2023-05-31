@@ -82,7 +82,7 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
     spdm_psk_exchange_response_t *spdm_response;
     bool result;
     uint32_t session_id;
-    size_t measurement_summary_hash_size;
+    uint32_t measurement_summary_hash_size;
     uint32_t hmac_size;
     const uint8_t *cptr;
     uint8_t *ptr;
@@ -303,7 +303,7 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
             spdm_context->connection_info.algorithm.measurement_hash_algo,
             spdm_request->header.param1,
             ptr,
-            &measurement_summary_hash_size);
+            measurement_summary_hash_size);
     }
     else {
         result = true;

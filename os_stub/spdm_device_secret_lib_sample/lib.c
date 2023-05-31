@@ -1602,7 +1602,7 @@ bool libspdm_generate_measurement_summary_hash(
     uint8_t measurement_specification, uint32_t measurement_hash_algo,
     uint8_t measurement_summary_hash_type,
     uint8_t *measurement_summary_hash,
-    size_t *measurement_summary_hash_size)
+    uint32_t measurement_summary_hash_size)
 {
     uint8_t measurement_data[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
     size_t index;
@@ -1621,7 +1621,7 @@ bool libspdm_generate_measurement_summary_hash(
 
     case SPDM_CHALLENGE_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH:
     case SPDM_CHALLENGE_REQUEST_ALL_MEASUREMENTS_HASH:
-        if (*measurement_summary_hash_size != libspdm_get_hash_size(base_hash_algo)) {
+        if (measurement_summary_hash_size != libspdm_get_hash_size(base_hash_algo)) {
             return false;
         }
 

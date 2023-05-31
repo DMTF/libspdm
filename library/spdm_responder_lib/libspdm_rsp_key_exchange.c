@@ -177,7 +177,7 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
     const spdm_key_exchange_request_t *spdm_request;
     spdm_key_exchange_response_t *spdm_response;
     size_t dhe_key_size;
-    size_t measurement_summary_hash_size;
+    uint32_t measurement_summary_hash_size;
     uint32_t signature_size;
     uint32_t hmac_size;
     const uint8_t *cptr;
@@ -478,7 +478,7 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
             spdm_context->connection_info.algorithm.measurement_hash_algo,
             spdm_request->header.param1,
             ptr,
-            &measurement_summary_hash_size);
+            measurement_summary_hash_size);
     }
     else {
         result = true;
