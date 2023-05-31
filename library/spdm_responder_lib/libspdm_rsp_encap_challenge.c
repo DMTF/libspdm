@@ -76,7 +76,7 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
     const uint8_t *ptr;
     const void *cert_chain_hash;
     size_t hash_size;
-    size_t measurement_summary_hash_size;
+    uint32_t measurement_summary_hash_size;
     uint16_t opaque_length;
     const void *signature;
     size_t signature_size;

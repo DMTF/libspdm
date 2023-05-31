@@ -21,7 +21,7 @@ libspdm_return_t libspdm_get_response_challenge_auth(libspdm_context_t *spdm_con
     size_t signature_size;
     uint8_t slot_id;
     uint32_t hash_size;
-    size_t measurement_summary_hash_size;
+    uint32_t measurement_summary_hash_size;
     uint8_t *ptr;
     size_t total_size;
     uint8_t auth_attribute;
@@ -204,7 +204,7 @@ libspdm_return_t libspdm_get_response_challenge_auth(libspdm_context_t *spdm_con
             spdm_context->connection_info.algorithm.measurement_hash_algo,
             spdm_request->header.param2,
             ptr,
-            &measurement_summary_hash_size);
+            measurement_summary_hash_size);
     }
     else {
         result = true;

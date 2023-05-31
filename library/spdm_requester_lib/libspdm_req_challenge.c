@@ -61,7 +61,7 @@ static libspdm_return_t libspdm_try_challenge(libspdm_context_t *spdm_context,
     uint8_t *ptr;
     void *cert_chain_hash;
     size_t hash_size;
-    size_t measurement_summary_hash_size;
+    uint32_t measurement_summary_hash_size;
     void *nonce;
     void *measurement_summary_hash;
     uint16_t opaque_length;

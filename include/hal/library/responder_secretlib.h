@@ -135,7 +135,7 @@ extern bool libspdm_generate_measurement_summary_hash(
     uint32_t measurement_hash_algo,
     uint8_t measurement_summary_hash_type,
     uint8_t *measurement_summary_hash,
-    size_t *measurement_summary_hash_size);
+    uint32_t measurement_summary_hash_size);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
