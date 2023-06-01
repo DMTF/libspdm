@@ -242,7 +242,7 @@ bool libspdm_get_element_from_opaque_data(libspdm_context_t *spdm_context,
  **/
 bool libspdm_process_general_opaque_data_check(libspdm_context_t *spdm_context,
                                                size_t data_in_size,
-                                               void *data_in)
+                                               const void *data_in)
 {
     const spdm_general_opaque_data_table_header_t
     *spdm_general_opaque_data_table_header;
