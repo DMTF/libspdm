@@ -216,6 +216,13 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
     if (spdm_request->opaque_length != 0) {
         cptr = (const uint8_t *)request + sizeof(spdm_psk_exchange_request_t) +
                spdm_request->psk_hint_length + spdm_request->context_length;
+        result = libspdm_process_general_opaque_data_check(spdm_context,
+                                                           spdm_request->opaque_length, cptr);
+        if (!result) {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                                   response_size, response);
+        }
         status = libspdm_process_opaque_data_supported_version_data(
             spdm_context, spdm_request->opaque_length, cptr);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {

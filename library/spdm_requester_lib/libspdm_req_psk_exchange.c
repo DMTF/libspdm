@@ -371,6 +371,12 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
     ptr = (uint8_t *)spdm_response + sizeof(spdm_psk_exchange_response_t) +
           measurement_summary_hash_size + spdm_response->context_length;
     if (spdm_response->opaque_length != 0) {
+        result = libspdm_process_general_opaque_data_check(spdm_context,
+                                                           spdm_response->opaque_length, ptr);
+        if (!result) {
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+            goto receive_done;
+        }
         status = libspdm_process_opaque_data_version_selection_data(
             spdm_context, spdm_response->opaque_length, ptr);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
