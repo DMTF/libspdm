@@ -274,7 +274,8 @@ void libspdm_free_session_id(libspdm_context_t *spdm_context, uint32_t session_i
         if (session_info[index].session_id == session_id) {
             libspdm_session_info_init(spdm_context,
                                       &session_info[index],
-                                      INVALID_SESSION_ID, false);
+                                      INVALID_SESSION_ID,
+                                      session_info[index].use_psk);
             return;
         }
     }
