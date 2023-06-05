@@ -1057,7 +1057,8 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
                      const void *request, size_t request_size,
                      uint8_t *requester_info, size_t requester_info_length,
                      uint8_t *opaque_data, uint16_t opaque_data_length,
-                     size_t *csr_len, uint8_t *csr_pointer)
+                     size_t *csr_len, uint8_t *csr_pointer,
+                     bool is_device_cert_model)
 {
     bool result;
     size_t hash_nid;
@@ -1139,6 +1140,7 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
 
         result = libspdm_gen_x509_csr(hash_nid, asym_nid,
                                       requester_info, requester_info_length,
+                                      !is_device_cert_model,
                                       context, subject_name,
                                       csr_len, csr_pointer);
         libspdm_asym_free(base_asym_algo, context);
@@ -1157,6 +1159,7 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
 
     result = libspdm_gen_x509_csr(hash_nid, asym_nid,
                                   requester_info, requester_info_length,
+                                  !is_device_cert_model,
                                   context, subject_name,
                                   csr_len, csr_pointer);
     libspdm_asym_free(base_asym_algo, context);

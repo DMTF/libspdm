@@ -26,6 +26,7 @@ libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
     uint8_t *opaque_data;
     uint8_t *requester_info;
     bool need_reset;
+    bool is_device_cert_model;
 
     spdm_request = request;
 
@@ -142,6 +143,13 @@ libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
     spdm_response = response;
     libspdm_zero_mem(response, *response_size);
 
+    is_device_cert_model = false;
+
+    if((spdm_context->local_context.capability.flags &
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP) == 0) {
+        is_device_cert_model = true;
+    }
+
     csr_len = *response_size - sizeof(spdm_csr_response_t);
     csr_p = (uint8_t*)(spdm_response + 1);
     result = libspdm_gen_csr(spdm_context->connection_info.algorithm.base_hash_algo,
@@ -149,7 +157,7 @@ libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
                              &need_reset, request, request_size,
                              requester_info, requester_info_length,
                              opaque_data, opaque_data_length,
-                             &csr_len, csr_p);
+                             &csr_len, csr_p, is_device_cert_model);
     if (!result) {
         return libspdm_generate_error_response(
             spdm_context,

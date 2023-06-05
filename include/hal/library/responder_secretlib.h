@@ -232,6 +232,9 @@ extern bool libspdm_responder_data_sign(
  *                              On output, csr_pointer is address for stored CSR.
  *                              The csr_pointer address will be changed.
  *
+ * @param[in]       is_device_cert_model  If true, the cert chain is DeviceCert model.
+ *                                        If false, the cert chain is AliasCert model.
+ *
  * @retval  true   Success.
  * @retval  false  Failed to gen CSR.
  **/
@@ -239,7 +242,8 @@ extern bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bo
                             const void *request, size_t request_size,
                             uint8_t *requester_info, size_t requester_info_length,
                             uint8_t *opaque_data, uint16_t opaque_data_length,
-                            size_t *csr_len, uint8_t *csr_pointer);
+                            size_t *csr_len, uint8_t *csr_pointer,
+                            bool is_device_cert_model);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP */
 
 #endif /* RESPONDER_SECRETLIB_H */
