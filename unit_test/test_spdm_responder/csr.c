@@ -144,10 +144,126 @@ void libspdm_test_clear_cached_last_request()
     libspdm_write_output_file(file, NULL, 0);
 }
 
+/*check the csr is consistent with the is_device_cert_model*/
+bool libspdm_check_csr_basic_constraints(uint8_t *csr, uint16_t csr_len, bool is_device_cert_model)
+{
+    bool result;
+    uint8_t *ptr;
+    uint16_t length;
+    size_t obj_len;
+    uint8_t *end;
+
+    /*basic_constraints: CA: false */
+    #define BASIC_CONSTRAINTS_STRING_FALSE {0x30, 0x00}
+    uint8_t basic_constraints_false[] = BASIC_CONSTRAINTS_STRING_FALSE;
+
+    /*basic_constraints: CA: true */
+    #define BASIC_CONSTRAINTS_STRING_TRUE {0x30, 0x03, 0x01, 0x01, 0xFF}
+    uint8_t basic_constraints_true[] = BASIC_CONSTRAINTS_STRING_TRUE;
+
+    length = csr_len;
+    ptr = (uint8_t*)csr;
+    obj_len = 0;
+    end = ptr + length;
+
+    result = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                                  LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+    if (!result) {
+        return false;
+    }
+
+    result = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                                  LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+    if (!result) {
+        return false;
+    }
+
+    end = ptr + obj_len;
+
+    /*version*/
+    result = libspdm_asn1_get_tag(&ptr, end, &obj_len, LIBSPDM_CRYPTO_ASN1_INTEGER);
+    if (!result) {
+        return false;
+    }
+    ptr += obj_len;
+
+    /*subject*/
+    result = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                                  LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+    if (!result) {
+        return false;
+    }
+    ptr += obj_len;
+
+    /*PKinfo*/
+    result = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                                  LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+    if (!result) {
+        return false;
+    }
+    ptr += obj_len;
+
+    /*attribute*/
+    result = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                                  LIBSPDM_CRYPTO_ASN1_CONTEXT_SPECIFIC |
+                                  LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+    if (!result) {
+        return false;
+    }
+
+    result = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                                  LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+    if (!result) {
+        return false;
+    }
+    result = libspdm_asn1_get_tag(&ptr, end, &obj_len, LIBSPDM_CRYPTO_ASN1_OID);
+    if (!result) {
+        return false;
+    }
+    ptr += obj_len;
+
+    result = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                                  LIBSPDM_CRYPTO_ASN1_SET | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+    if (!result) {
+        return false;
+    }
+    result = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                                  LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+    if (!result) {
+        return false;
+    }
+    result = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                                  LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+    if (!result) {
+        return false;
+    }
+    /*basic constriants oid*/
+    result = libspdm_asn1_get_tag(&ptr, end, &obj_len, LIBSPDM_CRYPTO_ASN1_OID);
+    if (!result) {
+        return false;
+    }
+    ptr += obj_len;
+
+    /*basic constriants*/
+    result = libspdm_asn1_get_tag(&ptr, end, &obj_len, LIBSPDM_CRYPTO_ASN1_OCTET_STRING);
+    if (!result) {
+        return false;
+    }
+
+    if (is_device_cert_model) {
+        result = libspdm_consttime_is_mem_equal(
+            ptr, basic_constraints_false, sizeof(basic_constraints_false));
+    } else {
+        result = libspdm_consttime_is_mem_equal(
+            ptr, basic_constraints_true, sizeof(basic_constraints_true));
+    }
+
+    return result;
+}
 
 /**
  * Test 1: receives a valid GET_CSR request message from Requester
- * Expected Behavior: produces a valid CSR response message
+ * Expected Behavior: produces a valid CSR response message with device_cert mode
  **/
 void libspdm_test_responder_csr_case1(void **state)
 {
@@ -159,6 +275,9 @@ void libspdm_test_responder_csr_case1(void **state)
     spdm_csr_response_t *spdm_response;
     spdm_get_csr_request_t *m_libspdm_get_csr_request;
     uint8_t wrong_csr[LIBSPDM_MAX_CSR_SIZE];
+    bool result;
+    bool is_device_cert_model;
+
     libspdm_zero_mem(wrong_csr, LIBSPDM_MAX_CSR_SIZE);
 
     spdm_test_context = *state;
@@ -176,6 +295,9 @@ void libspdm_test_responder_csr_case1(void **state)
     spdm_context->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
 
+    is_device_cert_model = true;
+    spdm_context->local_context.capability.flags &=
+        ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP;
 
     m_libspdm_get_csr_request = malloc(sizeof(spdm_get_csr_request_t));
 
@@ -203,6 +325,11 @@ void libspdm_test_responder_csr_case1(void **state)
 
     /*check returned CSR not zero */
     assert_memory_not_equal(spdm_response + 1, wrong_csr, spdm_response->csr_length);
+
+    /*check the resulting CSR shall be for a Device Certificate*/
+    result = libspdm_check_csr_basic_constraints((uint8_t *)(spdm_response + 1),
+                                                 spdm_response->csr_length, is_device_cert_model);
+    assert_true(result);
 
     free(m_libspdm_get_csr_request);
 }
@@ -961,6 +1088,80 @@ void libspdm_test_responder_csr_case10(void **state)
     free(m_libspdm_get_csr_request);
 }
 
+/**
+ * Test 11: receives a valid GET_CSR request message from Requester
+ * Expected Behavior: produces a valid CSR response message with alias_cert mode
+ **/
+void libspdm_test_responder_csr_case11(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_csr_response_t *spdm_response;
+    spdm_get_csr_request_t *m_libspdm_get_csr_request;
+    uint8_t wrong_csr[LIBSPDM_MAX_CSR_SIZE];
+    bool result;
+    bool is_device_cert_model;
+
+    libspdm_zero_mem(wrong_csr, LIBSPDM_MAX_CSR_SIZE);
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xB;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CSR_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo =
+        m_libspdm_use_asym_algo;
+
+    /*set alias cert mode*/
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP;
+    is_device_cert_model = false;
+
+    m_libspdm_get_csr_request = malloc(sizeof(spdm_get_csr_request_t));
+
+    m_libspdm_get_csr_request->header.spdm_version = SPDM_MESSAGE_VERSION_12;
+    m_libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
+    m_libspdm_get_csr_request->header.param1 = 0;
+    m_libspdm_get_csr_request->header.param2 = 0;
+
+    m_libspdm_get_csr_request->opaque_data_length = 0;
+    m_libspdm_get_csr_request->requester_info_length = 0;
+
+    size_t m_libspdm_get_csr_request_size = sizeof(spdm_get_csr_request_t);
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_csr(spdm_context,
+                                      m_libspdm_get_csr_request_size,
+                                      m_libspdm_get_csr_request,
+                                      &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    spdm_response = (void *)response;
+    assert_int_equal(response_size, sizeof(spdm_csr_response_t) + spdm_response->csr_length);
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_CSR);
+
+    /*check returned CSR not zero */
+    assert_memory_not_equal(spdm_response + 1, wrong_csr, spdm_response->csr_length);
+
+    /*check the resulting CSR shall be for a Device Certificate CA.*/
+    result = libspdm_check_csr_basic_constraints((uint8_t *)(spdm_response + 1),
+                                                 spdm_response->csr_length, is_device_cert_model);
+    assert_true(result);
+
+    free(m_libspdm_get_csr_request);
+}
+
 libspdm_test_context_t m_libspdm_responder_csr_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     false,
@@ -969,7 +1170,7 @@ libspdm_test_context_t m_libspdm_responder_csr_test_context = {
 int libspdm_responder_csr_test_main(void)
 {
     const struct CMUnitTest spdm_responder_csr_tests[] = {
-        /* Success Case for csr response  */
+        /* Success Case for csr response with device_cert mode */
         cmocka_unit_test(libspdm_test_responder_csr_case1),
         /* Bad request size*/
         cmocka_unit_test(libspdm_test_responder_csr_case2),
@@ -989,6 +1190,8 @@ int libspdm_responder_csr_test_main(void)
         cmocka_unit_test(libspdm_test_responder_csr_case9),
         /* Failed Case  OpaqueDataFmt1, When AlignPadding is not zero*/
         cmocka_unit_test(libspdm_test_responder_csr_case10),
+        /* Success Case for csr response with alias_cert mode */
+        cmocka_unit_test(libspdm_test_responder_csr_case11),
     };
 
     libspdm_setup_test_context(&m_libspdm_responder_csr_test_context);
