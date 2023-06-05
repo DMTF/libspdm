@@ -1564,8 +1564,7 @@ int32_t libspdm_x509_compare_date_time(const void *date_time1, const void *date_
     if (date_time1 == NULL || date_time2 == NULL) {
         return -2;
     }
-    if (libspdm_consttime_is_mem_equal(date_time2, date_time1, sizeof(mbedtls_x509_time)) ==
-        0) {
+    if (libspdm_consttime_is_mem_equal(date_time2, date_time1, sizeof(mbedtls_x509_time))) {
         return 0;
     }
     if (libspdm_internal_x509_check_time((const mbedtls_x509_time *)date_time1,
