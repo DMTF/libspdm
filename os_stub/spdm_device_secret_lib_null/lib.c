@@ -124,7 +124,8 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
                      const void *request, size_t request_size,
                      uint8_t *requester_info, size_t requester_info_length,
                      uint8_t *opaque_data, uint16_t opaque_data_length,
-                     size_t *csr_len, uint8_t *csr_pointer)
+                     size_t *csr_len, uint8_t *csr_pointer,
+                     bool is_device_cert_model)
 {
     return false;
 }

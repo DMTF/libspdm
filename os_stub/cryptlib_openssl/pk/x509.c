@@ -2401,6 +2401,8 @@ bool libspdm_set_attribute_for_req(X509_REQ *req, uint8_t *req_info, size_t req_
  * @param[in]      requester_info        requester info to gen CSR
  * @param[in]      requester_info_length The len of requester info
  *
+ * @param[in]       is_ca                if true, set basic_constraints: CA:true; Otherwise, set to false.
+ *
  * @param[in]      context               Pointer to asymmetric context
  * @param[in]      subject_name          Subject name: should be break with ',' in the middle
  *                                       example: "C=AA,CN=BB"
@@ -2412,17 +2414,18 @@ bool libspdm_set_attribute_for_req(X509_REQ *req, uint8_t *req_info, size_t req_
  * "SN","givenName","GN", "initials", "pseudonym", "generationQualifier", "domainComponent", "DC"}.
  * Note: The object of C and countryName should be CSR Supported Country Codes
  *
- * @param[in]      csr_len               For input, csr_len is the size of store CSR buffer.
- *                                       For output, csr_len is CSR len for DER format
- * @param[in]      csr_pointer           For input, csr_pointer is buffer address to store CSR.
- *                                       For output, csr_pointer is address for stored CSR.
- *                                       The csr_pointer address will be changed.
+ * @param[in, out]      csr_len               For input, csr_len is the size of store CSR buffer.
+ *                                            For output, csr_len is CSR len for DER format
+ * @param[in, out]      csr_pointer           For input, csr_pointer is buffer address to store CSR.
+ *                                            For output, csr_pointer is address for stored CSR.
+ *                                            The csr_pointer address will be changed.
  *
  * @retval  true   Success.
  * @retval  false  Failed to gen CSR.
  **/
 bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
                           uint8_t *requester_info, size_t requester_info_length,
+                          bool is_ca,
                           void *context, char *subject_name,
                           size_t *csr_len, uint8_t *csr_pointer)
 {
@@ -2434,7 +2437,11 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
     EVP_PKEY *private_key;
     const EVP_MD *md;
     uint8_t *csr_p;
+    STACK_OF(X509_EXTENSION) *exts;
+    X509_EXTENSION *basic_constraints_ext;
 
+    exts = NULL;
+    basic_constraints_ext = NULL;
     ret = 0;
     version = 0;
 
@@ -2538,6 +2545,27 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
         ret = 0;
         goto free_all;
     }
+
+    /*gen basicConstraints*/
+    exts = sk_X509_EXTENSION_new_null();
+    if (!exts) {
+        ret = 0;
+        goto free_all;
+    }
+
+    basic_constraints_ext = X509V3_EXT_conf_nid(
+        NULL, NULL, NID_basic_constraints,
+        is_ca ? "CA:TRUE" : "CA:FALSE");
+    if (!basic_constraints_ext) {
+        sk_X509_EXTENSION_free(exts);
+        ret = 0;
+        goto free_all;
+    }
+
+    /*set basicConstraints*/
+    sk_X509_EXTENSION_push(exts, basic_constraints_ext);
+    X509_REQ_add_extensions(x509_req, exts);
+    sk_X509_EXTENSION_free(exts);
 
     /*sign for x509 req*/
     ret = X509_REQ_sign(x509_req, private_key, md);

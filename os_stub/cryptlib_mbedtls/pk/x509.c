@@ -19,6 +19,7 @@
 #include <mbedtls/x509_csr.h>
 #include <mbedtls/entropy.h>
 #include <mbedtls/ctr_drbg.h>
+#include <mbedtls/oid.h>
 #include <string.h>
 
 #if LIBSPDM_CERT_PARSE_SUPPORT
@@ -1701,6 +1702,8 @@ bool libspdm_set_attribute_for_req(mbedtls_x509write_csr *req, uint8_t *req_info
  * @param[in]      requester_info        requester info to gen CSR
  * @param[in]      requester_info_length The len of requester info
  *
+ * @param[in]       is_ca                if true, set basic_constraints: CA:true; Otherwise, set to false.
+ *
  * @param[in]      context               Pointer to asymmetric context
  * @param[in]      subject_name          Subject name: should be break with ',' in the middle
  *                                       example: "C=AA,CN=BB"
@@ -1712,17 +1715,18 @@ bool libspdm_set_attribute_for_req(mbedtls_x509write_csr *req, uint8_t *req_info
  * "SN","givenName","GN", "initials", "pseudonym", "generationQualifier", "domainComponent", "DC"}.
  * Note: The object of C and countryName should be CSR Supported Country Codes
  *
- * @param[in]      csr_len               For input, csr_len is the size of store CSR buffer.
- *                                       For output, csr_len is CSR len for DER format
- * @param[in]      csr_pointer           For input, csr_pointer is buffer address to store CSR.
- *                                       For output, csr_pointer is address for stored CSR.
- *                                       The csr_pointer address will be changed.
+ * @param[in, out]      csr_len               For input, csr_len is the size of store CSR buffer.
+ *                                            For output, csr_len is CSR len for DER format
+ * @param[in, out]      csr_pointer           For input, csr_pointer is buffer address to store CSR.
+ *                                            For output, csr_pointer is address for stored CSR.
+ *                                            The csr_pointer address will be changed.
  *
  * @retval  true   Success.
  * @retval  false  Failed to gen CSR.
  **/
 bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
                           uint8_t *requester_info, size_t requester_info_length,
+                          bool is_ca,
                           void *context, char *subject_name,
                           size_t *csr_len, uint8_t *csr_pointer)
 {
@@ -1733,6 +1737,14 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
     mbedtls_x509write_csr req;
     mbedtls_md_type_t md_alg;
     mbedtls_pk_context key;
+
+    /*basic_constraints: CA: false */
+    #define BASIC_CONSTRAINTS_STRING_FALSE {0x30, 0x00}
+    uint8_t basic_constraints_false[] = BASIC_CONSTRAINTS_STRING_FALSE;
+
+    /*basic_constraints: CA: true */
+    #define BASIC_CONSTRAINTS_STRING_TRUE {0x30, 0x03, 0x01, 0x01, 0xFF}
+    uint8_t basic_constraints_true[] = BASIC_CONSTRAINTS_STRING_TRUE;
 
     /* Init */
     mbedtls_x509write_csr_init(&req);
@@ -1823,6 +1835,20 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
 
     /* Set key */
     mbedtls_x509write_csr_set_key(&req, &key);
+
+    /*set basicConstraints*/
+    if (mbedtls_x509write_csr_set_extension(&req, MBEDTLS_OID_BASIC_CONSTRAINTS,
+                                            MBEDTLS_OID_SIZE(MBEDTLS_OID_BASIC_CONSTRAINTS),
+                                            is_ca ? basic_constraints_true : basic_constraints_false,
+                                            is_ca ?
+                                            sizeof(basic_constraints_true) :
+                                            sizeof(basic_constraints_false)
+                                            ) != 0) {
+        ret = 1;
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                       "mbedtls_x509write_csr_set_extension set basicConstraints failed \n"));
+        goto free_all;
+    }
 
     /*csr data is written at the end of the buffer*/
     ret = mbedtls_x509write_csr_der(&req, csr_pointer, csr_buffer_size, libspdm_myrand, NULL);
