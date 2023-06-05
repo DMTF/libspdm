@@ -913,7 +913,7 @@ void libspdm_test_responder_key_exchange_case9(void **state)
         measurement_hash,
         measurement_summary_hash_size);
 
-    session_id = (m_libspdm_key_exchange_request1.req_session_id << 16) |
+    session_id = (m_libspdm_key_exchange_request4.req_session_id << 16) |
                  spdm_response->rsp_session_id;
     libspdm_free_session_id(spdm_context, session_id);
 
