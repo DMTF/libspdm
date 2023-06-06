@@ -38,6 +38,11 @@ void libspdm_test_responder_set_cetificate_rsp_case1(void **state)
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
 
+    spdm_context->local_context.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo =
+        m_libspdm_use_asym_algo;
+
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &cert_chain,
                                                     &cert_chain_size, NULL, NULL);
@@ -99,6 +104,11 @@ void libspdm_test_responder_set_cetificate_rsp_case2(void **state)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
+
+    spdm_context->local_context.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo =
+        m_libspdm_use_asym_algo;
 
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &cert_chain,
@@ -167,6 +177,11 @@ void libspdm_test_responder_set_cetificate_rsp_case3(void **state)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
+
+    spdm_context->local_context.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo =
+        m_libspdm_use_asym_algo;
 
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &cert_chain,
@@ -238,6 +253,11 @@ void libspdm_test_responder_set_cetificate_rsp_case4(void **state)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
+
+    spdm_context->local_context.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo =
+        m_libspdm_use_asym_algo;
 
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &cert_chain,
@@ -315,6 +335,11 @@ void libspdm_test_responder_set_cetificate_rsp_case5(void **state)
     spdm_context->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
 
+    spdm_context->local_context.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo =
+        m_libspdm_use_asym_algo;
+
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
     spdm_context->last_spdm_request_session_id_valid = true;
@@ -389,6 +414,11 @@ void libspdm_test_responder_set_cetificate_rsp_case6(void **state)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_INSTALL_RESET_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
+
+    spdm_context->local_context.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo =
+        m_libspdm_use_asym_algo;
 
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &cert_chain,
