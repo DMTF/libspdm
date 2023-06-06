@@ -10,7 +10,7 @@
 #if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
 
 /**
- * Test 1: receives a valid SET_CERTIFICATE request message from Requester to set cert in slot_id:0
+ * Test 1: receives a valid SET_CERTIFICATE request message from Requester to set cert in slot_id:0 with device_cert model
  * Expected Behavior: produces a valid SET_CERTIFICATE_RSP response message
  **/
 void libspdm_test_responder_set_cetificate_rsp_case1(void **state)
@@ -457,6 +457,80 @@ void libspdm_test_responder_set_cetificate_rsp_case6(void **state)
     free(m_libspdm_set_certificate_request);
 }
 
+/**
+ * Test 7: receives a valid SET_CERTIFICATE request message from Requester to set cert in slot_id:0 with alias_cert model
+ * Expected Behavior: produces a valid SET_CERTIFICATE_RSP response message
+ **/
+void libspdm_test_responder_set_cetificate_rsp_case7(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_set_certificate_response_t *spdm_response;
+    void *cert_chain;
+    size_t cert_chain_size;
+    spdm_set_certificate_request_t *m_libspdm_set_certificate_request;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x7;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->local_context.capability.flags &=
+        ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_INSTALL_RESET_CAP;
+
+    spdm_context->local_context.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo =
+        m_libspdm_use_asym_algo;
+
+    /*set alias cert mode*/
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP;
+    /*read alias cert*/
+    libspdm_read_responder_public_certificate_chain_alias_cert_till_dev_cert_ca(
+        m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
+        &cert_chain, &cert_chain_size, NULL, NULL);
+
+    m_libspdm_set_certificate_request = malloc(sizeof(spdm_set_certificate_request_t) +
+                                               cert_chain_size);
+
+    m_libspdm_set_certificate_request->header.spdm_version = SPDM_MESSAGE_VERSION_12;
+    m_libspdm_set_certificate_request->header.request_response_code = SPDM_SET_CERTIFICATE;
+    m_libspdm_set_certificate_request->header.param1 = 0;
+    m_libspdm_set_certificate_request->header.param2 = 0;
+
+    libspdm_copy_mem(m_libspdm_set_certificate_request + 1,
+                     LIBSPDM_MAX_CERT_CHAIN_SIZE,
+                     (uint8_t *)cert_chain, cert_chain_size);
+
+    size_t m_libspdm_set_certificate_request_size = sizeof(spdm_set_certificate_request_t) +
+                                                    cert_chain_size;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_set_certificate(spdm_context,
+                                                  m_libspdm_set_certificate_request_size,
+                                                  m_libspdm_set_certificate_request,
+                                                  &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_set_certificate_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_SET_CERTIFICATE_RSP);
+
+    free(cert_chain);
+    free(m_libspdm_set_certificate_request);
+}
+
 libspdm_test_context_t m_libspdm_responder_set_certificate_rsp_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     false,
@@ -465,7 +539,7 @@ libspdm_test_context_t m_libspdm_responder_set_certificate_rsp_test_context = {
 int libspdm_responder_set_certificate_rsp_test_main(void)
 {
     const struct CMUnitTest spdm_responder_set_cetificate_tests[] = {
-        /* Success Case for set_certificate to slot_id:0 */
+        /* Success Case for set_certificate to slot_id:0 with device_cert mode*/
         cmocka_unit_test(libspdm_test_responder_set_cetificate_rsp_case1),
         /* Bad request size*/
         cmocka_unit_test(libspdm_test_responder_set_cetificate_rsp_case2),
@@ -477,6 +551,8 @@ int libspdm_responder_set_certificate_rsp_test_main(void)
         cmocka_unit_test(libspdm_test_responder_set_cetificate_rsp_case5),
         /* Responder requires a reset to complete the SET_CERTIFICATE request */
         cmocka_unit_test(libspdm_test_responder_set_cetificate_rsp_case6),
+        /* Success Case for set_certificate to slot_id:0 with alias_cert mode*/
+        cmocka_unit_test(libspdm_test_responder_set_cetificate_rsp_case7),
     };
 
     libspdm_setup_test_context(&m_libspdm_responder_set_certificate_rsp_test_context);
