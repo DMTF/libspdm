@@ -815,8 +815,8 @@ bool libspdm_get_random_number(size_t size, uint8_t *rand);
  * @param[in]  base_asym_algo        SPDM base_asym_algo
  * @param[in]  base_hash_algo        SPDM base_hash_algo
  * @param[in]  is_requester_cert     Is the function verifying requester or responder cert.
- * @param[in]  is_device_cert_model  If true, the cert chain is DeviceCert model.
- *                                   If false, the cert chain is AliasCert model.
+ * @param[in]  is_device_cert_model  If true, the local endpoint uses the DeviceCert model.
+ *                                   If false, the local endpoint uses the AliasCert model.
  *
  * @retval  true   Success.
  * @retval  false  Certificate is not valid.
@@ -824,6 +824,24 @@ bool libspdm_get_random_number(size_t size, uint8_t *rand);
 bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
                                     uint32_t base_asym_algo, uint32_t base_hash_algo,
                                     bool is_requester_cert, bool is_device_cert_model);
+
+/**
+ * Certificate Check for SPDM leaf cert when set_cert.
+ *
+ * @param[in]  cert                  Pointer to the DER-encoded certificate data.
+ * @param[in]  cert_size             The size of certificate data in bytes.
+ * @param[in]  base_asym_algo        SPDM base_asym_algo
+ * @param[in]  base_hash_algo        SPDM base_hash_algo
+ * @param[in]  is_requester_cert     Is the function verifying requester or responder cert.
+ * @param[in]  is_device_cert_model  If true, the local endpoint uses the DeviceCert model.
+ *                                   If false, the local endpoint uses the AliasCert model.
+ *
+ * @retval  true   Success.
+ * @retval  false  Certificate is not valid.
+ **/
+bool libspdm_x509_set_cert_certificate_check(const uint8_t *cert, size_t cert_size,
+                                             uint32_t base_asym_algo, uint32_t base_hash_algo,
+                                             bool is_requester_cert, bool is_device_cert_model);
 
 /**
  * Return certificate is root cert or not.

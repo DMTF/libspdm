@@ -8,6 +8,46 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
 
+/*set_cert verify cert_chain*/
+static bool libspdm_set_cert_verify_certchain(const uint8_t *cert_chain, size_t cert_chain_size,
+                                              uint32_t base_asym_algo, uint32_t base_hash_algo,
+                                              bool is_device_cert_model)
+{
+    const uint8_t *root_cert_buffer;
+    size_t root_cert_buffer_size;
+    const uint8_t *leaf_cert_buffer;
+    size_t leaf_cert_buffer_size;
+
+    /*get root cert*/
+    if (!libspdm_x509_get_cert_from_cert_chain(
+            cert_chain, cert_chain_size, 0, &root_cert_buffer,
+            &root_cert_buffer_size)) {
+        return false;
+    }
+
+    /*verify cert_chain*/
+    if (!libspdm_x509_verify_cert_chain(root_cert_buffer, root_cert_buffer_size,
+                                        cert_chain, cert_chain_size)) {
+        return false;
+    }
+
+    /*get leaf cert*/
+    if (!libspdm_x509_get_cert_from_cert_chain(
+            cert_chain, cert_chain_size, -1, &leaf_cert_buffer,
+            &leaf_cert_buffer_size)) {
+        return false;
+    }
+
+    /*verify leaf cert*/
+    if (!libspdm_x509_set_cert_certificate_check(leaf_cert_buffer, leaf_cert_buffer_size,
+                                                 base_asym_algo, base_hash_algo,
+                                                 false, is_device_cert_model)) {
+        return false;
+    }
+
+    return true;
+}
+
 libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_context,
                                                       size_t request_size, const void *request,
                                                       size_t *response_size, void *response)
@@ -25,6 +65,8 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
 
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
+
+    bool is_device_cert_model;
 
     spdm_request = request;
 
@@ -120,6 +162,23 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
     /*point to actual cert_chain*/
     cert_chain = (const void*)((const uint8_t *)cert_chain
                                + sizeof(spdm_cert_chain_t) + root_cert_hash_size);
+
+    is_device_cert_model = false;
+    if((spdm_context->local_context.capability.flags &
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP) == 0) {
+        is_device_cert_model = true;
+    }
+
+    /*check the cert_chain*/
+    result = libspdm_set_cert_verify_certchain(cert_chain, cert_chain_size,
+                                               spdm_context->local_context.algorithm.base_asym_algo,
+                                               spdm_context->local_context.algorithm.base_hash_algo,
+                                               is_device_cert_model);
+    if (!result) {
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_UNSPECIFIED, 0,
+                                               response_size, response);
+    }
 
     /* set certificate to NV*/
     result = libspdm_write_certificate_to_nvm(slot_id, cert_chain,
