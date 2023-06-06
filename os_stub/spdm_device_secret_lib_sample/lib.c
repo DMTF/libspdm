@@ -2030,21 +2030,7 @@ bool libspdm_write_certificate_to_nvm(uint8_t slot_id, const void * cert_chain,
 
     char file_name[] = {'s','l','o','t','_','i','d','_','0','\0'};
 
-    const uint8_t *root_cert_buffer;
-    size_t root_cert_buffer_size;
-
     file_name[strlen(file_name) - 1] = (char)(slot_id+'0');
-
-    /*verify cert chain*/
-    if (!libspdm_x509_get_cert_from_cert_chain(
-            cert_chain, cert_chain_size, 0, &root_cert_buffer,
-            &root_cert_buffer_size)) {
-        return false;
-    }
-    if (!libspdm_x509_verify_cert_chain(root_cert_buffer, root_cert_buffer_size,
-                                        cert_chain, cert_chain_size)) {
-        return false;
-    }
 
 #if defined(_MSC_VER) || (defined(__clang__) && (defined (LIBSPDM_CPU_AARCH64) || \
     defined(LIBSPDM_CPU_ARM)))

@@ -88,6 +88,15 @@
 #define ENCRY_ALGO_ED448_OID {0x2B, 0x65, 0x71}
 #endif
 
+/*leaf cert basic_constraints false case1: CA: false and CA object is excluded */
+#define BASIC_CONSTRAINTS_STRING_FALSE_CASE1 {0x30, 0x00}
+
+/*leaf cert basic_constraints false case2: CA: false */
+#define BASIC_CONSTRAINTS_STRING_FALSE_CASE2 {0x30, 0x03, 0x01, 0x01, 0x00}
+
+/*leaf cert basic_constraints true case: CA: true */
+#define BASIC_CONSTRAINTS_STRING_TRUE_CASE {0x30, 0x03, 0x01, 0x01, 0xFF}
+
 /**
  * Retrieve the asymmetric public key from one DER-encoded X509 certificate.
  *
@@ -742,13 +751,8 @@ static bool libspdm_verify_leaf_cert_basic_constraints(const uint8_t *cert, size
     uint8_t cert_basic_constraints[LIBSPDM_MAX_BASIC_CONSTRAINTS_CA_LEN];
     size_t len;
 
-    /*leaf cert basic_constraints case1: CA: false and CA object is excluded */
-    #define BASIC_CONSTRAINTS_STRING_CASE1 {0x30, 0x00}
-    uint8_t basic_constraints_case1[] = BASIC_CONSTRAINTS_STRING_CASE1;
-
-    /*leaf cert basic_constraints case2: CA: false */
-    #define BASIC_CONSTRAINTS_STRING_CASE2 {0x30, 0x03, 0x01, 0x01, 0x00}
-    uint8_t basic_constraints_case2[] = BASIC_CONSTRAINTS_STRING_CASE2;
+    uint8_t basic_constraints_false_case1[] = BASIC_CONSTRAINTS_STRING_FALSE_CASE1;
+    uint8_t basic_constraints_false_case2[] = BASIC_CONSTRAINTS_STRING_FALSE_CASE2;
 
     len = LIBSPDM_MAX_BASIC_CONSTRAINTS_CA_LEN;
 
@@ -762,18 +766,80 @@ static bool libspdm_verify_leaf_cert_basic_constraints(const uint8_t *cert, size
         return false;
     }
 
-    if ((len == sizeof(basic_constraints_case1)) &&
+    if ((len == sizeof(basic_constraints_false_case1)) &&
         (libspdm_consttime_is_mem_equal(cert_basic_constraints,
-                                        basic_constraints_case1,
-                                        sizeof(basic_constraints_case1)))) {
+                                        basic_constraints_false_case1,
+                                        sizeof(basic_constraints_false_case1)))) {
         return true;
     }
 
-    if ((len == sizeof(basic_constraints_case2)) &&
+    if ((len == sizeof(basic_constraints_false_case2)) &&
         (libspdm_consttime_is_mem_equal(cert_basic_constraints,
-                                        basic_constraints_case2,
-                                        sizeof(basic_constraints_case2)))) {
+                                        basic_constraints_false_case2,
+                                        sizeof(basic_constraints_false_case2)))) {
         return true;
+    }
+
+    return false;
+}
+
+/**
+ * Verify leaf cert basic_constraints CA is false
+ *
+ * @param[in]  cert                  Pointer to the DER-encoded certificate data.
+ * @param[in]  cert_size             The size of certificate data in bytes.
+ *
+ * @retval  true   verify pass,two case: 1.basic constraints is not present in cert;
+ *                                       2. cert basic_constraints CA is false;
+ * @retval  false  verify fail
+ **/
+static bool libspdm_verify_set_cert_leaf_cert_basic_constraints(
+    const uint8_t *cert, size_t cert_size, bool is_device_cert_model)
+{
+    bool status;
+    /*basic_constraints from cert*/
+    uint8_t cert_basic_constraints[LIBSPDM_MAX_BASIC_CONSTRAINTS_CA_LEN];
+    size_t len;
+
+    uint8_t basic_constraints_false_case1[] = BASIC_CONSTRAINTS_STRING_FALSE_CASE1;
+    uint8_t basic_constraints_false_case2[] = BASIC_CONSTRAINTS_STRING_FALSE_CASE2;
+    uint8_t basic_constraints_true_case[] = BASIC_CONSTRAINTS_STRING_TRUE_CASE;
+
+    len = LIBSPDM_MAX_BASIC_CONSTRAINTS_CA_LEN;
+
+    status = libspdm_x509_get_extended_basic_constraints(cert, cert_size,
+                                                         cert_basic_constraints, &len);
+
+    if (is_device_cert_model) {
+        /*device cert model*/
+        if (len == 0) {
+            /* basic constraints is not present in cert */
+            return true;
+        } else if (!status ) {
+            return false;
+        }
+
+        if ((len == sizeof(basic_constraints_false_case1)) &&
+            (libspdm_consttime_is_mem_equal(cert_basic_constraints,
+                                            basic_constraints_false_case1,
+                                            sizeof(basic_constraints_false_case1)))) {
+            return true;
+        }
+
+        if ((len == sizeof(basic_constraints_false_case2)) &&
+            (libspdm_consttime_is_mem_equal(cert_basic_constraints,
+                                            basic_constraints_false_case2,
+                                            sizeof(basic_constraints_false_case2)))) {
+            return true;
+        }
+    } else {
+        /*alias cert model*/
+        if (status && (len == sizeof(basic_constraints_true_case)) &&
+            (libspdm_consttime_is_mem_equal(cert_basic_constraints,
+                                            basic_constraints_true_case,
+                                            sizeof(basic_constraints_true_case)))) {
+            return true;
+        }
     }
 
     return false;
@@ -916,24 +982,22 @@ static bool libspdm_verify_leaf_cert_spdm_extension(const uint8_t *cert, size_t 
 }
 
 /**
- * Certificate Check for SPDM leaf cert.
+ * Certificate common Check for SPDM leaf cert when get_cert and set_cert.
  *
  * @param[in]  cert                  Pointer to the DER-encoded certificate data.
  * @param[in]  cert_size             The size of certificate data in bytes.
  * @param[in]  base_asym_algo        SPDM base_asym_algo
  * @param[in]  base_hash_algo        SPDM base_hash_algo
  * @param[in]  is_requester_cert     Is the function verifying requester or responder cert.
- * @param[in]  is_device_cert_model  If true, the cert chain is DeviceCert model;
- *                                   If false, the cert chain is AliasCert model;
+ * @param[in]  is_device_cert_model  If true, the local endpoint uses the DeviceCert model.
+ *                                   If false, the local endpoint uses the AliasCert model.
  *
  * @retval  true   Success.
- * @retval  false  Certificate is not valid
+ * @retval  false  Certificate is not valid.
  **/
-bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
-                                    uint32_t base_asym_algo,
-                                    uint32_t base_hash_algo,
-                                    bool is_requester_cert,
-                                    bool is_device_cert_model)
+bool libspdm_x509_common_certificate_check(const uint8_t *cert, size_t cert_size,
+                                           uint32_t base_asym_algo, uint32_t base_hash_algo,
+                                           bool is_requester_cert, bool is_device_cert_model)
 {
     uint8_t end_cert_from[64];
     size_t end_cert_from_len;
@@ -1028,19 +1092,13 @@ bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
         goto cleanup;
     }
 
-    /* 9. verify basic constraints*/
-    status = libspdm_verify_leaf_cert_basic_constraints(cert, cert_size);
-    if (!status) {
-        goto cleanup;
-    }
-
-    /* 10. verify spdm defined extended key usage*/
+    /* 9. verify spdm defined extended key usage*/
     status = libspdm_verify_leaf_cert_spdm_eku(cert, cert_size, is_requester_cert);
     if (!status) {
         goto cleanup;
     }
 
-    /* 11. verify spdm defined extension*/
+    /* 10. verify spdm defined extension*/
     status = libspdm_verify_leaf_cert_spdm_extension(cert, cert_size,
                                                      is_requester_cert, is_device_cert_model);
     if (!status) {
@@ -1049,6 +1107,73 @@ bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
 
 cleanup:
     libspdm_asym_free(base_asym_algo, context);
+    return status;
+}
+
+/**
+ * Certificate Check for SPDM leaf cert when get_cert command
+ *
+ * @param[in]  cert                  Pointer to the DER-encoded certificate data.
+ * @param[in]  cert_size             The size of certificate data in bytes.
+ * @param[in]  base_asym_algo        SPDM base_asym_algo
+ * @param[in]  base_hash_algo        SPDM base_hash_algo
+ * @param[in]  is_requester_cert     Is the function verifying requester or responder cert.
+ * @param[in]  is_device_cert_model  If true, the local endpoint uses the DeviceCert model.
+ *                                   If false, the local endpoint uses the AliasCert model.
+ *
+ * @retval  true   Success.
+ * @retval  false  Certificate is not valid
+ **/
+bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
+                                    uint32_t base_asym_algo,
+                                    uint32_t base_hash_algo,
+                                    bool is_requester_cert,
+                                    bool is_device_cert_model)
+{
+    bool status;
+
+    status = libspdm_x509_common_certificate_check(cert, cert_size, base_asym_algo,
+                                                   base_hash_algo, is_requester_cert,
+                                                   is_device_cert_model);
+    if (!status) {
+        return false;
+    }
+
+    /* verify basic constraints: the leaf cert always is ca:fasle in get_cert*/
+    status = libspdm_verify_leaf_cert_basic_constraints(cert, cert_size);
+    return status;
+}
+
+/**
+ * Certificate Check for SPDM leaf cert when set_cert command.
+ *
+ * @param[in]  cert                  Pointer to the DER-encoded certificate data.
+ * @param[in]  cert_size             The size of certificate data in bytes.
+ * @param[in]  base_asym_algo        SPDM base_asym_algo
+ * @param[in]  base_hash_algo        SPDM base_hash_algo
+ * @param[in]  is_requester_cert     Is the function verifying requester or responder cert.
+ * @param[in]  is_device_cert_model  If true, the local endpoint uses the DeviceCert model.
+ *                                   If false, the local endpoint uses the AliasCert model.
+ *
+ * @retval  true   Success.
+ * @retval  false  Certificate is not valid.
+ **/
+bool libspdm_x509_set_cert_certificate_check(const uint8_t *cert, size_t cert_size,
+                                             uint32_t base_asym_algo, uint32_t base_hash_algo,
+                                             bool is_requester_cert, bool is_device_cert_model)
+{
+    bool status;
+
+    status = libspdm_x509_common_certificate_check(cert, cert_size, base_asym_algo,
+                                                   base_hash_algo, is_requester_cert,
+                                                   is_device_cert_model);
+    if (!status) {
+        return false;
+    }
+
+    /* verify basic constraints: need check with is_device_cert_model*/
+    status = libspdm_verify_set_cert_leaf_cert_basic_constraints(
+        cert, cert_size, is_device_cert_model);
     return status;
 }
 
