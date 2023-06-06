@@ -618,3 +618,53 @@ openssl asn1parse -in end_responder_with_spdm_req_rsp_eku.cert -out end_responde
 openssl asn1parse -in end_responder_with_spdm_req_eku.cert -out end_responder_with_spdm_req_eku.cert.der
 openssl asn1parse -in end_responder_with_spdm_rsp_eku.cert -out end_responder_with_spdm_rsp_eku.cert.der
 popd
+
+==== More alias_cert model cert_chain to gen ====
+NOTE: The bundle_responder.certchain_alias.der and bundle_requester.certchain.der have same ca_cert and inter cert.
+The only different is: the basic constraints is: CA: ture in leaf cert of bundle_responder.certchain_alias.der.
+This alias cert chain is partial, from root CA to device certificate CA.
+
+=== ecc256 Certificate alias Chains ===
+openssl x509 -req -in end_responder.req -out end_responder_alias.cert -CA inter.cert -CAkey inter.key -sha256 -days 3650 -set_serial 3 -extensions v3_end_alias -extfile ../openssl.cnf
+openssl asn1parse -in end_responder_alias.cert -out end_responder_alias.cert.der
+cat ca.cert.der inter.cert.der end_responder_alias.cert.der > bundle_responder.certchain_alias.der
+
+=== ecc384 Certificate alias Chains ===
+openssl x509 -req -in end_responder.req -out end_responder_alias.cert -CA inter.cert -CAkey inter.key -sha384 -days 3650 -set_serial 3 -extensions v3_end_alias -extfile ../openssl.cnf
+openssl asn1parse -in end_responder_alias.cert -out end_responder_alias.cert.der
+cat ca.cert.der inter.cert.der end_responder_alias.cert.der > bundle_responder.certchain_alias.der
+
+=== ecc521 Certificate alias Chains ===
+openssl x509 -req -in end_responder.req -out end_responder_alias.cert -CA inter.cert -CAkey inter.key -sha512 -days 3650 -set_serial 3 -extensions v3_end_alias -extfile ../openssl.cnf
+openssl asn1parse -in end_responder_alias.cert -out end_responder_alias.cert.der
+cat ca.cert.der inter.cert.der end_responder_alias.cert.der > bundle_responder.certchain_alias.der
+
+=== rsa2048 Certificate alias Chains ===
+openssl x509 -req -in end_responder.req -out end_responder_alias.cert -CA inter.cert -CAkey inter.key -sha256 -days 3650 -set_serial 3 -extensions v3_end_alias -extfile ../openssl.cnf
+openssl asn1parse -in end_responder_alias.cert -out end_responder_alias.cert.der
+cat ca.cert.der inter.cert.der end_responder_alias.cert.der > bundle_responder.certchain_alias.der
+
+=== rsa3072 Certificate alias Chains ===
+openssl x509 -req -in end_responder.req -out end_responder_alias.cert -CA inter.cert -CAkey inter.key -sha384 -days 3650 -set_serial 3 -extensions v3_end_alias -extfile ../openssl.cnf
+openssl asn1parse -in end_responder_alias.cert -out end_responder_alias.cert.der
+cat ca.cert.der inter.cert.der end_responder_alias.cert.der > bundle_responder.certchain_alias.der
+
+=== rsa4096 Certificate alias Chains ===
+openssl x509 -req -in end_responder.req -out end_responder_alias.cert -CA inter.cert -CAkey inter.key -sha512 -days 3650 -set_serial 3 -extensions v3_end_alias -extfile ../openssl.cnf
+openssl asn1parse -in end_responder_alias.cert -out end_responder_alias.cert.der
+cat ca.cert.der inter.cert.der end_responder_alias.cert.der > bundle_responder.certchain_alias.der
+
+=== ed25519 Certificate alias Chains ===
+openssl x509 -req -days 3650 -in end_responder.req -CA inter.cert -CAkey inter.key -out end_responder_alias.cert -set_serial 3 -extensions v3_end_alias -extfile ../openssl.cnf
+openssl asn1parse -in end_responder_alias.cert -out end_responder_alias.cert.der
+cat ca.cert.der inter.cert.der end_responder_alias.cert.der > bundle_responder.certchain_alias.der
+
+=== ed448 Certificate Chains ===
+openssl x509 -req -days 3650 -in end_responder.req -CA inter.cert -CAkey inter.key -out end_responder_alias.cert -set_serial 3 -extensions v3_end_alias -extfile ../openssl.cnf
+openssl asn1parse -in end_responder_alias.cert -out end_responder_alias.cert.der
+cat ca.cert.der inter.cert.der end_responder_alias.cert.der > bundle_responder.certchain_alias.der
+
+=== sm2 Certificate Chains ===
+openssl x509 -req -days 3650 -in end_responder.req -CA inter.cert -CAkey inter.key -out end_responder_alias.cert -set_serial 3 -extensions v3_end_alias -extfile ../openssl.cnf
+openssl asn1parse -in end_responder_alias.cert -out end_responder_alias.cert.der
+cat ca.cert.der inter.cert.der end_responder_alias.cert.der > bundle_responder.certchain_alias.der
