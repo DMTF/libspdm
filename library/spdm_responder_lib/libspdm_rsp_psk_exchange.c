@@ -318,6 +318,7 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
 
     if ((measurement_summary_hash_size == 0) &&
         (spdm_request->header.param2 != SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH)) {
+        libspdm_free_session_id(spdm_context, session_id);
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST,
                                                0, response_size, response);
@@ -332,6 +333,7 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
 
     if (context_length != 0) {
         if(!libspdm_get_random_number(context_length, ptr)) {
+            libspdm_free_session_id(spdm_context, session_id);
             return libspdm_generate_error_response(spdm_context,
                                                    SPDM_ERROR_CODE_UNSPECIFIED, 0,
                                                    response_size, response);
@@ -412,6 +414,7 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
         result = libspdm_calculate_th2_hash(spdm_context, session_info,
                                             false, th2_hash_data);
         if (!result) {
+            libspdm_free_session_id(spdm_context, session_id);
             return libspdm_generate_error_response(
                 spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
                 0, response_size, response);
@@ -419,6 +422,7 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
         result = libspdm_generate_session_data_key(
             session_info->secured_message_context, th2_hash_data);
         if (!result) {
+            libspdm_free_session_id(spdm_context, session_id);
             return libspdm_generate_error_response(
                 spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
                 0, response_size, response);

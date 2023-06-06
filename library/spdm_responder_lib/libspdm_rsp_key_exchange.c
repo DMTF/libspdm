@@ -421,6 +421,7 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
 
     if(!libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                                   spdm_response->random_data)) {
+        libspdm_free_session_id(spdm_context, session_id);
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,
                                                response_size, response);
