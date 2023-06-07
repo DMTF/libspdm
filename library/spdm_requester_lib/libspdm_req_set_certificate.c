@@ -55,12 +55,6 @@ static libspdm_return_t libspdm_try_set_certificate(libspdm_context_t *spdm_cont
         return LIBSPDM_STATUS_INVALID_PARAMETER;
     }
 
-    /*The Requester shall issue SET_CERTIFICATE inside a secure session
-     * for slot 1-7 provisioning*/
-    if ((slot_id != 0) && (session_id == NULL)) {
-        return LIBSPDM_STATUS_INVALID_PARAMETER;
-    }
-
     if (spdm_context->connection_info.connection_state <
         LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
