@@ -16,7 +16,8 @@ uint32_t libspdm_get_scratch_buffer_secure_message_offset(libspdm_context_t *spd
 
 uint32_t libspdm_get_scratch_buffer_secure_message_capacity(libspdm_context_t *spdm_context) {
     return spdm_context->local_context.capability.max_spdm_msg_size +
-           spdm_context->local_context.capability.transport_additional_size;
+           spdm_context->local_context.capability.transport_header_size +
+           spdm_context->local_context.capability.transport_tail_size;
 }
 
 /* second section */
@@ -41,7 +42,8 @@ uint32_t libspdm_get_scratch_buffer_sender_receiver_offset(libspdm_context_t *sp
 
 uint32_t libspdm_get_scratch_buffer_sender_receiver_capacity(libspdm_context_t *spdm_context) {
     return spdm_context->local_context.capability.max_spdm_msg_size +
-           spdm_context->local_context.capability.transport_additional_size;
+           spdm_context->local_context.capability.transport_header_size +
+           spdm_context->local_context.capability.transport_tail_size;
 }
 
 #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
@@ -55,7 +57,8 @@ uint32_t libspdm_get_scratch_buffer_large_sender_receiver_offset(libspdm_context
 uint32_t libspdm_get_scratch_buffer_large_sender_receiver_capacity(libspdm_context_t *spdm_context)
 {
     return spdm_context->local_context.capability.max_spdm_msg_size +
-           spdm_context->local_context.capability.transport_additional_size;
+           spdm_context->local_context.capability.transport_header_size +
+           spdm_context->local_context.capability.transport_tail_size;
 }
 #endif
 
@@ -2009,14 +2012,18 @@ void libspdm_register_device_buffer_func(
     context->release_receiver_buffer = release_receiver_buffer;
 
     LIBSPDM_ASSERT (sender_buffer_size >=
-                    context->local_context.capability.transport_additional_size);
-    sender_buffer_size -= context->local_context.capability.transport_additional_size;
+                    context->local_context.capability.transport_header_size +
+                    context->local_context.capability.transport_tail_size);
+    sender_buffer_size -= (context->local_context.capability.transport_header_size +
+                           context->local_context.capability.transport_tail_size);
     LIBSPDM_ASSERT (sender_buffer_size >= SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12);
     context->local_context.capability.sender_data_transfer_size = sender_buffer_size;
 
     LIBSPDM_ASSERT(receiver_buffer_size >=
-                   context->local_context.capability.transport_additional_size);
-    receiver_buffer_size -= context->local_context.capability.transport_additional_size;
+                   context->local_context.capability.transport_header_size +
+                   context->local_context.capability.transport_tail_size);
+    receiver_buffer_size -= (context->local_context.capability.transport_header_size +
+                             context->local_context.capability.transport_tail_size);
     LIBSPDM_ASSERT (receiver_buffer_size >= SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12);
     context->local_context.capability.data_transfer_size = receiver_buffer_size;
 }
@@ -2033,8 +2040,8 @@ void libspdm_register_device_buffer_func(
 void libspdm_register_transport_layer_func(
     void *spdm_context,
     uint32_t max_spdm_msg_size,
-    uint32_t transport_additional_size,
     uint32_t transport_header_size,
+    uint32_t transport_tail_size,
     libspdm_transport_encode_message_func transport_encode_message,
     libspdm_transport_decode_message_func transport_decode_message)
 {
@@ -2047,18 +2054,20 @@ void libspdm_register_transport_layer_func(
         (context->local_context.capability.data_transfer_size ==
          context->receiver_buffer_size)) {
         context->local_context.capability.data_transfer_size =
-            (uint32_t)(context->receiver_buffer_size - transport_additional_size);
+            (uint32_t)(context->receiver_buffer_size -
+                       (transport_header_size + transport_tail_size));
     }
     if ((context->local_context.capability.sender_data_transfer_size != 0) &&
         (context->local_context.capability.sender_data_transfer_size ==
          context->sender_buffer_size)) {
         context->local_context.capability.sender_data_transfer_size =
-            (uint32_t)(context->sender_buffer_size - transport_additional_size);
+            (uint32_t)(context->sender_buffer_size -
+                       (transport_header_size + transport_tail_size));
     }
 
     context->local_context.capability.max_spdm_msg_size = max_spdm_msg_size;
-    context->local_context.capability.transport_additional_size = transport_additional_size;
     context->local_context.capability.transport_header_size = transport_header_size;
+    context->local_context.capability.transport_tail_size = transport_tail_size;
     context->transport_encode_message = transport_encode_message;
     context->transport_decode_message = transport_decode_message;
 }

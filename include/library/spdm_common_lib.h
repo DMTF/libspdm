@@ -695,8 +695,8 @@ typedef uint32_t (*libspdm_transport_get_header_size_func)(void *spdm_context);
 void libspdm_register_transport_layer_func(
     void *spdm_context,
     uint32_t max_spdm_msg_size,
-    uint32_t transport_additional_size,
     uint32_t transport_header_size,
+    uint32_t transport_tail_size,
     libspdm_transport_encode_message_func transport_encode_message,
     libspdm_transport_decode_message_func transport_decode_message);
 

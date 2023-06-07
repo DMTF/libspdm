@@ -23,9 +23,6 @@
  * | MCTP  |    1   |    4    |   2  | 2 |   2  |   1  |  |  32  | 16|   0    |  60 |
  * +-------+--------+---------------------------+------+--+------+---+--------+-----+
  */
-#define LIBSPDM_MCTP_TRANSPORT_ADDITIONAL_SIZE    (LIBSPDM_MCTP_TRANSPORT_HEADER_SIZE + \
-                                                   LIBSPDM_MCTP_TRANSPORT_TAIL_SIZE)
-
 #define LIBSPDM_MCTP_TRANSPORT_HEADER_SIZE  (2 + 8 + \
                                              LIBSPDM_MCTP_SEQUENCE_NUMBER_COUNT)
 
