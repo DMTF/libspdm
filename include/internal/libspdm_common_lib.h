@@ -34,8 +34,8 @@ typedef struct {
     uint32_t data_transfer_size;
     uint32_t sender_data_transfer_size;
     uint32_t max_spdm_msg_size;
-    uint32_t transport_additional_size;
     uint32_t transport_header_size;
+    uint32_t transport_tail_size;
 } libspdm_device_capability_t;
 
 typedef struct {

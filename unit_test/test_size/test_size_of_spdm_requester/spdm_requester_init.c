@@ -89,8 +89,8 @@ void *spdm_client_init(void)
                                     spdm_requester_receive_message);
     libspdm_register_transport_layer_func(spdm_context,
                                           LIBSPDM_MAX_SPDM_MSG_SIZE,
-                                          LIBSPDM_TRANSPORT_ADDITIONAL_SIZE,
                                           LIBSPDM_MCTP_TRANSPORT_HEADER_SIZE,
+                                          LIBSPDM_MCTP_TRANSPORT_TAIL_SIZE,
                                           libspdm_transport_mctp_encode_message,
                                           libspdm_transport_mctp_decode_message);
     libspdm_register_device_buffer_func(spdm_context,

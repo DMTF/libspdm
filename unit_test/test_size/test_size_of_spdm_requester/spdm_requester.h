@@ -15,7 +15,8 @@
 #include "hal/library/memlib.h"
 #include "hal/library/debuglib.h"
 
-#define LIBSPDM_TRANSPORT_ADDITIONAL_SIZE    LIBSPDM_MCTP_TRANSPORT_ADDITIONAL_SIZE
+#define LIBSPDM_TRANSPORT_ADDITIONAL_SIZE    (LIBSPDM_MCTP_TRANSPORT_HEADER_SIZE + \
+                                              LIBSPDM_MCTP_TRANSPORT_TAIL_SIZE)
 
 #ifndef LIBSPDM_SENDER_BUFFER_SIZE
 #define LIBSPDM_SENDER_BUFFER_SIZE (0x1100 + \

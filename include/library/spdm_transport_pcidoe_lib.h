@@ -23,9 +23,6 @@
  * |PCI_DOE|    8   |    4    |   0  | 2 |   2  |   0  |  |   0  | 16|   3    |  35 |
  * +-------+--------+---------------------------+------+--+------+---+--------+-----+
  */
-#define LIBSPDM_PCI_DOE_TRANSPORT_ADDITIONAL_SIZE    (LIBSPDM_PCI_DOE_TRANSPORT_HEADER_SIZE + \
-                                                      LIBSPDM_PCI_DOE_TRANSPORT_TAIL_SIZE)
-
 #define LIBSPDM_PCI_DOE_TRANSPORT_HEADER_SIZE  (8 + 8 + \
                                                 LIBSPDM_PCI_DOE_SEQUENCE_NUMBER_COUNT)
 

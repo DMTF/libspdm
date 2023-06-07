@@ -80,8 +80,8 @@ size_t libspdm_unit_test_group_setup(void **State)
                                     spdm_test_context->receive_message);
     libspdm_register_transport_layer_func(spdm_context,
                                           LIBSPDM_MAX_SPDM_MSG_SIZE,
-                                          LIBSPDM_TRANSPORT_ADDITIONAL_SIZE,
                                           LIBSPDM_TEST_TRANSPORT_HEADER_SIZE,
+                                          LIBSPDM_TEST_TRANSPORT_TAIL_SIZE,
                                           libspdm_transport_test_encode_message,
                                           libspdm_transport_test_decode_message);
     libspdm_register_device_buffer_func(spdm_context,

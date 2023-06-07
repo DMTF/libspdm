@@ -24,9 +24,6 @@
  * | TEST  |    1   |    4    |   2  | 2 |   2  |   1  |  |  32  | 16|   3    |  63 |
  * +-------+--------+---------------------------+------+--+------+---+--------+-----+
  */
-#define LIBSPDM_TEST_TRANSPORT_ADDITIONAL_SIZE    (LIBSPDM_TEST_TRANSPORT_HEADER_SIZE + \
-                                                   LIBSPDM_TEST_TRANSPORT_TAIL_SIZE)
-
 #define LIBSPDM_TEST_TRANSPORT_HEADER_SIZE  (2 + 8 + \
                                              LIBSPDM_TEST_SEQUENCE_NUMBER_COUNT)
 
