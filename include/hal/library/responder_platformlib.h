@@ -33,20 +33,4 @@ extern bool libspdm_stop_watchdog(uint32_t session_id);
 extern bool libspdm_reset_watchdog(uint32_t session_id);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP */
 
-#if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
-/**
- * Stores a certificate chain in non-volatile memory.
- *
- *
- * @param[in]  slot_id          The number of slot for the certificate chain.
- * @param[in]  cert_chain       The pointer for the certificate chain to set.
- * @param[in]  cert_chain_size  The size of the certificate chain to set.
- *
- * @retval true   The certificate chain was successfully written to non-volatile memory.
- * @retval false  Unable to write certificate chain to non-volatile memory.
- **/
-extern bool libspdm_write_certificate_to_nvm(uint8_t slot_id, const void * cert_chain,
-                                             size_t cert_chain_size);
-#endif /* LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP */
-
 #endif /* REQUESTER_PLATFORMLIB_H */
