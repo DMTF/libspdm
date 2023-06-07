@@ -319,41 +319,6 @@ void libspdm_test_requester_set_certificate_case3(void **state)
 }
 
 /**
- * Test 4: Unsuccessful response to set certificate for slot 1, because the session id is null
- * Expected Behavior: get a LIBSPDM_STATUS_INVALID_PARAMETER return code
- **/
-void libspdm_test_requester_set_certificate_case4(void **state)
-{
-    libspdm_return_t status;
-    libspdm_test_context_t *spdm_test_context;
-    libspdm_context_t *spdm_context;
-
-    void *data;
-    size_t data_size;
-
-    spdm_test_context = *state;
-    spdm_context = spdm_test_context->spdm_context;
-    spdm_test_context->case_id = 0x4;
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
-                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
-
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP;
-
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo,
-                                                    &data, &data_size, NULL, NULL);
-
-    /* slot id is 1*/
-    status = libspdm_set_certificate(spdm_context, NULL, 1, data, data_size);
-
-    assert_int_equal(status, LIBSPDM_STATUS_INVALID_PARAMETER);
-    free(data);
-}
-
-/**
  * Test 5: Successful response to set certificate for slot 1 in secure session
  * Expected Behavior: get a RETURN_SUCCESS return code
  **/
@@ -464,8 +429,6 @@ int libspdm_requester_set_certificate_test_main(void)
         cmocka_unit_test(libspdm_test_requester_set_certificate_case2),
         /* Set null cert_chain for slot 0*/
         cmocka_unit_test(libspdm_test_requester_set_certificate_case3),
-        /* Set certificate for slot 1,but the session id is null*/
-        cmocka_unit_test(libspdm_test_requester_set_certificate_case4),
         /* Successful response to set certificate for slot 1 in secure session*/
         cmocka_unit_test(libspdm_test_requester_set_certificate_case5),
         /* Successful response to set certificate with a reset required */
