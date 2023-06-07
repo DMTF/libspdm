@@ -111,7 +111,7 @@ libspdm_return_t libspdm_requester_get_csr_test_receive_message(
         libspdm_read_requester_gen_csr((void *)&csr_data_pointer, &global_csr_len);
 
         spdm_response_size = sizeof(spdm_csr_response_t) + global_csr_len;
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_12;
@@ -138,7 +138,7 @@ libspdm_return_t libspdm_requester_get_csr_test_receive_message(
         libspdm_read_requester_gen_csr((void *)&csr_data_pointer, &global_csr_len);
 
         spdm_response_size = sizeof(spdm_csr_response_t) + global_csr_len;
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_12;
@@ -172,7 +172,7 @@ libspdm_return_t libspdm_requester_get_csr_test_receive_message(
 
         libspdm_read_requester_gen_csr((void *)&csr_data_pointer, &global_csr_len);
         spdm_response_size = sizeof(spdm_csr_response_t) + global_csr_len;
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_12;

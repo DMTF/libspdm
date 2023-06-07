@@ -127,7 +127,7 @@ void libspdm_test_responder_receive_send_rsp_case1(void** state)
                                     &response_size, (void**)&response);
 
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    transport_header_size = spdm_context->transport_get_header_size(spdm_context);
+    transport_header_size = spdm_context->local_context.capability.transport_header_size;
 
     /* Verify responder returned error large response with chunk_handle == 1
      * and responder is in chunking mode (get.chunk_in_use). */
@@ -214,7 +214,7 @@ void libspdm_test_responder_receive_send_rsp_case2(void** state)
     status = libspdm_build_response(spdm_context, NULL, false,
                                     &response_size, (void**)&response);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    transport_header_size = spdm_context->transport_get_header_size(spdm_context);
+    transport_header_size = spdm_context->local_context.capability.transport_header_size;
 
     /* Verify responder returned error large response with chunk_handle == 1
      * and responder is in chunking mode (get.chunk_in_use). */
@@ -336,7 +336,7 @@ void libspdm_test_responder_receive_send_rsp_case3(void** state)
                                     &response_size, (void**)&response);
 
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    transport_header_size = spdm_context->transport_get_header_size(spdm_context);
+    transport_header_size = spdm_context->local_context.capability.transport_header_size;
 
     /* Verify responder returned SPDM_ERROR_CODE_RESPONSE_TOO_LARGE response with chunk_handle == 0
      * and responder is not in chunking mode (get.chunk_in_use). */

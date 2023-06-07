@@ -151,7 +151,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_algorithms_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -182,7 +182,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_algorithms_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -213,7 +213,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_error_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -235,7 +235,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_error_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -259,7 +259,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
             size_t transport_header_size;
 
             spdm_response_size = sizeof(spdm_error_response_t);
-            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -279,7 +279,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
             size_t transport_header_size;
 
             spdm_response_size = sizeof(spdm_algorithms_response_t);
-            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -315,7 +315,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_error_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -337,7 +337,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -368,7 +368,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_algorithms_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -398,7 +398,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_algorithms_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -429,7 +429,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_algorithms_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -461,7 +461,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_algorithms_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -491,7 +491,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_algorithms_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -520,7 +520,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_algorithms_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -550,7 +550,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_algorithms_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -580,7 +580,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_algorithms_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -610,7 +610,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_algorithms_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -640,7 +640,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_algorithms_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -671,7 +671,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_algorithms_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -701,7 +701,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_algorithms_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -732,7 +732,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(libspdm_algorithms_response_spdm11_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -778,7 +778,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(libspdm_algorithms_response_spdm11_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -824,7 +824,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(libspdm_algorithms_response_spdm11_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -870,7 +870,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(libspdm_algorithms_response_spdm11_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -917,7 +917,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(libspdm_algorithms_response_spdm11_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -964,7 +964,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(libspdm_algorithms_response_spdm11_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -1010,7 +1010,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(libspdm_algorithms_response_spdm11_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -1057,7 +1057,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(libspdm_algorithms_response_spdm11_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -1104,7 +1104,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(libspdm_algorithms_response_spdm11_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -1151,7 +1151,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(libspdm_algorithms_response_spdm11_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -1197,7 +1197,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_algorithms_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -1228,7 +1228,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(libspdm_algorithms_response_spdm11_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -1275,7 +1275,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(libspdm_algorithms_response_spdm11_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -1325,7 +1325,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(libspdm_algorithms_response_spdm11_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -1374,7 +1374,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_algorithms_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -1406,7 +1406,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_algorithms_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -1439,7 +1439,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(libspdm_algorithms_response_spdm11_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -1484,7 +1484,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(libspdm_algorithms_response_spdm11_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void*)((uint8_t*)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -1530,7 +1530,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(libspdm_algorithms_response_spdm11_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void*)((uint8_t*)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -1576,7 +1576,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_algorithms_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -1611,7 +1611,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(libspdm_algorithms_response_spdm11_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void*)((uint8_t*)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);
@@ -1657,7 +1657,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         size_t transport_header_size;
 
         spdm_response_size = sizeof(libspdm_algorithms_response_spdm11_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void*)((uint8_t*)*response + transport_header_size);
 
         libspdm_zero_mem(spdm_response, spdm_response_size);

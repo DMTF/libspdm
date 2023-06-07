@@ -330,7 +330,7 @@ libspdm_return_t libspdm_requester_chunk_get_test_receive_message(
         spdm_error_response_t* error_rsp;
         size_t error_rsp_size;
 
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         error_rsp = (void*) ((uint8_t*) *response + transport_header_size);
         error_rsp_size = sizeof(spdm_error_response_t) + sizeof(uint8_t);
 
@@ -354,7 +354,7 @@ libspdm_return_t libspdm_requester_chunk_get_test_receive_message(
         static size_t sub_cert_index = 0;
         static size_t sub_cert_count = 0;
 
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         chunk_rsp = (void*) ((uint8_t*) *response + transport_header_size);
 
         chunk_rsp->header.spdm_version = SPDM_MESSAGE_VERSION_12;
@@ -455,7 +455,7 @@ libspdm_return_t libspdm_requester_chunk_get_test_receive_message(
 
     if (build_response_func)
     {
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         chunk_rsp = (void*) ((uint8_t*) *response + transport_header_size);
 
         chunk_rsp->header.spdm_version = SPDM_MESSAGE_VERSION_12;

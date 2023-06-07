@@ -74,7 +74,7 @@ void libspdm_test_encode_secured_message(void **State)
     app_message = scratch_buffer + record_header_max_size;
     app_message_size = spdm_test_context->test_buffer_size - record_header_max_size;
 
-    transport_header_size = libspdm_transport_mctp_get_header_size(spdm_context);
+    transport_header_size = LIBSPDM_MCTP_TRANSPORT_HEADER_SIZE;
     secured_message = (uint8_t *)spdm_test_context->test_buffer + transport_header_size;
     secured_message_size = spdm_test_context->test_buffer_size - transport_header_size;
 

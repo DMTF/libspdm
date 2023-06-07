@@ -112,7 +112,7 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
             m_libspdm_use_hash_algo;
         spdm_response_size = sizeof(spdm_digest_response_t) +
                              libspdm_get_hash_size(m_libspdm_use_hash_algo);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -149,7 +149,7 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
             m_libspdm_use_hash_algo;
         spdm_response_size = sizeof(spdm_digest_response_t) +
                              libspdm_get_hash_size(m_libspdm_use_hash_algo);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -178,7 +178,7 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
         size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_error_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -199,7 +199,7 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
         size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_error_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -222,7 +222,7 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
             size_t transport_header_size;
 
             spdm_response_size = sizeof(spdm_error_response_t);
-            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -245,7 +245,7 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
                 m_libspdm_use_hash_algo;
             spdm_response_size = sizeof(spdm_digest_response_t) +
                                  libspdm_get_hash_size(m_libspdm_use_hash_algo);
-            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -275,7 +275,7 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
         size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_error_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -296,7 +296,7 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
         size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -325,7 +325,7 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
             m_libspdm_use_hash_algo;
         spdm_response_size = sizeof(spdm_digest_response_t) +
                              libspdm_get_hash_size(m_libspdm_use_hash_algo);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -365,7 +365,7 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
         ->connection_info.algorithm.base_hash_algo =
             m_libspdm_use_hash_algo;
         spdm_response_size = 2;
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -391,7 +391,7 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
             m_libspdm_use_hash_algo;
         spdm_response_size = sizeof(spdm_digest_response_t) +
                              libspdm_get_hash_size(m_libspdm_use_hash_algo);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -420,7 +420,7 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
         size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_digest_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -455,7 +455,7 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
             m_libspdm_use_hash_algo;
         spdm_response_size = sizeof(spdm_digest_response_t) +
                              libspdm_get_hash_size(m_libspdm_use_hash_algo);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -495,7 +495,7 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
         digest_count = 4;
         spdm_response_size = sizeof(spdm_digest_response_t) +
                              libspdm_get_hash_size(m_libspdm_use_hash_algo);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -536,7 +536,7 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
         spdm_response_size =
             sizeof(spdm_digest_response_t) +
             digest_count * libspdm_get_hash_size(m_libspdm_use_hash_algo);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -577,7 +577,7 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
         ((libspdm_context_t *)spdm_context)->connection_info.algorithm.base_hash_algo =
             m_libspdm_use_hash_algo;
         spdm_response_size = 5;
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -603,7 +603,7 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
             m_libspdm_use_hash_algo;
         spdm_response_size = sizeof(spdm_message_header_t) +
                              LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT + 1;
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -635,7 +635,7 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
         size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_error_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         if(error_code <= 0xff) {
@@ -685,7 +685,7 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
             m_libspdm_use_hash_algo;
         spdm_response_size = sizeof(spdm_digest_response_t) +
                              libspdm_get_hash_size(m_libspdm_use_hash_algo);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -724,7 +724,7 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
                 m_libspdm_use_hash_algo;
             spdm_response_size = sizeof(spdm_digest_response_t) +
                                  libspdm_get_hash_size(m_libspdm_use_hash_algo);
-            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -782,7 +782,7 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
 
             spdm_response_size =
                 sizeof(spdm_certificate_response_t) + portion_length;
-            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
@@ -830,7 +830,7 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
             m_libspdm_use_hash_algo;
         spdm_response_size = sizeof(spdm_digest_response_t) +
                              libspdm_get_hash_size(m_libspdm_use_hash_algo);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
