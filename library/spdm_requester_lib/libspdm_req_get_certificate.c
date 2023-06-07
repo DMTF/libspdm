@@ -135,7 +135,7 @@ static libspdm_return_t libspdm_try_get_certificate(libspdm_context_t *spdm_cont
     cert_chain_capacity = *cert_chain_size;
     cert_chain_size_internal = 0;
 
-    transport_header_size = spdm_context->transport_get_header_size(spdm_context);
+    transport_header_size = spdm_context->local_context.capability.transport_header_size;
 
     do {
         /* -=[Construct Request Phase]=- */

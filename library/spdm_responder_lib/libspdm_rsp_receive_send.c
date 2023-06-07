@@ -164,7 +164,7 @@ libspdm_return_t libspdm_process_request(void *spdm_context, uint32_t **session_
     /* always use scratch buffer to response.
      * if it is secured message, this scratch buffer will be used.
      * if it is normal message, the response ptr will point to receiver buffer. */
-    transport_header_size = context->transport_get_header_size(context);
+    transport_header_size = context->local_context.capability.transport_header_size;
     libspdm_get_scratch_buffer (context, (void **)&scratch_buffer, &scratch_buffer_size);
     #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
     decoded_message_ptr = scratch_buffer +
@@ -442,7 +442,7 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
 
     /* For secure message, setup my_response to scratch buffer
      * For non-secure message, setup my_response to sender buffer*/
-    transport_header_size = context->transport_get_header_size(context);
+    transport_header_size = context->local_context.capability.transport_header_size;
     if (session_id != NULL) {
         libspdm_get_scratch_buffer (context, (void **)&scratch_buffer, &scratch_buffer_size);
         #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP

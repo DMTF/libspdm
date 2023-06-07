@@ -1359,9 +1359,9 @@ static void libspdm_test_check_context_case20(void **state)
     libspdm_register_transport_layer_func(context,
                                           LIBSPDM_MAX_SPDM_MSG_SIZE,
                                           LIBSPDM_TRANSPORT_ADDITIONAL_SIZE,
+                                          LIBSPDM_TEST_TRANSPORT_HEADER_SIZE,
                                           libspdm_transport_test_encode_message,
-                                          libspdm_transport_test_decode_message,
-                                          libspdm_transport_test_get_header_size);
+                                          libspdm_transport_test_decode_message);
 
     libspdm_register_device_buffer_func(context,
                                         LIBSPDM_MAX_SENDER_RECEIVER_BUFFER_SIZE,

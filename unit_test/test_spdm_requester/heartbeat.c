@@ -98,7 +98,7 @@ libspdm_return_t libspdm_requester_heartbeat_test_receive_message(
 
         session_id = 0xFFFFFFFF;
         spdm_response_size = sizeof(spdm_heartbeat_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -151,7 +151,7 @@ libspdm_return_t libspdm_requester_heartbeat_test_receive_message(
 
         session_id = 0xFFFFFFFF;
         spdm_response_size = sizeof(spdm_heartbeat_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -202,7 +202,7 @@ libspdm_return_t libspdm_requester_heartbeat_test_receive_message(
         uint8_t *salt;
 
         spdm_response_size = sizeof(spdm_error_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
@@ -254,7 +254,7 @@ libspdm_return_t libspdm_requester_heartbeat_test_receive_message(
         uint8_t *salt;
 
         spdm_response_size = sizeof(spdm_error_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
@@ -308,7 +308,7 @@ libspdm_return_t libspdm_requester_heartbeat_test_receive_message(
             uint8_t *salt;
 
             spdm_response_size = sizeof(spdm_error_response_t);
-            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             session_id = 0xFFFFFFFF;
@@ -361,7 +361,7 @@ libspdm_return_t libspdm_requester_heartbeat_test_receive_message(
 
             session_id = 0xFFFFFFFF;
             spdm_response_size = sizeof(spdm_heartbeat_response_t);
-            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             spdm_response->header.spdm_version =
@@ -416,7 +416,7 @@ libspdm_return_t libspdm_requester_heartbeat_test_receive_message(
         uint8_t *salt;
 
         spdm_response_size = sizeof(spdm_error_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
@@ -468,7 +468,7 @@ libspdm_return_t libspdm_requester_heartbeat_test_receive_message(
         uint8_t *salt;
 
         spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
@@ -528,7 +528,7 @@ libspdm_return_t libspdm_requester_heartbeat_test_receive_message(
             uint8_t *salt;
 
             spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
-            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             session_id = 0xFFFFFFFF;
@@ -587,7 +587,7 @@ libspdm_return_t libspdm_requester_heartbeat_test_receive_message(
 
             session_id = 0xFFFFFFFF;
             spdm_response_size = sizeof(spdm_heartbeat_response_t);
-            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             spdm_response->header.spdm_version =
@@ -645,7 +645,7 @@ libspdm_return_t libspdm_requester_heartbeat_test_receive_message(
         session_id = 0xFFFFFFFF;
 
         spdm_response_size = sizeof(spdm_error_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         if(error_code <= 0xff) {
@@ -696,7 +696,7 @@ libspdm_return_t libspdm_requester_heartbeat_test_receive_message(
 
         session_id = 0xFFFFFFFF;
         spdm_response_size = sizeof(spdm_heartbeat_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -748,7 +748,7 @@ libspdm_return_t libspdm_requester_heartbeat_test_receive_message(
         uint8_t *salt;
 
         spdm_response_size = sizeof(spdm_error_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;

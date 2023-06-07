@@ -691,15 +691,14 @@ typedef uint32_t (*libspdm_transport_get_header_size_func)(void *spdm_context);
  * @param  spdm_context               A pointer to the SPDM context.
  * @param  transport_encode_message   The fuction to encode an SPDM or APP message to a transport layer message.
  * @param  transport_decode_message   The fuction to decode an SPDM or APP message from a transport layer message.
- * @param  transport_get_header_size  The fuction to get the maximum transport layer message header size.
  **/
 void libspdm_register_transport_layer_func(
     void *spdm_context,
     uint32_t max_spdm_msg_size,
     uint32_t transport_additional_size,
+    uint32_t transport_header_size,
     libspdm_transport_encode_message_func transport_encode_message,
-    libspdm_transport_decode_message_func transport_decode_message,
-    libspdm_transport_get_header_size_func transport_get_header_size);
+    libspdm_transport_decode_message_func transport_decode_message);
 
 /**
  * Get the size of required scratch buffer.

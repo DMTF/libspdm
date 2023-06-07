@@ -316,7 +316,7 @@ libspdm_return_t libspdm_send_data(void *spdm_context, const uint32_t *session_i
     size_t transport_header_size;
 
     context = spdm_context;
-    transport_header_size = context->transport_get_header_size(context);
+    transport_header_size = context->local_context.capability.transport_header_size;
 
     status = libspdm_acquire_sender_buffer(context, &message_size, (void **)&message);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {

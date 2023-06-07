@@ -198,7 +198,7 @@ libspdm_return_t libspdm_encapsulated_request(libspdm_context_t *spdm_context,
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
     } else {
 
-        transport_header_size = spdm_context->transport_get_header_size(spdm_context);
+        transport_header_size = spdm_context->local_context.capability.transport_header_size;
         status = libspdm_acquire_sender_buffer (spdm_context, &message_size, (void **)&message);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return status;
@@ -288,7 +288,7 @@ libspdm_return_t libspdm_encapsulated_request(libspdm_context_t *spdm_context,
     while (true) {
 
         /* Process request*/
-        transport_header_size = spdm_context->transport_get_header_size(spdm_context);
+        transport_header_size = spdm_context->local_context.capability.transport_header_size;
         status = libspdm_acquire_sender_buffer (spdm_context, &message_size, (void **)&message);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return status;

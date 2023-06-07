@@ -86,7 +86,7 @@ libspdm_return_t libspdm_requester_set_certificate_test_receive_message(
         size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_set_certificate_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_12;
@@ -107,7 +107,7 @@ libspdm_return_t libspdm_requester_set_certificate_test_receive_message(
         size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_set_certificate_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_12;
@@ -128,7 +128,7 @@ libspdm_return_t libspdm_requester_set_certificate_test_receive_message(
         size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_set_certificate_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_12;
@@ -157,7 +157,7 @@ libspdm_return_t libspdm_requester_set_certificate_test_receive_message(
         session_id = 0xFFFFFFFF;
 
         spdm_response_size = sizeof(spdm_set_certificate_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_12;
@@ -203,7 +203,7 @@ libspdm_return_t libspdm_requester_set_certificate_test_receive_message(
         size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_set_certificate_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_12;

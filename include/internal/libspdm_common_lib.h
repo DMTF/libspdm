@@ -35,6 +35,7 @@ typedef struct {
     uint32_t sender_data_transfer_size;
     uint32_t max_spdm_msg_size;
     uint32_t transport_additional_size;
+    uint32_t transport_header_size;
 } libspdm_device_capability_t;
 
 typedef struct {
@@ -447,7 +448,6 @@ typedef struct {
     /* Transport Layer information */
     libspdm_transport_encode_message_func transport_encode_message;
     libspdm_transport_decode_message_func transport_decode_message;
-    libspdm_transport_get_header_size_func transport_get_header_size;
 
     /* Cached plain text command
      * If the command is cipher text, decrypt then cache it. */

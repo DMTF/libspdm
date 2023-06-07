@@ -417,7 +417,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                              dhe_key_size + 0 + sizeof(uint16_t) +
                              opaque_key_exchange_rsp_size + signature_size +
                              hmac_size;
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -583,7 +583,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                              dhe_key_size + 0 + sizeof(uint16_t) +
                              opaque_key_exchange_rsp_size + signature_size +
                              hmac_size;
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -702,7 +702,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_error_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -723,7 +723,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_error_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -746,7 +746,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
             size_t transport_header_size;
 
             spdm_response_size = sizeof(spdm_error_response_t);
-            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             spdm_response->header.spdm_version =
@@ -816,7 +816,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                                  dhe_key_size + 0 + sizeof(uint16_t) +
                                  opaque_key_exchange_rsp_size +
                                  signature_size + hmac_size;
-            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             spdm_response->header.spdm_version =
@@ -945,7 +945,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_error_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -966,7 +966,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -996,7 +996,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
             size_t transport_header_size;
 
             spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
-            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             spdm_response->header.spdm_version =
@@ -1072,7 +1072,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                                  dhe_key_size + 0 + sizeof(uint16_t) +
                                  opaque_key_exchange_rsp_size +
                                  signature_size + hmac_size;
-            transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+            transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
             spdm_response->header.spdm_version =
@@ -1204,7 +1204,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         size_t transport_header_size;
 
         spdm_response_size = sizeof(spdm_error_response_t);
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         if(error_code <= 0xff) {
@@ -1284,7 +1284,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                              dhe_key_size + 0 + sizeof(uint16_t) +
                              opaque_key_exchange_rsp_size + signature_size +
                              hmac_size;
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -1453,7 +1453,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                              dhe_key_size + measurement_hash_size + sizeof(uint16_t) +
                              opaque_key_exchange_rsp_size + signature_size +
                              hmac_size;
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
         libspdm_zero_mem(spdm_response,spdm_response_size);
 
@@ -1629,7 +1629,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                              dhe_key_size + measurement_hash_size + sizeof(uint16_t) +
                              opaque_key_exchange_rsp_size + signature_size +
                              hmac_size;
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
         libspdm_zero_mem(spdm_response,spdm_response_size);
 
@@ -1800,7 +1800,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                              dhe_key_size + measurement_hash_size + sizeof(uint16_t) +
                              opaque_key_exchange_rsp_size + signature_size +
                              hmac_size;
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
         libspdm_zero_mem(spdm_response,spdm_response_size);
 
@@ -1970,7 +1970,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                              dhe_key_size + 0 + sizeof(uint16_t) +
                              opaque_key_exchange_rsp_size + signature_size +
                              hmac_size;
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
         libspdm_zero_mem(spdm_response,spdm_response_size);
 
@@ -2137,7 +2137,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                              dhe_key_size + 0 + sizeof(uint16_t) +
                              opaque_key_exchange_rsp_size + signature_size +
                              hmac_size;
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
         libspdm_zero_mem(spdm_response,spdm_response_size);
 
@@ -2308,7 +2308,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                              dhe_key_size + measurement_hash_size + sizeof(uint16_t) +
                              opaque_key_exchange_rsp_size + signature_size +
                              hmac_size;
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
         libspdm_zero_mem(spdm_response,spdm_response_size);
 
@@ -2482,7 +2482,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                              dhe_key_size + measurement_hash_size + sizeof(uint16_t) +
                              opaque_key_exchange_rsp_size + signature_size +
                              hmac_size;
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
         libspdm_zero_mem(spdm_response,spdm_response_size);
 
@@ -2654,7 +2654,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                              dhe_key_size + 0 + sizeof(uint16_t) +
                              opaque_key_exchange_rsp_size + signature_size +
                              hmac_size;
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
         libspdm_zero_mem(spdm_response,spdm_response_size);
 
@@ -2816,7 +2816,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         spdm_response_size = sizeof(spdm_key_exchange_response_t) +
                              dhe_key_size + 0 + sizeof(uint16_t) +
                              opaque_key_exchange_rsp_size + signature_size + hmac_size;
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
         libspdm_zero_mem(spdm_response,spdm_response_size);
 
@@ -2977,7 +2977,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                              dhe_key_size + 0 + sizeof(uint16_t) +
                              opaque_key_exchange_rsp_size + signature_size +
                              hmac_size;
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
         libspdm_zero_mem(spdm_response,spdm_response_size);
 
@@ -3144,7 +3144,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                              dhe_key_size + 0 + sizeof(uint16_t) +
                              opaque_key_exchange_rsp_size + signature_size +
                              hmac_size;
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
         libspdm_zero_mem(spdm_response,spdm_response_size);
 
@@ -3312,7 +3312,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                              dhe_key_size + 0 + sizeof(uint16_t) +
                              opaque_key_exchange_rsp_size + signature_size +
                              hmac_size;
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
         libspdm_zero_mem(spdm_response,spdm_response_size);
 
@@ -3480,7 +3480,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                              dhe_key_size + 0 + sizeof(uint16_t) +
                              opaque_key_exchange_rsp_size + signature_size +
                              hmac_size;
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
         libspdm_zero_mem(spdm_response,spdm_response_size);
 
@@ -3648,7 +3648,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                              dhe_key_size + 0 + sizeof(uint16_t) +
                              opaque_key_exchange_rsp_size + signature_size +
                              hmac_size;
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
         libspdm_zero_mem(spdm_response,spdm_response_size);
 
@@ -3817,7 +3817,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                              dhe_key_size + 0 + sizeof(uint16_t) +
                              opaque_key_exchange_rsp_size + signature_size +
                              hmac_size;
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
         libspdm_zero_mem(spdm_response,spdm_response_size);
 
@@ -3986,7 +3986,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                              dhe_key_size + 0 + sizeof(uint16_t) +
                              opaque_key_exchange_rsp_size + signature_size +
                              hmac_size;
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
         libspdm_zero_mem(spdm_response,spdm_response_size);
 
@@ -4150,7 +4150,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                              dhe_key_size + 0 + sizeof(uint16_t) +
                              opaque_key_exchange_rsp_size + signature_size +
                              hmac_size;
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -4307,7 +4307,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                              dhe_key_size + 0 + sizeof(uint16_t) +
                              opaque_key_exchange_rsp_size + signature_size +
                              hmac_size;
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_12;
@@ -4473,7 +4473,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                              dhe_key_size + 0 + sizeof(uint16_t) +
                              opaque_key_exchange_rsp_size + signature_size +
                              hmac_size;
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
         libspdm_zero_mem(spdm_response,spdm_response_size);
 
