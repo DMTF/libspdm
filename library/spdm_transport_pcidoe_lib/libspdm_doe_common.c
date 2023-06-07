@@ -110,7 +110,7 @@ libspdm_return_t libspdm_transport_pci_doe_encode_message(
         }
 
         /* message to secured message*/
-        transport_header_size = libspdm_transport_pci_doe_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_PCI_DOE_TRANSPORT_HEADER_SIZE;
         secured_message = (uint8_t *)*transport_message + transport_header_size;
         secured_message_size = *transport_message_size - transport_header_size;
         status = libspdm_encode_secured_message(
