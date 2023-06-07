@@ -9,6 +9,7 @@
 
 #include "library/spdm_common_lib.h"
 #include "library/spdm_crypt_lib.h"
+#include "industry_standard/pcidoe.h"
 
 #define LIBSPDM_PCI_DOE_ALIGNMENT 4
 #define LIBSPDM_PCI_DOE_SEQUENCE_NUMBER_COUNT 0
@@ -27,6 +28,9 @@
                                                       LIBSPDM_PCI_DOE_MAX_RANDOM_NUMBER_COUNT + \
                                                       LIBSPDM_MAX_AEAD_TAG_SIZE + \
                                                       (LIBSPDM_PCI_DOE_ALIGNMENT - 1))
+
+#define LIBSPDM_PCI_DOE_TRANSPORT_HEADER_SIZE  (sizeof(pci_doe_data_object_header_t) + \
+                                                sizeof(spdm_secured_message_cipher_header_t))
 
 /**
  * Encode an SPDM or APP message to a transport layer message.
@@ -97,20 +101,6 @@ libspdm_return_t libspdm_transport_pci_doe_decode_message(
     bool *is_app_message, bool is_requester,
     size_t transport_message_size, void *transport_message,
     size_t *message_size, void **message);
-
-/**
- * Return the maximum transport layer message header size.
- *   Transport Message Header Size + sizeof(spdm_secured_message_cipher_header_t))
- *
- *   For MCTP, Transport Message Header Size = sizeof(mctp_message_header_t)
- *   For PCI_DOE, Transport Message Header Size = sizeof(pci_doe_data_object_header_t)
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- *
- * @return size of maximum transport layer message header size
- **/
-uint32_t libspdm_transport_pci_doe_get_header_size(
-    void *spdm_context);
 
 /**
  * Get sequence number in an SPDM secure message.

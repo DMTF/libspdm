@@ -204,20 +204,3 @@ libspdm_return_t libspdm_pci_doe_decode_message(uint32_t **session_id,
     *message = (uint8_t *)transport_message + sizeof(pci_doe_data_object_header_t);
     return LIBSPDM_STATUS_SUCCESS;
 }
-
-/**
- * Return the maximum transport layer message header size.
- *   Transport Message Header Size + sizeof(spdm_secured_message_cipher_header_t))
- *
- *   For MCTP, Transport Message Header Size = sizeof(mctp_message_header_t)
- *   For PCI_DOE, Transport Message Header Size = sizeof(pci_doe_data_object_header_t)
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- *
- * @return size of maximum transport layer message header size
- **/
-uint32_t libspdm_transport_pci_doe_get_header_size(
-    void *spdm_context)
-{
-    return sizeof(pci_doe_data_object_header_t) + sizeof(spdm_secured_message_cipher_header_t);
-}
