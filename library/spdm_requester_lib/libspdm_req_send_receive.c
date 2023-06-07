@@ -33,7 +33,7 @@ libspdm_return_t libspdm_send_request(void *spdm_context, const uint32_t *sessio
                    request_size));
     LIBSPDM_INTERNAL_DUMP_HEX(request, request_size);
 
-    transport_header_size = context->transport_get_header_size(context);
+    transport_header_size = context->local_context.capability.transport_header_size;
     libspdm_get_scratch_buffer(context, (void**) &scratch_buffer, &scratch_buffer_size);
     libspdm_get_sender_buffer(context, (void**) &sender_buffer, &sender_buffer_size);
 
@@ -165,7 +165,7 @@ libspdm_return_t libspdm_receive_response(void *spdm_context, const uint32_t *se
     /* always use scratch buffer to response.
      * if it is secured message, this scratch buffer will be used.
      * if it is normal message, the response ptr will point to receiver buffer. */
-    transport_header_size = context->transport_get_header_size(context);
+    transport_header_size = context->local_context.capability.transport_header_size;
     libspdm_get_scratch_buffer (context, (void **)&scratch_buffer, &scratch_buffer_size);
     #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
     *response = scratch_buffer + libspdm_get_scratch_buffer_secure_message_offset(context) +
@@ -331,7 +331,7 @@ libspdm_return_t libspdm_handle_large_request(
     }
 
     /* now we can get sender buffer */
-    transport_header_size = spdm_context->transport_get_header_size(spdm_context);
+    transport_header_size = spdm_context->local_context.capability.transport_header_size;
 
     libspdm_get_scratch_buffer(spdm_context, (void**) &scratch_buffer, &scratch_buffer_size);
 

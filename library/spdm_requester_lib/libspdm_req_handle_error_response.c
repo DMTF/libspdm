@@ -40,7 +40,7 @@ static libspdm_return_t libspdm_requester_respond_if_ready(libspdm_context_t *sp
     libspdm_release_receiver_buffer (spdm_context);
 
     /* now we can get sender buffer */
-    transport_header_size = spdm_context->transport_get_header_size(spdm_context);
+    transport_header_size = spdm_context->local_context.capability.transport_header_size;
     status = libspdm_acquire_sender_buffer (spdm_context, &message_size, (void **)&message);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return status;
@@ -241,7 +241,7 @@ libspdm_return_t libspdm_handle_error_large_response(
     chunk_handle = extend_error_data->handle;
 
     /* now we can get sender buffer */
-    transport_header_size = spdm_context->transport_get_header_size(spdm_context);
+    transport_header_size = spdm_context->local_context.capability.transport_header_size;
 
     libspdm_get_scratch_buffer(spdm_context, (void**)&scratch_buffer, &scratch_buffer_size);
 

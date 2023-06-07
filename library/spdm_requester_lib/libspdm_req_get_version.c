@@ -60,7 +60,7 @@ static libspdm_return_t libspdm_try_get_version(libspdm_context_t *spdm_context,
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL, SPDM_GET_VERSION);
 
     /* -=[Construct Request Phase]=- */
-    transport_header_size = spdm_context->transport_get_header_size(spdm_context);
+    transport_header_size = spdm_context->local_context.capability.transport_header_size;
     status = libspdm_acquire_sender_buffer (spdm_context, &message_size, (void **)&message);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return status;

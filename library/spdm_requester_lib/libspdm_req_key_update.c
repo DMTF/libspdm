@@ -80,7 +80,7 @@ static libspdm_return_t libspdm_try_key_update(libspdm_context_t *spdm_context,
 
         /* Update key*/
 
-        transport_header_size = spdm_context->transport_get_header_size(spdm_context);
+        transport_header_size = spdm_context->local_context.capability.transport_header_size;
         status = libspdm_acquire_sender_buffer (spdm_context, &message_size, (void **)&message);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return status;
@@ -228,7 +228,7 @@ static libspdm_return_t libspdm_try_key_update(libspdm_context_t *spdm_context,
 
     /* Verify key*/
 
-    transport_header_size = spdm_context->transport_get_header_size(spdm_context);
+    transport_header_size = spdm_context->local_context.capability.transport_header_size;
     status = libspdm_acquire_sender_buffer (spdm_context, &message_size, (void **)&message);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return status;

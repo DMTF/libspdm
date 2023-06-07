@@ -47,7 +47,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context,
     spdm_error_response_t* error_rsp;
     size_t error_rsp_size;
 
-    test_message_header_size = libspdm_transport_test_get_header_size(spdm_context);
+    test_message_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
     spdm_response_size = spdm_test_context->test_buffer_size;
 
     if (error_large_response_sent == false) {

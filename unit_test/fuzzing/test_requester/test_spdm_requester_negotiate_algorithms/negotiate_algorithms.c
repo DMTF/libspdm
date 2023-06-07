@@ -30,7 +30,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
     size_t test_message_header_size;
 
     spdm_test_context = libspdm_get_test_context();
-    test_message_header_size = libspdm_transport_test_get_header_size(spdm_context);
+    test_message_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
     spdm_response = (void *)((uint8_t *)temp_buf + test_message_header_size);
     spdm_response_size = spdm_test_context->test_buffer_size;
     if (spdm_response_size > sizeof(temp_buf) - test_message_header_size - LIBSPDM_TEST_ALIGNMENT) {
