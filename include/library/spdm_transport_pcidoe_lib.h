@@ -23,14 +23,15 @@
  * |PCI_DOE|    8   |    4    |   0  | 2 |   2  |   0  |  |   0  | 16|   3    |  35 |
  * +-------+--------+---------------------------+------+--+------+---+--------+-----+
  */
-#define LIBSPDM_PCI_DOE_TRANSPORT_ADDITIONAL_SIZE    (16 + \
-                                                      LIBSPDM_PCI_DOE_SEQUENCE_NUMBER_COUNT + \
-                                                      LIBSPDM_PCI_DOE_MAX_RANDOM_NUMBER_COUNT + \
-                                                      LIBSPDM_MAX_AEAD_TAG_SIZE + \
-                                                      (LIBSPDM_PCI_DOE_ALIGNMENT - 1))
+#define LIBSPDM_PCI_DOE_TRANSPORT_ADDITIONAL_SIZE    (LIBSPDM_PCI_DOE_TRANSPORT_HEADER_SIZE + \
+                                                      LIBSPDM_PCI_DOE_TRANSPORT_TAIL_SIZE)
 
-#define LIBSPDM_PCI_DOE_TRANSPORT_HEADER_SIZE  (sizeof(pci_doe_data_object_header_t) + \
-                                                sizeof(spdm_secured_message_cipher_header_t))
+#define LIBSPDM_PCI_DOE_TRANSPORT_HEADER_SIZE  (8 + 8 + \
+                                                LIBSPDM_PCI_DOE_SEQUENCE_NUMBER_COUNT)
+
+#define LIBSPDM_PCI_DOE_TRANSPORT_TAIL_SIZE    (LIBSPDM_PCI_DOE_MAX_RANDOM_NUMBER_COUNT + \
+                                                LIBSPDM_MAX_AEAD_TAG_SIZE + \
+                                                (LIBSPDM_PCI_DOE_ALIGNMENT - 1))
 
 /**
  * Encode an SPDM or APP message to a transport layer message.
