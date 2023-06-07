@@ -23,14 +23,15 @@
  * | MCTP  |    1   |    4    |   2  | 2 |   2  |   1  |  |  32  | 16|   0    |  60 |
  * +-------+--------+---------------------------+------+--+------+---+--------+-----+
  */
-#define LIBSPDM_MCTP_TRANSPORT_ADDITIONAL_SIZE    (10 + \
-                                                   LIBSPDM_MCTP_SEQUENCE_NUMBER_COUNT + \
-                                                   LIBSPDM_MCTP_MAX_RANDOM_NUMBER_COUNT + \
-                                                   LIBSPDM_MAX_AEAD_TAG_SIZE + \
-                                                   (LIBSPDM_MCTP_ALIGNMENT - 1))
+#define LIBSPDM_MCTP_TRANSPORT_ADDITIONAL_SIZE    (LIBSPDM_MCTP_TRANSPORT_HEADER_SIZE + \
+                                                   LIBSPDM_MCTP_TRANSPORT_TAIL_SIZE)
 
-#define LIBSPDM_MCTP_TRANSPORT_HEADER_SIZE  (sizeof(mctp_message_header_t) + \
-                                             sizeof(spdm_secured_message_cipher_header_t))
+#define LIBSPDM_MCTP_TRANSPORT_HEADER_SIZE  (2 + 8 + \
+                                             LIBSPDM_MCTP_SEQUENCE_NUMBER_COUNT)
+
+#define LIBSPDM_MCTP_TRANSPORT_TAIL_SIZE    (LIBSPDM_MCTP_MAX_RANDOM_NUMBER_COUNT + \
+                                             LIBSPDM_MAX_AEAD_TAG_SIZE + \
+                                             (LIBSPDM_MCTP_ALIGNMENT - 1))
 
 /**
  * Encode an SPDM or APP message to a transport layer message.
