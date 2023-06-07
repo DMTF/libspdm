@@ -30,6 +30,9 @@
                                                    LIBSPDM_MAX_AEAD_TAG_SIZE + \
                                                    (LIBSPDM_TEST_ALIGNMENT - 1))
 
+#define LIBSPDM_TEST_TRANSPORT_HEADER_SIZE  (sizeof(libspdm_test_message_header_t) + \
+                                             sizeof(spdm_secured_message_cipher_header_t))
+
 #define LIBSPDM_TEST_MESSAGE_TYPE_SPDM 0x01
 #define LIBSPDM_TEST_MESSAGE_TYPE_SECURED_TEST 0x02
 
@@ -106,20 +109,6 @@ libspdm_return_t libspdm_transport_test_decode_message(
     bool *is_app_message, bool is_requester,
     size_t transport_message_size, void *transport_message,
     size_t *message_size, void **message);
-
-/**
- * Return the maximum transport layer message header size.
- *   Transport Message Header Size + sizeof(spdm_secured_message_cipher_header_t))
- *
- *   For MCTP, Transport Message Header Size = sizeof(mctp_message_header_t)
- *   For PCI_DOE, Transport Message Header Size = sizeof(pci_doe_data_object_header_t)
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- *
- * @return size of maximum transport layer message header size
- **/
-uint32_t libspdm_transport_test_get_header_size(
-    void *spdm_context);
 
 /**
  * Get sequence number in an SPDM secure message.

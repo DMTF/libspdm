@@ -110,7 +110,7 @@ libspdm_return_t libspdm_transport_test_encode_message(
             return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         }
 
-        transport_header_size = libspdm_transport_test_get_header_size(spdm_context);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
 
         if (!is_app_message) {
             /* SPDM message to APP message*/
