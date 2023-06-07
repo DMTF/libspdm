@@ -365,8 +365,8 @@ openssl req -new -key inter.key -out inter.req -sha256 -batch -subj '//CN=DMTF l
 openssl req -new -key end_requester.key -out end_requester.req -sha256 -batch -subj '//CN=DMTF libspdm SM2 requseter cert'
 openssl req -new -key end_responder.key -out end_responder.req -sha256 -batch -subj '//CN=DMTF libspdm SM2 responder cert'
 openssl x509 -req -days 3650 -in inter.req -CA ca.cert -CAkey ca.key -out inter.cert -set_serial 1 -extensions v3_inter -extfile ../openssl.cnf
-openssl x509 -req -days 3650 -in end_requester.req -CA inter.cert -CAkey inter.key -out end_requester.cert -set_serial 2 -extensions v3_inter -extfile ../openssl.cnf
-openssl x509 -req -days 3650 -in end_responder.req -CA inter.cert -CAkey inter.key -out end_responder.cert -set_serial 3 -extensions v3_inter -extfile ../openssl.cnf
+openssl x509 -req -days 3650 -in end_requester.req -CA inter.cert -CAkey inter.key -out end_requester.cert -set_serial 2 -extensions v3_end -extfile ../openssl.cnf
+openssl x509 -req -days 3650 -in end_responder.req -CA inter.cert -CAkey inter.key -out end_responder.cert -set_serial 3 -extensions v3_end -extfile ../openssl.cnf
 openssl asn1parse -in ca.cert -out ca.cert.der
 openssl asn1parse -in inter.cert -out inter.cert.der
 openssl asn1parse -in end_requester.cert -out end_requester.cert.der
