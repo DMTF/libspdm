@@ -24,14 +24,15 @@
  * | TEST  |    1   |    4    |   2  | 2 |   2  |   1  |  |  32  | 16|   3    |  63 |
  * +-------+--------+---------------------------+------+--+------+---+--------+-----+
  */
-#define LIBSPDM_TEST_TRANSPORT_ADDITIONAL_SIZE    (10 + \
-                                                   LIBSPDM_TEST_SEQUENCE_NUMBER_COUNT + \
-                                                   LIBSPDM_TEST_MAX_RANDOM_NUMBER_COUNT + \
-                                                   LIBSPDM_MAX_AEAD_TAG_SIZE + \
-                                                   (LIBSPDM_TEST_ALIGNMENT - 1))
+#define LIBSPDM_TEST_TRANSPORT_ADDITIONAL_SIZE    (LIBSPDM_TEST_TRANSPORT_HEADER_SIZE + \
+                                                   LIBSPDM_TEST_TRANSPORT_TAIL_SIZE)
 
-#define LIBSPDM_TEST_TRANSPORT_HEADER_SIZE  (sizeof(libspdm_test_message_header_t) + \
-                                             sizeof(spdm_secured_message_cipher_header_t))
+#define LIBSPDM_TEST_TRANSPORT_HEADER_SIZE  (2 + 8 + \
+                                             LIBSPDM_TEST_SEQUENCE_NUMBER_COUNT)
+
+#define LIBSPDM_TEST_TRANSPORT_TAIL_SIZE    (LIBSPDM_TEST_MAX_RANDOM_NUMBER_COUNT + \
+                                             LIBSPDM_MAX_AEAD_TAG_SIZE + \
+                                             (LIBSPDM_TEST_ALIGNMENT - 1))
 
 #define LIBSPDM_TEST_MESSAGE_TYPE_SPDM 0x01
 #define LIBSPDM_TEST_MESSAGE_TYPE_SECURED_TEST 0x02
