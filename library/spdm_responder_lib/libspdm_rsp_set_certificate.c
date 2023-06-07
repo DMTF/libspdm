@@ -133,6 +133,14 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
                                                response_size, response);
     }
 
+    if ((!libspdm_is_in_trusted_environment()) &&
+        (slot_id != 0) &&
+        (!spdm_context->last_spdm_request_session_id_valid)) {
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
+                                               response_size, response);
+    }
+
     root_cert_hash_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
 

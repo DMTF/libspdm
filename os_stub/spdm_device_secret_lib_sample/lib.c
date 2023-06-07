@@ -2018,6 +2018,11 @@ bool libspdm_psk_master_secret_hkdf_expand(
 #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
+bool libspdm_is_in_trusted_environment()
+{
+    return false;
+}
+
 bool libspdm_write_certificate_to_nvm(uint8_t slot_id, const void * cert_chain,
                                       size_t cert_chain_size)
 {

@@ -274,4 +274,14 @@ extern bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bo
                             bool is_device_cert_model);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP */
 
+#if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
+/**
+ * return if current code is running in a trusted environment.
+ *
+ * @retval  true   It is in a trusted environment.
+ * @retval  false  It is not in a trusted environment.
+ **/
+extern bool libspdm_is_in_trusted_environment();
+#endif /* LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP */
+
 #endif /* RESPONDER_SECRETLIB_H */
