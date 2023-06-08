@@ -1764,7 +1764,8 @@ bool libspdm_generate_measurement_summary_hash(
 bool libspdm_requester_data_sign(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint16_t req_base_asym_alg,
-    uint32_t base_hash_algo, bool is_data_hash,
+    uint32_t base_hash_algo,
+    uint8_t slot_id, bool is_data_hash,
     const uint8_t *message, size_t message_size,
     uint8_t *signature, size_t *sig_size)
 {
@@ -1834,7 +1835,8 @@ bool libspdm_requester_data_sign(
 bool libspdm_responder_data_sign(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint32_t base_asym_algo,
-    uint32_t base_hash_algo, bool is_data_hash,
+    uint32_t base_hash_algo,
+    uint8_t slot_id, bool is_data_hash,
     const uint8_t *message, size_t message_size,
     uint8_t *signature, size_t *sig_size)
 {

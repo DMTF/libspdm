@@ -785,6 +785,7 @@ bool libspdm_verify_peer_cert_chain_buffer(libspdm_context_t *spdm_context,
  **/
 bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
                                                bool is_requester,
+                                               uint8_t slot_id,
                                                uint8_t *signature)
 {
     bool result;
@@ -826,12 +827,14 @@ bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
             spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
             spdm_context->connection_info.algorithm.req_base_asym_alg,
             spdm_context->connection_info.algorithm.base_hash_algo,
+            slot_id,
             false, m1m2_buffer, m1m2_buffer_size, signature, &signature_size);
 #else
         result = libspdm_requester_data_sign(
             spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
             spdm_context->connection_info.algorithm.req_base_asym_alg,
             spdm_context->connection_info.algorithm.base_hash_algo,
+            slot_id,
             true, m1m2_hash, m1m2_hash_size, signature, &signature_size);
 #endif
 #else /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
@@ -845,6 +848,7 @@ bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
             spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
             spdm_context->connection_info.algorithm.base_asym_algo,
             spdm_context->connection_info.algorithm.base_hash_algo,
+            slot_id,
             false, m1m2_buffer, m1m2_buffer_size, signature,
             &signature_size);
 #else
@@ -852,6 +856,7 @@ bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
             spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
             spdm_context->connection_info.algorithm.base_asym_algo,
             spdm_context->connection_info.algorithm.base_hash_algo,
+            slot_id,
             true, m1m2_hash, m1m2_hash_size, signature,
             &signature_size);
 #endif

@@ -863,6 +863,7 @@ bool libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context
  **/
 bool libspdm_generate_measurement_signature(libspdm_context_t *spdm_context,
                                             libspdm_session_info_t *session_info,
+                                            uint8_t slot_id,
                                             uint8_t *signature);
 
 #endif /* SPDM_RESPONDER_LIB_INTERNAL_H */

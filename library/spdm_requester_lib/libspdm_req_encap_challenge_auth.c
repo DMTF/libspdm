@@ -177,7 +177,7 @@ libspdm_return_t libspdm_get_encap_response_challenge_auth(
             response_size, response);
     }
     result =
-        libspdm_generate_challenge_auth_signature(context, true, ptr);
+        libspdm_generate_challenge_auth_signature(context, true, slot_id, ptr);
     if (!result) {
         return libspdm_generate_encap_error_response(
             context, SPDM_ERROR_CODE_UNSPECIFIED,

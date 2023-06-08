@@ -16,6 +16,7 @@
  *
  * @param  req_base_asym_alg Indicates the signing algorithm.
  * @param  base_hash_algo    Indicates the hash algorithm.
+ * @param  slot_id           The number of slot for the certificate chain.
  * @param  is_data_hash      Indicates the message type.
  *                           If true, raw message before hash.
  *                           If false, message hash.
@@ -34,7 +35,8 @@ extern bool libspdm_requester_data_sign(
     spdm_version_number_t spdm_version,
     uint8_t op_code,
     uint16_t req_base_asym_alg,
-    uint32_t base_hash_algo, bool is_data_hash,
+    uint32_t base_hash_algo,
+    uint8_t slot_id, bool is_data_hash,
     const uint8_t *message, size_t message_size,
     uint8_t *signature, size_t *sig_size);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */

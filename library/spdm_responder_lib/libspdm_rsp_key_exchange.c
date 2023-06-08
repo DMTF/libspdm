@@ -84,8 +84,8 @@ bool libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context
 {
     bool result;
     size_t signature_size;
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     uint8_t slot_id;
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     uint8_t *th_curr_data;
     size_t th_curr_data_size;
     libspdm_th_managed_buffer_t th_curr;
@@ -105,9 +105,10 @@ bool libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context
     signature_size = libspdm_get_asym_signature_size(
         spdm_context->connection_info.algorithm.base_asym_algo);
 
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     slot_id = spdm_context->connection_info.local_used_cert_chain_slot_id;
     LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xFF));
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     if (slot_id == 0xFF) {
         result = libspdm_get_local_public_key_buffer(
             spdm_context, (const void **)&cert_chain_buffer, &cert_chain_buffer_size);
@@ -152,12 +153,14 @@ bool libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context
         spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
         spdm_context->connection_info.algorithm.base_asym_algo,
         spdm_context->connection_info.algorithm.base_hash_algo,
+        slot_id,
         false, th_curr_data, th_curr_data_size, signature, &signature_size);
 #else
     result = libspdm_responder_data_sign(
         spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
         spdm_context->connection_info.algorithm.base_asym_algo,
         spdm_context->connection_info.algorithm.base_hash_algo,
+        slot_id,
         true, hash_data, hash_size, signature, &signature_size);
 #endif
     if (result) {

@@ -873,6 +873,7 @@ bool libspdm_verify_peer_cert_chain_buffer(libspdm_context_t *spdm_context,
  **/
 bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
                                                bool is_requester,
+                                               uint8_t slot_id,
                                                uint8_t *signature);
 
 /**

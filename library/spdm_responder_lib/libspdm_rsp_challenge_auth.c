@@ -271,7 +271,7 @@ libspdm_return_t libspdm_get_response_challenge_auth(libspdm_context_t *spdm_con
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,
                                                response_size, response);
     }
-    result = libspdm_generate_challenge_auth_signature(spdm_context, false, ptr);
+    result = libspdm_generate_challenge_auth_signature(spdm_context, false, slot_id, ptr);
     if (!result) {
         libspdm_reset_message_c(spdm_context);
         return libspdm_generate_error_response(

@@ -9,6 +9,7 @@
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 bool libspdm_generate_measurement_signature(libspdm_context_t *spdm_context,
                                             libspdm_session_info_t *session_info,
+                                            uint8_t slot_id,
                                             uint8_t *signature)
 {
     size_t signature_size;
@@ -43,12 +44,14 @@ bool libspdm_generate_measurement_signature(libspdm_context_t *spdm_context,
         spdm_context->connection_info.version, SPDM_MEASUREMENTS,
         spdm_context->connection_info.algorithm.base_asym_algo,
         spdm_context->connection_info.algorithm.base_hash_algo,
+        slot_id
         false, l1l2_buffer, l1l2_buffer_size, signature, &signature_size);
 #else
     result = libspdm_responder_data_sign(
         spdm_context->connection_info.version, SPDM_MEASUREMENTS,
         spdm_context->connection_info.algorithm.base_asym_algo,
         spdm_context->connection_info.algorithm.base_hash_algo,
+        slot_id,
         true, l1l2_hash, l1l2_hash_size, signature, &signature_size);
 #endif
     return result;
@@ -379,7 +382,7 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
 
         fill_response_ptr += opaque_data_size;
 
-        ret = libspdm_generate_measurement_signature(spdm_context, session_info, fill_response_ptr);
+        ret = libspdm_generate_measurement_signature(spdm_context, session_info, slot_id_param, fill_response_ptr);
 
         if (!ret) {
             status = libspdm_generate_error_response(
