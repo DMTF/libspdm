@@ -24,6 +24,7 @@
  **/
 libspdm_return_t libspdm_init_connection(void *spdm_context, bool get_version_only);
 
+#if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
 /**
  * This function sends GET_DIGEST to get all digest of the certificate chains from device.
  *
@@ -136,6 +137,7 @@ libspdm_return_t libspdm_get_certificate_ex(void *spdm_context,
                                             void *cert_chain,
                                             const void **trust_anchor,
                                             size_t *trust_anchor_size);
+#endif /* LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT */
 
 /**
  * This function sends CHALLENGE to authenticate the device based upon the key in one slot.

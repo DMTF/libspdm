@@ -37,7 +37,7 @@ spdm_authentication(void *context, uint8_t *slot_mask,
 
     status = LIBSPDM_STATUS_SUCCESS;
 
-    #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+    #if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
     status = libspdm_get_digest(context, NULL, slot_mask, total_digest_buffer);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return status;
@@ -50,7 +50,7 @@ spdm_authentication(void *context, uint8_t *slot_mask,
             return status;
         }
     }
-    #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
+    #endif /* LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT */
 
     #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
     status = libspdm_challenge(context, NULL, slot_id, measurement_hash_type,

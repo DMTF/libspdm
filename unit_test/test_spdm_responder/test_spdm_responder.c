@@ -49,14 +49,17 @@ int libspdm_responder_key_update_test_main(void);
 int libspdm_responder_end_session_test_main(void);
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP) */
 
-#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
+#if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+#if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
 int spdm_responder_encap_get_digests_test_main(void);
 int spdm_responder_encap_get_certificate_test_main(void);
+#endif /* LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT */
+#if LIBSPDM_SEND_CHALLENGE_SUPPORT
 int libspdm_responder_encap_challenge_auth_test_main(void);
+#endif /* LIBSPDM_SEND_CHALLENGE_SUPPORT */
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
 int libspdm_responder_encapsulated_response_test_main(void);
-#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)*/
-
-#if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
 int libspdm_responder_encap_key_update_test_main(void);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP*/
 
@@ -152,22 +155,25 @@ int main(void)
     }
     #endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP) */
 
-    #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
+    #if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+    #if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
     if (spdm_responder_encap_get_digests_test_main() != 0) {
         return_value = 1;
     }
     if (spdm_responder_encap_get_certificate_test_main() != 0) {
         return_value = 1;
     }
+    #endif /* LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT */
+    #if LIBSPDM_SEND_CHALLENGE_SUPPORT
     if (libspdm_responder_encap_challenge_auth_test_main() != 0) {
         return_value = 1;
     }
+    #endif /* LIBSPDM_SEND_CHALLENGE_SUPPORT */
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
     if (libspdm_responder_encapsulated_response_test_main() != 0) {
         return_value = 1;
     }
-    #endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)*/
-
-    #if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
     if (libspdm_responder_encap_key_update_test_main() != 0) {
         return_value = 1;
     }

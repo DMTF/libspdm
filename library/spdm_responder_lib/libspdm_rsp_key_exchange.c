@@ -398,7 +398,7 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
             spdm_context->local_context.mut_auth_requested;
     }
     if (spdm_response->mut_auth_requested != 0) {
-#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
         spdm_context->connection_info.peer_used_cert_chain_slot_id =
             spdm_context->encap_context.req_slot_id;
         libspdm_init_mut_auth_encap_state(
@@ -414,7 +414,7 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
 #else
         spdm_response->mut_auth_requested = 0;
         spdm_response->req_slot_id_param = 0;
-#endif
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
     } else {
         spdm_response->req_slot_id_param = 0;
     }

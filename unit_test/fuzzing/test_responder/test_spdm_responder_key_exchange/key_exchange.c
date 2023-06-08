@@ -225,6 +225,8 @@ void libspdm_test_responder_key_exchange_case3(void **State)
     free(data);
 }
 
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && \
+    (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)
 void libspdm_test_responder_key_exchange_case4(void **State)
 {
     libspdm_test_context_t *spdm_test_context;
@@ -304,6 +306,7 @@ void libspdm_test_responder_key_exchange_case4(void **State)
     }
     free(data);
 }
+#endif
 
 void libspdm_test_responder_key_exchange_case5(void **State)
 {
@@ -632,10 +635,13 @@ void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
     libspdm_test_responder_key_exchange_case3(&State);
     libspdm_unit_test_group_teardown(&State);
 
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && \
+    (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)
     /* return response mut_auth_requested  */
     libspdm_unit_test_group_setup(&State);
     libspdm_test_responder_key_exchange_case4(&State);
     libspdm_unit_test_group_teardown(&State);
+#endif
 
     /*capability.flags: SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP */
     libspdm_unit_test_group_setup(&State);

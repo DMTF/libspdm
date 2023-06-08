@@ -85,7 +85,7 @@ libspdm_return_t libspdm_start_session(void *spdm_context, bool use_psk,
             break;
         case SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST:
         case SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS:
-#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
             status = libspdm_encapsulated_request(
                 context, session_id,
                 session_info->mut_auth_requested,
@@ -100,7 +100,7 @@ libspdm_return_t libspdm_start_session(void *spdm_context, bool use_psk,
                            "libspdm_start_session - unsupported mut_auth_requested - 0x%x\n",
                            session_info->mut_auth_requested));
             return LIBSPDM_STATUS_INVALID_MSG_FIELD;
-#endif
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) */
             break;
         default:
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
@@ -218,7 +218,7 @@ libspdm_return_t libspdm_start_session_ex(void *spdm_context, bool use_psk,
             break;
         case SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST:
         case SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS:
-#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
             status = libspdm_encapsulated_request(
                 context, session_id,
                 session_info->mut_auth_requested,
@@ -233,7 +233,7 @@ libspdm_return_t libspdm_start_session_ex(void *spdm_context, bool use_psk,
                            "libspdm_start_session - unsupported mut_auth_requested - 0x%x\n",
                            session_info->mut_auth_requested));
             return LIBSPDM_STATUS_INVALID_MSG_FIELD;
-#endif
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) */
             break;
         default:
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
