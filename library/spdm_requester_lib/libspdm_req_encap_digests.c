@@ -6,7 +6,8 @@
 
 #include "internal/libspdm_requester_lib.h"
 
-#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && \
+    (LIBSPDM_ENABLE_CAPABILITY_CERT_CAP)
 
 libspdm_return_t libspdm_get_encap_response_digest(void *spdm_context,
                                                    size_t request_size,
@@ -112,4 +113,4 @@ libspdm_return_t libspdm_get_encap_response_digest(void *spdm_context,
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)*/
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (..) */

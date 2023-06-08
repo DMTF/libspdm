@@ -14,7 +14,8 @@ static uint8_t m_send_receive_buffer[LIBSPDM_MAX_SENDER_RECEIVER_BUFFER_SIZE];
 static bool m_error_acquire_sender_buffer = false;
 static bool m_error_acquire_receiver_buffer = false;
 
-#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && \
+    (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)
 static uint8_t m_cert_chain_buffer[SPDM_MAX_CERTIFICATE_CHAIN_SIZE];
 #endif
 
@@ -116,10 +117,11 @@ int libspdm_unit_test_group_setup(void **state)
     m_error_acquire_sender_buffer = false;
     m_error_acquire_receiver_buffer = false;
 
-    #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
+    #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && \
+    (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)
     libspdm_register_cert_chain_buffer(
         spdm_context, m_cert_chain_buffer, sizeof(m_cert_chain_buffer));
-    #endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) */
+    #endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (...) */
 
     *state = spdm_test_context;
 

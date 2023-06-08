@@ -8,7 +8,7 @@
 #include "internal/libspdm_requester_lib.h"
 #include "internal/libspdm_secured_message_lib.h"
 
-#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+#if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
 
 static void *m_libspdm_local_certificate_chain;
 static size_t m_libspdm_local_certificate_chain_size;
@@ -3901,4 +3901,4 @@ int libspdm_requester_get_certificate_test_main(void)
                                   libspdm_unit_test_group_teardown);
 }
 
-#endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
+#endif /* LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT */

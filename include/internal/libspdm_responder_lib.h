@@ -408,7 +408,7 @@ libspdm_return_t libspdm_get_response_heartbeat(libspdm_context_t *spdm_context,
                                                 void *response);
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP) */
 
-#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
+#if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
 /**
  * Process the SPDM ENCAPSULATED_REQUEST request and return the response.
  *
@@ -451,6 +451,7 @@ libspdm_return_t libspdm_get_response_encapsulated_response_ack(
     libspdm_context_t *spdm_context, size_t request_size, const void *request,
     size_t *response_size, void *response);
 
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)
 /**
  * Get the SPDM encapsulated GET_DIGESTS request.
  *
@@ -517,7 +518,9 @@ libspdm_return_t libspdm_get_encap_request_get_certificate(libspdm_context_t *sp
 libspdm_return_t libspdm_process_encap_response_certificate(
     libspdm_context_t *spdm_context, size_t encap_response_size,
     const void *encap_response, bool *need_continue);
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT) */
 
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_CHALLENGE_SUPPORT)
 /**
  * Get the SPDM encapsulated CHALLENGE request.
  *
@@ -550,6 +553,7 @@ libspdm_return_t libspdm_get_encap_request_challenge(libspdm_context_t *spdm_con
 libspdm_return_t libspdm_process_encap_response_challenge_auth(
     libspdm_context_t *spdm_context, size_t encap_response_size,
     const void *encap_response, bool *need_continue);
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_CHALLENGE_SUPPORT) */
 
 /**
  * Get the SPDM encapsulated KEY_UPDATE request.
@@ -564,10 +568,9 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
  * @retval RETURN_SUCCESS               The encapsulated request is returned.
  * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
-libspdm_return_t
-libspdm_get_encap_request_key_update(libspdm_context_t *spdm_context,
-                                     size_t *encap_request_size,
-                                     void *encap_request);
+libspdm_return_t libspdm_get_encap_request_key_update(libspdm_context_t *spdm_context,
+                                                      size_t *encap_request_size,
+                                                      void *encap_request);
 
 /**
  * Process the SPDM encapsulated KEY_UPDATE response.
@@ -584,7 +587,7 @@ libspdm_get_encap_request_key_update(libspdm_context_t *spdm_context,
 libspdm_return_t libspdm_process_encap_response_key_update(
     libspdm_context_t *spdm_context, size_t encap_response_size,
     const void *encap_response, bool *need_continue);
-#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)*/
+#endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
 
 /**
  * Return the GET_SPDM_RESPONSE function via request code.
@@ -595,7 +598,7 @@ libspdm_return_t libspdm_process_encap_response_key_update(
  **/
 libspdm_get_spdm_response_func libspdm_get_response_func_via_request_code(uint8_t request_code);
 
-#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
 /**
  * This function initializes the mut_auth encapsulated state.
  *
@@ -604,13 +607,15 @@ libspdm_get_spdm_response_func libspdm_get_response_func_via_request_code(uint8_
  **/
 void libspdm_init_mut_auth_encap_state(libspdm_context_t *spdm_context, uint8_t mut_auth_requested);
 
+#if LIBSPDM_SEND_CHALLENGE_SUPPORT
 /**
  * This function initializes the basic_mut_auth encapsulated state.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  **/
 void libspdm_init_basic_mut_auth_encap_state(libspdm_context_t *spdm_context);
-#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)*/
+#endif /* LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT */
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
 
 /**
  * This function handles the encap error response.

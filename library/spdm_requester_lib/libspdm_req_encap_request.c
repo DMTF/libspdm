@@ -6,7 +6,7 @@
 
 #include "internal/libspdm_requester_lib.h"
 
-#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
+#if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
 
 typedef struct {
     uint8_t request_response_code;
@@ -36,6 +36,7 @@ libspdm_get_encap_response_func_via_request_code(uint8_t request_response_code)
     size_t index;
 
     libspdm_get_encap_response_struct_t get_encap_response_struct[] = {
+        #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
         #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
         { SPDM_GET_DIGESTS, libspdm_get_encap_response_digest },
         { SPDM_GET_CERTIFICATE, libspdm_get_encap_response_certificate },
@@ -44,6 +45,7 @@ libspdm_get_encap_response_func_via_request_code(uint8_t request_response_code)
         #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
         { SPDM_CHALLENGE, libspdm_get_encap_response_challenge_auth },
         #endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
 
         { SPDM_KEY_UPDATE, libspdm_get_encap_response_key_update },
     };
@@ -443,4 +445,4 @@ libspdm_return_t libspdm_send_receive_encap_request(void *spdm_context, const ui
     return libspdm_encapsulated_request(spdm_context, session_id, 0, NULL);
 }
 
-#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)*/
+#endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */

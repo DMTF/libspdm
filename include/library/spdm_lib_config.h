@@ -268,6 +268,22 @@
 #define LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP 1
 #endif
 
+/* If 1 then endpoint supports sending GET_CERTIFICATE and GET_DIGESTS requests.
+ * If enabled and endpoint is a Responder then LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+ * must also be enabled.
+ */
+#ifndef LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
+#define LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT 1
+#endif
+
+/* If 1 then endpoint supports sending CHALLENGE request.
+ * If enabled and endpoint is a Responder then LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+ * must also be enabled.
+ */
+#ifndef LIBSPDM_SEND_CHALLENGE_SUPPORT
+#define LIBSPDM_SEND_CHALLENGE_SUPPORT 1
+#endif
+
 /* When LIBSPDM_RESPOND_IF_READY_SUPPORT is 0 then
  *      - For a Requester, if the Responder sends a ResponseNotReady ERROR response then the error
  *        is immediately returned to the Integrator. The Requester cannot send a RESPOND_IF_READY

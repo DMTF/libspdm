@@ -7,7 +7,7 @@
 #include "spdm_unit_test.h"
 #include "internal/libspdm_requester_lib.h"
 
-#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
+#if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
 
 static uint8_t m_libspdm_local_certificate_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
 static uint8_t temp_buf[LIBSPDM_RECEIVER_BUFFER_SIZE];
@@ -610,7 +610,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
     }
 }
 
-#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_CERT_CAP)
 void libspdm_test_requester_encap_request_case1(void **State)
 {
     libspdm_return_t status;
@@ -1023,7 +1023,7 @@ void libspdm_test_requester_encap_request_case8(void **State)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     free(data);
 }
-#endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP */
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_CERT_CAP) */
 
 void libspdm_test_requester_encap_request_case9(void **State)
 {
@@ -1119,7 +1119,7 @@ int libspdm_requester_encap_request_test_main(void)
 {
     const struct CMUnitTest spdm_requester_encap_request_tests[] = {
         /* SendRequest failed*/
-#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_CERT_CAP)
         cmocka_unit_test(libspdm_test_requester_encap_request_case1),
         /* Success Case ,func :libspdm_get_encap_response_digest*/
         cmocka_unit_test(libspdm_test_requester_encap_request_case2),
@@ -1135,7 +1135,7 @@ int libspdm_requester_encap_request_test_main(void)
         cmocka_unit_test(libspdm_test_requester_encap_request_case7),
         /*Success Case ,func :libspdm_get_encap_response_certificate */
         cmocka_unit_test(libspdm_test_requester_encap_request_case8),
-#endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP */
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (..) */
 
         /*Success Case ,func :libspdm_get_encap_response_key_update */
         cmocka_unit_test(libspdm_test_requester_encap_request_case9),
@@ -1150,4 +1150,4 @@ int libspdm_requester_encap_request_test_main(void)
                                   libspdm_unit_test_group_teardown);
 }
 
-#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)*/
+#endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */

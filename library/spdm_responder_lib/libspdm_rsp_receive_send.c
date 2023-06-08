@@ -31,7 +31,7 @@ libspdm_get_spdm_response_func libspdm_get_response_func_via_request_code(uint8_
         #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
         { SPDM_GET_DIGESTS, libspdm_get_response_digests },
         { SPDM_GET_CERTIFICATE, libspdm_get_response_certificate },
-        #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP */
 
         #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
         { SPDM_CHALLENGE, libspdm_get_response_challenge_auth },
@@ -49,10 +49,10 @@ libspdm_get_spdm_response_func libspdm_get_response_func_via_request_code(uint8_
         { SPDM_PSK_EXCHANGE, libspdm_get_response_psk_exchange },
         #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
 
-        #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
+        #if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
         { SPDM_GET_ENCAPSULATED_REQUEST, libspdm_get_response_encapsulated_request },
         { SPDM_DELIVER_ENCAPSULATED_RESPONSE, libspdm_get_response_encapsulated_response_ack },
-        #endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)*/
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
 
         #if LIBSPDM_RESPOND_IF_READY_SUPPORT
         { SPDM_RESPOND_IF_READY, libspdm_get_response_respond_if_ready },
@@ -877,7 +877,8 @@ void libspdm_register_key_update_callback_func(
     context->spdm_key_update_callback = (void *)spdm_key_update_callback;
 }
 
-#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && \
+    (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)
 void libspdm_register_cert_chain_buffer(
     void *spdm_context, void *cert_chain_buffer, size_t cert_chain_buffer_max_size)
 {

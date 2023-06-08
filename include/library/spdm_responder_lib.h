@@ -246,7 +246,8 @@ void libspdm_register_key_update_callback_func(
  **/
 void libspdm_init_key_update_encap_state(void *spdm_context);
 
-#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && \
+    (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)
 /**
  * Register a buffer to store the Requester's certificate chain during mutual authentication.
  *

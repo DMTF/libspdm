@@ -525,7 +525,7 @@ libspdm_return_t libspdm_requester_chunk_get_test_receive_message(
     return LIBSPDM_STATUS_SEND_FAIL;
 
 }
-#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+#if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
 void libspdm_test_requester_chunk_get_case1(void** state)
 {
     libspdm_return_t status;
@@ -759,7 +759,7 @@ void libspdm_test_requester_chunk_get_case3(void** state)
     #endif
 }
 #endif
-#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+#if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
 void libspdm_test_requester_chunk_get_case4(void** state)
 {
     /* Copied from Get Digests Test Case 2*/
@@ -897,7 +897,7 @@ int libspdm_requester_chunk_get_test_main(void)
 {
     /* Test the CHUNK_GET handlers in various requester handlers */
     const struct CMUnitTest spdm_requester_chunk_get_tests[] = {
-#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+#if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
         /* Request a certificate in portions */
         cmocka_unit_test(libspdm_test_requester_chunk_get_case1),
 #endif
@@ -909,7 +909,7 @@ int libspdm_requester_chunk_get_test_main(void)
         /* Request Challenge */
         cmocka_unit_test(libspdm_test_requester_chunk_get_case3),
 #endif
-#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+#if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
         /* Request Digests */
         cmocka_unit_test(libspdm_test_requester_chunk_get_case4),
 #endif

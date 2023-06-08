@@ -315,7 +315,7 @@ static libspdm_return_t libspdm_try_challenge(libspdm_context_t *spdm_context,
     }
 
     /* -=[Update State Phase]=- */
-#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
     if ((auth_attribute & SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_BASIC_MUT_AUTH_REQ) != 0) {
         /* we must release it here, because libspdm_encapsulated_request() will acquire again. */
         libspdm_release_receiver_buffer (spdm_context);
@@ -331,7 +331,7 @@ static libspdm_return_t libspdm_try_challenge(libspdm_context_t *spdm_context,
         spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
         return LIBSPDM_STATUS_SUCCESS;
     }
-#endif
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) */
 
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     status = LIBSPDM_STATUS_SUCCESS;

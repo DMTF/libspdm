@@ -8,7 +8,7 @@
 #include "toolchain_harness.h"
 #include "internal/libspdm_requester_lib.h"
 
-#if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+#if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
 
 bool m_secured_on_off;
 uint8_t temp_buf[LIBSPDM_RECEIVER_BUFFER_SIZE];
@@ -235,4 +235,4 @@ size_t libspdm_get_max_buffer_size(void)
 void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size){
 
 }
-#endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
+#endif /* LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT */
