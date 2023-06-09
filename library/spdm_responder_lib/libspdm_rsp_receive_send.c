@@ -867,8 +867,8 @@ void libspdm_register_cert_chain_buffer(
     LIBSPDM_ASSERT(spdm_context != NULL);
 
     context = spdm_context;
-    context->encap_context.certificate_chain_buffer = cert_chain_buffer;
-    context->encap_context.certificate_chain_buffer_max_size = cert_chain_buffer_max_size;
-    context->encap_context.certificate_chain_buffer_size = 0;
+    context->mut_auth_cert_chain_buffer = cert_chain_buffer;
+    context->mut_auth_cert_chain_buffer_max_size = cert_chain_buffer_max_size;
+    context->mut_auth_cert_chain_buffer_size = 0;
 }
 #endif

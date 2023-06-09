@@ -195,7 +195,7 @@ void libspdm_init_mut_auth_encap_state(libspdm_context_t *spdm_context, uint8_t 
     spdm_context->encap_context.last_encap_request_size = 0;
     libspdm_zero_mem(&spdm_context->encap_context.last_encap_request_header,
                      sizeof(spdm_context->encap_context.last_encap_request_header));
-    spdm_context->encap_context.certificate_chain_buffer_size = 0;
+    spdm_context->mut_auth_cert_chain_buffer_size = 0;
 
     /* Clear Cache */
     libspdm_reset_message_mut_b(spdm_context);
@@ -215,8 +215,8 @@ void libspdm_init_mut_auth_encap_state(libspdm_context_t *spdm_context, uint8_t 
         LIBSPDM_ASSERT(spdm_context->encap_context.req_slot_id == 0xFF);
         LIBSPDM_ASSERT(mut_auth_requested == SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED);
     } else {
-        LIBSPDM_ASSERT(spdm_context->encap_context.certificate_chain_buffer != NULL);
-        LIBSPDM_ASSERT(spdm_context->encap_context.certificate_chain_buffer_max_size != 0);
+        LIBSPDM_ASSERT(spdm_context->mut_auth_cert_chain_buffer != NULL);
+        LIBSPDM_ASSERT(spdm_context->mut_auth_cert_chain_buffer_max_size != 0);
     }
 
     switch (mut_auth_requested) {
@@ -250,7 +250,7 @@ void libspdm_init_basic_mut_auth_encap_state(libspdm_context_t *spdm_context)
     spdm_context->encap_context.last_encap_request_size = 0;
     libspdm_zero_mem(&spdm_context->encap_context.last_encap_request_header,
                      sizeof(spdm_context->encap_context.last_encap_request_header));
-    spdm_context->encap_context.certificate_chain_buffer_size = 0;
+    spdm_context->mut_auth_cert_chain_buffer_size = 0;
 
     /* Clear Cache*/
     libspdm_reset_message_mut_b(spdm_context);
@@ -273,8 +273,8 @@ void libspdm_init_basic_mut_auth_encap_state(libspdm_context_t *spdm_context)
         spdm_context->encap_context.request_op_code_sequence[0] = SPDM_CHALLENGE;
     } else {
         LIBSPDM_ASSERT (spdm_context->encap_context.req_slot_id != 0xFF);
-        LIBSPDM_ASSERT(spdm_context->encap_context.certificate_chain_buffer != NULL);
-        LIBSPDM_ASSERT(spdm_context->encap_context.certificate_chain_buffer_max_size != 0);
+        LIBSPDM_ASSERT(spdm_context->mut_auth_cert_chain_buffer != NULL);
+        LIBSPDM_ASSERT(spdm_context->mut_auth_cert_chain_buffer_max_size != 0);
 
         spdm_context->encap_context.request_op_code_count = 3;
         spdm_context->encap_context.request_op_code_sequence[0] = SPDM_GET_DIGESTS;

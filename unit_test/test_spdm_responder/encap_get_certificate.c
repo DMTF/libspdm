@@ -111,7 +111,7 @@ void test_spdm_responder_encap_get_certificate_case1(void **state)
                                                         &need_continue);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
-    spdm_context->encap_context.certificate_chain_buffer_size = 0;
+    spdm_context->mut_auth_cert_chain_buffer_size = 0;
     free(data);
 }
 
@@ -168,7 +168,7 @@ void test_spdm_responder_encap_get_certificate_case2(void **state)
     assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
 #endif
 
-    spdm_context->encap_context.certificate_chain_buffer_size = 0;
+    spdm_context->mut_auth_cert_chain_buffer_size = 0;
     free(data);
 }
 
@@ -266,7 +266,7 @@ void test_spdm_responder_encap_get_certificate_case3(void **state)
                                                         &need_continue);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 
-    spdm_context->encap_context.certificate_chain_buffer_size = 0;
+    spdm_context->mut_auth_cert_chain_buffer_size = 0;
     free(data);
 }
 
@@ -359,7 +359,7 @@ void test_spdm_responder_encap_get_certificate_case4(void **state)
                                                         &need_continue);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 
-    spdm_context->encap_context.certificate_chain_buffer_size = 0;
+    spdm_context->mut_auth_cert_chain_buffer_size = 0;
     free(data);
 }
 
