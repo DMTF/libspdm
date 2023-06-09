@@ -36,7 +36,7 @@ libspdm_return_t libspdm_get_encap_request_get_certificate(libspdm_context_t *sp
     spdm_request->header.request_response_code = SPDM_GET_CERTIFICATE;
     spdm_request->header.param1 = spdm_context->encap_context.req_slot_id;
     spdm_request->header.param2 = 0;
-    spdm_request->offset = (uint16_t)spdm_context->encap_context.certificate_chain_buffer_size;;
+    spdm_request->offset = (uint16_t)spdm_context->mut_auth_cert_chain_buffer_size;;
     spdm_request->length = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "request (offset 0x%x, size 0x%x):\n",
                    spdm_request->offset, spdm_request->length));
@@ -75,9 +75,9 @@ libspdm_return_t libspdm_process_encap_response_certificate(
     spdm_response = encap_response;
     spdm_response_size = encap_response_size;
 
-    cert_chain_buffer = (uint8_t *)spdm_context->encap_context.certificate_chain_buffer;
-    cert_chain_buffer_size = spdm_context->encap_context.certificate_chain_buffer_size;
-    cert_chain_buffer_max_size = spdm_context->encap_context.certificate_chain_buffer_max_size;
+    cert_chain_buffer = (uint8_t *)spdm_context->mut_auth_cert_chain_buffer;
+    cert_chain_buffer_size = spdm_context->mut_auth_cert_chain_buffer_size;
+    cert_chain_buffer_max_size = spdm_context->mut_auth_cert_chain_buffer_max_size;
 
     if (spdm_response_size < sizeof(spdm_message_header_t)) {
         return LIBSPDM_STATUS_INVALID_MSG_SIZE;

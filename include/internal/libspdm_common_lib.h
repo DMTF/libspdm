@@ -379,9 +379,6 @@ typedef struct {
     spdm_message_header_t last_encap_request_header;
     size_t last_encap_request_size;
     uint16_t cert_chain_total_len;
-    void *certificate_chain_buffer;
-    size_t certificate_chain_buffer_size;
-    size_t certificate_chain_buffer_max_size;
 } libspdm_encap_context_t;
 
 #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
@@ -500,7 +497,13 @@ typedef struct {
 
     libspdm_session_info_t session_info[LIBSPDM_MAX_SESSION_COUNT];
 
-    /* Cache lastest session ID for HANDSHAKE_IN_THE_CLEAR */
+    /* Buffer that the Responder uses to store the Requester's certificate chain for
+     * mutual authentication. */
+    void *mut_auth_cert_chain_buffer;
+    size_t mut_auth_cert_chain_buffer_size;
+    size_t mut_auth_cert_chain_buffer_max_size;
+
+    /* Cache latest session ID for HANDSHAKE_IN_THE_CLEAR */
     uint32_t latest_session_id;
 
     /* Register for Responder state, be initial to Normal (responder only) */

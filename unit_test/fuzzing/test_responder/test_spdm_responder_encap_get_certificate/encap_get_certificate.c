@@ -75,10 +75,10 @@ void libspdm_test_responder_encap_get_certificate_case1(void **State)
                                        sizeof(m_cert_chain_buffer));
 
     libspdm_copy_mem(m_cert_chain_buffer, sizeof(m_cert_chain_buffer), data, data_size);
-    spdm_context->encap_context.certificate_chain_buffer_size = data_size;
+    spdm_context->mut_auth_cert_chain_buffer_size = data_size;
 
     uint16_t cert_chain_total_len =
-        (uint16_t)spdm_context->encap_context.certificate_chain_buffer_size +
+        (uint16_t)spdm_context->mut_auth_cert_chain_buffer_size +
         spdm_response->portion_length + spdm_response->remainder_length;
     spdm_context->encap_context.cert_chain_total_len = cert_chain_total_len;
 
@@ -144,10 +144,10 @@ void libspdm_test_responder_encap_get_certificate_case2(void **State)
                                        sizeof(m_cert_chain_buffer));
 
     libspdm_copy_mem(m_cert_chain_buffer, sizeof(m_cert_chain_buffer), data, data_size);
-    spdm_context->encap_context.certificate_chain_buffer_size = data_size;
+    spdm_context->mut_auth_cert_chain_buffer_size = data_size;
 
     uint16_t cert_chain_total_len =
-        (uint16_t)spdm_context->encap_context.certificate_chain_buffer_size +
+        (uint16_t)spdm_context->mut_auth_cert_chain_buffer_size +
         spdm_response->portion_length + spdm_response->remainder_length;
     spdm_context->encap_context.cert_chain_total_len = cert_chain_total_len;
 
@@ -214,10 +214,10 @@ void libspdm_test_responder_encap_get_certificate_case3(void **State)
                                        sizeof(m_cert_chain_buffer));
 
     libspdm_copy_mem(m_cert_chain_buffer, sizeof(m_cert_chain_buffer), data, data_size);
-    spdm_context->encap_context.certificate_chain_buffer_size = data_size;
+    spdm_context->mut_auth_cert_chain_buffer_size = data_size;
 
     uint16_t cert_chain_total_len =
-        (uint16_t)spdm_context->encap_context.certificate_chain_buffer_size +
+        (uint16_t)spdm_context->mut_auth_cert_chain_buffer_size +
         spdm_response->portion_length + spdm_response->remainder_length;
     spdm_context->encap_context.cert_chain_total_len = cert_chain_total_len;
 
