@@ -1269,6 +1269,8 @@ void libspdm_test_responder_measurements_case22(void **state)
         m_libspdm_use_asym_algo;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
+    spdm_context->connection_info.algorithm.measurement_spec =
+        m_libspdm_use_measurement_spec;
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
@@ -1277,11 +1279,11 @@ void libspdm_test_responder_measurements_case22(void **state)
 
     for (NumberOfMessages = 1; NumberOfMessages <= TOTAL_MESSAGES; NumberOfMessages++) {
         libspdm_get_random_number(SPDM_NONCE_SIZE,
-                                  m_libspdm_get_measurements_request6.nonce);
+                                  m_libspdm_get_measurements_request9.nonce);
         response_size = sizeof(response);
         status = libspdm_get_response_measurements(
-            spdm_context, m_libspdm_get_measurements_request6_size,
-            &m_libspdm_get_measurements_request6, &response_size,
+            spdm_context, m_libspdm_get_measurements_request9_size,
+            &m_libspdm_get_measurements_request9, &response_size,
             response);
         assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
         spdm_response = (void *)response;
@@ -1301,7 +1303,7 @@ void libspdm_test_responder_measurements_case22(void **state)
             assert_int_equal(
                 spdm_context->transcript.message_m.buffer_size,
                 NumberOfMessages *
-                (m_libspdm_get_measurements_request6_size +
+                (m_libspdm_get_measurements_request9_size +
                  sizeof(spdm_measurements_response_t) +
                  sizeof(spdm_measurement_block_dmtf_t) +
                  libspdm_get_measurement_hash_size(
