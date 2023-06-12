@@ -349,7 +349,9 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
         (uint8_t*)response + sizeof(spdm_measurements_response_t) + measurements_size;
 
     if(!libspdm_get_random_number(SPDM_NONCE_SIZE, fill_response_ptr)) {
-        return false;
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_UNSPECIFIED, 0,
+                                               response_size, response);
     }
     fill_response_ptr += SPDM_NONCE_SIZE;
 
