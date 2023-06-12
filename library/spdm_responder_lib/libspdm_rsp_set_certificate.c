@@ -8,6 +8,7 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
 
+#if LIBSPDM_CERT_PARSE_SUPPORT
 /*set_cert verify cert_chain*/
 static bool libspdm_set_cert_verify_certchain(const uint8_t *cert_chain, size_t cert_chain_size,
                                               uint32_t base_asym_algo, uint32_t base_hash_algo,
@@ -47,6 +48,7 @@ static bool libspdm_set_cert_verify_certchain(const uint8_t *cert_chain, size_t 
 
     return true;
 }
+#endif /*LIBSPDM_CERT_PARSE_SUPPORT*/
 
 libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_context,
                                                       size_t request_size, const void *request,
@@ -169,6 +171,7 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
         is_device_cert_model = true;
     }
 
+#if LIBSPDM_CERT_PARSE_SUPPORT
     /*check the cert_chain*/
     result = libspdm_set_cert_verify_certchain(cert_chain, cert_chain_size,
                                                spdm_context->local_context.algorithm.base_asym_algo,
@@ -179,6 +182,7 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,
                                                response_size, response);
     }
+#endif /*LIBSPDM_CERT_PARSE_SUPPORT*/
 
     /* set certificate to NV*/
     result = libspdm_write_certificate_to_nvm(slot_id, cert_chain,
