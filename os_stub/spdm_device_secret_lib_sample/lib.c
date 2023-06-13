@@ -28,6 +28,8 @@
 #include "library/memlib.h"
 #include "spdm_device_secret_lib_internal.h"
 
+bool g_in_trusted_environment = false;
+
 /* "LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY = 1" means use the RAW private key only
  * "LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY = 0" means controled by g_private_key_mode
  **/
@@ -2020,7 +2022,7 @@ bool libspdm_psk_master_secret_hkdf_expand(
 #if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
 bool libspdm_is_in_trusted_environment()
 {
-    return false;
+    return g_in_trusted_environment;
 }
 
 bool libspdm_write_certificate_to_nvm(uint8_t slot_id, const void * cert_chain,
