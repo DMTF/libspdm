@@ -615,6 +615,15 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         }
         context->max_psk_session_count = *(uint32_t *)data;
         break;
+    case LIBSPDM_DATA_MAX_SPDM_SESSION_SEQUENCE_NUMBER:
+        if (data_size != sizeof(uint64_t)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        context->max_spdm_session_sequence_number = *(uint64_t *)data;
+        if (context->max_spdm_session_sequence_number == 0) {
+            context->max_spdm_session_sequence_number = LIBSPDM_MAX_SPDM_SESSION_SEQUENCE_NUMBER;
+        }
+        break;
     default:
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         break;
@@ -850,6 +859,10 @@ libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_t
     case LIBSPDM_DATA_MAX_PSK_SESSION_COUNT:
         target_data_size = sizeof(uint32_t);
         target_data = &context->max_psk_session_count;
+        break;
+    case LIBSPDM_DATA_MAX_SPDM_SESSION_SEQUENCE_NUMBER:
+        target_data_size = sizeof(uint64_t);
+        target_data = &context->max_spdm_session_sequence_number;
         break;
     case LIBSPDM_DATA_VCA_CACHE:
         target_data_size = context->transcript.message_a.buffer_size;
@@ -2502,6 +2515,8 @@ libspdm_return_t libspdm_init_context_with_secured_context(void *spdm_context,
     context->local_context.capability.st1 = SPDM_ST1_VALUE_US;
 
     context->mut_auth_cert_chain_buffer_size = 0;
+
+    context->max_spdm_session_sequence_number = LIBSPDM_MAX_SPDM_SESSION_SEQUENCE_NUMBER;
 
     /* To be updated in libspdm_register_device_buffer_func */
     context->local_context.capability.data_transfer_size = 0;

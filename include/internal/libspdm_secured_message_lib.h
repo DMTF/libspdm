@@ -56,6 +56,7 @@ typedef struct {
     size_t aead_key_size;
     size_t aead_iv_size;
     size_t aead_tag_size;
+    uint64_t max_spdm_session_sequence_number;
     bool use_psk;
     libspdm_session_state_t session_state;
     libspdm_session_info_struct_master_secret_t master_secret;
@@ -138,6 +139,16 @@ void libspdm_secured_message_set_algorithms(void *spdm_secured_message_context,
 void libspdm_secured_message_set_psk_hint(void *spdm_secured_message_context,
                                           const void *psk_hint,
                                           size_t psk_hint_size);
+
+/**
+ * Set the maximum sequence_number to an SPDM secured message context.
+ *
+ * @param  spdm_secured_message_context      A pointer to the SPDM secured message context.
+ * @param  max_spdm_session_sequence_number  Indicate the maximum sequence_number in SPDM session.
+ */
+void libspdm_secured_message_set_max_spdm_session_sequence_number(
+    void *spdm_secured_message_context,
+    uint64_t max_spdm_session_sequence_number);
 
 /**
  * Allocates and Initializes one Diffie-Hellman Ephemeral (DHE) context for subsequent use,

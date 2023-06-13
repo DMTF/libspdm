@@ -21,6 +21,8 @@
 #define LIBSPDM_MAX_CT_EXPONENT 31
 #define LIBSPDM_MAX_RDT_EXPONENT 31
 
+#define LIBSPDM_MAX_SPDM_SESSION_SEQUENCE_NUMBER 0xFFFFFFFFFFFFFFFFull
+
 typedef struct {
     uint8_t spdm_version_count;
     spdm_version_number_t spdm_version[SPDM_MAX_VERSION_COUNT];
@@ -538,6 +540,9 @@ typedef struct {
     /* Current session count for DHE session and PSK session */
     uint32_t current_dhe_session_count;
     uint32_t current_psk_session_count;
+
+    /* see LIBSPDM_DATA_MAX_SPDM_SESSION_SEQUENCE_NUMBER */
+    uint64_t max_spdm_session_sequence_number;
 
 #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
     /* Chunk specific context */

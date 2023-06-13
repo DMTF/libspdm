@@ -161,6 +161,22 @@ void libspdm_secured_message_set_psk_hint(void *spdm_secured_message_context,
 }
 
 /**
+ * Set the maximum sequence_number to an SPDM secured message context.
+ *
+ * @param  spdm_secured_message_context      A pointer to the SPDM secured message context.
+ * @param  max_spdm_session_sequence_number  Indicate the maximum sequence_number in SPDM session.
+ */
+void libspdm_secured_message_set_max_spdm_session_sequence_number(
+    void *spdm_secured_message_context,
+    uint64_t max_spdm_session_sequence_number)
+{
+    libspdm_secured_message_context_t *secured_message_context;
+
+    secured_message_context = spdm_secured_message_context;
+    secured_message_context->max_spdm_session_sequence_number = max_spdm_session_sequence_number;
+}
+
+/**
  * Import the DHE Secret to an SPDM secured message context.
  *
  * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
