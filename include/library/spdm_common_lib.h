@@ -127,6 +127,19 @@ typedef enum {
     LIBSPDM_DATA_MAX_DHE_SESSION_COUNT,
     LIBSPDM_DATA_MAX_PSK_SESSION_COUNT,
 
+    /* DSP0277 defines 64bit sequence number.
+     * The default value is max number 0xFFFFFFFFFFFFFFFFull (64bit).
+     * 0 means the default value.
+     *
+     * https://datatracker.ietf.org/doc/html/draft-irtf-cfrg-aead-limits describes
+     * how to limit the use of keys in order to bound the advantage given to an attacker.
+     *
+     * The integrator can override the default value, such as 0xFFFFFFFF (32bit) or 0xFFFFFF (24bit).
+     * If KEY_UPDATE is not sent before the max sequence number is reached,
+     * the SPDM session will be terminated.
+     */
+    LIBSPDM_DATA_MAX_SPDM_SESSION_SEQUENCE_NUMBER,
+
     /* MAX */
     LIBSPDM_DATA_MAX
 } libspdm_data_type_t;

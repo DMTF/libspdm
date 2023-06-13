@@ -121,7 +121,7 @@ libspdm_return_t libspdm_encode_secured_message(
         break;
     }
 
-    if (sequence_number == (uint64_t)-1) {
+    if (sequence_number >= secured_message_context->max_spdm_session_sequence_number) {
         return LIBSPDM_STATUS_SEQUENCE_NUMBER_OVERFLOW;
     }
 
@@ -390,7 +390,7 @@ libspdm_return_t libspdm_decode_secured_message(
         return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
 
-    if (sequence_number == (uint64_t)-1) {
+    if (sequence_number >= secured_message_context->max_spdm_session_sequence_number) {
         libspdm_secured_message_set_last_spdm_error_struct(
             spdm_secured_message_context, &spdm_error);
         return LIBSPDM_STATUS_SEQUENCE_NUMBER_OVERFLOW;
