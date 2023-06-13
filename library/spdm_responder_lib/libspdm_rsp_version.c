@@ -66,6 +66,8 @@ libspdm_return_t libspdm_get_response_version(libspdm_context_t *spdm_context, s
     libspdm_reset_message_a(spdm_context);
     libspdm_reset_message_b(spdm_context);
     libspdm_reset_message_c(spdm_context);
+    libspdm_reset_message_mut_b(spdm_context);
+    libspdm_reset_message_mut_c(spdm_context);
 
     request_size = sizeof(spdm_get_version_request_t);
     status = libspdm_append_message_a(spdm_context, spdm_request, request_size);

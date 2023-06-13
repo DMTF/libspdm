@@ -56,6 +56,8 @@ static libspdm_return_t libspdm_try_get_version(libspdm_context_t *spdm_context,
     libspdm_reset_message_a(spdm_context);
     libspdm_reset_message_b(spdm_context);
     libspdm_reset_message_c(spdm_context);
+    libspdm_reset_message_mut_b(spdm_context);
+    libspdm_reset_message_mut_c(spdm_context);
     libspdm_reset_context(spdm_context);
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL, SPDM_GET_VERSION);
 

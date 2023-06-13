@@ -232,6 +232,10 @@ void libspdm_test_responder_version_case8(void **state)
     spdm_context->transcript.message_b.buffer_size = 8;
     libspdm_set_mem(spdm_context->transcript.message_c.buffer, 12, (uint8_t) 0xDD);
     spdm_context->transcript.message_c.buffer_size = 12;
+    libspdm_set_mem(spdm_context->transcript.message_mut_b.buffer, 14, (uint8_t) 0xCC);
+    spdm_context->transcript.message_mut_b.buffer_size = 14;
+    libspdm_set_mem(spdm_context->transcript.message_mut_c.buffer, 16, (uint8_t) 0xBB);
+    spdm_context->transcript.message_mut_c.buffer_size = 16;
 #endif
 
     response_size = sizeof(response);
@@ -254,6 +258,8 @@ void libspdm_test_responder_version_case8(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_b.buffer_size, 0);
     assert_int_equal(spdm_context->transcript.message_c.buffer_size, 0);
+    assert_int_equal(spdm_context->transcript.message_mut_b.buffer_size, 0);
+    assert_int_equal(spdm_context->transcript.message_mut_c.buffer_size, 0);
 #endif
 }
 
