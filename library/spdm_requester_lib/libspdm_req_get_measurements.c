@@ -307,7 +307,6 @@ static libspdm_return_t libspdm_try_get_measurement(libspdm_context_t *spdm_cont
             goto receive_done;
         }
     } else if (spdm_response->header.request_response_code != SPDM_MEASUREMENTS) {
-        libspdm_reset_message_m(spdm_context, session_info);
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
@@ -318,7 +317,6 @@ static libspdm_return_t libspdm_try_get_measurement(libspdm_context_t *spdm_cont
     if (measurement_operation ==
         SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_TOTAL_NUMBER_OF_MEASUREMENTS) {
         if (spdm_response->number_of_blocks != 0) {
-            libspdm_reset_message_m(spdm_context, session_info);
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             goto receive_done;
         }
@@ -339,7 +337,6 @@ static libspdm_return_t libspdm_try_get_measurement(libspdm_context_t *spdm_cont
     if (measurement_operation ==
         SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_TOTAL_NUMBER_OF_MEASUREMENTS) {
         if (measurement_record_data_length != 0) {
-            libspdm_reset_message_m(spdm_context, session_info);
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             goto receive_done;
         }
@@ -360,14 +357,12 @@ static libspdm_return_t libspdm_try_get_measurement(libspdm_context_t *spdm_cont
         if (spdm_response_size <
             sizeof(spdm_measurements_response_t) +
             measurement_record_data_length + SPDM_NONCE_SIZE + sizeof(uint16_t)) {
-            libspdm_reset_message_m(spdm_context, session_info);
             status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
             goto receive_done;
         }
         if ((spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_11) &&
             ((spdm_response->header.param2 & SPDM_MEASUREMENTS_RESPONSE_SLOT_ID_MASK)
              != slot_id_param)) {
-            libspdm_reset_message_m(spdm_context, session_info);
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             goto receive_done;
         }
@@ -417,7 +412,6 @@ static libspdm_return_t libspdm_try_get_measurement(libspdm_context_t *spdm_cont
         status = libspdm_append_message_m(spdm_context, session_info, spdm_response,
                                           spdm_response_size - signature_size);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
-            libspdm_reset_message_m(spdm_context, session_info);
             goto receive_done;
         }
 
@@ -438,7 +432,6 @@ static libspdm_return_t libspdm_try_get_measurement(libspdm_context_t *spdm_cont
         result = libspdm_verify_measurement_signature(
             spdm_context, session_info, signature, signature_size);
         if (!result) {
-            libspdm_reset_message_m(spdm_context, session_info);
             status = LIBSPDM_STATUS_VERIF_FAIL;
             goto receive_done;
         }
@@ -506,7 +499,6 @@ static libspdm_return_t libspdm_try_get_measurement(libspdm_context_t *spdm_cont
         status = libspdm_append_message_m(spdm_context, session_info, spdm_response,
                                           spdm_response_size);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
-            libspdm_reset_message_m(spdm_context, session_info);
             goto receive_done;
         }
     }
@@ -605,6 +597,11 @@ static libspdm_return_t libspdm_try_get_measurement(libspdm_context_t *spdm_cont
     #endif /* LIBSPDM_ENABLE_MSG_LOG */
 
 receive_done:
+    if ((status != LIBSPDM_STATUS_SUCCESS) &&
+        (status != LIBSPDM_STATUS_NOT_READY_PEER) &&
+        (status != LIBSPDM_STATUS_BUSY_PEER)) {
+        libspdm_reset_message_m(spdm_context, session_info);
+    }
     libspdm_release_receiver_buffer (spdm_context);
     return status;
 }
