@@ -37,6 +37,7 @@ void libspdm_test_responder_encap_challenge_case1(void **state)
                                                     m_libspdm_use_req_asym_algo, &data,
                                                     &data_size,
                                                     NULL, NULL);
+    libspdm_reset_message_mut_c(spdm_context);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = data_size;
     libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
@@ -87,6 +88,12 @@ void libspdm_test_responder_encap_challenge_case1(void **state)
                                                             spdm_response,
                                                             &need_continue);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    /* Completion of CHALLENGE sets M1/M2 to null. */
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    assert_int_equal(spdm_context->transcript.message_mut_c.buffer_size, 0);
+#else
+    assert_null(spdm_context->transcript.digest_context_mut_m1m2);
+#endif
     free(data);
 }
 
