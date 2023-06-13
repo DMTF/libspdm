@@ -51,6 +51,7 @@ jobs:
           - "-DLIBSPDM_ENABLE_CAPABILITY_CERT_CAP=0 -DLIBSPDM_ENABLE_CAPABILITY_CHAL_CAP=0 -DLIBSPDM_ENABLE_CAPABILITY_MEAS_CAP=0 -DLIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP=0 -DLIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP=0 -DLIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP=0 -DLIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP=0 -DLIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP=0 -DLIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP=0 -DLIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP=0 -DLIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP=0 -DLIBSPDM_RESPOND_IF_READY_SUPPORT=0"
           - "-DLIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT=0 -DLIBSPDM_FIPS_MODE=0"
           - "-DLIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT=1 -DLIBSPDM_FIPS_MODE=1"
+          - "-DDISABLE_TESTS=1"
         exclude:
           - os: ubuntu-latest
             toolchain: VS2019
@@ -177,37 +178,37 @@ jobs:
           make copy_sample_key
           make -j`nproc`
       - name: Test Requester
-        if: matrix.toolchain != 'LIBFUZZER' && matrix.toolchain != 'ARM_GNU'
+        if: matrix.toolchain != 'LIBFUZZER' && matrix.toolchain != 'ARM_GNU' && matrix.configurations != '-DDISABLE_TESTS=1'
         run: |
           cd build/bin
           ./test_spdm_requester
       - name: Test Responder
-        if: matrix.toolchain != 'LIBFUZZER' && matrix.toolchain != 'ARM_GNU'
+        if: matrix.toolchain != 'LIBFUZZER' && matrix.toolchain != 'ARM_GNU' && matrix.configurations != '-DDISABLE_TESTS=1'
         run: |
           cd build/bin
           ./test_spdm_responder
       - name: Test Common
-        if: matrix.toolchain != 'LIBFUZZER' && matrix.toolchain != 'ARM_GNU'
+        if: matrix.toolchain != 'LIBFUZZER' && matrix.toolchain != 'ARM_GNU' && matrix.configurations != '-DDISABLE_TESTS=1'
         run: |
           cd build/bin
           ./test_spdm_common
       - name: Test SPDM Crypt
-        if: matrix.toolchain != 'LIBFUZZER' && matrix.toolchain != 'ARM_GNU'
+        if: matrix.toolchain != 'LIBFUZZER' && matrix.toolchain != 'ARM_GNU'&& matrix.configurations != '-DDISABLE_TESTS=1'
         run: |
           cd build/bin
           ./test_spdm_crypt
       - name: Test Crypt
-        if: matrix.toolchain != 'LIBFUZZER' && matrix.toolchain != 'ARM_GNU'
+        if: matrix.toolchain != 'LIBFUZZER' && matrix.toolchain != 'ARM_GNU' && matrix.configurations != '-DDISABLE_TESTS=1'
         run: |
           cd build/bin
           ./test_crypt
       - name: Test FIPS
-        if: matrix.toolchain != 'LIBFUZZER' && matrix.toolchain != 'ARM_GNU' && matrix.configurations == '-DLIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT=1 -DLIBSPDM_FIPS_MODE=1'
+        if: matrix.toolchain != 'LIBFUZZER' && matrix.toolchain != 'ARM_GNU' && matrix.configurations == '-DLIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT=1 -DLIBSPDM_FIPS_MODE=1' && matrix.configurations != '-DDISABLE_TESTS=1'
         run: |
           cd build/bin
           ./test_spdm_fips
       - name: Fuzz test with initial seed
-        if: matrix.os == 'ubuntu-latest' && matrix.arch == 'x64'
+        if: matrix.os == 'ubuntu-latest' && matrix.arch == 'x64' && matrix.configurations != '-DDISABLE_TESTS=1'
         run: |
           cd build/bin
           ./run_initial_seed.sh
