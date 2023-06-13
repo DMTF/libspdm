@@ -290,13 +290,11 @@ static libspdm_return_t libspdm_try_get_capabilities(libspdm_context_t *spdm_con
     /* -=[Process Response Phase]=- */
     status = libspdm_append_message_a(spdm_context, spdm_request, spdm_request_size);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        status = LIBSPDM_STATUS_BUFFER_FULL;
         goto receive_done;
     }
 
     status = libspdm_append_message_a(spdm_context, spdm_response, spdm_response_size);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        status = LIBSPDM_STATUS_BUFFER_FULL;
         goto receive_done;
     }
 

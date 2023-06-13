@@ -644,7 +644,6 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
         libspdm_free_session_id(spdm_context, *session_id);
         libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group, dhe_context);
-        status = LIBSPDM_STATUS_BUFFER_FULL;
         goto receive_done;
     }
 
@@ -654,7 +653,6 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
         libspdm_free_session_id(spdm_context, *session_id);
         libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group, dhe_context);
-        status = LIBSPDM_STATUS_BUFFER_FULL;
         goto receive_done;
     }
 
@@ -677,7 +675,6 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
         libspdm_free_session_id(spdm_context, *session_id);
         libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group, dhe_context);
-        status = LIBSPDM_STATUS_BUFFER_FULL;
         goto receive_done;
     }
 
@@ -728,7 +725,6 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
         status = libspdm_append_message_k(spdm_context, session_info, true, verify_data, hmac_size);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             libspdm_free_session_id(spdm_context, *session_id);
-            status = LIBSPDM_STATUS_BUFFER_FULL;
             goto receive_done;
         }
     }

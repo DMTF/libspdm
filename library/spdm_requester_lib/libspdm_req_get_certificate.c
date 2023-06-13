@@ -273,13 +273,11 @@ static libspdm_return_t libspdm_try_get_certificate(libspdm_context_t *spdm_cont
             status = libspdm_append_message_b(spdm_context, spdm_request, spdm_request_size);
             if (LIBSPDM_STATUS_IS_ERROR(status)) {
                 libspdm_release_receiver_buffer (spdm_context);
-                status = LIBSPDM_STATUS_BUFFER_FULL;
                 goto done;
             }
             status = libspdm_append_message_b(spdm_context, spdm_response, spdm_response_size);
             if (LIBSPDM_STATUS_IS_ERROR(status)) {
                 libspdm_release_receiver_buffer (spdm_context);
-                status = LIBSPDM_STATUS_BUFFER_FULL;
                 goto done;
             }
         }

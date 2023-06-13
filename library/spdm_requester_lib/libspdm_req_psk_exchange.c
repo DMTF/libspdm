@@ -462,7 +462,6 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
                                       spdm_request_size);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_free_session_id(spdm_context, *session_id);
-        status = LIBSPDM_STATUS_BUFFER_FULL;
         goto receive_done;
     }
 
@@ -470,7 +469,6 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
                                       spdm_response_size - hmac_size);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_free_session_id(spdm_context, *session_id);
-        status = LIBSPDM_STATUS_BUFFER_FULL;
         goto receive_done;
     }
 
@@ -505,7 +503,6 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
     status = libspdm_append_message_k(spdm_context, session_info, true, verify_data, hmac_size);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_free_session_id(spdm_context, *session_id);
-        status = LIBSPDM_STATUS_BUFFER_FULL;
         goto receive_done;
     }
 
