@@ -1,3 +1,6 @@
+==== NOTE ====
+After regenerate new key in sample_key, the raw_data_key_gen.py need run to generate sync raw data key.
+
 ==== RSA ====
 Generate a root key:
 
