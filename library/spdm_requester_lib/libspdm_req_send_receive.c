@@ -257,6 +257,10 @@ libspdm_return_t libspdm_receive_response(void *spdm_context, const uint32_t *se
     }
 
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
+        if ((session_id != NULL) &&
+            (context->last_spdm_error.error_code == SPDM_ERROR_CODE_DECRYPT_ERROR)) {
+            libspdm_free_session_id(context, *session_id);
+        }
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "libspdm_receive_spdm_response[%x] status - %p\n",
                        (session_id != NULL) ? *session_id : 0x0, status));
