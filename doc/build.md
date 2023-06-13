@@ -248,3 +248,17 @@ a) [NIOS2 GNU](https://www.intel.com/content/www/us/en/docs/programmable/683689/
    cmake -DARCH=riscv32 -DTOOLCHAIN=RISCV_XPACK -DTARGET=Release -DCRYPTO=mbedtls ..
    ```
    Note: `make -j` can be used to accelerate the build.
+
+### Linux Builds inside build environments
+
+If the toolchain is set to NONE then it will use the native toolchain of the
+build environment. This is useful inside build environments such as Buildroot
+or OpenEmbedded.
+
+```shell
+cd libspdm
+mkdir build
+cd build
+cmake -DARCH=<arch> -DTOOLCHAIN=NONE -DTARGET=<Debug|Release> -DCRYPTO=<mbedtls|openssl> ..
+make
+```
