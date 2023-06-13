@@ -512,6 +512,12 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
             context, session_id, false, false,
             my_response_size, my_response, response_size, response);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
+            if ((session_id != NULL) &&
+                ((status == LIBSPDM_STATUS_SEQUENCE_NUMBER_OVERFLOW) ||
+                 (status == LIBSPDM_STATUS_LOW_ENTROPY) ||
+                 (status == LIBSPDM_STATUS_CRYPTO_ERROR))) {
+                libspdm_free_session_id(context, *session_id);
+            }
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "transport_encode_message : %p\n", status));
             return status;
         }
@@ -717,6 +723,12 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
         context, session_id, is_app_message, false,
         my_response_size, my_response, response_size, response);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
+        if ((session_id != NULL) &&
+            ((status == LIBSPDM_STATUS_SEQUENCE_NUMBER_OVERFLOW) ||
+             (status == LIBSPDM_STATUS_LOW_ENTROPY) ||
+             (status == LIBSPDM_STATUS_CRYPTO_ERROR))) {
+            libspdm_free_session_id(context, *session_id);
+        }
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "transport_encode_message : %p\n", status));
         return status;
     }
