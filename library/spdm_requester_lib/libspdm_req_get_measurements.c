@@ -411,7 +411,6 @@ static libspdm_return_t libspdm_try_get_measurement(libspdm_context_t *spdm_cont
         status = libspdm_append_message_m(spdm_context, session_info, spdm_request,
                                           spdm_request_size);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
-            status = LIBSPDM_STATUS_BUFFER_FULL;
             goto receive_done;
         }
 
@@ -419,7 +418,6 @@ static libspdm_return_t libspdm_try_get_measurement(libspdm_context_t *spdm_cont
                                           spdm_response_size - signature_size);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             libspdm_reset_message_m(spdm_context, session_info);
-            status = LIBSPDM_STATUS_BUFFER_FULL;
             goto receive_done;
         }
 
@@ -502,7 +500,6 @@ static libspdm_return_t libspdm_try_get_measurement(libspdm_context_t *spdm_cont
         status = libspdm_append_message_m(spdm_context, session_info, spdm_request,
                                           spdm_request_size);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
-            status = LIBSPDM_STATUS_BUFFER_FULL;
             goto receive_done;
         }
 
@@ -510,7 +507,6 @@ static libspdm_return_t libspdm_try_get_measurement(libspdm_context_t *spdm_cont
                                           spdm_response_size);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             libspdm_reset_message_m(spdm_context, session_info);
-            status = LIBSPDM_STATUS_BUFFER_FULL;
             goto receive_done;
         }
     }

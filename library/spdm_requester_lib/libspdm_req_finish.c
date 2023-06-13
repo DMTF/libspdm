@@ -435,7 +435,6 @@ static libspdm_return_t libspdm_try_send_receive_finish(libspdm_context_t *spdm_
                                       sizeof(spdm_finish_request_t));
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_release_sender_buffer (spdm_context);
-        status = LIBSPDM_STATUS_BUFFER_FULL;
         goto error;
     }
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
@@ -449,7 +448,6 @@ static libspdm_return_t libspdm_try_send_receive_finish(libspdm_context_t *spdm_
         status = libspdm_append_message_f(spdm_context, session_info, true, ptr, signature_size);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             libspdm_release_sender_buffer (spdm_context);
-            status = LIBSPDM_STATUS_BUFFER_FULL;
             goto error;
         }
         ptr += signature_size;
@@ -466,7 +464,6 @@ static libspdm_return_t libspdm_try_send_receive_finish(libspdm_context_t *spdm_
     status = libspdm_append_message_f(spdm_context, session_info, true, ptr, hmac_size);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_release_sender_buffer (spdm_context);
-        status = LIBSPDM_STATUS_BUFFER_FULL;
         goto error;
     }
 
@@ -542,7 +539,6 @@ static libspdm_return_t libspdm_try_send_receive_finish(libspdm_context_t *spdm_
     status = libspdm_append_message_f(spdm_context, session_info, true, spdm_response,
                                       sizeof(spdm_finish_response_t));
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        status = LIBSPDM_STATUS_BUFFER_FULL;
         goto receive_done;
     }
 
@@ -566,7 +562,6 @@ static libspdm_return_t libspdm_try_send_receive_finish(libspdm_context_t *spdm_
             sizeof(spdm_finish_response_t),
             hmac_size);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
-            status = LIBSPDM_STATUS_BUFFER_FULL;
             goto receive_done;
         }
     }
