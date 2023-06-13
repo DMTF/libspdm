@@ -33,7 +33,7 @@ extern size_t libspdm_secret_lib_challenge_opaque_data_size;
  * Test 1: receiving a correct CHALLENGE message from the requester with
  * no opaque data, no measurements, and slot number 0.
  * Expected behavior: the requester accepts the request and produces a valid
- * CHALLENGE_AUTH response message.
+ * CHALLENGE_AUTH response message and Completion of CHALLENGE sets M1/M2 to null.
  **/
 void test_libspdm_requester_encap_challenge_auth_case1(void **state)
 {
@@ -85,7 +85,7 @@ void test_libspdm_requester_encap_challenge_auth_case1(void **state)
         data_size;
 
     libspdm_secret_lib_challenge_opaque_data_size = 0;
-    libspdm_reset_message_c(spdm_context);
+    libspdm_reset_message_mut_c(spdm_context);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->transcript.message_m.buffer_size =
         spdm_context->transcript.message_m.max_buffer_size;
@@ -113,6 +113,9 @@ void test_libspdm_requester_encap_challenge_auth_case1(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_m.buffer_size,
                      0);
+    assert_int_equal(spdm_context->transcript.message_mut_c.buffer_size, 0);
+#else
+    assert_null(spdm_context->transcript.digest_context_mut_m1m2);
 #endif
     free(data);
 }

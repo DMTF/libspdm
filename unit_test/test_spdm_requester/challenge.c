@@ -1920,6 +1920,13 @@ void libspdm_test_requester_challenge_case2(void **state)
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
         measurement_hash, NULL);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    /* Completion of CHALLENGE sets M1/M2 to null. */
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    assert_int_equal(spdm_context->transcript.message_c.buffer_size, 0);
+#else
+    assert_null(spdm_context->transcript.digest_context_m1m2);
+#endif
     free(data);
 }
 

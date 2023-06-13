@@ -106,8 +106,12 @@ void libspdm_test_responder_challenge_auth_case1(void **state)
     assert_int_equal(spdm_response->header.request_response_code, SPDM_CHALLENGE_AUTH);
     assert_int_equal(spdm_response->header.param1, 0);
     assert_int_equal(spdm_response->header.param2, 1 << 0);
+    /* Completion of CHALLENGE sets M1/M2 to null. */
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
+    assert_int_equal(spdm_context->transcript.message_c.buffer_size, 0);
+#else
+    assert_null(spdm_context->transcript.digest_context_m1m2);
 #endif
     free(data1);
 }
