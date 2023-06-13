@@ -601,9 +601,9 @@ void libspdm_test_responder_challenge_auth_case10(void **state) {
     libspdm_reset_message_c(spdm_context);
 
     response_size = sizeof(response);
-    libspdm_get_random_number (SPDM_NONCE_SIZE, m_libspdm_challenge_request3.nonce);
-    status = libspdm_get_response_challenge_auth (spdm_context, m_libspdm_challenge_request3_size,
-                                                  &m_libspdm_challenge_request3, &response_size,
+    libspdm_get_random_number (SPDM_NONCE_SIZE, m_libspdm_challenge_request4.nonce);
+    status = libspdm_get_response_challenge_auth (spdm_context, m_libspdm_challenge_request4_size,
+                                                  &m_libspdm_challenge_request4, &response_size,
                                                   response);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal (response_size, sizeof(spdm_error_response_t));
