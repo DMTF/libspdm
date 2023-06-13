@@ -262,3 +262,11 @@ cd build
 cmake -DARCH=<arch> -DTOOLCHAIN=NONE -DTARGET=<Debug|Release> -DCRYPTO=<mbedtls|openssl> ..
 make
 ```
+
+### Disabling unit and fuzz tests
+
+Unit tests can be disable by adding -DDISABLE_TESTS=1 to CMake.
+
+```shell
+-DDISABLE_TESTS=1
+```
