@@ -241,28 +241,27 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
 
         data32 = libspdm_read_uint32((const uint8_t *)data);
 
-    #if !(LIBSPDM_ENABLE_CAPABILITY_CERT_CAP)
-        LIBSPDM_ASSERT((data32 & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP) == 0);
-    #endif /* !LIBSPDM_ENABLE_CAPABILITY_CERT_CAP */
-
-    #if !(LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP)
-        LIBSPDM_ASSERT((data32 & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP) == 0);
-    #endif /* !LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP */
-
-    #if !(LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP)
-        LIBSPDM_ASSERT((data32 & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP) == 0);
-    #endif /* !LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
-
-    #if !(LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP)
-        LIBSPDM_ASSERT((data32 & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP) ==
-                       0);
-    #endif /* !LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP */
-
-    #if !(LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP)
-        LIBSPDM_ASSERT((data32 & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP) == 0);
-    #endif /* !LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
-
         if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
+            #if !(LIBSPDM_ENABLE_CAPABILITY_CERT_CAP)
+            LIBSPDM_ASSERT((data32 & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP) == 0);
+            #endif /* !LIBSPDM_ENABLE_CAPABILITY_CERT_CAP */
+
+            #if !(LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP)
+            LIBSPDM_ASSERT((data32 & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP) == 0);
+            #endif /* !LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP */
+
+            #if !(LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP)
+            LIBSPDM_ASSERT((data32 & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP) == 0);
+            #endif /* !LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
+
+            #if !(LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP)
+            LIBSPDM_ASSERT((data32 & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP) == 0);
+            #endif /* !LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP */
+
+            #if !(LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP)
+            LIBSPDM_ASSERT((data32 & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP) == 0);
+            #endif /* !LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
+
             context->connection_info.capability.flags = data32;
         } else {
             context->local_context.capability.flags = data32;
