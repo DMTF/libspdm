@@ -848,6 +848,7 @@ static void libspdm_test_set_data_case9(void **state)
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
+    libspdm_data_parameter_t parameter;
 
     void *data;
     size_t data_size;
@@ -877,8 +878,9 @@ static void libspdm_test_set_data_case9(void **state)
         spdm_context->local_context.peer_root_cert_provision_size[root_cert_index] = 0;
         spdm_context->local_context.peer_root_cert_provision[root_cert_index] = NULL;
     }
+    parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
     status = libspdm_set_data(spdm_context, LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT,
-                              NULL, root_cert_buffer, root_cert_size);
+                              &parameter, root_cert_buffer, root_cert_size);
     assert_int_equal (status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal (spdm_context->local_context.peer_root_cert_provision_size[0], root_cert_size);
     assert_ptr_equal (spdm_context->local_context.peer_root_cert_provision[0], root_cert_buffer);
@@ -889,7 +891,7 @@ static void libspdm_test_set_data_case9(void **state)
         spdm_context->local_context.peer_root_cert_provision[root_cert_index] = root_cert_buffer;
     }
     status = libspdm_set_data(spdm_context, LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT,
-                              NULL, root_cert_buffer, root_cert_size);
+                              &parameter, root_cert_buffer, root_cert_size);
     assert_int_equal (status, LIBSPDM_STATUS_BUFFER_FULL);
 
     free(data);
@@ -1345,8 +1347,6 @@ static void libspdm_test_export_master_secret_case19(void **state)
 static void libspdm_test_check_context_case20(void **state)
 {
     void *context;
-    uint32_t data32;
-    libspdm_data_parameter_t parameter;
     bool result;
 
     context = (void *)malloc (libspdm_get_context_size());
@@ -1374,11 +1374,13 @@ static void libspdm_test_check_context_case20(void **state)
     result = libspdm_check_context (context);
     assert_int_equal(true, result);
 
-    parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
+    libspdm_register_transport_layer_func(context,
+                                          SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12,
+                                          LIBSPDM_TEST_TRANSPORT_HEADER_SIZE,
+                                          LIBSPDM_TEST_TRANSPORT_TAIL_SIZE,
+                                          libspdm_transport_test_encode_message,
+                                          libspdm_transport_test_decode_message);
 
-    data32 = SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12;
-    libspdm_set_data (context, LIBSPDM_DATA_CAPABILITY_MAX_SPDM_MSG_SIZE, &parameter, &data32,
-                      sizeof(data32));
     result = libspdm_check_context (context);
     assert_int_equal(false, result);
 }

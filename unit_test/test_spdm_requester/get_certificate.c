@@ -2159,6 +2159,7 @@ void libspdm_test_requester_get_certificate_case2(void **state)
         m_libspdm_use_req_asym_algo;
 
     libspdm_zero_mem(&parameter, sizeof(parameter));
+    parameter.location = LIBSPDM_DATA_LOCATION_CONNECTION;
     parameter.additional_data[0] = 0;
     libspdm_set_data(spdm_context, LIBSPDM_DATA_PEER_USED_CERT_CHAIN_BUFFER, &parameter,
                      data, data_size);

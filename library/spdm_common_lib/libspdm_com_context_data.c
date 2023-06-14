@@ -202,7 +202,7 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
                              sizeof(context->connection_info.version),
                              data,
                              sizeof(spdm_version_number_t));
-        } else {
+        } else if (parameter->location == LIBSPDM_DATA_LOCATION_LOCAL) {
             context->local_context.version.spdm_version_count =
                 (uint8_t)(data_size / sizeof(spdm_version_number_t));
             libspdm_copy_mem(context->local_context.version.spdm_version,
@@ -210,6 +210,8 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
                              data,
                              context->local_context.version.spdm_version_count *
                              sizeof(spdm_version_number_t));
+        } else {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         break;
     case LIBSPDM_DATA_SECURED_MESSAGE_VERSION:
@@ -222,7 +224,7 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
                              sizeof(context->connection_info.secured_message_version),
                              data,
                              sizeof(spdm_version_number_t));
-        } else {
+        } else if (parameter->location == LIBSPDM_DATA_LOCATION_LOCAL) {
             context->local_context.secured_message_version
             .spdm_version_count = (uint8_t)(data_size / sizeof(spdm_version_number_t));
             libspdm_copy_mem(context->local_context
@@ -232,6 +234,8 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
                              data,
                              context->local_context.secured_message_version.
                              spdm_version_count * sizeof(spdm_version_number_t));
+        } else {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         break;
     case LIBSPDM_DATA_CAPABILITY_FLAGS:
@@ -241,7 +245,7 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
 
         data32 = libspdm_read_uint32((const uint8_t *)data);
 
-        if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
+        if (parameter->location == LIBSPDM_DATA_LOCATION_LOCAL) {
             #if !(LIBSPDM_ENABLE_CAPABILITY_CERT_CAP)
             LIBSPDM_ASSERT((data32 & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP) == 0);
             #endif /* !LIBSPDM_ENABLE_CAPABILITY_CERT_CAP */
@@ -262,9 +266,11 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
             LIBSPDM_ASSERT((data32 & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP) == 0);
             #endif /* !LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
 
+            context->local_context.capability.flags = data32;
+        } else if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
             context->connection_info.capability.flags = data32;
         } else {
-            context->local_context.capability.flags = data32;
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         break;
     case LIBSPDM_DATA_CAPABILITY_CT_EXPONENT:
@@ -273,12 +279,17 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         }
         if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
             context->connection_info.capability.ct_exponent = *(uint8_t *)data;
-        } else {
+        } else if (parameter->location == LIBSPDM_DATA_LOCATION_LOCAL) {
             context->local_context.capability.ct_exponent = *(uint8_t *)data;
+        } else {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         break;
     case LIBSPDM_DATA_CAPABILITY_RTT_US:
         if (data_size != sizeof(uint64_t)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         context->local_context.capability.rtt = libspdm_read_uint64((const uint8_t *)data);
@@ -287,9 +298,14 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         if (data_size != sizeof(uint32_t)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
+        /* The local max_spdm_msg_size is set by libspdm_register_transport_layer_func.
+         * Only the connection's max_spdm_msg_size is settable here. */
+        if (parameter->location != LIBSPDM_DATA_LOCATION_CONNECTION) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
         data32 = libspdm_read_uint32((const uint8_t *)data);
         LIBSPDM_ASSERT (data32 >= SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12);
-        context->local_context.capability.max_spdm_msg_size = data32;
+        context->connection_info.capability.max_spdm_msg_size = data32;
         break;
     case LIBSPDM_DATA_MEASUREMENT_SPEC:
         if (data_size != sizeof(uint8_t)) {
@@ -297,8 +313,10 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         }
         if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
             context->connection_info.algorithm.measurement_spec = *(uint8_t *)data;
-        } else {
+        } else if (parameter->location == LIBSPDM_DATA_LOCATION_LOCAL) {
             context->local_context.algorithm.measurement_spec = *(uint8_t *)data;
+        } else {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         break;
     case LIBSPDM_DATA_MEASUREMENT_HASH_ALGO:
@@ -308,8 +326,10 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         data32 = libspdm_read_uint32((const uint8_t *)data);
         if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
             context->connection_info.algorithm.measurement_hash_algo = data32;
-        } else {
+        } else if (parameter->location == LIBSPDM_DATA_LOCATION_LOCAL) {
             context->local_context.algorithm.measurement_hash_algo = data32;
+        } else {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         break;
     case LIBSPDM_DATA_BASE_ASYM_ALGO:
@@ -319,8 +339,10 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         data32 = libspdm_read_uint32((const uint8_t *)data);
         if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
             context->connection_info.algorithm.base_asym_algo = data32;
-        } else {
+        } else if (parameter->location == LIBSPDM_DATA_LOCATION_LOCAL) {
             context->local_context.algorithm.base_asym_algo = data32;
+        } else {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         break;
     case LIBSPDM_DATA_BASE_HASH_ALGO:
@@ -330,8 +352,10 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         data32 = libspdm_read_uint32((const uint8_t *)data);
         if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
             context->connection_info.algorithm.base_hash_algo = data32;
-        } else {
+        } else if (parameter->location == LIBSPDM_DATA_LOCATION_LOCAL) {
             context->local_context.algorithm.base_hash_algo = data32;
+        } else {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         break;
     case LIBSPDM_DATA_DHE_NAME_GROUP:
@@ -341,8 +365,10 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         data16 = libspdm_read_uint16((const uint8_t *)data);
         if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
             context->connection_info.algorithm.dhe_named_group = data16;
-        } else {
+        } else if (parameter->location == LIBSPDM_DATA_LOCATION_LOCAL) {
             context->local_context.algorithm.dhe_named_group = data16;
+        } else {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         break;
     case LIBSPDM_DATA_AEAD_CIPHER_SUITE:
@@ -352,8 +378,10 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         data16 = libspdm_read_uint16((const uint8_t *)data);
         if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
             context->connection_info.algorithm.aead_cipher_suite = data16;
-        } else {
+        } else if (parameter->location == LIBSPDM_DATA_LOCATION_LOCAL) {
             context->local_context.algorithm.aead_cipher_suite = data16;
+        } else {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         break;
     case LIBSPDM_DATA_REQ_BASE_ASYM_ALG:
@@ -363,8 +391,10 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         data16 = libspdm_read_uint16((const uint8_t *)data);
         if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
             context->connection_info.algorithm.req_base_asym_alg = data16;
-        } else {
+        } else if (parameter->location == LIBSPDM_DATA_LOCATION_LOCAL) {
             context->local_context.algorithm.req_base_asym_alg = data16;
+        } else {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         break;
     case LIBSPDM_DATA_KEY_SCHEDULE:
@@ -374,8 +404,10 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         data16 = libspdm_read_uint16((const uint8_t *)data);
         if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
             context->connection_info.algorithm.key_schedule = data16;
-        } else {
+        } else if (parameter->location == LIBSPDM_DATA_LOCATION_LOCAL) {
             context->local_context.algorithm.key_schedule = data16;
+        } else {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         break;
     case LIBSPDM_DATA_OTHER_PARAMS_SUPPORT:
@@ -384,12 +416,17 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         }
         if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
             context->connection_info.algorithm.other_params_support = *(uint8_t *)data;
-        } else {
+        } else if (parameter->location == LIBSPDM_DATA_LOCATION_LOCAL) {
             context->local_context.algorithm.other_params_support = *(uint8_t *)data;
+        } else {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         break;
     case LIBSPDM_DATA_CONNECTION_STATE:
         if (data_size != sizeof(libspdm_connection_state_t)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        if (parameter->location != LIBSPDM_DATA_LOCATION_CONNECTION) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         context->connection_info.connection_state = libspdm_read_uint32((const uint8_t *)data);
@@ -401,6 +438,9 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         context->response_state = libspdm_read_uint32((const uint8_t *)data);
         break;
     case LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
         root_cert_index = 0;
         while (context->local_context.peer_root_cert_provision[root_cert_index] != NULL) {
             root_cert_index++;
@@ -412,6 +452,9 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         context->local_context.peer_root_cert_provision[root_cert_index] = data;
         break;
     case LIBSPDM_DATA_LOCAL_PUBLIC_CERT_CHAIN:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
         slot_id = parameter->additional_data[0];
         if (slot_id >= SPDM_MAX_SLOT_COUNT) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
@@ -420,6 +463,9 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         context->local_context.local_cert_chain_provision[slot_id] = data;
         break;
     case LIBSPDM_DATA_PEER_USED_CERT_CHAIN_BUFFER:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_CONNECTION) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
         slot_id = parameter->additional_data[0];
         if (slot_id >= SPDM_MAX_SLOT_COUNT) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
@@ -499,15 +545,24 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
 #endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
         break;
     case LIBSPDM_DATA_PEER_PUBLIC_KEY:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
         context->local_context.peer_public_key_provision_size = data_size;
         context->local_context.peer_public_key_provision = data;
         break;
     case LIBSPDM_DATA_LOCAL_PUBLIC_KEY:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
         context->local_context.local_public_key_provision_size = data_size;
         context->local_context.local_public_key_provision = data;
         break;
     case LIBSPDM_DATA_BASIC_MUT_AUTH_REQUESTED:
         if (data_size != sizeof(bool)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         mut_auth_requested = *(uint8_t *)data;
@@ -533,6 +588,9 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         if (data_size != sizeof(uint8_t)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
+        if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
         mut_auth_requested = *(uint8_t *)data;
         if (((mut_auth_requested != 0) &&
              (mut_auth_requested !=
@@ -553,6 +611,9 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         break;
     case LIBSPDM_DATA_HEARTBEAT_PERIOD:
         if (data_size != sizeof(uint8_t)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         context->local_context.heartbeat_period = *(uint8_t *)data;
@@ -580,6 +641,9 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         break;
     case LIBSPDM_DATA_IS_REQUESTER:
         if (data_size != sizeof(bool)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         context->local_context.is_requester = *(bool *)data;
@@ -702,40 +766,50 @@ libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_t
         target_data_size = sizeof(uint32_t);
         if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
             target_data = &context->connection_info.capability.flags;
-        } else {
+        } else if (parameter->location == LIBSPDM_DATA_LOCATION_LOCAL) {
             target_data = &context->local_context.capability.flags;
+        } else {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         break;
     case LIBSPDM_DATA_CAPABILITY_CT_EXPONENT:
         target_data_size = sizeof(uint8_t);
         if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
             target_data = &context->connection_info.capability.ct_exponent;
-        } else {
+        } else if (parameter->location == LIBSPDM_DATA_LOCATION_LOCAL) {
             target_data = &context->local_context.capability.ct_exponent;
+        } else {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         break;
     case LIBSPDM_DATA_CAPABILITY_DATA_TRANSFER_SIZE:
         target_data_size = sizeof(uint32_t);
         if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
             target_data = &context->connection_info.capability.data_transfer_size;
-        } else {
+        } else if (parameter->location == LIBSPDM_DATA_LOCATION_LOCAL) {
             target_data = &context->local_context.capability.data_transfer_size;
+        } else {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         break;
     case LIBSPDM_DATA_CAPABILITY_MAX_SPDM_MSG_SIZE:
         target_data_size = sizeof(uint32_t);
         if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
             target_data = &context->connection_info.capability.max_spdm_msg_size;
-        } else {
+        } else if (parameter->location == LIBSPDM_DATA_LOCATION_LOCAL) {
             target_data = &context->local_context.capability.max_spdm_msg_size;
+        } else {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         break;
     case LIBSPDM_DATA_CAPABILITY_SENDER_DATA_TRANSFER_SIZE:
         target_data_size = sizeof(uint32_t);
         if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
-        } else {
+        } else if (parameter->location == LIBSPDM_DATA_LOCATION_LOCAL) {
             target_data = &context->local_context.capability.sender_data_transfer_size;
+        } else {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         break;
     case LIBSPDM_DATA_MEASUREMENT_SPEC:
@@ -813,10 +887,16 @@ libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_t
         target_data = &context->response_state;
         break;
     case LIBSPDM_DATA_PEER_SLOT_MASK:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_CONNECTION) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
         target_data_size = sizeof(uint8_t);
         target_data = &context->connection_info.peer_digest_slot_mask;
         break;
     case LIBSPDM_DATA_PEER_TOTAL_DIGEST_BUFFER:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_CONNECTION) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
         digest_count = 0;
         for (index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
             if (context->connection_info.peer_digest_slot_mask & (1 << index)) {
