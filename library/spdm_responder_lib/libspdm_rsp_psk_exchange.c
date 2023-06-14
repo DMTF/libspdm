@@ -428,6 +428,22 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
                 0, response_size, response);
         }
 
+        #if LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP
+        if (libspdm_is_capabilities_flag_supported(
+                spdm_context, false,
+                SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP,
+                SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP)) {
+            result = libspdm_start_watchdog(
+                session_id, spdm_context->local_context.heartbeat_period * 2);
+            if (!result) {
+                libspdm_free_session_id(spdm_context, session_id);
+                return libspdm_generate_error_response(
+                    spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
+                    0, response_size, response);
+            }
+        }
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP */
+
         libspdm_set_session_state(spdm_context, session_id, LIBSPDM_SESSION_STATE_ESTABLISHED);
     }
 
