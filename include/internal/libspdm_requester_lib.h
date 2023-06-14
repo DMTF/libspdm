@@ -10,7 +10,7 @@
 #include "library/spdm_requester_lib.h"
 #include "library/spdm_secured_message_lib.h"
 #include "internal/libspdm_common_lib.h"
-#include "hal/library/requester_platformlib.h"
+#include "hal/library/requester/timelib.h"
 
 /**
  * Send an SPDM or an APP request to a device.
