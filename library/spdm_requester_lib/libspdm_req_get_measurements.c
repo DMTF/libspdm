@@ -598,8 +598,7 @@ static libspdm_return_t libspdm_try_get_measurement(libspdm_context_t *spdm_cont
 
 receive_done:
     if ((status != LIBSPDM_STATUS_SUCCESS) &&
-        (status != LIBSPDM_STATUS_NOT_READY_PEER) &&
-        (status != LIBSPDM_STATUS_BUSY_PEER)) {
+        (status != LIBSPDM_STATUS_NOT_READY_PEER)) {
         libspdm_reset_message_m(spdm_context, session_info);
     }
     libspdm_release_receiver_buffer (spdm_context);
