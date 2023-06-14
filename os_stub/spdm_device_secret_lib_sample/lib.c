@@ -577,6 +577,10 @@ bool libspdm_cache_last_csr_request(const uint8_t *last_csr_request, size_t last
     return res;
 }
 
+/*
+ * return true represent that: the device complete the csr by reset successfuly
+ * return false represent that: the device complete the csr need reset
+ **/
 bool libspdm_read_cached_csr(uint32_t base_asym_algo, uint8_t **csr_pointer, size_t *csr_len)
 {
     bool res;
@@ -676,6 +680,8 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
                 return result;
             }
 
+            /*device need reset this time*/
+            *need_reset = true;
             return true;
         }
     }
