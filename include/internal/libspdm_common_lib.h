@@ -13,8 +13,13 @@
 #include "library/spdm_crypt_lib.h"
 #include "hal/library/debuglib.h"
 #include "hal/library/memlib.h"
-#include "hal/library/requester_secretlib.h"
-#include "hal/library/responder_secretlib.h"
+#include "hal/library/requester/reqasymsignlib.h"
+#include "hal/library/requester/psklib.h"
+#include "hal/library/responder/asymsignlib.h"
+#include "hal/library/responder/csrlib.h"
+#include "hal/library/responder/measlib.h"
+#include "hal/library/responder/psklib.h"
+#include "hal/library/responder/setcertlib.h"
 #include "hal/library/cryptlib.h"
 
 #define INVALID_SESSION_ID 0

@@ -130,7 +130,7 @@ libspdm_return_t libspdm_get_encap_response_challenge_auth(
         (uint8_t*)response + sizeof(spdm_challenge_auth_response_t) + hash_size + SPDM_NONCE_SIZE +
         measurement_summary_hash_size + sizeof(uint16_t);
 
-    result = libspdm_challenge_opaque_data(
+    result = libspdm_encap_challenge_opaque_data(
         context->connection_info.version,
         slot_id,
         measurement_summary_hash, measurement_summary_hash_size,
@@ -145,7 +145,7 @@ libspdm_return_t libspdm_get_encap_response_challenge_auth(
     libspdm_write_uint16 (ptr, (uint16_t)opaque_data_size);
     ptr += sizeof(uint16_t);
 
-    /*the opaque_data is stored by libspdm_challenge_opaque_data*/
+    /*the opaque_data is stored by libspdm_encap_challenge_opaque_data*/
     ptr += opaque_data_size;
 
     /*get actual response size*/

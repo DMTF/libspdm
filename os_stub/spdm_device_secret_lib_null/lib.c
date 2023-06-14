@@ -9,8 +9,13 @@
  * It follows the SPDM Specification.
  **/
 
-#include "hal/library/responder_secretlib.h"
-#include "hal/library/requester_secretlib.h"
+#include "hal/library/responder/asymsignlib.h"
+#include "hal/library/responder/csrlib.h"
+#include "hal/library/responder/measlib.h"
+#include "hal/library/responder/psklib.h"
+#include "hal/library/responder/setcertlib.h"
+#include "hal/library/requester/reqasymsignlib.h"
+#include "hal/library/requester/psklib.h"
 
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 libspdm_return_t libspdm_measurement_collection(
@@ -40,6 +45,17 @@ bool libspdm_measurement_opaque_data(
 }
 
 bool libspdm_challenge_opaque_data(
+    spdm_version_number_t spdm_version,
+    uint8_t slot_id,
+    uint8_t *measurement_summary_hash,
+    size_t measurement_summary_hash_size,
+    void *opaque_data,
+    size_t *opaque_data_size)
+{
+    return false;
+}
+
+bool libspdm_encap_challenge_opaque_data(
     spdm_version_number_t spdm_version,
     uint8_t slot_id,
     uint8_t *measurement_summary_hash,

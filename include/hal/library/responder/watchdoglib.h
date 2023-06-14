@@ -3,8 +3,8 @@
  *  Copyright 2022-2023 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
-#ifndef REQUESTER_PLATFORMLIB_H
-#define REQUESTER_PLATFORMLIB_H
+#ifndef REQUESTER_WATCHDOGLIB_H
+#define REQUESTER_WATCHDOGLIB_H
 
 #include "hal/base.h"
 #include "internal/libspdm_lib_config.h"
@@ -33,4 +33,4 @@ extern bool libspdm_stop_watchdog(uint32_t session_id);
 extern bool libspdm_reset_watchdog(uint32_t session_id);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP */
 
-#endif /* REQUESTER_PLATFORMLIB_H */
+#endif /* REQUESTER_WATCHDOGLIB_H */
