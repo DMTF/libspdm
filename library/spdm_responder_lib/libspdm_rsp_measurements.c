@@ -111,8 +111,7 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
                                                response_size, response);
     }
     if (spdm_context->response_state != LIBSPDM_RESPONSE_STATE_NORMAL) {
-        if (spdm_context->response_state != LIBSPDM_RESPONSE_STATE_BUSY &&
-            spdm_context->response_state != LIBSPDM_RESPONSE_STATE_NOT_READY) {
+        if (spdm_context->response_state != LIBSPDM_RESPONSE_STATE_NOT_READY) {
             libspdm_reset_message_m(spdm_context, session_info);
         }
         return libspdm_responder_handle_response_state(
