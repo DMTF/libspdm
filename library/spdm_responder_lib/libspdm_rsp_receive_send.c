@@ -518,7 +518,6 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             if ((session_id != NULL) &&
                 ((status == LIBSPDM_STATUS_SEQUENCE_NUMBER_OVERFLOW) ||
-                 (status == LIBSPDM_STATUS_LOW_ENTROPY) ||
                  (status == LIBSPDM_STATUS_CRYPTO_ERROR))) {
                 libspdm_free_session_id(context, *session_id);
             }
@@ -734,7 +733,6 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         if ((session_id != NULL) &&
             ((status == LIBSPDM_STATUS_SEQUENCE_NUMBER_OVERFLOW) ||
-             (status == LIBSPDM_STATUS_LOW_ENTROPY) ||
              (status == LIBSPDM_STATUS_CRYPTO_ERROR))) {
             libspdm_free_session_id(context, *session_id);
         }

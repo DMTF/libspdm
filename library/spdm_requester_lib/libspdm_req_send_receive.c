@@ -104,7 +104,6 @@ libspdm_return_t libspdm_send_request(void *spdm_context, const uint32_t *sessio
                        status));
         if ((session_id != NULL) &&
             ((status == LIBSPDM_STATUS_SEQUENCE_NUMBER_OVERFLOW) ||
-             (status == LIBSPDM_STATUS_LOW_ENTROPY) ||
              (status == LIBSPDM_STATUS_CRYPTO_ERROR))) {
             libspdm_free_session_id(context, *session_id);
         }
