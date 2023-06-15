@@ -144,13 +144,16 @@ libspdm_return_t libspdm_process_encap_response_certificate(
                      cert_chain_buffer_max_size - cert_chain_buffer_size,
                      (const void *)(spdm_response + 1), spdm_response->portion_length);
 
+    cert_chain_buffer_size += spdm_response->portion_length;
+    spdm_context->mut_auth_cert_chain_buffer_size = cert_chain_buffer_size;
+
     if (spdm_response->remainder_length != 0) {
         *need_continue = true;
+
         return LIBSPDM_STATUS_SUCCESS;
     }
 
     *need_continue = false;
-    cert_chain_buffer_size += spdm_response->portion_length;
 
     if (spdm_context->local_context.verify_peer_spdm_cert_chain != NULL) {
         result = spdm_context->local_context.verify_peer_spdm_cert_chain (
