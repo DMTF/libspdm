@@ -27,6 +27,11 @@ void libspdm_test_responder_set_cetificate_rsp_case1(void **state)
     size_t cert_chain_size;
     spdm_set_certificate_request_t *m_libspdm_set_certificate_request;
 
+    void *cert_chain_slot_1;
+    uint8_t *new_cert_chain;
+    size_t new_cert_chain_size;
+    size_t root_cert_hash_size;
+
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x1;
@@ -76,6 +81,64 @@ void libspdm_test_responder_set_cetificate_rsp_case1(void **state)
                      SPDM_SET_CERTIFICATE_RSP);
 
     free(cert_chain);
+    free(m_libspdm_set_certificate_request);
+
+    /*test overwirte same slot_id cert*/
+
+    /*read a different cert_chain*/
+    libspdm_read_responder_public_certificate_chain_per_slot(1, m_libspdm_use_hash_algo,
+                                                             m_libspdm_use_asym_algo,
+                                                             &cert_chain_slot_1,
+                                                             &cert_chain_size, NULL, NULL);
+
+    m_libspdm_set_certificate_request = malloc(sizeof(spdm_set_certificate_request_t) +
+                                               cert_chain_size);
+
+    m_libspdm_set_certificate_request->header.spdm_version = SPDM_MESSAGE_VERSION_12;
+    m_libspdm_set_certificate_request->header.request_response_code = SPDM_SET_CERTIFICATE;
+    /*write the same slot_id 0*/
+    m_libspdm_set_certificate_request->header.param1 = 0;
+    m_libspdm_set_certificate_request->header.param2 = 0;
+
+    libspdm_copy_mem(m_libspdm_set_certificate_request + 1,
+                     LIBSPDM_MAX_CERT_CHAIN_SIZE,
+                     (uint8_t *)cert_chain_slot_1, cert_chain_size);
+
+    m_libspdm_set_certificate_request_size = sizeof(spdm_set_certificate_request_t) +
+                                             cert_chain_size;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_set_certificate(spdm_context,
+                                                  m_libspdm_set_certificate_request_size,
+                                                  m_libspdm_set_certificate_request,
+                                                  &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_set_certificate_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_SET_CERTIFICATE_RSP);
+
+    /*check that the cert_chain is overwritten*/
+    libspdm_read_input_file("slot_id_0_cert_chain.der",
+                            (void **)&new_cert_chain, &new_cert_chain_size);
+
+    /*get actual cert_chain size*/
+    root_cert_hash_size = libspdm_get_hash_size(
+        spdm_context->local_context.algorithm.base_hash_algo);
+    cert_chain_size = cert_chain_size - sizeof(spdm_cert_chain_t) - root_cert_hash_size;
+
+    /*point to actual cert_chain*/
+    cert_chain_slot_1 = (void*)((uint8_t *)cert_chain_slot_1
+                                + sizeof(spdm_cert_chain_t) + root_cert_hash_size);
+
+    assert_memory_equal(cert_chain_slot_1, new_cert_chain, cert_chain_size);
+
+    free(new_cert_chain);
+
+    /*point to total cert_chain_slot_1: it is important*/
+    cert_chain_slot_1 = (void*)((uint8_t *)cert_chain_slot_1
+                                - sizeof(spdm_cert_chain_t) - root_cert_hash_size);
+    free(cert_chain_slot_1);
     free(m_libspdm_set_certificate_request);
 }
 
