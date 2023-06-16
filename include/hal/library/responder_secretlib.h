@@ -287,6 +287,7 @@ extern bool libspdm_is_in_trusted_environment();
  * Stores a certificate chain in non-volatile memory.
  *
  *
+ * @param[in]  spdm_context                  A pointer to the SPDM context.
  * @param[in]  slot_id          The number of slot for the certificate chain.
  * @param[in]  cert_chain       The pointer for the certificate chain to set.
  * @param[in]  cert_chain_size  The size of the certificate chain to set.
@@ -296,7 +297,8 @@ extern bool libspdm_is_in_trusted_environment();
  * @retval true   The certificate chain was successfully written to non-volatile memory.
  * @retval false  Unable to write certificate chain to non-volatile memory.
  **/
-extern bool libspdm_write_certificate_to_nvm(uint8_t slot_id, const void * cert_chain,
+extern bool libspdm_write_certificate_to_nvm(void *spdm_context,
+                                             uint8_t slot_id, const void * cert_chain,
                                              size_t cert_chain_size,
                                              uint32_t base_hash_algo, uint32_t base_asym_algo);
 

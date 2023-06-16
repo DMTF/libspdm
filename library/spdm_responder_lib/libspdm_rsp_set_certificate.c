@@ -193,7 +193,7 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
 #endif /*LIBSPDM_CERT_PARSE_SUPPORT*/
 
     /* set certificate to NV*/
-    result = libspdm_write_certificate_to_nvm(slot_id, cert_chain,
+    result = libspdm_write_certificate_to_nvm(spdm_context, slot_id, cert_chain,
                                               cert_chain_size,
                                               spdm_context->connection_info.algorithm.base_asym_algo,
                                               spdm_context->connection_info.algorithm.base_hash_algo);
