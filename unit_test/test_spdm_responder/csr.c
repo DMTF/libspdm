@@ -134,6 +134,58 @@ bool libspdm_test_read_cached_csr(uint32_t base_asym_algo, uint8_t **csr_pointer
     return res;
 }
 
+/*
+ * If device need reset to set csr, the function simulates the CSR state before device reset.
+ * The returned status indicates whether the setting was successful or unsuccessful.
+ **/
+bool libspdm_set_csr_before_reset()
+{
+    uint8_t index;
+
+    char *file_name[] = {"test_csr/rsa2048.csr", "test_csr/rsa3072.csr", "test_csr/rsa4096.csr",
+                         "test_csr/ecp256.csr", "test_csr/ecp384.csr", "test_csr/ecp521.csr"};
+    char *new_name[] = {"test_csr/rsa2048.staging",
+                        "test_csr/rsa3072.staging",
+                        "test_csr/rsa4096.staging",
+                        "test_csr/ecp256.staging",
+                        "test_csr/ecp384.staging",
+                        "test_csr/ecp521.staging"};
+
+    for (index = 0; index < 6; index++) {
+        if (rename(file_name[index], new_name[index]) != 0) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/*
+ * If device need reset to set csr, the function simulates the CSR state after device reset.
+ * The returned status indicates whether the setting was successful or unsuccessful.
+ **/
+bool libspdm_set_csr_after_reset()
+{
+    uint8_t index;
+
+    char *file_name[] = {"test_csr/rsa2048.csr", "test_csr/rsa3072.csr", "test_csr/rsa4096.csr",
+                         "test_csr/ecp256.csr", "test_csr/ecp384.csr", "test_csr/ecp521.csr"};
+    char *new_name[] = {"test_csr/rsa2048.staging",
+                        "test_csr/rsa3072.staging",
+                        "test_csr/rsa4096.staging",
+                        "test_csr/ecp256.staging",
+                        "test_csr/ecp384.staging",
+                        "test_csr/ecp521.staging"};
+
+    for (index = 0; index < 6; index++) {
+        if (rename(new_name[index], file_name[index]) != 0) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 /*clean the cached last SPDM csr request*/
 void libspdm_test_clear_cached_last_request()
 {
@@ -602,7 +654,7 @@ void libspdm_test_responder_csr_case5(void **state)
 /**
  * Test 6: receives a valid GET_CSR request message from Requester with need_reset
  * Expected Behavior: the first get_csr: responder return need reset;
- *                    the second get_csr: get the cached valid csr;
+ *                    the second get_csr after device reset: get the cached valid csr;
  **/
 void libspdm_test_responder_csr_case6(void **state)
 {
@@ -646,6 +698,9 @@ void libspdm_test_responder_csr_case6(void **state)
     spdm_context->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
 
+    /*set csr before reset*/
+    assert_true(libspdm_set_csr_before_reset());
+
     m_libspdm_get_csr_request = malloc(sizeof(spdm_get_csr_request_t) +
                                        sizeof(right_req_info));
 
@@ -679,6 +734,8 @@ void libspdm_test_responder_csr_case6(void **state)
                      SPDM_ERROR_CODE_RESET_REQUIRED);
     assert_int_equal(spdm_response->header.param2, 0);
 
+    /*set csr after reset*/
+    assert_true(libspdm_set_csr_after_reset());
 
     m_libspdm_get_csr_request->header.spdm_version = SPDM_MESSAGE_VERSION_12;
     m_libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
@@ -695,7 +752,7 @@ void libspdm_test_responder_csr_case6(void **state)
                                       m_libspdm_get_csr_request_size,
                                       m_libspdm_get_csr_request,
                                       &response_size, response);
-    /*second get_csr: get the responder cached csr*/
+    /*second get_csr after device reset: get the responder cached csr*/
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
     spdm_response = (void *)response;
@@ -1162,6 +1219,123 @@ void libspdm_test_responder_csr_case11(void **state)
     free(m_libspdm_get_csr_request);
 }
 
+/**
+ * Test 12: receives a valid GET_CSR request message from Requester with need_reset
+ * Expected Behavior: the first get_csr: responder return need reset;
+ *                    the second get_csr without device reset: responder return need reset;
+ **/
+void libspdm_test_responder_csr_case12(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_csr_response_t *spdm_response;
+    spdm_get_csr_request_t *m_libspdm_get_csr_request;
+    uint8_t cached_csr[LIBSPDM_MAX_CSR_SIZE];
+    libspdm_zero_mem(cached_csr, LIBSPDM_MAX_CSR_SIZE);
+
+    uint8_t *csr_pointer;
+    size_t csr_len;
+
+    if (!libspdm_test_read_cached_csr(m_libspdm_use_asym_algo, &csr_pointer, &csr_len)) {
+        assert_false(true);
+    }
+
+    libspdm_copy_mem(cached_csr, LIBSPDM_MAX_CSR_SIZE, csr_pointer, csr_len);
+    free(csr_pointer);
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xC;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CSR_CAP;
+
+    /*set responder need reset*/
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_INSTALL_RESET_CAP;
+
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo =
+        m_libspdm_use_asym_algo;
+
+    /*set csr before reset*/
+    assert_true(libspdm_set_csr_before_reset());
+
+    m_libspdm_get_csr_request = malloc(sizeof(spdm_get_csr_request_t) +
+                                       sizeof(right_req_info));
+
+    m_libspdm_get_csr_request->header.spdm_version = SPDM_MESSAGE_VERSION_12;
+    m_libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
+    m_libspdm_get_csr_request->header.param1 = 0;
+    m_libspdm_get_csr_request->header.param2 = 0;
+
+    m_libspdm_get_csr_request->opaque_data_length = 0;
+    m_libspdm_get_csr_request->requester_info_length = sizeof(right_req_info);
+
+    libspdm_copy_mem(m_libspdm_get_csr_request + 1, sizeof(right_req_info),
+                     right_req_info, sizeof(right_req_info));
+
+    size_t m_libspdm_get_csr_request_size = sizeof(spdm_get_csr_request_t) +
+                                            sizeof(right_req_info);
+
+    response_size = sizeof(response);
+
+    status = libspdm_get_response_csr(spdm_context,
+                                      m_libspdm_get_csr_request_size,
+                                      m_libspdm_get_csr_request,
+                                      &response_size, response);
+    /*first get_csr: the responder need reset*/
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1,
+                     SPDM_ERROR_CODE_RESET_REQUIRED);
+    assert_int_equal(spdm_response->header.param2, 0);
+
+    m_libspdm_get_csr_request->header.spdm_version = SPDM_MESSAGE_VERSION_12;
+    m_libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
+    m_libspdm_get_csr_request->header.param1 = 0;
+    m_libspdm_get_csr_request->header.param2 = 0;
+
+    m_libspdm_get_csr_request->opaque_data_length = 0;
+    m_libspdm_get_csr_request->requester_info_length = sizeof(right_req_info);
+    libspdm_copy_mem(m_libspdm_get_csr_request + 1, sizeof(right_req_info),
+                     right_req_info, sizeof(right_req_info));
+
+    response_size = sizeof(response);
+
+    status = libspdm_get_response_csr(spdm_context,
+                                      m_libspdm_get_csr_request_size,
+                                      m_libspdm_get_csr_request,
+                                      &response_size, response);
+    /*second get_csr without device reset: get the responder cached csr*/
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1,
+                     SPDM_ERROR_CODE_RESET_REQUIRED);
+    assert_int_equal(spdm_response->header.param2, 0);
+
+    /*clear cached req_info*/
+    libspdm_test_clear_cached_last_request();
+    free(m_libspdm_get_csr_request);
+
+    /*set csr to the origin state*/
+    assert_true(libspdm_set_csr_after_reset());
+}
+
 libspdm_test_context_t m_libspdm_responder_csr_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     false,
@@ -1180,7 +1354,7 @@ int libspdm_responder_csr_test_main(void)
         cmocka_unit_test(libspdm_test_responder_csr_case4),
         /* Failed Case for csr response with non-null wrong req_info */
         cmocka_unit_test(libspdm_test_responder_csr_case5),
-        /* Responder need reset to gen csr*/
+        /* Responder need reset to gen csr, the second send after device reset*/
         cmocka_unit_test(libspdm_test_responder_csr_case6),
         /* Success Case for csr response with non-null right req_info and opaque_data */
         cmocka_unit_test(libspdm_test_responder_csr_case7),
@@ -1192,6 +1366,8 @@ int libspdm_responder_csr_test_main(void)
         cmocka_unit_test(libspdm_test_responder_csr_case10),
         /* Success Case for csr response with alias_cert mode */
         cmocka_unit_test(libspdm_test_responder_csr_case11),
+        /* Responder need reset to gen csr, the second send without device reset*/
+        cmocka_unit_test(libspdm_test_responder_csr_case12),
     };
 
     libspdm_setup_test_context(&m_libspdm_responder_csr_test_context);
