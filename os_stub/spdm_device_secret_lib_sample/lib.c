@@ -1088,7 +1088,8 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
             (cached_last_request_len == request_size) &&
             (libspdm_consttime_is_mem_equal(cached_last_csr_request, request,
                                             request_size)) &&
-            (libspdm_read_cached_csr(base_asym_algo, &cached_csr, csr_len))) {
+            (libspdm_read_cached_csr(base_asym_algo, &cached_csr, csr_len)) &&
+            (*csr_len != 0)) {
 
             /*get and save cached csr*/
             if (csr_buffer_size < *csr_len) {
