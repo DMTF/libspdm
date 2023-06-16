@@ -1588,7 +1588,8 @@ bool libspdm_is_in_trusted_environment()
 }
 
 bool libspdm_write_certificate_to_nvm(uint8_t slot_id, const void * cert_chain,
-                                      size_t cert_chain_size)
+                                      size_t cert_chain_size,
+                                      uint32_t base_hash_algo, uint32_t base_asym_algo)
 {
 #if defined(_MSC_VER) || (defined(__clang__) && (defined (LIBSPDM_CPU_AARCH64) || \
     defined(LIBSPDM_CPU_ARM)))
