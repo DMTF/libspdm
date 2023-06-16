@@ -194,7 +194,9 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
 
     /* set certificate to NV*/
     result = libspdm_write_certificate_to_nvm(slot_id, cert_chain,
-                                              cert_chain_size);
+                                              cert_chain_size,
+                                              spdm_context->connection_info.algorithm.base_asym_algo,
+                                              spdm_context->connection_info.algorithm.base_hash_algo);
     if (!result) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,
