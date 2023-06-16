@@ -16,6 +16,7 @@ libspdm_return_t libspdm_get_response_chunk_get(
     void* response)
 {
     libspdm_chunk_info_t* get_info;
+    uint32_t min_data_transfer_size;
 
     const spdm_chunk_get_request_t* spdm_request;
     spdm_chunk_response_response_t* spdm_response;
@@ -102,9 +103,13 @@ libspdm_return_t libspdm_get_response_chunk_get(
 
     libspdm_zero_mem(response, *response_size);
 
+    min_data_transfer_size = LIBSPDM_MIN(
+        spdm_context->connection_info.capability.data_transfer_size,
+        spdm_context->local_context.capability.sender_data_transfer_size);
+
     /* Assert the data transfer size is smaller than the response size.
      * Otherwise there is no reason to chunk this response. */
-    LIBSPDM_ASSERT(spdm_context->connection_info.capability.data_transfer_size < *response_size);
+    LIBSPDM_ASSERT(min_data_transfer_size < *response_size);
 
     spdm_response->header.spdm_version = spdm_request->header.spdm_version;
     spdm_response->header.request_response_code = SPDM_CHUNK_RESPONSE;
@@ -114,7 +119,7 @@ libspdm_return_t libspdm_get_response_chunk_get(
 
     if (spdm_request->chunk_seq_no == 0) {
         spdm_response->chunk_size =
-            spdm_context->connection_info.capability.data_transfer_size
+            min_data_transfer_size
             - sizeof(spdm_chunk_response_response_t)
             - sizeof(uint32_t);
 
@@ -133,7 +138,7 @@ libspdm_return_t libspdm_get_response_chunk_get(
     }
     else {
         spdm_response->chunk_size =
-            LIBSPDM_MIN(spdm_context->connection_info.capability.data_transfer_size
+            LIBSPDM_MIN(min_data_transfer_size
                         - sizeof(spdm_chunk_response_response_t),
                         (uint32_t) (get_info->large_message_size
                                     - get_info->chunk_bytes_transferred));
