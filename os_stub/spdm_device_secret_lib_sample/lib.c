@@ -9,7 +9,7 @@
  * It follows the SPDM Specification.
  **/
 #include <base.h>
-#if defined(_MSC_VER) || (defined(__clang__) && (defined (LIBSPDM_CPU_AARCH64) || \
+#if defined(_WIN32) || (defined(__clang__) && (defined (LIBSPDM_CPU_AARCH64) || \
     defined(LIBSPDM_CPU_ARM)))
 #else
     #include <fcntl.h>
@@ -1591,18 +1591,18 @@ bool libspdm_write_certificate_to_nvm(uint8_t slot_id, const void * cert_chain,
                                       size_t cert_chain_size,
                                       uint32_t base_hash_algo, uint32_t base_asym_algo)
 {
-#if defined(_MSC_VER) || (defined(__clang__) && (defined (LIBSPDM_CPU_AARCH64) || \
+#if defined(_WIN32) || (defined(__clang__) && (defined (LIBSPDM_CPU_AARCH64) || \
     defined(LIBSPDM_CPU_ARM)))
     FILE *fp_out;
 #else
     int64_t fp_out;
 #endif
 
-    char file_name[] = {'s','l','o','t','_','i','d','_','0','\0'};
+    char file_name[] = "slot_id_0_cert_chain.der";
+    /*change the file name, for example: slot_id_1_cert_chain.der*/
+    file_name[8] = (char)(slot_id+'0');
 
-    file_name[strlen(file_name) - 1] = (char)(slot_id+'0');
-
-#if defined(_MSC_VER) || (defined(__clang__) && (defined (LIBSPDM_CPU_AARCH64) || \
+#if defined(_WIN32) || (defined(__clang__) && (defined (LIBSPDM_CPU_AARCH64) || \
     defined(LIBSPDM_CPU_ARM)))
     if ((fp_out = fopen(file_name, "w+b")) == NULL) {
         printf("Unable to open file %s\n", file_name);
