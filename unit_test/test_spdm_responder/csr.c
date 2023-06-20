@@ -766,7 +766,7 @@ void libspdm_test_responder_csr_case7(void **state)
     libspdm_copy_mem(libspdm_get_csr_request + 1, sizeof(right_req_info),
                      right_req_info, sizeof(right_req_info));
 
-    libspdm_copy_mem((uint8_t *)(libspdm_get_csr_request + 1) + sizeof(m_csr_opaque_data),
+    libspdm_copy_mem((uint8_t *)(libspdm_get_csr_request + 1) + sizeof(right_req_info),
                      sizeof(m_csr_opaque_data),
                      m_csr_opaque_data, sizeof(m_csr_opaque_data));
 
