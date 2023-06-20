@@ -11,27 +11,22 @@
 
 #define LIBSPDM_MAX_CSR_SIZE 0x1000
 
+/*refer to https://github.com/Mbed-TLS/mbedtls/blob/3048c8c90654eb116a6b17c0d2d27c3ccbe6782c/programs/x509/cert_req.c#L119-L129*/
+#define LIBSPDM_MAX_REQ_INFO_BUFFER_SIZE 4096
+
 uint8_t m_csr_opaque_data[8] = "libspdm";
 
 /*ECC 256 req_info(include right req_info attribute)*/
-static uint8_t right_req_info[] = {
-    /*req_info sequence*/
-    0x30, 0x81, 0xBF,
-    /*integer:version*/
-    0x02, 0x01, 0x00,
-    /*sequence:subject name*/
+uint8_t req_info_sequence[] = {0x30, 0x81, 0xBF,};
+uint8_t req_info_version[] = {0x02, 0x01, 0x00,};
+uint8_t req_info_subject[] = {
     0x30, 0x45, 0x31, 0x0B, 0x30, 0x09, 0x06, 0x03, 0x55, 0x04, 0x06, 0x13, 0x02, 0x41, 0x55, 0x31,
     0x13, 0x30, 0x11, 0x06, 0x03, 0x55, 0x04, 0x08, 0x0C, 0x0A, 0x53, 0x6F, 0x6D, 0x65, 0x2D, 0x53,
     0x74, 0x61, 0x74, 0x65, 0x31, 0x21, 0x30, 0x1F, 0x06, 0x03, 0x55, 0x04, 0x0A, 0x0C, 0x18, 0x49,
     0x6E, 0x74, 0x65, 0x72, 0x6E, 0x65, 0x74, 0x20, 0x57, 0x69, 0x64, 0x67, 0x69, 0x74, 0x73, 0x20,
     0x50, 0x74, 0x79, 0x20, 0x4C, 0x74, 0x64,
-    /*sequence:subject pkinfo*/
-    0x30, 0x59, 0x30, 0x13, 0x06, 0x07, 0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x02, 0x01, 0x06, 0x08, 0x2A,
-    0x86, 0x48, 0xCE, 0x3D, 0x03, 0x01, 0x07, 0x03, 0x42, 0x00, 0x04, 0xDB, 0xC2, 0xB2, 0xB7, 0x83,
-    0x3C, 0xC8, 0x85, 0xE4, 0x3D, 0xE1, 0xF3, 0xBA, 0xE2, 0xF2, 0x90, 0x8E, 0x30, 0x25, 0x14, 0xE1,
-    0xF7, 0xA9, 0x82, 0x29, 0xDB, 0x9D, 0x76, 0x2F, 0x80, 0x11, 0x32, 0xEE, 0xAB, 0xE2, 0x68, 0xD1,
-    0x22, 0xE7, 0xBD, 0xB4, 0x71, 0x27, 0xC8, 0x79, 0xFB, 0xDC, 0x7C, 0x9E, 0x33, 0xA6, 0x67, 0xC2,
-    0x10, 0x47, 0x36, 0x32, 0xC5, 0xA1, 0xAA, 0x6B, 0x2B, 0xAA, 0xC9,
+};
+uint8_t req_info_right_attributes[] = {
     /*[0]: attributes*/
     0xA0, 0x18, 0x30, 0x16,
     /*OID*/
@@ -40,38 +35,75 @@ static uint8_t right_req_info[] = {
     0x31, 0x09, 0x0C, 0x07, 0x74, 0x65, 0x73, 0x74, 0x31, 0x32, 0x33
 };
 
-/*ECC 256 req_info(include wrong req_info attribute, oid is wrong)*/
-static uint8_t wrong_req_info[] = {
-    /*req_info sequence*/
-    0x30, 0x81, 0xBF,
-    /*integer:version*/
-    0x02, 0x01, 0x00,
-    /*sequence:subject name*/
-    0x30, 0x45, 0x31, 0x0B, 0x30, 0x09, 0x06, 0x03, 0x55, 0x04, 0x06, 0x13, 0x02, 0x41, 0x55, 0x31,
-    0x13, 0x30, 0x11, 0x06, 0x03, 0x55, 0x04, 0x08, 0x0C, 0x0A, 0x53, 0x6F, 0x6D, 0x65, 0x2D, 0x53,
-    0x74, 0x61, 0x74, 0x65, 0x31, 0x21, 0x30, 0x1F, 0x06, 0x03, 0x55, 0x04, 0x0A, 0x0C, 0x18, 0x49,
-    0x6E, 0x74, 0x65, 0x72, 0x6E, 0x65, 0x74, 0x20, 0x57, 0x69, 0x64, 0x67, 0x69, 0x74, 0x73, 0x20,
-    0x50, 0x74, 0x79, 0x20, 0x4C, 0x74, 0x64,
-    /*sequence:subject pkinfo*/
-    0x30, 0x59, 0x30, 0x13, 0x06, 0x07, 0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x02, 0x01, 0x06, 0x08, 0x2A,
-    0x86, 0x48, 0xCE, 0x3D, 0x03, 0x01, 0x07, 0x03, 0x42, 0x00, 0x04, 0xDB, 0xC2, 0xB2, 0xB7, 0x83,
-    0x3C, 0xC8, 0x85, 0xE4, 0x3D, 0xE1, 0xF3, 0xBA, 0xE2, 0xF2, 0x90, 0x8E, 0x30, 0x25, 0x14, 0xE1,
-    0xF7, 0xA9, 0x82, 0x29, 0xDB, 0x9D, 0x76, 0x2F, 0x80, 0x11, 0x32, 0xEE, 0xAB, 0xE2, 0x68, 0xD1,
-    0x22, 0xE7, 0xBD, 0xB4, 0x71, 0x27, 0xC8, 0x79, 0xFB, 0xDC, 0x7C, 0x9E, 0x33, 0xA6, 0x67, 0xC2,
-    0x10, 0x47, 0x36, 0x32, 0xC5, 0xA1, 0xAA, 0x6B, 0x2B, 0xAA, 0xC9,
-    /*[0]: attributes*/
-    0xA0, 0x18, 0x30, 0x16,
-    /*wrong OID*/
-    0x06, 0x09, 0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D,       0x09, 0x07,
-    /*attributes*/
-    0x31, 0x09, 0x0C, 0x07, 0x74, 0x65, 0x73, 0x74, 0x31, 0x32, 0x33
+/*the unique attribute from right_req_info*/
+uint8_t right_req_info_string[] = {0x74, 0x65, 0x73, 0x74, 0x31, 0x32, 0x33};
+/*the default subject without req_info*/
+uint8_t default_subject1[] = {
+    0x06, 0x03, 0x55, 0x04, 0x06, 0x13, 0x02, 0x4E, 0x4C,
 };
 
-/*the unique attribute from right_req_info*/
-char right_req_info_string[] = {0x74, 0x65, 0x73, 0x74, 0x31, 0x32, 0x33};
+uint8_t default_subject2[] = {
+    0x06, 0x03, 0x55, 0x04, 0x0A, 0x0C, 0x08, 0x50, 0x6F, 0x6C, 0x61, 0x72, 0x53, 0x53, 0x4C,
+};
+uint8_t default_subject3[] = {
+    0x0C, 0x11, 0x50, 0x6F, 0x6C, 0x61, 0x72, 0x53, 0x53, 0x4C, 0x20, 0x53, 0x65, 0x72, 0x76,
+    0x65, 0x72, 0x20, 0x31
+};
+
+static uint8_t right_req_info[LIBSPDM_MAX_REQ_INFO_BUFFER_SIZE];
+static uint8_t wrong_req_info[LIBSPDM_MAX_REQ_INFO_BUFFER_SIZE];
+static uint16_t req_info_len;
+
+/*gen right_req_info and wrong_req_info*/
+void libspdm_gen_req_info()
+{
+    uint8_t *req_info_p;
+    void *req_info_pkinfo;
+    size_t req_info_pkinfo_len;
+
+    libspdm_zero_mem(right_req_info, sizeof(right_req_info));
+    libspdm_zero_mem(wrong_req_info, sizeof(wrong_req_info));
+
+    req_info_p = right_req_info;
+    req_info_len = sizeof(right_req_info);
+
+    libspdm_read_responder_public_key(m_libspdm_use_asym_algo,
+                                      &req_info_pkinfo, &req_info_pkinfo_len);
+
+    /*concat right_req_info*/
+    libspdm_copy_mem(req_info_p, req_info_len, req_info_sequence, sizeof(req_info_sequence));
+    req_info_p += sizeof(req_info_sequence);
+    req_info_len -= sizeof(req_info_sequence);
+
+    libspdm_copy_mem(req_info_p, req_info_len, req_info_version, sizeof(req_info_version));
+    req_info_p += sizeof(req_info_version);
+    req_info_len -= sizeof(req_info_version);
+
+    libspdm_copy_mem(req_info_p, req_info_len, req_info_subject, sizeof(req_info_subject));
+    req_info_p += sizeof(req_info_subject);
+    req_info_len -= sizeof(req_info_subject);
+
+    libspdm_copy_mem(req_info_p, req_info_len, req_info_pkinfo, req_info_pkinfo_len);
+    req_info_p += req_info_pkinfo_len;
+    req_info_len = (uint16_t)(req_info_len - req_info_pkinfo_len);
+
+    libspdm_copy_mem(req_info_p, req_info_len,
+                     req_info_right_attributes, sizeof(req_info_right_attributes));
+    req_info_p += sizeof(req_info_right_attributes);
+    req_info_len -= sizeof(req_info_right_attributes);
+
+    req_info_len = sizeof(right_req_info) - req_info_len;
+
+    /*concat wrong_req_info*/
+    libspdm_copy_mem(wrong_req_info, sizeof(wrong_req_info), right_req_info, req_info_len);
+    /*make the wrong_req_info is wrong*/
+    *wrong_req_info = '1';
+
+    free(req_info_pkinfo);
+}
 
 /*find destination buffer from source buffer*/
-bool libspdm_find_buffer(char *src, size_t src_len, char *dst, size_t dst_len)
+bool libspdm_find_buffer(uint8_t *src, size_t src_len, uint8_t *dst, size_t dst_len)
 {
     size_t index;
 
@@ -314,6 +346,9 @@ void libspdm_test_responder_csr_case1(void **state)
 
     size_t m_libspdm_get_csr_request_size = sizeof(spdm_get_csr_request_t);
 
+    /*init req_info*/
+    libspdm_gen_req_info();
+
     response_size = sizeof(response);
     status = libspdm_get_response_csr(spdm_context,
                                       m_libspdm_get_csr_request_size,
@@ -334,6 +369,13 @@ void libspdm_test_responder_csr_case1(void **state)
                                                  spdm_response->csr_length, is_device_cert_model);
     assert_true(result);
 
+    /*check that returned CSR contains default subject*/
+    assert_true(libspdm_find_buffer((uint8_t *)(spdm_response + 1), spdm_response->csr_length,
+                                    default_subject1, sizeof(default_subject1)));
+    assert_true(libspdm_find_buffer((uint8_t *)(spdm_response + 1), spdm_response->csr_length,
+                                    default_subject2, sizeof(default_subject2)));
+    assert_true(libspdm_find_buffer((uint8_t *)(spdm_response + 1), spdm_response->csr_length,
+                                    default_subject3, sizeof(default_subject3)));
     free(m_libspdm_get_csr_request);
 }
 
@@ -413,7 +455,7 @@ void libspdm_test_responder_csr_case3(void **state)
     spdm_get_csr_request_t *m_libspdm_get_csr_request;
     uint8_t wrong_csr[LIBSPDM_MAX_CSR_SIZE];
     libspdm_zero_mem(wrong_csr, LIBSPDM_MAX_CSR_SIZE);
-    char *csr;
+    uint8_t *csr;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -431,7 +473,7 @@ void libspdm_test_responder_csr_case3(void **state)
         m_libspdm_use_asym_algo;
 
     m_libspdm_get_csr_request = malloc(sizeof(spdm_get_csr_request_t) +
-                                       sizeof(right_req_info));
+                                       req_info_len);
 
     m_libspdm_get_csr_request->header.spdm_version = SPDM_MESSAGE_VERSION_12;
     m_libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
@@ -439,13 +481,13 @@ void libspdm_test_responder_csr_case3(void **state)
     m_libspdm_get_csr_request->header.param2 = 0;
 
     m_libspdm_get_csr_request->opaque_data_length = 0;
-    m_libspdm_get_csr_request->requester_info_length = sizeof(right_req_info);
+    m_libspdm_get_csr_request->requester_info_length = req_info_len;
 
-    libspdm_copy_mem(m_libspdm_get_csr_request + 1, sizeof(right_req_info),
-                     right_req_info, sizeof(right_req_info));
+    libspdm_copy_mem(m_libspdm_get_csr_request + 1, req_info_len,
+                     right_req_info, req_info_len);
 
     size_t m_libspdm_get_csr_request_size = sizeof(spdm_get_csr_request_t) +
-                                            sizeof(right_req_info);
+                                            req_info_len;
 
     response_size = sizeof(response);
     status = libspdm_get_response_csr(spdm_context,
@@ -462,10 +504,14 @@ void libspdm_test_responder_csr_case3(void **state)
     /*check returned CSR not zero */
     assert_memory_not_equal(spdm_response + 1, wrong_csr, spdm_response->csr_length);
 
-    csr = (char *)(spdm_response + 1);
+    csr = (uint8_t *)(spdm_response + 1);
     /*check that returned CSR contains req_info attribute*/
     assert_true(libspdm_find_buffer(csr, spdm_response->csr_length,
                                     right_req_info_string, sizeof(right_req_info_string)));
+
+    /*check that returned CSR contains req_info subject*/
+    assert_true(libspdm_find_buffer(csr, spdm_response->csr_length,
+                                    req_info_subject, sizeof(req_info_subject)));
 
     free(m_libspdm_get_csr_request);
 }
@@ -568,7 +614,7 @@ void libspdm_test_responder_csr_case5(void **state)
         m_libspdm_use_asym_algo;
 
     m_libspdm_get_csr_request = malloc(sizeof(spdm_get_csr_request_t) +
-                                       sizeof(wrong_req_info));
+                                       req_info_len);
 
     m_libspdm_get_csr_request->header.spdm_version = SPDM_MESSAGE_VERSION_12;
     m_libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
@@ -576,13 +622,13 @@ void libspdm_test_responder_csr_case5(void **state)
     m_libspdm_get_csr_request->header.param2 = 0;
 
     m_libspdm_get_csr_request->opaque_data_length = 0;
-    m_libspdm_get_csr_request->requester_info_length = sizeof(wrong_req_info);
+    m_libspdm_get_csr_request->requester_info_length = req_info_len;
 
-    libspdm_copy_mem(m_libspdm_get_csr_request + 1, sizeof(wrong_req_info),
-                     wrong_req_info, sizeof(wrong_req_info));
+    libspdm_copy_mem(m_libspdm_get_csr_request + 1, req_info_len,
+                     wrong_req_info, req_info_len);
 
     size_t m_libspdm_get_csr_request_size = sizeof(spdm_get_csr_request_t) +
-                                            sizeof(wrong_req_info);
+                                            req_info_len;
 
     response_size = sizeof(response);
     status = libspdm_get_response_csr(spdm_context,
@@ -653,7 +699,7 @@ void libspdm_test_responder_csr_case6(void **state)
     assert_true(libspdm_set_csr_before_reset());
 
     m_libspdm_get_csr_request = malloc(sizeof(spdm_get_csr_request_t) +
-                                       sizeof(right_req_info));
+                                       req_info_len);
 
     m_libspdm_get_csr_request->header.spdm_version = SPDM_MESSAGE_VERSION_12;
     m_libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
@@ -661,13 +707,13 @@ void libspdm_test_responder_csr_case6(void **state)
     m_libspdm_get_csr_request->header.param2 = 0;
 
     m_libspdm_get_csr_request->opaque_data_length = 0;
-    m_libspdm_get_csr_request->requester_info_length = sizeof(right_req_info);
+    m_libspdm_get_csr_request->requester_info_length = req_info_len;
 
-    libspdm_copy_mem(m_libspdm_get_csr_request + 1, sizeof(right_req_info),
-                     right_req_info, sizeof(right_req_info));
+    libspdm_copy_mem(m_libspdm_get_csr_request + 1, req_info_len,
+                     right_req_info, req_info_len);
 
     size_t m_libspdm_get_csr_request_size = sizeof(spdm_get_csr_request_t) +
-                                            sizeof(right_req_info);
+                                            req_info_len;
 
     response_size = sizeof(response);
 
@@ -694,9 +740,9 @@ void libspdm_test_responder_csr_case6(void **state)
     m_libspdm_get_csr_request->header.param2 = 0;
 
     m_libspdm_get_csr_request->opaque_data_length = 0;
-    m_libspdm_get_csr_request->requester_info_length = sizeof(right_req_info);
-    libspdm_copy_mem(m_libspdm_get_csr_request + 1, sizeof(right_req_info),
-                     right_req_info, sizeof(right_req_info));
+    m_libspdm_get_csr_request->requester_info_length = req_info_len;
+    libspdm_copy_mem(m_libspdm_get_csr_request + 1, req_info_len,
+                     right_req_info, req_info_len);
 
     response_size = sizeof(response);
     status = libspdm_get_response_csr(spdm_context,
@@ -734,7 +780,7 @@ void libspdm_test_responder_csr_case7(void **state)
     spdm_get_csr_request_t *libspdm_get_csr_request;
     uint8_t wrong_csr[LIBSPDM_MAX_CSR_SIZE];
     libspdm_zero_mem(wrong_csr, LIBSPDM_MAX_CSR_SIZE);
-    char *csr;
+    uint8_t *csr;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -754,25 +800,25 @@ void libspdm_test_responder_csr_case7(void **state)
 
     libspdm_get_csr_request = malloc(sizeof(spdm_get_csr_request_t) +
                                      sizeof(m_csr_opaque_data) +
-                                     sizeof(right_req_info));
+                                     req_info_len);
 
     libspdm_get_csr_request->header.spdm_version = SPDM_MESSAGE_VERSION_12;
     libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
     libspdm_get_csr_request->header.param1 = 0;
     libspdm_get_csr_request->header.param2 = 0;
     libspdm_get_csr_request->opaque_data_length = sizeof(m_csr_opaque_data);
-    libspdm_get_csr_request->requester_info_length = sizeof(right_req_info);
+    libspdm_get_csr_request->requester_info_length = req_info_len;
 
-    libspdm_copy_mem(libspdm_get_csr_request + 1, sizeof(right_req_info),
-                     right_req_info, sizeof(right_req_info));
+    libspdm_copy_mem(libspdm_get_csr_request + 1, req_info_len,
+                     right_req_info, req_info_len);
 
-    libspdm_copy_mem((uint8_t *)(libspdm_get_csr_request + 1) + sizeof(right_req_info),
+    libspdm_copy_mem((uint8_t *)(libspdm_get_csr_request + 1) + req_info_len,
                      sizeof(m_csr_opaque_data),
                      m_csr_opaque_data, sizeof(m_csr_opaque_data));
 
     size_t libspdm_get_csr_request_size = sizeof(spdm_get_csr_request_t) +
                                           sizeof(m_csr_opaque_data) +
-                                          sizeof(right_req_info);
+                                          req_info_len;
 
     response_size = sizeof(response);
     status = libspdm_get_response_csr(spdm_context,
@@ -789,9 +835,12 @@ void libspdm_test_responder_csr_case7(void **state)
     /*check returned CSR not zero */
     assert_memory_not_equal(spdm_response + 1, wrong_csr, spdm_response->csr_length);
 
-    csr = (char *)(spdm_response + 1);
+    csr = (uint8_t *)(spdm_response + 1);
     assert_true(libspdm_find_buffer(csr, spdm_response->csr_length,
                                     right_req_info_string, sizeof(right_req_info_string)));
+    /*check that returned CSR contains req_info subject*/
+    assert_true(libspdm_find_buffer(csr, spdm_response->csr_length,
+                                    req_info_subject, sizeof(req_info_subject)));
 
     free(libspdm_get_csr_request);
 }
@@ -835,17 +884,17 @@ void libspdm_test_responder_csr_case8(void **state)
     libspdm_get_csr_request->header.param2 = 0;
 
     /* Swap right_req_info and m_csr_opaque_data */
-    libspdm_get_csr_request->opaque_data_length = sizeof(right_req_info);
+    libspdm_get_csr_request->opaque_data_length = req_info_len;
     libspdm_get_csr_request->requester_info_length = sizeof(m_csr_opaque_data);
     libspdm_copy_mem(libspdm_get_csr_request + 1, sizeof(m_csr_opaque_data),
                      m_csr_opaque_data, sizeof(m_csr_opaque_data));
-    libspdm_copy_mem((uint8_t *)(libspdm_get_csr_request + 1) + sizeof(right_req_info),
-                     sizeof(right_req_info),
-                     right_req_info, sizeof(right_req_info));
+    libspdm_copy_mem((uint8_t *)(libspdm_get_csr_request + 1) + req_info_len,
+                     req_info_len,
+                     right_req_info, req_info_len);
 
     size_t libspdm_get_csr_request_size = sizeof(spdm_get_csr_request_t) +
                                           sizeof(m_csr_opaque_data) +
-                                          sizeof(right_req_info);
+                                          req_info_len;
 
     response_size = sizeof(response);
     status = libspdm_get_response_csr(spdm_context,
@@ -1221,7 +1270,7 @@ void libspdm_test_responder_csr_case12(void **state)
     assert_true(libspdm_set_csr_before_reset());
 
     m_libspdm_get_csr_request = malloc(sizeof(spdm_get_csr_request_t) +
-                                       sizeof(right_req_info));
+                                       req_info_len);
 
     m_libspdm_get_csr_request->header.spdm_version = SPDM_MESSAGE_VERSION_12;
     m_libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
@@ -1229,13 +1278,13 @@ void libspdm_test_responder_csr_case12(void **state)
     m_libspdm_get_csr_request->header.param2 = 0;
 
     m_libspdm_get_csr_request->opaque_data_length = 0;
-    m_libspdm_get_csr_request->requester_info_length = sizeof(right_req_info);
+    m_libspdm_get_csr_request->requester_info_length = req_info_len;
 
-    libspdm_copy_mem(m_libspdm_get_csr_request + 1, sizeof(right_req_info),
-                     right_req_info, sizeof(right_req_info));
+    libspdm_copy_mem(m_libspdm_get_csr_request + 1, req_info_len,
+                     right_req_info, req_info_len);
 
     size_t m_libspdm_get_csr_request_size = sizeof(spdm_get_csr_request_t) +
-                                            sizeof(right_req_info);
+                                            req_info_len;
 
     response_size = sizeof(response);
 
@@ -1259,9 +1308,9 @@ void libspdm_test_responder_csr_case12(void **state)
     m_libspdm_get_csr_request->header.param2 = 0;
 
     m_libspdm_get_csr_request->opaque_data_length = 0;
-    m_libspdm_get_csr_request->requester_info_length = sizeof(right_req_info);
-    libspdm_copy_mem(m_libspdm_get_csr_request + 1, sizeof(right_req_info),
-                     right_req_info, sizeof(right_req_info));
+    m_libspdm_get_csr_request->requester_info_length = req_info_len;
+    libspdm_copy_mem(m_libspdm_get_csr_request + 1, req_info_len,
+                     right_req_info, req_info_len);
 
     response_size = sizeof(response);
 
