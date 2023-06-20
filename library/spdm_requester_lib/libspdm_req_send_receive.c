@@ -326,6 +326,7 @@ libspdm_return_t libspdm_handle_large_request(
     uint8_t *chunk_ptr;
     size_t copy_size;
     libspdm_chunk_info_t *send_info;
+    uint32_t min_data_transfer_size;
 
     if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_12) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
@@ -368,6 +369,10 @@ libspdm_return_t libspdm_handle_large_request(
     request = NULL; /* Invalidate to prevent accidental use. */
     request_size = 0;
 
+    min_data_transfer_size = LIBSPDM_MIN(
+        spdm_context->connection_info.capability.data_transfer_size,
+        spdm_context->local_context.capability.sender_data_transfer_size);
+
     do {
         LIBSPDM_ASSERT(send_info->large_message_capacity >= transport_header_size);
         spdm_request = (spdm_chunk_send_request_t*) ((uint8_t*) message + transport_header_size);
@@ -381,11 +386,11 @@ libspdm_return_t libspdm_handle_large_request(
         spdm_request->reserved = 0;
         chunk_ptr = (uint8_t*) (spdm_request + 1);
 
-        if (spdm_context->connection_info.capability.data_transfer_size
+        if (min_data_transfer_size
             - sizeof(spdm_chunk_send_request_t)
             < (send_info->large_message_size - send_info->chunk_bytes_transferred)) {
 
-            copy_size = spdm_context->connection_info.capability.data_transfer_size
+            copy_size = min_data_transfer_size
                         - sizeof(spdm_chunk_send_request_t);
         }
         else {
