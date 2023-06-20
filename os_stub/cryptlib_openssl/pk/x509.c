@@ -1884,9 +1884,13 @@ bool libspdm_x509_verify_cert(const uint8_t *cert, size_t cert_size,
 
 
     /* Allow partial certificate chains, terminated by a non-self-signed but
-     * still trusted intermediate certificate. Also disable time checks.*/
+     * still trusted intermediate certificate.
+     */
 
     X509_STORE_set_flags(cert_store, X509_V_FLAG_PARTIAL_CHAIN);
+#ifndef OPENSSL_CHECK_TIME
+    X509_STORE_set_flags(cert_store, X509_V_FLAG_NO_CHECK_TIME);
+#endif
 
 
     /* Set up X509_STORE_CTX for the subsequent verification operation.*/
