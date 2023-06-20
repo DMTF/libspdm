@@ -954,6 +954,9 @@ typedef struct {
      * uint8_t opaque_data[opaque_data_length]; */
 } spdm_get_csr_request_t;
 
+/* Maximum size, in bytes, of a CSR. */
+#define SPDM_MAX_CSR_SIZE 65535
+
 /* SPDM CSR response */
 typedef struct {
     spdm_message_header_t header;
