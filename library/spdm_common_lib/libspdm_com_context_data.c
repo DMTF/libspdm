@@ -167,7 +167,7 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
     uint8_t mut_auth_requested;
     uint8_t root_cert_index;
     uint16_t data16;
-#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
+#if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) && LIBSPDM_CERT_PARSE_SUPPORT
     bool status;
     const uint8_t *cert_buffer;
     size_t cert_buffer_size;
@@ -480,7 +480,7 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
                          sizeof(context->connection_info.peer_used_cert_chain[slot_id].buffer),
                          data, data_size);
 #else
-
+#if LIBSPDM_CERT_PARSE_SUPPORT
         status = libspdm_hash_all(
             context->connection_info.algorithm.base_hash_algo,
             data, data_size,
@@ -507,7 +507,6 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         }
 
         status = false;
-#if LIBSPDM_CERT_PARSE_SUPPORT
 #if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)
         if (!status) {
             status = libspdm_rsa_get_public_key_from_x509(
