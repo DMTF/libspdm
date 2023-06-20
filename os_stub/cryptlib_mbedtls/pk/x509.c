@@ -20,6 +20,7 @@
 #include <mbedtls/entropy.h>
 #include <mbedtls/ctr_drbg.h>
 #include <mbedtls/oid.h>
+#include <mbedtls/bignum.h>
 #include <string.h>
 
 #if LIBSPDM_CERT_PARSE_SUPPORT
@@ -35,6 +36,54 @@ static const uint8_t m_libspdm_oid_common_name[] = OID_COMMON_NAME;
 static const uint8_t m_libspdm_oid_organization_name[] = OID_ORGANIZATION_NAME;
 static const uint8_t m_libspdm_oid_ext_key_usage[] = OID_EXT_KEY_USAGE;
 static const uint8_t m_libspdm_oid_basic_constraints[] = OID_BASIC_CONSTRAINTS;
+
+typedef struct {
+    const char *name; /* String representation of AttributeType, e.g.
+                       * "CN" or "emailAddress". */
+    size_t name_len;  /* Length of 'name', without trailing 0 byte. */
+    const char *oid;  /* String representation of OID of AttributeType,
+                       * as per RFC 5280, Appendix A.1. */
+    size_t oid_len;
+    int default_tag;  /* The default character encoding used for the
+                       * given attribute type, e.g.
+                       * MBEDTLS_ASN1_UTF8_STRING for UTF-8. */
+} libspdm_x509_subject_descriptor_t;
+
+#define LIBSPDM_ADD_STRLEN( s )     s, sizeof( s ) - 1
+
+/*
+ * EC public keys:
+ *  SubjectPublicKeyInfo  ::=  SEQUENCE  {      1 + 2
+ *    algorithm         AlgorithmIdentifier,    1 + 1 (sequence)
+ *                                            + 1 + 1 + 7 (ec oid)
+ *                                            + 1 + 1 + 9 (namedCurve oid)
+ *    subjectPublicKey  BIT STRING              1 + 2 + 1               [1]
+ *                                            + 1 (point format)        [1]
+ *                                            + 2 * ECP_MAX (coords)    [1]
+ *  }
+ */
+#define LIBSPDM_ECP_PUB_DER_MAX_BYTES   (30 + 2 * MBEDTLS_ECP_MAX_BYTES)
+
+/*
+ * RSA public keys:
+ *  SubjectPublicKeyInfo  ::=  SEQUENCE  {          1 + 3
+ *       algorithm            AlgorithmIdentifier,  1 + 1 (sequence)
+ *                                                + 1 + 1 + 9 (rsa oid)
+ *                                                + 1 + 1 (params null)
+ *       subjectPublicKey     BIT STRING }          1 + 3 + (1 + below)
+ *  RSAPublicKey ::= SEQUENCE {                     1 + 3
+ *      modulus           INTEGER,  -- n            1 + 3 + MPI_MAX + 1
+ *      publicExponent    INTEGER   -- e            1 + 3 + MPI_MAX + 1
+ *  }
+ */
+#define LIBSPDM_RSA_PUB_DER_MAX_BYTES   (38 + 2 * MBEDTLS_MPI_MAX_SIZE)
+
+#define LIBSPDM_MAX_PUBKEY_DER_BUFFER_SIZE (LIBSPDM_RSA_PUB_DER_MAX_BYTES > \
+                                            LIBSPDM_ECP_PUB_DER_MAX_BYTES ? \
+                                            LIBSPDM_RSA_PUB_DER_MAX_BYTES : \
+                                            LIBSPDM_ECP_PUB_DER_MAX_BYTES )
+
+#define LIBSPDM_MAX_SUBJECT_BUFFER_SIZE MBEDTLS_X509_MAX_DN_NAME_SIZE
 
 /**
  * Construct a X509 object from DER-encoded certificate data.
@@ -1576,6 +1625,131 @@ int32_t libspdm_x509_compare_date_time(const void *date_time1, const void *date_
     }
 }
 
+static bool libspdm_convert_subject_to_string(uint8_t *ptr, size_t obj_len,
+                                              uint8_t *buffer, int32_t buff_len)
+{
+    bool ret;
+    uint8_t *end;
+    uint8_t *internal_p;
+
+    libspdm_x509_subject_descriptor_t *cur;
+    /* X.509 DN attributes from RFC 5280, Appendix A.1. */
+    libspdm_x509_subject_descriptor_t x509_attrs[] =
+    {
+        { LIBSPDM_ADD_STRLEN( "CN" ), LIBSPDM_ADD_STRLEN( MBEDTLS_OID_AT_CN ),
+          MBEDTLS_ASN1_UTF8_STRING },
+        { LIBSPDM_ADD_STRLEN( "C" ), LIBSPDM_ADD_STRLEN( MBEDTLS_OID_AT_COUNTRY ),
+          MBEDTLS_ASN1_PRINTABLE_STRING },
+        { LIBSPDM_ADD_STRLEN( "O" ), LIBSPDM_ADD_STRLEN( MBEDTLS_OID_AT_ORGANIZATION ),
+          MBEDTLS_ASN1_UTF8_STRING },
+        { LIBSPDM_ADD_STRLEN( "L" ), LIBSPDM_ADD_STRLEN( MBEDTLS_OID_AT_LOCALITY ),
+          MBEDTLS_ASN1_UTF8_STRING },
+        { LIBSPDM_ADD_STRLEN( "R" ), LIBSPDM_ADD_STRLEN( MBEDTLS_OID_PKCS9_EMAIL ),
+          MBEDTLS_ASN1_IA5_STRING },
+        { LIBSPDM_ADD_STRLEN( "OU" ), LIBSPDM_ADD_STRLEN( MBEDTLS_OID_AT_ORG_UNIT ),
+          MBEDTLS_ASN1_UTF8_STRING },
+        { LIBSPDM_ADD_STRLEN( "ST" ), LIBSPDM_ADD_STRLEN( MBEDTLS_OID_AT_STATE ),
+          MBEDTLS_ASN1_UTF8_STRING },
+        { LIBSPDM_ADD_STRLEN( "emailAddress" ), LIBSPDM_ADD_STRLEN( MBEDTLS_OID_PKCS9_EMAIL ),
+          MBEDTLS_ASN1_IA5_STRING },
+        { LIBSPDM_ADD_STRLEN( "serialNumber" ), LIBSPDM_ADD_STRLEN( MBEDTLS_OID_AT_SERIAL_NUMBER ),
+          MBEDTLS_ASN1_PRINTABLE_STRING },
+        { LIBSPDM_ADD_STRLEN( "postalAddress" ),
+          LIBSPDM_ADD_STRLEN( MBEDTLS_OID_AT_POSTAL_ADDRESS ), MBEDTLS_ASN1_PRINTABLE_STRING },
+        { LIBSPDM_ADD_STRLEN( "postalCode" ), LIBSPDM_ADD_STRLEN( MBEDTLS_OID_AT_POSTAL_CODE ),
+          MBEDTLS_ASN1_PRINTABLE_STRING },
+        { LIBSPDM_ADD_STRLEN( "dnQualifier" ), LIBSPDM_ADD_STRLEN( MBEDTLS_OID_AT_DN_QUALIFIER ),
+          MBEDTLS_ASN1_PRINTABLE_STRING },
+        { LIBSPDM_ADD_STRLEN( "title" ), LIBSPDM_ADD_STRLEN( MBEDTLS_OID_AT_TITLE ),
+          MBEDTLS_ASN1_UTF8_STRING },
+        { LIBSPDM_ADD_STRLEN( "SN" ), LIBSPDM_ADD_STRLEN( MBEDTLS_OID_AT_SUR_NAME ),
+          MBEDTLS_ASN1_UTF8_STRING },
+        { LIBSPDM_ADD_STRLEN( "GN" ), LIBSPDM_ADD_STRLEN( MBEDTLS_OID_AT_GIVEN_NAME ),
+          MBEDTLS_ASN1_UTF8_STRING },
+        { LIBSPDM_ADD_STRLEN( "initials" ), LIBSPDM_ADD_STRLEN( MBEDTLS_OID_AT_INITIALS ),
+          MBEDTLS_ASN1_UTF8_STRING },
+        { LIBSPDM_ADD_STRLEN( "pseudonym" ), LIBSPDM_ADD_STRLEN( MBEDTLS_OID_AT_PSEUDONYM ),
+          MBEDTLS_ASN1_UTF8_STRING },
+        { LIBSPDM_ADD_STRLEN( "generationQualifier" ),
+          LIBSPDM_ADD_STRLEN( MBEDTLS_OID_AT_GENERATION_QUALIFIER ),
+          MBEDTLS_ASN1_UTF8_STRING },
+        { LIBSPDM_ADD_STRLEN( "DC" ), LIBSPDM_ADD_STRLEN( MBEDTLS_OID_DOMAIN_COMPONENT ),
+          MBEDTLS_ASN1_IA5_STRING },
+        { NULL, 0, NULL, 0, MBEDTLS_ASN1_NULL }
+    };
+
+    end = ptr + obj_len;
+
+    while(ptr != end) {
+        /*SET*/
+        ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                                   LIBSPDM_CRYPTO_ASN1_SET | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+        if (!ret) {
+            return false;
+        }
+        internal_p = ptr;
+        /*move to next SET*/
+        ptr += obj_len;
+
+        /*sequece*/
+        ret = libspdm_asn1_get_tag(&internal_p, end, &obj_len,
+                                   LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+        if (!ret) {
+            return false;
+        }
+
+        /*OID*/
+        ret = libspdm_asn1_get_tag(&internal_p, end, &obj_len, LIBSPDM_CRYPTO_ASN1_OID);
+        if (!ret) {
+            return false;
+        }
+
+        for (cur = x509_attrs; cur->name != NULL; cur++) {
+            if ((cur->oid_len == obj_len) &&
+                (libspdm_consttime_is_mem_equal(cur->oid, internal_p, obj_len))) {
+                /*Concat subject string*/
+
+                /*for example: CN=*/
+                libspdm_copy_mem(buffer, buff_len, cur->name, cur->name_len);
+                buff_len = (int32_t)(buff_len - cur->name_len);
+                buffer += cur->name_len;
+                *buffer = '=';
+                buff_len--;
+                buffer++;
+
+                /*move to string*/
+                internal_p += obj_len;
+                ret = libspdm_asn1_get_tag(&internal_p, end, &obj_len, cur->default_tag);
+                if (!ret) {
+                    return false;
+                }
+
+                /*for example: AU,*/
+                libspdm_copy_mem(buffer, buff_len, internal_p, obj_len);
+                buff_len = (int32_t)(buff_len - obj_len);
+                buffer += obj_len;
+                *buffer = ',';
+                buff_len--;
+                buffer++;
+
+                if (buff_len < 0) {
+                    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"the buffer is too small"));
+                    return false;
+                }
+                break;
+            }
+        }
+
+        /*can not find the same oid, the subject is wrong*/
+        if (cur->name == NULL) {
+            return false;
+        }
+    }
+
+    *buffer = '\0';
+    return true;
+}
+
 /**
  * Set all attributes object form req_info to CSR
  *
@@ -1586,8 +1760,9 @@ int32_t libspdm_x509_compare_date_time(const void *date_time1, const void *date_
  * @retval  true   Success Set.
  * @retval  false  Set failed.
  **/
-bool libspdm_set_attribute_for_req(mbedtls_x509write_csr *req, uint8_t *req_info,
-                                   size_t req_info_len)
+bool libspdm_set_attribute_for_req(mbedtls_x509write_csr *req,
+                                   uint8_t *req_info, size_t req_info_len,
+                                   uint8_t *pub_key_der, size_t pub_key_der_len)
 {
     uint8_t *ptr;
     int32_t length;
@@ -1601,6 +1776,10 @@ bool libspdm_set_attribute_for_req(mbedtls_x509write_csr *req, uint8_t *req_info
     uint8_t *val;
     size_t val_len;
 
+    uint8_t *pkinfo;
+    size_t pkinfo_len;
+    uint8_t buffer[LIBSPDM_MAX_SUBJECT_BUFFER_SIZE];
+
     length = (int32_t)req_info_len;
     ptr = req_info;
     obj_len = 0;
@@ -1611,24 +1790,50 @@ bool libspdm_set_attribute_for_req(mbedtls_x509write_csr *req, uint8_t *req_info
         return false;
     }
 
-    /*req_info sequence, all ret is ok because the req_info has been verified before*/
+    /*req_info sequence, all req_info format is ok because the req_info has been verified before*/
     ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
                                LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
 
     /*integer:version*/
     ret = libspdm_asn1_get_tag(&ptr, end, &obj_len, LIBSPDM_CRYPTO_ASN1_INTEGER);
+    /*check req_info verson. spec PKCS#10: It shall be 0 for this version of the standard.*/
+    if ((obj_len != 1) || (*ptr != 0)) {
+        return false;
+    }
     ptr += obj_len;
 
     /*sequence:subject name*/
     ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
                                LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+
+    /**/
+    libspdm_zero_mem(buffer, sizeof(buffer));
+    ret = libspdm_convert_subject_to_string(ptr, obj_len, buffer, LIBSPDM_MAX_SUBJECT_BUFFER_SIZE);
+    if (!ret) {
+        return false;
+    }
+
+    /*set subject name*/
+    ret = mbedtls_x509write_csr_set_subject_name(req, buffer);
+    if (ret != 0) {
+        return false;
+    }
+
     ptr += obj_len;
 
+    pkinfo = ptr;
     /*sequence:subject pkinfo*/
     ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
                                LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
-    ptr += obj_len;
 
+    pkinfo_len = obj_len + ptr - pkinfo;
+    /*check the public key info*/
+    if (!((pkinfo_len == pub_key_der_len) &&
+          (libspdm_consttime_is_mem_equal(pub_key_der, pkinfo, pkinfo_len)))) {
+        return false;
+    }
+
+    ptr += obj_len;
 
     /*[0]: attributes*/
     ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
@@ -1738,6 +1943,10 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
     mbedtls_md_type_t md_alg;
     mbedtls_pk_context key;
 
+    uint8_t pubkey_buffer[LIBSPDM_MAX_PUBKEY_DER_BUFFER_SIZE];
+    uint8_t *pubkey_der_data;
+    size_t pubkey_der_len;
+
     /*basic_constraints: CA: false */
     #define BASIC_CONSTRAINTS_STRING_FALSE {0x30, 0x00}
     uint8_t basic_constraints_false[] = BASIC_CONSTRAINTS_STRING_FALSE;
@@ -1811,15 +2020,6 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
         goto free_all;
     }
 
-    /* requester info parse*/
-    if (requester_info_length != 0) {
-        result = libspdm_set_attribute_for_req(&req, requester_info, requester_info_length);
-        if (!result) {
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"set_attribute failed !\n"));
-            goto free_all;
-        }
-    }
-
     /* Set the md alg */
     mbedtls_x509write_csr_set_md_alg(&req, md_alg);
 
@@ -1829,6 +2029,28 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
         if (ret != 0) {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                            "failed\n ! mbedtls_x509write_csr_set_subject_name returned %d", ret));
+            goto free_all;
+        }
+    }
+
+    libspdm_zero_mem(pubkey_buffer, sizeof(pubkey_buffer));
+    pubkey_der_len = mbedtls_pk_write_pubkey_der(&key, pubkey_buffer, sizeof(pubkey_buffer));
+    if (pubkey_der_len > 0) {
+        /*Note: data is written at the end of the buffer!*/
+        pubkey_der_data = pubkey_buffer + sizeof(pubkey_buffer) - pubkey_der_len;
+    } else{
+        goto free_all;
+    }
+
+    /* requester info parse
+     * check the req_info version and subjectPKInfo;
+     * get attribute and subject from req_info and set them to CSR;
+     **/
+    if (requester_info_length != 0) {
+        result = libspdm_set_attribute_for_req(&req, requester_info, requester_info_length,
+                                               pubkey_der_data, pubkey_der_len);
+        if (!result) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"set_attribute failed !\n"));
             goto free_all;
         }
     }

@@ -17,6 +17,7 @@
 #include <openssl/bn.h>
 #include <openssl/pem.h>
 #include <openssl/bio.h>
+#include <crypto/x509.h>
 
 #if LIBSPDM_CERT_PARSE_SUPPORT
 
@@ -2273,7 +2274,8 @@ bool libspdm_set_subject_name(X509_NAME *x509_name, char *subject_name)
  * @retval  true   Success Set.
  * @retval  false  Set failed.
  **/
-bool libspdm_set_attribute_for_req(X509_REQ *req, uint8_t *req_info, size_t req_info_len)
+bool libspdm_set_attribute_for_req(X509_REQ *req, uint8_t *req_info, size_t req_info_len,
+                                   EVP_PKEY *public_key)
 {
     uint8_t *ptr;
     int32_t length;
@@ -2290,6 +2292,15 @@ bool libspdm_set_attribute_for_req(X509_REQ *req, uint8_t *req_info, size_t req_
     ASN1_OBJECT *oid_asn1_obj;
     const unsigned char *oid_for_d2i;
 
+    uint8_t *pubkey_info;
+    size_t pubkey_info_len;
+    uint8_t *der_data;
+    int32_t der_len;
+    X509_REQ_INFO *x509_req_info;
+
+    x509_req_info = NULL;
+    der_data = NULL;
+    der_len = 0;
     length = (int32_t)req_info_len;
     ptr = req_info;
     obj_len = 0;
@@ -2300,12 +2311,25 @@ bool libspdm_set_attribute_for_req(X509_REQ *req, uint8_t *req_info, size_t req_
         return false;
     }
 
-    /*req_info sequence, all ret is ok because the req_info has been verified before*/
+    /*get subject name from req_info and set it to CSR*/
+    x509_req_info = d2i_X509_REQ_INFO(NULL, (const unsigned char **)(&req_info), req_info_len);
+    if (x509_req_info) {
+        X509_REQ_set_subject_name(req, x509_req_info->subject);
+        X509_REQ_INFO_free(x509_req_info);
+    } else {
+        return false;
+    }
+
+    /*req_info sequence, all req_info format is ok because the req_info has been verified before*/
     ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
                                LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
 
     /*integer:version*/
     ret = libspdm_asn1_get_tag(&ptr, end, &obj_len, LIBSPDM_CRYPTO_ASN1_INTEGER);
+    /*check req_info verson. spec PKCS#10: It shall be 0 for this version of the standard.*/
+    if ((obj_len != 1) || (*ptr != 0)) {
+        return false;
+    }
     ptr += obj_len;
 
     /*sequence:subject name*/
@@ -2314,9 +2338,24 @@ bool libspdm_set_attribute_for_req(X509_REQ *req, uint8_t *req_info, size_t req_
     ptr += obj_len;
 
     /*sequence:subject pkinfo*/
+    pubkey_info = ptr;
     ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
                                LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+
+    pubkey_info_len = obj_len + (ptr - pubkey_info);
+    der_len = i2d_PUBKEY(public_key, &der_data);
+    /*check the public key info*/
+    if (!((der_len > 0) && (der_len == pubkey_info_len) &&
+          (libspdm_consttime_is_mem_equal(pubkey_info, der_data, der_len)))) {
+        if (der_data != NULL) {
+            OPENSSL_free(der_data);
+        }
+        return false;
+    }
+    OPENSSL_free(der_data);
     ptr += obj_len;
+
+    /*get attributes from req_info and set them to CSR*/
 
     /*[0]: attributes*/
     ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
@@ -2435,6 +2474,9 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
     X509_REQ *x509_req;
     X509_NAME *x509_name;
     EVP_PKEY *private_key;
+    EVP_PKEY *public_key;
+    RSA *rsa_public_key;
+    EC_KEY *ec_public_key;
     const EVP_MD *md;
     uint8_t *csr_p;
     STACK_OF(X509_EXTENSION) *exts;
@@ -2447,6 +2489,10 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
 
     x509_req = NULL;
     x509_name = NULL;
+    private_key = NULL;
+    public_key = NULL;
+    rsa_public_key = NULL;
+    ec_public_key = NULL;
     md = NULL;
     csr_p = csr_pointer;
 
@@ -2458,6 +2504,13 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
     private_key = EVP_PKEY_new();
     if (private_key == NULL) {
         X509_REQ_free(x509_req);
+        return false;
+    }
+
+    public_key = EVP_PKEY_new();
+    if (public_key == NULL) {
+        X509_REQ_free(x509_req);
+        EVP_PKEY_free(private_key);
         return false;
     }
 
@@ -2473,6 +2526,9 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
         if (ret != 1) {
             goto free_all;
         }
+
+        rsa_public_key = RSAPublicKey_dup((RSA *)context);
+        EVP_PKEY_assign_RSA(public_key, rsa_public_key);
         break;
     case LIBSPDM_CRYPTO_NID_ECDSA_NIST_P256:
     case LIBSPDM_CRYPTO_NID_ECDSA_NIST_P384:
@@ -2481,17 +2537,12 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
         if (ret != 1) {
             goto free_all;
         }
+
+        ec_public_key = EC_KEY_dup((EC_KEY *)context);
+        EVP_PKEY_assign_EC_KEY(public_key, ec_public_key);
         break;
     default:
         goto free_all;
-    }
-
-    /* requester info parse*/
-    if (requester_info_length != 0) {
-        ret = libspdm_set_attribute_for_req(x509_req, requester_info, requester_info_length);
-        if (ret == 0) {
-            goto free_all;
-        }
     }
 
     /*set version of x509 req*/
@@ -2507,6 +2558,18 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
     if (subject_name != NULL) {
         ret = libspdm_set_subject_name(x509_name, subject_name);
         if (ret != 1) {
+            goto free_all;
+        }
+    }
+
+    /* requester info parse
+     * check the req_info version and subjectPKInfo;
+     * get attribute and subject from req_info and set them to CSR;
+     **/
+    if (requester_info_length != 0) {
+        ret = libspdm_set_attribute_for_req(x509_req, requester_info, requester_info_length,
+                                            public_key);
+        if (ret == 0) {
             goto free_all;
         }
     }
@@ -2588,6 +2651,7 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
 free_all:
     X509_REQ_free(x509_req);
     EVP_PKEY_free(private_key);
+    EVP_PKEY_free(public_key);
 
     return (ret != 0);
 }
