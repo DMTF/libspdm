@@ -12,6 +12,21 @@
 extern "C" {
 # endif
 
+/**
+ * \def X509_V_FLAG_NO_CHECK_TIME
+ *
+ * The X509_V_FLAG_NO_CHECK_TIME flag suppresses checking the
+ * validity period of certificates and CRLs against the current time.
+ *
+ * The time needs to be correct (not necessarily very accurate, but at least
+ * the date should be correct). This is used to verify the validity period of
+ * X.509 certificates.
+ *
+ * Comment if your system does not have a correct clock.
+ *
+ */
+#define OPENSSL_CHECK_TIME
+
 # ifdef OPENSSL_ALGORITHM_DEFINES
 #  error OPENSSL_ALGORITHM_DEFINES no longer supported
 # endif
