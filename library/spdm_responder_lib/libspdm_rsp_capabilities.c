@@ -238,13 +238,23 @@ libspdm_return_t libspdm_get_response_capabilities(libspdm_context_t *spdm_conte
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,
                                                response_size, response);
     }
+
     if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
         spdm_context->connection_info.capability.ct_exponent = spdm_request->ct_exponent;
-        spdm_context->connection_info.capability.flags = spdm_request->flags;
     } else {
         spdm_context->connection_info.capability.ct_exponent = 0;
-        spdm_context->connection_info.capability.flags = 0;
     }
+
+    if (spdm_response->header.spdm_version == SPDM_MESSAGE_VERSION_10) {
+        spdm_context->connection_info.capability.flags = 0;
+    } else if (spdm_response->header.spdm_version == SPDM_MESSAGE_VERSION_11) {
+        spdm_context->connection_info.capability.flags =
+            spdm_request->flags & SPDM_GET_CAPABILITIES_REQUEST_FLAGS_11_MASK;
+    } else {
+        spdm_context->connection_info.capability.flags =
+            spdm_request->flags & SPDM_GET_CAPABILITIES_REQUEST_FLAGS_12_MASK;
+    }
+
     if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
         spdm_context->connection_info.capability.data_transfer_size =
             spdm_request->data_transfer_size;

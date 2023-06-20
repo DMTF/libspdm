@@ -299,7 +299,17 @@ static libspdm_return_t libspdm_try_get_capabilities(libspdm_context_t *spdm_con
     }
 
     spdm_context->connection_info.capability.ct_exponent = spdm_response->ct_exponent;
-    spdm_context->connection_info.capability.flags = spdm_response->flags;
+
+    if (spdm_response->header.spdm_version == SPDM_MESSAGE_VERSION_10) {
+        spdm_context->connection_info.capability.flags =
+            spdm_response->flags & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_10_MASK;
+    } else if (spdm_response->header.spdm_version == SPDM_MESSAGE_VERSION_11) {
+        spdm_context->connection_info.capability.flags =
+            spdm_response->flags & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_11_MASK;
+    } else {
+        spdm_context->connection_info.capability.flags =
+            spdm_response->flags & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_12_MASK;
+    }
 
     if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
         spdm_context->connection_info.capability.data_transfer_size =
