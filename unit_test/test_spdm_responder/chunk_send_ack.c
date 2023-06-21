@@ -107,7 +107,8 @@ void libspdm_test_responder_chunk_send_ack_setup_algo_state(libspdm_context_t* s
 
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
-
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 }
 
 /* Test sending large NegAlg Request in multiple chunks. */
@@ -257,6 +258,8 @@ void libspdm_test_responder_chunk_send_ack_rsp_case1(void** state)
 
     spdm_context->local_context.capability.flags &=
         ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
     chunk_num = 0;
     bytes_total = sizeof(m_libspdm_chunk_send_negotiate_algorithm_request1);

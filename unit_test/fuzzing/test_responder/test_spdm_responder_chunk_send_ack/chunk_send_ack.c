@@ -55,6 +55,8 @@ void libspdm_test_responder_chunk_send_ack_setup_algo_state(libspdm_context_t *s
 
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 }
 
 void libspdm_test_responder_chunk_send_ack_case1(void **State)
