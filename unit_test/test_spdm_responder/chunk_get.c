@@ -94,6 +94,8 @@ void libspdm_test_responder_chunk_get_rsp_case2(void** state)
 
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
     /* Set bad response state */
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_BUSY;
@@ -152,6 +154,8 @@ void libspdm_test_responder_chunk_get_rsp_case3(void** state)
         CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
     spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
 
     libspdm_zero_mem(&spdm_request, sizeof(spdm_request));
@@ -208,6 +212,8 @@ void libspdm_test_responder_chunk_get_rsp_case4(void** state)
 
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
     libspdm_zero_mem(&spdm_request, sizeof(spdm_request));
     spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_12;
@@ -262,6 +268,8 @@ void libspdm_test_responder_chunk_get_rsp_case5(void** state)
         CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
     libspdm_zero_mem(&spdm_request, sizeof(spdm_request));
     spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_11; /* Mismatching SPDM version */
@@ -314,6 +322,8 @@ void libspdm_test_responder_chunk_get_rsp_case6(void** state)
         CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
     /* Set no chunk saved */
     spdm_context->chunk_context.get.chunk_in_use = false;
@@ -373,6 +383,8 @@ void libspdm_test_responder_chunk_get_rsp_case7(void** state)
         CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
     libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
 
@@ -443,6 +455,8 @@ void libspdm_test_responder_chunk_get_rsp_case8(void** state)
         CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
     libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
 
@@ -513,6 +527,8 @@ void libspdm_test_responder_chunk_get_rsp_case9(void** state)
         CHUNK_GET_RESPONDER_UNIT_TEST_DATA_TRANSFER_SIZE;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
     libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
 
@@ -593,6 +609,8 @@ void libspdm_test_responder_chunk_get_rsp_case10(void** state)
     spdm_context->local_context.capability.data_transfer_size = data_transfer_size;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
     libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
 
@@ -697,6 +715,8 @@ void libspdm_test_responder_chunk_get_rsp_case11(void** state)
     spdm_context->local_context.capability.data_transfer_size = data_transfer_size;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
     libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
 
@@ -799,6 +819,8 @@ void libspdm_test_responder_chunk_get_rsp_case12(void** state)
     spdm_context->local_context.capability.data_transfer_size = data_transfer_size;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
     libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
 
@@ -903,6 +925,8 @@ void libspdm_test_responder_chunk_get_rsp_case13(void** state)
     spdm_context->local_context.capability.data_transfer_size = data_transfer_size;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
     libspdm_get_scratch_buffer(spdm_context, &scratch_buffer, &scratch_buffer_size);
 

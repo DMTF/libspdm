@@ -56,6 +56,8 @@ void libspdm_test_responder_receive_send_rsp_case1(void** state)
     spdm_context->local_context.capability.flags |=
         (SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP
          | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP);
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
     libspdm_read_responder_public_certificate_chain(
         m_libspdm_use_hash_algo,
@@ -181,6 +183,8 @@ void libspdm_test_responder_receive_send_rsp_case2(void** state)
     spdm_context->local_context.capability.flags |=
         (SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP
          | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP);
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
     /* The local Responder transmit buffer size for sending a single and complete SPDM message */
     spdm_context->local_context.capability.sender_data_transfer_size =
@@ -265,6 +269,8 @@ void libspdm_test_responder_receive_send_rsp_case3(void** state)
     spdm_context->local_context.capability.flags |=
         (SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP
          | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP);
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
 
     libspdm_read_responder_public_certificate_chain(
         m_libspdm_use_hash_algo,
