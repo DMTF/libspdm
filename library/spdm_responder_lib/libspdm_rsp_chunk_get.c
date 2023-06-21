@@ -33,8 +33,9 @@ libspdm_return_t libspdm_get_response_chunk_get(
                                                response_size, response);
     }
 
-    if ((spdm_context->local_context.capability.flags &
-         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP) == 0) {
+    if (!libspdm_is_capabilities_flag_supported(
+            spdm_context, false, SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP,
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP)) {
         return libspdm_generate_error_response(
             spdm_context,
             SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,

@@ -619,7 +619,7 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
          ((context->local_context.capability.sender_data_transfer_size != 0) &&
           (my_response_size > context->local_context.capability.sender_data_transfer_size))) &&
         libspdm_is_capabilities_flag_supported(
-            context, false, 0,
+            context, false, SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP)) {
         #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
 
