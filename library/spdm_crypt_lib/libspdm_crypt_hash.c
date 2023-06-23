@@ -22,7 +22,7 @@ uint32_t libspdm_get_hash_size(uint32_t base_hash_algo)
         return 0;
 #endif
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384:
-#if LIBSPDM_SHA256_SUPPORT
+#if LIBSPDM_SHA384_SUPPORT
         return 48;
 #else
         return 0;
