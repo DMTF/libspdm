@@ -579,7 +579,7 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         #if LIBSPDM_DEBUG_PRINT_ENABLE
         if (mut_auth_requested) {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                           "Basic mutual authentication is a deprecated feature."));
+                           "Basic mutual authentication is a deprecated feature.\n"));
         }
         #endif /* LIBSPDM_DEBUG_PRINT_ENABLE */
         break;
