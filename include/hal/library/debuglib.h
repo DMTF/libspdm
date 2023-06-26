@@ -15,6 +15,7 @@
  * an image.
  **/
 
+#include "hal/base.h"
 #include "internal/libspdm_lib_config.h"
 
 #if LIBSPDM_DEBUG_PRINT_ENABLE
