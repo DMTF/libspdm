@@ -51,10 +51,13 @@ bool libspdm_cryptest_main(void)
         return status;
     }
 
+#if (LIBSPDM_AEAD_GCM_SUPPORT) || (LIBSPDM_AEAD_CHACHA20_POLY1305_SUPPORT) || \
+    (LIBSPDM_AEAD_SM4_SUPPORT)
     status = libspdm_validate_crypt_aead_cipher();
     if (!status) {
         return status;
     }
+#endif
 
     #if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)
     status = libspdm_validate_crypt_rsa();
