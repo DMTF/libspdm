@@ -27,6 +27,11 @@ libspdm_return_t libspdm_generate_error_response(const void *spdm_context,
     spdm_response->header.param1 = error_code;
     spdm_response->header.param2 = error_data;
 
+    if (spdm_response->header.spdm_version <= SPDM_MESSAGE_VERSION_11) {
+        LIBSPDM_ASSERT ((error_code != SPDM_ERROR_CODE_RESPONSE_TOO_LARGE) &&
+                        (error_code != SPDM_ERROR_CODE_LARGE_RESPONSE));
+    }
+
     return LIBSPDM_STATUS_SUCCESS;
 }
 
