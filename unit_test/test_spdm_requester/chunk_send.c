@@ -99,6 +99,12 @@ libspdm_return_t libspdm_requester_chunk_send_test_send_message(
     if (spdm_test_context->case_id == 11) {
         return LIBSPDM_STATUS_SUCCESS;
     }
+    if (spdm_test_context->case_id == 12) {
+        /* Here the send request message should always be SPDM_CHUNK_SEND,
+         * if not then something is wrong. */
+        LIBSPDM_ASSERT(chunk_send->header.request_response_code == SPDM_CHUNK_SEND);
+        return LIBSPDM_STATUS_SUCCESS;
+    }
     return LIBSPDM_STATUS_SEND_FAIL;
 }
 
@@ -288,6 +294,36 @@ libspdm_return_t libspdm_requester_chunk_send_test_receive_message(
 
         return LIBSPDM_STATUS_SUCCESS;
     }
+    if (spdm_test_context->case_id == 12) {
+        /* ErrorCode == LargeResponse shall not be allowed in ResponseToLargeRequest */
+        chunk_send_ack_rsp
+            = (void*) ((uint8_t*) *response + sizeof(libspdm_test_message_header_t));
+
+        chunk_send_ack_rsp->header.spdm_version = SPDM_MESSAGE_VERSION_12;
+        chunk_send_ack_rsp->header.request_response_code = SPDM_CHUNK_SEND_ACK;
+        chunk_send_ack_rsp->header.param1
+            = SPDM_CHUNK_SEND_ACK_RESPONSE_ATTRIBUTE_EARLY_ERROR_DETECTED;
+        chunk_send_ack_rsp->header.param2 = m_libspdm_chunk_send_chunk_handle;
+        chunk_send_ack_rsp->chunk_seq_no = m_libspdm_chunk_send_chunk_seq_no;
+
+        error_response = (void*) (chunk_send_ack_rsp + 1);
+        error_response->header.spdm_version = SPDM_MESSAGE_VERSION_12;
+        error_response->header.request_response_code = SPDM_ERROR;
+
+        /* ErrorCode == LargeResponse in ResponseToLargeRequest */
+        error_response->header.param1 = SPDM_ERROR_CODE_LARGE_RESPONSE;
+        error_response->header.param2 = 0;
+        *((uint8_t*) (error_response + 1)) = 0;
+
+        chunk_rsp_size = sizeof(spdm_chunk_send_ack_response_t) + sizeof(spdm_error_response_t) +
+                         sizeof(uint8_t);
+        libspdm_transport_test_encode_message(
+            spdm_context, NULL, false, false,
+            chunk_rsp_size, chunk_send_ack_rsp,
+            response_size, response);
+
+        return LIBSPDM_STATUS_SUCCESS;
+    }
     return LIBSPDM_STATUS_RECEIVE_FAIL;
 }
 
@@ -418,6 +454,19 @@ void libspdm_test_requester_chunk_send_case11(void** state)
     assert_int_equal(status, LIBSPDM_STATUS_PEER_BUFFER_TOO_SMALL);
 }
 
+/**
+ * Test 12: ErrorCode == LargeResponse shall not be allowed in ResponseToLargeRequest.
+ * Expected behavior: returns a status of LIBSPDM_STATUS_ERROR_PEER,
+ * Received an unexpected error message.
+ **/
+void libspdm_test_requester_chunk_send_case12(void** state)
+{
+    libspdm_return_t status;
+
+    status = libspdm_test_requester_chunk_send_generic_test_case(state, 12);
+    assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
+}
+
 libspdm_test_context_t m_libspdm_requester_chunk_send_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     true,
@@ -451,6 +500,8 @@ int libspdm_requester_chunk_send_test_main(void)
         cmocka_unit_test(libspdm_test_requester_chunk_send_case10),
         /* requester message size greater than the responder max_spdm_msg_size, return LIBSPDM_STATUS_PEER_BUFFER_TOO_SMALL */
         cmocka_unit_test(libspdm_test_requester_chunk_send_case11),
+        /* ErrorCode == LargeResponse shall not be allowed in ResponseToLargeRequest */
+        cmocka_unit_test(libspdm_test_requester_chunk_send_case12),
     };
 
     libspdm_setup_test_context(
