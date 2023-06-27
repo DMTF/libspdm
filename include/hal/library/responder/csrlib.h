@@ -12,7 +12,7 @@
 #include "library/spdm_return_status.h"
 #include "industry_standard/spdm.h"
 
-#if LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP
 /**
  * Gen CSR
  *
@@ -48,6 +48,6 @@ extern bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bo
                             uint8_t *opaque_data, uint16_t opaque_data_length,
                             size_t *csr_len, uint8_t *csr_pointer,
                             bool is_device_cert_model);
-#endif /* LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP */
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CSR_CAP */
 
 #endif /* RESPONDER_CSRLIB_H */

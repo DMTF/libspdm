@@ -632,7 +632,7 @@ extern bool libspdm_sm2_dsa_check_key(const void *sm2_context);
 extern bool libspdm_sm2_dsa_generate_key(void *sm2_context, uint8_t *public_data,
                                          size_t *public_size);
 
-#if LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP
 /**
  * Generate a CSR.
  *
@@ -670,6 +670,6 @@ extern bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
                                  bool is_ca,
                                  void *context, char *subject_name,
                                  size_t *csr_len, uint8_t *csr_pointer);
-#endif /* LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP */
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CSR_CAP */
 
 #endif /* CRYPTLIB_EXT_H */

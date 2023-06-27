@@ -648,7 +648,7 @@ void libspdm_set_session_state(libspdm_context_t *spdm_context,
 void libspdm_set_connection_state(libspdm_context_t *spdm_context,
                                   libspdm_connection_state_t connection_state);
 
-#if LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP
 /**
  * Process the SPDM GET_CSR request and return the response.
  *
@@ -669,7 +669,7 @@ void libspdm_set_connection_state(libspdm_context_t *spdm_context,
 libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
                                           size_t request_size, const void *request,
                                           size_t *response_size, void *response);
-#endif /* LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP */
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CSR_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
 /**
