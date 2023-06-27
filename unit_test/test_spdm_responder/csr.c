@@ -94,41 +94,12 @@ bool libspdm_find_buffer(char *src, size_t src_len, char *dst, size_t dst_len)
 }
 
 /*get the cached csr*/
-bool libspdm_test_read_cached_csr(uint32_t base_asym_algo, uint8_t **csr_pointer, size_t *csr_len)
+bool libspdm_test_read_cached_csr(uint8_t **csr_pointer, size_t *csr_len)
 {
     bool res;
     char *file;
 
-    if (base_asym_algo == 0) {
-        return false;
-    }
-
-    switch (base_asym_algo) {
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048:
-        file = "test_csr/rsa2048.csr";
-        break;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
-        file = "test_csr/rsa3072.csr";
-        break;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
-        file = "test_csr/rsa4096.csr";
-        break;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
-        file = "test_csr/ecp256.csr";
-        break;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
-        file = "test_csr/ecp384.csr";
-        break;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
-        file = "test_csr/ecp521.csr";
-        break;
-    default:
-        LIBSPDM_ASSERT(false);
-        return false;
-    }
+    file = "test_csr/cached.csr";
 
     res = libspdm_read_input_file(file, (void **)csr_pointer, csr_len);
     return res;
@@ -140,21 +111,11 @@ bool libspdm_test_read_cached_csr(uint32_t base_asym_algo, uint8_t **csr_pointer
  **/
 bool libspdm_set_csr_before_reset()
 {
-    uint8_t index;
+    char *file_name = "test_csr/cached.csr";
+    char *new_name = "test_csr/cached.staging";
 
-    char *file_name[] = {"test_csr/rsa2048.csr", "test_csr/rsa3072.csr", "test_csr/rsa4096.csr",
-                         "test_csr/ecp256.csr", "test_csr/ecp384.csr", "test_csr/ecp521.csr"};
-    char *new_name[] = {"test_csr/rsa2048.staging",
-                        "test_csr/rsa3072.staging",
-                        "test_csr/rsa4096.staging",
-                        "test_csr/ecp256.staging",
-                        "test_csr/ecp384.staging",
-                        "test_csr/ecp521.staging"};
-
-    for (index = 0; index < 6; index++) {
-        if (rename(file_name[index], new_name[index]) != 0) {
-            return false;
-        }
+    if (rename(file_name, new_name) != 0) {
+        return false;
     }
 
     return true;
@@ -166,21 +127,11 @@ bool libspdm_set_csr_before_reset()
  **/
 bool libspdm_set_csr_after_reset()
 {
-    uint8_t index;
+    char *file_name = "test_csr/cached.csr";
+    char *new_name = "test_csr/cached.staging";
 
-    char *file_name[] = {"test_csr/rsa2048.csr", "test_csr/rsa3072.csr", "test_csr/rsa4096.csr",
-                         "test_csr/ecp256.csr", "test_csr/ecp384.csr", "test_csr/ecp521.csr"};
-    char *new_name[] = {"test_csr/rsa2048.staging",
-                        "test_csr/rsa3072.staging",
-                        "test_csr/rsa4096.staging",
-                        "test_csr/ecp256.staging",
-                        "test_csr/ecp384.staging",
-                        "test_csr/ecp521.staging"};
-
-    for (index = 0; index < 6; index++) {
-        if (rename(new_name[index], file_name[index]) != 0) {
-            return false;
-        }
+    if (rename(new_name, file_name) != 0) {
+        return false;
     }
 
     return true;
@@ -671,7 +622,7 @@ void libspdm_test_responder_csr_case6(void **state)
     uint8_t *csr_pointer;
     size_t csr_len;
 
-    if (!libspdm_test_read_cached_csr(m_libspdm_use_asym_algo, &csr_pointer, &csr_len)) {
+    if (!libspdm_test_read_cached_csr(&csr_pointer, &csr_len)) {
         assert_false(true);
     }
 
@@ -1239,7 +1190,7 @@ void libspdm_test_responder_csr_case12(void **state)
     uint8_t *csr_pointer;
     size_t csr_len;
 
-    if (!libspdm_test_read_cached_csr(m_libspdm_use_asym_algo, &csr_pointer, &csr_len)) {
+    if (!libspdm_test_read_cached_csr(&csr_pointer, &csr_len)) {
         assert_false(true);
     }
 
