@@ -290,8 +290,8 @@ extern bool libspdm_is_in_trusted_environment();
  * @param[in]  slot_id          The number of slot for the certificate chain.
  * @param[in]  cert_chain       The pointer for the certificate chain to set.
  * @param[in]  cert_chain_size  The size of the certificate chain to set.
- * @param[in]  base_hash_algo   Indicates the negotiated signing algorithm.
- * @param[in]  base_asym_algo   Indicates the negotiated hash algorithms.
+ * @param[in]  base_hash_algo   Indicates the negotiated hash algorithm.
+ * @param[in]  base_asym_algo   Indicates the negotiated signing algorithms.
  *
  * @retval true   The certificate chain was successfully written to non-volatile memory.
  * @retval false  Unable to write certificate chain to non-volatile memory.
