@@ -555,7 +555,7 @@ bool libspdm_read_requester_public_key(uint16_t req_base_asym_alg,
     return res;
 }
 
-#if LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP
 bool libspdm_read_cached_last_csr_request(uint8_t **last_csr_request, size_t *last_csr_request_len)
 {
     bool res;
@@ -744,7 +744,7 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
     }
     return result;
 }
-#endif /* LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP */
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CSR_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 /**

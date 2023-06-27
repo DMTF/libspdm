@@ -6,7 +6,7 @@
 
 #include "internal/libspdm_responder_lib.h"
 
-#if LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP
 
 libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
                                           size_t request_size, const void *request,
@@ -187,4 +187,4 @@ libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-#endif /*LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP*/
+#endif /*LIBSPDM_ENABLE_CAPABILITY_CSR_CAP*/

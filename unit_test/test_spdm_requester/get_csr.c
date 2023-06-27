@@ -8,7 +8,7 @@
 #include "internal/libspdm_requester_lib.h"
 #include "internal/libspdm_secured_message_lib.h"
 
-#if LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP
 
 #define LIBSPDM_MAX_CSR_SIZE 0x1000
 
@@ -375,4 +375,4 @@ int libspdm_requester_get_csr_test_main(void)
                                   libspdm_unit_test_group_teardown);
 }
 
-#endif /*LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP*/
+#endif /*LIBSPDM_ENABLE_CAPABILITY_CSR_CAP*/
