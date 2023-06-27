@@ -1594,7 +1594,7 @@ bool libspdm_write_certificate_to_nvm(uint8_t slot_id, const void * cert_chain,
     defined(LIBSPDM_CPU_ARM)))
     FILE *fp_out;
 #else
-    uint64_t fp_out;
+    int64_t fp_out;
 #endif
 
     char file_name[] = {'s','l','o','t','_','i','d','_','0','\0'};
