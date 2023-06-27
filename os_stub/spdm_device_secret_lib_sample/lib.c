@@ -581,41 +581,12 @@ bool libspdm_cache_last_csr_request(const uint8_t *last_csr_request, size_t last
  * return true represent that: the device complete the csr by reset successfuly
  * return false represent that: the device complete the csr need reset
  **/
-bool libspdm_read_cached_csr(uint32_t base_asym_algo, uint8_t **csr_pointer, size_t *csr_len)
+bool libspdm_read_cached_csr(uint8_t **csr_pointer, size_t *csr_len)
 {
     bool res;
     char *file;
 
-    if (base_asym_algo == 0) {
-        return false;
-    }
-
-    switch (base_asym_algo) {
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048:
-        file = "test_csr/rsa2048.csr";
-        break;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
-        file = "test_csr/rsa3072.csr";
-        break;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
-        file = "test_csr/rsa4096.csr";
-        break;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
-        file = "test_csr/ecp256.csr";
-        break;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
-        file = "test_csr/ecp384.csr";
-        break;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
-        file = "test_csr/ecp521.csr";
-        break;
-    default:
-        LIBSPDM_ASSERT(false);
-        return false;
-    }
+    file = "test_csr/cached.csr";
 
     res = libspdm_read_input_file(file, (void **)csr_pointer, csr_len);
     return res;
@@ -650,7 +621,7 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
             (cached_last_request_len == request_size) &&
             (libspdm_consttime_is_mem_equal(cached_last_csr_request, request,
                                             request_size)) &&
-            (libspdm_read_cached_csr(base_asym_algo, &cached_csr, csr_len)) &&
+            (libspdm_read_cached_csr(&cached_csr, csr_len)) &&
             (*csr_len != 0)) {
 
             /*get and save cached csr*/
