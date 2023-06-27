@@ -423,6 +423,7 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
     uint8_t *scratch_buffer;
     size_t scratch_buffer_size;
     uint8_t request_response_code;
+    uint32_t actual_size;
 
     #if LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP
     bool result;
@@ -434,7 +435,6 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
     libspdm_chunk_info_t* get_info;
     spdm_chunk_response_response_t *chunk_rsp;
     uint8_t *chunk_ptr;
-    uint32_t actual_size;
     #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
 
     context = spdm_context;
@@ -611,38 +611,11 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
         }
     }
 
-    /* large SPDM message is the SPDM message whose size is greater than the DataTransferSize of the receiving
-     * SPDM endpoint or greater than the transmit buffer size of the sending SPDM endpoint */
-    if ((status == LIBSPDM_STATUS_SUCCESS) &&
-        (((context->connection_info.capability.data_transfer_size != 0) &&
-          (my_response_size > context->connection_info.capability.data_transfer_size)) ||
-         ((context->local_context.capability.sender_data_transfer_size != 0) &&
-          (my_response_size > context->local_context.capability.sender_data_transfer_size))) &&
-        libspdm_is_capabilities_flag_supported(
-            context, false, SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP,
-            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP)) {
-        #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
-
-        get_info = &context->chunk_context.get;
-
-        /* Saving multiple large responses is not an expected use case.
-         * Therefore, if the requester did not perform chunk_get requests for
-         * previous large responses, they will be lost. */
-        if (get_info->chunk_in_use) {
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
-                           "Warning: Overwriting previous unrequested chunk_get info.\n"));
-        }
-
-        libspdm_get_scratch_buffer(context, (void **)&scratch_buffer, &scratch_buffer_size);
-
-        /* The first section of the scratch
-         * buffer may be used for other purposes. Use only after that section. */
-
-        large_buffer = (uint8_t*)scratch_buffer +
-                       libspdm_get_scratch_buffer_large_message_offset(spdm_context);
-        large_buffer_size = libspdm_get_scratch_buffer_large_message_capacity(spdm_context);
-
-        if (my_response_size > context->connection_info.capability.max_spdm_msg_size) {
+    if (status == LIBSPDM_STATUS_SUCCESS) {
+        /* large SPDM message is the SPDM message whose size is greater than the DataTransferSize of the receiving
+         * SPDM endpoint or greater than the transmit buffer size of the sending SPDM endpoint */
+        if ((context->connection_info.capability.max_spdm_msg_size != 0) &&
+            (my_response_size > context->connection_info.capability.max_spdm_msg_size)) {
             actual_size = (uint32_t)my_response_size;
             status = libspdm_generate_extended_error_response(context,
                                                               SPDM_ERROR_CODE_RESPONSE_TOO_LARGE,
@@ -650,7 +623,35 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
                                                               sizeof(uint32_t),
                                                               (uint8_t *)&actual_size,
                                                               &my_response_size, my_response);
-        } else {
+        } else if ((((context->connection_info.capability.data_transfer_size != 0) &&
+                     (my_response_size > context->connection_info.capability.data_transfer_size)) ||
+                    ((context->local_context.capability.sender_data_transfer_size != 0) &&
+                     (my_response_size >
+                      context->local_context.capability.sender_data_transfer_size))) &&
+                   libspdm_is_capabilities_flag_supported(
+                       context, false, SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP,
+                       SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP)) {
+            #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
+
+            get_info = &context->chunk_context.get;
+
+            /* Saving multiple large responses is not an expected use case.
+             * Therefore, if the requester did not perform chunk_get requests for
+             * previous large responses, they will be lost. */
+            if (get_info->chunk_in_use) {
+                LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
+                               "Warning: Overwriting previous unrequested chunk_get info.\n"));
+            }
+
+            libspdm_get_scratch_buffer(context, (void **)&scratch_buffer, &scratch_buffer_size);
+
+            /* The first section of the scratch
+             * buffer may be used for other purposes. Use only after that section. */
+
+            large_buffer = (uint8_t*)scratch_buffer +
+                           libspdm_get_scratch_buffer_large_message_offset(spdm_context);
+            large_buffer_size = libspdm_get_scratch_buffer_large_message_capacity(spdm_context);
+
             get_info->chunk_in_use = true;
             /* Increment chunk_handle here as opposed to end of chunk_get handler
              * in case requester never issues chunk_get. */
@@ -686,19 +687,19 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
                                                               sizeof(uint8_t),
                                                               &get_info->chunk_handle,
                                                               &my_response_size, my_response);
-        }
-        #else
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
-                       "Warning: Could not save chunk. Scratch buffer too small.\n"));
+            #else
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
+                           "Warning: Could not save chunk. Scratch buffer too small.\n"));
 
-        status = libspdm_generate_extended_error_response(context,
-                                                          SPDM_ERROR_CODE_LARGE_RESPONSE,
-                                                          0, 0, NULL,
-                                                          &my_response_size, my_response);
-        #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
+            status = libspdm_generate_extended_error_response(context,
+                                                              SPDM_ERROR_CODE_LARGE_RESPONSE,
+                                                              0, 0, NULL,
+                                                              &my_response_size, my_response);
+            #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
 
-        if (LIBSPDM_STATUS_IS_ERROR(status)) {
-            return status;
+            if (LIBSPDM_STATUS_IS_ERROR(status)) {
+                return status;
+            }
         }
     }
 
