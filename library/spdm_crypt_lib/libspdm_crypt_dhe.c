@@ -96,7 +96,14 @@ void *libspdm_dhe_new(spdm_version_number_t spdm_version,
                       uint16_t dhe_named_group, bool is_initiator)
 {
     size_t nid;
+#if LIBSPDM_SM2_KEY_EXCHANGE_SUPPORT
     void *context;
+    bool result;
+    uint8_t spdm12_key_change_requester_context[
+        SPDM_VERSION_1_2_KEY_EXCHANGE_REQUESTER_CONTEXT_SIZE];
+    uint8_t spdm12_key_change_responder_context[
+        SPDM_VERSION_1_2_KEY_EXCHANGE_RESPONDER_CONTEXT_SIZE];
+#endif /* LIBSPDM_SM2_KEY_EXCHANGE_SUPPORT */
 
     nid = libspdm_get_dhe_nid(dhe_named_group);
     if (nid == 0) {
@@ -117,7 +124,7 @@ void *libspdm_dhe_new(spdm_version_number_t spdm_version,
 #if !LIBSPDM_FFDHE_4096_SUPPORT
         LIBSPDM_ASSERT(dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_4096);
 #endif
-        context = libspdm_dh_new_by_nid(nid);
+        return libspdm_dh_new_by_nid(nid);
 #else
         LIBSPDM_ASSERT(false);
         return NULL;
@@ -136,7 +143,7 @@ void *libspdm_dhe_new(spdm_version_number_t spdm_version,
 #if !LIBSPDM_ECDHE_P521_SUPPORT
         LIBSPDM_ASSERT(dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_521_R1);
 #endif
-        context = libspdm_ec_new_by_nid(nid);
+        return libspdm_ec_new_by_nid(nid);
 #else
         LIBSPDM_ASSERT(false);
         return NULL;
@@ -145,23 +152,6 @@ void *libspdm_dhe_new(spdm_version_number_t spdm_version,
     case SPDM_ALGORITHMS_DHE_NAMED_GROUP_SM2_P256:
 #if LIBSPDM_SM2_KEY_EXCHANGE_SUPPORT
         context = libspdm_sm2_key_exchange_new_by_nid(nid);
-#else
-        LIBSPDM_ASSERT(false);
-        return NULL;
-#endif
-        break;
-    default:
-        LIBSPDM_ASSERT(false);
-        return NULL;
-    }
-
-#if LIBSPDM_SM2_KEY_EXCHANGE_SUPPORT
-    if (dhe_named_group == SPDM_ALGORITHMS_DHE_NAMED_GROUP_SM2_P256) {
-        bool result;
-        uint8_t spdm12_key_change_requester_context[
-            SPDM_VERSION_1_2_KEY_EXCHANGE_REQUESTER_CONTEXT_SIZE];
-        uint8_t spdm12_key_change_responder_context[
-            SPDM_VERSION_1_2_KEY_EXCHANGE_RESPONDER_CONTEXT_SIZE];
 
         libspdm_copy_mem(spdm12_key_change_requester_context,
                          sizeof(spdm12_key_change_requester_context),
@@ -187,10 +177,16 @@ void *libspdm_dhe_new(spdm_version_number_t spdm_version,
             libspdm_sm2_key_exchange_free (context);
             return NULL;
         }
+        return context;
+#else
+        LIBSPDM_ASSERT(false);
+        return NULL;
+#endif
+        break;
+    default:
+        LIBSPDM_ASSERT(false);
+        return NULL;
     }
-#endif /* LIBSPDM_SM2_KEY_EXCHANGE_SUPPORT */
-
-    return context;
 }
 
 void libspdm_dhe_free(uint16_t dhe_named_group, void *context)

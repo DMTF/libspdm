@@ -6,6 +6,9 @@
 
 #include "test_crypt.h"
 
+#if (LIBSPDM_AEAD_GCM_SUPPORT) || (LIBSPDM_AEAD_CHACHA20_POLY1305_SUPPORT) || \
+    (LIBSPDM_AEAD_SM4_SUPPORT)
+
 /* AES-GCM test data from NIST public test vectors. */
 uint8_t m_libspdm_gcm_key[] = {
     0xee, 0xbc, 0x1f, 0x57, 0x48, 0x7f, 0x51, 0x92, 0x1c, 0x04, 0x65,
@@ -130,8 +133,6 @@ uint8_t m_libspdm_sm4_gcm_tag[] = {
  **/
 bool libspdm_validate_crypt_aead_cipher(void)
 {
-    #if (LIBSPDM_AEAD_GCM_SUPPORT) || (LIBSPDM_AEAD_CHACHA20_POLY1305_SUPPORT) || \
-    (LIBSPDM_AEAD_SM4_SUPPORT)
     bool status;
     uint8_t OutBuffer[1024];
     size_t OutBufferSize;
@@ -139,9 +140,6 @@ bool libspdm_validate_crypt_aead_cipher(void)
     size_t OutTagSize;
 
     libspdm_my_print("\nCrypto AEAD Testing: ");
-    #else
-    return true;
-    #endif
 
     #if LIBSPDM_AEAD_GCM_SUPPORT
     libspdm_my_print("\n- AES-GCM Encryption: ");
@@ -305,3 +303,5 @@ bool libspdm_validate_crypt_aead_cipher(void)
 
     return true;
 }
+
+#endif
