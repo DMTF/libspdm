@@ -58,6 +58,12 @@ libspdm_return_t libspdm_get_encap_response_challenge_auth(
             response_size, response);
     }
 
+    if (spdm_request->header.param2 != SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH) {
+        return libspdm_generate_encap_error_response(
+            context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+            response_size, response);
+    }
+
     slot_id = spdm_request->header.param1;
 
     if ((slot_id != 0xFF) &&
