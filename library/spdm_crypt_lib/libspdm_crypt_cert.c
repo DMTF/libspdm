@@ -428,7 +428,7 @@ static bool libspdm_get_public_key_algo_OID(uint32_t base_asym_algo, uint8_t *oi
         uint8_t encry_algo_oid_rsa2048_ohter[] = KEY_ENCRY_ALGO_RSA2048_FLAG_OTHER;
         libspdm_copy_mem(oid, oid_len, encry_algo_oid_rsa2048, oid_len);
         libspdm_copy_mem(oid_other, oid_len, encry_algo_oid_rsa2048_ohter, oid_len);
-        break;
+        return true;
 #else
         return false;
 #endif
@@ -440,7 +440,7 @@ static bool libspdm_get_public_key_algo_OID(uint32_t base_asym_algo, uint8_t *oi
         uint8_t encry_algo_oid_rsa3072_ohter[] = KEY_ENCRY_ALGO_RSA3072_FLAG_OTHER;
         libspdm_copy_mem(oid, oid_len, encry_algo_oid_rsa3072, oid_len);
         libspdm_copy_mem(oid_other, oid_len, encry_algo_oid_rsa3072_ohter, oid_len);
-        break;
+        return true;
 #else
         return false;
 #endif
@@ -452,7 +452,7 @@ static bool libspdm_get_public_key_algo_OID(uint32_t base_asym_algo, uint8_t *oi
         uint8_t encry_algo_oid_rsa4096_ohter[] = KEY_ENCRY_ALGO_RSA4096_FLAG_OTHER;
         libspdm_copy_mem(oid, oid_len, encry_algo_oid_rsa4096, oid_len);
         libspdm_copy_mem(oid_other, oid_len, encry_algo_oid_rsa4096_ohter, oid_len);
-        break;
+        return true;
 #else
         return false;
 #endif
@@ -462,7 +462,7 @@ static bool libspdm_get_public_key_algo_OID(uint32_t base_asym_algo, uint8_t *oi
 #if LIBSPDM_ECDSA_P256_SUPPORT
         uint8_t encry_algo_oid_ecc256[] = KEY_ENCRY_ALGO_ECC256_OID;
         libspdm_copy_mem(oid, oid_len, encry_algo_oid_ecc256, oid_len);
-        break;
+        return true;
 #else
         return false;
 #endif
@@ -471,7 +471,7 @@ static bool libspdm_get_public_key_algo_OID(uint32_t base_asym_algo, uint8_t *oi
 #if LIBSPDM_ECDSA_P384_SUPPORT
         uint8_t encry_algo_oid_ecc384[] = KEY_ENCRY_ALGO_ECC384_OID;
         libspdm_copy_mem(oid, oid_len, encry_algo_oid_ecc384, oid_len);
-        break;
+        return true;
 #else
         return false;
 #endif
@@ -480,7 +480,7 @@ static bool libspdm_get_public_key_algo_OID(uint32_t base_asym_algo, uint8_t *oi
 #if LIBSPDM_ECDSA_P521_SUPPORT
         uint8_t encry_algo_oid_ecc521[] = KEY_ENCRY_ALGO_ECC521_OID;
         libspdm_copy_mem(oid, oid_len, encry_algo_oid_ecc521, oid_len);
-        break;
+        return true;
 #else
         return false;
 #endif
@@ -494,6 +494,7 @@ static bool libspdm_get_public_key_algo_OID(uint32_t base_asym_algo, uint8_t *oi
 #if LIBSPDM_EDDSA_ED25519_SUPPORT
         uint8_t encry_algo_oid_ed25519[] = ENCRY_ALGO_ED25519_OID;
         libspdm_copy_mem(oid, oid_len, encry_algo_oid_ed25519, oid_len);
+        return true;
 #else
         return false;
 #endif
@@ -503,6 +504,7 @@ static bool libspdm_get_public_key_algo_OID(uint32_t base_asym_algo, uint8_t *oi
 #if LIBSPDM_EDDSA_ED448_SUPPORT
         uint8_t encry_algo_oid_ed448[] = ENCRY_ALGO_ED448_OID;
         libspdm_copy_mem(oid, oid_len, encry_algo_oid_ed448, oid_len);
+        return true;
 #else
         return false;
 #endif
@@ -513,8 +515,6 @@ static bool libspdm_get_public_key_algo_OID(uint32_t base_asym_algo, uint8_t *oi
         LIBSPDM_ASSERT(false);
         return false;
     }
-
-    return true;
 }
 
 /**
