@@ -187,7 +187,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
 
     if(TOOLCHAIN STREQUAL "GCC")
         SET(CMAKE_C_COMPILER gcc)
-        ADD_COMPILE_OPTIONS(-std=c99 -fshort-wchar -fno-strict-aliasing -Wall -Werror -Wno-array-bounds -ffunction-sections -fdata-sections -fno-common -Wno-address -fpie -fno-asynchronous-unwind-tables -DUSING_LTO  -Wno-maybe-uninitialized -Wno-uninitialized  -Wno-builtin-declaration-mismatch -Wno-nonnull-compare -Werror-implicit-function-declaration -Wcast-qual)
+        ADD_COMPILE_OPTIONS(-std=c99 -fshort-wchar -fno-strict-aliasing -Wall -Werror -Wno-array-bounds -ffunction-sections -fdata-sections -fno-common -Wno-address -fpie -fno-asynchronous-unwind-tables -DUSING_LTO  -Wno-maybe-uninitialized -Wno-uninitialized  -Wno-builtin-declaration-mismatch -Wno-nonnull-compare -Werror-implicit-function-declaration -Wcast-qual -Wcast-align)
         if (ARCH STREQUAL "x64")
             ADD_COMPILE_OPTIONS(-mno-red-zone)
         endif()

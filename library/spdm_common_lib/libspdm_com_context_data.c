@@ -183,7 +183,7 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         if (parameter->location != LIBSPDM_DATA_LOCATION_SESSION) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
-        session_id = *(const uint32_t *)parameter->additional_data;
+        session_id = libspdm_read_uint32(parameter->additional_data);
         session_info = libspdm_get_session_info_via_session_id(context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
@@ -737,7 +737,7 @@ libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_t
         if (parameter->location != LIBSPDM_DATA_LOCATION_SESSION) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
-        session_id = *(const uint32_t *)parameter->additional_data;
+        session_id = libspdm_read_uint32(parameter->additional_data);
         session_info = libspdm_get_session_info_via_session_id(context, session_id);
         if (session_info == NULL) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
