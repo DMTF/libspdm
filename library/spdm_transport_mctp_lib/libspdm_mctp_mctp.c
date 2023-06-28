@@ -155,8 +155,8 @@ libspdm_return_t libspdm_mctp_decode_message(uint32_t **session_id,
             sizeof(mctp_message_header_t) + sizeof(uint32_t)) {
             return LIBSPDM_STATUS_INVALID_MSG_SIZE;
         }
-        *session_id = (uint32_t *)((uint8_t *)transport_message +
-                                   sizeof(mctp_message_header_t));
+        *session_id = (void *)((uint8_t *)transport_message +
+			       sizeof(mctp_message_header_t));
         break;
     case MCTP_MESSAGE_TYPE_SPDM:
         if (session_id != NULL) {

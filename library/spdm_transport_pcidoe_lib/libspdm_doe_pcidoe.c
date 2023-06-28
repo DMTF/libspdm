@@ -171,7 +171,7 @@ libspdm_return_t libspdm_pci_doe_decode_message(uint32_t **session_id,
             sizeof(pci_doe_data_object_header_t) + sizeof(uint32_t)) {
             return LIBSPDM_STATUS_INVALID_MSG_SIZE;
         }
-        *session_id = (uint32_t *)((uint8_t *)transport_message +
+        *session_id = (void *)((uint8_t *)transport_message +
                                    sizeof(pci_doe_data_object_header_t));
         break;
     case PCI_DOE_DATA_OBJECT_TYPE_SPDM:

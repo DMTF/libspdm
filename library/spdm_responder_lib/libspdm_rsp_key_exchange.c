@@ -293,8 +293,7 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
     }
-    opaque_data_length =
-        *(const uint16_t *)((const uint8_t *)request +
+    opaque_data_length = libspdm_read_uint16((const uint8_t *)request +
                             sizeof(spdm_key_exchange_request_t) + dhe_key_size);
     if (request_size < sizeof(spdm_key_exchange_request_t) + dhe_key_size +
         sizeof(uint16_t) + opaque_data_length) {
