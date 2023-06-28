@@ -85,6 +85,7 @@ uint8_t m_libspdm_rsa4096_req_d[] = LIBSPDM_RSA4096_REQ_D;
 
 bool libspdm_get_responder_private_key_from_raw_data(uint32_t base_asym_algo, void **context)
 {
+#if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT) || (LIBSPDM_ECDSA_SUPPORT)
     bool result;
 
 #if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)
@@ -224,11 +225,13 @@ bool libspdm_get_responder_private_key_from_raw_data(uint32_t base_asym_algo, vo
 #endif /*#LIBSPDM_ECDSA_SUPPORT*/
     }
 
+#endif /* (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT) || (LIBSPDM_ECDSA_SUPPORT) */
     return false;
 }
 
 bool libspdm_get_requester_private_key_from_raw_data(uint32_t base_asym_algo, void **context)
 {
+#if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT) || (LIBSPDM_ECDSA_SUPPORT)
     bool result;
 
 #if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)
@@ -368,6 +371,7 @@ bool libspdm_get_requester_private_key_from_raw_data(uint32_t base_asym_algo, vo
 #endif /*#LIBSPDM_ECDSA_SUPPORT*/
     }
 
+#endif /* (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT) || (LIBSPDM_ECDSA_SUPPORT) */
     return false;
 }
 
