@@ -327,6 +327,7 @@ libspdm_return_t libspdm_handle_large_request(
     size_t copy_size;
     libspdm_chunk_info_t *send_info;
     uint32_t min_data_transfer_size;
+    spdm_error_response_t *spdm_error;
 
     if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_12) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
@@ -482,6 +483,23 @@ libspdm_return_t libspdm_handle_large_request(
             }
             if (spdm_response->header.param1
                 & SPDM_CHUNK_SEND_ACK_RESPONSE_ATTRIBUTE_EARLY_ERROR_DETECTED) {
+
+                spdm_error = (spdm_error_response_t *) (spdm_response + 1);
+                if (response_size < (sizeof(spdm_chunk_send_ack_response_t) +
+                                     sizeof(spdm_error_response_t))) {
+                    status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+                    break;
+                }
+                if ((spdm_error->header.spdm_version !=
+                     libspdm_get_connection_version(spdm_context)) ||
+                    (spdm_error->header.request_response_code != SPDM_ERROR)) {
+                    status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                    break;
+                }
+                if (spdm_error->header.param1 == SPDM_ERROR_CODE_LARGE_RESPONSE) {
+                    status = LIBSPDM_STATUS_ERROR_PEER;
+                    break;
+                }
 
                 /* Store the error response in scratch buffer to be read by
                  * libspdm_receive_spdm_response and returned to its caller
