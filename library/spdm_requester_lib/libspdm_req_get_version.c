@@ -110,6 +110,12 @@ static libspdm_return_t libspdm_try_get_version(libspdm_context_t *spdm_context,
         goto receive_done;
     }
     if (spdm_response->header.request_response_code == SPDM_ERROR) {
+        /* Responder shall not respond to the GET_VERSION request message with ErrorCode=ResponseNotReady.*/
+        if (spdm_response->header.param1 == SPDM_ERROR_CODE_RESPONSE_NOT_READY) {
+            /* Received an unexpected error message. */
+            status = LIBSPDM_STATUS_ERROR_PEER;
+            goto receive_done;
+        }
         status = libspdm_handle_simple_error_response(spdm_context, spdm_response->header.param1);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             goto receive_done;
