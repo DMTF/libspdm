@@ -86,6 +86,10 @@ void libspdm_internal_dump_hex_str(const uint8_t *data, size_t size)
     for (index = 0; index < size; index++) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "%02x", (size_t)data[index]));
     }
+    for (index = 0; index < size; index++) {
+        char c = data[index];
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "%c", c >= 32 && c <= 126 ? c : '.'));
+    }
 }
 
 void libspdm_internal_dump_data(const uint8_t *data, size_t size)
@@ -93,6 +97,10 @@ void libspdm_internal_dump_data(const uint8_t *data, size_t size)
     size_t index;
     for (index = 0; index < size; index++) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "%02x ", (size_t)data[index]));
+    }
+    for (index = 0; index < size; index++) {
+        char c = data[index];
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "%c", c >= 32 && c <= 126 ? c : '.'));
     }
 }
 
