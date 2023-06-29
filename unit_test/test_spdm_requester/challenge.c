@@ -1659,7 +1659,6 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
         void *data;
         size_t data_size;
         uint8_t *Ptr;
-        uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
         size_t sig_size;
         size_t spdm_response_size;
         size_t transport_header_size;
@@ -1759,8 +1758,6 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
                          spdm_response,
                          (size_t)Ptr - (size_t)spdm_response);
         m_libspdm_local_buffer_size += ((size_t)Ptr - (size_t)spdm_response);
-        libspdm_hash_all (m_libspdm_use_hash_algo, m_libspdm_local_buffer,
-                          m_libspdm_local_buffer_size, hash_data);
         sig_size = libspdm_get_asym_signature_size (m_libspdm_use_asym_algo);
         libspdm_responder_data_sign(
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
