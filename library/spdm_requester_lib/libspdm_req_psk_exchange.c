@@ -192,7 +192,7 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
             if (spdm_context->connection_info.algorithm
                 .measurement_spec !=
-                SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF) {
+                SPDM_MEASUREMENT_SPECIFICATION_DMTF) {
                 return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
             }
             algo_size = libspdm_get_measurement_hash_size(

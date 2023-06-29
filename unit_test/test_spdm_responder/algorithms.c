@@ -53,7 +53,7 @@ typedef struct {
 spdm_negotiate_algorithms_request_t m_libspdm_negotiate_algorithms_request1 = {
     { SPDM_MESSAGE_VERSION_10, SPDM_NEGOTIATE_ALGORITHMS, 0, 0 },
     sizeof(spdm_negotiate_algorithms_request_t),
-    SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
+    SPDM_MEASUREMENT_SPECIFICATION_DMTF,
 };
 size_t m_libspdm_negotiate_algorithms_request1_size =
     sizeof(m_libspdm_negotiate_algorithms_request1);
@@ -61,7 +61,7 @@ size_t m_libspdm_negotiate_algorithms_request1_size =
 spdm_negotiate_algorithms_request_t m_libspdm_negotiate_algorithms_request2 = {
     { SPDM_MESSAGE_VERSION_10, SPDM_NEGOTIATE_ALGORITHMS, 0, 0 },
     sizeof(spdm_negotiate_algorithms_request_t),
-    SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
+    SPDM_MEASUREMENT_SPECIFICATION_DMTF,
 };
 size_t m_libspdm_negotiate_algorithms_request2_size = sizeof(spdm_message_header_t);
 
@@ -74,7 +74,7 @@ libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_requ
             0
         },
         sizeof(libspdm_negotiate_algorithms_request_spdm11_t),
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF,
     },
     {
         {
@@ -110,7 +110,7 @@ libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_requ
             0
         },
         sizeof(libspdm_negotiate_algorithms_request_spdm11_t),
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF,
     },
     {
         {
@@ -146,7 +146,7 @@ libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_requ
             0
         },
         sizeof(libspdm_negotiate_algorithms_request_spdm11_t),
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF,
     },
     {
         {
@@ -182,7 +182,7 @@ libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_requ
             0
         },
         sizeof(libspdm_negotiate_algorithms_request_spdm11_t),
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF,
     },
     {
         {
@@ -218,7 +218,7 @@ libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_requ
             0
         },
         sizeof(libspdm_negotiate_algorithms_request_spdm11_t),
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF,
     },
     {
         {
@@ -254,7 +254,7 @@ libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_requ
             0
         },
         sizeof(libspdm_negotiate_algorithms_request_spdm11_t),
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF,
     },
     {
         {
@@ -290,7 +290,7 @@ libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_requ
             0
         },
         sizeof(libspdm_negotiate_algorithms_request_spdm11_t),
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF,
     },
     {
         {
@@ -325,7 +325,7 @@ spdm_negotiate_algorithms_request_t m_libspdm_negotiate_algorithm_request10 = {
         0
     },
     0x44,
-    SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
+    SPDM_MEASUREMENT_SPECIFICATION_DMTF,
 };
 size_t m_libspdm_negotiate_algorithm_request10_size = 0x44;
 
@@ -338,7 +338,7 @@ libspdm_negotiate_algorithms_request_spdm11_oversized_t m_libspdm_negotiate_algo
             0
         },
         sizeof(libspdm_negotiate_algorithms_request_spdm11_oversized_t),
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF,
     },
     {0},
     {
@@ -378,7 +378,7 @@ libspdm_negotiate_algorithms_request_spdm11_multiple_tables_t
             0
         },
         sizeof(libspdm_negotiate_algorithms_request_spdm11_multiple_tables_t),
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF,
     },
     {
         {
@@ -458,7 +458,7 @@ libspdm_negotiate_algorithms_request_spdm11_t
         },
         sizeof(libspdm_negotiate_algorithms_request_spdm11_t)-
         sizeof(spdm_negotiate_algorithms_common_struct_table_t),
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF,
     },
     {
         {
@@ -500,7 +500,7 @@ libspdm_negotiate_algorithms_request_spdm11_t
         },
         sizeof(libspdm_negotiate_algorithms_request_spdm11_t)+
         sizeof(spdm_negotiate_algorithms_common_struct_table_t),
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF,
     },
     {
         {
@@ -541,7 +541,7 @@ libspdm_negotiate_algorithms_request_spdm11_t
             0
         },
         sizeof(libspdm_negotiate_algorithms_request_spdm11_t),
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF,
     },
     {
         {
@@ -578,7 +578,7 @@ libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_requ
             0
         },
         sizeof(libspdm_negotiate_algorithms_request_spdm11_t),
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF,
     },
     {
         {
@@ -618,7 +618,7 @@ libspdm_negotiate_algorithms_request_spdm12_t
             0
         },
         sizeof(libspdm_negotiate_algorithms_request_spdm12_t),
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF,
         SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1,
     },
     {
@@ -658,7 +658,7 @@ libspdm_negotiate_algorithms_request_spdm12_t
             0
         },
         sizeof(libspdm_negotiate_algorithms_request_spdm12_t),
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF,
     },
     {
         {
@@ -695,7 +695,7 @@ libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_requ
             0
         },
         sizeof(libspdm_negotiate_algorithms_request_spdm11_t),
-        0, /* SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF */
+        0, /* SPDM_MEASUREMENT_SPECIFICATION_DMTF */
         SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1,
         SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
         SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
@@ -737,7 +737,7 @@ libspdm_negotiate_algorithms_request_spdm12_t
             0
         },
         sizeof(libspdm_negotiate_algorithms_request_spdm12_t),
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF,
         SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1,
         SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
         SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
@@ -779,7 +779,7 @@ libspdm_negotiate_algorithms_request_spdm12_t
             0
         },
         sizeof(libspdm_negotiate_algorithms_request_spdm12_t),
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF,
         SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1,
         SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
         SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
@@ -821,7 +821,7 @@ libspdm_negotiate_algorithms_request_spdm12_more_algo_t
             0
         },
         sizeof(libspdm_negotiate_algorithms_request_spdm12_more_algo_t),
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF,
         SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1,
         SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
         SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
@@ -868,7 +868,7 @@ libspdm_negotiate_algorithms_request_spdm12_more_algo_t
             0
         },
         sizeof(libspdm_negotiate_algorithms_request_spdm12_more_algo_t),
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF,
         SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1,
         SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
         SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,

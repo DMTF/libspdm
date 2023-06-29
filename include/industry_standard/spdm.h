@@ -536,7 +536,7 @@ typedef struct {
     /*uint8_t                measurement[measurement_size];*/
 } spdm_measurement_block_common_header_t;
 
-#define SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF 0x00000001
+#define SPDM_MEASUREMENT_SPECIFICATION_DMTF 0x01
 
 /* SPDM MEASUREMENTS block DMTF header */
 typedef struct {

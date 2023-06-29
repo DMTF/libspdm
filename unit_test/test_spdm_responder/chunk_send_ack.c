@@ -27,7 +27,7 @@ libspdm_negotiate_algorithms_request_spdm_tables_t
             0
         },
         sizeof(libspdm_negotiate_algorithms_request_spdm_tables_t),
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF,
         SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1,
     },
     {

@@ -104,7 +104,7 @@ void libspdm_requester_chunk_get_test_case2_build_measurements_response(
         1);
     measurment_block->measurement_block_common_header.index = 1;
     measurment_block->measurement_block_common_header.measurement_specification =
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF;
     measurment_block->measurement_block_common_header.measurement_size =
         (uint16_t) (sizeof(spdm_measurement_block_dmtf_header_t) +
                     libspdm_get_measurement_hash_size(
@@ -116,7 +116,7 @@ void libspdm_requester_chunk_get_test_case2_build_measurements_response(
                       m_libspdm_use_measurement_hash_algo)));
     measurment_block->measurement_block_common_header.index = 2;
     measurment_block->measurement_block_common_header.measurement_specification =
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF;
     measurment_block->measurement_block_common_header.measurement_size =
         (uint16_t) (sizeof(spdm_measurement_block_dmtf_header_t) +
                     libspdm_get_measurement_hash_size(
@@ -252,7 +252,7 @@ void libspdm_requester_chunk_get_test_case5_build_algorithms_response(
     spdm_response->header.param2 = 0;
     spdm_response->length = sizeof(spdm_algorithms_response_t);
     spdm_response->measurement_specification_sel =
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF;
     spdm_response->measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
     spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
@@ -639,7 +639,7 @@ void libspdm_test_requester_chunk_get_case2(void** state)
     spdm_context->connection_info.algorithm.base_asym_algo =
         m_libspdm_use_asym_algo;
     spdm_context->local_context.algorithm.measurement_spec =
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF;
     #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size = data_size;
     libspdm_copy_mem(

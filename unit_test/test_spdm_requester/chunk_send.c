@@ -34,7 +34,7 @@ void libspdm_requester_chunk_send_test_case1_build_algorithms_response(
     spdm_response->header.param2 = 0;
     spdm_response->length = sizeof(spdm_algorithms_response_t);
     spdm_response->measurement_specification_sel =
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF;
     spdm_response->measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
     spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
