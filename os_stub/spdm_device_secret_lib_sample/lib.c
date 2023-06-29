@@ -744,7 +744,7 @@ size_t libspdm_fill_measurement_image_hash_block (
     .index = measurements_index;
     measurement_block->measurement_block_common_header
     .measurement_specification =
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF;
 
     libspdm_set_mem(data, sizeof(data), (uint8_t)(measurements_index));
 
@@ -806,7 +806,7 @@ size_t libspdm_fill_measurement_svn_block (
     .index = LIBSPDM_MEASUREMENT_INDEX_SVN;
     measurement_block->measurement_block_common_header
     .measurement_specification =
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF;
 
     svn = 0x7;
 
@@ -843,7 +843,7 @@ size_t libspdm_fill_measurement_manifest_block (
     .index = SPDM_MEASUREMENT_BLOCK_MEASUREMENT_INDEX_MEASUREMENT_MANIFEST;
     measurement_block->measurement_block_common_header
     .measurement_specification =
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF;
 
     libspdm_set_mem(data, sizeof(data),
                     (uint8_t)SPDM_MEASUREMENT_BLOCK_MEASUREMENT_INDEX_MEASUREMENT_MANIFEST);
@@ -881,7 +881,7 @@ size_t libspdm_fill_measurement_device_mode_block (
     .index = SPDM_MEASUREMENT_BLOCK_MEASUREMENT_INDEX_DEVICE_MODE;
     measurement_block->measurement_block_common_header
     .measurement_specification =
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF;
 
     device_mode.operational_mode_capabilities =
         SPDM_MEASUREMENT_DEVICE_OPERATION_MODE_MANUFACTURING_MODE |
@@ -940,7 +940,7 @@ libspdm_return_t libspdm_measurement_collection(
     size_t measurement_block_size;
 
     if ((measurement_specification !=
-         SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF) ||
+         SPDM_MEASUREMENT_SPECIFICATION_DMTF) ||
         (measurement_hash_algo == 0)) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }

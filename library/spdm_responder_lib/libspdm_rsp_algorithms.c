@@ -247,7 +247,7 @@ libspdm_return_t libspdm_get_response_algorithms(libspdm_context_t *spdm_context
     };
 
     uint32_t measurement_spec_priority_table[] = {
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF,
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF,
     };
 
     uint32_t other_params_support_priority_table[] = {
@@ -544,7 +544,7 @@ libspdm_return_t libspdm_get_response_algorithms(libspdm_context_t *spdm_context
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP) &&
         (spdm_request->measurement_specification != 0)) {
         if (spdm_context->connection_info.algorithm.measurement_spec !=
-            SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF) {
+            SPDM_MEASUREMENT_SPECIFICATION_DMTF) {
             return libspdm_generate_error_response(
                 spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
                 0, response_size, response);

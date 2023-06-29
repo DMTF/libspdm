@@ -3978,7 +3978,7 @@ void libspdm_test_requester_psk_exchange_case14(void **state)
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_NO_SIG;
     spdm_context->connection_info.algorithm.measurement_spec =
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF;
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
         SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
@@ -4060,7 +4060,7 @@ void libspdm_test_requester_psk_exchange_case15(void **state)
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP_REQUESTER;
     spdm_context->connection_info.algorithm.measurement_spec =
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF;
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
         SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
@@ -4142,7 +4142,7 @@ void libspdm_test_requester_psk_exchange_case16(void **state)
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP_REQUESTER;
     spdm_context->connection_info.algorithm.measurement_spec =
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF;
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
         SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
@@ -4225,7 +4225,7 @@ void libspdm_test_requester_psk_exchange_case17(void **state)
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP_REQUESTER;
     spdm_context->connection_info.algorithm.measurement_spec =
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF;
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
         SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
@@ -4299,7 +4299,7 @@ void libspdm_test_requester_psk_exchange_case18(void **state)
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP_REQUESTER;
     spdm_context->connection_info.algorithm.measurement_spec =
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF;
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
         SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
@@ -4373,7 +4373,7 @@ void libspdm_test_requester_psk_exchange_case19(void **state)
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP_REQUESTER;
     spdm_context->connection_info.algorithm.measurement_spec =
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF;
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
         SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
@@ -4447,7 +4447,7 @@ void libspdm_test_requester_psk_exchange_case20(void **state)
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP_REQUESTER;
     spdm_context->connection_info.algorithm.measurement_spec =
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF;
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
         SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
@@ -4528,7 +4528,7 @@ void libspdm_test_requester_psk_exchange_case21(void **state)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP;
 
     spdm_context->connection_info.algorithm.measurement_spec =
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF;
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
         SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
@@ -4620,7 +4620,7 @@ void libspdm_test_requester_psk_exchange_case22(void **state)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP;
 
     spdm_context->connection_info.algorithm.measurement_spec =
-        SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_DMTF;
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF;
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
         SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
