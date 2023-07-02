@@ -232,6 +232,18 @@ void libspdm_write_uint64(uint8_t *buffer, uint64_t value)
     buffer[7] = (uint8_t)((value >> 56) & 0xFF);
 }
 
+void libspdm_ltob_uint64(uint8_t *buffer, uint64_t value)
+{
+    buffer[0] = (uint8_t)((value >> 56) & 0xFF);
+    buffer[1] = (uint8_t)((value >> 48) & 0xFF);
+    buffer[2] = (uint8_t)((value >> 40) & 0xFF);
+    buffer[3] = (uint8_t)((value >> 32) & 0xFF);
+    buffer[4] = (uint8_t)((value >> 24) & 0xFF);
+    buffer[5] = (uint8_t)((value >> 16) & 0xFF);
+    buffer[6] = (uint8_t)((value >> 8) & 0xFF);
+    buffer[7] = (uint8_t)(value & 0xFF);
+}
+
 libspdm_return_t libspdm_append_managed_buffer(void *m_buffer, const void *buffer,
                                                size_t buffer_size)
 {

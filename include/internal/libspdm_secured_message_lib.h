@@ -455,4 +455,16 @@ bool libspdm_activate_update_session_data_key(void *spdm_secured_message_context
                                               libspdm_key_update_action_t action,
                                               bool use_new_key);
 
+/**
+ * Generates an IV from a sequence number and salt.
+ *
+ * @param iv
+ * @param sequence_number
+ * @param aead_iv_size
+ */
+void libspdm_generate_iv(uint8_t *iv,
+                         uint64_t sequence_number,
+                         const uint8_t *salt,
+                         size_t aead_iv_size);
+
 #endif /* SPDM_SECURED_MESSAGE_LIB_INTERNAL_H */

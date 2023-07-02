@@ -1588,6 +1588,14 @@ uint64_t libspdm_read_uint64(const uint8_t *buffer);
 void libspdm_write_uint64(uint8_t *buffer, uint64_t value);
 
 /**
+ * Converts a 64-bit little endian number to big endian.
+ *
+ * @param buffer Buffer to hold the converted value.
+ * @param value  The 64-bit little endian number.
+ */
+void libspdm_ltob_uint64(uint8_t *buffer, uint64_t value);
+
+/**
  * Determine if bitmask has at most one bit set.
  *
  * @param mask  The bitmask to be tested.
