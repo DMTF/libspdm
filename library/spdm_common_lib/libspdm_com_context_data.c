@@ -2652,13 +2652,6 @@ libspdm_return_t libspdm_init_context(void *spdm_context)
                                                      LIBSPDM_MAX_SESSION_COUNT);
 }
 
-/**
- * Reset an SPDM context.
- *
- * The size in bytes of the spdm_context can be returned by libspdm_get_context_size.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- */
 void libspdm_reset_context(void *spdm_context)
 {
     libspdm_context_t *context;
@@ -2697,14 +2690,6 @@ void libspdm_reset_context(void *spdm_context)
     context->mut_auth_cert_chain_buffer_size = 0;
     context->current_dhe_session_count = 0;
     context->current_psk_session_count = 0;
-
-    #if LIBSPDM_ENABLE_MSG_LOG
-    context->msg_log.buffer = NULL;
-    context->msg_log.max_buffer_size = 0;
-    context->msg_log.buffer_size = 0;
-    context->msg_log.mode = 0;
-    context->msg_log.status = 0;
-    #endif /* LIBSPDM_ENABLE_MSG_LOG */
 }
 
 /**

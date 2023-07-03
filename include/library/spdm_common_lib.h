@@ -401,7 +401,8 @@ libspdm_return_t libspdm_init_context(void *spdm_context);
 /**
  * Reset an SPDM context.
  *
- * The size in bytes of the spdm_context can be returned by libspdm_get_context_size.
+ * Note that message logging is not reset by this function. To reset the message logger call
+ * libspdm_reset_msg_log.
  *
  * @param  spdm_context  A pointer to the SPDM context.
  */
