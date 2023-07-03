@@ -74,6 +74,11 @@ libspdm_return_t libspdm_get_response_end_session(libspdm_context_t *spdm_contex
                                                   spdm_request->header.request_response_code);
 
     session_info->end_session_attributes = spdm_request->header.param1;
+    if ((spdm_request->header.param1 &
+         SPDM_END_SESSION_REQUEST_ATTRIBUTES_PRESERVE_NEGOTIATED_STATE_CLEAR) != 0) {
+        spdm_context->connection_info.end_session_attributes |=
+            SPDM_END_SESSION_REQUEST_ATTRIBUTES_PRESERVE_NEGOTIATED_STATE_CLEAR;
+    }
 
     LIBSPDM_ASSERT(*response_size >= sizeof(spdm_end_session_response_t));
     *response_size = sizeof(spdm_end_session_response_t);

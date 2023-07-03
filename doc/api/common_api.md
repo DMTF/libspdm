@@ -308,8 +308,13 @@ Enumeration value used for the `libspdm_set_data` and/or `libspdm_get_data` func
     - For a given session ID, returns whether the Responder has requested mutual authentication with
       the Requester.
 - `LIBSPDM_DATA_SESSION_END_SESSION_ATTRIBUTES`
-    - For a given session ID, returns the `END_SESSION` request attributes field. This is a bitmask
-      whose fields are defined by the `SPDM_END_SESSION_REQUEST_ATTRIBUTES_*` macros.
+    - Can be `get` with either a session ID or without one. If a session ID is present then this
+      returns the end session attributes for the session. If a session ID is not present then this
+      returns the union of the end session attributes for all sessions, and is a sticky bit such
+      that once set to `1` it cannot be set to `0` except by initializing the SPDM context. This
+      value is only used by a Responder.
+    - This is a bitmask whose fields are defined by the `SPDM_END_SESSION_REQUEST_ATTRIBUTES_*`
+      macros.
     - `SPDM_END_SESSION_REQUEST_ATTRIBUTES_PRESERVE_NEGOTIATED_STATE_CLEAR`
         - If set then the Responder will clear its negotiated connection state derived from `VCA`.
           If not set then Responder will maintain its negotiated connection state.
