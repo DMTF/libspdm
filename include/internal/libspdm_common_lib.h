@@ -124,6 +124,10 @@ typedef struct {
     const uint8_t *local_used_cert_chain_buffer;
     size_t local_used_cert_chain_buffer_size;
     uint8_t local_used_cert_chain_slot_id;
+
+    /* Specifies whether the cached negotiated state should be invalidated. (responder only)
+     * This is a "sticky" bit wherein if it is set to 1 then it cannot be set to 0. */
+    uint8_t end_session_attributes;
 } libspdm_connection_info_t;
 
 typedef struct {

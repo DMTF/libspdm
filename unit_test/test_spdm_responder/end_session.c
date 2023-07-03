@@ -20,6 +20,11 @@ spdm_end_session_request_t m_libspdm_end_session_request2 = {
 };
 size_t m_libspdm_end_session_request2_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
 
+spdm_end_session_request_t m_libspdm_end_session_request3 = {
+    { SPDM_MESSAGE_VERSION_11, SPDM_END_SESSION,
+      SPDM_END_SESSION_REQUEST_ATTRIBUTES_PRESERVE_NEGOTIATED_STATE_CLEAR, 0 }
+};
+size_t m_libspdm_end_session_request3_size = sizeof(m_libspdm_end_session_request1);
 
 void libspdm_test_responder_end_session_case1(void **state)
 {
@@ -565,6 +570,70 @@ void libspdm_test_responder_end_session_case7(void **state)
     free(data1);
 }
 
+void libspdm_test_responder_end_session_case8(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_end_session_response_t *spdm_response;
+    void *data1;
+    size_t data_size1;
+    libspdm_session_info_t *session_info;
+    uint32_t session_id;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x1;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data1,
+                                                    &data_size1, NULL, NULL);
+    spdm_context->local_context.local_cert_chain_provision[0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+    spdm_context->connection_info.local_used_cert_chain_buffer = data1;
+    spdm_context->connection_info.local_used_cert_chain_buffer_size = data_size1;
+
+    libspdm_reset_message_a(spdm_context);
+    spdm_context->local_context.mut_auth_requested = 0;
+
+    session_id = 0xFFFFFFFF;
+    spdm_context->latest_session_id = session_id;
+    spdm_context->last_spdm_request_session_id_valid = true;
+    spdm_context->last_spdm_request_session_id = session_id;
+    session_info = &spdm_context->session_info[0];
+    libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_secured_message_set_session_state(
+        session_info->secured_message_context,
+        LIBSPDM_SESSION_STATE_ESTABLISHED);
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_end_session(spdm_context,
+                                              m_libspdm_end_session_request3_size,
+                                              &m_libspdm_end_session_request3,
+                                              &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_end_session_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_END_SESSION_ACK);
+    assert_int_not_equal(spdm_context->connection_info.end_session_attributes &
+                         SPDM_END_SESSION_REQUEST_ATTRIBUTES_PRESERVE_NEGOTIATED_STATE_CLEAR, 0);
+    free(data1);
+}
+
 libspdm_test_context_t m_libspdm_responder_end_session_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     false,
@@ -589,6 +658,8 @@ int libspdm_responder_end_session_test_main(void)
         cmocka_unit_test(libspdm_test_responder_end_session_case6),
         /* Buffer reset*/
         cmocka_unit_test(libspdm_test_responder_end_session_case7),
+        /* Success Case with end_session_attribute set */
+        cmocka_unit_test(libspdm_test_responder_end_session_case8),
     };
 
     libspdm_setup_test_context(&m_libspdm_responder_end_session_test_context);

@@ -733,7 +733,12 @@ libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_t
 
     context = spdm_context;
 
-    if (need_session_info_for_data(data_type)) {
+    if (data_type == LIBSPDM_DATA_SESSION_END_SESSION_ATTRIBUTES) {
+        /* end_session_attributes is present in both a session context as well as an
+         * spdm context. */
+        session_id = libspdm_read_uint32(parameter->additional_data);
+        session_info = libspdm_get_session_info_via_session_id(context, session_id);
+    } else if (need_session_info_for_data(data_type)) {
         if (parameter->location != LIBSPDM_DATA_LOCATION_SESSION) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
@@ -915,8 +920,15 @@ libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_t
         target_data = &session_info->mut_auth_requested;
         break;
     case LIBSPDM_DATA_SESSION_END_SESSION_ATTRIBUTES:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_CONNECTION) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
         target_data_size = sizeof(uint8_t);
-        target_data = &session_info->end_session_attributes;
+        if (session_info == NULL) {
+            target_data = &context->connection_info.end_session_attributes;
+        } else {
+            target_data = &session_info->end_session_attributes;
+        }
         break;
     case LIBSPDM_DATA_SESSION_POLICY:
         target_data_size = sizeof(uint8_t);
