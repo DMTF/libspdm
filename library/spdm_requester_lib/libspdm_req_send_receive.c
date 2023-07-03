@@ -565,6 +565,9 @@ libspdm_return_t libspdm_send_spdm_request(libspdm_context_t *spdm_context,
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
     libspdm_return_t status;
+    #if LIBSPDM_ENABLE_MSG_LOG
+    size_t msg_log_size;
+    #endif /* LIBSPDM_ENABLE_MSG_LOG */
 
     /* large SPDM message is the SPDM message whose size is greater than the DataTransferSize of the receiving
      * SPDM endpoint or greater than the transmit buffer size of the sending SPDM endpoint */
@@ -597,6 +600,12 @@ libspdm_return_t libspdm_send_spdm_request(libspdm_context_t *spdm_context,
             session_id = NULL;
         }
     }
+
+    #if LIBSPDM_ENABLE_MSG_LOG
+    /* First save the size of the message log buffer. If there is an error it will be reverted. */
+    msg_log_size = libspdm_get_msg_log_size(spdm_context);
+    libspdm_append_msg_log(spdm_context, request, request_size);
+    #endif /* LIBSPDM_ENABLE_MSG_LOG */
 
     /* large SPDM message is the SPDM message whose size is greater than the DataTransferSize of the receiving
      * SPDM endpoint or greater than the transmit buffer size of the sending SPDM endpoint */
@@ -640,10 +649,11 @@ libspdm_return_t libspdm_send_spdm_request(libspdm_context_t *spdm_context,
     }
 
     #if LIBSPDM_ENABLE_MSG_LOG
-    if (status == LIBSPDM_STATUS_SUCCESS) {
-        libspdm_append_msg_log(spdm_context, request, request_size);
+    /* If there is an error in sending the request then revert the request in the message log. */
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
+        spdm_context->msg_log.buffer_size = msg_log_size;
     }
-    #endif
+    #endif /* LIBSPDM_ENABLE_MSG_LOG */
 
     return status;
 }
