@@ -182,8 +182,8 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
 #if LIBSPDM_CERT_PARSE_SUPPORT
     /*check the cert_chain*/
     result = libspdm_set_cert_verify_certchain(cert_chain, cert_chain_size,
-                                               spdm_context->local_context.algorithm.base_asym_algo,
-                                               spdm_context->local_context.algorithm.base_hash_algo,
+                                               spdm_context->connection_info.algorithm.base_asym_algo,
+                                               spdm_context->connection_info.algorithm.base_hash_algo,
                                                is_device_cert_model);
     if (!result) {
         return libspdm_generate_error_response(spdm_context,
