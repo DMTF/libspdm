@@ -612,10 +612,12 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
     }
 
     if (status == LIBSPDM_STATUS_SUCCESS) {
+        LIBSPDM_ASSERT (my_response_size <= context->local_context.capability.max_spdm_msg_size);
         /* large SPDM message is the SPDM message whose size is greater than the DataTransferSize of the receiving
          * SPDM endpoint or greater than the transmit buffer size of the sending SPDM endpoint */
         if ((context->connection_info.capability.max_spdm_msg_size != 0) &&
             (my_response_size > context->connection_info.capability.max_spdm_msg_size)) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "my_response_size > req max_spdm_msg_size\n"));
             actual_size = (uint32_t)my_response_size;
             status = libspdm_generate_extended_error_response(context,
                                                               SPDM_ERROR_CODE_RESPONSE_TOO_LARGE,
