@@ -601,6 +601,13 @@ libspdm_return_t libspdm_send_spdm_request(libspdm_context_t *spdm_context,
         }
     }
 
+    if ((spdm_context->connection_info.capability.max_spdm_msg_size != 0) &&
+        (request_size > spdm_context->connection_info.capability.max_spdm_msg_size)) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "request_size > rsp max_spdm_msg_size\n"));
+        return LIBSPDM_STATUS_PEER_BUFFER_TOO_SMALL;
+    }
+    LIBSPDM_ASSERT (request_size <= spdm_context->local_context.capability.max_spdm_msg_size);
+
     #if LIBSPDM_ENABLE_MSG_LOG
     /* First save the size of the message log buffer. If there is an error it will be reverted. */
     msg_log_size = libspdm_get_msg_log_size(spdm_context);
@@ -633,12 +640,8 @@ libspdm_return_t libspdm_send_spdm_request(libspdm_context_t *spdm_context,
             spdm_context->last_spdm_request_size = request_size;
         }
 
-        if (request_size > spdm_context->connection_info.capability.max_spdm_msg_size) {
-            return LIBSPDM_STATUS_PEER_BUFFER_TOO_SMALL;
-        } else {
-            status = libspdm_handle_large_request(
-                spdm_context, session_id, request_size, request);
-        }
+        status = libspdm_handle_large_request(
+            spdm_context, session_id, request_size, request);
         #else  /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP*/
         status = LIBSPDM_STATUS_BUFFER_TOO_SMALL;
         #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP*/
