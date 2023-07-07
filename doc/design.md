@@ -19,15 +19,20 @@
    +------------------+  +---------------+  +------------------+
    |spdm_requester_lib|->|spdm_common_lib|<-|spdm_responder_lib|   // DSP0274 - SPDM
    +------------------+  +---------------+  +------------------+
-         | | |            |         V                | | |
-         | | |            | +----------------------+ | | |
-         | | |            | |spdm_device_secret_lib| | | |         // Device Secret handling (PrivateKey)
-         | | |            | +----------------------+ | | |
-         | | |            V         ^                | | |
+         | | |            |    |      V              | | |
+         | | |            |    |  +-----------+      | | |
+         | | |            |    |  |asymsignlib|      | | |         // HAL: Device Secret handling (PrivateKey)
+         | | |            |    V  +-----------+      | | |
+         | | |            |  +--------------+        | | |
+         | | |            |  |spdm_crypt_lib|        | | |         // SPDM related crypto
+         | | |            V  +--------------+        | | |
          | | |      +------------------------+       | | |
          | |  ----->|spdm_secured_message_lib|<------  | |         // DSP0277 - Secured Message in SPDM session
          | |        +------------------------+         | |
-         | |                     ^                     | |
+         | |                     ^      V              | |
+         | |                     |  +--------+         | |
+         | |                     |  | psklib |         | |         // HAL: Device Secret handling (PSK)
+         | |                     |  +--------+         | |
    =============================================================
          | |                     |                     | |
          | |         +----------------------+          | |
@@ -63,64 +68,50 @@
 
    This can be implemented in a secure environment if the session keys are considered a secret.
 
-5) [spdm_device_secret_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_device_secret_lib.h)
-
-   This library handles the private key signing, PSK HMAC operation, and measurement collection.
-
-   This must be implemented in a secure environment because the private key and PSK are secret.
-
-6) [spdm_crypt_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_crypt_lib.h)
+5) [spdm_crypt_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_crypt_lib.h)
 
    This library provides SPDM-related cryptography functions.
 
-7) Transport layer encode/decode
+6) Transport layer encode/decode
 
-7.1) [spdm_transport_mctp_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_mctp_lib.h) (follows DSP0275 and DSP0276)
+6.1) [spdm_transport_mctp_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_mctp_lib.h) (follows DSP0275 and DSP0276)
 
    This library encodes and decodes MCTP message header.
 
-   SPDM Requester / Responder needs to register `libspdm_transport_encode_message_func`,
-   `libspdm_transport_decode_message_func`, and `libspdm_transport_get_header_size_func`
-   to the `spdm_requester_lib` / `spdm_responder_lib`.
+   SPDM Requester / Responder needs to register `max_spdm_msg_size`, `LIBSPDM_MCTP_TRANSPORT_HEADER_SIZE`, `LIBSPDM_MCTP_TRANSPORT_TAIL_SIZE`, `libspdm_transport_mctp_encode_message` and `libspdm_transport_mctp_decode_message` to the `spdm_requester_lib` / `spdm_responder_lib` via `libspdm_register_transport_layer_func`.
 
    These APIs encode and decode transport layer messages to or from a SPDM device.
 
-7.2) [spdm_transport_pcidoe_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_pcidoe_lib.h) (follows PCI DOE)
+6.2) [spdm_transport_pcidoe_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_pcidoe_lib.h) (follows PCI DOE)
 
    This library encodes and decodes PCI DOE message header.
 
-   SPDM Requester / Responders need to register `libspdm_transport_encode_message_func`,
-   `libspdm_transport_decode_message_func`, and `libspdm_transport_get_header_size_func`
-   to the `spdm_requester_lib` / `spdm_responder_lib`.
+   SPDM Requester / Responders need to register `max_spdm_msg_size`, `LIBSPDM_PCI_DOE_TRANSPORT_HEADER_SIZE`, `LIBSPDM_PCI_DOE_TRANSPORT_TAIL_SIZE`, `libspdm_transport_pci_doe_encode_message` and `libspdm_transport_pci_doe_decode_message` to the `spdm_requester_lib` / `spdm_responder_lib` via `libspdm_register_transport_layer_func`.
 
    These APIs encode and decode transport layer messages to or from a SPDM device.
 
-8) Device IO
+7) Device IO
 
-   SPDM Requester / Responder needs to register `libspdm_device_send_message_func`
-   and `libspdm_device_receive_message_func` to the `spdm_requester_lib` / `spdm_responder_lib`.
+   SPDM Requester / Responder needs to register `libspdm_device_send_message_func` and `libspdm_device_receive_message_func` to the `spdm_requester_lib` / `spdm_responder_lib` via `libspdm_register_device_io_func`.
 
-   SPDM Requester / Responder needs to register `libspdm_device_acquire_sender_buffer_func`,
-   `libspdm_device_release_sender_buffer_func`, `libspdm_device_acquire_receiver_buffer_func`,
-   and `libspdm_device_release_receiver_buffer_func` to the `spdm_requester_lib` / `spdm_responder_lib`.
+   SPDM Requester / Responder needs to register `sender_buffer_size`, `receiver_buffer_size`, `libspdm_device_acquire_sender_buffer_func`, `libspdm_device_release_sender_buffer_func`, `libspdm_device_acquire_receiver_buffer_func`, and `libspdm_device_release_receiver_buffer_func` to the `spdm_requester_lib` / `spdm_responder_lib` via `libspdm_register_device_buffer_func`.
 
    These APIs send and receive transport layer messages to and from an SPDM device.
 
-   The size of sender/receiver buffer is `LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE`.
-   The size of scratch buffer is `LIBSPDM_SCRATCH_BUFFER_SIZE`.
-   Refer to [spdm_lib_config.h](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_lib_config.h).
+   The size of scratch buffer can be got via `libspdm_get_sizeof_required_scratch_buffer` at runtime or pre-calculated via `libspdm_get_scratch_buffer_capacity` statically.
 
    ```
    The sender flow is:
    {
-     libspdm_device_acquire_sender_buffer_func (&sender_buffer, &sender_buffer_size);
-     max_header_size = libspdm_transport_get_header_size_func();
-     spdm_message_buffer = sender_buffer + max_header_size;
+     libspdm_acquire_sender_buffer (&sender_buffer, &sender_buffer_size);
+     spdm_message_buffer = sender_buffer + transport_header_size;
+
      /* build SPDM request/response in spdm_message_buffer */
-     libspdm_transport_encode_message_func (spdm_message_buffer, spdm_message_buffer_size,
+     transport_encode_message (spdm_message_buffer, spdm_message_buffer_size,
          &transport_message_buffer, &transport_message_buffer_size);
-     libspdm_device_send_message_func (transport_message_buffer, transport_message_buffer_size);
-     libspdm_device_release_sender_buffer_func (sender_buffer);
+     send_message (transport_message_buffer, transport_message_buffer_size);
+
+     libspdm_release_sender_buffer (sender_buffer);
    }
 
    The buffer usage of sender buffer is:
@@ -140,18 +131,17 @@
 
    For secured messages the scratch_buffer is used to store plain text and the final cipher text will be in sender_buffer.
 
-   libspdm_transport_encode_message_func(spdm_message_buffer, &transport_message_buffer)
+   libspdm_transport_xx_encode_message(spdm_message_buffer, &transport_message_buffer)
    {
      /* spdm_message_buffer is inside of scratch_buffer.
       * transport_message_buffer is inside of sender_buffer. */
 
-     xxx_encode_spdm_message_to_app (spdm_message_buffer, spdm_message_buffer_size,
+     libspdm_xxx_encode_message (spdm_message_buffer, spdm_message_buffer_size,
          &app_message_buffer, &app_message_buffer_size);
-     max_header_size = libspdm_transport_get_header_size_func();
-     secured_message_buffer = transport_message_buffer + max_header_size;
+     secured_message_buffer = transport_message_buffer + transport_header_size;
      libspdm_encode_secured_message (app_message_buffer, app_message_buffer_size,
          secured_message_buffer, &secured_message_buffer_size);
-     xxx_encode_secured_message_to_transport (secured_message_buffer, secured_message_buffer_size,
+     libspdm_xxx_encode_message (secured_message_buffer, secured_message_buffer_size,
          &transport_message_buffer, &transport_message_buffer_size);
    }
 
@@ -193,13 +183,15 @@
    ```
    The receiver flow is:
    {
-     libspdm_device_acquire_receiver_buffer_func (&receiver_buffer, &receiver_buffer_size);
+     libspdm_acquire_receiver_buffer (&receiver_buffer, &receiver_buffer_size);
+
      transport_message_buffer = receiver_buffer;
-     libspdm_device_receive_message_func (&transport_message_buffer, &transport_message_buffer_size);
-     libspdm_transport_decode_message_func (transport_message_buffer, transport_message_buffer_size,
+     receive_message (&transport_message_buffer, &transport_message_buffer_size);
+     transport_decode_message (transport_message_buffer, transport_message_buffer_size,
          &spdm_message_buffer, &spdm_message_buffer_size);
      /* process SPDM request/response in spdm_message_buffer */
-     libspdm_device_release_receiver_buffer_func (receiver_buffer);
+
+     libspdm_release_receiver_buffer (receiver_buffer);
    }
 
    The buffer usage of sender buffer is:
@@ -219,17 +211,17 @@
 
    For secured messages the scratch_buffer will be used to store plain text and the cipher text is in receiver_buffer.
 
-   libspdm_transport_decode_message_func(transport_message_buffer, &spdm_message_buffer)
+   libspdm_transport_xxx_decode_message(transport_message_buffer, &spdm_message_buffer)
    {
      /* transport_message_buffer is inside of receiver_buffer.
       * spdm_message_buffer is inside of scratch_buffer. */
 
-     xxx_decode_secured_message_from_transport (transport_message_buffer, transport_message_buffer_size,
+     libspdm_xxx_decode_message (transport_message_buffer, transport_message_buffer_size,
          &secured_message_buffer, &secured_message_buffer_size);
      app_message_buffer = spdm_message_buffer
      libspdm_decode_secured_message (secured_message_buffer, secured_message_buffer_size,
          &app_message_buffer, &app_message_buffer_size);
-     xxx_decode_spdm_message_from_app (app_message_buffer, app_message_buffer_size,
+     libspdm_xxx_decode_message (app_message_buffer, app_message_buffer_size,
          &spdm_message_buffer, &spdm_message_buffer_size);
    }
 
@@ -279,11 +271,11 @@
    cannot be modified by external agents. It is the library Integrator's responsibility to ensure that
    the buffers cannot be tampered with while libspdm is accessing them.
 
-9) [spdm_lib_config.h](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_lib_config.h) provides an example of the configuration macros used in the libspdm library.
+8) [spdm_lib_config.h](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_lib_config.h) provides an example of the configuration macros used in the libspdm library.
 
    The Integrator can override the use of this file by defining the `LIBSPDM_CONFIG` macro.
 
-10) SPDM library depends upon the [HAL library](https://github.com/DMTF/libspdm/tree/main/include/hal).
+9) SPDM library depends upon the [HAL library](https://github.com/DMTF/libspdm/tree/main/include/hal).
 
    Sample implementations can be found at [os_stub](https://github.com/DMTF/libspdm/tree/main/os_stub)
 
@@ -293,12 +285,24 @@
 
    10.3) [debuglib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/debuglib.h) provides debug functions.
 
-   10.4) [platform_lib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/platform_lib.h) provides sleep function and watchdog function.
+   10.4) [requester library](https://github.com/DMTF/libspdm/tree/main/include/hal/requester)
 
-   10.4.1) Sleep function
+   10.4.1) [timelib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/requester/timelib.h) provides sleep function.
 
-   The sleep function delays the execution of a message flow instance for a specified period of time.
+   10.4.2) [reqasymsignlib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/requester/reqasymsignlib.h) provides private key signing in a secure environment.
 
-   10.4.2) Watchdog function
+   10.4.3) [psklib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/requester/psklib.h) provides PSK HMAC operation in a secure environment.
 
-   The watchdog function supports multiple software watchdogs for multiple sessions with one hardware watchdog.
+   10.5) [responder library](https://github.com/DMTF/libspdm/tree/main/include/hal/responder)
+
+   10.5.1) [watchdoglib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/responder/watchdoglib.h) provides watchdog function.
+
+   10.5.2) [asymsignlib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/responder/asymsignlib.h) provides private key signing in a secure environment.
+
+   10.5.3) [psklib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/responder/psklib.h) provides PSK HMAC operation in a secure environment.
+
+   10.5.4) [measlib](https://github.com/DMTF/libspdm/blob/main/include/library/responder/measlib.h) provides measurement collection.
+
+   10.5.5) [csrlib](https://github.com/DMTF/libspdm/blob/main/include/library/responder/csrlib.h) provides CSR signing.
+
+   10.5.6) [setcertlib](https://github.com/DMTF/libspdm/blob/main/include/library/responder/setcertlib.h) provides certificate chain setting function.

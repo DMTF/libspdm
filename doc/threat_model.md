@@ -4,13 +4,12 @@
 
 ### Level 1 - Persistent Secret Handling
 
-  spdm_device_secret_lib. (Device Specific)
+  (req)asymsignlib / psklib. (Device Specific)a
 
   It can access the device private key and sign the message.
   It can access the PSK and HMAC the message.
-  It can collect the device measurement.
 
-  API: Sign the data with private key. HMAC the data with PSK. Return device_measurement.
+  API: Sign the data with private key. HMAC the data with PSK.
 
   External Input: None.
 
