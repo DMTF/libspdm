@@ -9,20 +9,17 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
 0. Choose proper SPDM libraries.
 
    0.0, choose proper macros in [spdm_lib_config](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_lib_config.h), including:
-    - Cryptography Configuration, such as `LIBSPDM_RSA_SSA_SUPPORT`, `LIBSPDM_FFDHE_SUPPORT`.
+    - Cryptography Configuration, such as `LIBSPDM_RSA_SSA_2048_SUPPORT`, `LIBSPDM_ECDHE_P256_SUPPORT`, and FIPS mode `LIBSPDM_FIPS_MODE`.
     - Capability Configuration, such as `LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP`, `LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP`, `LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP`.
-    - Transport Configuration, such as `LIBSPDM_DATA_TRANSFER_SIZE`, `LIBSPDM_MAX_SPDM_MSG_SIZE`.
     - Data Size Configuration, such as `LIBSPDM_MAX_CERT_CHAIN_SIZE`, `LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE`.
 
-   0.1, implement a proper [spdm_device_secret_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_device_secret_lib.h).
+   0.1, implement [requester library](https://github.com/DMTF/libspdm/tree/main/include/hal/requester).
 
-   If the Requester supports mutual authentication, implement libspdm_requester_data_sign().
+   Implement [timelib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/requester/timelib.h).
 
-   If the Requester supports measurement, implement libspdm_measurement_collection().
+   If the Requester supports mutual authentication, implement [reqasymsignlib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/requester/reqasymsignlib.h) in a secure environment.
 
-   If the Requester supports PSK exchange, implement libspdm_psk_handshake_secret_hkdf_expand() and libspdm_psk_master_secret_hkdf_expand().
-
-   spdm_device_secret_lib must be in a secure environment.
+   If the Requester supports PSK exchange, implement [psklib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/requester/psklib.h) in a secure environment.
 
    0.2, choose a proper [spdm_secured_message_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_secured_message_lib.h).
 
@@ -33,8 +30,6 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
    0.4, choose required SPDM transport libs, such as [spdm_transport_mctp_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_mctp_lib.h) and [spdm_transport_pcidoe_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_pcidoe_lib.h)
 
    0.5, implement required SPDM device IO functions - `libspdm_device_send_message_func` and `libspdm_device_receive_message_func` according to [spdm_common_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_common_lib.h). The `timeout`, in microseconds (us) units, is for the execution of the message. For a Requester, the timeout value to send a message is `RTT` and the timeout value to receive a message is `T1 = RTT + ST1` or `T2 = RTT + CT = RTT + 2^ct_exponent`.
-
-   0.6, implement a proper [platform_lib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/platform_lib.h).
 
 1. Initialize SPDM context
 
@@ -93,11 +88,15 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
      spdm_device_receive_message);
    libspdm_register_transport_layer_func (
      spdm_context,
-     spdm_transport_mctp_encode_message,
-     libspdm_transport_mctp_decode_message,
-     libspdm_transport_mctp_get_header_size);
+     LIBSPDM_MAX_SPDM_MSG_SIZE,
+     LIBSPDM_MCTP_TRANSPORT_HEADER_SIZE,
+     LIBSPDM_MCTP_TRANSPORT_TAIL_SIZE,
+     libspdm_transport_mctp_encode_message,
+     libspdm_transport_mctp_decode_message);
    libspdm_register_device_buffer_func (
      spdm_context,
+     LIBSPDM_SENDER_BUFFER_SIZE,
+     LIBSPDM_RECEIVER_BUFFER_SIZE,
      spdm_device_acquire_sender_buffer,
      spdm_device_release_sender_buffer,
      spdm_device_acquire_receiver_buffer,
@@ -165,9 +164,9 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
 
    Send GET_DIGESTES, GET_CERTIFICATES and CHALLENGE.
    ```
-   libspdm_get_digest (spdm_context, NULL, slot_mask, total_digest_buffer);
-   libspdm_get_certificate (spdm_context, NULL, slot_id, cert_chain_size, cert_chain);
-   libspdm_challenge (spdm_context, NULL, slot_id, measurement_hash_type, measurement_hash);
+   libspdm_get_digest (spdm_context, session_id, slot_mask, total_digest_buffer);
+   libspdm_get_certificate (spdm_context, session_id, slot_id, cert_chain_size, cert_chain);
+   libspdm_challenge (spdm_context, NULL, slot_id, measurement_hash_type, measurement_hash, &slot_mask);
    ```
 
 4. Get the measurement from the Responder
@@ -176,10 +175,11 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
    ```
    libspdm_get_measurement (
        spdm_context,
-       NULL,
+       session_id,
        request_attribute,
        SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_TOTAL_NUMBER_OF_MEASUREMENTS,
        slot_id,
+       &content_changed,
        &number_of_blocks,
        NULL,
        NULL
@@ -194,13 +194,14 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
      }
      libspdm_get_measurement (
        spdm_context,
-       NULL,
+       session_id,
        request_attribute,
        index,
        slot_id,
+       &content_changed,
        &number_of_block,
        &measurement_record_length,
-       measurement_record
+       &measurement_record
        );
    }
    ```
@@ -212,11 +213,13 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
    libspdm_start_session (
        spdm_context,
        FALSE, // KeyExchange
+       NULL, 0,
        SPDM_CHALLENGE_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH,
        slot_id,
+       session_policy,
        &session_id,
        &heartbeat_period,
-       measurement_hash
+       &measurement_hash
        );
    ```
 
@@ -225,11 +228,13 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
    libspdm_start_session (
        spdm_context,
        TRUE, // KeyExchange
+       psk_hint, psk_hint_size,
        SPDM_CHALLENGE_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH,
        slot_id,
+       session_policy,
        &session_id,
        &heartbeat_period,
-       measurement_hash
+       &measurement_hash
        );
    ```
 
@@ -277,20 +282,23 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
 0. Choose proper SPDM libraries.
 
    0.0, choose proper macros in [spdm_lib_config](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_lib_config.h), including:
-    - Cryptography Configuration, such as `LIBSPDM_RSA_SSA_SUPPORT`, `LIBSPDM_FFDHE_SUPPORT`.
+    - Cryptography Configuration, such as `LIBSPDM_RSA_SSA_2048_SUPPORT`, `LIBSPDM_ECDHE_P256_SUPPORT`, and FIPS mode `LIBSPDM_FIPS_MODE`.
     - Capability Configuration, such as `LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP`, `LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP`, `LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP`.
-    - Transport Configuration, such as `LIBSPDM_DATA_TRANSFER_SIZE`, `LIBSPDM_MAX_SPDM_MSG_SIZE`.
     - Data Size Configuration, such as `LIBSPDM_MAX_CERT_CHAIN_SIZE`, `LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE`.
 
-   0.1, implement a proper [spdm_device_secret_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_device_secret_lib.h).
+   0.1, implement [responder library](https://github.com/DMTF/libspdm/tree/main/include/hal/responder).
 
-   If the Responder supports signing, implement libspdm_responder_data_sign().
+   Implement [watchdoglib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/responder/watchdoglib.h).
 
-   If the Responder supports measurement, implement libspdm_measurement_collection().
+   If the Responder supports signing, implement [asymsignlib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/responder/asymsignlib.h) in a secure environment.
 
-   If the Responder supports PSK exchange, implement libspdm_psk_handshake_secret_hkdf_expand() and libspdm_psk_master_secret_hkdf_expand().
+   If the Responder supports PSK exchange, implement [psklib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/responder/psklib.h) in a secure environment.
 
-   spdm_device_secret_lib must be in a secure environment.
+   If the Responder supports measurement, implement [measlib](https://github.com/DMTF/libspdm/blob/main/include/library/responder/measlib.h).
+
+   If the Responder supports CSR signing, implement [csrlib](https://github.com/DMTF/libspdm/blob/main/include/library/responder/csrlib.h) in a secure environment.
+
+   If the Responder supports certificate chain setting, implement [setcertlib](https://github.com/DMTF/libspdm/blob/main/include/library/responder/setcertlib.h).
 
    0.2, choose a proper [spdm_secured_message_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_secured_message_lib.h).
 
@@ -301,8 +309,6 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
    0.4, choose required SPDM transport libs, such as [spdm_transport_mctp_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_mctp_lib.h) and [spdm_transport_pcidoe_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_transport_pcidoe_lib.h)
 
    0.5, implement required SPDM device IO functions - `libspdm_device_send_message_func` and `libspdm_device_receive_message_func` according to [spdm_common_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_common_lib.h).
-
-   0.6, implement a proper [platform_lib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/platform_lib.h).
 
 0. Implement a proper spdm_device_secret_lib.
 
@@ -362,11 +368,15 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
      spdm_device_receive_message);
    libspdm_register_transport_layer_func (
      spdm_context,
-     spdm_transport_mctp_encode_message,
-     libspdm_transport_mctp_decode_message,
-     libspdm_transport_mctp_get_header_size);
+     LIBSPDM_MAX_SPDM_MSG_SIZE,
+     LIBSPDM_MCTP_TRANSPORT_HEADER_SIZE,
+     LIBSPDM_MCTP_TRANSPORT_TAIL_SIZE,
+     libspdm_transport_mctp_encode_message,
+     libspdm_transport_mctp_decode_message);
    libspdm_register_device_buffer_func (
      spdm_context,
+     LIBSPDM_SENDER_BUFFER_SIZE,
+     LIBSPDM_RECEIVER_BUFFER_SIZE,
      spdm_device_acquire_sender_buffer,
      spdm_device_release_sender_buffer,
      spdm_device_acquire_receiver_buffer,
