@@ -977,6 +977,7 @@ libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_t
 bool libspdm_check_context (void *spdm_context)
 {
     libspdm_context_t *context;
+    size_t index;
 
     context = spdm_context;
 
@@ -1016,6 +1017,25 @@ bool libspdm_check_context (void *spdm_context)
                        context->local_context.capability.sender_data_transfer_size));
         return false;
     }
+
+    if (((context->local_context.capability.flags &
+          SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP) != 0) &&
+        (context->local_context.capability.max_spdm_msg_size != 0)) {
+        for (index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
+            if ((context->local_context.local_cert_chain_provision_size[index] != 0) &&
+                (context->local_context.local_cert_chain_provision_size[index] +
+                 sizeof(spdm_certificate_response_t) >
+                 context->local_context.capability.max_spdm_msg_size)) {
+                LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
+                               "max_spdm_msg_size (%d) must be greater than or "
+                               "equal to local_cert_chain_provision_size[%d] (%d).\n",
+                               context->local_context.capability.max_spdm_msg_size, index,
+                               context->local_context.local_cert_chain_provision_size[index]));
+                return false;
+            }
+        }
+    }
+
     return true;
 }
 #endif /* LIBSPDM_CHECK_CONTEXT */
