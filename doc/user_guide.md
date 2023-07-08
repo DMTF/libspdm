@@ -2,6 +2,8 @@
 
 This document provides the general information on how to construct an SPDM Requester or an SPDM Responder.
 
+Please refer to [FIPS support](fips.md) for FIPS related enabling.
+
 ## SPDM Requester
 
 Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-emu/blob/main/spdm_emu/spdm_requester_emu/spdm_requester_spdm.c)
@@ -9,7 +11,7 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
 0. Choose proper SPDM libraries.
 
    0.0, choose proper macros in [spdm_lib_config](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_lib_config.h), including:
-    - Cryptography Configuration, such as `LIBSPDM_RSA_SSA_2048_SUPPORT`, `LIBSPDM_ECDHE_P256_SUPPORT`, and FIPS mode `LIBSPDM_FIPS_MODE`.
+    - Cryptography Configuration, such as `LIBSPDM_RSA_SSA_2048_SUPPORT`, `LIBSPDM_ECDHE_P256_SUPPORT`. 
     - Capability Configuration, such as `LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP`, `LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP`, `LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP`.
     - Data Size Configuration, such as `LIBSPDM_MAX_CERT_CHAIN_SIZE`, `LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE`.
 
@@ -41,13 +43,6 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
    ```
    spdm_context = (void *)malloc (libspdm_get_context_size());
    libspdm_init_context (spdm_context);
-
-   #if LIBSPDM_FIPS_MODE
-   spdm_fips_selftest_context = (void *)malloc(libspdm_get_fips_selftest_context_size());//user only calls the function once when device start.
-   libspdm_init_fips_selftest_context(spdm_fips_selftest_context); //user only calls the function once when device start.
-   libspdm_fips_run_selftest(spdm_fips_selftest_context);//Optional running. If run_selftest is successful，then call import_fips_self. If run_selftest is failed, eixt.
-   libspdm_import_fips_selftest_context_to_spdm_context(void *spdm_context, void *fips_selftest_context, size_t fips_selftest_context_size);//If libspdm_fips_run_selftest is not called, the import_fips_selftest_context is still needed.
-   #endif
 
    scratch_buffer_size = libspdm_get_sizeof_required_scratch_buffer(m_spdm_context);
    LIBSPDM_ASSERT (scratch_buffer_size == LIBSPDM_SCRATCH_BUFFER_SIZE);
@@ -269,9 +264,6 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
 7. Free the memory of contexts within the SPDM context when all flow is over.
    This function doesn't free the SPDM context itself.
    ```
-   #if LIBSPDM_FIPS_MODE
-   libspdm_export_fips_selftest_context_from_spdm_context(void *spdm_context, void *fips_selftest_context, size_t fips_selftest_context_size);
-   #endif
    libspdm_deinit_context(spdm_context);
    ```
 
@@ -282,7 +274,7 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
 0. Choose proper SPDM libraries.
 
    0.0, choose proper macros in [spdm_lib_config](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_lib_config.h), including:
-    - Cryptography Configuration, such as `LIBSPDM_RSA_SSA_2048_SUPPORT`, `LIBSPDM_ECDHE_P256_SUPPORT`, and FIPS mode `LIBSPDM_FIPS_MODE`.
+    - Cryptography Configuration, such as `LIBSPDM_RSA_SSA_2048_SUPPORT`, `LIBSPDM_ECDHE_P256_SUPPORT`.
     - Capability Configuration, such as `LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP`, `LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP`, `LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP`.
     - Data Size Configuration, such as `LIBSPDM_MAX_CERT_CHAIN_SIZE`, `LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE`.
 
@@ -322,13 +314,6 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
    ```
    spdm_context = (void *)malloc (spdm_get_context_size());
    libspdm_init_context (spdm_context);
-
-  #if LIBSPDM_FIPS_MODE
-   spdm_fips_selftest_context = (void *)malloc(libspdm_get_fips_selftest_context_size());//user only calls the function once when device start.
-   libspdm_init_fips_selftest_context(spdm_fips_selftest_context); //user only calls the function once when device start.
-   libspdm_fips_run_selftest(spdm_fips_selftest_context);//Optional running. If run_selftest is successful，then call import_fips_self. If run_selftest is failed, eixt.
-   libspdm_import_fips_selftest_context_to_spdm_context(void *spdm_context, void *fips_selftest_context, size_t fips_selftest_context_size);//If libspdm_fips_run_selftest is not called, the import_fips_selftest_context is still needed.
-  #endif
 
    scratch_buffer_size = libspdm_get_sizeof_required_scratch_buffer(m_spdm_context);
    LIBSPDM_ASSERT (scratch_buffer_size == LIBSPDM_SCRATCH_BUFFER_SIZE);
@@ -476,9 +461,6 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
 4. Free the memory of contexts within the SPDM context when all flow is over.
    This function doesn't free the SPDM context itself.
    ```
-   #if LIBSPDM_FIPS_MODE
-   libspdm_export_fips_selftest_context_from_spdm_context(void *spdm_context, void *fips_selftest_context, size_t fips_selftest_context_size);
-   #endif
    libspdm_deinit_context(spdm_context);
    ```
 
