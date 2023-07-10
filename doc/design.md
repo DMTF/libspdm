@@ -118,15 +118,15 @@
 
      ===== : SPDM message (max_header_size must be reserved before message)
 
-     |<---                       sender_buffer_size                      --->|
-        |<---                transport_message_buffer_size            --->|
-        |<-max_header_size->|<-spdm_message_buffer_size->|
-     +--+-------------------+============================+----------------+--+
-     |  | transport header  |         SPDM message       | transport tail |  |
-     +--+-------------------+============================+----------------+--+
-     ^  ^                   ^
-     |  |                   | spdm_message_buffer
-     |  | transport_message_buffer
+     |<---                          sender_buffer_size                          --->|
+           |<---                transport_message_buffer_size            --->|
+     |<-transport_header_size->|<-spdm_message_buffer_size->|<-transport_tail_size->|
+     +-----+-------------------+============================+----------------+------+
+     |     | transport header  |         SPDM message       | transport tail |      |
+     +-----+-------------------+============================+----------------+------+
+     ^     ^                   ^
+     |     |                   | spdm_message_buffer
+     |     | transport_message_buffer
      | sender_buffer
 
    For secured messages the scratch_buffer is used to store plain text and the final cipher text will be in sender_buffer.
@@ -152,30 +152,31 @@
      $$$$$ : additional authenticated data (AAD)
      &&&&& : message authentication code (MAC) / TAG
 
-     |<---                            sender_buffer_size                           --->|
-        |<---                     transport_message_buffer_size                 --->|
-        |<-max_hdr_s->|<---       secured_message_buffer_size          --->|
-     +--+-------------+$$$$$$$$$$$$$$$$$$$$+***************************+&&&+--------+--+
-     |  |  TransHdr   |      EncryptionHeader     |AppHdr| SPDM |Random|MAC|AlignPad|  |
-     |  |             |SessionId|SeqNum|Len|AppLen|      |      |      |   |        |  |
-     +--+-------------+$$$$$$$$$$$$$$$$$$$$+***************************+&&&+--------+--+
-     ^  ^             ^
-     |  |             | secured_message_buffer
-     |  | transport_message_buffer
+     |<---                             sender_buffer_size                                --->|
+               |<---                   transport_message_buffer_size                 --->|
+     |sec_trans_header_size|<---       secured_message_buffer_size          --->|
+     |<---             transport_header_size              --->|<spdm>|<-transport_tail_size->|
+     +---------+-----------+$$$$$$$$$$$$$$$$$$$$+***************************+&&&+--------+---+
+     |         | TransHdr  |      EncryptionHeader     |AppHdr| SPDM |Random|MAC|AlignPad|   |
+     |         |           |SessionId|SeqNum|Len|AppLen|      |      |      |   |        |   |
+     +---------+-----------+$$$$$$$$$$$$$$$$$$$$+***************************+&&&+--------+---+
+     ^         ^           ^
+     |         |           | secured_message_buffer
+     |         | transport_message_buffer
      | sender_buffer
 
-     |<---                            scratch_buffer_size                          --->|
-                                           |<---  plain text size  --->|
-                                                  |<-app_msg_s->|
-                                           |<-max_hdr_s->|<spdm>|
-     +-------------------------------------+-------------+======+------+---------------+
-     |                                     |EncHdr|AppHdr| SPDM |Random|               |
-     |                                     |AppLen|      |      |      |               |
-     +-------------------------------------+-------------+======+------+---------------+
-     ^                                     ^      ^      ^
-     |                                     |      |      | spdm_message_buffer
-     |                                     |      | app_message_buffer
-     |                                     | plain text
+     |<---                             scratch_buffer_size                               --->|
+                                                |<---  plain text size  --->|
+                                                       |<-app_msg_s->|
+     |<---             transport_header_size              --->|<spdm>|<-transport_tail_size->|
+     +------------------------------------------+-------------+======+------+----------------+
+     |                                          |EncHdr|AppHdr| SPDM |Random|                |
+     |                                          |AppLen|      |      |      |                |
+     +------------------------------------------+-------------+======+------+----------------+
+     ^                                          ^      ^      ^
+     |                                          |      |      | spdm_message_buffer
+     |                                          |      | app_message_buffer
+     |                                          | plain text
      | scratch_buffer
 
    ```
