@@ -449,14 +449,17 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
         my_response = scratch_buffer + libspdm_get_scratch_buffer_secure_message_offset(context) +
                       transport_header_size;
         my_response_size = libspdm_get_scratch_buffer_secure_message_capacity(context) -
-                           transport_header_size;
+                           transport_header_size -
+                           context->local_context.capability.transport_tail_size;
         #else
         my_response = scratch_buffer + transport_header_size;
-        my_response_size = scratch_buffer_size - transport_header_size;
+        my_response_size = scratch_buffer_size - transport_header_size -
+                           context->local_context.capability.transport_tail_size;
         #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
     } else {
         my_response = (uint8_t *)*response + transport_header_size;
-        my_response_size = *response_size - transport_header_size;
+        my_response_size = *response_size - transport_header_size -
+                           context->local_context.capability.transport_tail_size;
     }
     libspdm_zero_mem(my_response, my_response_size);
 
