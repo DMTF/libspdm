@@ -178,8 +178,11 @@ static libspdm_return_t libspdm_try_get_capabilities(libspdm_context_t *spdm_con
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return status;
     }
-    LIBSPDM_ASSERT (message_size >= transport_header_size);
+    LIBSPDM_ASSERT (message_size >= transport_header_size +
+                    spdm_context->local_context.capability.transport_tail_size);
     spdm_request = (void *)(message + transport_header_size);
+    spdm_request_size = message_size - transport_header_size -
+                        spdm_context->local_context.capability.transport_tail_size;
 
     libspdm_zero_mem(spdm_request, sizeof(spdm_get_capabilities_request_t));
     spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
