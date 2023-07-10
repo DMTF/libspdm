@@ -400,9 +400,11 @@ static libspdm_return_t libspdm_try_send_receive_finish(libspdm_context_t *spdm_
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         goto error;
     }
-    LIBSPDM_ASSERT (message_size >= transport_header_size);
+    LIBSPDM_ASSERT (message_size >= transport_header_size +
+                    spdm_context->local_context.capability.transport_tail_size);
     spdm_request = (void *)(message + transport_header_size);
-    spdm_request_size = message_size - transport_header_size;
+    spdm_request_size = message_size - transport_header_size -
+                        spdm_context->local_context.capability.transport_tail_size;
 
     spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request->header.request_response_code = SPDM_FINISH;

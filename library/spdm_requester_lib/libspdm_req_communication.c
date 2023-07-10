@@ -322,9 +322,11 @@ libspdm_return_t libspdm_send_data(void *spdm_context, const uint32_t *session_i
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return status;
     }
-    LIBSPDM_ASSERT (message_size >= transport_header_size);
+    LIBSPDM_ASSERT (message_size >= transport_header_size +
+                    context->local_context.capability.transport_tail_size);
     spdm_request = (void *)(message + transport_header_size);
-    spdm_request_size = message_size - transport_header_size;
+    spdm_request_size = message_size - transport_header_size -
+                        context->local_context.capability.transport_tail_size;
     libspdm_copy_mem (spdm_request, spdm_request_size, request, request_size);
     spdm_request_size = request_size;
 
