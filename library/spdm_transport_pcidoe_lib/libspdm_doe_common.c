@@ -86,7 +86,7 @@ libspdm_return_t libspdm_transport_pci_doe_encode_message(
     size_t secured_message_size;
     libspdm_secured_message_callbacks_t spdm_secured_message_callbacks;
     void *secured_message_context;
-    size_t transport_header_size;
+    size_t sec_trans_header_size;
 
     spdm_secured_message_callbacks.version =
         LIBSPDM_SECURED_MESSAGE_CALLBACKS_VERSION;
@@ -110,9 +110,9 @@ libspdm_return_t libspdm_transport_pci_doe_encode_message(
         }
 
         /* message to secured message*/
-        transport_header_size = LIBSPDM_PCI_DOE_TRANSPORT_HEADER_SIZE;
-        secured_message = (uint8_t *)*transport_message + transport_header_size;
-        secured_message_size = *transport_message_size - transport_header_size;
+        sec_trans_header_size = sizeof(pci_doe_data_object_header_t);
+        secured_message = (uint8_t *)*transport_message + sec_trans_header_size;
+        secured_message_size = *transport_message_size - sec_trans_header_size;
         status = libspdm_encode_secured_message(
             secured_message_context, *session_id, is_requester,
             message_size, message, &secured_message_size,
