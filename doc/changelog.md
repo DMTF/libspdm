@@ -6,10 +6,39 @@
 - Support for OpenSSL 3.0.
 - Initial draft for API documentation.
 
-## API Changes
+## Library API Changes
 - `/include/hal/library` libraries have been broken out into multiple headers.
     - `spdm_device_secret_lib.h` is split to `requester/psklib.h`, `requester/reqasymsignlib.h`, `responder/asymsignlib.h`, `responder/csrlib.h`, `responder/measlib.h`, `responder/psklib.h`, and `responder/setcertlib.h`.
     - `platform_lib.h` is split to `requester/timelib.h` and `responder/watchdoglib.h`
+- Registered APIs with changes:
+    - `libspdm_device_acquire_sender_buffer_func`
+    - `libspdm_device_acquire_receiver_buffer_func`
+    - `libspdm_register_transport_layer_func`
+    - `libspdm_register_device_buffer_func`
+- Library APIs with changes
+    - All of the functions in `memlib.h`.
+    - `libspdm_write_certificate_to_nvm`
+    - `libspdm_challenge_ex`
+    - `libspdm_get_measurement_ex`
+    - `libspdm_get_csr`
+    - `libspdm_set_certificate`
+- Data Set/Get removed:
+    - `LIBSPDM_DATA_LOCAL_SLOT_COUNT` - deprecated.
+    - `LIBSPDM_DATA_PEER_PUBLIC_CERT_CHAIN` - unsupported.
+    - `LIBSPDM_DATA_LOCAL_USED_CERT_CHAIN_BUFFER` - unsupported.
+    - `LIBSPDM_DATA_LOCAL_PUBLIC_CERT_CHAIN_DEFAULT_SLOT_ID` - replaced by new public key solution.
+    - `LIBSPDM_DATA_PSK_HINT` - The Integrator needs to input `psk_hint` to `libspdm_start_session`.
+- Data Set/Get added:
+    - `LIBSPDM_DATA_CAPABILITY_SENDER_DATA_TRANSFER_SIZE` - split from `LIBSPDM_DATA_CAPABILITY_DATA_TRANSFER_SIZE` that means the size for receiver.
+    - `LIBSPDM_DATA_PEER_PUBLIC_KEY` - for new raw public key solution.
+    - `LIBSPDM_DATA_LOCAL_PUBLIC_KEY` - for new raw public key solution.
+    - `LIBSPDM_DATA_REQUEST_RETRY_TIMES` - replace `LIBSPDM_MAX_REQUEST_RETRY_TIMES` macro.
+    - `LIBSPDM_DATA_REQUEST_RETRY_DELAY_TIME` - work with `LIBSPDM_DATA_REQUEST_RETRY_TIMES`.
+    - `LIBSPDM_DATA_MAX_DHE_SESSION_COUNT` - maximum allowed DHE session count.
+    - `LIBSPDM_DATA_MAX_PSK_SESSION_COUNT` - maximum allowed PSK session count.
+    - `LIBSPDM_DATA_MAX_SPDM_SESSION_SEQUENCE_NUMBER` - maximum allowed sequence number for AEAD limit.
+
+## Configuration Macro Changes
 - Configuration macros removed:
     - `LIBSPDM_SCRATCH_BUFFER_SIZE` - The Integrator may calculate the `scratch_buffer_size` according to the `max_spdm_msg_size` value input to `libspdm_register_transport_layer_func()`, according to `libspdm_get_scratch_buffer_capacity()` API implementation in [libspdm_com_context_data.c](https://github.com/DMTF/libspdm/blob/main/library/spdm_common_lib/libspdm_com_context_data.c). NOTE: The size requirement depends on `LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP` and `LIBSPDM_RESPOND_IF_READY_SUPPORT`.
     - `LIBSPDM_MAX_SPDM_MSG_SIZE` - The Integrator needs to input `max_spdm_msg_size` to `libspdm_register_transport_layer_func()`.
@@ -35,24 +64,12 @@
     - `LIBSPDM_ENABLE_CAPABILITY_GET_CSR_CAP` is renamed to `LIBSPDM_ENABLE_CAPABILITY_CSR_CAP`.
     - `LIBSPDM_ENABLE_CAPABILITY_SET_CERTIFICATE_CAP` is renamed to `LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP`.
 - Configuration macros added:
-    - `LIBSPDM_FIPS_MODE`
-    - `LIBSPDM_CERT_PARSE_SUPPORT`
-    - `LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT`
-    - `LIBSPDM_SEND_CHALLENGE_SUPPORT`
-    - `LIBSPDM_RESPOND_IF_READY_SUPPORT`
-    - `LIBSPDM_CHECK_SPDM_CONTEXT`
-- Registered APIs with changes:
-    - `libspdm_device_acquire_sender_buffer_func`
-    - `libspdm_device_acquire_receiver_buffer_func`
-    - `libspdm_register_transport_layer_func`
-    - `libspdm_register_device_buffer_func`
-- Library APIs with changes
-    - All of the functions in `memlib.h`.
-    - `libspdm_write_certificate_to_nvm`
-    - `libspdm_challenge_ex`
-    - `libspdm_get_measurement_ex`
-    - `libspdm_get_csr`
-    - `libspdm_set_certificate`
+    - `LIBSPDM_FIPS_MODE` - support FIPS.
+    - `LIBSPDM_CERT_PARSE_SUPPORT` - support X.509 parsing enable/disable for responder.
+    - `LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT` - split from `LIBSPDM_ENABLE_CAPABILITY_CERT_CAP` that means to receive.
+    - `LIBSPDM_SEND_CHALLENGE_SUPPORT` - split from `LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP` that means to receive.
+    - `LIBSPDM_RESPOND_IF_READY_SUPPORT` - support RESPOND_IF_READY.
+    - `LIBSPDM_CHECK_SPDM_CONTEXT` - optional check to see if SPDM context is setup correctly.
 
 ## Additional Changes
 - Many bug fixes and further alignment with the SPDM specifications.
