@@ -290,6 +290,11 @@ Enumeration value used for the `libspdm_set_data` and/or `libspdm_get_data` func
             - Similar to `SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST` except
               the Responder embeds a `GET_DIGESTS` request in its response to the Requester. This
               may improve performance.
+- `LIBSPDM_DATA_MAX_SPDM_SESSION_SEQUENCE_NUMBER`
+    - Specifies the number of messages that can encrypted or decrypted before an error is returned
+      to the Integrator. The sequence number used to track these messages is 64 bits and the
+      default maximum value is `0xffffffffffffffff`. If
+      `LIBSPDM_DATA_MAX_SPDM_SESSION_SEQUENCE_NUMBER` is set to `0` then the default value is used.
 
 ### Values that can only be `get`.
 
