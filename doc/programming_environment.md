@@ -26,3 +26,16 @@ operating environment.
 - The compiler supports the `#pragma pack()` directive.
 - If a pointer has been `memset` to a value of `0` then the pointer is equal to `NULL`.
 - Characters are encoded as ASCII so that, for example, `('A' == 65)` evaluates to `1`.
+
+## Assertion Philosophy
+
+The `LIBSPDM_ASSERT` macro is used to document assumptions within the codebase and within an SPDM
+endpoint. If a `LIBSPDM_ASSERT` check fails then it is due to any combination of
+- a bug in the libspdm codebase.
+- misuse of libspdm's public API by the Integrator.
+- misconfiguration of the SPDM endpoint by the Integrator.
+
+A `LIBSPDM_ASSERT` check should never fail due to an SPDM message received from a peer endpoint.
+Assertions can be removed during compilation to reduce the size of object files. If
+`LIBSPDM_CHECK_MACRO` is set then libspdm will check configuration macros, provided by the
+Integrator, during compilation.
