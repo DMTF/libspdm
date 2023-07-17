@@ -134,6 +134,8 @@ static bool need_session_info_for_data(libspdm_data_type_t data_type)
     case LIBSPDM_DATA_SESSION_MUT_AUTH_REQUESTED:
     case LIBSPDM_DATA_SESSION_END_SESSION_ATTRIBUTES:
     case LIBSPDM_DATA_SESSION_POLICY:
+    case LIBSPDM_DATA_SESSION_SEQUENCE_NUMBER_RSP_DIR:
+    case LIBSPDM_DATA_SESSION_SEQUENCE_NUMBER_REQ_DIR:
         return true;
     default:
         return false;
@@ -718,6 +720,7 @@ libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_t
                                   void *data, size_t *data_size)
 {
     libspdm_context_t *context;
+    libspdm_secured_message_context_t *secured_context;
     size_t target_data_size;
     void *target_data;
     uint32_t session_id;
@@ -747,6 +750,7 @@ libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_t
         if (session_info == NULL) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
+        secured_context = session_info->secured_message_context;
     } else {
         session_info = NULL;
     }
@@ -949,6 +953,14 @@ libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_t
     case LIBSPDM_DATA_MAX_PSK_SESSION_COUNT:
         target_data_size = sizeof(uint32_t);
         target_data = &context->max_psk_session_count;
+        break;
+    case LIBSPDM_DATA_SESSION_SEQUENCE_NUMBER_REQ_DIR:
+        target_data_size = sizeof(uint64_t);
+        target_data = &secured_context->application_secret.request_data_sequence_number;
+        break;
+    case LIBSPDM_DATA_SESSION_SEQUENCE_NUMBER_RSP_DIR:
+        target_data_size = sizeof(uint64_t);
+        target_data = &secured_context->application_secret.response_data_sequence_number;
         break;
     case LIBSPDM_DATA_MAX_SPDM_SESSION_SEQUENCE_NUMBER:
         target_data_size = sizeof(uint64_t);
