@@ -221,7 +221,7 @@ bool libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "bin_str1 (0x%x):\n", bin_str1_size));
     LIBSPDM_INTERNAL_DUMP_HEX(bin_str1, bin_str1_size);
 
-    #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
     if (secured_message_context->use_psk) {
         status = libspdm_psk_handshake_secret_hkdf_expand(
             secured_message_context->version,
@@ -236,7 +236,7 @@ bool libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
             return false;
         }
     }
-    #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
     if (!(secured_message_context->use_psk)) {
         status = libspdm_hkdf_expand(
             secured_message_context->base_hash_algo,
@@ -264,7 +264,7 @@ bool libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "bin_str2 (0x%x):\n", bin_str2_size));
     LIBSPDM_INTERNAL_DUMP_HEX(bin_str2, bin_str2_size);
 
-    #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
     if (secured_message_context->use_psk) {
         status = libspdm_psk_handshake_secret_hkdf_expand(
             secured_message_context->version,
@@ -279,7 +279,7 @@ bool libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
             return false;
         }
     }
-    #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
     if (!(secured_message_context->use_psk)) {
         status = libspdm_hkdf_expand(
             secured_message_context->base_hash_algo,
@@ -417,7 +417,7 @@ bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "bin_str3 (0x%x):\n", bin_str3_size));
     LIBSPDM_INTERNAL_DUMP_HEX(bin_str3, bin_str3_size);
 
-    #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
     if (secured_message_context->use_psk) {
         status = libspdm_psk_master_secret_hkdf_expand(
             secured_message_context->version,
@@ -432,7 +432,7 @@ bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
             goto cleanup;
         }
     }
-    #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
     if (!(secured_message_context->use_psk)) {
         status = libspdm_hkdf_expand(
             secured_message_context->base_hash_algo,
@@ -460,7 +460,7 @@ bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "bin_str4 (0x%x):\n", bin_str4_size));
     LIBSPDM_INTERNAL_DUMP_HEX(bin_str4, bin_str4_size);
 
-    #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
     if (secured_message_context->use_psk) {
         status = libspdm_psk_master_secret_hkdf_expand(
             secured_message_context->version,
@@ -475,7 +475,7 @@ bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
             goto cleanup;
         }
     }
-    #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
     if (!(secured_message_context->use_psk)) {
         status = libspdm_hkdf_expand(
             secured_message_context->base_hash_algo,
@@ -504,7 +504,7 @@ bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "bin_str8 (0x%x):\n", bin_str8_size));
     LIBSPDM_INTERNAL_DUMP_HEX(bin_str8, bin_str8_size);
 
-    #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
     if (secured_message_context->use_psk) {
         status = libspdm_psk_master_secret_hkdf_expand(
             secured_message_context->version,
@@ -519,7 +519,7 @@ bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
             goto cleanup;
         }
     }
-    #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
     if (!(secured_message_context->use_psk)) {
         status = libspdm_hkdf_expand(
             secured_message_context->base_hash_algo,

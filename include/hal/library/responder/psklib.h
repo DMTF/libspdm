@@ -12,7 +12,7 @@
 #include "library/spdm_return_status.h"
 #include "industry_standard/spdm.h"
 
-#if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
 /**
  * Derive HMAC-based Expand key Derivation Function (HKDF) Expand, based upon the negotiated HKDF
  * algorithm.
@@ -55,6 +55,6 @@ extern bool libspdm_psk_master_secret_hkdf_expand(
     const uint8_t *psk_hint, size_t psk_hint_size,
     const uint8_t *info, size_t info_size,
     uint8_t *out, size_t out_size);
-#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
+#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
 
 #endif /* RESPONDER_PSKLIB_H */

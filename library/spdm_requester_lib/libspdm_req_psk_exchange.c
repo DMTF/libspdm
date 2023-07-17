@@ -7,7 +7,7 @@
 #include "internal/libspdm_requester_lib.h"
 #include "internal/libspdm_secured_message_lib.h"
 
-#if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
 
 #pragma pack(1)
 typedef struct {
@@ -638,4 +638,4 @@ libspdm_return_t libspdm_send_receive_psk_exchange_ex(libspdm_context_t *spdm_co
     return status;
 }
 
-#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
+#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP*/

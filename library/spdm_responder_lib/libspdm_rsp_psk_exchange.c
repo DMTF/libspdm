@@ -7,7 +7,7 @@
 #include "internal/libspdm_responder_lib.h"
 #include "internal/libspdm_secured_message_lib.h"
 
-#if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
 
 /**
  * This function generates the PSK exchange HMAC based upon TH.
@@ -459,4 +459,4 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
+#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP*/

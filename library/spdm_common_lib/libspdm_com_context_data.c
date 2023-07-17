@@ -262,9 +262,9 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
             LIBSPDM_ASSERT((data32 & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP) == 0);
             #endif /* !LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP */
 
-            #if !(LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP)
+            #if !(LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)
             LIBSPDM_ASSERT((data32 & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP) == 0);
-            #endif /* !LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
+            #endif /* !LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
 
             context->local_context.capability.flags = data32;
         } else if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {

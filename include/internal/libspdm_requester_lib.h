@@ -272,7 +272,7 @@ libspdm_return_t libspdm_send_receive_finish(libspdm_context_t *spdm_context,
                                              uint8_t req_slot_id_param);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP */
 
-#if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
 /**
  * This function sends PSK_EXCHANGE and receives PSK_EXCHANGE_RSP for SPDM PSK exchange.
  *
@@ -346,9 +346,9 @@ libspdm_return_t libspdm_send_receive_psk_exchange_ex(libspdm_context_t *spdm_co
  **/
 libspdm_return_t libspdm_send_receive_psk_finish(libspdm_context_t *spdm_context,
                                                  uint32_t session_id);
-#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
+#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
 
-#if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP)
+#if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)
 /**
  * This function sends END_SESSION and receives END_SESSION_ACK for SPDM session end.
  *
@@ -362,7 +362,7 @@ libspdm_return_t libspdm_send_receive_psk_finish(libspdm_context_t *spdm_context
 libspdm_return_t libspdm_send_receive_end_session(libspdm_context_t *spdm_context,
                                                   uint32_t session_id,
                                                   uint8_t end_session_attributes);
-#endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP) */
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP) */
 
 #if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
 /**

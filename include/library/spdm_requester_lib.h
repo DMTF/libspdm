@@ -268,7 +268,7 @@ libspdm_return_t libspdm_get_measurement_ex(void *spdm_context, const uint32_t *
                                             void *opaque_data,
                                             size_t *opaque_data_size);
 
-#if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP)
+#if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)
 /**
  * This function sends KEY_EXCHANGE/FINISH or PSK_EXCHANGE/PSK_FINISH
  * to start an SPDM Session.
@@ -376,7 +376,7 @@ libspdm_return_t libspdm_start_session_ex(void *spdm_context, bool use_psk,
  **/
 libspdm_return_t libspdm_stop_session(void *spdm_context, uint32_t session_id,
                                       uint8_t end_session_attributes);
-#endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP) */
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP) */
 
 /**
  * Send an SPDM or APP message.
