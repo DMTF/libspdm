@@ -11,8 +11,8 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
 0. Choose proper SPDM libraries.
 
    0.0, choose proper macros in [spdm_lib_config](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_lib_config.h), including:
-    - Cryptography Configuration, such as `LIBSPDM_RSA_SSA_2048_SUPPORT`, `LIBSPDM_ECDHE_P256_SUPPORT`. 
-    - Capability Configuration, such as `LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP`, `LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP`, `LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP`.
+    - Cryptography Configuration, such as `LIBSPDM_RSA_SSA_2048_SUPPORT`, `LIBSPDM_ECDHE_P256_SUPPORT`.
+    - Capability Configuration, such as `LIBSPDM_ENABLE_CAPABILITY_PSK_CAP`, `LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP`, `LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP`.
     - Data Size Configuration, such as `LIBSPDM_MAX_CERT_CHAIN_SIZE`, `LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE`.
 
    0.1, implement [requester library](https://github.com/DMTF/libspdm/tree/main/include/hal/requester).
@@ -276,7 +276,7 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
 
    0.0, choose proper macros in [spdm_lib_config](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_lib_config.h), including:
     - Cryptography Configuration, such as `LIBSPDM_RSA_SSA_2048_SUPPORT`, `LIBSPDM_ECDHE_P256_SUPPORT`.
-    - Capability Configuration, such as `LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP`, `LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP`, `LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP`.
+    - Capability Configuration, such as `LIBSPDM_ENABLE_CAPABILITY_PSK_CAP`, `LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP`, `LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP`.
     - Data Size Configuration, such as `LIBSPDM_MAX_CERT_CHAIN_SIZE`, `LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE`.
 
    0.1, implement [responder library](https://github.com/DMTF/libspdm/tree/main/include/hal/responder).

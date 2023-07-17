@@ -8,7 +8,7 @@
 #include "internal/libspdm_requester_lib.h"
 #include "internal/libspdm_secured_message_lib.h"
 
-#if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP)
+#if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)
 
 static uint8_t m_libspdm_last_token;
 static uint8_t m_libspdm_last_rsp_enc_key[LIBSPDM_MAX_AEAD_KEY_SIZE];
@@ -6342,4 +6342,4 @@ int libspdm_requester_key_update_test_main(void)
                                   libspdm_unit_test_group_teardown);
 }
 
-#endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP) */
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP) */

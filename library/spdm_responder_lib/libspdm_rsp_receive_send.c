@@ -45,9 +45,9 @@ libspdm_get_spdm_response_func libspdm_get_response_func_via_request_code(uint8_
         { SPDM_KEY_EXCHANGE, libspdm_get_response_key_exchange },
         #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
 
-        #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+        #if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
         { SPDM_PSK_EXCHANGE, libspdm_get_response_psk_exchange },
-        #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP*/
 
         #if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
         { SPDM_GET_ENCAPSULATED_REQUEST, libspdm_get_response_encapsulated_request },
@@ -62,15 +62,15 @@ libspdm_get_spdm_response_func libspdm_get_response_func_via_request_code(uint8_
         { SPDM_FINISH, libspdm_get_response_finish },
         #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
 
-        #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+        #if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
         { SPDM_PSK_FINISH, libspdm_get_response_psk_finish },
-        #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP*/
 
-        #if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP)
+        #if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)
         { SPDM_END_SESSION, libspdm_get_response_end_session },
         { SPDM_HEARTBEAT, libspdm_get_response_heartbeat },
         { SPDM_KEY_UPDATE, libspdm_get_response_key_update },
-        #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_CAP*/
 
         #if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP
         { SPDM_GET_CSR, libspdm_get_response_csr },

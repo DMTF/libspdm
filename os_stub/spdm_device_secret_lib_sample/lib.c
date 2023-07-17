@@ -1465,7 +1465,7 @@ bool libspdm_responder_data_sign(
     return result;
 }
 
-#if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
 
 uint8_t m_libspdm_my_zero_filled_buffer[LIBSPDM_MAX_HASH_SIZE];
 uint8_t m_libspdm_bin_str0[0x11] = {
@@ -1583,7 +1583,7 @@ bool libspdm_psk_master_secret_hkdf_expand(
 
     return result;
 }
-#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
+#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
 bool libspdm_is_in_trusted_environment()

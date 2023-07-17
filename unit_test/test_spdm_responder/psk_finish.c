@@ -8,7 +8,7 @@
 #include "internal/libspdm_responder_lib.h"
 #include "internal/libspdm_secured_message_lib.h"
 
-#if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
 #pragma pack(1)
 typedef struct {
     spdm_message_header_t header;
@@ -1617,4 +1617,4 @@ int libspdm_responder_psk_finish_test_main(void)
                                   libspdm_unit_test_group_teardown);
 }
 
-#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
+#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */

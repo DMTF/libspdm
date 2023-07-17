@@ -56,8 +56,8 @@
     #error If KEY_EX_CAP is enabled then at least one AEAD algorithm must also be enabled.
 #endif
 
-#if (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP) && !LIBSPDM_AEAD_ALGO_SUPPORT
-    #error If PSK_EX_CAP is enabled then at least one AEAD algorithm must also be enabled.
+#if (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP) && !LIBSPDM_AEAD_ALGO_SUPPORT
+    #error If PSK_CAP is enabled then at least one AEAD algorithm must also be enabled.
 #endif
 
 #if (LIBSPDM_ENABLE_CAPABILITY_CERT_CAP) && !LIBSPDM_HASH_ALGO_SUPPORT
@@ -72,8 +72,8 @@
     #error If KEY_EX_CAP is enabled then at least one HASH algorithm must also be enabled.
 #endif
 
-#if (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP) && !LIBSPDM_HASH_ALGO_SUPPORT
-    #error If PSK_EX_CAP is enabled then at least one HASH algorithm must also be enabled.
+#if (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP) && !LIBSPDM_HASH_ALGO_SUPPORT
+    #error If PSK_CAP is enabled then at least one HASH algorithm must also be enabled.
 #endif
 
 #if ((LIBSPDM_MAX_VERSION_COUNT) == 0) || ((LIBSPDM_MAX_VERSION_COUNT) > 255)

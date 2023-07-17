@@ -8,7 +8,7 @@
 #include "internal/libspdm_responder_lib.h"
 #include "internal/libspdm_requester_lib.h"
 
-#if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
 
 #pragma pack(1)
 
@@ -1768,4 +1768,4 @@ int libspdm_responder_psk_exchange_test_main(void)
                                   libspdm_unit_test_group_teardown);
 }
 
-#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
+#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP*/

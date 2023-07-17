@@ -289,7 +289,7 @@ libspdm_return_t libspdm_get_response_finish(libspdm_context_t *spdm_context,
                                              void *response);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP */
 
-#if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
 /**
  * Process the SPDM PSK_EXCHANGE request and return the response.
  *
@@ -335,9 +335,9 @@ libspdm_return_t libspdm_get_response_psk_finish(libspdm_context_t *spdm_context
                                                  const void *request,
                                                  size_t *response_size,
                                                  void *response);
-#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
+#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
 
-#if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP)
+#if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)
 /**
  * Process the SPDM END_SESSION request and return the response.
  *
@@ -406,7 +406,7 @@ libspdm_return_t libspdm_get_response_heartbeat(libspdm_context_t *spdm_context,
                                                 const void *request,
                                                 size_t *response_size,
                                                 void *response);
-#endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP) */
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP) */
 
 #if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
 /**

@@ -7,7 +7,7 @@
 #include "internal/libspdm_responder_lib.h"
 #include "internal/libspdm_secured_message_lib.h"
 
-#if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
 
 bool libspdm_verify_psk_finish_req_hmac(libspdm_context_t *spdm_context,
                                         libspdm_session_info_t *session_info,
@@ -245,4 +245,4 @@ libspdm_return_t libspdm_get_response_psk_finish(libspdm_context_t *spdm_context
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP */
+#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */

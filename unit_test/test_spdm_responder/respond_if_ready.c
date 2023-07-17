@@ -13,7 +13,7 @@
 
 #if (LIBSPDM_ENABLE_CAPABILITY_CERT_CAP || LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP || \
      LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP || LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || \
-     LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP)
+     LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)
 
 #define LIBSPDM_MY_TEST_TOKEN            0x30
 #define LIBSPDM_MY_WRONG_TEST_TOKEN      0x2F
@@ -808,7 +808,7 @@ void libspdm_test_responder_respond_if_ready_case6(void **state) {
  * Expected behavior: the responder accepts the request and produces a valid PSK_EXCHANGE_RSP
  * response message.
  **/
-#if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
 
 void libspdm_test_responder_respond_if_ready_case7(void **state) {
     libspdm_return_t status;
@@ -904,7 +904,7 @@ void libspdm_test_responder_respond_if_ready_case7(void **state) {
     free(data);
     libspdm_free_session_id (spdm_context, (0xFFFFFFFF));
 }
-#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
+#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP*/
 
 /**
  * Test 8: receiving a correct RESPOND_IF_READY from the requester, after a
@@ -912,7 +912,7 @@ void libspdm_test_responder_respond_if_ready_case7(void **state) {
  * Expected behavior: the responder accepts the request and produces a valid PSK_FINISH_RSP
  * response message.
  **/
-#if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+#if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
 void libspdm_test_responder_respond_if_ready_case8(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -1024,7 +1024,7 @@ void libspdm_test_responder_respond_if_ready_case8(void **state) {
     free(data);
     libspdm_free_session_id (spdm_context, (0xFFFFFFFF));
 }
-#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
+#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP*/
 
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 
@@ -1381,10 +1381,10 @@ int libspdm_responder_respond_if_ready_test_main(void) {
         cmocka_unit_test(libspdm_test_responder_respond_if_ready_case6),
     #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/
 
-    #if LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP
+    #if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
         cmocka_unit_test(libspdm_test_responder_respond_if_ready_case7),
         cmocka_unit_test(libspdm_test_responder_respond_if_ready_case8),
-    #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_EX_CAP*/
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP*/
 
     #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
         cmocka_unit_test(libspdm_test_responder_respond_if_ready_case9),
