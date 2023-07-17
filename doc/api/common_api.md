@@ -324,3 +324,13 @@ Enumeration value used for the `libspdm_set_data` and/or `libspdm_get_data` func
         - If set then the Responder will clear its negotiated connection state derived from `VCA`.
           If not set then Responder will maintain its negotiated connection state.
         - Only valid if the Responder supports `VCA` caching (`CACHE_CAP` is set).
+- `LIBSPDM_DATA_SESSION_SEQUENCE_NUMBER_REQ_DIR`
+    - For a given session ID, returns the number of application data messages that have been
+      encrypted / decrypted in the request (Requester to Responder) direction.
+    - This value is only applicable when the local endpoint is in the
+      `LIBSPDM_SESSION_STATE_ESTABLISHED` state.
+- `LIBSPDM_DATA_SESSION_SEQUENCE_NUMBER_RSP_DIR`
+    - For a given session ID, returns the number of application data messages that have been
+      encrypted / decrypted in the response (Responder to Requester) direction.
+    - This value is only applicable when the local endpoint is in the
+     `LIBSPDM_SESSION_STATE_ESTABLISHED` state.
