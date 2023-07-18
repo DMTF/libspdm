@@ -39,7 +39,7 @@ bool libspdm_rsa_get_public_key_from_der(const uint8_t *der_data,
                                          size_t der_size,
                                          void **rsa_context)
 {
-    int32_t ret;
+    int ret;
     mbedtls_pk_context pk;
     mbedtls_rsa_context *rsa;
 
@@ -101,7 +101,7 @@ bool libspdm_ec_get_public_key_from_der(const uint8_t *der_data,
                                         size_t der_size,
                                         void **ec_context)
 {
-    int32_t ret;
+    int ret;
     mbedtls_pk_context pk;
     mbedtls_ecdh_context *ecdh;
 

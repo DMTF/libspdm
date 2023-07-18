@@ -45,7 +45,7 @@ bool libspdm_aead_chacha20_poly1305_encrypt(
     size_t tag_size, uint8_t *data_out, size_t *data_out_size)
 {
     mbedtls_chachapoly_context ctx;
-    int32_t ret;
+    int ret;
 
     if (data_in_size > INT_MAX) {
         return false;
@@ -122,7 +122,7 @@ bool libspdm_aead_chacha20_poly1305_decrypt(
     size_t tag_size, uint8_t *data_out, size_t *data_out_size)
 {
     mbedtls_chachapoly_context ctx;
-    int32_t ret;
+    int ret;
 
     if (data_in_size > INT_MAX) {
         return false;

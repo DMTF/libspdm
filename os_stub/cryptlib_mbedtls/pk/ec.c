@@ -31,7 +31,7 @@ void *libspdm_ec_new_by_nid(size_t nid)
 {
     mbedtls_ecdh_context *ctx;
     mbedtls_ecp_group_id grp_id;
-    int32_t ret;
+    int ret;
 
     ctx = allocate_zero_pool(sizeof(mbedtls_ecdh_context));
     if (ctx == NULL) {
@@ -96,7 +96,7 @@ bool libspdm_ec_set_pub_key(void *ec_context, const uint8_t *public_key,
                             size_t public_key_size)
 {
     mbedtls_ecdh_context *ctx;
-    int32_t ret;
+    int ret;
     size_t half_size;
 
     if (ec_context == NULL || public_key == NULL) {
@@ -157,7 +157,7 @@ bool libspdm_ec_set_priv_key(void *ec_context, const uint8_t *private_key,
                              size_t private_key_size)
 {
     mbedtls_ecdh_context *ctx;
-    int32_t ret;
+    int ret;
     size_t half_size;
 
     if (ec_context == NULL || private_key == NULL) {
@@ -210,7 +210,7 @@ bool libspdm_ec_get_pub_key(void *ec_context, uint8_t *public_key,
                             size_t *public_key_size)
 {
     mbedtls_ecdh_context *ctx;
-    int32_t ret;
+    int ret;
     size_t half_size;
     size_t x_size;
     size_t y_size;
@@ -314,7 +314,7 @@ bool libspdm_ec_generate_key(void *ec_context, uint8_t *public_data,
                              size_t *public_size)
 {
     mbedtls_ecdh_context *ctx;
-    int32_t ret;
+    int ret;
     size_t half_size;
     size_t x_size;
     size_t y_size;
@@ -408,7 +408,7 @@ bool libspdm_ec_compute_key(void *ec_context, const uint8_t *peer_public,
 {
     mbedtls_ecdh_context *ctx;
     size_t half_size;
-    int32_t ret;
+    int ret;
 
     if (ec_context == NULL || peer_public == NULL || key_size == NULL ||
         key == NULL) {
@@ -503,7 +503,7 @@ bool libspdm_ecdsa_sign(void *ec_context, size_t hash_nid,
                         const uint8_t *message_hash, size_t hash_size,
                         uint8_t *signature, size_t *sig_size)
 {
-    int32_t ret;
+    int ret;
     mbedtls_ecdh_context *ctx;
     mbedtls_mpi bn_r;
     mbedtls_mpi bn_s;
@@ -624,7 +624,7 @@ bool libspdm_ecdsa_verify(void *ec_context, size_t hash_nid,
                           const uint8_t *message_hash, size_t hash_size,
                           const uint8_t *signature, size_t sig_size)
 {
-    int32_t ret;
+    int ret;
     mbedtls_ecdh_context *ctx;
     mbedtls_mpi bn_r;
     mbedtls_mpi bn_s;
@@ -729,7 +729,7 @@ bool libspdm_ecdsa_sign_ex(void *ec_context, size_t hash_nid,
                            uint8_t *signature, size_t *sig_size,
                            int (*random_func)(void *, unsigned char *, size_t))
 {
-    int32_t ret;
+    int ret;
     mbedtls_ecdh_context *ctx;
     mbedtls_mpi bn_r;
     mbedtls_mpi bn_s;

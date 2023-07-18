@@ -43,7 +43,7 @@ static const unsigned char m_ffehde4096_g[] =
 void *libspdm_dh_new_by_nid(size_t nid)
 {
     mbedtls_dhm_context *ctx;
-    int32_t ret;
+    int ret;
 
     ctx = allocate_zero_pool(sizeof(mbedtls_dhm_context));
     if (ctx == NULL) {
@@ -194,7 +194,7 @@ bool libspdm_dh_set_parameter(void *dh_context, size_t generator,
 bool libspdm_dh_generate_key(void *dh_context, uint8_t *public_key,
                              size_t *public_key_size)
 {
-    int32_t ret;
+    int ret;
     mbedtls_dhm_context *ctx;
     size_t final_pub_key_size;
 
@@ -272,7 +272,7 @@ bool libspdm_dh_compute_key(void *dh_context, const uint8_t *peer_public_key,
                             size_t peer_public_key_size, uint8_t *key,
                             size_t *key_size)
 {
-    int32_t ret;
+    int ret;
     mbedtls_dhm_context *ctx;
     size_t return_size;
     size_t dh_key_size;
