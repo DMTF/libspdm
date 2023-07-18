@@ -127,6 +127,9 @@ libspdm_return_t libspdm_get_response_capabilities(libspdm_context_t *spdm_conte
 
     spdm_request = request;
 
+    /* -=[Check Parameters Phase]=- */
+    LIBSPDM_ASSERT(spdm_request->header.request_response_code == SPDM_GET_CAPABILITIES);
+
     /* -=[Verify State Phase]=- */
     if (spdm_context->response_state != LIBSPDM_RESPONSE_STATE_NORMAL) {
         return libspdm_responder_handle_response_state(

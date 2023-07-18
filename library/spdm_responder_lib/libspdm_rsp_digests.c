@@ -30,6 +30,9 @@ libspdm_return_t libspdm_get_response_digests(libspdm_context_t *spdm_context, s
 
     spdm_request = request;
 
+    /* -=[Check Parameters Phase]=- */
+    LIBSPDM_ASSERT(spdm_request->header.request_response_code == SPDM_GET_DIGESTS);
+
     if (spdm_request->header.spdm_version != libspdm_get_connection_version(spdm_context)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_VERSION_MISMATCH, 0,

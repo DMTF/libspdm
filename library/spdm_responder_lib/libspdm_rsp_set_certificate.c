@@ -72,6 +72,9 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
 
     spdm_request = request;
 
+    /* -=[Check Parameters Phase]=- */
+    LIBSPDM_ASSERT(spdm_request->header.request_response_code == SPDM_SET_CERTIFICATE);
+
     if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_12) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNSUPPORTED_REQUEST, 0,

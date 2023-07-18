@@ -80,6 +80,9 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
 
     spdm_request = request;
 
+    /* -=[Check Parameters Phase]=- */
+    LIBSPDM_ASSERT(spdm_request->header.request_response_code == SPDM_GET_MEASUREMENTS);
+
     if (!spdm_context->last_spdm_request_session_id_valid) {
         session_info = NULL;
     } else {
