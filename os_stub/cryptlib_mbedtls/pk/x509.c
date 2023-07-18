@@ -103,7 +103,7 @@ bool libspdm_x509_construct_certificate(const uint8_t *cert, size_t cert_size,
                                         uint8_t **single_x509_cert)
 {
     mbedtls_x509_crt *mbedtls_cert;
-    int32_t ret;
+    int ret;
 
     if (cert == NULL || single_x509_cert == NULL || cert_size == 0) {
         return false;
@@ -127,7 +127,7 @@ static bool libspdm_x509_construct_certificate_stack_v(uint8_t **x509_stack,
 {
     uint8_t *cert;
     size_t cert_size;
-    int32_t ret;
+    int ret;
 
     if (x509_stack == NULL) {
         return false;
@@ -270,7 +270,7 @@ bool libspdm_x509_get_subject_name(const uint8_t *cert, size_t cert_size,
                                    size_t *subject_size)
 {
     mbedtls_x509_crt crt;
-    int32_t ret;
+    int ret;
     bool status;
 
     if (cert == NULL) {
@@ -335,7 +335,7 @@ libspdm_internal_x509_get_subject_nid_name(const uint8_t *cert, size_t cert_size
                                            size_t *common_name_size)
 {
     mbedtls_x509_crt crt;
-    int32_t ret;
+    int ret;
     mbedtls_x509_name *name;
     bool status;
 
@@ -367,7 +367,7 @@ libspdm_internal_x509_get_issuer_nid_name(const uint8_t *cert, size_t cert_size,
                                           size_t *common_name_size)
 {
     mbedtls_x509_crt crt;
-    int32_t ret;
+    int ret;
     mbedtls_x509_name *name;
     bool status;
 
@@ -485,7 +485,7 @@ bool libspdm_rsa_get_public_key_from_x509(const uint8_t *cert, size_t cert_size,
 {
     mbedtls_x509_crt crt;
     mbedtls_rsa_context *rsa;
-    int32_t ret;
+    int ret;
 
     mbedtls_x509_crt_init(&crt);
 
@@ -537,7 +537,7 @@ bool libspdm_ec_get_public_key_from_x509(const uint8_t *cert, size_t cert_size,
 {
     mbedtls_x509_crt crt;
     mbedtls_ecdh_context *ecdh;
-    int32_t ret;
+    int ret;
 
     mbedtls_x509_crt_init(&crt);
 
@@ -634,7 +634,7 @@ bool libspdm_sm2_get_public_key_from_x509(const uint8_t *cert, size_t cert_size,
 bool libspdm_x509_verify_cert(const uint8_t *cert, size_t cert_size,
                               const uint8_t *ca_cert, size_t ca_cert_size)
 {
-    int32_t ret;
+    int ret;
     mbedtls_x509_crt ca, end;
     uint32_t v_flag = 0;
     mbedtls_x509_crt_profile profile = { 0 };
@@ -694,7 +694,7 @@ bool libspdm_x509_verify_cert_chain(const uint8_t *root_cert, size_t root_cert_l
     size_t current_cert_len;
     const uint8_t *current_cert;
     const uint8_t *tmp_ptr;
-    uint32_t ret;
+    int ret;
     bool verify_flag;
 
     verify_flag = false;
@@ -769,7 +769,7 @@ bool libspdm_x509_get_cert_from_cert_chain(const uint8_t *cert_chain,
     size_t current_cert_len;
     const uint8_t *current_cert;
     const uint8_t *tmp_ptr;
-    int32_t ret;
+    int ret;
 
     current_cert_len = 0;
 
@@ -867,7 +867,7 @@ bool libspdm_x509_get_version(const uint8_t *cert, size_t cert_size,
                               size_t *version)
 {
     mbedtls_x509_crt crt;
-    int32_t ret;
+    int ret;
     bool status;
 
     if (cert == NULL) {
@@ -918,7 +918,7 @@ bool libspdm_x509_get_serial_number(const uint8_t *cert, size_t cert_size,
                                     size_t *serial_number_size)
 {
     mbedtls_x509_crt crt;
-    int32_t ret;
+    int ret;
     bool status;
 
     if (cert == NULL) {
@@ -974,7 +974,7 @@ bool libspdm_x509_get_issuer_name(const uint8_t *cert, size_t cert_size,
                                   size_t *issuer_size)
 {
     mbedtls_x509_crt crt;
-    int32_t ret;
+    int ret;
     bool status;
 
     if (cert == NULL) {
@@ -1102,7 +1102,7 @@ bool libspdm_x509_get_signature_algorithm(const uint8_t *cert,
                                           size_t *oid_size)
 {
     mbedtls_x509_crt crt;
-    int32_t ret;
+    int ret;
     bool status;
 
     if (cert == NULL || cert_size == 0 || oid_size == NULL) {
@@ -1153,7 +1153,7 @@ libspdm_internal_x509_find_extension_data(uint8_t *start, uint8_t *end, const ui
     uint8_t *ptr;
     uint8_t *extension_ptr;
     size_t obj_len;
-    int32_t ret;
+    int ret;
     bool status;
     size_t find_extension_len;
     size_t header_len;
@@ -1241,7 +1241,7 @@ bool libspdm_x509_get_extension_data(const uint8_t *cert, size_t cert_size,
                                      size_t *extension_data_size)
 {
     mbedtls_x509_crt crt;
-    int32_t ret;
+    int ret;
     bool status;
     uint8_t *ptr;
     uint8_t *end;
@@ -1321,7 +1321,7 @@ bool libspdm_x509_get_validity(const uint8_t *cert, size_t cert_size,
                                size_t *to_size)
 {
     mbedtls_x509_crt crt;
-    int32_t ret;
+    int ret;
     bool status;
     size_t t_size;
     size_t f_size;
@@ -1381,7 +1381,7 @@ bool libspdm_x509_get_key_usage(const uint8_t *cert, size_t cert_size,
                                 size_t *usage)
 {
     mbedtls_x509_crt crt;
-    int32_t ret;
+    int ret;
     bool status;
 
     if (cert == NULL) {

@@ -54,7 +54,7 @@ bool libspdm_rsa_get_private_key_from_pem(const uint8_t *pem_data,
                                           const char *password,
                                           void **rsa_context)
 {
-    int32_t ret;
+    int ret;
     mbedtls_pk_context pk;
     mbedtls_rsa_context *rsa;
     uint8_t *new_pem_data;
@@ -140,7 +140,7 @@ bool libspdm_ec_get_private_key_from_pem(const uint8_t *pem_data, size_t pem_siz
                                          const char *password,
                                          void **ec_context)
 {
-    int32_t ret;
+    int ret;
     mbedtls_pk_context pk;
     mbedtls_ecdh_context *ecdh;
     uint8_t *new_pem_data;

@@ -37,7 +37,7 @@ bool hkdf_md_extract_and_expand(const mbedtls_md_type_t md_type,
                                 uint8_t *out, size_t out_size)
 {
     const mbedtls_md_info_t *md;
-    int32_t ret;
+    int ret;
 
     if (key == NULL || salt == NULL || info == NULL || out == NULL ||
         key_size > INT_MAX || salt_size > INT_MAX || info_size > INT_MAX ||
@@ -78,7 +78,7 @@ bool hkdf_md_extract(const mbedtls_md_type_t md_type, const uint8_t *key,
                      size_t prk_out_size)
 {
     const mbedtls_md_info_t *md;
-    int32_t ret;
+    int ret;
     size_t md_size;
 
     if (key == NULL || salt == NULL || prk_out == NULL ||
@@ -137,7 +137,7 @@ bool hkdf_md_expand(const mbedtls_md_type_t md_type, const uint8_t *prk,
                     size_t info_size, uint8_t *out, size_t out_size)
 {
     const mbedtls_md_info_t *md;
-    int32_t ret;
+    int ret;
     size_t md_size;
 
     if (prk == NULL || info == NULL || out == NULL || prk_size > INT_MAX ||

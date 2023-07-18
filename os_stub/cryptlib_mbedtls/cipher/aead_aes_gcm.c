@@ -46,7 +46,7 @@ bool libspdm_aead_aes_gcm_encrypt(const uint8_t *key, size_t key_size,
                                   uint8_t *data_out, size_t *data_out_size)
 {
     mbedtls_gcm_context ctx;
-    int32_t ret;
+    int ret;
 
     if (data_in_size > INT_MAX) {
         return false;
@@ -133,7 +133,7 @@ bool libspdm_aead_aes_gcm_decrypt(const uint8_t *key, size_t key_size,
                                   uint8_t *data_out, size_t *data_out_size)
 {
     mbedtls_gcm_context ctx;
-    int32_t ret;
+    int ret;
 
     if (data_in_size > INT_MAX) {
         return false;

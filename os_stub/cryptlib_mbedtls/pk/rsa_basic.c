@@ -79,7 +79,7 @@ bool libspdm_rsa_set_key(void *rsa_context, const libspdm_rsa_key_tag_t key_tag,
                          const uint8_t *big_number, size_t bn_size)
 {
     mbedtls_rsa_context *rsa_key;
-    int32_t ret;
+    int ret;
     mbedtls_mpi value;
 
 
@@ -162,7 +162,7 @@ bool libspdm_rsa_pkcs1_verify_with_nid(void *rsa_context, size_t hash_nid,
                                        size_t hash_size, const uint8_t *signature,
                                        size_t sig_size)
 {
-    int32_t ret;
+    int ret;
     mbedtls_md_type_t md_alg;
     mbedtls_rsa_context *rsa_key;
 
@@ -249,7 +249,7 @@ bool libspdm_rsa_pss_verify(void *rsa_context, size_t hash_nid,
                             const uint8_t *message_hash, size_t hash_size,
                             const uint8_t *signature, size_t sig_size)
 {
-    int32_t ret;
+    int ret;
     mbedtls_md_type_t md_alg;
     mbedtls_rsa_context *rsa_key;
 

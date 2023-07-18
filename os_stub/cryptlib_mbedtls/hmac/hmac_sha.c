@@ -61,7 +61,7 @@ bool hmac_md_set_key(const mbedtls_md_type_t md_type, void *hmac_md_ctx,
                      const uint8_t *key, size_t key_size)
 {
     const mbedtls_md_info_t *md_info;
-    int32_t ret;
+    int ret;
 
     if (hmac_md_ctx == NULL || key_size > INT_MAX) {
         return false;
@@ -126,7 +126,7 @@ int hmac_md_get_blocksize( mbedtls_md_type_t md_type )
 bool hmac_md_duplicate(const mbedtls_md_type_t md_type, const void *hmac_md_ctx,
                        void *new_hmac_md_ctx)
 {
-    int32_t ret;
+    int ret;
     const mbedtls_md_info_t *md_info;
 
     if (hmac_md_ctx == NULL || new_hmac_md_ctx == NULL) {
@@ -177,7 +177,7 @@ bool hmac_md_duplicate(const mbedtls_md_type_t md_type, const void *hmac_md_ctx,
 bool hmac_md_update(void *hmac_md_ctx, const void *data,
                     size_t data_size)
 {
-    int32_t ret;
+    int ret;
 
     if (hmac_md_ctx == NULL) {
         return false;
@@ -219,7 +219,7 @@ bool hmac_md_update(void *hmac_md_ctx, const void *data,
  **/
 bool hmac_md_final(void *hmac_md_ctx, uint8_t *hmac_value)
 {
-    int32_t ret;
+    int ret;
 
     if (hmac_md_ctx == NULL || hmac_value == NULL) {
         return false;
@@ -259,7 +259,7 @@ bool hmac_md_all(const mbedtls_md_type_t md_type, const void *data,
                  uint8_t *hmac_value)
 {
     const mbedtls_md_info_t *md_info;
-    int32_t ret;
+    int ret;
 
     md_info = mbedtls_md_info_from_type(md_type);
     LIBSPDM_ASSERT(md_info != NULL);
