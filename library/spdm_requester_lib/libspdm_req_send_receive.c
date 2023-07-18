@@ -734,6 +734,27 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
 
     if (spdm_response->request_response_code == SPDM_ERROR
         && spdm_response->param1 == SPDM_ERROR_CODE_LARGE_RESPONSE) {
+        spdm_message_header_t *request_message;
+
+        request_message = (spdm_message_header_t *)spdm_context->last_spdm_request;
+
+        switch (request_message->request_response_code)
+        {
+        case SPDM_GET_VERSION:
+        case SPDM_GET_CAPABILITIES:
+        case SPDM_PSK_FINISH:
+        case SPDM_HEARTBEAT:
+        case SPDM_KEY_UPDATE:
+        case SPDM_END_SESSION:
+        case SPDM_SET_CERTIFICATE:
+            /* The responses to these requests cannot be chunked as they are smaller than the
+             * MinDataTransferSize. */
+            status = LIBSPDM_STATUS_ERROR_PEER;
+            goto receive_done;
+        default:
+            break;
+        }
+
         status = libspdm_handle_error_large_response(
             spdm_context, session_id,
             response_size, (void*) spdm_response, response_capacity);
@@ -744,15 +765,6 @@ libspdm_return_t libspdm_receive_spdm_response(libspdm_context_t *spdm_context,
 
         if (*response_size < sizeof(spdm_message_header_t)) {
             status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
-            goto receive_done;
-        }
-
-        /* Per the spec, SPDM_VERSION and SPDM_CAPABILITIES shall not be chunked
-         * and should be an unexpected error. */
-        if (spdm_response->request_response_code == SPDM_VERSION ||
-            spdm_response->request_response_code == SPDM_CAPABILITIES
-            ) {
-            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             goto receive_done;
         }
     }
