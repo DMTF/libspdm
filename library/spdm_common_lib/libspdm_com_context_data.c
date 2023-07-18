@@ -818,7 +818,7 @@ libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_t
                                   void *data, size_t *data_size)
 {
     libspdm_context_t *context;
-    libspdm_secured_message_context_t *secured_context;
+    libspdm_secured_message_context_t *secured_context = NULL;
     size_t target_data_size;
     void *target_data;
     uint32_t session_id;
