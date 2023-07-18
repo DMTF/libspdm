@@ -258,10 +258,11 @@ libspdm_return_t libspdm_get_response_algorithms(libspdm_context_t *spdm_context
 
     ext_alg_total_count = 0;
 
+    /* -=[Check Parameters Phase]=- */
+    LIBSPDM_ASSERT(spdm_request->header.request_response_code == SPDM_NEGOTIATE_ALGORITHMS);
     LIBSPDM_ASSERT(!(((spdm_context->local_context.capability.flags &
                        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP) == 0) ^
                      (spdm_context->local_context.algorithm.measurement_spec == 0)));
-
     LIBSPDM_ASSERT(!(((spdm_context->local_context.capability.flags &
                        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP) == 0) ^
                      (spdm_context->local_context.algorithm.measurement_hash_algo == 0)));
