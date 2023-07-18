@@ -15,6 +15,21 @@ typedef struct {
 } libspdm_version_response_mine_t;
 #pragma pack()
 
+static libspdm_return_t generate_invalid_version_error(size_t *response_size, void *response)
+{
+    spdm_error_response_t *spdm_response;
+
+    spdm_response = response;
+    *response_size = sizeof(spdm_error_response_t);
+
+    spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+    spdm_response->header.request_response_code = SPDM_ERROR;
+    spdm_response->header.param1 = SPDM_ERROR_CODE_VERSION_MISMATCH;
+    spdm_response->header.param2 = 0;
+
+    return LIBSPDM_STATUS_SUCCESS;
+}
+
 libspdm_return_t libspdm_get_response_version(libspdm_context_t *spdm_context, size_t request_size,
                                               const void *request,
                                               size_t *response_size,
@@ -43,9 +58,9 @@ libspdm_return_t libspdm_get_response_version(libspdm_context_t *spdm_context, s
     }
 
     if (spdm_request->header.spdm_version != SPDM_MESSAGE_VERSION_10) {
-        return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_VERSION_MISMATCH, 0,
-                                               response_size, response);
+        /* If the GET_VERSION request is improperly formed then the version of the error message
+         * must be 1.0, regardless of what the negotiated version is. */
+        return generate_invalid_version_error(response_size, response);
     }
 
     libspdm_set_connection_state(spdm_context, LIBSPDM_CONNECTION_STATE_NOT_STARTED);
