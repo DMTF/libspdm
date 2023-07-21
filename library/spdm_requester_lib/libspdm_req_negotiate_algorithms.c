@@ -195,6 +195,13 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+        if (!libspdm_onehot0(spdm_response->other_params_selection &
+                             SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_MASK)) {
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+            goto receive_done;
+        }
+    }
     if (!libspdm_onehot0(spdm_response->measurement_hash_algo)) {
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
@@ -496,6 +503,7 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
         spdm_context->connection_info.algorithm.aead_cipher_suite = 0;
         spdm_context->connection_info.algorithm.req_base_asym_alg = 0;
         spdm_context->connection_info.algorithm.key_schedule = 0;
+        spdm_context->connection_info.algorithm.other_params_support = 0;
     }
 
     /* -=[Update State Phase]=- */

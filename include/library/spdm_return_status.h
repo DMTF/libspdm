@@ -145,6 +145,10 @@ typedef uint32_t libspdm_return_t;
 #define LIBSPDM_STATUS_PEER_BUFFER_TOO_SMALL \
     LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_CORE, 0x0013)
 
+/* A parameter passed by the Integrator was overridden. */
+#define LIBSPDM_STATUS_OVERRIDDEN_PARAMETER \
+    LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_WARNING, LIBSPDM_SOURCE_CORE, 0x0014)
+
 /* - Cryptography Errors - */
 
 /* Generic failure originating from the cryptography module. */

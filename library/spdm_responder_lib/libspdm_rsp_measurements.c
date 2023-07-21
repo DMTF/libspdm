@@ -256,22 +256,29 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
     opaque_data =
         (uint8_t*)response + sizeof(spdm_measurements_response_t) +
         SPDM_NONCE_SIZE + sizeof(uint16_t);
-    opaque_data_size = meas_opaque_buffer_size - measurements_size;
 
-    ret = libspdm_measurement_opaque_data(
-        spdm_context->connection_info.version,
-        spdm_context->connection_info.algorithm.measurement_spec,
-        spdm_context->connection_info.algorithm.measurement_hash_algo,
-        measurements_index,
-        spdm_request->header.param1,
-        opaque_data,
-        &opaque_data_size);
+    if ((libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_12) &&
+        ((spdm_context->connection_info.algorithm.other_params_support &
+          SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_MASK) == SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_NONE)) {
+        opaque_data_size = 0;
+    } else {
+        opaque_data_size = meas_opaque_buffer_size - measurements_size;
 
-    if (!ret) {
-        libspdm_reset_message_m(spdm_context, session_info);
-        return libspdm_generate_error_response(
-            spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
-            0, response_size, response);
+        ret = libspdm_measurement_opaque_data(
+            spdm_context->connection_info.version,
+            spdm_context->connection_info.algorithm.measurement_spec,
+            spdm_context->connection_info.algorithm.measurement_hash_algo,
+            measurements_index,
+            spdm_request->header.param1,
+            opaque_data,
+            &opaque_data_size);
+
+        if (!ret) {
+            libspdm_reset_message_m(spdm_context, session_info);
+            return libspdm_generate_error_response(
+                spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
+                0, response_size, response);
+        }
     }
 
     LIBSPDM_ASSERT(opaque_data_size <= (meas_opaque_buffer_size - measurements_size));

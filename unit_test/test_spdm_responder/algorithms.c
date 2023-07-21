@@ -659,6 +659,8 @@ libspdm_negotiate_algorithms_request_spdm12_t
         },
         sizeof(libspdm_negotiate_algorithms_request_spdm12_t),
         SPDM_MEASUREMENT_SPECIFICATION_DMTF,
+        /* Illegal OpaqueDataFmt. */
+        0x03,
     },
     {
         {

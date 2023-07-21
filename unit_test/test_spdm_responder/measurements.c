@@ -1616,22 +1616,19 @@ void libspdm_test_responder_measurements_case27(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0x1B;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.measurement_spec =
-        m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.algorithm.other_params_support =
+        SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1;
     libspdm_reset_message_m(spdm_context, NULL);
 
     /*opaque data*/

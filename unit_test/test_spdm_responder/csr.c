@@ -538,14 +538,12 @@ void libspdm_test_responder_csr_case4(void **state)
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
 
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CSR_CAP;
-    spdm_context->connection_info.algorithm.base_hash_algo =
-        m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo =
-        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CSR_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.other_params_support =
+        SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_0;
 
     m_libspdm_get_csr_request = malloc(sizeof(spdm_get_csr_request_t) +
                                        sizeof(m_csr_opaque_data));
@@ -573,8 +571,7 @@ void libspdm_test_responder_csr_case4(void **state)
 
     spdm_response = (void *)response;
     assert_int_equal(response_size, sizeof(spdm_csr_response_t) + spdm_response->csr_length);
-    assert_int_equal(spdm_response->header.request_response_code,
-                     SPDM_CSR);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_CSR);
 
     /*check returned CSR not zero */
     assert_memory_not_equal(spdm_response + 1, wrong_csr, spdm_response->csr_length);
