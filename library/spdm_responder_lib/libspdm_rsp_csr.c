@@ -101,6 +101,13 @@ libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
     }
+    if (((spdm_context->connection_info.algorithm.other_params_support &
+          SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_MASK) == SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_NONE)
+        && (opaque_data_length != 0)) {
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                               response_size, response);
+    }
 
     if (opaque_data_length >
         request_size - sizeof(spdm_get_csr_request_t)) {

@@ -225,11 +225,18 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
             spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
             SPDM_KEY_EXCHANGE, response_size, response);
     }
-    if (spdm_context->connection_info.connection_state <
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
+    if (spdm_context->connection_info.connection_state < LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNEXPECTED_REQUEST,
                                                0, response_size, response);
+    }
+    if (libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_12) {
+        if ((spdm_context->connection_info.algorithm.other_params_support &
+             SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_MASK) != SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1) {
+            return libspdm_generate_error_response(
+                spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
+                0, response_size, response);
+        }
     }
     if (spdm_context->last_spdm_request_session_id_valid) {
         return libspdm_generate_error_response(spdm_context,

@@ -252,6 +252,8 @@ libspdm_return_t libspdm_get_response_algorithms(libspdm_context_t *spdm_context
 
     uint32_t other_params_support_priority_table[] = {
         SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1,
+        SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_0,
+        SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_NONE
     };
 
     spdm_request = request;
@@ -389,6 +391,20 @@ libspdm_return_t libspdm_get_response_algorithms(libspdm_context_t *spdm_context
                 response_size, response);
         }
     }
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+        switch (spdm_request->other_params_support & SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_MASK) {
+        case SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_NONE:
+        case SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_0:
+        case SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1:
+            break;
+        default:
+            return libspdm_generate_error_response(
+                spdm_context,
+                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                response_size, response);
+        }
+    }
+
     request_size = (size_t)struct_table - (size_t)spdm_request;
     if (request_size != spdm_request->length) {
         return libspdm_generate_error_response(

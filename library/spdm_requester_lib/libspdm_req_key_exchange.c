@@ -318,6 +318,12 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
     if (spdm_context->connection_info.connection_state < LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
+    if (libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_12) {
+        if ((spdm_context->connection_info.algorithm.other_params_support &
+             SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_MASK) != SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1) {
+            return LIBSPDM_STATUS_INVALID_STATE_PEER;
+        }
+    }
 
     req_session_id = libspdm_allocate_req_session_id(spdm_context, false);
     if (req_session_id == (INVALID_SESSION_ID & 0xFFFF))

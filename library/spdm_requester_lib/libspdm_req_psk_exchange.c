@@ -174,9 +174,14 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP)) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
-    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL, SPDM_PSK_EXCHANGE);
     if (spdm_context->connection_info.connection_state < LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
+    }
+    if (libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_12) {
+        if ((spdm_context->connection_info.algorithm.other_params_support &
+             SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_MASK) != SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1) {
+            return LIBSPDM_STATUS_INVALID_STATE_PEER;
+        }
     }
 
     req_session_id = libspdm_allocate_req_session_id(spdm_context, true);
@@ -185,6 +190,7 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
         return LIBSPDM_STATUS_SESSION_NUMBER_EXCEED;
     }
 
+    libspdm_reset_message_buffer_via_request_code(spdm_context, NULL, SPDM_PSK_EXCHANGE);
     {
         /* Double check if algorithm has been provisioned, because ALGORITHM might be skipped.*/
         if (libspdm_is_capabilities_flag_supported(

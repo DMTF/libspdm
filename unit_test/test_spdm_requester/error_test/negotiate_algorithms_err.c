@@ -1284,9 +1284,9 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
         spdm_response->header.param1 = 4;
         spdm_response->header.param2 = 0;
         spdm_response->length = sizeof(libspdm_algorithms_response_spdm11_t);
-        spdm_response->measurement_specification_sel =
-            SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-        spdm_response->other_params_selection = 0;
+        spdm_response->measurement_specification_sel = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+        /* Return illegal value for OpaqueDataFmt. */
+        spdm_response->other_params_selection = 0x3;
         spdm_response->measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
         spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
         spdm_response->base_hash_sel = m_libspdm_use_hash_algo;
@@ -1589,8 +1589,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
             SPDM_MEASUREMENT_SPECIFICATION_DMTF;
         /* Two bits set when only one should be set. */
         spdm_response->other_params_selection =
-            SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_0 |
-            SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1;
+            SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_0 | SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1;
         spdm_response->measurement_hash_algo =
             m_libspdm_use_measurement_hash_algo;
         spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
@@ -2753,7 +2752,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case34(void **stat
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
 
     status = libspdm_negotiate_algorithms (spdm_context);
-    assert_int_equal (status, LIBSPDM_STATUS_NEGOTIATION_FAIL);
+    assert_int_equal (status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
 /**
@@ -3010,7 +3009,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case41(void **stat
     libspdm_reset_message_a(spdm_context);
 
     status = libspdm_negotiate_algorithms(spdm_context);
-    assert_int_equal(status, LIBSPDM_STATUS_NEGOTIATION_FAIL);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
 /**

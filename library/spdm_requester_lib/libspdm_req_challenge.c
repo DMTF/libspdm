@@ -256,6 +256,15 @@ static libspdm_return_t libspdm_try_challenge(libspdm_context_t *spdm_context,
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
+    if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+        if (((spdm_context->connection_info.algorithm.other_params_support &
+              SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_MASK) ==
+             SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_NONE) &&
+            (opaque_length != 0)) {
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+            goto receive_done;
+        }
+    }
     ptr += sizeof(uint16_t);
     if (opaque_length != 0) {
         result = libspdm_process_general_opaque_data_check(spdm_context, opaque_length, ptr);

@@ -35,6 +35,7 @@ static libspdm_return_t libspdm_try_get_csr(libspdm_context_t *spdm_context,
                                             void *csr, size_t *csr_len)
 {
     libspdm_return_t status;
+    libspdm_return_t warning;
     spdm_get_csr_request_t *spdm_request;
     size_t spdm_request_size;
     spdm_csr_response_t *spdm_response;
@@ -44,6 +45,8 @@ static libspdm_return_t libspdm_try_get_csr(libspdm_context_t *spdm_context,
     size_t message_size;
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
+
+    warning = LIBSPDM_STATUS_SUCCESS;
 
     if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_12) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
@@ -99,6 +102,15 @@ static libspdm_return_t libspdm_try_get_csr(libspdm_context_t *spdm_context,
         libspdm_copy_mem(spdm_request + 1,
                          spdm_request_size - sizeof(spdm_get_csr_request_t),
                          (uint8_t *)requester_info, requester_info_length);
+    }
+
+    if (((spdm_context->connection_info.algorithm.other_params_support &
+          SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_MASK) == SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_NONE) &&
+        (opaque_data_length != 0)) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Overriding opaque_data_length to 0 since there is "
+                       "no negotiated opaque data format.\n"));
+        opaque_data_length = 0;
+        warning = LIBSPDM_STATUS_OVERRIDDEN_PARAMETER;
     }
 
     if (opaque_data_length != 0) {
@@ -175,6 +187,10 @@ static libspdm_return_t libspdm_try_get_csr(libspdm_context_t *spdm_context,
 
 receive_done:
     libspdm_release_receiver_buffer (spdm_context);
+
+    if (LIBSPDM_STATUS_IS_SUCCESS(status) && LIBSPDM_STATUS_IS_WARNING(warning)) {
+        status = warning;
+    }
     return status;
 }
 
