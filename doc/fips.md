@@ -12,16 +12,16 @@ libspdm integrator is expected to choose crypto module and support CMVP.
 
 | SPDM Algorithm      | Specification                             | Type | Test Attributes      |
 | ------------------- | ----------------------------------------- | ---- | -------------------- |
-| SHA-256/384/512     | [NIST.FIPS.180-4](https://doi.org/10.6028/NIST.FIPS.180-4)   | KAT  | SHA-256/512          |
-| SHA3-256/384/512    | [NIST.FIPS.202](https://doi.org/10.6028/NIST.FIPS.202)     | KAT  | SHA3-256             |
+| SHA-256/384/512     | [NIST.FIPS.180-4](https://doi.org/10.6028/NIST.FIPS.180-4)   | KAT  | SHA-256/384/512 |
+| SHA3-256/384/512    | [NIST.FIPS.202](https://doi.org/10.6028/NIST.FIPS.202)     | KAT  | SHA3-256/384/512 |
 | RSA-SSA             | [NIST.FIPS.186-5](https://doi.org/10.6028/NIST.FIPS.186-5), [rfc8017](https://tools.ietf.org/html/rfc8017)   | KAT  | RSA-SSA2048 + SHA256 |
 | RSA-PSS             | [NIST.FIPS.186-5](https://doi.org/10.6028/NIST.FIPS.186-5), [rfc8017](https://tools.ietf.org/html/rfc8017)   | PCT  | RSA-PSS2048 + SHA256 |
-| ECDSA               | [NIST.FIPS.186-5](https://doi.org/10.6028/NIST.FIPS.186-5), [NIST.SP.800-186](https://doi.org/10.6028/NIST.SP.800-186)  | PCT  | ECDSA-P256+SHA256    |
-| EdDSA               | [NIST.FIPS.186-5](https://doi.org/10.6028/NIST.FIPS.186-5), [NIST.SP.800-186](https://doi.org/10.6028/NIST.SP.800-186), [rfc8032](https://www.rfc-editor.org/rfc/rfc8032)  | KAT  | EdDSA-25519          |
-| HMAC                | [NIST.FIPS.198-1](https://doi.org/10.6028/NIST.FIPS.198-1), [rfc2104](https://tools.ietf.org/html/rfc2104)   | KAT  | HMAC-SHA-256         |
+| ECDSA               | [NIST.FIPS.186-5](https://doi.org/10.6028/NIST.FIPS.186-5), [NIST.SP.800-186](https://doi.org/10.6028/NIST.SP.800-186)  | KAT with fixed random | ECDSA-P256+SHA256    |
+| EdDSA               | [NIST.FIPS.186-5](https://doi.org/10.6028/NIST.FIPS.186-5), [NIST.SP.800-186](https://doi.org/10.6028/NIST.SP.800-186), [rfc8032](https://www.rfc-editor.org/rfc/rfc8032)  | KAT  | EdDSA-25519,EdDSA-448 |
+| HMAC                | [NIST.FIPS.198-1](https://doi.org/10.6028/NIST.FIPS.198-1), [rfc2104](https://tools.ietf.org/html/rfc2104)   | KAT  | HMAC-SHA-256/384/512 |
 | AES-GCM             | [NIST.FIPS.197](https://doi.org/10.6028/NIST.FIPS.197), [NIST.SP.800-38D](https://doi.org/10.6028/NIST.SP.800-38D)   | KAT  | AES-GCM-256          |
 | FFDHE               | [NIST.SP.800-56Ar3](https://doi.org/10.6028/NIST.SP.800-56Ar3), [rfc7919](https://www.rfc-editor.org/rfc/rfc7919) | PCT  | FFDHE-2048           |
-| ECDHE               | [NIST.SP.800-56Ar3](https://doi.org/10.6028/NIST.SP.800-56Ar3), [rfc8446](https://www.rfc-editor.org/rfc/rfc8446) | PCT  | ECDHE-P256           |
+| ECDHE               | [NIST.SP.800-56Ar3](https://doi.org/10.6028/NIST.SP.800-56Ar3), [rfc8446](https://www.rfc-editor.org/rfc/rfc8446) | KAT  | ECDHE-P256           |
 | HKDF                | [NIST.SP.800-56Cr2](https://doi.org/10.6028/NIST.SP.800-56Cr2), [rfc5869](https://tools.ietf.org/html/rfc5869) | KAT  | HKDF-HMAC-SHA-256    |
 | ChaCha-Poly (*) | [rfc8439](https://www.rfc-editor.org/rfc/rfc8439) | KAT | not FIPS approved yet |
 | SM3 (*) | [GB/T 32905-2016,GM/T 0004-2012](http://www.gmbz.org.cn/upload/2018-07-24/1532401392982079739.pdf), [ISO/IEC 10118-3:2018](https://www.iso.org/standard/67116.html) | KAT | not FIPS approved yet |
@@ -44,6 +44,8 @@ Reference:
 Not implemented in the libspdm. The integrator may build libspdm as a binary and do self test.
 
 ## Implementation
+
+Please refer to [FIPS discussion](https://github.com/DMTF/libspdm/discussions/1406) for detail.
 
 ### FIPS configuration
 
