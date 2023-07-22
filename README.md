@@ -22,9 +22,13 @@
 
 2) Includes libraries that can be used to construct an SPDM Requester and an SPDM Responder.
 
+   Please refer to [libspdm API](https://github.com/DMTF/libspdm/tree/main/doc/api).
+
 3) Programming Context
 
    The core libraries in `libspdm/library` require only the C99 freestanding headers and so are suitable for embedded and systems programming. Any functionality beyond the freestanding headers is provided by `libspdm/os_stub` or by the library's Integrator. All statically allocated memory in the core libraries is read-only. The core libraries do not dynamically allocate memory.
+
+   Please refer to [programming environment](https://github.com/DMTF/libspdm/blob/main/doc/programming_environment.md).
 
 4) Implemented Requests and Responses
 
@@ -34,18 +38,24 @@
 
    SPDM 1.2: `GET_CSR`, `SET_CERTIFICATE`, `CHUNK_SEND`, and `CHUNK_GET`.
 
-5) Cryptographic Algorithm Support
+5) Cryptography Support
 
    The SPDM library requires [cryptolib API](https://github.com/DMTF/libspdm/blob/main/include/hal/library/cryptlib.h), including random number generation, symmetric cryptography, asymmetric cryptography, hash, and message authentication code.
 
    Currently supported algorithms: Hash:SHA2/SHA3/SM3, Signature:RSA-SSA/RSA-PSS/ECDSA/EdDSA/SM2-Sign, KeyExchange:FFDHE/ECDHE/SM2-KeyExchange, AEAD:AES_GCM/ChaCha20Poly1305/SM4_GCM.
    NOTE: NIST algorithms and Shang-Mi (SM) algorithms should not be mixed together.
 
+   The endianness is defined in [crypto_endianness](https://github.com/DMTF/libspdm/blob/main/doc/crypto_endianness.md).
+
    An [Mbed TLS](https://tls.mbed.org/) wrapper is included in [cryptlib_mbedtls](https://github.com/DMTF/libspdm/tree/main/os_stub/mbedtlslib).
    NOTE: SMx and EdDSA are not supported.
 
    An [OpenSSL](https://www.openssl.org/) wrapper is included in [cryptlib_openssl](https://github.com/DMTF/libspdm/tree/main/os_stub/openssllib).
    NOTE: SM2-KeyExchange and SM4_GCM are not supported.
+
+   Since 3.0.0, libspdm starts adding [FIPS 140-3](https://csrc.nist.gov/publications/detail/fips/140/3/final) support. Please refer to [libspdm FIPS](https://github.com/DMTF/libspdm/blob/main/doc/fips.md).
+
+   Since 3.0.0, libspdm uses [RFC7250](https://www.rfc-editor.org/rfc/rfc7250) defined public key format. Please refer to [libspdm raw public key](https://github.com/DMTF/libspdm/blob/main/doc/raw_public_key.md).
 
 6) Execution Context
 
@@ -56,6 +66,8 @@
    Support to be included in [OpenBMC](https://github.com/openbmc). It is in planning, see [SPDM Integration](https://www.youtube.com/watch?v=PmgXkLJYI-E).
 
    Support to be linked by other language. For example, [JAVA verifier](https://github.com/altera-opensource/verifier).
+
+   Support interoperability testing with other SPDM implementations. For example, [intel-server-prot-spdm](https://github.com/intel/intel-server-prot-spdm) and [rust-spdm](https://github.com/intel/rust-spdm).
 
 7) Supported Architecture and Cross-Compiler based on X64 platform.
 
