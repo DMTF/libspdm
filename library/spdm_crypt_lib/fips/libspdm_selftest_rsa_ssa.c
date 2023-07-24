@@ -156,14 +156,14 @@ bool libspdm_fips_selftest_rsa_ssa(void *fips_selftest_context)
 
     rsa = libspdm_rsa_new();
     if (rsa == NULL) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "RSA_PSS rsa new failed \n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "RSA_SSA rsa new failed \n"));
         result = false;
         goto update;
     }
 
     result = libspdm_rsa_set_key(rsa, LIBSPDM_RSA_KEY_N, public_n, sizeof(public_n));
     if (!result) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "RSA_PSS rsa set key failed \n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "RSA_SSA rsa set key failed \n"));
         libspdm_rsa_free(rsa);
         result = false;
         goto update;
@@ -171,7 +171,7 @@ bool libspdm_fips_selftest_rsa_ssa(void *fips_selftest_context)
 
     result = libspdm_rsa_set_key(rsa, LIBSPDM_RSA_KEY_E, e, sizeof(e));
     if (!result) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "RSA_PSS rsa set key failed \n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "RSA_SSA rsa set key failed \n"));
         libspdm_rsa_free(rsa);
         result = false;
         goto update;
@@ -179,7 +179,7 @@ bool libspdm_fips_selftest_rsa_ssa(void *fips_selftest_context)
 
     result = libspdm_rsa_set_key(rsa, LIBSPDM_RSA_KEY_D, private_d, sizeof(private_d));
     if (!result) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "RSA_PSS rsa set key failed \n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "RSA_SSA rsa set key failed \n"));
         libspdm_rsa_free(rsa);
         result = false;
         goto update;
@@ -189,7 +189,7 @@ bool libspdm_fips_selftest_rsa_ssa(void *fips_selftest_context)
                                              input_data, sizeof(input_data),
                                              signature, &sig_size);
     if (!result) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "RSA_PSS rsa sign failed \n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "RSA_SSA rsa sign failed \n"));
         libspdm_rsa_free(rsa);
         result = false;
         goto update;
@@ -197,7 +197,7 @@ bool libspdm_fips_selftest_rsa_ssa(void *fips_selftest_context)
 
     /*KAT test*/
     if (sig_size != sizeof(expected_sig)) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "RSA_PSS KAT failed \n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "RSA_SSA KAT failed \n"));
         libspdm_rsa_free(rsa);
         result = false;
         goto update;
@@ -205,7 +205,7 @@ bool libspdm_fips_selftest_rsa_ssa(void *fips_selftest_context)
 
     if (!libspdm_consttime_is_mem_equal(signature, expected_sig,
                                         sizeof(expected_sig))) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "RSA_PSS KAT failed \n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "RSA_SSA KAT failed \n"));
         libspdm_rsa_free(rsa);
         result = false;
         goto update;
@@ -215,7 +215,7 @@ bool libspdm_fips_selftest_rsa_ssa(void *fips_selftest_context)
                                                input_data, sizeof(input_data),
                                                signature, sig_size);
     if (!result) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "RSA_PSS selftest failed \n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "RSA_SSA selftest failed \n"));
         libspdm_rsa_free(rsa);
         result = false;
         goto update;
