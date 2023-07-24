@@ -33,7 +33,7 @@ void libspdm_test_process_opaque_data_case1(void **State)
 
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
-        SPDM_MESSAGE_VERSION_10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        SECURED_SPDM_VERSION_10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     libspdm_process_opaque_data_supported_version_data(
         spdm_context, spdm_test_context->test_buffer_size,
@@ -60,7 +60,7 @@ void libspdm_test_process_opaque_data_case2(void **State)
 
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
-        SPDM_MESSAGE_VERSION_10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        SECURED_SPDM_VERSION_10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     libspdm_process_opaque_data_supported_version_data(
         spdm_context, spdm_test_context->test_buffer_size,

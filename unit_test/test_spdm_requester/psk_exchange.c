@@ -341,7 +341,7 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)->connection_info.secured_message_version =
-            SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+            SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
             m_libspdm_use_asym_algo;
@@ -1252,7 +1252,7 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)->connection_info.secured_message_version =
-            SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+            SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
             m_libspdm_use_asym_algo;
@@ -1375,7 +1375,7 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)->connection_info.secured_message_version =
-            SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+            SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
             m_libspdm_use_asym_algo;
@@ -1508,7 +1508,7 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)->connection_info.secured_message_version =
-            SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+            SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
             m_libspdm_use_asym_algo;
@@ -1640,7 +1640,7 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)->connection_info.secured_message_version =
-            SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+            SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
             m_libspdm_use_asym_algo;
@@ -1771,7 +1771,7 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)->connection_info.secured_message_version =
-            SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+            SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
             m_libspdm_use_asym_algo;
@@ -1895,7 +1895,7 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)->connection_info.secured_message_version =
-            SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+            SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
             m_libspdm_use_asym_algo;
@@ -2021,7 +2021,7 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)->connection_info.secured_message_version =
-            SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+            SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
             m_libspdm_use_asym_algo;
@@ -2152,7 +2152,7 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)->connection_info.secured_message_version =
-            SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+            SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
             m_libspdm_use_asym_algo;
@@ -2274,7 +2274,7 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)->connection_info.secured_message_version =
-            SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+            SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
             m_libspdm_use_asym_algo;
@@ -2396,7 +2396,7 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)->connection_info.secured_message_version =
-            SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+            SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
             m_libspdm_use_asym_algo;
@@ -2518,7 +2518,7 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)->connection_info.secured_message_version =
-            SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+            SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
             m_libspdm_use_asym_algo;
@@ -2643,7 +2643,7 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)->connection_info.secured_message_version =
-            SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+            SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
             m_libspdm_use_asym_algo;
@@ -2765,7 +2765,7 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)->connection_info.secured_message_version =
-            SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+            SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
             m_libspdm_use_asym_algo;
@@ -2885,7 +2885,7 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)->connection_info.secured_message_version =
-            SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+            SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
             m_libspdm_use_asym_algo;
@@ -3004,7 +3004,7 @@ libspdm_return_t libspdm_requester_psk_exchange_test_receive_message(
         size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)->connection_info.secured_message_version =
-            SPDM_MESSAGE_VERSION_12 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+            SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_asym_algo =
             m_libspdm_use_asym_algo;
@@ -3193,7 +3193,7 @@ void libspdm_test_requester_psk_exchange_case2(void **state)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP_REQUESTER;
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
-        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, &hash, &hash_size);
@@ -3900,7 +3900,7 @@ void libspdm_test_requester_psk_exchange_case13(void **state)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP_REQUESTER;
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
-        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, &hash, &hash_size);
@@ -3981,7 +3981,7 @@ void libspdm_test_requester_psk_exchange_case14(void **state)
         SPDM_MEASUREMENT_SPECIFICATION_DMTF;
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
-        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
@@ -4063,7 +4063,7 @@ void libspdm_test_requester_psk_exchange_case15(void **state)
         SPDM_MEASUREMENT_SPECIFICATION_DMTF;
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
-        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
@@ -4145,7 +4145,7 @@ void libspdm_test_requester_psk_exchange_case16(void **state)
         SPDM_MEASUREMENT_SPECIFICATION_DMTF;
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
-        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
@@ -4228,7 +4228,7 @@ void libspdm_test_requester_psk_exchange_case17(void **state)
         SPDM_MEASUREMENT_SPECIFICATION_DMTF;
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
-        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
@@ -4302,7 +4302,7 @@ void libspdm_test_requester_psk_exchange_case18(void **state)
         SPDM_MEASUREMENT_SPECIFICATION_DMTF;
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
-        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
@@ -4376,7 +4376,7 @@ void libspdm_test_requester_psk_exchange_case19(void **state)
         SPDM_MEASUREMENT_SPECIFICATION_DMTF;
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
-        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
@@ -4450,7 +4450,7 @@ void libspdm_test_requester_psk_exchange_case20(void **state)
         SPDM_MEASUREMENT_SPECIFICATION_DMTF;
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
-        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
 
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
@@ -4531,7 +4531,7 @@ void libspdm_test_requester_psk_exchange_case21(void **state)
         SPDM_MEASUREMENT_SPECIFICATION_DMTF;
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
-        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
 
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
@@ -4623,7 +4623,7 @@ void libspdm_test_requester_psk_exchange_case22(void **state)
         SPDM_MEASUREMENT_SPECIFICATION_DMTF;
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
-        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
 
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
@@ -4707,7 +4707,7 @@ void libspdm_test_requester_psk_exchange_case23(void **state)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP_REQUESTER;
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
-        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, &hash, &hash_size);
@@ -4772,7 +4772,7 @@ void libspdm_test_requester_psk_exchange_case24(void **state)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP_REQUESTER;
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
-        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, &hash, &hash_size);
@@ -4842,7 +4842,7 @@ void libspdm_test_requester_psk_exchange_case25(void **state)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP_REQUESTER;
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
-        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, &hash, &hash_size);
@@ -4912,7 +4912,7 @@ void libspdm_test_requester_psk_exchange_case26(void **state)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP_REQUESTER;
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
-        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, &hash, &hash_size);
@@ -4977,7 +4977,7 @@ void libspdm_test_requester_psk_exchange_case27(void **state)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP_REQUESTER;
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
-        SPDM_MESSAGE_VERSION_12 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.algorithm.other_params_support =
         SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
