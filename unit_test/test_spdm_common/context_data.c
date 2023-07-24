@@ -1078,9 +1078,9 @@ void libspdm_test_process_opaque_data_selection_version_data_case14(void **state
 
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->connection_info.secured_message_version =
-        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
-        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     element_num = 2;
     opaque_data_size =
@@ -1121,9 +1121,9 @@ void libspdm_test_process_opaque_data_selection_version_data_case15(void **state
 
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->connection_info.secured_message_version =
-        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
-        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     /*make element id wrong*/
     element_num = SPDM_REGISTRY_ID_MAX + 2;
@@ -1165,9 +1165,9 @@ void libspdm_test_process_opaque_data_selection_version_data_case16(void **state
 
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->connection_info.secured_message_version =
-        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
-        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     element_num = 2;
     opaque_data_size =
@@ -1207,9 +1207,9 @@ void libspdm_test_process_opaque_data_selection_version_data_case17(void **state
 
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->connection_info.secured_message_version =
-        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
-        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
 
     /*make element id wrong*/
     element_num = SPDM_REGISTRY_ID_MAX + 2;

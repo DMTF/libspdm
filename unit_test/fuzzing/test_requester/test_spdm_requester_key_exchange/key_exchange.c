@@ -279,7 +279,7 @@ void libspdm_test_requester_key_exchange_case1(void **State)
     spdm_context = spdm_test_context->spdm_context;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.secured_message_version = SPDM_MESSAGE_VERSION_11
+    spdm_context->connection_info.secured_message_version = SECURED_SPDM_VERSION_11
                                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
@@ -287,7 +287,7 @@ void libspdm_test_requester_key_exchange_case1(void **State)
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
-        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size,
@@ -355,7 +355,7 @@ void libspdm_test_requester_key_exchange_case2(void **State)
     spdm_context = spdm_test_context->spdm_context;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.secured_message_version = SPDM_MESSAGE_VERSION_11
+    spdm_context->connection_info.secured_message_version = SECURED_SPDM_VERSION_11
                                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
@@ -364,7 +364,7 @@ void libspdm_test_requester_key_exchange_case2(void **State)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
-        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size,
@@ -434,7 +434,7 @@ void libspdm_test_requester_key_exchange_case3(void **State)
     spdm_context = spdm_test_context->spdm_context;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.secured_message_version = SPDM_MESSAGE_VERSION_12
+    spdm_context->connection_info.secured_message_version = SECURED_SPDM_VERSION_11
                                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
@@ -444,7 +444,7 @@ void libspdm_test_requester_key_exchange_case3(void **State)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
-        SPDM_MESSAGE_VERSION_12 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, &hash, &hash_size);
@@ -519,7 +519,7 @@ void libspdm_test_requester_key_exchange_case4(void **State)
     spdm_context = spdm_test_context->spdm_context;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.secured_message_version = SPDM_MESSAGE_VERSION_11
+    spdm_context->connection_info.secured_message_version = SECURED_SPDM_VERSION_11
                                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
@@ -535,7 +535,7 @@ void libspdm_test_requester_key_exchange_case4(void **State)
 
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
-        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, &hash, &hash_size);
@@ -610,7 +610,7 @@ void libspdm_test_requester_key_exchange_case5(void **State)
     spdm_context = spdm_test_context->spdm_context;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.secured_message_version = SPDM_MESSAGE_VERSION_11
+    spdm_context->connection_info.secured_message_version = SECURED_SPDM_VERSION_11
                                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
@@ -626,7 +626,7 @@ void libspdm_test_requester_key_exchange_case5(void **State)
 
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
-        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, &hash, &hash_size);
@@ -706,7 +706,7 @@ void libspdm_test_requester_key_exchange_ex_case1(void **State)
     spdm_context = spdm_test_context->spdm_context;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11
                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.secured_message_version = SPDM_MESSAGE_VERSION_11
+    spdm_context->connection_info.secured_message_version = SECURED_SPDM_VERSION_11
                                                             << SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
@@ -714,7 +714,7 @@ void libspdm_test_requester_key_exchange_ex_case1(void **State)
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
-        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size,
