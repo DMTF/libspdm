@@ -321,7 +321,7 @@ void libspdm_test_requester_key_exchange_case1(void **State)
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
 
     status = libspdm_send_receive_key_exchange(spdm_context,
-                                               SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
+                                               SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
                                                0, 0, &session_id, &heartbeat_period, &slot_id_param,
                                                measurement_hash);
     free(data);
@@ -402,7 +402,7 @@ void libspdm_test_requester_key_exchange_case2(void **State)
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
 
     status = libspdm_send_receive_key_exchange(spdm_context,
-                                               SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
+                                               SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
                                                0, 0, &session_id, &heartbeat_period, &slot_id_param,
                                                measurement_hash);
     free(data);
@@ -485,7 +485,7 @@ void libspdm_test_requester_key_exchange_case3(void **State)
 
     status = libspdm_send_receive_key_exchange(
         spdm_context,
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0xFF,
+        SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0xFF,
         &session_id, &heartbeat_period, &slot_id_param,
         measurement_hash);
 
@@ -576,7 +576,7 @@ void libspdm_test_requester_key_exchange_case4(void **State)
 
     status = libspdm_send_receive_key_exchange(
         spdm_context,
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0xFF,
+        SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0xFF,
         &session_id, &heartbeat_period, &slot_id_param,
         measurement_hash);
 
@@ -667,7 +667,7 @@ void libspdm_test_requester_key_exchange_case5(void **State)
 
     status = libspdm_send_receive_key_exchange(
         spdm_context,
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0xFF,
+        SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0xFF,
         &session_id, &heartbeat_period, &slot_id_param,
         measurement_hash);
 
@@ -748,7 +748,7 @@ void libspdm_test_requester_key_exchange_ex_case1(void **State)
     responder_opaque_data_size = sizeof(responder_opaque_data);
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_send_receive_key_exchange_ex(spdm_context,
-                                                  SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
+                                                  SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
                                                   0, 0,
                                                   &session_id, &heartbeat_period, &slot_id_param,
                                                   measurement_hash, requester_random_in,

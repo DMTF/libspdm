@@ -57,33 +57,33 @@ typedef struct {
 
 libspdm_psk_exchange_request_mine_t m_libspdm_psk_exchange_request1 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_PSK_EXCHANGE,
-      SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0 },
+      SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0 },
 };
 size_t m_libspdm_psk_exchange_request1_size = sizeof(m_libspdm_psk_exchange_request1);
 
 libspdm_psk_exchange_request_mine_t m_libspdm_psk_exchange_request2 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_PSK_EXCHANGE,
-      SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0 },
+      SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0 },
 };
 size_t m_libspdm_psk_exchange_request2_size = sizeof(spdm_psk_exchange_request_t);
 
 libspdm_psk_exchange_request_mine_t m_libspdm_psk_exchange_request3 = {
     { SPDM_MESSAGE_VERSION_12, SPDM_PSK_EXCHANGE,
-      SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0 },
+      SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0 },
 };
 size_t m_libspdm_psk_exchange_request3_size = sizeof(m_libspdm_psk_exchange_request3);
 
 /* Request TCB measurement hash */
 libspdm_psk_exchange_request_mine_t m_libspdm_psk_exchange_request4 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_PSK_EXCHANGE,
-      SPDM_CHALLENGE_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH, 0 },
+      SPDM_PSK_EXCHANGE_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH, 0 },
 };
 size_t m_libspdm_psk_exchange_request4_size = sizeof(m_libspdm_psk_exchange_request4);
 
 /* Request all measurement hash */
 libspdm_psk_exchange_request_mine_t m_libspdm_psk_exchange_request5 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_PSK_EXCHANGE,
-      SPDM_CHALLENGE_REQUEST_ALL_MEASUREMENTS_HASH, 0 },
+      SPDM_PSK_EXCHANGE_REQUEST_ALL_MEASUREMENTS_HASH, 0 },
 };
 size_t m_libspdm_psk_exchange_request5_size = sizeof(m_libspdm_psk_exchange_request5);
 
@@ -96,19 +96,19 @@ size_t m_libspdm_psk_exchange_request6_size = sizeof(m_libspdm_psk_exchange_requ
 
 libspdm_psk_exchange_request_mine_t_noPSKHINT m_libspdm_psk_exchange_request7 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_PSK_EXCHANGE,
-      SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0 },
+      SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0 },
 };
 size_t m_libspdm_psk_exchange_request7_size = sizeof(m_libspdm_psk_exchange_request7);
 
 libspdm_psk_exchange_request_mine_t_noOPAQUE m_libspdm_psk_exchange_request8 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_PSK_EXCHANGE,
-      SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0 },
+      SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0 },
 };
 size_t m_libspdm_psk_exchange_request8_size = sizeof(m_libspdm_psk_exchange_request8);
 
 libspdm_psk_exchange_request_mine_t_noPSKHINT_noOPAQUE m_libspdm_psk_exchange_request9 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_PSK_EXCHANGE,
-      SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0 },
+      SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0 },
 };
 size_t m_libspdm_psk_exchange_request9_size = sizeof(m_libspdm_psk_exchange_request9);
 

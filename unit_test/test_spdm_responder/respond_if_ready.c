@@ -214,7 +214,7 @@ libspdm_key_exchange_request_mine_t m_libspdm_key_exchange_request = {
     {
         SPDM_MESSAGE_VERSION_11,
         SPDM_KEY_EXCHANGE,
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
+        SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
         0
     },
 };
@@ -234,7 +234,7 @@ libspdm_psk_exchange_request_mine_t m_libspdm_psk_exchange_request = {
     {
         SPDM_MESSAGE_VERSION_11,
         SPDM_PSK_EXCHANGE,
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
+        SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
         0
     },
 };

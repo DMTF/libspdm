@@ -3159,7 +3159,7 @@ void libspdm_test_requester_psk_exchange_case1(void **state)
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_send_receive_psk_exchange(
         spdm_context, NULL, 0,
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
+        SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_SEND_FAIL);
     free(data);
@@ -3219,7 +3219,7 @@ void libspdm_test_requester_psk_exchange_case2(void **state)
     status = libspdm_send_receive_psk_exchange(
         spdm_context,
         LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING),
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
+        SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(session_id, 0xFFFFFFFF);
@@ -3281,7 +3281,7 @@ void libspdm_test_requester_psk_exchange_case3(void **state)
     status = libspdm_send_receive_psk_exchange(
         spdm_context,
         LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING),
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
+        SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_STATE_LOCAL);
     free(data);
@@ -3338,7 +3338,7 @@ void libspdm_test_requester_psk_exchange_case4(void **state)
     status = libspdm_send_receive_psk_exchange(
         spdm_context,
         LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING),
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
+        SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
     free(data);
@@ -3395,7 +3395,7 @@ void libspdm_test_requester_psk_exchange_case5(void **state)
     status = libspdm_send_receive_psk_exchange(
         spdm_context,
         LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING),
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
+        SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_BUSY_PEER);
     free(data);
@@ -3453,7 +3453,7 @@ void libspdm_test_requester_psk_exchange_case6(void **state)
     status = libspdm_send_receive_psk_exchange(
         spdm_context,
         LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING),
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
+        SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(session_id, 0xFFFEFFFE);
@@ -3515,7 +3515,7 @@ void libspdm_test_requester_psk_exchange_case7(void **state)
     status = libspdm_send_receive_psk_exchange(
         spdm_context,
         LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING),
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
+        SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_RESYNCH_PEER);
     assert_int_equal(spdm_context->connection_info.connection_state,
@@ -3574,7 +3574,7 @@ void libspdm_test_requester_psk_exchange_case8(void **state)
     status = libspdm_send_receive_psk_exchange(
         spdm_context,
         LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING),
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
+        SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_NOT_READY_PEER);
     free(data);
@@ -3632,7 +3632,7 @@ void libspdm_test_requester_psk_exchange_case9(void **state)
     status = libspdm_send_receive_psk_exchange(
         spdm_context,
         LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING),
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
+        SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
     if (LIBSPDM_RESPOND_IF_READY_SUPPORT) {
         assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
@@ -3696,7 +3696,7 @@ void libspdm_test_requester_psk_exchange_case10(void **state) {
         status = libspdm_send_receive_psk_exchange (spdm_context,
                                                     LIBSPDM_TEST_PSK_HINT_STRING,
                                                     sizeof(LIBSPDM_TEST_PSK_HINT_STRING),
-                                                    SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
+                                                    SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
                                                     0,
                                                     &session_id, &heartbeat_period,
                                                     measurement_hash);
@@ -3780,7 +3780,7 @@ void libspdm_test_requester_psk_exchange_case11(void **state)
     status = libspdm_send_receive_psk_exchange(
         spdm_context,
         LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING),
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
+        SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(session_id, 0xFFFFFFFF);
@@ -3851,7 +3851,7 @@ void libspdm_test_requester_psk_exchange_case12(void **state)
     status = libspdm_send_receive_psk_exchange(
         spdm_context,
         LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING),
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
+        SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(session_id, 0xFFFFFFFF);
@@ -3926,8 +3926,8 @@ void libspdm_test_requester_psk_exchange_case13(void **state)
     status = libspdm_send_receive_psk_exchange(
         spdm_context,
         LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING),
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
-        SPDM_CHALLENGE_REQUEST_ALL_MEASUREMENTS_HASH, &session_id,
+        SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
+        SPDM_PSK_EXCHANGE_REQUEST_ALL_MEASUREMENTS_HASH, &session_id,
         &heartbeat_period, measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(session_id, 0xFFFFFFFF);
@@ -3937,7 +3937,7 @@ void libspdm_test_requester_psk_exchange_case13(void **state)
         LIBSPDM_SESSION_STATE_HANDSHAKING);
     assert_int_equal(
         spdm_context->session_info[0].session_policy,
-        SPDM_CHALLENGE_REQUEST_ALL_MEASUREMENTS_HASH);
+        SPDM_PSK_EXCHANGE_REQUEST_ALL_MEASUREMENTS_HASH);
     free(data);
 }
 
@@ -4008,7 +4008,7 @@ void libspdm_test_requester_psk_exchange_case14(void **state)
     status = libspdm_send_receive_psk_exchange(
         spdm_context,
         LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING),
-        SPDM_CHALLENGE_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH, 0, &session_id,
+        SPDM_PSK_EXCHANGE_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(session_id, 0xFFFFFFFF);
@@ -4090,7 +4090,7 @@ void libspdm_test_requester_psk_exchange_case15(void **state)
     status = libspdm_send_receive_psk_exchange(
         spdm_context,
         LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING),
-        SPDM_CHALLENGE_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH, 0, &session_id,
+        SPDM_PSK_EXCHANGE_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(session_id, 0xFFFFFFFF);
@@ -4173,7 +4173,7 @@ void libspdm_test_requester_psk_exchange_case16(void **state)
     status = libspdm_send_receive_psk_exchange(
         spdm_context,
         LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING),
-        SPDM_CHALLENGE_REQUEST_ALL_MEASUREMENTS_HASH, 0, &session_id,
+        SPDM_PSK_EXCHANGE_REQUEST_ALL_MEASUREMENTS_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(session_id, 0xFFFFFFFF);
@@ -4256,7 +4256,7 @@ void libspdm_test_requester_psk_exchange_case17(void **state)
     status = libspdm_send_receive_psk_exchange(
         spdm_context,
         LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING),
-        SPDM_CHALLENGE_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH, 0, &session_id,
+        SPDM_PSK_EXCHANGE_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_SIZE);
     free(data);
@@ -4330,7 +4330,7 @@ void libspdm_test_requester_psk_exchange_case18(void **state)
     status = libspdm_send_receive_psk_exchange(
         spdm_context,
         LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING),
-        SPDM_KEY_EXCHANGE_REQUEST_ALL_MEASUREMENTS_HASH, 0, &session_id,
+        SPDM_PSK_EXCHANGE_REQUEST_ALL_MEASUREMENTS_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_SIZE);
     free(data);
@@ -4404,7 +4404,7 @@ void libspdm_test_requester_psk_exchange_case19(void **state)
     status = libspdm_send_receive_psk_exchange(
         spdm_context,
         LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING),
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
+        SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     free(data);
@@ -4479,7 +4479,7 @@ void libspdm_test_requester_psk_exchange_case20(void **state)
     status = libspdm_send_receive_psk_exchange(
         spdm_context,
         LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING),
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
+        SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     free(data);
@@ -4560,7 +4560,7 @@ void libspdm_test_requester_psk_exchange_case21(void **state)
     status = libspdm_send_receive_psk_exchange(
         spdm_context,
         LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING),
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
+        SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
     /* clear Heartbeat flags */
     spdm_context->connection_info.capability.flags &=
@@ -4652,7 +4652,7 @@ void libspdm_test_requester_psk_exchange_case22(void **state)
     status = libspdm_send_receive_psk_exchange(
         spdm_context,
         LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING),
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
+        SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
 
     /*clear Heartbeat flags*/
@@ -4730,7 +4730,7 @@ void libspdm_test_requester_psk_exchange_case23(void **state)
     status = libspdm_send_receive_psk_exchange(
         spdm_context,
         LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING),
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
+        SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_VERIF_FAIL);
     free(data);
@@ -4795,7 +4795,7 @@ void libspdm_test_requester_psk_exchange_case24(void **state)
     status = libspdm_send_receive_psk_exchange(
         spdm_context,
         LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING),
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
+        SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(session_id, 0xFFFFFFFF);
@@ -4865,7 +4865,7 @@ void libspdm_test_requester_psk_exchange_case25(void **state)
     status = libspdm_send_receive_psk_exchange(
         spdm_context,
         LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING),
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
+        SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(session_id, 0xFFFFFFFF);
@@ -4935,7 +4935,7 @@ void libspdm_test_requester_psk_exchange_case26(void **state)
     status = libspdm_send_receive_psk_exchange(
         spdm_context,
         LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING),
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
+        SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(session_id, 0xFFFFFFFF);
@@ -5005,8 +5005,8 @@ void libspdm_test_requester_psk_exchange_case27(void **state)
     status = libspdm_send_receive_psk_exchange(
         spdm_context,
         LIBSPDM_TEST_PSK_HINT_STRING, sizeof(LIBSPDM_TEST_PSK_HINT_STRING),
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
-        SPDM_CHALLENGE_REQUEST_ALL_MEASUREMENTS_HASH, &session_id,
+        SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
+        SPDM_PSK_EXCHANGE_REQUEST_ALL_MEASUREMENTS_HASH, &session_id,
         &heartbeat_period, measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(session_id, 0xFFFFFFFF);
@@ -5016,7 +5016,7 @@ void libspdm_test_requester_psk_exchange_case27(void **state)
         LIBSPDM_SESSION_STATE_HANDSHAKING);
     assert_int_equal(
         spdm_context->session_info[0].session_policy,
-        SPDM_CHALLENGE_REQUEST_ALL_MEASUREMENTS_HASH);
+        SPDM_PSK_EXCHANGE_REQUEST_ALL_MEASUREMENTS_HASH);
     free(data);
 }
 

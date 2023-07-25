@@ -4655,7 +4655,7 @@ static void libspdm_test_requester_key_exchange_err_case1(void **state)
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_send_receive_key_exchange(
         spdm_context,
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
+        SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
         &session_id, &heartbeat_period, &slot_id_param,
         measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_SEND_FAIL);
@@ -4727,7 +4727,7 @@ static void libspdm_test_requester_key_exchange_err_case2(void **state)
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_send_receive_key_exchange(
         spdm_context,
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
+        SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
         &session_id, &heartbeat_period, &slot_id_param,
         measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
@@ -4801,7 +4801,7 @@ static void libspdm_test_requester_key_exchange_err_case3(void **state)
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_send_receive_key_exchange(
         spdm_context,
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
+        SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
         &session_id, &heartbeat_period, &slot_id_param,
         measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_STATE_LOCAL);
@@ -4870,7 +4870,7 @@ static void libspdm_test_requester_key_exchange_err_case4(void **state)
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_send_receive_key_exchange(
         spdm_context,
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
+        SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
         &session_id, &heartbeat_period, &slot_id_param,
         measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
@@ -4939,7 +4939,7 @@ static void libspdm_test_requester_key_exchange_err_case5(void **state)
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_send_receive_key_exchange(
         spdm_context,
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
+        SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
         &session_id, &heartbeat_period, &slot_id_param,
         measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_BUSY_PEER);
@@ -4968,7 +4968,7 @@ static void libspdm_test_requester_key_exchange_err_case6(void **state)
     spdm_context->local_context.capability.flags = 0;
 
     status = libspdm_send_receive_key_exchange(
-        spdm_context, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
+        spdm_context, SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
         &session_id, NULL, &slot_id_param, NULL);
     assert_int_equal(status, LIBSPDM_STATUS_UNSUPPORTED_CAP);
 }
@@ -5035,7 +5035,7 @@ static void libspdm_test_requester_key_exchange_err_case7(void **state)
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_send_receive_key_exchange(
         spdm_context,
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
+        SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
         &session_id, &heartbeat_period, &slot_id_param,
         measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_RESYNCH_PEER);
@@ -5106,7 +5106,7 @@ static void libspdm_test_requester_key_exchange_err_case8(void **state)
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_send_receive_key_exchange(
         spdm_context,
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
+        SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
         &session_id, &heartbeat_period, &slot_id_param,
         measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_NOT_READY_PEER);
@@ -5138,7 +5138,7 @@ static void libspdm_test_requester_key_exchange_err_case9(void **state)
 
     libspdm_force_error (LIBSPDM_ERR_ACQUIRE_SENDER_BUFFER);
     status = libspdm_send_receive_key_exchange(
-        spdm_context, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
+        spdm_context, SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
         &session_id, NULL, &slot_id_param, NULL);
     libspdm_release_error (LIBSPDM_ERR_ACQUIRE_SENDER_BUFFER);
 
@@ -5204,7 +5204,7 @@ static void libspdm_test_requester_key_exchange_err_case10(void **state) {
         heartbeat_period = 0;
         libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
         status = libspdm_send_receive_key_exchange (spdm_context,
-                                                    SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
+                                                    SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
                                                     0, 0, &session_id, &heartbeat_period,
                                                     &slot_id_param, measurement_hash);
         LIBSPDM_ASSERT_INT_EQUAL_CASE (status, LIBSPDM_STATUS_ERROR_PEER, error_code);
@@ -5249,7 +5249,7 @@ static void libspdm_test_requester_key_exchange_err_case11(void **state)
 
     libspdm_force_error (LIBSPDM_ERR_ACQUIRE_RECEIVER_BUFFER);
     status = libspdm_send_receive_key_exchange(
-        spdm_context, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
+        spdm_context, SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
         &session_id, NULL, &slot_id_param, NULL);
     libspdm_release_error (LIBSPDM_ERR_ACQUIRE_RECEIVER_BUFFER);
 
@@ -5280,7 +5280,7 @@ static void libspdm_test_requester_key_exchange_err_case12(void **state)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
 
     status = libspdm_send_receive_key_exchange(
-        spdm_context, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
+        spdm_context, SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
         &session_id, NULL, &slot_id_param, NULL);
 
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
@@ -5310,7 +5310,7 @@ static void libspdm_test_requester_key_exchange_err_case13(void **state)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
 
     status = libspdm_send_receive_key_exchange(
-        spdm_context, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
+        spdm_context, SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
         &session_id, NULL, &slot_id_param, NULL);
 
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
@@ -5340,7 +5340,7 @@ static void libspdm_test_requester_key_exchange_err_case14(void **state)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
 
     status = libspdm_send_receive_key_exchange(
-        spdm_context, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
+        spdm_context, SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
         &session_id, NULL, &slot_id_param, NULL);
 
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
@@ -5576,7 +5576,7 @@ static void libspdm_test_requester_key_exchange_err_case17(void **state)
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_send_receive_key_exchange(
         spdm_context,
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
+        SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
         &session_id, &heartbeat_period, &slot_id_param,
         measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_SIZE);
@@ -5655,7 +5655,7 @@ static void libspdm_test_requester_key_exchange_err_case18(void **state)
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_send_receive_key_exchange(
         spdm_context,
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
+        SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
         &session_id, &heartbeat_period, &slot_id_param,
         measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_VERIF_FAIL);
@@ -5743,7 +5743,7 @@ static void libspdm_test_requester_key_exchange_err_case20(void **state)
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_send_receive_key_exchange(
         spdm_context,
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
+        SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
         &session_id, &heartbeat_period, &slot_id_param,
         measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
@@ -5774,7 +5774,7 @@ static void libspdm_test_requester_key_exchange_err_case21(void **state)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
 
     status = libspdm_send_receive_key_exchange(
-        spdm_context, SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
+        spdm_context, SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
         &session_id, NULL, &slot_id_param, NULL);
 
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
@@ -5874,7 +5874,7 @@ static void libspdm_test_requester_key_exchange_err_case26(void **state)
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_send_receive_key_exchange(
         spdm_context,
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
+        SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
         &session_id, &heartbeat_period, &slot_id_param,
         measurement_hash);
     /* Clear Mut_auth flags */
@@ -5964,7 +5964,7 @@ static void libspdm_test_requester_key_exchange_err_case27(void **state)
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_send_receive_key_exchange(
         spdm_context,
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
+        SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
         &session_id, &heartbeat_period, &slot_id_param,
         measurement_hash);
     /*Clear Mut_auth flags*/
@@ -6054,7 +6054,7 @@ static void libspdm_test_requester_key_exchange_err_case28(void **state)
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_send_receive_key_exchange(
         spdm_context,
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
+        SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
         &session_id, &heartbeat_period, &slot_id_param,
         measurement_hash);
     /* Clear Mut_auth flags */
@@ -6156,7 +6156,7 @@ static void libspdm_test_requester_key_exchange_err_case31(void **state)
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_send_receive_key_exchange(
         spdm_context,
-        SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
+        SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
         &session_id, &heartbeat_period, &slot_id_param,
         measurement_hash);
     /* Clear Mut_auth flags */

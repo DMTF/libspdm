@@ -25,27 +25,27 @@ typedef struct {
 
 libspdm_key_exchange_request_mine_t m_libspdm_key_exchange_request1 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_KEY_EXCHANGE,
-      SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0 },
+      SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0 },
 };
 size_t m_libspdm_key_exchange_request1_size = sizeof(m_libspdm_key_exchange_request1);
 
 libspdm_key_exchange_request_mine_t m_libspdm_key_exchange_request2 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_KEY_EXCHANGE,
-      SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0 },
+      SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0 },
 };
 size_t m_libspdm_key_exchange_request2_size = sizeof(spdm_key_exchange_request_t);
 
 /* Request TCB measurement hash */
 libspdm_key_exchange_request_mine_t m_libspdm_key_exchange_request3 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_KEY_EXCHANGE,
-      SPDM_CHALLENGE_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH, 0 },
+      SPDM_KEY_EXCHANGE_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH, 0 },
 };
 size_t m_libspdm_key_exchange_request3_size = sizeof(m_libspdm_key_exchange_request3);
 
 /* Request all measurement hash */
 libspdm_key_exchange_request_mine_t m_libspdm_key_exchange_request4 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_KEY_EXCHANGE,
-      SPDM_CHALLENGE_REQUEST_ALL_MEASUREMENTS_HASH, 0 },
+      SPDM_KEY_EXCHANGE_REQUEST_ALL_MEASUREMENTS_HASH, 0 },
 };
 size_t m_libspdm_key_exchange_request4_size = sizeof(m_libspdm_key_exchange_request4);
 
@@ -59,26 +59,26 @@ size_t m_libspdm_key_exchange_request5_size = sizeof(m_libspdm_key_exchange_requ
 /* Asks for certificate in slot 1 */
 libspdm_key_exchange_request_mine_t m_libspdm_key_exchange_request6 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_KEY_EXCHANGE,
-      SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 1 },
+      SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 1 },
 };
 size_t m_libspdm_key_exchange_request6_size = sizeof(m_libspdm_key_exchange_request6);
 
 /* Asks for previously provisioned raw public key */
 libspdm_key_exchange_request_mine_t m_libspdm_key_exchange_request7 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_KEY_EXCHANGE,
-      SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0xFF },
+      SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0xFF },
 };
 size_t m_libspdm_key_exchange_request7_size = sizeof(m_libspdm_key_exchange_request7);
 
 libspdm_key_exchange_request_mine_t m_libspdm_key_exchange_request8 = {
     { SPDM_MESSAGE_VERSION_12, SPDM_KEY_EXCHANGE,
-      SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0 },
+      SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0 },
 };
 size_t m_libspdm_key_exchange_request8_size = sizeof(m_libspdm_key_exchange_request8);
 
 libspdm_key_exchange_request_mine_t m_libspdm_key_exchange_request9 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_KEY_EXCHANGE,
-      SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 9 },
+      SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 9 },
 };
 size_t m_libspdm_key_exchange_request9_size = sizeof(m_libspdm_key_exchange_request9);
 
