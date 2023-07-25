@@ -204,6 +204,13 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
 
     measurement_summary_hash_size = libspdm_get_measurement_summary_hash_size(
         spdm_context, false, spdm_request->header.param1);
+    if ((measurement_summary_hash_size == 0) &&
+        (spdm_request->header.param1 != SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH)) {
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_INVALID_REQUEST,
+                                               0, response_size, response);
+    }
+
     hmac_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
 
     if (request_size < sizeof(spdm_psk_exchange_request_t)) {
@@ -327,13 +334,6 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
         result = true;
     }
 
-    if ((measurement_summary_hash_size == 0) &&
-        (spdm_request->header.param2 != SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH)) {
-        libspdm_free_session_id(spdm_context, session_id);
-        return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_INVALID_REQUEST,
-                                               0, response_size, response);
-    }
     if (!result) {
         libspdm_free_session_id(spdm_context, session_id);
         return libspdm_generate_error_response(spdm_context,

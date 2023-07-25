@@ -1227,13 +1227,12 @@ void libspdm_test_responder_psk_exchange_case12(void **state)
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
                      SPDM_ERROR);
-    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_UNSPECIFIED);
-
-
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    /* Error before libspdm_reset_message_buffer_via_request_code, so will not libspdm_reset_message_m */
     assert_int_equal(spdm_context->transcript.message_m.buffer_size,
-                     0);
+                     spdm_context->transcript.message_m.max_buffer_size);
 #endif
     free(data1);
 }
