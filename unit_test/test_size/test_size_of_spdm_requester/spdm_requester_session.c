@@ -20,7 +20,7 @@ libspdm_return_t do_session_via_spdm(void *spdm_context)
         spdm_context,
         false, /* KeyExchange*/
         NULL, 0,
-        SPDM_CHALLENGE_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH, 0, 0,
+        SPDM_KEY_EXCHANGE_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH, 0, 0,
         &session_id, &heartbeat_period, measurement_hash);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "libspdm_start_session - %r\n", status));

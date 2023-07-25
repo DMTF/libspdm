@@ -231,7 +231,7 @@ void libspdm_test_requester_psk_exchange_case1(void **State)
     status = libspdm_send_receive_psk_exchange(spdm_context,
                                                LIBSPDM_TEST_PSK_HINT_STRING,
                                                sizeof(LIBSPDM_TEST_PSK_HINT_STRING),
-                                               SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
+                                               SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
                                                0, &session_id, &heartbeat_period, measurement_hash);
     if (status == LIBSPDM_STATUS_SUCCESS) {
         libspdm_reset_message_k(spdm_context, spdm_context->session_info);
@@ -294,7 +294,7 @@ void libspdm_test_requester_psk_exchange_case2(void **State)
     status = libspdm_send_receive_psk_exchange_ex(spdm_context,
                                                   LIBSPDM_TEST_PSK_HINT_STRING,
                                                   sizeof(LIBSPDM_TEST_PSK_HINT_STRING),
-                                                  SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
+                                                  SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
                                                   0, &session_id, &heartbeat_period,
                                                   measurement_hash, NULL, 0,
                                                   NULL, NULL, NULL, NULL, NULL, 0,
@@ -363,7 +363,7 @@ void libspdm_test_requester_psk_exchange_case3(void **State)
     status = libspdm_send_receive_psk_exchange(spdm_context,
                                                LIBSPDM_TEST_PSK_HINT_STRING,
                                                sizeof(LIBSPDM_TEST_PSK_HINT_STRING),
-                                               SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
+                                               SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH,
                                                0, &session_id, &heartbeat_period, measurement_hash);
     if (status == LIBSPDM_STATUS_SUCCESS) {
         libspdm_reset_message_k(spdm_context, spdm_context->session_info);
@@ -426,7 +426,7 @@ void libspdm_test_requester_psk_exchange_ex_case1(void **State)
     status = libspdm_send_receive_psk_exchange_ex(spdm_context,
                                                   LIBSPDM_TEST_PSK_HINT_STRING,
                                                   sizeof(LIBSPDM_TEST_PSK_HINT_STRING),
-                                                  SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0,
+                                                  SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0,
                                                   &session_id, &heartbeat_period, measurement_hash, NULL, 0,
                                                   NULL, NULL, NULL, NULL,
                                                   NULL, 0,
