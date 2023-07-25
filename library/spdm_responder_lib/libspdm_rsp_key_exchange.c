@@ -285,7 +285,7 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
         spdm_context, false, spdm_request->header.param1);
 
     if ((measurement_summary_hash_size == 0) &&
-        (spdm_request->header.param1 != SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH)) {
+        (spdm_request->header.param1 != SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST,
                                                0, response_size, response);

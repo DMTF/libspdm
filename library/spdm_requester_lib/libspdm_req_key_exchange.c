@@ -300,9 +300,9 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
     LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xff));
     LIBSPDM_ASSERT((slot_id != 0xff) ||
                    (spdm_context->local_context.peer_public_key_provision_size != 0));
-    LIBSPDM_ASSERT(measurement_hash_type == SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH ||
-                   measurement_hash_type == SPDM_CHALLENGE_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH ||
-                   measurement_hash_type == SPDM_CHALLENGE_REQUEST_ALL_MEASUREMENTS_HASH);
+    LIBSPDM_ASSERT(measurement_hash_type == SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH ||
+                   measurement_hash_type == SPDM_KEY_EXCHANGE_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH ||
+                   measurement_hash_type == SPDM_KEY_EXCHANGE_REQUEST_ALL_MEASUREMENTS_HASH);
 
     /* -=[Verify State Phase]=- */
     if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_11) {

@@ -1213,11 +1213,11 @@ bool libspdm_generate_measurement_summary_hash(
     bool result;
 
     switch (measurement_summary_hash_type) {
-    case SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH:
+    case SPDM_REQUEST_NO_MEASUREMENT_SUMMARY_HASH:
         break;
 
-    case SPDM_CHALLENGE_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH:
-    case SPDM_CHALLENGE_REQUEST_ALL_MEASUREMENTS_HASH:
+    case SPDM_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH:
+    case SPDM_REQUEST_ALL_MEASUREMENTS_HASH:
         if (measurement_summary_hash_size != libspdm_get_hash_size(base_hash_algo)) {
             return false;
         }
@@ -1275,7 +1275,7 @@ bool libspdm_generate_measurement_summary_hash(
                 .measurement_size;
             /* filter unneeded data*/
             if ((measurement_summary_hash_type ==
-                 SPDM_CHALLENGE_REQUEST_ALL_MEASUREMENTS_HASH) ||
+                 SPDM_REQUEST_ALL_MEASUREMENTS_HASH) ||
                 ((cached_measurment_block
                   ->measurement_block_dmtf_header
                   .dmtf_spec_measurement_value_type &

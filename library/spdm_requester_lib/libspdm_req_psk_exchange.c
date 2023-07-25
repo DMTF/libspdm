@@ -158,9 +158,9 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
     size_t message_size;
     size_t transport_header_size;
 
-    LIBSPDM_ASSERT(measurement_hash_type == SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH ||
-                   measurement_hash_type == SPDM_CHALLENGE_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH ||
-                   measurement_hash_type == SPDM_CHALLENGE_REQUEST_ALL_MEASUREMENTS_HASH);
+    LIBSPDM_ASSERT(measurement_hash_type == SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH ||
+                   measurement_hash_type == SPDM_PSK_EXCHANGE_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH ||
+                   measurement_hash_type == SPDM_PSK_EXCHANGE_REQUEST_ALL_MEASUREMENTS_HASH);
 
     if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_11) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;

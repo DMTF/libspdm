@@ -1158,12 +1158,12 @@ libspdm_get_measurement_summary_hash_size(libspdm_context_t *spdm_context,
     }
 
     switch (measurement_summary_hash_type) {
-    case SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH:
+    case SPDM_REQUEST_NO_MEASUREMENT_SUMMARY_HASH:
         return 0;
         break;
 
-    case SPDM_CHALLENGE_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH:
-    case SPDM_CHALLENGE_REQUEST_ALL_MEASUREMENTS_HASH:
+    case SPDM_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH:
+    case SPDM_REQUEST_ALL_MEASUREMENTS_HASH:
         return libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
         break;
     default:
