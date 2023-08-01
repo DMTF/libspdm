@@ -492,4 +492,130 @@ bool libspdm_rsa_pss_sign(void *rsa_context, size_t hash_nid,
         return true;
     }
 }
+
+#if LIBSPDM_FIPS_MODE
+/**
+ * Carries out the RSA-SSA signature generation with EMSA-PSS encoding scheme for FIPS test.
+ *
+ * This function carries out the RSA-SSA signature generation with EMSA-PSS encoding scheme defined in
+ * RSA PKCS#1 v2.2 for FIPS test.
+ *
+ * The salt length is zero.
+ *
+ * If the signature buffer is too small to hold the contents of signature, false
+ * is returned and sig_size is set to the required buffer size to obtain the signature.
+ *
+ * If rsa_context is NULL, then return false.
+ * If message_hash is NULL, then return false.
+ * If hash_size need match the hash_nid. nid could be SHA256, SHA384, SHA512, SHA3_256, SHA3_384, SHA3_512.
+ * If sig_size is large enough but signature is NULL, then return false.
+ *
+ * @param[in]       rsa_context   Pointer to RSA context for signature generation.
+ * @param[in]       hash_nid      hash NID
+ * @param[in]       message_hash  Pointer to octet message hash to be signed.
+ * @param[in]       hash_size     size of the message hash in bytes.
+ * @param[out]      signature    Pointer to buffer to receive RSA-SSA PSS signature.
+ * @param[in, out]  sig_size      On input, the size of signature buffer in bytes.
+ *                              On output, the size of data returned in signature buffer in bytes.
+ *
+ * @retval  true   signature successfully generated in RSA-SSA PSS.
+ * @retval  false  signature generation failed.
+ * @retval  false  sig_size is too small.
+ *
+ **/
+bool libspdm_rsa_pss_sign_fips(void *rsa_context, size_t hash_nid,
+                               const uint8_t *message_hash, size_t hash_size,
+                               uint8_t *signature, size_t *sig_size)
+{
+    RSA *rsa;
+    bool result;
+    int32_t size;
+    const EVP_MD *evp_md;
+    void *buffer;
+
+    if (rsa_context == NULL || message_hash == NULL) {
+        return false;
+    }
+
+    rsa = (RSA *)rsa_context;
+    size = RSA_size(rsa);
+
+    if (*sig_size < (size_t)size) {
+        *sig_size = size;
+        return false;
+    }
+    *sig_size = size;
+
+    switch (hash_nid) {
+    case LIBSPDM_CRYPTO_NID_SHA256:
+        evp_md = EVP_sha256();
+        if (hash_size != LIBSPDM_SHA256_DIGEST_SIZE) {
+            return false;
+        }
+        break;
+
+    case LIBSPDM_CRYPTO_NID_SHA384:
+        evp_md = EVP_sha384();
+        if (hash_size != LIBSPDM_SHA384_DIGEST_SIZE) {
+            return false;
+        }
+        break;
+
+    case LIBSPDM_CRYPTO_NID_SHA512:
+        evp_md = EVP_sha512();
+        if (hash_size != LIBSPDM_SHA512_DIGEST_SIZE) {
+            return false;
+        }
+        break;
+
+    case LIBSPDM_CRYPTO_NID_SHA3_256:
+        evp_md = EVP_sha3_256();
+        if (hash_size != LIBSPDM_SHA3_256_DIGEST_SIZE) {
+            return false;
+        }
+        break;
+
+    case LIBSPDM_CRYPTO_NID_SHA3_384:
+        evp_md = EVP_sha3_384();
+        if (hash_size != LIBSPDM_SHA3_384_DIGEST_SIZE) {
+            return false;
+        }
+        break;
+
+    case LIBSPDM_CRYPTO_NID_SHA3_512:
+        evp_md = EVP_sha3_512();
+        if (hash_size != LIBSPDM_SHA3_512_DIGEST_SIZE) {
+            return false;
+        }
+        break;
+
+    default:
+        return false;
+    }
+
+    buffer = allocate_pool(size);
+    if (buffer == NULL) {
+        return false;
+    }
+
+    /*salt len is 0*/
+    result = (bool)RSA_padding_add_PKCS1_PSS(
+        rsa, buffer, message_hash, evp_md, 0);
+    if (!result) {
+        free_pool(buffer);
+        return false;
+    }
+
+    size = RSA_private_encrypt(size, buffer, signature, rsa,
+                               RSA_NO_PADDING);
+    free_pool(buffer);
+    if (size <= 0) {
+        return false;
+    } else {
+        LIBSPDM_ASSERT(*sig_size == (size_t)size);
+        return true;
+    }
+}
+#endif /*LIBSPDM_FIPS_MODE*/
+
 #endif /* LIBSPDM_RSA_PSS_SUPPORT */

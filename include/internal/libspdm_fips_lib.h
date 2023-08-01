@@ -22,6 +22,7 @@
 #define LIBSPDM_FIPS_SELF_TEST_FFDH          0x00002000
 #define LIBSPDM_FIPS_SELF_TEST_ECDSA         0x00004000
 #define LIBSPDM_FIPS_SELF_TEST_EDDSA         0x00008000
+#define LIBSPDM_FIPS_SELF_TEST_RSA_PSS       0x00010000
 
 /**
  * HMAC-SHA256 KAT covers SHA256 KAT.
@@ -45,6 +46,11 @@ bool libspdm_fips_selftest_aes_gcm(void *fips_selftest_context);
  * RSA_SSA(RSASSA-PKCS1 v1.5) self_test
  **/
 bool libspdm_fips_selftest_rsa_ssa(void *fips_selftest_context);
+
+/**
+ * RSA_PSS self_test
+ **/
+bool libspdm_fips_selftest_rsa_pss(void *fips_selftest_context);
 
 /**
  * HKDF KAT test

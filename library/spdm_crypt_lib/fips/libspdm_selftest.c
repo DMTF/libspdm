@@ -25,6 +25,7 @@ bool libspdm_fips_run_selftest(void *fips_selftest_context)
     libspdm_fips_selftest_aes_gcm(context);
 
     libspdm_fips_selftest_rsa_ssa(context);
+    libspdm_fips_selftest_rsa_pss(context);
 
     libspdm_fips_selftest_hkdf(context);
 

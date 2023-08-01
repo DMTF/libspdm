@@ -16,6 +16,7 @@ SET(src_spdm_crypt_lib
     fips/libspdm_selftest_hmac.c
     fips/libspdm_selftest_aes_gcm.c
     fips/libspdm_selftest_rsa_ssa.c
+    fips/libspdm_selftest_rsa_pss.c
     fips/libspdm_selftest_hkdf.c
     fips/libspdm_selftest_ecdh.c
     fips/libspdm_selftest_sha2.c

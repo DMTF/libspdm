@@ -95,6 +95,7 @@ The pre-shared key (PSK) is managed by the [requester-psklib](https://github.com
  * `libspdm_fips_selftest_hmac_sha512()`
  * `libspdm_fips_selftest_aes_gcm()`
  * `libspdm_fips_selftest_rsa_ssa()`
+ * `libspdm_fips_selftest_rsa_pss()`
  * `libspdm_fips_selftest_hkdf()`
  * `libspdm_fips_selftest_ecdh()`
  * `libspdm_fips_selftest_sha256()`
