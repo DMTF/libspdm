@@ -180,4 +180,44 @@ bool libspdm_rsa_pss_sign(void *rsa_context, size_t hash_nid,
     LIBSPDM_ASSERT(false);
     return false;
 }
+
+#if LIBSPDM_FIPS_MODE
+/**
+ * Carries out the RSA-SSA signature generation with EMSA-PSS encoding scheme for FIPS test.
+ *
+ * This function carries out the RSA-SSA signature generation with EMSA-PSS encoding scheme defined in
+ * RSA PKCS#1 v2.2 for FIPS test.
+ *
+ * The salt length is zero.
+ *
+ * If the signature buffer is too small to hold the contents of signature, false
+ * is returned and sig_size is set to the required buffer size to obtain the signature.
+ *
+ * If rsa_context is NULL, then return false.
+ * If message_hash is NULL, then return false.
+ * If hash_size need match the hash_nid. nid could be SHA256, SHA384, SHA512, SHA3_256, SHA3_384, SHA3_512.
+ * If sig_size is large enough but signature is NULL, then return false.
+ *
+ * @param[in]       rsa_context   Pointer to RSA context for signature generation.
+ * @param[in]       hash_nid      hash NID
+ * @param[in]       message_hash  Pointer to octet message hash to be signed.
+ * @param[in]       hash_size     size of the message hash in bytes.
+ * @param[out]      signature    Pointer to buffer to receive RSA-SSA PSS signature.
+ * @param[in, out]  sig_size      On input, the size of signature buffer in bytes.
+ *                              On output, the size of data returned in signature buffer in bytes.
+ *
+ * @retval  true   signature successfully generated in RSA-SSA PSS.
+ * @retval  false  signature generation failed.
+ * @retval  false  sig_size is too small.
+ *
+ **/
+bool libspdm_rsa_pss_sign_fips(void *rsa_context, size_t hash_nid,
+                               const uint8_t *message_hash, size_t hash_size,
+                               uint8_t *signature, size_t *sig_size)
+{
+    LIBSPDM_ASSERT(false);
+    return false;
+}
+#endif /*LIBSPDM_FIPS_MODE*/
+
 #endif /* LIBSPDM_RSA_PSS_SUPPORT */
