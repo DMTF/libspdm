@@ -982,16 +982,16 @@ bool libspdm_get_leaf_cert_public_key_from_cert_chain(uint32_t base_hash_algo,
  * @param[in]      req_info      Requester info to gen CSR.
  * @param[in]      req_info_len  The len of requester info.
  *
- * @retval  true    Vaild req info, have three situations:
+ * @retval  true    Valid req info, have three situations:
  *                                  1: no req_info
  *                                  2: good format req_info without attributes
  *                                  3: good format req_info with good format attributes
- * @retval  false   Invaild req info.
+ * @retval  false   Invalid req info.
  **/
 bool libspdm_verify_req_info(uint8_t *req_info, uint16_t req_info_len);
 
 #if LIBSPDM_FIPS_MODE
-/*run of all selftests and returns the results.*/
+/*run all of the self-tests and returns the results.*/
 bool libspdm_fips_run_selftest(void *fips_selftest_context);
 #endif
 

@@ -10,7 +10,7 @@
 
 #if LIBSPDM_FIPS_MODE
 
-/*run of all selftests and returns the results.*/
+/*run all of the self-tests and returns the results.*/
 bool libspdm_fips_run_selftest(void *fips_selftest_context)
 {
     libspdm_fips_selftest_context *context;
