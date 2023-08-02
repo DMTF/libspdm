@@ -144,10 +144,8 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
    libspdm_set_data (spdm_context, LIBSPDM_DATA_LOCAL_PUBLIC_KEY, &parameter, local_public_key, local_public_key_size);
    ```
 
-   1.7, if PSK is required, optionally deploy PSK Hint.
-   ```
-   libspdm_set_data (spdm_context, LIBSPDM_DATA_PSK_HINT, NULL, psk_hint, psk_hint_size);
-   ```
+   1.7, if PSK is required, optionally deploy PSK Hint in the call to libspdm_start_session().
+   See section 5.1 below.
 
 2. Create connection with the Responder
 
@@ -418,10 +416,7 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
    libspdm_set_data (spdm_context, LIBSPDM_DATA_LOCAL_PUBLIC_KEY, &parameter, local_public_key, local_public_key_size);
    ```
 
-   1.7, if PSK is required, optionally deploy PSK Hint.
-   ```
-   libspdm_set_data (spdm_context, LIBSPDM_DATA_PSK_HINT, NULL, psk_hint, psk_hint_size);
-   ```
+   1.7, if PSK is required, optionally deploy PSK Hint in the call to libspdm_start_session().
 
 2. Dispatch SPDM messages.
 
