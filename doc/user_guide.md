@@ -156,7 +156,7 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
 
 3. Authentication the Responder
 
-   Send GET_DIGESTES, GET_CERTIFICATES and CHALLENGE.
+   Send GET_DIGESTS, GET_CERTIFICATES and CHALLENGE.
    ```
    libspdm_get_digest (spdm_context, session_id, slot_mask, total_digest_buffer);
    libspdm_get_certificate (spdm_context, session_id, slot_id, cert_chain_size, cert_chain);
@@ -318,7 +318,7 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
    libspdm_set_scratch_buffer (spdm_context, m_scratch_buffer, scratch_buffer_size);
    ```
 
-   Optionall, the Integrator can calculate the `scratch_buffer_size` according to the `max_spdm_msg_size` value input to `libspdm_register_transport_layer_func()`, according to `libspdm_get_scratch_buffer_capacity()` API implementation in [libspdm_com_context_data.c](https://github.com/DMTF/libspdm/blob/main/library/spdm_common_lib/libspdm_com_context_data.c). NOTE: The size requirement depends on `LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP` and `LIBSPDM_RESPOND_IF_READY_SUPPORT`.
+   Optionally, the Integrator can calculate the `scratch_buffer_size` according to the `max_spdm_msg_size` value input to `libspdm_register_transport_layer_func()`, according to `libspdm_get_scratch_buffer_capacity()` API implementation in [libspdm_com_context_data.c](https://github.com/DMTF/libspdm/blob/main/library/spdm_common_lib/libspdm_com_context_data.c). NOTE: The size requirement depends on `LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP` and `LIBSPDM_RESPOND_IF_READY_SUPPORT`.
 
    The location of session keys can be separated from spdm_context if desired.
    Each session holds keys in a secured context, and the location of each can be
