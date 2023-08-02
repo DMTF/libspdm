@@ -9,7 +9,7 @@ freestanding headers.
 - stdef.h
 
 If a compiler does not provide at least one of these headers or if at least one of the compiler's
-headers must be overriden by the Integrator's headers then they can be overridden with the
+headers must be overridden by the Integrator's headers then they can be overridden with the
 `LIBSPDM_STDINT_ALT`, `LIBSPDM_STDBOOL_ALT`, or `LIBSPDM_STDDEF_ALT` macros. The inclusion of only
 freestanding headers indicates that the core libraries are suitable for embedded and systems
 programming. Any functionality beyond the freestanding headers is indicated through the

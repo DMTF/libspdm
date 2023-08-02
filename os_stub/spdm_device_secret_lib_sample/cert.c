@@ -385,7 +385,7 @@ bool libspdm_read_responder_public_certificate_chain(
 
     is_requester_cert = false;
 
-    /*defalut is true*/
+    /*default is true*/
     is_device_cert_model = true;
 
     *data = NULL;
@@ -517,7 +517,7 @@ bool libspdm_read_responder_public_certificate_chain_alias_cert_till_dev_cert_ca
 
     is_requester_cert = false;
 
-    /*defalut is false*/
+    /*default is false*/
     is_device_cert_model = false;
 
     *data = NULL;
@@ -661,7 +661,7 @@ bool libspdm_read_responder_public_certificate_chain_per_slot(
 
     is_requester_cert = false;
 
-    /*defalut is true*/
+    /*default is true*/
     is_device_cert_model = true;
 
     *data = NULL;
@@ -829,7 +829,7 @@ bool libspdm_read_requester_public_certificate_chain(
 
     is_requester_cert = false;
 
-    /*defalut is true*/
+    /*default is true*/
     is_device_cert_model = true;
 
     *data = NULL;
