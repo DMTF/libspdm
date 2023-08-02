@@ -33,7 +33,7 @@ bool libspdm_fips_selftest_sha3_256(void *fips_selftest_context)
 
     const uint8_t msg[] = {0x7f, 0x94};
     /*Test Vectors: https://csrc.nist.gov/Projects/Cryptographic-Algorithm-Validation-Program/Secure-Hashing#sha3vsha3vss */
-    uint8_t sha3_256_result[32];
+    uint8_t sha3_256_result[LIBSPDM_MAX_HASH_SIZE];
     const uint8_t sha3_256_answer[] = {
         0xde, 0x01, 0x6a, 0xcf, 0xc1, 0xa2, 0xe2, 0x2e,
         0x39, 0x52, 0x6c, 0x60, 0x9d, 0x9c, 0x69, 0xd8,
@@ -92,7 +92,7 @@ bool libspdm_fips_selftest_sha3_384(void *fips_selftest_context)
         return true;
     }
 
-    uint8_t sha3_384_result[48];
+    uint8_t sha3_384_result[LIBSPDM_MAX_HASH_SIZE];
     /*Test Vectors: https://csrc.nist.gov/Projects/Cryptographic-Algorithm-Validation-Program/Secure-Hashing#sha3vsha3vss */
     const uint8_t msg[] = {0x89, 0xcc};
     const uint8_t sha3_384_answer[] = {
@@ -155,7 +155,7 @@ bool libspdm_fips_selftest_sha3_512(void *fips_selftest_context)
         return true;
     }
 
-    uint8_t sha3_512_result[64];
+    uint8_t sha3_512_result[LIBSPDM_MAX_HASH_SIZE];
     /*Test Vectors: https://csrc.nist.gov/Projects/Cryptographic-Algorithm-Validation-Program/Secure-Hashing#sha3vsha3vss */
     const uint8_t msg[] = {0xb1, 0x39};
     const uint8_t sha3_512_answer[] = {

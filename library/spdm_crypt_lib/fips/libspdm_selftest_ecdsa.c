@@ -46,7 +46,7 @@ bool libspdm_fips_selftest_ecdsa(void *fips_selftest_context)
         return true;
     }
 
-    uint8_t signature[32 * 2];
+    uint8_t signature[LIBSPDM_MAX_ASYM_KEY_SIZE];
     size_t sig_size;
     void *ec_context;
 

@@ -34,9 +34,9 @@ bool libspdm_fips_selftest_eddsa(void *fips_selftest_context)
 #if LIBSPDM_EDDSA_ED25519_SUPPORT
 
     void *ecd_25519;
-    uint8_t signature_25519[32 * 2];
+    uint8_t signature_25519[LIBSPDM_MAX_ASYM_KEY_SIZE];
     size_t sig25519_size;
-    uint8_t get_pub_key_25519[32];
+    uint8_t get_pub_key_25519[LIBSPDM_MAX_ASYM_KEY_SIZE];
     size_t get_pub_key_25519_size = sizeof(get_pub_key_25519);
 
     /*test vectors from https://www.rfc-editor.org/rfc/rfc8032 */
@@ -145,9 +145,9 @@ bool libspdm_fips_selftest_eddsa(void *fips_selftest_context)
 
 #if LIBSPDM_EDDSA_ED448_SUPPORT
     void *ecd_448;
-    uint8_t signature_448[57 * 2];
+    uint8_t signature_448[LIBSPDM_MAX_ASYM_KEY_SIZE];
     size_t sig448_size;
-    uint8_t get_edd48_key[57];
+    uint8_t get_edd48_key[LIBSPDM_MAX_ASYM_KEY_SIZE];
     size_t get_pub_key_448_size = sizeof(get_edd48_key);
 
     /*test vectors from https://www.rfc-editor.org/rfc/rfc8032 */

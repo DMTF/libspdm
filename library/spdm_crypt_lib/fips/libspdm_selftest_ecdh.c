@@ -32,7 +32,7 @@ bool libspdm_fips_selftest_ecdh(void *fips_selftest_context)
     }
 
     void *ec_context;
-    uint8_t common_key[66];
+    uint8_t common_key[LIBSPDM_MAX_DHE_KEY_SIZE];
     size_t common_key_length;
 
     common_key_length = sizeof(common_key);

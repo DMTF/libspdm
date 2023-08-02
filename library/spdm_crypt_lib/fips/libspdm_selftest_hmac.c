@@ -34,7 +34,7 @@ bool libspdm_fips_selftest_hmac_sha256(void *fips_selftest_context)
     const uint8_t key[32] = {0};
     const uint8_t msg[32] = {0};
 
-    uint8_t hmac_256_result[32];
+    uint8_t hmac_256_result[LIBSPDM_MAX_HASH_SIZE];
     const uint8_t hmac_sha256_answer[] = {
         0x33, 0xad, 0x0a, 0x1c, 0x60, 0x7e, 0xc0, 0x3b,
         0x09, 0xe6, 0xcd, 0x98, 0x93, 0x68, 0x0c, 0xe2,
@@ -95,7 +95,7 @@ bool libspdm_fips_selftest_hmac_sha384(void *fips_selftest_context)
     const uint8_t key[32] = {0};
     const uint8_t msg[32] = {0};
 
-    uint8_t hmac_384_result[48];
+    uint8_t hmac_384_result[LIBSPDM_MAX_HASH_SIZE];
     const uint8_t hmac_sha384_answer[] = {
         0xe6, 0x65, 0xec, 0x75, 0xdc, 0xa3, 0x23, 0xdf,
         0x31, 0x80, 0x40, 0x60, 0xe1, 0xb0, 0xd8, 0x28,
@@ -158,7 +158,7 @@ bool libspdm_fips_selftest_hmac_sha512(void *fips_selftest_context)
     const uint8_t key[32] = {0};
     const uint8_t msg[32] = {0};
 
-    uint8_t hmac_512_result[64];
+    uint8_t hmac_512_result[LIBSPDM_MAX_HASH_SIZE];
     const uint8_t hmac_sha512_answer[] = {
         0xba, 0xe4, 0x6c, 0xeb, 0xeb, 0xbb, 0x90, 0x40,
         0x9a, 0xbc, 0x5a, 0xcf, 0x7a, 0xc2, 0x1f, 0xdb,

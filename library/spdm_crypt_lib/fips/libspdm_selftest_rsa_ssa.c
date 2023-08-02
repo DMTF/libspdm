@@ -31,7 +31,7 @@ bool libspdm_fips_selftest_rsa_ssa(void *fips_selftest_context)
         return true;
     }
 
-    uint8_t signature[1024];
+    uint8_t signature[LIBSPDM_MAX_ASYM_KEY_SIZE];
     size_t sig_size;
     void *rsa;
 
