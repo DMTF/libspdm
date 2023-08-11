@@ -15,7 +15,6 @@
 #include <openssl/bn.h>
 #include <openssl/ec.h>
 #include <openssl/objects.h>
-#include <crypto/ec.h>
 
 /**
  * Allocates and Initializes one Elliptic Curve context for subsequent use
@@ -854,7 +853,7 @@ static int libspdm_ecdsa_sign_setup_random(EC_KEY *eckey, BIGNUM **kinvp, BIGNUM
                                            uint8_t* random, size_t random_len)
 {
     BN_CTX *ctx = NULL;
-    BIGNUM *k = NULL, *r = NULL, *X = NULL;
+    BIGNUM *k = NULL, *r = NULL, *X = NULL, *e = NULL;
     const BIGNUM *order;
     EC_POINT *tmp_point = NULL;
     const EC_GROUP *group;
@@ -901,6 +900,11 @@ static int libspdm_ecdsa_sign_setup_random(EC_KEY *eckey, BIGNUM **kinvp, BIGNUM
         goto err;
     }
 
+    e = BN_CTX_get(ctx);
+    if (e == NULL) {
+        return 0;
+    }
+
     /*random number*/
     k = BN_bin2bn(random, random_len, NULL);
 
@@ -915,10 +919,24 @@ static int libspdm_ecdsa_sign_setup_random(EC_KEY *eckey, BIGNUM **kinvp, BIGNUM
         goto err;
     }
 
-    /* compute the inverse of k */
-    if (!ossl_ec_group_do_inverse_ord(group, k, k, ctx)) {
+    /*
+     * compute the inverse of k
+     * Based on ossl_ec_group_do_inverse_ord() from OpenSSL
+     */
+    BN_CTX_start(ctx);
+    if (!BN_set_word(e, 2)) {
+        BN_CTX_end(ctx);
         goto err;
     }
+    if (!BN_sub(e, order, e)) {
+        BN_CTX_end(ctx);
+        goto err;
+    }
+    if (!BN_mod_exp_mont(k, k, e, order, ctx, EC_GROUP_get_mont_data(group))) {
+        BN_CTX_end(ctx);
+        goto err;
+    }
+    BN_CTX_end(ctx);
 
     /* clear old values if necessary */
     BN_clear_free(*rp);
