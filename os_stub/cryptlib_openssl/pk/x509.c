@@ -17,7 +17,6 @@
 #include <openssl/bn.h>
 #include <openssl/pem.h>
 #include <openssl/bio.h>
-#include <crypto/x509.h>
 
 #if LIBSPDM_CERT_PARSE_SUPPORT
 
@@ -2318,7 +2317,7 @@ bool libspdm_set_attribute_for_req(X509_REQ *req, uint8_t *req_info, size_t req_
     /*get subject name from req_info and set it to CSR*/
     x509_req_info = d2i_X509_REQ_INFO(NULL, (const unsigned char **)(&req_info), req_info_len);
     if (x509_req_info) {
-        X509_REQ_set_subject_name(req, x509_req_info->subject);
+        X509_REQ_set_subject_name(req, X509_REQ_get_subject_name((X509_REQ *)x509_req_info));
         X509_REQ_INFO_free(x509_req_info);
     } else {
         return false;
