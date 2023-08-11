@@ -13,7 +13,6 @@
 
 #include "internal_crypt_lib.h"
 #include <openssl/evp.h>
-#include <crypto/evp.h>
 
 /**
  * Allocates and Initializes one Edwards-Curve context for subsequent use
@@ -95,7 +94,6 @@ bool libspdm_ecd_set_pub_key(void *ecd_context, const uint8_t *public_key,
 {
     uint32_t final_pub_key_size;
     EVP_PKEY *evp_key;
-    EVP_PKEY *new_evp_key;
 
     if ((ecd_context == NULL) || (public_key == NULL)) {
         return false;
@@ -118,19 +116,13 @@ bool libspdm_ecd_set_pub_key(void *ecd_context, const uint8_t *public_key,
         return false;
     }
 
-    new_evp_key = EVP_PKEY_new_raw_public_key(EVP_PKEY_id(evp_key), NULL,
-                                              public_key, public_key_size);
+    evp_key = EVP_PKEY_new_raw_public_key(EVP_PKEY_id(evp_key), NULL,
+                                          public_key, public_key_size);
 
-    if (new_evp_key == NULL) {
+    if (evp_key == NULL) {
         return false;
     }
 
-    if (evp_pkey_copy_downgraded(&evp_key, new_evp_key) != 1) {
-        EVP_PKEY_free(new_evp_key);
-        return false;
-    }
-
-    EVP_PKEY_free(new_evp_key);
     return true;
 }
 
@@ -153,7 +145,6 @@ bool libspdm_ecd_set_pri_key(void *ecd_context, const uint8_t *private_key,
 {
     uint32_t final_pri_key_size;
     EVP_PKEY *evp_key;
-    EVP_PKEY *new_evp_key;
 
     if ((ecd_context == NULL) || (private_key == NULL)) {
         return false;
@@ -176,18 +167,12 @@ bool libspdm_ecd_set_pri_key(void *ecd_context, const uint8_t *private_key,
         return false;
     }
 
-    new_evp_key = EVP_PKEY_new_raw_private_key(EVP_PKEY_id(evp_key), NULL,
-                                               private_key, private_key_size);
-    if (new_evp_key == NULL) {
+    evp_key = EVP_PKEY_new_raw_private_key(EVP_PKEY_id(evp_key), NULL,
+                                           private_key, private_key_size);
+    if (evp_key == NULL) {
         return false;
     }
 
-    if (evp_pkey_copy_downgraded(&evp_key, new_evp_key) != 1) {
-        EVP_PKEY_free(new_evp_key);
-        return false;
-    }
-
-    EVP_PKEY_free(new_evp_key);
     return true;
 }
 
