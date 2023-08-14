@@ -14,8 +14,8 @@
 
 #pragma pack(1)
 
-/* 3 means SPDM spec 1.0, 1.1, 1.2 */
-#define SPDM_MAX_VERSION_COUNT 3
+/* 4 means SPDM spec 1.0, 1.1, 1.2, 1.3 */
+#define SPDM_MAX_VERSION_COUNT 4
 #define SPDM_MAX_SLOT_COUNT 8
 #define SPDM_MAX_OPAQUE_DATA_SIZE 1024
 
