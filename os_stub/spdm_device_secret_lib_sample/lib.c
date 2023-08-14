@@ -1496,6 +1496,10 @@ bool libspdm_psk_handshake_secret_hkdf_expand(
     bool result;
     uint8_t handshake_secret[LIBSPDM_MAX_HASH_SIZE];
 
+    if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) >= SPDM_MESSAGE_VERSION_13) {
+        libspdm_set_mem(m_libspdm_my_salt0, sizeof(m_libspdm_my_salt0), 0xff);
+    }
+
     if (psk_hint_size == 0) {
         psk = LIBSPDM_TEST_PSK_DATA_STRING;
         psk_size = sizeof(LIBSPDM_TEST_PSK_DATA_STRING);
