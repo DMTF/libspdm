@@ -1472,6 +1472,7 @@ bool libspdm_responder_data_sign(
 #if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
 
 uint8_t m_libspdm_my_zero_filled_buffer[LIBSPDM_MAX_HASH_SIZE];
+uint8_t m_libspdm_my_salt0[LIBSPDM_MAX_HASH_SIZE];
 uint8_t m_libspdm_bin_str0[0x11] = {
     0x00, 0x00, /* length - to be filled*/
     /* SPDM_VERSION_1_1_BIN_CONCAT_LABEL */
@@ -1512,7 +1513,7 @@ bool libspdm_psk_handshake_secret_hkdf_expand(
 
     hash_size = libspdm_get_hash_size(base_hash_algo);
 
-    result = libspdm_hkdf_extract(base_hash_algo, psk, psk_size, m_libspdm_my_zero_filled_buffer,
+    result = libspdm_hkdf_extract(base_hash_algo, psk, psk_size, m_libspdm_my_salt0,
                                   hash_size, handshake_secret, hash_size);
     if (!result) {
         return result;
@@ -1556,7 +1557,7 @@ bool libspdm_psk_master_secret_hkdf_expand(
 
     hash_size = libspdm_get_hash_size(base_hash_algo);
 
-    result = libspdm_hkdf_extract(base_hash_algo, psk, psk_size, m_libspdm_my_zero_filled_buffer,
+    result = libspdm_hkdf_extract(base_hash_algo, psk, psk_size, m_libspdm_my_salt0,
                                   hash_size, handshake_secret, hash_size);
     if (!result) {
         return result;

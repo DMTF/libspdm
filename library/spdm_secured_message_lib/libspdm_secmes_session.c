@@ -183,7 +183,7 @@ bool libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
     uint8_t bin_str2[128];
     size_t bin_str2_size;
     libspdm_secured_message_context_t *secured_message_context;
-    uint8_t zero_filled_buffer[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t salt0[LIBSPDM_MAX_HASH_SIZE];
 
     secured_message_context = spdm_secured_message_context;
 
@@ -195,12 +195,12 @@ bool libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
             secured_message_context->master_secret.dhe_secret,
             secured_message_context->dhe_key_size);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
-        libspdm_zero_mem(zero_filled_buffer, sizeof(zero_filled_buffer));
+        libspdm_zero_mem(salt0, sizeof(salt0));
         status = libspdm_hkdf_extract(
             secured_message_context->base_hash_algo,
             secured_message_context->master_secret.dhe_secret,
             secured_message_context->dhe_key_size,
-            zero_filled_buffer, hash_size,
+            salt0, hash_size,
             secured_message_context->master_secret.handshake_secret, hash_size);
         if (!status) {
             return false;
