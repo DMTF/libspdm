@@ -2649,12 +2649,14 @@ libspdm_return_t libspdm_init_context_with_secured_context(void *spdm_context,
         sizeof(context->transcript.message_m.buffer);
 #endif
     context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
-    context->local_context.version.spdm_version_count = 3;
+    context->local_context.version.spdm_version_count = SPDM_MAX_VERSION_COUNT;
     context->local_context.version.spdm_version[0] = SPDM_MESSAGE_VERSION_10 <<
                                                      SPDM_VERSION_NUMBER_SHIFT_BIT;
     context->local_context.version.spdm_version[1] = SPDM_MESSAGE_VERSION_11 <<
                                                      SPDM_VERSION_NUMBER_SHIFT_BIT;
     context->local_context.version.spdm_version[2] = SPDM_MESSAGE_VERSION_12 <<
+                                                     SPDM_VERSION_NUMBER_SHIFT_BIT;
+    context->local_context.version.spdm_version[3] = SPDM_MESSAGE_VERSION_13 <<
                                                      SPDM_VERSION_NUMBER_SHIFT_BIT;
     context->local_context.secured_message_version.spdm_version_count = 2;
     context->local_context.secured_message_version.spdm_version[0] =
