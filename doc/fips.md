@@ -15,7 +15,7 @@ libspdm integrator is expected to choose crypto module and support CMVP.
 | SHA-256/384/512     | [NIST.FIPS.180-4](https://doi.org/10.6028/NIST.FIPS.180-4)   | KAT  | SHA-256/384/512 |
 | SHA3-256/384/512    | [NIST.FIPS.202](https://doi.org/10.6028/NIST.FIPS.202)     | KAT  | SHA3-256/384/512 |
 | RSA-SSA             | [NIST.FIPS.186-5](https://doi.org/10.6028/NIST.FIPS.186-5), [rfc8017](https://tools.ietf.org/html/rfc8017)   | KAT  | RSA-SSA2048 + SHA256 |
-| RSA-PSS             | [NIST.FIPS.186-5](https://doi.org/10.6028/NIST.FIPS.186-5), [rfc8017](https://tools.ietf.org/html/rfc8017)   | PCT  | RSA-PSS2048 + SHA256 |
+| RSA-PSS             | [NIST.FIPS.186-5](https://doi.org/10.6028/NIST.FIPS.186-5), [rfc8017](https://tools.ietf.org/html/rfc8017)   | KAT  | RSA-PSS2048 + SHA256 |
 | ECDSA               | [NIST.FIPS.186-5](https://doi.org/10.6028/NIST.FIPS.186-5), [NIST.SP.800-186](https://doi.org/10.6028/NIST.SP.800-186)  | KAT with fixed random | ECDSA-P256+SHA256    |
 | EdDSA               | [NIST.FIPS.186-5](https://doi.org/10.6028/NIST.FIPS.186-5), [NIST.SP.800-186](https://doi.org/10.6028/NIST.SP.800-186), [rfc8032](https://www.rfc-editor.org/rfc/rfc8032)  | KAT  | EdDSA-25519,EdDSA-448 |
 | HMAC                | [NIST.FIPS.198-1](https://doi.org/10.6028/NIST.FIPS.198-1), [rfc2104](https://tools.ietf.org/html/rfc2104)   | KAT  | HMAC-SHA-256/384/512 |
