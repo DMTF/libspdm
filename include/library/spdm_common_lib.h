@@ -620,7 +620,7 @@ void libspdm_register_device_buffer_func(
  *                                 If session_id is NULL, it is a normal message.
  *                                 If session_id is not NULL, it is a secured message.
  * @param  is_app_message          Indicates if it is an APP message or SPDM message.
- * @param  is_requester_message    Indicates if it is a requester message.
+ * @param  is_request_message      Indicates if it is a request message.
  * @param  message_size            Size in bytes of the message data buffer.
  * @param  message                 A pointer to a source buffer to store the message.
  *                                 For normal message, it shall point to the acquired sender buffer.
@@ -635,7 +635,7 @@ void libspdm_register_device_buffer_func(
  **/
 typedef libspdm_return_t (*libspdm_transport_encode_message_func)(
     void *spdm_context, const uint32_t *session_id, bool is_app_message,
-    bool is_requester_message, size_t message_size,
+    bool is_request_message, size_t message_size,
     void *message, size_t *transport_message_size,
     void **transport_message);
 
@@ -655,7 +655,7 @@ typedef libspdm_return_t (*libspdm_transport_encode_message_func)(
  *                                 If session_id is NULL, it is a normal message.
  *                                 If session_id is not NULL, it is a secured message.
  * @param  is_app_message          Indicates if it is an APP message or SPDM message.
- * @param  is_requester_message    Indicates if it is a requester message.
+ * @param  is_request_message      Indicates if it is a request message.
  * @param  transport_message_size  Size in bytes of the transport message data buffer.
  * @param  transport_message       A pointer to a source buffer to store the transport message.
  *                                 For normal message or secured message, it shall point to acquired receiver buffer.
@@ -671,7 +671,7 @@ typedef libspdm_return_t (*libspdm_transport_encode_message_func)(
  **/
 typedef libspdm_return_t (*libspdm_transport_decode_message_func)(
     void *spdm_context, uint32_t **session_id,
-    bool *is_app_message, bool is_requester_message,
+    bool *is_app_message, bool is_request_message,
     size_t transport_message_size, void *transport_message,
     size_t *message_size, void **message);
 

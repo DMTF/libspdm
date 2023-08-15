@@ -62,7 +62,7 @@ libspdm_return_t libspdm_test_decode_message(uint32_t **session_id,
  *                                 If session_id is NULL, it is a normal message.
  *                                 If session_id is not NULL, it is a secured message.
  * @param  is_app_message          Indicates if it is an APP message or SPDM message.
- * @param  is_requester_message    Indicates if it is a requester message.
+ * @param  is_request_message      Indicates if it is a request message.
  * @param  message_size            Size in bytes of the message data buffer.
  * @param  message                 A pointer to a source buffer to store the message.
  *                                 For normal message, it shall point to the acquired sender buffer.
@@ -77,7 +77,7 @@ libspdm_return_t libspdm_test_decode_message(uint32_t **session_id,
  **/
 libspdm_return_t libspdm_transport_test_encode_message(
     void *spdm_context, const uint32_t *session_id, bool is_app_message,
-    bool is_requester_message, size_t message_size, void *message,
+    bool is_request_message, size_t message_size, void *message,
     size_t *transport_message_size, void **transport_message)
 {
     libspdm_return_t status;
@@ -134,7 +134,7 @@ libspdm_return_t libspdm_transport_test_encode_message(
         secured_message = (uint8_t *)*transport_message + transport_header_size;
         secured_message_size = *transport_message_size - transport_header_size;
         status = libspdm_encode_secured_message(
-            secured_message_context, *session_id, is_requester_message,
+            secured_message_context, *session_id, is_request_message,
             app_message_size, app_message, &secured_message_size,
             secured_message, &spdm_secured_message_callbacks);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
@@ -183,7 +183,7 @@ libspdm_return_t libspdm_transport_test_encode_message(
  *                                 If session_id is NULL, it is a normal message.
  *                                 If session_id is not NULL, it is a secured message.
  * @param  is_app_message          Indicates if it is an APP message or SPDM message.
- * @param  is_requester_message    Indicates if it is a requester message.
+ * @param  is_request_message      Indicates if it is a request message.
  * @param  transport_message_size  Size in bytes of the transport message data buffer.
  * @param  transport_message       A pointer to a source buffer to store the transport message.
  *                                 For normal message or secured message, it shall point to acquired receiver buffer.
@@ -199,7 +199,7 @@ libspdm_return_t libspdm_transport_test_encode_message(
  **/
 libspdm_return_t libspdm_transport_test_decode_message(
     void *spdm_context, uint32_t **session_id,
-    bool *is_app_message, bool is_requester_message,
+    bool *is_app_message, bool is_request_message,
     size_t transport_message_size, void *transport_message,
     size_t *message_size, void **message)
 {
@@ -259,7 +259,7 @@ libspdm_return_t libspdm_transport_test_decode_message(
         app_message_size = *message_size;
         status = libspdm_decode_secured_message(
             secured_message_context, *secured_message_session_id,
-            is_requester_message, secured_message_size, secured_message,
+            is_request_message, secured_message_size, secured_message,
             &app_message_size, (void **)&app_message,
             &spdm_secured_message_callbacks);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
