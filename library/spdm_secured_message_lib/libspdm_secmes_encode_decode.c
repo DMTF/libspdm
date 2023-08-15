@@ -11,7 +11,7 @@
  *
  * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
  * @param  session_id                      The session ID of the SPDM session.
- * @param  is_requester_message            Indicates if it is a requester message.
+ * @param  is_request_message              Indicates if it is a request message.
  * @param  app_message_size                size in bytes of the application message data buffer.
  * @param  app_message                     A pointer to a source buffer to store the application message.
  *                                         It shall point to the scratch buffer in spdm_context.
@@ -28,7 +28,7 @@
  **/
 libspdm_return_t libspdm_encode_secured_message(
     void *spdm_secured_message_context, uint32_t session_id,
-    bool is_requester_message, size_t app_message_size,
+    bool is_request_message, size_t app_message_size,
     void *app_message, size_t *secured_message_size,
     void *secured_message,
     const libspdm_secured_message_callbacks_t *spdm_secured_message_callbacks)
@@ -83,7 +83,7 @@ libspdm_return_t libspdm_encode_secured_message(
 
     switch (session_state) {
     case LIBSPDM_SESSION_STATE_HANDSHAKING:
-        if (is_requester_message) {
+        if (is_request_message) {
             key = (const uint8_t *)secured_message_context->handshake_secret.
                   request_handshake_encryption_key;
             salt = (uint8_t *)secured_message_context->handshake_secret.
@@ -100,7 +100,7 @@ libspdm_return_t libspdm_encode_secured_message(
         }
         break;
     case LIBSPDM_SESSION_STATE_ESTABLISHED:
-        if (is_requester_message) {
+        if (is_request_message) {
             key = (const uint8_t *)secured_message_context->application_secret.
                   request_data_encryption_key;
             salt = (uint8_t *)secured_message_context->application_secret.
@@ -139,7 +139,7 @@ libspdm_return_t libspdm_encode_secured_message(
 
     sequence_number++;
     if (session_state == LIBSPDM_SESSION_STATE_HANDSHAKING) {
-        if (is_requester_message) {
+        if (is_request_message) {
             secured_message_context->handshake_secret.request_handshake_sequence_number =
                 sequence_number;
         } else {
@@ -148,7 +148,7 @@ libspdm_return_t libspdm_encode_secured_message(
         }
     }
     else {
-        if (is_requester_message) {
+        if (is_request_message) {
             secured_message_context->application_secret.request_data_sequence_number =
                 sequence_number;
         } else {
@@ -276,7 +276,7 @@ libspdm_return_t libspdm_encode_secured_message(
  *
  * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
  * @param  session_id                      The session ID of the SPDM session.
- * @param  is_requester_message            Indicates if it is a requester message.
+ * @param  is_request_message              Indicates if it is a request message.
  * @param  secured_message_size            size in bytes of the secured message data buffer.
  * @param  secured_message                 A pointer to a source buffer to store the secured message.
  *                                         It shall point to the acquired receiver buffer.
@@ -293,7 +293,7 @@ libspdm_return_t libspdm_encode_secured_message(
  **/
 libspdm_return_t libspdm_decode_secured_message(
     void *spdm_secured_message_context, uint32_t session_id,
-    bool is_requester_message, size_t secured_message_size,
+    bool is_request_message, size_t secured_message_size,
     void *secured_message, size_t *app_message_size,
     void **app_message,
     const libspdm_secured_message_callbacks_t *spdm_secured_message_callbacks)
@@ -353,7 +353,7 @@ libspdm_return_t libspdm_decode_secured_message(
 
     switch (session_state) {
     case LIBSPDM_SESSION_STATE_HANDSHAKING:
-        if (is_requester_message) {
+        if (is_request_message) {
             key = (const uint8_t *)secured_message_context->handshake_secret.
                   request_handshake_encryption_key;
             salt = (uint8_t *)secured_message_context->handshake_secret.
@@ -370,7 +370,7 @@ libspdm_return_t libspdm_decode_secured_message(
         }
         break;
     case LIBSPDM_SESSION_STATE_ESTABLISHED:
-        if (is_requester_message) {
+        if (is_request_message) {
             key = (const uint8_t *)secured_message_context->application_secret.
                   request_data_encryption_key;
             salt = (uint8_t *)secured_message_context->application_secret.
@@ -411,7 +411,7 @@ libspdm_return_t libspdm_decode_secured_message(
 
     sequence_number++;
     if (session_state == LIBSPDM_SESSION_STATE_HANDSHAKING) {
-        if (is_requester_message) {
+        if (is_request_message) {
             secured_message_context->handshake_secret.request_handshake_sequence_number =
                 sequence_number;
         } else {
@@ -420,7 +420,7 @@ libspdm_return_t libspdm_decode_secured_message(
         }
     }
     else {
-        if (is_requester_message) {
+        if (is_request_message) {
             secured_message_context->application_secret.request_data_sequence_number =
                 sequence_number;
         } else {
@@ -485,8 +485,8 @@ libspdm_return_t libspdm_decode_secured_message(
             aead_tag_size, dec_msg, &cipher_text_size);
         if (!result) {
             /* Backup keys are valid, fail and alert rollback and retry is possible. */
-            if ((is_requester_message && secured_message_context->requester_backup_valid) ||
-                ((!is_requester_message) && secured_message_context->responder_backup_valid)) {
+            if ((is_request_message && secured_message_context->requester_backup_valid) ||
+                ((!is_request_message) && secured_message_context->responder_backup_valid)) {
                 return LIBSPDM_STATUS_SESSION_TRY_DISCARD_KEY_UPDATE;
             }
 
@@ -551,8 +551,8 @@ libspdm_return_t libspdm_decode_secured_message(
             NULL, 0, tag, aead_tag_size, NULL, NULL);
         if (!result) {
             /* Backup keys are valid, fail and alert rollback and retry is possible. */
-            if ((is_requester_message && secured_message_context->requester_backup_valid) ||
-                ((!is_requester_message) && secured_message_context->responder_backup_valid)) {
+            if ((is_request_message && secured_message_context->requester_backup_valid) ||
+                ((!is_request_message) && secured_message_context->responder_backup_valid)) {
                 return LIBSPDM_STATUS_SESSION_TRY_DISCARD_KEY_UPDATE;
             }
 
