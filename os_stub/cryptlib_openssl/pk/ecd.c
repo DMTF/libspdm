@@ -12,6 +12,9 @@
  **/
 
 #include "internal_crypt_lib.h"
+
+#if (LIBSPDM_EDDSA_ED25519_SUPPORT) || (LIBSPDM_EDDSA_ED448_SUPPORT)
+
 #include <openssl/evp.h>
 #include <crypto/evp.h>
 
@@ -471,3 +474,4 @@ bool libspdm_eddsa_verify(const void *ecd_context, size_t hash_nid,
     EVP_MD_CTX_free(ctx);
     return true;
 }
+#endif /* (LIBSPDM_EDDSA_ED25519_SUPPORT) || (LIBSPDM_EDDSA_ED448_SUPPORT) */
