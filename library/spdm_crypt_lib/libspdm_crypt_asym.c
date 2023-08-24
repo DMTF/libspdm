@@ -589,12 +589,49 @@ bool libspdm_sm2_dsa_verify_wrap (void *context, size_t hash_nid,
 }
 #endif
 
+static void libspdm_copy_signature_swap_endian(
+    uint8_t *endian_swapped_signature_buffer,
+    size_t   endian_swapped_signature_buffer_size,
+    bool is_dual_buffer,
+    const uint8_t *signature,
+    size_t sig_size)
+{
+    LIBSPDM_ASSERT(endian_swapped_signature_buffer_size >= sig_size);
+
+    size_t i;
+
+    if (is_dual_buffer) {
+        /* ECDSA signature is actually 2 buffers and each must be swapped individually */
+
+        size_t buf_size;
+        const uint8_t* buf;
+
+        buf_size = sig_size / 2;
+        buf = signature;
+        for (i = 0; i < buf_size; i++) {
+            /* Copy the first buffer endian swapped */
+            endian_swapped_signature_buffer[i] = buf[buf_size - i - 1];
+            /* Copy the second buffer endian swapped */
+            endian_swapped_signature_buffer[i + buf_size] = buf[2 * buf_size - i - 1];
+        }
+
+    } else {
+        /* RSA signature is a single buffer to be swapped */
+        for (i = 0; i < sig_size; i++) {
+            endian_swapped_signature_buffer[i] = signature[sig_size - i - 1];
+        }
+    }
+}
+
 static bool libspdm_asym_verify_wrap(
     void *context, size_t hash_nid, uint32_t base_asym_algo,
     const uint8_t *param, size_t param_size,
     const uint8_t *message, size_t message_size,
-    const uint8_t *signature, size_t sig_size)
+    const uint8_t *signature, size_t sig_size, bool try_endian_swapped_signature)
 {
+    bool result;
+    uint8_t endian_swapped_signature[LIBSPDM_MAX_ASYM_SIG_SIZE];
+
     switch (base_asym_algo) {
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
@@ -609,10 +646,22 @@ static bool libspdm_asym_verify_wrap(
 #if !LIBSPDM_RSA_SSA_4096_SUPPORT
         LIBSPDM_ASSERT(base_asym_algo!= SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096);
 #endif
-        return libspdm_rsa_pkcs1_verify_with_nid_wrap(context, hash_nid,
+        result = libspdm_rsa_pkcs1_verify_with_nid_wrap(context, hash_nid,
                                                       param, param_size,
                                                       message, message_size,
                                                       signature, sig_size);
+        if (!result && try_endian_swapped_signature) {
+            libspdm_copy_signature_swap_endian(endian_swapped_signature,
+                                               sizeof(endian_swapped_signature),
+                                               false, signature, sig_size);
+
+            result = libspdm_rsa_pkcs1_verify_with_nid_wrap(context, hash_nid,
+                param, param_size,
+                message, message_size,
+                endian_swapped_signature, sig_size);
+        }
+
+        return result;
 #else
         LIBSPDM_ASSERT(false);
         return false;
@@ -630,10 +679,21 @@ static bool libspdm_asym_verify_wrap(
 #if !LIBSPDM_RSA_PSS_4096_SUPPORT
         LIBSPDM_ASSERT(base_asym_algo!= SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096);
 #endif
-        return libspdm_rsa_pss_verify_wrap(context, hash_nid,
+        result = libspdm_rsa_pss_verify_wrap(context, hash_nid,
                                            param, param_size,
                                            message, message_size,
                                            signature, sig_size);
+        if (!result && try_endian_swapped_signature) {
+            libspdm_copy_signature_swap_endian(endian_swapped_signature,
+                                               sizeof(endian_swapped_signature),
+                                               false, signature, sig_size);
+
+            result = libspdm_rsa_pss_verify_wrap(context, hash_nid,
+                                                 param, param_size,
+                                                 message, message_size,
+                                                 endian_swapped_signature, sig_size);
+        }
+        return result;
 #else
         LIBSPDM_ASSERT(false);
         return false;
@@ -651,10 +711,20 @@ static bool libspdm_asym_verify_wrap(
 #if !LIBSPDM_ECDSA_P521_SUPPORT
         LIBSPDM_ASSERT(base_asym_algo!= SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521);
 #endif
-        return libspdm_ecdsa_verify_wrap(context, hash_nid,
-                                         param, param_size,
-                                         message, message_size,
-                                         signature, sig_size);
+        result = libspdm_ecdsa_verify_wrap(context, hash_nid,
+                                           param, param_size,
+                                           message, message_size,
+                                           signature, sig_size);
+        if (!result && try_endian_swapped_signature) {
+            libspdm_copy_signature_swap_endian(endian_swapped_signature,
+                                               sizeof(endian_swapped_signature),
+                                               true, signature, sig_size);
+
+            result = libspdm_ecdsa_verify_wrap(context, hash_nid,
+                param, param_size,
+                message, message_size,
+                signature, sig_size);
+        }
 #else
         LIBSPDM_ASSERT(false);
         return false;
@@ -692,6 +762,33 @@ static bool libspdm_asym_verify_wrap(
     }
 }
 
+bool libspdm_try_endian_swapped_signature(
+    spdm_version_number_t spdm_version, uint32_t base_asym_algo)
+{
+    bool try_swap = false;
+#if LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_DUAL_ENDIAN_RSA_ECDSA
+
+    if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) == SPDM_MESSAGE_VERSION_10) {
+        try_swap |=
+            (LIBSPDM_SPDM_10_VERIFY_SIGNATURE_DUAL_ENDIAN_RSA &&
+                (base_asym_algo & SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSA_ALL));
+        try_swap |=
+            (LIBSPDM_SPDM_10_VERIFY_SIGNATURE_DUAL_ENDIAN_ECDSA &&
+                (base_asym_algo & SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSA_ALL));
+    }
+
+    if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) == SPDM_MESSAGE_VERSION_11) {
+        try_swap |=
+            (LIBSPDM_SPDM_11_VERIFY_SIGNATURE_DUAL_ENDIAN_RSA &&
+                (base_asym_algo & SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSA_ALL));
+        try_swap |=
+            (LIBSPDM_SPDM_11_VERIFY_SIGNATURE_DUAL_ENDIAN_ECDSA &&
+                (base_asym_algo & SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSA_ALL));
+    }
+#endif /* LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_DUAL_ENDIAN_RSA_ECDSA */
+    return try_swap;
+}
+
 bool libspdm_asym_verify(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint32_t base_asym_algo, uint32_t base_hash_algo,
@@ -708,6 +805,7 @@ bool libspdm_asym_verify(
                                              LIBSPDM_MAX_HASH_SIZE];
     const void *param;
     size_t param_size;
+    bool try_endian_swapped_signature;
 
     hash_nid = libspdm_get_hash_nid(base_hash_algo);
     need_hash = libspdm_asym_func_need_hash(base_asym_algo);
@@ -751,22 +849,29 @@ bool libspdm_asym_verify(
         /* Passthru */
     }
 
+    try_endian_swapped_signature
+        = libspdm_try_endian_swapped_signature(spdm_version, base_asym_algo);
+
     if (need_hash) {
         hash_size = libspdm_get_hash_size(base_hash_algo);
         result = libspdm_hash_all(base_hash_algo, message, message_size, message_hash);
         if (!result) {
             return false;
         }
-        return libspdm_asym_verify_wrap(context, hash_nid, base_asym_algo,
-                                        param, param_size,
-                                        message_hash, hash_size,
-                                        signature, sig_size);
+        result = libspdm_asym_verify_wrap(context, hash_nid, base_asym_algo,
+                                          param, param_size,
+                                          message_hash, hash_size,
+                                          signature, sig_size,
+                                          try_endian_swapped_signature);
     } else {
-        return libspdm_asym_verify_wrap(context, hash_nid, base_asym_algo,
-                                        param, param_size,
-                                        message, message_size,
-                                        signature, sig_size);
+        result = libspdm_asym_verify_wrap(context, hash_nid, base_asym_algo,
+                                          param, param_size,
+                                          message, message_size,
+                                          signature, sig_size,
+                                          try_endian_swapped_signature);
     }
+
+    return result;
 }
 
 bool libspdm_asym_verify_hash(
@@ -786,6 +891,7 @@ bool libspdm_asym_verify_hash(
                                              LIBSPDM_MAX_HASH_SIZE];
     const void *param;
     size_t param_size;
+    bool try_endian_swapped_signature;
 
     hash_nid = libspdm_get_hash_nid(base_hash_algo);
     need_hash = libspdm_asym_func_need_hash(base_asym_algo);
@@ -833,26 +939,95 @@ bool libspdm_asym_verify_hash(
             return libspdm_asym_verify_wrap(context, hash_nid, base_asym_algo,
                                             param, param_size,
                                             full_message_hash, hash_size,
-                                            signature, sig_size);
+                                            signature, sig_size,
+                                            false);
         } else {
             return libspdm_asym_verify_wrap(context, hash_nid, base_asym_algo,
                                             param, param_size,
                                             message, message_size,
-                                            signature, sig_size);
+                                            signature, sig_size,
+                                            false);
         }
 
         /* SPDM 1.2 signing done. */
     }
 
     if (need_hash) {
+        try_endian_swapped_signature
+            = libspdm_try_endian_swapped_signature(spdm_version, base_asym_algo);
+
         return libspdm_asym_verify_wrap(context, hash_nid, base_asym_algo,
                                         param, param_size,
                                         message_hash, hash_size,
-                                        signature, sig_size);
+                                        signature, sig_size,
+                                        try_endian_swapped_signature);
     } else {
         LIBSPDM_ASSERT(false);
         return false;
     }
+}
+
+void libspdm_asym_signature_swap_endian_if_necessary(
+    spdm_version_number_t spdm_version, uint32_t base_asym_algo,
+    uint8_t *signature, size_t sig_size)
+{
+#if LIBSPDM_SPDM_10_11_SIGN_LITTLE_ENDIAN_RSA_ECDSA
+    uint32_t swap_endian_rsa = 0;
+    uint32_t swap_endian_ecdsa = 0;
+    size_t i;
+    uint8_t byte;
+
+#if LIBSPDM_SPDM_10_SIGN_LITTLE_ENDIAN_RSA || LIBSPDM_SPDM_10_SIGN_LITTLE_ENDIAN_ECDSA
+    if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) == SPDM_MESSAGE_VERSION_10) {
+        swap_endian_rsa =
+            (LIBSPDM_SPDM_10_SIGN_LITTLE_ENDIAN_RSA &&
+                (base_asym_algo & SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSA_ALL));
+        swap_endian_ecdsa =
+            (LIBSPDM_SPDM_10_SIGN_LITTLE_ENDIAN_RSA &&
+                (base_asym_algo & SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSA_ALL));
+    }
+#endif
+
+#if LIBSPDM_SPDM_11_SIGN_LITTLE_ENDIAN_RSA || LIBSPDM_SPDM_11_SIGN_LITTLE_ENDIAN_ECDSA
+    if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) == SPDM_MESSAGE_VERSION_11) {
+        swap_endian_rsa =
+            (LIBSPDM_SPDM_11_SIGN_LITTLE_ENDIAN_RSA &&
+                (base_asym_algo & SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSA_ALL));
+        swap_endian_ecdsa =
+            (LIBSPDM_SPDM_11_SIGN_LITTLE_ENDIAN_ECDSA &&
+                (base_asym_algo & SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ALL));
+    }
+#endif
+    if (swap_endian_rsa) {
+        /* RSA signature is a single buffer to be swapped */
+
+        for (i = 0; i < sig_size / 2; i++) {
+            byte = signature[i];
+            signature[i] = signature[sig_size - i - 1];
+            signature[sig_size - i - 1] = byte;
+        }
+    } else if (swap_endian_ecdsa) {
+        /* ECDSA signature is actually 2 buffers and each must be swapped individually */
+        size_t buf_size;
+        uint8_t* buf;
+
+        buf_size = sig_size / 2;
+        buf = signature;
+        for (i = 0; i < buf_size / 2; i++) {
+            byte = buf[i];
+            buf[i] = buf[buf_size - i - 1];
+            buf[buf_size - i - 1] = byte;
+        }
+
+        buf = signature + buf_size;
+        for (i = 0; i < buf_size / 2; i++) {
+            byte = buf[i];
+            buf[i] = buf[buf_size - i - 1];
+            buf[buf_size - i - 1] = byte;
+        }
+    }
+
+#endif /* LIBSPDM_SPDM_10_11_SIGN_LITTLE_ENDIAN_RSA_ECDSA */
 }
 
 bool libspdm_asym_sign(
@@ -920,16 +1095,19 @@ bool libspdm_asym_sign(
         if (!result) {
             return false;
         }
-        return libspdm_asym_sign_wrap(context, hash_nid, base_asym_algo,
-                                      param, param_size,
-                                      message_hash, hash_size,
-                                      signature, sig_size);
+        result = libspdm_asym_sign_wrap(context, hash_nid, base_asym_algo,
+                                        param, param_size,
+                                        message_hash, hash_size,
+                                        signature, sig_size);
     } else {
-        return libspdm_asym_sign_wrap(context, hash_nid, base_asym_algo,
-                                      param, param_size,
-                                      message, message_size,
-                                      signature, sig_size);
+        result = libspdm_asym_sign_wrap(context, hash_nid, base_asym_algo,
+                                        param, param_size,
+                                        message, message_size,
+                                        signature, sig_size);
     }
+    libspdm_asym_signature_swap_endian_if_necessary(spdm_version, base_asym_algo,
+                                                    signature, *sig_size);
+    return result;
 }
 
 bool libspdm_asym_sign_hash(
@@ -1008,10 +1186,13 @@ bool libspdm_asym_sign_hash(
     }
 
     if (need_hash) {
-        return libspdm_asym_sign_wrap(context, hash_nid, base_asym_algo,
+        result = libspdm_asym_sign_wrap(context, hash_nid, base_asym_algo,
                                       param, param_size,
                                       message_hash, hash_size,
                                       signature, sig_size);
+        libspdm_asym_signature_swap_endian_if_necessary(spdm_version, base_asym_algo,
+                                                        signature, *sig_size);
+        return result;
     } else {
         LIBSPDM_ASSERT (false);
         return false;
@@ -1060,6 +1241,7 @@ bool libspdm_req_asym_verify(
                                              LIBSPDM_MAX_HASH_SIZE];
     const void *param;
     size_t param_size;
+    bool try_endian_swapped_signature;
 
     hash_nid = libspdm_get_hash_nid(base_hash_algo);
     need_hash = libspdm_req_asym_func_need_hash(req_base_asym_alg);
@@ -1103,6 +1285,9 @@ bool libspdm_req_asym_verify(
         /* Passthru */
     }
 
+    try_endian_swapped_signature =
+        libspdm_try_endian_swapped_signature(spdm_version, req_base_asym_alg);
+
     if (need_hash) {
         hash_size = libspdm_get_hash_size(base_hash_algo);
         result = libspdm_hash_all(base_hash_algo, message, message_size, message_hash);
@@ -1112,12 +1297,14 @@ bool libspdm_req_asym_verify(
         return libspdm_asym_verify_wrap(context, hash_nid, req_base_asym_alg,
                                         param, param_size,
                                         message_hash, hash_size,
-                                        signature, sig_size);
+                                        signature, sig_size,
+                                        try_endian_swapped_signature);
     } else {
         return libspdm_asym_verify_wrap(context, hash_nid, req_base_asym_alg,
                                         param, param_size,
                                         message, message_size,
-                                        signature, sig_size);
+                                        signature, sig_size,
+                                        try_endian_swapped_signature);
     }
 }
 
@@ -1138,6 +1325,7 @@ bool libspdm_req_asym_verify_hash(
                                              LIBSPDM_MAX_HASH_SIZE];
     const void *param;
     size_t param_size;
+    bool try_endian_swapped_signature;
 
     hash_nid = libspdm_get_hash_nid(base_hash_algo);
     need_hash = libspdm_req_asym_func_need_hash(req_base_asym_alg);
@@ -1186,21 +1374,25 @@ bool libspdm_req_asym_verify_hash(
             return libspdm_asym_verify_wrap(context, hash_nid, req_base_asym_alg,
                                             param, param_size,
                                             full_message_hash, hash_size,
-                                            signature, sig_size);
+                                            signature, sig_size, false);
         } else {
             return libspdm_asym_verify_wrap(context, hash_nid, req_base_asym_alg,
                                             param, param_size,
                                             message, message_size,
-                                            signature, sig_size);
+                                            signature, sig_size, false);
         }
         /* SPDM 1.2 signing done. */
     }
 
     if (need_hash) {
+        try_endian_swapped_signature =
+            libspdm_try_endian_swapped_signature(spdm_version, req_base_asym_alg);
+
         return libspdm_asym_verify_wrap(context, hash_nid, req_base_asym_alg,
                                         param, param_size,
                                         message_hash, hash_size,
-                                        signature, sig_size);
+                                        signature, sig_size,
+                                        try_endian_swapped_signature);
     } else {
         LIBSPDM_ASSERT (false);
         return false;
