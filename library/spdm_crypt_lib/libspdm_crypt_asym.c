@@ -591,7 +591,7 @@ bool libspdm_sm2_dsa_verify_wrap (void *context, size_t hash_nid,
 
 static void libspdm_copy_signature_swap_endian(
     uint8_t *endian_swapped_signature_buffer,
-    size_t   endian_swapped_signature_buffer_size,
+    size_t endian_swapped_signature_buffer_size,
     bool is_dual_buffer,
     const uint8_t *signature,
     size_t sig_size)
@@ -721,9 +721,9 @@ static bool libspdm_asym_verify_wrap(
                                                true, signature, sig_size);
 
             result = libspdm_ecdsa_verify_wrap(context, hash_nid,
-                param, param_size,
-                message, message_size,
-                signature, sig_size);
+                                               param, param_size,
+                                               message, message_size,
+                                               signature, sig_size);
         }
         return result;
 #else
