@@ -149,8 +149,6 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
         libspdm_session_info_t *session_info;
         uint8_t *scratch_buffer;
         size_t scratch_buffer_size;
-        uint64_t sequence_number;
-        uint8_t *salt;
 
         session_id = 0xFFFFFFFF;
         spdm_response_size = sizeof(spdm_psk_finish_response_t);
@@ -183,15 +181,6 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->handshake_secret.response_handshake_sequence_number--;
-
-        salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-               ->handshake_secret.response_handshake_salt;
-        sequence_number = ((libspdm_secured_message_context_t
-                            *)(session_info->secured_message_context))
-                          ->handshake_secret.response_handshake_sequence_number;
-        if (sequence_number > 0) {
-            *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-        }
     }
         return LIBSPDM_STATUS_SUCCESS;
 
@@ -203,8 +192,6 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
         libspdm_session_info_t *session_info;
         uint8_t *scratch_buffer;
         size_t scratch_buffer_size;
-        uint64_t sequence_number;
-        uint8_t *salt;
 
         session_id = 0xFFFFFFFF;
         spdm_response_size = sizeof(spdm_psk_finish_response_t);
@@ -236,16 +223,6 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->handshake_secret.response_handshake_sequence_number--;
-
-        salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-               ->handshake_secret.response_handshake_salt;
-        sequence_number = ((libspdm_secured_message_context_t
-                            *)(session_info->secured_message_context))
-                          ->handshake_secret.response_handshake_sequence_number;
-        if (sequence_number > 0) {
-            *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-        }
-
     }
         return LIBSPDM_STATUS_SUCCESS;
 
@@ -257,8 +234,6 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
         libspdm_session_info_t *session_info;
         uint8_t *scratch_buffer;
         size_t scratch_buffer_size;
-        uint64_t sequence_number;
-        uint8_t *salt;
 
         spdm_response_size = sizeof(spdm_error_response_t);
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -290,14 +265,6 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->handshake_secret.response_handshake_sequence_number--;
-        salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-               ->handshake_secret.response_handshake_salt;
-        sequence_number = ((libspdm_secured_message_context_t
-                            *)(session_info->secured_message_context))
-                          ->handshake_secret.response_handshake_sequence_number;
-        if (sequence_number > 0) {
-            *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-        }
     }
         return LIBSPDM_STATUS_SUCCESS;
 
@@ -309,8 +276,6 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
         libspdm_session_info_t *session_info;
         uint8_t *scratch_buffer;
         size_t scratch_buffer_size;
-        uint64_t sequence_number;
-        uint8_t *salt;
 
         spdm_response_size = sizeof(spdm_error_response_t);
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -342,14 +307,6 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->handshake_secret.response_handshake_sequence_number--;
-        salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-               ->handshake_secret.response_handshake_salt;
-        sequence_number = ((libspdm_secured_message_context_t
-                            *)(session_info->secured_message_context))
-                          ->handshake_secret.response_handshake_sequence_number;
-        if (sequence_number > 0) {
-            *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-        }
     }
         return LIBSPDM_STATUS_SUCCESS;
 
@@ -363,8 +320,6 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
             libspdm_session_info_t *session_info;
             uint8_t *scratch_buffer;
             size_t scratch_buffer_size;
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             spdm_response_size = sizeof(spdm_error_response_t);
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -399,14 +354,6 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
               *)(session_info->secured_message_context))
             ->handshake_secret
             .response_handshake_sequence_number--;
-            salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                   ->handshake_secret.response_handshake_salt;
-            sequence_number = ((libspdm_secured_message_context_t
-                                *)(session_info->secured_message_context))
-                              ->handshake_secret.response_handshake_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
         } else if (sub_index1 == 1) {
             spdm_psk_finish_response_t *spdm_response;
             size_t spdm_response_size;
@@ -415,8 +362,6 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
             libspdm_session_info_t *session_info;
             uint8_t *scratch_buffer;
             size_t scratch_buffer_size;
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             session_id = 0xFFFFFFFF;
             spdm_response_size = sizeof(spdm_psk_finish_response_t);
@@ -451,14 +396,6 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
               *)(session_info->secured_message_context))
             ->handshake_secret
             .response_handshake_sequence_number--;
-            salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                   ->handshake_secret.response_handshake_salt;
-            sequence_number = ((libspdm_secured_message_context_t
-                                *)(session_info->secured_message_context))
-                              ->handshake_secret.response_handshake_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
         }
     }
         return LIBSPDM_STATUS_SUCCESS;
@@ -471,8 +408,6 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
         libspdm_session_info_t *session_info;
         uint8_t *scratch_buffer;
         size_t scratch_buffer_size;
-        uint64_t sequence_number;
-        uint8_t *salt;
 
         spdm_response_size = sizeof(spdm_error_response_t);
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -504,14 +439,6 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->handshake_secret.response_handshake_sequence_number--;
-        salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-               ->handshake_secret.response_handshake_salt;
-        sequence_number = ((libspdm_secured_message_context_t
-                            *)(session_info->secured_message_context))
-                          ->handshake_secret.response_handshake_sequence_number;
-        if (sequence_number > 0) {
-            *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-        }
     }
         return LIBSPDM_STATUS_SUCCESS;
 
@@ -523,8 +450,6 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
         libspdm_session_info_t *session_info;
         uint8_t *scratch_buffer;
         size_t scratch_buffer_size;
-        uint64_t sequence_number;
-        uint8_t *salt;
 
         spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -561,14 +486,6 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->handshake_secret.response_handshake_sequence_number--;
-        salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-               ->handshake_secret.response_handshake_salt;
-        sequence_number = ((libspdm_secured_message_context_t
-                            *)(session_info->secured_message_context))
-                          ->handshake_secret.response_handshake_sequence_number;
-        if (sequence_number > 0) {
-            *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-        }
     }
         return LIBSPDM_STATUS_SUCCESS;
 
@@ -583,8 +500,6 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
             libspdm_session_info_t *session_info;
             uint8_t *scratch_buffer;
             size_t scratch_buffer_size;
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -625,14 +540,6 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
               *)(session_info->secured_message_context))
             ->handshake_secret
             .response_handshake_sequence_number--;
-            salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                   ->handshake_secret.response_handshake_salt;
-            sequence_number = ((libspdm_secured_message_context_t
-                                *)(session_info->secured_message_context))
-                              ->handshake_secret.response_handshake_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
         } else if (sub_index2 == 1) {
             spdm_psk_finish_response_t *spdm_response;
             size_t spdm_response_size;
@@ -641,8 +548,6 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
             libspdm_session_info_t *session_info;
             uint8_t *scratch_buffer;
             size_t scratch_buffer_size;
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             session_id = 0xFFFFFFFF;
             spdm_response_size = sizeof(spdm_psk_finish_response_t);
@@ -677,14 +582,6 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
               *)(session_info->secured_message_context))
             ->handshake_secret
             .response_handshake_sequence_number--;
-            salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                   ->handshake_secret.response_handshake_salt;
-            sequence_number = ((libspdm_secured_message_context_t
-                                *)(session_info->secured_message_context))
-                              ->handshake_secret.response_handshake_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
         }
     }
         return LIBSPDM_STATUS_SUCCESS;
@@ -700,8 +597,6 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
         libspdm_session_info_t      *session_info;
         uint8_t *scratch_buffer;
         size_t scratch_buffer_size;
-        uint64_t sequence_number;
-        uint8_t *salt;
 
         session_id = 0xFFFFFFFF;
 
@@ -730,14 +625,6 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
             session_info = libspdm_get_session_info_via_session_id (spdm_context, session_id);
             ((libspdm_secured_message_context_t*)(session_info->secured_message_context))->
             handshake_secret.response_handshake_sequence_number--;
-            salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                   ->handshake_secret.response_handshake_salt;
-            sequence_number = ((libspdm_secured_message_context_t
-                                *)(session_info->secured_message_context))
-                              ->handshake_secret.response_handshake_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
         }
 
         error_code++;
@@ -760,8 +647,6 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
         libspdm_session_info_t *session_info;
         uint8_t *scratch_buffer;
         size_t scratch_buffer_size;
-        uint64_t sequence_number;
-        uint8_t *salt;
 
         session_id = 0xFFFFFFFF;
         spdm_response_size = sizeof(spdm_psk_finish_response_t);
@@ -794,14 +679,6 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->handshake_secret.response_handshake_sequence_number--;
-        salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-               ->handshake_secret.response_handshake_salt;
-        sequence_number = ((libspdm_secured_message_context_t
-                            *)(session_info->secured_message_context))
-                          ->handshake_secret.response_handshake_sequence_number;
-        if (sequence_number > 0) {
-            *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-        }
     }
         return LIBSPDM_STATUS_SUCCESS;
 
@@ -813,8 +690,6 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
         libspdm_session_info_t *session_info;
         uint8_t *scratch_buffer;
         size_t scratch_buffer_size;
-        uint64_t sequence_number;
-        uint8_t *salt;
 
         session_id = 0xFFFFFFFF;
         spdm_response_size = sizeof(spdm_psk_finish_response_t);
@@ -847,14 +722,6 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->handshake_secret.response_handshake_sequence_number--;
-        salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-               ->handshake_secret.response_handshake_salt;
-        sequence_number = ((libspdm_secured_message_context_t
-                            *)(session_info->secured_message_context))
-                          ->handshake_secret.response_handshake_sequence_number;
-        if (sequence_number > 0) {
-            *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-        }
     }
         return LIBSPDM_STATUS_SUCCESS;
 
@@ -866,8 +733,6 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
         libspdm_session_info_t *session_info;
         uint8_t *scratch_buffer;
         size_t scratch_buffer_size;
-        uint64_t sequence_number;
-        uint8_t *salt;
 
         session_id = 0xFFFFFFFF;
         spdm_response_size = sizeof(spdm_psk_finish_response_t);
@@ -900,14 +765,6 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->handshake_secret.response_handshake_sequence_number--;
-        salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-               ->handshake_secret.response_handshake_salt;
-        sequence_number = ((libspdm_secured_message_context_t
-                            *)(session_info->secured_message_context))
-                          ->handshake_secret.response_handshake_sequence_number;
-        if (sequence_number > 0) {
-            *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-        }
     }
         return LIBSPDM_STATUS_SUCCESS;
 
@@ -919,8 +776,6 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
         libspdm_session_info_t *session_info;
         uint8_t *scratch_buffer;
         size_t scratch_buffer_size;
-        uint64_t sequence_number;
-        uint8_t *salt;
 
         session_id = 0xFFFFFFFF;
         spdm_response_size = sizeof(spdm_psk_finish_response_t);
@@ -953,14 +808,6 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->handshake_secret.response_handshake_sequence_number--;
-        salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-               ->handshake_secret.response_handshake_salt;
-        sequence_number = ((libspdm_secured_message_context_t
-                            *)(session_info->secured_message_context))
-                          ->handshake_secret.response_handshake_sequence_number;
-        if (sequence_number > 0) {
-            *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-        }
     }
         return LIBSPDM_STATUS_SUCCESS;
 
@@ -972,8 +819,6 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
         libspdm_session_info_t *session_info;
         uint8_t *scratch_buffer;
         size_t scratch_buffer_size;
-        uint64_t sequence_number;
-        uint8_t *salt;
 
         session_id = 0xFFFFFFFF;
 
@@ -1006,14 +851,6 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->handshake_secret.response_handshake_sequence_number--;
-        salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-               ->handshake_secret.response_handshake_salt;
-        sequence_number = ((libspdm_secured_message_context_t
-                            *)(session_info->secured_message_context))
-                          ->handshake_secret.response_handshake_sequence_number;
-        if (sequence_number > 0) {
-            *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-        }
     }
         return LIBSPDM_STATUS_SUCCESS;
 
@@ -1025,8 +862,6 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
         libspdm_session_info_t *session_info;
         uint8_t *scratch_buffer;
         size_t scratch_buffer_size;
-        uint64_t sequence_number;
-        uint8_t *salt;
 
         session_id = 0xFFFFFFFF;
         spdm_response_size = sizeof(spdm_psk_finish_response_t);
@@ -1063,14 +898,6 @@ libspdm_return_t libspdm_requester_psk_finish_test_receive_message(
         /* WALKAROUND: If just use single context to encode message and then decode message */
         ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
         ->handshake_secret.response_handshake_sequence_number--;
-        salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-               ->handshake_secret.response_handshake_salt;
-        sequence_number = ((libspdm_secured_message_context_t
-                            *)(session_info->secured_message_context))
-                          ->handshake_secret.response_handshake_sequence_number;
-        if (sequence_number > 0) {
-            *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-        }
     }
         return LIBSPDM_STATUS_SUCCESS;
 

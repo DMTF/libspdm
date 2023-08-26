@@ -122,8 +122,6 @@ libspdm_return_t libspdm_device_send_message(void *spdm_context, size_t request_
     bool is_app_message;
     libspdm_session_info_t *session_info;
     uint8_t message_buffer[LIBSPDM_SENDER_BUFFER_SIZE];
-    uint64_t sequence_number;
-    uint8_t *salt;
 
     message_session_id = NULL;
     session_id = 0xFFFFFFFF;
@@ -139,14 +137,6 @@ libspdm_return_t libspdm_device_send_message(void *spdm_context, size_t request_
     ((libspdm_secured_message_context_t
       *)(session_info->secured_message_context))
     ->application_secret.request_data_sequence_number--;
-    salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-           ->application_secret.request_data_salt;
-    sequence_number = ((libspdm_secured_message_context_t
-                        *)(session_info->secured_message_context))
-                      ->application_secret.request_data_sequence_number;
-    if (sequence_number > 0) {
-        *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-    }
     libspdm_get_scratch_buffer (spdm_context, (void **)&decoded_message, &decoded_message_size);
     status = libspdm_transport_test_decode_message(spdm_context,
                                                    &message_session_id, &is_app_message, true,
@@ -176,8 +166,6 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
     size_t scratch_buffer_size;
     size_t aead_tag_max_size;
     static uint8_t sub_index = 0;
-    uint64_t sequence_number;
-    uint8_t *salt;
 
     session_id = 0xFFFFFFFF;
     session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
@@ -236,14 +224,6 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
     /* WALKAROUND: If just use single context to encode message and then decode message */
     ((libspdm_secured_message_context_t *)(session_info->secured_message_context))
     ->application_secret.response_data_sequence_number--;
-    salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-           ->application_secret.response_data_salt;
-    sequence_number = ((libspdm_secured_message_context_t
-                        *)(session_info->secured_message_context))
-                      ->application_secret.response_data_sequence_number;
-    if (sequence_number > 0) {
-        *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-    }
 
     if (sub_index != 0) {
         sub_index = 0;

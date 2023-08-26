@@ -143,8 +143,6 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
         bool is_app_message;
         libspdm_session_info_t *session_info;
         uint8_t message_buffer[LIBSPDM_SENDER_BUFFER_SIZE];
-        uint64_t sequence_number;
-        uint8_t *salt;
 
         message_session_id = NULL;
         session_id = 0xFFFFFFFF;
@@ -160,14 +158,6 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.request_data_sequence_number--;
-        salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-               ->application_secret.request_data_salt;
-        sequence_number = ((libspdm_secured_message_context_t
-                            *)(session_info->secured_message_context))
-                          ->application_secret.request_data_sequence_number;
-        if (sequence_number > 0) {
-            *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-        }
         libspdm_get_scratch_buffer (spdm_context, (void **)&decoded_message, &decoded_message_size);
         status = libspdm_transport_test_decode_message(spdm_context,
                                                        &message_session_id, &is_app_message, true,
@@ -194,8 +184,6 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             bool is_app_message;
             libspdm_session_info_t *session_info;
             uint8_t message_buffer[LIBSPDM_SENDER_BUFFER_SIZE];
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
@@ -211,14 +199,6 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
-            salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                   ->application_secret.request_data_salt;
-            sequence_number = ((libspdm_secured_message_context_t
-                                *)(session_info->secured_message_context))
-                              ->application_secret.request_data_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
             libspdm_get_scratch_buffer (spdm_context, (void **)&decoded_message,
                                         &decoded_message_size);
             status = libspdm_transport_test_decode_message(spdm_context,
@@ -250,8 +230,6 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             bool is_app_message;
             libspdm_session_info_t *session_info;
             uint8_t message_buffer[LIBSPDM_SENDER_BUFFER_SIZE];
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
@@ -267,14 +245,6 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
-            salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                   ->application_secret.request_data_salt;
-            sequence_number = ((libspdm_secured_message_context_t
-                                *)(session_info->secured_message_context))
-                              ->application_secret.request_data_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
             libspdm_get_scratch_buffer (spdm_context, (void **)&decoded_message,
                                         &decoded_message_size);
             status = libspdm_transport_test_decode_message(spdm_context,
@@ -306,8 +276,6 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             bool is_app_message;
             libspdm_session_info_t *session_info;
             uint8_t message_buffer[LIBSPDM_SENDER_BUFFER_SIZE];
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
@@ -323,14 +291,6 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
-            salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                   ->application_secret.request_data_salt;
-            sequence_number = ((libspdm_secured_message_context_t
-                                *)(session_info->secured_message_context))
-                              ->application_secret.request_data_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
             libspdm_get_scratch_buffer (spdm_context, (void **)&decoded_message,
                                         &decoded_message_size);
             status = libspdm_transport_test_decode_message(spdm_context,
@@ -362,8 +322,6 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             bool is_app_message;
             libspdm_session_info_t *session_info;
             uint8_t message_buffer[LIBSPDM_SENDER_BUFFER_SIZE];
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
@@ -379,14 +337,6 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
-            salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                   ->application_secret.request_data_salt;
-            sequence_number = ((libspdm_secured_message_context_t
-                                *)(session_info->secured_message_context))
-                              ->application_secret.request_data_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
             libspdm_get_scratch_buffer (spdm_context, (void **)&decoded_message,
                                         &decoded_message_size);
             status = libspdm_transport_test_decode_message(spdm_context,
@@ -421,8 +371,6 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             bool is_app_message;
             libspdm_session_info_t    *session_info;
             uint8_t message_buffer[LIBSPDM_SENDER_BUFFER_SIZE];
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
@@ -438,14 +386,6 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
-            salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                   ->application_secret.request_data_salt;
-            sequence_number = ((libspdm_secured_message_context_t
-                                *)(session_info->secured_message_context))
-                              ->application_secret.request_data_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
             libspdm_get_scratch_buffer (spdm_context, (void **)&decoded_message,
                                         &decoded_message_size);
             status = libspdm_transport_test_decode_message(spdm_context,
@@ -486,8 +426,6 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
         bool is_app_message;
         libspdm_session_info_t *session_info;
         uint8_t message_buffer[LIBSPDM_SENDER_BUFFER_SIZE];
-        uint64_t sequence_number;
-        uint8_t *salt;
 
         message_session_id = NULL;
         session_id = 0xFFFFFFFF;
@@ -503,14 +441,6 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.request_data_sequence_number--;
-        salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-               ->application_secret.request_data_salt;
-        sequence_number = ((libspdm_secured_message_context_t
-                            *)(session_info->secured_message_context))
-                          ->application_secret.request_data_sequence_number;
-        if (sequence_number > 0) {
-            *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-        }
         libspdm_get_scratch_buffer (spdm_context, (void **)&decoded_message, &decoded_message_size);
         status = libspdm_transport_test_decode_message(spdm_context,
                                                        &message_session_id, &is_app_message, true,
@@ -537,8 +467,6 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             bool is_app_message;
             libspdm_session_info_t    *session_info;
             uint8_t message_buffer[LIBSPDM_SENDER_BUFFER_SIZE];
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
@@ -554,14 +482,6 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
-            salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                   ->application_secret.request_data_salt;
-            sequence_number = ((libspdm_secured_message_context_t
-                                *)(session_info->secured_message_context))
-                              ->application_secret.request_data_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
             libspdm_get_scratch_buffer (spdm_context, (void **)&decoded_message,
                                         &decoded_message_size);
             status = libspdm_transport_test_decode_message(spdm_context,
@@ -595,8 +515,6 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             bool is_app_message;
             libspdm_session_info_t    *session_info;
             uint8_t message_buffer[LIBSPDM_SENDER_BUFFER_SIZE];
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
@@ -612,14 +530,6 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
-            salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                   ->application_secret.request_data_salt;
-            sequence_number = ((libspdm_secured_message_context_t
-                                *)(session_info->secured_message_context))
-                              ->application_secret.request_data_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
             libspdm_get_scratch_buffer (spdm_context, (void **)&decoded_message,
                                         &decoded_message_size);
             status = libspdm_transport_test_decode_message(spdm_context,
@@ -652,8 +562,6 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
         bool is_app_message;
         libspdm_session_info_t *session_info;
         uint8_t message_buffer[LIBSPDM_SENDER_BUFFER_SIZE];
-        uint64_t sequence_number;
-        uint8_t *salt;
 
         message_session_id = NULL;
         session_id = 0xFFFFFFFF;
@@ -669,14 +577,6 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.request_data_sequence_number--;
-        salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-               ->application_secret.request_data_salt;
-        sequence_number = ((libspdm_secured_message_context_t
-                            *)(session_info->secured_message_context))
-                          ->application_secret.request_data_sequence_number;
-        if (sequence_number > 0) {
-            *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-        }
         libspdm_get_scratch_buffer (spdm_context, (void **)&decoded_message, &decoded_message_size);
         status = libspdm_transport_test_decode_message(spdm_context,
                                                        &message_session_id, &is_app_message, true,
@@ -700,8 +600,6 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
         bool is_app_message;
         libspdm_session_info_t *session_info;
         uint8_t message_buffer[LIBSPDM_SENDER_BUFFER_SIZE];
-        uint64_t sequence_number;
-        uint8_t *salt;
 
         message_session_id = NULL;
         session_id = 0xFFFFFFFF;
@@ -717,14 +615,6 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.request_data_sequence_number--;
-        salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-               ->application_secret.request_data_salt;
-        sequence_number = ((libspdm_secured_message_context_t
-                            *)(session_info->secured_message_context))
-                          ->application_secret.request_data_sequence_number;
-        if (sequence_number > 0) {
-            *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-        }
         libspdm_get_scratch_buffer (spdm_context, (void **)&decoded_message, &decoded_message_size);
         status = libspdm_transport_test_decode_message(spdm_context,
                                                        &message_session_id, &is_app_message, true,
@@ -751,8 +641,6 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             bool is_app_message;
             libspdm_session_info_t *session_info;
             uint8_t message_buffer[LIBSPDM_SENDER_BUFFER_SIZE];
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
@@ -768,14 +656,6 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
-            salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                   ->application_secret.request_data_salt;
-            sequence_number = ((libspdm_secured_message_context_t
-                                *)(session_info->secured_message_context))
-                              ->application_secret.request_data_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
             libspdm_get_scratch_buffer (spdm_context, (void **)&decoded_message,
                                         &decoded_message_size);
             status = libspdm_transport_test_decode_message(spdm_context,
@@ -807,8 +687,6 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             bool is_app_message;
             libspdm_session_info_t *session_info;
             uint8_t message_buffer[LIBSPDM_SENDER_BUFFER_SIZE];
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
@@ -824,14 +702,6 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
-            salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                   ->application_secret.request_data_salt;
-            sequence_number = ((libspdm_secured_message_context_t
-                                *)(session_info->secured_message_context))
-                              ->application_secret.request_data_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
             libspdm_get_scratch_buffer (spdm_context, (void **)&decoded_message,
                                         &decoded_message_size);
             status = libspdm_transport_test_decode_message(spdm_context,
@@ -863,8 +733,6 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             bool is_app_message;
             libspdm_session_info_t *session_info;
             uint8_t message_buffer[LIBSPDM_SENDER_BUFFER_SIZE];
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
@@ -880,14 +748,6 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
-            salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                   ->application_secret.request_data_salt;
-            sequence_number = ((libspdm_secured_message_context_t
-                                *)(session_info->secured_message_context))
-                              ->application_secret.request_data_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
             libspdm_get_scratch_buffer (spdm_context, (void **)&decoded_message,
                                         &decoded_message_size);
             status = libspdm_transport_test_decode_message(spdm_context,
@@ -922,8 +782,6 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             bool is_app_message;
             libspdm_session_info_t    *session_info;
             uint8_t message_buffer[LIBSPDM_SENDER_BUFFER_SIZE];
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             message_session_id = NULL;
             session_id = 0xFFFFFFFF;
@@ -939,14 +797,6 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.request_data_sequence_number--;
-            salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                   ->application_secret.request_data_salt;
-            sequence_number = ((libspdm_secured_message_context_t
-                                *)(session_info->secured_message_context))
-                              ->application_secret.request_data_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
             libspdm_get_scratch_buffer (spdm_context, (void **)&decoded_message,
                                         &decoded_message_size);
             status = libspdm_transport_test_decode_message(spdm_context,
@@ -996,8 +846,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         libspdm_session_info_t        *session_info;
         uint8_t *scratch_buffer;
         size_t scratch_buffer_size;
-        uint64_t sequence_number;
-        uint8_t *salt;
 
         spdm_response_size = sizeof(spdm_key_update_response_t);
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -1039,14 +887,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
-        salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-               ->application_secret.response_data_salt;
-        sequence_number = ((libspdm_secured_message_context_t
-                            *)(session_info->secured_message_context))
-                          ->application_secret.response_data_sequence_number;
-        if (sequence_number > 0) {
-            *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-        }
 
         sub_index++;
     }
@@ -1062,8 +902,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         libspdm_session_info_t        *session_info;
         uint8_t *scratch_buffer;
         size_t scratch_buffer_size;
-        uint64_t sequence_number;
-        uint8_t *salt;
 
         spdm_response_size = sizeof(spdm_key_update_response_t);
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -1105,14 +943,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
-        salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-               ->application_secret.response_data_salt;
-        sequence_number = ((libspdm_secured_message_context_t
-                            *)(session_info->secured_message_context))
-                          ->application_secret.response_data_sequence_number;
-        if (sequence_number > 0) {
-            *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-        }
 
         sub_index++;
     }
@@ -1126,8 +956,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         libspdm_session_info_t    *session_info;
         uint8_t *scratch_buffer;
         size_t scratch_buffer_size;
-        uint64_t sequence_number;
-        uint8_t *salt;
 
         spdm_response_size = sizeof(spdm_error_response_t);
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -1160,14 +988,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
-        salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-               ->application_secret.response_data_salt;
-        sequence_number = ((libspdm_secured_message_context_t
-                            *)(session_info->secured_message_context))
-                          ->application_secret.response_data_sequence_number;
-        if (sequence_number > 0) {
-            *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-        }
     }
         return LIBSPDM_STATUS_SUCCESS;
 
@@ -1179,8 +999,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         libspdm_session_info_t    *session_info;
         uint8_t *scratch_buffer;
         size_t scratch_buffer_size;
-        uint64_t sequence_number;
-        uint8_t *salt;
 
         spdm_response_size = sizeof(spdm_error_response_t);
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -1213,14 +1031,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
-        salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-               ->application_secret.response_data_salt;
-        sequence_number = ((libspdm_secured_message_context_t
-                            *)(session_info->secured_message_context))
-                          ->application_secret.response_data_sequence_number;
-        if (sequence_number > 0) {
-            *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-        }
     }
         return LIBSPDM_STATUS_SUCCESS;
 
@@ -1243,8 +1053,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             size_t transport_header_size;
             uint8_t *scratch_buffer;
             size_t scratch_buffer_size;
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             spdm_response_size = sizeof(spdm_error_response_t);
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -1273,22 +1081,12 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
-            salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                   ->application_secret.response_data_salt;
-            sequence_number = ((libspdm_secured_message_context_t
-                                *)(session_info->secured_message_context))
-                              ->application_secret.response_data_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
         } else if (sub_index == 1) {
             spdm_key_update_response_t *spdm_response;
             size_t spdm_response_size;
             size_t transport_header_size;
             uint8_t *scratch_buffer;
             size_t scratch_buffer_size;
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             spdm_response_size = sizeof(spdm_key_update_response_t);
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -1318,22 +1116,12 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
-            salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                   ->application_secret.response_data_salt;
-            sequence_number = ((libspdm_secured_message_context_t
-                                *)(session_info->secured_message_context))
-                              ->application_secret.response_data_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
         } else if (sub_index == 2) {
             spdm_key_update_response_t *spdm_response;
             size_t spdm_response_size;
             size_t transport_header_size;
             uint8_t *scratch_buffer;
             size_t scratch_buffer_size;
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             spdm_response_size = sizeof(spdm_key_update_response_t);
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -1363,14 +1151,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
-            salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                   ->application_secret.response_data_salt;
-            sequence_number = ((libspdm_secured_message_context_t
-                                *)(session_info->secured_message_context))
-                              ->application_secret.response_data_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
         }
 
         sub_index++;
@@ -1385,8 +1165,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         libspdm_session_info_t    *session_info;
         uint8_t *scratch_buffer;
         size_t scratch_buffer_size;
-        uint64_t sequence_number;
-        uint8_t *salt;
 
         spdm_response_size = sizeof(spdm_error_response_t);
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -1419,14 +1197,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
-        salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-               ->application_secret.response_data_salt;
-        sequence_number = ((libspdm_secured_message_context_t
-                            *)(session_info->secured_message_context))
-                          ->application_secret.response_data_sequence_number;
-        if (sequence_number > 0) {
-            *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-        }
     }
         return LIBSPDM_STATUS_SUCCESS;
 
@@ -1438,8 +1208,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         libspdm_session_info_t    *session_info;
         uint8_t *scratch_buffer;
         size_t scratch_buffer_size;
-        uint64_t sequence_number;
-        uint8_t *salt;
 
         spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -1477,14 +1245,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
-        salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-               ->application_secret.response_data_salt;
-        sequence_number = ((libspdm_secured_message_context_t
-                            *)(session_info->secured_message_context))
-                          ->application_secret.response_data_sequence_number;
-        if (sequence_number > 0) {
-            *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-        }
     }
         return LIBSPDM_STATUS_SUCCESS;
 
@@ -1508,8 +1268,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             size_t transport_header_size;
             uint8_t *scratch_buffer;
             size_t scratch_buffer_size;
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -1544,22 +1302,12 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
-            salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                   ->application_secret.response_data_salt;
-            sequence_number = ((libspdm_secured_message_context_t
-                                *)(session_info->secured_message_context))
-                              ->application_secret.response_data_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
         } else if (sub_index == 1) {
             spdm_key_update_response_t *spdm_response;
             size_t spdm_response_size;
             size_t transport_header_size;
             uint8_t *scratch_buffer;
             size_t scratch_buffer_size;
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             spdm_response_size = sizeof(spdm_key_update_response_t);
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -1589,22 +1337,12 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
-            salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                   ->application_secret.response_data_salt;
-            sequence_number = ((libspdm_secured_message_context_t
-                                *)(session_info->secured_message_context))
-                              ->application_secret.response_data_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
         } else if (sub_index == 2) {
             spdm_key_update_response_t *spdm_response;
             size_t spdm_response_size;
             size_t transport_header_size;
             uint8_t *scratch_buffer;
             size_t scratch_buffer_size;
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             spdm_response_size = sizeof(spdm_key_update_response_t);
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -1634,14 +1372,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
-            salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                   ->application_secret.response_data_salt;
-            sequence_number = ((libspdm_secured_message_context_t
-                                *)(session_info->secured_message_context))
-                              ->application_secret.response_data_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
         }
 
         sub_index++;
@@ -1659,8 +1389,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         size_t transport_header_size;
         uint8_t *scratch_buffer;
         size_t scratch_buffer_size;
-        uint64_t sequence_number;
-        uint8_t *salt;
 
         spdm_response_size = sizeof(spdm_error_response_t);
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -1701,14 +1429,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
-            salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                   ->application_secret.response_data_salt;
-            sequence_number = ((libspdm_secured_message_context_t
-                                *)(session_info->secured_message_context))
-                              ->application_secret.response_data_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
         }
 
         error_code++;
@@ -1737,8 +1457,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         libspdm_session_info_t        *session_info;
         uint8_t *scratch_buffer;
         size_t scratch_buffer_size;
-        uint64_t sequence_number;
-        uint8_t *salt;
 
         spdm_response_size = sizeof(spdm_key_update_response_t);
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -1780,14 +1498,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
-        salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-               ->application_secret.response_data_salt;
-        sequence_number = ((libspdm_secured_message_context_t
-                            *)(session_info->secured_message_context))
-                          ->application_secret.response_data_sequence_number;
-        if (sequence_number > 0) {
-            *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-        }
 
         sub_index++;
     }
@@ -1803,8 +1513,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         libspdm_session_info_t        *session_info;
         uint8_t *scratch_buffer;
         size_t scratch_buffer_size;
-        uint64_t sequence_number;
-        uint8_t *salt;
 
         spdm_response_size = sizeof(spdm_key_update_response_t);
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -1847,14 +1555,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
-        salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-               ->application_secret.response_data_salt;
-        sequence_number = ((libspdm_secured_message_context_t
-                            *)(session_info->secured_message_context))
-                          ->application_secret.response_data_sequence_number;
-        if (sequence_number > 0) {
-            *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-        }
 
         sub_index++;
     }
@@ -1870,8 +1570,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         libspdm_session_info_t        *session_info;
         uint8_t *scratch_buffer;
         size_t scratch_buffer_size;
-        uint64_t sequence_number;
-        uint8_t *salt;
 
         spdm_response_size = sizeof(spdm_key_update_response_t);
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -1913,14 +1611,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
-        salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-               ->application_secret.response_data_salt;
-        sequence_number = ((libspdm_secured_message_context_t
-                            *)(session_info->secured_message_context))
-                          ->application_secret.response_data_sequence_number;
-        if (sequence_number > 0) {
-            *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-        }
 
         sub_index++;
     }
@@ -1936,8 +1626,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         libspdm_session_info_t        *session_info;
         uint8_t *scratch_buffer;
         size_t scratch_buffer_size;
-        uint64_t sequence_number;
-        uint8_t *salt;
 
         spdm_response_size = sizeof(spdm_key_update_response_t);
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -1979,14 +1667,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
-        salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-               ->application_secret.response_data_salt;
-        sequence_number = ((libspdm_secured_message_context_t
-                            *)(session_info->secured_message_context))
-                          ->application_secret.response_data_sequence_number;
-        if (sequence_number > 0) {
-            *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-        }
 
         sub_index++;
     }
@@ -2002,8 +1682,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         libspdm_session_info_t        *session_info;
         uint8_t *scratch_buffer;
         size_t scratch_buffer_size;
-        uint64_t sequence_number;
-        uint8_t *salt;
 
         spdm_response_size = sizeof(spdm_key_update_response_t);
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -2046,14 +1724,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
-        salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-               ->application_secret.response_data_salt;
-        sequence_number = ((libspdm_secured_message_context_t
-                            *)(session_info->secured_message_context))
-                          ->application_secret.response_data_sequence_number;
-        if (sequence_number > 0) {
-            *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-        }
 
         sub_index++;
     }
@@ -2069,8 +1739,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         libspdm_session_info_t        *session_info;
         uint8_t *scratch_buffer;
         size_t scratch_buffer_size;
-        uint64_t sequence_number;
-        uint8_t *salt;
 
         spdm_response_size = sizeof(spdm_key_update_response_t);
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -2113,14 +1781,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
-        salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-               ->application_secret.response_data_salt;
-        sequence_number = ((libspdm_secured_message_context_t
-                            *)(session_info->secured_message_context))
-                          ->application_secret.response_data_sequence_number;
-        if (sequence_number > 0) {
-            *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-        }
 
         sub_index++;
     }
@@ -2145,8 +1805,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             size_t transport_header_size;
             uint8_t *scratch_buffer;
             size_t scratch_buffer_size;
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             spdm_response_size = sizeof(spdm_key_update_response_t);
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -2176,14 +1834,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
-            salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                   ->application_secret.response_data_salt;
-            sequence_number = ((libspdm_secured_message_context_t
-                                *)(session_info->secured_message_context))
-                              ->application_secret.response_data_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
         }
         else if (sub_index == 1) {
             spdm_error_response_t *spdm_response;
@@ -2191,8 +1841,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             size_t transport_header_size;
             uint8_t *scratch_buffer;
             size_t scratch_buffer_size;
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             spdm_response_size = sizeof(spdm_error_response_t);
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -2220,14 +1868,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
-            salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                   ->application_secret.response_data_salt;
-            sequence_number = ((libspdm_secured_message_context_t
-                                *)(session_info->secured_message_context))
-                              ->application_secret.response_data_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
         }
 
         sub_index++;
@@ -2253,8 +1893,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             size_t transport_header_size;
             uint8_t *scratch_buffer;
             size_t scratch_buffer_size;
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             spdm_response_size = sizeof(spdm_key_update_response_t);
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -2284,14 +1922,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
-            salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                   ->application_secret.response_data_salt;
-            sequence_number = ((libspdm_secured_message_context_t
-                                *)(session_info->secured_message_context))
-                              ->application_secret.response_data_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
         }
         else {
             spdm_error_response_t *spdm_response;
@@ -2299,8 +1929,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             size_t transport_header_size;
             uint8_t *scratch_buffer;
             size_t scratch_buffer_size;
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             spdm_response_size = sizeof(spdm_error_response_t);
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -2328,14 +1956,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
-            salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                   ->application_secret.response_data_salt;
-            sequence_number = ((libspdm_secured_message_context_t
-                                *)(session_info->secured_message_context))
-                              ->application_secret.response_data_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
         }
 
         sub_index++;
@@ -2361,8 +1981,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             size_t transport_header_size;
             uint8_t *scratch_buffer;
             size_t scratch_buffer_size;
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             spdm_response_size = sizeof(spdm_key_update_response_t);
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -2392,14 +2010,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
-            salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                   ->application_secret.response_data_salt;
-            sequence_number = ((libspdm_secured_message_context_t
-                                *)(session_info->secured_message_context))
-                              ->application_secret.response_data_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
         }
         else if (sub_index == 1) {
             spdm_error_response_t *spdm_response;
@@ -2407,8 +2017,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             size_t transport_header_size;
             uint8_t *scratch_buffer;
             size_t scratch_buffer_size;
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             spdm_response_size = sizeof(spdm_error_response_t);
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -2437,14 +2045,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
-            salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                   ->application_secret.response_data_salt;
-            sequence_number = ((libspdm_secured_message_context_t
-                                *)(session_info->secured_message_context))
-                              ->application_secret.response_data_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
         }
         else if (sub_index == 2) {
             spdm_key_update_response_t *spdm_response;
@@ -2452,8 +2052,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             size_t transport_header_size;
             uint8_t *scratch_buffer;
             size_t scratch_buffer_size;
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             spdm_response_size = sizeof(spdm_key_update_response_t);
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -2483,14 +2081,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
-            salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                   ->application_secret.response_data_salt;
-            sequence_number = ((libspdm_secured_message_context_t
-                                *)(session_info->secured_message_context))
-                              ->application_secret.response_data_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
         }
 
         sub_index++;
@@ -2516,8 +2106,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             size_t transport_header_size;
             uint8_t *scratch_buffer;
             size_t scratch_buffer_size;
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             spdm_response_size = sizeof(spdm_key_update_response_t);
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -2547,14 +2135,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
-            salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                   ->application_secret.response_data_salt;
-            sequence_number = ((libspdm_secured_message_context_t
-                                *)(session_info->secured_message_context))
-                              ->application_secret.response_data_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
         }
         else if (sub_index == 1) {
             spdm_error_response_t *spdm_response;
@@ -2562,8 +2142,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             size_t transport_header_size;
             uint8_t *scratch_buffer;
             size_t scratch_buffer_size;
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             spdm_response_size = sizeof(spdm_error_response_t);
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -2591,14 +2169,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
-            salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                   ->application_secret.response_data_salt;
-            sequence_number = ((libspdm_secured_message_context_t
-                                *)(session_info->secured_message_context))
-                              ->application_secret.response_data_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
         }
 
         sub_index++;
@@ -2624,8 +2194,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             size_t transport_header_size;
             uint8_t *scratch_buffer;
             size_t scratch_buffer_size;
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             spdm_response_size = sizeof(spdm_key_update_response_t);
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -2655,14 +2223,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
-            salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                   ->application_secret.response_data_salt;
-            sequence_number = ((libspdm_secured_message_context_t
-                                *)(session_info->secured_message_context))
-                              ->application_secret.response_data_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
         }
         else {
             spdm_error_response_data_response_not_ready_t *spdm_response;
@@ -2670,8 +2230,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             size_t transport_header_size;
             uint8_t *scratch_buffer;
             size_t scratch_buffer_size;
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -2704,14 +2262,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
-            salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                   ->application_secret.response_data_salt;
-            sequence_number = ((libspdm_secured_message_context_t
-                                *)(session_info->secured_message_context))
-                              ->application_secret.response_data_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
         }
 
         sub_index++;
@@ -2737,8 +2287,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             size_t transport_header_size;
             uint8_t *scratch_buffer;
             size_t scratch_buffer_size;
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             spdm_response_size = sizeof(spdm_key_update_response_t);
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -2768,14 +2316,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
-            salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                   ->application_secret.response_data_salt;
-            sequence_number = ((libspdm_secured_message_context_t
-                                *)(session_info->secured_message_context))
-                              ->application_secret.response_data_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
         }
         else if (sub_index == 1) {
             spdm_error_response_data_response_not_ready_t *spdm_response;
@@ -2783,8 +2323,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             size_t transport_header_size;
             uint8_t *scratch_buffer;
             size_t scratch_buffer_size;
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             spdm_response_size = sizeof(spdm_error_response_data_response_not_ready_t);
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -2817,14 +2355,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
-            salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                   ->application_secret.response_data_salt;
-            sequence_number = ((libspdm_secured_message_context_t
-                                *)(session_info->secured_message_context))
-                              ->application_secret.response_data_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
         }
         else if (sub_index == 2) {
             spdm_key_update_response_t *spdm_response;
@@ -2832,8 +2362,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             size_t transport_header_size;
             uint8_t *scratch_buffer;
             size_t scratch_buffer_size;
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             spdm_response_size = sizeof(spdm_key_update_response_t);
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -2863,14 +2391,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
-            salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                   ->application_secret.response_data_salt;
-            sequence_number = ((libspdm_secured_message_context_t
-                                *)(session_info->secured_message_context))
-                              ->application_secret.response_data_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
         }
 
         sub_index++;
@@ -2902,8 +2422,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
                 size_t transport_header_size;
                 uint8_t *scratch_buffer;
                 size_t scratch_buffer_size;
-                uint64_t sequence_number;
-                uint8_t *salt;
 
                 spdm_response_size = sizeof(spdm_key_update_response_t);
                 transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -2933,15 +2451,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
                 ((libspdm_secured_message_context_t
                   *)(session_info->secured_message_context))
                 ->application_secret.response_data_sequence_number--;
-                salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                       ->application_secret.response_data_salt;
-                sequence_number = ((libspdm_secured_message_context_t
-                                    *)(session_info->secured_message_context))
-                                  ->application_secret.response_data_sequence_number;
-                if (sequence_number > 0) {
-                    *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-                }
-
             }
             else {
                 spdm_error_response_t *spdm_response;
@@ -2949,8 +2458,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
                 size_t transport_header_size;
                 uint8_t *scratch_buffer;
                 size_t scratch_buffer_size;
-                uint64_t sequence_number;
-                uint8_t *salt;
 
                 spdm_response_size = sizeof(spdm_error_response_t);
                 transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -2979,15 +2486,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
                 ((libspdm_secured_message_context_t
                   *)(session_info->secured_message_context))
                 ->application_secret.response_data_sequence_number--;
-                salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-                       ->application_secret.response_data_salt;
-                sequence_number = ((libspdm_secured_message_context_t
-                                    *)(session_info->secured_message_context))
-                                  ->application_secret.response_data_sequence_number;
-                if (sequence_number > 0) {
-                    *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-                }
-
 
                 error_code++;
                 /*busy is treated in cases 5 and 6*/
@@ -3019,8 +2517,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         libspdm_session_info_t        *session_info;
         uint8_t *scratch_buffer;
         size_t scratch_buffer_size;
-        uint64_t sequence_number;
-        uint8_t *salt;
 
         spdm_response_size = sizeof(spdm_key_update_response_t);
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -3067,14 +2563,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
-        salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-               ->application_secret.response_data_salt;
-        sequence_number = ((libspdm_secured_message_context_t
-                            *)(session_info->secured_message_context))
-                          ->application_secret.response_data_sequence_number;
-        if (sequence_number > 0) {
-            *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-        }
 
         sub_index++;
     }
@@ -3090,8 +2578,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         libspdm_session_info_t        *session_info;
         uint8_t *scratch_buffer;
         size_t scratch_buffer_size;
-        uint64_t sequence_number;
-        uint8_t *salt;
 
         spdm_response_size = sizeof(spdm_key_update_response_t);
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -3134,14 +2620,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
-        salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-               ->application_secret.response_data_salt;
-        sequence_number = ((libspdm_secured_message_context_t
-                            *)(session_info->secured_message_context))
-                          ->application_secret.response_data_sequence_number;
-        if (sequence_number > 0) {
-            *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-        }
 
         sub_index++;
     }
@@ -3157,8 +2635,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         libspdm_session_info_t        *session_info;
         uint8_t *scratch_buffer;
         size_t scratch_buffer_size;
-        uint64_t sequence_number;
-        uint8_t *salt;
 
         spdm_response_size = sizeof(spdm_key_update_response_t);
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -3201,14 +2677,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
-        salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-               ->application_secret.response_data_salt;
-        sequence_number = ((libspdm_secured_message_context_t
-                            *)(session_info->secured_message_context))
-                          ->application_secret.response_data_sequence_number;
-        if (sequence_number > 0) {
-            *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-        }
 
         sub_index++;
     }
@@ -3224,8 +2692,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         libspdm_session_info_t        *session_info;
         uint8_t *scratch_buffer;
         size_t scratch_buffer_size;
-        uint64_t sequence_number;
-        uint8_t *salt;
 
         spdm_response_size = sizeof(spdm_key_update_response_t);
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -3270,14 +2736,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
-        salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-               ->application_secret.response_data_salt;
-        sequence_number = ((libspdm_secured_message_context_t
-                            *)(session_info->secured_message_context))
-                          ->application_secret.response_data_sequence_number;
-        if (sequence_number > 0) {
-            *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-        }
 
         sub_index++;
     }
@@ -3422,11 +2880,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         .response_data_sequence_number = m_libspdm_last_rsp_sequence_number;
 
         /* once the sequence number is used, it should be increased for next BUSY message.*/
-        if (m_libspdm_last_rsp_sequence_number > 0) {
-            *(uint64_t *)m_libspdm_last_rsp_salt = *(uint64_t *)m_libspdm_last_rsp_salt ^
-                                                   (m_libspdm_last_rsp_sequence_number -
-                                                    1) ^ m_libspdm_last_rsp_sequence_number;
-        }
         m_libspdm_last_rsp_sequence_number++;
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
@@ -3560,8 +3013,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             size_t transport_header_size;
             uint8_t *scratch_buffer;
             size_t scratch_buffer_size;
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             spdm_response_size = sizeof(spdm_key_update_response_t);
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -3590,20 +3041,12 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
              * message and then decode message */
             secured_message_context->application_secret
             .response_data_sequence_number--;
-            salt = secured_message_context->application_secret.response_data_salt;
-            sequence_number = secured_message_context->application_secret.
-                              response_data_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
         } else if (sub_index == 2) {
             spdm_key_update_response_t *spdm_response;
             size_t spdm_response_size;
             size_t transport_header_size;
             uint8_t *scratch_buffer;
             size_t scratch_buffer_size;
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             spdm_response_size = sizeof(spdm_key_update_response_t);
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -3632,12 +3075,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
              * message and then decode message */
             secured_message_context->application_secret
             .response_data_sequence_number--;
-            salt = secured_message_context->application_secret.response_data_salt;
-            sequence_number = secured_message_context->application_secret.
-                              response_data_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
         }
 
         sub_index++;
@@ -3928,8 +3365,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             size_t transport_header_size;
             uint8_t *scratch_buffer;
             size_t scratch_buffer_size;
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             spdm_response_size = sizeof(spdm_key_update_response_t);
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -3958,20 +3393,12 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
              * message and then decode message */
             secured_message_context->application_secret
             .response_data_sequence_number--;
-            salt = secured_message_context->application_secret.response_data_salt;
-            sequence_number = secured_message_context->application_secret.
-                              response_data_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
         } else if (sub_index == 2) {
             spdm_key_update_response_t *spdm_response;
             size_t spdm_response_size;
             size_t transport_header_size;
             uint8_t *scratch_buffer;
             size_t scratch_buffer_size;
-            uint64_t sequence_number;
-            uint8_t *salt;
 
             spdm_response_size = sizeof(spdm_key_update_response_t);
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -4000,12 +3427,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
              * message and then decode message */
             secured_message_context->application_secret
             .response_data_sequence_number--;
-            salt = secured_message_context->application_secret.response_data_salt;
-            sequence_number = secured_message_context->application_secret.
-                              response_data_sequence_number;
-            if (sequence_number > 0) {
-                *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-            }
         }
 
         sub_index++;
@@ -4132,8 +3553,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         libspdm_session_info_t    *session_info;
         uint8_t *scratch_buffer;
         size_t scratch_buffer_size;
-        uint64_t sequence_number;
-        uint8_t *salt;
 
         spdm_response_size = sizeof(spdm_error_response_t);
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -4166,14 +3585,6 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         ((libspdm_secured_message_context_t
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
-        salt = ((libspdm_secured_message_context_t*)(session_info->secured_message_context))
-               ->application_secret.response_data_salt;
-        sequence_number = ((libspdm_secured_message_context_t
-                            *)(session_info->secured_message_context))
-                          ->application_secret.response_data_sequence_number;
-        if (sequence_number > 0) {
-            *(uint64_t *)salt = *(uint64_t *)salt ^ (sequence_number - 1) ^ sequence_number;
-        }
     }
         return LIBSPDM_STATUS_SUCCESS;
 
