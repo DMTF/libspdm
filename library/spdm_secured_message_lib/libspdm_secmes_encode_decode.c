@@ -51,6 +51,7 @@ libspdm_return_t libspdm_encode_secured_message(
     bool result;
     const uint8_t *key;
     uint8_t *salt;
+    uint8_t iv[LIBSPDM_MAX_AEAD_IV_SIZE];
     uint64_t sequence_number;
     uint64_t sequence_num_in_header;
     uint64_t data64;
@@ -126,11 +127,9 @@ libspdm_return_t libspdm_encode_secured_message(
         return LIBSPDM_STATUS_SEQUENCE_NUMBER_OVERFLOW;
     }
 
-    if (sequence_number > 0) {
-        data64 = libspdm_read_uint64((const uint8_t *)salt) ^
-                 (sequence_number - 1) ^ sequence_number;
-        libspdm_write_uint64(salt, data64);
-    }
+    libspdm_copy_mem (iv, LIBSPDM_MAX_AEAD_IV_SIZE, salt, aead_iv_size);
+    data64 = libspdm_read_uint64((const uint8_t *)iv) ^ sequence_number;
+    libspdm_write_uint64(iv, data64);
 
     sequence_num_in_header = 0;
     sequence_num_in_header_size = spdm_secured_message_callbacks->get_sequence_number(
@@ -218,7 +217,7 @@ libspdm_return_t libspdm_encode_secured_message(
         result = libspdm_aead_encryption(
             secured_message_context->secured_message_version,
             secured_message_context->aead_cipher_suite, key,
-            aead_key_size, salt, aead_iv_size, (uint8_t *)a_data,
+            aead_key_size, iv, aead_iv_size, (uint8_t *)a_data,
             record_header_size, dec_msg, cipher_text_size, tag,
             aead_tag_size, enc_msg, &cipher_text_size);
         break;
@@ -256,7 +255,7 @@ libspdm_return_t libspdm_encode_secured_message(
         result = libspdm_aead_encryption(
             secured_message_context->secured_message_version,
             secured_message_context->aead_cipher_suite, key,
-            aead_key_size, salt, aead_iv_size, (uint8_t *)a_data,
+            aead_key_size, iv, aead_iv_size, (uint8_t *)a_data,
             record_header_size + app_message_size, NULL, 0, tag,
             aead_tag_size, NULL, NULL);
         break;
@@ -315,6 +314,7 @@ libspdm_return_t libspdm_decode_secured_message(
     bool result;
     const uint8_t *key;
     uint8_t *salt;
+    uint8_t iv[LIBSPDM_MAX_AEAD_IV_SIZE];
     uint64_t sequence_number;
     uint64_t sequence_num_in_header;
     uint64_t data64;
@@ -397,11 +397,9 @@ libspdm_return_t libspdm_decode_secured_message(
         return LIBSPDM_STATUS_SEQUENCE_NUMBER_OVERFLOW;
     }
 
-    if (sequence_number > 0) {
-        data64 = libspdm_read_uint64((const uint8_t *)salt) ^
-                 (sequence_number - 1) ^ sequence_number;
-        libspdm_write_uint64(salt, data64);
-    }
+    libspdm_copy_mem (iv, LIBSPDM_MAX_AEAD_IV_SIZE, salt, aead_iv_size);
+    data64 = libspdm_read_uint64((const uint8_t *)iv) ^ sequence_number;
+    libspdm_write_uint64(iv, data64);
 
     sequence_num_in_header = 0;
     sequence_num_in_header_size =
@@ -480,7 +478,7 @@ libspdm_return_t libspdm_decode_secured_message(
         result = libspdm_aead_decryption(
             secured_message_context->secured_message_version,
             secured_message_context->aead_cipher_suite, key,
-            aead_key_size, salt, aead_iv_size, a_data,
+            aead_key_size, iv, aead_iv_size, a_data,
             record_header_size, enc_msg, cipher_text_size, tag,
             aead_tag_size, dec_msg, &cipher_text_size);
         if (!result) {
@@ -545,7 +543,7 @@ libspdm_return_t libspdm_decode_secured_message(
         result = libspdm_aead_decryption(
             secured_message_context->secured_message_version,
             secured_message_context->aead_cipher_suite, key,
-            aead_key_size, salt, aead_iv_size, a_data,
+            aead_key_size, iv, aead_iv_size, a_data,
             record_header_size + record_header2->length -
             aead_tag_size,
             NULL, 0, tag, aead_tag_size, NULL, NULL);
