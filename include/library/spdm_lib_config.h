@@ -383,10 +383,6 @@
 #define LIBSPDM_CHECK_SPDM_CONTEXT 1
 #endif
 
-/* Enable Endianness for signatures on SPDM1.0 and SPDM1.1.
-* Big-endian is default, but little-endian may need to be supported as well.
-* See issue: https://github.com/DMTF/libspdm/issues/2151 */
-
 /* For SPDM 1.0 Enable signing in little-endian mode for RSA */
 #ifndef LIBSPDM_SPDM_10_SIGN_LITTLE_ENDIAN_RSA
 #define LIBSPDM_SPDM_10_SIGN_LITTLE_ENDIAN_RSA 0

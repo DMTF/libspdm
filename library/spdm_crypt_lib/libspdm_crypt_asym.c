@@ -589,36 +589,107 @@ bool libspdm_sm2_dsa_verify_wrap (void *context, size_t hash_nid,
 }
 #endif
 
-static void libspdm_copy_signature_swap_endian(
-    uint8_t *endian_swapped_signature_buffer,
-    size_t endian_swapped_signature_buffer_size,
-    bool is_dual_buffer,
-    const uint8_t *signature,
-    size_t sig_size)
+static void libspdm_copy_signature_swap_endian_rsa(
+    uint8_t *dst,
+    size_t dst_size,
+    const uint8_t *src,
+    size_t src_size)
 {
-    LIBSPDM_ASSERT(endian_swapped_signature_buffer_size >= sig_size);
+    /* RSA signature is a single buffer to be swapped */
+    size_t i;
+
+    if (src == dst) {
+        LIBSPDM_ASSERT(dst_size == src_size);
+
+        /* src and dst are same buffer. Swap in place. */
+
+        uint8_t byte;
+        for (i = 0; i < dst_size / 2; i++) {
+            byte = dst[i];
+            dst[i] = dst[dst_size - i - 1];
+            dst[dst_size - i - 1] = byte;
+        }
+    } else {
+        /* src and dst are different non-overlapping buffers */
+        LIBSPDM_ASSERT(dst_size >= src_size);
+        LIBSPDM_ASSERT(src < dst && src + src_size <= dst ||
+                       dst < src && dst + dst_size <= src);
+
+        for (i = 0; i < src_size; i++) {
+            dst[i] = src[src_size - i - 1];
+        }
+    }
+}
+
+static void libspdm_copy_signature_swap_endian_ecdsa(
+    uint8_t *dst,
+    size_t dst_size,
+    const uint8_t *src,
+    size_t src_size)
+{
+
+    /* ECDSA signature is actually 2 buffers (x & y) and each must be swapped individually */
 
     size_t i;
 
-    if (is_dual_buffer) {
-        /* ECDSA signature is actually 2 buffers and each must be swapped individually */
+    if (src == dst) {
+        LIBSPDM_ASSERT(dst_size == src_size);
 
-        size_t buf_size;
-        const uint8_t* buf;
+        /* src and dst are same buffer. Swap ecdsa 2 internal buffers in place. */
 
-        buf_size = sig_size / 2;
-        buf = signature;
-        for (i = 0; i < buf_size; i++) {
-            /* Copy the first buffer endian swapped */
-            endian_swapped_signature_buffer[i] = buf[buf_size - i - 1];
-            /* Copy the second buffer endian swapped */
-            endian_swapped_signature_buffer[i + buf_size] = buf[2 * buf_size - i - 1];
+        size_t x_size;
+        size_t y_size;
+        uint8_t* x;
+        uint8_t* y;
+        uint8_t byte;
+
+        x_size = dst_size / 2;
+        y_size = x_size;
+
+        x = dst;
+        y = x + x_size;
+
+        for (i = 0; i < x_size / 2; i++) {
+            byte = x[i];
+            x[i] = x[x_size - i - 1];
+            x[x_size - i - 1] = byte;
         }
 
+        for (i = 0; i < y_size / 2; i++) {
+            byte = y[i];
+            y[i] = y[y_size - i - 1];
+            y[y_size - i - 1] = byte;
+        }
     } else {
-        /* RSA signature is a single buffer to be swapped */
-        for (i = 0; i < sig_size; i++) {
-            endian_swapped_signature_buffer[i] = signature[sig_size - i - 1];
+        /* src and dst are different non-overlapping buffers */
+        LIBSPDM_ASSERT(dst_size >= src_size);
+        LIBSPDM_ASSERT(src < dst && src + src_size <= dst ||
+                       dst < src && dst + dst_size <= src);
+
+        size_t x_size;
+        size_t y_size;
+
+        const uint8_t *src_x;
+        const uint8_t *src_y;
+
+        uint8_t* dst_x;
+        uint8_t* dst_y;
+
+        x_size = src_size / 2;
+        y_size = x_size;
+
+        src_x = src;
+        src_y = src_x + x_size;
+
+        dst_x = dst;
+        dst_y = dst_x + x_size;
+
+        for (i = 0; i < x_size; i++) {
+            dst_x[i] = src_x[x_size - i - 1];
+        }
+
+        for (i = 0; i < y_size; i++) {
+            dst_y[i] = src_y[y_size - i - 1];
         }
     }
 }
@@ -651,9 +722,9 @@ static bool libspdm_asym_verify_wrap(
                                                         message, message_size,
                                                         signature, sig_size);
         if (!result && try_endian_swapped_signature) {
-            libspdm_copy_signature_swap_endian(endian_swapped_signature,
-                                               sizeof(endian_swapped_signature),
-                                               false, signature, sig_size);
+            libspdm_copy_signature_swap_endian_rsa(endian_swapped_signature,
+                                                   sizeof(endian_swapped_signature),
+                                                   signature, sig_size);
 
             result = libspdm_rsa_pkcs1_verify_with_nid_wrap(context, hash_nid,
                                                             param, param_size,
@@ -684,9 +755,9 @@ static bool libspdm_asym_verify_wrap(
                                              message, message_size,
                                              signature, sig_size);
         if (!result && try_endian_swapped_signature) {
-            libspdm_copy_signature_swap_endian(endian_swapped_signature,
-                                               sizeof(endian_swapped_signature),
-                                               false, signature, sig_size);
+            libspdm_copy_signature_swap_endian_rsa(endian_swapped_signature,
+                                                   sizeof(endian_swapped_signature),
+                                                   signature, sig_size);
 
             result = libspdm_rsa_pss_verify_wrap(context, hash_nid,
                                                  param, param_size,
@@ -716,9 +787,9 @@ static bool libspdm_asym_verify_wrap(
                                            message, message_size,
                                            signature, sig_size);
         if (!result && try_endian_swapped_signature) {
-            libspdm_copy_signature_swap_endian(endian_swapped_signature,
-                                               sizeof(endian_swapped_signature),
-                                               true, signature, sig_size);
+            libspdm_copy_signature_swap_endian_ecdsa(endian_swapped_signature,
+                                                     sizeof(endian_swapped_signature),
+                                                     signature, sig_size);
 
             result = libspdm_ecdsa_verify_wrap(context, hash_nid,
                                                param, param_size,
@@ -973,8 +1044,8 @@ void libspdm_asym_signature_swap_endian_if_necessary(
     uint8_t *signature, size_t sig_size)
 {
 #if LIBSPDM_SPDM_10_11_SIGN_LITTLE_ENDIAN_RSA_ECDSA
-    uint32_t swap_endian_rsa = 0;
-    uint32_t swap_endian_ecdsa = 0;
+    bool swap_endian_rsa = false;
+    bool swap_endian_ecdsa = false;
     size_t i;
     uint8_t byte;
 
@@ -1000,32 +1071,11 @@ void libspdm_asym_signature_swap_endian_if_necessary(
     }
 #endif
     if (swap_endian_rsa) {
-        /* RSA signature is a single buffer to be swapped */
-
-        for (i = 0; i < sig_size / 2; i++) {
-            byte = signature[i];
-            signature[i] = signature[sig_size - i - 1];
-            signature[sig_size - i - 1] = byte;
-        }
+        libspdm_copy_signature_swap_endian_rsa(signature, sig_size, signature, sig_size);
     } else if (swap_endian_ecdsa) {
+        libspdm_copy_signature_swap_endian_ecdsa(signature, sig_size, signature, size_size);
         /* ECDSA signature is actually 2 buffers and each must be swapped individually */
-        size_t buf_size;
-        uint8_t* buf;
 
-        buf_size = sig_size / 2;
-        buf = signature;
-        for (i = 0; i < buf_size / 2; i++) {
-            byte = buf[i];
-            buf[i] = buf[buf_size - i - 1];
-            buf[buf_size - i - 1] = byte;
-        }
-
-        buf = signature + buf_size;
-        for (i = 0; i < buf_size / 2; i++) {
-            byte = buf[i];
-            buf[i] = buf[buf_size - i - 1];
-            buf[buf_size - i - 1] = byte;
-        }
     }
 
 #endif /* LIBSPDM_SPDM_10_11_SIGN_LITTLE_ENDIAN_RSA_ECDSA */
@@ -1106,8 +1156,10 @@ bool libspdm_asym_sign(
                                         message, message_size,
                                         signature, sig_size);
     }
-    libspdm_asym_signature_swap_endian_if_necessary(spdm_version, base_asym_algo,
-                                                    signature, *sig_size);
+    if (result) {
+        libspdm_asym_signature_swap_endian_if_necessary(spdm_version, base_asym_algo,
+                                                        signature, *sig_size);
+    }
     return result;
 }
 
@@ -1191,8 +1243,10 @@ bool libspdm_asym_sign_hash(
                                         param, param_size,
                                         message_hash, hash_size,
                                         signature, sig_size);
-        libspdm_asym_signature_swap_endian_if_necessary(spdm_version, base_asym_algo,
-                                                        signature, *sig_size);
+        if (result) {
+            libspdm_asym_signature_swap_endian_if_necessary(spdm_version, base_asym_algo,
+                                                            signature, *sig_size);
+        }
         return result;
     } else {
         LIBSPDM_ASSERT (false);
@@ -1466,16 +1520,21 @@ bool libspdm_req_asym_sign(
         if (!result) {
             return false;
         }
-        return libspdm_asym_sign_wrap(context, hash_nid, req_base_asym_alg,
+        result = libspdm_asym_sign_wrap(context, hash_nid, req_base_asym_alg,
                                       param, param_size,
                                       message_hash, hash_size,
                                       signature, sig_size);
     } else {
-        return libspdm_asym_sign_wrap(context, hash_nid, req_base_asym_alg,
+        result = libspdm_asym_sign_wrap(context, hash_nid, req_base_asym_alg,
                                       param, param_size,
                                       message, message_size,
                                       signature, sig_size);
     }
+    if (result) {
+        libspdm_asym_signature_swap_endian_if_necessary(spdm_version, req_base_asym_alg,
+                                                        signature, *sig_size);
+    }
+    return result;
 }
 
 bool libspdm_req_asym_sign_hash(
@@ -1555,10 +1614,15 @@ bool libspdm_req_asym_sign_hash(
     }
 
     if (need_hash) {
-        return libspdm_asym_sign_wrap(context, hash_nid, req_base_asym_alg,
-                                      param, param_size,
-                                      message_hash, hash_size,
-                                      signature, sig_size);
+        result = libspdm_asym_sign_wrap(context, hash_nid, req_base_asym_alg,
+                                        param, param_size,
+                                        message_hash, hash_size,
+                                        signature, sig_size);
+        if (result) {
+            libspdm_asym_signature_swap_endian_if_necessary(spdm_version, req_base_asym_alg,
+                                                            signature, *sig_size);
+        }
+        return result;
     } else {
         LIBSPDM_ASSERT (false);
         return false;
