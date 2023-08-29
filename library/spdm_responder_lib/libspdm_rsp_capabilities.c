@@ -186,6 +186,8 @@ libspdm_return_t libspdm_get_response_capabilities(libspdm_context_t *spdm_conte
                                                    SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                    response_size, response);
         }
+    }
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
         if (((spdm_request->flags & SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP) == 0) &&
             (spdm_request->data_transfer_size != spdm_request->max_spdm_msg_size)) {
             return libspdm_generate_error_response(spdm_context,
