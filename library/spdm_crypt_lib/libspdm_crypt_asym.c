@@ -612,8 +612,8 @@ static void libspdm_copy_signature_swap_endian_rsa(
     } else {
         /* src and dst are different non-overlapping buffers */
         LIBSPDM_ASSERT(dst_size >= src_size);
-        LIBSPDM_ASSERT(src < dst && src + src_size <= dst ||
-                       dst < src && dst + dst_size <= src);
+        LIBSPDM_ASSERT((src < dst && src + src_size <= dst) ||
+                       (dst < src && dst + dst_size <= src));
 
         for (i = 0; i < src_size; i++) {
             dst[i] = src[src_size - i - 1];
@@ -663,8 +663,8 @@ static void libspdm_copy_signature_swap_endian_ecdsa(
     } else {
         /* src and dst are different non-overlapping buffers */
         LIBSPDM_ASSERT(dst_size >= src_size);
-        LIBSPDM_ASSERT(src < dst && src + src_size <= dst ||
-                       dst < src && dst + dst_size <= src);
+        LIBSPDM_ASSERT((src < dst && src + src_size <= dst) ||
+                       (dst < src && dst + dst_size <= src));
 
         size_t x_size;
         size_t y_size;
@@ -1521,14 +1521,14 @@ bool libspdm_req_asym_sign(
             return false;
         }
         result = libspdm_asym_sign_wrap(context, hash_nid, req_base_asym_alg,
-                                      param, param_size,
-                                      message_hash, hash_size,
-                                      signature, sig_size);
+                                        param, param_size,
+                                        message_hash, hash_size,
+                                        signature, sig_size);
     } else {
         result = libspdm_asym_sign_wrap(context, hash_nid, req_base_asym_alg,
-                                      param, param_size,
-                                      message, message_size,
-                                      signature, sig_size);
+                                        param, param_size,
+                                        message, message_size,
+                                        signature, sig_size);
     }
     if (result) {
         libspdm_asym_signature_swap_endian_if_necessary(spdm_version, req_base_asym_alg,
