@@ -224,6 +224,7 @@ bool libspdm_verify_key_exchange_rsp_signature(
         spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
         spdm_context->connection_info.algorithm.base_asym_algo,
         spdm_context->connection_info.algorithm.base_hash_algo,
+        spdm_context->spdm_10_11_asym_algo_verify_dual_endian,
         context, th_curr_data, th_curr_data_size, sign_data, sign_data_size);
     libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo, context);
 #else
@@ -231,6 +232,7 @@ bool libspdm_verify_key_exchange_rsp_signature(
         spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
         spdm_context->connection_info.algorithm.base_asym_algo,
         spdm_context->connection_info.algorithm.base_hash_algo,
+        spdm_context->spdm_10_11_asym_algo_verify_dual_endian,
         context, hash_data, hash_size, sign_data, sign_data_size);
     if (slot_id == 0xFF) {
         libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo, context);

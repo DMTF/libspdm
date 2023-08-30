@@ -545,7 +545,7 @@ static libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
         libspdm_responder_data_sign(
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_MEASUREMENTS,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
+                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, 0,
                 false, m_libspdm_local_buffer, m_libspdm_local_buffer_size,
                 ptr, &sig_size);
         ptr += sig_size;
@@ -631,7 +631,7 @@ static libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
         libspdm_responder_data_sign(
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_MEASUREMENTS,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
+                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, 0,
                 false, m_libspdm_local_buffer, m_libspdm_local_buffer_size,
                 ptr, &sig_size);
         ptr += sig_size;
@@ -791,7 +791,7 @@ static libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
                 spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                     SPDM_MEASUREMENTS,
                     m_libspdm_use_asym_algo,
-                    m_libspdm_use_hash_algo,
+                    m_libspdm_use_hash_algo, 0,
                     false, m_libspdm_local_buffer,
                     m_libspdm_local_buffer_size, ptr,
                     &sig_size);
@@ -965,7 +965,7 @@ static libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
                 spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                     SPDM_MEASUREMENTS,
                     m_libspdm_use_asym_algo,
-                    m_libspdm_use_hash_algo,
+                    m_libspdm_use_hash_algo, 0,
                     false, m_libspdm_local_buffer,
                     m_libspdm_local_buffer_size, ptr,
                     &sig_size);
@@ -1355,7 +1355,7 @@ static libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
         libspdm_responder_data_sign(
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_MEASUREMENTS,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
+                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, 0,
                 false, m_libspdm_local_buffer, m_libspdm_local_buffer_size,
                 ptr, &sig_size);
         ptr += sig_size;
@@ -1445,7 +1445,7 @@ static libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
         libspdm_responder_data_sign(
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_MEASUREMENTS,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
+                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, 0,
                 false, m_libspdm_local_buffer, m_libspdm_local_buffer_size,
                 ptr, &sig_size);
         ptr += sig_size;
@@ -2014,7 +2014,7 @@ static libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
         libspdm_responder_data_sign(
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_MEASUREMENTS,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
+                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, 0,
                 false, m_libspdm_local_buffer, m_libspdm_local_buffer_size,
                 ptr, &sig_size);
         ptr += sig_size;
@@ -2113,7 +2113,7 @@ static libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
         libspdm_responder_data_sign(
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_MEASUREMENTS,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
+                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, 0,
                 false, m_libspdm_local_buffer, m_libspdm_local_buffer_size,
                 ptr, &sig_size);
         ptr += sig_size;
@@ -2212,7 +2212,7 @@ static libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
         libspdm_responder_data_sign(
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_MEASUREMENTS,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
+                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, 0,
                 false, m_libspdm_local_buffer, m_libspdm_local_buffer_size,
                 ptr, &sig_size);
         ptr += sig_size;
@@ -2309,7 +2309,7 @@ static libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
         libspdm_responder_data_sign(
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_MEASUREMENTS,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
+                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, 0,
                 false, m_libspdm_local_buffer, m_libspdm_local_buffer_size,
                 ptr, &sig_size);
         ptr += sig_size;
@@ -2697,7 +2697,7 @@ static libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
         libspdm_responder_data_sign(
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_MEASUREMENTS,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
+                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, 0,
                 false, m_libspdm_local_buffer, m_libspdm_local_buffer_size,
                 ptr, &sig_size);
         ptr += sig_size;
@@ -2855,7 +2855,7 @@ static libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
         libspdm_responder_data_sign(
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_MEASUREMENTS,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
+                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, 0,
                 false, m_libspdm_local_buffer, m_libspdm_local_buffer_size,
                 ptr, &sig_size);
         ptr += sig_size;
@@ -2973,7 +2973,7 @@ static libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
         libspdm_responder_data_sign(
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_MEASUREMENTS,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
+                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, 0,
                 false, m_libspdm_local_buffer, m_libspdm_local_buffer_size,
                 ptr, &sig_size);
         ptr += sig_size;
@@ -3110,7 +3110,7 @@ static libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
         libspdm_responder_data_sign(
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_MEASUREMENTS,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
+                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, 0,
                 false, m_libspdm_local_buffer, m_libspdm_local_buffer_size,
                 ptr, &sig_size);
         ptr += sig_size;

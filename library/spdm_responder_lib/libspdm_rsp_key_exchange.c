@@ -152,12 +152,14 @@ bool libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context
         spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
         spdm_context->connection_info.algorithm.base_asym_algo,
         spdm_context->connection_info.algorithm.base_hash_algo,
+        spdm_context->spdm_10_11_asym_algo_sign_little_endian,
         false, th_curr_data, th_curr_data_size, signature, &signature_size);
 #else
     result = libspdm_responder_data_sign(
         spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
         spdm_context->connection_info.algorithm.base_asym_algo,
         spdm_context->connection_info.algorithm.base_hash_algo,
+        spdm_context->spdm_10_11_asym_algo_sign_little_endian,
         true, hash_data, hash_size, signature, &signature_size);
 #endif
     if (result) {

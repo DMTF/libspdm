@@ -243,6 +243,7 @@ bool libspdm_verify_finish_req_signature(libspdm_context_t *spdm_context,
         spdm_context->connection_info.version, SPDM_FINISH,
         spdm_context->connection_info.algorithm.req_base_asym_alg,
         spdm_context->connection_info.algorithm.base_hash_algo,
+        spdm_context->spdm_10_11_asym_algo_verify_dual_endian,
         context, th_curr_data, th_curr_data_size, sign_data, sign_data_size);
     libspdm_req_asym_free(spdm_context->connection_info.algorithm.req_base_asym_alg, context);
 #else
@@ -250,6 +251,7 @@ bool libspdm_verify_finish_req_signature(libspdm_context_t *spdm_context,
         spdm_context->connection_info.version, SPDM_FINISH,
         spdm_context->connection_info.algorithm.req_base_asym_alg,
         spdm_context->connection_info.algorithm.base_hash_algo,
+        spdm_context->spdm_10_11_asym_algo_verify_dual_endian,
         context, hash_data, hash_size, sign_data, sign_data_size);
     if (slot_id == 0xFF) {
         libspdm_req_asym_free(spdm_context->connection_info.algorithm.req_base_asym_alg, context);

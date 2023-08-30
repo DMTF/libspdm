@@ -202,7 +202,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
         free(data);
         libspdm_responder_data_sign(
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-                SPDM_KEY_EXCHANGE_RSP, m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, false,
+                SPDM_KEY_EXCHANGE_RSP, m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, 0, false,
                 libspdm_get_managed_buffer(&th_curr), libspdm_get_managed_buffer_size(
                 &th_curr), ptr, &signature_size);
         libspdm_copy_mem(&m_libspdm_local_buffer[m_libspdm_local_buffer_size],

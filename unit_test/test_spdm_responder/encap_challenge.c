@@ -81,7 +81,7 @@ void libspdm_test_responder_encap_challenge_case1(void **state)
     libspdm_requester_data_sign(
         spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
             SPDM_CHALLENGE_AUTH,
-            m_libspdm_use_req_asym_algo, m_libspdm_use_hash_algo,
+            m_libspdm_use_req_asym_algo, m_libspdm_use_hash_algo, 0,
             false, (uint8_t*)spdm_response, response_size - sig_size,
             ptr, &sig_size);
 
@@ -356,7 +356,7 @@ void libspdm_test_responder_encap_challenge_case5(void **state)
     libspdm_requester_data_sign(
         spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
             SPDM_CHALLENGE_AUTH,
-            m_libspdm_use_req_asym_algo, m_libspdm_use_hash_algo,
+            m_libspdm_use_req_asym_algo, m_libspdm_use_hash_algo, 0,
             false, (uint8_t*)spdm_response, response_size - sig_size,
             ptr, &sig_size);
 

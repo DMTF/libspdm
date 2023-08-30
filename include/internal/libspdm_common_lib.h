@@ -565,6 +565,11 @@ typedef struct {
 #if LIBSPDM_FIPS_MODE
     libspdm_fips_selftest_context fips_selftest_context;
 #endif /* LIBSPDM_FIPS_MODE */
+
+    /* Endianness to use for asymmetric algorithms signing and verification on SPDM 1.0 and 1.1 */
+    uint32_t spdm_10_11_asym_algo_sign_little_endian;
+    uint32_t spdm_10_11_asym_algo_verify_dual_endian;
+
 } libspdm_context_t;
 
 #define LIBSPDM_CONTEXT_SIZE_WITHOUT_SECURED_CONTEXT (sizeof(libspdm_context_t))

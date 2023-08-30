@@ -131,6 +131,13 @@ typedef enum {
     LIBSPDM_DATA_SESSION_SEQUENCE_NUMBER_REQ_DIR,
     LIBSPDM_DATA_MAX_SPDM_SESSION_SEQUENCE_NUMBER,
 
+    /* For SPDM 1.0 and 1.1:
+     * 1) Allow signing in little-endian for specified asymmetric algorithms.
+     * 2) Allow signature verification for both endians for specified asymmetric algorithms.
+     **/
+    LIBSPDM_DATA_SPDM_VERSION_10_11_ASYM_ALGO_SIGN_LITTLE_ENDIAN,
+    LIBSPDM_DATA_SPDM_VERSION_10_11_ASYM_ALGO_VERIFY_DUAL_ENDIAN,
+
     /* MAX */
     LIBSPDM_DATA_MAX
 } libspdm_data_type_t;

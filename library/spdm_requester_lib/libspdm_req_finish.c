@@ -303,12 +303,14 @@ bool libspdm_generate_finish_req_signature(libspdm_context_t *spdm_context,
         spdm_context->connection_info.version, SPDM_FINISH,
         spdm_context->connection_info.algorithm.req_base_asym_alg,
         spdm_context->connection_info.algorithm.base_hash_algo,
+        spdm_context->spdm_10_11_asym_algo_sign_little_endian,
         false, th_curr_data, th_curr_data_size, signature, &signature_size);
 #else
     result = libspdm_requester_data_sign(
         spdm_context->connection_info.version, SPDM_FINISH,
         spdm_context->connection_info.algorithm.req_base_asym_alg,
         spdm_context->connection_info.algorithm.base_hash_algo,
+        spdm_context->spdm_10_11_asym_algo_sign_little_endian,
         true, hash_data, hash_size, signature, &signature_size);
 #endif
     if (result) {

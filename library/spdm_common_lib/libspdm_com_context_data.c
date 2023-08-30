@@ -688,6 +688,18 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
             context->max_spdm_session_sequence_number = LIBSPDM_MAX_SPDM_SESSION_SEQUENCE_NUMBER;
         }
         break;
+    case LIBSPDM_DATA_SPDM_VERSION_10_11_ASYM_ALGO_SIGN_LITTLE_ENDIAN:
+        if (data_size != sizeof(uint32_t)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        context->spdm_10_11_asym_algo_sign_little_endian = *(uint32_t*)data;
+        break;
+    case LIBSPDM_DATA_SPDM_VERSION_10_11_ASYM_ALGO_VERIFY_DUAL_ENDIAN:
+        if (data_size != sizeof(uint32_t)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        context->spdm_10_11_asym_algo_verify_dual_endian = *(uint32_t*)data;
+        break;
     default:
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         break;
@@ -969,6 +981,14 @@ libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_t
     case LIBSPDM_DATA_VCA_CACHE:
         target_data_size = context->transcript.message_a.buffer_size;
         target_data = context->transcript.message_a.buffer;
+        break;
+    case LIBSPDM_DATA_SPDM_VERSION_10_11_ASYM_ALGO_SIGN_LITTLE_ENDIAN:
+        target_data_size = sizeof(uint32_t);
+        target_data = &context->spdm_10_11_asym_algo_sign_little_endian;
+        break;
+    case LIBSPDM_DATA_SPDM_VERSION_10_11_ASYM_ALGO_VERIFY_DUAL_ENDIAN:
+        target_data_size = sizeof(uint32_t);
+        target_data = &context->spdm_10_11_asym_algo_verify_dual_endian;
         break;
     default:
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;

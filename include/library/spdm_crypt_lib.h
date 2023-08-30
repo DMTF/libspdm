@@ -31,22 +31,30 @@
 
 #if ((LIBSPDM_RSA_SSA_4096_SUPPORT) || (LIBSPDM_RSA_PSS_4096_SUPPORT))
 #define LIBSPDM_MAX_ASYM_KEY_SIZE 512
+#define LIBSPDM_MAX_ASYM_SIG_SIZE 512
 #elif ((LIBSPDM_RSA_SSA_3072_SUPPORT) || (LIBSPDM_RSA_PSS_3072_SUPPORT))
 #define LIBSPDM_MAX_ASYM_KEY_SIZE 384
+#define LIBSPDM_MAX_ASYM_SIG_SIZE 384
 #elif ((LIBSPDM_RSA_SSA_2048_SUPPORT) || (LIBSPDM_RSA_PSS_2048_SUPPORT))
 #define LIBSPDM_MAX_ASYM_KEY_SIZE 256
+#define LIBSPDM_MAX_ASYM_SIG_SIZE 256
 #elif (LIBSPDM_ECDSA_P521_SUPPORT)
 #define LIBSPDM_MAX_ASYM_KEY_SIZE (66 * 2)
+#define LIBSPDM_MAX_ASYM_SIG_SIZE (66 * 2)
 #elif (LIBSPDM_EDDSA_ED448_SUPPORT)
 #define LIBSPDM_MAX_ASYM_KEY_SIZE (57 * 2)
+#define LIBSPDM_MAX_ASYM_SIG_SIZE (57 * 2)
 #elif (LIBSPDM_ECDSA_P384_SUPPORT)
 #define LIBSPDM_MAX_ASYM_KEY_SIZE (48 * 2)
+#define LIBSPDM_MAX_ASYM_SIG_SIZE (48 * 2)
 #elif ((LIBSPDM_ECDSA_P256_SUPPORT) || (LIBSPDM_SM2_DSA_P256_SUPPORT) || \
     (LIBSPDM_EDDSA_ED25519_SUPPORT))
 #define LIBSPDM_MAX_ASYM_KEY_SIZE (32 * 2)
+#define LIBSPDM_MAX_ASYM_SIG_SIZE (32 * 2)
 #else
 /* set 1 to pass build only */
 #define LIBSPDM_MAX_ASYM_KEY_SIZE 1
+#define LIBSPDM_MAX_ASYM_SIG_SIZE 1
 #endif /* LIBSPDM_MAX_ASYM_KEY_SIZE */
 
 #if ((LIBSPDM_SHA512_SUPPORT) || (LIBSPDM_SHA3_512_SUPPORT))
@@ -409,6 +417,7 @@ void libspdm_asym_free(uint32_t base_asym_algo, void *context);
  *
  * @param  base_asym_algo  SPDM base_asym_algo
  * @param  base_hash_algo  SPDM base_hash_algo
+ * @param  spdm_10_11_asym_algos_verify_dual_endian Algos to verify dual endian.
  * @param  context         Pointer to asymmetric context for signature verification.
  * @param  message         Pointer to octet message to be checked (before hash).
  * @param  message_size    Size of the message in bytes.
@@ -421,6 +430,7 @@ void libspdm_asym_free(uint32_t base_asym_algo, void *context);
 bool libspdm_asym_verify(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint32_t base_asym_algo, uint32_t base_hash_algo,
+    uint32_t spdm_10_11_asym_algos_verify_dual_endian,
     void *context, const uint8_t *message,
     size_t message_size, const uint8_t *signature,
     size_t sig_size);
@@ -430,6 +440,7 @@ bool libspdm_asym_verify(
  *
  * @param  base_asym_algo  SPDM base_asym_algo
  * @param  base_hash_algo  SPDM base_hash_algo
+ * @param  spdm_10_11_asym_algos_verify_dual_endian Algos to verify dual endian.
  * @param  context         Pointer to asymmetric context for signature verification.
  * @param  message_hash    Pointer to octet message hash to be checked (after hash).
  * @param  hash_size       Size of the hash in bytes.
@@ -442,6 +453,7 @@ bool libspdm_asym_verify(
 bool libspdm_asym_verify_hash(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint32_t base_asym_algo, uint32_t base_hash_algo,
+    uint32_t spdm_10_11_asym_algos_verify_dual_endian,
     void *context, const uint8_t *message_hash,
     size_t hash_size, const uint8_t *signature,
     size_t sig_size);
@@ -454,6 +466,7 @@ bool libspdm_asym_verify_hash(
  *
  * @param  base_asym_algo  SPDM base_asym_algo
  * @param  base_hash_algo  SPDM base_hash_algo
+ * @param  spdm_10_11_asym_algos_sign_little_endian Algos to sign in little endian.
  * @param  context         Pointer to asymmetric context for signature generation.
  * @param  message         Pointer to octet message to be signed (before hash).
  * @param  message_size    Size of the message in bytes.
@@ -468,6 +481,7 @@ bool libspdm_asym_verify_hash(
 bool libspdm_asym_sign(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint32_t base_asym_algo, uint32_t base_hash_algo,
+    uint32_t spdm_10_11_asym_algos_sign_little_endian,
     void *context, const uint8_t *message,
     size_t message_size, uint8_t *signature,
     size_t *sig_size);
@@ -480,6 +494,7 @@ bool libspdm_asym_sign(
  *
  * @param  base_asym_algo  SPDM base_asym_algo
  * @param  base_hash_algo  SPDM base_hash_algo
+ * @param  spdm_10_11_asym_algos_sign_little_endian Algos to sign in little endian.
  * @param  context         Pointer to asymmetric context for signature generation.
  * @param  message_hash    Pointer to octet message hash to be signed (after hash).
  * @param  hash_size       Size of the hash in bytes.
@@ -494,6 +509,7 @@ bool libspdm_asym_sign(
 bool libspdm_asym_sign_hash(
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint32_t base_asym_algo, uint32_t base_hash_algo,
+    uint32_t spdm_10_11_asym_algos_sign_little_endian,
     void *context, const uint8_t *message_hash,
     size_t hash_size, uint8_t *signature,
     size_t *sig_size);
@@ -558,6 +574,7 @@ void libspdm_req_asym_free(uint16_t req_base_asym_alg, void *context);
  *
  * @param  req_base_asym_alg  SPDM req_base_asym_alg
  * @param  base_hash_algo     SPDM base_hash_algo
+ * @param  spdm_10_11_asym_algo_verify_dual_endian Verify in both endians for some algos.
  * @param  context            Pointer to asymmetric context for signature verification.
  * @param  message            Pointer to octet message to be checked (before hash).
  * @param  message_size       Size of the message in bytes.
@@ -569,8 +586,9 @@ void libspdm_req_asym_free(uint16_t req_base_asym_alg, void *context);
  **/
 bool libspdm_req_asym_verify(
     spdm_version_number_t spdm_version, uint8_t op_code,
-    uint16_t req_base_asym_alg,
-    uint32_t base_hash_algo, void *context,
+    uint16_t req_base_asym_alg, uint32_t base_hash_algo,
+    uint32_t spdm_10_11_asym_algo_verify_dual_endian,
+    void *context,
     const uint8_t *message, size_t message_size,
     const uint8_t *signature, size_t sig_size);
 
@@ -579,6 +597,7 @@ bool libspdm_req_asym_verify(
  *
  * @param  req_base_asym_alg  SPDM req_base_asym_alg
  * @param  base_hash_algo     SPDM base_hash_algo
+ * @param  spdm_10_11_asym_algo_verify_dual_endian Verify in both endians for some algos.
  * @param  context            Pointer to asymmetric context for signature verification.
  * @param  message_hash       Pointer to octet message hash to be checked (after hash).
  * @param  hash_size          Size of the hash in bytes.
@@ -590,8 +609,9 @@ bool libspdm_req_asym_verify(
  **/
 bool libspdm_req_asym_verify_hash(
     spdm_version_number_t spdm_version, uint8_t op_code,
-    uint16_t req_base_asym_alg,
-    uint32_t base_hash_algo, void *context,
+    uint16_t req_base_asym_alg, uint32_t base_hash_algo,
+    uint32_t spdm_10_11_asym_algo_verify_dual_endian,
+    void *context,
     const uint8_t *message_hash, size_t hash_size,
     const uint8_t *signature, size_t sig_size);
 
@@ -603,6 +623,7 @@ bool libspdm_req_asym_verify_hash(
  *
  * @param  req_base_asym_alg  SPDM req_base_asym_alg
  * @param  base_hash_algo     SPDM base_hash_algo
+ * @param  spdm_10_11_asym_algo_sign_little_endian Sign in little endian for some algos.
  * @param  context            Pointer to asymmetric context for signature generation.
  * @param  message            Pointer to octet message to be signed (before hash).
  * @param  message_size       Size of the message in bytes.
@@ -616,8 +637,9 @@ bool libspdm_req_asym_verify_hash(
  **/
 bool libspdm_req_asym_sign(
     spdm_version_number_t spdm_version, uint8_t op_code,
-    uint16_t req_base_asym_alg,
-    uint32_t base_hash_algo, void *context,
+    uint16_t req_base_asym_alg, uint32_t base_hash_algo,
+    uint32_t spdm_10_11_asym_algo_sign_little_endian,
+    void *context,
     const uint8_t *message, size_t message_size,
     uint8_t *signature, size_t *sig_size);
 
@@ -629,6 +651,7 @@ bool libspdm_req_asym_sign(
  *
  * @param  req_base_asym_alg  SPDM req_base_asym_alg
  * @param  base_hash_algo     SPDM base_hash_algo
+ * @param  spdm_10_11_asym_algo_sign_little_endian Sign in little endian for some algos.
  * @param  context            Pointer to asymmetric context for signature generation.
  * @param  message_hash       Pointer to octet message hash to be signed (after hash).
  * @param  hash_size          Size of the hash in bytes.
@@ -642,8 +665,9 @@ bool libspdm_req_asym_sign(
  **/
 bool libspdm_req_asym_sign_hash(
     spdm_version_number_t spdm_version, uint8_t op_code,
-    uint16_t req_base_asym_alg,
-    uint32_t base_hash_algo, void *context,
+    uint16_t req_base_asym_alg, uint32_t base_hash_algo,
+    uint32_t spdm_10_11_asym_algo_sign_little_endian,
+    void *context,
     const uint8_t *message_hash, size_t hash_size,
     uint8_t *signature, size_t *sig_size);
 

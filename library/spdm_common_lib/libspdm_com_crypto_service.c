@@ -788,12 +788,14 @@ bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
             spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
             spdm_context->connection_info.algorithm.req_base_asym_alg,
             spdm_context->connection_info.algorithm.base_hash_algo,
+            spdm_context->spdm_10_11_asym_algo_sign_little_endian,
             false, m1m2_buffer, m1m2_buffer_size, signature, &signature_size);
 #else
         result = libspdm_requester_data_sign(
             spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
             spdm_context->connection_info.algorithm.req_base_asym_alg,
             spdm_context->connection_info.algorithm.base_hash_algo,
+            spdm_context->spdm_10_11_asym_algo_sign_little_endian,
             true, m1m2_hash, m1m2_hash_size, signature, &signature_size);
 #endif
 #else /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
@@ -807,6 +809,7 @@ bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
             spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
             spdm_context->connection_info.algorithm.base_asym_algo,
             spdm_context->connection_info.algorithm.base_hash_algo,
+            spdm_context->spdm_10_11_asym_algo_sign_little_endian,
             false, m1m2_buffer, m1m2_buffer_size, signature,
             &signature_size);
 #else
@@ -814,6 +817,7 @@ bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
             spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
             spdm_context->connection_info.algorithm.base_asym_algo,
             spdm_context->connection_info.algorithm.base_hash_algo,
+            spdm_context->spdm_10_11_asym_algo_sign_little_endian,
             true, m1m2_hash, m1m2_hash_size, signature,
             &signature_size);
 #endif
@@ -1052,6 +1056,7 @@ bool libspdm_verify_challenge_auth_signature(libspdm_context_t *spdm_context,
             spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
             spdm_context->connection_info.algorithm.base_asym_algo,
             spdm_context->connection_info.algorithm.base_hash_algo,
+            spdm_context->spdm_10_11_asym_algo_verify_dual_endian,
             context, m1m2_buffer, m1m2_buffer_size, sign_data, sign_data_size);
         libspdm_asym_free(
             spdm_context->connection_info.algorithm.base_asym_algo, context);
@@ -1060,6 +1065,7 @@ bool libspdm_verify_challenge_auth_signature(libspdm_context_t *spdm_context,
             spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
             spdm_context->connection_info.algorithm.base_asym_algo,
             spdm_context->connection_info.algorithm.base_hash_algo,
+            spdm_context->spdm_10_11_asym_algo_verify_dual_endian,
             context, m1m2_hash, m1m2_hash_size, sign_data, sign_data_size);
         if (slot_id == 0xFF) {
             libspdm_asym_free(
@@ -1072,6 +1078,7 @@ bool libspdm_verify_challenge_auth_signature(libspdm_context_t *spdm_context,
             spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
             spdm_context->connection_info.algorithm.req_base_asym_alg,
             spdm_context->connection_info.algorithm.base_hash_algo,
+            spdm_context->spdm_10_11_asym_algo_verify_dual_endian,
             context, m1m2_buffer, m1m2_buffer_size, sign_data, sign_data_size);
         libspdm_req_asym_free(
             spdm_context->connection_info.algorithm.req_base_asym_alg, context);
@@ -1080,6 +1087,7 @@ bool libspdm_verify_challenge_auth_signature(libspdm_context_t *spdm_context,
             spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
             spdm_context->connection_info.algorithm.req_base_asym_alg,
             spdm_context->connection_info.algorithm.base_hash_algo,
+            spdm_context->spdm_10_11_asym_algo_verify_dual_endian,
             context, m1m2_hash, m1m2_hash_size, sign_data, sign_data_size);
         if (slot_id == 0xFF) {
             libspdm_req_asym_free(
