@@ -162,12 +162,10 @@ bool libspdm_rsa_generate_key(void *rsa_context, size_t modulus_length,
 {
     int32_t ret = 0;
     mbedtls_rsa_context *rsa;
-    int32_t pe;
-    mbedtls_mpi e;
+    uint32_t e;
 
 
     /* Check input parameters.*/
-
     if (rsa_context == NULL || modulus_length > INT_MAX ||
         public_exponent_size > INT_MAX) {
         return false;
@@ -175,20 +173,36 @@ bool libspdm_rsa_generate_key(void *rsa_context, size_t modulus_length,
 
     rsa = (mbedtls_rsa_context *)rsa_context;
 
-    mbedtls_mpi_init(&e);
-
     if (public_exponent == NULL) {
-        pe = 0x10001;
+        e = 0x10001;
     } else {
-        /* TBD*/
-        ret = mbedtls_mpi_read_binary(&e, public_exponent,
-                                      public_exponent_size);
-        pe = 0x10001;
+        if (public_exponent_size == 0) {
+            return false;
+        }
+
+        switch (public_exponent_size) {
+        case 1:
+            e = public_exponent[0];
+            break;
+        case 2:
+            e = public_exponent[0] << 8 | public_exponent[1];
+            break;
+        case 3:
+            e = public_exponent[0] << 16 | public_exponent[1] << 8 |
+                public_exponent[2];
+            break;
+        case 4:
+            e = public_exponent[0] << 24 | public_exponent[1] << 16 |
+                public_exponent[2] << 8 | public_exponent[3];
+            break;
+        default:
+            return false;
+        }
     }
 
     if (ret == 0) {
         ret = mbedtls_rsa_gen_key(rsa, libspdm_myrand, NULL,
-                                  (uint32_t)modulus_length, pe);
+                                  (uint32_t)modulus_length, e);
     }
 
     return ret == 0;
