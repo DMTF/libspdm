@@ -103,6 +103,17 @@ uint8_t m_libspdm_rsa_pkcs1_signature[] = {
 /* Default public key 0x10001. */
 uint8_t m_libspdm_default_public_key[] = { 0x01, 0x00, 0x01 };
 
+/* input public key test. */
+uint8_t m_libspdm_test_rsa_public_exponent1[] = { 0x03 };
+uint8_t m_libspdm_test_rsa_public_exponent2[] = { 0x01, 0x01 };
+uint8_t m_libspdm_test_rsa_public_exponent3[] = { 0x01, 0x00, 0x01};
+
+uint8_t * m_libspdm_test_rsa_public_exponent[] = {
+    m_libspdm_test_rsa_public_exponent1,
+    m_libspdm_test_rsa_public_exponent2,
+    m_libspdm_test_rsa_public_exponent3
+};
+
 /**
  * Validate Crypto RSA Interfaces.
  *
@@ -122,6 +133,7 @@ bool libspdm_validate_crypt_rsa(void)
     bool status;
     size_t key_size;
     uint8_t *KeyBuffer;
+    uint8_t index;
 
     libspdm_my_print("\nCrypto RSA Engine Testing: ");
 
@@ -249,8 +261,72 @@ bool libspdm_validate_crypt_rsa(void)
         return false;
     }
 
-    /* Generate RSA key Components*/
-    libspdm_my_print("Generate RSA key Components ... ");
+    /* Generate RSA key Components without default RSA public exponent*/
+    libspdm_my_print("Generate RSA key Components without default RSA public exponent... ");
+
+    for (index = 0; index < 3; index++) {
+        libspdm_rsa_free(rsa);
+        rsa = libspdm_rsa_new();
+        status = libspdm_rsa_generate_key(rsa, LIBSPDM_RSA_MODULUS_LENGTH,
+                                          m_libspdm_test_rsa_public_exponent[index],
+                                          (index + 1));
+        if (!status) {
+            libspdm_my_print("[Fail]");
+            libspdm_rsa_free(rsa);
+            return false;
+        }
+
+        key_size = LIBSPDM_RSA_MODULUS_LENGTH / 8;
+        KeyBuffer = allocate_pool(key_size);
+        if (KeyBuffer == NULL) {
+            libspdm_my_print("[Fail]");
+            libspdm_rsa_free(rsa);
+            return false;
+        }
+        status = libspdm_rsa_get_key(rsa, LIBSPDM_RSA_KEY_E, KeyBuffer, &key_size);
+        if (!status) {
+            libspdm_my_print("[Fail]");
+            free_pool(KeyBuffer);
+            libspdm_rsa_free(rsa);
+            return false;
+        }
+
+        if ((key_size != (size_t)(index + 1)) ||
+            memcmp(KeyBuffer, m_libspdm_test_rsa_public_exponent[index],
+                   (index + 1)) != 0) {
+            libspdm_my_print("[Fail]");
+            free_pool(KeyBuffer);
+            libspdm_rsa_free(rsa);
+            return false;
+        }
+
+        key_size = LIBSPDM_RSA_MODULUS_LENGTH / 8;
+        status = libspdm_rsa_get_key(rsa, LIBSPDM_RSA_KEY_N, KeyBuffer, &key_size);
+        if (!status) {
+            libspdm_my_print("[Fail]");
+            free_pool(KeyBuffer);
+            libspdm_rsa_free(rsa);
+            return false;
+        }
+
+        if (key_size != LIBSPDM_RSA_MODULUS_LENGTH / 8) {
+            libspdm_my_print("[Fail]");
+            free_pool(KeyBuffer);
+            libspdm_rsa_free(rsa);
+            return false;
+        }
+
+        if (!libspdm_rsa_check_key(rsa)) {
+            libspdm_my_print("[Fail]");
+            free_pool(KeyBuffer);
+            libspdm_rsa_free(rsa);
+            return false;
+        }
+        free_pool(KeyBuffer);
+    }
+
+    /* Generate RSA key Components with default RSA public exponent*/
+    libspdm_my_print("Generate RSA key Components with default RSA public exponent... ");
 
     status = libspdm_rsa_generate_key(rsa, LIBSPDM_RSA_MODULUS_LENGTH, NULL, 0);
     if (!status) {
