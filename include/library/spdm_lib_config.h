@@ -383,4 +383,106 @@
 #define LIBSPDM_CHECK_SPDM_CONTEXT 1
 #endif
 
+/* For SPDM 1.0 Enable signing in little-endian mode for RSA */
+#ifndef LIBSPDM_SPDM_10_RSA_SIGN_ENDIAN_LITTLE
+#define LIBSPDM_SPDM_10_RSA_SIGN_ENDIAN_LITTLE 0
+#endif
+
+/* For SPDM 1.0 Enable signing in big-endian mode for RSA */
+#ifndef LIBSPDM_SPDM_10_RSA_SIGN_ENDIAN_BIG
+#define LIBSPDM_SPDM_10_RSA_SIGN_ENDIAN_BIG 0
+#endif
+
+/* For SPDM 1.0 Verify signature in little-endian mode for RSA */
+#ifndef LIBSPDM_SPDM_10_RSA_VERIFY_SIGNATURE_ENDIAN_LITTLE
+#define LIBSPDM_SPDM_10_RSA_VERIFY_SIGNATURE_ENDIAN_LITTLE 0
+#endif
+
+/* For SPDM 1.0 Verify signature in both-endian mode for RSA */
+#ifndef LIBSPDM_SPDM_10_RSA_VERIFY_SIGNATURE_ENDIAN_BIG
+#define LIBSPDM_SPDM_10_RSA_VERIFY_SIGNATURE_ENDIAN_BIG 0
+#endif
+
+/* For SPDM 1.0 Verify signature in dual-endian mode for RSA */
+#ifndef LIBSPDM_SPDM_10_RSA_VERIFY_SIGNATURE_ENDIAN_DUAL
+#define LIBSPDM_SPDM_10_RSA_VERIFY_SIGNATURE_ENDIAN_DUAL 0
+#endif
+
+/* For SPDM 1.0 Enable signing in little-endian mode for ECDSA */
+#ifndef LIBSPDM_SPDM_10_ECDSA_SIGN_ENDIAN_LITTLE
+#define LIBSPDM_SPDM_10_ECDSA_SIGN_ENDIAN_LITTLE 0
+#endif
+
+/* For SPDM 1.0 Enable signing in big-endian mode for ECDSA */
+#ifndef LIBSPDM_SPDM_10_ECDSA_SIGN_ENDIAN_BIG
+#define LIBSPDM_SPDM_10_ECDSA_SIGN_ENDIAN_BIG 0
+#endif
+
+/* For SPDM 1.0 Verify signature in little-endian mode for ECDSA */
+#ifndef LIBSPDM_SPDM_10_ECDSA_VERIFY_SIGNATURE_ENDIAN_LITTLE
+#define LIBSPDM_SPDM_10_ECDSA_VERIFY_SIGNATURE_ENDIAN_LITTLE 0
+#endif
+
+/* For SPDM 1.0 Verify signature in both-endian mode for ECDSA */
+#ifndef LIBSPDM_SPDM_10_ECDSA_VERIFY_SIGNATURE_ENDIAN_BIG
+#define LIBSPDM_SPDM_10_ECDSA_VERIFY_SIGNATURE_ENDIAN_BIG 0
+#endif
+
+/* For SPDM 1.0 Verify signature in dual-endian mode for ECDSA */
+#ifndef LIBSPDM_SPDM_10_ECDSA_VERIFY_SIGNATURE_ENDIAN_DUAL
+#define LIBSPDM_SPDM_10_ECDSA_VERIFY_SIGNATURE_ENDIAN_DUAL 0
+#endif
+
+
+/* For SPDM 1.1 Enable signing in little-endian mode for RSA */
+#ifndef LIBSPDM_SPDM_11_RSA_SIGN_ENDIAN_LITTLE
+#define LIBSPDM_SPDM_11_RSA_SIGN_ENDIAN_LITTLE 0
+#endif
+
+/* For SPDM 1.1 Enable signing in big-endian mode for RSA */
+#ifndef LIBSPDM_SPDM_11_RSA_SIGN_ENDIAN_BIG
+#define LIBSPDM_SPDM_11_RSA_SIGN_ENDIAN_BIG 0
+#endif
+
+/* For SPDM 1.1 Verify signature in little-endian mode for RSA */
+#ifndef LIBSPDM_SPDM_11_RSA_VERIFY_SIGNATURE_ENDIAN_LITTLE
+#define LIBSPDM_SPDM_11_RSA_VERIFY_SIGNATURE_ENDIAN_LITTLE 0
+#endif
+
+/* For SPDM 1.1 Verify signature in both-endian mode for RSA */
+#ifndef LIBSPDM_SPDM_11_RSA_VERIFY_SIGNATURE_ENDIAN_BIG
+#define LIBSPDM_SPDM_11_RSA_VERIFY_SIGNATURE_ENDIAN_BIG 0
+#endif
+
+/* For SPDM 1.1 Verify signature in dual-endian mode for RSA */
+#ifndef LIBSPDM_SPDM_11_RSA_VERIFY_SIGNATURE_ENDIAN_DUAL
+#define LIBSPDM_SPDM_11_RSA_VERIFY_SIGNATURE_ENDIAN_DUAL 0
+#endif
+
+/* For SPDM 1.1 Enable signing in little-endian mode for ECDSA */
+#ifndef LIBSPDM_SPDM_11_ECDSA_SIGN_ENDIAN_LITTLE
+#define LIBSPDM_SPDM_11_ECDSA_SIGN_ENDIAN_LITTLE 0
+#endif
+
+/* For SPDM 1.1 Enable signing in big-endian mode for ECDSA */
+#ifndef LIBSPDM_SPDM_11_ECDSA_SIGN_ENDIAN_BIG
+#define LIBSPDM_SPDM_11_ECDSA_SIGN_ENDIAN_BIG 0
+#endif
+
+/* For SPDM 1.1 Verify signature in little-endian mode for ECDSA */
+#ifndef LIBSPDM_SPDM_11_ECDSA_VERIFY_SIGNATURE_ENDIAN_LITTLE
+#define LIBSPDM_SPDM_11_ECDSA_VERIFY_SIGNATURE_ENDIAN_LITTLE 0
+#endif
+
+/* For SPDM 1.1 Verify signature in both-endian mode for ECDSA */
+#ifndef LIBSPDM_SPDM_11_ECDSA_VERIFY_SIGNATURE_ENDIAN_BIG
+#define LIBSPDM_SPDM_11_ECDSA_VERIFY_SIGNATURE_ENDIAN_BIG 0
+#endif
+
+/* For SPDM 1.1 Verify signature in dual-endian mode for ECDSA */
+#ifndef LIBSPDM_SPDM_11_ECDSA_VERIFY_SIGNATURE_ENDIAN_DUAL
+#define LIBSPDM_SPDM_11_ECDSA_VERIFY_SIGNATURE_ENDIAN_DUAL 0
+#endif
+
+
 #endif /* SPDM_LIB_CONFIG_H */

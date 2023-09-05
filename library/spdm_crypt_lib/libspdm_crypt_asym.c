@@ -250,10 +250,118 @@ uint32_t libspdm_get_asym_signature_size(uint32_t base_asym_algo)
     }
 }
 
+#define LIBSPDM_SIGN_ENDIAN_DEFAULT     (0)
+#define LIBSPDM_SIGN_ENDIAN_LITTLE      (1)
+#define LIBSPDM_SIGN_ENDIAN_BIG         (2)
+
+
+#define LIBSPDM_VERIFY_SIGNATURE_ENDIAN_DEFAULT     (0)
+#define LIBSPDM_VERIFY_SIGNATURE_ENDIAN_LITTLE      (1)
+#define LIBSPDM_VERIFY_SIGNATURE_ENDIAN_BIG         (2)
+#define LIBSPDM_VERIFY_SIGNATURE_ENDIAN_DUAL        (3)
+
+#define SPDM_10_11_BASE_ASYM_ALGOS_RSA ( \
+ SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048 | \
+ SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072 | \
+ SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096 | \
+ SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048 | \
+ SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072 | \
+ SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096 )
+
+#define SPDM_10_11_BASE_ASYM_ALGOS_ECDSA ( \
+ SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256 | \
+ SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384 | \
+ SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521 )
+
+static uint32_t libspdm_get_sign_endian(spdm_version_number_t spdm_version,
+                                        uint32_t base_asym_algo)
+{
+    if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) == SPDM_MESSAGE_VERSION_10) {
+        if (SPDM_10_11_BASE_ASYM_ALGOS_RSA & base_asym_algo) {
+            if (LIBSPDM_SPDM_10_RSA_SIGN_ENDIAN_LITTLE)
+                return LIBSPDM_SIGN_ENDIAN_LITTLE;
+            if (LIBSPDM_SPDM_10_RSA_SIGN_ENDIAN_BIG)
+                return LIBSPDM_SIGN_ENDIAN_BIG;
+            return LIBSPDM_SIGN_ENDIAN_DEFAULT;
+        }
+        if (SPDM_10_11_BASE_ASYM_ALGOS_ECDSA & base_asym_algo) {
+            if (LIBSPDM_SPDM_10_ECDSA_SIGN_ENDIAN_LITTLE)
+                return LIBSPDM_SIGN_ENDIAN_LITTLE;
+            if (LIBSPDM_SPDM_10_ECDSA_SIGN_ENDIAN_BIG)
+                return LIBSPDM_SIGN_ENDIAN_BIG;
+            return LIBSPDM_SIGN_ENDIAN_DEFAULT;
+        }
+    }
+    if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) == SPDM_MESSAGE_VERSION_11) {
+        if (SPDM_10_11_BASE_ASYM_ALGOS_RSA & base_asym_algo) {
+            if (LIBSPDM_SPDM_11_RSA_SIGN_ENDIAN_LITTLE)
+                return LIBSPDM_SIGN_ENDIAN_LITTLE;
+            if (LIBSPDM_SPDM_11_RSA_SIGN_ENDIAN_BIG)
+                return LIBSPDM_SIGN_ENDIAN_BIG;
+            return LIBSPDM_SIGN_ENDIAN_DEFAULT;
+        }
+        if (SPDM_10_11_BASE_ASYM_ALGOS_ECDSA & base_asym_algo) {
+            if (LIBSPDM_SPDM_11_ECDSA_SIGN_ENDIAN_LITTLE)
+                return LIBSPDM_SIGN_ENDIAN_LITTLE;
+            if (LIBSPDM_SPDM_11_ECDSA_SIGN_ENDIAN_BIG)
+                return LIBSPDM_SIGN_ENDIAN_BIG;
+            return LIBSPDM_SIGN_ENDIAN_DEFAULT;
+        }
+    }
+    return LIBSPDM_SIGN_ENDIAN_DEFAULT;
+}
+
+static uint32_t libspdm_get_verify_signature_endian(spdm_version_number_t spdm_version,
+    uint32_t base_asym_algo)
+{
+    if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) == SPDM_MESSAGE_VERSION_10) {
+        if (SPDM_10_11_BASE_ASYM_ALGOS_RSA & base_asym_algo) {
+            if (LIBSPDM_SPDM_10_RSA_VERIFY_SIGNATURE_ENDIAN_LITTLE)
+                return LIBSPDM_VERIFY_SIGNATURE_ENDIAN_LITTLE;
+            if (LIBSPDM_SPDM_10_RSA_VERIFY_SIGNATURE_ENDIAN_BIG)
+                return LIBSPDM_VERIFY_SIGNATURE_ENDIAN_BIG;
+            if (LIBSPDM_SPDM_10_RSA_VERIFY_SIGNATURE_ENDIAN_DUAL)
+                return LIBSPDM_VERIFY_SIGNATURE_ENDIAN_DUAL;
+            return LIBSPDM_VERIFY_SIGNATURE_ENDIAN_DEFAULT;
+        }
+        if (SPDM_10_11_BASE_ASYM_ALGOS_ECDSA & base_asym_algo) {
+            if (LIBSPDM_SPDM_10_ECDSA_VERIFY_SIGNATURE_ENDIAN_LITTLE)
+                return LIBSPDM_VERIFY_SIGNATURE_ENDIAN_LITTLE;
+            if (LIBSPDM_SPDM_10_ECDSA_VERIFY_SIGNATURE_ENDIAN_BIG)
+                return LIBSPDM_VERIFY_SIGNATURE_ENDIAN_BIG;
+            if (LIBSPDM_SPDM_10_ECDSA_VERIFY_SIGNATURE_ENDIAN_DUAL)
+                return LIBSPDM_VERIFY_SIGNATURE_ENDIAN_DUAL;
+            return LIBSPDM_VERIFY_SIGNATURE_ENDIAN_DEFAULT;
+        }
+    }
+    if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) == SPDM_MESSAGE_VERSION_11) {
+        if (SPDM_10_11_BASE_ASYM_ALGOS_RSA & base_asym_algo) {
+            if (LIBSPDM_SPDM_11_RSA_VERIFY_SIGNATURE_ENDIAN_LITTLE)
+                return LIBSPDM_VERIFY_SIGNATURE_ENDIAN_LITTLE;
+            if (LIBSPDM_SPDM_11_RSA_VERIFY_SIGNATURE_ENDIAN_BIG)
+                return LIBSPDM_VERIFY_SIGNATURE_ENDIAN_BIG;
+            if (LIBSPDM_SPDM_11_RSA_VERIFY_SIGNATURE_ENDIAN_DUAL)
+                return LIBSPDM_VERIFY_SIGNATURE_ENDIAN_DUAL;
+            return LIBSPDM_VERIFY_SIGNATURE_ENDIAN_DEFAULT;
+        }
+        if (SPDM_10_11_BASE_ASYM_ALGOS_ECDSA & base_asym_algo) {
+            if (LIBSPDM_SPDM_11_ECDSA_VERIFY_SIGNATURE_ENDIAN_LITTLE)
+                return LIBSPDM_VERIFY_SIGNATURE_ENDIAN_LITTLE;
+            if (LIBSPDM_SPDM_11_ECDSA_VERIFY_SIGNATURE_ENDIAN_BIG)
+                return LIBSPDM_VERIFY_SIGNATURE_ENDIAN_BIG;
+            if (LIBSPDM_SPDM_11_ECDSA_VERIFY_SIGNATURE_ENDIAN_DUAL)
+                return LIBSPDM_VERIFY_SIGNATURE_ENDIAN_DUAL;
+            return LIBSPDM_VERIFY_SIGNATURE_ENDIAN_DEFAULT;
+        }
+    }
+    return LIBSPDM_VERIFY_SIGNATURE_ENDIAN_DEFAULT;
+}
+
 static bool libspdm_asym_sign_wrap (void *context, size_t hash_nid, uint32_t base_asym_algo,
                                     const uint8_t *param, size_t param_size,
                                     const uint8_t *message, size_t message_size,
-                                    uint8_t *signature, size_t *sig_size)
+                                    uint8_t *signature, size_t *sig_size,
+                                    uint32_t sign_endian)
 {
     switch (base_asym_algo) {
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
@@ -269,6 +377,12 @@ static bool libspdm_asym_sign_wrap (void *context, size_t hash_nid, uint32_t bas
 #if !LIBSPDM_RSA_SSA_4096_SUPPORT
         LIBSPDM_ASSERT(base_asym_algo!= SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096);
 #endif
+        /* TODO: Do something based on sign_endian.
+        *  Option 1: Make assumption on which endian lower level function uses and
+        *            reverse it here if necessary.
+        *  Option 2: Pass sign_endian to lower level function and have it handle
+        *            endianness.
+        */
         return libspdm_rsa_pkcs1_sign_with_nid_wrap(context, hash_nid,
                                                     param, param_size,
                                                     message, message_size,
@@ -290,6 +404,12 @@ static bool libspdm_asym_sign_wrap (void *context, size_t hash_nid, uint32_t bas
 #if !LIBSPDM_RSA_PSS_4096_SUPPORT
         LIBSPDM_ASSERT(base_asym_algo!= SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096);
 #endif
+        /* TODO: Do something based on sign_endian.
+        *  Option 1: Make assumption on which endian lower level function uses and
+        *            reverse it here if necessary.
+        *  Option 2: Pass sign_endian to lower level function and have it handle
+        *            endianness.
+        */
         return libspdm_rsa_pss_sign_wrap(context, hash_nid,
                                          param, param_size,
                                          message, message_size,
@@ -311,6 +431,12 @@ static bool libspdm_asym_sign_wrap (void *context, size_t hash_nid, uint32_t bas
 #if !LIBSPDM_ECDSA_P521_SUPPORT
         LIBSPDM_ASSERT(base_asym_algo!= SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521);
 #endif
+        /* TODO: Do something based on sign_endian.
+        *  Option 1: Make assumption on which endian lower level function uses and
+        *            reverse it here if necessary.
+        *  Option 2: Pass sign_endian to lower level function and have it handle
+        *            endianness.
+        */
         return libspdm_ecdsa_sign_wrap(context, hash_nid,
                                        param, param_size,
                                        message, message_size,
@@ -593,7 +719,7 @@ static bool libspdm_asym_verify_wrap(
     void *context, size_t hash_nid, uint32_t base_asym_algo,
     const uint8_t *param, size_t param_size,
     const uint8_t *message, size_t message_size,
-    const uint8_t *signature, size_t sig_size)
+    const uint8_t *signature, size_t sig_size, uint32_t verify_endian)
 {
     switch (base_asym_algo) {
     case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
@@ -609,6 +735,12 @@ static bool libspdm_asym_verify_wrap(
 #if !LIBSPDM_RSA_SSA_4096_SUPPORT
         LIBSPDM_ASSERT(base_asym_algo!= SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096);
 #endif
+        /* TODO: Do something based on verify_endian
+        *  Option 1: Make assumption on which endian lower level function uses and
+        *            reverse it here before passing to lower level if necessary.
+        *  Option 2: Pass verify_endian to lower level function and have it handle
+        *            endianness.
+        */
         return libspdm_rsa_pkcs1_verify_with_nid_wrap(context, hash_nid,
                                                       param, param_size,
                                                       message, message_size,
@@ -630,6 +762,12 @@ static bool libspdm_asym_verify_wrap(
 #if !LIBSPDM_RSA_PSS_4096_SUPPORT
         LIBSPDM_ASSERT(base_asym_algo!= SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096);
 #endif
+        /* TODO: Do something based on verify_endian
+        *  Option 1: Make assumption on which endian lower level function uses and
+        *            reverse it here before passing to lower level if necessary.
+        *  Option 2: Pass verify_endian to lower level function and have it handle
+        *            endianness.
+        */
         return libspdm_rsa_pss_verify_wrap(context, hash_nid,
                                            param, param_size,
                                            message, message_size,
@@ -651,6 +789,12 @@ static bool libspdm_asym_verify_wrap(
 #if !LIBSPDM_ECDSA_P521_SUPPORT
         LIBSPDM_ASSERT(base_asym_algo!= SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521);
 #endif
+        /* TODO: Do something based on verify_endian
+        *  Option 1: Make assumption on which endian lower level function uses and
+        *            reverse it here before passing to lower level if necessary.
+        *  Option 2: Pass verify_endian to lower level function and have it handle
+        *            endianness.
+        */
         return libspdm_ecdsa_verify_wrap(context, hash_nid,
                                          param, param_size,
                                          message, message_size,
@@ -708,12 +852,14 @@ bool libspdm_asym_verify(
                                              LIBSPDM_MAX_HASH_SIZE];
     const void *param;
     size_t param_size;
+    uint32_t verify_endian;
 
     hash_nid = libspdm_get_hash_nid(base_hash_algo);
     need_hash = libspdm_asym_func_need_hash(base_asym_algo);
 
     param = NULL;
     param_size = 0;
+    verify_endian = LIBSPDM_VERIFY_SIGNATURE_ENDIAN_DEFAULT;
 
     if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11) {
         /* Need use SPDM 1.2 signing. */
@@ -749,6 +895,8 @@ bool libspdm_asym_verify(
         message_size = SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + hash_size;
 
         /* Passthru */
+    } else {
+        verify_endian = libspdm_get_verify_signature_endian(spdm_version, base_asym_algo);
     }
 
     if (need_hash) {
@@ -760,12 +908,12 @@ bool libspdm_asym_verify(
         return libspdm_asym_verify_wrap(context, hash_nid, base_asym_algo,
                                         param, param_size,
                                         message_hash, hash_size,
-                                        signature, sig_size);
+                                        signature, sig_size, verify_endian);
     } else {
         return libspdm_asym_verify_wrap(context, hash_nid, base_asym_algo,
                                         param, param_size,
                                         message, message_size,
-                                        signature, sig_size);
+                                        signature, sig_size, verify_endian);
     }
 }
 
@@ -786,6 +934,7 @@ bool libspdm_asym_verify_hash(
                                              LIBSPDM_MAX_HASH_SIZE];
     const void *param;
     size_t param_size;
+    uint32_t verify_endian;
 
     hash_nid = libspdm_get_hash_nid(base_hash_algo);
     need_hash = libspdm_asym_func_need_hash(base_asym_algo);
@@ -793,6 +942,7 @@ bool libspdm_asym_verify_hash(
 
     param = NULL;
     param_size = 0;
+    verify_endian = LIBSPDM_VERIFY_SIGNATURE_ENDIAN_DEFAULT;
 
     if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11) {
         /* Need use SPDM 1.2 signing */
@@ -833,22 +983,24 @@ bool libspdm_asym_verify_hash(
             return libspdm_asym_verify_wrap(context, hash_nid, base_asym_algo,
                                             param, param_size,
                                             full_message_hash, hash_size,
-                                            signature, sig_size);
+                                            signature, sig_size, verify_endian);
         } else {
             return libspdm_asym_verify_wrap(context, hash_nid, base_asym_algo,
                                             param, param_size,
                                             message, message_size,
-                                            signature, sig_size);
+                                            signature, sig_size, verify_endian);
         }
 
         /* SPDM 1.2 signing done. */
+    } else {
+        verify_endian = libspdm_get_verify_signature_endian(spdm_version, base_asym_algo);
     }
 
     if (need_hash) {
         return libspdm_asym_verify_wrap(context, hash_nid, base_asym_algo,
                                         param, param_size,
                                         message_hash, hash_size,
-                                        signature, sig_size);
+                                        signature, sig_size, verify_endian);
     } else {
         LIBSPDM_ASSERT(false);
         return false;
@@ -871,6 +1023,7 @@ bool libspdm_asym_sign(
                                              LIBSPDM_MAX_HASH_SIZE];
     const void *param;
     size_t param_size;
+    uint32_t sign_endian;
 
     hash_nid = libspdm_get_hash_nid(base_hash_algo);
     need_hash = libspdm_asym_func_need_hash(base_asym_algo);
@@ -910,8 +1063,10 @@ bool libspdm_asym_sign(
         /* re-assign message and message_size for signing */
         message = spdm12_signing_context_with_hash;
         message_size = SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + hash_size;
-
+        sign_endian = LIBSPDM_SIGN_ENDIAN_DEFAULT;
         /* Passthru*/
+    } else {
+        sign_endian = libspdm_get_sign_endian(spdm_version, base_asym_algo);
     }
 
     if (need_hash) {
@@ -923,12 +1078,12 @@ bool libspdm_asym_sign(
         return libspdm_asym_sign_wrap(context, hash_nid, base_asym_algo,
                                       param, param_size,
                                       message_hash, hash_size,
-                                      signature, sig_size);
+                                      signature, sig_size, sign_endian);
     } else {
         return libspdm_asym_sign_wrap(context, hash_nid, base_asym_algo,
                                       param, param_size,
                                       message, message_size,
-                                      signature, sig_size);
+                                      signature, sig_size, sign_endian);
     }
 }
 
@@ -949,6 +1104,7 @@ bool libspdm_asym_sign_hash(
                                              LIBSPDM_MAX_HASH_SIZE];
     const void *param;
     size_t param_size;
+    uint32_t sign_endian;
 
     hash_nid = libspdm_get_hash_nid(base_hash_algo);
     need_hash = libspdm_asym_func_need_hash(base_asym_algo);
@@ -956,6 +1112,7 @@ bool libspdm_asym_sign_hash(
 
     param = NULL;
     param_size = 0;
+    sign_endian = LIBSPDM_SIGN_ENDIAN_DEFAULT;
 
     if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11) {
         /* Need use SPDM 1.2 signing */
@@ -996,22 +1153,23 @@ bool libspdm_asym_sign_hash(
             return libspdm_asym_sign_wrap(context, hash_nid, base_asym_algo,
                                           param, param_size,
                                           full_message_hash, hash_size,
-                                          signature, sig_size);
+                                          signature, sig_size, sign_endian);
         } else {
             return libspdm_asym_sign_wrap(context, hash_nid, base_asym_algo,
                                           param, param_size,
                                           message, message_size,
-                                          signature, sig_size);
+                                          signature, sig_size, sign_endian);
         }
 
         /* SPDM 1.2 signing done. */
     }
 
     if (need_hash) {
+        sign_endian = libspdm_get_sign_endian(spdm_version, base_asym_algo);
         return libspdm_asym_sign_wrap(context, hash_nid, base_asym_algo,
                                       param, param_size,
                                       message_hash, hash_size,
-                                      signature, sig_size);
+                                      signature, sig_size, sign_endian);
     } else {
         LIBSPDM_ASSERT (false);
         return false;
@@ -1060,12 +1218,14 @@ bool libspdm_req_asym_verify(
                                              LIBSPDM_MAX_HASH_SIZE];
     const void *param;
     size_t param_size;
+    uint32_t verify_endian;
 
     hash_nid = libspdm_get_hash_nid(base_hash_algo);
     need_hash = libspdm_req_asym_func_need_hash(req_base_asym_alg);
 
     param = NULL;
     param_size = 0;
+    verify_endian = LIBSPDM_VERIFY_SIGNATURE_ENDIAN_DEFAULT;
 
     if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11) {
         /* Need use SPDM 1.2 signing */
@@ -1101,6 +1261,9 @@ bool libspdm_req_asym_verify(
         message_size = SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + hash_size;
 
         /* Passthru */
+    } else {
+        verify_endian = libspdm_get_verify_signature_endian(spdm_version,
+                                                            base_hash_algo);
     }
 
     if (need_hash) {
@@ -1112,12 +1275,12 @@ bool libspdm_req_asym_verify(
         return libspdm_asym_verify_wrap(context, hash_nid, req_base_asym_alg,
                                         param, param_size,
                                         message_hash, hash_size,
-                                        signature, sig_size);
+                                        signature, sig_size, verify_endian);
     } else {
         return libspdm_asym_verify_wrap(context, hash_nid, req_base_asym_alg,
                                         param, param_size,
                                         message, message_size,
-                                        signature, sig_size);
+                                        signature, sig_size, verify_endian);
     }
 }
 
@@ -1138,6 +1301,7 @@ bool libspdm_req_asym_verify_hash(
                                              LIBSPDM_MAX_HASH_SIZE];
     const void *param;
     size_t param_size;
+    uint32_t verify_endian;
 
     hash_nid = libspdm_get_hash_nid(base_hash_algo);
     need_hash = libspdm_req_asym_func_need_hash(req_base_asym_alg);
@@ -1145,6 +1309,7 @@ bool libspdm_req_asym_verify_hash(
 
     param = NULL;
     param_size = 0;
+    verify_endian = LIBSPDM_VERIFY_SIGNATURE_ENDIAN_DEFAULT;
 
     if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11) {
         /* Need use SPDM 1.2 signing */
@@ -1186,21 +1351,24 @@ bool libspdm_req_asym_verify_hash(
             return libspdm_asym_verify_wrap(context, hash_nid, req_base_asym_alg,
                                             param, param_size,
                                             full_message_hash, hash_size,
-                                            signature, sig_size);
+                                            signature, sig_size, verify_endian);
         } else {
             return libspdm_asym_verify_wrap(context, hash_nid, req_base_asym_alg,
                                             param, param_size,
                                             message, message_size,
-                                            signature, sig_size);
+                                            signature, sig_size, verify_endian);
         }
         /* SPDM 1.2 signing done. */
+    } else {
+        verify_endian = libspdm_get_verify_signature_endian(spdm_version,
+                                                            req_base_asym_alg);
     }
 
     if (need_hash) {
         return libspdm_asym_verify_wrap(context, hash_nid, req_base_asym_alg,
                                         param, param_size,
                                         message_hash, hash_size,
-                                        signature, sig_size);
+                                        signature, sig_size, verify_endian);
     } else {
         LIBSPDM_ASSERT (false);
         return false;
@@ -1223,12 +1391,14 @@ bool libspdm_req_asym_sign(
                                              LIBSPDM_MAX_HASH_SIZE];
     const void *param;
     size_t param_size;
+    uint32_t sign_endian;
 
     hash_nid = libspdm_get_hash_nid(base_hash_algo);
     need_hash = libspdm_req_asym_func_need_hash(req_base_asym_alg);
 
     param = NULL;
     param_size = 0;
+    sign_endian = LIBSPDM_SIGN_ENDIAN_DEFAULT;
 
     if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11) {
         /* Need use SPDM 1.2 signing */
@@ -1262,8 +1432,10 @@ bool libspdm_req_asym_sign(
         /* re-assign message and message_size for signing */
         message = spdm12_signing_context_with_hash;
         message_size = SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE + hash_size;
-
+        sign_endian = LIBSPDM_SIGN_ENDIAN_DEFAULT;
         /* Passthru */
+    } else {
+        sign_endian = libspdm_get_sign_endian(spdm_version, req_base_asym_alg);
     }
 
     if (need_hash) {
@@ -1276,12 +1448,12 @@ bool libspdm_req_asym_sign(
         return libspdm_asym_sign_wrap(context, hash_nid, req_base_asym_alg,
                                       param, param_size,
                                       message_hash, hash_size,
-                                      signature, sig_size);
+                                      signature, sig_size, sign_endian);
     } else {
         return libspdm_asym_sign_wrap(context, hash_nid, req_base_asym_alg,
                                       param, param_size,
                                       message, message_size,
-                                      signature, sig_size);
+                                      signature, sig_size, sign_endian);
     }
 }
 
@@ -1302,6 +1474,7 @@ bool libspdm_req_asym_sign_hash(
                                              LIBSPDM_MAX_HASH_SIZE];
     const void *param;
     size_t param_size;
+    uint32_t sign_endian;
 
     hash_nid = libspdm_get_hash_nid(base_hash_algo);
     need_hash = libspdm_req_asym_func_need_hash(req_base_asym_alg);
@@ -1309,6 +1482,7 @@ bool libspdm_req_asym_sign_hash(
 
     param = NULL;
     param_size = 0;
+    sign_endian = LIBSPDM_SIGN_ENDIAN_DEFAULT;
 
     if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) > SPDM_MESSAGE_VERSION_11) {
         /* Need use SPDM 1.2 signing */
@@ -1350,22 +1524,23 @@ bool libspdm_req_asym_sign_hash(
             return libspdm_asym_sign_wrap(context, hash_nid, req_base_asym_alg,
                                           param, param_size,
                                           full_message_hash, hash_size,
-                                          signature, sig_size);
+                                          signature, sig_size, sign_endian);
         } else {
             return libspdm_asym_sign_wrap(context, hash_nid, req_base_asym_alg,
                                           param, param_size,
                                           message, message_size,
-                                          signature, sig_size);
+                                          signature, sig_size, sign_endian);
         }
 
         /* SPDM 1.2 signing done. */
     }
 
     if (need_hash) {
+        sign_endian = libspdm_get_sign_endian(spdm_version, req_base_asym_alg);
         return libspdm_asym_sign_wrap(context, hash_nid, req_base_asym_alg,
                                       param, param_size,
                                       message_hash, hash_size,
-                                      signature, sig_size);
+                                      signature, sig_size, sign_endian);
     } else {
         LIBSPDM_ASSERT (false);
         return false;
