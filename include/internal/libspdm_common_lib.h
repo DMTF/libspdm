@@ -565,6 +565,11 @@ typedef struct {
 #if LIBSPDM_FIPS_MODE
     libspdm_fips_selftest_context fips_selftest_context;
 #endif /* LIBSPDM_FIPS_MODE */
+
+    /* Endianness (BE/LE/Both) to use for signature verification on SPDM 1.0 and 1.1
+     * This field is ignored for other SPDM versions */
+    libspdm_spdm_10_11_verify_signature_endian_t spdm_10_11_verify_signature_endian;
+
 } libspdm_context_t;
 
 #define LIBSPDM_CONTEXT_SIZE_WITHOUT_SECURED_CONTEXT (sizeof(libspdm_context_t))

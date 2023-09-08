@@ -131,6 +131,9 @@ typedef enum {
     LIBSPDM_DATA_SESSION_SEQUENCE_NUMBER_REQ_DIR,
     LIBSPDM_DATA_MAX_SPDM_SESSION_SEQUENCE_NUMBER,
 
+    /* For SPDM 1.0 and 1.1, allow signature verification in big, little, or both endians. */
+    LIBSPDM_DATA_SPDM_VERSION_10_11_VERIFY_SIGNATURE_ENDIAN,
+
     /* MAX */
     LIBSPDM_DATA_MAX
 } libspdm_data_type_t;
@@ -208,6 +211,12 @@ typedef enum {
     /* MAX */
     LIBSPDM_RESPONSE_STATE_MAX
 } libspdm_response_state_t;
+
+typedef enum {
+    LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_BIG_ENDIAN_ONLY,
+    LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_LITTLE_ENDIAN_ONLY,
+    LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_BIG_OR_LITTLE_ENDIAN,
+} libspdm_spdm_10_11_verify_signature_endian_t;
 
 /*
  * +--------------------------+------------------------------------------+---------+
