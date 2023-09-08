@@ -206,6 +206,29 @@ extern bool libspdm_rsa_get_private_key_from_pem(const uint8_t *pem_data,
                                                  void **rsa_context);
 
 /**
+ * Generates RSA key components.
+ *
+ * This function generates RSA key components. It takes RSA public exponent E and
+ * length in bits of RSA modulus N as input, and generates all key components.
+ * If public_exponent is NULL, the default RSA public exponent (0x10001) will be used.
+ *
+ * If rsa_context is NULL, then return false.
+ * If this interface is not supported, then return false.
+ *
+ * @param[in, out]  rsa_context           Pointer to RSA context being set.
+ * @param[in]       modulus_length        Length of RSA modulus N in bits.
+ * @param[in]       public_exponent       Pointer to RSA public exponent.
+ * @param[in]       public_exponent_size  Size of RSA public exponent buffer in bytes.
+ *
+ * @retval  true   RSA key component was generated successfully.
+ * @retval  false  Invalid RSA key component tag.
+ * @retval  false  This interface is not supported.
+ **/
+extern bool libspdm_rsa_generate_key(void *rsa_context, size_t modulus_length,
+                                     const uint8_t *public_exponent,
+                                     size_t public_exponent_size);
+
+/**
  * Retrieve the EC Private key from the password-protected PEM key data.
  *
  * @param[in]  pem_data    Pointer to the PEM-encoded key data to be retrieved.
