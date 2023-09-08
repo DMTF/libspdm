@@ -565,6 +565,10 @@ typedef struct {
 #if LIBSPDM_FIPS_MODE
     libspdm_fips_selftest_context fips_selftest_context;
 #endif /* LIBSPDM_FIPS_MODE */
+
+    /* Endianness (BE/LE/Both) to use for signature verification on SPDM 1.0 and 1.1 */
+    libspdm_spdm_10_11_verify_signature_endian spdm_10_11_verify_signature_endian;
+
 } libspdm_context_t;
 
 #define LIBSPDM_CONTEXT_SIZE_WITHOUT_SECURED_CONTEXT (sizeof(libspdm_context_t))
@@ -1584,5 +1588,15 @@ static inline bool libspdm_onehot0(uint32_t mask)
 {
     return !mask || !(mask & (mask - 1));
 }
+
+/**
+ * Copies signature buffer and swaps endian during copy for SPDM1.0/1.1 SRSA and ECDSA.
+ **/
+void libspdm_copy_signature_swap_endian(
+    uint32_t base_asym_algo,
+    uint8_t* dst,
+    size_t dst_size,
+    const uint8_t* src,
+    size_t src_size);
 
 #endif /* SPDM_COMMON_LIB_INTERNAL_H */

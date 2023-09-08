@@ -119,6 +119,13 @@ bool libspdm_verify_key_exchange_rsp_signature(
     bool result;
     void *context;
     uint8_t slot_id;
+
+    spdm_version_number_t spdm_version;
+    uint8_t endian_mode;
+    bool try_big_endian;
+    bool try_little_endian;
+    uint8_t endian_swapped_sign_data[LIBSPDM_MAX_ASYM_SIG_SIZE];
+
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     uint8_t *cert_chain_buffer;
     size_t cert_chain_buffer_size;
@@ -219,21 +226,76 @@ bool libspdm_verify_key_exchange_rsp_signature(
 #endif
     }
 
+    endian_mode = spdm_context->spdm_10_11_verify_signature_endian;
+    spdm_version = spdm_context->connection_info.version
+                   >> SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    try_big_endian = spdm_version > SPDM_MESSAGE_VERSION_11
+                     || (spdm_version <= SPDM_MESSAGE_VERSION_11
+                         && (endian_mode == LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_BIG_OR_LITTLE_ENDIAN
+                             || endian_mode ==
+                             LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_BIG_ENDIAN_ONLY));
+
+    try_little_endian = spdm_version <= SPDM_MESSAGE_VERSION_11 &&
+                        (endian_mode == LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_LITTLE_ENDIAN_ONLY
+                         || endian_mode ==
+                         LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_BIG_OR_LITTLE_ENDIAN);
+
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    result = libspdm_asym_verify(
-        spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
-        spdm_context->connection_info.algorithm.base_asym_algo,
-        spdm_context->connection_info.algorithm.base_hash_algo,
-        context, th_curr_data, th_curr_data_size, sign_data, sign_data_size);
-    libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo, context);
+    result = false;
+    if (try_big_endian)
+    {
+        result = libspdm_asym_verify(
+            spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
+            spdm_context->connection_info.algorithm.base_asym_algo,
+            spdm_context->connection_info.algorithm.base_hash_algo,
+            context, th_curr_data, th_curr_data_size, sign_data, sign_data_size);
+    }
+
+    if (result == false && try_little_endian)
+    {
+        libspdm_copy_signature_swap_endian(
+            spdm_context->connection_info.algorithm.base_asym_algo,
+            endian_swapped_sign_data, sizeof(endian_swapped_sign_data),
+            sign_data, sign_data_size);
+
+        result = libspdm_asym_verify(
+            spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
+            spdm_context->connection_info.algorithm.base_asym_algo,
+            spdm_context->connection_info.algorithm.base_hash_algo,
+            context, th_curr_data, th_curr_data_size,
+            endian_swapped_sign_data, sign_data_size);
+    }
+
+    libspdm_asym_free(
+        spdm_context->connection_info.algorithm.base_asym_algo, context);
 #else
-    result = libspdm_asym_verify_hash(
-        spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
-        spdm_context->connection_info.algorithm.base_asym_algo,
-        spdm_context->connection_info.algorithm.base_hash_algo,
-        context, hash_data, hash_size, sign_data, sign_data_size);
+    result = false;
+    if (try_big_endian)
+    {
+        result = libspdm_asym_verify_hash(
+            spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
+            spdm_context->connection_info.algorithm.base_asym_algo,
+            spdm_context->connection_info.algorithm.base_hash_algo,
+            context, hash_data, hash_size, sign_data, sign_data_size);
+    }
+
+    if (result == false && try_little_endian)
+    {
+        libspdm_copy_signature_swap_endian(
+            spdm_context->connection_info.algorithm.base_asym_algo,
+            endian_swapped_sign_data, sizeof(endian_swapped_sign_data),
+            sign_data, sign_data_size);
+        result = libspdm_asym_verify_hash(
+            spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
+            spdm_context->connection_info.algorithm.base_asym_algo,
+            spdm_context->connection_info.algorithm.base_hash_algo,
+            context, hash_data, hash_size,
+            endian_swapped_sign_data, sign_data_size);
+    }
     if (slot_id == 0xFF) {
-        libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo, context);
+        libspdm_asym_free(
+            spdm_context->connection_info.algorithm.base_asym_algo, context);
     }
 #endif
     if (!result) {

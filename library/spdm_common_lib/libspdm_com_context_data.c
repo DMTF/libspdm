@@ -688,6 +688,18 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
             context->max_spdm_session_sequence_number = LIBSPDM_MAX_SPDM_SESSION_SEQUENCE_NUMBER;
         }
         break;
+    case LIBSPDM_DATA_SPDM_VERSION_10_11_VERIFY_SIGNATURE_ENDIAN_MODE:
+        if (data_size != sizeof(libspdm_spdm_10_11_verify_signature_endian)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        if (*(uint32_t*)data != LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_BIG_ENDIAN_ONLY &&
+            *(uint32_t*)data != LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_LITTLE_ENDIAN_ONLY &&
+            *(uint32_t*)data != LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_BIG_OR_LITTLE_ENDIAN)
+        {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        context->spdm_10_11_verify_signature_endian = *(uint32_t*)data;
+        break;
     default:
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         break;
@@ -969,6 +981,10 @@ libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_t
     case LIBSPDM_DATA_VCA_CACHE:
         target_data_size = context->transcript.message_a.buffer_size;
         target_data = context->transcript.message_a.buffer;
+        break;
+    case LIBSPDM_DATA_SPDM_VERSION_10_11_VERIFY_SIGNATURE_ENDIAN_MODE:
+        target_data_size = sizeof(libspdm_spdm_10_11_verify_signature_endian);
+        target_data = &context->spdm_10_11_verify_signature_endian;
         break;
     default:
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
