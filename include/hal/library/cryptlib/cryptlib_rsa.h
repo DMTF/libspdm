@@ -120,29 +120,6 @@ extern bool libspdm_rsa_get_key(void *rsa_context, const libspdm_rsa_key_tag_t k
                                 uint8_t *big_number, size_t *bn_size);
 
 /**
- * Generates RSA key components.
- *
- * This function generates RSA key components. It takes RSA public exponent E and
- * length in bits of RSA modulus N as input, and generates all key components.
- * If public_exponent is NULL, the default RSA public exponent (0x10001) will be used.
- *
- * If rsa_context is NULL, then return false.
- * If this interface is not supported, then return false.
- *
- * @param[in, out]  rsa_context           Pointer to RSA context being set.
- * @param[in]       modulus_length        Length of RSA modulus N in bits.
- * @param[in]       public_exponent       Pointer to RSA public exponent.
- * @param[in]       public_exponent_size  Size of RSA public exponent buffer in bytes.
- *
- * @retval  true   RSA key component was generated successfully.
- * @retval  false  Invalid RSA key component tag.
- * @retval  false  This interface is not supported.
- **/
-extern bool libspdm_rsa_generate_key(void *rsa_context, size_t modulus_length,
-                                     const uint8_t *public_exponent,
-                                     size_t public_exponent_size);
-
-/**
  * Validates key components of RSA context.
  * NOTE: This function performs integrity checks on all the RSA key material, so
  *      the RSA key structure must contain all the private key data.
