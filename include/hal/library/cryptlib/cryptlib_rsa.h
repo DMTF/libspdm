@@ -89,57 +89,6 @@ extern void libspdm_rsa_free(void *rsa_context);
 extern bool libspdm_rsa_set_key(void *rsa_context, const libspdm_rsa_key_tag_t key_tag,
                                 const uint8_t *big_number, size_t bn_size);
 
-/**
- * Gets the tag-designated RSA key component from the established RSA context.
- *
- * This function retrieves the tag-designated RSA key component from the
- * established RSA context as a non-negative integer (octet string format
- * represented in RSA PKCS#1).
- * If specified key component has not been set or has been cleared, then returned
- * bn_size is set to 0.
- * If the big_number buffer is too small to hold the contents of the key, false
- * is returned and bn_size is set to the required buffer size to obtain the key.
- *
- * If rsa_context is NULL, then return false.
- * If bn_size is NULL, then return false.
- * If bn_size is large enough but big_number is NULL, then return false.
- * If this interface is not supported, then return false.
- *
- * @param[in, out]  rsa_context  Pointer to RSA context being set.
- * @param[in]       key_tag      Tag of RSA key component being set.
- * @param[out]      big_number   Pointer to octet integer buffer.
- * @param[in, out]  bn_size      On input, the size of big number buffer in bytes.
- *                               On output, the size of data returned in big number buffer in bytes.
- *
- * @retval  true   RSA key component was retrieved successfully.
- * @retval  false  Invalid RSA key component tag.
- * @retval  false  bn_size is too small.
- * @retval  false  This interface is not supported.
- **/
-extern bool libspdm_rsa_get_key(void *rsa_context, const libspdm_rsa_key_tag_t key_tag,
-                                uint8_t *big_number, size_t *bn_size);
-
-/**
- * Validates key components of RSA context.
- * NOTE: This function performs integrity checks on all the RSA key material, so
- *      the RSA key structure must contain all the private key data.
- *
- * This function validates key components of RSA context in following aspects:
- * - Whether p is a prime
- * - Whether q is a prime
- * - Whether n = p * q
- * - Whether d*e = 1  mod lcm(p-1,q-1)
- *
- * If rsa_context is NULL, then return false.
- * If this interface is not supported, then return false.
- *
- * @param[in]  rsa_context  Pointer to RSA context to check.
- *
- * @retval  true   RSA key components are valid.
- * @retval  false  RSA key components are not valid.
- * @retval  false  This interface is not supported.
- **/
-extern bool libspdm_rsa_check_key(void *rsa_context);
 #endif /* (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT) */
 
 #if LIBSPDM_RSA_SSA_SUPPORT
