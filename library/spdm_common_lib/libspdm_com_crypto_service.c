@@ -1047,13 +1047,43 @@ bool libspdm_verify_challenge_auth_signature(libspdm_context_t *spdm_context,
     }
 
     if (is_requester) {
+        /**
+         * No compile time assert in libspdm requires using runtime assert instead.
+         *
+         * To keep the spdm_crypt_lib agnostic of spdm_context types, the "endian"
+         * parameter of spdm_crypt_lib::libspdm_asym_verify(_hash)_ex is type uint32_t.
+         * The type representing the same thing in spdm_context is and enum type of
+         * libspdm_spdm_10_11_verify_signature_endian_t. Generally enum types are the
+         * same size as uint32_t, but there are compile options to shrink enums sizes.
+         *
+         * The first assert guarantees there will be no conflict in the sizes of these
+         * types, as one is used in place of the other. (spdm_context->
+         * spdm_10_11_verify_signature_endian is passed in as endian parameter.)
+         *
+         * The remaining asserts verify the endian values have the same meaning.
+         * Ex. spdm_context::LE == spdm_crypt_lib::LE
+         *     spdm_context::BE == spdm_crypt_lib::BE
+         *     spdm_context::BE or LE == spdm_crypt_lib:: BE or LE
+         *
+         * If any of these asserts pop, be sure to search for other usages of
+         * spdm_context->spdm_10_11_verify_signature_endian and be sure it is correct.
+         */
+        LIBSPDM_ASSERT(sizeof(uint32_t) ==
+                       sizeof(spdm_context->spdm_10_11_verify_signature_endian));
+        LIBSPDM_ASSERT(LIBSPDM_SPDM_10_11_ASYM_VERIFY_FLAG_LITTLE_ENDIAN_ONLY ==
+                       LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_LITTLE_ENDIAN_ONLY);
+        LIBSPDM_ASSERT(LIBSPDM_SPDM_10_11_ASYM_VERIFY_FLAG_LITTLE_BIG_ONLY ==
+                       LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_LITTLE_BIG_ONLY);
+        LIBSPDM_ASSERT(LIBSPDM_SPDM_10_11_ASYM_VERIFY_FLAG_BIG_OR_LITTLE_ENDIAN ==
+                       LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_BIG_OR_LITTLE_ENDIAN);
+
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
         result = libspdm_asym_verify_ex(
             spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
             spdm_context->connection_info.algorithm.base_asym_algo,
             spdm_context->connection_info.algorithm.base_hash_algo,
             context, m1m2_buffer, m1m2_buffer_size, sign_data, sign_data_size,
-            spdm_context->spdm_10_11_verify_signature_endian);
+            (uint32_t*)&spdm_context->spdm_10_11_verify_signature_endian);
         libspdm_asym_free(
             spdm_context->connection_info.algorithm.base_asym_algo, context);
 #else
@@ -1062,7 +1092,7 @@ bool libspdm_verify_challenge_auth_signature(libspdm_context_t *spdm_context,
             spdm_context->connection_info.algorithm.base_asym_algo,
             spdm_context->connection_info.algorithm.base_hash_algo,
             context, m1m2_hash, m1m2_hash_size, sign_data, sign_data_size,
-            spdm_context->spdm_10_11_verify_signature_endian);
+            (uint32_t*)&spdm_context->spdm_10_11_verify_signature_endian);
         if (slot_id == 0xFF) {
             libspdm_asym_free(
                 spdm_context->connection_info.algorithm.base_asym_algo, context);
@@ -1075,7 +1105,7 @@ bool libspdm_verify_challenge_auth_signature(libspdm_context_t *spdm_context,
             spdm_context->connection_info.algorithm.req_base_asym_alg,
             spdm_context->connection_info.algorithm.base_hash_algo,
             context, m1m2_buffer, m1m2_buffer_size, sign_data, sign_data_size,
-            spdm_context->spdm_10_11_verify_signature_endian);
+            (uint32_t*)&spdm_context->spdm_10_11_verify_signature_endian);
         libspdm_req_asym_free(
             spdm_context->connection_info.algorithm.req_base_asym_alg, context);
 #else
@@ -1084,7 +1114,7 @@ bool libspdm_verify_challenge_auth_signature(libspdm_context_t *spdm_context,
             spdm_context->connection_info.algorithm.req_base_asym_alg,
             spdm_context->connection_info.algorithm.base_hash_algo,
             context, m1m2_hash, m1m2_hash_size, sign_data, sign_data_size,
-            spdm_context->spdm_10_11_verify_signature_endian);
+            (uint32_t*)&spdm_context->spdm_10_11_verify_signature_endian);
         if (slot_id == 0xFF) {
             libspdm_req_asym_free(
                 spdm_context->connection_info.algorithm.req_base_asym_alg, context);

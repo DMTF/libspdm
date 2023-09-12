@@ -428,7 +428,6 @@ void libspdm_copy_signature_swap_endian(
 #define LIBSDPM_SPDM_10_11_ASYM_VERIFY_FLAG_BIG_ENDIAN_ONLY        (0x0)
 #define LIBSPDM_SPDM_10_11_ASYM_VERIFY_FLAG_LITTLE_ENDIAN_ONLY     (0x1)
 #define LIBSDPM_SPDM_10_11_ASYM_VERIFY_FLAG_BIG_OR_LITTLE_ENDIAN   (0x2)
-#define LIBSDPM_SPDM_10_11_ASYM_VERIFY_FLAG_ENDIAN_FLAGS           (0x3)
 
 /**
  * Verifies the asymmetric signature, based upon negotiated asymmetric algorithm.
@@ -440,6 +439,8 @@ void libspdm_copy_signature_swap_endian(
  * @param  message_size    Size of the message in bytes.
  * @param  signature       Pointer to asymmetric signature to be verified.
  * @param  sig_size        Size of signature in bytes.
+ * @param  endian          Endian to be tried. If both endians is selected,
+ *                         the one actually used successfully is returned.
  *
  * @retval  true   Valid asymmetric signature.
  * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
@@ -457,7 +458,7 @@ bool libspdm_asym_verify_ex(
     void* context,
     const uint8_t* message, size_t message_size,
     const uint8_t* signature, size_t sig_size,
-    uint32_t flags);
+    uint32_t *endian);
 
 /**
  * Verifies the asymmetric signature, based upon negotiated asymmetric algorithm.
@@ -469,6 +470,8 @@ bool libspdm_asym_verify_ex(
  * @param  hash_size       Size of the hash in bytes.
  * @param  signature       Pointer to asymmetric signature to be verified.
  * @param  sig_size        Size of signature in bytes.
+ * @param  endian          Endian to be tried. If both endians is selected,
+ *                         the one actually used successfully is returned.
  *
  * @retval  true   Valid asymmetric signature.
  * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
@@ -484,7 +487,7 @@ bool libspdm_asym_verify_hash_ex(
     uint32_t base_asym_algo, uint32_t base_hash_algo, void* context,
     const uint8_t* message_hash, size_t hash_size,
     const uint8_t* signature, size_t sig_size,
-    uint32_t flags);
+    uint32_t *endian);
 
 /**
  * Carries out the signature generation.
@@ -603,6 +606,8 @@ void libspdm_req_asym_free(uint16_t req_base_asym_alg, void *context);
  * @param  message_size       Size of the message in bytes.
  * @param  signature          Pointer to asymmetric signature to be verified.
  * @param  sig_size           Size of signature in bytes.
+ * @param  endian             Endian to be tried. If both endians is selected,
+ *                            the one actually used successfully is returned.
  *
  * @retval  true   Valid asymmetric signature.
  * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
@@ -619,7 +624,7 @@ bool libspdm_req_asym_verify_ex(
     uint16_t req_base_asym_alg,
     uint32_t base_hash_algo, void* context,
     const uint8_t* message, size_t message_size,
-    const uint8_t* signature, size_t sig_size, uint32_t flags);
+    const uint8_t* signature, size_t sig_size, uint32_t *endian);
 
 /**
  * Verifies the asymmetric signature, based upon negotiated requester asymmetric algorithm.
@@ -631,6 +636,8 @@ bool libspdm_req_asym_verify_ex(
  * @param  hash_size          Size of the hash in bytes.
  * @param  signature          Pointer to asymmetric signature to be verified.
  * @param  sig_size           Size of signature in bytes.
+ * @param  endian             Endian to be tried. If both endians is selected,
+ *                            the one actually used successfully is returned.
  *
  * @retval  true   Valid asymmetric signature.
  * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
@@ -647,7 +654,7 @@ bool libspdm_req_asym_verify_hash_ex(
     uint16_t req_base_asym_alg,
     uint32_t base_hash_algo, void* context,
     const uint8_t* message_hash, size_t hash_size,
-    const uint8_t* signature, size_t sig_size, uint32_t flags);
+    const uint8_t* signature, size_t sig_size, uint32_t *endian);
 
 /**
  * Carries out the signature generation.

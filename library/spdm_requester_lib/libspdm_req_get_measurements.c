@@ -88,7 +88,7 @@ bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
         spdm_context->connection_info.algorithm.base_asym_algo,
         spdm_context->connection_info.algorithm.base_hash_algo,
         context, l1l2_buffer, l1l2_buffer_size, sign_data, sign_data_size,
-        spdm_context->spdm_10_11_verify_signature_endian);
+        (uint32_t*)&spdm_context->spdm_10_11_verify_signature_endian);
     libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo, context);
 #else
     result = libspdm_asym_verify_hash_ex(
@@ -96,7 +96,7 @@ bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
         spdm_context->connection_info.algorithm.base_asym_algo,
         spdm_context->connection_info.algorithm.base_hash_algo,
         context, l1l2_hash, l1l2_hash_size, sign_data, sign_data_size,
-        spdm_context->spdm_10_11_verify_signature_endian);
+        (uint32_t*)&spdm_context->spdm_10_11_verify_signature_endian);
     if (slot_id == 0xF) {
         libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo, context);
     }
