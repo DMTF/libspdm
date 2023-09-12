@@ -18,7 +18,8 @@ typedef struct {
     uint8_t ext_asym_count;
     uint8_t ext_hash_count;
     uint16_t reserved3;
-    spdm_negotiate_algorithms_common_struct_table_t struct_table[4];
+    spdm_negotiate_algorithms_common_struct_table_t struct_table[
+        SPDM_NEGOTIATE_ALGORITHMS_MAX_NUM_STRUCT_TABLE_ALG];
 } libspdm_negotiate_algorithms_request_mine_t;
 
 typedef struct {
@@ -35,7 +36,8 @@ typedef struct {
     uint16_t reserved3;
     uint32_t ext_asym_sel;
     uint32_t ext_hash_sel;
-    spdm_negotiate_algorithms_common_struct_table_t struct_table[4];
+    spdm_negotiate_algorithms_common_struct_table_t struct_table[
+        SPDM_NEGOTIATE_ALGORITHMS_MAX_NUM_STRUCT_TABLE_ALG];
 } libspdm_algorithms_response_max_t;
 #pragma pack()
 
@@ -72,7 +74,7 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
     libspdm_algorithms_response_max_t *spdm_response;
     size_t spdm_response_size;
     uint32_t algo_size;
-    size_t index;
+    size_t index = 0;
     spdm_negotiate_algorithms_common_struct_table_t *struct_table;
     uint8_t fixed_alg_size;
     uint8_t ext_alg_count;
@@ -80,6 +82,7 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
     size_t message_size;
     size_t transport_header_size;
     uint8_t alg_type_pre;
+    uint8_t req_param1 = 0;
 
     /* -=[Verify State Phase]=- */
     if (spdm_context->connection_info.connection_state !=
@@ -104,9 +107,18 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
     libspdm_zero_mem(spdm_request, sizeof(libspdm_negotiate_algorithms_request_mine_t));
     spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
-        spdm_request->length = sizeof(libspdm_negotiate_algorithms_request_mine_t);
-        /* Number of Algorithms Structure Tables*/
-        spdm_request->header.param1 = 4;
+        /* Number of Algorithms Structure Tables based on supported algorithms */
+        if (spdm_context->local_context.algorithm.dhe_named_group) {req_param1++;}
+        if (spdm_context->local_context.algorithm.aead_cipher_suite) {req_param1++;}
+        if (spdm_context->local_context.algorithm.req_base_asym_alg) {req_param1++;}
+        if (spdm_context->local_context.algorithm.key_schedule) {req_param1++;}
+        LIBSPDM_ASSERT(req_param1 <=
+                       SPDM_NEGOTIATE_ALGORITHMS_MAX_NUM_STRUCT_TABLE_ALG);
+        spdm_request->header.param1 = req_param1;
+        spdm_request->length = sizeof(libspdm_negotiate_algorithms_request_mine_t) -
+                               ((SPDM_NEGOTIATE_ALGORITHMS_MAX_NUM_STRUCT_TABLE_ALG  -
+                                 req_param1) *
+                                sizeof(spdm_negotiate_algorithms_common_struct_table_t));
     } else {
         spdm_request->length = sizeof(libspdm_negotiate_algorithms_request_mine_t) -
                                sizeof(spdm_request->struct_table);
@@ -124,24 +136,42 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
     spdm_request->base_hash_algo = spdm_context->local_context.algorithm.base_hash_algo;
     spdm_request->ext_asym_count = 0;
     spdm_request->ext_hash_count = 0;
-    spdm_request->struct_table[0].alg_type = SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_DHE;
-    spdm_request->struct_table[0].alg_count = 0x20;
-    spdm_request->struct_table[0].alg_supported =
-        spdm_context->local_context.algorithm.dhe_named_group;
-    spdm_request->struct_table[1].alg_type = SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_AEAD;
-    spdm_request->struct_table[1].alg_count = 0x20;
-    spdm_request->struct_table[1].alg_supported =
-        spdm_context->local_context.algorithm.aead_cipher_suite;
-    spdm_request->struct_table[2].alg_type =
-        SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_REQ_BASE_ASYM_ALG;
-    spdm_request->struct_table[2].alg_count = 0x20;
-    spdm_request->struct_table[2].alg_supported =
-        spdm_context->local_context.algorithm.req_base_asym_alg;
-    spdm_request->struct_table[3].alg_type =
-        SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE;
-    spdm_request->struct_table[3].alg_count = 0x20;
-    spdm_request->struct_table[3].alg_supported =
-        spdm_context->local_context.algorithm.key_schedule;
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
+        /* ReqAlgStruct order based on by AlgType */
+        if (spdm_context->local_context.algorithm.dhe_named_group) {
+            spdm_request->struct_table[index].alg_type =
+                SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_DHE;
+            spdm_request->struct_table[index].alg_count = 0x20;
+            spdm_request->struct_table[index].alg_supported =
+                spdm_context->local_context.algorithm.dhe_named_group;
+            index++;
+        }
+        if (spdm_context->local_context.algorithm.aead_cipher_suite) {
+            spdm_request->struct_table[index].alg_type =
+                SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_AEAD;
+            spdm_request->struct_table[index].alg_count = 0x20;
+            spdm_request->struct_table[index].alg_supported =
+                spdm_context->local_context.algorithm.aead_cipher_suite;
+            index++;
+        }
+        if (spdm_context->local_context.algorithm.req_base_asym_alg) {
+            spdm_request->struct_table[index].alg_type =
+                SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_REQ_BASE_ASYM_ALG;
+            spdm_request->struct_table[index].alg_count = 0x20;
+            spdm_request->struct_table[index].alg_supported =
+                spdm_context->local_context.algorithm.req_base_asym_alg;
+            index++;
+        }
+        if (spdm_context->local_context.algorithm.key_schedule) {
+            spdm_request->struct_table[index].alg_type =
+                SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE;
+            spdm_request->struct_table[index].alg_count = 0x20;
+            spdm_request->struct_table[index].alg_supported =
+                spdm_context->local_context.algorithm.key_schedule;
+            index++;
+        }
+        LIBSPDM_ASSERT(index == spdm_request->header.param1);
+    }
     spdm_request_size = spdm_request->length;
 
     /* -=[Send Request Phase]=- */
