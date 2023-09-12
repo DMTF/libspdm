@@ -425,9 +425,9 @@ void libspdm_copy_signature_swap_endian(
 
 /* The Endian flags apply only if the spdm version is 1.0/1.1.
  * The default verification mode is BIG ENDIAN ONLY. */
-#define LIBSDPM_SPDM_10_11_ASYM_VERIFY_FLAG_BIG_ENDIAN_ONLY        (0x0)
+#define LIBSPDM_SPDM_10_11_ASYM_VERIFY_FLAG_BIG_ENDIAN_ONLY        (0x0)
 #define LIBSPDM_SPDM_10_11_ASYM_VERIFY_FLAG_LITTLE_ENDIAN_ONLY     (0x1)
-#define LIBSDPM_SPDM_10_11_ASYM_VERIFY_FLAG_BIG_OR_LITTLE_ENDIAN   (0x2)
+#define LIBSPDM_SPDM_10_11_ASYM_VERIFY_FLAG_BIG_OR_LITTLE_ENDIAN   (0x2)
 
 /**
  * Verifies the asymmetric signature, based upon negotiated asymmetric algorithm.
