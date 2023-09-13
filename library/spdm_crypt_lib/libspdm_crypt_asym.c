@@ -925,12 +925,12 @@ bool libspdm_asym_verify_ex(
         /* Passthru */
     } else {
         try_big_endian =
-            (*endian == LIBSPDM_SPDM_10_11_ASYM_VERIFY_FLAG_BIG_ENDIAN_ONLY
-             || *endian == LIBSPDM_SPDM_10_11_ASYM_VERIFY_FLAG_BIG_OR_LITTLE_ENDIAN);
+            (*endian == LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY
+             || *endian == LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_OR_LITTLE);
 
         try_little_endian =
-            (*endian == LIBSPDM_SPDM_10_11_ASYM_VERIFY_FLAG_LITTLE_ENDIAN_ONLY
-             || *endian == LIBSPDM_SPDM_10_11_ASYM_VERIFY_FLAG_BIG_OR_LITTLE_ENDIAN);
+            (*endian == LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY
+             || *endian == LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_OR_LITTLE);
 
         little_endian_succeeded = false;
     }
@@ -983,9 +983,9 @@ bool libspdm_asym_verify_ex(
     }
     if (try_big_endian && try_little_endian && result) {
         if (little_endian_succeeded) {
-            *endian = LIBSPDM_SPDM_10_11_ASYM_VERIFY_FLAG_LITTLE_ENDIAN_ONLY;
+            *endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY;
         } else {
-            *endian = LIBSPDM_SPDM_10_11_ASYM_VERIFY_FLAG_BIG_ENDIAN_ONLY;
+            *endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
         }
     }
     return result;
@@ -1075,12 +1075,12 @@ bool libspdm_asym_verify_hash_ex(
     }
     else {
         try_big_endian =
-            (*endian == LIBSPDM_SPDM_10_11_ASYM_VERIFY_FLAG_BIG_ENDIAN_ONLY
-             || *endian == LIBSPDM_SPDM_10_11_ASYM_VERIFY_FLAG_BIG_OR_LITTLE_ENDIAN);
+            (*endian == LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY
+             || *endian == LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_OR_LITTLE);
 
         try_little_endian =
-            (*endian == LIBSPDM_SPDM_10_11_ASYM_VERIFY_FLAG_LITTLE_ENDIAN_ONLY
-             || *endian == LIBSPDM_SPDM_10_11_ASYM_VERIFY_FLAG_BIG_OR_LITTLE_ENDIAN);
+            (*endian == LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY
+             || *endian == LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_OR_LITTLE);
 
         little_endian_succeeded = false;
     }
@@ -1107,10 +1107,10 @@ bool libspdm_asym_verify_hash_ex(
         }
         if (try_big_endian && try_little_endian && result) {
             if (little_endian_succeeded) {
-                *endian = LIBSPDM_SPDM_10_11_ASYM_VERIFY_FLAG_LITTLE_ENDIAN_ONLY;
+                *endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY;
             }
             else {
-                *endian = LIBSPDM_SPDM_10_11_ASYM_VERIFY_FLAG_BIG_ENDIAN_ONLY;
+                *endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
             }
         }
         return result;
@@ -1128,7 +1128,7 @@ bool libspdm_asym_verify(
     size_t message_size, const uint8_t* signature,
     size_t sig_size)
 {
-    uint32_t endian = LIBSPDM_SPDM_10_11_ASYM_VERIFY_FLAG_BIG_ENDIAN_ONLY;
+    uint32_t endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
     return libspdm_asym_verify_ex(
         spdm_version, op_code, base_asym_algo, base_hash_algo,
         context, message, message_size, signature, sig_size, &endian);
@@ -1141,7 +1141,7 @@ bool libspdm_asym_verify_hash(
     size_t hash_size, const uint8_t* signature,
     size_t sig_size)
 {
-    uint32_t endian = LIBSPDM_SPDM_10_11_ASYM_VERIFY_FLAG_BIG_ENDIAN_ONLY;
+    uint32_t endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
     return libspdm_asym_verify_hash_ex(
         spdm_version, op_code, base_asym_algo, base_hash_algo,
         context, message_hash, hash_size, signature, sig_size, &endian);
@@ -1402,12 +1402,12 @@ bool libspdm_req_asym_verify_ex(
         /* Passthru */
     } else {
         try_big_endian =
-            (*endian == LIBSPDM_SPDM_10_11_ASYM_VERIFY_FLAG_BIG_ENDIAN_ONLY
-             || *endian == LIBSPDM_SPDM_10_11_ASYM_VERIFY_FLAG_BIG_OR_LITTLE_ENDIAN);
+            (*endian == LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY
+             || *endian == LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_OR_LITTLE);
 
         try_little_endian =
-            (*endian == LIBSPDM_SPDM_10_11_ASYM_VERIFY_FLAG_LITTLE_ENDIAN_ONLY
-             || *endian == LIBSPDM_SPDM_10_11_ASYM_VERIFY_FLAG_BIG_OR_LITTLE_ENDIAN);
+            (*endian == LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY
+             || *endian == LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_OR_LITTLE);
 
         little_endian_succeeded = false;
     }
@@ -1460,10 +1460,10 @@ bool libspdm_req_asym_verify_ex(
     }
     if (try_big_endian && try_little_endian && result) {
         if (little_endian_succeeded) {
-            *endian = LIBSPDM_SPDM_10_11_ASYM_VERIFY_FLAG_LITTLE_ENDIAN_ONLY;
+            *endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY;
         }
         else {
-            *endian = LIBSPDM_SPDM_10_11_ASYM_VERIFY_FLAG_BIG_ENDIAN_ONLY;
+            *endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
         }
     }
     return result;
@@ -1549,12 +1549,12 @@ bool libspdm_req_asym_verify_hash_ex(
         /* SPDM 1.2 signing done. */
     } else {
         try_big_endian =
-            (*endian == LIBSPDM_SPDM_10_11_ASYM_VERIFY_FLAG_BIG_ENDIAN_ONLY
-             || *endian == LIBSPDM_SPDM_10_11_ASYM_VERIFY_FLAG_BIG_OR_LITTLE_ENDIAN);
+            (*endian == LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY
+             || *endian == LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_OR_LITTLE);
 
         try_little_endian =
-            (*endian == LIBSPDM_SPDM_10_11_ASYM_VERIFY_FLAG_LITTLE_ENDIAN_ONLY
-             || *endian == LIBSPDM_SPDM_10_11_ASYM_VERIFY_FLAG_BIG_OR_LITTLE_ENDIAN);
+            (*endian == LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY
+             || *endian == LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_OR_LITTLE);
 
         little_endian_succeeded = false;
     }
@@ -1581,10 +1581,10 @@ bool libspdm_req_asym_verify_hash_ex(
         }
         if (try_big_endian && try_little_endian && result) {
             if (little_endian_succeeded) {
-                *endian = LIBSPDM_SPDM_10_11_ASYM_VERIFY_FLAG_LITTLE_ENDIAN_ONLY;
+                *endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY;
             }
             else {
-                *endian = LIBSPDM_SPDM_10_11_ASYM_VERIFY_FLAG_BIG_ENDIAN_ONLY;
+                *endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
             }
         }
         return result;
@@ -1601,10 +1601,10 @@ bool libspdm_req_asym_verify(
     const uint8_t* message, size_t message_size,
     const uint8_t* signature, size_t sig_size)
 {
+    uint32_t endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
     return libspdm_req_asym_verify_ex(
         spdm_version, op_code, req_base_asym_alg, base_hash_algo, context,
-        message, message_size, signature, sig_size,
-        LIBSPDM_SPDM_10_11_ASYM_VERIFY_FLAG_BIG_ENDIAN_ONLY);
+        message, message_size, signature, sig_size, &endian);
 }
 
 bool libspdm_req_asym_verify_hash(
@@ -1614,10 +1614,10 @@ bool libspdm_req_asym_verify_hash(
     const uint8_t* message_hash, size_t hash_size,
     const uint8_t* signature, size_t sig_size)
 {
+    uint32_t endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
     return libspdm_req_asym_verify_hash_ex(
         spdm_version, op_code, req_base_asym_alg, base_hash_algo, context,
-        message_hash, hash_size, signature, sig_size,
-        LIBSPDM_SPDM_10_11_ASYM_VERIFY_FLAG_BIG_ENDIAN_ONLY);
+        message_hash, hash_size, signature, sig_size, &endian);
 }
 
 bool libspdm_req_asym_sign(

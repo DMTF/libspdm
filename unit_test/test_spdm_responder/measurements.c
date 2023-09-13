@@ -1792,7 +1792,7 @@ void libspdm_test_responder_measurements_case29(void** state)
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
     spdm_context->spdm_10_11_verify_signature_endian =
-        LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_LITTLE_ENDIAN_ONLY;
+        LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY;
 
     libspdm_reset_message_m(spdm_context, NULL);
     libspdm_secret_lib_meas_opaque_data_size = 0;
@@ -1915,7 +1915,7 @@ void libspdm_test_responder_measurements_case30(void** state)
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
     spdm_context->spdm_10_11_verify_signature_endian =
-        LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_BIG_ENDIAN_ONLY;
+        LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
 
     libspdm_reset_message_m(spdm_context, NULL);
     libspdm_secret_lib_meas_opaque_data_size = 0;
@@ -2040,7 +2040,7 @@ void libspdm_test_responder_measurements_case31(void** state)
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
     spdm_context->spdm_10_11_verify_signature_endian =
-        LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_BIG_OR_LITTLE_ENDIAN;
+        LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_OR_LITTLE;
 
     libspdm_reset_message_m(spdm_context, NULL);
     libspdm_secret_lib_meas_opaque_data_size = 0;
@@ -2165,7 +2165,7 @@ void libspdm_test_responder_measurements_case32(void** state)
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
     spdm_context->spdm_10_11_verify_signature_endian =
-        LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_LITTLE_ENDIAN_ONLY;
+        LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY;
 
     libspdm_reset_message_m(spdm_context, NULL);
     libspdm_secret_lib_meas_opaque_data_size = 0;
@@ -2295,7 +2295,7 @@ void libspdm_test_responder_measurements_case33(void** state)
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
     spdm_context->spdm_10_11_verify_signature_endian =
-        LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_BIG_ENDIAN_ONLY;
+        LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
 
     libspdm_reset_message_m(spdm_context, NULL);
     libspdm_secret_lib_meas_opaque_data_size = 0;
@@ -2426,7 +2426,7 @@ void libspdm_test_responder_measurements_case34(void** state)
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
     spdm_context->spdm_10_11_verify_signature_endian =
-        LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_BIG_OR_LITTLE_ENDIAN;
+        LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_OR_LITTLE;
 
     libspdm_reset_message_m(spdm_context, NULL);
     libspdm_secret_lib_meas_opaque_data_size = 0;

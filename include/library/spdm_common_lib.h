@@ -212,19 +212,6 @@ typedef enum {
     LIBSPDM_RESPONSE_STATE_MAX
 } libspdm_response_state_t;
 
-/**
- * Specifies the endianness to use when verifying signatures on SPDM 1.0/1.1.
- * If BIG_OR_LITTLE_ENDIAN is specified, both endians will be tried one time and the
- * succeeding one will be susbsequently used in all future verifications.
- * The value saved will be automatically changed from BIG_OR_LITTLE_ENDIAN
- * to BIG_ENDIAN_ONLY or LITTLE_ENDIAN_ONLY.
- **/
-typedef enum {
-    LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_BIG_ENDIAN_ONLY,
-    LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_LITTLE_ENDIAN_ONLY,
-    LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_BIG_OR_LITTLE_ENDIAN,
-} libspdm_spdm_10_11_verify_signature_endian_t;
-
 /*
  * +--------------------------+------------------------------------------+---------+
  * | GET_VERSION              | 4                                        | 1       |

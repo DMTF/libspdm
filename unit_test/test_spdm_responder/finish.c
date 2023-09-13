@@ -2745,7 +2745,7 @@ void libspdm_test_responder_finish_case23(void** state)
     spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
     spdm_context->spdm_10_11_verify_signature_endian =
-        LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_LITTLE_ENDIAN_ONLY;
+        LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY;
 
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
@@ -2909,7 +2909,7 @@ void libspdm_test_responder_finish_case24(void** state)
     spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
     spdm_context->spdm_10_11_verify_signature_endian =
-        LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_BIG_ENDIAN_ONLY;
+        LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
 
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
@@ -3073,7 +3073,7 @@ void libspdm_test_responder_finish_case25(void** state)
     spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
     spdm_context->spdm_10_11_verify_signature_endian =
-        LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_BIG_OR_LITTLE_ENDIAN;
+        LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_OR_LITTLE;
 
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
@@ -3235,7 +3235,7 @@ void libspdm_test_responder_finish_case26(void** state)
     spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
     spdm_context->spdm_10_11_verify_signature_endian =
-        LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_LITTLE_ENDIAN_ONLY;
+        LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY;
 
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
@@ -3403,7 +3403,7 @@ void libspdm_test_responder_finish_case27(void** state)
     spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
     spdm_context->spdm_10_11_verify_signature_endian =
-        LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_BIG_ENDIAN_ONLY;
+        LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
 
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
@@ -3571,7 +3571,7 @@ void libspdm_test_responder_finish_case28(void** state)
     spdm_context->connection_info.local_used_cert_chain_buffer_size =
         data_size1;
     spdm_context->spdm_10_11_verify_signature_endian =
-        LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_LITTLE_ENDIAN_ONLY;
+        LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY;
 
     libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.mut_auth_requested = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
