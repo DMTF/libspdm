@@ -6,12 +6,28 @@
 
 #include "hal/library/memlib.h"
 
+#ifdef _WIN32
+#include <windows.h>
+#elif defined(_GNU_SOURCE) || defined(_BSD_SOURCE)
+#include <strings.h>
+#include <string.h>
+#endif
+
 void libspdm_zero_mem(void *buffer, size_t length)
 {
+
+#if defined(__STDC_LIB_EXT1__)
+    memset_s(buffer, length, 0, length);
+#elif defined(_WIN32)
+    SecureZeroMemory(buffer, length);
+#elif defined(_GNU_SOURCE) || defined(_BSD_SOURCE)
+    explicit_bzero(buffer, length);
+#else
     volatile uint8_t *pointer;
 
     pointer = (uint8_t *)buffer;
     while (length-- != 0) {
         *(pointer++) = 0;
     }
+#endif
 }
