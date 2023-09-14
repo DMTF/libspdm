@@ -84,6 +84,8 @@ void libspdm_session_info_init(libspdm_context_t *spdm_context,
     session_info->use_psk = use_psk;
     libspdm_secured_message_set_use_psk(session_info->secured_message_context, use_psk);
     libspdm_secured_message_set_session_type(session_info->secured_message_context, session_type);
+    libspdm_secured_message_set_sequence_number_endian(session_info->secured_message_context,
+                                                       spdm_context->sequence_number_endian);
     libspdm_secured_message_set_max_spdm_session_sequence_number(
         session_info->secured_message_context, spdm_context->max_spdm_session_sequence_number);
     libspdm_secured_message_set_algorithms(

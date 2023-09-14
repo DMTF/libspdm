@@ -68,6 +68,7 @@ typedef struct {
     size_t psk_hint_size;
     uint8_t psk_hint[LIBSPDM_PSK_MAX_HINT_LENGTH];
     uint8_t export_master_secret[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t sequence_number_endian;
 
     /* Cache the error in libspdm_decode_secured_message.
      * It is handled in libspdm_build_response. */
@@ -149,6 +150,17 @@ void libspdm_secured_message_set_psk_hint(void *spdm_secured_message_context,
 void libspdm_secured_message_set_max_spdm_session_sequence_number(
     void *spdm_secured_message_context,
     uint64_t max_spdm_session_sequence_number);
+
+/**
+ * Set the endianness of the sequence number used to construct the AEAD IV.
+ *
+ * @param spdm_secured_message_context A pointer to the SPDM secured message context.
+ * @param endian_value                 The endianness value.
+ *
+ */
+void libspdm_secured_message_set_sequence_number_endian(
+    void *spdm_secured_message_context,
+    uint8_t endian_value);
 
 /**
  * Allocates and Initializes one Diffie-Hellman Ephemeral (DHE) context for subsequent use,

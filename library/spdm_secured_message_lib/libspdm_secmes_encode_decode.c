@@ -6,6 +6,62 @@
 
 #include "internal/libspdm_secured_message_lib.h"
 
+static void generate_iv(uint64_t sequence_number, uint8_t *iv, const uint8_t *salt,
+                        size_t aead_iv_size, uint8_t endian)
+{
+    uint8_t iv_temp[LIBSPDM_MAX_AEAD_IV_SIZE];
+    size_t index;
+
+    /* Form the AEAD IV from the salt and the sequence number. */
+    libspdm_copy_mem(iv, LIBSPDM_MAX_AEAD_IV_SIZE, salt, aead_iv_size);
+
+    switch (endian) {
+    case LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_LITTLE:
+    case LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_BOTH:
+        /* If little-endian then the sequence number is zero-extended to the higher indices.
+         * The sequence number begins at the lowest index (0). */
+        libspdm_copy_mem(iv_temp, sizeof(iv_temp), &sequence_number, sizeof(sequence_number));
+        for (index = 0; index < sizeof(sequence_number); index++) {
+            iv[index] = iv[index] ^ iv_temp[index];
+        }
+        break;
+    case LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_BIG_DEC_BIG:
+    case LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_BIG_DEC_BOTH: {
+        /* If big-endian then the sequence number is zero-extended to the lower indices.
+         * The sequence number ends at the highest index (aead_size - 1). */
+        sequence_number = libspdm_le_to_be_64(sequence_number);
+        libspdm_copy_mem(iv_temp + (aead_iv_size - sizeof(sequence_number)),
+                         aead_iv_size,
+                         &sequence_number,
+                         sizeof(sequence_number));
+        for (index = aead_iv_size - sizeof(sequence_number); index < sizeof(sequence_number);
+             index++) {
+            iv[index] = iv[index] ^ iv_temp[index];
+        }
+        break;
+    }
+    }
+}
+
+static uint8_t swap_endian(uint8_t endian)
+{
+    switch (endian) {
+    case LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_BOTH:
+        return LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_BIG_DEC_BIG;
+    case LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_BIG_DEC_BOTH:
+        return LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_LITTLE;
+    default:
+        LIBSPDM_ASSERT(0);
+        return 0;
+    }
+}
+
+static bool is_sequence_number_endian_determined(uint8_t endian)
+{
+    return ((endian == LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_BIG_DEC_BIG) ||
+            (endian == LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_LITTLE)) ? true : false;
+}
+
 /**
  * Encode an application message to a secured message.
  *
@@ -54,7 +110,6 @@ libspdm_return_t libspdm_encode_secured_message(
     uint8_t iv[LIBSPDM_MAX_AEAD_IV_SIZE];
     uint64_t sequence_number;
     uint64_t sequence_num_in_header;
-    uint64_t data64;
     uint8_t sequence_num_in_header_size;
     libspdm_session_type_t session_type;
     uint32_t rand_count;
@@ -127,9 +182,8 @@ libspdm_return_t libspdm_encode_secured_message(
         return LIBSPDM_STATUS_SEQUENCE_NUMBER_OVERFLOW;
     }
 
-    libspdm_copy_mem (iv, LIBSPDM_MAX_AEAD_IV_SIZE, salt, aead_iv_size);
-    data64 = libspdm_read_uint64((const uint8_t *)iv) ^ sequence_number;
-    libspdm_write_uint64(iv, data64);
+    generate_iv(sequence_number, iv, salt, aead_iv_size,
+                secured_message_context->sequence_number_endian);
 
     sequence_num_in_header = 0;
     sequence_num_in_header_size = spdm_secured_message_callbacks->get_sequence_number(
@@ -316,7 +370,6 @@ libspdm_return_t libspdm_decode_secured_message(
     uint8_t iv[LIBSPDM_MAX_AEAD_IV_SIZE];
     uint64_t sequence_number;
     uint64_t sequence_num_in_header;
-    uint64_t data64;
     uint8_t sequence_num_in_header_size;
     libspdm_session_type_t session_type;
     libspdm_session_state_t session_state;
@@ -396,9 +449,8 @@ libspdm_return_t libspdm_decode_secured_message(
         return LIBSPDM_STATUS_SEQUENCE_NUMBER_OVERFLOW;
     }
 
-    libspdm_copy_mem (iv, LIBSPDM_MAX_AEAD_IV_SIZE, salt, aead_iv_size);
-    data64 = libspdm_read_uint64((const uint8_t *)iv) ^ sequence_number;
-    libspdm_write_uint64(iv, data64);
+    generate_iv(sequence_number, iv, salt, aead_iv_size,
+                secured_message_context->sequence_number_endian);
 
     sequence_num_in_header = 0;
     sequence_num_in_header_size =
@@ -473,12 +525,50 @@ libspdm_return_t libspdm_decode_secured_message(
         dec_msg = (uint8_t *)*app_message;
         enc_msg_header = (void *)dec_msg;
         tag = (const uint8_t *)record_header1 + record_header_size + cipher_text_size;
+
         result = libspdm_aead_decryption(
             secured_message_context->secured_message_version,
             secured_message_context->aead_cipher_suite, key,
             aead_key_size, iv, aead_iv_size, a_data,
             record_header_size, enc_msg, cipher_text_size, tag,
             aead_tag_size, dec_msg, &cipher_text_size);
+
+        if (!is_sequence_number_endian_determined(
+                secured_message_context->sequence_number_endian)) {
+
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Sequence number endianness is not determined.\n"));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Attempting to determine endianness.\n"));
+
+            if (result) {
+                /* Endianness is correct so set the endianness. */
+                if (secured_message_context->sequence_number_endian ==
+                    LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_BOTH) {
+                    secured_message_context->sequence_number_endian =
+                        LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_LITTLE;
+                } else {
+                    secured_message_context->sequence_number_endian =
+                        LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_BIG_DEC_BIG;
+                }
+            } else {
+                /* Endianness may be incorrect so try with the opposite endianness. */
+                generate_iv(sequence_number - 1, iv, salt, aead_iv_size,
+                            swap_endian(secured_message_context->sequence_number_endian));
+
+                result = libspdm_aead_decryption(
+                    secured_message_context->secured_message_version,
+                    secured_message_context->aead_cipher_suite, key,
+                    aead_key_size, iv, aead_iv_size, a_data,
+                    record_header_size, enc_msg, cipher_text_size, tag,
+                    aead_tag_size, dec_msg, &cipher_text_size);
+
+                if (result) {
+                    /* Endianness is correct so set the endianness. */
+                    secured_message_context->sequence_number_endian =
+                        swap_endian(secured_message_context->sequence_number_endian);
+                }
+            }
+        }
+
         if (!result) {
             /* Backup keys are valid, fail and alert rollback and retry is possible. */
             if ((is_request_message && secured_message_context->requester_backup_valid) ||
@@ -538,13 +628,46 @@ libspdm_return_t libspdm_decode_secured_message(
         a_data = (uint8_t *)record_header1;
         tag = (uint8_t *)record_header1 + record_header_size +
               record_header2->length - aead_tag_size;
+
         result = libspdm_aead_decryption(
             secured_message_context->secured_message_version,
             secured_message_context->aead_cipher_suite, key,
             aead_key_size, iv, aead_iv_size, a_data,
-            record_header_size + record_header2->length -
-            aead_tag_size,
+            record_header_size + record_header2->length - aead_tag_size,
             NULL, 0, tag, aead_tag_size, NULL, NULL);
+
+        if (!is_sequence_number_endian_determined(
+                secured_message_context->sequence_number_endian)) {
+            if (result) {
+                /* Endianness is correct so set the endianness. */
+                if (secured_message_context->sequence_number_endian ==
+                    LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_BOTH) {
+                    secured_message_context->sequence_number_endian =
+                        LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_LITTLE;
+                } else {
+                    secured_message_context->sequence_number_endian =
+                        LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_BIG_DEC_BIG;
+                }
+            } else {
+                /* Endianness may be incorrect so try with the opposite endianness. */
+                generate_iv(sequence_number - 1, iv, salt, aead_iv_size,
+                            swap_endian(secured_message_context->sequence_number_endian));
+
+                result = libspdm_aead_decryption(
+                    secured_message_context->secured_message_version,
+                    secured_message_context->aead_cipher_suite, key,
+                    aead_key_size, iv, aead_iv_size, a_data,
+                    record_header_size + record_header2->length - aead_tag_size,
+                    NULL, 0, tag, aead_tag_size, NULL, NULL);
+
+                if (result) {
+                    /* Endianness is correct so set the endianness. */
+                    secured_message_context->sequence_number_endian =
+                        swap_endian(secured_message_context->sequence_number_endian);
+                }
+            }
+        }
+
         if (!result) {
             /* Backup keys are valid, fail and alert rollback and retry is possible. */
             if ((is_request_message && secured_message_context->requester_backup_valid) ||
