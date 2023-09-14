@@ -134,6 +134,8 @@ typedef enum {
     /* For SPDM 1.0 and 1.1, allow signature verification in big, little, or both endians. */
     LIBSPDM_DATA_SPDM_VERSION_10_11_VERIFY_SIGNATURE_ENDIAN,
 
+    LIBSPDM_DATA_SESSION_SEQUENCE_NUMBER_ENDIAN,
+
     /* MAX */
     LIBSPDM_DATA_MAX
 } libspdm_data_type_t;
@@ -212,12 +214,21 @@ typedef enum {
     LIBSPDM_RESPONSE_STATE_MAX
 } libspdm_response_state_t;
 
-/* The Endian values apply only if the spdm version is 1.0/1.1.
+/* These macros apply only if the negotiated SPDM version is 1.0 or 1.1.
  * The default verification mode is big endian only. */
-#define LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY        (0)
-#define LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY     (1)
-#define LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_OR_LITTLE   (2)
+#define LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY 0
+#define LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY 1
+#define LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_OR_LITTLE 2
 
+/* Set the endianness of the AEAD sequence number. These macros apply only if the negotiated
+ * SPDM Secured Message version is 1.0 or 1.1.
+ * *_LITTLE and *_BIG immediately return an error on decryption failure.
+ * *_BOTH tries the opposite endianness on decryption failure.
+ * The default endianness is little endian for both encryption and decryption. */
+#define LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_LITTLE 0
+#define LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_BIG_DEC_BIG 1
+#define LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_BOTH 2
+#define LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_BIG_DEC_BOTH 3
 
 /*
  * +--------------------------+------------------------------------------+---------+

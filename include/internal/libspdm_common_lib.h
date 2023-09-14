@@ -553,6 +553,8 @@ typedef struct {
     /* see LIBSPDM_DATA_MAX_SPDM_SESSION_SEQUENCE_NUMBER */
     uint64_t max_spdm_session_sequence_number;
 
+    uint8_t sequence_number_endian;
+
 #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
     /* Chunk specific context */
     libspdm_chunk_context_t chunk_context;

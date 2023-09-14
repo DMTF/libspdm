@@ -176,6 +176,16 @@ void libspdm_secured_message_set_max_spdm_session_sequence_number(
     secured_message_context->max_spdm_session_sequence_number = max_spdm_session_sequence_number;
 }
 
+void libspdm_secured_message_set_sequence_number_endian (
+    void *spdm_secured_message_context,
+    uint8_t endian_value)
+{
+    libspdm_secured_message_context_t *secured_message_context;
+
+    secured_message_context = spdm_secured_message_context;
+    secured_message_context->sequence_number_endian = endian_value;
+}
+
 /**
  * Import the DHE Secret to an SPDM secured message context.
  *
