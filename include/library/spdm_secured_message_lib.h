@@ -33,6 +33,12 @@ typedef enum {
     LIBSPDM_SESSION_STATE_MAX
 } libspdm_session_state_t;
 
+/* The InvalidSession error code was removed from the specification. This define was originally
+ * in spdm.h and has moved here since it is used in transport decode functions to convey that
+ * the session ID is not recognizable.
+ */
+#define SPDM_ERROR_CODE_INVALID_SESSION 0x02
+
 /**
  * Return the size in bytes of a single SPDM secured message context.
  *
