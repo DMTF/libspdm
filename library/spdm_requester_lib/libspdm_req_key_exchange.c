@@ -220,18 +220,20 @@ bool libspdm_verify_key_exchange_rsp_signature(
     }
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    result = libspdm_asym_verify(
+    result = libspdm_asym_verify_ex(
         spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
         spdm_context->connection_info.algorithm.base_asym_algo,
         spdm_context->connection_info.algorithm.base_hash_algo,
-        context, th_curr_data, th_curr_data_size, sign_data, sign_data_size);
+        context, th_curr_data, th_curr_data_size, sign_data, sign_data_size,
+        &spdm_context->spdm_10_11_verify_signature_endian);
     libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo, context);
 #else
-    result = libspdm_asym_verify_hash(
+    result = libspdm_asym_verify_hash_ex(
         spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
         spdm_context->connection_info.algorithm.base_asym_algo,
         spdm_context->connection_info.algorithm.base_hash_algo,
-        context, hash_data, hash_size, sign_data, sign_data_size);
+        context, hash_data, hash_size, sign_data, sign_data_size,
+        &spdm_context->spdm_10_11_verify_signature_endian);
     if (slot_id == 0xFF) {
         libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo, context);
     }

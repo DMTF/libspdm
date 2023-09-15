@@ -1048,19 +1048,21 @@ bool libspdm_verify_challenge_auth_signature(libspdm_context_t *spdm_context,
 
     if (is_requester) {
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-        result = libspdm_asym_verify(
+        result = libspdm_asym_verify_ex(
             spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
             spdm_context->connection_info.algorithm.base_asym_algo,
             spdm_context->connection_info.algorithm.base_hash_algo,
-            context, m1m2_buffer, m1m2_buffer_size, sign_data, sign_data_size);
+            context, m1m2_buffer, m1m2_buffer_size, sign_data, sign_data_size,
+            &spdm_context->spdm_10_11_verify_signature_endian);
         libspdm_asym_free(
             spdm_context->connection_info.algorithm.base_asym_algo, context);
 #else
-        result = libspdm_asym_verify_hash(
+        result = libspdm_asym_verify_hash_ex(
             spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
             spdm_context->connection_info.algorithm.base_asym_algo,
             spdm_context->connection_info.algorithm.base_hash_algo,
-            context, m1m2_hash, m1m2_hash_size, sign_data, sign_data_size);
+            context, m1m2_hash, m1m2_hash_size, sign_data, sign_data_size,
+            &spdm_context->spdm_10_11_verify_signature_endian);
         if (slot_id == 0xFF) {
             libspdm_asym_free(
                 spdm_context->connection_info.algorithm.base_asym_algo, context);
@@ -1068,19 +1070,21 @@ bool libspdm_verify_challenge_auth_signature(libspdm_context_t *spdm_context,
 #endif
     } else {
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-        result = libspdm_req_asym_verify(
+        result = libspdm_req_asym_verify_ex(
             spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
             spdm_context->connection_info.algorithm.req_base_asym_alg,
             spdm_context->connection_info.algorithm.base_hash_algo,
-            context, m1m2_buffer, m1m2_buffer_size, sign_data, sign_data_size);
+            context, m1m2_buffer, m1m2_buffer_size, sign_data, sign_data_size,
+            &spdm_context->spdm_10_11_verify_signature_endian);
         libspdm_req_asym_free(
             spdm_context->connection_info.algorithm.req_base_asym_alg, context);
 #else
-        result = libspdm_req_asym_verify_hash(
+        result = libspdm_req_asym_verify_hash_ex(
             spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
             spdm_context->connection_info.algorithm.req_base_asym_alg,
             spdm_context->connection_info.algorithm.base_hash_algo,
-            context, m1m2_hash, m1m2_hash_size, sign_data, sign_data_size);
+            context, m1m2_hash, m1m2_hash_size, sign_data, sign_data_size,
+            &spdm_context->spdm_10_11_verify_signature_endian);
         if (slot_id == 0xFF) {
             libspdm_req_asym_free(
                 spdm_context->connection_info.algorithm.req_base_asym_alg, context);
