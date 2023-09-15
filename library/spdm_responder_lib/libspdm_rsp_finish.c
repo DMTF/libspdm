@@ -239,18 +239,20 @@ bool libspdm_verify_finish_req_signature(libspdm_context_t *spdm_context,
     }
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    result = libspdm_req_asym_verify(
+    result = libspdm_req_asym_verify_ex(
         spdm_context->connection_info.version, SPDM_FINISH,
         spdm_context->connection_info.algorithm.req_base_asym_alg,
         spdm_context->connection_info.algorithm.base_hash_algo,
-        context, th_curr_data, th_curr_data_size, sign_data, sign_data_size);
+        context, th_curr_data, th_curr_data_size, sign_data, sign_data_size,
+        &spdm_context->spdm_10_11_verify_signature_endian);
     libspdm_req_asym_free(spdm_context->connection_info.algorithm.req_base_asym_alg, context);
 #else
-    result = libspdm_req_asym_verify_hash(
+    result = libspdm_req_asym_verify_hash_ex(
         spdm_context->connection_info.version, SPDM_FINISH,
         spdm_context->connection_info.algorithm.req_base_asym_alg,
         spdm_context->connection_info.algorithm.base_hash_algo,
-        context, hash_data, hash_size, sign_data, sign_data_size);
+        context, hash_data, hash_size, sign_data, sign_data_size,
+        &spdm_context->spdm_10_11_verify_signature_endian);
     if (slot_id == 0xFF) {
         libspdm_req_asym_free(spdm_context->connection_info.algorithm.req_base_asym_alg, context);
     }

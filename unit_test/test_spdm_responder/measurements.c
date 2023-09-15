@@ -1744,6 +1744,770 @@ void libspdm_test_responder_measurements_case28(void **state)
     free(data);
 }
 
+/**
+ * Test 29: Based of Test Case 7  Successful response to get a number of measurements
+ * with signature.
+ * Signature test with signing in big endian but verification in little endian.
+ *
+ * Expected Behavior: Failing signature verification
+ **/
+void libspdm_test_responder_measurements_case29(void** state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t* spdm_test_context;
+    libspdm_context_t* spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_measurements_response_t* spdm_response;
+    size_t measurment_sig_size;
+
+    bool result;
+    uint32_t measurement_record_data_length;
+    uint8_t* measurement_record_data;
+    uint8_t* ptr;
+    uint16_t opaque_length;
+    void* signature;
+    size_t signature_size;
+    libspdm_session_info_t* session_info;
+    void* data;
+    size_t data_size;
+    void* hash;
+    size_t hash_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 29;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo =
+        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec =
+        m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->spdm_10_11_verify_signature_endian =
+        LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY;
+
+    libspdm_reset_message_m(spdm_context, NULL);
+    libspdm_secret_lib_meas_opaque_data_size = 0;
+    measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 +
+                          libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
+
+    response_size = sizeof(response);
+    libspdm_get_random_number(SPDM_NONCE_SIZE,
+                              m_libspdm_get_measurements_request5.nonce);
+    status = libspdm_get_response_measurements(
+        spdm_context, m_libspdm_get_measurements_request5_size,
+        &m_libspdm_get_measurements_request5, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_measurements_response_t) +
+                     measurment_sig_size);
+    spdm_response = (void*)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_MEASUREMENTS);
+    assert_int_equal(spdm_response->header.param1,
+                     LIBSPDM_MEASUREMENT_BLOCK_NUMBER);
+
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size,
+                                                    &hash, &hash_size);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
+        data_size;
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
+                     data, data_size);
+#else
+    libspdm_hash_all(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        data, data_size,
+        spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash);
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size =
+        libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+    libspdm_get_leaf_cert_public_key_from_cert_chain(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        spdm_context->connection_info.algorithm.base_asym_algo,
+        data, data_size,
+        &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+#endif
+
+    measurement_record_data_length = libspdm_read_uint24(spdm_response->measurement_record_length);
+    measurement_record_data = (void*)(spdm_response + 1);
+    ptr = measurement_record_data + measurement_record_data_length;
+    ptr += SPDM_NONCE_SIZE;
+    opaque_length = libspdm_read_uint16((const uint8_t*)ptr);
+    ptr += sizeof(uint16_t);
+    ptr += opaque_length;
+    signature = ptr;
+    signature_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
+    session_info = NULL;
+
+    status = libspdm_append_message_m(spdm_context, session_info,
+                                      &m_libspdm_get_measurements_request5,
+                                      m_libspdm_get_measurements_request5_size);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    status = libspdm_append_message_m(spdm_context, session_info, spdm_response,
+                                      response_size - signature_size);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    result = libspdm_verify_measurement_signature(
+        spdm_context, session_info, signature, signature_size);
+    assert_true(result == false);
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
+#endif
+}
+
+/**
+ * Test 30: Based of Test Case 7  Successful response to get a number of measurements
+ * with signature.
+ * Signature test with signing in big endian but verification in little endian.
+ *
+ * Expected Behavior: Failing signature verification
+ **/
+void libspdm_test_responder_measurements_case30(void** state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t* spdm_test_context;
+    libspdm_context_t* spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_measurements_response_t* spdm_response;
+    size_t measurment_sig_size;
+
+    bool result;
+    uint32_t measurement_record_data_length;
+    uint8_t* measurement_record_data;
+    uint8_t* ptr;
+    uint16_t opaque_length;
+    void* signature;
+    size_t signature_size;
+    libspdm_session_info_t* session_info;
+    void* data;
+    size_t data_size;
+    void* hash;
+    size_t hash_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 30;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo =
+        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec =
+        m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->spdm_10_11_verify_signature_endian =
+        LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
+
+    libspdm_reset_message_m(spdm_context, NULL);
+    libspdm_secret_lib_meas_opaque_data_size = 0;
+    measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 +
+                          libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
+
+    response_size = sizeof(response);
+    libspdm_get_random_number(SPDM_NONCE_SIZE,
+                              m_libspdm_get_measurements_request5.nonce);
+    status = libspdm_get_response_measurements(
+        spdm_context, m_libspdm_get_measurements_request5_size,
+        &m_libspdm_get_measurements_request5, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_measurements_response_t) +
+                     measurment_sig_size);
+    spdm_response = (void*)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_MEASUREMENTS);
+    assert_int_equal(spdm_response->header.param1,
+                     LIBSPDM_MEASUREMENT_BLOCK_NUMBER);
+
+    libspdm_read_responder_public_certificate_chain(
+        m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
+        &data, &data_size,
+        &hash, &hash_size);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
+        data_size;
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
+                     data, data_size);
+#else
+    libspdm_hash_all(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        data, data_size,
+        spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash);
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size =
+        libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+    libspdm_get_leaf_cert_public_key_from_cert_chain(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        spdm_context->connection_info.algorithm.base_asym_algo,
+        data, data_size,
+        &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+#endif
+
+    measurement_record_data_length = libspdm_read_uint24(spdm_response->measurement_record_length);
+    measurement_record_data = (void*)(spdm_response + 1);
+    ptr = measurement_record_data + measurement_record_data_length;
+    ptr += SPDM_NONCE_SIZE;
+    opaque_length = libspdm_read_uint16((const uint8_t*)ptr);
+    ptr += sizeof(uint16_t);
+    ptr += opaque_length;
+    signature = ptr;
+    signature_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
+    session_info = NULL;
+
+    status = libspdm_append_message_m(
+        spdm_context, session_info,
+        &m_libspdm_get_measurements_request5,
+        m_libspdm_get_measurements_request5_size);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    status = libspdm_append_message_m(
+        spdm_context, session_info, spdm_response,
+        response_size - signature_size);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    result = libspdm_verify_measurement_signature(
+        spdm_context, session_info, signature, signature_size);
+    assert_true(result == true);
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
+#endif
+}
+
+/**
+ * Test 31: Based of Test Case 7  Successful response to get a number of measurements
+ * with signature.
+ * Signature test with signing in big endian but verification in big or little endian.
+ *
+ * Expected Behavior: Passing signature verification
+ **/
+void libspdm_test_responder_measurements_case31(void** state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t* spdm_test_context;
+    libspdm_context_t* spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_measurements_response_t* spdm_response;
+    size_t measurment_sig_size;
+
+    bool result;
+    uint32_t measurement_record_data_length;
+    uint8_t* measurement_record_data;
+    uint8_t* ptr;
+    uint16_t opaque_length;
+    void* signature;
+    size_t signature_size;
+    libspdm_session_info_t* session_info;
+    void* data;
+    size_t data_size;
+    void* hash;
+    size_t hash_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 31;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo =
+        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec =
+        m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->spdm_10_11_verify_signature_endian =
+        LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_OR_LITTLE;
+
+    libspdm_reset_message_m(spdm_context, NULL);
+    libspdm_secret_lib_meas_opaque_data_size = 0;
+    measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 +
+                          libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
+
+    response_size = sizeof(response);
+    libspdm_get_random_number(SPDM_NONCE_SIZE,
+                              m_libspdm_get_measurements_request5.nonce);
+    status = libspdm_get_response_measurements(
+        spdm_context, m_libspdm_get_measurements_request5_size,
+        &m_libspdm_get_measurements_request5, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_measurements_response_t) +
+                     measurment_sig_size);
+    spdm_response = (void*)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_MEASUREMENTS);
+    assert_int_equal(spdm_response->header.param1,
+                     LIBSPDM_MEASUREMENT_BLOCK_NUMBER);
+
+    libspdm_read_responder_public_certificate_chain(
+        m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
+        &data, &data_size,
+        &hash, &hash_size);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
+        data_size;
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
+                     data, data_size);
+#else
+    libspdm_hash_all(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        data, data_size,
+        spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash);
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size =
+        libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+    libspdm_get_leaf_cert_public_key_from_cert_chain(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        spdm_context->connection_info.algorithm.base_asym_algo,
+        data, data_size,
+        &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+#endif
+
+    measurement_record_data_length = libspdm_read_uint24(spdm_response->measurement_record_length);
+    measurement_record_data = (void*)(spdm_response + 1);
+    ptr = measurement_record_data + measurement_record_data_length;
+    ptr += SPDM_NONCE_SIZE;
+    opaque_length = libspdm_read_uint16((const uint8_t*)ptr);
+    ptr += sizeof(uint16_t);
+    ptr += opaque_length;
+    signature = ptr;
+    signature_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
+    session_info = NULL;
+
+    status = libspdm_append_message_m(
+        spdm_context, session_info,
+        &m_libspdm_get_measurements_request5,
+        m_libspdm_get_measurements_request5_size);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    status = libspdm_append_message_m(
+        spdm_context, session_info, spdm_response,
+        response_size - signature_size);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    result = libspdm_verify_measurement_signature(
+        spdm_context, session_info, signature, signature_size);
+    assert_true(result == true);
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
+#endif
+}
+
+/**
+ * Test 32: Based of Test Case 7  Successful response to get a number of measurements
+ * with signature.
+ * Signature test with signing in little endian but verification in little endian.
+ *
+ * Expected Behavior: Failing signature verification
+ **/
+void libspdm_test_responder_measurements_case32(void** state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t* spdm_test_context;
+    libspdm_context_t* spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_measurements_response_t* spdm_response;
+    size_t measurment_sig_size;
+
+    bool result;
+    uint32_t measurement_record_data_length;
+    uint8_t* measurement_record_data;
+    uint8_t* ptr;
+    uint16_t opaque_length;
+    void* signature;
+    size_t signature_size;
+    libspdm_session_info_t* session_info;
+    void* data;
+    size_t data_size;
+    void* hash;
+    size_t hash_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 32;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo =
+        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec =
+        m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->spdm_10_11_verify_signature_endian =
+        LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY;
+
+    libspdm_reset_message_m(spdm_context, NULL);
+    libspdm_secret_lib_meas_opaque_data_size = 0;
+    measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 +
+                          libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
+
+    response_size = sizeof(response);
+    libspdm_get_random_number(SPDM_NONCE_SIZE,
+                              m_libspdm_get_measurements_request5.nonce);
+    status = libspdm_get_response_measurements(
+        spdm_context, m_libspdm_get_measurements_request5_size,
+        &m_libspdm_get_measurements_request5, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_measurements_response_t) +
+                     measurment_sig_size);
+    spdm_response = (void*)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_MEASUREMENTS);
+    assert_int_equal(spdm_response->header.param1,
+                     LIBSPDM_MEASUREMENT_BLOCK_NUMBER);
+
+    libspdm_read_responder_public_certificate_chain(
+        m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
+        &data, &data_size,
+        &hash, &hash_size);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
+        data_size;
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
+                     data, data_size);
+#else
+    libspdm_hash_all(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        data, data_size,
+        spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash);
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size =
+        libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+    libspdm_get_leaf_cert_public_key_from_cert_chain(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        spdm_context->connection_info.algorithm.base_asym_algo,
+        data, data_size,
+        &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+#endif
+
+    measurement_record_data_length = libspdm_read_uint24(spdm_response->measurement_record_length);
+    measurement_record_data = (void*)(spdm_response + 1);
+    ptr = measurement_record_data + measurement_record_data_length;
+    ptr += SPDM_NONCE_SIZE;
+    opaque_length = libspdm_read_uint16((const uint8_t*)ptr);
+    ptr += sizeof(uint16_t);
+    ptr += opaque_length;
+    signature = ptr;
+    signature_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
+
+    libspdm_copy_signature_swap_endian(
+        m_libspdm_use_asym_algo,
+        signature, signature_size, signature, signature_size);
+
+    session_info = NULL;
+
+    status = libspdm_append_message_m(
+        spdm_context, session_info,
+        &m_libspdm_get_measurements_request5,
+        m_libspdm_get_measurements_request5_size);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    status = libspdm_append_message_m(
+        spdm_context, session_info, spdm_response,
+        response_size - signature_size);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    result = libspdm_verify_measurement_signature(
+        spdm_context, session_info, signature, signature_size);
+    assert_true(result == true);
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
+#endif
+}
+
+/**
+ * Test 33: Based of Test Case 7  Successful response to get a number of measurements
+ * with signature.
+ * Signature test with signing in little endian but verification in big endian.
+ *
+ * Expected Behavior: Failing signature verification
+ **/
+void libspdm_test_responder_measurements_case33(void** state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t* spdm_test_context;
+    libspdm_context_t* spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_measurements_response_t* spdm_response;
+    size_t measurment_sig_size;
+
+    bool result;
+    uint32_t measurement_record_data_length;
+    uint8_t* measurement_record_data;
+    uint8_t* ptr;
+    uint16_t opaque_length;
+    void* signature;
+    size_t signature_size;
+    libspdm_session_info_t* session_info;
+    void* data;
+    size_t data_size;
+    void* hash;
+    size_t hash_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 33;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo =
+        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec =
+        m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->spdm_10_11_verify_signature_endian =
+        LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
+
+    libspdm_reset_message_m(spdm_context, NULL);
+    libspdm_secret_lib_meas_opaque_data_size = 0;
+    measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 +
+                          libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
+
+    response_size = sizeof(response);
+    libspdm_get_random_number(SPDM_NONCE_SIZE,
+                              m_libspdm_get_measurements_request5.nonce);
+    status = libspdm_get_response_measurements(
+        spdm_context, m_libspdm_get_measurements_request5_size,
+        &m_libspdm_get_measurements_request5, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_measurements_response_t) +
+                     measurment_sig_size);
+    spdm_response = (void*)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_MEASUREMENTS);
+    assert_int_equal(spdm_response->header.param1,
+                     LIBSPDM_MEASUREMENT_BLOCK_NUMBER);
+
+    libspdm_read_responder_public_certificate_chain(
+        m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
+        &data, &data_size,
+        &hash, &hash_size);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
+        data_size;
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
+                     data, data_size);
+#else
+    libspdm_hash_all(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        data, data_size,
+        spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash);
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size =
+        libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+    libspdm_get_leaf_cert_public_key_from_cert_chain(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        spdm_context->connection_info.algorithm.base_asym_algo,
+        data, data_size,
+        &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+#endif
+
+    measurement_record_data_length = libspdm_read_uint24(spdm_response->measurement_record_length);
+    measurement_record_data = (void*)(spdm_response + 1);
+    ptr = measurement_record_data + measurement_record_data_length;
+    ptr += SPDM_NONCE_SIZE;
+    opaque_length = libspdm_read_uint16((const uint8_t*)ptr);
+    ptr += sizeof(uint16_t);
+    ptr += opaque_length;
+    signature = ptr;
+    signature_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
+
+    libspdm_copy_signature_swap_endian(
+        m_libspdm_use_asym_algo,
+        signature, signature_size, signature, signature_size);
+
+    session_info = NULL;
+
+    status = libspdm_append_message_m(
+        spdm_context, session_info,
+        &m_libspdm_get_measurements_request5,
+        m_libspdm_get_measurements_request5_size);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    status = libspdm_append_message_m(
+        spdm_context, session_info, spdm_response,
+        response_size - signature_size);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    result = libspdm_verify_measurement_signature(
+        spdm_context, session_info, signature, signature_size);
+    assert_true(result == false);
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
+#endif
+}
+
+
+/**
+ * Test 34: Based of Test Case 7  Successful response to get a number of measurements
+ * with signature.
+ * Signature test with signing in little endian but verification in big or little endian.
+ *
+ * Expected Behavior: Passing signature verification
+ **/
+void libspdm_test_responder_measurements_case34(void** state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t* spdm_test_context;
+    libspdm_context_t* spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_measurements_response_t* spdm_response;
+    size_t measurment_sig_size;
+
+    bool result;
+    uint32_t measurement_record_data_length;
+    uint8_t* measurement_record_data;
+    uint8_t* ptr;
+    uint16_t opaque_length;
+    void* signature;
+    size_t signature_size;
+    libspdm_session_info_t* session_info;
+    void* data;
+    size_t data_size;
+    void* hash;
+    size_t hash_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 34;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo =
+        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec =
+        m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->spdm_10_11_verify_signature_endian =
+        LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_OR_LITTLE;
+
+    libspdm_reset_message_m(spdm_context, NULL);
+    libspdm_secret_lib_meas_opaque_data_size = 0;
+    measurment_sig_size = SPDM_NONCE_SIZE + sizeof(uint16_t) + 0 +
+                          libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
+
+    response_size = sizeof(response);
+    libspdm_get_random_number(SPDM_NONCE_SIZE,
+                              m_libspdm_get_measurements_request5.nonce);
+    status = libspdm_get_response_measurements(
+        spdm_context, m_libspdm_get_measurements_request5_size,
+        &m_libspdm_get_measurements_request5, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_measurements_response_t) +
+                     measurment_sig_size);
+    spdm_response = (void*)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_MEASUREMENTS);
+    assert_int_equal(spdm_response->header.param1,
+                     LIBSPDM_MEASUREMENT_BLOCK_NUMBER);
+
+    libspdm_read_responder_public_certificate_chain(
+        m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
+        &data, &data_size,
+        &hash, &hash_size);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
+        data_size;
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
+                     data, data_size);
+#else
+    libspdm_hash_all(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        data, data_size,
+        spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash);
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size =
+        libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+    libspdm_get_leaf_cert_public_key_from_cert_chain(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        spdm_context->connection_info.algorithm.base_asym_algo,
+        data, data_size,
+        &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+#endif
+
+    measurement_record_data_length = libspdm_read_uint24(spdm_response->measurement_record_length);
+    measurement_record_data = (void*)(spdm_response + 1);
+    ptr = measurement_record_data + measurement_record_data_length;
+    ptr += SPDM_NONCE_SIZE;
+    opaque_length = libspdm_read_uint16((const uint8_t*)ptr);
+    ptr += sizeof(uint16_t);
+    ptr += opaque_length;
+    signature = ptr;
+    signature_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
+    libspdm_copy_signature_swap_endian(
+        m_libspdm_use_asym_algo,
+        signature, signature_size, signature, signature_size);
+
+    session_info = NULL;
+
+    status = libspdm_append_message_m(
+        spdm_context, session_info,
+        &m_libspdm_get_measurements_request5,
+        m_libspdm_get_measurements_request5_size);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    status = libspdm_append_message_m(
+        spdm_context, session_info, spdm_response,
+        response_size - signature_size);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    result = libspdm_verify_measurement_signature(
+        spdm_context, session_info, signature, signature_size);
+    assert_true(result == true);
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
+#endif
+}
+
+
 libspdm_test_context_t m_libspdm_responder_measurements_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     false,
@@ -1811,6 +2575,18 @@ int libspdm_responder_measurements_test_main(void)
         cmocka_unit_test(libspdm_test_responder_measurements_case27),
         /* Success Case to get measurement with signature using slot_id 0xFF */
         cmocka_unit_test(libspdm_test_responder_measurements_case28),
+        /* Error Case: Big Endian Signature. Little Endian Verify */
+        cmocka_unit_test(libspdm_test_responder_measurements_case29),
+        /* Success Case: Big Endian Signature. Big Endian Verify */
+        cmocka_unit_test(libspdm_test_responder_measurements_case30),
+        /* Success Case: Big Endian Signature. Big or Little Endian Verify */
+        cmocka_unit_test(libspdm_test_responder_measurements_case31),
+        /* Success Case: Little Endian Signature. Little Endian Verify */
+        cmocka_unit_test(libspdm_test_responder_measurements_case32),
+        /* Error Case: Little Endian Signature. Big Endian Verify */
+        cmocka_unit_test(libspdm_test_responder_measurements_case33),
+        /* Success Case: Little Endian Signature. Big or Little Endian Verify */
+        cmocka_unit_test(libspdm_test_responder_measurements_case34),
     };
 
     libspdm_setup_test_context(&m_libspdm_responder_measurements_test_context);

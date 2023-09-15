@@ -2680,6 +2680,1001 @@ void libspdm_test_responder_finish_case22(void **state)
     free(data2);
 }
 
+/**
+ * Test 23: Same as test case 22 but test signature endianness.
+ * Big-Endian Sign. Little-Endian Verify.
+ * Expecting signature to fail.
+ **/
+void libspdm_test_responder_finish_case23(void** state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t* spdm_test_context;
+    libspdm_context_t* spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_finish_response_t* spdm_response;
+    void* data1;
+    size_t data_size1;
+    void* data2;
+    size_t data_size2;
+    uint8_t* ptr;
+    uint8_t* cert_buffer;
+    size_t cert_buffer_size;
+    uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t req_cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
+    libspdm_session_info_t* session_info;
+    uint32_t session_id;
+    uint32_t hash_size;
+    uint32_t hmac_size;
+    size_t req_asym_signature_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 23;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo =
+        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg =
+        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec =
+        m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group =
+        m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite =
+        m_libspdm_use_aead_algo;
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data1,
+                                                    &data_size1, NULL, NULL);
+    spdm_context->local_context.local_cert_chain_provision[0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0] =
+        data_size1;
+    spdm_context->connection_info.local_used_cert_chain_buffer = data1;
+    spdm_context->connection_info.local_used_cert_chain_buffer_size =
+        data_size1;
+    spdm_context->spdm_10_11_verify_signature_endian =
+        LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY;
+
+    libspdm_reset_message_a(spdm_context);
+    spdm_context->local_context.mut_auth_requested = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
+    libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_req_asym_algo, &data2,
+                                                    &data_size2, NULL, NULL);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
+                     data2, data_size2);
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
+        data_size2;
+#else
+    libspdm_hash_all(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        data2, data_size2,
+        spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash);
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size =
+        libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+    libspdm_get_leaf_cert_public_key_from_cert_chain(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        spdm_context->connection_info.algorithm.req_base_asym_alg,
+        data2,
+        data_size2,
+        &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+#endif
+    spdm_context->connection_info.peer_used_cert_chain_slot_id = 0;
+
+    session_id = 0xFFFFFFFF;
+    spdm_context->latest_session_id = session_id;
+    session_info = &spdm_context->session_info[0];
+    libspdm_session_info_init(spdm_context, session_info, session_id, false);
+    hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
+    libspdm_set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
+    libspdm_secured_message_set_request_finished_key(
+        session_info->secured_message_context, m_dummy_buffer,
+        hash_size);
+    libspdm_secured_message_set_session_state(
+        session_info->secured_message_context,
+        LIBSPDM_SESSION_STATE_HANDSHAKING);
+    session_info->mut_auth_requested = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
+
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+    hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
+    hmac_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
+    req_asym_signature_size =
+        libspdm_get_req_asym_signature_size(m_libspdm_use_req_asym_algo);
+    ptr = m_libspdm_finish_request7.signature;
+    libspdm_init_managed_buffer(&th_curr, sizeof(th_curr.buffer));
+    cert_buffer = (uint8_t*)data1;
+    cert_buffer_size = data_size1;
+    libspdm_hash_all(m_libspdm_use_hash_algo, cert_buffer, cert_buffer_size,
+                     cert_buffer_hash);
+    cert_buffer = (uint8_t*)data2;
+    cert_buffer_size = data_size2;
+    libspdm_hash_all(m_libspdm_use_hash_algo, cert_buffer, cert_buffer_size,
+                     req_cert_buffer_hash);
+    /* transcript.message_a size is 0*/
+    libspdm_append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
+    /* session_transcript.message_k is 0*/
+    libspdm_append_managed_buffer(&th_curr, req_cert_buffer_hash, hash_size);
+    libspdm_append_managed_buffer(&th_curr, (uint8_t*)&m_libspdm_finish_request7,
+                                  sizeof(spdm_finish_request_t));
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+    libspdm_requester_data_sign(
+        m_libspdm_finish_request7.header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT, SPDM_FINISH,
+            m_libspdm_use_req_asym_algo, m_libspdm_use_hash_algo,
+            false, libspdm_get_managed_buffer(&th_curr),
+            libspdm_get_managed_buffer_size(&th_curr),
+            ptr, &req_asym_signature_size);
+#endif
+    libspdm_append_managed_buffer(&th_curr, ptr, req_asym_signature_size);
+    ptr += req_asym_signature_size;
+    libspdm_set_mem(request_finished_key, LIBSPDM_MAX_HASH_SIZE, (uint8_t)(0xFF));
+    libspdm_hash_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
+                     libspdm_get_managed_buffer_size(&th_curr), hash_data);
+    libspdm_hmac_all(m_libspdm_use_hash_algo, hash_data, hash_size,
+                     request_finished_key, hash_size, ptr);
+    m_libspdm_finish_request7_size = sizeof(spdm_finish_request_t) +
+                                     req_asym_signature_size + hmac_size;
+    response_size = sizeof(response);
+    status = libspdm_get_response_finish(spdm_context,
+                                         m_libspdm_finish_request7_size,
+                                         &m_libspdm_finish_request7,
+                                         &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    spdm_response = (void*)response;
+
+    /* Expecting failure on little-endian signature */
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    free(data1);
+    free(data2);
+}
+
+/**
+ * Test 24: Same as test case 22 but test signature endianness.
+ * Big-Endian Sign. Big-Endian Verify.
+ * Expecting signature to PASS.
+ **/
+void libspdm_test_responder_finish_case24(void** state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t* spdm_test_context;
+    libspdm_context_t* spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_finish_response_t* spdm_response;
+    void* data1;
+    size_t data_size1;
+    void* data2;
+    size_t data_size2;
+    uint8_t* ptr;
+    uint8_t* cert_buffer;
+    size_t cert_buffer_size;
+    uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t req_cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
+    libspdm_session_info_t* session_info;
+    uint32_t session_id;
+    uint32_t hash_size;
+    uint32_t hmac_size;
+    size_t req_asym_signature_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 24;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo =
+        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg =
+        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec =
+        m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group =
+        m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite =
+        m_libspdm_use_aead_algo;
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data1,
+                                                    &data_size1, NULL, NULL);
+    spdm_context->local_context.local_cert_chain_provision[0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0] =
+        data_size1;
+    spdm_context->connection_info.local_used_cert_chain_buffer = data1;
+    spdm_context->connection_info.local_used_cert_chain_buffer_size =
+        data_size1;
+    spdm_context->spdm_10_11_verify_signature_endian =
+        LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
+
+    libspdm_reset_message_a(spdm_context);
+    spdm_context->local_context.mut_auth_requested = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
+    libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_req_asym_algo, &data2,
+                                                    &data_size2, NULL, NULL);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
+                     data2, data_size2);
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
+        data_size2;
+#else
+    libspdm_hash_all(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        data2, data_size2,
+        spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash);
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size =
+        libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+    libspdm_get_leaf_cert_public_key_from_cert_chain(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        spdm_context->connection_info.algorithm.req_base_asym_alg,
+        data2,
+        data_size2,
+        &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+#endif
+    spdm_context->connection_info.peer_used_cert_chain_slot_id = 0;
+
+    session_id = 0xFFFFFFFF;
+    spdm_context->latest_session_id = session_id;
+    session_info = &spdm_context->session_info[0];
+    libspdm_session_info_init(spdm_context, session_info, session_id, false);
+    hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
+    libspdm_set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
+    libspdm_secured_message_set_request_finished_key(
+        session_info->secured_message_context, m_dummy_buffer,
+        hash_size);
+    libspdm_secured_message_set_session_state(
+        session_info->secured_message_context,
+        LIBSPDM_SESSION_STATE_HANDSHAKING);
+    session_info->mut_auth_requested = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
+
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+    hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
+    hmac_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
+    req_asym_signature_size =
+        libspdm_get_req_asym_signature_size(m_libspdm_use_req_asym_algo);
+    ptr = m_libspdm_finish_request7.signature;
+    libspdm_init_managed_buffer(&th_curr, sizeof(th_curr.buffer));
+    cert_buffer = (uint8_t*)data1;
+    cert_buffer_size = data_size1;
+    libspdm_hash_all(m_libspdm_use_hash_algo, cert_buffer, cert_buffer_size,
+                     cert_buffer_hash);
+    cert_buffer = (uint8_t*)data2;
+    cert_buffer_size = data_size2;
+    libspdm_hash_all(m_libspdm_use_hash_algo, cert_buffer, cert_buffer_size,
+                     req_cert_buffer_hash);
+    /* transcript.message_a size is 0*/
+    libspdm_append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
+    /* session_transcript.message_k is 0*/
+    libspdm_append_managed_buffer(&th_curr, req_cert_buffer_hash, hash_size);
+    libspdm_append_managed_buffer(&th_curr, (uint8_t*)&m_libspdm_finish_request7,
+                                  sizeof(spdm_finish_request_t));
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+    libspdm_requester_data_sign(
+        m_libspdm_finish_request7.header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT, SPDM_FINISH,
+            m_libspdm_use_req_asym_algo, m_libspdm_use_hash_algo,
+            false, libspdm_get_managed_buffer(&th_curr),
+            libspdm_get_managed_buffer_size(&th_curr),
+            ptr, &req_asym_signature_size);
+#endif
+    libspdm_append_managed_buffer(&th_curr, ptr, req_asym_signature_size);
+    ptr += req_asym_signature_size;
+    libspdm_set_mem(request_finished_key, LIBSPDM_MAX_HASH_SIZE, (uint8_t)(0xFF));
+    libspdm_hash_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
+                     libspdm_get_managed_buffer_size(&th_curr), hash_data);
+    libspdm_hmac_all(m_libspdm_use_hash_algo, hash_data, hash_size,
+                     request_finished_key, hash_size, ptr);
+    m_libspdm_finish_request7_size = sizeof(spdm_finish_request_t) +
+                                     req_asym_signature_size + hmac_size;
+    response_size = sizeof(response);
+    status = libspdm_get_response_finish(spdm_context,
+                                         m_libspdm_finish_request7_size,
+                                         &m_libspdm_finish_request7,
+                                         &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    spdm_response = (void*)response;
+
+    /* Expecting pass on big-endian signature */
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_FINISH_RSP);
+    assert_int_equal(response_size, sizeof(spdm_finish_response_t) + hmac_size);
+    free(data1);
+    free(data2);
+}
+
+/**
+ * Test 25: Same as test case 22, but test signature endianness.
+ * Big Endian Sign. Big or Little Endian Verify.
+ * Expecting signature to PASS.
+ **/
+void libspdm_test_responder_finish_case25(void** state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t* spdm_test_context;
+    libspdm_context_t* spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_finish_response_t* spdm_response;
+    void* data1;
+    size_t data_size1;
+    void* data2;
+    size_t data_size2;
+    uint8_t* ptr;
+    uint8_t* cert_buffer;
+    size_t cert_buffer_size;
+    uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t req_cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
+    libspdm_session_info_t* session_info;
+    uint32_t session_id;
+    uint32_t hash_size;
+    uint32_t hmac_size;
+    size_t req_asym_signature_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 25;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo =
+        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg =
+        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec =
+        m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group =
+        m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite =
+        m_libspdm_use_aead_algo;
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data1,
+                                                    &data_size1, NULL, NULL);
+    spdm_context->local_context.local_cert_chain_provision[0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0] =
+        data_size1;
+    spdm_context->connection_info.local_used_cert_chain_buffer = data1;
+    spdm_context->connection_info.local_used_cert_chain_buffer_size =
+        data_size1;
+    spdm_context->spdm_10_11_verify_signature_endian =
+        LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_OR_LITTLE;
+
+    libspdm_reset_message_a(spdm_context);
+    spdm_context->local_context.mut_auth_requested = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
+    libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_req_asym_algo, &data2,
+                                                    &data_size2, NULL, NULL);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
+                     data2, data_size2);
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
+        data_size2;
+#else
+    libspdm_hash_all(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        data2, data_size2,
+        spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash);
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size =
+        libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+    libspdm_get_leaf_cert_public_key_from_cert_chain(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        spdm_context->connection_info.algorithm.req_base_asym_alg,
+        data2,
+        data_size2,
+        &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+#endif
+    spdm_context->connection_info.peer_used_cert_chain_slot_id = 0;
+
+    session_id = 0xFFFFFFFF;
+    spdm_context->latest_session_id = session_id;
+    session_info = &spdm_context->session_info[0];
+    libspdm_session_info_init(spdm_context, session_info, session_id, false);
+    hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
+    libspdm_set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
+    libspdm_secured_message_set_request_finished_key(
+        session_info->secured_message_context, m_dummy_buffer,
+        hash_size);
+    libspdm_secured_message_set_session_state(
+        session_info->secured_message_context,
+        LIBSPDM_SESSION_STATE_HANDSHAKING);
+    session_info->mut_auth_requested = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
+
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+    hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
+    hmac_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
+    req_asym_signature_size =
+        libspdm_get_req_asym_signature_size(m_libspdm_use_req_asym_algo);
+    ptr = m_libspdm_finish_request7.signature;
+    libspdm_init_managed_buffer(&th_curr, sizeof(th_curr.buffer));
+    cert_buffer = (uint8_t*)data1;
+    cert_buffer_size = data_size1;
+    libspdm_hash_all(m_libspdm_use_hash_algo, cert_buffer, cert_buffer_size,
+                     cert_buffer_hash);
+    cert_buffer = (uint8_t*)data2;
+    cert_buffer_size = data_size2;
+    libspdm_hash_all(m_libspdm_use_hash_algo, cert_buffer, cert_buffer_size,
+                     req_cert_buffer_hash);
+    /* transcript.message_a size is 0*/
+    libspdm_append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
+    /* session_transcript.message_k is 0*/
+    libspdm_append_managed_buffer(&th_curr, req_cert_buffer_hash, hash_size);
+    libspdm_append_managed_buffer(&th_curr, (uint8_t*)&m_libspdm_finish_request7,
+                                  sizeof(spdm_finish_request_t));
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+    libspdm_requester_data_sign(
+        m_libspdm_finish_request7.header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT, SPDM_FINISH,
+            m_libspdm_use_req_asym_algo, m_libspdm_use_hash_algo,
+            false, libspdm_get_managed_buffer(&th_curr),
+            libspdm_get_managed_buffer_size(&th_curr),
+            ptr, &req_asym_signature_size);
+#endif
+    libspdm_append_managed_buffer(&th_curr, ptr, req_asym_signature_size);
+    ptr += req_asym_signature_size;
+    libspdm_set_mem(request_finished_key, LIBSPDM_MAX_HASH_SIZE, (uint8_t)(0xFF));
+    libspdm_hash_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
+                     libspdm_get_managed_buffer_size(&th_curr), hash_data);
+    libspdm_hmac_all(m_libspdm_use_hash_algo, hash_data, hash_size,
+                     request_finished_key, hash_size, ptr);
+    m_libspdm_finish_request7_size = sizeof(spdm_finish_request_t) +
+                                     req_asym_signature_size + hmac_size;
+    response_size = sizeof(response);
+    status = libspdm_get_response_finish(spdm_context,
+                                         m_libspdm_finish_request7_size,
+                                         &m_libspdm_finish_request7,
+                                         &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    spdm_response = (void*)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_FINISH_RSP);
+    assert_int_equal(response_size, sizeof(spdm_finish_response_t) + hmac_size);
+    free(data1);
+    free(data2);
+}
+
+/**
+ * Test 26: Same as test case 22, but test endian verification.
+ * Sign as Little Endian, Verify as Little.
+ * Expecting signature to PASS.
+ **/
+void libspdm_test_responder_finish_case26(void** state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t* spdm_test_context;
+    libspdm_context_t* spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_finish_response_t* spdm_response;
+    void* data1;
+    size_t data_size1;
+    void* data2;
+    size_t data_size2;
+    uint8_t* ptr;
+    uint8_t* cert_buffer;
+    size_t cert_buffer_size;
+    uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t req_cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
+    libspdm_session_info_t* session_info;
+    uint32_t session_id;
+    uint32_t hash_size;
+    uint32_t hmac_size;
+    size_t req_asym_signature_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 26;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo =
+        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg =
+        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec =
+        m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group =
+        m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite =
+        m_libspdm_use_aead_algo;
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data1,
+                                                    &data_size1, NULL, NULL);
+    spdm_context->local_context.local_cert_chain_provision[0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0] =
+        data_size1;
+    spdm_context->connection_info.local_used_cert_chain_buffer = data1;
+    spdm_context->connection_info.local_used_cert_chain_buffer_size =
+        data_size1;
+    spdm_context->spdm_10_11_verify_signature_endian =
+        LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY;
+
+    libspdm_reset_message_a(spdm_context);
+    spdm_context->local_context.mut_auth_requested = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
+    libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_req_asym_algo, &data2,
+                                                    &data_size2, NULL, NULL);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
+                     data2, data_size2);
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
+        data_size2;
+#else
+    libspdm_hash_all(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        data2, data_size2,
+        spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash);
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size =
+        libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+    libspdm_get_leaf_cert_public_key_from_cert_chain(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        spdm_context->connection_info.algorithm.req_base_asym_alg,
+        data2,
+        data_size2,
+        &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+#endif
+    spdm_context->connection_info.peer_used_cert_chain_slot_id = 0;
+
+    session_id = 0xFFFFFFFF;
+    spdm_context->latest_session_id = session_id;
+    session_info = &spdm_context->session_info[0];
+    libspdm_session_info_init(spdm_context, session_info, session_id, false);
+    hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
+    libspdm_set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
+    libspdm_secured_message_set_request_finished_key(
+        session_info->secured_message_context, m_dummy_buffer,
+        hash_size);
+    libspdm_secured_message_set_session_state(
+        session_info->secured_message_context,
+        LIBSPDM_SESSION_STATE_HANDSHAKING);
+    session_info->mut_auth_requested = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
+
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+    hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
+    hmac_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
+    req_asym_signature_size =
+        libspdm_get_req_asym_signature_size(m_libspdm_use_req_asym_algo);
+    ptr = m_libspdm_finish_request7.signature;
+    libspdm_init_managed_buffer(&th_curr, sizeof(th_curr.buffer));
+    cert_buffer = (uint8_t*)data1;
+    cert_buffer_size = data_size1;
+    libspdm_hash_all(m_libspdm_use_hash_algo, cert_buffer, cert_buffer_size,
+                     cert_buffer_hash);
+    cert_buffer = (uint8_t*)data2;
+    cert_buffer_size = data_size2;
+    libspdm_hash_all(m_libspdm_use_hash_algo, cert_buffer, cert_buffer_size,
+                     req_cert_buffer_hash);
+    /* transcript.message_a size is 0*/
+    libspdm_append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
+    /* session_transcript.message_k is 0*/
+    libspdm_append_managed_buffer(&th_curr, req_cert_buffer_hash, hash_size);
+    libspdm_append_managed_buffer(&th_curr, (uint8_t*)&m_libspdm_finish_request7,
+                                  sizeof(spdm_finish_request_t));
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+    libspdm_requester_data_sign(
+        m_libspdm_finish_request7.header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT, SPDM_FINISH,
+            m_libspdm_use_req_asym_algo, m_libspdm_use_hash_algo,
+            false, libspdm_get_managed_buffer(&th_curr),
+            libspdm_get_managed_buffer_size(&th_curr),
+            ptr, &req_asym_signature_size);
+
+    /* Switch signature to little endian */
+    libspdm_copy_signature_swap_endian(
+        m_libspdm_use_req_asym_algo,
+        ptr, req_asym_signature_size,
+        ptr, req_asym_signature_size);
+#endif
+    libspdm_append_managed_buffer(&th_curr, ptr, req_asym_signature_size);
+    ptr += req_asym_signature_size;
+    libspdm_set_mem(request_finished_key, LIBSPDM_MAX_HASH_SIZE, (uint8_t)(0xFF));
+    libspdm_hash_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
+                     libspdm_get_managed_buffer_size(&th_curr), hash_data);
+    libspdm_hmac_all(m_libspdm_use_hash_algo, hash_data, hash_size,
+                     request_finished_key, hash_size, ptr);
+    m_libspdm_finish_request7_size = sizeof(spdm_finish_request_t) +
+                                     req_asym_signature_size + hmac_size;
+    response_size = sizeof(response);
+    status = libspdm_get_response_finish(spdm_context,
+                                         m_libspdm_finish_request7_size,
+                                         &m_libspdm_finish_request7,
+                                         &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    spdm_response = (void*)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_FINISH_RSP);
+    assert_int_equal(response_size, sizeof(spdm_finish_response_t) + hmac_size);
+    free(data1);
+    free(data2);
+}
+
+/**
+ * Test 27: Same as test case 22, but test endian verification.
+ * Sign as Little Endian, Verify as Big.
+ * Expecting signature to FAIL.
+ **/
+void libspdm_test_responder_finish_case27(void** state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t* spdm_test_context;
+    libspdm_context_t* spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_finish_response_t* spdm_response;
+    void* data1;
+    size_t data_size1;
+    void* data2;
+    size_t data_size2;
+    uint8_t* ptr;
+    uint8_t* cert_buffer;
+    size_t cert_buffer_size;
+    uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t req_cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
+    libspdm_session_info_t* session_info;
+    uint32_t session_id;
+    uint32_t hash_size;
+    uint32_t hmac_size;
+    size_t req_asym_signature_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 27;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo =
+        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg =
+        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec =
+        m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group =
+        m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite =
+        m_libspdm_use_aead_algo;
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data1,
+                                                    &data_size1, NULL, NULL);
+    spdm_context->local_context.local_cert_chain_provision[0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0] =
+        data_size1;
+    spdm_context->connection_info.local_used_cert_chain_buffer = data1;
+    spdm_context->connection_info.local_used_cert_chain_buffer_size =
+        data_size1;
+    spdm_context->spdm_10_11_verify_signature_endian =
+        LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
+
+    libspdm_reset_message_a(spdm_context);
+    spdm_context->local_context.mut_auth_requested = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
+    libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_req_asym_algo, &data2,
+                                                    &data_size2, NULL, NULL);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
+                     data2, data_size2);
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
+        data_size2;
+#else
+    libspdm_hash_all(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        data2, data_size2,
+        spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash);
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size =
+        libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+    libspdm_get_leaf_cert_public_key_from_cert_chain(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        spdm_context->connection_info.algorithm.req_base_asym_alg,
+        data2,
+        data_size2,
+        &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+#endif
+    spdm_context->connection_info.peer_used_cert_chain_slot_id = 0;
+
+    session_id = 0xFFFFFFFF;
+    spdm_context->latest_session_id = session_id;
+    session_info = &spdm_context->session_info[0];
+    libspdm_session_info_init(spdm_context, session_info, session_id, false);
+    hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
+    libspdm_set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
+    libspdm_secured_message_set_request_finished_key(
+        session_info->secured_message_context, m_dummy_buffer,
+        hash_size);
+    libspdm_secured_message_set_session_state(
+        session_info->secured_message_context,
+        LIBSPDM_SESSION_STATE_HANDSHAKING);
+    session_info->mut_auth_requested = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
+
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+    hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
+    hmac_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
+    req_asym_signature_size =
+        libspdm_get_req_asym_signature_size(m_libspdm_use_req_asym_algo);
+    ptr = m_libspdm_finish_request7.signature;
+    libspdm_init_managed_buffer(&th_curr, sizeof(th_curr.buffer));
+    cert_buffer = (uint8_t*)data1;
+    cert_buffer_size = data_size1;
+    libspdm_hash_all(m_libspdm_use_hash_algo, cert_buffer, cert_buffer_size,
+                     cert_buffer_hash);
+    cert_buffer = (uint8_t*)data2;
+    cert_buffer_size = data_size2;
+    libspdm_hash_all(m_libspdm_use_hash_algo, cert_buffer, cert_buffer_size,
+                     req_cert_buffer_hash);
+    /* transcript.message_a size is 0*/
+    libspdm_append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
+    /* session_transcript.message_k is 0*/
+    libspdm_append_managed_buffer(&th_curr, req_cert_buffer_hash, hash_size);
+    libspdm_append_managed_buffer(&th_curr, (uint8_t*)&m_libspdm_finish_request7,
+                                  sizeof(spdm_finish_request_t));
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+    libspdm_requester_data_sign(
+        m_libspdm_finish_request7.header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT, SPDM_FINISH,
+            m_libspdm_use_req_asym_algo, m_libspdm_use_hash_algo,
+            false, libspdm_get_managed_buffer(&th_curr),
+            libspdm_get_managed_buffer_size(&th_curr),
+            ptr, &req_asym_signature_size);
+
+    /* Switch signature to little endian */
+    libspdm_copy_signature_swap_endian(
+        m_libspdm_use_req_asym_algo,
+        ptr, req_asym_signature_size,
+        ptr, req_asym_signature_size);
+#endif
+    libspdm_append_managed_buffer(&th_curr, ptr, req_asym_signature_size);
+    ptr += req_asym_signature_size;
+    libspdm_set_mem(request_finished_key, LIBSPDM_MAX_HASH_SIZE, (uint8_t)(0xFF));
+    libspdm_hash_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
+                     libspdm_get_managed_buffer_size(&th_curr), hash_data);
+    libspdm_hmac_all(m_libspdm_use_hash_algo, hash_data, hash_size,
+                     request_finished_key, hash_size, ptr);
+    m_libspdm_finish_request7_size = sizeof(spdm_finish_request_t) +
+                                     req_asym_signature_size + hmac_size;
+    response_size = sizeof(response);
+    status = libspdm_get_response_finish(spdm_context,
+                                         m_libspdm_finish_request7_size,
+                                         &m_libspdm_finish_request7,
+                                         &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    spdm_response = (void*)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    free(data1);
+    free(data2);
+}
+
+/**
+ * Test 28: Same as test case 22, but test endian verification.
+ * Sign as Little Endian, Verify as Big Or Little.
+ * Expecting signature to PASS.
+ **/
+void libspdm_test_responder_finish_case28(void** state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t* spdm_test_context;
+    libspdm_context_t* spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_finish_response_t* spdm_response;
+    void* data1;
+    size_t data_size1;
+    void* data2;
+    size_t data_size2;
+    uint8_t* ptr;
+    uint8_t* cert_buffer;
+    size_t cert_buffer_size;
+    uint8_t cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t req_cert_buffer_hash[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
+    uint8_t request_finished_key[LIBSPDM_MAX_HASH_SIZE];
+    libspdm_session_info_t* session_info;
+    uint32_t session_id;
+    uint32_t hash_size;
+    uint32_t hmac_size;
+    size_t req_asym_signature_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 28;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo =
+        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg =
+        m_libspdm_use_req_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec =
+        m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group =
+        m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite =
+        m_libspdm_use_aead_algo;
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data1,
+                                                    &data_size1, NULL, NULL);
+    spdm_context->local_context.local_cert_chain_provision[0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0] =
+        data_size1;
+    spdm_context->connection_info.local_used_cert_chain_buffer = data1;
+    spdm_context->connection_info.local_used_cert_chain_buffer_size =
+        data_size1;
+    spdm_context->spdm_10_11_verify_signature_endian =
+        LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY;
+
+    libspdm_reset_message_a(spdm_context);
+    spdm_context->local_context.mut_auth_requested = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
+    libspdm_read_requester_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_req_asym_algo, &data2,
+                                                    &data_size2, NULL, NULL);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
+                     data2, data_size2);
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
+        data_size2;
+#else
+    libspdm_hash_all(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        data2, data_size2,
+        spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash);
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_hash_size =
+        libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+    libspdm_get_leaf_cert_public_key_from_cert_chain(
+        spdm_context->connection_info.algorithm.base_hash_algo,
+        spdm_context->connection_info.algorithm.req_base_asym_alg,
+        data2,
+        data_size2,
+        &spdm_context->connection_info.peer_used_cert_chain[0].leaf_cert_public_key);
+#endif
+    spdm_context->connection_info.peer_used_cert_chain_slot_id = 0;
+
+    session_id = 0xFFFFFFFF;
+    spdm_context->latest_session_id = session_id;
+    session_info = &spdm_context->session_info[0];
+    libspdm_session_info_init(spdm_context, session_info, session_id, false);
+    hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
+    libspdm_set_mem(m_dummy_buffer, hash_size, (uint8_t)(0xFF));
+    libspdm_secured_message_set_request_finished_key(
+        session_info->secured_message_context, m_dummy_buffer,
+        hash_size);
+    libspdm_secured_message_set_session_state(
+        session_info->secured_message_context,
+        LIBSPDM_SESSION_STATE_HANDSHAKING);
+    session_info->mut_auth_requested = SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
+
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+    hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
+    hmac_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
+    req_asym_signature_size =
+        libspdm_get_req_asym_signature_size(m_libspdm_use_req_asym_algo);
+    ptr = m_libspdm_finish_request7.signature;
+    libspdm_init_managed_buffer(&th_curr, sizeof(th_curr.buffer));
+    cert_buffer = (uint8_t*)data1;
+    cert_buffer_size = data_size1;
+    libspdm_hash_all(m_libspdm_use_hash_algo, cert_buffer, cert_buffer_size,
+                     cert_buffer_hash);
+    cert_buffer = (uint8_t*)data2;
+    cert_buffer_size = data_size2;
+    libspdm_hash_all(m_libspdm_use_hash_algo, cert_buffer, cert_buffer_size,
+                     req_cert_buffer_hash);
+    /* transcript.message_a size is 0*/
+    libspdm_append_managed_buffer(&th_curr, cert_buffer_hash, hash_size);
+    /* session_transcript.message_k is 0*/
+    libspdm_append_managed_buffer(&th_curr, req_cert_buffer_hash, hash_size);
+    libspdm_append_managed_buffer(&th_curr, (uint8_t*)&m_libspdm_finish_request7,
+                                  sizeof(spdm_finish_request_t));
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+    libspdm_requester_data_sign(
+        m_libspdm_finish_request7.header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT, SPDM_FINISH,
+            m_libspdm_use_req_asym_algo, m_libspdm_use_hash_algo,
+            false, libspdm_get_managed_buffer(&th_curr),
+            libspdm_get_managed_buffer_size(&th_curr),
+            ptr, &req_asym_signature_size);
+
+    /* Switch signature to little endian */
+    libspdm_copy_signature_swap_endian(
+        m_libspdm_use_req_asym_algo,
+        ptr, req_asym_signature_size,
+        ptr, req_asym_signature_size);
+#endif
+    libspdm_append_managed_buffer(&th_curr, ptr, req_asym_signature_size);
+    ptr += req_asym_signature_size;
+    libspdm_set_mem(request_finished_key, LIBSPDM_MAX_HASH_SIZE, (uint8_t)(0xFF));
+    libspdm_hash_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
+                     libspdm_get_managed_buffer_size(&th_curr), hash_data);
+    libspdm_hmac_all(m_libspdm_use_hash_algo, hash_data, hash_size,
+                     request_finished_key, hash_size, ptr);
+    m_libspdm_finish_request7_size = sizeof(spdm_finish_request_t) +
+                                     req_asym_signature_size + hmac_size;
+    response_size = sizeof(response);
+    status = libspdm_get_response_finish(spdm_context,
+                                         m_libspdm_finish_request7_size,
+                                         &m_libspdm_finish_request7,
+                                         &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    spdm_response = (void*)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_FINISH_RSP);
+    assert_int_equal(response_size, sizeof(spdm_finish_response_t) + hmac_size);
+    free(data1);
+    free(data2);
+}
+
+
 libspdm_test_context_t m_libspdm_responder_finish_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     false,
@@ -2730,6 +3725,18 @@ int libspdm_responder_finish_test_main(void)
         cmocka_unit_test_setup(libspdm_test_responder_finish_case21, libspdm_unit_test_group_setup),
         /* If KEY_EXCHANGE_RSP.MutAuthRequested equals neither 0x02 nor 0x04, FINISH.Param2 no need match ENCAPSULATED_RESPONSE_ACK.EncapsulatedRequest */
         cmocka_unit_test_setup(libspdm_test_responder_finish_case22, libspdm_unit_test_group_setup),
+        /* Big Endian Sign - Little Endian Verify */
+        cmocka_unit_test_setup(libspdm_test_responder_finish_case23, libspdm_unit_test_group_setup),
+        /* Big Endian Sign - Big Endian Verify */
+        cmocka_unit_test_setup(libspdm_test_responder_finish_case24, libspdm_unit_test_group_setup),
+        /* Big Endian Sign - Big or Little Endian Verify */
+        cmocka_unit_test_setup(libspdm_test_responder_finish_case25, libspdm_unit_test_group_setup),
+        /* Little Endian Sign - Little Endian Verify*/
+        cmocka_unit_test_setup(libspdm_test_responder_finish_case26, libspdm_unit_test_group_setup),
+        /* Little Endian Sign - Big Endian Verify */
+        cmocka_unit_test_setup(libspdm_test_responder_finish_case27, libspdm_unit_test_group_setup),
+        /* Little Endian Sign - Big or Little Endian Verify */
+        cmocka_unit_test_setup(libspdm_test_responder_finish_case28, libspdm_unit_test_group_setup),
     };
 
     libspdm_setup_test_context(&m_libspdm_responder_finish_test_context);
