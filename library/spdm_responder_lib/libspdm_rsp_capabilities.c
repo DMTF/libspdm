@@ -103,6 +103,13 @@ static bool libspdm_check_request_flag_compatibility(uint32_t capabilities_flag,
                 return false;
             }
         }
+
+        /* Checks that originate from mutual authentication capabilities. */
+        if (mut_auth_cap == 1) {
+            if ((key_ex_cap == 0) && (chal_cap == 0)) {
+                return false;
+            }
+        }
     }
 
     /* Checks specific to 1.1. */
