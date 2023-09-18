@@ -29,5 +29,12 @@ void libspdm_zero_mem(void *buffer, size_t length)
     while (length-- != 0) {
         *(pointer++) = 0;
     }
+
+#if defined(_MSC_VER) && (_MSC_VER > 1200) && !defined(__clang__)
+    _ReadWriteBarrier();
+#elif defined(__GNUC__)
+    __asm__ __volatile__ ("" : : : "memory");
+#endif
+
 #endif
 }
