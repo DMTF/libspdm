@@ -5,6 +5,7 @@
  **/
 
 #include "internal/libspdm_crypt_lib.h"
+#include "library/spdm_common_lib.h"
 
 typedef struct {
     bool is_requester;
@@ -558,8 +559,7 @@ static void libspdm_copy_signature_swap_endian_rsa(
             dst[i] = dst[dst_size - i - 1];
             dst[dst_size - i - 1] = byte;
         }
-    }
-    else {
+    } else {
         /* src and dst are different buffers.
          * Guard against overlap case with assert.
          * Overlap case is not an expected usage model. */
@@ -623,8 +623,7 @@ static void libspdm_copy_signature_swap_endian_ecdsa(
             y[i] = y[y_size - i - 1];
             y[y_size - i - 1] = byte;
         }
-    }
-    else {
+    } else {
         /* src and dst are different buffers.
          * Guard against overlap case with assert.
          * Overlap case is not an expected usage model. */
@@ -682,11 +681,9 @@ void libspdm_copy_signature_swap_endian(
 
     if (base_asym_algo & spdm_10_11_rsa_algos) {
         libspdm_copy_signature_swap_endian_rsa(dst, dst_size, src, src_size);
-    }
-    else if (base_asym_algo & spdm_10_11_ecdsa_algos) {
+    } else if (base_asym_algo & spdm_10_11_ecdsa_algos) {
         libspdm_copy_signature_swap_endian_ecdsa(dst, dst_size, src, src_size);
-    }
-    else {
+    } else {
         /* Currently do not expect asymmetric algorithms other than RSA and ECDSA */
         LIBSPDM_ASSERT(0);
     }
@@ -864,7 +861,7 @@ bool libspdm_asym_verify_ex(
     void *context,
     const uint8_t *message, size_t message_size,
     const uint8_t *signature, size_t sig_size,
-    uint32_t *endian)
+    uint8_t *endian)
 {
     bool need_hash;
     uint8_t message_hash[LIBSPDM_MAX_HASH_SIZE];
@@ -997,7 +994,7 @@ bool libspdm_asym_verify_hash_ex(
     uint32_t base_asym_algo, uint32_t base_hash_algo,
     void *context, const uint8_t *message_hash,
     size_t hash_size, const uint8_t *signature,
-    size_t sig_size, uint32_t *endian)
+    size_t sig_size, uint8_t *endian)
 {
     bool need_hash;
     uint8_t *message;
@@ -1072,8 +1069,7 @@ bool libspdm_asym_verify_hash_ex(
                                             signature, sig_size);
         }
         /* SPDM 1.2 signing done. */
-    }
-    else {
+    } else {
         try_big_endian =
             (*endian == LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY
              || *endian == LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_OR_LITTLE);
@@ -1108,8 +1104,7 @@ bool libspdm_asym_verify_hash_ex(
         if (try_big_endian && try_little_endian && result) {
             if (little_endian_succeeded) {
                 *endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY;
-            }
-            else {
+            } else {
                 *endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
             }
         }
@@ -1128,7 +1123,7 @@ bool libspdm_asym_verify(
     size_t message_size, const uint8_t* signature,
     size_t sig_size)
 {
-    uint32_t endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
+    uint8_t endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
     return libspdm_asym_verify_ex(
         spdm_version, op_code, base_asym_algo, base_hash_algo,
         context, message, message_size, signature, sig_size, &endian);
@@ -1141,7 +1136,7 @@ bool libspdm_asym_verify_hash(
     size_t hash_size, const uint8_t* signature,
     size_t sig_size)
 {
-    uint32_t endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
+    uint8_t endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
     return libspdm_asym_verify_hash_ex(
         spdm_version, op_code, base_asym_algo, base_hash_algo,
         context, message_hash, hash_size, signature, sig_size, &endian);
@@ -1341,7 +1336,7 @@ bool libspdm_req_asym_verify_ex(
     uint16_t req_base_asym_alg,
     uint32_t base_hash_algo, void *context,
     const uint8_t *message, size_t message_size,
-    const uint8_t *signature, size_t sig_size, uint32_t *endian)
+    const uint8_t *signature, size_t sig_size, uint8_t *endian)
 {
     bool need_hash;
     uint8_t message_hash[LIBSPDM_MAX_HASH_SIZE];
@@ -1461,8 +1456,7 @@ bool libspdm_req_asym_verify_ex(
     if (try_big_endian && try_little_endian && result) {
         if (little_endian_succeeded) {
             *endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY;
-        }
-        else {
+        } else {
             *endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
         }
     }
@@ -1474,7 +1468,7 @@ bool libspdm_req_asym_verify_hash_ex(
     uint16_t req_base_asym_alg,
     uint32_t base_hash_algo, void *context,
     const uint8_t *message_hash, size_t hash_size,
-    const uint8_t *signature, size_t sig_size, uint32_t *endian)
+    const uint8_t *signature, size_t sig_size, uint8_t *endian)
 {
     bool need_hash;
     uint8_t *message;
@@ -1582,8 +1576,7 @@ bool libspdm_req_asym_verify_hash_ex(
         if (try_big_endian && try_little_endian && result) {
             if (little_endian_succeeded) {
                 *endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY;
-            }
-            else {
+            } else {
                 *endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
             }
         }
@@ -1601,7 +1594,7 @@ bool libspdm_req_asym_verify(
     const uint8_t* message, size_t message_size,
     const uint8_t* signature, size_t sig_size)
 {
-    uint32_t endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
+    uint8_t endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
     return libspdm_req_asym_verify_ex(
         spdm_version, op_code, req_base_asym_alg, base_hash_algo, context,
         message, message_size, signature, sig_size, &endian);
@@ -1614,7 +1607,7 @@ bool libspdm_req_asym_verify_hash(
     const uint8_t* message_hash, size_t hash_size,
     const uint8_t* signature, size_t sig_size)
 {
-    uint32_t endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
+    uint8_t endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
     return libspdm_req_asym_verify_hash_ex(
         spdm_version, op_code, req_base_asym_alg, base_hash_algo, context,
         message_hash, hash_size, signature, sig_size, &endian);

@@ -423,11 +423,6 @@ void libspdm_copy_signature_swap_endian(
     const uint8_t* src,
     size_t src_size);
 
-/* The Endian values apply only if the spdm version is 1.0/1.1.
- * The default verification mode is big endian only. */
-#define LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY        (0x0)
-#define LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY     (0x1)
-#define LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_OR_LITTLE   (0x2)
 
 /**
  * Verifies the asymmetric signature, based upon negotiated asymmetric algorithm.
@@ -439,7 +434,7 @@ void libspdm_copy_signature_swap_endian(
  * @param  message_size    Size of the message in bytes.
  * @param  signature       Pointer to asymmetric signature to be verified.
  * @param  sig_size        Size of signature in bytes.
- * @param  endian          Endian to be tried. If both endians is selected,
+ * @param  endian          Endian to be tried. If both endians are selected,
  *                         the one actually used successfully is returned.
  *
  * @retval  true   Valid asymmetric signature.
@@ -458,7 +453,7 @@ bool libspdm_asym_verify_ex(
     void* context,
     const uint8_t* message, size_t message_size,
     const uint8_t* signature, size_t sig_size,
-    uint32_t *endian);
+    uint8_t *endian);
 
 /**
  * Verifies the asymmetric signature, based upon negotiated asymmetric algorithm.
@@ -470,7 +465,7 @@ bool libspdm_asym_verify_ex(
  * @param  hash_size       Size of the hash in bytes.
  * @param  signature       Pointer to asymmetric signature to be verified.
  * @param  sig_size        Size of signature in bytes.
- * @param  endian          Endian to be tried. If both endians is selected,
+ * @param  endian          Endian to be tried. If both endians are selected,
  *                         the one actually used successfully is returned.
  *
  * @retval  true   Valid asymmetric signature.
@@ -487,7 +482,7 @@ bool libspdm_asym_verify_hash_ex(
     uint32_t base_asym_algo, uint32_t base_hash_algo, void* context,
     const uint8_t* message_hash, size_t hash_size,
     const uint8_t* signature, size_t sig_size,
-    uint32_t *endian);
+    uint8_t *endian);
 
 /**
  * Carries out the signature generation.
@@ -606,7 +601,7 @@ void libspdm_req_asym_free(uint16_t req_base_asym_alg, void *context);
  * @param  message_size       Size of the message in bytes.
  * @param  signature          Pointer to asymmetric signature to be verified.
  * @param  sig_size           Size of signature in bytes.
- * @param  endian             Endian to be tried. If both endians is selected,
+ * @param  endian             Endian to be tried. If both endians are selected,
  *                            the one actually used successfully is returned.
  *
  * @retval  true   Valid asymmetric signature.
@@ -624,7 +619,7 @@ bool libspdm_req_asym_verify_ex(
     uint16_t req_base_asym_alg,
     uint32_t base_hash_algo, void* context,
     const uint8_t* message, size_t message_size,
-    const uint8_t* signature, size_t sig_size, uint32_t *endian);
+    const uint8_t* signature, size_t sig_size, uint8_t *endian);
 
 /**
  * Verifies the asymmetric signature, based upon negotiated requester asymmetric algorithm.
@@ -636,7 +631,7 @@ bool libspdm_req_asym_verify_ex(
  * @param  hash_size          Size of the hash in bytes.
  * @param  signature          Pointer to asymmetric signature to be verified.
  * @param  sig_size           Size of signature in bytes.
- * @param  endian             Endian to be tried. If both endians is selected,
+ * @param  endian             Endian to be tried. If both endians are selected,
  *                            the one actually used successfully is returned.
  *
  * @retval  true   Valid asymmetric signature.
@@ -654,7 +649,7 @@ bool libspdm_req_asym_verify_hash_ex(
     uint16_t req_base_asym_alg,
     uint32_t base_hash_algo, void* context,
     const uint8_t* message_hash, size_t hash_size,
-    const uint8_t* signature, size_t sig_size, uint32_t *endian);
+    const uint8_t* signature, size_t sig_size, uint8_t *endian);
 
 /**
  * Carries out the signature generation.

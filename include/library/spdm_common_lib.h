@@ -212,6 +212,13 @@ typedef enum {
     LIBSPDM_RESPONSE_STATE_MAX
 } libspdm_response_state_t;
 
+/* The Endian values apply only if the spdm version is 1.0/1.1.
+ * The default verification mode is big endian only. */
+#define LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY        (0)
+#define LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY     (1)
+#define LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_OR_LITTLE   (2)
+
+
 /*
  * +--------------------------+------------------------------------------+---------+
  * | GET_VERSION              | 4                                        | 1       |
