@@ -568,7 +568,7 @@ typedef struct {
 
     /* Endianness (BE/LE/Both) to use for signature verification on SPDM 1.0 and 1.1
      * This field is ignored for other SPDM versions */
-    uint32_t spdm_10_11_verify_signature_endian;
+    uint8_t spdm_10_11_verify_signature_endian;
 
 } libspdm_context_t;
 

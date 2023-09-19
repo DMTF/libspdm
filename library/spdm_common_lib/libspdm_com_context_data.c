@@ -689,16 +689,16 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         }
         break;
     case LIBSPDM_DATA_SPDM_VERSION_10_11_VERIFY_SIGNATURE_ENDIAN:
-        if (data_size != sizeof(uint32_t)) {
+        if (data_size != sizeof(uint8_t)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
-        if (*(uint32_t*)data != LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY &&
-            *(uint32_t*)data != LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY &&
-            *(uint32_t*)data != LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_OR_LITTLE)
+        if (*(uint8_t*)data != LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY &&
+            *(uint8_t*)data != LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY &&
+            *(uint8_t*)data != LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_OR_LITTLE)
         {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
-        context->spdm_10_11_verify_signature_endian = *(uint32_t*)data;
+        context->spdm_10_11_verify_signature_endian = *(uint8_t*)data;
         break;
     default:
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
@@ -983,7 +983,7 @@ libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_t
         target_data = context->transcript.message_a.buffer;
         break;
     case LIBSPDM_DATA_SPDM_VERSION_10_11_VERIFY_SIGNATURE_ENDIAN:
-        target_data_size = sizeof(uint32_t);
+        target_data_size = sizeof(uint8_t);
         target_data = &context->spdm_10_11_verify_signature_endian;
         break;
     default:
