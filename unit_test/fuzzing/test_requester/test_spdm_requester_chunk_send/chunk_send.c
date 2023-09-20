@@ -50,8 +50,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context,
     test_message_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
     spdm_response = (void *)((uint8_t *)temp_buf + test_message_header_size);
     spdm_response_size = spdm_test_context->test_buffer_size;
-    if (spdm_response_size > sizeof(temp_buf) - test_message_header_size - LIBSPDM_TEST_ALIGNMENT)
-    {
+    if (spdm_response_size > sizeof(temp_buf) - test_message_header_size - LIBSPDM_TEST_ALIGNMENT) {
         spdm_response_size = sizeof(temp_buf) - test_message_header_size - LIBSPDM_TEST_ALIGNMENT;
     }
     libspdm_copy_mem((uint8_t *)temp_buf + test_message_header_size,
@@ -61,8 +60,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context,
 
     chunk_send_ack_rsp = (void *)((uint8_t *)spdm_response);
 
-    if (m_libspdm_chunk_send_last_chunk)
-    {
+    if (m_libspdm_chunk_send_last_chunk) {
 
         chunk_copy_to = (uint8_t *)(chunk_send_ack_rsp + 1);
         chunk_size = spdm_response_size - (chunk_copy_to - (uint8_t *)spdm_response);
@@ -71,9 +69,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context,
             context, NULL, false, false,
             chunk_rsp_size, chunk_send_ack_rsp,
             response_size, response);
-    }
-    else
-    {
+    } else {
         chunk_rsp_size = sizeof(spdm_chunk_send_ack_response_t);
         libspdm_transport_test_encode_message(
             context, NULL, false, false,

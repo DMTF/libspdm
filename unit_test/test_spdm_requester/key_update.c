@@ -1834,8 +1834,7 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
-        }
-        else if (sub_index == 1) {
+        } else if (sub_index == 1) {
             spdm_error_response_t *spdm_response;
             size_t spdm_response_size;
             size_t transport_header_size;
@@ -1922,8 +1921,7 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
-        }
-        else {
+        } else {
             spdm_error_response_t *spdm_response;
             size_t spdm_response_size;
             size_t transport_header_size;
@@ -2010,8 +2008,7 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
-        }
-        else if (sub_index == 1) {
+        } else if (sub_index == 1) {
             spdm_error_response_t *spdm_response;
             size_t spdm_response_size;
             size_t transport_header_size;
@@ -2045,8 +2042,7 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
-        }
-        else if (sub_index == 2) {
+        } else if (sub_index == 2) {
             spdm_key_update_response_t *spdm_response;
             size_t spdm_response_size;
             size_t transport_header_size;
@@ -2135,8 +2131,7 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
-        }
-        else if (sub_index == 1) {
+        } else if (sub_index == 1) {
             spdm_error_response_t *spdm_response;
             size_t spdm_response_size;
             size_t transport_header_size;
@@ -2223,8 +2218,7 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
-        }
-        else {
+        } else {
             spdm_error_response_data_response_not_ready_t *spdm_response;
             size_t spdm_response_size;
             size_t transport_header_size;
@@ -2316,8 +2310,7 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
-        }
-        else if (sub_index == 1) {
+        } else if (sub_index == 1) {
             spdm_error_response_data_response_not_ready_t *spdm_response;
             size_t spdm_response_size;
             size_t transport_header_size;
@@ -2355,8 +2348,7 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             ((libspdm_secured_message_context_t
               *)(session_info->secured_message_context))
             ->application_secret.response_data_sequence_number--;
-        }
-        else if (sub_index == 2) {
+        } else if (sub_index == 2) {
             spdm_key_update_response_t *spdm_response;
             size_t spdm_response_size;
             size_t transport_header_size;
@@ -2451,8 +2443,7 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
                 ((libspdm_secured_message_context_t
                   *)(session_info->secured_message_context))
                 ->application_secret.response_data_sequence_number--;
-            }
-            else {
+            } else {
                 spdm_error_response_t *spdm_response;
                 size_t spdm_response_size;
                 size_t transport_header_size;

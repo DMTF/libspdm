@@ -145,8 +145,7 @@ libspdm_return_t libspdm_encode_secured_message(
             secured_message_context->handshake_secret.response_handshake_sequence_number =
                 sequence_number;
         }
-    }
-    else {
+    } else {
         if (is_request_message) {
             secured_message_context->application_secret.request_data_sequence_number =
                 sequence_number;
@@ -416,8 +415,7 @@ libspdm_return_t libspdm_decode_secured_message(
             secured_message_context->handshake_secret.response_handshake_sequence_number =
                 sequence_number;
         }
-    }
-    else {
+    } else {
         if (is_request_message) {
             secured_message_context->application_secret.request_data_sequence_number =
                 sequence_number;

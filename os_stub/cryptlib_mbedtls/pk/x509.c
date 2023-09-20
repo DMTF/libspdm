@@ -1481,29 +1481,35 @@ bool libspdm_x509_get_extended_basic_constraints(const uint8_t *cert,
 static int32_t libspdm_internal_x509_check_time(const mbedtls_x509_time *before,
                                                 const mbedtls_x509_time *after)
 {
-    if (before->year > after->year)
+    if (before->year > after->year) {
         return (1);
+    }
 
-    if (before->year == after->year && before->mon > after->mon)
+    if (before->year == after->year && before->mon > after->mon) {
         return (1);
-
-    if (before->year == after->year && before->mon == after->mon &&
-        before->day > after->day)
-        return (1);
+    }
 
     if (before->year == after->year && before->mon == after->mon &&
-        before->day == after->day && before->hour > after->hour)
+        before->day > after->day) {
         return (1);
+    }
+
+    if (before->year == after->year && before->mon == after->mon &&
+        before->day == after->day && before->hour > after->hour) {
+        return (1);
+    }
 
     if (before->year == after->year && before->mon == after->mon &&
         before->day == after->day && before->hour == after->hour &&
-        before->min > after->min)
+        before->min > after->min) {
         return (1);
+    }
 
     if (before->year == after->year && before->mon == after->mon &&
         before->day == after->day && before->hour == after->hour &&
-        before->min == after->min && before->sec > after->sec)
+        before->min == after->min && before->sec > after->sec) {
         return (1);
+    }
 
     return (0);
 }
@@ -2038,7 +2044,7 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
     if (pubkey_der_len > 0) {
         /*Note: data is written at the end of the buffer!*/
         pubkey_der_data = pubkey_buffer + sizeof(pubkey_buffer) - pubkey_der_len;
-    } else{
+    } else {
         goto free_all;
     }
 

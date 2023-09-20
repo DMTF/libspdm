@@ -11,8 +11,7 @@ char* strdup (const char* s)
 {
     size_t slen = strlen(s);
     char* result = malloc(slen + 1);
-    if(result == NULL)
-    {
+    if (result == NULL) {
         return NULL;
     }
 

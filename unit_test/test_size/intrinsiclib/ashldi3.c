@@ -38,10 +38,10 @@ di_int __ashldi3(di_int a, int b) {
     dwords input;
     dwords result;
     input.all = a;
-    if (b & bits_in_word) /* bits_in_word <= b < bits_in_dword */ {
+    if (b & bits_in_word) { /* bits_in_word <= b < bits_in_dword */
         result.s.low = 0;
         result.s.high = input.s.low << (b - bits_in_word);
-    } else /* 0 <= b < bits_in_word */ {
+    } else { /* 0 <= b < bits_in_word */
         if (b == 0) {
             return a;
         }

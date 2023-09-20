@@ -32,16 +32,13 @@ libspdm_return_t libspdm_device_send_message(void *spdm_context,
     uint8_t message_buffer[LIBSPDM_SENDER_BUFFER_SIZE];
 
     memcpy(message_buffer, request, request_size);
-    if (!m_secured_on_off)
-    {
+    if (!m_secured_on_off) {
         return LIBSPDM_STATUS_SUCCESS;
-    }else
-    {
+    } else {
         session_id = NULL;
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, 0xFFFFFFFF);
-        if (session_info == NULL)
-        {
+        if (session_info == NULL) {
             return LIBSPDM_STATUS_SEND_FAIL;
         }
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Request (0x%x):\n",
@@ -69,8 +66,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context,
                                                 void **response,
                                                 uint64_t timeout)
 {
-    if (!m_secured_on_off)
-    {
+    if (!m_secured_on_off) {
         libspdm_test_context_t *spdm_test_context;
         uint8_t *spdm_response;
         size_t spdm_response_size;
@@ -81,8 +77,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context,
         spdm_response = (void *)((uint8_t *)temp_buf + test_message_header_size);
         spdm_response_size = spdm_test_context->test_buffer_size;
         if (spdm_response_size >
-            sizeof(temp_buf) - test_message_header_size - LIBSPDM_TEST_ALIGNMENT)
-        {
+            sizeof(temp_buf) - test_message_header_size - LIBSPDM_TEST_ALIGNMENT) {
             spdm_response_size = sizeof(temp_buf) - test_message_header_size -
                                  LIBSPDM_TEST_ALIGNMENT;
         }
@@ -94,8 +89,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context,
         libspdm_transport_test_encode_message(spdm_context, NULL, false, false,
                                               spdm_response_size,
                                               spdm_response, response_size, response);
-    }else
-    {
+    } else {
         libspdm_test_context_t *spdm_test_context;
         size_t test_message_header_size;
         size_t spdm_response_size;
@@ -141,8 +135,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context,
 
         session_info = libspdm_get_session_info_via_session_id(
             spdm_context, session_id);
-        if (session_info == NULL)
-        {
+        if (session_info == NULL) {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
         /* WALKAROUND: If just use single context to encode message and then decode message */

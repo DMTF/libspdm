@@ -136,8 +136,7 @@ libspdm_return_t libspdm_get_response_chunk_get(
         *response_size = sizeof(spdm_chunk_response_response_t)
                          + sizeof(uint32_t)
                          + spdm_response->chunk_size;
-    }
-    else {
+    } else {
         spdm_response->chunk_size =
             LIBSPDM_MIN(min_data_transfer_size
                         - sizeof(spdm_chunk_response_response_t),

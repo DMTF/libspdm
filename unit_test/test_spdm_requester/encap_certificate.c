@@ -244,17 +244,14 @@ void libspdm_test_requester_encap_certificate_case4(void **state)
             &m_spdm_get_certificate_request3, &response_size, response);
         assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
-        if (m_spdm_get_certificate_request3.offset >= data_size)
-        {
+        if (m_spdm_get_certificate_request3.offset >= data_size) {
             /* A too long of an offset should return an error*/
             spdm_responseError = (void *)response;
             assert_int_equal(spdm_responseError->header.request_response_code,
                              SPDM_ERROR);
             assert_int_equal(spdm_responseError->header.param1,
                              SPDM_ERROR_CODE_INVALID_REQUEST);
-        }
-        else
-        {
+        } else {
             /* Otherwise it should work properly, considering length = 0*/
             assert_int_equal(response_size, sizeof(spdm_certificate_response_t));
             spdm_response = (void *)response;
@@ -350,16 +347,13 @@ void libspdm_test_requester_encap_certificate_case5(void **state)
         TEST_DEBUG_PRINT("expected_chunk_size %u\n", expected_chunk_size);
         TEST_DEBUG_PRINT("expected_remainder %u\n", expected_remainder);
 
-        if (expected_remainder > 0xFFFF || expected_chunk_size > 0xFFFF)
-        {
+        if (expected_remainder > 0xFFFF || expected_chunk_size > 0xFFFF) {
             spdm_responseError = (void *)response;
             assert_int_equal(spdm_responseError->header.request_response_code,
                              SPDM_ERROR);
             assert_int_equal(spdm_responseError->header.param1,
                              SPDM_ERROR_CODE_INVALID_REQUEST);
-        }
-        else
-        {
+        } else {
             assert_int_equal(response_size, sizeof(spdm_certificate_response_t) +
                              expected_chunk_size);
             spdm_response = (void *)response;
@@ -435,8 +429,7 @@ void libspdm_test_requester_encap_certificate_case6(void **state)
         /* It may fail because the spdm does not support too many messages.
          * assert_int_equal (spdm_response->header.request_response_code,
          * SPDM_CERTIFICATE);*/
-        if (spdm_response->header.request_response_code == SPDM_CERTIFICATE)
-        {
+        if (spdm_response->header.request_response_code == SPDM_CERTIFICATE) {
             assert_int_equal(spdm_response->header.request_response_code,
                              SPDM_CERTIFICATE);
             assert_int_equal(response_size, sizeof(spdm_certificate_response_t) +
@@ -447,17 +440,13 @@ void libspdm_test_requester_encap_certificate_case6(void **state)
                              data_size - offset - expected_chunk_size);
             assert_int_equal(((uint8_t *)data)[offset],
                              (response + sizeof(spdm_certificate_response_t))[0]);
-        }
-        else
-        {
+        } else {
             assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
             break;
         }
     }
-    if (spdm_response != NULL)
-    {
-        if (spdm_response->header.request_response_code == SPDM_CERTIFICATE)
-        {
+    if (spdm_response != NULL) {
+        if (spdm_response->header.request_response_code == SPDM_CERTIFICATE) {
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
             count = (data_size + m_spdm_get_certificate_request3.length - 1) /
                     m_spdm_get_certificate_request3.length;

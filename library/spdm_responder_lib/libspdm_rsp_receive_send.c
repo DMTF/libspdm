@@ -242,8 +242,7 @@ libspdm_return_t libspdm_process_request(void *spdm_context, uint32_t **session_
      * to activate backup key to parse the error. Then later the Requester will return SUCCESS,
      * the Responder needs new key. So we need to restore the environment by
      * libspdm_create_update_session_data_key() again.*/
-    if (reset_key_update)
-    {
+    if (reset_key_update) {
         /* temp_session_context and message_session_id must necessarily
          * be valid for us to reach here. */
         if (temp_session_context == NULL || message_session_id == NULL) {

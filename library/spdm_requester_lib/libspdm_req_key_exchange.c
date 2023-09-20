@@ -328,8 +328,7 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
     }
 
     req_session_id = libspdm_allocate_req_session_id(spdm_context, false);
-    if (req_session_id == (INVALID_SESSION_ID & 0xFFFF))
-    {
+    if (req_session_id == (INVALID_SESSION_ID & 0xFFFF)) {
         return LIBSPDM_STATUS_SESSION_NUMBER_EXCEED;
     }
 

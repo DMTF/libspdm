@@ -168,8 +168,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case0(void** state)
             request_size = sizeof(spdm_chunk_send_request_t)
                            + sizeof(uint32_t)
                            + chunk_send_request->chunk_size;
-        }
-        else {
+        } else {
             chunk_send_request->chunk_size =
                 LIBSPDM_MIN(
                     spdm_context->local_context.capability.data_transfer_size

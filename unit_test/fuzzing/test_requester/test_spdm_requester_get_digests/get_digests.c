@@ -38,8 +38,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context,
     spdm_test_context = libspdm_get_test_context();
     test_message_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
 
-    if (!m_secured_on_off)
-    {
+    if (!m_secured_on_off) {
         spdm_response = (void *)((uint8_t *)temp_buf + test_message_header_size);
         spdm_response_size = spdm_test_context->test_buffer_size;
         if (spdm_response_size >
@@ -55,8 +54,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context,
                                               spdm_response_size,
                                               spdm_response, response_size, response);
 
-    }else
-    {
+    } else {
         uint32_t session_id;
         libspdm_session_info_t *session_info;
         uint8_t *scratch_buffer;

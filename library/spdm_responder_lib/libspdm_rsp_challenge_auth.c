@@ -209,8 +209,7 @@ libspdm_return_t libspdm_get_response_challenge_auth(libspdm_context_t *spdm_con
             spdm_request->header.param2,
             ptr,
             measurement_summary_hash_size);
-    }
-    else {
+    } else {
         result = true;
     }
 

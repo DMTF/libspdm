@@ -72,8 +72,7 @@ void test_spdm_responder_encap_get_certificate_case1(void **state)
     spdm_context->connection_info.algorithm.req_base_asym_alg =
         SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256;
 
-    if (m_libspdm_local_certificate_chain == NULL)
-    {
+    if (m_libspdm_local_certificate_chain == NULL) {
         libspdm_read_responder_public_certificate_chain(
             m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
             &m_libspdm_local_certificate_chain,
@@ -226,8 +225,7 @@ void test_spdm_responder_encap_get_certificate_case3(void **state)
     spdm_context->connection_info.algorithm.req_base_asym_alg =
         SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256;
 
-    if (m_libspdm_local_certificate_chain == NULL)
-    {
+    if (m_libspdm_local_certificate_chain == NULL) {
         libspdm_read_responder_public_certificate_chain(
             m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
             &m_libspdm_local_certificate_chain,
@@ -321,8 +319,7 @@ void test_spdm_responder_encap_get_certificate_case4(void **state)
     spdm_context->connection_info.algorithm.req_base_asym_alg =
         SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256;
 
-    if (m_libspdm_local_certificate_chain == NULL)
-    {
+    if (m_libspdm_local_certificate_chain == NULL) {
         libspdm_read_responder_public_certificate_chain(
             m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
             &m_libspdm_local_certificate_chain,

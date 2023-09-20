@@ -148,8 +148,7 @@ libspdm_return_t libspdm_requester_chunk_send_test_receive_message(
                 spdm_context, NULL, false, false,
                 chunk_rsp_size, chunk_send_ack_rsp,
                 response_size, response);
-        }
-        else {
+        } else {
             chunk_rsp_size = sizeof(spdm_chunk_send_ack_response_t);
             libspdm_transport_test_encode_message(
                 spdm_context, NULL, false, false,

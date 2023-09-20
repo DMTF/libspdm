@@ -1375,8 +1375,7 @@ static void libspdm_test_export_master_secret_case19(void **state)
     for (int index = 0; index < LIBSPDM_MAX_HASH_SIZE; index++) {
         if (index < LIBSPDM_MAX_HASH_SIZE - 4) {
             assert_int_equal(target_buffer[index], index);
-        }
-        else {
+        } else {
             assert_int_equal(target_buffer[index], 0x00);
         }
     }

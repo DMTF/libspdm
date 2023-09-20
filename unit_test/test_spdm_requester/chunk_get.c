@@ -58,8 +58,7 @@ void libspdm_requester_chunk_get_test_case1_build_certificates_response(
             (uint16_t) (m_libspdm_local_certificate_chain_size_test_case_1 -
                         LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN *
                         (sub_cert_index + 1));
-    }
-    else {
+    } else {
         sub_cert_portion_length = (uint16_t) (
             m_libspdm_local_certificate_chain_size_test_case_1 -
             LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * (*sub_cert_count - 1));
@@ -291,11 +290,9 @@ libspdm_return_t libspdm_requester_chunk_get_test_send_message(
     spdm_test_context = libspdm_get_test_context();
     if (spdm_test_context->case_id == 0x1) {
         return LIBSPDM_STATUS_SUCCESS;
-    }
-    else if (spdm_test_context->case_id == 0x2) {
+    } else if (spdm_test_context->case_id == 0x2) {
         return LIBSPDM_STATUS_SUCCESS;
-    }
-    else if (spdm_test_context->case_id == 0x3) {
+    } else if (spdm_test_context->case_id == 0x3) {
         const uint8_t* ptr;
         ptr = (const uint8_t*) request;
 
@@ -306,14 +303,11 @@ libspdm_return_t libspdm_requester_chunk_get_test_send_message(
             m_libspdm_local_buffer_size += (request_size - 1);
         }
         return LIBSPDM_STATUS_SUCCESS;
-    }
-    else if (spdm_test_context->case_id == 0x4) {
+    } else if (spdm_test_context->case_id == 0x4) {
         return LIBSPDM_STATUS_SUCCESS;
-    }
-    else if (spdm_test_context->case_id == 0x5) {
+    } else if (spdm_test_context->case_id == 0x5) {
         return LIBSPDM_STATUS_SUCCESS;
-    }
-    else {
+    } else {
         return LIBSPDM_STATUS_SEND_FAIL;
     }
 }
@@ -406,8 +400,7 @@ libspdm_return_t libspdm_requester_chunk_get_test_receive_message(
             chunk_copy_size = LIBSPDM_MIN(sub_rsp_remaining, chunk_copy_size);
             chunk_rsp_size = sizeof(spdm_chunk_response_response_t)
                              + sizeof(uint32_t) + chunk_copy_size;
-        }
-        else {
+        } else {
             chunk_copy_size = LIBSPDM_MIN(sub_rsp_remaining, chunk_copy_size);
             chunk_rsp_size = sizeof(spdm_chunk_response_response_t) + chunk_copy_size;
         }
@@ -451,30 +444,24 @@ libspdm_return_t libspdm_requester_chunk_get_test_receive_message(
         }
 
         return LIBSPDM_STATUS_SUCCESS;
-    }
-    else if (spdm_test_context->case_id == 0x2) {
+    } else if (spdm_test_context->case_id == 0x2) {
         build_response_func =
             libspdm_requester_chunk_get_test_case2_build_measurements_response;
-    }
-    else if (spdm_test_context->case_id == 0x3) {
+    } else if (spdm_test_context->case_id == 0x3) {
         build_response_func =
             libspdm_requester_chunk_get_test_case3_build_challenge_response;
-    }
-    else if (spdm_test_context->case_id == 0x4) {
+    } else if (spdm_test_context->case_id == 0x4) {
         build_response_func =
             libspdm_requester_chunk_get_test_case4_build_digest_response;
-    }
-    else if (spdm_test_context->case_id == 0x5) {
+    } else if (spdm_test_context->case_id == 0x5) {
         build_response_func =
             libspdm_requester_chunk_get_test_case5_build_algorithms_response;
-    }
-    else {
+    } else {
         LIBSPDM_ASSERT(0);
         return LIBSPDM_STATUS_RECEIVE_FAIL;
     }
 
-    if (build_response_func)
-    {
+    if (build_response_func) {
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         chunk_rsp = (void*) ((uint8_t*) *response + transport_header_size);
 
@@ -507,8 +494,7 @@ libspdm_return_t libspdm_requester_chunk_get_test_receive_message(
             chunk_copy_size = LIBSPDM_MIN(sub_rsp_remaining, chunk_copy_size);
             chunk_rsp_size = sizeof(spdm_chunk_response_response_t)
                              + sizeof(uint32_t) + chunk_copy_size;
-        }
-        else {
+        } else {
             chunk_copy_size = LIBSPDM_MIN(sub_rsp_remaining, chunk_copy_size);
             chunk_rsp_size = sizeof(spdm_chunk_response_response_t) + chunk_copy_size;
         }

@@ -66,7 +66,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
            sizeof(spdm_get_encapsulated_request_request_t)) {
             spdm_response_size = sizeof(spdm_digest_response_t) +
                                  sizeof(spdm_get_encapsulated_request_request_t);
-        }else{
+        } else {
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
@@ -74,14 +74,12 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
                          scratch_buffer_size,
                          (uint8_t *)spdm_test_context->test_buffer,
                          spdm_response_size);
-    }
-    else
-    {
+    } else {
         size_t ack_header_size;
 
         if(libspdm_get_connection_version(spdm_context) == SPDM_MESSAGE_VERSION_12) {
             ack_header_size = sizeof(spdm_encapsulated_response_ack_response_t);
-        }else{
+        } else {
             ack_header_size = sizeof(spdm_message_header_t);
         }
 
