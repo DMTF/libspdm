@@ -1396,6 +1396,15 @@ bool libspdm_requester_data_sign(
 }
 #endif
 
+#if LIBSPDM_SECRET_LIB_SIGN_LITTLE_ENDIAN
+    if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) <= SPDM_MESSAGE_VERSION_11) {
+        if (result) {
+            libspdm_copy_signature_swap_endian(
+                req_base_asym_alg, signature, *sig_size, signature, *sig_size);
+        }
+    }
+#endif
+
     return result;
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
@@ -1461,6 +1470,15 @@ bool libspdm_responder_data_sign(
     libspdm_asym_free(base_asym_algo, context);
 #if !LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY
 }
+#endif
+
+#if LIBSPDM_SECRET_LIB_SIGN_LITTLE_ENDIAN
+    if ((spdm_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) <= SPDM_MESSAGE_VERSION_11) {
+        if (result) {
+            libspdm_copy_signature_swap_endian(
+                base_asym_algo, signature, *sig_size, signature, *sig_size);
+        }
+    }
 #endif
 
     return result;
