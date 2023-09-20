@@ -41,6 +41,10 @@
 #define LIBSPDM_LIBSPDM_TEST_CERT_MAXUINT16_LARGER 3
 #define LIBSPDM_TEST_CERT_SMALL 4
 
+
+/* Option to change signing algorithm to little endian. Default is big endian. */
+#define LIBSPDM_SECRET_LIB_SIGN_LITTLE_ENDIAN (0)
+
 /* public cert*/
 
 bool libspdm_read_responder_public_certificate_chain(
