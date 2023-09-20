@@ -556,8 +556,9 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
                 &digest[index *
                         libspdm_get_hash_size(m_libspdm_use_hash_algo)]);
             spdm_response->header.param2 |= (1 << index);
-            if (index == 0)
+            if (index == 0) {
                 continue;
+            }
             digest[(index + 1) * libspdm_get_hash_size(m_libspdm_use_hash_algo) -
                    1] = 0;
         }

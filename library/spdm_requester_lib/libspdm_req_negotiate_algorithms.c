@@ -108,10 +108,18 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
     spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
         /* Number of Algorithms Structure Tables based on supported algorithms */
-        if (spdm_context->local_context.algorithm.dhe_named_group) {req_param1++;}
-        if (spdm_context->local_context.algorithm.aead_cipher_suite) {req_param1++;}
-        if (spdm_context->local_context.algorithm.req_base_asym_alg) {req_param1++;}
-        if (spdm_context->local_context.algorithm.key_schedule) {req_param1++;}
+        if (spdm_context->local_context.algorithm.dhe_named_group) {
+            req_param1++;
+        }
+        if (spdm_context->local_context.algorithm.aead_cipher_suite) {
+            req_param1++;
+        }
+        if (spdm_context->local_context.algorithm.req_base_asym_alg) {
+            req_param1++;
+        }
+        if (spdm_context->local_context.algorithm.key_schedule) {
+            req_param1++;
+        }
         LIBSPDM_ASSERT(req_param1 <=
                        SPDM_NEGOTIATE_ALGORITHMS_MAX_NUM_STRUCT_TABLE_ALG);
         spdm_request->header.param1 = req_param1;

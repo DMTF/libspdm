@@ -55,12 +55,9 @@ libspdm_return_t libspdm_requester_encap_request_test_send_message(void *spdm_co
         return LIBSPDM_STATUS_SUCCESS;
     case 0xA:
     {
-        if (sub_index == 0)
-        {
+        if (sub_index == 0) {
             sub_index++;
-        }
-        else if (sub_index == 1)
-        {
+        } else if (sub_index == 1) {
             sub_index = 0;
             message_session_id = NULL;
             is_message_app_message = false;
@@ -77,16 +74,13 @@ libspdm_return_t libspdm_requester_encap_request_test_send_message(void *spdm_co
                                status));
             }
             spdm_response = (void*) (spdm_deliver_encapsulated_response_request + 1);
-            if (spdm_response->header.request_response_code != SPDM_ERROR)
-            {
+            if (spdm_response->header.request_response_code != SPDM_ERROR) {
                 return LIBSPDM_STATUS_SEND_FAIL;
             }
-            if (spdm_response->header.param1 != SPDM_ERROR_CODE_UNEXPECTED_REQUEST)   /* Here check ErrorCode should be UnexpectedRequestd */
-            {
+            if (spdm_response->header.param1 != SPDM_ERROR_CODE_UNEXPECTED_REQUEST) { /* Here check ErrorCode should be UnexpectedRequestd */
                 return LIBSPDM_STATUS_SEND_FAIL;
             }
-            if (spdm_response->header.param2 != 0)
-            {
+            if (spdm_response->header.param2 != 0) {
                 return LIBSPDM_STATUS_SEND_FAIL;
             }
         }
@@ -122,8 +116,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_hash_algo =
             m_libspdm_use_hash_algo;
-        if (sub_index == 0)
-        {
+        if (sub_index == 0) {
             temp_buf_size = sizeof(spdm_digest_response_t) +
                             libspdm_get_hash_size(m_libspdm_use_hash_algo) +
                             sizeof(spdm_encapsulated_request_response_t);
@@ -151,9 +144,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
                              sizeof(m_libspdm_local_certificate_chain), &digest[0]);
             spdm_response->header.param2 |= (0x01 << 0);
             sub_index++;
-        }
-        else if (sub_index == 1)
-        {
+        } else if (sub_index == 1) {
             /*When the version is SPDM_MESSAGE_VERSION_12, use the following code*/
             spdm_message_header_t *spdm_encapsulated_response_ack_response;
             temp_buf_size = sizeof(spdm_message_header_t);
@@ -167,8 +158,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
             spdm_encapsulated_response_ack_response->param2 =
                 SPDM_ENCAPSULATED_RESPONSE_ACK_RESPONSE_PAYLOAD_TYPE_ABSENT;
             sub_index = 0;
-        }
-        else {
+        } else {
             temp_buf_size = 0;
             temp_buf_ptr = NULL;
         }
@@ -184,8 +174,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_hash_algo =
             m_libspdm_use_hash_algo;
-        if (sub_index == 0)
-        {
+        if (sub_index == 0) {
             temp_buf_size = sizeof(spdm_digest_response_t) +
                             libspdm_get_hash_size(m_libspdm_use_hash_algo) +
                             sizeof(spdm_encapsulated_request_response_t);
@@ -213,9 +202,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
                              sizeof(m_libspdm_local_certificate_chain), &digest[0]);
             spdm_response->header.param2 |= (0x01 << 0);
             sub_index++;
-        }
-        else if (sub_index == 1)
-        {
+        } else if (sub_index == 1) {
             /*When the version is SPDM_MESSAGE_VERSION_12, use the following code*/
             spdm_encapsulated_response_ack_response_t *spdm_encapsulated_response_ack_response;
             temp_buf_size = sizeof(spdm_encapsulated_response_ack_response_t);
@@ -229,8 +216,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
             spdm_encapsulated_response_ack_response->header.param2 =
                 SPDM_ENCAPSULATED_RESPONSE_ACK_RESPONSE_PAYLOAD_TYPE_ABSENT;
             sub_index = 0;
-        }
-        else {
+        } else {
             temp_buf_size = 0;
             temp_buf_ptr = NULL;
         }
@@ -267,8 +253,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_hash_algo =
             m_libspdm_use_hash_algo;
-        if (sub_index == 0)
-        {
+        if (sub_index == 0) {
             temp_buf_size = sizeof(spdm_digest_response_t) +
                             libspdm_get_hash_size(m_libspdm_use_hash_algo) +
                             sizeof(spdm_encapsulated_request_response_t);
@@ -300,9 +285,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
                                                   temp_buf_size, temp_buf_ptr,
                                                   response_size, response);
             sub_index++;
-        }
-        else if (sub_index == 1)
-        {
+        } else if (sub_index == 1) {
             size_t temp_buff_size;
             uint8_t *temp_buff_ptr;
 
@@ -324,8 +307,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_hash_algo =
             m_libspdm_use_hash_algo;
-        if (sub_index == 0)
-        {
+        if (sub_index == 0) {
             temp_buf_size =
                 sizeof(spdm_digest_response_t) +
                 libspdm_get_hash_size(m_libspdm_use_hash_algo) +
@@ -355,9 +337,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
                              sizeof(m_libspdm_local_certificate_chain), &digest[0]);
             spdm_response->header.param2 |= (0x01 << 0);
             sub_index++;
-        }
-        else if (sub_index == 1)
-        {
+        } else if (sub_index == 1) {
             spdm_encapsulated_response_ack_response_t* spdm_encapsulated_response_ack_response;
             temp_buf_size = sizeof(spdm_encapsulated_response_ack_response_t);
             libspdm_zero_mem(temp_buf, LIBSPDM_RECEIVER_BUFFER_SIZE);
@@ -369,8 +349,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
             spdm_encapsulated_response_ack_response->header.param1 = 0;
             spdm_encapsulated_response_ack_response->header.param2 = 0;
             sub_index = 0;
-        }
-        else {
+        } else {
             temp_buf_size = 0;
             temp_buf_ptr = NULL;
         }
@@ -386,8 +365,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_hash_algo =
             m_libspdm_use_hash_algo;
-        if (sub_index == 0)
-        {
+        if (sub_index == 0) {
             temp_buf_size = sizeof(spdm_digest_response_t) +
                             libspdm_get_hash_size(m_libspdm_use_hash_algo) +
                             sizeof(spdm_encapsulated_request_response_t);
@@ -415,9 +393,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
                              sizeof(m_libspdm_local_certificate_chain), &digest[0]);
             spdm_response->header.param2 |= (0x01 << 0);
             sub_index++;
-        }
-        else if (sub_index == 1)
-        {
+        } else if (sub_index == 1) {
             spdm_encapsulated_response_ack_response_t *spdm_encapsulated_response_ack_response;
             temp_buf_size = sizeof(spdm_encapsulated_response_ack_response_t);
             libspdm_zero_mem(temp_buf, LIBSPDM_RECEIVER_BUFFER_SIZE);
@@ -430,8 +406,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
             spdm_encapsulated_response_ack_response->header.param2 =
                 SPDM_ENCAPSULATED_RESPONSE_ACK_RESPONSE_PAYLOAD_TYPE_REQ_SLOT_NUMBER;
             sub_index = 0;
-        }
-        else {
+        } else {
             temp_buf_size = 0;
             temp_buf_ptr = NULL;
         }
@@ -447,8 +422,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_hash_algo =
             m_libspdm_use_hash_algo;
-        if (sub_index == 0)
-        {
+        if (sub_index == 0) {
             temp_buf_size = sizeof(spdm_get_certificate_request_t) +
                             sizeof(spdm_encapsulated_request_response_t);
             libspdm_zero_mem(temp_buf, LIBSPDM_RECEIVER_BUFFER_SIZE);
@@ -469,9 +443,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
             spdm_response->offset = 0;
             spdm_response->length = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
             sub_index++;
-        }
-        else if (sub_index == 1)
-        {
+        } else if (sub_index == 1) {
             /*When the version is SPDM_MESSAGE_VERSION_12, use the following code*/
             spdm_message_header_t *spdm_encapsulated_response_ack_response;
             temp_buf_size = sizeof(spdm_message_header_t);
@@ -485,8 +457,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
             spdm_encapsulated_response_ack_response->param2 =
                 SPDM_ENCAPSULATED_RESPONSE_ACK_RESPONSE_PAYLOAD_TYPE_ABSENT;
             sub_index = 0;
-        }
-        else {
+        } else {
             temp_buf_size = 0;
             temp_buf_ptr = NULL;
         }
@@ -503,8 +474,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_hash_algo =
             m_libspdm_use_hash_algo;
-        if (sub_index == 0)
-        {
+        if (sub_index == 0) {
             temp_buf_size = sizeof(spdm_key_update_request_t) +
                             sizeof(spdm_encapsulated_request_response_t);
             libspdm_zero_mem(temp_buf, LIBSPDM_RECEIVER_BUFFER_SIZE);
@@ -524,9 +494,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
             spdm_response->header.param2 = 0x3;
 
             sub_index++;
-        }
-        else if (sub_index == 1)
-        {
+        } else if (sub_index == 1) {
             /*When the version is SPDM_MESSAGE_VERSION_12, use the following code*/
             spdm_message_header_t *spdm_encapsulated_response_ack_response;
             temp_buf_size = sizeof(spdm_message_header_t);
@@ -540,8 +508,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
             spdm_encapsulated_response_ack_response->param2 =
                 SPDM_ENCAPSULATED_RESPONSE_ACK_RESPONSE_PAYLOAD_TYPE_ABSENT;
             sub_index = 0;
-        }
-        else {
+        } else {
             temp_buf_size = 0;
             temp_buf_ptr = NULL;
         }
@@ -555,8 +522,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
     {
         spdm_get_encapsulated_request_request_t *spdm_response;
 
-        if (sub_index == 0)
-        {
+        if (sub_index == 0) {
             temp_buf_size = sizeof(spdm_encapsulated_request_response_t) +
                             sizeof(spdm_get_encapsulated_request_request_t);
             libspdm_zero_mem(temp_buf, LIBSPDM_RECEIVER_BUFFER_SIZE);
@@ -579,9 +545,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
             spdm_response->header.param2 = 0;
 
             sub_index++;
-        }
-        else if (sub_index == 1)
-        {
+        } else if (sub_index == 1) {
             spdm_message_header_t *spdm_encapsulated_response_ack_response;
             temp_buf_size = sizeof(spdm_message_header_t);
             libspdm_zero_mem(temp_buf, LIBSPDM_RECEIVER_BUFFER_SIZE);
@@ -594,8 +558,7 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
             spdm_encapsulated_response_ack_response->param2 =
                 SPDM_ENCAPSULATED_RESPONSE_ACK_RESPONSE_PAYLOAD_TYPE_ABSENT;
             sub_index = 0;
-        }
-        else {
+        } else {
             temp_buf_size = 0;
             temp_buf_ptr = NULL;
         }

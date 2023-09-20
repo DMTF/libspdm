@@ -47,8 +47,7 @@ libspdm_return_t libspdm_send_request(void *spdm_context, const uint32_t *sessio
         (uint8_t*)request < sender_buffer + sender_buffer_size) {
         message = sender_buffer;
         message_size = sender_buffer_size;
-    }
-    else {
+    } else {
         if ((uint8_t*)request >=
             scratch_buffer + libspdm_get_scratch_buffer_sender_receiver_offset(spdm_context)
             && (uint8_t*)request <
@@ -279,8 +278,7 @@ libspdm_return_t libspdm_receive_response(void *spdm_context, const uint32_t *se
      * to activate backup key to parse the error. Then later the Responder will return SUCCESS,
      * the Requester needs new key. So we need to restore the environment by
      * libspdm_create_update_session_data_key() again.*/
-    if (reset_key_update)
-    {
+    if (reset_key_update) {
         /* temp_session_context and message_session_id must necessarily
          * be valid for us to reach here. */
         if (temp_session_context == NULL || message_session_id == NULL) {
@@ -393,8 +391,7 @@ libspdm_return_t libspdm_handle_large_request(
 
             copy_size = min_data_transfer_size
                         - sizeof(spdm_chunk_send_request_t);
-        }
-        else {
+        } else {
             copy_size = (send_info->large_message_size - send_info->chunk_bytes_transferred);
         }
 
@@ -466,8 +463,7 @@ libspdm_return_t libspdm_handle_large_request(
                     spdm_response, response_size);
                 send_info->large_message_size = response_size;
                 break;
-            }
-            else {
+            } else {
                 status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
                 break;
             }
@@ -645,9 +641,7 @@ libspdm_return_t libspdm_send_spdm_request(libspdm_context_t *spdm_context,
         #else  /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP*/
         status = LIBSPDM_STATUS_BUFFER_TOO_SMALL;
         #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP*/
-    }
-    else
-    {
+    } else {
         status = libspdm_send_request(spdm_context, session_id, false, request_size, request);
     }
 

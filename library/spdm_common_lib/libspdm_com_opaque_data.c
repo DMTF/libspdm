@@ -307,8 +307,7 @@ bool libspdm_process_general_opaque_data_check(libspdm_context_t *spdm_context,
                                                         (uint8_t *)(size_t)
                                                         (opaque_element_table_header) +
                                                         current_element_len,
-                                                        4 - (current_element_len & 3)))
-                    {
+                                                        4 - (current_element_len & 3))) {
                         return false;
                     }
                 }

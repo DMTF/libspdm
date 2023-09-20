@@ -74,8 +74,9 @@ static inline du_int udiv128by64to64default(du_int u1, du_int u0, du_int v,
     while (q1 >= b || q1 * vn0 > b * rhat + un1) {
         q1 = q1 - 1;
         rhat = rhat + vn1;
-        if (rhat >= b)
+        if (rhat >= b) {
             break;
+        }
     }
     un21 = un64 * b + un1 - q1 * v;
     /*Compute the second quotient digit.*/
@@ -85,8 +86,9 @@ static inline du_int udiv128by64to64default(du_int u1, du_int u0, du_int v,
     while (q0 >= b || q0 * vn0 > b * rhat + un0) {
         q0 = q0 - 1;
         rhat = rhat + vn1;
-        if (rhat >= b)
+        if (rhat >= b) {
             break;
+        }
     }
     *r = (un21 * b + un0 - q0 * v) >> s;
     return q1 * b + q0;

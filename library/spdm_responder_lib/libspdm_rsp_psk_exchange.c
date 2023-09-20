@@ -329,8 +329,7 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
             spdm_request->header.param1,
             ptr,
             measurement_summary_hash_size);
-    }
-    else {
+    } else {
         result = true;
     }
 

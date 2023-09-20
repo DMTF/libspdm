@@ -22,12 +22,15 @@ size_t libspdm_alignment_size(size_t size)
     size_t alignment;
     alignment = LIBSPDM_TEST_ALIGNMENT;
 
-    if (((size) & (alignment - 1)) == 3)
+    if (((size) & (alignment - 1)) == 3) {
         size += 1;
-    if (((size) & (alignment - 1)) == 2)
+    }
+    if (((size) & (alignment - 1)) == 2) {
         size += 2;
-    if (((size) & (alignment - 1)) == 1)
+    }
+    if (((size) & (alignment - 1)) == 1) {
         size += 3;
+    }
     return size;
 }
 
@@ -115,8 +118,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
     }
     if (size > max_buffer_size) {
         size = max_buffer_size;
-    }
-    else{
+    } else {
         libspdm_copy_mem(test_buffer, max_buffer_size, data, size);
     }
     size = libspdm_alignment_size(size);

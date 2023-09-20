@@ -1627,8 +1627,7 @@ bool libspdm_write_certificate_to_nvm(uint8_t slot_id, const void * cert_chain,
         return false;
     }
 
-    if ((write(fp_out, cert_chain, cert_chain_size)) != cert_chain_size)
-    {
+    if ((write(fp_out, cert_chain, cert_chain_size)) != cert_chain_size) {
         printf("Write output file error %s\n", file_name);
         close(fp_out);
         return false;

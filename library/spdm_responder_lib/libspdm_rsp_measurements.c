@@ -240,8 +240,7 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
             return libspdm_generate_error_response(
                 spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
                 0, response_size, response);
-        }
-        else {
+        } else {
             libspdm_reset_message_m(spdm_context, session_info);
             return libspdm_generate_error_response(
                 spdm_context, SPDM_ERROR_CODE_UNSPECIFIED,
