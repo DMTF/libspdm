@@ -1904,8 +1904,7 @@ bool libspdm_x509_verify_cert(const uint8_t *cert, size_t cert_size,
 
 
     /* X509 Certificate Verification.*/
-
-    res = (bool)X509_verify_cert(cert_ctx);
+    res = (X509_verify_cert(cert_ctx) <= 0) ? false : true;
     X509_STORE_CTX_cleanup(cert_ctx);
 
 done:
