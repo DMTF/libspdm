@@ -974,20 +974,23 @@ bool libspdm_get_dmtf_subject_alt_name(const uint8_t *cert, const size_t cert_si
 /**
  * This function verifies the integrity of certificate chain data without spdm_cert_chain_t header.
  *
- * @param  cert_chain_data       The certificate chain data without spdm_cert_chain_t header.
- * @param  cert_chain_data_size  Size in bytes of the certificate chain data.
- * @param  base_asym_algo        SPDM base_asym_algo
- * @param  base_hash_algo        SPDM base_hash_algo
- * @param  is_requester_cert     Is the function verifying requester or responder cert.
- * @param  is_device_cert_model  If true, the cert chain is DeviceCert model.
- *                               If false, the cert chain is AliasCert model.
+ * @param  cert_chain_data          The certificate chain data without spdm_cert_chain_t header.
+ * @param  cert_chain_data_size      size in bytes of the certificate chain data.
+ * @param  base_asym_algo            SPDM base_asym_algo
+ * @param  base_hash_algo            SPDM base_hash_algo
+ * @param  is_requester_cert         Is the function verifying requester or responder cert.
+ * @param  is_device_cert_model      If true, the cert chain is DeviceCert model;
+ *                                   If false, the cert chain is AliasCert model;
+ * @param  is_partial_chain          If true, the cert chain does not contain a leaf certificate;
+ *                                   If false, the cert chain is complete;
  *
- * @retval true  Certificate chain data integrity verification pass.
- * @retval false Certificate chain data integrity verification fail.
+ * @retval true  certificate chain data integrity verification pass.
+ * @retval false certificate chain data integrity verification fail.
  **/
 bool libspdm_verify_cert_chain_data(uint8_t *cert_chain_data, size_t cert_chain_data_size,
                                     uint32_t base_asym_algo, uint32_t base_hash_algo,
-                                    bool is_requester_cert, bool is_device_cert_model);
+                                    bool is_requester_cert, bool is_device_cert_model,
+                                    bool is_partial_chain);
 
 /**
  * This function verifies the integrity of certificate chain buffer including

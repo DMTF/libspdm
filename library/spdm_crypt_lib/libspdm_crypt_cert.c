@@ -1405,13 +1405,16 @@ bool libspdm_get_dmtf_subject_alt_name(const uint8_t *cert, const size_t cert_si
  * @param  is_requester_cert         Is the function verifying requester or responder cert.
  * @param  is_device_cert_model      If true, the cert chain is DeviceCert model;
  *                                   If false, the cert chain is AliasCert model;
+ * @param  is_partial_chain          If true, the cert chain does not contain a leaf certificate
+ *                                   If false, the cert chain is complete
  *
  * @retval true  certificate chain data integrity verification pass.
  * @retval false certificate chain data integrity verification fail.
  **/
 bool libspdm_verify_cert_chain_data(uint8_t *cert_chain_data, size_t cert_chain_data_size,
                                     uint32_t base_asym_algo, uint32_t base_hash_algo,
-                                    bool is_requester_cert, bool is_device_cert_model)
+                                    bool is_requester_cert, bool is_device_cert_model,
+                                    bool is_partial_chain)
 {
     const uint8_t *root_cert_buffer;
     size_t root_cert_buffer_size;
@@ -1439,23 +1442,24 @@ bool libspdm_verify_cert_chain_data(uint8_t *cert_chain_data, size_t cert_chain_
                        "!!! VerifyCertificateChainData - FAIL (cert chain verify failed)!!!\n"));
         return false;
     }
+    if (is_partial_chain == false) {
+        /*This is a complete certificate chain*/
+        if (!libspdm_x509_get_cert_from_cert_chain(
+                cert_chain_data, cert_chain_data_size, -1,
+                &leaf_cert_buffer, &leaf_cert_buffer_size)) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "!!! VerifyCertificateChainData - FAIL (get leaf certificate failed)!!!\n"));
+            return false;
+        }
 
-    if (!libspdm_x509_get_cert_from_cert_chain(
-            cert_chain_data, cert_chain_data_size, -1,
-            &leaf_cert_buffer, &leaf_cert_buffer_size)) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                       "!!! VerifyCertificateChainData - FAIL (get leaf certificate failed)!!!\n"));
-        return false;
+        if (!libspdm_x509_certificate_check(leaf_cert_buffer, leaf_cert_buffer_size,
+                                            base_asym_algo, base_hash_algo,
+                                            is_requester_cert, is_device_cert_model)) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "!!! VerifyCertificateChainData - FAIL (leaf certificate check failed)!!!\n"));
+            return false;
+        }
     }
-
-    if (!libspdm_x509_certificate_check(leaf_cert_buffer, leaf_cert_buffer_size,
-                                        base_asym_algo, base_hash_algo,
-                                        is_requester_cert, is_device_cert_model)) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                       "!!! VerifyCertificateChainData - FAIL (leaf certificate check failed)!!!\n"));
-        return false;
-    }
-
     return true;
 }
 
