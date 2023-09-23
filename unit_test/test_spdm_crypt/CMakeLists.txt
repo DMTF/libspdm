@@ -19,6 +19,7 @@ endif()
 SET(src_test_spdm_crypt
     test_spdm_crypt.c
     ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/support.c
+    ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/algo.c
 )
 
 SET(test_spdm_crypt_LIBRARY
@@ -31,6 +32,7 @@ SET(test_spdm_crypt_LIBRARY
     malloclib
     cmockalib
     spdm_device_secret_lib_sample
+    spdm_crypt_ext_lib
 )
 
 if(TOOLCHAIN STREQUAL "ARM_DS2022")
