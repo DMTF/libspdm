@@ -990,6 +990,32 @@ bool libspdm_verify_cert_chain_data(uint8_t *cert_chain_data, size_t cert_chain_
                                     bool is_requester_cert, bool is_device_cert_model);
 
 /**
+ * This function verifies the integrity of certificate chain data without spdm_cert_chain_t header for a
+ * SET_CERTIFICATE
+ *
+ * This function also allows for not-validating the leaf certificate in the chain. This maybe useful for a
+ * requester to validate the immutable certificates ahead of a `SET_CERTIFICATE` request
+ * (i.e using the AliasCertificate model).
+ *
+ * @param  cert_chain_data          The certificate chain data without spdm_cert_chain_t header.
+ * @param  cert_chain_data_size      size in bytes of the certificate chain data.
+ * @param  base_asym_algo            SPDM base_asym_algo
+ * @param  base_hash_algo            SPDM base_hash_algo
+ * @param  is_requester_cert         Is the function verifying requester or responder cert.
+ * @param  is_device_cert_model      If true, the cert chain is DeviceCert model;
+ *                                   If false, the cert chain is AliasCert model;
+ * @param  check_leaf_cert           If true, verify the entire certificate chain;
+ *                                   If false, skip leaf certificate validation;
+ *
+ * @retval true  certificate chain data integrity verification pass.
+ * @retval false certificate chain data integrity verification fail.
+ **/
+bool libspdm_verify_cert_chain_data_ex(const uint8_t *cert_chain_data, size_t cert_chain_data_size,
+                                       uint32_t base_asym_algo, uint32_t base_hash_algo,
+                                       bool is_requester_cert, bool is_device_cert_model,
+                                       bool check_leaf_cert);
+
+/**
  * This function verifies the integrity of certificate chain buffer including
  * spdm_cert_chain_t header.
  *
