@@ -392,7 +392,9 @@ TBD
 ---
 
 ### Description
-Sends `SET_CERTIFICATE` to deposit a certificate chain into a Responder.
+Sends `SET_CERTIFICATE` to deposit a certificate chain into a Responder. It is recommended that the certificate chain be 
+validated by `libspdm_verify_cert_chain_data_ex` prior to invoking `libspdm_set_certificate`. This ensures that the
+certificate chain is validated locally first.
 
 ### Parameters
 
