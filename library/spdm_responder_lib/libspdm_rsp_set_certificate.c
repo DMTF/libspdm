@@ -14,39 +14,13 @@ static bool libspdm_set_cert_verify_certchain(const uint8_t *cert_chain, size_t 
                                               uint32_t base_asym_algo, uint32_t base_hash_algo,
                                               bool is_device_cert_model)
 {
-    const uint8_t *root_cert_buffer;
-    size_t root_cert_buffer_size;
-    const uint8_t *leaf_cert_buffer;
-    size_t leaf_cert_buffer_size;
+    bool is_requester_cert = false;
+    bool check_leaf_cert = true;
 
-    /*get root cert*/
-    if (!libspdm_x509_get_cert_from_cert_chain(
-            cert_chain, cert_chain_size, 0, &root_cert_buffer,
-            &root_cert_buffer_size)) {
-        return false;
-    }
-
-    /*verify cert_chain*/
-    if (!libspdm_x509_verify_cert_chain(root_cert_buffer, root_cert_buffer_size,
-                                        cert_chain, cert_chain_size)) {
-        return false;
-    }
-
-    /*get leaf cert*/
-    if (!libspdm_x509_get_cert_from_cert_chain(
-            cert_chain, cert_chain_size, -1, &leaf_cert_buffer,
-            &leaf_cert_buffer_size)) {
-        return false;
-    }
-
-    /*verify leaf cert*/
-    if (!libspdm_x509_set_cert_certificate_check(leaf_cert_buffer, leaf_cert_buffer_size,
-                                                 base_asym_algo, base_hash_algo,
-                                                 false, is_device_cert_model)) {
-        return false;
-    }
-
-    return true;
+    return libspdm_verify_cert_chain_data_ex(cert_chain, cert_chain_size,
+                                             base_asym_algo, base_hash_algo,
+                                             is_requester_cert, is_device_cert_model,
+                                             check_leaf_cert);
 }
 #endif /*LIBSPDM_CERT_PARSE_SUPPORT*/
 
