@@ -2032,7 +2032,7 @@ uint8_t libspdm_get_connection_version(const libspdm_context_t *spdm_context)
  *
  * @return the connection version with update_version_number.
  **/
-uint8_t libspdm_get_detailed_connection_version(const libspdm_context_t *spdm_context)
+uint16_t libspdm_get_detailed_connection_version(const libspdm_context_t *spdm_context)
 {
     return (uint8_t)(spdm_context->connection_info.version >> SPDM_VERSION_NUMBER_DETAILED_SHIFT_BIT);
 }

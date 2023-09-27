@@ -792,7 +792,7 @@ uint8_t libspdm_get_connection_version(const libspdm_context_t *spdm_context);
  *
  * @return the connection version with update_version_number.
  **/
-uint8_t libspdm_get_detailed_connection_version(const libspdm_context_t *spdm_context);
+uint16_t libspdm_get_detailed_connection_version(const libspdm_context_t *spdm_context);
 
 /**
  * This function returns if a capabilities flag is supported in current SPDM connection.
