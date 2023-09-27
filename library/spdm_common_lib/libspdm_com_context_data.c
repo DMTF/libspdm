@@ -2026,15 +2026,15 @@ uint8_t libspdm_get_connection_version(const libspdm_context_t *spdm_context)
 }
 
 /**
- * This function returns update_version_number negotiated by GET_VERSION/VERSION.
+ * This function returns connection version with update_version_number negotiated by GET_VERSION/VERSION.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  *
- * @return the connection update_version_number.
+ * @return the connection version with update_version_number.
  **/
 uint8_t libspdm_get_detailed_connection_version(const libspdm_context_t *spdm_context)
 {
-    return (uint8_t)((spdm_context->connection_info.version & 0xF0) >> SPDM_VERSION_NUMBER_DETAILED_SHIFT_BIT);
+    return (uint8_t)(spdm_context->connection_info.version >> SPDM_VERSION_NUMBER_DETAILED_SHIFT_BIT);
 }
 
 /**
