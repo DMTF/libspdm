@@ -90,6 +90,7 @@ typedef struct {
 #define SPDM_MESSAGE_VERSION_11 0x11
 #define SPDM_MESSAGE_VERSION_12 0x12
 #define SPDM_MESSAGE_VERSION SPDM_MESSAGE_VERSION_10
+#define SPDM_MESSAGE_VERSION_121_WITH_SET_CERT_CAP 1
 
 /* SPDM GET_VERSION request */
 typedef struct {
@@ -116,6 +117,7 @@ typedef struct {
  * bit[3:0]   alpha*/
 typedef uint16_t spdm_version_number_t;
 #define SPDM_VERSION_NUMBER_SHIFT_BIT 8
+#define SPDM_VERSION_NUMBER_DETAILED_SHIFT_BIT 4
 
 #define SPDM_VERSION_1_2_SIGNING_PREFIX_CONTEXT "dmtf-spdm-v1.2.*"
 #define SPDM_VERSION_1_2_SIGNING_PREFIX_CONTEXT_SIZE \
