@@ -43,11 +43,8 @@ static libspdm_return_t libspdm_try_set_certificate(libspdm_context_t *spdm_cont
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
 
-    if (!libspdm_is_capabilities_flag_supported(
-            spdm_context, true, 0,
-            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP)) {
-        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
-    }
+    /* Do not check the Responder's SET_CERT_CAP capability as it may be a 1.2.0 Responder
+     * and that capability does not exist. */
 
     LIBSPDM_ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
 

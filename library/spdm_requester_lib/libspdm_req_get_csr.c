@@ -52,11 +52,8 @@ static libspdm_return_t libspdm_try_get_csr(libspdm_context_t *spdm_context,
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
 
-    if (!libspdm_is_capabilities_flag_supported(
-            spdm_context, true, 0,
-            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CSR_CAP)) {
-        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
-    }
+    /* Do not check the Responder's CSR_CAP capability as it may be a 1.2.0 Responder
+     * and that capability does not exist. */
 
     LIBSPDM_ASSERT(opaque_data_length < SPDM_MAX_OPAQUE_DATA_SIZE);
 
