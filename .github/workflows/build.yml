@@ -202,6 +202,11 @@ jobs:
         run: |
           cd build/bin
           ./test_crypt
+      - name: Test Secured Message
+        if: matrix.toolchain != 'LIBFUZZER' && matrix.toolchain != 'ARM_GNU' && matrix.configurations != '-DDISABLE_TESTS=1'
+        run: |
+          cd build/bin
+          ./test_spdm_secured_message
       - name: Test FIPS
         if: matrix.toolchain != 'LIBFUZZER' && matrix.toolchain != 'ARM_GNU' && matrix.configurations == '-DLIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT=1 -DLIBSPDM_FIPS_MODE=1' && matrix.configurations != '-DDISABLE_TESTS=1'
         run: |
