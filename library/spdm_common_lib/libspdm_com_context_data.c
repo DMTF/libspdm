@@ -699,7 +699,7 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         }
         context->spdm_10_11_verify_signature_endian = *(uint8_t*)data;
         break;
-    case LIBSPDM_DATA_SESSION_SEQUENCE_NUMBER_ENDIAN:
+    case LIBSPDM_DATA_SEQUENCE_NUMBER_ENDIAN:
         if (data_size != sizeof(uint8_t)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
@@ -990,7 +990,7 @@ libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_t
         target_data_size = sizeof(uint8_t);
         target_data = &context->spdm_10_11_verify_signature_endian;
         break;
-    case LIBSPDM_DATA_SESSION_SEQUENCE_NUMBER_ENDIAN:
+    case LIBSPDM_DATA_SEQUENCE_NUMBER_ENDIAN:
         target_data_size = sizeof(uint8_t);
         target_data = &context->sequence_number_endian;
     default:
