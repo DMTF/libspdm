@@ -224,11 +224,11 @@ typedef enum {
  * SPDM Secured Message version is 1.0 or 1.1.
  * *_LITTLE and *_BIG immediately return an error on decryption failure.
  * *_BOTH tries the opposite endianness on decryption failure.
- * The default endianness is little endian for both encryption and decryption. */
-#define LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_LITTLE 0
-#define LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_BIG_DEC_BIG 1
-#define LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_BOTH 2
-#define LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_BIG_DEC_BOTH 3
+ * The default is LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_BOTH. */
+#define LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_BOTH 0
+#define LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_LITTLE 1
+#define LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_BIG_DEC_BOTH 2
+#define LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_BIG_DEC_BIG 3
 
 /*
  * +--------------------------+------------------------------------------+---------+

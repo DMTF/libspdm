@@ -26,7 +26,7 @@ static void generate_iv(uint64_t sequence_number, uint8_t *iv, const uint8_t *sa
         }
         break;
     case LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_BIG_DEC_BIG:
-    case LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_BIG_DEC_BOTH: {
+    case LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_BIG_DEC_BOTH:
         /* If big-endian then the sequence number is zero-extended to the lower indices.
          * The sequence number ends at the highest index (aead_size - 1). */
         sequence_number = libspdm_le_to_be_64(sequence_number);
@@ -34,12 +34,10 @@ static void generate_iv(uint64_t sequence_number, uint8_t *iv, const uint8_t *sa
                          aead_iv_size,
                          &sequence_number,
                          sizeof(sequence_number));
-        for (index = aead_iv_size - sizeof(sequence_number); index < sizeof(sequence_number);
-             index++) {
+        for (index = aead_iv_size - sizeof(sequence_number); index < aead_iv_size; index++) {
             iv[index] = iv[index] ^ iv_temp[index];
         }
         break;
-    }
     }
 }
 
