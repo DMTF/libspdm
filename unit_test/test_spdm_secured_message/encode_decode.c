@@ -1,12 +1,11 @@
+/**
+ *  Copyright Notice:
+ *  Copyright 2023 DMTF. All rights reserved.
+ *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ **/
+
 #include "spdm_unit_test.h"
 #include "internal/libspdm_secured_message_lib.h"
-
-/*libspdm_return_t libspdm_encode_secured_message(
-    void *spdm_secured_message_context, uint32_t session_id,
-    bool is_request_message, size_t app_message_size,
-    void *app_message, size_t *secured_message_size,
-    void *secured_message,
-    const libspdm_secured_message_callbacks_t *spdm_secured_message_callbacks)*/
 
 static uint8_t m_secured_message[0x1000];
 static uint8_t m_app_message[0x1000];
@@ -79,11 +78,11 @@ static void libspdm_test_secured_message_encode_case1(void **state)
         app_message[index] = index;
     }
 
-    status = libspdm_encode_secured_message(&m_secured_message_context, session_id, true,
+    status = libspdm_encode_secured_message(
+        &m_secured_message_context, session_id, true,
         sizeof(app_message), app_message, &secured_message_size, &m_secured_message,
         &m_secured_message_callbacks);
 
-    libspdm_internal_dump_hex((const uint8_t*)&m_secured_message, 100);
     assert_int_equal(LIBSPDM_STATUS_SUCCESS, status);
     assert_memory_equal(&session_id, &m_secured_message, 4);
 
@@ -129,17 +128,17 @@ static void libspdm_test_secured_message_encode_case2(void **state)
         app_message[index] = index;
     }
 
-    status = libspdm_encode_secured_message(&m_secured_message_context, session_id, true,
+    status = libspdm_encode_secured_message(
+        &m_secured_message_context, session_id, true,
         sizeof(app_message), app_message, &secured_message_size, &m_secured_message,
         &m_secured_message_callbacks);
 
-    libspdm_internal_dump_hex((const uint8_t*)&m_secured_message, 100);
     assert_int_equal(LIBSPDM_STATUS_SUCCESS, status);
     assert_memory_equal(&session_id, &m_secured_message, 4);
 
     /* Sequence number is alternating 0x55 and 0xaa. */
     for (int index = 4; index < 4 + PARTIAL_SEQ_NUM_SIZE; index++) {
-        if (index % 2 == 0){
+        if (index % 2 == 0) {
             assert_int_equal(0x55, m_secured_message[index]);
         } else {
             assert_int_equal(0xaa, m_secured_message[index]);
@@ -162,7 +161,7 @@ static void libspdm_test_secured_message_encode_case2(void **state)
 
     /* Sequence number is incremented by one after operation. */
     assert_int_equal(0xaa55aa55aa55aa56,
-        m_secured_message_context.application_secret.request_data_sequence_number);
+                     m_secured_message_context.application_secret.request_data_sequence_number);
 }
 
 /**
@@ -185,11 +184,11 @@ static void libspdm_test_secured_message_encode_case3(void **state)
         app_message[index] = index;
     }
 
-    status = libspdm_encode_secured_message(&m_secured_message_context, session_id, true,
+    status = libspdm_encode_secured_message(
+        &m_secured_message_context, session_id, true,
         sizeof(app_message), app_message, &secured_message_size, &m_secured_message,
         &m_secured_message_callbacks);
 
-    libspdm_internal_dump_hex((const uint8_t*)&m_secured_message, 100);
     assert_int_equal(LIBSPDM_STATUS_SUCCESS, status);
     assert_memory_equal(&session_id, &m_secured_message, 4);
 
@@ -237,17 +236,17 @@ static void libspdm_test_secured_message_encode_case4(void **state)
         app_message[index] = index;
     }
 
-    status = libspdm_encode_secured_message(&m_secured_message_context, session_id, true,
+    status = libspdm_encode_secured_message(
+        &m_secured_message_context, session_id, true,
         sizeof(app_message), app_message, &secured_message_size, &m_secured_message,
         &m_secured_message_callbacks);
 
-    libspdm_internal_dump_hex((const uint8_t*)&m_secured_message, 100);
     assert_int_equal(LIBSPDM_STATUS_SUCCESS, status);
     assert_memory_equal(&session_id, &m_secured_message, 4);
 
     /* Sequence number is alternating 0x55 and 0xaa. */
     for (int index = 4; index < 4 + PARTIAL_SEQ_NUM_SIZE; index++) {
-        if (index % 2 == 0){
+        if (index % 2 == 0) {
             assert_int_equal(0x55, m_secured_message[index]);
         } else {
             assert_int_equal(0xaa, m_secured_message[index]);
@@ -270,7 +269,7 @@ static void libspdm_test_secured_message_encode_case4(void **state)
 
     /* Sequence number is incremented by one after operation. */
     assert_int_equal(0xaa55aa55aa55aa56,
-        m_secured_message_context.application_secret.request_data_sequence_number);
+                     m_secured_message_context.application_secret.request_data_sequence_number);
 }
 
 /**
@@ -298,7 +297,8 @@ static void libspdm_test_secured_message_encode_case5(void **state)
         0x86, 0x17, 0x33, 0xd6, 0x7f, 0x95, 0x9a, 0x20,
         /* MAC. */
         0x3d, 0x4f, 0xac, 0x58, 0xcb, 0x70, 0x6c, 0xf5,
-        0xa0, 0x27, 0x0a, 0xf6, 0x73, 0xf0, 0xfe, 0x36};
+        0xa0, 0x27, 0x0a, 0xf6, 0x73, 0xf0, 0xfe, 0x36
+    };
 
     initialize_secured_message_context();
     m_secured_message_context.sequence_number_endian =
@@ -307,11 +307,11 @@ static void libspdm_test_secured_message_encode_case5(void **state)
     libspdm_copy_mem(m_secured_message, sizeof(m_secured_message),
                      secured_message, sizeof(secured_message));
 
-    status = libspdm_decode_secured_message(&m_secured_message_context, session_id, true,
+    status = libspdm_decode_secured_message(
+        &m_secured_message_context, session_id, true,
         sizeof(m_secured_message), m_secured_message, &app_message_size, &app_message,
         &m_secured_message_callbacks);
 
-    libspdm_internal_dump_hex((const uint8_t*)&m_secured_message, 100);
     assert_int_equal(LIBSPDM_STATUS_SUCCESS, status);
 
     for (int index = 0; index < 16; index++) {
@@ -347,7 +347,8 @@ static void libspdm_test_secured_message_encode_case6(void **state)
         0x86, 0x17, 0x33, 0xd6, 0x7f, 0x95, 0x9a, 0x20,
         /* MAC. */
         0x3d, 0x4f, 0xac, 0x58, 0xcb, 0x70, 0x6c, 0xf5,
-        0xa0, 0x27, 0x0a, 0xf6, 0x73, 0xf0, 0xfe, 0x36};
+        0xa0, 0x27, 0x0a, 0xf6, 0x73, 0xf0, 0xfe, 0x36
+    };
 
     initialize_secured_message_context();
     m_secured_message_context.sequence_number_endian =
@@ -356,11 +357,11 @@ static void libspdm_test_secured_message_encode_case6(void **state)
     libspdm_copy_mem(m_secured_message, sizeof(m_secured_message),
                      secured_message, sizeof(secured_message));
 
-    status = libspdm_decode_secured_message(&m_secured_message_context, session_id, true,
+    status = libspdm_decode_secured_message(
+        &m_secured_message_context, session_id, true,
         sizeof(m_secured_message), m_secured_message, &app_message_size, &app_message,
         &m_secured_message_callbacks);
 
-    libspdm_internal_dump_hex((const uint8_t*)&m_secured_message, 100);
     assert_int_equal(LIBSPDM_STATUS_SUCCESS, status);
 
     for (int index = 0; index < 16; index++) {
@@ -397,7 +398,8 @@ static void libspdm_test_secured_message_encode_case7(void **state)
         0xfe, 0xa0, 0x8d, 0x91, 0x79, 0x8a, 0x89, 0x88,
         /* MAC. */
         0xb6, 0x8e, 0xd3, 0x06, 0x4a, 0x95, 0x70, 0x89,
-        0xd4, 0xd8, 0xb9, 0x02, 0x9e, 0x9d, 0x72, 0x0b};
+        0xd4, 0xd8, 0xb9, 0x02, 0x9e, 0x9d, 0x72, 0x0b
+    };
 
     initialize_secured_message_context();
     m_secured_message_context.sequence_number_endian =
@@ -407,11 +409,11 @@ static void libspdm_test_secured_message_encode_case7(void **state)
     libspdm_copy_mem(m_secured_message, sizeof(m_secured_message),
                      secured_message, sizeof(secured_message));
 
-    status = libspdm_decode_secured_message(&m_secured_message_context, session_id, true,
+    status = libspdm_decode_secured_message(
+        &m_secured_message_context, session_id, true,
         sizeof(m_secured_message), m_secured_message, &app_message_size, &app_message,
         &m_secured_message_callbacks);
 
-    libspdm_internal_dump_hex((const uint8_t*)&m_secured_message, 100);
     assert_int_equal(LIBSPDM_STATUS_SUCCESS, status);
 
     for (int index = 0; index < 16; index++) {
@@ -420,7 +422,7 @@ static void libspdm_test_secured_message_encode_case7(void **state)
 
     /* Sequence number is incremented by one after operation. */
     assert_int_equal(0xaa55aa55aa55aa56,
-        m_secured_message_context.application_secret.request_data_sequence_number);
+                     m_secured_message_context.application_secret.request_data_sequence_number);
 
     /* Context should change to big-endian only. */
     assert_int_equal(LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_BIG_DEC_BIG,
@@ -453,7 +455,8 @@ static void libspdm_test_secured_message_encode_case8(void **state)
         0x52, 0x63, 0xf8, 0xc0, 0x8f, 0x6c, 0x1a, 0xa4,
         /* MAC. */
         0x0d, 0xcd, 0xb4, 0x8a, 0xd6, 0xfa, 0x24, 0x04,
-        0x79, 0xd5, 0xd8, 0xd2, 0xfe, 0x28, 0x19, 0x14};
+        0x79, 0xd5, 0xd8, 0xd2, 0xfe, 0x28, 0x19, 0x14
+    };
 
     initialize_secured_message_context();
     m_secured_message_context.sequence_number_endian =
@@ -463,11 +466,11 @@ static void libspdm_test_secured_message_encode_case8(void **state)
     libspdm_copy_mem(m_secured_message, sizeof(m_secured_message),
                      secured_message, sizeof(secured_message));
 
-    status = libspdm_decode_secured_message(&m_secured_message_context, session_id, true,
+    status = libspdm_decode_secured_message(
+        &m_secured_message_context, session_id, true,
         sizeof(m_secured_message), m_secured_message, &app_message_size, &app_message,
         &m_secured_message_callbacks);
 
-    libspdm_internal_dump_hex((const uint8_t*)&m_secured_message, 100);
     assert_int_equal(LIBSPDM_STATUS_SUCCESS, status);
 
     for (int index = 0; index < 16; index++) {
@@ -476,7 +479,7 @@ static void libspdm_test_secured_message_encode_case8(void **state)
 
     /* Sequence number is incremented by one after operation. */
     assert_int_equal(0xaa55aa55aa55aa56,
-        m_secured_message_context.application_secret.request_data_sequence_number);
+                     m_secured_message_context.application_secret.request_data_sequence_number);
 
     /* Context should change to little-endian only. */
     assert_int_equal(LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_LITTLE,
