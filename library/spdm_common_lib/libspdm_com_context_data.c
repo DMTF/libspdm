@@ -136,6 +136,7 @@ static bool need_session_info_for_data(libspdm_data_type_t data_type)
     case LIBSPDM_DATA_SESSION_POLICY:
     case LIBSPDM_DATA_SESSION_SEQUENCE_NUMBER_RSP_DIR:
     case LIBSPDM_DATA_SESSION_SEQUENCE_NUMBER_REQ_DIR:
+    case LIBSPDM_DATA_SESSION_SEQUENCE_NUMBER_ENDIAN:
         return true;
     default:
         return false;
@@ -993,6 +994,9 @@ libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_t
     case LIBSPDM_DATA_SEQUENCE_NUMBER_ENDIAN:
         target_data_size = sizeof(uint8_t);
         target_data = &context->sequence_number_endian;
+    case LIBSPDM_DATA_SESSION_SEQUENCE_NUMBER_ENDIAN:
+        target_data_size = sizeof(uint8_t);
+        target_data = &secured_context->sequence_number_endian;
     default:
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         break;

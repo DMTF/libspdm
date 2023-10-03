@@ -297,7 +297,7 @@ Enumeration value used for the `libspdm_set_data` and/or `libspdm_get_data` func
       `LIBSPDM_DATA_MAX_SPDM_SESSION_SEQUENCE_NUMBER` is set to `0` then the default value is used.
 - `LIBSPDM_DATA_SPDM_VERSION_10_11_VERIFY_SIGNATURE_ENDIAN`
     - Specifies how verification of asymmetric signatures is handled when the negotiated SPDM
-      version is 1.0 or 1.1. Its value can be one of
+      version is 1.0 or 1.1. Its value is one of
         - `LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY`
             - The endianness of the signature is only interpreted as big-endian.
         - `LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY`
@@ -306,8 +306,8 @@ Enumeration value used for the `libspdm_set_data` and/or `libspdm_get_data` func
             - The endianness of the signature is first interpreted as big-endian. If verification
               fails then little-endian is tried.
 - `LIBSPDM_DATA_SEQUENCE_NUMBER_ENDIAN`
-    - Specifies the endianness of the sequence number used in secured message encryption and
-      decryption. Its value can be one of
+    - Specifies the endianness of the AEAD sequence number used in secured message encryption and
+      decryption. Its value is one of
         - `LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_BOTH`
             - Data is encrypted with a little-endian sequence number and data is initially decrypted
               with a little-endian sequence number. If decryption fails then a big-endian sequence
@@ -321,10 +321,12 @@ Enumeration value used for the `libspdm_set_data` and/or `libspdm_get_data` func
         - `LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_BIG_DEC_BIG`
             - Data is both encrypted and decrypted with a big-endian sequence number.
     - For practical purposes `*_BOTH` only applies to Responder endpoints. In the scenario where
-      Requester and Responder only support different endianness encodings, the Responder may return
-      a `DecryptError` to the Requester or it may not return anything and terminate the session. In
-      such a situation the Requester Integrator may change the sequence number endianness to the
-      opposite value and try again with session establishment.
+      Requester and Responder exclusively support different endianness encodings, the Responder may
+      return a `DecryptError` to the Requester or it may not return an error and terminate the
+      session. In such a situation the Requester Integrator may change the sequence number
+      endianness to the opposite value and try again with session establishment. Once a session has
+      been successfully established, the correct endianness can be queried from
+      `LIBSPDM_DATA_SESSION_SEQUENCE_NUMBER_ENDIAN`.
 
 ### Values that can only be `get`.
 
@@ -364,3 +366,10 @@ Enumeration value used for the `libspdm_set_data` and/or `libspdm_get_data` func
       encrypted / decrypted in the response (Responder to Requester) direction.
     - This value is only applicable when the local endpoint is in the
      `LIBSPDM_SESSION_STATE_ESTABLISHED` state.
+- `LIBSPDM_DATA_SESSION_SEQUENCE_NUMBER_ENDIAN`
+    - For a given session ID, returns the endianness of the AEAD sequence number. Its value is one
+      of
+        - `LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_LITTLE`
+            - The endianness of the sequence number is little-endian.
+        - `LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_BIG_DEC_BOTH`
+            - The endianness of the sequence number is big-endian.

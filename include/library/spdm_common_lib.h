@@ -119,7 +119,7 @@ typedef enum {
      * When set a new value, below rule is applied:
      *     new MaxDheSessionCount <= LIBSPDM_MAX_SESSION_COUNT - current MaxPskSessionCount
      *     new MaxPskSessionCount <= LIBSPDM_MAX_SESSION_COUNT - current MaxDheSessionCount
-     * 0 means no limiation for the specific DHE or PSK session, as long as
+     * 0 means no limitation for the specific DHE or PSK session, as long as
      *     PskSessionCount + DheSessionCount <= LIBSPDM_MAX_SESSION_COUNT.
      * If these values are modified while there are active sessions then the active sessions
      * aren't terminated.
@@ -135,6 +135,7 @@ typedef enum {
     LIBSPDM_DATA_SPDM_VERSION_10_11_VERIFY_SIGNATURE_ENDIAN,
 
     LIBSPDM_DATA_SEQUENCE_NUMBER_ENDIAN,
+    LIBSPDM_DATA_SESSION_SEQUENCE_NUMBER_ENDIAN,
 
     /* MAX */
     LIBSPDM_DATA_MAX
@@ -224,11 +225,11 @@ typedef enum {
  * SPDM Secured Message version is 1.0 or 1.1.
  * *_LITTLE and *_BIG immediately return an error on decryption failure.
  * *_BOTH tries the opposite endianness on decryption failure.
- * The default is LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_BOTH. */
-#define LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_BOTH 0
-#define LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_LITTLE 1
-#define LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_BIG_DEC_BOTH 2
-#define LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_BIG_DEC_BIG 3
+ * The default is LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_LITTLE. */
+#define LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_LITTLE 0
+#define LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_BOTH 1
+#define LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_BIG_DEC_BIG 2
+#define LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_BIG_DEC_BOTH 3
 
 /*
  * +--------------------------+------------------------------------------+---------+
