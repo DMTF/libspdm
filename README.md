@@ -22,13 +22,13 @@
 
 2) Includes libraries that can be used to construct an SPDM Requester and an SPDM Responder.
 
-   Please refer to [libspdm API](https://github.com/DMTF/libspdm/tree/main/doc/api).
+   Refer to the [libspdm API](https://github.com/DMTF/libspdm/tree/main/doc/api) for more information.
 
 3) Programming Context
 
    The core libraries in `libspdm/library` require only the C99 freestanding headers and so are suitable for embedded and systems programming. Any functionality beyond the freestanding headers is provided by `libspdm/os_stub` or by the library's Integrator. All statically allocated memory in the core libraries is read-only. The core libraries do not dynamically allocate memory.
 
-   Please refer to [programming environment](https://github.com/DMTF/libspdm/blob/main/doc/programming_environment.md).
+   Refer to [programming environment](https://github.com/DMTF/libspdm/blob/main/doc/programming_environment.md) for more information.
 
 4) Implemented Requests and Responses
 
@@ -53,9 +53,9 @@
    An [OpenSSL](https://www.openssl.org/) wrapper is included in [cryptlib_openssl](https://github.com/DMTF/libspdm/tree/main/os_stub/openssllib).
    NOTE: SM2-KeyExchange and SM4_GCM are not supported.
 
-   Since 3.0.0, libspdm starts adding [FIPS 140-3](https://csrc.nist.gov/publications/detail/fips/140/3/final) support. Please refer to [libspdm FIPS](https://github.com/DMTF/libspdm/blob/main/doc/fips.md).
+   libspdm provides support for [FIPS 140-3](https://csrc.nist.gov/publications/detail/fips/140/3/final). Refer to [libspdm FIPS](https://github.com/DMTF/libspdm/blob/main/doc/fips.md) for more information.
 
-   Since 3.0.0, libspdm uses [RFC7250](https://www.rfc-editor.org/rfc/rfc7250) defined public key format. Please refer to [libspdm raw public key](https://github.com/DMTF/libspdm/blob/main/doc/raw_public_key.md).
+   libspdm implements a raw public key format as defined in [RFC7250](https://www.rfc-editor.org/rfc/rfc7250). Refer to [libspdm raw public key](https://github.com/DMTF/libspdm/blob/main/doc/raw_public_key.md) for more information.
 
 6) Execution Context
 
@@ -282,7 +282,7 @@ For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/m
 
   Refer to [test](https://github.com/DMTF/libspdm/blob/main/doc/test.md) for more details.
 
-## Associated Repsositories
+## Associated Repositories
 
 ### [spdm-emu](https://github.com/DMTF/spdm-emu)
 

@@ -1,28 +1,30 @@
-# Crypto Endianness
+# Cryptography Endianness
 
-## endianness of digital signature
+## Endianness of digital signatures
 
-SPDM 1.2+ defines the endianness of digital signature for RSA, ECDSA, SM2_DSA, and EdDSA.
+SPDM 1.2 and later define the endianness of digital signatures for RSA, ECDSA, SM2_DSA, and EdDSA.
 * RSA: big endian for s.
 * ECDSA and SMD2_DSA: big endian for r and s.
 * EdDSA: big endian for R and little endian for S.
 
-libspdm follows that for SPDM 1.2+. Because the definition aligns with existing crypto library such as OpenSSL and MbedTLS, no swap is required.
+When the negotiated SPDM version is 1.2 or later libspdm follows these definitions.
 
-SPDM 1.0 and 1.1 do not specify the endianness of the RSA and ECDSA digital signatures.
+SPDM 1.0 and 1.1 did not specify the endianness of the RSA and ECDSA digital signatures. libspdm
+allows an Integrator to specify the endianness when verifying RSA and ECDSA signatures through
+`LIBSPDM_DATA_SPDM_VERSION_10_11_VERIFY_SIGNATURE_ENDIAN` when the negotiated SPDM version is 1.0 or
+1.1.
 
-libspdm uses big endian for RSA and ECDSA for SPDM 1.0/1.1, which algins with SPDM 1.2 and existing crypto library. No swap is required.
+## Endianness of key exchange data
 
-## endianness of key exchange data
-
-SPDM 1.1+ defines the endianness of key exchange data for FFDHE, ECDHE, and SM2_KeyExchange.
+SPDM 1.1 and later defines the endianness of key exchange data for FFDHE, ECDHE, and SM2_KeyExchange.
 * FFDHE: big endian for Y.
 * ECDHE and SM2_KeyExchange: big endian for X and Y.
 
 libspdm follows that for SPDM 1.1+. Because the definition aligns with existing crypto library such as openssl and mbedtls, no swap is required.
 
-## endianness of AEAD IV
+## Endianness of AEAD IV
 
-Secured SPDM 1.0/1.1 are not very clear on how to extend 64bit sequence number and XOR with the IV derived from SPDM key schedule.
-
-libspdm uses little endian for the sequence number for Secured SPDM 1.0/1.1, which algins with default endianness defined in SPDM 1.0+. No swap is required.
+Versions 1.0 and 1.1 of the Secured Messages using SPDM specification do not explicitly specify how
+the AEAD IV is formed. In particular the endianness of the sequence number is either missing (1.0)
+or ill-defined (1.1). As such libspdm supports both little-endian and big-endian encoding of the
+sequence number, as well as automatically swapping endianness if decryption fails.
