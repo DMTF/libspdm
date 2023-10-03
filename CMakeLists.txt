@@ -155,11 +155,6 @@ else()
     MESSAGE(FATAL_ERROR "Unknown CRYPTO")
 endif()
 
-if(DISABLE_EDDSA STREQUAL "1")
-    add_definitions(-DLIBSPDM_EDDSA_ED25519_SUPPORT=0)
-    add_definitions(-DLIBSPDM_EDDSA_ED448_SUPPORT=0)
-endif()
-
 if(ENABLE_BINARY_BUILD STREQUAL "1")
     if(NOT CRYPTO STREQUAL "openssl")
         MESSAGE(FATAL_ERROR "enabling binary build not supported for non-openssl")
@@ -173,11 +168,17 @@ if(ENABLE_BINARY_BUILD STREQUAL "1")
         MESSAGE(FATAL_ERROR "enabling binary build requires path to libssl.")
     endif()
 
+    # Disable EDDSA when binary builds are enabled. EDDSA may be enabled in the future.
+    add_definitions(-DLIBSPDM_EDDSA_ED25519_SUPPORT=0)
+    add_definitions(-DLIBSPDM_EDDSA_ED448_SUPPORT=0)
+
     MESSAGE("ENABLE_BINARY_BUILD=1")
     MESSAGE("COMPILED_LIBCRYPTO_PATH=${COMPILED_LIBCRYPTO_PATH}")
     MESSAGE("COMPILED_LIBSSL_PATH=${COMPILED_LIBSSL_PATH}")
+    MESSAGE("Disabling EDDSA support due to ENABLE_BINARY_BUILD=1")
 
     SET(CRYPTO_LIB_PATHS ${COMPILED_LIBCRYPTO_PATH} ${COMPILED_LIBSSL_PATH})
+
 else()
     SET(CRYPTO_LIB_PATHS ${CRYPTO}lib)
     MESSAGE("ENABLE_BINARY_BUILD=0; Building ${CRYPTO} library from source.")
