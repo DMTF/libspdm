@@ -206,6 +206,7 @@ extern bool libspdm_rsa_get_private_key_from_pem(const uint8_t *pem_data,
                                                  const char *password,
                                                  void **rsa_context);
 
+#if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)
 /**
  * Gets the tag-designated RSA key component from the established RSA context.
  *
@@ -280,6 +281,7 @@ extern bool libspdm_rsa_check_key(void *rsa_context);
 extern bool libspdm_rsa_generate_key(void *rsa_context, size_t modulus_length,
                                      const uint8_t *public_exponent,
                                      size_t public_exponent_size);
+#endif /* (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT) */
 
 /**
  * Retrieve the EC Private key from the password-protected PEM key data.
