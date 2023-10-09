@@ -188,22 +188,17 @@ libspdm_return_t libspdm_encode_secured_message(
         sequence_number, (uint8_t *)&sequence_num_in_header);
     LIBSPDM_ASSERT(sequence_num_in_header_size <= sizeof(sequence_num_in_header));
 
-    sequence_number++;
     if (session_state == LIBSPDM_SESSION_STATE_HANDSHAKING) {
         if (is_request_message) {
-            secured_message_context->handshake_secret.request_handshake_sequence_number =
-                sequence_number;
+            secured_message_context->handshake_secret.request_handshake_sequence_number++;
         } else {
-            secured_message_context->handshake_secret.response_handshake_sequence_number =
-                sequence_number;
+            secured_message_context->handshake_secret.response_handshake_sequence_number++;
         }
     } else {
         if (is_request_message) {
-            secured_message_context->application_secret.request_data_sequence_number =
-                sequence_number;
+            secured_message_context->application_secret.request_data_sequence_number++;
         } else {
-            secured_message_context->application_secret.response_data_sequence_number =
-                sequence_number;
+            secured_message_context->application_secret.response_data_sequence_number++;
         }
     }
 
@@ -456,22 +451,17 @@ libspdm_return_t libspdm_decode_secured_message(
             sequence_number, (uint8_t *)&sequence_num_in_header);
     LIBSPDM_ASSERT(sequence_num_in_header_size <= sizeof(sequence_num_in_header));
 
-    sequence_number++;
     if (session_state == LIBSPDM_SESSION_STATE_HANDSHAKING) {
         if (is_request_message) {
-            secured_message_context->handshake_secret.request_handshake_sequence_number =
-                sequence_number;
+            secured_message_context->handshake_secret.request_handshake_sequence_number++;
         } else {
-            secured_message_context->handshake_secret.response_handshake_sequence_number =
-                sequence_number;
+            secured_message_context->handshake_secret.response_handshake_sequence_number++;
         }
     } else {
         if (is_request_message) {
-            secured_message_context->application_secret.request_data_sequence_number =
-                sequence_number;
+            secured_message_context->application_secret.request_data_sequence_number++;
         } else {
-            secured_message_context->application_secret.response_data_sequence_number =
-                sequence_number;
+            secured_message_context->application_secret.response_data_sequence_number++;
         }
     }
 
@@ -531,8 +521,11 @@ libspdm_return_t libspdm_decode_secured_message(
             record_header_size, enc_msg, cipher_text_size, tag,
             aead_tag_size, dec_msg, &cipher_text_size);
 
+        /* When the sequence number is 0 then it has the same encoding in both
+         * big and little endian. The endianness can only be determined on the subsequent
+         * decryption. */
         if (!is_sequence_number_endian_determined(
-                secured_message_context->sequence_number_endian)) {
+                secured_message_context->sequence_number_endian) && (sequence_number == 1)) {
 
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Sequence number endianness is not determined.\n"));
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Attempting to determine endianness.\n"));
@@ -549,7 +542,7 @@ libspdm_return_t libspdm_decode_secured_message(
                 }
             } else {
                 /* Endianness may be incorrect so try with the opposite endianness. */
-                generate_iv(sequence_number - 1, iv, salt, aead_iv_size,
+                generate_iv(sequence_number, iv, salt, aead_iv_size,
                             swap_endian(secured_message_context->sequence_number_endian));
 
                 result = libspdm_aead_decryption(
@@ -634,8 +627,11 @@ libspdm_return_t libspdm_decode_secured_message(
             record_header_size + record_header2->length - aead_tag_size,
             NULL, 0, tag, aead_tag_size, NULL, NULL);
 
+        /* When the sequence number is 0 then it has the same encoding in both
+         * big and little endian. The endianness can only be determined on the subsequent
+         * decryption. */
         if (!is_sequence_number_endian_determined(
-                secured_message_context->sequence_number_endian)) {
+                secured_message_context->sequence_number_endian) && (sequence_number == 1)) {
             if (result) {
                 /* Endianness is correct so set the endianness. */
                 if (secured_message_context->sequence_number_endian ==
@@ -648,7 +644,7 @@ libspdm_return_t libspdm_decode_secured_message(
                 }
             } else {
                 /* Endianness may be incorrect so try with the opposite endianness. */
-                generate_iv(sequence_number - 1, iv, salt, aead_iv_size,
+                generate_iv(sequence_number, iv, salt, aead_iv_size,
                             swap_endian(secured_message_context->sequence_number_endian));
 
                 result = libspdm_aead_decryption(
