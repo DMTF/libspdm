@@ -290,7 +290,7 @@ static void libspdm_test_secured_message_encode_case5(void **state)
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
         /* Total length. */
         0x22, 0x00,
-        /* Encrypted application data length.*/
+        /* Encrypted application data length. */
         0x9b, 0xfe,
         /* Encrypted application data. */
         0xd3, 0xb7, 0x04, 0x3d, 0x32, 0x86, 0x60, 0x3d,
@@ -340,7 +340,7 @@ static void libspdm_test_secured_message_encode_case6(void **state)
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
         /* Total length. */
         0x22, 0x00,
-        /* Encrypted application data length.*/
+        /* Encrypted application data length. */
         0x9b, 0xfe,
         /* Encrypted application data. */
         0xd3, 0xb7, 0x04, 0x3d, 0x32, 0x86, 0x60, 0x3d,
@@ -373,9 +373,11 @@ static void libspdm_test_secured_message_encode_case6(void **state)
 }
 
 /**
- * Test 7: Test try-fail decryption with sequence number set to alternating zeroes and ones.
+ * Test 7: Test try-fail decryption.
  *         The message is encrypted with big-endian sequence number but decoder is set to try
- *         little-endian first. This uses the same plaintext as test 1.
+ *         little-endian first. The first decryption with sequence number == 0 will pass regardless
+ *         of endianness. Endianness will be detected when sequence number == 1.
+ *         This uses the same plaintext as test 1.
  **/
 static void libspdm_test_secured_message_encode_case7(void **state)
 {
@@ -384,30 +386,29 @@ static void libspdm_test_secured_message_encode_case7(void **state)
     void *app_message = m_app_message;
     const uint32_t session_id = 0x00112233;
 
-    uint8_t secured_message[] = {
+    uint8_t secured_message_0[] = {
         /* Session id. */
         0x33, 0x22, 0x11, 0x00,
         /* Sequence number. */
-        0x55, 0xaa, 0x55, 0xaa, 0x55, 0xaa, 0x55, 0xaa,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
         /* Total length. */
         0x22, 0x00,
-        /* Encrypted application data length.*/
-        0xf6, 0x4d,
+        /* Encrypted application data length. */
+        0x9b, 0xfe,
         /* Encrypted application data. */
-        0x6b, 0x94, 0x37, 0x7a, 0x18, 0x61, 0x01, 0xce,
-        0xfe, 0xa0, 0x8d, 0x91, 0x79, 0x8a, 0x89, 0x88,
+        0xd3, 0xb7, 0x04, 0x3d, 0x32, 0x86, 0x60, 0x3d,
+        0x86, 0x17, 0x33, 0xd6, 0x7f, 0x95, 0x9a, 0x20,
         /* MAC. */
-        0xb6, 0x8e, 0xd3, 0x06, 0x4a, 0x95, 0x70, 0x89,
-        0xd4, 0xd8, 0xb9, 0x02, 0x9e, 0x9d, 0x72, 0x0b
+        0x3d, 0x4f, 0xac, 0x58, 0xcb, 0x70, 0x6c, 0xf5,
+        0xa0, 0x27, 0x0a, 0xf6, 0x73, 0xf0, 0xfe, 0x36
     };
 
     initialize_secured_message_context();
     m_secured_message_context.sequence_number_endian =
         LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_BOTH;
-    m_secured_message_context.application_secret.request_data_sequence_number = 0xaa55aa55aa55aa55;
 
     libspdm_copy_mem(m_secured_message, sizeof(m_secured_message),
-                     secured_message, sizeof(secured_message));
+                     secured_message_0, sizeof(secured_message_0));
 
     status = libspdm_decode_secured_message(
         &m_secured_message_context, session_id, true,
@@ -421,7 +422,51 @@ static void libspdm_test_secured_message_encode_case7(void **state)
     }
 
     /* Sequence number is incremented by one after operation. */
-    assert_int_equal(0xaa55aa55aa55aa56,
+    assert_int_equal(0x1,
+                     m_secured_message_context.application_secret.request_data_sequence_number);
+
+    /* Context should stay undetermined. */
+    assert_int_equal(LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_BOTH,
+                     m_secured_message_context.sequence_number_endian);
+
+    /* Increment sequence number to 1. The endianness can now be determined.
+     * Generated from https://tinyurl.com/yztzj7f4 */
+    uint8_t secured_message_1[] = {
+        /* Session id. */
+        0x33, 0x22, 0x11, 0x00,
+        /* Sequence number. */
+        0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        /* Total length. */
+        0x22, 0x00,
+        /* Encrypted application data length. */
+        0x07, 0x82,
+        /* Encrypted application data. */
+        0x8a, 0x2d, 0xb9, 0xbf, 0x37, 0x87, 0x0f, 0xc5,
+        0xb1, 0xe9, 0xb7, 0x03, 0xee, 0x1d, 0x14, 0xb4,
+        /* MAC. */
+        0x50, 0xa1, 0x5c, 0x3e, 0xee, 0x27, 0x8f, 0xed,
+        0xed, 0xa6, 0x86, 0xaf, 0x31, 0x07, 0xd8, 0x6f
+    };
+
+    libspdm_copy_mem(m_secured_message, sizeof(m_secured_message),
+                     secured_message_1, sizeof(secured_message_1));
+
+    app_message_size = sizeof(m_app_message);
+    app_message = m_app_message;
+
+    status = libspdm_decode_secured_message(
+        &m_secured_message_context, session_id, true,
+        sizeof(m_secured_message), m_secured_message, &app_message_size, &app_message,
+        &m_secured_message_callbacks);
+
+    assert_int_equal(LIBSPDM_STATUS_SUCCESS, status);
+
+    for (int index = 0; index < 16; index++) {
+        assert_int_equal(index, ((uint8_t *)app_message)[index]);
+    }
+
+    /* Sequence number is incremented by one after operation. */
+    assert_int_equal(0x2,
                      m_secured_message_context.application_secret.request_data_sequence_number);
 
     /* Context should change to big-endian only. */
@@ -430,9 +475,11 @@ static void libspdm_test_secured_message_encode_case7(void **state)
 }
 
 /**
- * Test 8: Test try-fail decryption with sequence number set to alternating zeroes and ones.
+ * Test 8: Test try-fail decryption.
  *         The message is encrypted with little-endian sequence number but decoder is set to try
- *         big-endian first. This uses the same plaintext as test 1.
+ *         big-endian first. The first decryption with sequence number == 0 will pass regardless
+ *         of endianness. Endianness will be detected when sequence number == 1.
+ *         This uses the same plaintext as test 1.
  **/
 static void libspdm_test_secured_message_encode_case8(void **state)
 {
@@ -441,30 +488,29 @@ static void libspdm_test_secured_message_encode_case8(void **state)
     void *app_message = m_app_message;
     const uint32_t session_id = 0x00112233;
 
-    uint8_t secured_message[] = {
+    uint8_t secured_message_0[] = {
         /* Session id. */
         0x33, 0x22, 0x11, 0x00,
         /* Sequence number. */
-        0x55, 0xaa, 0x55, 0xaa, 0x55, 0xaa, 0x55, 0xaa,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
         /* Total length. */
         0x22, 0x00,
-        /* Encrypted application data length.*/
-        0x0d, 0xea,
+        /* Encrypted application data length. */
+        0x9b, 0xfe,
         /* Encrypted application data. */
-        0x75, 0xea, 0xc6, 0x91, 0x37, 0x49, 0x94, 0x97,
-        0x52, 0x63, 0xf8, 0xc0, 0x8f, 0x6c, 0x1a, 0xa4,
+        0xd3, 0xb7, 0x04, 0x3d, 0x32, 0x86, 0x60, 0x3d,
+        0x86, 0x17, 0x33, 0xd6, 0x7f, 0x95, 0x9a, 0x20,
         /* MAC. */
-        0x0d, 0xcd, 0xb4, 0x8a, 0xd6, 0xfa, 0x24, 0x04,
-        0x79, 0xd5, 0xd8, 0xd2, 0xfe, 0x28, 0x19, 0x14
+        0x3d, 0x4f, 0xac, 0x58, 0xcb, 0x70, 0x6c, 0xf5,
+        0xa0, 0x27, 0x0a, 0xf6, 0x73, 0xf0, 0xfe, 0x36
     };
 
     initialize_secured_message_context();
     m_secured_message_context.sequence_number_endian =
         LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_BIG_DEC_BOTH;
-    m_secured_message_context.application_secret.request_data_sequence_number = 0xaa55aa55aa55aa55;
 
     libspdm_copy_mem(m_secured_message, sizeof(m_secured_message),
-                     secured_message, sizeof(secured_message));
+                     secured_message_0, sizeof(secured_message_0));
 
     status = libspdm_decode_secured_message(
         &m_secured_message_context, session_id, true,
@@ -478,7 +524,50 @@ static void libspdm_test_secured_message_encode_case8(void **state)
     }
 
     /* Sequence number is incremented by one after operation. */
-    assert_int_equal(0xaa55aa55aa55aa56,
+    assert_int_equal(0x1,
+                     m_secured_message_context.application_secret.request_data_sequence_number);
+
+    /* Context should stay undetermined. */
+    assert_int_equal(LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_BIG_DEC_BOTH,
+                     m_secured_message_context.sequence_number_endian);
+
+    /* Increment sequence number to 1. The endianness can now be determined. */
+    uint8_t secured_message_1[] = {
+        /* Session id. */
+        0x33, 0x22, 0x11, 0x00,
+        /* Sequence number. */
+        0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        /* Total length. */
+        0x22, 0x00,
+        /* Encrypted application data length. */
+        0xf4, 0x19,
+        /* Encrypted application data. */
+        0x96, 0xdc, 0xc6, 0x78, 0x5e, 0x8c, 0x74, 0x72,
+        0x59, 0xf4, 0x27, 0x22, 0xb9, 0x1b, 0x1f, 0x56,
+        /* MAC. */
+        0x1d, 0xca, 0x9f, 0x09, 0xd8, 0x80, 0x3a, 0x9a,
+        0x54, 0x8e, 0xf0, 0x9b, 0x53, 0xb9, 0xab, 0x1f
+    };
+
+    libspdm_copy_mem(m_secured_message, sizeof(m_secured_message),
+                     secured_message_1, sizeof(secured_message_1));
+
+    app_message_size = sizeof(m_app_message);
+    app_message = m_app_message;
+
+    status = libspdm_decode_secured_message(
+        &m_secured_message_context, session_id, true,
+        sizeof(m_secured_message), m_secured_message, &app_message_size, &app_message,
+        &m_secured_message_callbacks);
+
+    assert_int_equal(LIBSPDM_STATUS_SUCCESS, status);
+
+    for (int index = 0; index < 16; index++) {
+        assert_int_equal(index, ((uint8_t *)app_message)[index]);
+    }
+
+    /* Sequence number is incremented by one after operation. */
+    assert_int_equal(0x2,
                      m_secured_message_context.application_secret.request_data_sequence_number);
 
     /* Context should change to little-endian only. */
