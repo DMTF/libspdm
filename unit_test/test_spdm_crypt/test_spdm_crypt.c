@@ -861,6 +861,143 @@ void libspdm_test_crypt_req_asym_verify(void **state)
 #endif
 }
 
+bool libspdm_is_palindrome(const uint8_t *buf, size_t buf_size);
+
+bool libspdm_is_signature_buffer_palindrome(
+    uint32_t base_asym_algo, const uint8_t *buf, size_t buf_size);
+
+void libspdm_test_crypt_palindrome(void **state)
+{
+    bool status;
+
+    /* Test valid palindrome with even number of elements */
+    uint8_t buf1[] = {0, 1, 2, 3, 4, 5, 6, 7, 7, 6, 5, 4, 3, 2, 1, 0};
+    status = libspdm_is_palindrome(buf1, sizeof(buf1));
+    assert_true(status);
+
+    /* Test valid palindrome with odd number of elements */
+    uint8_t buf2[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 7, 6, 5, 4, 3, 2, 1, 0 };
+    status = libspdm_is_palindrome(buf2, sizeof(buf2));
+    assert_true(status);
+
+    /* Test invalid palindrome where inner corner-case element is not matching */
+    uint8_t buf3[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 6, 5, 4, 3, 2, 1, 0 };
+    status = libspdm_is_palindrome(buf3, sizeof(buf3));
+    assert_false(status);
+
+    /* Test invalid palindrome where outer corner-case element is not matching */
+    uint8_t buf4[] = { 0, 1, 2, 3, 4, 5, 6, 7, 7, 6, 5, 4, 3, 2, 1, 8 };
+    status = libspdm_is_palindrome(buf4, sizeof(buf4));
+    assert_false(status);
+
+    /* Test invalid palindrome where middle element is not matching */
+    uint8_t buf5[] = { 0, 1, 2, 3, 4, 5, 6, 7, 7, 6, 5, 4, 4, 2, 1, 0 };
+    status = libspdm_is_palindrome(buf5, sizeof(buf5));
+    assert_false(status);
+}
+
+void libspdm_test_crypt_rsa_palindrome(void **state)
+{
+    /* Test RSA Buffers as palindrone */
+    int i;
+    bool status;
+
+    const uint32_t rsa_algos[] = {
+        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
+        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048,
+        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072,
+        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072,
+        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096,
+        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096
+    };
+
+    /* Palindrome for RSA */
+    uint8_t buf0[] = { 0, 1, 2, 3, 4, 5, 6, 7, 7, 6, 5, 4, 3, 2, 1, 0 };
+
+    /* Not Palindrome cases for RSA */
+
+    /* Test invalid palindrome where inner corner-case element is not matching */
+    uint8_t buf1[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 6, 5, 4, 3, 2, 1, 0 };
+
+    /* Test invalid palindrome where outer corner-case element is not matching */
+    uint8_t buf2[] = { 0, 1, 2, 3, 4, 5, 6, 7, 7, 6, 5, 4, 3, 2, 1, 8 };
+
+    /* Test invalid palindrome where middle element is not matching */
+    uint8_t buf3[] = { 0, 1, 2, 3, 4, 5, 6, 7, 7, 6, 5, 4, 4, 2, 1, 0 };
+
+    /* Test each of these buffers against each RSA algo type */
+    for (i = 0; i < (sizeof(rsa_algos) / sizeof(rsa_algos[0])); i++) {
+        /* Test case where buffer is palindrone */
+        status = libspdm_is_signature_buffer_palindrome(rsa_algos[i], buf0, sizeof(buf0));
+        assert_true(status);
+
+        /* Test cases where buffer is NOT palindrone */
+        status = libspdm_is_signature_buffer_palindrome(rsa_algos[i], buf1, sizeof(buf1));
+        assert_false(status);
+        status = libspdm_is_signature_buffer_palindrome(rsa_algos[i], buf2, sizeof(buf2));
+        assert_false(status);
+        status = libspdm_is_signature_buffer_palindrome(rsa_algos[i], buf3, sizeof(buf3));
+        assert_false(status);
+    }
+}
+
+void libspdm_test_crypt_ecdsa_palindrome(void **state)
+{
+    int i;
+    bool status;
+
+    /* Test ECDSA Buffers as palindrome */
+    const uint32_t ecdsa_algos[] = {
+        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384,
+        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521
+    };
+
+    /* Test for valid ECDSA buffer palindrome */
+    uint8_t buf0[] = { 0, 1, 2, 3, 3, 2, 1, 0, 0, 1, 2, 3, 3, 2, 1, 0 };
+
+    /* Tests for ECDSA buffer not palidrome */
+
+    /* Test for invalid palindrome where outer element of 1st buffer does not match */
+    uint8_t buf1[] = { 0, 1, 2, 3, 3, 2, 1, 1, 0, 1, 2, 3, 3, 2, 1, 0 };
+
+    /* Test for invalid palindrome where outer element of 2nd buffer does not match */
+    uint8_t buf2[] = { 0, 1, 2, 3, 3, 2, 1, 0, 0, 1, 2, 3, 3, 2, 1, 1 };
+
+    /* Test for invalid palindrome where inner element of 1st buffer does not match */
+    uint8_t buf3[] = { 0, 1, 2, 3, 4, 2, 1, 0, 0, 1, 2, 3, 3, 2, 1, 0 };
+
+    /* Test for invalid palindrome where inner element of 2nd buffer does not match */
+    uint8_t buf4[] = { 0, 1, 2, 3, 3, 2, 1, 0, 0, 1, 2, 3, 4, 2, 1, 0 };
+
+    /* Test for invalid palindrome where middle element of 1st buffer does not match */
+    uint8_t buf5[] = { 0, 1, 2, 3, 3, 2, 0, 0, 0, 1, 2, 3, 3, 2, 1, 0 };
+
+    /* Test for invalid palindrome where middle element of 2nd buffer does not match */
+    uint8_t buf6[] = { 0, 1, 2, 3, 3, 2, 1, 0, 0, 1, 2, 3, 3, 0, 1, 0 };
+
+    /* Test each of the buffers against each ECDSA algo type */
+    for (i = 0; i < (sizeof(ecdsa_algos) / sizeof(ecdsa_algos[0])); i++) {
+        /* Test case where buffer is palindrone */
+        status = libspdm_is_signature_buffer_palindrome(ecdsa_algos[i], buf0, sizeof(buf0));
+        assert_true(status);
+
+        /* Test cases where buffer is NOT palindrone */
+        status = libspdm_is_signature_buffer_palindrome(ecdsa_algos[i], buf1, sizeof(buf1));
+        assert_false(status);
+        status = libspdm_is_signature_buffer_palindrome(ecdsa_algos[i], buf2, sizeof(buf2));
+        assert_false(status);
+        status = libspdm_is_signature_buffer_palindrome(ecdsa_algos[i], buf3, sizeof(buf3));
+        assert_false(status);
+        status = libspdm_is_signature_buffer_palindrome(ecdsa_algos[i], buf4, sizeof(buf4));
+        assert_false(status);
+        status = libspdm_is_signature_buffer_palindrome(ecdsa_algos[i], buf5, sizeof(buf5));
+        assert_false(status);
+        status = libspdm_is_signature_buffer_palindrome(ecdsa_algos[i], buf6, sizeof(buf6));
+        assert_false(status);
+    }
+}
+
 int libspdm_crypt_lib_setup(void **state)
 {
     return 0;
@@ -883,7 +1020,13 @@ int libspdm_crypt_lib_test_main(void)
 
         cmocka_unit_test(libspdm_test_crypt_asym_verify),
 
-        cmocka_unit_test(libspdm_test_crypt_req_asym_verify)
+        cmocka_unit_test(libspdm_test_crypt_req_asym_verify),
+
+        cmocka_unit_test(libspdm_test_crypt_palindrome),
+
+        cmocka_unit_test(libspdm_test_crypt_rsa_palindrome),
+
+        cmocka_unit_test(libspdm_test_crypt_ecdsa_palindrome),
     };
 
     return cmocka_run_group_tests(spdm_crypt_lib_tests,
