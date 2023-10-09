@@ -689,6 +689,64 @@ void libspdm_copy_signature_swap_endian(
     }
 }
 
+/**
+ * libspdm_is_palindrome
+ * Checks to see if a buffer is a palindrome.
+ * If the buffer is a palindrone, it is the same for both endians,
+ * and therefore endianness cannot be determined.
+ **/
+bool libspdm_is_palindrome(const uint8_t* buf, size_t buf_size)
+{
+    size_t head;
+    size_t tail;
+
+    head = 0;
+    tail = buf_size - 1;
+
+    while (head < tail) {
+        if (buf[head] != buf[tail]) {
+            return false;
+        }
+        head++;
+        tail--;
+    }
+
+    return true;
+}
+
+bool libspdm_is_signature_buffer_palindrome(
+    uint32_t base_asym_algo, const uint8_t *buf, size_t buf_size)
+{
+    const uint32_t spdm_10_11_rsa_algos =
+        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048 |
+        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048 |
+        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072 |
+        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072 |
+        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096 |
+        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096;
+
+    const uint32_t spdm_10_11_ecdsa_algos =
+        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256 |
+        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384 |
+        SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521;
+
+    if (base_asym_algo & spdm_10_11_rsa_algos) {
+        return libspdm_is_palindrome(buf, buf_size);
+    } else if (base_asym_algo & spdm_10_11_ecdsa_algos) {
+        const size_t x_size = buf_size / 2;
+        const size_t y_size = x_size;
+
+        const uint8_t *x = buf;
+        const uint8_t *y = buf + x_size;
+
+        return libspdm_is_palindrome(x, x_size) && libspdm_is_palindrome(y, y_size);
+    } else {
+        /* Currently do not expect asymmetric algorithms other than RSA and ECDSA */
+        LIBSPDM_ASSERT(0);
+        return false;
+    }
+}
+
 #if LIBSPDM_RSA_SSA_SUPPORT
 static bool libspdm_rsa_pkcs1_verify_with_nid_wrap (void *context, size_t hash_nid,
                                                     const uint8_t *param, size_t param_size,
@@ -979,10 +1037,12 @@ bool libspdm_asym_verify_ex(
         }
     }
     if (try_big_endian && try_little_endian && result) {
-        if (little_endian_succeeded) {
-            *endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY;
-        } else {
-            *endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
+        if (!libspdm_is_signature_buffer_palindrome(base_asym_algo, signature, sig_size)) {
+            if (little_endian_succeeded) {
+                *endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY;
+            } else {
+                *endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
+            }
         }
     }
     return result;
@@ -1102,10 +1162,12 @@ bool libspdm_asym_verify_hash_ex(
             little_endian_succeeded = result;
         }
         if (try_big_endian && try_little_endian && result) {
-            if (little_endian_succeeded) {
-                *endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY;
-            } else {
-                *endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
+            if (!libspdm_is_signature_buffer_palindrome(base_asym_algo, signature, sig_size)) {
+                if (little_endian_succeeded) {
+                    *endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY;
+                } else {
+                    *endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
+                }
             }
         }
         return result;
@@ -1454,10 +1516,12 @@ bool libspdm_req_asym_verify_ex(
         }
     }
     if (try_big_endian && try_little_endian && result) {
-        if (little_endian_succeeded) {
-            *endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY;
-        } else {
-            *endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
+        if (!libspdm_is_signature_buffer_palindrome(req_base_asym_alg, signature, sig_size)) {
+            if (little_endian_succeeded) {
+                *endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY;
+            } else {
+                *endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
+            }
         }
     }
     return result;
@@ -1574,10 +1638,12 @@ bool libspdm_req_asym_verify_hash_ex(
             little_endian_succeeded = result;
         }
         if (try_big_endian && try_little_endian && result) {
-            if (little_endian_succeeded) {
-                *endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY;
-            } else {
-                *endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
+            if (!libspdm_is_signature_buffer_palindrome(req_base_asym_alg, signature, sig_size)) {
+                if (little_endian_succeeded) {
+                    *endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_LITTLE_ONLY;
+                } else {
+                    *endian = LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY;
+                }
             }
         }
         return result;
