@@ -688,7 +688,8 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
                                       requester_info, requester_info_length,
                                       !is_device_cert_model,
                                       context, subject_name,
-                                      csr_len, csr_pointer);
+                                      csr_len, csr_pointer,
+                                      NULL);
         libspdm_asym_free(base_asym_algo, context);
         libspdm_zero_mem(prikey, prikey_size);
         free(prikey);
@@ -707,7 +708,8 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
                                   requester_info, requester_info_length,
                                   !is_device_cert_model,
                                   context, subject_name,
-                                  csr_len, csr_pointer);
+                                  csr_len, csr_pointer,
+                                  NULL);
     libspdm_asym_free(base_asym_algo, context);
 #if !LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY
 }

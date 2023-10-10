@@ -739,6 +739,8 @@ extern bool libspdm_sm2_dsa_generate_key(void *sm2_context, uint8_t *public_data
  * @param[in, out]      csr_pointer           For input, csr_pointer is buffer address to store CSR.
  *                                            For output, csr_pointer is address for stored CSR.
  *                                            The csr_pointer address will be changed.
+ * @param[in]           base_cert             An optional leaf certificate whose
+ *                                            extensions should be copied to the CSR
  *
  * @retval  true   Success.
  * @retval  false  Failed to gen CSR.
@@ -747,7 +749,8 @@ extern bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
                                  uint8_t *requester_info, size_t requester_info_length,
                                  bool is_ca,
                                  void *context, char *subject_name,
-                                 size_t *csr_len, uint8_t *csr_pointer);
+                                 size_t *csr_len, uint8_t *csr_pointer,
+                                 void *base_cert);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CSR_CAP */
 
 #endif /* CRYPTLIB_EXT_H */

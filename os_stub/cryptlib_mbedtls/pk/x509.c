@@ -1931,6 +1931,8 @@ bool libspdm_set_attribute_for_req(mbedtls_x509write_csr *req,
  * @param[in, out]      csr_pointer           For input, csr_pointer is buffer address to store CSR.
  *                                            For output, csr_pointer is address for stored CSR.
  *                                            The csr_pointer address will be changed.
+ * @param[in]           base_cert             An optional leaf certificate whose
+ *                                            extensions should be copied to the CSR
  *
  * @retval  true   Success.
  * @retval  false  Failed to gen CSR.
@@ -1939,7 +1941,8 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
                           uint8_t *requester_info, size_t requester_info_length,
                           bool is_ca,
                           void *context, char *subject_name,
-                          size_t *csr_len, uint8_t *csr_pointer)
+                          size_t *csr_len, uint8_t *csr_pointer,
+                          void *base_cert)
 {
     int ret;
     bool result;
@@ -1947,11 +1950,16 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
 
     mbedtls_x509write_csr req;
     mbedtls_md_type_t md_alg;
+    mbedtls_asn1_sequence extns;
+    mbedtls_asn1_sequence *next;
+    mbedtls_x509_buf buf;
+    mbedtls_x509_crt *cert;
     mbedtls_pk_context key;
 
     uint8_t pubkey_buffer[LIBSPDM_MAX_PUBKEY_DER_BUFFER_SIZE];
     uint8_t *pubkey_der_data;
     size_t pubkey_der_len;
+    size_t tag_len;
 
     /*basic_constraints: CA: false */
     #define BASIC_CONSTRAINTS_STRING_FALSE {0x30, 0x00}
@@ -1965,6 +1973,7 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
     mbedtls_x509write_csr_init(&req);
     mbedtls_pk_init(&key);
     csr_buffer_size = *csr_len;
+    next = NULL;
 
     ret = 1;
     switch (asym_nid)
@@ -2063,6 +2072,43 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
 
     /* Set key */
     mbedtls_x509write_csr_set_key(&req, &key);
+
+    if (base_cert != NULL) {
+        cert = base_cert;
+        buf = cert->v3_ext;
+        if (mbedtls_asn1_get_sequence_of(&buf.p, buf.p + buf.len, &extns,
+                                         MBEDTLS_ASN1_CONSTRUCTED | MBEDTLS_ASN1_SEQUENCE)) {
+            ret = 1;
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "mbedtls_x509write_csr_set_extension unable to get tag\n"));
+            goto free_all;
+        }
+
+        next = &extns;
+    }
+
+    while (next) {
+        if (mbedtls_asn1_get_tag(&(next->buf.p), next->buf.p + next->buf.len, &tag_len,
+                                 MBEDTLS_ASN1_OID)) {
+            ret = 1;
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "mbedtls_x509write_csr_set_extension unable to get tag\n"));
+            goto free_all;
+        }
+
+        if (mbedtls_x509write_csr_set_extension(&req, MBEDTLS_OID_BASIC_CONSTRAINTS,
+                                                MBEDTLS_OID_SIZE(MBEDTLS_OID_BASIC_CONSTRAINTS),
+                                                next->buf.p,
+                                                tag_len
+                                                ) != 0) {
+            ret = 1;
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "mbedtls_x509write_csr_set_extension set custom OID failed \n"));
+            goto free_all;
+        }
+
+        next = next->next;
+    }
 
     /*set basicConstraints*/
     if (mbedtls_x509write_csr_set_extension(&req, MBEDTLS_OID_BASIC_CONSTRAINTS,
