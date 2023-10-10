@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 2.8.12)
 
 project("libspdm" C)
+SET(LIB_NAME "spdm")
+SET(CMAKE_PROJECT_NAME "LibSPDM")
+SET(CMAKE_PROJECT_DESCRIPTION "LibSPDM Shared Library")
+FILE(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/VERSION.md CMAKE_INPUT_PROJECT_VERSION)
+string(REPLACE " " "_" CMAKE_PROJECT_VERSION ${CMAKE_INPUT_PROJECT_VERSION})
 
 #
 # Build Configuration Macro Definition
@@ -16,6 +21,7 @@ SET(CMAKE_BUILD_TYPE ${TARGET} CACHE STRING "Choose the target of build: Debug R
 SET(CRYPTO ${CRYPTO} CACHE STRING "Choose the crypto of build: mbedtls openssl" FORCE)
 SET(GCOV ${GCOV} CACHE STRING "Choose the target of Gcov: ON  OFF, and default is OFF" FORCE)
 SET(STACK_USAGE ${STACK_USAGE} CACHE STRING "Choose the target of STACK_USAGE: ON  OFF, and default is OFF" FORCE)
+SET(BUILD_SHARED_LIB ${BUILD_SHARED_LIB} CACHE STRING "Choose if shared library libspdm.co should be built: ON OFF, and default is OFF" FORCE)
 
 if(NOT GCOV)
     SET(GCOV "OFF")
@@ -23,6 +29,10 @@ endif()
 
 if(NOT STACK_USAGE)
     SET(STACK_USAGE "OFF")
+endif()
+
+if(NOT BUILD_SHARED_LIB)
+    SET(BUILD_SHARED_LIB "OFF")
 endif()
 
 SET(LIBSPDM_DIR ${PROJECT_SOURCE_DIR})
@@ -973,5 +983,54 @@ else()
                 ADD_SUBDIRECTORY(unit_test/test_size/test_size_of_spdm_responder)
             endif()
         endif()
+    endif()
+
+    if (BUILD_SHARED_LIB STREQUAL "ON")
+        if(CRYPTO STREQUAL "mbedtls")
+            SET(CRYPTO_DEPS "-lmbedtls -lmbedx509 -lmbedcrypto")
+            add_library(${LIB_NAME} SHARED 
+                                            $<TARGET_OBJECTS:cryptlib_${CRYPTO}>
+                                            $<TARGET_OBJECTS:debuglib>
+                                            $<TARGET_OBJECTS:malloclib>
+                                            $<TARGET_OBJECTS:platform_lib>
+                                            $<TARGET_OBJECTS:rnglib>
+                                            $<TARGET_OBJECTS:spdm_common_lib>
+                                            $<TARGET_OBJECTS:spdm_crypt_ext_lib>
+                                            $<TARGET_OBJECTS:spdm_crypt_lib>
+                                            $<TARGET_OBJECTS:spdm_device_secret_lib_sample>
+                                            $<TARGET_OBJECTS:spdm_requester_lib>
+                                            $<TARGET_OBJECTS:spdm_responder_lib>
+                                            $<TARGET_OBJECTS:spdm_secured_message_lib>
+                                            $<TARGET_OBJECTS:spdm_transport_mctp_lib>
+                                            $<TARGET_OBJECTS:spdm_transport_pcidoe_lib>
+                                            $<TARGET_OBJECTS:memlib>
+                                            )
+            
+        elseif(CRYPTO STREQUAL "openssl")
+            SET(CRYPTO_DEPS "-lssl -lcrypto")
+            add_library(${LIB_NAME} SHARED 
+                                            $<TARGET_OBJECTS:cryptlib_${CRYPTO}>
+                                            $<TARGET_OBJECTS:debuglib>
+                                            $<TARGET_OBJECTS:malloclib>
+                                            $<TARGET_OBJECTS:platform_lib>
+                                            $<TARGET_OBJECTS:rnglib>
+                                            $<TARGET_OBJECTS:spdm_common_lib>
+                                            $<TARGET_OBJECTS:spdm_crypt_ext_lib>
+                                            $<TARGET_OBJECTS:spdm_crypt_lib>
+                                            $<TARGET_OBJECTS:spdm_device_secret_lib_sample>
+                                            $<TARGET_OBJECTS:spdm_requester_lib>
+                                            $<TARGET_OBJECTS:spdm_responder_lib>
+                                            $<TARGET_OBJECTS:spdm_secured_message_lib>
+                                            $<TARGET_OBJECTS:spdm_transport_mctp_lib>
+                                            $<TARGET_OBJECTS:spdm_transport_pcidoe_lib>
+                                            $<TARGET_OBJECTS:memlib>
+                                            )
+        endif()        
+
+        install(DIRECTORY include DESTINATION include/libspdm)
+        configure_file(libspdm.pc.in lib/pkgconfig/libspdm.pc @ONLY)
+        install(FILES ${CMAKE_BINARY_DIR}/lib/pkgconfig/libspdm.pc DESTINATION lib/pkgconfig/)
+        install(TARGETS ${LIB_NAME}
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
     endif()
 endif()
