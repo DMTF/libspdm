@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 2.8.12)
 
 project("libspdm" C)
-SET(LIB_NAME "spdm")
-SET(CMAKE_PROJECT_NAME "LibSPDM")
-SET(CMAKE_PROJECT_DESCRIPTION "LibSPDM Shared Library")
 FILE(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/VERSION.md CMAKE_INPUT_PROJECT_VERSION)
 string(REPLACE " " "_" CMAKE_PROJECT_VERSION ${CMAKE_INPUT_PROJECT_VERSION})
 
@@ -21,7 +18,7 @@ SET(CMAKE_BUILD_TYPE ${TARGET} CACHE STRING "Choose the target of build: Debug R
 SET(CRYPTO ${CRYPTO} CACHE STRING "Choose the crypto of build: mbedtls openssl" FORCE)
 SET(GCOV ${GCOV} CACHE STRING "Choose the target of Gcov: ON  OFF, and default is OFF" FORCE)
 SET(STACK_USAGE ${STACK_USAGE} CACHE STRING "Choose the target of STACK_USAGE: ON  OFF, and default is OFF" FORCE)
-SET(BUILD_SHARED_LIB ${BUILD_SHARED_LIB} CACHE STRING "Choose if shared library libspdm.co should be built: ON OFF, and default is OFF" FORCE)
+SET(BUILD_LINUX_SHARED_LIB ${BUILD_LINUX_SHARED_LIB} CACHE STRING "Choose if libspdm shared library should be built for linux: ON OFF, and default is OFF" FORCE)
 
 if(NOT GCOV)
     SET(GCOV "OFF")
@@ -31,8 +28,8 @@ if(NOT STACK_USAGE)
     SET(STACK_USAGE "OFF")
 endif()
 
-if(NOT BUILD_SHARED_LIB)
-    SET(BUILD_SHARED_LIB "OFF")
+if(NOT BUILD_LINUX_SHARED_LIB)
+    SET(BUILD_LINUX_SHARED_LIB "OFF")
 endif()
 
 SET(LIBSPDM_DIR ${PROJECT_SOURCE_DIR})
@@ -985,7 +982,11 @@ else()
         endif()
     endif()
 
-    if (BUILD_SHARED_LIB STREQUAL "ON")
+    if ((BUILD_LINUX_SHARED_LIB STREQUAL "ON") AND (CMAKE_SYSTEM_NAME MATCHES "Linux"))
+        SET(LIB_NAME "spdm")
+        SET(CMAKE_PROJECT_NAME "libspdm")
+        SET(CMAKE_PROJECT_DESCRIPTION "libspdm shared library")
+
         if(CRYPTO STREQUAL "mbedtls")
             SET(CRYPTO_DEPS "-lmbedtls -lmbedx509 -lmbedcrypto")
             add_library(${LIB_NAME} SHARED 
