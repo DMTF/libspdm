@@ -12,7 +12,8 @@ When the negotiated SPDM version is 1.2 or later libspdm follows these definitio
 SPDM 1.0 and 1.1 did not specify the endianness of the RSA and ECDSA digital signatures. libspdm
 allows an Integrator to specify the endianness when verifying RSA and ECDSA signatures through
 `LIBSPDM_DATA_SPDM_VERSION_10_11_VERIFY_SIGNATURE_ENDIAN` when the negotiated SPDM version is 1.0 or
-1.1.
+1.1. The default value is `LIBSPDM_SPDM_10_11_VERIFY_SIGNATURE_ENDIAN_BIG_ONLY`.
+Please refer to [common_api](https://github.com/DMTF/libspdm/blob/main/doc/api/common_api.md).
 
 ## Endianness of key exchange data
 
@@ -26,5 +27,7 @@ libspdm follows that for SPDM 1.1+. Because the definition aligns with existing 
 
 Versions 1.0 and 1.1 of the Secured Messages using SPDM specification do not explicitly specify how
 the AEAD IV is formed. In particular the endianness of the sequence number is either missing (1.0)
-or ill-defined (1.1). As such libspdm supports both little-endian and big-endian encoding of the
-sequence number, as well as automatically swapping endianness if decryption fails.
+or ill-defined (1.1). libspdm allows an Integrator to specify the endianness encoding of the
+sequence number through `LIBSPDM_DATA_SEQUENCE_NUMBER_ENDIAN` when the negotiated Secured SPDM
+version is 1.0 or 1.1. The default value is `LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_LITTLE`.
+Please refer to [common_api](https://github.com/DMTF/libspdm/blob/main/doc/api/common_api.md).
