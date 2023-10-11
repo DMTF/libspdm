@@ -24,6 +24,39 @@
  **/
 libspdm_return_t libspdm_init_connection(void *spdm_context, bool get_version_only);
 
+/**
+ * This function builds GET_VERSION request message.
+ *
+ * @param  spdm_context      A pointer to the SPDM context.
+ * @param  request           request messge buffer.
+ * @param  request_size      On input, indicates the size in bytes of request message buffer.
+ *                           On outout, indicates the size in bytes of the request message.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS   The request message is created in the buffer.
+ **/
+libspdm_return_t
+libspdm_build_request_get_version(
+    void *spdm_context,
+    void *request,
+    size_t *request_size);
+
+/**
+ * This function processes VERSION response message.
+ *
+ * @param  spdm_context      A pointer to the SPDM context.
+ * @param  response          response messge buffer.
+ * @param  response_size     Size in bytes of response message with transport layer padding.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS   The response message is processed.
+ **/
+libspdm_return_t
+libspdm_process_response_version(
+    void *context,
+    const void *response,
+    size_t response_size,
+    uint8_t *version_number_entry_count,
+    spdm_version_number_t *version_number_entry);
+
 #if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
 /**
  * This function sends GET_DIGEST to get all digest of the certificate chains from device.

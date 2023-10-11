@@ -16,41 +16,26 @@ typedef struct {
 #pragma pack()
 
 /**
- * This function sends GET_VERSION and receives VERSION.
+ * This function builds GET_VERSION request message.
  *
- * @param  spdm_context         A pointer to the SPDM context.
- * @param  version_count        The number of SPDM versions that the Responder supports.
- * @param  VersionNumberEntries The list of SPDM versions that the Responder supports.
+ * @param  spdm_context      A pointer to the SPDM context.
+ * @param  request           request messge buffer.
+ * @param  request_size      On input, indicates the size in bytes of request message buffer.
+ *                           On outout, indicates the size in bytes of the request message.
  *
- * @retval LIBSPDM_STATUS_SUCCESS
- *         GET_VERSION was sent and VERSION was received.
- * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE
- *         The size of the VERSION response is invalid.
- * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD
- *         The VERSION response contains one or more invalid fields.
- * @retval LIBSPDM_STATUS_ERROR_PEER
- *         The Responder returned an unexpected error.
- * @retval LIBSPDM_STATUS_BUSY_PEER
- *         The Responder continually returned Busy error messages.
- * @retval LIBSPDM_STATUS_RESYNCH_PEER
- *         The Responder returned a RequestResynch error message.
- * @retval LIBSPDM_STATUS_NEGOTIATION_FAIL
- *         The Requester and Responder do not support a common SPDM version.
+ * @retval LIBSPDM_STATUS_SUCCESS   The request message is created in the buffer.
  **/
-static libspdm_return_t libspdm_try_get_version(libspdm_context_t *spdm_context,
-                                                uint8_t *version_number_entry_count,
-                                                spdm_version_number_t *version_number_entry)
+libspdm_return_t
+libspdm_build_request_get_version(
+    void *context,
+    void *request,
+    size_t *request_size)
 {
-    libspdm_return_t status;
-    bool result;
+    libspdm_context_t *spdm_context;
     spdm_get_version_request_t *spdm_request;
     size_t spdm_request_size;
-    libspdm_version_response_max_t *spdm_response;
-    size_t spdm_response_size;
-    spdm_version_number_t common_version;
-    uint8_t *message;
-    size_t message_size;
-    size_t transport_header_size;
+
+    spdm_context = context;
 
     /* -=[Set State Phase]=- */
     libspdm_reset_message_a(spdm_context);
@@ -60,47 +45,48 @@ static libspdm_return_t libspdm_try_get_version(libspdm_context_t *spdm_context,
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL, SPDM_GET_VERSION);
 
     /* -=[Construct Request Phase]=- */
-    transport_header_size = spdm_context->local_context.capability.transport_header_size;
-    status = libspdm_acquire_sender_buffer (spdm_context, &message_size, (void **)&message);
-    if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        return status;
-    }
-    LIBSPDM_ASSERT (message_size >= transport_header_size +
-                    spdm_context->local_context.capability.transport_tail_size);
-    spdm_request = (void *)(message + transport_header_size);
-    spdm_request_size = message_size - transport_header_size -
-                        spdm_context->local_context.capability.transport_tail_size;
+    spdm_request_size = sizeof(spdm_get_version_request_t);
+    LIBSPDM_ASSERT (*request_size >= spdm_request_size);
+    *request_size = spdm_request_size;
 
+    spdm_request = request;
     spdm_request->header.spdm_version = SPDM_MESSAGE_VERSION_10;
     spdm_request->header.request_response_code = SPDM_GET_VERSION;
     spdm_request->header.param1 = 0;
     spdm_request->header.param2 = 0;
-    spdm_request_size = sizeof(spdm_get_version_request_t);
 
-    /* -=[Send Request Phase]=- */
-    status = libspdm_send_spdm_request(spdm_context, NULL, spdm_request_size, spdm_request);
-    if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        libspdm_release_sender_buffer (spdm_context);
-        return status;
-    }
-    libspdm_release_sender_buffer (spdm_context);
-    spdm_request = (void *)spdm_context->last_spdm_request;
+    return LIBSPDM_STATUS_SUCCESS;
+}
 
-    /* -=[Receive Response Phase]=- */
-    status = libspdm_acquire_receiver_buffer (spdm_context, &message_size, (void **)&message);
-    if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        return status;
-    }
-    LIBSPDM_ASSERT (message_size >= transport_header_size);
-    spdm_response = (void *)(message);
-    spdm_response_size = message_size;
+/**
+ * This function processes VERSION response message.
+ *
+ * @param  spdm_context      A pointer to the SPDM context.
+ * @param  response          response messge buffer.
+ * @param  response_size     Size in bytes of response message with transport layer padding.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS   The response message is processed.
+ **/
+libspdm_return_t
+libspdm_process_response_version(
+    void *context,
+    const void *response,
+    size_t response_size,
+    uint8_t *version_number_entry_count,
+    spdm_version_number_t *version_number_entry)
+{
+    libspdm_context_t *spdm_context;
+    libspdm_version_response_max_t *spdm_response;
+    size_t spdm_response_size;
+    libspdm_return_t status;
+    bool result;
+    spdm_version_number_t common_version;
+    void *spdm_request;
+    size_t spdm_request_size;
 
-    libspdm_zero_mem(spdm_response, spdm_response_size);
-    status = libspdm_receive_spdm_response(spdm_context, NULL, &spdm_response_size,
-                                           (void **)&spdm_response);
-    if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        goto receive_done;
-    }
+    spdm_context = context;
+    spdm_response = (void *)(size_t)response;
+    spdm_response_size = response_size;
 
     /* -=[Validate Response Phase]=- */
     if (spdm_response_size < sizeof(spdm_message_header_t)) {
@@ -147,6 +133,8 @@ static libspdm_return_t libspdm_try_get_version(libspdm_context_t *spdm_context,
                          spdm_response->version_number_entry_count * sizeof(spdm_version_number_t);
 
     /* -=[Process Response Phase]=- */
+    spdm_request = (void *)spdm_context->last_spdm_request;
+    spdm_request_size = spdm_context->last_spdm_request_size;
     status = libspdm_append_message_a(spdm_context, spdm_request, spdm_request_size);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         goto receive_done;
@@ -203,6 +191,95 @@ static libspdm_return_t libspdm_try_get_version(libspdm_context_t *spdm_context,
 
     /*Set the role of device*/
     spdm_context->local_context.is_requester = true;
+
+receive_done:
+    return status;
+}
+
+
+/**
+ * This function sends GET_VERSION and receives VERSION.
+ *
+ * @param  spdm_context         A pointer to the SPDM context.
+ * @param  version_count        The number of SPDM versions that the Responder supports.
+ * @param  VersionNumberEntries The list of SPDM versions that the Responder supports.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS
+ *         GET_VERSION was sent and VERSION was received.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE
+ *         The size of the VERSION response is invalid.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD
+ *         The VERSION response contains one or more invalid fields.
+ * @retval LIBSPDM_STATUS_ERROR_PEER
+ *         The Responder returned an unexpected error.
+ * @retval LIBSPDM_STATUS_BUSY_PEER
+ *         The Responder continually returned Busy error messages.
+ * @retval LIBSPDM_STATUS_RESYNCH_PEER
+ *         The Responder returned a RequestResynch error message.
+ * @retval LIBSPDM_STATUS_NEGOTIATION_FAIL
+ *         The Requester and Responder do not support a common SPDM version.
+ **/
+static libspdm_return_t libspdm_try_get_version(libspdm_context_t *spdm_context,
+                                                uint8_t *version_number_entry_count,
+                                                spdm_version_number_t *version_number_entry)
+{
+    libspdm_return_t status;
+    spdm_get_version_request_t *spdm_request;
+    size_t spdm_request_size;
+    libspdm_version_response_max_t *spdm_response;
+    size_t spdm_response_size;
+    uint8_t *message;
+    size_t message_size;
+    size_t transport_header_size;
+
+    transport_header_size = spdm_context->local_context.capability.transport_header_size;
+    status = libspdm_acquire_sender_buffer (spdm_context, &message_size, (void **)&message);
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
+        return status;
+    }
+    LIBSPDM_ASSERT (message_size >= transport_header_size +
+                    spdm_context->local_context.capability.transport_tail_size);
+    spdm_request = (void *)(message + transport_header_size);
+    spdm_request_size = message_size - transport_header_size -
+                        spdm_context->local_context.capability.transport_tail_size;
+
+    /* -=[Build Request Phase]=- */
+    status = libspdm_build_request_get_version (spdm_context, spdm_request, &spdm_request_size);
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
+        libspdm_release_sender_buffer (spdm_context);
+        return status;
+    }
+
+    /* -=[Send Request Phase]=- */
+    status = libspdm_send_spdm_request(spdm_context, NULL, spdm_request_size, spdm_request);
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
+        libspdm_release_sender_buffer (spdm_context);
+        return status;
+    }
+    libspdm_release_sender_buffer (spdm_context);
+
+    /* -=[Receive Response Phase]=- */
+    status = libspdm_acquire_receiver_buffer (spdm_context, &message_size, (void **)&message);
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
+        return status;
+    }
+    LIBSPDM_ASSERT (message_size >= transport_header_size);
+    spdm_response = (void *)(message);
+    spdm_response_size = message_size;
+
+    libspdm_zero_mem(spdm_response, spdm_response_size);
+    status = libspdm_receive_spdm_response(spdm_context, NULL, &spdm_response_size,
+                                           (void **)&spdm_response);
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
+        goto receive_done;
+    }
+
+    /* -=[Process Response Phase]=- */
+    status = libspdm_process_response_version (spdm_context, spdm_response, spdm_response_size,
+                                               version_number_entry_count, version_number_entry);
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
+        goto receive_done;
+    }
 
 receive_done:
     libspdm_release_receiver_buffer (spdm_context);
