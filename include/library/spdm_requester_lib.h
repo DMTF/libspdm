@@ -681,4 +681,46 @@ size_t libspdm_get_msg_log_size (void *spdm_context);
 void libspdm_reset_msg_log (void *spdm_context);
 #endif /* LIBSPDM_ENABLE_MSG_LOG */
 
+/**
+ * This function builds GET_VERSION request message.
+ *
+ * @param  spdm_context      A pointer to the SPDM context.
+ * @param  request           request messge buffer.
+ * @param  request_size      On input, indicates the size in bytes of request message buffer.
+ *                           On outout, indicates the size in bytes of the request message.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS   The request message is created in the buffer.
+ **/
+libspdm_return_t libspdm_build_request_get_version(void *context,
+                                                   void *request,
+                                                   size_t *request_size);
+
+/**
+ * This function processes VERSION response message.
+ *
+ * @param  spdm_context      A pointer to the SPDM context.
+ * @param  response          response messge buffer.
+ * @param  response_size     Size in bytes of response message with transport layer padding.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS
+ *         GET_VERSION was sent and VERSION was received.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE
+ *         The size of the VERSION response is invalid.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD
+ *         The VERSION response contains one or more invalid fields.
+ * @retval LIBSPDM_STATUS_ERROR_PEER
+ *         The Responder returned an unexpected error.
+ * @retval LIBSPDM_STATUS_BUSY_PEER
+ *         The Responder continually returned Busy error messages.
+ * @retval LIBSPDM_STATUS_RESYNCH_PEER
+ *         The Responder returned a RequestResynch error message.
+ * @retval LIBSPDM_STATUS_NEGOTIATION_FAIL
+ *         The Requester and Responder do not support a common SPDM version.
+ **/
+libspdm_return_t libspdm_process_response_version(void *context,
+                                                  const void *response,
+                                                  size_t response_size,
+                                                  uint8_t *version_number_entry_count,
+                                                  spdm_version_number_t *version_number_entry);
+
 #endif /* SPDM_REQUESTER_LIB_H */
