@@ -1281,34 +1281,19 @@ bool libspdm_generate_measurement_summary_hash(
                   .dmtf_spec_measurement_value_type &
                   SPDM_MEASUREMENT_BLOCK_MEASUREMENT_TYPE_MASK) ==
                  SPDM_MEASUREMENT_BLOCK_MEASUREMENT_TYPE_IMMUTABLE_ROM)) {
-                if (spdm_version < (SPDM_MESSAGE_VERSION_12 << SPDM_VERSION_NUMBER_SHIFT_BIT)) {
-                    libspdm_copy_mem(&measurement_data[measurement_data_size],
-                                     sizeof(measurement_data)
-                                     - (&measurement_data[measurement_data_size] - measurement_data),
-                                     &cached_measurement_block->measurement_block_dmtf_header,
-                                     cached_measurement_block->measurement_block_common_header
-                                     .measurement_size);
-
-                    measurement_data_size +=
-                        cached_measurement_block
-                        ->measurement_block_common_header
-                        .measurement_size;
-                } else {
-                    libspdm_copy_mem(&measurement_data[measurement_data_size],
-                                     sizeof(measurement_data)
-                                     - (&measurement_data[measurement_data_size] - measurement_data),
-                                     cached_measurement_block,
-                                     sizeof(cached_measurement_block->
-                                            measurement_block_common_header) +
-                                     cached_measurement_block->measurement_block_common_header
-                                     .measurement_size);
-
-                    measurement_data_size +=
-                        sizeof(cached_measurement_block->measurement_block_common_header) +
-                        cached_measurement_block
-                        ->measurement_block_common_header
-                        .measurement_size;
-                }
+                libspdm_copy_mem(&measurement_data[measurement_data_size],
+                                 sizeof(measurement_data)
+                                 - (&measurement_data[measurement_data_size] - measurement_data),
+                                 cached_measurement_block,
+                                 sizeof(cached_measurement_block->
+                                        measurement_block_common_header) +
+                                 cached_measurement_block->measurement_block_common_header
+                                 .measurement_size);
+                measurement_data_size +=
+                    sizeof(cached_measurement_block->measurement_block_common_header) +
+                    cached_measurement_block
+                    ->measurement_block_common_header
+                    .measurement_size;
             }
             cached_measurement_block =
                 (void *)((size_t)cached_measurement_block +
