@@ -1,1 +1,1 @@
-libspdm version 3.1.0
+libspdm version 3.1.1

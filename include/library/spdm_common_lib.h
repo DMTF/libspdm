@@ -14,7 +14,7 @@
 
 #define LIBSPDM_MAJOR_VERSION 0x03
 #define LIBSPDM_MINOR_VERSION 0x01
-#define LIBSPDM_PATCH_VERSION 0x00
+#define LIBSPDM_PATCH_VERSION 0x01
 #define LIBSPDM_ALPHA         0x00
 
 /* Connection: When a host sends messages to a device, they create a connection.
