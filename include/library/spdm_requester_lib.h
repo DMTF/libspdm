@@ -762,4 +762,46 @@ libspdm_return_t libspdm_process_response_capabilities(void *context,
                                                        const void *response,
                                                        size_t response_size);
 
+/**
+ * This function builds NEGOTIATE_ALGORITHMS request message.
+ *
+ * @param  spdm_context      A pointer to the SPDM context.
+ * @param  request           request messge buffer.
+ * @param  request_size      On input, indicates the size in bytes of request message buffer.
+ *                           On outout, indicates the size in bytes of the request message.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS   The request message is created in the buffer.
+ **/
+libspdm_return_t libspdm_build_request_negotiate_algorithms(void *context,
+                                                            void *request,
+                                                            size_t *request_size);
+
+/**
+ * This function processes ALGORITHMS response message.
+ *
+ * @param  spdm_context      A pointer to the SPDM context.
+ * @param  response          response messge buffer.
+ * @param  response_size     Size in bytes of response message with transport layer padding.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS   The response message is processed.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE
+ *         The size of the ALGORITHMS response is invalid.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD
+ *         The ALGORITHMS response contains one or more invalid fields.
+ * @retval LIBSPDM_STATUS_ERROR_PEER
+ *         The Responder returned an unexpected error.
+ * @retval LIBSPDM_STATUS_BUSY_PEER
+ *         The Responder continually returned Busy error messages.
+ * @retval LIBSPDM_STATUS_RESYNCH_PEER
+ *         The Responder returned a RequestResynch error message.
+ * @retval LIBSPDM_STATUS_BUFFER_FULL
+ *         The buffer used to store transcripts is exhausted.
+ * @retval LIBSPDM_STATUS_NEGOTIATION_FAIL
+ *         The Requester and Responder could not agree on mutual algorithms.
+ *         Note: This return value may be removed in the future.
+ **/
+libspdm_return_t libspdm_process_response_algorithms(void *context,
+                                                     const void *response,
+                                                     size_t response_size);
+
 #endif /* SPDM_REQUESTER_LIB_H */
