@@ -205,10 +205,16 @@ static libspdm_return_t libspdm_try_get_capabilities(libspdm_context_t *spdm_con
     spdm_request->header.request_response_code = SPDM_GET_CAPABILITIES;
     spdm_request->header.param1 = 0;
     spdm_request->header.param2 = 0;
-    spdm_request->ct_exponent = spdm_context->local_context.capability.ct_exponent;
-    spdm_request->flags = spdm_context->local_context.capability.flags;
-    spdm_request->data_transfer_size = spdm_context->local_context.capability.data_transfer_size;
-    spdm_request->max_spdm_msg_size = spdm_context->local_context.capability.max_spdm_msg_size;
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
+        spdm_request->ct_exponent = spdm_context->local_context.capability.ct_exponent;
+        spdm_request->flags = spdm_context->local_context.capability.flags;
+    }
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+        spdm_request->data_transfer_size =
+            spdm_context->local_context.capability.data_transfer_size;
+        spdm_request->max_spdm_msg_size =
+            spdm_context->local_context.capability.max_spdm_msg_size;
+    }
 
     /* -=[Send Request Phase]=- */
     status = libspdm_send_spdm_request(spdm_context, NULL, spdm_request_size, spdm_request);
