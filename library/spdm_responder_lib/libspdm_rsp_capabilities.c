@@ -223,8 +223,12 @@ libspdm_return_t libspdm_get_response_capabilities(libspdm_context_t *spdm_conte
     spdm_response->header.param2 = 0;
     spdm_response->ct_exponent = spdm_context->local_context.capability.ct_exponent;
     spdm_response->flags = spdm_context->local_context.capability.flags;
-    spdm_response->data_transfer_size = spdm_context->local_context.capability.data_transfer_size;
-    spdm_response->max_spdm_msg_size = spdm_context->local_context.capability.max_spdm_msg_size;
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+        spdm_response->data_transfer_size =
+            spdm_context->local_context.capability.data_transfer_size;
+        spdm_response->max_spdm_msg_size =
+            spdm_context->local_context.capability.max_spdm_msg_size;
+    }
 
     if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
         *response_size = sizeof(spdm_capabilities_response_t);
