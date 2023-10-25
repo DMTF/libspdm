@@ -422,6 +422,51 @@ bool libspdm_read_responder_private_key(uint32_t base_asym_algo,
 }
 #endif
 
+bool libspdm_read_responder_certificate(uint32_t base_asym_algo,
+                                        void **data, size_t *size)
+{
+    bool res;
+    char *file;
+
+    switch (base_asym_algo) {
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048:
+        file = "rsa2048/end_responder.cert.der";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
+        file = "rsa3072/end_responder.cert.der";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
+        file = "rsa4096/end_responder.cert.der";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
+        file = "ecp256/end_responder.cert.der";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
+        file = "ecp384/end_responder.cert.der";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
+        file = "ecp521/end_responder.cert.der";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
+        file = "sm2/end_responder.cert.der";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519:
+        file = "ed25519/end_responder.cert.der";
+        break;
+    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
+        file = "ed448/end_responder.cert.der";
+        break;
+    default:
+        LIBSPDM_ASSERT(false);
+        return false;
+    }
+    res = libspdm_read_input_file(file, data, size);
+    return res;
+}
+
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
 bool libspdm_read_requester_private_key(uint16_t req_base_asym_alg,
                                         void **data, size_t *size)
@@ -663,12 +708,25 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
     }
 #if !LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY
     if (g_private_key_mode) {
-        void *prikey;
-        size_t prikey_size;
+        void *x509_ca_cert;
+        void *prikey, *cert;
+        size_t prikey_size, cert_size;
 
         result = libspdm_read_responder_private_key(
             base_asym_algo, &prikey, &prikey_size);
         if (!result) {
+            return false;
+        }
+
+        result = libspdm_read_responder_certificate(
+            base_asym_algo, &cert, &cert_size);
+        if (!result) {
+            return false;
+        }
+
+        result = libspdm_x509_construct_certificate(cert, cert_size,
+                                                    (uint8_t **)&x509_ca_cert);
+        if ((x509_ca_cert == NULL) || (!result)) {
             return false;
         }
 
@@ -689,16 +747,34 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
                                       !is_device_cert_model,
                                       context, subject_name,
                                       csr_len, csr_pointer,
-                                      NULL);
+                                      x509_ca_cert);
         libspdm_asym_free(base_asym_algo, context);
         libspdm_zero_mem(prikey, prikey_size);
         free(prikey);
+        free(cert);
     } else {
 #endif
+    void *x509_ca_cert;
+    void *cert;
+    size_t cert_size;
+
     result = libspdm_get_responder_private_key_from_raw_data(base_asym_algo, &context);
     if (!result) {
         return false;
     }
+
+    result = libspdm_read_responder_certificate(
+        base_asym_algo, &cert, &cert_size);
+    if (!result) {
+        return false;
+    }
+
+    result = libspdm_x509_construct_certificate(cert, cert_size,
+                                                (uint8_t **)&x509_ca_cert);
+    if ((x509_ca_cert == NULL) || (!result)) {
+        return false;
+    }
+
     hash_nid = libspdm_get_hash_nid(base_hash_algo);
     asym_nid = libspdm_get_aysm_nid(base_asym_algo);
 
@@ -709,8 +785,9 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
                                   !is_device_cert_model,
                                   context, subject_name,
                                   csr_len, csr_pointer,
-                                  NULL);
+                                  x509_ca_cert);
     libspdm_asym_free(base_asym_algo, context);
+    free(cert);
 #if !LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY
 }
 #endif
