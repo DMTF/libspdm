@@ -263,6 +263,27 @@ cmake -DARCH=<arch> -DTOOLCHAIN=NONE -DTARGET=<Debug|Release> -DCRYPTO=<mbedtls|
 make
 ```
 
+### Linux Shared Library Builds
+
+Supports shared libraries building and pkg-config '.pc' file generation and installation.
+Will generate:
+ - libspdm.so - main library code, all subprojects from "library" folder
+ - libspdm_platform.so - subprojects in the "os_stub" folder related to platform code, like memory allocation, random number generator, etc.
+  - libspdm_crypto.so - cryptography related code for libspdm linking to either mbedtls or openssl libraries
+All three libraries are required for an application that uses libspdm, but the developer is free to implement their own versions of libspdm_platform or libspdm_crypto libraries and link with their implementations.
+Will install pc file and all required headers and shared libraries (except for spdm_device_secret_lib_sample which developer has to implement), so application developers can use 'pkg-config --libs libspdm' and 'pkg-config --cflags libspdm' to link with libspdm
+
+To build with shared library support:
+```
+cmake -DARCH=x64 -DTOOLCHAIN=GCC -DTARGET=Release -DCRYPTO=mbedtls -DBUILD_LINUX_SHARED_LIB=ON ..
+```
+
+To compile and link with libspdm:
+```
+gcc `pkg-config --cflags libspdm` -c libspdm_app.c -o libspdm_app.o
+gcc libspdm_app.o `pkg-config --libs libspdm` libspdm_app
+```
+
 ### Disabling unit and fuzz tests
 
 Unit tests can be disable by adding -DDISABLE_TESTS=1 to CMake.
