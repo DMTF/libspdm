@@ -16,6 +16,7 @@ typedef struct {
     uint8_t measurement_summary_hash[LIBSPDM_MAX_HASH_SIZE];
     uint16_t opaque_length;
     uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
+    uint8_t requester_context[SPDM_REQ_CONTEXT_SIZE];
     uint8_t signature[LIBSPDM_MAX_ASYM_KEY_SIZE];
 } libspdm_challenge_auth_response_max_t;
 #pragma pack()
@@ -34,6 +35,8 @@ typedef struct {
  * @param  measurement_hash       A pointer to a destination buffer to store the measurement hash.
  * @param  slot_mask              A pointer to a destination to store the slot mask.
  * @param  requester_nonce_in     If not NULL, a buffer that holds the requester nonce (32 bytes)
+ * @param  requester_context      If not NULL, a buffer to hold the requester context (8 bytes).
+ *                                It is used only if the negotiated version >= 1.3.
  * @param  requester_nonce        If not NULL, a buffer to hold the requester nonce (32 bytes).
  * @param  responder_nonce        If not NULL, a buffer to hold the responder nonce (32 bytes).
  *
@@ -47,6 +50,7 @@ static libspdm_return_t libspdm_try_challenge(libspdm_context_t *spdm_context,
                                               void *measurement_hash,
                                               uint8_t *slot_mask,
                                               const void *requester_nonce_in,
+                                              const void *requester_context,
                                               void *requester_nonce,
                                               void *responder_nonce,
                                               void *opaque_data,
@@ -110,6 +114,9 @@ static libspdm_return_t libspdm_try_challenge(libspdm_context_t *spdm_context,
     spdm_request->header.param1 = slot_id;
     spdm_request->header.param2 = measurement_hash_type;
     spdm_request_size = sizeof(spdm_challenge_request_t);
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+        spdm_request_size = sizeof(spdm_challenge_request_t) + SPDM_REQ_CONTEXT_SIZE;
+    }
     if (requester_nonce_in == NULL) {
         if(!libspdm_get_random_number(SPDM_NONCE_SIZE, spdm_request->nonce)) {
             libspdm_release_sender_buffer (spdm_context);
@@ -124,6 +131,17 @@ static libspdm_return_t libspdm_try_challenge(libspdm_context_t *spdm_context,
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     if (requester_nonce != NULL) {
         libspdm_copy_mem(requester_nonce, SPDM_NONCE_SIZE, spdm_request->nonce, SPDM_NONCE_SIZE);
+    }
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+        if (requester_context == NULL) {
+            libspdm_zero_mem(spdm_request + 1, SPDM_REQ_CONTEXT_SIZE);
+        } else {
+            libspdm_copy_mem(spdm_request + 1, SPDM_REQ_CONTEXT_SIZE,
+                             requester_context, SPDM_REQ_CONTEXT_SIZE);
+        }
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "RequesterContext - "));
+        LIBSPDM_INTERNAL_DUMP_DATA((uint8_t *)(spdm_request + 1), SPDM_REQ_CONTEXT_SIZE);
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     }
 
     /* -=[Send Request Phase]=- */
@@ -274,26 +292,31 @@ static libspdm_return_t libspdm_try_challenge(libspdm_context_t *spdm_context,
         }
     }
 
-    status = libspdm_append_message_c(spdm_context, spdm_request, spdm_request_size);
-    if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        goto receive_done;
-    }
-    if (spdm_response_size <
-        sizeof(spdm_challenge_auth_response_t) + hash_size +
-        SPDM_NONCE_SIZE + measurement_summary_hash_size +
-        sizeof(uint16_t) + opaque_length + signature_size) {
-        status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
-        goto receive_done;
-    }
-    spdm_response_size = sizeof(spdm_challenge_auth_response_t) +
-                         hash_size + SPDM_NONCE_SIZE +
-                         measurement_summary_hash_size + sizeof(uint16_t) +
-                         opaque_length + signature_size;
-    status = libspdm_append_message_c(spdm_context, spdm_response,
-                                      spdm_response_size - signature_size);
-    if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        libspdm_reset_message_c(spdm_context);
-        goto receive_done;
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+        if (spdm_response_size <
+            sizeof(spdm_challenge_auth_response_t) + hash_size +
+            SPDM_NONCE_SIZE + measurement_summary_hash_size +
+            sizeof(uint16_t) + opaque_length + SPDM_REQ_CONTEXT_SIZE +
+            signature_size) {
+            status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+            goto receive_done;
+        }
+        spdm_response_size = sizeof(spdm_challenge_auth_response_t) +
+                             hash_size + SPDM_NONCE_SIZE +
+                             measurement_summary_hash_size + sizeof(uint16_t) +
+                             opaque_length + SPDM_REQ_CONTEXT_SIZE + signature_size;
+    } else {
+        if (spdm_response_size <
+            sizeof(spdm_challenge_auth_response_t) + hash_size +
+            SPDM_NONCE_SIZE + measurement_summary_hash_size +
+            sizeof(uint16_t) + opaque_length + signature_size) {
+            status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+            goto receive_done;
+        }
+        spdm_response_size = sizeof(spdm_challenge_auth_response_t) +
+                             hash_size + SPDM_NONCE_SIZE +
+                             measurement_summary_hash_size + sizeof(uint16_t) +
+                             opaque_length + signature_size;
     }
 
     if ((opaque_data != NULL) && (opaque_data_size != NULL)) {
@@ -306,6 +329,28 @@ static libspdm_return_t libspdm_try_challenge(libspdm_context_t *spdm_context,
     }
 
     ptr += opaque_length;
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "RequesterContext - "));
+        LIBSPDM_INTERNAL_DUMP_DATA(ptr, SPDM_REQ_CONTEXT_SIZE);
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
+        if (!libspdm_consttime_is_mem_equal(spdm_request + 1, ptr, SPDM_REQ_CONTEXT_SIZE)) {
+            libspdm_reset_message_c(spdm_context);
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+            goto receive_done;
+        }
+        ptr += SPDM_REQ_CONTEXT_SIZE;
+    }
+
+    status = libspdm_append_message_c(spdm_context, spdm_request, spdm_request_size);
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
+        goto receive_done;
+    }
+    status = libspdm_append_message_c(spdm_context, spdm_response,
+                                      spdm_response_size - signature_size);
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
+        libspdm_reset_message_c(spdm_context);
+        goto receive_done;
+    }
 
     signature = ptr;
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "signature (0x%x):\n", signature_size));
@@ -371,7 +416,7 @@ libspdm_return_t libspdm_challenge(void *spdm_context, void *reserved,
         status = libspdm_try_challenge(context, slot_id,
                                        measurement_hash_type,
                                        measurement_hash, slot_mask,
-                                       NULL, NULL, NULL, NULL, NULL);
+                                       NULL, NULL, NULL, NULL, NULL, NULL);
         if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
             return status;
         }
@@ -407,7 +452,47 @@ libspdm_return_t libspdm_challenge_ex(void *spdm_context, void *reserved,
                                        measurement_hash_type,
                                        measurement_hash,
                                        slot_mask,
-                                       requester_nonce_in,
+                                       requester_nonce_in, NULL,
+                                       requester_nonce, responder_nonce,
+                                       opaque_data,
+                                       opaque_data_size);
+        if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
+            return status;
+        }
+
+        libspdm_sleep(retry_delay_time);
+    } while (retry-- != 0);
+
+    return status;
+}
+
+libspdm_return_t libspdm_challenge_ex2(void *spdm_context, void *reserved,
+                                       uint8_t slot_id,
+                                       uint8_t measurement_hash_type,
+                                       void *measurement_hash,
+                                       uint8_t *slot_mask,
+                                       const void *requester_nonce_in,
+                                       const void *requester_context,
+                                       void *requester_nonce,
+                                       void *responder_nonce,
+                                       void *opaque_data,
+                                       size_t *opaque_data_size)
+{
+    libspdm_context_t *context;
+    size_t retry;
+    uint64_t retry_delay_time;
+    libspdm_return_t status;
+
+    context = spdm_context;
+    context->crypto_request = true;
+    retry = context->retry_times;
+    retry_delay_time = context->retry_delay_time;
+    do {
+        status = libspdm_try_challenge(context, slot_id,
+                                       measurement_hash_type,
+                                       measurement_hash,
+                                       slot_mask,
+                                       requester_nonce_in, requester_context,
                                        requester_nonce, responder_nonce,
                                        opaque_data,
                                        opaque_data_size);
