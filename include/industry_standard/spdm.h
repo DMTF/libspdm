@@ -21,6 +21,7 @@
 
 #define SPDM_NONCE_SIZE 32
 #define SPDM_RANDOM_DATA_SIZE 32
+#define SPDM_REQ_CONTEXT_SIZE 8
 
 /* SPDM response code (1.0) */
 #define SPDM_DIGESTS 0x01
@@ -480,6 +481,7 @@ typedef struct {
     /* param1 == slot_id
      * param2 == HashType*/
     uint8_t nonce[32];
+    /*uint8_t requester_context[SPDM_REQ_CONTEXT_SIZE]; */
 } spdm_challenge_request_t;
 
 /* SPDM CHALLENGE response */
@@ -492,6 +494,7 @@ typedef struct {
      * uint8_t                measurement_summary_hash[digest_size];
      * uint16_t               opaque_length;
      * uint8_t                opaque_data[opaque_length];
+     * uint8_t                requester_context[SPDM_REQ_CONTEXT_SIZE];
      * uint8_t                signature[key_size];*/
 } spdm_challenge_auth_response_t;
 
