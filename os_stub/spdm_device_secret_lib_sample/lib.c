@@ -1560,15 +1560,6 @@ uint8_t m_libspdm_bin_str0[0x11] = {
     0x64, 0x65, 0x72, 0x69, 0x76, 0x65, 0x64,
 };
 
-void libspdm_dump_hex_str_sample(const uint8_t *buffer, size_t buffer_size)
-{
-    size_t index;
-
-    for (index = 0; index < buffer_size; index++) {
-        printf("%02x", buffer[index]);
-    }
-}
-
 bool libspdm_psk_handshake_secret_hkdf_expand(
     spdm_version_number_t spdm_version,
     uint32_t base_hash_algo,
@@ -1600,7 +1591,7 @@ bool libspdm_psk_handshake_secret_hkdf_expand(
         return false;
     }
     printf("[PSK]: ");
-    libspdm_dump_hex_str_sample(psk, psk_size);
+    libspdm_dump_hex_str(psk, psk_size);
     printf("\n");
 
     hash_size = libspdm_get_hash_size(base_hash_algo);
