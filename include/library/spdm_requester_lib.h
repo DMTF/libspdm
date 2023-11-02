@@ -268,6 +268,48 @@ libspdm_return_t libspdm_get_measurement_ex(void *spdm_context, const uint32_t *
                                             void *opaque_data,
                                             size_t *opaque_data_size);
 
+/**
+ * This function sends GET_MEASUREMENT to get measurement from the device.
+ *
+ * If the signature is requested, this function verifies the signature of the measurement.
+ *
+ * @param  spdm_context               A pointer to the SPDM context.
+ * @param  session_id                 Indicates if it is a secured message protected via SPDM session.
+ *                                    If session_id is NULL, it is a normal message.
+ *                                    If session_id is NOT NULL, it is a secured message.
+ * @param  request_attribute          The request attribute of the request message.
+ * @param  measurement_operation      The measurement operation of the request message.
+ * @param  slot_id                    The number of slot for the certificate chain.
+ * @param  requester_context          A buffer to hold the requester context (8 bytes) as input, if not NULL.
+ *                                    It is used only if the negotiated version >= 1.3.
+ * @param  content_changed            The measurement content changed output param.
+ * @param  number_of_blocks           The number of blocks of the measurement record.
+ * @param  measurement_record_length  On input, indicate the size in bytes of the destination buffer to store the measurement record.
+ *                                    On output, indicate the size in bytes of the measurement record.
+ * @param  measurement_record         A pointer to a destination buffer to store the measurement record.
+ * @param  requester_nonce_in         A buffer to hold the requester nonce (32 bytes) as input, if not NULL.
+ * @param  requester_nonce            A buffer to hold the requester nonce (32 bytes), if not NULL.
+ * @param  responder_nonce            A buffer to hold the responder nonce (32 bytes), if not NULL.
+ * @param  opaque_data                A buffer to hold the responder opaque data, if not NULL.
+ * @param  opaque_data_size           On input, the size of the opaque data buffer.
+ *                                    Responder opaque data should be less than 1024 bytes.
+ *                                    On output, the size of the opaque data.
+ **/
+libspdm_return_t libspdm_get_measurement_ex2(void *spdm_context, const uint32_t *session_id,
+                                             uint8_t request_attribute,
+                                             uint8_t measurement_operation,
+                                             uint8_t slot_id,
+                                             const void *requester_context,
+                                             uint8_t *content_changed,
+                                             uint8_t *number_of_blocks,
+                                             uint32_t *measurement_record_length,
+                                             void *measurement_record,
+                                             const void *requester_nonce_in,
+                                             void *requester_nonce,
+                                             void *responder_nonce,
+                                             void *opaque_data,
+                                             size_t *opaque_data_size);
+
 #if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)
 /**
  * This function sends KEY_EXCHANGE/FINISH or PSK_EXCHANGE/PSK_FINISH

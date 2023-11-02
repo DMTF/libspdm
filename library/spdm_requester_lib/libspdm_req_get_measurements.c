@@ -121,6 +121,8 @@ bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
  * @param  request_attribute          The request attribute of the request message.
  * @param  measurement_operation      The measurement operation of the request message.
  * @param  slot_id                    The number of slot for the certificate chain.
+ * @param  requester_context          If not NULL, a buffer to hold the requester context (8 bytes).
+ *                                    It is used only if the negotiated version >= 1.3.
  * @param  content_changed            The measurement content changed output param.
  * @param  number_of_blocks           The number of blocks of the measurement record.
  * @param  measurement_record_length  On input, indicate the size in bytes of the destination buffer
@@ -137,6 +139,7 @@ static libspdm_return_t libspdm_try_get_measurement(libspdm_context_t *spdm_cont
                                                     uint8_t request_attribute,
                                                     uint8_t measurement_operation,
                                                     uint8_t slot_id_param,
+                                                    const void *requester_context,
                                                     uint8_t *content_changed,
                                                     uint8_t *number_of_blocks,
                                                     uint32_t *measurement_record_length,
@@ -266,6 +269,19 @@ static libspdm_return_t libspdm_try_get_measurement(libspdm_context_t *spdm_cont
         if (requester_nonce != NULL) {
             libspdm_zero_mem (requester_nonce, SPDM_NONCE_SIZE);
         }
+    }
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+        if (requester_context == NULL) {
+            libspdm_zero_mem((uint8_t *)spdm_request + spdm_request_size, SPDM_REQ_CONTEXT_SIZE);
+        } else {
+            libspdm_copy_mem((uint8_t *)spdm_request + spdm_request_size, SPDM_REQ_CONTEXT_SIZE,
+                             requester_context, SPDM_REQ_CONTEXT_SIZE);
+        }
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "RequesterContext - "));
+        LIBSPDM_INTERNAL_DUMP_DATA((uint8_t *)spdm_request + spdm_request_size,
+                                   SPDM_REQ_CONTEXT_SIZE);
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
+        spdm_request_size += SPDM_REQ_CONTEXT_SIZE;
     }
 
     /* -=[Send Request Phase]=- */
@@ -403,17 +419,53 @@ static libspdm_return_t libspdm_try_get_measurement(libspdm_context_t *spdm_cont
             }
         }
 
-        if (spdm_response_size <
-            sizeof(spdm_measurements_response_t) +
-            measurement_record_data_length + SPDM_NONCE_SIZE +
-            sizeof(uint16_t) + opaque_length + signature_size) {
-            status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
-            goto receive_done;
+        if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+            if (spdm_response_size <
+                sizeof(spdm_measurements_response_t) +
+                measurement_record_data_length + SPDM_NONCE_SIZE +
+                sizeof(uint16_t) + opaque_length + SPDM_REQ_CONTEXT_SIZE + signature_size) {
+                status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+                goto receive_done;
+            }
+            spdm_response_size = sizeof(spdm_measurements_response_t) +
+                                 measurement_record_data_length +
+                                 SPDM_NONCE_SIZE + sizeof(uint16_t) +
+                                 opaque_length + SPDM_REQ_CONTEXT_SIZE + signature_size;
+        } else {
+            if (spdm_response_size <
+                sizeof(spdm_measurements_response_t) +
+                measurement_record_data_length + SPDM_NONCE_SIZE +
+                sizeof(uint16_t) + opaque_length + signature_size) {
+                status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+                goto receive_done;
+            }
+            spdm_response_size = sizeof(spdm_measurements_response_t) +
+                                 measurement_record_data_length +
+                                 SPDM_NONCE_SIZE + sizeof(uint16_t) +
+                                 opaque_length + signature_size;
         }
-        spdm_response_size = sizeof(spdm_measurements_response_t) +
-                             measurement_record_data_length +
-                             SPDM_NONCE_SIZE + sizeof(uint16_t) +
-                             opaque_length + signature_size;
+
+        if ((opaque_data != NULL) && (opaque_data_size != NULL)) {
+            if (opaque_length >= *opaque_data_size) {
+                status = LIBSPDM_STATUS_BUFFER_TOO_SMALL;
+                goto receive_done;
+            }
+            libspdm_copy_mem(opaque_data, *opaque_data_size, ptr, opaque_length);
+            *opaque_data_size = opaque_length;
+        }
+        ptr += opaque_length;
+        if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "RequesterContext - "));
+            LIBSPDM_INTERNAL_DUMP_DATA(ptr, SPDM_REQ_CONTEXT_SIZE);
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
+            if (!libspdm_consttime_is_mem_equal((uint8_t *)spdm_request +
+                                                spdm_request_size - SPDM_REQ_CONTEXT_SIZE,
+                                                ptr, SPDM_REQ_CONTEXT_SIZE)) {
+                status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                goto receive_done;
+            }
+            ptr += SPDM_REQ_CONTEXT_SIZE;
+        }
 
         /* -=[Process Response Phase]=- */
         status = libspdm_append_message_m(spdm_context, session_info, spdm_request,
@@ -427,16 +479,6 @@ static libspdm_return_t libspdm_try_get_measurement(libspdm_context_t *spdm_cont
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             goto receive_done;
         }
-
-        if ((opaque_data != NULL) && (opaque_data_size != NULL)) {
-            if (opaque_length >= *opaque_data_size) {
-                status = LIBSPDM_STATUS_BUFFER_TOO_SMALL;
-                goto receive_done;
-            }
-            libspdm_copy_mem(opaque_data, *opaque_data_size, ptr, opaque_length);
-            *opaque_data_size = opaque_length;
-        }
-        ptr += opaque_length;
 
         signature = ptr;
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "signature (0x%x):\n", signature_size));
@@ -482,17 +524,53 @@ static libspdm_return_t libspdm_try_get_measurement(libspdm_context_t *spdm_cont
             }
         }
 
-        if (spdm_response_size <
-            sizeof(spdm_measurements_response_t) +
-            measurement_record_data_length + SPDM_NONCE_SIZE +
-            sizeof(uint16_t) + opaque_length) {
-            status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
-            goto receive_done;
+        if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+            if (spdm_response_size <
+                sizeof(spdm_measurements_response_t) +
+                measurement_record_data_length + SPDM_NONCE_SIZE +
+                sizeof(uint16_t) + opaque_length + SPDM_REQ_CONTEXT_SIZE) {
+                status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+                goto receive_done;
+            }
+            spdm_response_size = sizeof(spdm_measurements_response_t) +
+                                 measurement_record_data_length +
+                                 SPDM_NONCE_SIZE + sizeof(uint16_t) +
+                                 opaque_length + SPDM_REQ_CONTEXT_SIZE;
+        } else {
+            if (spdm_response_size <
+                sizeof(spdm_measurements_response_t) +
+                measurement_record_data_length + SPDM_NONCE_SIZE +
+                sizeof(uint16_t) + opaque_length) {
+                status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+                goto receive_done;
+            }
+            spdm_response_size = sizeof(spdm_measurements_response_t) +
+                                 measurement_record_data_length +
+                                 SPDM_NONCE_SIZE + sizeof(uint16_t) +
+                                 opaque_length;
         }
-        spdm_response_size = sizeof(spdm_measurements_response_t) +
-                             measurement_record_data_length +
-                             SPDM_NONCE_SIZE + sizeof(uint16_t) +
-                             opaque_length;
+
+        if ((opaque_data != NULL) && (opaque_data_size != NULL)) {
+            if (opaque_length >= *opaque_data_size) {
+                status = LIBSPDM_STATUS_BUFFER_TOO_SMALL;
+                goto receive_done;
+            }
+            libspdm_copy_mem(opaque_data, *opaque_data_size, ptr, opaque_length);
+            *opaque_data_size = opaque_length;
+        }
+        ptr += opaque_length;
+        if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "RequesterContext - "));
+            LIBSPDM_INTERNAL_DUMP_DATA(ptr, SPDM_REQ_CONTEXT_SIZE);
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
+            if (!libspdm_consttime_is_mem_equal((uint8_t *)spdm_request +
+                                                spdm_request_size - SPDM_REQ_CONTEXT_SIZE,
+                                                ptr, SPDM_REQ_CONTEXT_SIZE)) {
+                status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                goto receive_done;
+            }
+            ptr += SPDM_REQ_CONTEXT_SIZE;
+        }
 
         /* If a signature is not requested then content_changed must be 0. */
         if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
@@ -639,7 +717,7 @@ libspdm_return_t libspdm_get_measurement(void *spdm_context, const uint32_t *ses
     do {
         status = libspdm_try_get_measurement(
             context, session_id, request_attribute,
-            measurement_operation, slot_id_param, content_changed, number_of_blocks,
+            measurement_operation, slot_id_param, NULL, content_changed, number_of_blocks,
             measurement_record_length, measurement_record,
             NULL, NULL, NULL, NULL, NULL);
         if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
@@ -678,7 +756,50 @@ libspdm_return_t libspdm_get_measurement_ex(void *spdm_context, const uint32_t *
     do {
         status = libspdm_try_get_measurement(
             context, session_id, request_attribute,
-            measurement_operation, slot_id_param, content_changed, number_of_blocks,
+            measurement_operation, slot_id_param, NULL, content_changed, number_of_blocks,
+            measurement_record_length, measurement_record,
+            requester_nonce_in,
+            requester_nonce, responder_nonce,
+            opaque_data, opaque_data_size);
+        if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
+            return status;
+        }
+
+        libspdm_sleep(retry_delay_time);
+    } while (retry-- != 0);
+
+    return status;
+}
+
+libspdm_return_t libspdm_get_measurement_ex2(void *spdm_context, const uint32_t *session_id,
+                                             uint8_t request_attribute,
+                                             uint8_t measurement_operation,
+                                             uint8_t slot_id_param,
+                                             const void *requester_context,
+                                             uint8_t *content_changed,
+                                             uint8_t *number_of_blocks,
+                                             uint32_t *measurement_record_length,
+                                             void *measurement_record,
+                                             const void *requester_nonce_in,
+                                             void *requester_nonce,
+                                             void *responder_nonce,
+                                             void *opaque_data,
+                                             size_t *opaque_data_size)
+{
+    libspdm_context_t *context;
+    size_t retry;
+    uint64_t retry_delay_time;
+    libspdm_return_t status;
+
+    context = spdm_context;
+    context->crypto_request = true;
+    retry = context->retry_times;
+    retry_delay_time = context->retry_delay_time;
+    do {
+        status = libspdm_try_get_measurement(
+            context, session_id, request_attribute,
+            measurement_operation, slot_id_param, requester_context,
+            content_changed, number_of_blocks,
             measurement_record_length, measurement_record,
             requester_nonce_in,
             requester_nonce, responder_nonce,
