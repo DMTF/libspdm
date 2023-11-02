@@ -525,6 +525,7 @@ typedef struct {
     uint8_t nonce[32];
     /* Below field is added in 1.1.*/
     uint8_t slot_id_param; /* BIT[0:3]=slot_id, BIT[4:7]=RSVD*/
+    /*uint8_t requester_context[SPDM_REQ_CONTEXT_SIZE]; */
 } spdm_get_measurements_request_t;
 
 #define SPDM_GET_MEASUREMENTS_REQUEST_SLOT_ID_MASK 0xF
@@ -617,6 +618,7 @@ typedef struct {
      * uint8_t                nonce[32];
      * uint16_t               opaque_length;
      * uint8_t                opaque_data[opaque_length];
+     * uint8_t                requester_context[SPDM_REQ_CONTEXT_SIZE];
      * uint8_t                signature[key_size];*/
 } spdm_measurements_response_t;
 

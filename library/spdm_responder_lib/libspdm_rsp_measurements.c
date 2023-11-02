@@ -60,6 +60,7 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
                                                    void *response)
 {
     const spdm_get_measurements_request_t *spdm_request;
+    size_t spdm_request_size;
     spdm_measurements_response_t *spdm_response;
     size_t spdm_response_size;
     libspdm_return_t status;
@@ -161,7 +162,7 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
                     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                     response_size, response);
             }
-            request_size = sizeof(spdm_get_measurements_request_t);
+            spdm_request_size = sizeof(spdm_get_measurements_request_t);
         } else {
             if (request_size <
                 sizeof(spdm_get_measurements_request_t) -
@@ -172,8 +173,8 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
                     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                     response_size, response);
             }
-            request_size = sizeof(spdm_get_measurements_request_t) -
-                           sizeof(spdm_request->slot_id_param);
+            spdm_request_size = sizeof(spdm_get_measurements_request_t) -
+                                sizeof(spdm_request->slot_id_param);
         }
     } else {
         if (request_size < sizeof(spdm_message_header_t)) {
@@ -182,6 +183,16 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
                 spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
                 0, response_size, response);
         }
+        spdm_request_size = sizeof(spdm_message_header_t);
+    }
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+        if (request_size < spdm_request_size + SPDM_REQ_CONTEXT_SIZE) {
+            libspdm_reset_message_m(spdm_context, session_info);
+            return libspdm_generate_error_response(
+                spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
+                0, response_size, response);
+        }
+        spdm_request_size += SPDM_REQ_CONTEXT_SIZE;
     }
 
     if ((spdm_request->header.param1 &
@@ -285,6 +296,9 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
     spdm_response_size =
         sizeof(spdm_measurements_response_t) + measurements_size + SPDM_NONCE_SIZE +
         sizeof(uint16_t) + opaque_data_size + signature_size;
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+        spdm_response_size += SPDM_REQ_CONTEXT_SIZE;
+    }
 
     LIBSPDM_ASSERT(*response_size >= spdm_response_size);
 
@@ -392,10 +406,19 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
     libspdm_write_uint16(fill_response_ptr, (uint16_t)opaque_data_size);
     fill_response_ptr += sizeof(uint16_t);
 
+    fill_response_ptr += opaque_data_size;
+
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+        libspdm_copy_mem(fill_response_ptr, SPDM_REQ_CONTEXT_SIZE,
+                         (const uint8_t *)spdm_request + spdm_request_size - SPDM_REQ_CONTEXT_SIZE,
+                         SPDM_REQ_CONTEXT_SIZE);
+        fill_response_ptr += SPDM_REQ_CONTEXT_SIZE;
+    }
+
     libspdm_reset_message_buffer_via_request_code(spdm_context, session_info,
                                                   spdm_request->header.request_response_code);
 
-    status = libspdm_append_message_m(spdm_context, session_info, spdm_request, request_size);
+    status = libspdm_append_message_m(spdm_context, session_info, spdm_request, spdm_request_size);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_reset_message_m(spdm_context, session_info);
         return libspdm_generate_error_response(spdm_context,
@@ -414,8 +437,6 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
 
     if ((spdm_request->header.param1 &
          SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) != 0) {
-
-        fill_response_ptr += opaque_data_size;
 
         ret = libspdm_generate_measurement_signature(spdm_context, session_info, fill_response_ptr);
 
