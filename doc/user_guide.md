@@ -249,10 +249,9 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
 
 6. Send and receive message in an SPDM session
 
-   6.1, Use the SPDM vendor defined message.
-        (SPDM vendor defined message + transport layer header (SPDM) => application message)
+   6.1, Use the SPDM vendor defined request.
    ```
-   libspdm_send_receive_data (spdm_context, &session_id, FALSE, &request, request_size, &response, &response_size);
+   libspdm_vendor_request (spdm_context, standard_id, vendor_id_len, &vendor_id, &request, request_size, &response, &response_size);
    ```
 
    6.2, Use the transport layer application message.
@@ -435,27 +434,49 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
 
 3. Register message process callback
 
-   This callback need handle both SPDM vendor defined message and transport layer application message.
-   ```
-   return_status libspdm_get_response_vendor_defined_request (
-     void           *spdm_context,
-     const uint32_t *session_id,
-     bool            is_app_message,
-     size_t          request_size,
-     const void     *request,
-     size_t         *response_size,
-     void           *response
-   )
-   {
-     if (is_app_message) {
-       // this is a transport layer application message
-     } else {
-       // this is a SPDM vendor defined message (without transport layer header)
-     }
-   }
+   3.1 This callback handles transport layer application message.
+    ```
+    return_status libspdm_get_response (
+      void           *spdm_context,
+      const uint32_t *session_id,
+      bool            is_app_message,
+      size_t          request_size,
+      const void     *request,
+      size_t         *response_size,
+      void           *response
+    )
+    {
+      if (is_app_message) {
+        // this is a transport layer application message
+      } else {
+        // other SPDM message
+      }
+    }
 
-   libspdm_register_get_response_func (spdm_context, libspdm_get_response_vendor_defined_request);
-   ```
+    libspdm_register_get_response_func (spdm_context, libspdm_get_response);
+    ```
+    3.2 This callback handles SPDM Vendor Defined Commands
+    ```
+    libspdm_return_t libspdm_vendor_response_func(
+      void *spdm_context,
+      uint16_t standard_id,
+      uint8_t vendor_id_len,
+      const void *vendor_id,
+      const void *request,
+      size_t request_len,
+      void *resp,
+      size_t *resp_len)
+    {
+      // process request and create response
+      ...
+      // populate response header and payload
+      ...
+
+      return LIBSPDM_STATUS_SUCCESS;
+    }
+
+    libspdm_register_vendor_callback_func(spdm_context, libspdm_vendor_response_func);
+    ```
 
 4. Free the memory of contexts within the SPDM context when all flow is over.
    This function doesn't free the SPDM context itself.

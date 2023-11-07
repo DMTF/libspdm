@@ -955,4 +955,34 @@ uint32_t libspdm_module_version(void);
 /*true: FIPS enabled, false: FIPS disabled*/
 bool libspdm_get_fips_mode(void);
 
+#if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
+
+/**
+ * Vendor Response Callback Prototype.
+ * First 2 bytes are the response length, followed by the actual response
+ *
+ * @param  spdm_context  A pointer to the SPDM context.
+ * @param  standard_id      Registry or Standards body used
+ * @param  vendor_id_len    Length in bytes of the vendor id field
+ * @param  vendor_id        Vendor ID assigned by the Registry or Standards Body. Little-endian format
+ * @param  request          The vendor defined request
+ * @param  request_len      Length of the request
+ * @param  response         The vendor defined response (including response length as first 2 bytes)
+ * @param  response_len     Length of the vendor response
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS Success
+ * @retval LIBSPDM_STATUS_INVALID_PARAMETER Some parameters invalid or NULL
+ **/
+typedef libspdm_return_t (*libspdm_vendor_response_callback_func)(
+    void *spdm_context,
+    uint16_t standard_id,
+    uint8_t vendor_id_len,
+    const void *vendor_id,
+    const void *request,
+    size_t request_len,
+    void *response,
+    size_t *response_len);
+
+#endif /* LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES */
+
 #endif /* SPDM_COMMON_LIB_H */

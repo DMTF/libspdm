@@ -759,4 +759,44 @@ size_t libspdm_get_msg_log_size (void *spdm_context);
 void libspdm_reset_msg_log (void *spdm_context);
 #endif /* LIBSPDM_ENABLE_MSG_LOG */
 
+#if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
+
+/**
+ * This function sends VENDOR_DEFINED_REQUEST to the device and gets back a VENDOR_DEFINED_RESPONSE.
+ *
+ * This is useful for creating unique requests/responses to devices.
+ *
+ * @param  spdm_context     A pointer to the SPDM context.
+ * @param  standard_id      Registry or Standards body used
+ * @param  vendor_id_len    Length in bytes of the vendor id field
+ * @param  vendor_id        Vendor ID assigned by the Registry or Standards Body. Little-endian format
+ * @param  request          The vendor defined request
+ * @param  request_len      Length of the request
+ * @param  response         The vendor defined response
+ * @param  response_len     Length of the vendor response
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS
+ *         VENDOR_DEFINED_REQUEST was sent and VENDOR_DEFINED_RESPONSE was received.
+ * @retval LIBSPDM_STATUS_INVALID_STATE_LOCAL
+ *         Cannot send VENDOR_DEFINED_REQUEST due to Requester's state.
+ * @retval LIBSPDM_STATUS_ERROR_PEER
+ *         The Responder returned an unexpected error.
+ * @retval LIBSPDM_STATUS_BUSY_PEER
+ *         The Responder continually returned Busy error messages.
+ * @retval LIBSPDM_STATUS_RESYNCH_PEER
+ *         The Responder returned a RequestResynch error message.
+ * @retval LIBSPDM_STATUS_BUFFER_FULL
+ *         The buffer used to store transcripts is exhausted.
+ **/
+libspdm_return_t libspdm_vendor_request(void *spdm_context,
+                                        uint16_t standard_id,
+                                        uint8_t vendor_id_len,
+                                        void *vendor_id,
+                                        void *request,
+                                        size_t request_len,
+                                        void *response,
+                                        size_t *response_len);
+
+#endif /* LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES */
+
 #endif /* SPDM_REQUESTER_LIB_H */
