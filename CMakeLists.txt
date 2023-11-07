@@ -89,6 +89,8 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
         MESSAGE("TOOLCHAIN = RISCV_GNU")
     elseif(TOOLCHAIN STREQUAL "RISCV64_GCC")
         MESSAGE("TOOLCHAIN = RISCV64_GCC")
+    elseif(TOOLCHAIN STREQUAL "RISCV_NONE")
+        MESSAGE("TOOLCHAIN = RISCV_NONE")
     elseif(TOOLCHAIN STREQUAL "RISCV_XPACK")
         MESSAGE("TOOLCHAIN = RISCV_XPACK")
     elseif(TOOLCHAIN STREQUAL "ARC_GCC")
@@ -414,6 +416,30 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
         if(GCOV STREQUAL "ON")
         SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}  --coverage -lgcov -fprofile-arcs -ftest-coverage")
         endif()
+
+        SET(CMAKE_C_LINK_EXECUTABLE "<CMAKE_LINKER> <LINK_FLAGS> <OBJECTS> -o <TARGET> -Wl,--start-group <LINK_LIBRARIES> -Wl,--end-group")
+
+    elseif(TOOLCHAIN STREQUAL "RISCV_NONE")
+        SET(CMAKE_C_COMPILER riscv64-elf-gcc)
+        ADD_COMPILE_OPTIONS(-nostdlib -lgcc)
+        if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+           ADD_COMPILE_OPTIONS(-g)
+        endif()
+
+        if(ARCH STREQUAL "riscv32")
+            ADD_COMPILE_OPTIONS(-march=rv32imac_zicsr -mabi=ilp32)
+        elseif(ARCH STREQUAL "riscv64")
+            ADD_COMPILE_OPTIONS(-march=rv64imac_zicsr -mabi=lp64)
+        else()
+            ADD_COMPILE_OPTIONS(-march=error -mabi=error)
+        endif()
+
+        SET(CMAKE_AR riscv64-elf-ar)
+
+        SET(CMAKE_LINKER riscv64-elf-gcc)
+        SET(CMAKE_EXE_LINKER_FLAGS "-no-pie" )
+
+        SET(MBEDTLS_FLAGS -nostdlib -lgcc)
 
         SET(CMAKE_C_LINK_EXECUTABLE "<CMAKE_LINKER> <LINK_FLAGS> <OBJECTS> -o <TARGET> -Wl,--start-group <LINK_LIBRARIES> -Wl,--end-group")
 
