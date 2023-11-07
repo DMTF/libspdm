@@ -92,6 +92,7 @@
 | [RISCV_GNU](https://github.com/riscv/riscv-gnu-toolchain) |  -   |  -  |  -  |    -    | riscv32-unknown-linux-gnu-gcc | riscv64-unknown-linux-gnu-gcc |
 | [RISCV64_GCC](https://packages.ubuntu.com/bionic/gcc-riscv64-linux-gnu) |  -   |  -  |  -  |    -    |    -    | riscv64-linux-gnu-gcc |
 | [RISCV_XPACK](https://github.com/xpack-dev-tools/riscv-none-elf-gcc-xpack) |  -   |  -  |  -  |    -    | riscv-none-elf-gcc | riscv-none-elf-gcc |
+| [RISCV_NONE](https://archlinux.org/packages/extra/x86_64/riscv64-elf-gcc/) |  -   |  -  |  -  |    -    | riscv64-elf-gcc | riscv64-elf-gcc |
 
 ## Documents
 
