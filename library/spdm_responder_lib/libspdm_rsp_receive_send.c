@@ -84,6 +84,10 @@ libspdm_get_spdm_response_func libspdm_get_response_func_via_request_code(uint8_
         { SPDM_CHUNK_GET, libspdm_get_response_chunk_get},
         { SPDM_CHUNK_SEND, libspdm_get_response_chunk_send},
         #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
+
+        #if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
+        { SPDM_VENDOR_DEFINED_REQUEST, libspdm_get_vendor_defined_response },
+        #endif /*LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES*/
     };
 
     for (index = 0; index < sizeof(get_response_struct) / sizeof(get_response_struct[0]); index++) {

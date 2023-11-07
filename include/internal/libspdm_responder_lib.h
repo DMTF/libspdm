@@ -743,6 +743,31 @@ libspdm_return_t libspdm_get_response_chunk_send(libspdm_context_t *spdm_context
 
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
 
+#if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
+/**
+ * Process the SPDM VENDOR_DEFINED_REQUEST request and return the response.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  request_size                  size in bytes of the request data.
+ * @param  request                      A pointer to the request data.
+ * @param  response_size                 size in bytes of the response data.
+ *                                     On input, it means the size in bytes of response data buffer.
+ *                                     On output, it means the size in bytes of copied response data
+ * @param  response                     A pointer to the response data.
+ *
+ * @retval RETURN_SUCCESS               The request is processed and the response is returned.
+ * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ **/
+
+libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_context,
+                                                     size_t request_size,
+                                                     const void *request,
+                                                     size_t *response_size,
+                                                     void *response);
+#endif /* LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES */
+
 /**
  * This function allocates half of session ID for a responder.
  *
