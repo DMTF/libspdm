@@ -1951,7 +1951,7 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
     mbedtls_x509write_csr req;
     mbedtls_md_type_t md_alg;
     mbedtls_asn1_sequence extns;
-    mbedtls_asn1_sequence *next;
+    mbedtls_asn1_sequence *next_oid;
     mbedtls_x509_buf buf;
     mbedtls_x509_crt *cert;
     mbedtls_pk_context key;
@@ -1959,7 +1959,7 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
     uint8_t pubkey_buffer[LIBSPDM_MAX_PUBKEY_DER_BUFFER_SIZE];
     uint8_t *pubkey_der_data;
     size_t pubkey_der_len;
-    size_t tag_len;
+    size_t oid_tag_len;
 
     /*basic_constraints: CA: false */
     #define BASIC_CONSTRAINTS_STRING_FALSE {0x30, 0x00}
@@ -1973,7 +1973,7 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
     mbedtls_x509write_csr_init(&req);
     mbedtls_pk_init(&key);
     csr_buffer_size = *csr_len;
-    next = NULL;
+    next_oid = NULL;
 
     ret = 1;
     switch (asym_nid)
@@ -2073,43 +2073,6 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
     /* Set key */
     mbedtls_x509write_csr_set_key(&req, &key);
 
-    if (base_cert != NULL) {
-        cert = base_cert;
-        buf = cert->v3_ext;
-        if (mbedtls_asn1_get_sequence_of(&buf.p, buf.p + buf.len, &extns,
-                                         MBEDTLS_ASN1_CONSTRUCTED | MBEDTLS_ASN1_SEQUENCE)) {
-            ret = 1;
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                           "mbedtls_x509write_csr_set_extension unable to get tag\n"));
-            goto free_all;
-        }
-
-        next = &extns;
-    }
-
-    while (next) {
-        if (mbedtls_asn1_get_tag(&(next->buf.p), next->buf.p + next->buf.len, &tag_len,
-                                 MBEDTLS_ASN1_OID)) {
-            ret = 1;
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                           "mbedtls_x509write_csr_set_extension unable to get tag\n"));
-            goto free_all;
-        }
-
-        if (mbedtls_x509write_csr_set_extension(&req, MBEDTLS_OID_BASIC_CONSTRAINTS,
-                                                MBEDTLS_OID_SIZE(MBEDTLS_OID_BASIC_CONSTRAINTS),
-                                                next->buf.p,
-                                                tag_len
-                                                ) != 0) {
-            ret = 1;
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                           "mbedtls_x509write_csr_set_extension set custom OID failed \n"));
-            goto free_all;
-        }
-
-        next = next->next;
-    }
-
     /*set basicConstraints*/
     if (mbedtls_x509write_csr_set_extension(&req, MBEDTLS_OID_BASIC_CONSTRAINTS,
                                             MBEDTLS_OID_SIZE(MBEDTLS_OID_BASIC_CONSTRAINTS),
@@ -2122,6 +2085,43 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "mbedtls_x509write_csr_set_extension set basicConstraints failed \n"));
         goto free_all;
+    }
+
+    if (base_cert != NULL) {
+        cert = base_cert;
+        buf = cert->v3_ext;
+        if (mbedtls_asn1_get_sequence_of(&buf.p, buf.p + buf.len, &extns,
+                                         MBEDTLS_ASN1_CONSTRUCTED | MBEDTLS_ASN1_SEQUENCE)) {
+            ret = 1;
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "mbedtls_x509write_csr_set_extension unable to get sequence\n"));
+            goto free_all;
+        }
+
+        next_oid = &extns;
+    }
+
+    while (next_oid) {
+        if (mbedtls_asn1_get_tag(&(next_oid->buf.p), next_oid->buf.p + next_oid->buf.len,
+                                 &oid_tag_len, MBEDTLS_ASN1_OID)) {
+            ret = 1;
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "mbedtls_x509write_csr_set_extension unable to get OID tag\n"));
+            goto free_all;
+        }
+
+        if (mbedtls_x509write_csr_set_extension(&req, next_oid->buf.p,
+                                                oid_tag_len,
+                                                next_oid->buf.p + oid_tag_len,
+                                                next_oid->buf.len - oid_tag_len
+                                                ) != 0) {
+            ret = 1;
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                           "mbedtls_x509write_csr_set_extension set custom OID failed \n"));
+            goto free_all;
+        }
+
+        next_oid = next_oid->next;
     }
 
     /*csr data is written at the end of the buffer*/
