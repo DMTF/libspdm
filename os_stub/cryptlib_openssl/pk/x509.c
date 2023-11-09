@@ -2635,10 +2635,24 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
     sk_X509_EXTENSION_push(exts, basic_constraints_ext);
 
     if (base_cert != NULL) {
+        const ASN1_OBJECT *basic_constraints_obj = OBJ_nid2obj(NID_basic_constraints);
+        const ASN1_OBJECT *authority_key_identifier_obj = OBJ_nid2obj(NID_authority_key_identifier);
+
         num_exts = X509_get_ext_count(base_cert);
 
         for (int i = 0; i < num_exts; i++) {
-            sk_X509_EXTENSION_push(exts, X509_get_ext(base_cert, i));
+            X509_EXTENSION *extension = X509_get_ext(base_cert, i);
+            ASN1_OBJECT *obj = X509_EXTENSION_get_object(extension);
+
+            if (OBJ_cmp(basic_constraints_obj, obj) == 0) {
+                continue;
+            }
+
+            if (OBJ_cmp(authority_key_identifier_obj, obj) == 0) {
+                continue;
+            }
+
+            sk_X509_EXTENSION_push(exts, extension);
         }
     }
 
