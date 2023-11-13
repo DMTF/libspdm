@@ -2752,6 +2752,8 @@ void libspdm_reset_context(void *spdm_context)
     libspdm_zero_mem(&context->encap_context, sizeof(libspdm_encap_context_t));
     context->connection_info.local_used_cert_chain_buffer_size = 0;
     context->connection_info.local_used_cert_chain_buffer = NULL;
+    context->connection_info.multi_key_conn_req = false;
+    context->connection_info.multi_key_conn_rsp = false;
 #if LIBSPDM_RESPOND_IF_READY_SUPPORT
     context->cache_spdm_request_size = 0;
 #endif
