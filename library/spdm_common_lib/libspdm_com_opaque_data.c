@@ -261,8 +261,8 @@ bool libspdm_process_general_opaque_data_check(libspdm_context_t *spdm_context,
     LIBSPDM_ASSERT(data_in_size <= SPDM_MAX_OPAQUE_DATA_SIZE);
 
     if (libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_12) {
-        if (spdm_context->connection_info.algorithm.other_params_support ==
-            SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1) {
+        if ((spdm_context->connection_info.algorithm.other_params_support &
+             SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_MASK) == SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1) {
             /* Check byte alignment */
             if ((data_in_size & 3) != 0) {
                 return false;
