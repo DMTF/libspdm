@@ -59,9 +59,12 @@ static bool libspdm_check_request_flag_compatibility(uint32_t capabilities_flag,
     const uint8_t key_upd_cap = (uint8_t)(capabilities_flag >> 14) & 0x01;
     const uint8_t handshake_in_the_clear_cap = (uint8_t)(capabilities_flag >> 15) & 0x01;
     const uint8_t pub_key_id_cap = (uint8_t)(capabilities_flag >> 16) & 0x01;
+    const uint8_t ep_info_cap = (uint8_t)(capabilities_flag >> 22) & 0x03;
+    const uint8_t event_cap = (uint8_t)(capabilities_flag >> 25) & 0x01;
+    const uint8_t multi_key_cap = (uint8_t)(capabilities_flag >> 26) & 0x03;
 
-    /* Checks common to 1.1 and 1.2. */
-    if ((version == SPDM_MESSAGE_VERSION_11) || (version == SPDM_MESSAGE_VERSION_12)) {
+    /* Checks common to 1.1 and higher */
+    if (version >= SPDM_MESSAGE_VERSION_11) {
         /* Illegal to return reserved values. */
         if ((psk_cap == 2) || (psk_cap == 3)) {
             return false;
@@ -79,6 +82,11 @@ static bool libspdm_check_request_flag_compatibility(uint32_t capabilities_flag,
             if ((mac_cap == 1) || (encrypt_cap == 1) || (handshake_in_the_clear_cap == 1) ||
                 (hbeat_cap == 1) || (key_upd_cap == 1)) {
                 return false;
+            }
+            if (version == SPDM_MESSAGE_VERSION_13) {
+                if (event_cap == 1) {
+                    return false;
+                }
             }
         }
         if ((key_ex_cap == 0) && (psk_cap == 1)) {
@@ -102,6 +110,11 @@ static bool libspdm_check_request_flag_compatibility(uint32_t capabilities_flag,
             if ((chal_cap == 1) || (mut_auth_cap == 1)) {
                 return false;
             }
+            if (version == SPDM_MESSAGE_VERSION_13) {
+                if (ep_info_cap == 2) {
+                    return false;
+                }
+            }
         }
 
         /* Checks that originate from mutual authentication capabilities. */
@@ -115,6 +128,14 @@ static bool libspdm_check_request_flag_compatibility(uint32_t capabilities_flag,
     /* Checks specific to 1.1. */
     if (version == SPDM_MESSAGE_VERSION_11) {
         if ((mut_auth_cap == 1) && (encap_cap == 0)) {
+            return false;
+        }
+    }
+
+    /* Checks specific to 1.3. */
+    if (version == SPDM_MESSAGE_VERSION_13) {
+        /* Illegal to return reserved values. */
+        if ((ep_info_cap == 3) || (multi_key_cap == 3)) {
             return false;
         }
     }
@@ -264,9 +285,12 @@ libspdm_return_t libspdm_get_response_capabilities(libspdm_context_t *spdm_conte
     } else if (spdm_response->header.spdm_version == SPDM_MESSAGE_VERSION_11) {
         spdm_context->connection_info.capability.flags =
             spdm_request->flags & SPDM_GET_CAPABILITIES_REQUEST_FLAGS_11_MASK;
-    } else {
+    } else if (spdm_response->header.spdm_version == SPDM_MESSAGE_VERSION_12) {
         spdm_context->connection_info.capability.flags =
             spdm_request->flags & SPDM_GET_CAPABILITIES_REQUEST_FLAGS_12_MASK;
+    } else {
+        spdm_context->connection_info.capability.flags =
+            spdm_request->flags & SPDM_GET_CAPABILITIES_REQUEST_FLAGS_13_MASK;
     }
 
     if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
