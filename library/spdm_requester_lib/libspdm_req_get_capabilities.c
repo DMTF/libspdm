@@ -37,6 +37,12 @@ static bool validate_responder_capability(uint32_t capabilities_flag, uint8_t ve
     const uint8_t set_cert_cap = (uint8_t)(capabilities_flag >> 19) & 0x01;
     const uint8_t csr_cap = (uint8_t)(capabilities_flag >> 20) & 0x01;
     const uint8_t cert_install_reset_cap = (uint8_t)(capabilities_flag >> 21) & 0x01;
+    const uint8_t ep_info_cap = (uint8_t)(capabilities_flag >> 22) & 0x03;
+    /* const uint8_t mel_cap = (uint8_t)(capabilities_flag >> 24) & 0x01; */
+    const uint8_t event_cap = (uint8_t)(capabilities_flag >> 25) & 0x01;
+    const uint8_t multi_key_cap = (uint8_t)(capabilities_flag >> 26) & 0x03;
+    const uint8_t get_key_pair_info_cap = (uint8_t)(capabilities_flag >> 28) & 0x01;
+    /* const uint8_t set_key_pair_info_cap = (uint8_t)(capabilities_flag >> 29) & 0x01; */
 
     /* Checks common to all SPDM versions. */
 
@@ -65,8 +71,8 @@ static bool validate_responder_capability(uint32_t capabilities_flag, uint8_t ve
         return true;
     }
 
-    /* Checks common to 1.1 and 1.2. */
-    if ((version == SPDM_MESSAGE_VERSION_11) || (version == SPDM_MESSAGE_VERSION_12)) {
+    /* Checks common to 1.1 and higher. */
+    if (version >= SPDM_MESSAGE_VERSION_11) {
         /* Illegal to return reserved values. */
         if (psk_cap == 3) {
             return false;
@@ -84,6 +90,11 @@ static bool validate_responder_capability(uint32_t capabilities_flag, uint8_t ve
             if ((mac_cap == 1) || (encrypt_cap == 1) || (handshake_in_the_clear_cap == 1) ||
                 (hbeat_cap == 1) || (key_upd_cap == 1)) {
                 return false;
+            }
+            if (version == SPDM_MESSAGE_VERSION_13) {
+                if (event_cap == 1) {
+                    return false;
+                }
             }
         }
         if ((key_ex_cap == 0) && (psk_cap != 0)) {
@@ -107,6 +118,11 @@ static bool validate_responder_capability(uint32_t capabilities_flag, uint8_t ve
             if ((chal_cap == 1) || (key_ex_cap == 1) || (meas_cap == 2) || (mut_auth_cap == 1)) {
                 return false;
             }
+            if (version == SPDM_MESSAGE_VERSION_13) {
+                if (ep_info_cap == 2) {
+                    return false;
+                }
+            }
         }
 
         /* Checks that originate from mutual authentication capabilities. */
@@ -124,8 +140,8 @@ static bool validate_responder_capability(uint32_t capabilities_flag, uint8_t ve
         }
     }
 
-    /* Checks specific to 1.2. */
-    if (version == SPDM_MESSAGE_VERSION_12) {
+    /* Checks common to 1.2 and higher. */
+    if (version >= SPDM_MESSAGE_VERSION_12) {
         if ((cert_cap == 0) && ((alias_cert_cap == 1) || (set_cert_cap == 1))) {
             return false;
         }
@@ -133,6 +149,18 @@ static bool validate_responder_capability(uint32_t capabilities_flag, uint8_t ve
             return false;
         }
         if ((cert_install_reset_cap == 1) && (csr_cap == 0) && (set_cert_cap == 0)) {
+            return false;
+        }
+    }
+
+    /* Checks specific to 1.3. */
+    if (version == SPDM_MESSAGE_VERSION_13) {
+        /* Illegal to return reserved values. */
+        if ((ep_info_cap == 3) || (multi_key_cap == 3)) {
+            return false;
+        }
+        /* check multi-key */
+        if ((multi_key_cap != 0) && (get_key_pair_info_cap == 0)) {
             return false;
         }
     }
@@ -322,9 +350,12 @@ static libspdm_return_t libspdm_try_get_capabilities(libspdm_context_t *spdm_con
     } else if (spdm_response->header.spdm_version == SPDM_MESSAGE_VERSION_11) {
         spdm_context->connection_info.capability.flags =
             spdm_response->flags & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_11_MASK;
-    } else {
+    } else if (spdm_response->header.spdm_version == SPDM_MESSAGE_VERSION_12) {
         spdm_context->connection_info.capability.flags =
             spdm_response->flags & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_12_MASK;
+    } else {
+        spdm_context->connection_info.capability.flags =
+            spdm_response->flags & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_13_MASK;
     }
 
     if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
