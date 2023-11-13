@@ -312,6 +312,7 @@ typedef struct {
 typedef struct {
     /* the message_a must be plan text because we do not know the algorithm yet.*/
     libspdm_vca_managed_buffer_t message_a;
+    libspdm_message_d_managed_buffer_t message_d;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     libspdm_message_b_managed_buffer_t message_b;
     libspdm_message_c_managed_buffer_t message_c;
@@ -383,6 +384,7 @@ typedef struct {
  * F  = Concatenate (PSK_FINISH request, PSK_FINISH response)*/
 
 typedef struct {
+    libspdm_message_d_managed_buffer_t message_encap_d;
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     libspdm_message_k_managed_buffer_t message_k;
     libspdm_message_f_managed_buffer_t message_f;
@@ -1199,6 +1201,14 @@ void libspdm_append_msg_log(libspdm_context_t *spdm_context, void *message, size
 void libspdm_reset_message_a(libspdm_context_t *spdm_context);
 
 /**
+ * Reset message D cache in SPDM context.
+ *
+ * @param  spdm_context       A pointer to the SPDM context.
+ * @param  spdm_session_info  A pointer to the SPDM session context.
+ **/
+void libspdm_reset_message_d(libspdm_context_t *spdm_context);
+
+/**
  * Reset message B cache in SPDM context.
  *
  * @param  spdm_context  A pointer to the SPDM context.
@@ -1245,6 +1255,14 @@ void libspdm_reset_message_m(libspdm_context_t *spdm_context, void *session_info
 void libspdm_reset_message_k(libspdm_context_t *spdm_context, void *spdm_session_info);
 
 /**
+ * Reset message EncapD cache in SPDM context.
+ *
+ * @param  spdm_context       A pointer to the SPDM context.
+ * @param  spdm_session_info  A pointer to the SPDM session context.
+ **/
+void libspdm_reset_message_encap_d(libspdm_context_t *spdm_context, void *spdm_session_info);
+
+/**
  * Reset message F cache in SPDM context.
  *
  * @param  spdm_context       A pointer to the SPDM context.
@@ -1264,6 +1282,20 @@ void libspdm_reset_message_f(libspdm_context_t *spdm_context, void *spdm_session
  **/
 libspdm_return_t libspdm_append_message_a(libspdm_context_t *spdm_context, const void *message,
                                           size_t message_size);
+
+/**
+ * Append message D cache in SPDM context.
+ *
+ * @param  spdm_context  A pointer to the SPDM context.
+ * @param  message       Message buffer.
+ * @param  message_size  Size in bytes of message buffer.
+ *
+ * @return RETURN_SUCCESS          message is appended.
+ * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
+ **/
+libspdm_return_t libspdm_append_message_d(libspdm_context_t *spdm_context, const void *message,
+                                          size_t message_size);
+
 /**
  * Append message B cache in SPDM context.
  *
@@ -1349,6 +1381,23 @@ libspdm_return_t libspdm_append_message_k(libspdm_context_t *spdm_context,
                                           void *spdm_session_info,
                                           bool is_requester, const void *message,
                                           size_t message_size);
+
+/**
+ * Append message EncapD cache in SPDM context.
+ *
+ * @param  spdm_context       A pointer to the SPDM context.
+ * @param  spdm_session_info  A pointer to the SPDM session context.
+ * @param  is_requester       Indicate of the key generation for a requester or a responder.
+ * @param  message            Message buffer.
+ * @param  message_size       Size in bytes of message buffer.
+ *
+ * @return RETURN_SUCCESS          message is appended.
+ * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
+ **/
+libspdm_return_t libspdm_append_message_encap_d(libspdm_context_t *spdm_context,
+                                                void *spdm_session_info,
+                                                bool is_requester, const void *message,
+                                                size_t message_size);
 
 /**
  * Append message F cache in SPDM context.

@@ -187,6 +187,13 @@ static libspdm_return_t libspdm_try_get_digest(libspdm_context_t *spdm_context,
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             goto receive_done;
         }
+
+        if (spdm_context->connection_info.multi_key_conn_rsp) {
+            status = libspdm_append_message_d(spdm_context, spdm_response, spdm_response_size);
+            if (LIBSPDM_STATUS_IS_ERROR(status)) {
+                goto receive_done;
+            }
+        }
     }
 
     for (index = 0; index < digest_count; index++) {

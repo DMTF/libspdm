@@ -27,6 +27,8 @@ libspdm_return_t libspdm_get_encap_response_digest(void *spdm_context,
     uint8_t slot_count;
     /*populated solt index*/
     uint8_t slot_index;
+    uint32_t session_id;
+    libspdm_session_info_t *session_info;
 
     context = spdm_context;
     spdm_request = request;
@@ -108,6 +110,28 @@ libspdm_return_t libspdm_get_encap_response_digest(void *spdm_context,
         return libspdm_generate_encap_error_response(
             context, SPDM_ERROR_CODE_UNSPECIFIED, 0,
             response_size, response);
+    }
+
+    if (context->last_spdm_request_session_id_valid) {
+        session_id = context->last_spdm_request_session_id;
+    } else {
+        session_id = context->latest_session_id;
+    }
+    if (session_id != INVALID_SESSION_ID) {
+        session_info = libspdm_get_session_info_via_session_id(context, session_id);
+    } else {
+        session_info = NULL;
+    }
+    if (session_info != NULL) {
+        if (context->connection_info.multi_key_conn_req) {
+            status = libspdm_append_message_encap_d(context, session_info, true,
+                                                    spdm_response, *response_size);
+            if (LIBSPDM_STATUS_IS_ERROR(status)) {
+                return libspdm_generate_encap_error_response(
+                    context, SPDM_ERROR_CODE_UNSPECIFIED, 0,
+                    response_size, response);
+            }
+        }
     }
 
     return LIBSPDM_STATUS_SUCCESS;

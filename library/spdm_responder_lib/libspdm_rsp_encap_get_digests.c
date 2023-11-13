@@ -69,6 +69,8 @@ libspdm_return_t libspdm_process_encap_response_digest(
     size_t digest_count;
     size_t index;
     libspdm_return_t status;
+    uint32_t session_id;
+    libspdm_session_info_t *session_info;
 
     spdm_response = encap_response;
     spdm_response_size = encap_response_size;
@@ -118,6 +120,26 @@ libspdm_return_t libspdm_process_encap_response_digest(
                                           spdm_response_size);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return LIBSPDM_STATUS_BUFFER_FULL;
+    }
+
+    if (spdm_context->last_spdm_request_session_id_valid) {
+        session_id = spdm_context->last_spdm_request_session_id;
+    } else {
+        session_id = spdm_context->latest_session_id;
+    }
+    if (session_id != INVALID_SESSION_ID) {
+        session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
+    } else {
+        session_info = NULL;
+    }
+    if (session_info != NULL) {
+        if (spdm_context->connection_info.multi_key_conn_req) {
+            status = libspdm_append_message_encap_d(spdm_context, session_info, false,
+                                                    spdm_response, spdm_response_size);
+            if (LIBSPDM_STATUS_IS_ERROR(status)) {
+                return LIBSPDM_STATUS_BUFFER_FULL;
+            }
+        }
     }
 
     for (index = 0; index < digest_count; index++) {

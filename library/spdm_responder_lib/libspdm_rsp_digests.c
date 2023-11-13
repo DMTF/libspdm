@@ -150,6 +150,15 @@ libspdm_return_t libspdm_get_response_digests(libspdm_context_t *spdm_context, s
                                                    SPDM_ERROR_CODE_UNSPECIFIED, 0,
                                                    response_size, response);
         }
+
+        if (spdm_context->connection_info.multi_key_conn_rsp) {
+            status = libspdm_append_message_d(spdm_context, spdm_response, *response_size);
+            if (LIBSPDM_STATUS_IS_ERROR(status)) {
+                return libspdm_generate_error_response(spdm_context,
+                                                       SPDM_ERROR_CODE_UNSPECIFIED, 0,
+                                                       response_size, response);
+            }
+        }
     }
 
     if (spdm_context->connection_info.connection_state <
