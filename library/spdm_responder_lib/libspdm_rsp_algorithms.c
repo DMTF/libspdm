@@ -579,8 +579,39 @@ libspdm_return_t libspdm_get_response_algorithms(libspdm_context_t *spdm_context
         spdm_response->other_params_selection = (uint8_t)libspdm_prioritize_algorithm(
             other_params_support_priority_table,
             LIBSPDM_ARRAY_SIZE(other_params_support_priority_table),
-            spdm_context->local_context.algorithm.other_params_support,
-            spdm_context->connection_info.algorithm.other_params_support);
+            spdm_context->local_context.algorithm.other_params_support &
+            SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_MASK,
+            spdm_context->connection_info.algorithm.other_params_support &
+            SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_MASK);
+    }
+
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+        switch (spdm_context->connection_info.capability.flags &
+                SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MULTI_KEY_CAP) {
+        case 0:
+            spdm_context->connection_info.multi_key_conn_req = false;
+            break;
+        case SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MULTI_KEY_CAP_ONLY:
+            spdm_context->connection_info.multi_key_conn_req = true;
+            break;
+        case SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MULTI_KEY_CAP_NEG:
+            if ((spdm_context->local_context.algorithm.other_params_support &
+                 SPDM_ALGORITHMS_MULTI_KEY_CONN) == 0) {
+                spdm_context->connection_info.multi_key_conn_req = false;
+            } else {
+                spdm_context->connection_info.multi_key_conn_req = true;
+            }
+            break;
+        default:
+            return libspdm_generate_error_response(
+                spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
+                0, response_size, response);
+        }
+        if (spdm_context->connection_info.multi_key_conn_req) {
+            spdm_response->other_params_selection |= SPDM_ALGORITHMS_MULTI_KEY_CONN;
+        } else {
+            spdm_response->other_params_selection &= ~SPDM_ALGORITHMS_MULTI_KEY_CONN;
+        }
     }
 
     spdm_context->connection_info.algorithm.measurement_spec =
@@ -758,6 +789,30 @@ libspdm_return_t libspdm_get_response_algorithms(libspdm_context_t *spdm_context
                         SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                         response_size, response);
                 }
+            }
+        }
+
+        if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+            if ((spdm_context->connection_info.algorithm.other_params_support &
+                 SPDM_ALGORITHMS_MULTI_KEY_CONN) == 0) {
+                if ((spdm_context->local_context.capability.flags &
+                     SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MULTI_KEY_CAP) ==
+                    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MULTI_KEY_CAP_ONLY) {
+                    return libspdm_generate_error_response(
+                        spdm_context,
+                        SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                        response_size, response);
+                }
+                spdm_context->connection_info.multi_key_conn_rsp = false;
+            } else {
+                if ((spdm_context->local_context.capability.flags &
+                     SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MULTI_KEY_CAP) == 0) {
+                    return libspdm_generate_error_response(
+                        spdm_context,
+                        SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                        response_size, response);
+                }
+                spdm_context->connection_info.multi_key_conn_rsp = true;
             }
         }
     } else {

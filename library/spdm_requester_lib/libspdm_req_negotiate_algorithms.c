@@ -140,6 +140,32 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
         spdm_request->other_params_support =
             spdm_context->local_context.algorithm.other_params_support;
     }
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+        switch (spdm_context->connection_info.capability.flags &
+                SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MULTI_KEY_CAP) {
+        case 0:
+            spdm_context->connection_info.multi_key_conn_rsp = false;
+            break;
+        case SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MULTI_KEY_CAP_ONLY:
+            spdm_context->connection_info.multi_key_conn_rsp = true;
+            break;
+        case SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MULTI_KEY_CAP_NEG:
+            if ((spdm_context->local_context.algorithm.other_params_support &
+                 SPDM_ALGORITHMS_MULTI_KEY_CONN) == 0) {
+                spdm_context->connection_info.multi_key_conn_rsp = false;
+            } else {
+                spdm_context->connection_info.multi_key_conn_rsp = true;
+            }
+            break;
+        default:
+            return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+        }
+        if (spdm_context->connection_info.multi_key_conn_rsp) {
+            spdm_request->other_params_support |= SPDM_ALGORITHMS_MULTI_KEY_CONN;
+        } else {
+            spdm_request->other_params_support &= ~SPDM_ALGORITHMS_MULTI_KEY_CONN;
+        }
+    }
     spdm_request->base_asym_algo = spdm_context->local_context.algorithm.base_asym_algo;
     spdm_request->base_hash_algo = spdm_context->local_context.algorithm.base_hash_algo;
     spdm_request->ext_asym_count = 0;
@@ -534,6 +560,26 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
                     status = LIBSPDM_STATUS_NEGOTIATION_FAIL;
                     goto receive_done;
                 }
+            }
+        }
+
+        if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+            if ((spdm_context->connection_info.algorithm.other_params_support &
+                 SPDM_ALGORITHMS_MULTI_KEY_CONN) == 0) {
+                if ((spdm_context->local_context.capability.flags &
+                     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MULTI_KEY_CAP) ==
+                    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MULTI_KEY_CAP_ONLY) {
+                    status = LIBSPDM_STATUS_NEGOTIATION_FAIL;
+                    goto receive_done;
+                }
+                spdm_context->connection_info.multi_key_conn_req = false;
+            } else {
+                if ((spdm_context->local_context.capability.flags &
+                     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MULTI_KEY_CAP) == 0) {
+                    status = LIBSPDM_STATUS_NEGOTIATION_FAIL;
+                    goto receive_done;
+                }
+                spdm_context->connection_info.multi_key_conn_req = true;
             }
         }
     } else {

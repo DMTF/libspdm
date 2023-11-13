@@ -128,6 +128,10 @@ typedef struct {
     /* Specifies whether the cached negotiated state should be invalidated. (responder only)
      * This is a "sticky" bit wherein if it is set to 1 then it cannot be set to 0. */
     uint8_t end_session_attributes;
+
+    /* multi-key negotiated result */
+    bool multi_key_conn_req;
+    bool multi_key_conn_rsp;
 } libspdm_connection_info_t;
 
 typedef struct {
