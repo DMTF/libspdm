@@ -289,7 +289,9 @@ typedef struct {
     uint16_t length;
     uint8_t measurement_specification;
     /* other_params_support is added in 1.2.
-     * BIT[0:3]=opaque_data_format support, BIT[4:7]=reserved*/
+     * BIT[0:3]=opaque_data_format support
+     * BIT[4]=ResponderMultiKeyConn, added in 1.3
+     * BIT[5:7]=reserved*/
     uint8_t other_params_support;
     uint32_t base_asym_algo;
     uint32_t base_hash_algo;
@@ -387,7 +389,9 @@ typedef struct {
     uint16_t length;
     uint8_t measurement_specification_sel;
     /* other_params_selection is added in 1.2.
-     * BIT[0:3]=opaque_data_format select, BIT[4:7]=reserved*/
+     * BIT[0:3]=opaque_data_format select,
+     * BIT[4]=RequesterMultiKeyConnSel, added in 1.3
+     * BIT[5:7]=reserved*/
     uint8_t other_params_selection;
     uint32_t measurement_hash_algo;
     uint32_t base_asym_sel;
@@ -419,6 +423,8 @@ typedef struct {
 #define SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_0 0x1
 #define SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1 0x2
 #define SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_MASK 0xF
+/* SPDM Multi-Connection Selection (1.3) */
+#define SPDM_ALGORITHMS_MULTI_KEY_CONN 0x10
 
 /* SPDM Opaque Data Format 1 (1.2) */
 typedef struct {
