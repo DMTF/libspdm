@@ -1090,6 +1090,16 @@ void libspdm_reset_message_a(libspdm_context_t *spdm_context)
 }
 
 /**
+ * Reset message D cache in SPDM context.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ **/
+void libspdm_reset_message_d(libspdm_context_t *spdm_context)
+{
+    libspdm_reset_managed_buffer(&spdm_context->transcript.message_d);
+}
+
+/**
  * Reset message B cache in SPDM context.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
@@ -1227,6 +1237,20 @@ void libspdm_reset_message_k(libspdm_context_t *spdm_context, void *session_info
 }
 
 /**
+ * Reset message EncapD cache in SPDM context.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  spdm_session_info              A pointer to the SPDM session context.
+ **/
+void libspdm_reset_message_encap_d(libspdm_context_t *spdm_context, void *session_info)
+{
+    libspdm_session_info_t *spdm_session_info;
+
+    spdm_session_info = session_info;
+    libspdm_reset_managed_buffer(&spdm_session_info->session_transcript.message_encap_d);
+}
+
+/**
  * Reset message F cache in SPDM context.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
@@ -1324,6 +1348,24 @@ libspdm_return_t libspdm_append_message_a(libspdm_context_t *spdm_context, const
                                           size_t message_size)
 {
     return libspdm_append_managed_buffer(&spdm_context->transcript.message_a,
+                                         message, message_size);
+}
+
+/**
+ * Append message D cache in SPDM context.
+ *
+ * @param  spdm_context  A pointer to the SPDM context.
+ * @param  message       Message buffer.
+ * @param  message_size  Size in bytes of message buffer.
+ *
+ * @return RETURN_SUCCESS          message is appended.
+ * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
+ **/
+libspdm_return_t libspdm_append_message_d(libspdm_context_t *spdm_context, const void *message,
+                                          size_t message_size)
+{
+    libspdm_reset_message_d (spdm_context);
+    return libspdm_append_managed_buffer(&spdm_context->transcript.message_d,
                                          message, message_size);
 }
 
@@ -1836,6 +1878,19 @@ libspdm_return_t libspdm_append_message_k(libspdm_context_t *spdm_context,
                 return LIBSPDM_STATUS_CRYPTO_ERROR;
             }
             if (!spdm_session_info->use_psk) {
+                if (spdm_context->connection_info.multi_key_conn_rsp) {
+                    result = libspdm_hash_update (
+                        spdm_context->connection_info.algorithm.base_hash_algo,
+                        spdm_session_info->session_transcript.digest_context_th,
+                        libspdm_get_managed_buffer(&spdm_context->transcript.message_d),
+                        libspdm_get_managed_buffer_size(&spdm_context->transcript.message_d));
+                    if (!result) {
+                        libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
+                                           spdm_session_info->session_transcript.digest_context_th);
+                        return LIBSPDM_STATUS_CRYPTO_ERROR;
+                    }
+                }
+
                 result = libspdm_hash_update (
                     spdm_context->connection_info.algorithm.base_hash_algo,
                     spdm_session_info->session_transcript.digest_context_th,
@@ -1859,6 +1914,32 @@ libspdm_return_t libspdm_append_message_k(libspdm_context_t *spdm_context,
         return LIBSPDM_STATUS_SUCCESS;
     }
 #endif
+}
+
+/**
+ * Append message EncapD cache in SPDM context.
+ *
+ * @param  spdm_context       A pointer to the SPDM context.
+ * @param  spdm_session_info  A pointer to the SPDM session context.
+ * @param  is_requester       Indicate of the key generation for a requester or a responder.
+ * @param  message            Message buffer.
+ * @param  message_size       Size in bytes of message buffer.
+ *
+ * @return RETURN_SUCCESS          message is appended.
+ * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
+ **/
+libspdm_return_t libspdm_append_message_encap_d(libspdm_context_t *spdm_context,
+                                                void *session_info,
+                                                bool is_requester, const void *message,
+                                                size_t message_size)
+{
+    libspdm_session_info_t *spdm_session_info;
+
+    spdm_session_info = session_info;
+    libspdm_reset_message_encap_d(spdm_context, session_info);
+    return libspdm_append_managed_buffer(
+        &spdm_session_info->session_transcript.message_encap_d, message,
+        message_size);
 }
 
 /**
@@ -1993,6 +2074,22 @@ libspdm_return_t libspdm_append_message_f(libspdm_context_t *spdm_context,
         LIBSPDM_ASSERT (spdm_session_info->session_transcript.digest_context_th != NULL);
         if (!spdm_session_info->session_transcript.message_f_initialized) {
             if (!spdm_session_info->use_psk && spdm_session_info->mut_auth_requested) {
+                if (spdm_context->connection_info.multi_key_conn_req) {
+                    result = libspdm_hash_update (
+                        spdm_context->connection_info.algorithm.base_hash_algo,
+                        spdm_session_info->session_transcript.digest_context_th,
+                        libspdm_get_managed_buffer(&spdm_session_info->session_transcript.
+                                                   message_encap_d),
+                        libspdm_get_managed_buffer_size(&spdm_session_info->session_transcript.
+                                                        message_encap_d));
+                    if (!result) {
+                        libspdm_hash_free (spdm_context->connection_info.algorithm.base_hash_algo,
+                                           spdm_session_info->session_transcript.digest_context_th);
+                        spdm_session_info->session_transcript.digest_context_th = NULL;
+                        return LIBSPDM_STATUS_CRYPTO_ERROR;
+                    }
+                }
+
                 result = libspdm_hash_update (
                     spdm_context->connection_info.algorithm.base_hash_algo,
                     spdm_session_info->session_transcript.digest_context_th,
@@ -2636,6 +2733,8 @@ libspdm_return_t libspdm_init_context_with_secured_context(void *spdm_context,
     context->version = LIBSPDM_CONTEXT_STRUCT_VERSION;
     context->transcript.message_a.max_buffer_size =
         sizeof(context->transcript.message_a.buffer);
+    context->transcript.message_d.max_buffer_size =
+        sizeof(context->transcript.message_d.buffer);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     context->transcript.message_b.max_buffer_size =
         sizeof(context->transcript.message_b.buffer);
@@ -2818,6 +2917,7 @@ void libspdm_deinit_context(void *spdm_context)
 #endif
 
     libspdm_reset_message_a(context);
+    libspdm_reset_message_d(context);
     libspdm_reset_message_b(context);
     libspdm_reset_message_c(context);
     libspdm_reset_message_mut_b(context);
@@ -2825,6 +2925,7 @@ void libspdm_deinit_context(void *spdm_context)
     for (session_id = 0; session_id < LIBSPDM_MAX_SESSION_COUNT; session_id++) {
         session_info = &context->session_info[session_id];
         libspdm_reset_message_m(context, session_info);
+        libspdm_reset_message_encap_d(context, session_info);
         libspdm_reset_message_k(context, session_info);
         libspdm_reset_message_f(context, session_info);
     }

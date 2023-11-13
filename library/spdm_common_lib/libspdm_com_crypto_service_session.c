@@ -49,6 +49,20 @@ bool libspdm_calculate_th_for_exchange(
     }
 
     if (cert_chain_buffer != NULL) {
+        if (spdm_context->connection_info.multi_key_conn_rsp) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_d data :\n"));
+            LIBSPDM_INTERNAL_DUMP_HEX(
+                libspdm_get_managed_buffer(&spdm_context->transcript.message_d),
+                libspdm_get_managed_buffer_size(&spdm_context->transcript.message_d));
+            status = libspdm_append_managed_buffer(
+                th_curr,
+                libspdm_get_managed_buffer(&spdm_context->transcript.message_d),
+                libspdm_get_managed_buffer_size(&spdm_context->transcript.message_d));
+            if (LIBSPDM_STATUS_IS_ERROR(status)) {
+                return false;
+            }
+        }
+
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "th_message_ct data :\n"));
         LIBSPDM_INTERNAL_DUMP_HEX(cert_chain_buffer, cert_chain_buffer_size);
         result = libspdm_hash_all(
@@ -236,6 +250,20 @@ bool libspdm_calculate_th_for_finish(libspdm_context_t *spdm_context,
     }
 
     if (cert_chain_buffer != NULL) {
+        if (spdm_context->connection_info.multi_key_conn_rsp) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_d data :\n"));
+            LIBSPDM_INTERNAL_DUMP_HEX(
+                libspdm_get_managed_buffer(&spdm_context->transcript.message_d),
+                libspdm_get_managed_buffer_size(&spdm_context->transcript.message_d));
+            status = libspdm_append_managed_buffer(
+                th_curr,
+                libspdm_get_managed_buffer(&spdm_context->transcript.message_d),
+                libspdm_get_managed_buffer_size(&spdm_context->transcript.message_d));
+            if (LIBSPDM_STATUS_IS_ERROR(status)) {
+                return false;
+            }
+        }
+
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "th_message_ct data :\n"));
         LIBSPDM_INTERNAL_DUMP_HEX(cert_chain_buffer, cert_chain_buffer_size);
         result = libspdm_hash_all(
@@ -264,6 +292,20 @@ bool libspdm_calculate_th_for_finish(libspdm_context_t *spdm_context,
     }
 
     if (mut_cert_chain_buffer != NULL) {
+        if (spdm_context->connection_info.multi_key_conn_req) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_encap_d data :\n"));
+            LIBSPDM_INTERNAL_DUMP_HEX(
+                libspdm_get_managed_buffer(&session_info->session_transcript.message_encap_d),
+                libspdm_get_managed_buffer_size(&session_info->session_transcript.message_encap_d));
+            status = libspdm_append_managed_buffer(
+                th_curr,
+                libspdm_get_managed_buffer(&session_info->session_transcript.message_encap_d),
+                libspdm_get_managed_buffer_size(&session_info->session_transcript.message_encap_d));
+            if (LIBSPDM_STATUS_IS_ERROR(status)) {
+                return false;
+            }
+        }
+
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "th_message_cm data :\n"));
         LIBSPDM_INTERNAL_DUMP_HEX(mut_cert_chain_buffer, mut_cert_chain_buffer_size);
         result = libspdm_hash_all(

@@ -96,6 +96,8 @@ void libspdm_session_info_init(libspdm_context_t *spdm_context,
         spdm_context->connection_info.algorithm.dhe_named_group,
         spdm_context->connection_info.algorithm.aead_cipher_suite,
         spdm_context->connection_info.algorithm.key_schedule);
+    session_info->session_transcript.message_encap_d.max_buffer_size =
+        sizeof(session_info->session_transcript.message_encap_d.buffer);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     session_info->session_transcript.message_k.max_buffer_size =
         sizeof(session_info->session_transcript.message_k.buffer);
