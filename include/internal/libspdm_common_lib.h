@@ -146,48 +146,63 @@ typedef struct {
     uint8_t buffer[LIBSPDM_MAX_MESSAGE_VCA_BUFFER_SIZE];
 } libspdm_vca_managed_buffer_t;
 
+/*
+ * +--------------------------+------------------------------------------+---------+
+ * | DIGESTS 1.3              | 4 + (H [+ 4]) * SlotNum = [36, 548]      | [1, 18] |
+ * +--------------------------+------------------------------------------+---------+
+ * It is for multi-key.
+ */
+#define LIBSPDM_MAX_MESSAGE_D_BUFFER_SIZE (4 + \
+                                           (LIBSPDM_MAX_HASH_SIZE + 4) * SPDM_MAX_SLOT_COUNT)
+
+typedef struct {
+    size_t max_buffer_size;
+    size_t buffer_size;
+    uint8_t buffer[LIBSPDM_MAX_MESSAGE_D_BUFFER_SIZE];
+} libspdm_message_d_managed_buffer_t;
+
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 
 /*
  * +--------------------------+------------------------------------------+---------+
- * | GET_DIGESTS 1.2          | 4                                        | 1       |
- * | DIGESTS 1.2              | 4 + H * SlotNum = [36, 516]              | [1, 18] |
+ * | GET_DIGESTS 1.3          | 4                                        | 1       |
+ * | DIGESTS 1.3              | 4 + (H [+ 4]) * SlotNum = [36, 548]      | [1, 18] |
  * +--------------------------+------------------------------------------+---------+
- * | GET_CERTIFICATE 1.2      | 8                                        | 1       |
- * | CERTIFICATE 1.2          | 8 + PortionLen                           | [1, ]   |
+ * | GET_CERTIFICATE 1.3      | 8                                        | 1       |
+ * | CERTIFICATE 1.3          | 8 + PortionLen                           | [1, ]   |
  * +--------------------------+------------------------------------------+---------+
  */
 #define LIBSPDM_MAX_MESSAGE_B_BUFFER_SIZE (24 + \
-                                           LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT + \
+                                           (LIBSPDM_MAX_HASH_SIZE + 4) * SPDM_MAX_SLOT_COUNT + \
                                            LIBSPDM_MAX_CERT_CHAIN_SIZE)
 
 /*
  * +--------------------------+------------------------------------------+---------+
- * | CHALLENGE 1.2            | 40                                       | 1       |
- * | CHALLENGE_AUTH 1.2       | 38 + H * 2 + S [+ O] = [166, 678]        | [6, 23] |
+ * | CHALLENGE 1.3            | 44                                       | 1       |
+ * | CHALLENGE_AUTH 1.3       | 46 + H * 2 + S [+ O] = [166, 678]        | [6, 23] |
  * +--------------------------+------------------------------------------+---------+
  */
-#define LIBSPDM_MAX_MESSAGE_C_BUFFER_SIZE (78 + \
+#define LIBSPDM_MAX_MESSAGE_C_BUFFER_SIZE (90 + \
                                            LIBSPDM_MAX_HASH_SIZE * 2 + \
                                            LIBSPDM_MAX_ASYM_KEY_SIZE + SPDM_MAX_OPAQUE_DATA_SIZE)
 
 /*
  * +--------------------------+------------------------------------------+---------+
- * | GET_MEASUREMENTS 1.2     | 5 + Nonce (0 or 32)                      | 1       |
- * | MEASUREMENTS 1.2         | 42 + MeasRecLen (+ S) [+ O] = [106, 554] | [4, 19] |
+ * | GET_MEASUREMENTS 1.3     | 13 + Nonce (0 or 32)                     | 1       |
+ * | MEASUREMENTS 1.3         | 50 + MeasRecLen (+ S) [+ O] = [106, 554] | [4, 19] |
  * +--------------------------+------------------------------------------+---------+
  */
-#define LIBSPDM_MAX_MESSAGE_M_BUFFER_SIZE (47 + SPDM_NONCE_SIZE + \
+#define LIBSPDM_MAX_MESSAGE_M_BUFFER_SIZE (63 + SPDM_NONCE_SIZE + \
                                            LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE + \
                                            LIBSPDM_MAX_ASYM_KEY_SIZE + SPDM_MAX_OPAQUE_DATA_SIZE)
 
 /*
  * +--------------------------+------------------------------------------+---------+
- * | KEY_EXCHANGE 1.2         | 42 + D [+ O] = [106, 554]                | [4, 19] |
- * | KEY_EXCHANGE_RSP 1.2     | 42 + D + H + S (+ H) [+ O] = [234, 1194] | [8, 40] |
+ * | KEY_EXCHANGE 1.3         | 42 + D [+ O] = [106, 554]                | [4, 19] |
+ * | KEY_EXCHANGE_RSP 1.3     | 42 + D + H + S (+ H) [+ O] = [234, 1194] | [8, 40] |
  * +--------------------------+------------------------------------------+---------+
- * | PSK_EXCHANGE 1.2         | 12 [+ PSKHint] + R [+ O] = 44            | 2       |
- * | PSK_EXCHANGE_RSP 1.2     | 12 + R + H (+ H) [+ O] = [108, 172]      | [4, 6]  |
+ * | PSK_EXCHANGE 1.3         | 12 [+ PSKHint] + R [+ O] = 44            | 2       |
+ * | PSK_EXCHANGE_RSP 1.3     | 12 + R + H (+ H) [+ O] = [108, 172]      | [4, 6]  |
  * +--------------------------+------------------------------------------+---------+
  */
 #define LIBSPDM_MAX_MESSAGE_K_BUFFER_SIZE (84 + LIBSPDM_MAX_DHE_KEY_SIZE * 2 + \
@@ -196,11 +211,11 @@ typedef struct {
 
 /*
  * +--------------------------+------------------------------------------+---------+
- * | FINISH 1.2               | 4 (+ S) + H = [100, 580]                 | [4, 20] |
- * | FINISH_RSP 1.2           | 4 (+ H) = [36, 69]                       | [1, 3]  |
+ * | FINISH 1.3               | 4 (+ S) + H = [100, 580]                 | [4, 20] |
+ * | FINISH_RSP 1.3           | 4 (+ H) = [36, 69]                       | [1, 3]  |
  * +--------------------------+------------------------------------------+---------+
- * | PSK_FINISH 1.2           | 4 + H = [36, 68]                         | [1, 3]  |
- * | PSK_FINISH_RSP 1.2       | 4                                        | 1       |
+ * | PSK_FINISH 1.3           | 4 + H = [36, 68]                         | [1, 3]  |
+ * | PSK_FINISH_RSP 1.3       | 4                                        | 1       |
  * +--------------------------+------------------------------------------+---------+
  */
 #define LIBSPDM_MAX_MESSAGE_F_BUFFER_SIZE (8 + LIBSPDM_MAX_HASH_SIZE * 2 + \
@@ -215,7 +230,9 @@ typedef struct {
 
 #define LIBSPDM_MAX_MESSAGE_TH_BUFFER_SIZE \
     (LIBSPDM_MAX_MESSAGE_VCA_BUFFER_SIZE + \
+     LIBSPDM_MAX_MESSAGE_D_BUFFER_SIZE + \
      LIBSPDM_MAX_CERT_CHAIN_SIZE + LIBSPDM_MAX_MESSAGE_K_BUFFER_SIZE + \
+     LIBSPDM_MAX_MESSAGE_D_BUFFER_SIZE + \
      LIBSPDM_MAX_CERT_CHAIN_SIZE + LIBSPDM_MAX_MESSAGE_F_BUFFER_SIZE)
 
 typedef struct {
@@ -308,34 +325,43 @@ typedef struct {
 #endif
 } libspdm_transcript_t;
 
-/* TH for KEY_EXCHANGE response signature: Concatenate (A, Ct, K)
+/* TH for KEY_EXCHANGE response signature: Concatenate (A, D, Ct, K)
+ * D = DIGEST, if MULTI_KEY_CONN_RSP
  * Ct = certificate chain
  * K  = Concatenate (KEY_EXCHANGE request, KEY_EXCHANGE response\signature+verify_data)*/
 
-/* TH for KEY_EXCHANGE response HMAC: Concatenate (A, Ct, K)
+/* TH for KEY_EXCHANGE response HMAC: Concatenate (A, D, Ct, K)
+ * D = DIGEST, if MULTI_KEY_CONN_RSP
  * Ct = certificate chain
  * K  = Concatenate (KEY_EXCHANGE request, KEY_EXCHANGE response\verify_data)*/
 
-/* TH for FINISH request signature: Concatenate (A, Ct, K, CM, F)
+/* TH for FINISH request signature: Concatenate (A, D, Ct, K, EncapD, CM, F)
+ * D = DIGEST, if MULTI_KEY_CONN_RSP
  * Ct = certificate chain
- * K  = Concatenate (KEY_EXCHANGE request, KEY_EXCHANGE response)*/
-/* CM = mutual certificate chain *
+ * K  = Concatenate (KEY_EXCHANGE request, KEY_EXCHANGE response)
+ * EncapD = Encap DIGEST, if MULTI_KEY_CONN_REQ
+ * CM = mutual certificate chain
  * F  = Concatenate (FINISH request\signature+verify_data)*/
 
-/* TH for FINISH response HMAC: Concatenate (A, Ct, K, CM, F)
+/* TH for FINISH response HMAC: Concatenate (A, D, Ct, K, EncapD, CM, F)
+ * D = DIGEST, if MULTI_KEY_CONN_RSP
  * Ct = certificate chain
- * K = Concatenate (KEY_EXCHANGE request, KEY_EXCHANGE response)*/
-/* CM = mutual certificate chain *
+ * K = Concatenate (KEY_EXCHANGE request, KEY_EXCHANGE response)
+ * EncapD = Encap DIGEST, if MULTI_KEY_CONN_REQ
+ * CM = mutual certificate chain, if MutAuth
  * F = Concatenate (FINISH request\verify_data)*/
 
-/* th1: Concatenate (A, Ct, K)
+/* th1: Concatenate (A, D, Ct, K)
+ * D = DIGEST, if MULTI_KEY_CONN_RSP
  * Ct = certificate chain
  * K  = Concatenate (KEY_EXCHANGE request, KEY_EXCHANGE response)*/
 
-/* th2: Concatenate (A, Ct, K, CM, F)
+/* th2: Concatenate (A, D, Ct, K, EncapD, CM, F)
+ * D = DIGEST, if MULTI_KEY_CONN_RSP
  * Ct = certificate chain
- * K  = Concatenate (KEY_EXCHANGE request, KEY_EXCHANGE response)*/
-/* CM = mutual certificate chain *
+ * K  = Concatenate (KEY_EXCHANGE request, KEY_EXCHANGE response)
+ * EncapD = Encap DIGEST, if MULTI_KEY_CONN_REQ
+ * CM = mutual certificate chain, if MutAuth
  * F  = Concatenate (FINISH request, FINISH response)*/
 
 /* TH for PSK_EXCHANGE response HMAC: Concatenate (A, K)
