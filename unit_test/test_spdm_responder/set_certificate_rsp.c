@@ -7,6 +7,14 @@
 #include "spdm_unit_test.h"
 #include "internal/libspdm_responder_lib.h"
 
+#if defined(_WIN32) || (defined(__clang__) && (defined (LIBSPDM_CPU_AARCH64) || \
+    defined(LIBSPDM_CPU_ARM)))
+#else
+    #include <fcntl.h>
+    #include <unistd.h>
+    #include <sys/stat.h>
+#endif
+
 #if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
 
 extern bool g_in_trusted_environment;
@@ -760,6 +768,126 @@ void libspdm_test_responder_set_cetificate_rsp_case9(void **state)
     free(cert_chain);
     free(m_libspdm_set_certificate_request);
 }
+
+/**
+ * Test 10: receives a valid SET_CERTIFICATE request message from Requester to erase cert in slot_id:1 with session
+ * Expected Behavior: produces a valid SET_CERTIFICATE_RSP response message
+ **/
+void libspdm_test_responder_set_cetificate_rsp_case10(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_set_certificate_response_t *spdm_response;
+    spdm_set_certificate_request_t *m_libspdm_set_certificate_request;
+
+    libspdm_session_info_t *session_info;
+    uint32_t session_id;
+    uint8_t slot_id;
+#if defined(_WIN32) || (defined(__clang__) && (defined (LIBSPDM_CPU_AARCH64) || \
+    defined(LIBSPDM_CPU_ARM)))
+    FILE *fp_out;
+#else
+    int64_t fp_out;
+    struct stat file_stat;
+#endif
+    size_t cert_file_size;
+
+    char file_name[] = "slot_id_0_cert_chain.der";
+    slot_id = 1;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xA;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    /*responset_state need to set normal*/
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo =
+        m_libspdm_use_asym_algo;
+
+    spdm_context->local_context.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo =
+        m_libspdm_use_asym_algo;
+
+    session_id = 0xFFFFFFFF;
+    spdm_context->latest_session_id = session_id;
+    spdm_context->last_spdm_request_session_id_valid = true;
+    spdm_context->last_spdm_request_session_id = session_id;
+    session_info = &spdm_context->session_info[0];
+    libspdm_session_info_init(spdm_context, session_info, session_id, true);
+    libspdm_secured_message_set_session_state(
+        session_info->secured_message_context,
+        LIBSPDM_SESSION_STATE_ESTABLISHED);
+
+    m_libspdm_set_certificate_request = malloc(sizeof(spdm_set_certificate_request_t));
+
+    m_libspdm_set_certificate_request->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    m_libspdm_set_certificate_request->header.request_response_code = SPDM_SET_CERTIFICATE;
+    m_libspdm_set_certificate_request->header.param1 = slot_id |
+                                                       SPDM_SET_CERTIFICATE_REQUEST_ATTRIBUTES_ERASE;
+    m_libspdm_set_certificate_request->header.param2 = 0;
+
+    size_t m_libspdm_set_certificate_request_size = sizeof(spdm_set_certificate_request_t);
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_set_certificate(spdm_context,
+                                                  m_libspdm_set_certificate_request_size,
+                                                  m_libspdm_set_certificate_request,
+                                                  &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_set_certificate_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_SET_CERTIFICATE_RSP);
+    assert_int_equal(spdm_response->header.param1, slot_id);
+
+    /*change the file name, for example: slot_id_1_cert_chain.der*/
+    file_name[8] = (char)(slot_id + '0');
+
+#if defined(_WIN32) || (defined(__clang__) && (defined (LIBSPDM_CPU_AARCH64) || \
+    defined(LIBSPDM_CPU_ARM)))
+    if ((fp_out = fopen(file_name, "r")) == NULL) {
+        printf("Unable to open file %s\n", file_name);
+        assert_false(true);
+    }
+
+    /*check the cert is erased*/
+    fseek(fp_out, 0, SEEK_END);
+    cert_file_size = ftell(fp_out);
+    assert_int_equal(cert_file_size, 0);
+
+    fclose(fp_out);
+#else
+    if ((fp_out = open(file_name, O_RDONLY)) == -1) {
+        printf("Unable to open file %s\n", file_name);
+        assert_false(true);
+    }
+
+    if (fstat(fp_out, &file_stat) != 0) {
+        assert_false(true);
+    }
+
+    cert_file_size = file_stat.st_size;
+    assert_int_equal(cert_file_size, 0);
+
+    close(fp_out);
+#endif
+
+    free(m_libspdm_set_certificate_request);
+}
+
 libspdm_test_context_t m_libspdm_responder_set_certificate_rsp_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     false,
@@ -786,6 +914,8 @@ int libspdm_responder_set_certificate_rsp_test_main(void)
         cmocka_unit_test(libspdm_test_responder_set_cetificate_rsp_case8),
         /* Error Case for set_certificate to slot_id:1 without session and without trusted environment */
         cmocka_unit_test(libspdm_test_responder_set_cetificate_rsp_case9),
+        /* Success Case for erase certificate to slot_id:1 with session*/
+        cmocka_unit_test(libspdm_test_responder_set_cetificate_rsp_case10),
     };
 
     libspdm_setup_test_context(&m_libspdm_responder_set_certificate_rsp_test_context);
