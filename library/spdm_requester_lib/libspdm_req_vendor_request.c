@@ -217,7 +217,7 @@ libspdm_return_t libspdm_vendor_request(void *spdm_context,
         status = libspdm_try_vendor_request(context,
                                             standard_id,
                                             vendor_id_len, (uint8_t *)vendor_id,
-                                            (uint8_t *)request, request_len,
+                                            (uint8_t *)request, (uint16_t)request_len,
                                             (uint8_t *)response, response_len);
         if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
             return status;
