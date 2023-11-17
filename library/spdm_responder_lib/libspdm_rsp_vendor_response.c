@@ -65,6 +65,12 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
                                                response_size, response);
     }
 
+    if (spdm_context->vendor_response_callback == NULL) {
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                               response_size, response);
+    }
+
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                                                   spdm_request->header.request_response_code);
 
@@ -107,8 +113,9 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
 
     /* assign vendors from request
      * req_data advances by spdm_response->len */
+    uint8_t* temp_vendor_ptr = vendor_id;
     for (i = 0; i < spdm_response->len; i++) {
-        *vendor_id++ = *req_data++;
+        *temp_vendor_ptr++ = *req_data++;
     }
 
     /* advance by payload length, so callback gets actual payload */
@@ -127,8 +134,8 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
                                                     resp_data, &response_capacity);
 
     /* store back the response payload size */
-    *((uint16_t*)(resp_data - sizeof(uint16_t))) = response_capacity;
-    *response_size = response_capacity + header_length;
+    *((uint16_t*)(resp_data - sizeof(uint16_t))) = (uint16_t)response_capacity;
+    *response_size = response_capacity + (size_t)header_length;
 
     /* We are not caching request and response with libspdm_append_message_b
      * as these are used for secure sessions, so out of scope for us */
