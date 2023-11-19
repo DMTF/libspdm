@@ -2669,6 +2669,11 @@ libspdm_return_t libspdm_init_context_with_secured_context(void *spdm_context,
 
     context->max_spdm_session_sequence_number = LIBSPDM_MAX_SPDM_SESSION_SEQUENCE_NUMBER;
 
+    context->latest_session_id = INVALID_SESSION_ID;
+    context->last_spdm_request_session_id = INVALID_SESSION_ID;
+    context->last_spdm_request_session_id_valid = false;
+    context->last_spdm_request_size = 0;
+
     /* To be updated in libspdm_register_device_buffer_func */
     context->local_context.capability.data_transfer_size = 0;
     context->local_context.capability.sender_data_transfer_size = 0;
@@ -2759,6 +2764,7 @@ void libspdm_reset_context(void *spdm_context)
 #endif
     context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
     context->current_token = 0;
+    context->latest_session_id = INVALID_SESSION_ID;
     context->last_spdm_request_session_id = INVALID_SESSION_ID;
     context->last_spdm_request_session_id_valid = false;
     context->last_spdm_request_size = 0;
