@@ -208,12 +208,12 @@ libspdm_return_t libspdm_challenge_ex(void *spdm_context, void *reserved,
  * @param  spdm_context           A pointer to the SPDM context.
  * @param  reserved               Reserved for session_id and is ignored.
  * @param  slot_id                The number of slot for the challenge.
+ * @param  requester_context      A buffer to hold the requester context (8 bytes) as input, if not NULL.
+ *                                It is used only if the negotiated version >= 1.3.
  * @param  measurement_hash_type  The type of the measurement hash.
  * @param  measurement_hash       A pointer to a destination buffer to store the measurement hash.
  * @param  slot_mask              A pointer to a destination to store the slot mask.
  * @param  requester_nonce_in     A buffer to hold the requester nonce (32 bytes) as input, if not NULL.
- * @param  requester_context      A buffer to hold the requester context (8 bytes) as input, if not NULL.
- *                                It is used only if the negotiated version >= 1.3.
  * @param  requester_nonce        A buffer to hold the requester nonce (32 bytes), if not NULL.
  * @param  responder_nonce        A buffer to hold the responder nonce (32 bytes), if not NULL.
  * @param  opaque_data            A buffer to hold the responder opaque data, if not NULL.
@@ -223,11 +223,11 @@ libspdm_return_t libspdm_challenge_ex(void *spdm_context, void *reserved,
  **/
 libspdm_return_t libspdm_challenge_ex2(void *spdm_context, void *reserved,
                                        uint8_t slot_id,
+                                       const void *requester_context,
                                        uint8_t measurement_hash_type,
                                        void *measurement_hash,
                                        uint8_t *slot_mask,
                                        const void *requester_nonce_in,
-                                       const void *requester_context,
                                        void *requester_nonce,
                                        void *responder_nonce,
                                        void *opaque_data,

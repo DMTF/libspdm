@@ -31,12 +31,12 @@ typedef struct {
  *
  * @param  spdm_context           A pointer to the SPDM context.
  * @param  slot_id                The number of slot for the challenge.
+ * @param  requester_context      If not NULL, a buffer to hold the requester context (8 bytes).
+ *                                It is used only if the negotiated version >= 1.3.
  * @param  measurement_hash_type  The type of the measurement hash.
  * @param  measurement_hash       A pointer to a destination buffer to store the measurement hash.
  * @param  slot_mask              A pointer to a destination to store the slot mask.
  * @param  requester_nonce_in     If not NULL, a buffer that holds the requester nonce (32 bytes)
- * @param  requester_context      If not NULL, a buffer to hold the requester context (8 bytes).
- *                                It is used only if the negotiated version >= 1.3.
  * @param  requester_nonce        If not NULL, a buffer to hold the requester nonce (32 bytes).
  * @param  responder_nonce        If not NULL, a buffer to hold the responder nonce (32 bytes).
  *
@@ -46,11 +46,11 @@ typedef struct {
  **/
 static libspdm_return_t libspdm_try_challenge(libspdm_context_t *spdm_context,
                                               uint8_t slot_id,
+                                              const void *requester_context,
                                               uint8_t measurement_hash_type,
                                               void *measurement_hash,
                                               uint8_t *slot_mask,
                                               const void *requester_nonce_in,
-                                              const void *requester_context,
                                               void *requester_nonce,
                                               void *responder_nonce,
                                               void *opaque_data,
@@ -413,10 +413,10 @@ libspdm_return_t libspdm_challenge(void *spdm_context, void *reserved,
     retry = context->retry_times;
     retry_delay_time = context->retry_delay_time;
     do {
-        status = libspdm_try_challenge(context, slot_id,
+        status = libspdm_try_challenge(context, slot_id, NULL,
                                        measurement_hash_type,
                                        measurement_hash, slot_mask,
-                                       NULL, NULL, NULL, NULL, NULL, NULL);
+                                       NULL, NULL, NULL, NULL, NULL);
         if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
             return status;
         }
@@ -448,11 +448,11 @@ libspdm_return_t libspdm_challenge_ex(void *spdm_context, void *reserved,
     retry = context->retry_times;
     retry_delay_time = context->retry_delay_time;
     do {
-        status = libspdm_try_challenge(context, slot_id,
+        status = libspdm_try_challenge(context, slot_id, NULL,
                                        measurement_hash_type,
                                        measurement_hash,
                                        slot_mask,
-                                       requester_nonce_in, NULL,
+                                       requester_nonce_in,
                                        requester_nonce, responder_nonce,
                                        opaque_data,
                                        opaque_data_size);
@@ -468,11 +468,11 @@ libspdm_return_t libspdm_challenge_ex(void *spdm_context, void *reserved,
 
 libspdm_return_t libspdm_challenge_ex2(void *spdm_context, void *reserved,
                                        uint8_t slot_id,
+                                       const void *requester_context,
                                        uint8_t measurement_hash_type,
                                        void *measurement_hash,
                                        uint8_t *slot_mask,
                                        const void *requester_nonce_in,
-                                       const void *requester_context,
                                        void *requester_nonce,
                                        void *responder_nonce,
                                        void *opaque_data,
@@ -488,11 +488,11 @@ libspdm_return_t libspdm_challenge_ex2(void *spdm_context, void *reserved,
     retry = context->retry_times;
     retry_delay_time = context->retry_delay_time;
     do {
-        status = libspdm_try_challenge(context, slot_id,
+        status = libspdm_try_challenge(context, slot_id, requester_context,
                                        measurement_hash_type,
                                        measurement_hash,
                                        slot_mask,
-                                       requester_nonce_in, requester_context,
+                                       requester_nonce_in,
                                        requester_nonce, responder_nonce,
                                        opaque_data,
                                        opaque_data_size);
