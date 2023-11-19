@@ -273,6 +273,10 @@ void libspdm_free_session_id(libspdm_context_t *spdm_context, uint32_t session_i
         return;
     }
 
+    if (spdm_context->latest_session_id == session_id) {
+        spdm_context->latest_session_id = INVALID_SESSION_ID;
+    }
+
     session_info = spdm_context->session_info;
     for (index = 0; index < LIBSPDM_MAX_SESSION_COUNT; index++) {
         if (session_info[index].session_id == session_id) {
