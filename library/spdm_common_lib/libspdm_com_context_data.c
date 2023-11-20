@@ -425,6 +425,18 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         break;
+    case LIBSPDM_DATA_MEL_SPEC:
+        if (data_size != sizeof(uint8_t)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
+            context->connection_info.algorithm.mel_spec = *(uint8_t *)data;
+        } else if (parameter->location == LIBSPDM_DATA_LOCATION_LOCAL) {
+            context->local_context.algorithm.mel_spec = *(uint8_t *)data;
+        } else {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        break;
     case LIBSPDM_DATA_CONNECTION_STATE:
         if (data_size != sizeof(libspdm_connection_state_t)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
@@ -918,6 +930,13 @@ libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_t
         }
         target_data_size = sizeof(uint8_t);
         target_data = &context->connection_info.algorithm.other_params_support;
+        break;
+    case LIBSPDM_DATA_MEL_SPEC:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_CONNECTION) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        target_data_size = sizeof(uint8_t);
+        target_data = &context->connection_info.algorithm.mel_spec;
         break;
     case LIBSPDM_DATA_CONNECTION_STATE:
         if (parameter->location != LIBSPDM_DATA_LOCATION_CONNECTION) {

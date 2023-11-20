@@ -17,7 +17,8 @@ typedef struct {
     uint8_t reserved2[12];
     uint8_t ext_asym_count;
     uint8_t ext_hash_count;
-    uint16_t reserved3;
+    uint8_t reserved3;
+    uint8_t mel_specification;
     spdm_negotiate_algorithms_common_struct_table_t struct_table[
         SPDM_NEGOTIATE_ALGORITHMS_MAX_NUM_STRUCT_TABLE_ALG];
 } libspdm_negotiate_algorithms_request_mine_t;
@@ -30,7 +31,8 @@ typedef struct {
     uint32_t measurement_hash_algo;
     uint32_t base_asym_sel;
     uint32_t base_hash_sel;
-    uint8_t reserved2[12];
+    uint8_t reserved2[11];
+    uint8_t mel_specification_sel;
     uint8_t ext_asym_sel_count;
     uint8_t ext_hash_sel_count;
     uint16_t reserved3;
@@ -139,6 +141,10 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
         spdm_request->other_params_support =
             spdm_context->local_context.algorithm.other_params_support;
+        if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+            spdm_request->mel_specification =
+                spdm_context->local_context.algorithm.mel_spec;
+        }
     }
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
         switch (spdm_context->connection_info.capability.flags &
@@ -373,6 +379,10 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
     if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
         spdm_context->connection_info.algorithm.other_params_support =
             spdm_response->other_params_selection;
+        if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+            spdm_context->connection_info.algorithm.mel_spec =
+                spdm_response->mel_specification_sel;
+        }
     }
     spdm_context->connection_info.algorithm.measurement_hash_algo =
         spdm_response->measurement_hash_algo;
@@ -559,6 +569,18 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
                     SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1) {
                     status = LIBSPDM_STATUS_NEGOTIATION_FAIL;
                     goto receive_done;
+                }
+                if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+                    if (libspdm_is_capabilities_flag_supported(
+                            spdm_context, true, 0,
+                            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEL_CAP) &&
+                        (spdm_request->mel_specification != 0)) {
+                        if (spdm_context->connection_info.algorithm.mel_spec !=
+                            SPDM_MEL_SPECIFICATION_DMTF) {
+                            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                            goto receive_done;
+                        }
+                    }
                 }
             }
         }
