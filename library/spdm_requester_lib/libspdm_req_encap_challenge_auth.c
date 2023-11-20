@@ -28,6 +28,7 @@ libspdm_return_t libspdm_get_encap_response_challenge_auth(
     uint8_t slot_mask;
     uint8_t *opaque_data;
     size_t opaque_data_size;
+    size_t spdm_request_size;
     size_t spdm_response_size;
 
     context = spdm_context;
@@ -58,6 +59,15 @@ libspdm_return_t libspdm_get_encap_response_challenge_auth(
             context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
             response_size, response);
     }
+    spdm_request_size = sizeof(spdm_challenge_request_t);
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+        if (request_size < sizeof(spdm_challenge_request_t) + SPDM_REQ_CONTEXT_SIZE) {
+            return libspdm_generate_encap_error_response(
+                context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                response_size, response);
+        }
+        spdm_request_size += SPDM_REQ_CONTEXT_SIZE;
+    }
 
     if (spdm_request->header.param2 != SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH) {
         return libspdm_generate_encap_error_response(
@@ -86,7 +96,7 @@ libspdm_return_t libspdm_get_encap_response_challenge_auth(
     /* response_size should be large enough to hold a challenge response without opaque data. */
     LIBSPDM_ASSERT(*response_size >= sizeof(spdm_challenge_auth_response_t) + hash_size +
                    SPDM_NONCE_SIZE + measurement_summary_hash_size + sizeof(uint16_t) +
-                   signature_size);
+                   SPDM_REQ_CONTEXT_SIZE + signature_size);
 
     libspdm_zero_mem(response, *response_size);
     spdm_response = response;
@@ -155,11 +165,20 @@ libspdm_return_t libspdm_get_encap_response_challenge_auth(
     /*the opaque_data is stored by libspdm_encap_challenge_opaque_data*/
     ptr += opaque_data_size;
 
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+        libspdm_copy_mem(ptr, SPDM_REQ_CONTEXT_SIZE,
+                         spdm_request + 1, SPDM_REQ_CONTEXT_SIZE);
+        ptr += SPDM_REQ_CONTEXT_SIZE;
+    }
+
     /*get actual response size*/
     spdm_response_size =
         sizeof(spdm_challenge_auth_response_t) + hash_size +
         SPDM_NONCE_SIZE + measurement_summary_hash_size +
         sizeof(uint16_t) + opaque_data_size + signature_size;
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+        spdm_response_size += SPDM_REQ_CONTEXT_SIZE;
+    }
 
     LIBSPDM_ASSERT(*response_size >= spdm_response_size);
 
@@ -168,7 +187,7 @@ libspdm_return_t libspdm_get_encap_response_challenge_auth(
     /* Calc Sign*/
 
     status = libspdm_append_message_mut_c(context, spdm_request,
-                                          request_size);
+                                          spdm_request_size);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return libspdm_generate_encap_error_response(
             context, SPDM_ERROR_CODE_UNSPECIFIED, 0,
