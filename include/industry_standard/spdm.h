@@ -298,7 +298,8 @@ typedef struct {
     uint8_t reserved2[12];
     uint8_t ext_asym_count;
     uint8_t ext_hash_count;
-    uint16_t reserved3;
+    uint8_t reserved3;
+    uint8_t mel_specification;
     /*spdm_extended_algorithm_t                 ext_asym[ext_asym_count];
      * spdm_extended_algorithm_t                 ext_hash[ext_hash_count];
      * Below field is added in 1.1.
@@ -396,7 +397,8 @@ typedef struct {
     uint32_t measurement_hash_algo;
     uint32_t base_asym_sel;
     uint32_t base_hash_sel;
-    uint8_t reserved2[12];
+    uint8_t reserved2[11];
+    uint8_t mel_specification_sel;
     uint8_t ext_asym_sel_count;
     uint8_t ext_hash_sel_count;
     uint16_t reserved3;
@@ -673,6 +675,8 @@ typedef struct {
 
 #define SPDM_MEASUREMENTS_SIGN_CONTEXT "responder-measurements signing"
 #define SPDM_MEASUREMENTS_SIGN_CONTEXT_SIZE (sizeof(SPDM_MEASUREMENTS_SIGN_CONTEXT) - 1)
+
+#define SPDM_MEL_SPECIFICATION_DMTF 0x01
 
 /* SPDM ERROR response */
 typedef struct {

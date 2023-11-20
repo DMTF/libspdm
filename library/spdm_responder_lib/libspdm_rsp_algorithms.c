@@ -18,7 +18,8 @@ typedef struct {
     uint32_t measurement_hash_algo;
     uint32_t base_asym_sel;
     uint32_t base_hash_sel;
-    uint8_t reserved2[12];
+    uint8_t reserved2[11];
+    uint8_t mel_specification_sel;
     uint8_t ext_asym_sel_count;
     uint8_t ext_hash_sel_count;
     uint16_t reserved3;
@@ -255,6 +256,10 @@ libspdm_return_t libspdm_get_response_algorithms(libspdm_context_t *spdm_context
         SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1,
         SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_0,
         SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_NONE
+    };
+
+    uint32_t mel_spec_priority_table[] = {
+        SPDM_MEL_SPECIFICATION_DMTF,
     };
 
     spdm_request = request;
@@ -550,6 +555,10 @@ libspdm_return_t libspdm_get_response_algorithms(libspdm_context_t *spdm_context
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
         spdm_context->connection_info.algorithm.other_params_support =
             spdm_request->other_params_support;
+        if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+            spdm_context->connection_info.algorithm.mel_spec =
+                spdm_request->mel_specification;
+        }
     }
 
     spdm_response->measurement_specification_sel = (uint8_t)libspdm_prioritize_algorithm(
@@ -583,6 +592,13 @@ libspdm_return_t libspdm_get_response_algorithms(libspdm_context_t *spdm_context
             SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_MASK,
             spdm_context->connection_info.algorithm.other_params_support &
             SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_MASK);
+        if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+            spdm_response->mel_specification_sel = (uint8_t)libspdm_prioritize_algorithm(
+                mel_spec_priority_table,
+                LIBSPDM_ARRAY_SIZE(mel_spec_priority_table),
+                spdm_context->local_context.algorithm.mel_spec,
+                spdm_context->connection_info.algorithm.mel_spec);
+        }
     }
 
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
@@ -718,6 +734,12 @@ libspdm_return_t libspdm_get_response_algorithms(libspdm_context_t *spdm_context
         if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
             spdm_context->connection_info.algorithm.other_params_support =
                 spdm_response->other_params_selection;
+            if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+                spdm_context->connection_info.algorithm.mel_spec =
+                    spdm_response->mel_specification_sel;
+            } else {
+                spdm_context->connection_info.algorithm.mel_spec = 0;
+            }
         } else {
             spdm_context->connection_info.algorithm.other_params_support = 0;
         }
