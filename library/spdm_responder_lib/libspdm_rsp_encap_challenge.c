@@ -14,6 +14,7 @@ libspdm_return_t libspdm_get_encap_request_challenge(libspdm_context_t *spdm_con
                                                      void *encap_request)
 {
     spdm_challenge_request_t *spdm_request;
+    size_t spdm_request_size;
     libspdm_return_t status;
 
     spdm_context->encap_context.last_encap_request_size = 0;
@@ -28,10 +29,15 @@ libspdm_return_t libspdm_get_encap_request_challenge(libspdm_context_t *spdm_con
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
 
-    if(*encap_request_size < sizeof(spdm_challenge_request_t)) {
+    spdm_request_size = sizeof(spdm_challenge_request_t);
+    if (libspdm_get_connection_version (spdm_context) >= SPDM_MESSAGE_VERSION_13) {
+        spdm_request_size = sizeof(spdm_challenge_request_t) + SPDM_REQ_CONTEXT_SIZE;
+    }
+
+    if(*encap_request_size < spdm_request_size) {
         return LIBSPDM_STATUS_INVALID_MSG_SIZE;
     }
-    *encap_request_size = sizeof(spdm_challenge_request_t);
+    *encap_request_size = spdm_request_size;
 
     spdm_request = encap_request;
 
@@ -46,6 +52,13 @@ libspdm_return_t libspdm_get_encap_request_challenge(libspdm_context_t *spdm_con
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Encap RequesterNonce - "));
     LIBSPDM_INTERNAL_DUMP_DATA(spdm_request->nonce, SPDM_NONCE_SIZE);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+        libspdm_copy_mem(spdm_request + 1, SPDM_REQ_CONTEXT_SIZE,
+                         spdm_context->encap_context.req_context, SPDM_REQ_CONTEXT_SIZE);
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Encap RequesterContext - "));
+        LIBSPDM_INTERNAL_DUMP_DATA((uint8_t *)(spdm_request + 1), SPDM_REQ_CONTEXT_SIZE);
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
+    }
 
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                                                   spdm_request->header.request_response_code);
@@ -54,7 +67,7 @@ libspdm_return_t libspdm_get_encap_request_challenge(libspdm_context_t *spdm_con
     /* Cache data*/
 
     status = libspdm_append_message_mut_c(spdm_context, spdm_request,
-                                          *encap_request_size);
+                                          spdm_request_size);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return LIBSPDM_STATUS_BUFFER_FULL;
     }
@@ -62,7 +75,7 @@ libspdm_return_t libspdm_get_encap_request_challenge(libspdm_context_t *spdm_con
     libspdm_copy_mem(&spdm_context->encap_context.last_encap_request_header,
                      sizeof(spdm_context->encap_context.last_encap_request_header),
                      &spdm_request->header, sizeof(spdm_message_header_t));
-    spdm_context->encap_context.last_encap_request_size = *encap_request_size;
+    spdm_context->encap_context.last_encap_request_size = spdm_request_size;
 
     return LIBSPDM_STATUS_SUCCESS;
 }
@@ -105,6 +118,11 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
     }
     if (spdm_response_size < sizeof(spdm_challenge_auth_response_t)) {
         return LIBSPDM_STATUS_INVALID_MSG_SIZE;
+    }
+    if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+        if (spdm_response_size < sizeof(spdm_challenge_auth_response_t) + SPDM_REQ_CONTEXT_SIZE) {
+            return LIBSPDM_STATUS_INVALID_MSG_SIZE;
+        }
     }
 
     auth_attribute = spdm_response->header.param1;
@@ -182,20 +200,28 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
     }
     ptr += sizeof(uint16_t);
 
-    if (spdm_response_size <
-        sizeof(spdm_challenge_auth_response_t) + hash_size +
-        SPDM_NONCE_SIZE + measurement_summary_hash_size +
-        sizeof(uint16_t) + opaque_length + signature_size) {
-        return LIBSPDM_STATUS_INVALID_MSG_SIZE;
-    }
-    spdm_response_size = sizeof(spdm_challenge_auth_response_t) +
-                         hash_size + SPDM_NONCE_SIZE +
-                         measurement_summary_hash_size + sizeof(uint16_t) +
-                         opaque_length + signature_size;
-    status = libspdm_append_message_mut_c(spdm_context, spdm_response,
-                                          spdm_response_size - signature_size);
-    if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        return LIBSPDM_STATUS_BUFFER_FULL;
+    if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+        if (spdm_response_size <
+            sizeof(spdm_challenge_auth_response_t) + hash_size +
+            SPDM_NONCE_SIZE + measurement_summary_hash_size +
+            sizeof(uint16_t) + opaque_length + SPDM_REQ_CONTEXT_SIZE + signature_size) {
+            return LIBSPDM_STATUS_INVALID_MSG_SIZE;
+        }
+        spdm_response_size = sizeof(spdm_challenge_auth_response_t) +
+                             hash_size + SPDM_NONCE_SIZE +
+                             measurement_summary_hash_size + sizeof(uint16_t) +
+                             opaque_length + SPDM_REQ_CONTEXT_SIZE + signature_size;
+    } else {
+        if (spdm_response_size <
+            sizeof(spdm_challenge_auth_response_t) + hash_size +
+            SPDM_NONCE_SIZE + measurement_summary_hash_size +
+            sizeof(uint16_t) + opaque_length + signature_size) {
+            return LIBSPDM_STATUS_INVALID_MSG_SIZE;
+        }
+        spdm_response_size = sizeof(spdm_challenge_auth_response_t) +
+                             hash_size + SPDM_NONCE_SIZE +
+                             measurement_summary_hash_size + sizeof(uint16_t) +
+                             opaque_length + signature_size;
     }
 
     LIBSPDM_DEBUG_CODE(
@@ -205,6 +231,23 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
         LIBSPDM_INTERNAL_DUMP_HEX(opaque, opaque_length);
         );
     ptr += opaque_length;
+
+    if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+        if (!libspdm_consttime_is_mem_equal(spdm_context->encap_context.req_context, ptr,
+                                            SPDM_REQ_CONTEXT_SIZE)) {
+            return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+        }
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Encap RequesterContext - "));
+        LIBSPDM_INTERNAL_DUMP_DATA(ptr, SPDM_REQ_CONTEXT_SIZE);
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
+        ptr += SPDM_REQ_CONTEXT_SIZE;
+    }
+
+    status = libspdm_append_message_mut_c(spdm_context, spdm_response,
+                                          spdm_response_size - signature_size);
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
+        return LIBSPDM_STATUS_BUFFER_FULL;
+    }
 
     signature = ptr;
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Encap signature (0x%x):\n", signature_size));
