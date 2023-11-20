@@ -705,6 +705,25 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         context->sequence_number_endian = *(uint8_t *)data;
+        break;
+    case LIBSPDM_DATA_MULTI_KEY_CONN_REQ:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_CONNECTION) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        if (data_size != sizeof(bool)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        context->connection_info.multi_key_conn_req = *(bool *)data;
+        break;
+    case LIBSPDM_DATA_MULTI_KEY_CONN_RSP:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_CONNECTION) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        if (data_size != sizeof(bool)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        context->connection_info.multi_key_conn_rsp = *(bool *)data;
+        break;
     default:
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         break;
@@ -994,9 +1013,25 @@ libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_t
     case LIBSPDM_DATA_SEQUENCE_NUMBER_ENDIAN:
         target_data_size = sizeof(uint8_t);
         target_data = &context->sequence_number_endian;
+        break;
     case LIBSPDM_DATA_SESSION_SEQUENCE_NUMBER_ENDIAN:
         target_data_size = sizeof(uint8_t);
         target_data = &secured_context->sequence_number_endian;
+        break;
+    case LIBSPDM_DATA_MULTI_KEY_CONN_REQ:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_CONNECTION) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        target_data_size = sizeof(bool);
+        target_data = &context->connection_info.multi_key_conn_req;
+        break;
+    case LIBSPDM_DATA_MULTI_KEY_CONN_RSP:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_CONNECTION) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        target_data_size = sizeof(bool);
+        target_data = &context->connection_info.multi_key_conn_rsp;
+        break;
     default:
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         break;
