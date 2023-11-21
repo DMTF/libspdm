@@ -109,6 +109,12 @@ spdm_get_measurements_request_t m_libspdm_get_measurements_request16 = {
 };
 size_t m_libspdm_get_measurements_request16_size = sizeof(m_libspdm_get_measurements_request16);
 
+spdm_get_measurements_request_t m_libspdm_get_measurements_request17 = {
+    { SPDM_MESSAGE_VERSION_13, SPDM_GET_MEASUREMENTS, 0,
+      SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_TOTAL_NUMBER_OF_MEASUREMENTS },
+};
+size_t m_libspdm_get_measurements_request17_size = sizeof(spdm_message_header_t);
+
 extern size_t libspdm_secret_lib_meas_opaque_data_size;
 
 /**
@@ -2507,6 +2513,72 @@ void libspdm_test_responder_measurements_case34(void** state)
 #endif
 }
 
+/**
+ * Test 35: Successful response V1.3 to get a number of measurements without signature
+ * Expected Behavior: get a RETURN_SUCCESS return code, correct context field
+ **/
+void libspdm_test_responder_measurements_case35(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_measurements_response_t *spdm_response;
+    uint8_t *requester_context;
+    uint8_t *responder_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 35;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo =
+        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec =
+        m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    libspdm_reset_message_m(spdm_context, NULL);
+
+    libspdm_secret_lib_meas_opaque_data_size = 0;
+
+    response_size = sizeof(response);
+
+    requester_context = ((uint8_t *)&m_libspdm_get_measurements_request17) +
+                        m_libspdm_get_measurements_request17_size;
+    libspdm_set_mem(requester_context, SPDM_REQ_CONTEXT_SIZE, 0xAA);
+    m_libspdm_get_measurements_request17_size += SPDM_REQ_CONTEXT_SIZE;
+
+    status = libspdm_get_response_measurements(
+        spdm_context, m_libspdm_get_measurements_request17_size,
+        &m_libspdm_get_measurements_request17, &response_size, response);
+
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size,
+                     sizeof(spdm_measurements_response_t) + SPDM_NONCE_SIZE + sizeof(uint16_t) +
+                     SPDM_REQ_CONTEXT_SIZE);
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_MEASUREMENTS);
+    responder_context = (void *)response;
+    responder_context += sizeof(spdm_measurements_response_t) + SPDM_NONCE_SIZE + sizeof(uint16_t);
+    assert_memory_equal((void *)requester_context, responder_context, SPDM_REQ_CONTEXT_SIZE);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    assert_int_equal(spdm_context->transcript.message_m.buffer_size,
+                     m_libspdm_get_measurements_request17_size +
+                     sizeof(spdm_measurements_response_t) +
+                     SPDM_NONCE_SIZE +
+                     sizeof(uint16_t) +
+                     SPDM_REQ_CONTEXT_SIZE);
+#endif
+}
 
 libspdm_test_context_t m_libspdm_responder_measurements_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
@@ -2587,6 +2659,8 @@ int libspdm_responder_measurements_test_main(void)
         cmocka_unit_test(libspdm_test_responder_measurements_case33),
         /* Success Case: Little Endian Signature. Big or Little Endian Verify */
         cmocka_unit_test(libspdm_test_responder_measurements_case34),
+        /* Success Case: V1.3 get a correct context field */
+        cmocka_unit_test(libspdm_test_responder_measurements_case35),
     };
 
     libspdm_setup_test_context(&m_libspdm_responder_measurements_test_context);
