@@ -2110,6 +2110,17 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
             goto free_all;
         }
 
+        if (MBEDTLS_OID_CMP_RAW(MBEDTLS_OID_BASIC_CONSTRAINTS, next_oid->buf.p, oid_tag_len) == 0) {
+            next_oid = next_oid->next;
+            continue;
+        }
+
+        if (MBEDTLS_OID_CMP_RAW(MBEDTLS_OID_AUTHORITY_KEY_IDENTIFIER, next_oid->buf.p,
+                                oid_tag_len) == 0) {
+            next_oid = next_oid->next;
+            continue;
+        }
+
         if (mbedtls_x509write_csr_set_extension(&req, next_oid->buf.p,
                                                 oid_tag_len,
                                                 next_oid->buf.p + oid_tag_len,
