@@ -28,6 +28,12 @@ spdm_challenge_request_t m_spdm_challenge_request4 = {
 };
 size_t m_spdm_challenge_request4_size = sizeof(m_spdm_challenge_request4);
 
+spdm_challenge_request_t m_spdm_challenge_request5 = {
+    {SPDM_MESSAGE_VERSION_13, SPDM_CHALLENGE, 0,
+     SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH},
+};
+size_t m_spdm_challenge_request5_size = sizeof(m_spdm_challenge_request5);
+
 extern size_t libspdm_secret_lib_challenge_opaque_data_size;
 
 /**
@@ -358,6 +364,110 @@ void test_libspdm_requester_encap_challenge_auth_case6(void **state)
     free(data);
 }
 
+/**
+ * Test 7: receiving a correct CHALLENGE message from the requester with context field
+ * no opaque data, no measurements, and slot number 0.
+ * Expected behavior:  get a RETURN_SUCCESS return code, correct context field
+ **/
+void test_libspdm_requester_encap_challenge_auth_case7(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t request[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_challenge_auth_response_t *spdm_response;
+    void *data;
+    size_t data_size;
+    uint8_t *requester_context;
+    uint8_t *responder_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x7;
+
+    spdm_context->local_context.capability.flags = 0;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHAL_CAP;
+    spdm_context->connection_info.capability.flags = 0;
+
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo =
+        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec =
+        m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg =
+        m_libspdm_use_req_asym_algo;
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13
+                                            << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, NULL, NULL);
+    spdm_context->local_context.local_cert_chain_provision[0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0] =
+        data_size;
+
+    libspdm_reset_message_mut_c(spdm_context);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->transcript.message_m.buffer_size =
+        spdm_context->transcript.message_m.max_buffer_size;
+#endif
+
+    response_size = sizeof(response);
+    libspdm_get_random_number(SPDM_NONCE_SIZE,
+                              m_spdm_challenge_request5.nonce);
+
+    libspdm_zero_mem(request, sizeof(request));
+    libspdm_copy_mem(request, sizeof(spdm_challenge_request_t),
+                     &m_spdm_challenge_request5, m_spdm_challenge_request5_size);
+    requester_context = request + m_spdm_challenge_request5_size;
+    libspdm_set_mem(requester_context, SPDM_REQ_CONTEXT_SIZE, 0xAA);
+    m_spdm_challenge_request5_size += SPDM_REQ_CONTEXT_SIZE;
+
+    status = libspdm_get_encap_response_challenge_auth(
+        spdm_context, m_spdm_challenge_request5_size,
+        request, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_challenge_auth_response_t) +
+                     libspdm_get_hash_size(m_libspdm_use_hash_algo) +
+                     SPDM_NONCE_SIZE + 0 + sizeof(uint16_t) +
+                     libspdm_get_asym_signature_size(m_libspdm_use_req_asym_algo) +
+                     SPDM_REQ_CONTEXT_SIZE);
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_CHALLENGE_AUTH);
+    assert_int_equal(spdm_response->header.param1, 0);
+    assert_int_equal(spdm_response->header.param2, 1 << 0);
+
+    responder_context = (void *)response;
+    responder_context += sizeof(spdm_challenge_auth_response_t) +
+                         libspdm_get_hash_size(m_libspdm_use_hash_algo) +
+                         SPDM_NONCE_SIZE + 0 + sizeof(uint16_t);
+    assert_memory_equal(requester_context, responder_context, SPDM_REQ_CONTEXT_SIZE);
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    assert_int_equal(spdm_context->transcript.message_m.buffer_size,
+                     0);
+    assert_int_equal(spdm_context->transcript.message_mut_c.buffer_size, 0);
+#else
+    assert_null(spdm_context->transcript.digest_context_mut_m1m2);
+#endif
+    free(data);
+}
+
 libspdm_test_context_t m_spdm_requester_challenge_auth_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     false,
@@ -376,6 +486,8 @@ int libspdm_requester_encap_challenge_auth_test_main(void)
         cmocka_unit_test(test_libspdm_requester_encap_challenge_auth_case5),
         /* Success Case, use provisioned public key (slot 0xFF) */
         cmocka_unit_test(test_libspdm_requester_encap_challenge_auth_case6),
+        /* Success Case: V1.3 get a correct context field */
+        cmocka_unit_test(test_libspdm_requester_encap_challenge_auth_case7),
     };
 
     libspdm_setup_test_context(&m_spdm_requester_challenge_auth_test_context);
