@@ -466,11 +466,38 @@ typedef struct {
 /* SPDM GET_DIGESTS response */
 typedef struct {
     spdm_message_header_t header;
-    /* param1 == RSVD
-     * param2 == slot_mask
-     * uint8_t                digest[digest_size][slot_count];*/
+    /* param1 == RSVD (supported_slot_mask in 1.3)
+     * param2 == slot_mask (provisioned_slot_mask in 1.3) determing slot_count
+     * cert slot state:
+     * 1) not exist:           supported_slot_mask[slot_id] = 0
+     * 2) exist and empty:     supported_slot_mask[slot_id] = 1 && provisioned_slot_mask[slot_id] = 0
+     * 3) exist with key:      supported_slot_mask[slot_id] = 1 && provisioned_slot_mask[slot_id] = 1 && cert_model = 0
+     * 4) exist with key/cert: supported_slot_mask[slot_id] = 1 && provisioned_slot_mask[slot_id] = 1 && cert_model = !0
+     *
+     * uint8_t                    digest[digest_size][slot_count];
+     *
+     * Below field is added in 1.3. Present if MULTI_KEY_CONN is 1.
+     * spdm_key_pair_id_t         key_pair_id[slot_count];
+     * spdm_certificate_info_t    certificate_info[slot_count];
+     * spdm_key_usage_bit_mask_t  key_usage_bit_mask[slot_count];*/
 } spdm_digest_response_t;
 
+typedef uint8_t spdm_key_pair_id_t;
+
+typedef uint8_t spdm_certificate_info_t;
+#define SPDM_CERTIFICATE_INFO_CERT_MODEL_MASK 0x7
+#define SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE 0x0
+#define SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT 0x1
+#define SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT 0x2
+#define SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT 0x3
+
+typedef uint16_t spdm_key_usage_bit_mask_t;
+#define SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE 0x1
+#define SPDM_KEY_USAGE_BIT_MASK_CHALLENGE_USE 0x2
+#define SPDM_KEY_USAGE_BIT_MASK_MEASUREMENT_USE 0x4
+#define SPDM_KEY_USAGE_BIT_MASK_ENDPOINT_INFO_USE 0x8
+#define SPDM_KEY_USAGE_BIT_MASK_STANDARDS_KEY_USE 0x4000
+#define SPDM_KEY_USAGE_BIT_MASK_VENDOR_KEY_USE 0x8000
 
 /* SPDM GET_CERTIFICATE request */
 typedef struct {
