@@ -86,6 +86,7 @@ static libspdm_return_t libspdm_try_get_certificate(libspdm_context_t *spdm_cont
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
     bool chunk_enabled;
+    uint8_t cert_model;
 
     /* -=[Check Parameters Phase]=- */
     LIBSPDM_ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
@@ -228,6 +229,34 @@ static libspdm_return_t libspdm_try_get_certificate(libspdm_context_t *spdm_cont
             libspdm_release_receiver_buffer (spdm_context);
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             goto done;
+        }
+        if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "cert_info - 0x%02x\n",
+                           spdm_response->header.param2));
+            cert_model = spdm_response->header.param2 &
+                         SPDM_CERTIFICATE_RESPONSE_ATTRIBUTES_CERTIFICATE_INFO_MASK;
+            if (spdm_context->connection_info.multi_key_conn_rsp) {
+                if ((cert_model == SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE) ||
+                    (cert_model > SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT)) {
+                    libspdm_release_receiver_buffer (spdm_context);
+                    status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                    goto done;
+                }
+            } else {
+                if (cert_model != SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE) {
+                    libspdm_release_receiver_buffer (spdm_context);
+                    status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                    goto done;
+                }
+            }
+            if (spdm_context->connection_info.peer_cert_info[slot_id] ==
+                SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE) {
+                spdm_context->connection_info.peer_cert_info[slot_id] = cert_model;
+            } else if (spdm_context->connection_info.peer_cert_info[slot_id] != cert_model) {
+                libspdm_release_receiver_buffer (spdm_context);
+                status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                goto done;
+            }
         }
         if (spdm_response_size < sizeof(spdm_certificate_response_t) +
             spdm_response->portion_length) {

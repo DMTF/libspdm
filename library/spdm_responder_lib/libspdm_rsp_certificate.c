@@ -96,6 +96,14 @@ libspdm_return_t libspdm_get_response_certificate(libspdm_context_t *spdm_contex
     offset = spdm_request->offset;
     length = spdm_request->length;
 
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+        if (spdm_request->header.param2 &
+            SPDM_GET_CERTIFICATE_REQUEST_ATTRIBUTES_SLOT_SIZE_REQUESTED) {
+            offset = 0;
+            length = 0;
+        }
+    }
+
     if (offset >= spdm_context->local_context.local_cert_chain_provision_size[slot_id]) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
@@ -130,6 +138,11 @@ libspdm_return_t libspdm_get_response_certificate(libspdm_context_t *spdm_contex
     spdm_response->header.request_response_code = SPDM_CERTIFICATE;
     spdm_response->header.param1 = slot_id;
     spdm_response->header.param2 = 0;
+    if ((spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) &&
+        spdm_context->connection_info.multi_key_conn_rsp) {
+        spdm_response->header.param2 = spdm_context->local_context.local_cert_info[slot_id];
+    }
+
     spdm_response->portion_length = length;
     spdm_response->remainder_length = (uint16_t)remainder_length;
 
