@@ -503,24 +503,31 @@ typedef uint16_t spdm_key_usage_bit_mask_t;
 typedef struct {
     spdm_message_header_t header;
     /* param1 == BIT[0:3]=slot_id, BIT[4:7]=RSVD
-     * param2 == RSVD*/
+     * param2 == Request Attribute in 1.3 */
     uint16_t offset;
     uint16_t length;
 } spdm_get_certificate_request_t;
 
 #define SPDM_GET_CERTIFICATE_REQUEST_SLOT_ID_MASK 0xF
 
+/* SPDM GET_CERTIFICATE request Attributes */
+#define SPDM_GET_CERTIFICATE_REQUEST_ATTRIBUTES_SLOT_SIZE_REQUESTED 0x01
+
 /* SPDM GET_CERTIFICATE response */
 typedef struct {
     spdm_message_header_t header;
     /* param1 == BIT[0:3]=slot_id, BIT[4:7]=RSVD
-     * param2 == RSVD*/
+     * param2 == Response Attribute in 1.3 */
     uint16_t portion_length;
     uint16_t remainder_length;
     /*uint8_t                cert_chain[portion_length];*/
 } spdm_certificate_response_t;
 
 #define SPDM_CERTIFICATE_RESPONSE_SLOT_ID_MASK 0xF
+
+/* SPDM CERTIFICATE response Attributes */
+#define SPDM_CERTIFICATE_RESPONSE_ATTRIBUTES_CERTIFICATE_INFO_MASK 0x7
+
 typedef struct {
     /* Total length of the certificate chain, in bytes,
      * including all fields in this table.*/
