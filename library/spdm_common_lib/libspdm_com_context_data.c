@@ -477,6 +477,56 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         context->local_context.local_cert_chain_provision_size[slot_id] = data_size;
         context->local_context.local_cert_chain_provision[slot_id] = data;
         break;
+    case LIBSPDM_DATA_LOCAL_SUPPORTED_SLOT_MASK:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        slot_id = parameter->additional_data[0];
+        if (data_size != sizeof(uint8_t)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        context->local_context.local_supported_slot_mask = *(uint8_t *)data;
+        break;
+    case LIBSPDM_DATA_LOCAL_KEY_PAIR_ID:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        slot_id = parameter->additional_data[0];
+        if (slot_id >= SPDM_MAX_SLOT_COUNT) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        if (data_size != sizeof(spdm_key_pair_id_t)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        context->local_context.local_key_pair_id[slot_id] = *(spdm_key_pair_id_t *)data;
+        break;
+    case LIBSPDM_DATA_LOCAL_CERT_INFO:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        slot_id = parameter->additional_data[0];
+        if (slot_id >= SPDM_MAX_SLOT_COUNT) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        if (data_size != sizeof(spdm_certificate_info_t)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        context->local_context.local_cert_info[slot_id] = *(spdm_certificate_info_t *)data;
+        break;
+    case LIBSPDM_DATA_LOCAL_KEY_USAGE_BIT_MASK:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        slot_id = parameter->additional_data[0];
+        if (slot_id >= SPDM_MAX_SLOT_COUNT) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        if (data_size != sizeof(spdm_key_usage_bit_mask_t)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        context->local_context.local_key_usage_bit_mask[slot_id] =
+            libspdm_read_uint16((const uint8_t *)data);
+        break;
     case LIBSPDM_DATA_PEER_USED_CERT_CHAIN_BUFFER:
         if (parameter->location != LIBSPDM_DATA_LOCATION_CONNECTION) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
@@ -775,6 +825,7 @@ libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_t
     libspdm_session_info_t *session_info;
     size_t digest_size;
     size_t digest_count;
+    uint8_t slot_id;
     size_t index;
 
     if (spdm_context == NULL || data == NULL || data_size == NULL ||
@@ -949,12 +1000,19 @@ libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_t
         target_data_size = sizeof(libspdm_response_state_t);
         target_data = &context->response_state;
         break;
-    case LIBSPDM_DATA_PEER_SLOT_MASK:
+    case LIBSPDM_DATA_PEER_PROVISIONED_SLOT_MASK:
         if (parameter->location != LIBSPDM_DATA_LOCATION_CONNECTION) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         target_data_size = sizeof(uint8_t);
-        target_data = &context->connection_info.peer_digest_slot_mask;
+        target_data = &context->connection_info.peer_provisioned_slot_mask;
+        break;
+    case LIBSPDM_DATA_PEER_SUPPORTED_SLOT_MASK:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_CONNECTION) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        target_data_size = sizeof(uint8_t);
+        target_data = &context->connection_info.peer_supported_slot_mask;
         break;
     case LIBSPDM_DATA_PEER_TOTAL_DIGEST_BUFFER:
         if (parameter->location != LIBSPDM_DATA_LOCATION_CONNECTION) {
@@ -962,13 +1020,46 @@ libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_t
         }
         digest_count = 0;
         for (index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
-            if (context->connection_info.peer_digest_slot_mask & (1 << index)) {
+            if (context->connection_info.peer_provisioned_slot_mask & (1 << index)) {
                 digest_count++;
             }
         }
         digest_size = libspdm_get_hash_size(context->connection_info.algorithm.base_hash_algo);
         target_data_size = digest_size * digest_count;
         target_data = context->connection_info.peer_total_digest_buffer;
+        break;
+    case LIBSPDM_DATA_PEER_KEY_PAIR_ID:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_CONNECTION) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        slot_id = parameter->additional_data[0];
+        if (slot_id >= SPDM_MAX_SLOT_COUNT) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        target_data_size = sizeof(spdm_key_pair_id_t);
+        target_data = &context->connection_info.peer_key_pair_id[slot_id];
+        break;
+    case LIBSPDM_DATA_PEER_CERT_INFO:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_CONNECTION) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        slot_id = parameter->additional_data[0];
+        if (slot_id >= SPDM_MAX_SLOT_COUNT) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        target_data_size = sizeof(spdm_certificate_info_t);
+        target_data = &context->connection_info.peer_cert_info[slot_id];
+        break;
+    case LIBSPDM_DATA_PEER_KEY_USAGE_BIT_MASK:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_CONNECTION) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        slot_id = parameter->additional_data[0];
+        if (slot_id >= SPDM_MAX_SLOT_COUNT) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        target_data_size = sizeof(spdm_key_usage_bit_mask_t);
+        target_data = &context->connection_info.peer_key_usage_bit_mask[slot_id];
         break;
     case LIBSPDM_DATA_SESSION_USE_PSK:
         target_data_size = sizeof(bool);
