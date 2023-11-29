@@ -1001,10 +1001,17 @@ typedef struct {
 /* SPDM SET_CERTIFICATE request */
 typedef struct {
     spdm_message_header_t header;
-    /* param1 == BIT[0:3]=slot_id, BIT[4:7]=RSVD
-     * param2 == RSVD
-     * void * cert_chain*/
+    /* param1 == BIT[0:3]=slot_id, Request Attribute in 1.3
+     * param2 == key_pair_id in 1.3
+     * uint8_t cert_chain[]; */
 } spdm_set_certificate_request_t;
+
+#define SPDM_SET_CERTIFICATE_REQUEST_SLOT_ID_MASK 0xF
+
+/* SPDM SET_CERTIFICATE request Attributes */
+#define SPDM_SET_CERTIFICATE_REQUEST_ATTRIBUTES_CERT_MODEL_MASK 0x70
+#define SPDM_SET_CERTIFICATE_REQUEST_ATTRIBUTES_CERT_MODEL_OFFSET 4
+#define SPDM_SET_CERTIFICATE_REQUEST_ATTRIBUTES_ERASE 0x80
 
 /* SPDM SET_CERTIFICATE_RSP response */
 typedef struct {
@@ -1013,16 +1020,24 @@ typedef struct {
      * param2 == RSVD*/
 } spdm_set_certificate_response_t;
 
+#define SPDM_SET_CERTIFICATE_RESPONSE_SLOT_ID_MASK 0xF
+
 /* SPDM GET_CSR request */
 typedef struct {
     spdm_message_header_t header;
-    /* param1 == RSVD
-     * param2 == RSVD*/
+    /* param1 == key_pair_id in 1.3
+     * param2 == Request Attribute in 1.3*/
     uint16_t requester_info_length;
     uint16_t opaque_data_length;
     /* uint8_t RequesterInfo[requester_info_length];
      * uint8_t opaque_data[opaque_data_length]; */
 } spdm_get_csr_request_t;
+
+/* SPDM GET_CSR request Attributes */
+#define SPDM_GET_CSR_REQUEST_ATTRIBUTES_CERT_MODEL_MASK 0x07
+#define SPDM_GET_CSR_REQUEST_ATTRIBUTES_CSR_TRACKING_TAG_MASK 0x38
+#define SPDM_GET_CSR_REQUEST_ATTRIBUTES_CSR_TRACKING_TAG_OFFSET 3
+#define SPDM_GET_CSR_REQUEST_ATTRIBUTES_OVERWRITE 0x80
 
 /* Maximum size, in bytes, of a CSR. */
 #define SPDM_MAX_CSR_SIZE 65535
