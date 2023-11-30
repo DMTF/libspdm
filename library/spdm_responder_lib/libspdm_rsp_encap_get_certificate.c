@@ -72,6 +72,7 @@ libspdm_return_t libspdm_process_encap_response_certificate(
     uint8_t *cert_chain_buffer;
     size_t cert_chain_buffer_size;
     size_t cert_chain_buffer_max_size;
+    uint8_t cert_model;
 
     spdm_response = encap_response;
     spdm_response_size = encap_response_size;
@@ -118,9 +119,33 @@ libspdm_return_t libspdm_process_encap_response_certificate(
                request_offset + spdm_response->portion_length + spdm_response->remainder_length) {
         return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
-    if (spdm_response->header.param1 != spdm_context->encap_context.req_slot_id) {
+    slot_id = spdm_context->encap_context.req_slot_id;
+    if ((spdm_response->header.param1 & SPDM_CERTIFICATE_RESPONSE_SLOT_ID_MASK) != slot_id) {
         return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
+    if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "cert_info - 0x%02x\n",
+                       spdm_response->header.param2));
+        cert_model = spdm_response->header.param2 &
+                     SPDM_CERTIFICATE_RESPONSE_ATTRIBUTES_CERTIFICATE_INFO_MASK;
+        if (spdm_context->connection_info.multi_key_conn_req) {
+            if ((cert_model == SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE) ||
+                (cert_model > SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT)) {
+                return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+            }
+        } else {
+            if (cert_model != SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE) {
+                return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+            }
+        }
+        if (spdm_context->connection_info.peer_cert_info[slot_id] ==
+            SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE) {
+            spdm_context->connection_info.peer_cert_info[slot_id] = cert_model;
+        } else if (spdm_context->connection_info.peer_cert_info[slot_id] != cert_model) {
+            return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+        }
+    }
+
     if (spdm_response_size < sizeof(spdm_certificate_response_t) + spdm_response->portion_length) {
         return LIBSPDM_STATUS_INVALID_MSG_SIZE;
     }

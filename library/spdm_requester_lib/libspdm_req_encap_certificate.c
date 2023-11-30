@@ -71,6 +71,15 @@ libspdm_return_t libspdm_get_encap_response_certificate(void *spdm_context,
 
     offset = spdm_request->offset;
     length = spdm_request->length;
+
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+        if (spdm_request->header.param2 &
+            SPDM_GET_CERTIFICATE_REQUEST_ATTRIBUTES_SLOT_SIZE_REQUESTED) {
+            offset = 0;
+            length = 0;
+        }
+    }
+
     if (length > LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN) {
         length = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
     }
@@ -107,6 +116,11 @@ libspdm_return_t libspdm_get_encap_response_certificate(void *spdm_context,
     spdm_response->header.request_response_code = SPDM_CERTIFICATE;
     spdm_response->header.param1 = slot_id;
     spdm_response->header.param2 = 0;
+    if ((spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) &&
+        context->connection_info.multi_key_conn_req) {
+        spdm_response->header.param2 = context->local_context.local_cert_info[slot_id];
+    }
+
     spdm_response->portion_length = length;
     spdm_response->remainder_length = (uint16_t)remainder_length;
     libspdm_copy_mem(spdm_response + 1,
