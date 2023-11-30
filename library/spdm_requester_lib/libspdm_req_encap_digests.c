@@ -29,6 +29,10 @@ libspdm_return_t libspdm_get_encap_response_digest(void *spdm_context,
     uint8_t slot_index;
     uint32_t session_id;
     libspdm_session_info_t *session_info;
+    size_t additional_size;
+    spdm_key_pair_id_t *key_pair_id;
+    spdm_certificate_info_t *cert_info;
+    spdm_key_usage_bit_mask_t *key_usage_bit_mask;
 
     context = spdm_context;
     spdm_request = request;
@@ -66,9 +70,15 @@ libspdm_return_t libspdm_get_encap_response_digest(void *spdm_context,
         context->connection_info.algorithm.base_hash_algo);
 
     slot_count = libspdm_get_cert_slot_count(context);
+    additional_size = 0;
+    if ((spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) &&
+        context->connection_info.multi_key_conn_req) {
+        additional_size = sizeof(spdm_key_pair_id_t) + sizeof(spdm_certificate_info_t) +
+                          sizeof(spdm_key_usage_bit_mask_t);
+    }
     LIBSPDM_ASSERT(*response_size >=
-                   sizeof(spdm_digest_response_t) + hash_size * slot_count);
-    *response_size = sizeof(spdm_digest_response_t) + hash_size * slot_count;
+                   sizeof(spdm_digest_response_t) + (hash_size + additional_size) * slot_count);
+    *response_size = sizeof(spdm_digest_response_t) + (hash_size + additional_size) * slot_count;
     libspdm_zero_mem(response, *response_size);
     spdm_response = response;
 
@@ -77,7 +87,18 @@ libspdm_return_t libspdm_get_encap_response_digest(void *spdm_context,
     spdm_response->header.param1 = 0;
     spdm_response->header.param2 = 0;
 
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+        spdm_response->header.param1 = context->local_context.local_supported_slot_mask;
+    }
+
     digest = (void *)(spdm_response + 1);
+    key_pair_id = (spdm_key_pair_id_t *)((uint8_t *)digest + hash_size * slot_count);
+    cert_info = (spdm_certificate_info_t *)((uint8_t *)key_pair_id +
+                                            sizeof(spdm_key_pair_id_t) * slot_count);
+    key_usage_bit_mask = (spdm_key_usage_bit_mask_t *)((uint8_t *)cert_info +
+                                                       sizeof(spdm_certificate_info_t) *
+                                                       slot_count);
+
     slot_index = 0;
     for (index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
         if (context->local_context
@@ -85,6 +106,13 @@ libspdm_return_t libspdm_get_encap_response_digest(void *spdm_context,
             spdm_response->header.param2 |= (1 << index);
             result = libspdm_generate_cert_chain_hash(context, index,
                                                       &digest[hash_size * slot_index]);
+            if ((spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) &&
+                context->connection_info.multi_key_conn_req) {
+                key_pair_id[slot_index] = context->local_context.local_key_pair_id[index];
+                cert_info[slot_index] = context->local_context.local_cert_info[index];
+                key_usage_bit_mask[slot_index] =
+                    context->local_context.local_key_usage_bit_mask[index];
+            }
             slot_index++;
             if (!result) {
                 return libspdm_generate_encap_error_response(
