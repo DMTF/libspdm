@@ -605,6 +605,24 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
 
         SET(CMAKE_C_LINK_EXECUTABLE "")
 
+    elseif(TOOLCHAIN STREQUAL "NONE")
+        ADD_COMPILE_OPTIONS(-fshort-wchar -fno-strict-aliasing -Wall -Werror -Wno-array-bounds -ffunction-sections -fdata-sections -fno-common -Wno-address -fpie -fno-asynchronous-unwind-tables -flto -DUSING_LTO  -Wno-maybe-uninitialized -Wno-uninitialized  -Wno-builtin-declaration-mismatch -Wno-nonnull-compare -Werror-implicit-function-declaration)
+        if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+            ADD_COMPILE_OPTIONS(-g)
+        endif()
+        if(GCOV STREQUAL "ON")
+        ADD_COMPILE_OPTIONS(--coverage -fprofile-arcs -ftest-coverage)
+        endif()
+        SET(OPENSSL_FLAGS -include base.h -Wno-error=maybe-uninitialized -Wno-error=format -Wno-format -Wno-error=unused-but-set-variable -Wno-cast-qual -Wno-error=implicit-function-declaration)
+        SET(CMOCKA_FLAGS -std=gnu99 -Wpedantic -Wall -Wshadow -Wmissing-prototypes -Wcast-align -Werror=address -Wstrict-prototypes -Werror=strict-prototypes -Wwrite-strings -Werror=write-strings -Werror-implicit-function-declaration -Wpointer-arith -Werror=pointer-arith -Wdeclaration-after-statement -Werror=declaration-after-statement -Wreturn-type -Werror=return-type -Wuninitialized -Werror=uninitialized -Werror=strict-overflow -Wstrict-overflow=2 -Wno-format-zero-length -Wmissing-field-initializers -Wformat-security -Werror=format-security -fno-common -Wformat -fno-common -fstack-protector-strong -Wno-cast-qual)
+
+        SET(CMAKE_LINKER ${CMAKE_C_COMPILER})
+        SET(CMAKE_EXE_LINKER_FLAGS "-flto -Wno-error -no-pie" )
+        if(GCOV STREQUAL "ON")
+        SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}  --coverage -lgcov -fprofile-arcs -ftest-coverage")
+        endif()
+        SET(CMAKE_C_LINK_EXECUTABLE "<CMAKE_LINKER> <CMAKE_C_LINK_FLAGS> <LINK_FLAGS> <OBJECTS> -o <TARGET> -Wl,--start-group <LINK_LIBRARIES> -Wl,--end-group")
+
     endif()
 
     if(NOT TOOLCHAIN STREQUAL "NIOS2_GCC")
@@ -1013,12 +1031,14 @@ else()
         SET(CMAKE_PROJECT_NAME "libspdm")
         SET(CMAKE_PROJECT_DESCRIPTION "libspdm shared library")
 
-        SET(CMAKE_SKIP_BUILD_RPATH FALSE)
-        SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
-        SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
-        SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+        if(NOT TOOLCHAIN STREQUAL "NONE")
+            SET(CMAKE_SKIP_BUILD_RPATH FALSE)
+            SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
+            SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+            SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+        endif()
 
-        add_library(${LIB_NAME} SHARED 
+        add_library(${LIB_NAME} SHARED
             $<TARGET_OBJECTS:spdm_common_lib>
             $<TARGET_OBJECTS:spdm_crypt_lib>
             $<TARGET_OBJECTS:spdm_requester_lib>
@@ -1028,7 +1048,7 @@ else()
             $<TARGET_OBJECTS:spdm_transport_pcidoe_lib>
         )
 
-        add_library(${LIB_NAME}_platform SHARED 
+        add_library(${LIB_NAME}_platform SHARED
             $<TARGET_OBJECTS:debuglib>
             $<TARGET_OBJECTS:malloclib>
             $<TARGET_OBJECTS:platform_lib>
@@ -1036,7 +1056,7 @@ else()
             $<TARGET_OBJECTS:memlib>
         )
 
-        add_library(${LIB_NAME}_crypto SHARED 
+        add_library(${LIB_NAME}_crypto SHARED
             $<TARGET_OBJECTS:spdm_crypt_ext_lib>
             $<TARGET_OBJECTS:cryptlib_${CRYPTO}>
         )
@@ -1050,12 +1070,19 @@ else()
             )
         elseif(CRYPTO STREQUAL "openssl")
             SET(CRYPTO_DEPS "-lssl -lcrypto")
-            TARGET_LINK_LIBRARIES(${LIB_NAME}_crypto
-                PUBLIC ssl
-                PUBLIC crypto
-            )
-        endif()  
-        
+            if(TOOLCHAIN STREQUAL "NONE")
+                TARGET_LINK_LIBRARIES(${LIB_NAME}_crypto
+                    PUBLIC openssllib
+                    PUBLIC cryptlib_openssl
+                )
+            else()
+                TARGET_LINK_LIBRARIES(${LIB_NAME}_crypto
+                    PUBLIC ssl
+                    PUBLIC crypto
+                )
+            endif()
+        endif()
+
         TARGET_LINK_LIBRARIES(${LIB_NAME}
             PUBLIC ${LIB_NAME}_platform
             PUBLIC ${LIB_NAME}_crypto
