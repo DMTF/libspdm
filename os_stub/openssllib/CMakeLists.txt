@@ -22,6 +22,8 @@ elseif(ARCH STREQUAL "riscv32")
     ADD_COMPILE_OPTIONS(-DLIBSPDM_CPU_RISCV32)
 elseif(ARCH STREQUAL "riscv64")
     ADD_COMPILE_OPTIONS(-DLIBSPDM_CPU_RISCV64)
+elseif((ARCH STREQUAL "arm") OR (ARCH STREQUAL "aarch64"))
+    ADD_COMPILE_OPTIONS(-DLIBSPDM_CPU_ARM)
 else()
     MESSAGE(FATAL_ERROR "Unknown ARCH")
 endif()
@@ -748,9 +750,5 @@ SET(src_openssllib
     rand_pool.c
     ossl_store.c
 )
-
-if ((ARCH STREQUAL "arm") OR (ARCH STREQUAL "aarch64"))
-    ADD_COMPILE_OPTIONS(-DLIBSPDM_CPU_ARM)
-endif()
 
 ADD_LIBRARY(openssllib STATIC ${src_openssllib})

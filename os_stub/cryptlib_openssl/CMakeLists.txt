@@ -21,6 +21,8 @@ elseif(ARCH STREQUAL "riscv32")
     ADD_COMPILE_OPTIONS(-DLIBSPDM_CPU_RISCV32)
 elseif(ARCH STREQUAL "riscv64")
     ADD_COMPILE_OPTIONS(-DLIBSPDM_CPU_RISCV64)
+elseif((ARCH STREQUAL "arm") OR (ARCH STREQUAL "aarch64"))
+    ADD_COMPILE_OPTIONS(-DLIBSPDM_CPU_ARM)
 else()
     MESSAGE(FATAL_ERROR "Unknown ARCH")
 endif()
@@ -50,10 +52,6 @@ SET(src_cryptlib_openssl
     rand/rand.c
     sys_call/crt_wrapper_host.c
 )
-
-if ((ARCH STREQUAL "arm") OR (ARCH STREQUAL "aarch64"))
-    ADD_COMPILE_OPTIONS(-DLIBSPDM_CPU_ARM)
-endif()
 
 ADD_LIBRARY(cryptlib_openssl STATIC ${src_cryptlib_openssl})
 TARGET_COMPILE_OPTIONS(cryptlib_openssl PRIVATE ${OPENSSL_FLAGS})
