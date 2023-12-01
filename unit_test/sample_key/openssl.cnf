@@ -59,7 +59,7 @@ keyUsage = nonRepudiation, digitalSignature, keyEncipherment
 subjectKeyIdentifier = hash
 extendedKeyUsage = critical, serverAuth, clientAuth, OCSPSigning, OID:1.3.6.1.4.1.412.274.4
 
-[ v3_end_alias ]
+[ v3_end_alias_part ]
 basicConstraints = critical,CA:true
 keyUsage = nonRepudiation, digitalSignature, keyEncipherment, keyCertSign
 subjectKeyIdentifier = hash

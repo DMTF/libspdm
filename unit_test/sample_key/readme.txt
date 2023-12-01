@@ -72,7 +72,7 @@ Gen rsa3072_Expiration is same with rsa3072, expect the cert validaty time is 1 
 
 
 ==== More alias_cert model cert_chain to gen ====
-NOTE: The bundle_responder.certchain_alias.der and bundle_requester.certchain.der have same ca_cert and inter cert.
-The only different is: the basic constraints is: CA: ture in leaf cert of bundle_responder.certchain_alias.der.
+NOTE: The bundle_responder.certchain_alias_cert_partial_set.der and bundle_requester.certchain.der have same ca_cert and inter cert.
+The only different is: the basic constraints is: CA: ture in leaf cert of bundle_responder.certchain_alias_cert_partial_set.der.
 This alias cert chain is partial, from root CA to device certificate CA.
 

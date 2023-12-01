@@ -647,65 +647,65 @@ popd
 
 #=== ecc256 Certificate alias Chains ===
 pushd ecp256
-openssl x509 -req -in end_responder.req -out end_responder_alias.cert -CA inter.cert -CAkey inter.key -sha256 -days 3650 -set_serial 3 -extensions v3_end_alias -extfile ../openssl.cnf
-openssl asn1parse -in end_responder_alias.cert -out end_responder_alias.cert.der
-cat ca.cert.der inter.cert.der end_responder_alias.cert.der > bundle_responder.certchain_alias.der
+openssl x509 -req -in end_responder.req -out end_responder_alias_cert_partial_set.cert -CA inter.cert -CAkey inter.key -sha256 -days 3650 -set_serial 3 -extensions v3_end_alias_part -extfile ../openssl.cnf
+openssl asn1parse -in end_responder_alias_cert_partial_set.cert -out end_responder_alias_cert_partial_set.cert.der
+cat ca.cert.der inter.cert.der end_responder_alias_cert_partial_set.cert.der > bundle_responder.certchain_alias_cert_partial_set.der
 popd
 
 #=== ecc384 Certificate alias Chains ===
 pushd ecp384
-openssl x509 -req -in end_responder.req -out end_responder_alias.cert -CA inter.cert -CAkey inter.key -sha384 -days 3650 -set_serial 3 -extensions v3_end_alias -extfile ../openssl.cnf
-openssl asn1parse -in end_responder_alias.cert -out end_responder_alias.cert.der
-cat ca.cert.der inter.cert.der end_responder_alias.cert.der > bundle_responder.certchain_alias.der
+openssl x509 -req -in end_responder.req -out end_responder_alias_cert_partial_set.cert -CA inter.cert -CAkey inter.key -sha384 -days 3650 -set_serial 3 -extensions v3_end_alias_part -extfile ../openssl.cnf
+openssl asn1parse -in end_responder_alias_cert_partial_set.cert -out end_responder_alias_cert_partial_set.cert.der
+cat ca.cert.der inter.cert.der end_responder_alias_cert_partial_set.cert.der > bundle_responder.certchain_alias_cert_partial_set.der
 popd
 
 #=== ecc521 Certificate alias Chains ===
 pushd ecp521
-openssl x509 -req -in end_responder.req -out end_responder_alias.cert -CA inter.cert -CAkey inter.key -sha512 -days 3650 -set_serial 3 -extensions v3_end_alias -extfile ../openssl.cnf
-openssl asn1parse -in end_responder_alias.cert -out end_responder_alias.cert.der
-cat ca.cert.der inter.cert.der end_responder_alias.cert.der > bundle_responder.certchain_alias.der
+openssl x509 -req -in end_responder.req -out end_responder_alias_cert_partial_set.cert -CA inter.cert -CAkey inter.key -sha512 -days 3650 -set_serial 3 -extensions v3_end_alias_part -extfile ../openssl.cnf
+openssl asn1parse -in end_responder_alias_cert_partial_set.cert -out end_responder_alias_cert_partial_set.cert.der
+cat ca.cert.der inter.cert.der end_responder_alias_cert_partial_set.cert.der > bundle_responder.certchain_alias_cert_partial_set.der
 popd
 
 #=== rsa2048 Certificate alias Chains ===
 pushd rsa2048
-openssl x509 -req -in end_responder.req -out end_responder_alias.cert -CA inter.cert -CAkey inter.key -sha256 -days 3650 -set_serial 3 -extensions v3_end_alias -extfile ../openssl.cnf
-openssl asn1parse -in end_responder_alias.cert -out end_responder_alias.cert.der
-cat ca.cert.der inter.cert.der end_responder_alias.cert.der > bundle_responder.certchain_alias.der
+openssl x509 -req -in end_responder.req -out end_responder_alias_cert_partial_set.cert -CA inter.cert -CAkey inter.key -sha256 -days 3650 -set_serial 3 -extensions v3_end_alias_part -extfile ../openssl.cnf
+openssl asn1parse -in end_responder_alias_cert_partial_set.cert -out end_responder_alias_cert_partial_set.cert.der
+cat ca.cert.der inter.cert.der end_responder_alias_cert_partial_set.cert.der > bundle_responder.certchain_alias_cert_partial_set.der
 popd
 
 #=== rsa3072 Certificate alias Chains ===
 pushd rsa3072
-openssl x509 -req -in end_responder.req -out end_responder_alias.cert -CA inter.cert -CAkey inter.key -sha384 -days 3650 -set_serial 3 -extensions v3_end_alias -extfile ../openssl.cnf
-openssl asn1parse -in end_responder_alias.cert -out end_responder_alias.cert.der
-cat ca.cert.der inter.cert.der end_responder_alias.cert.der > bundle_responder.certchain_alias.der
+openssl x509 -req -in end_responder.req -out end_responder_alias_cert_partial_set.cert -CA inter.cert -CAkey inter.key -sha384 -days 3650 -set_serial 3 -extensions v3_end_alias_part -extfile ../openssl.cnf
+openssl asn1parse -in end_responder_alias_cert_partial_set.cert -out end_responder_alias_cert_partial_set.cert.der
+cat ca.cert.der inter.cert.der end_responder_alias_cert_partial_set.cert.der > bundle_responder.certchain_alias_cert_partial_set.der
 popd
 
 #=== rsa4096 Certificate alias Chains ===
 pushd rsa4096
-openssl x509 -req -in end_responder.req -out end_responder_alias.cert -CA inter.cert -CAkey inter.key -sha512 -days 3650 -set_serial 3 -extensions v3_end_alias -extfile ../openssl.cnf
-openssl asn1parse -in end_responder_alias.cert -out end_responder_alias.cert.der
-cat ca.cert.der inter.cert.der end_responder_alias.cert.der > bundle_responder.certchain_alias.der
+openssl x509 -req -in end_responder.req -out end_responder_alias_cert_partial_set.cert -CA inter.cert -CAkey inter.key -sha512 -days 3650 -set_serial 3 -extensions v3_end_alias_part -extfile ../openssl.cnf
+openssl asn1parse -in end_responder_alias_cert_partial_set.cert -out end_responder_alias_cert_partial_set.cert.der
+cat ca.cert.der inter.cert.der end_responder_alias_cert_partial_set.cert.der > bundle_responder.certchain_alias_cert_partial_set.der
 popd
 
 #=== ed25519 Certificate alias Chains ===
 pushd ed25519
-openssl x509 -req -days 3650 -in end_responder.req -CA inter.cert -CAkey inter.key -out end_responder_alias.cert -set_serial 3 -extensions v3_end_alias -extfile ../openssl.cnf
-openssl asn1parse -in end_responder_alias.cert -out end_responder_alias.cert.der
-cat ca.cert.der inter.cert.der end_responder_alias.cert.der > bundle_responder.certchain_alias.der
+openssl x509 -req -days 3650 -in end_responder.req -CA inter.cert -CAkey inter.key -out end_responder_alias_cert_partial_set.cert -set_serial 3 -extensions v3_end_alias_part -extfile ../openssl.cnf
+openssl asn1parse -in end_responder_alias_cert_partial_set.cert -out end_responder_alias_cert_partial_set.cert.der
+cat ca.cert.der inter.cert.der end_responder_alias_cert_partial_set.cert.der > bundle_responder.certchain_alias_cert_partial_set.der
 popd
 
 #=== ed448 Certificate Chains ===
 pushd ed448
-openssl x509 -req -days 3650 -in end_responder.req -CA inter.cert -CAkey inter.key -out end_responder_alias.cert -set_serial 3 -extensions v3_end_alias -extfile ../openssl.cnf
-openssl asn1parse -in end_responder_alias.cert -out end_responder_alias.cert.der
-cat ca.cert.der inter.cert.der end_responder_alias.cert.der > bundle_responder.certchain_alias.der
+openssl x509 -req -days 3650 -in end_responder.req -CA inter.cert -CAkey inter.key -out end_responder_alias_cert_partial_set.cert -set_serial 3 -extensions v3_end_alias_part -extfile ../openssl.cnf
+openssl asn1parse -in end_responder_alias_cert_partial_set.cert -out end_responder_alias_cert_partial_set.cert.der
+cat ca.cert.der inter.cert.der end_responder_alias_cert_partial_set.cert.der > bundle_responder.certchain_alias_cert_partial_set.der
 popd
 
 #=== sm2 Certificate Chains ===
 pushd sm2
-openssl x509 -req -days 3650 -in end_responder.req -CA inter.cert -CAkey inter.key -out end_responder_alias.cert -set_serial 3 -extensions v3_end_alias -extfile ../openssl.cnf
-openssl asn1parse -in end_responder_alias.cert -out end_responder_alias.cert.der
-cat ca.cert.der inter.cert.der end_responder_alias.cert.der > bundle_responder.certchain_alias.der
+openssl x509 -req -days 3650 -in end_responder.req -CA inter.cert -CAkey inter.key -out end_responder_alias_cert_partial_set.cert -set_serial 3 -extensions v3_end_alias_part -extfile ../openssl.cnf
+openssl asn1parse -in end_responder_alias_cert_partial_set.cert -out end_responder_alias_cert_partial_set.cert.der
+cat ca.cert.der inter.cert.der end_responder_alias_cert_partial_set.cert.der > bundle_responder.certchain_alias_cert_partial_set.der
 popd
 
 
