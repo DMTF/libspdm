@@ -573,7 +573,7 @@ void libspdm_test_responder_set_cetificate_rsp_case7(void **state)
     /*set alias cert mode*/
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP;
-    /*read alias cert*/
+    /*read alias cert(alias cert chain is partial)*/
     libspdm_read_responder_public_certificate_chain_alias_cert_till_dev_cert_ca(
         m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
         &cert_chain, &cert_chain_size, NULL, NULL);
