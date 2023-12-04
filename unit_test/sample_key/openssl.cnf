@@ -77,3 +77,10 @@ keyUsage = nonRepudiation, digitalSignature, keyEncipherment, keyCertSign
 subjectKeyIdentifier = hash
 subjectAltName = otherName:1.3.6.1.4.1.412.274.1;UTF8:ACME:WIDGET:1234567890
 extendedKeyUsage = critical, serverAuth, clientAuth, OCSPSigning
+
+[ v3_end_alias_entire ]
+basicConstraints = critical,CA:false
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+subjectKeyIdentifier = hash
+subjectAltName = otherName:1.3.6.1.4.1.412.274.1;UTF8:ACME:WIDGET:1234567890
+extendedKeyUsage = critical, serverAuth, clientAuth, OCSPSigning
