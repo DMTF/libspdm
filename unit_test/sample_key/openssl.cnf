@@ -61,7 +61,7 @@ extendedKeyUsage = critical, serverAuth, clientAuth, OCSPSigning, OID:1.3.6.1.4.
 
 [ v3_end_alias ]
 basicConstraints = critical,CA:true
-keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment, keyCertSign
 subjectKeyIdentifier = hash
 subjectAltName = otherName:1.3.6.1.4.1.412.274.1;UTF8:ACME:WIDGET:1234567890
 extendedKeyUsage = critical, serverAuth, clientAuth, OCSPSigning
