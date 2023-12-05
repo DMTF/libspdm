@@ -56,6 +56,11 @@ bool libspdm_read_responder_public_certificate_chain_alias_cert_till_dev_cert_ca
     uint32_t base_hash_algo, uint32_t base_asym_algo, void **data,
     size_t *size, void **hash, size_t *hash_size);
 
+/*This alias cert chain is entire, from root CA to leaf certificate.*/
+bool libspdm_read_responder_public_certificate_chain_alias_cert_entire(
+    uint32_t base_hash_algo, uint32_t base_asym_algo, void **data,
+    size_t *size, void **hash, size_t *hash_size);
+
 bool libspdm_read_responder_public_certificate_chain_per_slot(
     uint8_t slot_id, uint32_t base_hash_algo, uint32_t base_asym_algo,
     void **data, size_t *size, void **hash, size_t *hash_size);
