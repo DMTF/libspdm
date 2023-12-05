@@ -1665,6 +1665,27 @@ void libspdm_test_responder_measurements_case27(void **state)
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
                      SPDM_MEASUREMENTS);
+
+    uint8_t *opaque_data;
+    size_t opaque_data_size;
+
+    status = libspdm_measurement_opaque_data(
+        spdm_context->connection_info.version,
+        spdm_context->connection_info.algorithm.measurement_spec,
+        spdm_context->connection_info.algorithm.measurement_hash_algo,
+        m_libspdm_get_measurements_request15.header.param2,
+        m_libspdm_get_measurements_request15.header.param1,
+        opaque_data,
+        &opaque_data_size);
+
+    assert_memory_equal(opaque_data,
+                        (void *)response +
+                        sizeof(spdm_measurements_response_t) +
+                        sizeof(spdm_measurement_block_dmtf_t) +
+                        libspdm_get_measurement_hash_size(m_libspdm_use_measurement_hash_algo) +
+                        SPDM_NONCE_SIZE + sizeof(uint16_t),
+                        opaque_data_size);
+
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
