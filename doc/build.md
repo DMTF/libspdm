@@ -211,15 +211,26 @@ a) [NIOS2 GNU](https://www.intel.com/content/www/us/en/docs/programmable/683689/
    cd libspdm
    mkdir build
    cd build
-   cmake -DARCH=<arm|aarch64> -DTOOLCHAIN=ARM_GNU_BARE_METAL -DTARGET=<Debug|Release> -DCRYPTO=<mbedtls|openssl> ..
+   cmake -DARCH=<arm|aarch64> -DMARCH=<armv4t|...|armv7e-m...|iwmmxt2> -DTOOLCHAIN=ARM_GNU_BARE_METAL -DTARGET=<Debug|Release> -DCRYPTO=<mbedtls|openssl> -DISABLE_LTO=<1>..
    make copy_sample_key
    make
+   ```
+
+   Note that the `DMARCH` option is passed directly as a compiler option. As per `man arm-none-eabi-gcc`, the following options are allowed:
+   ```
+    Permissible names are: armv4t, armv5t, armv5te, armv6, armv6j, armv6k, armv6kz, armv6t2,  armv6z,  armv6zk,  armv7,
+    armv7-a,  armv7ve,  armv8-a,  armv8.1-a,  armv8.2-a,  armv8.3-a, armv8.4-a, armv8.5-a, armv8.6-a, armv9-a, armv7-r,
+    armv8-r, armv6-m, armv6s-m, armv7-m, armv7e-m, armv8-m.base,  armv8-m.main,  armv8.1-m.main,  armv9-a,  iwmmxt  and
+    iwmmxt2.
    ```
 
    Example CMake commands:
 
    ```
-   cmake -DARCH=arm -DTOOLCHAIN=ARM_GNU_BARE_METAL -DTARGET=Debug -DCRYPTO=mbedtls ..
+   cmake -DARCH=arm -DMARCH=armv7e-m -DTOOLCHAIN=ARM_GNU_BARE_METAL -DTARGET=Debug -DCRYPTO=mbedtls ..
+   ```
+   ```
+   cmake -DARCH=arm -DMARCH=armv4t -DTOOLCHAIN=ARM_GNU_BARE_METAL -DTARGET=Debug -DCRYPTO=mbedtls -DISABLE_LTO=1 ..
    ```
    ```
    cmake -DARCH=aarch64 -DTOOLCHAIN=ARM_GNU_BARE_METAL -DTARGET=Release -DCRYPTO=mbedtls ..
