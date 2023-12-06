@@ -2,7 +2,7 @@
 
 [ v3_inter ]
 basicConstraints = CA:true
-keyUsage = cRLSign, keyCertSign, digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment, keyAgreement, keyCertSign, cRLSign
+keyUsage = cRLSign, keyCertSign, digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment, keyAgreement
 subjectKeyIdentifier = hash
 extendedKeyUsage = critical, serverAuth, clientAuth
 
