@@ -1618,6 +1618,16 @@ void libspdm_test_responder_measurements_case27(void **state)
     void *data;
     size_t data_size;
     size_t measurment_sig_size;
+    uint8_t content_changed;
+    uint8_t measurements_count;
+    uint8_t *measurement_record_data;
+    size_t measurement_record_data_length;
+    uint8_t expect_measurement_record_data[LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE];
+    size_t expect_measurement_record_data_length;
+    uint8_t *opaque_data;
+    uint16_t *opaque_data_size;
+    uint8_t expect_opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
+    size_t expect_opaque_data_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1665,6 +1675,46 @@ void libspdm_test_responder_measurements_case27(void **state)
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
                      SPDM_MEASUREMENTS);
+
+    expect_measurement_record_data_length = sizeof(expect_measurement_record_data);
+    expect_opaque_data_size = sizeof(expect_opaque_data);
+
+    libspdm_measurement_collection(
+        spdm_context->connection_info.version,
+        spdm_context->connection_info.algorithm.measurement_spec,
+        spdm_context->connection_info.algorithm.measurement_hash_algo,
+        m_libspdm_get_measurements_request15.header.param2,
+        m_libspdm_get_measurements_request15.header.param1,
+        &content_changed,
+        &measurements_count,
+        expect_measurement_record_data,
+        &expect_measurement_record_data_length);
+
+    libspdm_measurement_opaque_data(
+        spdm_context->connection_info.version,
+        spdm_context->connection_info.algorithm.measurement_spec,
+        spdm_context->connection_info.algorithm.measurement_hash_algo,
+        m_libspdm_get_measurements_request15.header.param2,
+        m_libspdm_get_measurements_request15.header.param1,
+        expect_opaque_data,
+        &expect_opaque_data_size);
+
+    measurement_record_data = (uint8_t *)response + sizeof(spdm_measurements_response_t);
+    opaque_data_size =
+        (uint16_t *)(measurement_record_data + sizeof(spdm_measurement_block_dmtf_t) +
+                     libspdm_get_measurement_hash_size(
+                         m_libspdm_use_measurement_hash_algo) +
+                     SPDM_NONCE_SIZE);
+    opaque_data = (uint8_t *)opaque_data_size + sizeof(uint16_t);
+
+    measurement_record_data_length = libspdm_read_uint24(spdm_response->measurement_record_length);
+
+    assert_int_equal(measurement_record_data_length, expect_measurement_record_data_length );
+    assert_memory_equal(measurement_record_data, expect_measurement_record_data,
+                        expect_measurement_record_data_length);
+    assert_int_equal(*opaque_data_size, libspdm_secret_lib_meas_opaque_data_size);
+    assert_memory_equal(opaque_data, expect_opaque_data, libspdm_secret_lib_meas_opaque_data_size);
+
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
 #endif
