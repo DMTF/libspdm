@@ -129,7 +129,7 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
             SPDM_SET_CERTIFICATE, response_size, response);
     }
 
-    slot_id = spdm_request->header.param1 & SPDM_GET_CERTIFICATE_REQUEST_SLOT_ID_MASK;
+    slot_id = spdm_request->header.param1 & SPDM_SET_CERTIFICATE_REQUEST_SLOT_ID_MASK;
     if (slot_id >= SPDM_MAX_SLOT_COUNT) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
@@ -147,63 +147,84 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
     root_cert_hash_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
 
-    if (request_size < sizeof(spdm_set_certificate_request_t) +
-        sizeof(spdm_cert_chain_t) + root_cert_hash_size) {
-        return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-                                               response_size, response);
-    }
+    if ((libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_13) &&
+        ((spdm_request->header.param1 & SPDM_SET_CERTIFICATE_REQUEST_ATTRIBUTES_ERASE) != 0)) {
+        /*the CertChain field shall be absent;the value of SetCertModel shall be zero*/
+        if ((request_size < sizeof(spdm_set_certificate_request_t)) ||
+            ((spdm_request->header.param1 &
+              SPDM_SET_CERTIFICATE_REQUEST_ATTRIBUTES_CERT_MODEL_MASK) != 0)) {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                                   response_size, response);
+        }
 
-    /*point to full SPDM certificate chain*/
-    cert_chain = (const void*)(spdm_request + 1);
-    cert_chain_header = cert_chain;
+        /* erase slot_id cert_chain*/
+        result = libspdm_write_certificate_to_nvm(slot_id, NULL, 0, 0, 0);
+        if (!result) {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_OPERATION_FAILED, 0,
+                                                   response_size, response);
+        }
+    } else {
+        if (request_size < sizeof(spdm_set_certificate_request_t) +
+            sizeof(spdm_cert_chain_t) + root_cert_hash_size) {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                                   response_size, response);
+        }
 
-    if (cert_chain_header->length < sizeof(spdm_cert_chain_t) + root_cert_hash_size) {
-        return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-                                               response_size, response);
-    }
-    if (cert_chain_header->length > request_size - sizeof(spdm_set_certificate_request_t)) {
-        return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-                                               response_size, response);
-    }
+        /*point to full SPDM certificate chain*/
+        cert_chain = (const void*)(spdm_request + 1);
+        cert_chain_header = cert_chain;
 
-    /*get actual cert_chain size*/
-    cert_chain_size = cert_chain_header->length - sizeof(spdm_cert_chain_t) - root_cert_hash_size;
+        if (cert_chain_header->length < sizeof(spdm_cert_chain_t) + root_cert_hash_size) {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                                   response_size, response);
+        }
+        if (cert_chain_header->length > request_size - sizeof(spdm_set_certificate_request_t)) {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                                   response_size, response);
+        }
 
-    /*point to actual cert_chain*/
-    cert_chain = (const void*)((const uint8_t *)cert_chain
-                               + sizeof(spdm_cert_chain_t) + root_cert_hash_size);
+        /*get actual cert_chain size*/
+        cert_chain_size = cert_chain_header->length - sizeof(spdm_cert_chain_t) -
+                          root_cert_hash_size;
 
-    is_device_cert_model = false;
-    if((spdm_context->local_context.capability.flags &
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP) == 0) {
-        is_device_cert_model = true;
-    }
+        /*point to actual cert_chain*/
+        cert_chain = (const void*)((const uint8_t *)cert_chain
+                                   + sizeof(spdm_cert_chain_t) + root_cert_hash_size);
+
+        is_device_cert_model = false;
+        if((spdm_context->local_context.capability.flags &
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP) == 0) {
+            is_device_cert_model = true;
+        }
 
 #if LIBSPDM_CERT_PARSE_SUPPORT
-    /*check the cert_chain*/
-    result = libspdm_set_cert_verify_certchain(cert_chain, cert_chain_size,
-                                               spdm_context->connection_info.algorithm.base_asym_algo,
-                                               spdm_context->connection_info.algorithm.base_hash_algo,
-                                               is_device_cert_model);
-    if (!result) {
-        return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_UNSPECIFIED, 0,
-                                               response_size, response);
-    }
+        /*check the cert_chain*/
+        result = libspdm_set_cert_verify_certchain(cert_chain, cert_chain_size,
+                                                   spdm_context->connection_info.algorithm.base_asym_algo,
+                                                   spdm_context->connection_info.algorithm.base_hash_algo,
+                                                   is_device_cert_model);
+        if (!result) {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_UNSPECIFIED, 0,
+                                                   response_size, response);
+        }
 #endif /*LIBSPDM_CERT_PARSE_SUPPORT*/
 
-    /* set certificate to NV*/
-    result = libspdm_write_certificate_to_nvm(slot_id, cert_chain,
-                                              cert_chain_size,
-                                              spdm_context->connection_info.algorithm.base_hash_algo,
-                                              spdm_context->connection_info.algorithm.base_asym_algo);
-    if (!result) {
-        return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_UNSPECIFIED, 0,
-                                               response_size, response);
+        /* set certificate to NV*/
+        result = libspdm_write_certificate_to_nvm(slot_id, cert_chain,
+                                                  cert_chain_size,
+                                                  spdm_context->connection_info.algorithm.base_hash_algo,
+                                                  spdm_context->connection_info.algorithm.base_asym_algo);
+        if (!result) {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_UNSPECIFIED, 0,
+                                                   response_size, response);
+        }
     }
 
     LIBSPDM_ASSERT(*response_size >= sizeof(spdm_set_certificate_response_t));

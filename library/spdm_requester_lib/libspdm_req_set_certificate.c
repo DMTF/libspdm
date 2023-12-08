@@ -19,6 +19,10 @@
  * @param  cert_chain                   The pointer for the certificate chain to set.
  *                                      The cert chain is a full SPDM certificate chain, including Length and Root Cert Hash.
  * @param  cert_chain_size              The size of the certificate chain to set.
+ * @param  request_attribute            Set certificate request attributes. This field is only used for SPDM 1.3 and above.
+ *                                      And the bit[0~3] of request_attribute must be 0.
+ * @param  key_pair_id                  The value of this field shall be the unique key pair number identifying the desired
+ *                                      asymmetric key pair to associate with SlotID .
  *
  * @retval RETURN_SUCCESS               The measurement is got successfully.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
@@ -26,7 +30,9 @@
  **/
 static libspdm_return_t libspdm_try_set_certificate(libspdm_context_t *spdm_context,
                                                     const uint32_t *session_id, uint8_t slot_id,
-                                                    void *cert_chain, size_t cert_chain_size)
+                                                    void *cert_chain, size_t cert_chain_size,
+                                                    uint8_t request_attribute,
+                                                    uint8_t key_pair_id)
 {
     libspdm_return_t status;
     spdm_set_certificate_request_t *spdm_request;
@@ -48,8 +54,10 @@ static libspdm_return_t libspdm_try_set_certificate(libspdm_context_t *spdm_cont
 
     LIBSPDM_ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
 
-    if ((cert_chain == NULL) || (cert_chain_size == 0)) {
-        return LIBSPDM_STATUS_INVALID_PARAMETER;
+    if (libspdm_get_connection_version (spdm_context) < SPDM_MESSAGE_VERSION_13) {
+        if ((cert_chain == NULL) || (cert_chain_size == 0)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
     }
 
     if (spdm_context->connection_info.connection_state <
@@ -84,14 +92,37 @@ static libspdm_return_t libspdm_try_set_certificate(libspdm_context_t *spdm_cont
 
     spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request->header.request_response_code = SPDM_SET_CERTIFICATE;
-    spdm_request->header.param1 = slot_id;
+    spdm_request->header.param1 = slot_id & SPDM_SET_CERTIFICATE_REQUEST_SLOT_ID_MASK;
     spdm_request->header.param2 = 0;
+
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+        /*And the bit[0~3] of request_attribute must be 0.*/
+        if ((request_attribute & SPDM_SET_CERTIFICATE_REQUEST_SLOT_ID_MASK) != 0) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+
+        if ((request_attribute & SPDM_SET_CERTIFICATE_REQUEST_ATTRIBUTES_ERASE) != 0) {
+            /*the CertChain field shall be absent*/
+            cert_chain_size = 0;
+            /*the value of SetCertModel shall be zero*/
+            spdm_request->header.param1 &= ~SPDM_SET_CERTIFICATE_REQUEST_ATTRIBUTES_CERT_MODEL_MASK;
+            /*set Erase bit */
+            spdm_request->header.param1 |= SPDM_SET_CERTIFICATE_REQUEST_ATTRIBUTES_ERASE;
+        }
+    }
 
     LIBSPDM_ASSERT(spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12);
 
-    libspdm_copy_mem(spdm_request + 1,
-                     spdm_request_size - sizeof(spdm_set_certificate_request_t),
-                     (uint8_t *)cert_chain, cert_chain_size);
+    if ((libspdm_get_connection_version (spdm_context) < SPDM_MESSAGE_VERSION_13) ||
+        (cert_chain_size != 0)) {
+        if (cert_chain == NULL) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+
+        libspdm_copy_mem(spdm_request + 1,
+                         spdm_request_size - sizeof(spdm_set_certificate_request_t),
+                         (uint8_t *)cert_chain, cert_chain_size);
+    }
 
     spdm_request_size = sizeof(spdm_set_certificate_request_t) + cert_chain_size;
 
@@ -171,7 +202,36 @@ libspdm_return_t libspdm_set_certificate(void *spdm_context,
     retry_delay_time = context->retry_delay_time;
     do {
         status = libspdm_try_set_certificate(context, session_id, slot_id,
-                                             cert_chain, cert_chain_size);
+                                             cert_chain, cert_chain_size, 0, 0);
+        if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
+            return status;
+        }
+
+        libspdm_sleep(retry_delay_time);
+    } while (retry-- != 0);
+
+    return status;
+}
+
+libspdm_return_t libspdm_set_certificate_ex(void *spdm_context,
+                                            const uint32_t *session_id, uint8_t slot_id,
+                                            void *cert_chain, size_t cert_chain_size,
+                                            uint8_t request_attribute,
+                                            uint8_t key_pair_id)
+{
+    libspdm_context_t *context;
+    size_t retry;
+    uint64_t retry_delay_time;
+    libspdm_return_t status;
+
+    context = spdm_context;
+    context->crypto_request = true;
+    retry = context->retry_times;
+    retry_delay_time = context->retry_delay_time;
+    do {
+        status = libspdm_try_set_certificate(context, session_id, slot_id,
+                                             cert_chain, cert_chain_size,
+                                             request_attribute, key_pair_id);
         if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
             return status;
         }

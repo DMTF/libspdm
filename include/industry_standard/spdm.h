@@ -747,6 +747,9 @@ typedef struct {
 #define SPDM_ERROR_CODE_LARGE_RESPONSE 0x0F
 #define SPDM_ERROR_CODE_MESSAGE_LOST 0x10
 
+/* SPDM error code (1.3) */
+#define SPDM_ERROR_CODE_OPERATION_FAILED 0x44
+
 /* SPDM ResponseNotReady extended data */
 typedef struct {
     uint8_t rd_exponent;
@@ -1042,9 +1045,12 @@ typedef struct {
 /* SPDM SET_CERTIFICATE request */
 typedef struct {
     spdm_message_header_t header;
-    /* param1 == BIT[0:3]=slot_id, Request Attribute in 1.3
-     * param2 == key_pair_id in 1.3
-     * uint8_t cert_chain[]; */
+    /* param1 == BIT[0:3]=slot_id, BIT[4:7]=RSVD
+     * param2 == RSVD
+     * param1 and param2 are updated in 1.3
+     * param1 == Request attributes, BIT[0:3]=slot_id, BIT[4:6]=SetCertModel, BIT[7]=Erase
+     * param2 == KeyPairID
+     * void * cert_chain*/
 } spdm_set_certificate_request_t;
 
 #define SPDM_SET_CERTIFICATE_REQUEST_SLOT_ID_MASK 0xF

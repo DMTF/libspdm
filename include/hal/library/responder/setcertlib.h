@@ -22,8 +22,9 @@
 extern bool libspdm_is_in_trusted_environment();
 
 /**
- * Stores a certificate chain in non-volatile memory.
- *
+ * Stores or erase a certificate chain in non-volatile memory.
+ * If the cert_chain is NULL and cert_chain_size is 0,
+ * the feature is to erase the certificate chain.
  *
  * @param[in]  slot_id          The number of slot for the certificate chain.
  * @param[in]  cert_chain       The pointer for the certificate chain to set.
