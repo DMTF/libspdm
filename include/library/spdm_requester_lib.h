@@ -705,6 +705,37 @@ libspdm_return_t libspdm_set_certificate(void *spdm_context,
                                          const uint32_t *session_id, uint8_t slot_id,
                                          void *cert_chain, size_t cert_chain_size);
 
+/**
+ * This function try to send SET_CERTIFICATE
+ * to set certificate or erase certificate from the device.
+ *
+ * @param  context          A pointer to the SPDM context.
+ * @param  session_id       Indicates if it is a secured message protected via SPDM session.
+ *                          If session_id is NULL, it is a normal message.
+ *                          If session_id is NOT NULL, it is a secured message.
+ * @param  slot_id          The number of slot for the certificate chain.
+ * @param  cert_chain       The pointer for the certificate chain to set.
+ *                          The cert chain is a full SPDM certificate chain, including Length and Root Cert Hash.
+ *                          For SPDM 1.2, the cert_chain must be non-NULL.
+ *                          For SPDM 1.3 and above:
+ *                          If the request_attribute Erase bit is set, the cert_chain must be NULL;
+ *                          If the request_attribute Erase bit is not set, the cert_chain must be non-NULL.
+ * @param  cert_chain_size  The size of the certificate chain to set.
+ *                          For SPDM 1.2, the cert_chain_size must be non-zero.
+ *                          For SPDM 1.3 and above:
+ *                          If the request_attribute Erase bit is set, the cert_chain_size must be 0;
+ *                          If the request_attribute Erase bit is not set, the cert_chain_size must be non-zero.
+ *                          If the cert_chain is NULL, the cert_chain_size must be 0.
+ * @param  request_attribute Set certificate request attributes. This field is only used for SPDM 1.3 and above.
+ *                          And the bit[0~3] of request_attribute must be 0.
+ * @param  key_pair_id      The value of this field shall be the unique key pair number identifying the desired
+ *                          asymmetric key pair to associate with SlotID .
+ **/
+libspdm_return_t libspdm_set_certificate_ex(void *spdm_context,
+                                            const uint32_t *session_id, uint8_t slot_id,
+                                            void *cert_chain, size_t cert_chain_size,
+                                            uint8_t request_attribute,
+                                            uint8_t key_pair_id);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP */
 
 #if LIBSPDM_ENABLE_MSG_LOG

@@ -675,6 +675,20 @@ libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
 /**
  * Process the SPDM SET_CERTIFICATE request and return the response.
  *
+ *   |   Cert State in Slot  | Req(KeyPairID,CertMode) | Req(Erase) |   Res(KeyPairID,CertMode)   |           Action         |
+ *   |-----------------------|-------------------------|------------|-----------------------------|--------------------------|
+ *   |        Not exist      |            -            |      -     |              -              |           Invalid        |
+ *   |     exist and empty   |          Valid          |      No    |           Not exist         |          Provision       |
+ *   |     exist and empty   |          Valid          |      Yes   |           Not exist         |           Invalid        |
+ *   |     exist with key    |          Valid          |      No    |   KeyPairID/CertMode match  |          Provision       |
+ *   |     exist with key    |          Valid          |      Yes   |   KeyPairID/CertMode match  |           Invalid        |
+ *   |     exist with key    |          Valid          |      No    | KeyPairID/CertMode not match|    Invalid(or OverWrite) |
+ *   |     exist with key    |          Valid          |      Yes   | KeyPairID/CertMode not match|           Invalid        |
+ *   |exist with key and cert|          Valid          |      No    |   KeyPairID/CertMode match  |    Invalid(or OverWrite) |
+ *   |exist with key and cert|          Valid          |      Yes   |   KeyPairID/CertMode match  |           Erase Cert     |
+ *   |exist with key and cert|          Valid          |      No    | KeyPairID/CertMode not match|           Invalid        |
+ *   |exist with key and cert|          Valid          |      Yes   | KeyPairID/CertMode not match|           Invalid        |
+ *
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  request_size                  size in bytes of the request data.
  * @param  request                      A pointer to the request data.
