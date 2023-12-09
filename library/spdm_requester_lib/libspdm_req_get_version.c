@@ -54,6 +54,7 @@ static libspdm_return_t libspdm_try_get_version(libspdm_context_t *spdm_context,
 
     /* -=[Set State Phase]=- */
     libspdm_reset_message_a(spdm_context);
+    libspdm_reset_message_d(spdm_context);
     libspdm_reset_message_b(spdm_context);
     libspdm_reset_message_c(spdm_context);
     libspdm_reset_context(spdm_context);

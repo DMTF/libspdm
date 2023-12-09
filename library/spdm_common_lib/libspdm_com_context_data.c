@@ -1509,7 +1509,10 @@ libspdm_return_t libspdm_append_message_a(libspdm_context_t *spdm_context, const
 libspdm_return_t libspdm_append_message_d(libspdm_context_t *spdm_context, const void *message,
                                           size_t message_size)
 {
-    libspdm_reset_message_d (spdm_context);
+    /* Only the first message D after VCA in connection counts  */
+    if (libspdm_get_managed_buffer_size(&spdm_context->transcript.message_d) != 0) {
+        return LIBSPDM_STATUS_SUCCESS;
+    }
     return libspdm_append_managed_buffer(&spdm_context->transcript.message_d,
                                          message, message_size);
 }
@@ -2081,7 +2084,11 @@ libspdm_return_t libspdm_append_message_encap_d(libspdm_context_t *spdm_context,
     libspdm_session_info_t *spdm_session_info;
 
     spdm_session_info = session_info;
-    libspdm_reset_message_encap_d(spdm_context, session_info);
+    /* Only the first message EncapD in current session counts  */
+    if (libspdm_get_managed_buffer_size(&spdm_session_info->session_transcript.message_encap_d) !=
+        0) {
+        return LIBSPDM_STATUS_SUCCESS;
+    }
     return libspdm_append_managed_buffer(
         &spdm_session_info->session_transcript.message_encap_d, message,
         message_size);

@@ -82,6 +82,7 @@ libspdm_return_t libspdm_get_response_version(libspdm_context_t *spdm_context, s
                                                   spdm_request->header.request_response_code);
 
     libspdm_reset_message_a(spdm_context);
+    libspdm_reset_message_d(spdm_context);
     libspdm_reset_message_b(spdm_context);
     libspdm_reset_message_c(spdm_context);
 
