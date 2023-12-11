@@ -264,7 +264,7 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
     }
 
     opaque_data =
-        (uint8_t*)response + sizeof(spdm_measurements_response_t) +
+        (uint8_t*)response + sizeof(spdm_measurements_response_t) + measurements_size +
         SPDM_NONCE_SIZE + sizeof(uint16_t);
 
     if ((libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_12) &&
