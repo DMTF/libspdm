@@ -229,10 +229,7 @@ libspdm_return_t libspdm_get_response_encapsulated_request(
                                                response_size, response);
     }
 
-    if (!libspdm_is_capabilities_flag_supported(
-            spdm_context, false,
-            SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP,
-            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP)) {
+    if (!libspdm_is_encap_supported(spdm_context)) {
         return libspdm_generate_error_response(
             spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
             SPDM_GET_ENCAPSULATED_REQUEST, response_size, response);
