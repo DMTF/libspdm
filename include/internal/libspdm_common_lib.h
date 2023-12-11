@@ -852,6 +852,17 @@ bool libspdm_is_capabilities_flag_supported(const libspdm_context_t *spdm_contex
                                             uint32_t responder_capabilities_flag);
 
 /**
+ * Checks the negotiated SPDM version and endpoint capabilities to determine if encapsulated
+ * messages are supported or not.
+ *
+ * @param  spdm_context  A pointer to the SPDM context.
+ *
+ * @retval true   Both endpoints support encapsulated messages.
+ * @retval false  At least one endpoint does not support encapsulated messages.
+ **/
+bool libspdm_is_encap_supported(const libspdm_context_t *spdm_context);
+
+/**
  * This function generates the certificate chain hash.
  *
  * @param  spdm_context                  A pointer to the SPDM context.

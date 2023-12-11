@@ -2340,6 +2340,39 @@ bool libspdm_is_capabilities_flag_supported(const libspdm_context_t *spdm_contex
     }
 }
 
+bool libspdm_is_encap_supported(const libspdm_context_t *spdm_context)
+{
+    if (libspdm_get_connection_version(spdm_context) == SPDM_MESSAGE_VERSION_10) {
+        return false;
+    } else if (libspdm_get_connection_version(spdm_context) == SPDM_MESSAGE_VERSION_12) {
+        /* ENCAP_CAP was erroneously deprecated in SPDM 1.2.0 and 1.2.1, and MUT_AUTH_CAP
+         * was used in its place. In SPDM 1.2.2 and later ENCAP_CAP is undeprecated. Since
+         * UpdateVersionNumber must be ignored when checking interoperability libspdm will check
+         * if ENCAP_CAP or MUT_AUTH_CAP is set. */
+        const bool is_req_encap_cap_supported = libspdm_is_capabilities_flag_supported(
+            spdm_context, spdm_context->local_context.is_requester,
+            SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP, 0);
+        const bool is_req_mut_auth_cap_supported = libspdm_is_capabilities_flag_supported(
+            spdm_context, spdm_context->local_context.is_requester,
+            SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP, 0);
+        const bool is_rsp_encap_cap_supported = libspdm_is_capabilities_flag_supported(
+            spdm_context, spdm_context->local_context.is_requester,
+            0, SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP);
+        const bool is_rsp_mut_auth_cap_supported = libspdm_is_capabilities_flag_supported(
+            spdm_context, spdm_context->local_context.is_requester,
+            0, SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP);
+
+        return ((is_req_encap_cap_supported || is_req_mut_auth_cap_supported) &&
+                (is_rsp_encap_cap_supported || is_rsp_mut_auth_cap_supported));
+    } else {
+        /* For SPDM 1.1 and 1.3 and later only check ENCAP_CAP. */
+        return libspdm_is_capabilities_flag_supported(
+            spdm_context, spdm_context->local_context.is_requester,
+            SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP,
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP);
+    }
+}
+
 /**
  * Register SPDM device input/output functions.
  *
