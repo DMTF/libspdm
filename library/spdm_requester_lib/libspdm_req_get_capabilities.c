@@ -163,6 +163,10 @@ static bool validate_responder_capability(uint32_t capabilities_flag, uint8_t ve
         if ((multi_key_cap != 0) && (get_key_pair_info_cap == 0)) {
             return false;
         }
+        /* check multi-key and pub_key_id */
+        if ((multi_key_cap != 0) && (pub_key_id_cap == 1)) {
+            return false;
+        }
     }
 
     return true;
