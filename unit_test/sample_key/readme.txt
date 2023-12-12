@@ -76,4 +76,4 @@ NOTE: The bundle_responder.certchain_alias_cert_partial_set.der and bundle_reque
 The only different is: the basic constraints is: CA: ture in leaf cert of bundle_responder.certchain_alias_cert_partial_set.der.
 This alias cert chain is partial, from root CA to device certificate CA.
 
-The bundle_responder.certchain_alias_entire.der is the entire cert_chain in the alias_cert mode.
+The bundle_responder.certchain_alias.der is the entire cert_chain in the alias_cert mode.
