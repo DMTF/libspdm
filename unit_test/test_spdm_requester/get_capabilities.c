@@ -48,6 +48,15 @@
      SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP | \
      SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP)
 
+ #define LIBSPDM_DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_13 \
+    (LIBSPDM_DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_11 | \
+     LIBSPDM_DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_12 | \
+     SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_EP_INFO_CAP_NO_SIG  | \
+     SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEL_CAP | \
+     SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_EVENT_CAP | \
+     SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MULTI_KEY_CAP_ONLY | \
+     SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_GET_KEY_PAIR_INFO_CAP)
+
 static size_t m_libspdm_local_buffer_size;
 static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_VCA_BUFFER_SIZE];
 
@@ -133,6 +142,8 @@ static libspdm_return_t libspdm_requester_get_capabilities_test_send_message(
     case 0x21:
         return LIBSPDM_STATUS_SUCCESS;
     case 0x22:
+        return LIBSPDM_STATUS_SUCCESS;
+    case 0x23:
         return LIBSPDM_STATUS_SUCCESS;
     default:
         return LIBSPDM_STATUS_SEND_FAIL;
@@ -979,6 +990,30 @@ static libspdm_return_t libspdm_requester_get_capabilities_test_receive_message(
                                               response_size, response);
     }
         return LIBSPDM_STATUS_SUCCESS;
+    case 0x23: {
+        spdm_capabilities_response_t *spdm_response;
+        size_t spdm_response_size;
+        size_t transport_header_size;
+
+        spdm_response_size = sizeof(spdm_capabilities_response_t);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        libspdm_zero_mem(spdm_response, spdm_response_size);
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+        spdm_response->header.request_response_code = SPDM_CAPABILITIES;
+        spdm_response->header.param1 = 0;
+        spdm_response->header.param2 = 0;
+        spdm_response->ct_exponent = 0;
+        spdm_response->flags = LIBSPDM_DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_13;
+        spdm_response->data_transfer_size = LIBSPDM_DATA_TRANSFER_SIZE;
+        spdm_response->max_spdm_msg_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
+        libspdm_transport_test_encode_message(spdm_context, NULL, false,
+                                              false, spdm_response_size,
+                                              spdm_response,
+                                              response_size, response);
+    }
+        return LIBSPDM_STATUS_SUCCESS;
     default:
         return LIBSPDM_STATUS_RECEIVE_FAIL;
     }
@@ -1357,6 +1392,31 @@ static void libspdm_test_requester_get_capabilities_case33(void **state)
  * }
  */
 
+static void libspdm_test_requester_get_capabilities_case35(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x23;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+    spdm_context->local_context.capability.ct_exponent = 0;
+
+    status = libspdm_get_capabilities(spdm_context);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(spdm_context->connection_info.capability.max_spdm_msg_size,
+                     LIBSPDM_MAX_SPDM_MSG_SIZE);
+    assert_int_equal(spdm_context->connection_info.capability.data_transfer_size,
+                     LIBSPDM_DATA_TRANSFER_SIZE);
+    assert_int_equal(spdm_context->connection_info.capability.ct_exponent, 0);
+    assert_int_equal(spdm_context->connection_info.capability.flags,
+                     LIBSPDM_DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_13);
+}
+
 static libspdm_test_context_t m_libspdm_requester_get_capabilities_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     true,
@@ -1401,6 +1461,7 @@ int libspdm_requester_get_capabilities_test_main(void)
         cmocka_unit_test(libspdm_test_requester_get_capabilities_case32),
         cmocka_unit_test(libspdm_test_requester_get_capabilities_case33),
         /* cmocka_unit_test(libspdm_test_requester_get_capabilities_case34), */
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_case35),
     };
 
     libspdm_setup_test_context(
