@@ -27,6 +27,8 @@ typedef struct {
 static size_t m_libspdm_local_buffer_size;
 static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_VCA_BUFFER_SIZE];
 
+static uint8_t m_connection_other_params_support;
+
 static libspdm_return_t libspdm_requester_negotiate_algorithms_test_send_message(
     void *spdm_context, size_t request_size, const void *request, uint64_t timeout)
 {
@@ -108,6 +110,7 @@ static libspdm_return_t libspdm_requester_negotiate_algorithms_test_send_message
     case 0x21:
         return LIBSPDM_STATUS_SUCCESS;
     case 0x22:
+    case 0x23:
         return LIBSPDM_STATUS_SUCCESS;
     default:
         return LIBSPDM_STATUS_SEND_FAIL;
@@ -1315,6 +1318,40 @@ static libspdm_return_t libspdm_requester_negotiate_algorithm_test_receive_messa
                                                spdm_response, response_size, response);
     }
         return LIBSPDM_STATUS_SUCCESS;
+
+    case 0x23:
+    {
+        spdm_algorithms_response_t *spdm_response;
+        size_t spdm_response_size;
+        size_t transport_header_size;
+
+        spdm_response_size = sizeof(spdm_algorithms_response_t);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        libspdm_zero_mem(spdm_response, spdm_response_size);
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+        spdm_response->header.request_response_code = SPDM_ALGORITHMS;
+        spdm_response->header.param1 = 0;
+        spdm_response->header.param2 = 0;
+        spdm_response->length = sizeof(spdm_algorithms_response_t);
+        spdm_response->measurement_specification_sel =
+            SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+        spdm_response->measurement_hash_algo =
+            m_libspdm_use_measurement_hash_algo;
+        spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
+        spdm_response->base_hash_sel = m_libspdm_use_hash_algo;
+        spdm_response->ext_asym_sel_count = 0;
+        spdm_response->ext_hash_sel_count = 0;
+        spdm_response->other_params_selection = m_connection_other_params_support;
+
+        libspdm_transport_test_encode_message(spdm_context, NULL, false,
+                                              false, spdm_response_size,
+                                              spdm_response,
+                                              response_size, response);
+    }
+        return LIBSPDM_STATUS_SUCCESS;
+
     default:
         return LIBSPDM_STATUS_RECEIVE_FAIL;
     }
@@ -1670,6 +1707,139 @@ static void libspdm_test_requester_negotiate_algorithms_case34(void **state)
 {
 }
 
+/**
+ * Test 35: MULTI_KEY_CONN_REQ and MULTI_KEY_CONN_RSP value calculation
+ * +---------------+--------------------------+--------------------+
+ * | MULTI_KEY_CAP | RequesterMultiKeyConnSel | MULTI_KEY_CONN_REQ |
+ * +---------------+--------------------------+--------------------+
+ * | 00b           | 0                        | false              |
+ *  ----------------------------------------------------------------
+ * | 00b           | 1                        | invalid            |
+ *  ----------------------------------------------------------------
+ * | 01b           | 0                        | invalid            |
+ *  ----------------------------------------------------------------
+ * | 01b           | 1                        | true               |
+ *  ----------------------------------------------------------------
+ * | 10b           | 0                        | false              |
+ *  ----------------------------------------------------------------
+ * | 10b           | 1                        | true               |
+ * +---------------+--------------------------+--------------------+
+ * | MULTI_KEY_CAP | ResponderMultiKeyConn    | MULTI_KEY_CONN_RSP |
+ * +---------------+--------------------------+--------------------+
+ * | 00b           | 0                        | false              |
+ *  ----------------------------------------------------------------
+ * | 00b           | 1                        | invalid            |
+ *  ----------------------------------------------------------------
+ * | 01b           | 0                        | invalid            |
+ *  ----------------------------------------------------------------
+ * | 01b           | 1                        | true               |
+ *  ----------------------------------------------------------------
+ * | 10b           | 0                        | false              |
+ *  ----------------------------------------------------------------
+ * | 10b           | 1                        | true               |
+ *  ----------------------------------------------------------------
+ **/
+static void libspdm_test_requester_negotiate_algorithms_case35(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x23;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->local_context.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    libspdm_reset_message_a(spdm_context);
+
+    spdm_context->connection_info.capability.flags = 0;
+    spdm_context->local_context.capability.flags = 0;
+    spdm_context->local_context.algorithm.other_params_support = 0;
+    m_connection_other_params_support = 0;
+
+    status = libspdm_negotiate_algorithms(spdm_context);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(spdm_context->connection_info.multi_key_conn_rsp, false);
+    assert_int_equal(spdm_context->connection_info.multi_key_conn_req, false);
+
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    libspdm_reset_message_a(spdm_context);
+
+    spdm_context->connection_info.capability.flags = 0;
+    spdm_context->local_context.capability.flags = 0;
+    spdm_context->local_context.algorithm.other_params_support = SPDM_ALGORITHMS_MULTI_KEY_CONN;
+    m_connection_other_params_support = SPDM_ALGORITHMS_MULTI_KEY_CONN;
+
+    status = libspdm_negotiate_algorithms(spdm_context);
+    /* MULTI_KEY_CONN_REQ and MULTI_KEY_CONN_RSP invalid */
+    assert_int_equal(status, LIBSPDM_STATUS_NEGOTIATION_FAIL);
+
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    libspdm_reset_message_a(spdm_context);
+
+    spdm_context->connection_info.capability.flags =
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MULTI_KEY_CAP_ONLY;
+    spdm_context->local_context.capability.flags =
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MULTI_KEY_CAP_ONLY;
+    spdm_context->local_context.algorithm.other_params_support = 0;
+    m_connection_other_params_support = 0;
+
+    status = libspdm_negotiate_algorithms(spdm_context);
+    /* MULTI_KEY_CONN_REQ and MULTI_KEY_CONN_RSP invalid */
+    assert_int_equal(status, LIBSPDM_STATUS_NEGOTIATION_FAIL);
+
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    libspdm_reset_message_a(spdm_context);
+
+    spdm_context->connection_info.capability.flags =
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MULTI_KEY_CAP_ONLY;
+    spdm_context->local_context.capability.flags =
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MULTI_KEY_CAP_ONLY;
+    spdm_context->local_context.algorithm.other_params_support = SPDM_ALGORITHMS_MULTI_KEY_CONN;
+    m_connection_other_params_support = SPDM_ALGORITHMS_MULTI_KEY_CONN;
+
+    status = libspdm_negotiate_algorithms(spdm_context);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(spdm_context->connection_info.multi_key_conn_rsp, true);
+    assert_int_equal(spdm_context->connection_info.multi_key_conn_req, true);
+
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    libspdm_reset_message_a(spdm_context);
+
+    spdm_context->connection_info.capability.flags =
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MULTI_KEY_CAP_NEG;
+    spdm_context->local_context.capability.flags =
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MULTI_KEY_CAP_NEG;
+    spdm_context->local_context.algorithm.other_params_support = 0;
+    m_connection_other_params_support = 0;
+
+    status = libspdm_negotiate_algorithms(spdm_context);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(spdm_context->connection_info.multi_key_conn_rsp, false);
+    assert_int_equal(spdm_context->connection_info.multi_key_conn_req, false);
+
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    libspdm_reset_message_a(spdm_context);
+
+    spdm_context->connection_info.capability.flags =
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MULTI_KEY_CAP_NEG;
+    spdm_context->local_context.capability.flags =
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MULTI_KEY_CAP_NEG;
+    spdm_context->local_context.algorithm.other_params_support = SPDM_ALGORITHMS_MULTI_KEY_CONN;
+    m_connection_other_params_support = SPDM_ALGORITHMS_MULTI_KEY_CONN;
+
+    status = libspdm_negotiate_algorithms(spdm_context);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(spdm_context->connection_info.multi_key_conn_rsp, true);
+    assert_int_equal(spdm_context->connection_info.multi_key_conn_req, true);
+}
+
 static libspdm_test_context_t m_libspdm_requester_negotiate_algorithms_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     true,
@@ -1717,6 +1887,7 @@ int libspdm_requester_negotiate_algorithms_test_main(void)
         cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case32),
         cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case33),
         cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case34),
+        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case35),
     };
 
     libspdm_setup_test_context(&m_libspdm_requester_negotiate_algorithms_test_context);
