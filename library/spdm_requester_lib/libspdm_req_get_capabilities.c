@@ -42,7 +42,7 @@ static bool validate_responder_capability(uint32_t capabilities_flag, uint8_t ve
     const uint8_t event_cap = (uint8_t)(capabilities_flag >> 25) & 0x01;
     const uint8_t multi_key_cap = (uint8_t)(capabilities_flag >> 26) & 0x03;
     const uint8_t get_key_pair_info_cap = (uint8_t)(capabilities_flag >> 28) & 0x01;
-    /* const uint8_t set_key_pair_info_cap = (uint8_t)(capabilities_flag >> 29) & 0x01; */
+    const uint8_t set_key_pair_info_cap = (uint8_t)(capabilities_flag >> 29) & 0x01;
 
     /* Checks common to all SPDM versions. */
 
@@ -164,8 +164,11 @@ static bool validate_responder_capability(uint32_t capabilities_flag, uint8_t ve
             return false;
         }
         /* check multi-key and pub_key_id */
-        if ((multi_key_cap != 0) && (pub_key_id_cap == 1)) {
-            return false;
+        if (pub_key_id_cap == 1) {
+            if ((multi_key_cap != 0) || (get_key_pair_info_cap == 1) ||
+                (set_key_pair_info_cap == 1)) {
+                return false;
+            }
         }
     }
 
