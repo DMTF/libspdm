@@ -76,11 +76,6 @@
 #define LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN 1024
 #endif
 
-/* Maximum size of a vendor defined response message */
-#ifndef LIBSPDM_MAX_VENDOR_DEFINED_RESPONSE_LEN
-#define LIBSPDM_MAX_VENDOR_DEFINED_RESPONSE_LEN 1024
-#endif
-
 /* To ensure integrity in communication between the Requester and the Responder libspdm calculates
  * cryptographic digests and signatures over multiple requests and responses. This value specifies
  * whether libspdm will use a running calculation over the transcript, where requests and responses

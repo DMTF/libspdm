@@ -251,7 +251,10 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
 
    6.1, Use the SPDM vendor defined request.
    ```
-   libspdm_vendor_request (spdm_context, standard_id, vendor_id_len, &vendor_id, &request, request_size, &response, &response_size);
+
+   libspdm_vendor_send_request_receive_response (spdm_context, 
+      req_standard_id, req_vendor_id_len, req_vendor_id, req_size, req_data, 
+      &resp_standard_id, &resp_vendor_id_len, resp_vendor_id, &resp_size, resp_data);
    ```
 
    6.2, Use the transport layer application message.
@@ -455,18 +458,31 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
 
     libspdm_register_get_response_func (spdm_context, libspdm_get_response);
     ```
-    3.2 This callback handles SPDM Vendor Defined Commands
+    3.2 This callbacks handle SPDM Vendor Defined Commands
     ```
+    libspdm_return_t libspdm_vendor_get_id_func(
+      void *spdm_context,
+      uint16_t *resp_standard_id,
+      uint8_t *resp_vendor_id_len,
+      void *resp_vendor_id)
+    {
+      // return responder vendor id
+      ...
+
+      return LIBSPDM_STATUS_SUCCESS;
+    }
+
+    vendor_response_get_id
     libspdm_return_t libspdm_vendor_response_func(
       void *spdm_context,
-      uint16_t standard_id,
-      uint8_t vendor_id_len,
-      const void *vendor_id,
-      const void *request,
-      size_t request_len,
-      void *resp,
-      size_t *resp_len)
-    {
+      uint16_t req_standard_id,
+      uint8_t req_vendor_id_len,
+      const void *req_vendor_id,
+      uint16_t req_size,
+      const void *req_data,
+      uint16_t *resp_size,
+      void *resp_data)
+      {
       // process request and create response
       ...
       // populate response header and payload
@@ -475,6 +491,7 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
       return LIBSPDM_STATUS_SUCCESS;
     }
 
+    libspdm_register_vendor_get_id_callback_func(spdm_context, libspdm_vendor_get_id_func);
     libspdm_register_vendor_callback_func(spdm_context, libspdm_vendor_response_func);
     ```
 

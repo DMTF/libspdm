@@ -617,6 +617,7 @@ typedef struct {
 
 #if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
     libspdm_vendor_response_callback_func vendor_response_callback;
+    libspdm_vendor_get_id_callback_func vendor_response_get_id;
 #endif /* LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES */
 } libspdm_context_t;
 

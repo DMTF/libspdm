@@ -957,31 +957,55 @@ bool libspdm_get_fips_mode(void);
 
 #if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
 
+/* Maximum size of a vendor defined message data length
+ * limited by length field length which is 2 bytes */
+#define LIBSPDM_MAX_VENDOR_DEFINED_DATA_LEN 65535
+/* Maximum size of a vendor defined vendor id length
+ * limited by length field length which is 1 byte */
+#define LIBSPDM_MAX_VENDOR_ID_LENGTH 255
+
 /**
- * Vendor Response Callback Prototype.
- * First 2 bytes are the response length, followed by the actual response
+ * Vendor Response Get Vendor ID Callback Function Pointer.
+ * Required to be able to compose the Vendor Defined Response correctly
  *
- * @param  spdm_context  A pointer to the SPDM context.
- * @param  standard_id      Registry or Standards body used
- * @param  vendor_id_len    Length in bytes of the vendor id field
- * @param  vendor_id        Vendor ID assigned by the Registry or Standards Body. Little-endian format
- * @param  request          The vendor defined request
- * @param  request_len      Length of the request
- * @param  response         The vendor defined response (including response length as first 2 bytes)
- * @param  response_len     Length of the vendor response
+ * @param  spdm_context         A pointer to the SPDM context.
+ * @param  resp_standard_id     Registry or Standards body used for response
+ * @param  resp_vendor_id_len   Length in bytes of the vendor id field for the response
+ * @param  resp_vendor_id       Vendor ID assigned by the Registry or Standards Body. Little-endian format
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS Success
+ * @retval LIBSPDM_STATUS_INVALID_PARAMETER Some parameters invalid or NULL
+ **/
+typedef libspdm_return_t (*libspdm_vendor_get_id_callback_func)(
+    void *spdm_context,
+    uint16_t *resp_standard_id,
+    uint8_t *resp_vendor_id_len,
+    void *resp_vendor_id);
+
+/**
+ * Vendor Response Callback Function Pointer.
+ *
+ * @param  spdm_context         A pointer to the SPDM context.
+ * @param  req_standard_id      Registry or Standards body used for request
+ * @param  req_vendor_id_len    Length in bytes of the vendor id field for the request
+ * @param  req_vendor_id        Vendor ID assigned by the Registry or Standards Body. Little-endian format
+ * @param  req_size             Length of the request
+ * @param  req_data             The vendor defined request
+ * @param  resp_size            Length of the response
+ * @param  resp_data            The vendor defined response
  *
  * @retval LIBSPDM_STATUS_SUCCESS Success
  * @retval LIBSPDM_STATUS_INVALID_PARAMETER Some parameters invalid or NULL
  **/
 typedef libspdm_return_t (*libspdm_vendor_response_callback_func)(
     void *spdm_context,
-    uint16_t standard_id,
-    uint8_t vendor_id_len,
-    const void *vendor_id,
-    const void *request,
-    size_t request_len,
-    void *response,
-    size_t *response_len);
+    uint16_t req_standard_id,
+    uint8_t req_vendor_id_len,
+    const void *req_vendor_id,
+    uint16_t req_size,
+    const void *req_data,
+    uint16_t *resp_size,
+    void *resp_data);
 
 #endif /* LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES */
 
