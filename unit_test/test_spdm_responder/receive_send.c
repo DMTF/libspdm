@@ -11,18 +11,32 @@
 
 #define CHUNK_GET_UNIT_TEST_OVERRIDE_DATA_TRANSFER_SIZE (64)
 
+libspdm_return_t my_test_get_vendor_id_func(
+    void *spdm_context,
+    uint16_t *resp_standard_id,
+    uint8_t *resp_vendor_id_len,
+    void *resp_vendor_id)
+{
+    *resp_standard_id = 6;
+    *resp_vendor_id_len = 2;
+    ((uint8_t*)resp_vendor_id)[0] = 0xAA;
+    ((uint8_t*)resp_vendor_id)[1] = 0xAA;
+
+    return LIBSPDM_STATUS_SUCCESS;
+}
+
 libspdm_return_t my_test_get_response_func(
     void *spdm_context,
-    uint16_t standard_id,
-    uint8_t vendor_id_len,
-    const void *vendor_id,
-    const void *request,
-    size_t request_len,
-    void *resp,
-    size_t *resp_len)
+    uint16_t req_standard_id,
+    uint8_t req_vendor_id_len,
+    const void *req_vendor_id,
+    uint16_t req_size,
+    const void *req_data,
+    uint16_t *resp_size,
+    void *resp_data)
 {
     /* response message size is greater than the sending transmit buffer size of responder */
-    *resp_len = CHUNK_GET_UNIT_TEST_OVERRIDE_DATA_TRANSFER_SIZE + 1;
+    *resp_size = CHUNK_GET_UNIT_TEST_OVERRIDE_DATA_TRANSFER_SIZE + 1;
     return LIBSPDM_STATUS_SUCCESS;
 }
 
@@ -218,6 +232,7 @@ void libspdm_test_responder_receive_send_rsp_case2(void** state)
     libspdm_zero_mem(response, response_size);
 
     /* Make response message size greater than the sending transmit buffer size of responder */
+    libspdm_register_vendor_get_id_callback_func(spdm_context, my_test_get_vendor_id_func);
     libspdm_register_vendor_callback_func(spdm_context, my_test_get_response_func);
 
     status = libspdm_build_response(spdm_context, NULL, false,
