@@ -1,6 +1,5 @@
 /**
- *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2023 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -73,10 +72,10 @@ libspdm_return_t libspdm_vendor_response_func_test(
         return LIBSPDM_STATUS_INVALID_PARAMETER;
 
     libspdm_vendor_response_test test_response;
-    /* get pointer to response length and populate */
-    *resp_size = sizeof(test_response.data);
     /* get pointer to response data payload and populate */
     uint8_t *resp_payload = (uint8_t *)resp_data;
+    /* get pointer to response length and populate */
+    *resp_size = sizeof(test_response.data);
     /* store length of response */
     libspdm_set_mem(resp_payload, *resp_size, 0xFF);
 
@@ -127,13 +126,13 @@ static libspdm_return_t libspdm_requester_vendor_cmds_test_receive_message(
     case 0x1: {
         libspdm_vendor_response_test *spdm_response;
         libspdm_vendor_request_test* spdm_request = NULL;
+        size_t spdm_response_size;
+        size_t transport_header_size;
         status = libspdm_transport_test_decode_message(
             spdm_test_context, &session_id, &is_app_message, true,
             m_libspdm_local_buffer_size, m_libspdm_local_buffer,
             &transport_message_size, (void **)(&spdm_request));
         assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-        size_t spdm_response_size;
-        size_t transport_header_size;
 
         spdm_response_size = sizeof(libspdm_vendor_response_test);
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -234,6 +233,7 @@ static void libspdm_test_requester_vendor_cmds_case2(void **state)
     uint8_t response_buffer[255] = {0};
     libspdm_vendor_request_test request = {0};
     libspdm_vendor_response_test response = {0};
+    size_t response_len = 0;
     response.vendor_id_len = sizeof(response.vendor_id);
     response.data_len = sizeof(response.data);
 
@@ -263,7 +263,7 @@ static void libspdm_test_requester_vendor_cmds_case2(void **state)
     request.data_len = sizeof(request.data);
     libspdm_set_mem(request.data, sizeof(request.data), 0xAA);
 
-    size_t response_len = sizeof(response);
+    response_len = sizeof(response);
 
     /* copy header of request structure to buffer */
     libspdm_copy_mem(request_buffer, 255, &request,

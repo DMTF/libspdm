@@ -781,6 +781,13 @@ typedef struct {
      * param2 == token*/
 } spdm_response_if_ready_request_t;
 
+/* Maximum size of a vendor defined message data length
+ * limited by the length field size which is 2 bytes */
+#define LIBSPDM_MAX_VENDOR_DEFINED_DATA_LEN 65535
+/* Maximum size of a vendor defined vendor id length
+ * limited by the length field size which is 1 byte */
+#define LIBSPDM_MAX_VENDOR_ID_LENGTH 255
+
 /* SPDM VENDOR_DEFINED request */
 typedef struct {
     spdm_message_header_t header;

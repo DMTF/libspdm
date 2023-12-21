@@ -1,6 +1,5 @@
 /**
- *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2023 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -58,10 +57,10 @@ libspdm_return_t libspdm_vendor_response_func_err_test(
     void *resp_data)
 {
     libspdm_vendor_response_test test_response;
-    /* get pointer to response length and populate */
-    *resp_size = sizeof(test_response.data);
     /* get pointer to response data payload and populate */
     uint8_t *resp_payload = (uint8_t *)resp_data;
+    /* get pointer to response length and populate */
+    *resp_size = sizeof(test_response.data);
     /* store length of response */
     libspdm_set_mem(resp_payload, *resp_size, 0xFF);
 
@@ -232,6 +231,7 @@ static void libspdm_test_requester_vendor_cmds_err_case2(void **state)
     libspdm_vendor_response_test response = {0};
     response.vendor_id_len = sizeof(response.vendor_id);
     response.data_len = sizeof(response.data);
+    size_t response_len = 0;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -256,7 +256,7 @@ static void libspdm_test_requester_vendor_cmds_err_case2(void **state)
     request.data_len = sizeof(request.data);
     libspdm_set_mem(request.data, sizeof(request.data), 0xAA);
 
-    size_t response_len = sizeof(response);
+    response_len = sizeof(response);
 
     /* copy header of request structure to buffer */
     libspdm_copy_mem(request_buffer, 255, &request,

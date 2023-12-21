@@ -1,6 +1,5 @@
 /**
- *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2023 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -43,6 +42,10 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
 
     libspdm_session_info_t *session_info = NULL;
     libspdm_session_state_t session_state = 0;
+    uint8_t *resp_data = NULL;
+    const uint8_t *req_vendor_id;
+    const uint8_t *req_data;
+    uint16_t resp_size = 0;
 
     /* -=[Check Parameters Phase]=- */
     if (request == NULL ||
@@ -140,14 +143,14 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
 
     /* replace capacity with size */
     spdm_response->len = LIBSPDM_MAX_VENDOR_ID_LENGTH;
-    uint8_t *resp_data = ((uint8_t *)response) + sizeof(spdm_vendor_defined_response_msg_t);
+    resp_data = ((uint8_t *)response) + sizeof(spdm_vendor_defined_response_msg_t);
 
-    const uint8_t *req_vendor_id = ((const uint8_t *)request) +
-                                   sizeof(spdm_vendor_defined_response_msg_t);
-    const uint8_t *req_data = ((const uint8_t *)request) +
-                              sizeof(spdm_vendor_defined_request_msg_t) +
-                              ((const spdm_vendor_defined_response_msg_t*)request)->len +
-                              sizeof(uint16_t);
+    req_vendor_id = ((const uint8_t *)request) +
+                    sizeof(spdm_vendor_defined_response_msg_t);
+    req_data = ((const uint8_t *)request) +
+               sizeof(spdm_vendor_defined_request_msg_t) +
+               ((const spdm_vendor_defined_response_msg_t*)request)->len +
+               sizeof(uint16_t);
 
     status = spdm_context->vendor_response_get_id(
         spdm_context,
@@ -158,7 +161,7 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
     /* move pointer and adjust buffer size */
     resp_data += spdm_response->len + sizeof(uint16_t);
     response_capacity -= spdm_response->len + sizeof(uint16_t);
-    uint16_t resp_size = (uint16_t)response_capacity;
+    resp_size = (uint16_t)response_capacity;
 
     status = spdm_context->vendor_response_callback(spdm_context,
                                                     spdm_request->standard_id,

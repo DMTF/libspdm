@@ -249,10 +249,9 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
 
 6. Send and receive message in an SPDM session
 
-   6.1, Use the SPDM vendor defined request.
+   6.1, Use the SPDM vendor defined request. In libspdm, libspdm_init_connection call is needed first, so NEGOTIATE_ALGORITHMS step is done before sending a vendor defined request. Also, for each VENDOR_DEFINED_REQUEST, a VENDOR_DEFINED_RESPONSE message is expected, even if it has a data payload field of size zero.
    ```
-
-   libspdm_vendor_send_request_receive_response (spdm_context, 
+   libspdm_vendor_send_request_receive_response (spdm_context, session_id,
       req_standard_id, req_vendor_id_len, req_vendor_id, req_size, req_data, 
       &resp_standard_id, &resp_vendor_id_len, resp_vendor_id, &resp_size, resp_data);
    ```

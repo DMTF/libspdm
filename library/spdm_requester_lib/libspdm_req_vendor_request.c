@@ -1,6 +1,5 @@
 /**
- *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2023 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -42,6 +41,10 @@ libspdm_return_t libspdm_try_vendor_send_request_receive_response(
     uint8_t *message;
     size_t message_size = 0;
     size_t transport_header_size;
+    size_t max_payload = 0;
+    uint8_t* vendor_request = NULL;
+    uint8_t *response_ptr = NULL;
+    uint16_t response_size = 0;
 
     /* -=[Check Parameters Phase]=- */
     if (spdm_context == NULL ||
@@ -72,9 +75,9 @@ libspdm_return_t libspdm_try_vendor_send_request_receive_response(
      * removing all protocol, spdm and vendor defined message headers
      * -3 bytes is for the standard_id and vendor_id_len fields in the vendor header
      * -2 bytes is for the payload length field */
-    size_t max_payload = message_size - transport_header_size -
-                         spdm_context->local_context.capability.transport_tail_size
-                         - sizeof(spdm_request->header) - 3 - req_vendor_id_len - 2;
+    max_payload = message_size - transport_header_size -
+                  spdm_context->local_context.capability.transport_tail_size
+                  - sizeof(spdm_request->header) - 3 - req_vendor_id_len - 2;
 
     LIBSPDM_ASSERT (message_size >= transport_header_size +
                     spdm_context->local_context.capability.transport_tail_size);
@@ -95,7 +98,7 @@ libspdm_return_t libspdm_try_vendor_send_request_receive_response(
     spdm_request->len = req_vendor_id_len;
 
     /* Copy Vendor id */
-    uint8_t* vendor_request = ((uint8_t *)spdm_request) + sizeof(spdm_vendor_defined_request_msg_t);
+    vendor_request = ((uint8_t *)spdm_request) + sizeof(spdm_vendor_defined_request_msg_t);
     if (req_vendor_id_len != 0) {
         libspdm_copy_mem(vendor_request, req_vendor_id_len, req_vendor_id, req_vendor_id_len);
         vendor_request += req_vendor_id_len;
@@ -181,8 +184,8 @@ libspdm_return_t libspdm_try_vendor_send_request_receive_response(
     }
 
     /* -=[Process Response Phase]=- */
-    uint8_t *response_ptr = spdm_response->vendor_plus_request + spdm_response->vendor_id_len;
-    uint16_t response_size = *((uint16_t*)response_ptr);
+    response_ptr = spdm_response->vendor_plus_request + spdm_response->vendor_id_len;
+    response_size = *((uint16_t*)response_ptr);
     if (spdm_response_size < response_size +
         sizeof(spdm_vendor_defined_response_msg_t) +
         spdm_response->vendor_id_len + sizeof(uint16_t)) {

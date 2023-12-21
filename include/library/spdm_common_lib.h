@@ -957,13 +957,6 @@ bool libspdm_get_fips_mode(void);
 
 #if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
 
-/* Maximum size of a vendor defined message data length
- * limited by length field length which is 2 bytes */
-#define LIBSPDM_MAX_VENDOR_DEFINED_DATA_LEN 65535
-/* Maximum size of a vendor defined vendor id length
- * limited by length field length which is 1 byte */
-#define LIBSPDM_MAX_VENDOR_ID_LENGTH 255
-
 /**
  * Vendor Response Get Vendor ID Callback Function Pointer.
  * Required to be able to compose the Vendor Defined Response correctly
