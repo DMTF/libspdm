@@ -765,6 +765,9 @@ void libspdm_reset_msg_log (void *spdm_context);
  * This function sends VENDOR_DEFINED_REQUEST to the device and gets back a VENDOR_DEFINED_RESPONSE.
  *
  * This is useful for creating unique requests/responses to devices.
+ * In libspdm, libspdm_init_connection call is needed first, so NEGOTIATE_ALGORITHMS step is done before
+ * sending a vendor defined request
+ * For each VENDOR_DEFINED_REQUEST, a VENDOR_DEFINED_RESPONSE is expected, even if it has a data payload field of size zero.
  *
  * @param  spdm_context         A pointer to the SPDM context.
  * @param  session_id           Indicates if it is a secured message protected via SPDM session.
