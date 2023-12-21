@@ -466,6 +466,7 @@ void libspdm_test_responder_finish_case8(void **State)
 
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     libspdm_requester_data_sign(
+        spdm_context,
         spdm_test_finish_request->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT, SPDM_FINISH,
             m_libspdm_use_req_asym_algo, m_libspdm_use_hash_algo, false,
             libspdm_get_managed_buffer(&th_curr),

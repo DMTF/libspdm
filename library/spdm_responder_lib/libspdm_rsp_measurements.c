@@ -40,12 +40,14 @@ bool libspdm_generate_measurement_signature(libspdm_context_t *spdm_context,
     l1l2_buffer_size = libspdm_get_managed_buffer_size(&l1l2);
 
     result = libspdm_responder_data_sign(
+        spdm_context,
         spdm_context->connection_info.version, SPDM_MEASUREMENTS,
         spdm_context->connection_info.algorithm.base_asym_algo,
         spdm_context->connection_info.algorithm.base_hash_algo,
         false, l1l2_buffer, l1l2_buffer_size, signature, &signature_size);
 #else
     result = libspdm_responder_data_sign(
+        spdm_context,
         spdm_context->connection_info.version, SPDM_MEASUREMENTS,
         spdm_context->connection_info.algorithm.base_asym_algo,
         spdm_context->connection_info.algorithm.base_hash_algo,

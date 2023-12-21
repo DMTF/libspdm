@@ -1395,6 +1395,7 @@ bool libspdm_generate_measurement_summary_hash(
 
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
 bool libspdm_requester_data_sign(
+    void *spdm_context,
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint16_t req_base_asym_alg,
     uint32_t base_hash_algo, bool is_data_hash,
@@ -1474,6 +1475,7 @@ bool libspdm_requester_data_sign(
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
 
 bool libspdm_responder_data_sign(
+    void *spdm_context,
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint32_t base_asym_algo,
     uint32_t base_hash_algo, bool is_data_hash,

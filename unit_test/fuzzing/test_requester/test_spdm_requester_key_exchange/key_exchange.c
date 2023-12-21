@@ -201,6 +201,7 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
                          libspdm_get_managed_buffer_size(&th_curr), hash_data);
         free(data);
         libspdm_responder_data_sign(
+            spdm_context,
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_KEY_EXCHANGE_RSP, m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, false,
                 libspdm_get_managed_buffer(&th_curr), libspdm_get_managed_buffer_size(

@@ -14,6 +14,7 @@
 /**
  * Sign an SPDM message data.
  *
+ * @param  spdm_context      A pointer to the SPDM context.
  * @param  req_base_asym_alg Indicates the signing algorithm.
  * @param  base_hash_algo    Indicates the hash algorithm.
  * @param  is_data_hash      Indicates the message type.
@@ -31,6 +32,7 @@
  * @retval false signing fail.
  **/
 extern bool libspdm_requester_data_sign(
+    void *spdm_context,
     spdm_version_number_t spdm_version,
     uint8_t op_code,
     uint16_t req_base_asym_alg,

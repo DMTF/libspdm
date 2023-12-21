@@ -43,6 +43,7 @@ extern bool libspdm_challenge_opaque_data(
 /**
  * Sign an SPDM message data.
  *
+ * @param  spdm_context    A pointer to the SPDM context.
  * @param  base_asym_algo  Indicates the signing algorithm.
  * @param  base_hash_algo  Indicates the hash algorithm.
  * @param  is_data_hash    Indicate the message type.
@@ -59,6 +60,7 @@ extern bool libspdm_challenge_opaque_data(
  * @retval false Signing fail.
  **/
 extern bool libspdm_responder_data_sign(
+    void *spdm_context,
     spdm_version_number_t spdm_version,
     uint8_t op_code, uint32_t base_asym_algo,
     uint32_t base_hash_algo, bool is_data_hash,

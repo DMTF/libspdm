@@ -101,7 +101,8 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
         (((spdm_response->header.spdm_version >> 4) & 0xF) >= 10)) {
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_12;
     }
-    libspdm_responder_data_sign(spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
+    libspdm_responder_data_sign(spdm_context,
+                                spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                                 SPDM_CHALLENGE_AUTH, m_libspdm_use_asym_algo,
                                 m_libspdm_use_hash_algo, false,
                                 m_libspdm_local_buffer, m_libspdm_local_buffer_size, ptr,
