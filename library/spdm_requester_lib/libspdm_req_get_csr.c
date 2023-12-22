@@ -21,8 +21,12 @@
  * @param[in]  opaque_data                  opaque data
  * @param[in]  opaque_data_length           The len of opaque data
  * @param[out] csr                          address to store CSR.
- * @param[out] csr_len                      on input, *csr_len indicates the max csr buffer size.
+ * @param[in, out] csr_len                  on input, *csr_len indicates the max csr buffer size.
  *                                          on output, *csr_len indicates the actual csr buffer size.
+ * @param[in]  request_attribute            Set certificate request attributes. This field is only used for SPDM 1.3 and above.
+ * @param[in]  key_pair_id                  The value of this field shall be the unique key pair number identifying the desired
+ *                                          asymmetric key pair to associate with SlotID .
+ * @param[out] available_csr_tracking_tag   available CSRTrackingTag when the Responder sends a ResetRequired error messag
  *
  * @retval RETURN_SUCCESS               The measurement is got successfully.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
@@ -32,7 +36,10 @@ static libspdm_return_t libspdm_try_get_csr(libspdm_context_t *spdm_context,
                                             const uint32_t *session_id,
                                             void *requester_info, uint16_t requester_info_length,
                                             void *opaque_data, uint16_t opaque_data_length,
-                                            void *csr, size_t *csr_len)
+                                            void *csr, size_t *csr_len,
+                                            uint8_t request_attribute,
+                                            uint8_t key_pair_id,
+                                            uint8_t *available_csr_tracking_tag)
 {
     libspdm_return_t status;
     libspdm_return_t warning;
@@ -50,6 +57,24 @@ static libspdm_return_t libspdm_try_get_csr(libspdm_context_t *spdm_context,
 
     if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_12) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+    }
+
+    if (libspdm_get_connection_version(spdm_context) == SPDM_MESSAGE_VERSION_12) {
+        if ((key_pair_id != 0) || (request_attribute != 0)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+    }
+
+    if (libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_13) {
+        if ((spdm_context->connection_info.multi_key_conn_rsp) == (key_pair_id == 0)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+
+        if (!spdm_context->connection_info.multi_key_conn_rsp) {
+            if ((request_attribute & SPDM_GET_CSR_REQUEST_ATTRIBUTES_CERT_MODEL_MASK) != 0) {
+                return LIBSPDM_STATUS_INVALID_PARAMETER;
+            }
+        }
     }
 
     /* Do not check the Responder's CSR_CAP capability as it may be a 1.2.0 Responder
@@ -89,8 +114,8 @@ static libspdm_return_t libspdm_try_get_csr(libspdm_context_t *spdm_context,
 
     spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request->header.request_response_code = SPDM_GET_CSR;
-    spdm_request->header.param1 = 0;
-    spdm_request->header.param2 = 0;
+    spdm_request->header.param1 = key_pair_id;
+    spdm_request->header.param2 = request_attribute;
 
     spdm_request->opaque_data_length = opaque_data_length;
     spdm_request->requester_info_length = requester_info_length;
@@ -154,6 +179,12 @@ static libspdm_return_t libspdm_try_get_csr(libspdm_context_t *spdm_context,
         goto receive_done;
     }
     if (spdm_response->header.request_response_code == SPDM_ERROR) {
+        if ((spdm_response->header.param1 == SPDM_ERROR_CODE_RESET_REQUIRED) &&
+            (libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_13) &&
+            (available_csr_tracking_tag != NULL)) {
+            *available_csr_tracking_tag = spdm_response->header.param2;
+        }
+
         status = libspdm_handle_error_response_main(
             spdm_context, session_id,
             &spdm_response_size,
@@ -210,7 +241,8 @@ libspdm_return_t libspdm_get_csr(void * spdm_context,
         status = libspdm_try_get_csr(context, session_id,
                                      requester_info, requester_info_length,
                                      opaque_data, opaque_data_length,
-                                     csr, csr_len);
+                                     csr, csr_len,
+                                     0, 0, NULL);
         if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
             return status;
         }
@@ -220,5 +252,43 @@ libspdm_return_t libspdm_get_csr(void * spdm_context,
 
     return status;
 }
+
+#if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX
+libspdm_return_t libspdm_get_csr_ex(void * spdm_context,
+                                    const uint32_t *session_id,
+                                    void * requester_info, uint16_t requester_info_length,
+                                    void * opaque_data, uint16_t opaque_data_length,
+                                    void *csr, size_t *csr_len,
+                                    uint8_t request_attribute,
+                                    uint8_t key_pair_id,
+                                    uint8_t *available_csr_tracking_tag
+                                    )
+{
+    libspdm_context_t *context;
+    size_t retry;
+    uint64_t retry_delay_time;
+    libspdm_return_t status;
+
+    context = spdm_context;
+    context->crypto_request = true;
+    retry = context->retry_times;
+    retry_delay_time = context->retry_delay_time;
+    do {
+        status = libspdm_try_get_csr(context, session_id,
+                                     requester_info, requester_info_length,
+                                     opaque_data, opaque_data_length,
+                                     csr, csr_len,
+                                     request_attribute, key_pair_id,
+                                     available_csr_tracking_tag);
+        if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
+            return status;
+        }
+
+        libspdm_sleep(retry_delay_time);
+    } while (retry-- != 0);
+
+    return status;
+}
+#endif /*LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX*/
 
 #endif /*LIBSPDM_ENABLE_CAPABILITY_CSR_CAP*/
