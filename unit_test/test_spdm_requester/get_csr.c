@@ -137,6 +137,8 @@ libspdm_return_t libspdm_requester_get_csr_test_send_message(
         assert_memory_equal(opaque_data, m_csr_opaque_data, opaque_data_length);
         return LIBSPDM_STATUS_SUCCESS;
     }
+    case 0x5:
+        return LIBSPDM_STATUS_SUCCESS;
     default:
         return LIBSPDM_STATUS_SEND_FAIL;
     }
@@ -233,6 +235,30 @@ libspdm_return_t libspdm_requester_get_csr_test_receive_message(
         spdm_response->csr_length = (uint16_t)global_csr_len;
         spdm_response->reserved = 0;
         libspdm_copy_mem(spdm_response + 1, global_csr_len, csr_data_pointer, global_csr_len);
+
+        libspdm_transport_test_encode_message(spdm_context, NULL, false,
+                                              false, spdm_response_size,
+                                              spdm_response, response_size,
+                                              response);
+    }
+        return LIBSPDM_STATUS_SUCCESS;
+    case 0x5: {
+        spdm_csr_response_t *spdm_response;
+        size_t spdm_response_size;
+        size_t transport_header_size;
+
+        libspdm_read_requester_gen_csr((void *)&csr_data_pointer, &global_csr_len);
+
+        spdm_response_size = sizeof(spdm_csr_response_t) + global_csr_len;
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+        spdm_response->header.request_response_code = SPDM_ERROR;
+        spdm_response->header.param1 = SPDM_ERROR_CODE_RESET_REQUIRED;
+        spdm_response->header.param2 = 1;
+        spdm_response->csr_length = (uint16_t)global_csr_len;
+        spdm_response->reserved = 0;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, spdm_response_size,
@@ -400,6 +426,45 @@ void libspdm_test_requester_get_csr_case4(void **state)
     assert_memory_equal(csr_form_get, csr_data_pointer, global_csr_len);
 }
 
+/**
+ * Test 5: Successful response to libspdm_get_csr_ex,
+ * with a reset required
+ * Expected Behavior: get a LIBSPDM_STATUS_RESET_REQUIRED_PEER return code and available csr_tracking_tag
+ **/
+void libspdm_test_requester_get_csr_case5(void **state)
+{
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+#if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX
+    libspdm_return_t status;
+    uint8_t csr_form_get[LIBSPDM_MAX_CSR_SIZE] = {0};
+    size_t csr_len;
+    uint8_t reset_csr_tracking_tag;
+
+    csr_len = LIBSPDM_MAX_CSR_SIZE;
+    reset_csr_tracking_tag = 0;
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX*/
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x5;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CSR_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_INSTALL_RESET_CAP;
+
+#if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX
+    status = libspdm_get_csr_ex(spdm_context, NULL, NULL, 0, NULL, 0, (void *)&csr_form_get,
+                                &csr_len, 0, 0, &reset_csr_tracking_tag);
+
+    assert_int_equal(status, LIBSPDM_STATUS_RESET_REQUIRED_PEER);
+    assert_int_equal(reset_csr_tracking_tag, 1);
+#endif /*LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX*/
+}
+
 libspdm_test_context_t m_libspdm_requester_get_csr_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     true,
@@ -418,6 +483,8 @@ int libspdm_requester_get_csr_test_main(void)
         cmocka_unit_test(libspdm_test_requester_get_csr_case3),
         /* Send req_info and opaque_data Successful response to get csr */
         cmocka_unit_test(libspdm_test_requester_get_csr_case4),
+        /* Successful response to libspdm_get_csr_ex with a reset required */
+        cmocka_unit_test(libspdm_test_requester_get_csr_case5),
     };
 
     libspdm_setup_test_context(

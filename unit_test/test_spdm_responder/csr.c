@@ -172,11 +172,14 @@ bool libspdm_set_csr_after_reset()
 /*clean the cached last SPDM csr request*/
 void libspdm_test_clear_cached_last_request()
 {
-    char *file;
+    uint8_t index;
 
-    file = "cached_last_csr_request";
+    char file[] = "cached_last_csr_x_request";
 
-    libspdm_write_output_file(file, NULL, 0);
+    for (index = 1; index <= SPDM_MAX_CSR_TRACKING_TAG; index++) {
+        file[16] = (char)(index + '0');
+        libspdm_write_output_file(file, NULL, 0);
+    }
 }
 
 /*check the csr is consistent with the is_device_cert_model*/
@@ -1333,6 +1336,557 @@ void libspdm_test_responder_csr_case12(void **state)
     assert_true(libspdm_set_csr_after_reset());
 }
 
+/**
+ * Test 13: receives a valid GET_CSR request message from Requester with need_reset for SPDM 1.3
+ * Expected Behavior: the first get_csr with csr_tracking_tag 0: responder return need reset and available csr_tracking_tag;
+ *                    After reset, the second get_csr with returned available csr_tracking_tag: after device reset: get the cached valid csr;
+ **/
+void libspdm_test_responder_csr_case13(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_csr_response_t *spdm_response;
+    spdm_get_csr_request_t *m_libspdm_get_csr_request;
+    uint8_t cached_csr[LIBSPDM_MAX_CSR_SIZE];
+    libspdm_zero_mem(cached_csr, LIBSPDM_MAX_CSR_SIZE);
+
+    uint8_t *csr_pointer;
+    size_t csr_len;
+    uint8_t csr_tracking_tag;
+
+    csr_tracking_tag = 0;
+
+    if (!libspdm_test_read_cached_csr(&csr_pointer, &csr_len)) {
+        assert_false(true);
+    }
+
+    libspdm_copy_mem(cached_csr, LIBSPDM_MAX_CSR_SIZE, csr_pointer, csr_len);
+    free(csr_pointer);
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xD;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CSR_CAP;
+
+    spdm_context->connection_info.multi_key_conn_rsp = true;
+    /*set responder need reset*/
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_INSTALL_RESET_CAP;
+
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo =
+        m_libspdm_use_asym_algo;
+
+    /*set csr before reset*/
+    assert_true(libspdm_set_csr_before_reset());
+
+    m_libspdm_get_csr_request = malloc(sizeof(spdm_get_csr_request_t) +
+                                       req_info_len);
+
+    m_libspdm_get_csr_request->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    m_libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
+    m_libspdm_get_csr_request->header.param1 = 1;
+    m_libspdm_get_csr_request->header.param2 =
+        csr_tracking_tag << SPDM_GET_CSR_REQUEST_ATTRIBUTES_CSR_TRACKING_TAG_OFFSET;
+
+    m_libspdm_get_csr_request->opaque_data_length = 0;
+    m_libspdm_get_csr_request->requester_info_length = req_info_len;
+
+    libspdm_copy_mem(m_libspdm_get_csr_request + 1, req_info_len,
+                     right_req_info, req_info_len);
+
+    size_t m_libspdm_get_csr_request_size = sizeof(spdm_get_csr_request_t) +
+                                            req_info_len;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_csr(spdm_context,
+                                      m_libspdm_get_csr_request_size,
+                                      m_libspdm_get_csr_request,
+                                      &response_size, response);
+
+    /*set csr after reset*/
+    assert_true(libspdm_set_csr_after_reset());
+#if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX
+    /*first get_csr: the responder need reset*/
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1,
+                     SPDM_ERROR_CODE_RESET_REQUIRED);
+    assert_int_equal(spdm_response->header.param2, 1);
+
+    csr_tracking_tag = spdm_response->header.param2;
+    m_libspdm_get_csr_request->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    m_libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
+    m_libspdm_get_csr_request->header.param1 = 1;
+    m_libspdm_get_csr_request->header.param2 =
+        csr_tracking_tag << SPDM_GET_CSR_REQUEST_ATTRIBUTES_CSR_TRACKING_TAG_OFFSET;
+
+    m_libspdm_get_csr_request->opaque_data_length = 0;
+    m_libspdm_get_csr_request->requester_info_length = req_info_len;
+    libspdm_copy_mem(m_libspdm_get_csr_request + 1, req_info_len,
+                     right_req_info, req_info_len);
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_csr(spdm_context,
+                                      m_libspdm_get_csr_request_size,
+                                      m_libspdm_get_csr_request,
+                                      &response_size, response);
+    /*second get_csr after device reset: get the responder cached csr*/
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    spdm_response = (void *)response;
+    assert_int_equal(response_size, sizeof(spdm_csr_response_t) + spdm_response->csr_length);
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_CSR);
+
+    /*check returned CSR is equal the cached CSR */
+    assert_memory_equal(spdm_response + 1, cached_csr, spdm_response->csr_length);
+#else
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1,
+                     SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
+    assert_int_equal(spdm_response->header.param2, 0);
+#endif /*LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX*/
+    /*clear cached req_info*/
+    libspdm_test_clear_cached_last_request();
+    free(m_libspdm_get_csr_request);
+}
+
+/**
+ * Test 14: receives a valid GET_CSR request message from Requester with need_reset for SPDM 1.3
+ * Expected Behavior: the first get_csr with csr_tracking_tag 0: responder return need reset and available csr_tracking_tag;
+ *                    Afer reset, then send get_csr with csr_tracking_tag 0 six times: responder return need reset and available csr_tracking_tag;
+ *                    Then send get_csr with csr_tracking_tag 0: responder return busy error;
+ **/
+void libspdm_test_responder_csr_case14(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_csr_response_t *spdm_response;
+    spdm_get_csr_request_t *m_libspdm_get_csr_request;
+    uint8_t cached_csr[LIBSPDM_MAX_CSR_SIZE];
+#if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX
+    uint8_t index;
+#endif /*LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX*/
+    libspdm_zero_mem(cached_csr, LIBSPDM_MAX_CSR_SIZE);
+
+    uint8_t *csr_pointer;
+    size_t csr_len;
+    uint8_t csr_tracking_tag;
+
+    csr_tracking_tag = 0;
+
+    if (!libspdm_test_read_cached_csr(&csr_pointer, &csr_len)) {
+        assert_false(true);
+    }
+
+    libspdm_copy_mem(cached_csr, LIBSPDM_MAX_CSR_SIZE, csr_pointer, csr_len);
+    free(csr_pointer);
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xE;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CSR_CAP;
+
+    spdm_context->connection_info.multi_key_conn_rsp = true;
+    /*set responder need reset*/
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_INSTALL_RESET_CAP;
+
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo =
+        m_libspdm_use_asym_algo;
+
+    /*set csr before reset*/
+    assert_true(libspdm_set_csr_before_reset());
+
+    m_libspdm_get_csr_request = malloc(sizeof(spdm_get_csr_request_t) +
+                                       req_info_len);
+
+    m_libspdm_get_csr_request->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    m_libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
+    m_libspdm_get_csr_request->header.param1 = 1;
+    m_libspdm_get_csr_request->header.param2 =
+        csr_tracking_tag << SPDM_GET_CSR_REQUEST_ATTRIBUTES_CSR_TRACKING_TAG_OFFSET;
+
+    m_libspdm_get_csr_request->opaque_data_length = 0;
+    m_libspdm_get_csr_request->requester_info_length = req_info_len;
+
+    libspdm_copy_mem(m_libspdm_get_csr_request + 1, req_info_len,
+                     right_req_info, req_info_len);
+
+    size_t m_libspdm_get_csr_request_size = sizeof(spdm_get_csr_request_t) +
+                                            req_info_len;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_csr(spdm_context,
+                                      m_libspdm_get_csr_request_size,
+                                      m_libspdm_get_csr_request,
+                                      &response_size, response);
+
+    /*set csr after reset*/
+    assert_true(libspdm_set_csr_after_reset());
+#if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX
+    /*first get_csr: the responder need reset*/
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1,
+                     SPDM_ERROR_CODE_RESET_REQUIRED);
+    assert_int_equal(spdm_response->header.param2, 1);
+
+    for (index = 1; index < SPDM_MAX_CSR_TRACKING_TAG; index++) {
+        csr_tracking_tag = 0;
+        m_libspdm_get_csr_request->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+        m_libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
+        m_libspdm_get_csr_request->header.param1 = 1;
+        m_libspdm_get_csr_request->header.param2 =
+            csr_tracking_tag << SPDM_GET_CSR_REQUEST_ATTRIBUTES_CSR_TRACKING_TAG_OFFSET;
+
+        m_libspdm_get_csr_request->opaque_data_length = 0;
+        m_libspdm_get_csr_request->requester_info_length = req_info_len;
+        libspdm_copy_mem(m_libspdm_get_csr_request + 1, req_info_len,
+                         right_req_info, req_info_len);
+
+        response_size = sizeof(response);
+        status = libspdm_get_response_csr(spdm_context,
+                                          m_libspdm_get_csr_request_size,
+                                          m_libspdm_get_csr_request,
+                                          &response_size, response);
+        /*second get_csr after device reset: get the responder cached csr*/
+        assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+        assert_int_equal(response_size, sizeof(spdm_error_response_t));
+        spdm_response = (void *)response;
+        assert_int_equal(spdm_response->header.request_response_code,
+                         SPDM_ERROR);
+        assert_int_equal(spdm_response->header.param1,
+                         SPDM_ERROR_CODE_RESET_REQUIRED);
+        assert_int_equal(spdm_response->header.param2, index + 1);
+    }
+
+    csr_tracking_tag = 0;
+    m_libspdm_get_csr_request->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    m_libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
+    m_libspdm_get_csr_request->header.param1 = 1;
+    m_libspdm_get_csr_request->header.param2 =
+        csr_tracking_tag << SPDM_GET_CSR_REQUEST_ATTRIBUTES_CSR_TRACKING_TAG_OFFSET;
+
+    m_libspdm_get_csr_request->opaque_data_length = 0;
+    m_libspdm_get_csr_request->requester_info_length = req_info_len;
+    libspdm_copy_mem(m_libspdm_get_csr_request + 1, req_info_len,
+                     right_req_info, req_info_len);
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_csr(spdm_context,
+                                      m_libspdm_get_csr_request_size,
+                                      m_libspdm_get_csr_request,
+                                      &response_size, response);
+    /*second get_csr after device reset: get the responder cached csr*/
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1,
+                     SPDM_ERROR_CODE_BUSY);
+    assert_int_equal(spdm_response->header.param2, 0);
+#else
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1,
+                     SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
+    assert_int_equal(spdm_response->header.param2, 0);
+#endif /*LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX*/
+    /*clear cached req_info*/
+    libspdm_test_clear_cached_last_request();
+    free(m_libspdm_get_csr_request);
+}
+
+/**
+ * Test 15: receives a valid GET_CSR request message from Requester with need_reset for SPDM 1.3
+ * Expected Behavior: the first get_csr with csr_tracking_tag 0: responder return need reset and available csr_tracking_tag;
+ *                    Without reset, then send get_csr with unmatched csr_tracking_tag：responder return unexpected error;
+ *                    Without reset, then send get_csr with matched csr_tracking_tag：responder return busy error;
+ *                    Without reset, then send get_csr with non-0 csr_tracking_tag, and overwrite is set：responder return invalid error;
+ *                    After reset, then send get_csr with unmatched csr_tracking_tag：responder return unexpected error;
+ *                    After reset, then send get_csr with csr_tracking_tag 0, and overwrite is set：responder return need reset and available csr_tracking_tag;
+ **/
+void libspdm_test_responder_csr_case15(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_csr_response_t *spdm_response;
+    spdm_get_csr_request_t *m_libspdm_get_csr_request;
+    uint8_t cached_csr[LIBSPDM_MAX_CSR_SIZE];
+    libspdm_zero_mem(cached_csr, LIBSPDM_MAX_CSR_SIZE);
+
+    uint8_t *csr_pointer;
+    size_t csr_len;
+    uint8_t csr_tracking_tag;
+
+    csr_tracking_tag = 0;
+
+    if (!libspdm_test_read_cached_csr(&csr_pointer, &csr_len)) {
+        assert_false(true);
+    }
+
+    libspdm_copy_mem(cached_csr, LIBSPDM_MAX_CSR_SIZE, csr_pointer, csr_len);
+    free(csr_pointer);
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xF;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CSR_CAP;
+
+    spdm_context->connection_info.multi_key_conn_rsp = true;
+    /*set responder need reset*/
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_INSTALL_RESET_CAP;
+
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo =
+        m_libspdm_use_asym_algo;
+
+    /*set csr before reset*/
+    assert_true(libspdm_set_csr_before_reset());
+
+    m_libspdm_get_csr_request = malloc(sizeof(spdm_get_csr_request_t) +
+                                       req_info_len);
+
+    m_libspdm_get_csr_request->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    m_libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
+    m_libspdm_get_csr_request->header.param1 = 1;
+    m_libspdm_get_csr_request->header.param2 =
+        csr_tracking_tag << SPDM_GET_CSR_REQUEST_ATTRIBUTES_CSR_TRACKING_TAG_OFFSET;
+
+    m_libspdm_get_csr_request->opaque_data_length = 0;
+    m_libspdm_get_csr_request->requester_info_length = req_info_len;
+
+    libspdm_copy_mem(m_libspdm_get_csr_request + 1, req_info_len,
+                     right_req_info, req_info_len);
+
+    size_t m_libspdm_get_csr_request_size = sizeof(spdm_get_csr_request_t) +
+                                            req_info_len;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_csr(spdm_context,
+                                      m_libspdm_get_csr_request_size,
+                                      m_libspdm_get_csr_request,
+                                      &response_size, response);
+#if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX
+    /*first get_csr: the responder need reset*/
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1,
+                     SPDM_ERROR_CODE_RESET_REQUIRED);
+    assert_int_equal(spdm_response->header.param2, 1);
+
+    /*unmatched csr_tracking_tag*/
+    csr_tracking_tag = 3;
+    m_libspdm_get_csr_request->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    m_libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
+    m_libspdm_get_csr_request->header.param1 = 1;
+    m_libspdm_get_csr_request->header.param2 =
+        csr_tracking_tag << SPDM_GET_CSR_REQUEST_ATTRIBUTES_CSR_TRACKING_TAG_OFFSET;
+
+    m_libspdm_get_csr_request->opaque_data_length = 0;
+    m_libspdm_get_csr_request->requester_info_length = req_info_len;
+    libspdm_copy_mem(m_libspdm_get_csr_request + 1, req_info_len,
+                     right_req_info, req_info_len);
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_csr(spdm_context,
+                                      m_libspdm_get_csr_request_size,
+                                      m_libspdm_get_csr_request,
+                                      &response_size, response);
+    /*second get_csr after device reset: get the responder cached csr*/
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1,
+                     SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
+    assert_int_equal(spdm_response->header.param2, 0);
+
+    /*matched csr_tracking_tag without overwrite*/
+    csr_tracking_tag = 1;
+    m_libspdm_get_csr_request->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    m_libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
+    m_libspdm_get_csr_request->header.param1 = 1;
+    m_libspdm_get_csr_request->header.param2 =
+        csr_tracking_tag << SPDM_GET_CSR_REQUEST_ATTRIBUTES_CSR_TRACKING_TAG_OFFSET;
+
+    m_libspdm_get_csr_request->opaque_data_length = 0;
+    m_libspdm_get_csr_request->requester_info_length = req_info_len;
+    libspdm_copy_mem(m_libspdm_get_csr_request + 1, req_info_len,
+                     right_req_info, req_info_len);
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_csr(spdm_context,
+                                      m_libspdm_get_csr_request_size,
+                                      m_libspdm_get_csr_request,
+                                      &response_size, response);
+    /*second get_csr after device reset: get the responder cached csr*/
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1,
+                     SPDM_ERROR_CODE_BUSY);
+    assert_int_equal(spdm_response->header.param2, 0);
+
+
+    /*matched csr_tracking_tag with overwrite*/
+    csr_tracking_tag = 1;
+    m_libspdm_get_csr_request->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    m_libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
+    m_libspdm_get_csr_request->header.param1 = 1;
+    m_libspdm_get_csr_request->header.param2 =
+        (csr_tracking_tag << SPDM_GET_CSR_REQUEST_ATTRIBUTES_CSR_TRACKING_TAG_OFFSET) |
+        SPDM_GET_CSR_REQUEST_ATTRIBUTES_OVERWRITE;
+
+    m_libspdm_get_csr_request->opaque_data_length = 0;
+    m_libspdm_get_csr_request->requester_info_length = req_info_len;
+    libspdm_copy_mem(m_libspdm_get_csr_request + 1, req_info_len,
+                     right_req_info, req_info_len);
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_csr(spdm_context,
+                                      m_libspdm_get_csr_request_size,
+                                      m_libspdm_get_csr_request,
+                                      &response_size, response);
+    /*second get_csr after device reset: get the responder cached csr*/
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1,
+                     SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.param2, 0);
+
+    /*set csr after reset*/
+    assert_true(libspdm_set_csr_after_reset());
+
+    /*unmatched csr_tracking_tag*/
+    csr_tracking_tag = 3;
+    m_libspdm_get_csr_request->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    m_libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
+    m_libspdm_get_csr_request->header.param1 = 1;
+    m_libspdm_get_csr_request->header.param2 =
+        csr_tracking_tag << SPDM_GET_CSR_REQUEST_ATTRIBUTES_CSR_TRACKING_TAG_OFFSET;
+
+    m_libspdm_get_csr_request->opaque_data_length = 0;
+    m_libspdm_get_csr_request->requester_info_length = req_info_len;
+    libspdm_copy_mem(m_libspdm_get_csr_request + 1, req_info_len,
+                     right_req_info, req_info_len);
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_csr(spdm_context,
+                                      m_libspdm_get_csr_request_size,
+                                      m_libspdm_get_csr_request,
+                                      &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1,
+                     SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
+    assert_int_equal(spdm_response->header.param2, 0);
+
+    /*csr_tracking_tag 0 and overwrite*/
+    csr_tracking_tag = 0;
+    m_libspdm_get_csr_request->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    m_libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
+    m_libspdm_get_csr_request->header.param1 = 1;
+    m_libspdm_get_csr_request->header.param2 =
+        (csr_tracking_tag << SPDM_GET_CSR_REQUEST_ATTRIBUTES_CSR_TRACKING_TAG_OFFSET) |
+        SPDM_GET_CSR_REQUEST_ATTRIBUTES_OVERWRITE;
+
+    m_libspdm_get_csr_request->opaque_data_length = 0;
+    m_libspdm_get_csr_request->requester_info_length = req_info_len;
+    libspdm_copy_mem(m_libspdm_get_csr_request + 1, req_info_len,
+                     right_req_info, req_info_len);
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_csr(spdm_context,
+                                      m_libspdm_get_csr_request_size,
+                                      m_libspdm_get_csr_request,
+                                      &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1,
+                     SPDM_ERROR_CODE_RESET_REQUIRED);
+    assert_int_equal(spdm_response->header.param2, 1);
+
+#else
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1,
+                     SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
+    assert_int_equal(spdm_response->header.param2, 0);
+    /*set csr after reset*/
+    assert_true(libspdm_set_csr_after_reset());
+#endif /*LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX*/
+    /*clear cached req_info*/
+    libspdm_test_clear_cached_last_request();
+    free(m_libspdm_get_csr_request);
+}
+
 libspdm_test_context_t m_libspdm_responder_csr_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     false,
@@ -1365,6 +1919,12 @@ int libspdm_responder_csr_test_main(void)
         cmocka_unit_test(libspdm_test_responder_csr_case11),
         /* Responder need reset to gen csr, the second send without device reset*/
         cmocka_unit_test(libspdm_test_responder_csr_case12),
+        /* Success Case: Responder need reset to gen csr for SPDM1.3, the second send with matched csr_tracking_tag after device reset*/
+        cmocka_unit_test(libspdm_test_responder_csr_case13),
+        /* Failed Case: Responder need reset to gen csr for SPDM1.3, test for busy error*/
+        cmocka_unit_test(libspdm_test_responder_csr_case14),
+        /* Failed Case: Responder need reset to gen csr for SPDM1.3, test for unmatched csr_tracking_tag and overwrite*/
+        cmocka_unit_test(libspdm_test_responder_csr_case15),
     };
 
     libspdm_setup_test_context(&m_libspdm_responder_csr_test_context);
