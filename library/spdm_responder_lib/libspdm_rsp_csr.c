@@ -27,6 +27,12 @@ libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
     uint8_t *requester_info;
     bool need_reset;
     bool is_device_cert_model;
+    uint8_t csr_tracking_tag;
+#if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX
+    bool overwrite;
+    uint8_t req_cert_model;
+    uint8_t key_pair_id;
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX*/
 
     spdm_request = request;
 
@@ -162,17 +168,71 @@ libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
 
     csr_len = *response_size - sizeof(spdm_csr_response_t);
     csr_p = (uint8_t*)(spdm_response + 1);
-    result = libspdm_gen_csr(spdm_context->connection_info.algorithm.base_hash_algo,
-                             spdm_context->connection_info.algorithm.base_asym_algo,
-                             &need_reset, request, request_size,
-                             requester_info, requester_info_length,
-                             opaque_data, opaque_data_length,
-                             &csr_len, csr_p, is_device_cert_model);
-    if (!result) {
+
+    csr_tracking_tag = 0;
+    if (libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_13) {
+#if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX
+        csr_tracking_tag =
+            (spdm_request->header.param2 & SPDM_GET_CSR_REQUEST_ATTRIBUTES_CSR_TRACKING_TAG_MASK) >>
+            SPDM_GET_CSR_REQUEST_ATTRIBUTES_CSR_TRACKING_TAG_OFFSET;
+
+        if ((spdm_request->header.param2 & SPDM_GET_CSR_REQUEST_ATTRIBUTES_OVERWRITE) != 0) {
+            overwrite = true;
+        } else {
+            overwrite = false;
+        }
+
+        req_cert_model = spdm_request->header.param2 &
+                         SPDM_GET_CSR_REQUEST_ATTRIBUTES_CERT_MODEL_MASK;
+
+        key_pair_id = spdm_request->header.param1;
+
+        /*SPDM 1.3 parameters check*/
+        if (((spdm_context->connection_info.multi_key_conn_rsp) == (key_pair_id == 0)) ||
+            ((!spdm_context->connection_info.multi_key_conn_rsp) && (req_cert_model != 0)) ||
+            (req_cert_model >= SPDM_GET_CSR_REQUEST_ATTRIBUTES_MAX_CSR_CERT_MODEL) ||
+            (overwrite && (csr_tracking_tag != 0)) ||
+            ((!need_reset) && (csr_tracking_tag != 0))) {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                                   response_size, response);
+        }
+
+        result = libspdm_gen_csr_ex(spdm_context->connection_info.algorithm.base_hash_algo,
+                                    spdm_context->connection_info.algorithm.base_asym_algo,
+                                    &need_reset, request, request_size,
+                                    requester_info, requester_info_length,
+                                    opaque_data, opaque_data_length,
+                                    &csr_len, csr_p, req_cert_model,
+                                    &csr_tracking_tag, overwrite);
+#else
         return libspdm_generate_error_response(
             spdm_context,
             SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
             response_size, response);
+#endif /*LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX*/
+    } else {
+        result = libspdm_gen_csr(spdm_context->connection_info.algorithm.base_hash_algo,
+                                 spdm_context->connection_info.algorithm.base_asym_algo,
+                                 &need_reset, request, request_size,
+                                 requester_info, requester_info_length,
+                                 opaque_data, opaque_data_length,
+                                 &csr_len, csr_p, is_device_cert_model);
+    }
+
+    if (!result) {
+        if ((csr_tracking_tag == 0xFF) &&
+            (libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_13)) {
+            return libspdm_generate_error_response(
+                spdm_context,
+                SPDM_ERROR_CODE_BUSY, 0,
+                response_size, response);
+        } else {
+            return libspdm_generate_error_response(
+                spdm_context,
+                SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
+                response_size, response);
+        }
     }
 
     LIBSPDM_ASSERT(*response_size >= sizeof(spdm_csr_response_t) + csr_len);
@@ -183,7 +243,7 @@ libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_INSTALL_RESET_CAP) &&
         need_reset) {
         return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_RESET_REQUIRED, 0,
+                                               SPDM_ERROR_CODE_RESET_REQUIRED, csr_tracking_tag,
                                                response_size, response);
     } else {
         spdm_response->header.spdm_version = spdm_request->header.spdm_version;

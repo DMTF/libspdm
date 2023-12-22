@@ -152,4 +152,19 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
 {
     return false;
 }
+
+#if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX
+bool libspdm_gen_csr_ex(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *need_reset,
+                        const void *request, size_t request_size,
+                        uint8_t *requester_info, size_t requester_info_length,
+                        uint8_t *opaque_data, uint16_t opaque_data_length,
+                        size_t *csr_len, uint8_t *csr_pointer,
+                        uint8_t req_cert_model,
+                        uint8_t *csr_tracking_tag,
+                        bool overwrite)
+{
+    return false;
+}
+#endif /*LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX*/
+
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CSR_CAP */

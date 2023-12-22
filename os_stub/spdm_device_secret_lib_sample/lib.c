@@ -605,25 +605,67 @@ bool libspdm_read_requester_public_key(uint16_t req_base_asym_alg,
 }
 
 #if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP
-bool libspdm_read_cached_last_csr_request(uint8_t **last_csr_request, size_t *last_csr_request_len)
+bool libspdm_read_cached_last_csr_request(uint8_t **last_csr_request,
+                                          size_t *last_csr_request_len,
+                                          uint8_t req_csr_tracking_tag,
+                                          uint8_t *available_rsp_csr_tracking_tag)
 {
     bool res;
-    char *file;
+    uint8_t index;
+    size_t file_size;
+    uint8_t *file_data;
 
-    file = "cached_last_csr_request";
+    file_data = NULL;
+    *available_rsp_csr_tracking_tag = 0;
+    char file[] = "cached_last_csr_x_request";
+    /*change the file name, for example: cached_last_csr_1_request*/
+    file[16] = (char)(req_csr_tracking_tag + '0');
     res = libspdm_read_input_file(file, (void **)last_csr_request, last_csr_request_len);
+
+    for (index = 1; index <= SPDM_MAX_CSR_TRACKING_TAG; index++) {
+        file[16] = (char)(index + '0');
+        libspdm_read_input_file(file, (void **)(&file_data), &file_size);
+        if (file_size == 0) {
+            *available_rsp_csr_tracking_tag |=  (1 << index);
+        } else {
+            if (file_data != NULL) {
+                free(file_data);
+            }
+        }
+    }
+
     return res;
 }
 
-bool libspdm_cache_last_csr_request(const uint8_t *last_csr_request, size_t last_csr_request_len)
+bool libspdm_cache_last_csr_request(const uint8_t *last_csr_request,
+                                    size_t last_csr_request_len,
+                                    uint8_t req_csr_tracking_tag)
 {
     bool res;
-    char *file;
 
-    file = "cached_last_csr_request";
+    char file[] = "cached_last_csr_x_request";
+    /*change the file name, for example: cached_last_csr_1_request*/
+    file[16] = (char)(req_csr_tracking_tag + '0');
     res = libspdm_write_output_file(file, last_csr_request, last_csr_request_len);
 
     return res;
+}
+
+/*clean the cached last SPDM csr request*/
+bool libspdm_discard_all_cached_last_request()
+{
+    uint8_t index;
+
+    char file[] = "cached_last_csr_x_request";
+
+    for (index = 1; index <= SPDM_MAX_CSR_TRACKING_TAG; index++) {
+        file[16] = (char)(index + '0');
+        if (!libspdm_write_output_file(file, NULL, 0)) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 /*
@@ -641,71 +683,20 @@ bool libspdm_read_cached_csr(uint8_t **csr_pointer, size_t *csr_len)
     return res;
 }
 
-bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *need_reset,
-                     const void *request, size_t request_size,
-                     uint8_t *requester_info, size_t requester_info_length,
-                     uint8_t *opaque_data, uint16_t opaque_data_length,
-                     size_t *csr_len, uint8_t *csr_pointer,
-                     bool is_device_cert_model)
+bool libspdm_gen_csr_without_reset(uint32_t base_hash_algo, uint32_t base_asym_algo,
+                                   uint8_t *requester_info, size_t requester_info_length,
+                                   uint8_t *opaque_data, uint16_t opaque_data_length,
+                                   size_t *csr_len, uint8_t *csr_pointer,
+                                   bool is_device_cert_model)
 {
     bool result;
     size_t hash_nid;
     size_t asym_nid;
     void *context;
-
-    uint8_t *cached_last_csr_request;
-    size_t cached_last_request_len;
-    uint8_t *cached_csr;
     size_t csr_buffer_size;
 
     csr_buffer_size = *csr_len;
 
-    /*device gen csr need reset*/
-    if (*need_reset) {
-        result = libspdm_read_cached_last_csr_request(&cached_last_csr_request,
-                                                      &cached_last_request_len);
-
-        /*get the cached last csr request and csr*/
-        if ((result) &&
-            (cached_last_request_len == request_size) &&
-            (libspdm_consttime_is_mem_equal(cached_last_csr_request, request,
-                                            request_size)) &&
-            (libspdm_read_cached_csr(&cached_csr, csr_len)) &&
-            (*csr_len != 0)) {
-
-            /*get and save cached csr*/
-            if (csr_buffer_size < *csr_len) {
-                free(cached_csr);
-                free(cached_last_csr_request);
-                LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                               "csr buffer is too small to store cached csr! \n"));
-                return false;
-            } else {
-                libspdm_copy_mem(csr_pointer, csr_buffer_size, cached_csr, *csr_len);
-            }
-
-            /*device don't need reset this time*/
-            *need_reset = false;
-
-            free(cached_csr);
-            free(cached_last_csr_request);
-            return true;
-        } else {
-            if (cached_last_csr_request != NULL) {
-                free(cached_last_csr_request);
-            }
-
-            /*device need reset this time: cache the last_csr_request */
-            result = libspdm_cache_last_csr_request(request, request_size);
-            if (!result) {
-                return result;
-            }
-
-            /*device need reset this time*/
-            *need_reset = true;
-            return true;
-        }
-    }
 #if !LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY
     if (g_private_key_mode) {
         void *x509_ca_cert;
@@ -798,6 +789,219 @@ bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *nee
     }
     return result;
 }
+
+bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *need_reset,
+                     const void *request, size_t request_size,
+                     uint8_t *requester_info, size_t requester_info_length,
+                     uint8_t *opaque_data, uint16_t opaque_data_length,
+                     size_t *csr_len, uint8_t *csr_pointer,
+                     bool is_device_cert_model)
+{
+    bool result;
+    uint8_t *cached_last_csr_request;
+    size_t cached_last_request_len;
+    uint8_t *cached_csr;
+    size_t csr_buffer_size;
+    uint8_t rsp_csr_tracking_tag;
+
+    csr_buffer_size = *csr_len;
+
+    /*device gen csr need reset*/
+    if (*need_reset) {
+        result = libspdm_read_cached_last_csr_request(&cached_last_csr_request,
+                                                      &cached_last_request_len,
+                                                      1, &rsp_csr_tracking_tag);
+
+        /*get the cached last csr request and csr*/
+        if ((result) &&
+            (cached_last_request_len == request_size) &&
+            (libspdm_consttime_is_mem_equal(cached_last_csr_request, request,
+                                            request_size)) &&
+            (libspdm_read_cached_csr(&cached_csr, csr_len)) &&
+            (*csr_len != 0)) {
+
+            /*get and save cached csr*/
+            if (csr_buffer_size < *csr_len) {
+                free(cached_csr);
+                free(cached_last_csr_request);
+                LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                               "csr buffer is too small to store cached csr! \n"));
+                return false;
+            } else {
+                libspdm_copy_mem(csr_pointer, csr_buffer_size, cached_csr, *csr_len);
+            }
+
+            /*device don't need reset this time*/
+            *need_reset = false;
+
+            free(cached_csr);
+            free(cached_last_csr_request);
+            return true;
+        } else {
+            if (cached_last_csr_request != NULL) {
+                free(cached_last_csr_request);
+            }
+
+            /*device need reset this time: cache the last_csr_request */
+            result = libspdm_cache_last_csr_request(request, request_size, 1);
+            if (!result) {
+                return result;
+            }
+
+            /*device need reset this time*/
+            *need_reset = true;
+            return true;
+        }
+    } else {
+        result = libspdm_gen_csr_without_reset(base_hash_algo, base_asym_algo,
+                                               requester_info, requester_info_length,
+                                               opaque_data, opaque_data_length,
+                                               csr_len, csr_pointer, is_device_cert_model);
+        return result;
+    }
+
+}
+
+#if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX
+bool libspdm_gen_csr_ex(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *need_reset,
+                        const void *request, size_t request_size,
+                        uint8_t *requester_info, size_t requester_info_length,
+                        uint8_t *opaque_data, uint16_t opaque_data_length,
+                        size_t *csr_len, uint8_t *csr_pointer,
+                        uint8_t req_cert_model,
+                        uint8_t *req_csr_tracking_tag,
+                        bool overwrite)
+{
+    bool result;
+    uint8_t *cached_last_csr_request;
+    size_t cached_last_request_len;
+    uint8_t *cached_csr;
+    size_t csr_buffer_size;
+    uint8_t rsp_csr_tracking_tag;
+    uint8_t available_csr_tracking_tag;
+    uint8_t *request_change;
+    uint8_t index;
+    bool flag;
+    bool is_device_cert_model;
+
+    available_csr_tracking_tag = 0;
+    csr_buffer_size = *csr_len;
+
+    /*device gen csr need reset*/
+    if (*need_reset) {
+        result = libspdm_read_cached_last_csr_request(&cached_last_csr_request,
+                                                      &cached_last_request_len,
+                                                      *req_csr_tracking_tag,
+                                                      &rsp_csr_tracking_tag);
+
+        for (index = 1; index <= SPDM_MAX_CSR_TRACKING_TAG; index++) {
+            if (((rsp_csr_tracking_tag >> index) & 0x01) == 0x01) {
+                available_csr_tracking_tag = index;
+                break;
+            }
+        }
+
+        if (*req_csr_tracking_tag == 0) {
+            if (available_csr_tracking_tag == 0) {
+                /*no available tracking tag*/
+                *req_csr_tracking_tag = 0xFF;
+                return false;
+            } else {
+                flag = false;
+            }
+        } else {
+            /*matched csr_tracking_tag*/
+            if (((rsp_csr_tracking_tag >> *req_csr_tracking_tag) & 0x01) == 0) {
+                flag = true;
+            } else {
+                /*unexpected*/
+                return false;
+            }
+        }
+
+        /*get the cached last csr request and csr*/
+        if ((result) &&
+            (cached_last_request_len == request_size) &&
+            (libspdm_consttime_is_mem_equal(cached_last_csr_request, request,
+                                            request_size)) &&
+            (libspdm_read_cached_csr(&cached_csr, csr_len)) &&
+            (*csr_len != 0) &&
+            (flag)) {
+
+            /*get and save cached csr*/
+            if (csr_buffer_size < *csr_len) {
+                free(cached_csr);
+                free(cached_last_csr_request);
+                LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                               "csr buffer is too small to store cached csr! \n"));
+                return false;
+            } else {
+                libspdm_copy_mem(csr_pointer, csr_buffer_size, cached_csr, *csr_len);
+            }
+
+            /*device don't need reset this time*/
+            *need_reset = false;
+
+            free(cached_csr);
+            free(cached_last_csr_request);
+            return true;
+        } else {
+            if (cached_last_csr_request != NULL) {
+                free(cached_last_csr_request);
+            }
+
+            if ((*req_csr_tracking_tag == 0) && (available_csr_tracking_tag != 0)) {
+                request_change = malloc(request_size);
+                libspdm_copy_mem(request_change, request_size, request,request_size);
+
+                if (overwrite) {
+                    available_csr_tracking_tag = 1;
+                    /*discard all previously generated CSRTrackingTags. */
+                    result = libspdm_discard_all_cached_last_request();
+                    if (!result) {
+                        free(request_change);
+                        return result;
+                    }
+                }
+
+                request_change[3] |=
+                    (available_csr_tracking_tag <<
+                        SPDM_GET_CSR_REQUEST_ATTRIBUTES_CSR_TRACKING_TAG_OFFSET);
+
+                /*device need reset this time: cache the last_csr_request */
+                result = libspdm_cache_last_csr_request(request_change,
+                                                        request_size, available_csr_tracking_tag);
+                if (!result) {
+                    free(request_change);
+                    return result;
+                }
+
+                /*device need reset this time*/
+                *need_reset = true;
+                *req_csr_tracking_tag = available_csr_tracking_tag;
+                free(request_change);
+                return true;
+            } else {
+                /*the device is busy*/
+                *req_csr_tracking_tag = 0xFF;
+                return false;
+            }
+        }
+    } else {
+        if (req_cert_model == 1) {
+            is_device_cert_model = true;
+        } else {
+            is_device_cert_model = false;
+        }
+        result = libspdm_gen_csr_without_reset(base_hash_algo, base_asym_algo,
+                                               requester_info, requester_info_length,
+                                               opaque_data, opaque_data_length,
+                                               csr_len, csr_pointer, is_device_cert_model);
+        return result;
+    }
+}
+#endif /*LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX*/
+
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CSR_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP

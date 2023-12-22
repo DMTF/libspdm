@@ -673,7 +673,7 @@ libspdm_return_t libspdm_generate_encap_extended_error_response(
  * @param[in]  opaque_data            Opaque data from requester.
  * @param[in]  opaque_data_length     The length of opaque_data.
  * @param[out] csr                    Address to store CSR.
- * @param[out] csr_len                On input, *csr_len indicates the max csr buffer size.
+ * @param[in, out] csr_len            On input, *csr_len indicates the max csr buffer size.
  *                                    On output, *csr_len indicates the actual csr buffer size.
  **/
 libspdm_return_t libspdm_get_csr(void *spdm_context,
@@ -681,6 +681,39 @@ libspdm_return_t libspdm_get_csr(void *spdm_context,
                                  void *requester_info, uint16_t requester_info_length,
                                  void *opaque_data, uint16_t opaque_data_length,
                                  void *csr, size_t *csr_len);
+
+/**
+ * This function sends GET_CSR for SPDM 1.3
+ * to get csr from the device.
+ *
+ * @param[in]  context                A pointer to the SPDM context.
+ * @param[in]  session_id             Indicates if it is a secured message protected via SPDM session.
+ *                                    If session_id is NULL, it is a normal message.
+ *                                    If session_id is NOT NULL, it is a secured message.
+ * @param[in]  requester_info         Requester info to gen CSR
+ * @param[in]  requester_info_length  The length of requester info
+ * @param[in]  opaque_data            Opaque data from requester.
+ * @param[in]  opaque_data_length     The length of opaque_data.
+ * @param[out] csr                    Address to store CSR.
+ * @param[in, out] csr_len            On input, *csr_len indicates the max csr buffer size.
+ *                                    On output, *csr_len indicates the actual csr buffer size.
+ * @param[in]  request_attribute      Set certificate request attributes. This field is only used for SPDM 1.3 and above.
+ * @param[in]  key_pair_id            The value of this field shall be the unique key pair number identifying the desired
+ *                                    asymmetric key pair to associate with SlotID.
+ * @param[out] available_csr_tracking_tag   available CSRTrackingTag when the Responder sends a ResetRequired error messag
+ *
+ **/
+
+#if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX
+libspdm_return_t libspdm_get_csr_ex(void * spdm_context,
+                                    const uint32_t *session_id,
+                                    void * requester_info, uint16_t requester_info_length,
+                                    void * opaque_data, uint16_t opaque_data_length,
+                                    void *csr, size_t *csr_len,
+                                    uint8_t request_attribute,
+                                    uint8_t key_pair_id,
+                                    uint8_t *available_csr_tracking_tag);
+#endif /*LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX*/
 #endif /*LIBSPDM_ENABLE_CAPABILITY_CSR_CAP*/
 
 #if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
