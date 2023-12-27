@@ -865,9 +865,10 @@ static bool libspdm_verify_leaf_cert_spdm_eku(const uint8_t *cert, size_t cert_s
     bool status;
     uint8_t eku[256];
     size_t eku_size;
-    size_t index;
     bool req_auth_oid_find_success;
     bool rsp_auth_oid_find_success;
+    uint8_t *ptr;
+    size_t obj_len;
 
     /* SPDM defined OID */
     uint8_t eku_requester_auth_oid[] = SPDM_OID_DMTF_EKU_REQUESTER_AUTH;
@@ -882,23 +883,39 @@ static bool libspdm_verify_leaf_cert_spdm_eku(const uint8_t *cert, size_t cert_s
         return false;
     }
 
+    ptr = eku;
+    obj_len = 0;
     req_auth_oid_find_success = false;
     rsp_auth_oid_find_success = false;
 
-    for(index = 0; index <= eku_size - sizeof(eku_requester_auth_oid); index++) {
-        if (libspdm_consttime_is_mem_equal(eku + index, eku_requester_auth_oid,
-                                           sizeof(eku_requester_auth_oid))) {
-            req_auth_oid_find_success = true;
-            break;
-        }
+    status = libspdm_asn1_get_tag(&ptr, eku + eku_size, &obj_len,
+                                  LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+    if (!status) {
+        return false;
     }
 
-    for(index = 0; index <= eku_size - sizeof(eku_responder_auth_oid); index++) {
-        if (libspdm_consttime_is_mem_equal(eku + index, eku_responder_auth_oid,
-                                           sizeof(eku_responder_auth_oid))) {
-            rsp_auth_oid_find_success = true;
-            break;
+    while(ptr < eku + eku_size) {
+        status = libspdm_asn1_get_tag(&ptr, eku + eku_size, &obj_len, LIBSPDM_CRYPTO_ASN1_OID);
+        if (!status) {
+            return false;
         }
+
+        if ((obj_len == sizeof(eku_requester_auth_oid)) &&
+            (libspdm_consttime_is_mem_equal(ptr, eku_requester_auth_oid,
+                                            sizeof(eku_requester_auth_oid)))) {
+            req_auth_oid_find_success = true;
+        }
+        if ((obj_len == sizeof(eku_responder_auth_oid)) &&
+            (libspdm_consttime_is_mem_equal(ptr, eku_responder_auth_oid,
+                                            sizeof(eku_responder_auth_oid)))) {
+            rsp_auth_oid_find_success = true;
+        }
+
+        ptr += obj_len;
+    }
+
+    if (ptr != eku + eku_size) {
+        return false;
     }
 
     if (is_requester_cert) {
@@ -934,11 +951,12 @@ static bool libspdm_verify_leaf_cert_spdm_extension(const uint8_t *cert, size_t 
     bool status;
     bool find_sucessful;
     uint8_t spdm_extension[LIBSPDM_MAX_EXTENSION_LEN];
-    size_t index;
     size_t len;
+    uint8_t *ptr;
+    uint8_t *temptr;
+    size_t obj_len;
 
     /* SPDM defined OID */
-
     uint8_t oid_spdm_extension[] = SPDM_OID_DMTF_SPDM_EXTENSION;
     uint8_t hardware_identity_oid[] = SPDM_OID_DMTF_HARDWARE_IDENTITY;
 
@@ -953,7 +971,6 @@ static bool libspdm_verify_leaf_cert_spdm_extension(const uint8_t *cert, size_t 
                                              sizeof(oid_spdm_extension),
                                              spdm_extension,
                                              &len);
-
     if(len == 0) {
         return true;
     } else if(!status) {
@@ -962,12 +979,41 @@ static bool libspdm_verify_leaf_cert_spdm_extension(const uint8_t *cert, size_t 
 
     /*find the spdm hardware identity OID*/
     find_sucessful = false;
-    for(index = 0; index <= len - sizeof(hardware_identity_oid); index++) {
-        if (libspdm_consttime_is_mem_equal(spdm_extension + index, hardware_identity_oid,
-                                           sizeof(hardware_identity_oid))) {
-            find_sucessful = true;
-            break;
+    ptr = spdm_extension;
+    obj_len = 0;
+
+    /*id-spdm-cert-oids ::= SEQUENCE SIZE (1..MAX) OF id-spdm-cert-oid*/
+    status = libspdm_asn1_get_tag(
+        &ptr, spdm_extension + len, &obj_len,
+        LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+    if (!status) {
+        return false;
+    }
+
+    while(ptr < spdm_extension + len) {
+        status = libspdm_asn1_get_tag(
+            &ptr, spdm_extension + len, &obj_len,
+            LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+        if (!status) {
+            return false;
         }
+
+        temptr = ptr + obj_len;
+        status = libspdm_asn1_get_tag(
+            &ptr, spdm_extension + len, &obj_len, LIBSPDM_CRYPTO_ASN1_OID);
+        if (!status) {
+            return false;
+        }
+        if ((obj_len == sizeof(hardware_identity_oid)) &&
+            (libspdm_consttime_is_mem_equal(ptr, hardware_identity_oid,
+                                            sizeof(hardware_identity_oid)))) {
+            find_sucessful = true;
+        }
+        ptr = temptr;
+    }
+
+    if (ptr != spdm_extension + len) {
+        return false;
     }
 
     /* Responder does not determine Requester's certificate model */
