@@ -14,7 +14,7 @@ typedef struct {
     spdm_message_header_t header;
     uint16_t standard_id;
     uint8_t vendor_id_len;
-    uint8_t vendor_id[LIBSPDM_MAX_VENDOR_ID_LENGTH];
+    uint8_t vendor_id[SPDM_MAX_VENDOR_ID_LENGTH];
     uint16_t data_len;
     uint8_t data[16];
 } libspdm_vendor_request_test;
@@ -23,7 +23,7 @@ typedef struct {
     spdm_message_header_t header;
     uint16_t standard_id;
     uint8_t vendor_id_len;
-    uint8_t vendor_id[LIBSPDM_MAX_VENDOR_ID_LENGTH];
+    uint8_t vendor_id[SPDM_MAX_VENDOR_ID_LENGTH];
     uint16_t data_len;
     uint8_t data[64];
 } libspdm_vendor_response_test;
