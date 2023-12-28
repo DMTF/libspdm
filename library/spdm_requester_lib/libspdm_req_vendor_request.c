@@ -7,8 +7,8 @@
 
 #if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
 
-#define SPDM_MAX_VENDOR_PAYLOAD_LEN (LIBSPDM_MAX_VENDOR_ID_LENGTH + 2 + \
-                                     LIBSPDM_MAX_VENDOR_DEFINED_DATA_LEN)
+#define SPDM_MAX_VENDOR_PAYLOAD_LEN (SPDM_MAX_VENDOR_ID_LENGTH + 2 + \
+                                     SPDM_MAX_VENDOR_DEFINED_DATA_LEN)
 
 #pragma pack(1)
 typedef struct {

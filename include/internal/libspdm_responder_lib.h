@@ -755,10 +755,6 @@ libspdm_return_t libspdm_get_response_chunk_send(libspdm_context_t *spdm_context
  *                                     On output, it means the size in bytes of copied response data
  * @param  response                     A pointer to the response data.
  *
- * @retval RETURN_SUCCESS               The request is processed and the response is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 
 libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_context,

@@ -142,7 +142,7 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
      */
 
     /* replace capacity with size */
-    spdm_response->len = LIBSPDM_MAX_VENDOR_ID_LENGTH;
+    spdm_response->len = SPDM_MAX_VENDOR_ID_LENGTH;
     resp_data = ((uint8_t *)response) + sizeof(spdm_vendor_defined_response_msg_t);
 
     req_vendor_id = ((const uint8_t *)request) +
