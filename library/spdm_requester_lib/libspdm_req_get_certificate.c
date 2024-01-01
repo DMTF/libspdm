@@ -236,8 +236,7 @@ static libspdm_return_t libspdm_try_get_certificate(libspdm_context_t *spdm_cont
             cert_model = spdm_response->header.param2 &
                          SPDM_CERTIFICATE_RESPONSE_ATTRIBUTES_CERTIFICATE_INFO_MASK;
             if (spdm_context->connection_info.multi_key_conn_rsp) {
-                if ((cert_model == SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE) ||
-                    (cert_model > SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT)) {
+                if (cert_model > SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT) {
                     libspdm_release_receiver_buffer (spdm_context);
                     status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
                     goto done;
