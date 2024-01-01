@@ -129,8 +129,7 @@ libspdm_return_t libspdm_process_encap_response_certificate(
         cert_model = spdm_response->header.param2 &
                      SPDM_CERTIFICATE_RESPONSE_ATTRIBUTES_CERTIFICATE_INFO_MASK;
         if (spdm_context->connection_info.multi_key_conn_req) {
-            if ((cert_model == SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE) ||
-                (cert_model > SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT)) {
+            if (cert_model > SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT) {
                 return LIBSPDM_STATUS_INVALID_MSG_FIELD;
             }
         } else {
