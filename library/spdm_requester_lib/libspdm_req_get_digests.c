@@ -286,6 +286,20 @@ static libspdm_return_t libspdm_try_get_digest(libspdm_context_t *spdm_context,
                     status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
                     goto receive_done;
                 }
+                if (index == 0) {
+                    if (cert_model == SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT) {
+                        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                        goto receive_done;
+                    }
+                    if ((key_usage_bit_mask[slot_index] &
+                         (SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE |
+                          SPDM_KEY_USAGE_BIT_MASK_CHALLENGE_USE |
+                          SPDM_KEY_USAGE_BIT_MASK_MEASUREMENT_USE |
+                          SPDM_KEY_USAGE_BIT_MASK_ENDPOINT_INFO_USE)) == 0) {
+                        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                        goto receive_done;
+                    }
+                }
                 spdm_context->connection_info.peer_cert_info[index] = cert_model;
                 spdm_context->connection_info.peer_key_usage_bit_mask[index] =
                     key_usage_bit_mask[slot_index];
