@@ -949,14 +949,20 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
     case 0x1A: {
         spdm_digest_response_t *spdm_response;
         uint8_t *digest;
+        size_t hash_size;
         size_t spdm_response_size;
         size_t transport_header_size;
+        spdm_key_pair_id_t *key_pair_id;
+        spdm_certificate_info_t *cert_info;
+        spdm_key_usage_bit_mask_t *key_usage_bit_mask;
 
         ((libspdm_context_t *)spdm_context)
         ->connection_info.algorithm.base_hash_algo =
             m_libspdm_use_hash_algo;
+        hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
         spdm_response_size = sizeof(spdm_digest_response_t) +
-                             libspdm_get_hash_size(m_libspdm_use_hash_algo) * SPDM_MAX_SLOT_COUNT;
+                             hash_size + sizeof(spdm_key_pair_id_t) +
+                             sizeof(spdm_certificate_info_t) + sizeof(spdm_key_usage_bit_mask_t);
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -971,10 +977,20 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
                         (uint8_t)(0xFF));
 
         digest = (void *)(spdm_response + 1);
-        libspdm_zero_mem (digest,
-                          libspdm_get_hash_size(m_libspdm_use_hash_algo) * SPDM_MAX_SLOT_COUNT);
+        libspdm_zero_mem (digest, hash_size);
         libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_certificate_chain,
                          sizeof(m_libspdm_local_certificate_chain), &digest[0]);
+        key_pair_id = (spdm_key_pair_id_t *)((uint8_t *)digest + hash_size);
+        cert_info = (spdm_certificate_info_t *)((uint8_t *)key_pair_id +
+                                                sizeof(spdm_key_pair_id_t));
+        key_usage_bit_mask = (spdm_key_usage_bit_mask_t *)((uint8_t *)cert_info +
+                                                           sizeof(spdm_certificate_info_t));
+        *key_pair_id = 0;
+        *cert_info = SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT;
+        *key_usage_bit_mask = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE |
+                              SPDM_KEY_USAGE_BIT_MASK_CHALLENGE_USE |
+                              SPDM_KEY_USAGE_BIT_MASK_MEASUREMENT_USE |
+                              SPDM_KEY_USAGE_BIT_MASK_ENDPOINT_INFO_USE;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, spdm_response_size,

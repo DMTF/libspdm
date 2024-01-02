@@ -246,11 +246,15 @@ void test_spdm_responder_encap_get_digests_case6(void **state)
     libspdm_context_t *spdm_context;
     spdm_digest_response_t *spdm_response;
     uint8_t *digest;
+    size_t hash_size;
     uint8_t temp_buf[LIBSPDM_MAX_SPDM_MSG_SIZE];
     size_t spdm_response_size;
     bool need_continue;
     uint32_t session_id;
     libspdm_session_info_t *session_info;
+    spdm_key_pair_id_t *key_pair_id;
+    spdm_certificate_info_t *cert_info;
+    spdm_key_usage_bit_mask_t *key_usage_bit_mask;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -277,9 +281,21 @@ void test_spdm_responder_encap_get_digests_case6(void **state)
                     sizeof(m_libspdm_local_certificate_chain),
                     (uint8_t)(0xFF));
 
+    hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
     digest = (void *)(spdm_response + 1);
     libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_certificate_chain,
                      sizeof(m_libspdm_local_certificate_chain), &digest[0]);
+    key_pair_id = (spdm_key_pair_id_t *)((uint8_t *)digest + hash_size);
+    cert_info = (spdm_certificate_info_t *)((uint8_t *)key_pair_id +
+                                            sizeof(spdm_key_pair_id_t));
+    key_usage_bit_mask = (spdm_key_usage_bit_mask_t *)((uint8_t *)cert_info +
+                                                       sizeof(spdm_certificate_info_t));
+    *key_pair_id = 0;
+    *cert_info = SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT;
+    *key_usage_bit_mask = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE |
+                          SPDM_KEY_USAGE_BIT_MASK_CHALLENGE_USE |
+                          SPDM_KEY_USAGE_BIT_MASK_MEASUREMENT_USE |
+                          SPDM_KEY_USAGE_BIT_MASK_ENDPOINT_INFO_USE;
 
     session_id = 0xFFFFFFFF;
     spdm_context->latest_session_id = session_id;
