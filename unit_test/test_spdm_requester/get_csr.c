@@ -281,7 +281,7 @@ void libspdm_test_requester_get_csr_case1(void **state)
 }
 
 /**
- * Test 2: Successful response to set certificate for slot 0
+ * Test 2: Successful response to get csr
  * Expected Behavior: get a RETURN_SUCCESS return code
  **/
 void libspdm_test_requester_get_csr_case2(void **state)
@@ -315,7 +315,7 @@ void libspdm_test_requester_get_csr_case2(void **state)
 }
 
 /**
- * Test 3: Successful response to set certificate for slot 0,
+ * Test 3: Successful response to get csr,
  * with a reset required
  * Expected Behavior: get a RETURN_SUCCESS return code
  **/
@@ -412,9 +412,9 @@ int libspdm_requester_get_csr_test_main(void)
     const struct CMUnitTest spdm_requester_get_csr_tests[] = {
         /* SendRequest failed*/
         cmocka_unit_test(libspdm_test_requester_get_csr_case1),
-        /* Successful response to set certificate*/
+        /* Successful response to get csr*/
         cmocka_unit_test(libspdm_test_requester_get_csr_case2),
-        /* Successful response to set certificate with a reset required */
+        /* Successful response to get csr with a reset required */
         cmocka_unit_test(libspdm_test_requester_get_csr_case3),
         /* Send req_info and opaque_data Successful response to get csr */
         cmocka_unit_test(libspdm_test_requester_get_csr_case4),
