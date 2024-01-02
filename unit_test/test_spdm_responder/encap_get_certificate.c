@@ -361,6 +361,148 @@ void test_spdm_responder_encap_get_certificate_case4(void **state)
     free(data);
 }
 
+/**
+ * Test 5: check request attributes and response attributes ,
+ * Set CertModel to determine whether it meets expectations
+ * Expected Behavior: requester returns the status LIBSPDM_STATUS_SUCCESS
+ **/
+void test_spdm_responder_encap_get_certificate_case5(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    void *data;
+    size_t data_size;
+    void *hash;
+    size_t hash_size;
+    const uint8_t *root_cert;
+    size_t root_cert_size;
+    bool need_continue;
+    spdm_certificate_response_t *spdm_response;
+    uint8_t temp_buf[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    size_t temp_buf_size;
+    uint16_t portion_length;
+    uint16_t remainder_length;
+    size_t spdm_response_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x5;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.capability.flags = 0;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.req_base_asym_alg =
+        m_libspdm_use_req_asym_algo;
+
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, &hash, &hash_size);
+    libspdm_x509_get_cert_from_cert_chain((uint8_t *)data + sizeof(spdm_cert_chain_t) + hash_size,
+                                          data_size - sizeof(spdm_cert_chain_t) - hash_size, 0,
+                                          &root_cert, &root_cert_size);
+
+    spdm_context->local_context.peer_root_cert_provision_size[0] = root_cert_size;
+    spdm_context->local_context.peer_root_cert_provision[0] = root_cert;
+
+    libspdm_read_responder_public_certificate_chain(
+        m_libspdm_use_hash_algo, m_libspdm_use_asym_algo,
+        &m_libspdm_local_certificate_chain,
+        &m_libspdm_local_certificate_chain_size, NULL, NULL);
+
+    portion_length = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
+    remainder_length =
+        (uint16_t)(m_libspdm_local_certificate_chain_size -
+                   LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
+
+    temp_buf_size =
+        sizeof(spdm_certificate_response_t) + portion_length;
+    spdm_response_size = temp_buf_size;
+    spdm_response = (void *)temp_buf;
+
+    spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    spdm_response->header.request_response_code = SPDM_CERTIFICATE;
+    spdm_response->header.param1 = 0;
+    spdm_response->header.param2 = 0;
+    spdm_response->portion_length = portion_length;
+    spdm_response->remainder_length = remainder_length;
+    libspdm_copy_mem(spdm_response + 1,
+                     sizeof(temp_buf) - sizeof(*spdm_response),
+                     (uint8_t *)m_libspdm_local_certificate_chain,
+                     portion_length);
+
+    /* Sub Case 1: CertModel Value of 1 , DeviceCert model*/
+    spdm_context->connection_info.multi_key_conn_req = true;
+    spdm_context->encap_context.req_slot_id = 0;
+    spdm_context->connection_info.peer_cert_info[0] = 0;
+    spdm_context->mut_auth_cert_chain_buffer_size = 0;
+    spdm_response->header.param2 = SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT;
+    libspdm_reset_message_mut_b(spdm_context);
+
+    status = libspdm_process_encap_response_certificate(spdm_context, spdm_response_size,
+                                                        spdm_response,
+                                                        &need_continue);
+
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(spdm_context->connection_info.peer_cert_info[0],
+                     SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
+
+    /* Sub Case 2: CertModel Value of 2 , AliasCert model*/
+    spdm_context->connection_info.multi_key_conn_rsp = true;
+    spdm_context->encap_context.req_slot_id = 0;
+    spdm_context->connection_info.peer_cert_info[0] = 0;
+    spdm_context->mut_auth_cert_chain_buffer_size = 0;
+    spdm_response->header.param2 = SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT;
+    libspdm_reset_message_mut_b(spdm_context);
+
+    status = libspdm_process_encap_response_certificate(spdm_context, spdm_response_size,
+                                                        spdm_response,
+                                                        &need_continue);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(spdm_context->connection_info.peer_cert_info[0],
+                     SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT);
+
+    /* Sub Case 3: CertModel Value of 3 , GenericCert model*/
+    spdm_context->connection_info.multi_key_conn_rsp = true;
+    spdm_context->encap_context.req_slot_id = 0;
+    spdm_context->connection_info.peer_cert_info[0] = 0;
+    spdm_context->mut_auth_cert_chain_buffer_size = 0;
+    spdm_response->header.param2 = SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT;
+    libspdm_reset_message_mut_b(spdm_context);
+
+    status = libspdm_process_encap_response_certificate(spdm_context, spdm_response_size,
+                                                        spdm_response,
+                                                        &need_continue);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(spdm_context->connection_info.peer_cert_info[0],
+                     SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT);
+
+    /* Sub Case 4: CertModel Value of 0 */
+    /* Value of 0 indicates either that the certificate slot does not contain any certificates or that the corresponding
+     * MULTI_KEY_CONN_REQ or MULTI_KEY_CONN_RSP is false. */
+    spdm_context->connection_info.multi_key_conn_rsp = true;
+    spdm_context->encap_context.req_slot_id = 0;
+    spdm_context->connection_info.peer_cert_info[0] = 0;
+    spdm_context->mut_auth_cert_chain_buffer_size = 0;
+    spdm_response->header.param2 = SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE;
+    libspdm_reset_message_mut_b(spdm_context);
+
+    status = libspdm_process_encap_response_certificate(spdm_context, spdm_response_size,
+                                                        spdm_response,
+                                                        &need_continue);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(spdm_context->connection_info.peer_cert_info[0],
+                     SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE);
+
+    free(data);
+    free(m_libspdm_local_certificate_chain);
+    m_libspdm_local_certificate_chain = NULL;
+    m_libspdm_local_certificate_chain_size = 0;
+}
+
 libspdm_test_context_t m_spdm_responder_encap_get_certificate_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     false,
@@ -380,6 +522,8 @@ int spdm_responder_encap_get_certificate_test_main(void)
         cmocka_unit_test(test_spdm_responder_encap_get_certificate_case3),
         /* Fail response: responder return portion_length > spdm_request.length*/
         cmocka_unit_test(test_spdm_responder_encap_get_certificate_case4),
+        /* check request attributes and response attributes*/
+        cmocka_unit_test(test_spdm_responder_encap_get_certificate_case5),
     };
 
     libspdm_setup_test_context(&m_spdm_responder_encap_get_certificate_test_context);
