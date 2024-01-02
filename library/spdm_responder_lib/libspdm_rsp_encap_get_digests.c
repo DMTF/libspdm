@@ -222,6 +222,18 @@ libspdm_return_t libspdm_process_encap_response_digest(
                 if (cert_model > SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT) {
                     return LIBSPDM_STATUS_INVALID_MSG_FIELD;
                 }
+                if (index == 0) {
+                    if (cert_model == SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT) {
+                        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                    }
+                    if ((key_usage_bit_mask[slot_index] &
+                         (SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE |
+                          SPDM_KEY_USAGE_BIT_MASK_CHALLENGE_USE |
+                          SPDM_KEY_USAGE_BIT_MASK_MEASUREMENT_USE |
+                          SPDM_KEY_USAGE_BIT_MASK_ENDPOINT_INFO_USE)) == 0) {
+                        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                    }
+                }
                 spdm_context->connection_info.peer_cert_info[index] = cert_model;
                 spdm_context->connection_info.peer_key_usage_bit_mask[index] =
                     key_usage_bit_mask[slot_index];
