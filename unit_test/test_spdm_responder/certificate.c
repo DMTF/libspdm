@@ -37,6 +37,12 @@ spdm_get_certificate_request_t m_libspdm_get_certificate_request4 = {
 };
 size_t m_libspdm_get_certificate_request4_size = sizeof(m_libspdm_get_certificate_request4);
 
+spdm_get_certificate_request_t m_libspdm_get_certificate_request5 = {
+    { SPDM_MESSAGE_VERSION_13, SPDM_GET_CERTIFICATE, 0, 0 },
+    0,
+    LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN
+};
+size_t m_libspdm_get_certificate_request5_size = sizeof(m_libspdm_get_certificate_request5);
 /**
  * Test 1: request the first LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN bytes of the certificate chain
  * Expected Behavior: generate a correctly formed Certficate message, including its portion_length and remainder_length fields
@@ -1264,6 +1270,61 @@ void libspdm_test_responder_certificate_case17(void **state)
     free(data);
 }
 
+/**
+ * Test 18: check request attributes and response attributes , SlotSizeRequested=1b the Offset and Length fields in the
+ * GET_CERTIFICATE request shall be ignored by the Responde
+ * Expected Behavior: generate a correctly formed Certficate message, including its portion_length and remainder_length fields
+ **/
+void libspdm_test_responder_certificate_case18(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_certificate_response_t *spdm_response;
+    void *data;
+    size_t data_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 18;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, NULL, NULL);
+    spdm_context->local_context.local_cert_chain_provision[0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0] =
+        data_size;
+
+    /* When SlotSizeRequested=1b , the Offset and Length fields in the GET_CERTIFICATE request shall be ignored by the Responder */
+    m_libspdm_get_certificate_request5.header.param2 =
+        SPDM_GET_CERTIFICATE_REQUEST_ATTRIBUTES_SLOT_SIZE_REQUESTED;
+    m_libspdm_get_certificate_request5.length = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
+    m_libspdm_get_certificate_request5.offset = 0xFF;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_certificate(
+        spdm_context, m_libspdm_get_certificate_request5_size,
+        &m_libspdm_get_certificate_request5, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_certificate_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_CERTIFICATE);
+    assert_int_equal(spdm_response->header.param1, 0);
+    assert_int_equal(spdm_response->portion_length,0);
+    assert_int_equal(spdm_response->remainder_length, data_size);
+    free(data);
+}
+
 libspdm_test_context_t m_libspdm_responder_certificate_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     false,
@@ -1307,6 +1368,8 @@ int libspdm_responder_certificate_test_main(void)
         cmocka_unit_test(libspdm_test_responder_certificate_case16),
         /* Bad SlotID in request message */
         cmocka_unit_test(libspdm_test_responder_certificate_case17),
+        /* check request attributes and response attributes*/
+        cmocka_unit_test(libspdm_test_responder_certificate_case18),
     };
 
     libspdm_setup_test_context(&m_libspdm_responder_certificate_test_context);
