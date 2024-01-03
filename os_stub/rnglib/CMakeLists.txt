@@ -5,7 +5,11 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/os_stub/rnglib
 )
 
-if(CMAKE_SYSTEM_NAME MATCHES "Linux" AND NOT TOOLCHAIN STREQUAL "ARM_DS2022")
+set (src_rnglib "")
+
+if(TOOLCHAIN STREQUAL "ARM_GNU_BARE_METAL" OR TOOLCHAIN STREQUAL "RISCV_NONE")
+    # The target must provide the required implementation at link time.
+elseif(CMAKE_SYSTEM_NAME MATCHES "Linux" AND NOT TOOLCHAIN STREQUAL "ARM_DS2022")
 SET(src_rnglib
     rng_linux.c
 )
@@ -19,4 +23,8 @@ SET(src_rnglib
 )
 endif()
 
-ADD_LIBRARY(rnglib STATIC ${src_rnglib})
+if (NOT src_rnglib STREQUAL "")
+    ADD_LIBRARY(rnglib STATIC ${src_rnglib})
+else ()
+    message(WARNING "An rnglib implementation must be provided at link time")
+endif()
