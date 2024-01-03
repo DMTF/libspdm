@@ -77,6 +77,7 @@ libspdm_return_t libspdm_process_encap_response_digest(
     spdm_key_usage_bit_mask_t *key_usage_bit_mask;
     size_t slot_index;
     uint8_t cert_model;
+    uint8_t zero_digest[LIBSPDM_MAX_HASH_SIZE] = {0};
 
     spdm_response = encap_response;
     spdm_response_size = encap_response_size;
@@ -233,6 +234,13 @@ libspdm_return_t libspdm_process_encap_response_digest(
                           SPDM_KEY_USAGE_BIT_MASK_ENDPOINT_INFO_USE)) == 0) {
                         return LIBSPDM_STATUS_INVALID_MSG_FIELD;
                     }
+                }
+                if ((cert_model == SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE) &&
+                    (!libspdm_consttime_is_mem_equal(
+                         (const uint8_t *)(spdm_response + 1) + digest_size * slot_index,
+                         zero_digest,
+                         digest_size))) {
+                    return LIBSPDM_STATUS_INVALID_MSG_FIELD;
                 }
                 spdm_context->connection_info.peer_cert_info[index] = cert_model;
                 spdm_context->connection_info.peer_key_usage_bit_mask[index] =
