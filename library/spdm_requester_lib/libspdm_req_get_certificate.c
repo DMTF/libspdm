@@ -241,6 +241,12 @@ static libspdm_return_t libspdm_try_get_certificate(libspdm_context_t *spdm_cont
                     status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
                     goto done;
                 }
+                if ((slot_id == 0) &&
+                    (cert_model == SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT)) {
+                    libspdm_release_receiver_buffer (spdm_context);
+                    status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                    goto done;
+                }
             } else {
                 if (cert_model != SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE) {
                     libspdm_release_receiver_buffer (spdm_context);
