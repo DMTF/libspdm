@@ -68,6 +68,7 @@ static libspdm_return_t libspdm_try_get_digest(libspdm_context_t *spdm_context,
     spdm_key_usage_bit_mask_t *key_usage_bit_mask;
     size_t slot_index;
     uint8_t cert_model;
+    uint8_t zero_digest[LIBSPDM_MAX_HASH_SIZE] = {0};
 
     /* -=[Verify State Phase]=- */
     if (!libspdm_is_capabilities_flag_supported(
@@ -299,6 +300,14 @@ static libspdm_return_t libspdm_try_get_digest(libspdm_context_t *spdm_context,
                         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
                         goto receive_done;
                     }
+                }
+                if ((cert_model == SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE) &&
+                    (!libspdm_consttime_is_mem_equal(
+                         spdm_response->digest + digest_size * slot_index,
+                         zero_digest,
+                         digest_size))) {
+                    status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                    goto receive_done;
                 }
                 spdm_context->connection_info.peer_cert_info[index] = cert_model;
                 spdm_context->connection_info.peer_key_usage_bit_mask[index] =
