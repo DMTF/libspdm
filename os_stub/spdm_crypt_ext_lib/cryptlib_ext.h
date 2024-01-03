@@ -11,6 +11,20 @@
 #include "hal/library/cryptlib.h"
 
 /**
+ * Generates a 64-bit random number.
+ *
+ * An implementation must be provided by the target environment to provide
+ * a cryptographically safe 64-bit random number.
+ *
+ * @param[out] rand_data     buffer pointer to store the 64-bit random value.
+ *
+ * @retval true         Random number generated successfully.
+ * @retval false        Failed to generate the random number.
+ *
+ **/
+extern bool libspdm_get_random_number_64(uint64_t *rand_data);
+
+/**
  * Retrieve the common name (CN) string from one X.509 certificate.
  *
  * @param[in]      cert              Pointer to the DER-encoded X509 certificate.
