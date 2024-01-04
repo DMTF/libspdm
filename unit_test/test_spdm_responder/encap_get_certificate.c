@@ -365,6 +365,7 @@ void test_spdm_responder_encap_get_certificate_case4(void **state)
  * Test 5: check request attributes and response attributes ,
  * Set CertModel to determine whether it meets expectations
  * Expected Behavior: requester returns the status LIBSPDM_STATUS_SUCCESS
+ * Expected Behavior: CertModel is GenericCert model and slot 0 , returns a status of RETURN_DEVICE_ERROR.
  **/
 void test_spdm_responder_encap_get_certificate_case5(void **state)
 {
@@ -465,11 +466,13 @@ void test_spdm_responder_encap_get_certificate_case5(void **state)
     assert_int_equal(spdm_context->connection_info.peer_cert_info[0],
                      SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT);
 
-    /* Sub Case 3: CertModel Value of 3 , GenericCert model*/
+    /* Sub Case 3: CertModel Value of 3 GenericCert model , slot_id set 1
+     * In all cases, the certificate model for slot 0 shall be either the device certificate model or the alias certificate model*/
     spdm_context->connection_info.multi_key_conn_rsp = true;
-    spdm_context->encap_context.req_slot_id = 0;
-    spdm_context->connection_info.peer_cert_info[0] = 0;
+    spdm_context->encap_context.req_slot_id = 1;
+    spdm_context->connection_info.peer_cert_info[1] = 0;
     spdm_context->mut_auth_cert_chain_buffer_size = 0;
+    spdm_response->header.param1 = 1;
     spdm_response->header.param2 = SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT;
     libspdm_reset_message_mut_b(spdm_context);
 
@@ -477,25 +480,24 @@ void test_spdm_responder_encap_get_certificate_case5(void **state)
                                                         spdm_response,
                                                         &need_continue);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(spdm_context->connection_info.peer_cert_info[0],
+    assert_int_equal(spdm_context->connection_info.peer_cert_info[1],
                      SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT);
 
-    /* Sub Case 4: CertModel Value of 0 */
-    /* Value of 0 indicates either that the certificate slot does not contain any certificates or that the corresponding
-     * MULTI_KEY_CONN_REQ or MULTI_KEY_CONN_RSP is false. */
+    /* Sub Case 4: CertModel Value of 3 , GenericCert model ,slot_id set 0
+     * In all cases, the certificate model for slot 0 shall be either the device certificate model or the alias certificate model*/
     spdm_context->connection_info.multi_key_conn_rsp = true;
     spdm_context->encap_context.req_slot_id = 0;
     spdm_context->connection_info.peer_cert_info[0] = 0;
     spdm_context->mut_auth_cert_chain_buffer_size = 0;
-    spdm_response->header.param2 = SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE;
+    spdm_response->header.param1 = 0;
+    spdm_response->header.param2 = SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT;
     libspdm_reset_message_mut_b(spdm_context);
 
     status = libspdm_process_encap_response_certificate(spdm_context, spdm_response_size,
                                                         spdm_response,
                                                         &need_continue);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(spdm_context->connection_info.peer_cert_info[0],
-                     SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+    assert_int_equal(spdm_context->connection_info.peer_cert_info[0], 0);
 
     free(data);
     free(m_libspdm_local_certificate_chain);
