@@ -20,6 +20,10 @@ static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_M1M2_BUFFER_SIZE];
 
 static bool m_get_digest;
 
+static spdm_key_usage_bit_mask_t m_local_key_usage_bit_mask[SPDM_MAX_SLOT_COUNT];
+static spdm_certificate_info_t m_local_cert_info[SPDM_MAX_SLOT_COUNT];
+static spdm_key_pair_id_t m_local_key_pair_id[SPDM_MAX_SLOT_COUNT];
+
 static libspdm_return_t libspdm_requester_get_digests_test_send_message(
     void *spdm_context, size_t request_size, const void *request,
     uint64_t timeout)
@@ -85,6 +89,9 @@ static libspdm_return_t libspdm_requester_get_digests_test_send_message(
         return LIBSPDM_STATUS_SUCCESS;
     case 0x19:
     case 0x1A:
+    case 0x1B:
+    case 0x1C:
+    case 0x1D:
         return LIBSPDM_STATUS_SUCCESS;
     default:
         return LIBSPDM_STATUS_SEND_FAIL;
@@ -998,7 +1005,183 @@ static libspdm_return_t libspdm_requester_get_digests_test_receive_message(
                                               response);
     }
         return LIBSPDM_STATUS_SUCCESS;
+    case 0x1B: {
+        spdm_digest_response_t *spdm_response;
+        uint8_t *digest;
+        size_t spdm_response_size;
+        size_t transport_header_size;
+        spdm_key_pair_id_t *key_pair_id;
+        spdm_certificate_info_t *cert_info;
+        spdm_key_usage_bit_mask_t *key_usage_bit_mask;
+        uint32_t hash_size;
+        uint8_t slot_count;
+        size_t additional_size;
 
+        slot_count = SPDM_MAX_SLOT_COUNT;
+        additional_size = sizeof(spdm_key_pair_id_t) + sizeof(spdm_certificate_info_t) +
+                          sizeof(spdm_key_usage_bit_mask_t);
+        hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
+
+        spdm_response_size = sizeof(spdm_digest_response_t) +
+                             (hash_size + additional_size) * slot_count;
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        spdm_response->header.request_response_code = SPDM_DIGESTS;
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+        spdm_response->header.param1 = 0;
+        spdm_response->header.param2 = 0;
+
+        libspdm_set_mem(m_libspdm_local_certificate_chain,
+                        sizeof(m_libspdm_local_certificate_chain),
+                        (uint8_t)(0xFF));
+
+        digest = (void *)(spdm_response + 1);
+        libspdm_zero_mem (digest, hash_size * slot_count);
+        key_pair_id = (spdm_key_pair_id_t *)((uint8_t *)digest + (hash_size * slot_count));
+        cert_info = (spdm_certificate_info_t *)((uint8_t *)key_pair_id +
+                                                sizeof(spdm_key_pair_id_t) * slot_count);
+        key_usage_bit_mask = (spdm_key_usage_bit_mask_t *)((uint8_t *)cert_info +
+                                                           sizeof(spdm_certificate_info_t) *
+                                                           slot_count);
+
+        for (uint8_t index = 0; index < slot_count; index++)
+        {
+            libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_certificate_chain,
+                             sizeof(m_libspdm_local_certificate_chain), &digest[hash_size * index]);
+
+            key_pair_id[index] = m_local_key_pair_id[index];
+            cert_info[index] = m_local_cert_info[index];
+            key_usage_bit_mask[index] = m_local_key_usage_bit_mask[index];
+
+            spdm_response->header.param1 |= (1 << index);
+            spdm_response->header.param2 |= (1 << index);
+        }
+
+        libspdm_transport_test_encode_message(spdm_context, NULL, false,
+                                              false, spdm_response_size,
+                                              spdm_response, response_size,
+                                              response);
+    }
+        return LIBSPDM_STATUS_SUCCESS;
+    case 0x1C: {
+        spdm_digest_response_t *spdm_response;
+        uint8_t *digest;
+        size_t spdm_response_size;
+        size_t transport_header_size;
+        spdm_key_pair_id_t *key_pair_id;
+        spdm_certificate_info_t *cert_info;
+        spdm_key_usage_bit_mask_t *key_usage_bit_mask;
+        uint32_t hash_size;
+        uint8_t slot_count;
+        size_t additional_size;
+
+        slot_count = 1;
+        additional_size = sizeof(spdm_key_pair_id_t) + sizeof(spdm_certificate_info_t) +
+                          sizeof(spdm_key_usage_bit_mask_t);
+        hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
+
+        spdm_response_size = sizeof(spdm_digest_response_t) +
+                             (hash_size + additional_size) * slot_count;
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        spdm_response->header.request_response_code = SPDM_DIGESTS;
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+        spdm_response->header.param1 = 0;
+        spdm_response->header.param2 = 0;
+
+        libspdm_set_mem(m_libspdm_local_certificate_chain,
+                        sizeof(m_libspdm_local_certificate_chain),
+                        (uint8_t)(0xFF));
+
+        digest = (void *)(spdm_response + 1);
+        key_pair_id = (spdm_key_pair_id_t *)((uint8_t *)digest + (hash_size * slot_count));
+        cert_info = (spdm_certificate_info_t *)((uint8_t *)key_pair_id +
+                                                sizeof(spdm_key_pair_id_t) * slot_count);
+        key_usage_bit_mask = (spdm_key_usage_bit_mask_t *)((uint8_t *)cert_info +
+                                                           sizeof(spdm_certificate_info_t) *
+                                                           slot_count);
+
+        /* Set Digest KeyUsageMask and CertificateInfo to 0*/
+        libspdm_zero_mem (digest, hash_size * slot_count);
+        key_pair_id[0] = m_local_key_pair_id[0];
+        cert_info[0] = m_local_cert_info[0];
+        key_usage_bit_mask[0] = m_local_key_usage_bit_mask[0];
+
+        spdm_response->header.param1 |= (1 << 0);
+        spdm_response->header.param2 |= (1 << 0);
+
+        libspdm_transport_test_encode_message(spdm_context, NULL, false,
+                                              false, spdm_response_size,
+                                              spdm_response, response_size,
+                                              response);
+    }
+        return LIBSPDM_STATUS_SUCCESS;
+    case 0x1D: {
+        spdm_digest_response_t *spdm_response;
+        uint8_t *digest;
+        size_t spdm_response_size;
+        size_t transport_header_size;
+        spdm_key_pair_id_t *key_pair_id;
+        spdm_certificate_info_t *cert_info;
+        spdm_key_usage_bit_mask_t *key_usage_bit_mask;
+        uint32_t hash_size;
+        uint8_t slot_count;
+        size_t additional_size;
+
+        slot_count = 2;
+        additional_size = sizeof(spdm_key_pair_id_t) + sizeof(spdm_certificate_info_t) +
+                          sizeof(spdm_key_usage_bit_mask_t);
+        hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
+
+        spdm_response_size = sizeof(spdm_digest_response_t) +
+                             (hash_size + additional_size) * slot_count;
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        spdm_response->header.request_response_code = SPDM_DIGESTS;
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+        spdm_response->header.param1 = 0;
+        spdm_response->header.param2 = 0;
+
+        libspdm_set_mem(m_libspdm_local_certificate_chain,
+                        sizeof(m_libspdm_local_certificate_chain),
+                        (uint8_t)(0xFF));
+
+        digest = (void *)(spdm_response + 1);
+        key_pair_id = (spdm_key_pair_id_t *)((uint8_t *)digest + (hash_size * slot_count));
+        cert_info = (spdm_certificate_info_t *)((uint8_t *)key_pair_id +
+                                                sizeof(spdm_key_pair_id_t) * slot_count);
+        key_usage_bit_mask = (spdm_key_usage_bit_mask_t *)((uint8_t *)cert_info +
+                                                           sizeof(spdm_certificate_info_t) *
+                                                           slot_count);
+
+        libspdm_zero_mem (digest, hash_size * slot_count);
+        libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_certificate_chain,
+                         sizeof(m_libspdm_local_certificate_chain), &digest[hash_size * 0]);
+        key_pair_id[0] = m_local_key_pair_id[0];
+        cert_info[0] = m_local_cert_info[0];
+        key_usage_bit_mask[0] = m_local_key_usage_bit_mask[0];
+
+        spdm_response->header.param1 |= (1 << 0);
+        spdm_response->header.param2 |= (1 << 0);
+
+        libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_certificate_chain,
+                         sizeof(m_libspdm_local_certificate_chain), &digest[hash_size * 1]);
+        key_pair_id[1] = m_local_key_pair_id[1];
+        cert_info[1] = m_local_cert_info[1];
+        key_usage_bit_mask[1] = m_local_key_usage_bit_mask[1];
+
+        spdm_response->header.param1 |= (1 << 1);
+        spdm_response->header.param2 |= (1 << 1);
+
+        libspdm_transport_test_encode_message(spdm_context, NULL, false,
+                                              false, spdm_response_size,
+                                              spdm_response, response_size,
+                                              response);
+    }
+        return LIBSPDM_STATUS_SUCCESS;
     default:
         return LIBSPDM_STATUS_RECEIVE_FAIL;
     }
@@ -1593,6 +1776,204 @@ static void libspdm_test_requester_get_digests_case26(void **state)
     assert_int_equal(spdm_context->transcript.message_d.buffer_size,0);
 }
 
+/**
+ * Test 27: a response message is successfully sent ,
+ * Set multi_key_conn_rsp to check if it responds correctly
+ * Expected Behavior: requester returns the status LIBSPDM_STATUS_SUCCESS
+ **/
+static void libspdm_test_requester_get_digests_case27(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint8_t slot_mask;
+    uint8_t total_digest_buffer[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
+    uint32_t hash_size;
+    uint8_t slot_count;
+    size_t additional_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x1B;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    libspdm_set_mem(m_libspdm_local_certificate_chain,
+                    sizeof(m_libspdm_local_certificate_chain),
+                    (uint8_t)(0xFF));
+    libspdm_reset_message_b(spdm_context);
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->transcript.message_m.buffer_size =
+        spdm_context->transcript.message_m.max_buffer_size;
+#endif
+    spdm_context->connection_info.multi_key_conn_rsp = true;
+    libspdm_reset_message_d(spdm_context);
+
+    m_local_key_pair_id[0] = 0x00;
+    m_local_cert_info[0] = SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT;
+    m_local_key_usage_bit_mask[0] = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
+
+    m_local_key_pair_id[1] = 0x01;
+    m_local_cert_info[1] = SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT;
+    m_local_key_usage_bit_mask[1] = SPDM_KEY_USAGE_BIT_MASK_CHALLENGE_USE;
+
+    m_local_key_pair_id[2] = 0x02;
+    m_local_cert_info[2] = SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT;
+    m_local_key_usage_bit_mask[2] = SPDM_KEY_USAGE_BIT_MASK_MEASUREMENT_USE;
+
+    m_local_key_pair_id[3] = 0x03;
+    m_local_cert_info[3] = SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT;
+    m_local_key_usage_bit_mask[3] = SPDM_KEY_USAGE_BIT_MASK_ENDPOINT_INFO_USE;
+
+    m_local_key_pair_id[4] = 0x04;
+    m_local_cert_info[4] = SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT;
+    m_local_key_usage_bit_mask[4] = SPDM_KEY_USAGE_BIT_MASK_STANDARDS_KEY_USE;
+
+    m_local_key_pair_id[5] = 0x05;
+    m_local_cert_info[5] = SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT;
+    m_local_key_usage_bit_mask[5] = SPDM_KEY_USAGE_BIT_MASK_VENDOR_KEY_USE;
+
+    m_local_key_pair_id[6] = 0x06;
+    m_local_cert_info[6] = SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT;
+    m_local_key_usage_bit_mask[6] = SPDM_KEY_USAGE_BIT_MASK_VENDOR_KEY_USE;
+
+    m_local_key_pair_id[7] = 0x07;
+    m_local_cert_info[7] = SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT;
+    m_local_key_usage_bit_mask[7] = SPDM_KEY_USAGE_BIT_MASK_VENDOR_KEY_USE;
+
+    slot_count = SPDM_MAX_SLOT_COUNT;
+    additional_size = sizeof(spdm_key_pair_id_t) + sizeof(spdm_certificate_info_t) +
+                      sizeof(spdm_key_usage_bit_mask_t);
+    hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
+
+    libspdm_zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
+    status = libspdm_get_digest(spdm_context, NULL, &slot_mask, &total_digest_buffer);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(
+        spdm_context->transcript.message_d.buffer_size,
+        sizeof(spdm_digest_response_t) + (additional_size + hash_size) * slot_count);
+
+    for (uint8_t index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
+        assert_memory_equal((void *)&m_local_key_pair_id[index],
+                            (void *)&spdm_context->connection_info.peer_key_pair_id[index],
+                            sizeof(spdm_key_pair_id_t));
+        assert_memory_equal((void *)&m_local_cert_info[index],
+                            (void *)&spdm_context->connection_info.peer_cert_info[index],
+                            sizeof(spdm_key_pair_id_t));
+        assert_memory_equal((void *)&m_local_key_usage_bit_mask[index],
+                            (void *)&spdm_context->connection_info.peer_key_usage_bit_mask[index],
+                            sizeof(spdm_key_pair_id_t));
+    }
+}
+
+/**
+ * Test 28:
+ * 1.For slot 0, at least one of KeyExUse , ChallengeUse , MeasurementUse , and EndpointInfoUse shall be set. The
+ *   corresponding capability bits shall be set appropriately
+ * 2.In all cases, the certificate model for slot 0 shall be either the device certificate model or the alias certificate model.
+ * Set KeyUsageMask to 0 and Set CertificateInfo to SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT(GenericCert model)
+ * Expected Behavior: requester returns the status LIBSPDM_STATUS_INVALID_MSG_FIELD
+ **/
+static void libspdm_test_requester_get_digests_case28(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint8_t slot_mask;
+    uint8_t total_digest_buffer[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x1C;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    libspdm_set_mem(m_libspdm_local_certificate_chain,
+                    sizeof(m_libspdm_local_certificate_chain),
+                    (uint8_t)(0xFF));
+    libspdm_reset_message_b(spdm_context);
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->transcript.message_m.buffer_size =
+        spdm_context->transcript.message_m.max_buffer_size;
+#endif
+
+    spdm_context->connection_info.multi_key_conn_rsp = true;
+    libspdm_reset_message_d(spdm_context);
+
+    /* Sub Case 1: Set KeyUsageMask to 0*/
+    m_local_key_pair_id[0] = 0x00;
+    m_local_cert_info[0] = SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT;
+    m_local_key_usage_bit_mask[0] = 0;
+
+    libspdm_zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
+    status = libspdm_get_digest(spdm_context, NULL, &slot_mask, &total_digest_buffer);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+
+    /* Sub Case 2: Set CertificateInfo to SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT*/
+    m_local_key_pair_id[0] = 0x00;
+    m_local_cert_info[0] = SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT;
+    m_local_key_usage_bit_mask[0] = SPDM_KEY_USAGE_BIT_MASK_ENDPOINT_INFO_USE;
+
+    libspdm_zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
+    status = libspdm_get_digest(spdm_context, NULL, &slot_mask, &total_digest_buffer);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+}
+
+/**
+ * Test 29:
+ * Digest: If a certificate chain is not present in this slot, the value of this field shall be all zeros.
+ * CertModel: Value of 0 indicates either that the certificate slot does not contain any certificates or that the corresponding
+ * MULTI_KEY_CONN_REQ or MULTI_KEY_CONN_RSP is false.
+ * Expected Behavior: requester returns the status LIBSPDM_STATUS_INVALID_MSG_FIELD
+ **/
+static void libspdm_test_requester_get_digests_case29(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint8_t slot_mask;
+    uint8_t total_digest_buffer[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x1D;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    libspdm_zero_mem(m_libspdm_local_certificate_chain, sizeof(m_libspdm_local_certificate_chain));
+    libspdm_reset_message_b(spdm_context);
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->transcript.message_m.buffer_size =
+        spdm_context->transcript.message_m.max_buffer_size;
+#endif
+
+    spdm_context->connection_info.multi_key_conn_rsp = true;
+    libspdm_reset_message_d(spdm_context);
+
+    m_local_key_pair_id[0] = 0x00;
+    m_local_cert_info[0] = SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT;
+    m_local_key_usage_bit_mask[0] = SPDM_KEY_USAGE_BIT_MASK_ENDPOINT_INFO_USE;
+
+    /* CertModel:Value of 0 indicates either that the certificate slot does not contain any certificates or that the corresponding
+     * MULTI_KEY_CONN_REQ or MULTI_KEY_CONN_RSP is false. */
+    m_local_key_pair_id[1] = 0x01;
+    m_local_cert_info[1] = SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE;
+    m_local_key_usage_bit_mask[1] = SPDM_KEY_USAGE_BIT_MASK_ENDPOINT_INFO_USE;
+
+    libspdm_zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
+    status = libspdm_get_digest(spdm_context, NULL, &slot_mask, &total_digest_buffer);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+}
+
 static libspdm_test_context_t m_libspdm_requester_get_digests_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     true,
@@ -1629,6 +2010,9 @@ int libspdm_requester_get_digests_test_main(void)
         cmocka_unit_test(libspdm_test_requester_get_digests_case24),
         cmocka_unit_test(libspdm_test_requester_get_digests_case25),
         cmocka_unit_test(libspdm_test_requester_get_digests_case26),
+        cmocka_unit_test(libspdm_test_requester_get_digests_case27),
+        cmocka_unit_test(libspdm_test_requester_get_digests_case28),
+        cmocka_unit_test(libspdm_test_requester_get_digests_case29),
     };
 
     libspdm_setup_test_context(&m_libspdm_requester_get_digests_test_context);
