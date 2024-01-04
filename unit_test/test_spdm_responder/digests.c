@@ -500,6 +500,101 @@ void libspdm_test_responder_digests_case9(void **state)
     assert_int_equal(spdm_context->transcript.message_d.buffer_size, 0);
 }
 
+/**
+ * Test10: a response message is successfully sent ,
+ * Check KeyPairID CertificateInfo and KeyUsageMask
+ * Expected Behavior: requester returns the status LIBSPDM_STATUS_SUCCESS
+ **/
+void libspdm_test_responder_digests_case10(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_digest_response_t *spdm_response;
+    uint8_t *digest;
+    spdm_key_pair_id_t *key_pair_id;
+    spdm_certificate_info_t *cert_info;
+    spdm_key_usage_bit_mask_t *key_usage_bit_mask;
+    uint32_t hash_size;
+    uint8_t slot_count;
+    size_t additional_size;
+
+    slot_count = SPDM_MAX_SLOT_COUNT;
+    additional_size = sizeof(spdm_key_pair_id_t) + sizeof(spdm_certificate_info_t) +
+                      sizeof(spdm_key_usage_bit_mask_t);
+    hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x0A;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->local_context.capability.flags = 0;
+    spdm_context->last_spdm_request_session_id_valid = false;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+
+    for (uint8_t index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
+        spdm_context->local_context.local_cert_chain_provision[index] =
+            &m_libspdm_local_certificate_chain[hash_size *index];
+        spdm_context->local_context.local_cert_chain_provision_size[index] = hash_size;
+    }
+
+    libspdm_set_mem(m_libspdm_local_certificate_chain,
+                    sizeof(m_libspdm_local_certificate_chain),
+                    (uint8_t)(0xFF));
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->transcript.message_m.buffer_size =
+        spdm_context->transcript.message_m.max_buffer_size;
+#endif
+    spdm_context->connection_info.multi_key_conn_rsp = true;
+    libspdm_reset_message_d(spdm_context);
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_digests(spdm_context,
+                                          m_libspdm_get_digests_request2_size,
+                                          &m_libspdm_get_digests_request2,
+                                          &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size,
+                     sizeof(spdm_digest_response_t) +
+                     (hash_size + additional_size) *
+                     slot_count);
+
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_DIGESTS);
+    assert_int_equal(spdm_context->transcript.message_d.buffer_size,
+                     sizeof(spdm_digest_response_t) + (hash_size + additional_size) * slot_count);
+
+    digest = (void *)(spdm_response + 1);
+    libspdm_zero_mem (digest, hash_size * slot_count);
+    key_pair_id = (spdm_key_pair_id_t *)((uint8_t *)digest + (hash_size * slot_count));
+    cert_info = (spdm_certificate_info_t *)((uint8_t *)key_pair_id +
+                                            sizeof(spdm_key_pair_id_t) * slot_count);
+    key_usage_bit_mask = (spdm_key_usage_bit_mask_t *)((uint8_t *)cert_info +
+                                                       sizeof(spdm_certificate_info_t) *
+                                                       slot_count);
+    for (uint8_t index = 0; index < SPDM_MAX_SLOT_COUNT; index++) {
+        assert_memory_equal((void *)&key_pair_id[index],
+                            (void *)&spdm_context->local_context.local_key_pair_id[index],
+                            sizeof(spdm_key_pair_id_t));
+        assert_memory_equal((void *)&cert_info[index],
+                            (void *)&spdm_context->local_context.local_cert_info[index],
+                            sizeof(spdm_certificate_info_t));
+        assert_memory_equal((void *)&key_usage_bit_mask[index],
+                            (void *)&spdm_context->local_context.local_key_usage_bit_mask[index],
+                            sizeof(spdm_key_usage_bit_mask_t));
+    }
+}
+
 libspdm_test_context_t m_libspdm_responder_digests_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     false,
@@ -528,6 +623,8 @@ int libspdm_responder_digests_test_main(void)
         cmocka_unit_test(libspdm_test_responder_digests_case8),
         /* Set multi_key_conn_rsp to check if it responds correctly */
         cmocka_unit_test(libspdm_test_responder_digests_case9),
+        /* Check KeyPairID CertificateInfo and KeyUsageMask*/
+        cmocka_unit_test(libspdm_test_responder_digests_case10),
     };
 
     libspdm_setup_test_context(&m_libspdm_responder_digests_test_context);
