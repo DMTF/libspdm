@@ -20,6 +20,8 @@ static bool m_get_cert;
 
 static uint8_t m_cert_model;
 
+static uint8_t m_slot_id;
+
 /* Loading the target expiration certificate chain and saving root certificate hash
  * "rsa3072_Expiration/bundle_responder.certchain.der"*/
 bool libspdm_libspdm_read_responder_public_certificate_chain_expiration(
@@ -2209,10 +2211,11 @@ libspdm_return_t libspdm_requester_get_certificate_test_receive_message(
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_13;
         spdm_response->header.request_response_code = SPDM_CERTIFICATE;
-        spdm_response->header.param1 = 0;
+        spdm_response->header.param1 = m_slot_id;
         spdm_response->header.param2 = m_cert_model;
         spdm_response->portion_length = portion_length;
         spdm_response->remainder_length = remainder_length;
+
         libspdm_copy_mem(spdm_response + 1,
                          (size_t)(*response) + *response_size - (size_t)(spdm_response + 1),
                          (uint8_t *)m_libspdm_local_certificate_chain +
@@ -4148,6 +4151,7 @@ void libspdm_test_requester_get_certificate_case29(void **state)
  * Test 30: check request attributes and response attributes ,
  * Set CertModel to determine whether it meets expectations
  * Expected Behavior: requester returns the status LIBSPDM_STATUS_SUCCESS
+ * Expected Behavior: CertModel is GenericCert model and slot 0 , returns a status of RETURN_DEVICE_ERROR.
  **/
 void libspdm_test_requester_get_certificate_case30(void **state)
 {
@@ -4225,10 +4229,11 @@ void libspdm_test_requester_get_certificate_case30(void **state)
     spdm_context->connection_info.peer_cert_info[0] = 0;
     m_cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT;
     libspdm_reset_message_b(spdm_context);
+    m_slot_id = 0;
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
+    status = libspdm_get_certificate(spdm_context, NULL, m_slot_id, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(spdm_context->connection_info.peer_cert_info[0], m_cert_model);
@@ -4238,42 +4243,44 @@ void libspdm_test_requester_get_certificate_case30(void **state)
     spdm_context->connection_info.peer_cert_info[0] = 0;
     m_cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT;
     libspdm_reset_message_b(spdm_context);
+    m_slot_id = 0;
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
+    status = libspdm_get_certificate(spdm_context, NULL, m_slot_id, &cert_chain_size,
                                      cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(spdm_context->connection_info.peer_cert_info[0], m_cert_model);
-    libspdm_reset_message_b(spdm_context);
 
-    /* Sub Case 3: CertModel Value of 3 , GenericCert model*/
+    /* Sub Case 3: CertModel Value of 3 GenericCert model , slot_id set 1
+     * In all cases, the certificate model for slot 0 shall be either the device certificate model or the alias certificate model*/
+    spdm_context->connection_info.multi_key_conn_rsp = true;
+    spdm_context->connection_info.peer_cert_info[1] = 0;
+    m_cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT;
+    libspdm_reset_message_b(spdm_context);
+    m_slot_id = 1;
+
+    cert_chain_size = sizeof(cert_chain);
+    libspdm_zero_mem(cert_chain, sizeof(cert_chain));
+    status = libspdm_get_certificate(spdm_context, NULL, m_slot_id, &cert_chain_size,
+                                     cert_chain);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(spdm_context->connection_info.peer_cert_info[1], m_cert_model);
+
+    /* Sub Case 4: CertModel Value of 3 , GenericCert model , slot_id set 0
+     * In all cases, the certificate model for slot 0 shall be either the device certificate model or the alias certificate model*/
     spdm_context->connection_info.multi_key_conn_rsp = true;
     spdm_context->connection_info.peer_cert_info[0] = 0;
     m_cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT;
     libspdm_reset_message_b(spdm_context);
+    m_slot_id = 0;
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
+    status = libspdm_get_certificate(spdm_context, NULL, m_slot_id, &cert_chain_size,
                                      cert_chain);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(spdm_context->connection_info.peer_cert_info[0], m_cert_model);
-
-    /* Sub Case 4: CertModel Value of 0 */
-    /* Value of 0 indicates either that the certificate slot does not contain any certificates or that the corresponding
-     * MULTI_KEY_CONN_REQ or MULTI_KEY_CONN_RSP is false. */
-    spdm_context->connection_info.multi_key_conn_rsp = true;
-    spdm_context->connection_info.peer_cert_info[0] = 0;
-    m_cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE;
-    libspdm_reset_message_b(spdm_context);
-
-    cert_chain_size = sizeof(cert_chain);
-    libspdm_zero_mem(cert_chain, sizeof(cert_chain));
-    status = libspdm_get_certificate(spdm_context, NULL, 0, &cert_chain_size,
-                                     cert_chain);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(spdm_context->connection_info.peer_cert_info[0], m_cert_model);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+    assert_int_equal(spdm_context->connection_info.peer_cert_info[0], 0);
 
     free(data);
 }
