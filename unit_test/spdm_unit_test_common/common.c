@@ -8,8 +8,10 @@
 
 static libspdm_test_context_t *m_spdm_test_context;
 
-static bool m_send_receive_buffer_acquired = false;
 static uint8_t m_send_receive_buffer[LIBSPDM_MAX_SENDER_RECEIVER_BUFFER_SIZE];
+
+static bool m_sender_buffer_acquired = false;
+static bool m_receiver_buffer_acquired = false;
 
 static bool m_error_acquire_sender_buffer = false;
 static bool m_error_acquire_receiver_buffer = false;
@@ -22,13 +24,13 @@ static uint8_t m_cert_chain_buffer[SPDM_MAX_CERTIFICATE_CHAIN_SIZE];
 libspdm_return_t spdm_device_acquire_sender_buffer (
     void *context, void **msg_buf_ptr)
 {
-    LIBSPDM_ASSERT (!m_send_receive_buffer_acquired);
+    LIBSPDM_ASSERT (!m_sender_buffer_acquired && !m_receiver_buffer_acquired);
     if (m_error_acquire_sender_buffer) {
         return LIBSPDM_STATUS_ACQUIRE_FAIL;
     } else {
         *msg_buf_ptr = m_send_receive_buffer;
         libspdm_zero_mem (m_send_receive_buffer, sizeof(m_send_receive_buffer));
-        m_send_receive_buffer_acquired = true;
+        m_sender_buffer_acquired = true;
 
         return LIBSPDM_STATUS_SUCCESS;
     }
@@ -36,23 +38,23 @@ libspdm_return_t spdm_device_acquire_sender_buffer (
 
 void spdm_device_release_sender_buffer (void *context, const void *msg_buf_ptr)
 {
-    LIBSPDM_ASSERT (m_send_receive_buffer_acquired);
+    LIBSPDM_ASSERT (m_sender_buffer_acquired && !m_receiver_buffer_acquired);
     LIBSPDM_ASSERT (msg_buf_ptr == m_send_receive_buffer);
 
-    m_send_receive_buffer_acquired = false;
+    m_sender_buffer_acquired = false;
 }
 
 libspdm_return_t spdm_device_acquire_receiver_buffer (
     void *context, void **msg_buf_ptr)
 {
-    LIBSPDM_ASSERT (!m_send_receive_buffer_acquired);
+    LIBSPDM_ASSERT (!m_sender_buffer_acquired && !m_receiver_buffer_acquired);
 
     if (m_error_acquire_receiver_buffer) {
         return LIBSPDM_STATUS_ACQUIRE_FAIL;
     } else {
         *msg_buf_ptr = m_send_receive_buffer;
         libspdm_zero_mem (m_send_receive_buffer, sizeof(m_send_receive_buffer));
-        m_send_receive_buffer_acquired = true;
+        m_receiver_buffer_acquired = true;
 
         return LIBSPDM_STATUS_SUCCESS;
     }
@@ -60,9 +62,10 @@ libspdm_return_t spdm_device_acquire_receiver_buffer (
 
 void spdm_device_release_receiver_buffer (void *context, const void *msg_buf_ptr)
 {
-    LIBSPDM_ASSERT (m_send_receive_buffer_acquired);
+    LIBSPDM_ASSERT (!m_sender_buffer_acquired && m_receiver_buffer_acquired);
     LIBSPDM_ASSERT (msg_buf_ptr == m_send_receive_buffer);
-    m_send_receive_buffer_acquired = false;
+
+    m_receiver_buffer_acquired = false;
 }
 
 libspdm_test_context_t *libspdm_get_test_context(void)
