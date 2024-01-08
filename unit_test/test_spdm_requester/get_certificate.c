@@ -22,6 +22,9 @@ static uint8_t m_cert_model;
 
 static uint8_t m_slot_id;
 
+static size_t m_calling_index;
+
+
 /* Loading the target expiration certificate chain and saving root certificate hash
  * "rsa3072_Expiration/bundle_responder.certchain.der"*/
 bool libspdm_libspdm_read_responder_public_certificate_chain_expiration(
@@ -2177,7 +2180,12 @@ libspdm_return_t libspdm_requester_get_certificate_test_receive_message(
         uint16_t portion_length;
         uint16_t remainder_length;
         size_t count;
-        static size_t calling_index = 0;
+
+        if (m_calling_index ==0) {
+            free(m_libspdm_local_certificate_chain);
+            m_libspdm_local_certificate_chain = NULL;
+            m_libspdm_local_certificate_chain_size = 0;
+        }
 
         if (m_libspdm_local_certificate_chain == NULL) {
             libspdm_read_responder_public_certificate_chain(
@@ -2191,12 +2199,12 @@ libspdm_return_t libspdm_requester_get_certificate_test_receive_message(
         count = (m_libspdm_local_certificate_chain_size +
                  LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN - 1) /
                 LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
-        if (calling_index != count - 1) {
+        if (m_calling_index != count - 1) {
             portion_length = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
             remainder_length =
                 (uint16_t)(m_libspdm_local_certificate_chain_size -
                            LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN *
-                           (calling_index + 1));
+                           (m_calling_index + 1));
         } else {
             portion_length = (uint16_t)(
                 m_libspdm_local_certificate_chain_size -
@@ -2219,7 +2227,7 @@ libspdm_return_t libspdm_requester_get_certificate_test_receive_message(
         libspdm_copy_mem(spdm_response + 1,
                          (size_t)(*response) + *response_size - (size_t)(spdm_response + 1),
                          (uint8_t *)m_libspdm_local_certificate_chain +
-                         LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * calling_index,
+                         LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN * m_calling_index,
                          portion_length);
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
@@ -2227,13 +2235,7 @@ libspdm_return_t libspdm_requester_get_certificate_test_receive_message(
                                               spdm_response, response_size,
                                               response);
 
-        calling_index++;
-        if (calling_index == count) {
-            calling_index = 0;
-            free(m_libspdm_local_certificate_chain);
-            m_libspdm_local_certificate_chain = NULL;
-            m_libspdm_local_certificate_chain_size = 0;
-        }
+        m_calling_index++;
     }
         return LIBSPDM_STATUS_SUCCESS;
     default:
@@ -4152,6 +4154,7 @@ void libspdm_test_requester_get_certificate_case29(void **state)
  * Set CertModel to determine whether it meets expectations
  * Expected Behavior: requester returns the status LIBSPDM_STATUS_SUCCESS
  * Expected Behavior: CertModel is GenericCert model and slot 0 , returns a status of RETURN_DEVICE_ERROR.
+ * Expected Behavior: CertModel Value of 0 and certificate chain is valid, returns a status of RETURN_DEVICE_ERROR.
  **/
 void libspdm_test_requester_get_certificate_case30(void **state)
 {
@@ -4230,6 +4233,7 @@ void libspdm_test_requester_get_certificate_case30(void **state)
     m_cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT;
     libspdm_reset_message_b(spdm_context);
     m_slot_id = 0;
+    m_calling_index = 0;
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
@@ -4237,6 +4241,9 @@ void libspdm_test_requester_get_certificate_case30(void **state)
                                      cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(spdm_context->connection_info.peer_cert_info[0], m_cert_model);
+    assert_int_equal(cert_chain_size, m_libspdm_local_certificate_chain_size);
+    assert_memory_equal(cert_chain, m_libspdm_local_certificate_chain,
+                        m_libspdm_local_certificate_chain_size);
 
     /* Sub Case 2: CertModel Value of 2 , AliasCert model*/
     spdm_context->connection_info.multi_key_conn_rsp = true;
@@ -4244,6 +4251,7 @@ void libspdm_test_requester_get_certificate_case30(void **state)
     m_cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT;
     libspdm_reset_message_b(spdm_context);
     m_slot_id = 0;
+    m_calling_index = 0;
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
@@ -4251,6 +4259,9 @@ void libspdm_test_requester_get_certificate_case30(void **state)
                                      cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(spdm_context->connection_info.peer_cert_info[0], m_cert_model);
+    assert_int_equal(cert_chain_size, m_libspdm_local_certificate_chain_size);
+    assert_memory_equal(cert_chain, m_libspdm_local_certificate_chain,
+                        m_libspdm_local_certificate_chain_size);
 
     /* Sub Case 3: CertModel Value of 3 GenericCert model , slot_id set 1
      * In all cases, the certificate model for slot 0 shall be either the device certificate model or the alias certificate model*/
@@ -4259,6 +4270,7 @@ void libspdm_test_requester_get_certificate_case30(void **state)
     m_cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT;
     libspdm_reset_message_b(spdm_context);
     m_slot_id = 1;
+    m_calling_index = 0;
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
@@ -4266,6 +4278,9 @@ void libspdm_test_requester_get_certificate_case30(void **state)
                                      cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(spdm_context->connection_info.peer_cert_info[1], m_cert_model);
+    assert_int_equal(cert_chain_size, m_libspdm_local_certificate_chain_size);
+    assert_memory_equal(cert_chain, m_libspdm_local_certificate_chain,
+                        m_libspdm_local_certificate_chain_size);
 
     /* Sub Case 4: CertModel Value of 3 , GenericCert model , slot_id set 0
      * In all cases, the certificate model for slot 0 shall be either the device certificate model or the alias certificate model*/
@@ -4274,6 +4289,7 @@ void libspdm_test_requester_get_certificate_case30(void **state)
     m_cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT;
     libspdm_reset_message_b(spdm_context);
     m_slot_id = 0;
+    m_calling_index = 0;
 
     cert_chain_size = sizeof(cert_chain);
     libspdm_zero_mem(cert_chain, sizeof(cert_chain));
@@ -4282,7 +4298,45 @@ void libspdm_test_requester_get_certificate_case30(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     assert_int_equal(spdm_context->connection_info.peer_cert_info[0], 0);
 
+    /* Sub Case 5: CertModel Value of 0 , MULTI_KEY_CONN_RSP is true*/
+    /* Value of 0 indicates either that the certificate slot does not contain any certificates or that the corresponding
+     * MULTI_KEY_CONN_REQ or MULTI_KEY_CONN_RSP is false. */
+    spdm_context->connection_info.multi_key_conn_rsp = true;
+    spdm_context->connection_info.peer_cert_info[0] = 0;
+    m_cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE;
+    libspdm_reset_message_b(spdm_context);
+    m_slot_id = 0;
+    m_calling_index = 0;
+
+    cert_chain_size = sizeof(cert_chain);
+    libspdm_zero_mem(cert_chain, sizeof(cert_chain));
+    status = libspdm_get_certificate(spdm_context, NULL, m_slot_id, &cert_chain_size,
+                                     cert_chain);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+    assert_int_equal(spdm_context->connection_info.peer_cert_info[0], m_cert_model);
+
+    /* Sub Case 6: CertModel Value of 0 , MULTI_KEY_CONN_RSP is false*/
+    /* Value of 0 indicates either that the certificate slot does not contain any certificates or that the corresponding
+     * MULTI_KEY_CONN_REQ or MULTI_KEY_CONN_RSP is false. */
+    spdm_context->connection_info.multi_key_conn_rsp = false;
+    spdm_context->connection_info.peer_cert_info[0] = 0;
+    m_cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE;
+    libspdm_reset_message_b(spdm_context);
+    m_slot_id = 0;
+    m_calling_index = 0;
+
+    cert_chain_size = sizeof(cert_chain);
+    libspdm_zero_mem(cert_chain, sizeof(cert_chain));
+    status = libspdm_get_certificate(spdm_context, NULL, m_slot_id, &cert_chain_size,
+                                     cert_chain);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(spdm_context->connection_info.peer_cert_info[0], m_cert_model);
+    assert_int_equal(cert_chain_size, m_libspdm_local_certificate_chain_size);
+    assert_memory_equal(cert_chain, m_libspdm_local_certificate_chain,
+                        m_libspdm_local_certificate_chain_size);
+
     free(data);
+    free(m_libspdm_local_certificate_chain);
 }
 
 libspdm_test_context_t m_libspdm_requester_get_certificate_test_context = {
