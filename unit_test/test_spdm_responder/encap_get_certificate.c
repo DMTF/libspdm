@@ -366,6 +366,7 @@ void test_spdm_responder_encap_get_certificate_case4(void **state)
  * Set CertModel to determine whether it meets expectations
  * Expected Behavior: requester returns the status LIBSPDM_STATUS_SUCCESS
  * Expected Behavior: CertModel is GenericCert model and slot 0 , returns a status of RETURN_DEVICE_ERROR.
+ * Expected Behavior: CertModel Value of 0 and certificate chain is valid, returns a status of RETURN_DEVICE_ERROR.
  **/
 void test_spdm_responder_encap_get_certificate_case5(void **state)
 {
@@ -382,6 +383,7 @@ void test_spdm_responder_encap_get_certificate_case5(void **state)
     spdm_certificate_response_t *spdm_response;
     uint8_t temp_buf[LIBSPDM_MAX_SPDM_MSG_SIZE];
     size_t temp_buf_size;
+    uint8_t cert_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
     uint16_t portion_length;
     uint16_t remainder_length;
     size_t spdm_response_size;
@@ -450,14 +452,20 @@ void test_spdm_responder_encap_get_certificate_case5(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(spdm_context->connection_info.peer_cert_info[0],
                      SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
+    assert_int_equal(spdm_context->mut_auth_cert_chain_buffer_size,
+                     LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
+    assert_memory_equal(spdm_context->mut_auth_cert_chain_buffer, m_libspdm_local_certificate_chain,
+                        LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
 
     /* Sub Case 2: CertModel Value of 2 , AliasCert model*/
-    spdm_context->connection_info.multi_key_conn_rsp = true;
+    spdm_context->connection_info.multi_key_conn_req = true;
     spdm_context->encap_context.req_slot_id = 0;
     spdm_context->connection_info.peer_cert_info[0] = 0;
-    spdm_context->mut_auth_cert_chain_buffer_size = 0;
     spdm_response->header.param2 = SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT;
     libspdm_reset_message_mut_b(spdm_context);
+    libspdm_zero_mem(cert_chain, sizeof(cert_chain));
+    spdm_context->mut_auth_cert_chain_buffer_size = 0;
+    spdm_context->mut_auth_cert_chain_buffer = cert_chain;
 
     status = libspdm_process_encap_response_certificate(spdm_context, spdm_response_size,
                                                         spdm_response,
@@ -465,16 +473,23 @@ void test_spdm_responder_encap_get_certificate_case5(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(spdm_context->connection_info.peer_cert_info[0],
                      SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT);
+    assert_int_equal(spdm_context->mut_auth_cert_chain_buffer_size,
+                     LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
+    assert_memory_equal(spdm_context->mut_auth_cert_chain_buffer, m_libspdm_local_certificate_chain,
+                        LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
 
     /* Sub Case 3: CertModel Value of 3 GenericCert model , slot_id set 1
      * In all cases, the certificate model for slot 0 shall be either the device certificate model or the alias certificate model*/
-    spdm_context->connection_info.multi_key_conn_rsp = true;
+    spdm_context->connection_info.multi_key_conn_req = true;
     spdm_context->encap_context.req_slot_id = 1;
     spdm_context->connection_info.peer_cert_info[1] = 0;
     spdm_context->mut_auth_cert_chain_buffer_size = 0;
     spdm_response->header.param1 = 1;
     spdm_response->header.param2 = SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT;
     libspdm_reset_message_mut_b(spdm_context);
+    libspdm_zero_mem(cert_chain, sizeof(cert_chain));
+    spdm_context->mut_auth_cert_chain_buffer_size = 0;
+    spdm_context->mut_auth_cert_chain_buffer = cert_chain;
 
     status = libspdm_process_encap_response_certificate(spdm_context, spdm_response_size,
                                                         spdm_response,
@@ -482,22 +497,73 @@ void test_spdm_responder_encap_get_certificate_case5(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(spdm_context->connection_info.peer_cert_info[1],
                      SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT);
+    assert_int_equal(spdm_context->mut_auth_cert_chain_buffer_size,
+                     LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
+    assert_memory_equal(spdm_context->mut_auth_cert_chain_buffer, m_libspdm_local_certificate_chain,
+                        LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
 
     /* Sub Case 4: CertModel Value of 3 , GenericCert model ,slot_id set 0
      * In all cases, the certificate model for slot 0 shall be either the device certificate model or the alias certificate model*/
-    spdm_context->connection_info.multi_key_conn_rsp = true;
+    spdm_context->connection_info.multi_key_conn_req = true;
     spdm_context->encap_context.req_slot_id = 0;
     spdm_context->connection_info.peer_cert_info[0] = 0;
     spdm_context->mut_auth_cert_chain_buffer_size = 0;
     spdm_response->header.param1 = 0;
     spdm_response->header.param2 = SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT;
     libspdm_reset_message_mut_b(spdm_context);
+    libspdm_zero_mem(cert_chain, sizeof(cert_chain));
+    spdm_context->mut_auth_cert_chain_buffer_size = 0;
+    spdm_context->mut_auth_cert_chain_buffer = cert_chain;
 
     status = libspdm_process_encap_response_certificate(spdm_context, spdm_response_size,
                                                         spdm_response,
                                                         &need_continue);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     assert_int_equal(spdm_context->connection_info.peer_cert_info[0], 0);
+
+    /* Sub Case 5: CertModel Value of 0 , MULTI_KEY_CONN_REQ is true*/
+    /* Value of 0 indicates either that the certificate slot does not contain any certificates or that the corresponding
+     * MULTI_KEY_CONN_REQ or MULTI_KEY_CONN_RSP is false. */
+    spdm_context->connection_info.multi_key_conn_req = true;
+    spdm_context->encap_context.req_slot_id = 0;
+    spdm_context->connection_info.peer_cert_info[0] = 0;
+    spdm_context->mut_auth_cert_chain_buffer_size = 0;
+    spdm_response->header.param2 = SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE;
+    libspdm_reset_message_mut_b(spdm_context);
+    libspdm_zero_mem(cert_chain, sizeof(cert_chain));
+    spdm_context->mut_auth_cert_chain_buffer_size = 0;
+    spdm_context->mut_auth_cert_chain_buffer = cert_chain;
+
+    status = libspdm_process_encap_response_certificate(spdm_context, spdm_response_size,
+                                                        spdm_response,
+                                                        &need_continue);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+    assert_int_equal(spdm_context->connection_info.peer_cert_info[0],
+                     SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE);
+
+    /* Sub Case 6: CertModel Value of 0 , MULTI_KEY_CONN_REQ is false*/
+    /* Value of 0 indicates either that the certificate slot does not contain any certificates or that the corresponding
+     * MULTI_KEY_CONN_REQ or MULTI_KEY_CONN_RSP is false. */
+    spdm_context->connection_info.multi_key_conn_req = false;
+    spdm_context->encap_context.req_slot_id = 0;
+    spdm_context->connection_info.peer_cert_info[0] = 0;
+    spdm_context->mut_auth_cert_chain_buffer_size = 0;
+    spdm_response->header.param2 = SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE;
+    libspdm_reset_message_mut_b(spdm_context);
+    libspdm_zero_mem(cert_chain, sizeof(cert_chain));
+    spdm_context->mut_auth_cert_chain_buffer_size = 0;
+    spdm_context->mut_auth_cert_chain_buffer = cert_chain;
+
+    status = libspdm_process_encap_response_certificate(spdm_context, spdm_response_size,
+                                                        spdm_response,
+                                                        &need_continue);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(spdm_context->connection_info.peer_cert_info[0],
+                     SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE);
+    assert_int_equal(spdm_context->mut_auth_cert_chain_buffer_size,
+                     LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
+    assert_memory_equal(spdm_context->mut_auth_cert_chain_buffer, m_libspdm_local_certificate_chain,
+                        LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
 
     free(data);
     free(m_libspdm_local_certificate_chain);
