@@ -186,13 +186,22 @@ Enumeration value used for the `libspdm_set_data` and/or `libspdm_get_data` func
 - `LIBSPDM_DATA_OTHER_PARAMS_SUPPORT`
     - This field is included in the `NEGOTIATE_ALGORITHMS / ALGORITHMS` messages to advertise
       miscellaneous capabilities. This is a bitmask whose fields are defined through the
-      `SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_*` macros.
+      `SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_*` and `SPDM_ALGORITHMS_MULTI_KEY_CONN` macros.
         - `SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_0`
             - The format for all `OpaqueData` fields is defined by the device vendor or other
               standards body.
         - `SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1`
             - The format for all `OpaqueData` fields is defined by the SPDM specification's general
-            opaque data format.
+              opaque data format.
+        - `SPDM_ALGORITHMS_MULTI_KEY_CONN`
+            - Specifies whether the Integrator wants the peer endpoint to support multi-key or not.
+              This only applies when the value of the peer endpoint's `MULTI_KEY_CAP` is
+              `SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MULTI_KEY_CAP_NEG`. If the value of the peer
+              endpoint's `MULTI_KEY_CAP` is not that then libspdm will set the appropriate value in
+              `NEGOTIATE_ALGORITHMS / ALGORITHMS` based on the peer endpoint's capabilities.
+              `LIBSPDM_DATA_MULTI_KEY_CONN_REQ` and `LIBSPDM_DATA_MULTI_KEY_CONN_RSP` can be
+              queried after a successful `NEGOTIATE_ALGORITHMS / ALGORITHMS` to determine the
+              connection's multi-key state.
     - `LIBSPDM_DATA_LOCATION_CONNECTION`
         - The `OtherParams` value of the peer endpoint.
     - `LIBSPDM_DATA_LOCATION_LOCAL`
@@ -327,6 +336,21 @@ Enumeration value used for the `libspdm_set_data` and/or `libspdm_get_data` func
       endianness to the opposite value and try again with session establishment. Once a session has
       been successfully established, the correct endianness can be queried from
       `LIBSPDM_DATA_SESSION_SEQUENCE_NUMBER_ENDIAN`.
+- `LIBSPDM_DATA_MULTI_KEY_CONN_REQ`
+    - Specifies the Requester's multi-key state for the connection. This is set following
+      `NEGOTIATE_ALGORITHMS / ALGORITHMS`.
+        - If `true` then the Requester supports multi-key capabilities during the connection.
+        - If `false` then Requester does not support multi-key capabilities and only supports a
+          single asymmetric key during the connection.
+    - Only `LIBSPDM_DATA_LOCATION_CONNECTION` is allowed.
+
+- `LIBSPDM_DATA_MULTI_KEY_CONN_RSP`
+    - Specifies the Responder's multi-key state for the connection. This is set following
+      `NEGOTIATE_ALGORITHMS / ALGORITHMS`.
+        - If `true` then the Responder supports multi-key capabilities during the connection.
+        - If `false` then Responder does not support multi-key capabilities and only supports a
+          single asymmetric key during the connection.
+    - Only `LIBSPDM_DATA_LOCATION_CONNECTION` is allowed.
 
 ### Values that can only be `get`.
 
