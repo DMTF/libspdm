@@ -136,6 +136,10 @@ libspdm_return_t libspdm_process_encap_response_certificate(
                 (cert_model == SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT)) {
                 return LIBSPDM_STATUS_INVALID_MSG_FIELD;
             }
+            if ((cert_model == SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE) &&
+                (spdm_response->portion_length != 0)) {
+                return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+            }
         } else {
             if (cert_model != SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE) {
                 return LIBSPDM_STATUS_INVALID_MSG_FIELD;
