@@ -6,7 +6,7 @@
 
    The SPDM and secured message libraries follow :
 
-   [DSP0274](https://www.dmtf.org/dsp/DSP0274)  Security Protocol and Data Model (SPDM) Specification (version [1.0.1](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.0.1.pdf), version [1.1.2](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.1.2.pdf) and version [1.2.1](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.2.1.pdf))
+   [DSP0274](https://www.dmtf.org/dsp/DSP0274)  Security Protocol and Data Model (SPDM) Specification (version [1.0.2](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.0.2.pdf), version [1.1.3](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.1.3.pdf), version [1.2.2](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.2.2.pdf) and version [1.3.0](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.3.0.pdf))
 
    [DSP0277](https://www.dmtf.org/dsp/DSP0277)  Secured Messages using SPDM Specification (version [1.1.0](https://www.dmtf.org/sites/default/files/standards/documents/DSP0277_1.1.0.pdf))
 
@@ -37,6 +37,8 @@
    SPDM 1.1: `KEY_EXCHANGE`, `FINISH`, `PSK_EXCHANGE`, `PSK_FINISH`, `END_SESSION`, `HEARTBEAT`, `KEY_UPDATE`, and `ENCAPSULATED` messages.
 
    SPDM 1.2: `GET_CSR`, `SET_CERTIFICATE`, `CHUNK_SEND`, and `CHUNK_GET`.
+
+   SPDM 1.3: No new commands are supported at this momemnt. No new SPDM 1.3 features are supported.
 
 5) Cryptography Support
 
