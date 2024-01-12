@@ -280,6 +280,16 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
         }
     }
 
+    if ((spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) &&
+        spdm_context->connection_info.multi_key_conn_rsp) {
+        if ((spdm_context->local_context.local_key_usage_bit_mask[slot_id] &
+             SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE) == 0) {
+            return libspdm_generate_error_response(
+                spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
+                0, response_size, response);
+        }
+    }
+
     spdm_context->connection_info.local_used_cert_chain_slot_id = slot_id;
 
     signature_size = libspdm_get_asym_signature_size(

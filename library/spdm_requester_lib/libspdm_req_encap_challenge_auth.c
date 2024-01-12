@@ -84,6 +84,16 @@ libspdm_return_t libspdm_get_encap_response_challenge_auth(
             response_size, response);
     }
 
+    if ((spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) &&
+        context->connection_info.multi_key_conn_req) {
+        if ((context->local_context.local_key_usage_bit_mask[slot_id] &
+             SPDM_KEY_USAGE_BIT_MASK_CHALLENGE_USE) == 0) {
+            return libspdm_generate_encap_error_response(
+                context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                response_size, response);
+        }
+    }
+
     libspdm_reset_message_buffer_via_request_code(context, NULL,
                                                   spdm_request->header.request_response_code);
 
