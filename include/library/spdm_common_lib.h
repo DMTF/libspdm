@@ -13,9 +13,9 @@
 #include "library/spdm_return_status.h"
 
 #define LIBSPDM_MAJOR_VERSION 0x03
-#define LIBSPDM_MINOR_VERSION 0x02
+#define LIBSPDM_MINOR_VERSION 0x03
 #define LIBSPDM_PATCH_VERSION 0x00
-#define LIBSPDM_ALPHA         0x00
+#define LIBSPDM_ALPHA         0xFF
 
 /* Connection: When a host sends messages to a device, they create a connection.
  *             The host can and only can create one connection with one device.
