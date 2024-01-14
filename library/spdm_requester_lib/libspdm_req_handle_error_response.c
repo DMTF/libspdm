@@ -118,10 +118,15 @@ libspdm_return_t libspdm_handle_simple_error_response(libspdm_context_t *spdm_co
     if ((last_spdm_request->header.request_response_code == SPDM_SET_CERTIFICATE) ||
         (last_spdm_request->header.request_response_code == SPDM_GET_CSR)) {
 
-        /* Do not check the Responder's CERT_INSTALL_RESET_CAP capability as it may be a 1.2.0
-         * Responder and that capability does not exist. */
-
         if (error_code == SPDM_ERROR_CODE_RESET_REQUIRED) {
+            if ((libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_13) &&
+                !libspdm_is_capabilities_flag_supported(
+                    spdm_context, true, 0,
+                    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_INSTALL_RESET_CAP)) {
+                return LIBSPDM_STATUS_ERROR_PEER;
+            }
+            /* CERT_INSTALL_RESET_CAP for a 1.2 Responder is not checked because it was not defined
+             * in SPDM 1.2.0. */
             return LIBSPDM_STATUS_RESET_REQUIRED_PEER;
         }
     }
