@@ -139,6 +139,8 @@ libspdm_return_t libspdm_requester_get_csr_test_send_message(
     }
     case 0x5:
         return LIBSPDM_STATUS_SUCCESS;
+    case 0x6:
+        return LIBSPDM_STATUS_SUCCESS;
     default:
         return LIBSPDM_STATUS_SEND_FAIL;
     }
@@ -259,6 +261,26 @@ libspdm_return_t libspdm_requester_get_csr_test_receive_message(
         spdm_response->header.param2 = 1;
         spdm_response->csr_length = (uint16_t)global_csr_len;
         spdm_response->reserved = 0;
+
+        libspdm_transport_test_encode_message(spdm_context, NULL, false,
+                                              false, spdm_response_size,
+                                              spdm_response, response_size,
+                                              response);
+    }
+        return LIBSPDM_STATUS_SUCCESS;
+    case 0x6: {
+        spdm_error_response_t *spdm_response;
+        size_t spdm_response_size;
+        size_t transport_header_size;
+
+        spdm_response_size = sizeof(spdm_error_response_t);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+        spdm_response->header.request_response_code = SPDM_ERROR;
+        spdm_response->header.param1 = SPDM_ERROR_CODE_RESET_REQUIRED;
+        spdm_response->header.param2 = 1;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                               false, spdm_response_size,
@@ -465,6 +487,48 @@ void libspdm_test_requester_get_csr_case5(void **state)
 #endif /*LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX*/
 }
 
+/**
+ * Test 6: A 1.3 Responder returns ResetRequired when its CERT_INSTALL_RESET_CAP is 0.
+ * Expected Behavior: libspdm returns LIBSPDM_STATUS_ERROR_PEER since Responder should
+ *                    not produce that error message unless CERT_INSTALL_RESET_CAP is 1.
+ **/
+void libspdm_test_requester_get_csr_case6(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    uint8_t csr_form_get[LIBSPDM_MAX_CSR_SIZE] = {0};
+    size_t csr_len;
+
+    csr_len = LIBSPDM_MAX_CSR_SIZE;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x6;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->local_context.capability.flags = 0;
+    /* Don't set CERT_INSTALL_RESET_CAP. */
+    spdm_context->connection_info.capability.flags = SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CSR_CAP;
+
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+
+    spdm_context->connection_info.algorithm.other_params_support =
+        SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_0;
+
+    status = libspdm_get_csr(spdm_context, NULL,
+                             right_req_info, right_req_info_size,
+                             m_csr_opaque_data, m_csr_opaque_data_size,
+                             (void *)&csr_form_get, &csr_len);
+
+    assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
+}
+
+
 libspdm_test_context_t m_libspdm_requester_get_csr_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     true,
@@ -485,6 +549,8 @@ int libspdm_requester_get_csr_test_main(void)
         cmocka_unit_test(libspdm_test_requester_get_csr_case4),
         /* Successful response to libspdm_get_csr_ex with a reset required */
         cmocka_unit_test(libspdm_test_requester_get_csr_case5),
+        /* Illegal ResetRequired error response. */
+        cmocka_unit_test(libspdm_test_requester_get_csr_case6),
     };
 
     libspdm_setup_test_context(

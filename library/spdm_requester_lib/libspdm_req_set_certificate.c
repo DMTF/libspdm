@@ -45,23 +45,26 @@ static libspdm_return_t libspdm_try_set_certificate(libspdm_context_t *spdm_cont
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
 
+    LIBSPDM_ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
+
     if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_12) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
-
-    /* Do not check the Responder's SET_CERT_CAP capability as it may be a 1.2.0 Responder
-     * and that capability does not exist. */
-
-    LIBSPDM_ASSERT(slot_id < SPDM_MAX_SLOT_COUNT);
-
     if (libspdm_get_connection_version (spdm_context) < SPDM_MESSAGE_VERSION_13) {
         if ((cert_chain == NULL) || (cert_chain_size == 0)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
     }
+    /* SET_CERT_CAP for a 1.2 Responder is not checked because it was not defined in SPDM 1.2.0. */
+    if (libspdm_get_connection_version (spdm_context) >= SPDM_MESSAGE_VERSION_13) {
+        if (!libspdm_is_capabilities_flag_supported(
+                spdm_context, true, 0,
+                SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP)) {
+            return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+        }
+    }
 
-    if (spdm_context->connection_info.connection_state <
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
+    if (spdm_context->connection_info.connection_state < LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
 
