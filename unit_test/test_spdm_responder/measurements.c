@@ -2630,6 +2630,87 @@ void libspdm_test_responder_measurements_case35(void **state)
 #endif
 }
 
+/**
+ * Test 36: The key usage bit mask is not set, the SlotID fields in GET_MEASUREMENTS and MEASUREMENTS shall not specify this certificate slot
+ * Expected Behavior: get a SPDM_ERROR_CODE_INVALID_REQUEST return code
+ **/
+void libspdm_test_responder_measurements_case36(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_measurements_response_t *spdm_response;
+    uint8_t *requester_context;
+    uint8_t slot_id;
+    void *data;
+    size_t data_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 36;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PUB_KEY_ID_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo =
+        m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.measurement_spec =
+        m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.multi_key_conn_rsp = true;
+    libspdm_reset_message_m(spdm_context, NULL);
+
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, NULL, NULL);
+    for (int i = 0; i < SPDM_MAX_SLOT_COUNT; i++) {
+        spdm_context->local_context.local_cert_chain_provision_size[i] = data_size;
+        spdm_context->local_context.local_cert_chain_provision[i] = data;
+    }
+
+    /* If set, the SlotID fields in GET_MEASUREMENTS and MEASUREMENTS can specify this certificate slot. If not set,
+     * the SlotID fields in GET_MEASUREMENTS and MEASUREMENTS shall not specify this certificate slot. */
+    slot_id = 0;
+    m_libspdm_get_measurements_request17.slot_id_param = slot_id;
+    spdm_context->local_context.local_key_usage_bit_mask[slot_id] =
+        SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE |
+        SPDM_KEY_USAGE_BIT_MASK_CHALLENGE_USE;
+
+    libspdm_get_random_number(SPDM_NONCE_SIZE,
+                              m_libspdm_get_measurements_request17.nonce);
+    m_libspdm_get_measurements_request17.header.param1 =
+        SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE;
+    m_libspdm_get_measurements_request17.header.param2 = 1;
+
+    requester_context = ((uint8_t *)&m_libspdm_get_measurements_request17) +
+                        sizeof(m_libspdm_get_measurements_request17);
+    libspdm_set_mem(requester_context, SPDM_REQ_CONTEXT_SIZE, 0xAA);
+    m_libspdm_get_measurements_request17_size = sizeof(m_libspdm_get_measurements_request17) +
+                                                SPDM_REQ_CONTEXT_SIZE;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_measurements(
+        spdm_context, m_libspdm_get_measurements_request17_size,
+        &m_libspdm_get_measurements_request17, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.param2, 0);
+}
+
 libspdm_test_context_t m_libspdm_responder_measurements_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     false,
@@ -2711,6 +2792,8 @@ int libspdm_responder_measurements_test_main(void)
         cmocka_unit_test(libspdm_test_responder_measurements_case34),
         /* Success Case: V1.3 get a correct context field */
         cmocka_unit_test(libspdm_test_responder_measurements_case35),
+        /* The key usage bit mask is not set, failed Case*/
+        cmocka_unit_test(libspdm_test_responder_measurements_case36),
     };
 
     libspdm_setup_test_context(&m_libspdm_responder_measurements_test_context);
