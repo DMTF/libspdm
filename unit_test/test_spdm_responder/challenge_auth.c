@@ -1137,6 +1137,83 @@ void libspdm_test_responder_challenge_auth_case18(void **state)
     free(data1);
 }
 
+/**
+ * Test 19: The key usage bit mask is not set, the SlotID fields in CHALLENGE and CHALLENGE_AUTH shall not specify this certificate slot
+ * Expected behavior: the responder accepts the request, but produces an ERROR message
+ * indicating the invalid state.
+ **/
+void libspdm_test_responder_challenge_auth_case19(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    spdm_challenge_auth_response_t *spdm_response;
+    void *data1;
+    size_t data_size1;
+    uint8_t *requester_context;
+    uint8_t request[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    uint8_t slot_id;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x13;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->local_context.capability.flags = 0;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHAL_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->connection_info.multi_key_conn_rsp = true;
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data1,
+                                                    &data_size1, NULL, NULL);
+    spdm_context->local_context.local_cert_chain_provision[0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+
+    libspdm_secret_lib_challenge_opaque_data_size = 0;
+    libspdm_reset_message_c(spdm_context);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->transcript.message_m.buffer_size =
+        spdm_context->transcript.message_m.max_buffer_size;
+#endif
+
+    /* If set, the SlotID fields in CHALLENGE and CHALLENGE_AUTH can specify this certificate slot. If not set, the
+     * SlotID fields in CHALLENGE and CHALLENGE_AUTH shall not specify this certificate slot. */
+    slot_id = 0;
+    m_libspdm_challenge_request8.header.param1 = slot_id;
+    spdm_context->local_context.local_key_usage_bit_mask[slot_id] =
+        SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE |
+        SPDM_KEY_USAGE_BIT_MASK_MEASUREMENT_USE;
+
+    libspdm_get_random_number(SPDM_NONCE_SIZE, m_libspdm_challenge_request8.nonce);
+
+    libspdm_zero_mem(request, sizeof(request));
+    libspdm_copy_mem(request, sizeof(spdm_challenge_request_t),
+                     &m_libspdm_challenge_request8, sizeof(m_libspdm_challenge_request8));
+    requester_context = request + sizeof(m_libspdm_challenge_request8);
+    libspdm_set_mem(requester_context, SPDM_REQ_CONTEXT_SIZE, 0xAA);
+    m_libspdm_challenge_request8_size = sizeof(m_libspdm_challenge_request8) +
+                                        SPDM_REQ_CONTEXT_SIZE;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_challenge_auth(
+        spdm_context, m_libspdm_challenge_request8_size,
+        request, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal (response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal (spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal (spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal (spdm_response->header.param2, 0);
+    free(data1);
+}
 libspdm_test_context_t m_libspdm_responder_challenge_auth_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     false,
@@ -1174,6 +1251,9 @@ int libspdm_responder_challenge_auth_test_main(void)
         cmocka_unit_test(libspdm_test_responder_challenge_auth_case17),
         /* Success Case: V1.3 get a correct context field */
         cmocka_unit_test(libspdm_test_responder_challenge_auth_case18),
+        /* The key usage bit mask is not set, failed Case*/
+        cmocka_unit_test(libspdm_test_responder_challenge_auth_case19),
+
     };
 
     libspdm_setup_test_context(&m_libspdm_responder_challenge_auth_test_context);

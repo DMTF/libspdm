@@ -82,6 +82,12 @@ libspdm_key_exchange_request_mine_t m_libspdm_key_exchange_request9 = {
 };
 size_t m_libspdm_key_exchange_request9_size = sizeof(m_libspdm_key_exchange_request9);
 
+libspdm_key_exchange_request_mine_t m_libspdm_key_exchange_request10 = {
+    { SPDM_MESSAGE_VERSION_13, SPDM_KEY_EXCHANGE,
+      SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0 },
+};
+size_t m_libspdm_key_exchange_request10_size = sizeof(m_libspdm_key_exchange_request10);
+
 void libspdm_test_responder_key_exchange_case1(void **state)
 {
     libspdm_return_t status;
@@ -1801,6 +1807,102 @@ void libspdm_test_responder_key_exchange_case20(void **state)
     free(data1);
 }
 
+/**
+ * Test 36: The key usage bit mask is not set, the SlotID fields in KEY_EXCHANGE and KEY_EXCHANGE_RSP shall not specify this certificate slot
+ * Expected Behavior: get a SPDM_ERROR_CODE_INVALID_REQUEST return code
+ **/
+void libspdm_test_responder_key_exchange_case21(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_key_exchange_response_t *spdm_response;
+    void *data1;
+    size_t data_size1;
+    uint8_t *ptr;
+    size_t dhe_key_size;
+    void *dhe_context;
+    size_t opaque_key_exchange_req_size;
+    uint8_t slot_id;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x15;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.algorithm.other_params_support =
+        SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1;
+    spdm_context->local_context.secured_message_version.spdm_version_count = 1;
+    spdm_context->connection_info.multi_key_conn_rsp = true;
+
+    libspdm_session_info_init(spdm_context,
+                              spdm_context->session_info,
+                              INVALID_SESSION_ID, false);
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data1,
+                                                    &data_size1, NULL, NULL);
+    spdm_context->local_context.local_cert_chain_provision[0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+
+    libspdm_reset_message_a(spdm_context);
+    spdm_context->local_context.mut_auth_requested = 0;
+
+    /* If set, the SlotID fields in KEY_EXCHANGE and KEY_EXCHANGE_RSP can specify this certificate slot. If not set,
+     * the SlotID fields in KEY_EXCHANGE and KEY_EXCHANGE_RSP shall not specify this certificate slot */
+    slot_id = 0;
+    m_libspdm_key_exchange_request10.header.param2 = slot_id;
+    spdm_context->local_context.local_key_usage_bit_mask[slot_id] =
+        SPDM_KEY_USAGE_BIT_MASK_CHALLENGE_USE |
+        SPDM_KEY_USAGE_BIT_MASK_MEASUREMENT_USE;
+
+    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, m_libspdm_key_exchange_request10.random_data);
+    m_libspdm_key_exchange_request10.req_session_id = 0xFFFF;
+    m_libspdm_key_exchange_request10.reserved = 0;
+    m_libspdm_key_exchange_request10.session_policy = 0xFF;
+    ptr = m_libspdm_key_exchange_request10.exchange_data;
+    dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
+    dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_libspdm_use_dhe_algo,
+                                  false);
+    libspdm_dhe_generate_key(m_libspdm_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
+    ptr += dhe_key_size;
+    libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
+    opaque_key_exchange_req_size =
+        libspdm_get_opaque_data_supported_version_data_size(spdm_context);
+    *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+    ptr += sizeof(uint16_t);
+    libspdm_build_opaque_data_supported_version_data(
+        spdm_context, &opaque_key_exchange_req_size, ptr);
+    ptr += opaque_key_exchange_req_size;
+    response_size = sizeof(response);
+    status = libspdm_get_response_key_exchange(
+        spdm_context, m_libspdm_key_exchange_request10_size,
+        &m_libspdm_key_exchange_request10, &response_size, response);
+
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal (response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal (spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal (spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal (spdm_response->header.param2, 0);
+
+    free(data1);
+}
+
 libspdm_test_context_t m_libspdm_responder_key_exchange_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     false,
@@ -1847,7 +1949,8 @@ int libspdm_responder_key_exchange_test_main(void)
         cmocka_unit_test(libspdm_test_responder_key_exchange_case19),
         /* OpaqueData only supports OpaqueDataFmt1, Success Case */
         cmocka_unit_test(libspdm_test_responder_key_exchange_case20),
-
+        /* The key usage bit mask is not set, failed Case*/
+        cmocka_unit_test(libspdm_test_responder_key_exchange_case21),
     };
 
     libspdm_setup_test_context(&m_libspdm_responder_key_exchange_test_context);
