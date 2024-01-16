@@ -536,6 +536,17 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
                 status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
                 goto receive_done;
             }
+
+            if ((spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) &&
+                spdm_context->connection_info.multi_key_conn_req) {
+                if ((spdm_context->local_context.local_key_usage_bit_mask[*req_slot_id_param] &
+                     SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE) == 0) {
+                    libspdm_secured_message_dhe_free(
+                        spdm_context->connection_info.algorithm.dhe_named_group, dhe_context);
+                    status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                    goto receive_done;
+                }
+            }
         }
     }
 
