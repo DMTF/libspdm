@@ -404,6 +404,16 @@ libspdm_return_t libspdm_encapsulated_request(libspdm_context_t *spdm_context,
                         libspdm_release_receiver_buffer (spdm_context);
                         return LIBSPDM_STATUS_INVALID_MSG_FIELD;
                     }
+
+                    if ((spdm_encapsulated_response_ack_response->header.spdm_version >=
+                         SPDM_MESSAGE_VERSION_13) &&
+                        spdm_context->connection_info.multi_key_conn_req) {
+                        if ((spdm_context->local_context.local_key_usage_bit_mask[*req_slot_id_param
+                             ] & SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE) == 0) {
+                            libspdm_release_receiver_buffer (spdm_context);
+                            return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                        }
+                    }
                 }
                 libspdm_release_receiver_buffer (spdm_context);
                 return LIBSPDM_STATUS_SUCCESS;
