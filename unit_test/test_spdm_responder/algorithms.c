@@ -2726,6 +2726,54 @@ void libspdm_test_responder_algorithms_case30(void **state)
     assert_int_equal(spdm_context->connection_info.multi_key_conn_req, true);
 }
 
+
+/**
+ * Test 31: NEGOTIATE_ALGORITHMS message received with MEL correct
+ * Expected Behavior: get a RETURN_SUCCESS return code
+ **/
+void libspdm_test_responder_algorithms_case31(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_algorithms_response_t *spdm_response;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x1E;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.measurement_hash_algo = 0;
+    spdm_context->local_context.algorithm.measurement_spec = 0;
+    spdm_context->local_context.capability.flags = 0;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEL_CAP;
+    spdm_context->local_context.algorithm.other_params_support = 0;
+    spdm_context->local_context.algorithm.mel_spec = SPDM_MEL_SPECIFICATION_DMTF;
+    libspdm_reset_message_a(spdm_context);
+
+    m_libspdm_negotiate_algorithms_request30.other_params_support = 0;
+    m_libspdm_negotiate_algorithms_request30.mel_specification = SPDM_MEL_SPECIFICATION_DMTF;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_algorithms(
+        spdm_context, m_libspdm_negotiate_algorithms_request30_size,
+        &m_libspdm_negotiate_algorithms_request30, &response_size,
+        response);
+
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_algorithms_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_ALGORITHMS);
+    assert_int_equal(spdm_response->mel_specification_sel, SPDM_MEL_SPECIFICATION_DMTF);
+    assert_int_equal(spdm_context->connection_info.algorithm.mel_spec, SPDM_MEL_SPECIFICATION_DMTF);
+}
+
 libspdm_test_context_t m_libspdm_responder_algorithms_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     false,
@@ -2792,6 +2840,8 @@ int libspdm_responder_algorithms_test_main(void)
         cmocka_unit_test(libspdm_test_responder_algorithms_case29),
         /* MULTI_KEY_CONN_REQ and MULTI_KEY_CONN_RSP value validation*/
         cmocka_unit_test(libspdm_test_responder_algorithms_case30),
+        /* Success Case , set MELspecificationSel*/
+        cmocka_unit_test(libspdm_test_responder_algorithms_case31),
     };
 
     m_libspdm_negotiate_algorithms_request1.base_asym_algo = m_libspdm_use_asym_algo;
