@@ -62,6 +62,7 @@
  * On input, indicates the size in bytes of the destination buffer.
  * On output, indicates the total size in bytes of all device measurement
  * blocks in the buffer. This field should only be modified if "measurement_index" is non-zero.
+ * The maximum size is SPDM_MAX_MEASUREMENT_RECORD_LENGTH (2^24 - 1 bytes).
  **/
 extern libspdm_return_t libspdm_measurement_collection(
     spdm_version_number_t spdm_version,
