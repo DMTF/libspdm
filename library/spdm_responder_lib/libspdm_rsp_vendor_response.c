@@ -54,6 +54,25 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
         return LIBSPDM_STATUS_INVALID_PARAMETER;
     }
 
+    /* Check if caller is using the old Vendor Defined API */
+    if ((spdm_context->vendor_response_callback == NULL ||
+         spdm_context->vendor_response_get_id == NULL)) {
+
+        if (spdm_context->get_response_func != NULL) {
+
+            return ((libspdm_get_response_func)spdm_context->get_response_func)(
+                spdm_context,
+                &spdm_context->session_info->session_id,
+                false,
+                request_size,
+                request,
+                response_size,
+                response
+                );
+        } else
+            return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+    }
+
     spdm_request = request;
 
     if (spdm_request->header.spdm_version != libspdm_get_connection_version(spdm_context)) {
