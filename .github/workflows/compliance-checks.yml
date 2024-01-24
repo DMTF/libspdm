@@ -44,6 +44,7 @@ jobs:
             git diff
             exit 1
           fi
+
   file-encoding:
     name: File Encoding Check
     runs-on: ubuntu-latest
@@ -54,6 +55,20 @@ jobs:
         run: |
           set +e
           ./script/check_encode.sh
+          if [ $? -ne 0 ]; then
+            exit 1
+          fi
+
+  copyright-date:
+    name: Check Copyright Year
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Check
+        run: |
+          set +e
+          ./script/check_copyright_date.sh
           if [ $? -ne 0 ]; then
             exit 1
           fi
