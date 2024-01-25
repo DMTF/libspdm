@@ -140,7 +140,9 @@
  *
  * Comment if your system does not support time functions
  */
+#ifndef MBEDTLS_SKIP_TIME_CHECK
 #define MBEDTLS_HAVE_TIME
+#endif
 
 /**
  * \def MBEDTLS_HAVE_TIME_DATE
@@ -161,7 +163,9 @@
  * mbedtls_platform_gmtime_r() at compile-time by using the macro
  * MBEDTLS_PLATFORM_GMTIME_R_ALT.
  */
+#ifndef MBEDTLS_SKIP_TIME_CHECK
 #define MBEDTLS_HAVE_TIME_DATE
+#endif
 
 /**
  * \def MBEDTLS_PLATFORM_MEMORY
