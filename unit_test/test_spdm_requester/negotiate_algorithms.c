@@ -1894,15 +1894,34 @@ static void libspdm_test_requester_negotiate_algorithms_case35(void **state)
 
 /**
  * Test 36: ALGORITHMS message received with MEL
- * Expected Behavior:
- * mel_specification_sel and mel_specification SPDM_MEL_SPECIFICATION_DMTF , LIBSPDM_STATUS_SUCCESS
- * mel_specification_sel set 0 , mel_specification set SPDM_MEL_SPECIFICATION_DMTF , LIBSPDM_STATUS_INVALID_MSG_FIELD
+ * +---------------+--------------------------+--------------------------+-----------------------------------+
+ * | MEAS_CAP |       MELspecification     |     MELspecificationSel     |          Expected result          |
+ * |          |     NEGOTIATE_ALGORITHMS   |         ALGORITHMS          |                                   |
+ * +----------+----------------------------+-----------------------------+-----------------------------------+
+ * | set      | DMTFmeasSpec               | DMTFmeasSpec                | LIBSPDM_STATUS_SUCCESS            |
+ *  ---------------------------------------------------------------------------------------------------------+
+ * | set      | DMTFmeasSpec               | 0                           | LIBSPDM_STATUS_INVALID_MSG_FIELD  |
+ *  ----------------------------------------------------------------------------------------------------------
+ * | set      | 0                          | DMTFmeasSpec                | LIBSPDM_STATUS_INVALID_MSG_FIELD  |
+ *  ---------------------------------------------------------------------------------------------------------+
+ * | set      | 0                          | 0                           | LIBSPDM_STATUS_SUCCESS            |
+ *  ----------------------------------------------------------------------------------------------------------
+ * | Not set  | DMTFmeasSpec               | DMTFmeasSpec                | LIBSPDM_STATUS_INVALID_MSG_FIELD  |
+ *  ---------------------------------------------------------------------------------------------------------+
+ * | Not set  | DMTFmeasSpec               | 0                           | LIBSPDM_STATUS_SUCCESS            |
+ *  ----------------------------------------------------------------------------------------------------------
+ * | Not set  | 0                          | DMTFmeasSpec                | LIBSPDM_STATUS_INVALID_MSG_FIELD  |
+ *  ---------------------------------------------------------------------------------------------------------+
+ * | Not set  | 0                          | 0                           | LIBSPDM_STATUS_SUCCESS            |
+ *  ----------------------------------------------------------------------------------------------------------
  **/
 static void libspdm_test_requester_negotiate_algorithms_case36(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
+    uint32_t local_capability_flags;
+    uint32_t connection_capability_flags;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1913,43 +1932,98 @@ static void libspdm_test_requester_negotiate_algorithms_case36(void **state)
         m_libspdm_use_measurement_hash_algo;
     spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
     spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
-    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
-    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
-    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP;
-    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
-    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
-    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEL_CAP;
-
-    libspdm_reset_message_a(spdm_context);
     spdm_context->local_context.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
     spdm_context->local_context.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
     spdm_context->local_context.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
     spdm_context->local_context.algorithm.key_schedule = m_libspdm_use_key_schedule_algo;
-
     spdm_context->local_context.algorithm.other_params_support = 0;
 
-    /* Sub Case 1: mel_specification_sel and mel_specification set SPDM_MEL_SPECIFICATION_DMTF*/
+    local_capability_flags = SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
+                             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP|
+                             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP|
+                             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP|
+                             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
+    connection_capability_flags =
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
+
+    spdm_context->connection_info.capability.flags = connection_capability_flags;
+    spdm_context->local_context.capability.flags = local_capability_flags;
+
+    /* Sub Case 1: MEL_CAP set 1, mel_specification_sel and mel_specification set SPDM_MEL_SPECIFICATION_DMTF*/
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEL_CAP;
+    libspdm_reset_message_a(spdm_context);
     m_mel_specification_sel = SPDM_MEL_SPECIFICATION_DMTF;
     spdm_context->local_context.algorithm.mel_spec = SPDM_MEL_SPECIFICATION_DMTF;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
     status = libspdm_negotiate_algorithms(spdm_context);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
-    /* Sub Case 2: mel_specification_sel set 0 , mel_specification set SPDM_MEL_SPECIFICATION_DMTF*/
+    /* Sub Case 2: MEL_CAP set 1, mel_specification_sel set 0 , mel_specification set SPDM_MEL_SPECIFICATION_DMTF*/
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEL_CAP;
+    libspdm_reset_message_a(spdm_context);
     m_mel_specification_sel = 0;
     spdm_context->local_context.algorithm.mel_spec = SPDM_MEL_SPECIFICATION_DMTF;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
     status = libspdm_negotiate_algorithms(spdm_context);
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+
+    /* Sub Case 3: MEL_CAP set 1, mel_specification_sel set SPDM_MEL_SPECIFICATION_DMTF , mel_specification set 0*/
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEL_CAP;
+    libspdm_reset_message_a(spdm_context);
+    m_mel_specification_sel = SPDM_MEL_SPECIFICATION_DMTF;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    spdm_context->local_context.algorithm.mel_spec = 0;
+    status = libspdm_negotiate_algorithms(spdm_context);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+
+    /* Sub Case 4: MEL_CAP set 1,mel_specification_sel set 0 , mel_specification set 0*/
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEL_CAP;
+    libspdm_reset_message_a(spdm_context);
+    m_mel_specification_sel = 0;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    spdm_context->local_context.algorithm.mel_spec = 0;
+    status = libspdm_negotiate_algorithms(spdm_context);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    /* Sub Case 5:MEL_CAP set 0, mel_specification_sel and mel_specification set SPDM_MEL_SPECIFICATION_DMTF*/
+    spdm_context->connection_info.capability.flags = connection_capability_flags;
+    libspdm_reset_message_a(spdm_context);
+    m_mel_specification_sel = SPDM_MEL_SPECIFICATION_DMTF;
+    spdm_context->local_context.algorithm.mel_spec = SPDM_MEL_SPECIFICATION_DMTF;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    status = libspdm_negotiate_algorithms(spdm_context);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+
+    /* Sub Case 6: MEL_CAP set 0, mel_specification_sel set 0 , mel_specification set SPDM_MEL_SPECIFICATION_DMTF*/
+    spdm_context->connection_info.capability.flags = connection_capability_flags;
+    libspdm_reset_message_a(spdm_context);
+    m_mel_specification_sel = 0;
+    spdm_context->local_context.algorithm.mel_spec = SPDM_MEL_SPECIFICATION_DMTF;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    status = libspdm_negotiate_algorithms(spdm_context);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    /* Sub Case 7: MEL_CAP set 0,mel_specification_sel set SPDM_MEL_SPECIFICATION_DMTF , mel_specification set 0*/
+    spdm_context->connection_info.capability.flags = connection_capability_flags;
+    libspdm_reset_message_a(spdm_context);
+    m_mel_specification_sel = SPDM_MEL_SPECIFICATION_DMTF;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    spdm_context->local_context.algorithm.mel_spec = 0;
+    status = libspdm_negotiate_algorithms(spdm_context);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+
+    /* Sub Case 8: MEL_CAP set 0,mel_specification_sel set 0 , mel_specification set 0*/
+    spdm_context->connection_info.capability.flags = connection_capability_flags;
+    libspdm_reset_message_a(spdm_context);
+    m_mel_specification_sel = 0;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    spdm_context->local_context.algorithm.mel_spec = 0;
+    status = libspdm_negotiate_algorithms(spdm_context);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 }
 
 static libspdm_test_context_t m_libspdm_requester_negotiate_algorithms_test_context = {
