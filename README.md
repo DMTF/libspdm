@@ -69,7 +69,7 @@
 
    Support to be linked by other language. For example, [JAVA verifier](https://github.com/altera-opensource/verifier).
 
-   Support interoperability testing with other SPDM implementations. For example, [intel-server-prot-spdm](https://github.com/intel/intel-server-prot-spdm) and [rust-spdm](https://github.com/intel/rust-spdm).
+   Support interoperability testing with other SPDM implementations. For example, [intel-server-prot-spdm](https://github.com/intel/intel-server-prot-spdm) and [spdm-rs](https://github.com/ccc-spdm-tools/spdm-rs).
 
 7) Supported Architecture and Cross-Compiler based on X64 platform.
 
