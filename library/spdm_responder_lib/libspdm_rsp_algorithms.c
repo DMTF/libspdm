@@ -554,8 +554,10 @@ libspdm_return_t libspdm_get_response_algorithms(libspdm_context_t *spdm_context
     }
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
         spdm_context->connection_info.algorithm.other_params_support =
-            spdm_request->other_params_support;
+            spdm_request->other_params_support & SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_MASK;
         if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+            spdm_context->connection_info.algorithm.other_params_support =
+                spdm_request->other_params_support;
             spdm_context->connection_info.algorithm.mel_spec =
                 spdm_request->mel_specification;
         }
@@ -732,14 +734,18 @@ libspdm_return_t libspdm_get_response_algorithms(libspdm_context_t *spdm_context
             }
         }
         if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
-            spdm_context->connection_info.algorithm.other_params_support =
-                (spdm_context->connection_info.algorithm.other_params_support &
-                 SPDM_ALGORITHMS_MULTI_KEY_CONN) |
-                (spdm_response->other_params_selection & SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_MASK);
             if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+                spdm_context->connection_info.algorithm.other_params_support =
+                    (spdm_context->connection_info.algorithm.other_params_support &
+                     SPDM_ALGORITHMS_MULTI_KEY_CONN) |
+                    (spdm_response->other_params_selection &
+                     SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_MASK);
                 spdm_context->connection_info.algorithm.mel_spec =
                     spdm_response->mel_specification_sel;
             } else {
+                spdm_context->connection_info.algorithm.other_params_support =
+                    (spdm_response->other_params_selection &
+                     SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_MASK);
                 spdm_context->connection_info.algorithm.mel_spec = 0;
             }
         } else {
