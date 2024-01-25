@@ -140,8 +140,11 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
         spdm_context->local_context.algorithm.measurement_spec;
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
         spdm_request->other_params_support =
-            spdm_context->local_context.algorithm.other_params_support;
+            spdm_context->local_context.algorithm.other_params_support &
+            SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_MASK;
         if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+            spdm_request->other_params_support =
+                spdm_context->local_context.algorithm.other_params_support;
             spdm_request->mel_specification =
                 spdm_context->local_context.algorithm.mel_spec;
         }
@@ -378,8 +381,10 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
         spdm_response->measurement_specification_sel;
     if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
         spdm_context->connection_info.algorithm.other_params_support =
-            spdm_response->other_params_selection;
+            spdm_response->other_params_selection & SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_MASK;
         if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+            spdm_context->connection_info.algorithm.other_params_support =
+                spdm_response->other_params_selection;
             spdm_context->connection_info.algorithm.mel_spec =
                 spdm_response->mel_specification_sel;
         }
