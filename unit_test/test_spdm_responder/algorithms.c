@@ -2751,13 +2751,14 @@ void libspdm_test_responder_algorithms_case31(void **state)
     spdm_context->local_context.algorithm.measurement_hash_algo = 0;
     spdm_context->local_context.algorithm.measurement_spec = 0;
     spdm_context->local_context.capability.flags = 0;
-    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEL_CAP;
     spdm_context->local_context.algorithm.other_params_support = 0;
     spdm_context->local_context.algorithm.mel_spec = SPDM_MEL_SPECIFICATION_DMTF;
     libspdm_reset_message_a(spdm_context);
 
+    /* Sub Case 1: MEL_CAP set 1, mel_specification set SPDM_MEL_SPECIFICATION_DMTF*/
     m_libspdm_negotiate_algorithms_request30.other_params_support = 0;
     m_libspdm_negotiate_algorithms_request30.mel_specification = SPDM_MEL_SPECIFICATION_DMTF;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEL_CAP;
 
     response_size = sizeof(response);
     status = libspdm_get_response_algorithms(
@@ -2772,6 +2773,26 @@ void libspdm_test_responder_algorithms_case31(void **state)
                      SPDM_ALGORITHMS);
     assert_int_equal(spdm_response->mel_specification_sel, SPDM_MEL_SPECIFICATION_DMTF);
     assert_int_equal(spdm_context->connection_info.algorithm.mel_spec, SPDM_MEL_SPECIFICATION_DMTF);
+
+    /* Sub Case 2: MEL_CAP set 0, mel_specification set SPDM_MEL_SPECIFICATION_DMTF*/
+    m_libspdm_negotiate_algorithms_request30.mel_specification = SPDM_MEL_SPECIFICATION_DMTF;
+    spdm_context->local_context.capability.flags = 0;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    libspdm_reset_message_a(spdm_context);
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_algorithms(
+        spdm_context, m_libspdm_negotiate_algorithms_request30_size,
+        &m_libspdm_negotiate_algorithms_request30, &response_size,
+        response);
+
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_algorithms_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_ALGORITHMS);
+    assert_int_equal(spdm_response->mel_specification_sel, 0);
+    assert_int_equal(spdm_context->connection_info.algorithm.mel_spec, 0);
 }
 
 libspdm_test_context_t m_libspdm_responder_algorithms_test_context = {
