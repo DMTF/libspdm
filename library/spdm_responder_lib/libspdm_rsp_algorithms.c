@@ -594,12 +594,18 @@ libspdm_return_t libspdm_get_response_algorithms(libspdm_context_t *spdm_context
             SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_MASK,
             spdm_context->connection_info.algorithm.other_params_support &
             SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_MASK);
-        if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
-            spdm_response->mel_specification_sel = (uint8_t)libspdm_prioritize_algorithm(
-                mel_spec_priority_table,
-                LIBSPDM_ARRAY_SIZE(mel_spec_priority_table),
-                spdm_context->local_context.algorithm.mel_spec,
-                spdm_context->connection_info.algorithm.mel_spec);
+        if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+            if (libspdm_is_capabilities_flag_supported(
+                    spdm_context, false, 0,
+                    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEL_CAP)) {
+                spdm_response->mel_specification_sel = (uint8_t)libspdm_prioritize_algorithm(
+                    mel_spec_priority_table,
+                    LIBSPDM_ARRAY_SIZE(mel_spec_priority_table),
+                    spdm_context->local_context.algorithm.mel_spec,
+                    spdm_context->connection_info.algorithm.mel_spec);
+            } else {
+                spdm_response->mel_specification_sel = 0;
+            }
         }
     }
 
