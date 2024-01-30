@@ -363,6 +363,8 @@ libspdm_return_t libspdm_test_requester_chunk_send_generic_test_case(
 
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP;
+    spdm_context->local_context.algorithm.measurement_spec = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
 
     spdm_context->local_context.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;

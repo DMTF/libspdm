@@ -879,6 +879,8 @@ void libspdm_test_requester_chunk_get_case5(void** state)
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
     spdm_context->local_context.capability.data_transfer_size
         = CHUNK_GET_REQUESTER_UNIT_TEST_DATA_TRANSFER_SIZE;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP;
+    spdm_context->local_context.algorithm.measurement_spec = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
 
     spdm_context->local_context.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;

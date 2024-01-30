@@ -2795,6 +2795,79 @@ void libspdm_test_responder_algorithms_case31(void **state)
     assert_int_equal(spdm_context->connection_info.algorithm.mel_spec, 0);
 }
 
+/**
+ * Test 32: NEGOTIATE_ALGORITHMS message received with MEAS correct
+ * Expected Behavior: get a RETURN_SUCCESS return code
+ **/
+void libspdm_test_responder_algorithms_case32(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_algorithms_response_t *spdm_response;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x1F;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.measurement_spec = 0;
+    spdm_context->local_context.algorithm.measurement_spec |= SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+    spdm_context->local_context.capability.flags = 0;
+    spdm_context->local_context.algorithm.other_params_support = 0;
+    libspdm_reset_message_a(spdm_context);
+
+    /* Sub Case 1: MEL_CAP set 1, measurement_spec set SPDM_MEASUREMENT_SPECIFICATION_DMTF*/
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
+    spdm_context->local_context.algorithm.measurement_spec |= SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+    spdm_context->local_context.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_algorithms(
+        spdm_context, m_libspdm_negotiate_algorithms_request1_size,
+        &m_libspdm_negotiate_algorithms_request1, &response_size,
+        response);
+
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_algorithms_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_ALGORITHMS);
+    assert_int_equal(spdm_response->measurement_specification_sel,
+                     SPDM_MEASUREMENT_SPECIFICATION_DMTF);
+    assert_int_equal(spdm_context->connection_info.algorithm.measurement_spec,
+                     SPDM_MEASUREMENT_SPECIFICATION_DMTF);
+
+    /* Sub Case 2: MEL_CAP set 0, measurement_spec set 0*/
+    spdm_context->local_context.capability.flags = 0;
+    spdm_context->local_context.algorithm.measurement_hash_algo = 0;
+    spdm_context->local_context.algorithm.measurement_spec = 0;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    m_libspdm_negotiate_algorithms_request1.measurement_specification = 0;
+    libspdm_reset_message_a(spdm_context);
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_algorithms(
+        spdm_context, m_libspdm_negotiate_algorithms_request1_size,
+        &m_libspdm_negotiate_algorithms_request1, &response_size,
+        response);
+
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_algorithms_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_ALGORITHMS);
+    assert_int_equal(spdm_response->measurement_specification_sel, 0);
+    assert_int_equal(spdm_context->connection_info.algorithm.measurement_spec, 0);
+}
+
 libspdm_test_context_t m_libspdm_responder_algorithms_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     false,
@@ -2863,6 +2936,8 @@ int libspdm_responder_algorithms_test_main(void)
         cmocka_unit_test(libspdm_test_responder_algorithms_case30),
         /* Success Case , set MELspecificationSel*/
         cmocka_unit_test(libspdm_test_responder_algorithms_case31),
+        /* Success Case , set MeasurementSpecification*/
+        cmocka_unit_test(libspdm_test_responder_algorithms_case32),
     };
 
     m_libspdm_negotiate_algorithms_request1.base_asym_algo = m_libspdm_use_asym_algo;
