@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -407,6 +407,11 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
             spdm_context->connection_info.algorithm.measurement_hash_algo);
         if (algo_size == 0) {
             status = LIBSPDM_STATUS_NEGOTIATION_FAIL;
+            goto receive_done;
+        }
+    } else {
+        if (spdm_context->connection_info.algorithm.measurement_spec != 0) {
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             goto receive_done;
         }
     }
