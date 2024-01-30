@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -563,11 +563,17 @@ libspdm_return_t libspdm_get_response_algorithms(libspdm_context_t *spdm_context
         }
     }
 
-    spdm_response->measurement_specification_sel = (uint8_t)libspdm_prioritize_algorithm(
-        measurement_spec_priority_table,
-        LIBSPDM_ARRAY_SIZE(measurement_spec_priority_table),
-        spdm_context->local_context.algorithm.measurement_spec,
-        spdm_context->connection_info.algorithm.measurement_spec);
+    if (libspdm_is_capabilities_flag_supported(
+            spdm_context, false, 0,
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
+        spdm_response->measurement_specification_sel = (uint8_t)libspdm_prioritize_algorithm(
+            measurement_spec_priority_table,
+            LIBSPDM_ARRAY_SIZE(measurement_spec_priority_table),
+            spdm_context->local_context.algorithm.measurement_spec,
+            spdm_context->connection_info.algorithm.measurement_spec);
+    } else {
+        spdm_response->measurement_specification_sel = 0;
+    }
 
     spdm_response->measurement_hash_algo = libspdm_prioritize_algorithm(
         measurement_hash_priority_table,
