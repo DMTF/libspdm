@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -870,6 +870,7 @@ bool libspdm_gen_csr_ex(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *
                         size_t *csr_len, uint8_t *csr_pointer,
                         uint8_t req_cert_model,
                         uint8_t *req_csr_tracking_tag,
+                        uint8_t req_key_pair_id,
                         bool overwrite)
 {
     bool result;

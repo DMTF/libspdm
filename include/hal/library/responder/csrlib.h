@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2023 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -92,6 +92,7 @@ extern bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bo
  *
  * @param[in, out]  req_csr_tracking_tag  For input, this field shall contain the CSRTrackingTag of the associated GET_CSR request.
  *                                        For output, this field indicate responder available csr_tracking_tag.
+ * @param[in]       req_key_pair_id       Indicates the desired key pair associated with the CSR.
  * @param[in]       overwrite             If set, the Responder shall stop processing any existing GET_CSR request and
  *                                        overwrite it with this request
  *
@@ -107,6 +108,7 @@ extern bool libspdm_gen_csr_ex(uint32_t base_hash_algo, uint32_t base_asym_algo,
                                size_t *csr_len, uint8_t *csr_pointer,
                                uint8_t req_cert_model,
                                uint8_t *req_csr_tracking_tag,
+                               uint8_t req_key_pair_id,
                                bool overwrite);
 #endif /*LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX*/
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CSR_CAP */
