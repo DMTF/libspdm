@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -186,7 +186,7 @@ static libspdm_return_t libspdm_try_key_update(libspdm_context_t *spdm_context,
         if (!single_direction) {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                            "libspdm_activate_update_session_data_key[%x] Responder new\n",
-                           session_id, LIBSPDM_KEY_UPDATE_ACTION_RESPONDER));
+                           session_id));
             result = libspdm_activate_update_session_data_key(
                 session_info->secured_message_context,
                 LIBSPDM_KEY_UPDATE_ACTION_RESPONDER, true);
