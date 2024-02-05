@@ -112,7 +112,16 @@ static libspdm_return_t libspdm_requester_negotiate_algorithms_test_send_message
         m_libspdm_local_buffer_size += (request_size - 1);
     }
         return LIBSPDM_STATUS_SUCCESS;
-    case 0x21:
+    case 0x21: {
+        const spdm_negotiate_algorithms_request_t *spdm_request;
+        spdm_request =
+            (const spdm_negotiate_algorithms_request_t *)((const uint8_t *)request +
+                                                          sizeof(libspdm_test_message_header_t));
+
+        assert_int_equal (spdm_request->header.spdm_version, SPDM_MESSAGE_VERSION_12);
+        assert_int_equal (spdm_request->header.request_response_code, SPDM_NEGOTIATE_ALGORITHMS);
+        assert_int_equal (spdm_request->other_params_support, SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1);
+    }
         return LIBSPDM_STATUS_SUCCESS;
     case 0x22:
     case 0x23:
@@ -1828,7 +1837,6 @@ static void libspdm_test_requester_negotiate_algorithms_case33(void **state) {
 
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
     spdm_context->local_context.algorithm.measurement_hash_algo =
         m_libspdm_use_measurement_hash_algo;
     spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
@@ -1838,8 +1846,6 @@ static void libspdm_test_requester_negotiate_algorithms_case33(void **state) {
     spdm_context->local_context.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
     spdm_context->local_context.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
     spdm_context->local_context.algorithm.key_schedule = m_libspdm_use_key_schedule_algo;
-    spdm_context->local_context.algorithm.other_params_support =
-        SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1;
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
@@ -1861,8 +1867,28 @@ static void libspdm_test_requester_negotiate_algorithms_case33(void **state) {
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP;
     spdm_context->local_context.algorithm.measurement_spec = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
 
-    status = libspdm_negotiate_algorithms (spdm_context);
+    /* Sub Case 1: other_params_support set OpaqueDataFmt1 */
+    spdm_context->local_context.algorithm.other_params_support =
+        SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    libspdm_reset_message_a(spdm_context);
+
+    status = libspdm_negotiate_algorithms(spdm_context);
     assert_int_equal (status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(spdm_context->connection_info.algorithm.other_params_support,
+                     SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1);
+
+    /* Sub Case 2: Populate reserved field for version 1.2, field values marked as Reserved shall be written as zero ( 0 )*/
+    spdm_context->local_context.algorithm.other_params_support =
+        SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1 |
+        SPDM_ALGORITHMS_MULTI_KEY_CONN;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    libspdm_reset_message_a(spdm_context);
+
+    status = libspdm_negotiate_algorithms(spdm_context);
+    assert_int_equal (status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(spdm_context->connection_info.algorithm.other_params_support,
+                     SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal (spdm_context->transcript.message_a.buffer_size,
                       sizeof(spdm_negotiate_algorithms_request_t) + 4*
@@ -2192,9 +2218,6 @@ int libspdm_requester_negotiate_algorithms_test_main(void)
         cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case29),
         cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case30),
         cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case31),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case32),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case32),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case33),
         cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case32),
         cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case33),
         cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case34),
