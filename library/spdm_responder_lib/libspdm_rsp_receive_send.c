@@ -1,16 +1,11 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
 #include "internal/libspdm_responder_lib.h"
 #include "internal/libspdm_secured_message_lib.h"
-
-typedef struct {
-    uint8_t request_response_code;
-    libspdm_get_spdm_response_func get_response_func;
-} libspdm_get_response_struct_t;
 
 /**
  * Return the GET_SPDM_RESPONSE function via request code.
@@ -22,6 +17,11 @@ typedef struct {
 libspdm_get_spdm_response_func libspdm_get_response_func_via_request_code(uint8_t request_code)
 {
     size_t index;
+
+    typedef struct {
+        uint8_t request_response_code;
+        libspdm_get_spdm_response_func get_response_func;
+    } libspdm_get_response_struct_t;
 
     libspdm_get_response_struct_t get_response_struct[] = {
         { SPDM_GET_VERSION, libspdm_get_response_version },
@@ -90,7 +90,7 @@ libspdm_get_spdm_response_func libspdm_get_response_func_via_request_code(uint8_
         #endif /*LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES*/
     };
 
-    for (index = 0; index < sizeof(get_response_struct) / sizeof(get_response_struct[0]); index++) {
+    for (index = 0; index < LIBSPDM_ARRAY_SIZE(get_response_struct); index++) {
         if (request_code == get_response_struct[index].request_response_code) {
             return get_response_struct[index].get_response_func;
         }
