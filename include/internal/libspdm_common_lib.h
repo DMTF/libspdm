@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -23,6 +23,13 @@
 #include "hal/library/cryptlib.h"
 
 #define INVALID_SESSION_ID 0
+/* The SPDM specification does not limit the values of CTExponent and RDTExponent.
+ * libspdm artificially limits their values to 31, which corresponds to approximately 35 minutes
+ * for CT and RDT. If an endpoint takes longer than 35 minutes to generate an SPDM message then
+ * libspdm assumes the Integrator would not want to interact with such an endpoint. A maximum value
+ * of 31 also means that, when calculating CT and RDT, a left-shift will not result in C undefined
+ * behavior.
+ */
 #define LIBSPDM_MAX_CT_EXPONENT 31
 #define LIBSPDM_MAX_RDT_EXPONENT 31
 
