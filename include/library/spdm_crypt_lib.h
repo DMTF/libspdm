@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -74,9 +74,9 @@
 #define LIBSPDM_MAX_AEAD_IV_SIZE 12
 #define LIBSPDM_MAX_AEAD_TAG_SIZE 16
 #else
-/* set 1 to pass build only */
+/* set 1 or 8 to pass build only */
 #define LIBSPDM_MAX_AEAD_KEY_SIZE 1
-#define LIBSPDM_MAX_AEAD_IV_SIZE 1
+#define LIBSPDM_MAX_AEAD_IV_SIZE 8
 #define LIBSPDM_MAX_AEAD_TAG_SIZE 1
 #endif /* LIBSPDM_MAX_AEAD_KEY_SIZE */
 
