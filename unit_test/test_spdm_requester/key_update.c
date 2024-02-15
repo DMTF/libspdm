@@ -504,7 +504,7 @@ libspdm_return_t libspdm_requester_key_update_test_send_message(
     case 0x17: {
         static size_t sub_index = 0;
 
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "send message: %d\n", sub_index));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "send message: %zu\n", sub_index));
 
         if(sub_index%2 == 0) {
             libspdm_return_t status;

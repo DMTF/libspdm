@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -89,8 +89,8 @@ void libspdm_append_msg_log(libspdm_context_t *spdm_context, void *message, size
             spdm_context->msg_log.buffer_size += message_size;
         }
 
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Message Logging Status = [%x] Buffer Size = [%x] "
-                       "Max Buffer Size = [%x]\n", spdm_context->msg_log.status,
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Message Logging Status = [%x] Buffer Size = [%zx] "
+                       "Max Buffer Size = [%zx]\n", spdm_context->msg_log.status,
                        spdm_context->msg_log.buffer_size, spdm_context->msg_log.max_buffer_size));
         LIBSPDM_INTERNAL_DUMP_HEX(spdm_context->msg_log.buffer, spdm_context->msg_log.buffer_size);
     }

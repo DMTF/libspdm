@@ -263,7 +263,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
         goto cleanup;
     } else {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                       "\n  - Retrieving Common name = \"%s\" (size = %d)",
+                       "\n  - Retrieving Common name = \"%s\" (size = %zu)",
                        common_name, common_name_size));
         libspdm_my_print(" - [PASS]");
     }
@@ -287,7 +287,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
         libspdm_my_print("\n  - Retrieving version - [Fail]");
         goto cleanup;
     } else {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n  - Retrieving version = %d - ",
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n  - Retrieving version = %zu - ",
                        cert_version));
         libspdm_my_print("[Pass]");
     }
@@ -301,7 +301,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
         libspdm_my_print("\n  - Retrieving serial_number - [Fail]");
         goto cleanup;
     } else {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n  - Retrieving serial_number = %d - ",
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n  - Retrieving serial_number = %llu - ",
                        *((uint64_t *)asn1_buffer)));
         libspdm_my_print("[Pass]");
     }
@@ -332,7 +332,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
         goto cleanup;
     } else {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                       "\n  - Retrieving Issuer Common name = \"%s\" (size = %d) - ",
+                       "\n  - Retrieving Issuer Common name = \"%s\" (size = %zu) - ",
                        common_name, common_name_size));
         libspdm_my_print("[Pass]");
     }
@@ -361,7 +361,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
         goto cleanup;
     } else {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                       "\n  - Retrieving  SubjectAltName (size = %d) ",
+                       "\n  - Retrieving  SubjectAltName (size = %zu) ",
                        asn1_buffer_len));
         libspdm_my_print("- [Pass]");
     }

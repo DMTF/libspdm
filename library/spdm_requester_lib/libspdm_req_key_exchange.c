@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -397,7 +397,7 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
         libspdm_release_sender_buffer (spdm_context);
         return LIBSPDM_STATUS_CRYPTO_ERROR;
     }
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "RequesterKey (0x%x):\n", dhe_key_size));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "RequesterKey (0x%zx):\n", dhe_key_size));
     LIBSPDM_INTERNAL_DUMP_HEX(ptr, dhe_key_size);
     ptr += dhe_key_size;
 
@@ -580,7 +580,7 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
                          spdm_response->random_data, SPDM_RANDOM_DATA_SIZE);
     }
 
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ResponderKey (0x%x):\n", dhe_key_size));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ResponderKey (0x%zx):\n", dhe_key_size));
     LIBSPDM_INTERNAL_DUMP_HEX(spdm_response->exchange_data, dhe_key_size);
 
     ptr = spdm_response->exchange_data;

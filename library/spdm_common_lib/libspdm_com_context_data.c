@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -1212,7 +1212,7 @@ bool libspdm_check_context (void *spdm_context)
                  context->local_context.capability.max_spdm_msg_size)) {
                 LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
                                "max_spdm_msg_size (%d) must be greater than or "
-                               "equal to local_cert_chain_provision_size[%d] (%d).\n",
+                               "equal to local_cert_chain_provision_size[%zu] (%zu).\n",
                                context->local_context.capability.max_spdm_msg_size, index,
                                context->local_context.local_cert_chain_provision_size[index]));
                 return false;

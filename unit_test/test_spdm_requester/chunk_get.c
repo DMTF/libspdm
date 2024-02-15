@@ -202,7 +202,7 @@ void libspdm_requester_chunk_get_test_case3_build_challenge_response(
         (&m_libspdm_local_buffer[m_libspdm_local_buffer_size] - m_libspdm_local_buffer),
         spdm_response, (size_t) ptr - (size_t) spdm_response);
     m_libspdm_local_buffer_size += ((size_t) ptr - (size_t) spdm_response);
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%x):\n",
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "m_libspdm_local_buffer_size (0x%zx):\n",
                    m_libspdm_local_buffer_size));
     libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
     libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_buffer,

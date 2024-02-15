@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -176,7 +176,7 @@ libspdm_return_t libspdm_process_encap_response_digest(
         (spdm_key_usage_bit_mask_t *)((uint8_t *)cert_info + sizeof(spdm_certificate_info_t) *
                                       digest_count);
     for (index = 0; index < digest_count; index++) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "digest (0x%x) - ", index));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "digest (0x%zx) - ", index));
         LIBSPDM_INTERNAL_DUMP_DATA(
             (const uint8_t *)(spdm_response + 1) + (digest_size * index), digest_size);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
@@ -184,15 +184,15 @@ libspdm_return_t libspdm_process_encap_response_digest(
     if ((spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_13) &&
         spdm_context->connection_info.multi_key_conn_req) {
         for (index = 0; index < digest_count; index++) {
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "key_pair_id (0x%x) - 0x%02x\n", index,
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "key_pair_id (0x%zx) - 0x%02x\n", index,
                            key_pair_id[index]));
         }
         for (index = 0; index < digest_count; index++) {
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "cert_info (0x%x) - 0x%02x\n", index,
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "cert_info (0x%zx) - 0x%02x\n", index,
                            cert_info[index]));
         }
         for (index = 0; index < digest_count; index++) {
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "key_usage_bit_mask (0x%x) - 0x%04x\n", index,
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "key_usage_bit_mask (0x%zx) - 0x%04x\n", index,
                            key_usage_bit_mask[index]));
         }
     }

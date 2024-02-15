@@ -43,7 +43,7 @@ libspdm_return_t libspdm_device_send_message(void *spdm_context,
         if (session_info == NULL) {
             return LIBSPDM_STATUS_SEND_FAIL;
         }
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Request (0x%x):\n",
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Request (0x%zx):\n",
                        request_size));
         libspdm_dump_hex(request, request_size);
 
