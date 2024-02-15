@@ -70,7 +70,7 @@ libspdm_return_t libspdm_requester_encap_request_test_send_message(void *spdm_co
                                                            &decode_message_size,
                                                            (void **)&spdm_deliver_encapsulated_response_request);
             if (LIBSPDM_STATUS_IS_ERROR(status)) {
-                LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "transport_decode_message - %p\n",
+                LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "transport_decode_message - %xu\n",
                                status));
             }
             spdm_response = (void*) (spdm_deliver_encapsulated_response_request + 1);

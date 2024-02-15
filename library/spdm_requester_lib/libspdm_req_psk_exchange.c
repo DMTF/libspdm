@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -530,7 +530,7 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
         /* No need to send PSK_FINISH, enter application phase directly.*/
 
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_generate_session_data_key[%x]\n",
-                       session_id));
+                       *session_id));
         result = libspdm_calculate_th2_hash(spdm_context, session_info,
                                             true, th2_hash_data);
         if (!result) {

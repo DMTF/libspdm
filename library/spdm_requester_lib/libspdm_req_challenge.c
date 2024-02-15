@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -240,7 +240,7 @@ static libspdm_return_t libspdm_try_challenge(libspdm_context_t *spdm_context,
 
     cert_chain_hash = ptr;
     ptr += hash_size;
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "cert_chain_hash (0x%x) - ", hash_size));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "cert_chain_hash (0x%zx) - ", hash_size));
     LIBSPDM_INTERNAL_DUMP_DATA(cert_chain_hash, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     if (slot_id == 0xFF) {
@@ -353,7 +353,7 @@ static libspdm_return_t libspdm_try_challenge(libspdm_context_t *spdm_context,
     }
 
     signature = ptr;
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "signature (0x%x):\n", signature_size));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "signature (0x%zx):\n", signature_size));
     LIBSPDM_INTERNAL_DUMP_HEX(signature, signature_size);
     result = libspdm_verify_challenge_auth_signature(spdm_context, true, signature, signature_size);
     if (!result) {
@@ -379,7 +379,7 @@ static libspdm_return_t libspdm_try_challenge(libspdm_context_t *spdm_context,
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "BasicMutAuth :\n"));
         status = libspdm_encapsulated_request(spdm_context, NULL, 0, NULL);
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                       "libspdm_challenge - libspdm_encapsulated_request - %p\n", status));
+                       "libspdm_challenge - libspdm_encapsulated_request - %xu\n", status));
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             libspdm_reset_message_c(spdm_context);
             return status;

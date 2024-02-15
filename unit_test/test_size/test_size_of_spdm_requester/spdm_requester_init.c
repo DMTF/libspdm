@@ -148,7 +148,7 @@ void *spdm_client_init(void)
 
     status = libspdm_init_connection(spdm_context, false);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "libspdm_init_connection - %r\n", status));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "libspdm_init_connection - %xu\n", status));
         free_pool(spdm_context);
         return NULL;
     }

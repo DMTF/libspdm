@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -163,7 +163,7 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
 
     cert_chain_hash = ptr;
     ptr += hash_size;
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Encap cert_chain_hash (0x%x) - ", hash_size));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Encap cert_chain_hash (0x%zx) - ", hash_size));
     LIBSPDM_INTERNAL_DUMP_DATA(cert_chain_hash, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
     if (spdm_context->connection_info.peer_used_cert_chain_slot_id == 0xFF) {
@@ -250,7 +250,7 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
     }
 
     signature = ptr;
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Encap signature (0x%x):\n", signature_size));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Encap signature (0x%zx):\n", signature_size));
     LIBSPDM_INTERNAL_DUMP_HEX(signature, signature_size);
     result = libspdm_verify_challenge_auth_signature(
         spdm_context, false, signature, signature_size);

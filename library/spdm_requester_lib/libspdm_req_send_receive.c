@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -25,7 +25,7 @@ libspdm_return_t libspdm_send_request(void *spdm_context, const uint32_t *sessio
     context = spdm_context;
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                   "libspdm_send_spdm_request[%x] msg %s(0x%x), size (0x%x): \n",
+                   "libspdm_send_spdm_request[%x] msg %s(0x%x), size (0x%zx): \n",
                    (session_id != NULL) ? *session_id : 0x0,
                    libspdm_get_code_str(((spdm_message_header_t *)request)->
                                         request_response_code),
@@ -99,7 +99,7 @@ libspdm_return_t libspdm_send_request(void *spdm_context, const uint32_t *sessio
         context, session_id, is_app_message, true, request_size,
         request, &message_size, (void **)&message);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "transport_encode_message status - %p\n",
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "transport_encode_message status - %xu\n",
                        status));
         if ((session_id != NULL) &&
             ((status == LIBSPDM_STATUS_SEQUENCE_NUMBER_OVERFLOW) ||
@@ -114,7 +114,7 @@ libspdm_return_t libspdm_send_request(void *spdm_context, const uint32_t *sessio
     status = context->send_message(context, message_size, message,
                                    timeout);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_send_spdm_request[%x] status - %p\n",
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_send_spdm_request[%x] status - %xu\n",
                        (session_id != NULL) ? *session_id : 0x0, status));
     }
 
@@ -158,7 +158,7 @@ libspdm_return_t libspdm_receive_response(void *spdm_context, const uint32_t *se
                                       (void **)&message, timeout);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                       "libspdm_receive_spdm_response[%x] status - %p\n",
+                       "libspdm_receive_spdm_response[%x] status - %xu\n",
                        (session_id != NULL) ? *session_id : 0x0, status));
         return status;
     }
@@ -260,11 +260,11 @@ libspdm_return_t libspdm_receive_response(void *spdm_context, const uint32_t *se
             libspdm_free_session_id(context, *session_id);
         }
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                       "libspdm_receive_spdm_response[%x] status - %p\n",
+                       "libspdm_receive_spdm_response[%x] status - %xu\n",
                        (session_id != NULL) ? *session_id : 0x0, status));
     } else {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
-                       "libspdm_receive_spdm_response[%x] msg %s(0x%x), size (0x%x): \n",
+                       "libspdm_receive_spdm_response[%x] msg %s(0x%x), size (0x%zx): \n",
                        (session_id != NULL) ? *session_id : 0x0,
                        libspdm_get_code_str(((spdm_message_header_t *)*response)->
                                             request_response_code),
