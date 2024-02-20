@@ -2231,7 +2231,31 @@ void libspdm_test_responder_algorithms_case23(void **state)
     assert_int_equal(spdm_context->connection_info.algorithm.other_params_support,
                      SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1);
 
-
+    /* Sub Case 4: OpaqueDataFmt. Supports both SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_0 and SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1*/
+    m_libspdm_negotiate_algorithm_request18.spdm_request_version10.other_params_support =
+        SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_0 |
+        SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1;
+    spdm_context->local_context.algorithm.other_params_support =
+        SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_0 |
+        SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    libspdm_reset_message_a(spdm_context);
+    response_size = sizeof(response);
+    status = libspdm_get_response_algorithms (spdm_context,
+                                              m_libspdm_negotiate_algorithm_request18_size,
+                                              &m_libspdm_negotiate_algorithm_request18,
+                                              &response_size,
+                                              response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size,
+                     sizeof(spdm_algorithms_response_t) + 4*
+                     sizeof(spdm_negotiate_algorithms_common_struct_table_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.spdm_version, SPDM_MESSAGE_VERSION_12);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ALGORITHMS);
+    assert_int_equal(spdm_response->other_params_selection, SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1);
+    assert_int_equal(spdm_context->connection_info.algorithm.other_params_support,
+                     SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1);
 }
 
 void libspdm_test_responder_algorithms_case24(void **state)
