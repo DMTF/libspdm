@@ -989,7 +989,7 @@ bool libspdm_gen_csr_ex(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *
             }
         }
     } else {
-        if (req_cert_model == 1) {
+        if (req_cert_model == SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT) {
             is_device_cert_model = true;
         } else {
             is_device_cert_model = false;
