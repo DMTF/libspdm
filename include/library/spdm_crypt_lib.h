@@ -894,6 +894,22 @@ bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
                                     bool is_requester_cert, bool is_device_cert_model);
 
 /**
+ * Certificate Check for SPDM leaf cert. It is used for SPDM 1.3.
+ *
+ * @param[in]  cert                  Pointer to the DER-encoded certificate data.
+ * @param[in]  cert_size             The size of certificate data in bytes.
+ * @param[in]  base_asym_algo        SPDM base_asym_algo
+ * @param[in]  base_hash_algo        SPDM base_hash_algo
+ * @param[in]  is_requester_cert     Is the function verifying requester or responder cert.
+ * @param[in]  cert_model            One of the SPDM_CERTIFICATE_INFO_CERT_MODEL_* macros.
+ *
+ * @retval  true   Success.
+ * @retval  false  Certificate is not valid.
+ **/
+bool libspdm_x509_certificate_check_ex(const uint8_t *cert, size_t cert_size,
+                                       uint32_t base_asym_algo, uint32_t base_hash_algo,
+                                       bool is_requester_cert, uint8_t cert_model);
+/**
  * Certificate Check for SPDM leaf cert when set_cert.
  *
  * @param[in]  cert                  Pointer to the DER-encoded certificate data.
@@ -910,6 +926,23 @@ bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
 bool libspdm_x509_set_cert_certificate_check(const uint8_t *cert, size_t cert_size,
                                              uint32_t base_asym_algo, uint32_t base_hash_algo,
                                              bool is_requester_cert, bool is_device_cert_model);
+
+/**
+ * Certificate Check for SPDM leaf cert when set_cert. It is used for SPDM 1.3.
+ *
+ * @param[in]  cert                  Pointer to the DER-encoded certificate data.
+ * @param[in]  cert_size             The size of certificate data in bytes.
+ * @param[in]  base_asym_algo        SPDM base_asym_algo
+ * @param[in]  base_hash_algo        SPDM base_hash_algo
+ * @param[in]  is_requester_cert     Is the function verifying requester or responder cert.
+ * @param[in]  cert_model            One of the SPDM_CERTIFICATE_INFO_CERT_MODEL_* macros.
+ *
+ * @retval  true   Success.
+ * @retval  false  Certificate is not valid.
+ **/
+bool libspdm_x509_set_cert_certificate_check_ex(const uint8_t *cert, size_t cert_size,
+                                                uint32_t base_asym_algo, uint32_t base_hash_algo,
+                                                bool is_requester_cert, uint8_t cert_model);
 
 /**
  * Return certificate is root cert or not.
@@ -990,6 +1023,24 @@ bool libspdm_verify_cert_chain_data(uint8_t *cert_chain_data, size_t cert_chain_
                                     bool is_requester_cert, bool is_device_cert_model);
 
 /**
+ * This function verifies the integrity of certificate chain data without spdm_cert_chain_t header.
+ * It is used for SPDM 1.3.
+ *
+ * @param  cert_chain_data       The certificate chain data without spdm_cert_chain_t header.
+ * @param  cert_chain_data_size  Size in bytes of the certificate chain data.
+ * @param  base_asym_algo        SPDM base_asym_algo
+ * @param  base_hash_algo        SPDM base_hash_algo
+ * @param  is_requester_cert     Is the function verifying requester or responder cert.
+ * @param  cert_model            One of the SPDM_CERTIFICATE_INFO_CERT_MODEL_* macros.
+ *
+ * @retval true  Certificate chain data integrity verification pass.
+ * @retval false Certificate chain data integrity verification fail.
+ **/
+bool libspdm_verify_cert_chain_data_ex(uint8_t *cert_chain_data, size_t cert_chain_data_size,
+                                       uint32_t base_asym_algo, uint32_t base_hash_algo,
+                                       bool is_requester_cert, uint8_t cert_model);
+
+/**
  * This function verifies the integrity of certificate chain buffer including
  * spdm_cert_chain_t header.
  *
@@ -1008,6 +1059,25 @@ bool libspdm_verify_certificate_chain_buffer(uint32_t base_hash_algo, uint32_t b
                                              const void *cert_chain_buffer,
                                              size_t cert_chain_buffer_size,
                                              bool is_requester_cert, bool is_device_cert_model);
+
+/**
+ * This function verifies the integrity of certificate chain buffer including
+ * spdm_cert_chain_t header. It is used for SPDM 1.3.
+ *
+ * @param  base_hash_algo          SPDM base_hash_algo
+ * @param  base_asym_algo          SPDM base_asym_algo
+ * @param  cert_chain_buffer       The certificate chain buffer including spdm_cert_chain_t header.
+ * @param  cert_chain_buffer_size  Size in bytes of the certificate chain buffer.
+ * @param  is_requester_cert       Is the function verifying requester or responder cert.
+ * @param  cert_model              One of the SPDM_CERTIFICATE_INFO_CERT_MODEL_* macros.
+ *
+ * @retval true   Certificate chain buffer integrity verification pass.
+ * @retval false  Certificate chain buffer integrity verification fail.
+ **/
+bool libspdm_verify_certificate_chain_buffer_ex(uint32_t base_hash_algo, uint32_t base_asym_algo,
+                                                const void *cert_chain_buffer,
+                                                size_t cert_chain_buffer_size,
+                                                bool is_requester_cert, uint8_t cert_model);
 
 /**
  * Retrieve the asymmetric public key from one DER-encoded X509 certificate,
