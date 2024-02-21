@@ -157,7 +157,7 @@ For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/m
 
 ### Unit Test framework
 
-1) [cmocka](https://cmocka.org/). Version 1.1.5.
+1) [cmocka](https://cmocka.org/). Version 1.1.7.
 
 ## Build
 
