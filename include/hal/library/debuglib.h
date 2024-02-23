@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -26,6 +26,7 @@
 
 /**
  * Prints a debug message to the debug output device if the specified error level is enabled.
+ * Both format and the variable argument list conform to C99 printf conventions.
  *
  * @param  error_level  The error level of the debug message, either LIBSPDM_DEBUG_INFO or
  *                      LIBSPDM_DEBUG_ERROR.
