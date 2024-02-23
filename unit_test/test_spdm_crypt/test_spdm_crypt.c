@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -400,6 +400,216 @@ void libspdm_test_crypt_spdm_x509_certificate_check(void **state)
                                                 false, true);
         assert_true(status);
         free(file_buffer);
+    }
+}
+
+void libspdm_test_crypt_spdm_x509_certificate_check_ex(void **state)
+{
+    bool status;
+    uint8_t *file_buffer;
+    size_t file_buffer_size;
+
+    if ((LIBSPDM_RSA_SSA_2048_SUPPORT) && (LIBSPDM_SHA256_SUPPORT)) {
+        status = libspdm_read_input_file("rsa2048/end_requester.cert.der",
+                                         (void **)&file_buffer, &file_buffer_size);
+        assert_true(status);
+
+        status = libspdm_x509_certificate_check_ex(file_buffer, file_buffer_size,
+                                                   SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
+                                                   SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                                                   true,
+                                                   SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
+        assert_true(status);
+
+        status = libspdm_x509_certificate_check_ex(file_buffer, file_buffer_size,
+                                                   SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
+                                                   SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                                                   true,
+                                                   SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT);
+        assert_true(status);
+        free(file_buffer);
+    }
+    if ((LIBSPDM_ECDSA_P256_SUPPORT) && (LIBSPDM_SHA256_SUPPORT)) {
+        status = libspdm_read_input_file("ecp256/end_responder.cert.der",
+                                         (void **)&file_buffer, &file_buffer_size);
+        assert_true(status);
+        status = libspdm_x509_certificate_check_ex(file_buffer, file_buffer_size,
+                                                   SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+                                                   SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                                                   false,
+                                                   SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
+        assert_true(status);
+
+        status = libspdm_x509_certificate_check_ex(file_buffer, file_buffer_size,
+                                                   SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+                                                   SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                                                   false,
+                                                   SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT);
+        assert_false(status);
+        free(file_buffer);
+    }
+
+}
+
+void libspdm_test_crypt_spdm_x509_set_cert_certificate_check_ex(void **state)
+{
+    bool status;
+    uint8_t *file_buffer;
+    size_t file_buffer_size;
+
+    if ((LIBSPDM_RSA_SSA_2048_SUPPORT) && (LIBSPDM_SHA256_SUPPORT)) {
+        status = libspdm_read_input_file("rsa2048/end_responder.cert.der",
+                                         (void **)&file_buffer, &file_buffer_size);
+        assert_true(status);
+
+        status = libspdm_x509_set_cert_certificate_check_ex(file_buffer, file_buffer_size,
+                                                            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
+                                                            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                                                            false,
+                                                            SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
+        assert_true(status);
+        status = libspdm_x509_set_cert_certificate_check_ex(file_buffer, file_buffer_size,
+                                                            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
+                                                            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                                                            false,
+                                                            SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT);
+        assert_false(status);
+        free(file_buffer);
+    }
+    if ((LIBSPDM_ECDSA_P256_SUPPORT) && (LIBSPDM_SHA256_SUPPORT)) {
+        status = libspdm_read_input_file("ecp256/end_requester.cert.der",
+                                         (void **)&file_buffer, &file_buffer_size);
+        assert_true(status);
+        status = libspdm_x509_set_cert_certificate_check_ex(file_buffer, file_buffer_size,
+                                                            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+                                                            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                                                            true,
+                                                            SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
+        assert_true(status);
+
+        status = libspdm_x509_set_cert_certificate_check_ex(file_buffer, file_buffer_size,
+                                                            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+                                                            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                                                            true,
+                                                            SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT);
+        assert_false(status);
+
+        status = libspdm_read_input_file("ecp256/end_requester_ca_false.cert.der",
+                                         (void **)&file_buffer, &file_buffer_size);
+        assert_true(status);
+        status = libspdm_x509_set_cert_certificate_check_ex(file_buffer, file_buffer_size,
+                                                            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+                                                            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                                                            true,
+                                                            SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT);
+        assert_true(status);
+        free(file_buffer);
+    }
+
+}
+
+void libspdm_test_crypt_spdm_verify_cert_chain_data_ex(void **state)
+{
+    bool status;
+    uint8_t *file_buffer;
+    size_t file_buffer_size;
+
+    if ((LIBSPDM_RSA_SSA_2048_SUPPORT) && (LIBSPDM_SHA256_SUPPORT)) {
+        status = libspdm_read_input_file("rsa2048/bundle_requester.certchain.der",
+                                         (void **)&file_buffer, &file_buffer_size);
+        assert_true(status);
+
+        status = libspdm_verify_cert_chain_data_ex(file_buffer, file_buffer_size,
+                                                   SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
+                                                   SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                                                   true,
+                                                   SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
+        assert_true(status);
+
+        status = libspdm_verify_cert_chain_data_ex(file_buffer, file_buffer_size,
+                                                   SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
+                                                   SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                                                   true,
+                                                   SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT);
+        assert_true(status);
+        free(file_buffer);
+    }
+    if ((LIBSPDM_ECDSA_P256_SUPPORT) && (LIBSPDM_SHA256_SUPPORT)) {
+        status = libspdm_read_input_file("ecp256/bundle_responder.certchain.der",
+                                         (void **)&file_buffer, &file_buffer_size);
+        assert_true(status);
+        status = libspdm_verify_cert_chain_data_ex(file_buffer, file_buffer_size,
+                                                   SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+                                                   SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                                                   false,
+                                                   SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
+        assert_true(status);
+
+        status = libspdm_verify_cert_chain_data_ex(file_buffer, file_buffer_size,
+                                                   SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+                                                   SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                                                   false,
+                                                   SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT);
+        assert_false(status);
+        free(file_buffer);
+    }
+}
+
+
+void libspdm_test_crypt_spdm_verify_certificate_chain_buffer_ex(void **state)
+{
+    bool status;
+    void *data;
+    size_t data_size;
+
+    if ((LIBSPDM_RSA_SSA_2048_SUPPORT) && (LIBSPDM_SHA256_SUPPORT)) {
+        libspdm_read_responder_public_certificate_chain(
+            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
+            &data,&data_size,
+            NULL, NULL);
+
+        status = libspdm_verify_certificate_chain_buffer_ex(
+            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
+            data,data_size,
+            true,
+            SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
+        assert_true(status);
+
+        status = libspdm_verify_certificate_chain_buffer_ex(
+            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
+            data,data_size,
+            true,
+            SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT);
+        assert_true(status);
+        free(data);
+    }
+
+    if ((LIBSPDM_ECDSA_P256_SUPPORT) && (LIBSPDM_SHA256_SUPPORT)) {
+        libspdm_read_responder_public_certificate_chain(
+            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+            &data,&data_size,
+            NULL, NULL);
+
+        status = libspdm_verify_certificate_chain_buffer_ex(
+            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+            data,data_size,
+            false,
+            SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
+        assert_true(status);
+
+        status = libspdm_verify_certificate_chain_buffer_ex(
+            SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+            data,data_size,
+            false,
+            SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT);
+        assert_false(status);
+        free(data);
     }
 }
 
@@ -1017,6 +1227,14 @@ int libspdm_crypt_lib_test_main(void)
         cmocka_unit_test(libspdm_test_crypt_spdm_get_dmtf_subject_alt_name),
 
         cmocka_unit_test(libspdm_test_crypt_spdm_x509_certificate_check),
+
+        cmocka_unit_test(libspdm_test_crypt_spdm_x509_certificate_check_ex),
+
+        cmocka_unit_test(libspdm_test_crypt_spdm_x509_set_cert_certificate_check_ex),
+
+        cmocka_unit_test(libspdm_test_crypt_spdm_verify_cert_chain_data_ex),
+
+        cmocka_unit_test(libspdm_test_crypt_spdm_verify_certificate_chain_buffer_ex),
 
         cmocka_unit_test(libspdm_test_crypt_asym_verify),
 
