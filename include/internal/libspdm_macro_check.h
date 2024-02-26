@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -74,6 +74,11 @@
 
 #if (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP) && !LIBSPDM_HASH_ALGO_SUPPORT
     #error If PSK_CAP is enabled then at least one HASH algorithm must also be enabled.
+#endif
+
+#if (LIBSPDM_EVENT_RECIPIENT_SUPPORT) && !(LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
+/* This restriction may be removed or altered in a future version of libspdm. */
+    #error If endpoint is an event recipient then ENCAP_CAP must also be enabled.
 #endif
 
 #if ((LIBSPDM_MAX_VERSION_COUNT) == 0) || ((LIBSPDM_MAX_VERSION_COUNT) > 255)

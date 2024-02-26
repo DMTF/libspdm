@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -291,6 +291,14 @@
  */
 #ifndef LIBSPDM_SEND_CHALLENGE_SUPPORT
 #define LIBSPDM_SEND_CHALLENGE_SUPPORT 1
+#endif
+
+/* If 1 then endpoint supports sending the GET_SUPPORTED_EVENT_TYPES, SUBSCRIBE_EVENT_TYPES, and
+ * encapsulated EVENT_ACK messages. In addition, LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP must also be
+ * 1.
+ */
+#ifndef LIBSPDM_EVENT_RECIPIENT_SUPPORT
+#define LIBSPDM_EVENT_RECIPIENT_SUPPORT 1
 #endif
 
 /* When LIBSPDM_RESPOND_IF_READY_SUPPORT is 0 then

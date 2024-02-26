@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -770,6 +770,46 @@ libspdm_return_t libspdm_set_certificate_ex(void *spdm_context,
                                             uint8_t request_attribute,
                                             uint8_t key_pair_id);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP */
+
+#if LIBSPDM_EVENT_RECIPIENT_SUPPORT
+/** This function retrieves the supported event types from the device.
+ *
+ *  This function can only be called after a secure session has been established with the device.
+ *
+ *  @param  spdm_context       A pointer to the SPDM context.
+ *  @param  session_id         The session ID of the session.
+ *  @param  event_group_count  The number of event groups in supported_event_groups_list.
+ *  @param  supported_event_groups_list_len On input, the size, in bytes, of the
+ *                                          supported_event_groups_list buffer.
+ *                                          On output, the size, in bytes, of the supported event
+ *                                          groups list returned by the device.
+ *  @param  supported_event_groups_list     A pointer to the caller-provided buffer.
+ **/
+libspdm_return_t libspdm_get_event_types(void *spdm_context,
+                                         uint32_t session_id,
+                                         uint8_t *event_group_count,
+                                         uint32_t *supported_event_groups_list_len,
+                                         void *supported_event_groups_list);
+
+/** This function subscribes to the specified event types.
+ *
+ *  This function can only be called after a secure session has been established with the device.
+ *
+ *  @param  spdm_context       A pointer to the SPDM context.
+ *  @param  session_id         The session ID of the session.
+ *  @param  subscribe_event_group_count The number of event groups in subscribe_list. If this value
+ *                                      is 0 then subscription to all events will be cleared and
+ *                                      subscribe_list_len must be 0 and subscribe_list must be
+ *                                      NULL.
+ *  @param  subscribe_list_len The size, in bytes, of subscribe_list.
+ *  @param  subscribe_list     List of event types and event groups.
+ **/
+libspdm_return_t libspdm_subscribe_event_types(void *spdm_context,
+                                               uint32_t session_id,
+                                               uint8_t subscribe_event_group_count,
+                                               uint32_t subscribe_list_len,
+                                               void *subscribe_list);
+#endif /* LIBSPDM_EVENT_RECIPIENT_SUPPORT */
 
 #if LIBSPDM_ENABLE_MSG_LOG
 /* For now these functions are only available to the Requester. They may become available to the
