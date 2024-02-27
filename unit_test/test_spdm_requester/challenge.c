@@ -223,12 +223,14 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
                        libspdm_get_hash_size(m_libspdm_use_hash_algo)));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         sig_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
-        libspdm_responder_data_sign(
-            spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-                SPDM_CHALLENGE_AUTH,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
-                false, m_libspdm_local_buffer, m_libspdm_local_buffer_size,
-                ptr, &sig_size);
+        libspdm_responder_data_sign(spdm_context,
+                                    spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                                    SPDM_CHALLENGE_AUTH,
+                                    m_libspdm_use_asym_algo,
+                                    m_libspdm_use_hash_algo, false,
+                                    m_libspdm_local_buffer,
+                                    m_libspdm_local_buffer_size, ptr,
+                                    &sig_size);
         ptr += sig_size;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
@@ -300,12 +302,14 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
         libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_buffer,
                          m_libspdm_local_buffer_size, hash_data);
         sig_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
-        libspdm_responder_data_sign(
-            spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-                SPDM_CHALLENGE_AUTH,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
-                false, m_libspdm_local_buffer, m_libspdm_local_buffer_size,
-                ptr, &sig_size);
+        libspdm_responder_data_sign(spdm_context,
+                                    spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                                    SPDM_CHALLENGE_AUTH,
+                                    m_libspdm_use_asym_algo,
+                                    m_libspdm_use_hash_algo, false,
+                                    m_libspdm_local_buffer,
+                                    m_libspdm_local_buffer_size, ptr,
+                                    &sig_size);
         ptr += sig_size;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
@@ -448,14 +452,14 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
                              m_libspdm_local_buffer_size, hash_data);
             sig_size =
                 libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
-            libspdm_responder_data_sign(
-                spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-                    SPDM_CHALLENGE_AUTH,
-                    m_libspdm_use_asym_algo,
-                    m_libspdm_use_hash_algo,
-                    false, m_libspdm_local_buffer,
-                    m_libspdm_local_buffer_size, ptr,
-                    &sig_size);
+            libspdm_responder_data_sign(spdm_context,
+                                        spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                                        SPDM_CHALLENGE_AUTH,
+                                        m_libspdm_use_asym_algo,
+                                        m_libspdm_use_hash_algo, false,
+                                        m_libspdm_local_buffer,
+                                        m_libspdm_local_buffer_size, ptr,
+                                        &sig_size);
             ptr += sig_size;
 
             libspdm_transport_test_encode_message(
@@ -610,14 +614,14 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
                              m_libspdm_local_buffer_size, hash_data);
             sig_size =
                 libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
-            libspdm_responder_data_sign(
-                spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-                    SPDM_CHALLENGE_AUTH,
-                    m_libspdm_use_asym_algo,
-                    m_libspdm_use_hash_algo,
-                    false, m_libspdm_local_buffer,
-                    m_libspdm_local_buffer_size, ptr,
-                    &sig_size);
+            libspdm_responder_data_sign(spdm_context,
+                                        spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                                        SPDM_CHALLENGE_AUTH,
+                                        m_libspdm_use_asym_algo,
+                                        m_libspdm_use_hash_algo, false,
+                                        m_libspdm_local_buffer,
+                                        m_libspdm_local_buffer_size, ptr,
+                                        &sig_size);
             ptr += sig_size;
 
             libspdm_transport_test_encode_message(
@@ -687,11 +691,14 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
         libspdm_hash_all (m_libspdm_use_hash_algo, m_libspdm_local_buffer,
                           m_libspdm_local_buffer_size, hash_data);
         sig_size = libspdm_get_asym_signature_size (m_libspdm_use_asym_algo);
-        libspdm_responder_data_sign(
-            spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-                SPDM_CHALLENGE_AUTH,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, false, m_libspdm_local_buffer,
-                m_libspdm_local_buffer_size, Ptr, &sig_size);
+        libspdm_responder_data_sign(spdm_context,
+                                    spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                                    SPDM_CHALLENGE_AUTH,
+                                    m_libspdm_use_asym_algo,
+                                    m_libspdm_use_hash_algo, false,
+                                    m_libspdm_local_buffer,
+                                    m_libspdm_local_buffer_size, Ptr,
+                                    &sig_size);
         Ptr += sig_size;
 
         libspdm_transport_test_encode_message (spdm_context, NULL, false, false, spdm_response_size,
@@ -779,11 +786,14 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
         libspdm_hash_all (m_libspdm_use_hash_algo, m_libspdm_local_buffer,
                           m_libspdm_local_buffer_size, hash_data);
         sig_size = libspdm_get_asym_signature_size (m_libspdm_use_asym_algo);
-        libspdm_responder_data_sign(
-            spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-                SPDM_CHALLENGE_AUTH,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, false, m_libspdm_local_buffer,
-                m_libspdm_local_buffer_size, Ptr, &sig_size);
+        libspdm_responder_data_sign(spdm_context,
+                                    spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                                    SPDM_CHALLENGE_AUTH,
+                                    m_libspdm_use_asym_algo,
+                                    m_libspdm_use_hash_algo, false,
+                                    m_libspdm_local_buffer,
+                                    m_libspdm_local_buffer_size, Ptr,
+                                    &sig_size);
         Ptr += sig_size;
 
         libspdm_transport_test_encode_message (spdm_context, NULL, false, false, spdm_response_size,
@@ -851,11 +861,14 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
         libspdm_hash_all (m_libspdm_use_hash_algo, m_libspdm_local_buffer,
                           m_libspdm_local_buffer_size, hash_data);
         sig_size = libspdm_get_asym_signature_size (m_libspdm_use_asym_algo);
-        libspdm_responder_data_sign(
-            spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-                SPDM_CHALLENGE_AUTH,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, false, m_libspdm_local_buffer,
-                m_libspdm_local_buffer_size, Ptr, &sig_size);
+        libspdm_responder_data_sign(spdm_context,
+                                    spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                                    SPDM_CHALLENGE_AUTH,
+                                    m_libspdm_use_asym_algo,
+                                    m_libspdm_use_hash_algo, false,
+                                    m_libspdm_local_buffer,
+                                    m_libspdm_local_buffer_size, Ptr,
+                                    &sig_size);
         Ptr += sig_size;
 
         libspdm_transport_test_encode_message (spdm_context, NULL, false, false, spdm_response_size,
@@ -923,11 +936,14 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
         libspdm_hash_all (m_libspdm_use_hash_algo, m_libspdm_local_buffer,
                           m_libspdm_local_buffer_size, hash_data);
         sig_size = libspdm_get_asym_signature_size (m_libspdm_use_asym_algo);
-        libspdm_responder_data_sign(
-            spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-                SPDM_CHALLENGE_AUTH,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, false, m_libspdm_local_buffer,
-                m_libspdm_local_buffer_size, Ptr, &sig_size);
+        libspdm_responder_data_sign(spdm_context,
+                                    spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                                    SPDM_CHALLENGE_AUTH,
+                                    m_libspdm_use_asym_algo,
+                                    m_libspdm_use_hash_algo, false,
+                                    m_libspdm_local_buffer,
+                                    m_libspdm_local_buffer_size, Ptr,
+                                    &sig_size);
         Ptr += sig_size;
 
         libspdm_transport_test_encode_message (spdm_context, NULL, false, false, spdm_response_size,
@@ -995,11 +1011,14 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
         libspdm_hash_all (m_libspdm_use_hash_algo, m_libspdm_local_buffer,
                           m_libspdm_local_buffer_size, hash_data);
         sig_size = libspdm_get_asym_signature_size (m_libspdm_use_asym_algo);
-        libspdm_responder_data_sign(
-            spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-                SPDM_CHALLENGE_AUTH,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, false, m_libspdm_local_buffer,
-                m_libspdm_local_buffer_size, Ptr, &sig_size);
+        libspdm_responder_data_sign(spdm_context,
+                                    spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                                    SPDM_CHALLENGE_AUTH,
+                                    m_libspdm_use_asym_algo,
+                                    m_libspdm_use_hash_algo, false,
+                                    m_libspdm_local_buffer,
+                                    m_libspdm_local_buffer_size, Ptr,
+                                    &sig_size);
         Ptr += sig_size;
 
         libspdm_transport_test_encode_message (spdm_context, NULL, false, false, spdm_response_size,
@@ -1070,11 +1089,14 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
         libspdm_hash_all (m_libspdm_use_hash_algo, m_libspdm_local_buffer,
                           m_libspdm_local_buffer_size, hash_data);
         sig_size = libspdm_get_asym_signature_size (m_libspdm_use_asym_algo);
-        libspdm_responder_data_sign(
-            spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-                SPDM_CHALLENGE_AUTH,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, false, m_libspdm_local_buffer,
-                m_libspdm_local_buffer_size, Ptr, &sig_size);
+        libspdm_responder_data_sign(spdm_context,
+                                    spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                                    SPDM_CHALLENGE_AUTH,
+                                    m_libspdm_use_asym_algo,
+                                    m_libspdm_use_hash_algo, false,
+                                    m_libspdm_local_buffer,
+                                    m_libspdm_local_buffer_size, Ptr,
+                                    &sig_size);
         Ptr += sig_size;
 
         libspdm_transport_test_encode_message (spdm_context, NULL, false, false, spdm_response_size,
@@ -1144,11 +1166,13 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
         libspdm_hash_all (m_libspdm_use_hash_algo, hash_data, libspdm_get_hash_size (
                               m_libspdm_use_hash_algo), hash_data);
         sig_size = libspdm_get_asym_signature_size (m_libspdm_use_asym_algo);
-        libspdm_responder_data_sign(
-            spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-                SPDM_CHALLENGE_AUTH,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, false, hash_data, libspdm_get_hash_size (
-                m_libspdm_use_hash_algo), Ptr, &sig_size);
+        libspdm_responder_data_sign(spdm_context,
+                                    spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                                    SPDM_CHALLENGE_AUTH,
+                                    m_libspdm_use_asym_algo,
+                                    m_libspdm_use_hash_algo, false, hash_data,
+                                    libspdm_get_hash_size(m_libspdm_use_hash_algo),
+                                    Ptr, &sig_size);
         Ptr += sig_size;
 
         libspdm_transport_test_encode_message (spdm_context, NULL, false, false, spdm_response_size,
@@ -1217,11 +1241,14 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
         libspdm_hash_all (m_libspdm_use_hash_algo, m_libspdm_local_buffer,
                           m_libspdm_local_buffer_size, hash_data);
         sig_size = libspdm_get_asym_signature_size (m_libspdm_use_asym_algo);
-        libspdm_responder_data_sign(
-            spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-                SPDM_CHALLENGE_AUTH,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, false, m_libspdm_local_buffer,
-                m_libspdm_local_buffer_size, Ptr, &sig_size);
+        libspdm_responder_data_sign(spdm_context,
+                                    spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                                    SPDM_CHALLENGE_AUTH,
+                                    m_libspdm_use_asym_algo,
+                                    m_libspdm_use_hash_algo, false,
+                                    m_libspdm_local_buffer,
+                                    m_libspdm_local_buffer_size, Ptr,
+                                    &sig_size);
         Ptr += sig_size;
 
         libspdm_transport_test_encode_message (spdm_context, NULL, false, false, spdm_response_size,
@@ -1323,11 +1350,14 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
         libspdm_hash_all (m_libspdm_use_hash_algo, m_libspdm_local_buffer,
                           m_libspdm_local_buffer_size, hash_data);
         sig_size = libspdm_get_asym_signature_size (m_libspdm_use_asym_algo);
-        libspdm_responder_data_sign(
-            spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-                SPDM_CHALLENGE_AUTH,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, false, m_libspdm_local_buffer,
-                m_libspdm_local_buffer_size, ptr, &sig_size);
+        libspdm_responder_data_sign(spdm_context,
+                                    spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                                    SPDM_CHALLENGE_AUTH,
+                                    m_libspdm_use_asym_algo,
+                                    m_libspdm_use_hash_algo, false,
+                                    m_libspdm_local_buffer,
+                                    m_libspdm_local_buffer_size, ptr,
+                                    &sig_size);
         ptr += sig_size;
         libspdm_transport_test_encode_message (spdm_context, NULL, false, false, spdm_response_size,
                                                spdm_response, response_size, response);
@@ -1394,12 +1424,14 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
                        libspdm_get_hash_size(m_libspdm_use_hash_algo)));
         libspdm_dump_hex(hash_data, libspdm_get_hash_size(m_libspdm_use_hash_algo));
         sig_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
-        libspdm_responder_data_sign(spdm_response->header.spdm_version <<
-                                    SPDM_VERSION_NUMBER_SHIFT_BIT,
+        libspdm_responder_data_sign(spdm_context,
+                                    spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                                     SPDM_CHALLENGE_AUTH,
-                                    m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
-                                    false, m_libspdm_local_buffer, m_libspdm_local_buffer_size,
-                                    ptr, &sig_size);
+                                    m_libspdm_use_asym_algo,
+                                    m_libspdm_use_hash_algo, false,
+                                    m_libspdm_local_buffer,
+                                    m_libspdm_local_buffer_size, ptr,
+                                    &sig_size);
         ptr += sig_size;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
@@ -1485,12 +1517,14 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
                        libspdm_get_hash_size(m_libspdm_use_hash_algo)));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         sig_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
-        libspdm_responder_data_sign(
-            spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-                SPDM_CHALLENGE_AUTH,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
-                false, m_libspdm_local_buffer, m_libspdm_local_buffer_size,
-                ptr, &sig_size);
+        libspdm_responder_data_sign(spdm_context,
+                                    spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                                    SPDM_CHALLENGE_AUTH,
+                                    m_libspdm_use_asym_algo,
+                                    m_libspdm_use_hash_algo, false,
+                                    m_libspdm_local_buffer,
+                                    m_libspdm_local_buffer_size, ptr,
+                                    &sig_size);
         ptr += sig_size;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
@@ -1566,12 +1600,14 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
                        libspdm_get_hash_size(m_libspdm_use_hash_algo)));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         sig_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
-        libspdm_responder_data_sign(
-            spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-                SPDM_CHALLENGE_AUTH,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
-                false, m_libspdm_local_buffer, m_libspdm_local_buffer_size,
-                ptr, &sig_size);
+        libspdm_responder_data_sign(spdm_context,
+                                    spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                                    SPDM_CHALLENGE_AUTH,
+                                    m_libspdm_use_asym_algo,
+                                    m_libspdm_use_hash_algo, false,
+                                    m_libspdm_local_buffer,
+                                    m_libspdm_local_buffer_size, ptr,
+                                    &sig_size);
         ptr += sig_size;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
@@ -1646,11 +1682,14 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
         libspdm_hash_all (m_libspdm_use_hash_algo, m_libspdm_local_buffer,
                           m_libspdm_local_buffer_size, hash_data);
         sig_size = libspdm_get_asym_signature_size (m_libspdm_use_asym_algo);
-        libspdm_responder_data_sign(
-            spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-                SPDM_CHALLENGE_AUTH,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, false, m_libspdm_local_buffer,
-                m_libspdm_local_buffer_size, Ptr, &sig_size);
+        libspdm_responder_data_sign(spdm_context,
+                                    spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                                    SPDM_CHALLENGE_AUTH,
+                                    m_libspdm_use_asym_algo,
+                                    m_libspdm_use_hash_algo, false,
+                                    m_libspdm_local_buffer,
+                                    m_libspdm_local_buffer_size, Ptr,
+                                    &sig_size);
         Ptr += sig_size;
 
         libspdm_transport_test_encode_message (spdm_context, NULL, false, false, spdm_response_size,
@@ -1768,11 +1807,14 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
                          (size_t)Ptr - (size_t)spdm_response);
         m_libspdm_local_buffer_size += ((size_t)Ptr - (size_t)spdm_response);
         sig_size = libspdm_get_asym_signature_size (m_libspdm_use_asym_algo);
-        libspdm_responder_data_sign(
-            spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-                SPDM_CHALLENGE_AUTH,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, false, m_libspdm_local_buffer,
-                m_libspdm_local_buffer_size, Ptr, &sig_size);
+        libspdm_responder_data_sign(spdm_context,
+                                    spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                                    SPDM_CHALLENGE_AUTH,
+                                    m_libspdm_use_asym_algo,
+                                    m_libspdm_use_hash_algo, false,
+                                    m_libspdm_local_buffer,
+                                    m_libspdm_local_buffer_size, Ptr,
+                                    &sig_size);
         Ptr += sig_size;
 
         libspdm_transport_test_encode_message (spdm_context, NULL, false, false, spdm_response_size,
@@ -1849,12 +1891,14 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
                        libspdm_get_hash_size(m_libspdm_use_hash_algo)));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         sig_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
-        libspdm_responder_data_sign(
-            spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-                SPDM_CHALLENGE_AUTH,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
-                false, m_libspdm_local_buffer, m_libspdm_local_buffer_size,
-                ptr, &sig_size);
+        libspdm_responder_data_sign(spdm_context,
+                                    spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                                    SPDM_CHALLENGE_AUTH,
+                                    m_libspdm_use_asym_algo,
+                                    m_libspdm_use_hash_algo, false,
+                                    m_libspdm_local_buffer,
+                                    m_libspdm_local_buffer_size, ptr,
+                                    &sig_size);
         ptr += sig_size;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,
@@ -1934,12 +1978,14 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
                        libspdm_get_hash_size(m_libspdm_use_hash_algo)));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         sig_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
-        libspdm_responder_data_sign(
-            spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-                SPDM_CHALLENGE_AUTH,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
-                false, m_libspdm_local_buffer, m_libspdm_local_buffer_size,
-                ptr, &sig_size);
+        libspdm_responder_data_sign(spdm_context,
+                                    spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                                    SPDM_CHALLENGE_AUTH,
+                                    m_libspdm_use_asym_algo,
+                                    m_libspdm_use_hash_algo, false,
+                                    m_libspdm_local_buffer,
+                                    m_libspdm_local_buffer_size, ptr,
+                                    &sig_size);
         ptr += sig_size;
 
         libspdm_transport_test_encode_message(spdm_context, NULL, false,

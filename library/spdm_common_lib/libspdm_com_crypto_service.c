@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -785,12 +785,14 @@ bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
             spdm_context->connection_info.algorithm.req_base_asym_alg);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
         result = libspdm_requester_data_sign(
+            spdm_context,
             spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
             spdm_context->connection_info.algorithm.req_base_asym_alg,
             spdm_context->connection_info.algorithm.base_hash_algo,
             false, m1m2_buffer, m1m2_buffer_size, signature, &signature_size);
 #else
         result = libspdm_requester_data_sign(
+            spdm_context,
             spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
             spdm_context->connection_info.algorithm.req_base_asym_alg,
             spdm_context->connection_info.algorithm.base_hash_algo,
@@ -804,6 +806,7 @@ bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
             spdm_context->connection_info.algorithm.base_asym_algo);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
         result = libspdm_responder_data_sign(
+            spdm_context,
             spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
             spdm_context->connection_info.algorithm.base_asym_algo,
             spdm_context->connection_info.algorithm.base_hash_algo,
@@ -811,6 +814,7 @@ bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
             &signature_size);
 #else
         result = libspdm_responder_data_sign(
+            spdm_context,
             spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
             spdm_context->connection_info.algorithm.base_asym_algo,
             spdm_context->connection_info.algorithm.base_hash_algo,

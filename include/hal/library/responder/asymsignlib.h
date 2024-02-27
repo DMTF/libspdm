@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2023 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -59,6 +59,7 @@ extern bool libspdm_challenge_opaque_data(
  * @retval false Signing fail.
  **/
 extern bool libspdm_responder_data_sign(
+    void *spdm_context,
     spdm_version_number_t spdm_version,
     uint8_t op_code, uint32_t base_asym_algo,
     uint32_t base_hash_algo, bool is_data_hash,

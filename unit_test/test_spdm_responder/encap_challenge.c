@@ -80,12 +80,13 @@ void libspdm_test_responder_encap_challenge_case1(void **state)
     *(uint16_t *)ptr = 0;
     ptr += sizeof(uint16_t);
 
-    libspdm_requester_data_sign(
-        spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-            SPDM_CHALLENGE_AUTH,
-            m_libspdm_use_req_asym_algo, m_libspdm_use_hash_algo,
-            false, (uint8_t*)spdm_response, response_size - sig_size,
-            ptr, &sig_size);
+    libspdm_requester_data_sign(spdm_context,
+                                spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                                SPDM_CHALLENGE_AUTH,
+                                m_libspdm_use_req_asym_algo,
+                                m_libspdm_use_hash_algo, false,
+                                (uint8_t *)spdm_response,
+                                response_size - sig_size, ptr, &sig_size);
 
     status =  libspdm_process_encap_response_challenge_auth(spdm_context, response_size,
                                                             spdm_response,
@@ -355,12 +356,13 @@ void libspdm_test_responder_encap_challenge_case5(void **state)
     *(uint16_t *)ptr = 0;
     ptr += sizeof(uint16_t);
 
-    libspdm_requester_data_sign(
-        spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-            SPDM_CHALLENGE_AUTH,
-            m_libspdm_use_req_asym_algo, m_libspdm_use_hash_algo,
-            false, (uint8_t*)spdm_response, response_size - sig_size,
-            ptr, &sig_size);
+    libspdm_requester_data_sign(spdm_context,
+                                spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                                SPDM_CHALLENGE_AUTH,
+                                m_libspdm_use_req_asym_algo,
+                                m_libspdm_use_hash_algo, false,
+                                (uint8_t *)spdm_response,
+                                response_size - sig_size, ptr, &sig_size);
 
     status = libspdm_process_encap_response_challenge_auth(spdm_context, response_size,
                                                            spdm_response,
@@ -448,12 +450,13 @@ void libspdm_test_responder_encap_challenge_case6(void **state)
     libspdm_set_mem(ptr, SPDM_REQ_CONTEXT_SIZE, 0xAA);
     ptr += SPDM_REQ_CONTEXT_SIZE;
 
-    libspdm_requester_data_sign(
-        spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
-            SPDM_CHALLENGE_AUTH,
-            m_libspdm_use_req_asym_algo, m_libspdm_use_hash_algo,
-            false, (uint8_t*)spdm_response, response_size - sig_size,
-            ptr, &sig_size);
+    libspdm_requester_data_sign(spdm_context,
+                                spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
+                                SPDM_CHALLENGE_AUTH,
+                                m_libspdm_use_req_asym_algo,
+                                m_libspdm_use_hash_algo, false,
+                                (uint8_t *)spdm_response,
+                                response_size - sig_size, ptr, &sig_size);
 
     status =  libspdm_process_encap_response_challenge_auth(spdm_context, response_size,
                                                             spdm_response,

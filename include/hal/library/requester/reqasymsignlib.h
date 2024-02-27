@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2023 DMTF. All rights reserved.
+ *  Copyright 2023-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -31,6 +31,7 @@
  * @retval false signing fail.
  **/
 extern bool libspdm_requester_data_sign(
+    void *spdm_context,
     spdm_version_number_t spdm_version,
     uint8_t op_code,
     uint16_t req_base_asym_alg,
