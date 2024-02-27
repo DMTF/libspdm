@@ -16,6 +16,8 @@
 /**
  * Gen CSR
  *
+ * @param[in]      spdm_context          A pointer to the SPDM context.
+ *
  * @param[in]      base_hash_algo        Indicates the hash algorithm.
  * @param[in]      base_asym_algo        Indicates the signing algorithm.
  * @param[in, out] need_reset            For input, it gives the value of CERT_INSTALL_RESET_CAP:
@@ -44,12 +46,16 @@
  * @retval  true   Success.
  * @retval  false  Failed to gen CSR.
  **/
-extern bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *need_reset,
-                            const void *request, size_t request_size,
-                            uint8_t *requester_info, size_t requester_info_length,
-                            uint8_t *opaque_data, uint16_t opaque_data_length,
-                            size_t *csr_len, uint8_t *csr_pointer,
-                            bool is_device_cert_model);
+extern bool libspdm_gen_csr(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+    void *spdm_context,
+#endif
+    uint32_t base_hash_algo, uint32_t base_asym_algo, bool *need_reset,
+    const void *request, size_t request_size,
+    uint8_t *requester_info, size_t requester_info_length,
+    uint8_t *opaque_data, uint16_t opaque_data_length,
+    size_t *csr_len, uint8_t *csr_pointer,
+    bool is_device_cert_model);
 
 /**
  * Gen CSR, which is uesd for SPDM 1.3
@@ -65,6 +71,8 @@ extern bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bo
  *   |    Yes    |          0          |      No     |   -   |          ResetRequired       |
  *   |    Yes    |          0          |      Yes    |   -   |          ResetRequired       |
  *   |    Yes    |        Non-0        |      -      |   -   |             Invalid          |
+ *
+ * @param[in]      spdm_context          A pointer to the SPDM context.
  *
  * @param[in]      base_hash_algo        Indicates the hash algorithm.
  * @param[in]      base_asym_algo        Indicates the signing algorithm.
@@ -101,15 +109,19 @@ extern bool libspdm_gen_csr(uint32_t base_hash_algo, uint32_t base_asym_algo, bo
  **/
 
 #if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX
-extern bool libspdm_gen_csr_ex(uint32_t base_hash_algo, uint32_t base_asym_algo, bool *need_reset,
-                               const void *request, size_t request_size,
-                               uint8_t *requester_info, size_t requester_info_length,
-                               uint8_t *opaque_data, uint16_t opaque_data_length,
-                               size_t *csr_len, uint8_t *csr_pointer,
-                               uint8_t req_cert_model,
-                               uint8_t *req_csr_tracking_tag,
-                               uint8_t req_key_pair_id,
-                               bool overwrite);
+extern bool libspdm_gen_csr_ex(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+    void *spdm_context,
+#endif
+    uint32_t base_hash_algo, uint32_t base_asym_algo, bool *need_reset,
+    const void *request, size_t request_size,
+    uint8_t *requester_info, size_t requester_info_length,
+    uint8_t *opaque_data, uint16_t opaque_data_length,
+    size_t *csr_len, uint8_t *csr_pointer,
+    uint8_t req_cert_model,
+    uint8_t *req_csr_tracking_tag,
+    uint8_t req_key_pair_id,
+    bool overwrite);
 #endif /*LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX*/
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CSR_CAP */
 

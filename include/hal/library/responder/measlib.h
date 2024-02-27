@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2023 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -19,7 +19,8 @@
  * libspdm will call this function to retrieve the measurements for a device.
  * The "measurement_index" parameter indicates the measurement requested.
  *
- * @param spdm_version  Indicates the negotiated SPDM version.
+ * @param  spdm_context  A pointer to the SPDM context.
+ * @param  spdm_version  Indicates the negotiated SPDM version.
  *
  * @param  measurement_specification  Indicates the measurement specification.
  * Must be a SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_* value in spdm.h.
@@ -65,6 +66,9 @@
  * The maximum size is SPDM_MAX_MEASUREMENT_RECORD_LENGTH (2^24 - 1 bytes).
  **/
 extern libspdm_return_t libspdm_measurement_collection(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+    void *spdm_context,
+#endif
     spdm_version_number_t spdm_version,
     uint8_t measurement_specification,
     uint32_t measurement_hash_algo,
@@ -81,7 +85,8 @@ extern libspdm_return_t libspdm_measurement_collection(
  * It is called immediately after libspdm_measurement_collection() is called and allows the opaque
  * data field to vary based on the GET_MEASUREMENTS request.
  *
- * @param spdm_version  Indicates the negotiated SPDM version.
+ * @param  spdm_context  A pointer to the SPDM context.
+ * @param  spdm_version  Indicates the negotiated SPDM version.
  *
  * @param  measurement_specification  Indicates the measurement specification.
  * Must be a SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_* value in spdm.h.
@@ -102,6 +107,9 @@ extern libspdm_return_t libspdm_measurement_collection(
  * On output, indicates the size of the opaque data.
  **/
 extern bool libspdm_measurement_opaque_data(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+    void *spdm_context,
+#endif
     spdm_version_number_t spdm_version,
     uint8_t measurement_specification,
     uint32_t measurement_hash_algo,
@@ -113,6 +121,7 @@ extern bool libspdm_measurement_opaque_data(
 /**
  * This function calculates the measurement summary hash.
  *
+ * @param  spdm_context               A pointer to the SPDM context.
  * @param  spdm_version               The SPDM version.
  * @param  base_hash_algo             The hash algo to use on summary.
  * @param  measurement_specification  Indicates the measurement specification.
@@ -130,6 +139,9 @@ extern bool libspdm_measurement_opaque_data(
  * @retval false measurement summary hash is not generated.
  **/
 extern bool libspdm_generate_measurement_summary_hash(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+    void *spdm_context,
+#endif
     spdm_version_number_t spdm_version,
     uint32_t base_hash_algo,
     uint8_t measurement_specification,
