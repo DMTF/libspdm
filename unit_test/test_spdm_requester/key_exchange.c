@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -495,6 +495,9 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr), hash_data);
         free(data);
         libspdm_responder_data_sign(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+            spdm_context,
+#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_KEY_EXCHANGE_RSP,
                 m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
@@ -661,6 +664,9 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr), hash_data);
         free(data);
         libspdm_responder_data_sign(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+            spdm_context,
+#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_KEY_EXCHANGE_RSP,
                 m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
@@ -899,6 +905,9 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                              hash_data);
             free(data);
             libspdm_responder_data_sign(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+                spdm_context,
+#endif
                 spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                     SPDM_KEY_EXCHANGE_RSP,
                     m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
@@ -1155,6 +1164,9 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                              hash_data);
             free(data);
             libspdm_responder_data_sign(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+                spdm_context,
+#endif
                 spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                     SPDM_KEY_EXCHANGE_RSP,
                     m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
@@ -1362,6 +1374,9 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr), hash_data);
         free(data);
         libspdm_responder_data_sign(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+            spdm_context,
+#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_KEY_EXCHANGE_RSP,
                 m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
@@ -1537,6 +1552,9 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr), hash_data);
         free(data);
         libspdm_responder_data_sign(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+            spdm_context,
+#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_KEY_EXCHANGE_RSP,
                 m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
@@ -1712,6 +1730,9 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr), hash_data);
         free(data);
         libspdm_responder_data_sign(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+            spdm_context,
+#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_KEY_EXCHANGE_RSP,
                 m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
@@ -1888,6 +1909,9 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr), hash_data);
         free(data);
         libspdm_responder_data_sign(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+            spdm_context,
+#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_KEY_EXCHANGE_RSP,
                 m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
@@ -2055,6 +2079,9 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr), hash_data);
         free(data);
         libspdm_responder_data_sign(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+            spdm_context,
+#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_KEY_EXCHANGE_RSP,
                 m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
@@ -2222,6 +2249,9 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr), hash_data);
         free(data);
         libspdm_responder_data_sign(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+            spdm_context,
+#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_KEY_EXCHANGE_RSP,
                 m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
@@ -2398,6 +2428,9 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr), hash_data);
         free(data);
         libspdm_responder_data_sign(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+            spdm_context,
+#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_KEY_EXCHANGE_RSP,
                 m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
@@ -2566,6 +2599,9 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr), hash_data);
         free(data);
         libspdm_responder_data_sign(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+            spdm_context,
+#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_KEY_EXCHANGE_RSP,
                 m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
@@ -2725,6 +2761,9 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr), hash_data);
         free(data);
         libspdm_responder_data_sign(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+            spdm_context,
+#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_KEY_EXCHANGE_RSP,
                 m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
@@ -2861,6 +2900,9 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr), hash_data);
         free(data);
         libspdm_responder_data_sign(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+            spdm_context,
+#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_KEY_EXCHANGE_RSP,
                 m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
@@ -3028,6 +3070,9 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr), hash_data);
         free(data);
         libspdm_responder_data_sign(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+            spdm_context,
+#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_KEY_EXCHANGE_RSP,
                 m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
@@ -3195,6 +3240,9 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr), hash_data);
         free(data);
         libspdm_responder_data_sign(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+            spdm_context,
+#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_KEY_EXCHANGE_RSP,
                 m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
@@ -3363,6 +3411,9 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr), hash_data);
         free(data);
         libspdm_responder_data_sign(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+            spdm_context,
+#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_KEY_EXCHANGE_RSP,
                 m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
@@ -3521,6 +3572,9 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr), hash_data);
         free(data);
         libspdm_responder_data_sign(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+            spdm_context,
+#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_KEY_EXCHANGE_RSP,
                 m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
@@ -3680,6 +3734,9 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr), hash_data);
         free(data);
         libspdm_responder_data_sign(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+            spdm_context,
+#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_KEY_EXCHANGE_RSP,
                 m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
@@ -3849,6 +3906,9 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr), hash_data);
         free(data);
         libspdm_responder_data_sign(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+            spdm_context,
+#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_KEY_EXCHANGE_RSP,
                 m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
@@ -4018,6 +4078,9 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr), hash_data);
         free(data);
         libspdm_responder_data_sign(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+            spdm_context,
+#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_KEY_EXCHANGE_RSP,
                 m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
@@ -4187,6 +4250,9 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr), hash_data);
         free(data);
         libspdm_responder_data_sign(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+            spdm_context,
+#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_KEY_EXCHANGE_RSP,
                 m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
@@ -4340,6 +4406,9 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr), hash_data);
         free(data);
         libspdm_responder_data_sign(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+            spdm_context,
+#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_KEY_EXCHANGE_RSP, m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
                 false, libspdm_get_managed_buffer(&th_curr),
@@ -4505,6 +4574,9 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr), hash_data);
         free(data);
         libspdm_responder_data_sign(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+            spdm_context,
+#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_KEY_EXCHANGE_RSP,
                 m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
@@ -4663,6 +4735,9 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr), hash_data);
         free(data);
         libspdm_responder_data_sign(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+            spdm_context,
+#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_KEY_EXCHANGE_RSP,
                 m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
@@ -4829,6 +4904,9 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr), hash_data);
         free(data);
         libspdm_responder_data_sign(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+            spdm_context,
+#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_KEY_EXCHANGE_RSP,
                 m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
@@ -4996,6 +5074,9 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
                          libspdm_get_managed_buffer_size(&th_curr), hash_data);
         free(data);
         libspdm_responder_data_sign(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+            spdm_context,
+#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_KEY_EXCHANGE_RSP,
                 m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,

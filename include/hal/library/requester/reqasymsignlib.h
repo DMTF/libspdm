@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2023 DMTF. All rights reserved.
+ *  Copyright 2023-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -14,6 +14,8 @@
 /**
  * Sign an SPDM message data.
  *
+ * @param  spdm_context      A pointer to the SPDM context.
+ * @param  spdm_version      Indicates the negotiated s version.
  * @param  req_base_asym_alg Indicates the signing algorithm.
  * @param  base_hash_algo    Indicates the hash algorithm.
  * @param  is_data_hash      Indicates the message type.
@@ -31,6 +33,9 @@
  * @retval false signing fail.
  **/
 extern bool libspdm_requester_data_sign(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+    void *spdm_context,
+#endif
     spdm_version_number_t spdm_version,
     uint8_t op_code,
     uint16_t req_base_asym_alg,
@@ -42,7 +47,8 @@ extern bool libspdm_requester_data_sign(
 /**
  * This functions returns the opaque data in a CHALLENGE_AUTH response.
  *
- * @param spdm_version  Indicates the negotiated s version.
+ * @param  spdm_context  A pointer to the SPDM context.
+ * @param  spdm_version  Indicates the negotiated s version.
  *
  * @param  slot_id       The number of slot for the certificate chain.
  *
@@ -58,6 +64,9 @@ extern bool libspdm_requester_data_sign(
  * On output, indicates the size of the opaque data.
  **/
 extern bool libspdm_encap_challenge_opaque_data(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+    void *spdm_context,
+#endif
     spdm_version_number_t spdm_version,
     uint8_t slot_id,
     uint8_t *measurement_summary_hash,

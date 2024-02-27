@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -201,6 +201,9 @@ libspdm_return_t libspdm_device_receive_message(void *spdm_context, size_t *resp
                          libspdm_get_managed_buffer_size(&th_curr), hash_data);
         free(data);
         libspdm_responder_data_sign(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+            spdm_context,
+#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_KEY_EXCHANGE_RSP, m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, false,
                 libspdm_get_managed_buffer(&th_curr), libspdm_get_managed_buffer_size(

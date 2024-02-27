@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -212,6 +212,9 @@ void libspdm_requester_chunk_get_test_case3_build_challenge_response(
     libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
     sig_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
     libspdm_responder_data_sign(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+        spdm_context,
+#endif
         spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
             SPDM_CHALLENGE_AUTH,
             m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,

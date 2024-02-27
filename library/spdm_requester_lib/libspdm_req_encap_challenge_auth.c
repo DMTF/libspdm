@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -158,6 +158,9 @@ libspdm_return_t libspdm_get_encap_response_challenge_auth(
         measurement_summary_hash_size + sizeof(uint16_t);
 
     result = libspdm_encap_challenge_opaque_data(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+        spdm_context,
+#endif
         context->connection_info.version,
         slot_id,
         measurement_summary_hash, measurement_summary_hash_size,

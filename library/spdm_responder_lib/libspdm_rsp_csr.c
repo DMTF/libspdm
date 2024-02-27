@@ -198,13 +198,17 @@ libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
                                                    response_size, response);
         }
 
-        result = libspdm_gen_csr_ex(spdm_context->connection_info.algorithm.base_hash_algo,
-                                    spdm_context->connection_info.algorithm.base_asym_algo,
-                                    &need_reset, request, request_size,
-                                    requester_info, requester_info_length,
-                                    opaque_data, opaque_data_length,
-                                    &csr_len, csr_p, req_cert_model,
-                                    &csr_tracking_tag, key_pair_id, overwrite);
+        result = libspdm_gen_csr_ex(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+            spdm_context,
+#endif
+            spdm_context->connection_info.algorithm.base_hash_algo,
+            spdm_context->connection_info.algorithm.base_asym_algo,
+            &need_reset, request, request_size,
+            requester_info, requester_info_length,
+            opaque_data, opaque_data_length,
+            &csr_len, csr_p, req_cert_model,
+            &csr_tracking_tag, key_pair_id, overwrite);
 #else
         return libspdm_generate_error_response(
             spdm_context,
@@ -212,12 +216,16 @@ libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
             response_size, response);
 #endif /*LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX*/
     } else {
-        result = libspdm_gen_csr(spdm_context->connection_info.algorithm.base_hash_algo,
-                                 spdm_context->connection_info.algorithm.base_asym_algo,
-                                 &need_reset, request, request_size,
-                                 requester_info, requester_info_length,
-                                 opaque_data, opaque_data_length,
-                                 &csr_len, csr_p, is_device_cert_model);
+        result = libspdm_gen_csr(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+            spdm_context,
+#endif
+            spdm_context->connection_info.algorithm.base_hash_algo,
+            spdm_context->connection_info.algorithm.base_asym_algo,
+            &need_reset, request, request_size,
+            requester_info, requester_info_length,
+            opaque_data, opaque_data_length,
+            &csr_len, csr_p, is_device_cert_model);
     }
 
     if (!result) {

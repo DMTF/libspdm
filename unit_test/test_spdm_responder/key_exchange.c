@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -793,6 +793,9 @@ void libspdm_test_responder_key_exchange_case8(void **state)
     measurement_summary_hash_size = libspdm_get_measurement_summary_hash_size(
         spdm_context, false, m_libspdm_key_exchange_request3.header.param1);
     libspdm_generate_measurement_summary_hash(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+        spdm_context,
+#endif
         spdm_context->connection_info.version,
         spdm_context->connection_info.algorithm.base_hash_algo,
         spdm_context->connection_info.algorithm.measurement_spec,
@@ -904,6 +907,9 @@ void libspdm_test_responder_key_exchange_case9(void **state)
     measurement_summary_hash_size = libspdm_get_measurement_summary_hash_size(
         spdm_context, false, m_libspdm_key_exchange_request4.header.param1);
     libspdm_generate_measurement_summary_hash(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+        spdm_context,
+#endif
         spdm_context->connection_info.version,
         spdm_context->connection_info.algorithm.base_hash_algo,
         spdm_context->connection_info.algorithm.measurement_spec,

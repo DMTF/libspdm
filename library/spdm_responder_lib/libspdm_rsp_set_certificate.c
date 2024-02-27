@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -136,7 +136,11 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
                                                response_size, response);
     }
 
-    if ((!libspdm_is_in_trusted_environment()) &&
+    if ((!libspdm_is_in_trusted_environment(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+             spdm_context
+#endif
+             )) &&
         (slot_id != 0) &&
         (!spdm_context->last_spdm_request_session_id_valid)) {
         return libspdm_generate_error_response(spdm_context,
@@ -159,7 +163,11 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
         }
 
         /* erase slot_id cert_chain*/
-        result = libspdm_write_certificate_to_nvm(slot_id, NULL, 0, 0, 0);
+        result = libspdm_write_certificate_to_nvm(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+            spdm_context,
+#endif
+            slot_id, NULL, 0, 0, 0);
         if (!result) {
             return libspdm_generate_error_response(spdm_context,
                                                    SPDM_ERROR_CODE_OPERATION_FAILED, 0,
@@ -216,10 +224,14 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
 #endif /*LIBSPDM_CERT_PARSE_SUPPORT*/
 
         /* set certificate to NV*/
-        result = libspdm_write_certificate_to_nvm(slot_id, cert_chain,
-                                                  cert_chain_size,
-                                                  spdm_context->connection_info.algorithm.base_hash_algo,
-                                                  spdm_context->connection_info.algorithm.base_asym_algo);
+        result = libspdm_write_certificate_to_nvm(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+            spdm_context,
+#endif
+            slot_id, cert_chain,
+            cert_chain_size,
+            spdm_context->connection_info.algorithm.base_hash_algo,
+            spdm_context->connection_info.algorithm.base_asym_algo);
         if (!result) {
             return libspdm_generate_error_response(spdm_context,
                                                    SPDM_ERROR_CODE_UNSPECIFIED, 0,
