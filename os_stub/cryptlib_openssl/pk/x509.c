@@ -1351,21 +1351,22 @@ bool libspdm_x509_get_extension_data(const uint8_t *cert, size_t cert_size,
 
     if (cert == NULL || cert_size == 0 || oid == NULL || oid_size == 0 ||
         extension_data_size == NULL) {
+        if (extension_data_size != NULL) {
+            *extension_data_size = 0;
+        }
         return false;
     }
 
     x509_cert = NULL;
     status = false;
 
-
     /* Read DER-encoded X509 Certificate and Construct X509 object.*/
 
     status = libspdm_x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
-    if ((x509_cert == NULL) || (!status)) {
+    if (!status) {
         *extension_data_size = 0;
         goto cleanup;
     }
-
 
     /* Retrieve extensions from certificate object.*/
 
@@ -1374,7 +1375,6 @@ bool libspdm_x509_get_extension_data(const uint8_t *cert, size_t cert_size,
         *extension_data_size = 0;
         goto cleanup;
     }
-
 
     /* Traverse extensions*/
 
@@ -1410,6 +1410,7 @@ bool libspdm_x509_get_extension_data(const uint8_t *cert, size_t cert_size,
         /* reset to 0 if not found */
         oct_length = 0;
     }
+
     if (status) {
         if (*extension_data_size < oct_length) {
             *extension_data_size = oct_length;
@@ -1422,6 +1423,8 @@ bool libspdm_x509_get_extension_data(const uint8_t *cert, size_t cert_size,
         }
         *extension_data_size = oct_length;
     } else {
+        /* the cert extension is found, but the oid extension is not found; */
+        status = true;
         *extension_data_size = 0;
     }
 
