@@ -1716,4 +1716,42 @@ static inline uint64_t libspdm_le_to_be_64(uint64_t value)
             ((value & 0xff00000000000000) >> 56));
 }
 
+/**
+ * Send an SPDM or an APP request to a device.
+ *
+ * @param  spdm_context    The SPDM context for the device.
+ * @param  session_id      Indicate if the request is a secured message.
+ *                         If session_id is NULL, it is a normal message.
+ *                         If session_id is NOT NULL, it is a secured message.
+ * @param  is_app_message  Indicates if it is an APP message or SPDM message.
+ * @param  request_size    Size in bytes of the request data buffer.
+ * @param  request         A pointer to a destination buffer to store the request.
+ *                         The caller is responsible for having either implicit or explicit ownership
+ *                         of the buffer.
+ *                         For normal message, requester pointer point to transport_message + transport header size
+ *                         For secured message, requester pointer will point to the scratch buffer + transport header size in spdm_context.
+ **/
+libspdm_return_t libspdm_send_request(void *spdm_context, const uint32_t *session_id,
+                                      bool is_app_message,
+                                      size_t request_size, void *request);
+
+/**
+ * Receive an SPDM or an APP response from a device.
+ *
+ * @param  spdm_context    The SPDM context for the device.
+ * @param  session_id      Indicate if the response is a secured message.
+ *                         If session_id is NULL, it is a normal message.
+ *                         If session_id is NOT NULL, it is a secured message.
+ * @param  is_app_message  Indicates if it is an APP message or SPDM message.
+ * @param  response_size   Size in bytes of the response data buffer.
+ * @param  response        A pointer to a destination buffer to store the response.
+ *                         The caller is responsible for having either implicit or explicit
+ *                         ownership of the buffer.
+ *                         For normal message, response pointer still point to original transport_message.
+ *                         For secured message, response pointer will point to the scratch buffer in spdm_context.
+ **/
+libspdm_return_t libspdm_receive_response(void *spdm_context, const uint32_t *session_id,
+                                          bool is_app_message,
+                                          size_t *response_size, void **response);
+
 #endif /* SPDM_COMMON_LIB_INTERNAL_H */
