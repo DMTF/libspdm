@@ -1249,6 +1249,9 @@ bool libspdm_x509_get_extension_data(const uint8_t *cert, size_t cert_size,
 
     if (cert == NULL || cert_size == 0 || oid == NULL || oid_size == 0 ||
         extension_data_size == NULL) {
+        if (extension_data_size != NULL) {
+            *extension_data_size = 0;
+        }
         return false;
     }
 
@@ -1269,6 +1272,11 @@ bool libspdm_x509_get_extension_data(const uint8_t *cert, size_t cert_size,
     if (ret == 0) {
         status = libspdm_internal_x509_find_extension_data(
             ptr, end, oid, oid_size, &ptr, &obj_len);
+        if (!status) {
+            status = true;
+            *extension_data_size = 0;
+            goto cleanup;
+        }
     }
 
     if (status) {
