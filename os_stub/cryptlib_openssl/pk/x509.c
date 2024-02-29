@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -1326,15 +1326,11 @@ done:
  * @param[out]     extension_data    Extension bytes.
  * @param[in, out] extension_data_size Extension bytes size.
  *
- * @retval RETURN_SUCCESS           The certificate Extension data retrieved successfully.
- * @retval RETURN_INVALID_PARAMETER If cert is NULL.
- *                                 If extension_data_size is NULL.
- *                                 If extension_data is not NULL and *extension_data_size is 0.
- *                                 If Certificate is invalid.
- * @retval RETURN_NOT_FOUND         If no Extension entry match oid.
- * @retval RETURN_BUFFER_TOO_SMALL  If the extension_data is NULL. The required buffer size
- *                                 is returned in the extension_data_size parameter.
- * @retval RETURN_UNSUPPORTED       The operation is not supported.
+ * @return true   If the returned extension_data_size == 0, it means that cert and oid are valid, but the oid extension is not found;
+ *                If the returned extension_data_size != 0, it means that cert and oid are valid, and the oid extension is found;
+ * @return false  If the returned extension_data_size == 0, it means that cert or oid are invalid;
+ *                If the returned extension_data_size != 0, it means that cert and oid are valid, and the oid extension is found,
+ *                                                          but the store buffer is too small.
  **/
 bool libspdm_x509_get_extension_data(const uint8_t *cert, size_t cert_size,
                                      const uint8_t *oid, size_t oid_size,
