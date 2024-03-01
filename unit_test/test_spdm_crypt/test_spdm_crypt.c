@@ -35,6 +35,105 @@ uint8_t m_libspdm_subject_alt_name_buffer3[] = {
 uint8_t m_libspdm_dmtf_oid[] = { 0x2B, 0x06, 0x01, 0x4,  0x01,
                                  0x83, 0x1C, 0x82, 0x12, 0x01 };
 
+bool check_length(void *data, size_t data_len, size_t *length, size_t *byte_consumed,
+                  bool is_increase_length) {
+    uint8_t *length_byte;
+    size_t combined;
+
+    if (data == NULL || length == NULL || byte_consumed == NULL || data_len < 1) {
+        return false;
+    }
+
+    length_byte = (uint8_t *)data;
+
+    if ((length_byte[0] & 0x80) == 0) {
+        *length = length_byte[0];
+        *byte_consumed = 1;
+    } else if(length_byte[0] == 0x81) {
+        if (data_len < 2) {
+            return false;
+        }
+
+        if(is_increase_length ) {
+            length_byte[1]++;
+        }
+
+        if (length_byte[1] < 0x80) {
+            return false;
+        }
+
+        *length = (size_t)length_byte[1];
+        *byte_consumed = 2;
+    } else if (length_byte[0] == 0x82) {
+        if (data_len < 3) {
+            return false;
+        }
+
+        if(is_increase_length ) {
+            length_byte[2]++;
+        }
+
+        combined = (size_t)(length_byte[1] << 8) | length_byte[2];
+
+        if (combined < 0x100) {
+            return false;
+        }
+
+        *length = combined;
+        *byte_consumed = 3;
+    } else {
+        return false;
+    }
+
+    return true;
+}
+
+bool convert_normalized_to_non_normalized(uint8_t *data, size_t *data_length) {
+    size_t payload_length;
+    size_t bytes_consumed;
+    size_t index;
+    size_t length;
+    uint8_t temp[LIBSPDM_MAX_CERT_CHAIN_SIZE];
+
+    length = *data_length;
+
+    /* Certificate SEQUENCE */
+    index = 1;
+    check_length(data + index, length, &payload_length, &bytes_consumed, false);
+
+    if (length < 1 + payload_length + bytes_consumed) {
+        return false;
+    }
+
+    /* tbsCertificate TBSCertificate SEQUENCE*/
+    index += 1 + bytes_consumed;
+    check_length(data + index, length - index, &payload_length, &bytes_consumed, false);
+
+    index += 1 + bytes_consumed;
+    check_length(data + index, length - index, &payload_length, &bytes_consumed, false);
+
+    if(payload_length < 0x7F) {
+        /* The definite form of length encoding shall be used, encoded in the minimum number of octets
+         * Use non canonical encoding format , length encoding is : 0x81 0x03*/
+        temp[0] = 0x81;
+        memmove(temp + 1, data + index, length - index);
+        libspdm_copy_mem(data + index, length - index + 1, temp,  length - index + 1);
+        length += 1;
+
+        /* Increase the length of Certificate SEQUENCE and tbsCertificate SEQUENCE */
+        for (size_t i = 1; i < index; i++) {
+
+            check_length(data + i, length -i, &payload_length, &bytes_consumed, true);
+
+            i += bytes_consumed;
+        }
+    }
+
+    *data_length = length;
+
+    return true;
+}
+
 void libspdm_test_crypt_spdm_get_dmtf_subject_alt_name_from_bytes(void **state)
 {
     size_t common_name_size;
@@ -171,6 +270,8 @@ void libspdm_test_crypt_spdm_x509_certificate_check(void **state)
     bool status;
     uint8_t *file_buffer;
     size_t file_buffer_size;
+    uint8_t buffer[LIBSPDM_MAX_CERT_CHAIN_SIZE];
+    size_t buffer_size;
 
     if ((LIBSPDM_RSA_SSA_2048_SUPPORT) && (LIBSPDM_SHA256_SUPPORT)) {
         status = libspdm_read_input_file("rsa2048/end_requester.cert.der",
@@ -399,6 +500,25 @@ void libspdm_test_crypt_spdm_x509_certificate_check(void **state)
                                                 SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
                                                 false, true);
         assert_true(status);
+        free(file_buffer);
+    }
+
+    if ((LIBSPDM_RSA_SSA_2048_SUPPORT) && (LIBSPDM_SHA256_SUPPORT)) {
+        status = libspdm_read_input_file("rsa2048/end_requester.cert.der",
+                                         (void **)&file_buffer, &file_buffer_size);
+        assert_true(status);
+
+        libspdm_copy_mem(buffer, file_buffer_size, file_buffer, file_buffer_size);
+        buffer_size = file_buffer_size;
+
+        /* Canonical length encoding is modified to non canonical length encoding format */
+        convert_normalized_to_non_normalized(buffer, &buffer_size);
+
+        status = libspdm_x509_certificate_check(buffer, buffer_size,
+                                                SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048,
+                                                SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                                                true, true);
+        assert_false(status);
         free(file_buffer);
     }
 }
