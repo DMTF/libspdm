@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -60,7 +60,7 @@ void libspdm_zero_mem(void *buffer, size_t length);
  * @param  source_buffer       A pointer to the source buffer to compare.
  * @param  length              The number of bytes to compare.
  *
- * @return true   The contents of the two buffers are the same.
+ * @retval true   The contents of the two buffers are the same.
  * @retval false  The contents of the two buffers are not the same.
  **/
 bool libspdm_consttime_is_mem_equal(const void *destination_buffer,
