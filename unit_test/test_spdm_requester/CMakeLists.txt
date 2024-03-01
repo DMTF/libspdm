@@ -24,6 +24,7 @@ SET(src_test_spdm_requester
     get_digests.c
     get_certificate.c
     challenge.c
+    get_event_types.c
     get_measurements.c
     key_exchange.c
     finish.c
@@ -47,6 +48,7 @@ SET(src_test_spdm_requester
     error_test/get_digests_err.c
     error_test/key_exchange_err.c
     error_test/get_measurements_err.c
+    error_test/get_event_types_err.c
     ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/common.c
     ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/algo.c
     ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/support.c
