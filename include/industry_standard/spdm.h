@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -54,6 +54,9 @@
 #define SPDM_CHUNK_SEND_ACK 0x05
 #define SPDM_CHUNK_RESPONSE 0x06
 
+/* SPDM response code (1.3) */
+#define SPDM_SUPPORTED_EVENT_TYPES 0x62
+
 /* SPDM request code (1.0) */
 #define SPDM_GET_DIGESTS 0x81
 #define SPDM_GET_CERTIFICATE 0x82
@@ -81,6 +84,9 @@
 #define SPDM_SET_CERTIFICATE 0xEE
 #define SPDM_CHUNK_SEND 0x85
 #define SPDM_CHUNK_GET 0x86
+
+/* SPDM request code (1.3) */
+#define SPDM_GET_SUPPORTED_EVENT_TYPES 0xE2
 
 /* SPDM message header*/
 typedef struct {
@@ -1151,6 +1157,20 @@ typedef struct {
 
 #define SPDM_CHUNK_GET_RESPONSE_ATTRIBUTE_LAST_CHUNK (1 << 0)
 
+typedef struct {
+    spdm_message_header_t header;
+    /* param1 == RSVD
+     * param2 == RSVD */
+} spdm_get_supported_event_types_request_t;
+
+typedef struct {
+    spdm_message_header_t header;
+    /* param1 == EventGroupCount
+     * param2 == RSVD */
+    uint32_t supported_event_groups_list_len;
+    /* uint8_t supported_event_groups_list[supported_event_groups_list_len] */
+} spdm_supported_event_types_response_t;
+
 #pragma pack()
 
 #define SPDM_VERSION_1_1_BIN_CONCAT_LABEL "spdm1.1 "
@@ -1196,5 +1216,11 @@ typedef struct {
 /* id-DMTF-SPDM-extension, { id-DMTF-spdm 6 }, 1.3.6.1.4.1.412.274.6 */
 #define SPDM_OID_DMTF_SPDM_EXTENSION \
     { /*0x06, 0x0A,*/ 0x2B, 0x06, 0x01, 0x04, 0x01, 0x83, 0x1C, 0x82, 0x12, 0x06 }
+
+/* DMTF Event Type IDs */
+#define SPDM_DMTF_EVENT_TYPE_EVENT_LOST 1
+#define SPDM_DMTF_EVENT_TYPE_MEASUREMENT_CHANGED 2
+#define SPDM_DMTF_EVENT_TYPE_MEASUREMENT_PRE_UPDATE 3
+#define SPDM_DMTF_EVENT_TYPE_CERTIFICATE_CHANGED 4
 
 #endif /* SPDM_H */

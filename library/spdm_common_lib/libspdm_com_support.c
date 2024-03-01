@@ -42,6 +42,8 @@ const char *libspdm_get_code_str(uint8_t request_code)
         { SPDM_SET_CERTIFICATE_RSP, "SPDM_SET_CERTIFICATE_RSP" },
         { SPDM_CHUNK_SEND_ACK, "SPDM_CHUNK_SEND_ACK" },
         { SPDM_CHUNK_RESPONSE, "SPDM_CHUNK_RESPONSE" },
+        /* SPDM response code (1.3 )*/
+        { SPDM_SUPPORTED_EVENT_TYPES, "SPDM_SUPPORTED_EVENT_TYPES" },
         /* SPDM request code (1.0) */
         { SPDM_GET_DIGESTS, "SPDM_GET_DIGESTS" },
         { SPDM_GET_CERTIFICATE, "SPDM_GET_CERTIFICATE" },
@@ -66,7 +68,8 @@ const char *libspdm_get_code_str(uint8_t request_code)
         { SPDM_GET_CSR, "SPDM_GET_CSR" },
         { SPDM_SET_CERTIFICATE, "SPDM_SET_CERTIFICATE" },
         { SPDM_CHUNK_SEND, "SPDM_CHUNK_SEND" },
-        { SPDM_CHUNK_GET, "SPDM_CHUNK_GET" }
+        { SPDM_CHUNK_GET, "SPDM_CHUNK_GET" },
+        { SPDM_GET_SUPPORTED_EVENT_TYPES, "SPDM_GET_SUPPORTED_EVENT_TYPES" }
     };
 
     for (index = 0; index < LIBSPDM_ARRAY_SIZE(code_str_struct); index++) {
