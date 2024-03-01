@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -487,7 +487,7 @@ libspdm_return_t libspdm_decode_secured_message(
             return LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
         if (!libspdm_consttime_is_mem_equal(record_header1 + 1, &sequence_num_in_header,
-                                            sequence_num_in_header_size) != 0) {
+                                            sequence_num_in_header_size)) {
             libspdm_secured_message_set_last_spdm_error_struct(
                 spdm_secured_message_context, &spdm_error);
             return LIBSPDM_STATUS_INVALID_MSG_FIELD;
