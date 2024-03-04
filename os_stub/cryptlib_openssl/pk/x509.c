@@ -2033,6 +2033,11 @@ bool libspdm_x509_verify_cert_chain(const uint8_t *root_cert, size_t root_cert_l
     size_t preceding_cert_len;
     bool verify_flag;
     int32_t ret;
+    uint8_t *root_ptr;
+    uint8_t *chain_ptr;
+    size_t root_obj_len;
+    size_t chain_obj_len;
+    uint8_t *end;
 
     preceding_cert = root_cert;
     preceding_cert_len = root_cert_length;
@@ -2040,6 +2045,31 @@ bool libspdm_x509_verify_cert_chain(const uint8_t *root_cert, size_t root_cert_l
     current_cert = cert_chain;
     length = 0;
     current_cert_len = 0;
+
+    root_ptr = (uint8_t*)(size_t)root_cert;
+    end = root_ptr + root_cert_length;
+    verify_flag = libspdm_asn1_get_tag(
+        &root_ptr, end, &root_obj_len,
+        LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+    if (!verify_flag) {
+        return false;
+    }
+
+    chain_ptr = (uint8_t*)(size_t)cert_chain;
+    end = chain_ptr + cert_chain_length;
+    verify_flag = libspdm_asn1_get_tag(
+        &chain_ptr, end, &chain_obj_len,
+        LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+    if (!verify_flag) {
+        return false;
+    }
+
+    /*only self_signed cert is accepted when these two cert are same*/
+    if ((chain_obj_len == root_obj_len) &&
+        (libspdm_consttime_is_mem_equal(root_ptr, chain_ptr, root_obj_len)) &&
+        (!libspdm_is_root_certificate(root_cert, root_cert_length))) {
+        return false;
+    }
 
     verify_flag = false;
     while (true) {
