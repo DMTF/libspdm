@@ -172,6 +172,55 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
         libspdm_my_print("[Pass]\n");
     }
 
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                   "- X509 Certificate CA cert verify itself Verification ... "));
+    status = libspdm_x509_verify_cert_chain((const uint8_t *)test_ca_cert, test_ca_cert_len,
+                                            (const uint8_t *)test_ca_cert,
+                                            test_ca_cert_len);
+    if (!status) {
+        libspdm_my_print("[Fail]\n");
+        goto cleanup;
+    } else {
+        libspdm_my_print("[Pass]\n");
+    }
+
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                   "- X509 Certificate CA cert verify itself Verification with large cert len"));
+    status = libspdm_x509_verify_cert_chain((const uint8_t *)test_ca_cert, test_ca_cert_len,
+                                            (const uint8_t *)test_ca_cert,
+                                            test_ca_cert_len + 1);
+    if (!status) {
+        libspdm_my_print("[Fail]\n");
+        goto cleanup;
+    } else {
+        libspdm_my_print("[Pass]\n");
+    }
+
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                   "- X509 Certificate end cert verify itself Verification ... "));
+    status = libspdm_x509_verify_cert_chain((const uint8_t *)test_end_cert, test_end_cert_len,
+                                            (const uint8_t *)test_end_cert,
+                                            test_end_cert_len);
+    if (status) {
+        libspdm_my_print("[Fail]\n");
+        goto cleanup;
+    } else {
+        libspdm_my_print("[Pass]\n");
+    }
+
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                   "- X509 Certificate end cert verify itself Verification with large cert len"));
+    status = libspdm_x509_verify_cert_chain((const uint8_t *)test_end_cert, test_end_cert_len,
+                                            (const uint8_t *)test_end_cert,
+                                            test_end_cert_len + 1);
+    if (status) {
+        libspdm_my_print("[Fail]\n");
+        goto cleanup;
+    } else {
+        libspdm_my_print("[Pass]\n");
+    }
+
+
     /* X509 Get leaf certificate from cert_chain Verificate*/
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                    "- X509 Certificate Chain get leaf certificate Verification ... "));
