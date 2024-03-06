@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -160,19 +160,18 @@ libspdm_return_t libspdm_get_response_digests(libspdm_context_t *spdm_context, s
         }
     }
 
-    /* Cache*/
-
     if (session_info == NULL) {
-        status = libspdm_append_message_b(spdm_context, spdm_request,
-                                          request_size);
+        /* Log to transcript. */
+        const size_t spdm_request_size = sizeof(spdm_get_digest_request_t);
+
+        status = libspdm_append_message_b(spdm_context, spdm_request, spdm_request_size);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return libspdm_generate_error_response(spdm_context,
                                                    SPDM_ERROR_CODE_UNSPECIFIED, 0,
                                                    response_size, response);
         }
 
-        status = libspdm_append_message_b(spdm_context, spdm_response,
-                                          *response_size);
+        status = libspdm_append_message_b(spdm_context, spdm_response, *response_size);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return libspdm_generate_error_response(spdm_context,
                                                    SPDM_ERROR_CODE_UNSPECIFIED, 0,

@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 #include "internal/libspdm_responder_lib.h"
@@ -150,10 +150,11 @@ libspdm_return_t libspdm_get_response_certificate(libspdm_context_t *spdm_contex
                      (const uint8_t *)spdm_context->local_context
                      .local_cert_chain_provision[slot_id] + offset, length);
 
-    /* Cache*/
-
     if (session_info == NULL) {
-        status = libspdm_append_message_b(spdm_context, spdm_request, request_size);
+        /* Log to transcript. */
+        const size_t spdm_request_size = sizeof(spdm_get_certificate_request_t);
+
+        status = libspdm_append_message_b(spdm_context, spdm_request, spdm_request_size);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return libspdm_generate_error_response(spdm_context,
                                                    SPDM_ERROR_CODE_UNSPECIFIED, 0,
