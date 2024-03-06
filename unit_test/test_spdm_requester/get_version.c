@@ -701,7 +701,7 @@ static void libspdm_test_requester_get_version_case10(void **state)
 
 /**
  * Test 15: receiving a VERSION message with unordered vesion list.
- * Requester list:5.5, 4.5, 0.9, 1.0, 1.1
+ * Requester list:5.5, 0.9, 1.0, 1.1
  * Responder list:4.2, 5.2, 1.2, 1.1, 1.0
  * Expected behavior: client returns a status of LIBSPDM_STATUS_SUCCESS and right negotiated version 1.1.
  **/
@@ -714,12 +714,11 @@ static void libspdm_test_requester_get_version_case15(void **state)
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
     spdm_test_context->case_id = 0xF;
-    spdm_context->local_context.version.spdm_version_count = 5;
+    spdm_context->local_context.version.spdm_version_count = 4;
     spdm_context->local_context.version.spdm_version[0] = 0x55 << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->local_context.version.spdm_version[1] = 0x45 << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->local_context.version.spdm_version[2] = 0x09 << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->local_context.version.spdm_version[3] = 0x10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->local_context.version.spdm_version[4] = 0x11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->local_context.version.spdm_version[1] = 0x09 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->local_context.version.spdm_version[2] = 0x10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->local_context.version.spdm_version[3] = 0x11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     status = libspdm_get_version(spdm_context, NULL, NULL);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(
