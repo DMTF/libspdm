@@ -64,6 +64,7 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
     const spdm_cert_chain_t *cert_chain_header;
     size_t cert_chain_size;
     const void * cert_chain;
+    uint8_t key_pair_id;
 
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
@@ -150,6 +151,16 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
 
     root_cert_hash_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
+
+    if (libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_13) {
+        /*And key_pair_id/slot_id check will be done in the future.*/
+        key_pair_id = spdm_request->header.param2;
+        if ((!spdm_context->connection_info.multi_key_conn_rsp) && (key_pair_id != 0)) {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                                   response_size, response);
+        }
+    }
 
     if ((libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_13) &&
         ((spdm_request->header.param1 & SPDM_SET_CERTIFICATE_REQUEST_ATTRIBUTES_ERASE) != 0)) {
