@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -111,6 +111,10 @@ static libspdm_return_t libspdm_try_set_certificate(libspdm_context_t *spdm_cont
             spdm_request->header.param1 &= ~SPDM_SET_CERTIFICATE_REQUEST_ATTRIBUTES_CERT_MODEL_MASK;
             /*set Erase bit */
             spdm_request->header.param1 |= SPDM_SET_CERTIFICATE_REQUEST_ATTRIBUTES_ERASE;
+        }
+
+        if (spdm_context->connection_info.multi_key_conn_rsp) {
+            spdm_request->header.param2 = key_pair_id;
         }
     }
 
