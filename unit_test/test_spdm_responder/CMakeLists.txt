@@ -38,6 +38,8 @@ SET(src_test_spdm_responder
     encap_key_update.c
     encap_challenge.c
     encap_response.c
+    supported_event_types.c
+    error_test/supported_event_types_err.c
     set_certificate_rsp.c
     csr.c
     receive_send.c

@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -756,6 +756,17 @@ libspdm_return_t libspdm_get_response_chunk_send(libspdm_context_t *spdm_context
                                                  void* response);
 
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
+
+#if LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP
+/**
+ * Process the SPDM GET_SUPPORTED_EVENT_TYPES request and return the response.
+ **/
+libspdm_return_t libspdm_get_response_supported_event_types(libspdm_context_t *spdm_context,
+                                                            size_t request_size,
+                                                            const void *request,
+                                                            size_t *response_size,
+                                                            void *response);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
 
 #if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
 /**

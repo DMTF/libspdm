@@ -69,6 +69,7 @@ const char *libspdm_get_code_str(uint8_t request_code)
         { SPDM_SET_CERTIFICATE, "SPDM_SET_CERTIFICATE" },
         { SPDM_CHUNK_SEND, "SPDM_CHUNK_SEND" },
         { SPDM_CHUNK_GET, "SPDM_CHUNK_GET" },
+        /* SPDM request code (1.3) */
         { SPDM_GET_SUPPORTED_EVENT_TYPES, "SPDM_GET_SUPPORTED_EVENT_TYPES" }
     };
 

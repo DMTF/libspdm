@@ -85,6 +85,10 @@ libspdm_get_spdm_response_func libspdm_get_response_func_via_request_code(uint8_
         { SPDM_CHUNK_SEND, libspdm_get_response_chunk_send},
         #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
 
+        #if LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP
+        { SPDM_SUPPORTED_EVENT_TYPES, libspdm_get_response_supported_event_types },
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
+
         #if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
         { SPDM_VENDOR_DEFINED_REQUEST, libspdm_get_vendor_defined_response },
         #endif /*LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES*/
