@@ -30,6 +30,8 @@
 #include "raw_data_key.h"
 
 bool g_in_trusted_environment = false;
+uint32_t g_supported_event_groups_list_len = 8;
+uint8_t g_event_group_count = 1;
 
 /* "LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY = 1" means use the RAW private key only
  * "LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY = 0" means controlled by g_private_key_mode
@@ -1987,3 +1989,24 @@ bool libspdm_write_certificate_to_nvm(
     return true;
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP */
+
+#if LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP
+bool libspdm_event_get_types(
+    void *spdm_context,
+    spdm_version_number_t spdm_version,
+    void *supported_event_groups_list,
+    uint32_t *supported_event_groups_list_len,
+    uint8_t *event_group_count)
+{
+    *supported_event_groups_list_len = g_supported_event_groups_list_len;
+
+    for (uint32_t index = 0; index < *supported_event_groups_list_len; index++)
+    {
+        ((char *)supported_event_groups_list)[index] = (char)index;
+    }
+
+    *event_group_count = g_event_group_count;
+
+    return true;
+}
+#endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */

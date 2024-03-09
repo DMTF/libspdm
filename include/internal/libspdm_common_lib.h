@@ -20,6 +20,7 @@
 #include "hal/library/responder/measlib.h"
 #include "hal/library/responder/psklib.h"
 #include "hal/library/responder/setcertlib.h"
+#include "hal/library/eventlib.h"
 #include "hal/library/cryptlib.h"
 
 #define INVALID_SESSION_ID 0
