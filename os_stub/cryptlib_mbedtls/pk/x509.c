@@ -1225,9 +1225,9 @@ libspdm_internal_x509_find_extension_data(uint8_t *start, uint8_t *end, const ui
  * @param[out]     extension_data    Extension bytes.
  * @param[in, out] extension_data_size Extension bytes size.
  *
- * @return true   If the returned extension_data_size == 0, it means that cert and oid are valid, but the oid extension is not found;
+ * @retval true   If the returned extension_data_size == 0, it means that cert and oid are valid, but the oid extension is not found;
  *                If the returned extension_data_size != 0, it means that cert and oid are valid, and the oid extension is found;
- * @return false  If the returned extension_data_size == 0, it means that cert or oid are invalid;
+ * @retval false  If the returned extension_data_size == 0, it means that cert or oid are invalid;
  *                If the returned extension_data_size != 0, it means that cert and oid are valid, and the oid extension is found,
  *                                                          but the store buffer is too small.
  **/
@@ -1415,14 +1415,11 @@ bool libspdm_x509_get_key_usage(const uint8_t *cert, size_t cert_size,
  * @param[out]     usage            key usage bytes.
  * @param[in, out] usage_size        key usage buffer sizs in bytes.
  *
- * @retval RETURN_SUCCESS           The usage bytes retrieve successfully.
- * @retval RETURN_INVALID_PARAMETER If cert is NULL.
- *                                 If cert_size is NULL.
- *                                 If usage is not NULL and *usage_size is 0.
- *                                 If cert is invalid.
- * @retval RETURN_BUFFER_TOO_SMALL  If the usage is NULL. The required buffer size
- *                                 is returned in the usage_size parameter.
- * @retval RETURN_UNSUPPORTED       The operation is not supported.
+ * @retval true   If the returned usage_size == 0, it means that cert and oid are valid, but the Extended key usage is not found;
+ *                If the returned usage_size != 0, it means that cert and oid are valid, and the Extended key usage is found;
+ * @retval false  If the returned usage_size == 0, it means that cert or oid are invalid;
+ *                If the returned usage_size != 0, it means that cert and oid are valid, and the Extended key usage is found,
+ *                                                 but the store buffer is too small.
  **/
 bool libspdm_x509_get_extended_key_usage(const uint8_t *cert,
                                          size_t cert_size, uint8_t *usage,
@@ -1450,15 +1447,11 @@ bool libspdm_x509_get_extended_key_usage(const uint8_t *cert,
  * @param[out]     basic_constraints        basic constraints bytes.
  * @param[in, out] basic_constraints_size   basic constraints buffer sizs in bytes.
  *
- * @retval RETURN_SUCCESS           The basic constraints retrieve successfully.
- * @retval RETURN_INVALID_PARAMETER If cert is NULL.
- *                                  If cert_size is NULL.
- *                                  If basic_constraints is not NULL and *basic_constraints_size is 0.
- *                                  If cert is invalid.
- * @retval RETURN_BUFFER_TOO_SMALL  The required buffer size is small.
- *                                  The return buffer size is basic_constraints_size parameter.
- * @retval RETURN_NOT_FOUND         If no Extension entry match oid.
- * @retval RETURN_UNSUPPORTED       The operation is not supported.
+ * @retval true   If the returned basic_constraints_size == 0, it means that cert and oid are valid, but the basic_constraints is not found;
+ *                If the returned basic_constraints_size != 0, it means that cert and oid are valid, and the basic_constraints is found;
+ * @retval false  If the returned basic_constraints_size == 0, it means that cert or oid are invalid;
+ *                If the returned basic_constraints_size != 0, it means that cert and oid are valid, and the basic_constraints is found,
+ *                                                             but the store buffer is too small.
  **/
 bool libspdm_x509_get_extended_basic_constraints(const uint8_t *cert,
                                                  size_t cert_size,

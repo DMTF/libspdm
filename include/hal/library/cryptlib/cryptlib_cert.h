@@ -112,9 +112,9 @@ extern bool libspdm_x509_get_issuer_name(const uint8_t *cert, size_t cert_size,
  * @param[out]     extension_data       Extension bytes.
  * @param[in, out] extension_data_size  Extension bytes size.
  *
- * @return true   If the returned extension_data_size == 0, it means that cert and oid are valid, but the oid extension is not found;
+ * @retval true   If the returned extension_data_size == 0, it means that cert and oid are valid, but the oid extension is not found;
  *                If the returned extension_data_size != 0, it means that cert and oid are valid, and the oid extension is found;
- * @return false  If the returned extension_data_size == 0, it means that cert or oid are invalid;
+ * @retval false  If the returned extension_data_size == 0, it means that cert or oid are invalid;
  *                If the returned extension_data_size != 0, it means that cert and oid are valid, and the oid extension is found,
  *                                                          but the store buffer is too small.
  **/
@@ -206,8 +206,11 @@ extern bool libspdm_x509_get_key_usage(const uint8_t *cert, size_t cert_size, si
  * @param[out]     usage       Key usage bytes.
  * @param[in, out] usage_size  Key usage buffer size in bytes.
  *
- * @retval  true
- * @retval  false
+ * @retval true   If the returned usage_size == 0, it means that cert and oid are valid, but the Extended key usage is not found;
+ *                If the returned usage_size != 0, it means that cert and oid are valid, and the Extended key usage is found;
+ * @retval false  If the returned usage_size == 0, it means that cert or oid are invalid;
+ *                If the returned usage_size != 0, it means that cert and oid are valid, and the Extended key usage is found,
+ *                                                 but the store buffer is too small.
  **/
 extern bool libspdm_x509_get_extended_key_usage(const uint8_t *cert,
                                                 size_t cert_size, uint8_t *usage,
@@ -221,8 +224,11 @@ extern bool libspdm_x509_get_extended_key_usage(const uint8_t *cert,
  * @param[out]     basic_constraints        Basic constraints bytes.
  * @param[in, out] basic_constraints_size   Basic constraints buffer size in bytes.
  *
- * @retval  true
- * @retval  false
+ * @retval true   If the returned basic_constraints_size == 0, it means that cert and oid are valid, but the basic_constraints is not found;
+ *                If the returned basic_constraints_size != 0, it means that cert and oid are valid, and the basic_constraints is found;
+ * @retval false  If the returned basic_constraints_size == 0, it means that cert or oid are invalid;
+ *                If the returned basic_constraints_size != 0, it means that cert and oid are valid, and the basic_constraints is found,
+ *                                                             but the store buffer is too small.
  **/
 extern bool libspdm_x509_get_extended_basic_constraints(const uint8_t *cert,
                                                         size_t cert_size,

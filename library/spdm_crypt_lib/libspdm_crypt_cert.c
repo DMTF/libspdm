@@ -758,12 +758,11 @@ static bool libspdm_verify_leaf_cert_basic_constraints(const uint8_t *cert, size
 
     status = libspdm_x509_get_extended_basic_constraints(cert, cert_size,
                                                          cert_basic_constraints, &len);
-
-    if (len == 0) {
+    if (!status) {
+        return false;
+    } else if (len == 0) {
         /* basic constraints is not present in cert */
         return true;
-    } else if (!status ) {
-        return false;
     }
 
     if ((len == sizeof(basic_constraints_false_case1)) &&
@@ -811,11 +810,11 @@ static bool libspdm_verify_set_cert_leaf_cert_basic_constraints(
                                                          cert_basic_constraints, &len);
     if (cert_model == SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT) {
         /*device cert model*/
-        if (len == 0) {
+        if (!status) {
+            return false;
+        } else if (len == 0) {
             /* basic constraints is not present in cert */
             return true;
-        } else if (!status ) {
-            return false;
         }
 
         if ((len == sizeof(basic_constraints_false_case1)) &&
@@ -875,11 +874,11 @@ static bool libspdm_verify_leaf_cert_spdm_eku(const uint8_t *cert, size_t cert_s
 
     eku_size = sizeof(eku);
     status = libspdm_x509_get_extended_key_usage(cert, cert_size, eku, &eku_size);
-    if (eku_size == 0) {
+    if (!status) {
+        return false;
+    } else if (eku_size == 0) {
         /* eku is not present in cert */
         return true;
-    } else if (!status ) {
-        return false;
     }
 
     ptr = eku;
@@ -970,10 +969,10 @@ static bool libspdm_verify_leaf_cert_spdm_extension(const uint8_t *cert, size_t 
                                              sizeof(oid_spdm_extension),
                                              spdm_extension,
                                              &len);
-    if(len == 0) {
-        return true;
-    } else if(!status) {
+    if (!status) {
         return false;
+    } else if(len == 0) {
+        return true;
     }
 
     /*find the spdm hardware identity OID*/
