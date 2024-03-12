@@ -895,6 +895,7 @@ if(ENABLE_CODEQL STREQUAL "ON")
     add_subdirectory(library/spdm_transport_mctp_lib)
     add_subdirectory(library/spdm_transport_pcidoe_lib)
     add_subdirectory(library/spdm_transport_tcp_lib)
+    ADD_SUBDIRECTORY(library/spdm_transport_storage_lib)
     add_subdirectory(os_stub/memlib)
     add_subdirectory(os_stub/debuglib)
     add_subdirectory(os_stub/debuglib_null)
@@ -933,6 +934,7 @@ else()
         add_subdirectory(library/spdm_transport_mctp_lib)
         add_subdirectory(library/spdm_transport_pcidoe_lib)
         add_subdirectory(library/spdm_transport_tcp_lib)
+        ADD_SUBDIRECTORY(library/spdm_transport_storage_lib)
         add_subdirectory(os_stub/memlib)
         add_subdirectory(os_stub/debuglib)
         add_subdirectory(os_stub/debuglib_null)
@@ -1075,6 +1077,7 @@ else()
             $<TARGET_OBJECTS:spdm_transport_mctp_lib>
             $<TARGET_OBJECTS:spdm_transport_pcidoe_lib>
             $<TARGET_OBJECTS:spdm_transport_tcp_lib>
+            $<TARGET_OBJECTS:spdm_transport_storage_lib>
         )
 
         add_library(${LIB_NAME}_platform SHARED
