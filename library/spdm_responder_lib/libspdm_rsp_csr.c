@@ -198,6 +198,9 @@ libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
                                                    response_size, response);
         }
 
+        /* TBD:
+         * When the Responder MULTI_KEY_CONN_RSP is true,
+         * the SubjectPublicKeyInfo of CSR shall contain values consistent with the KeyPairID. */
         result = libspdm_gen_csr_ex(
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT
             spdm_context,
