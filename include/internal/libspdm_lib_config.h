@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -21,14 +21,6 @@
 #define LIBSPDM_DEBUG_ASSERT_ENABLE (LIBSPDM_DEBUG_ENABLE)
 #define LIBSPDM_DEBUG_PRINT_ENABLE (LIBSPDM_DEBUG_ENABLE)
 #define LIBSPDM_DEBUG_BLOCK_ENABLE (LIBSPDM_DEBUG_ENABLE)
-#elif defined(MDEPKG_NDEBUG)
-#undef LIBSPDM_DEBUG_ASSERT_ENABLE
-#undef LIBSPDM_DEBUG_PRINT_ENABLE
-#undef LIBSPDM_DEBUG_BLOCK_ENABLE
-
-#define LIBSPDM_DEBUG_ASSERT_ENABLE 0
-#define LIBSPDM_DEBUG_PRINT_ENABLE 0
-#define LIBSPDM_DEBUG_BLOCK_ENABLE 0
 #endif /* defined(LIBSPDM_DEBUG_ENABLE) */
 
 /*when in FIPS mode, only support approved algo in FIPS */
