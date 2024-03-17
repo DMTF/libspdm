@@ -65,17 +65,25 @@ static libspdm_return_t libspdm_try_get_csr(libspdm_context_t *spdm_context,
     }
 
     if (libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_13) {
+        const uint8_t csr_cert_model = request_attribute &
+                                       SPDM_GET_CSR_REQUEST_ATTRIBUTES_CERT_MODEL_MASK;
+
         /* CSR_CAP for a 1.2 Responder is not checked because it was not defined in SPDM 1.2.0. */
         if (!libspdm_is_capabilities_flag_supported(
                 spdm_context, true, 0,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CSR_CAP)) {
             return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         }
-        if ((spdm_context->connection_info.multi_key_conn_rsp) == (key_pair_id == 0)) {
-            return LIBSPDM_STATUS_INVALID_PARAMETER;
-        }
-        if (!spdm_context->connection_info.multi_key_conn_rsp) {
-            if ((request_attribute & SPDM_GET_CSR_REQUEST_ATTRIBUTES_CERT_MODEL_MASK) != 0) {
+        if (spdm_context->connection_info.multi_key_conn_rsp) {
+            if (key_pair_id == 0) {
+                return LIBSPDM_STATUS_INVALID_PARAMETER;
+            }
+            if ((csr_cert_model == SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE) ||
+                (csr_cert_model > SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT)) {
+                return LIBSPDM_STATUS_INVALID_PARAMETER;
+            }
+        } else {
+            if ((key_pair_id != 0) || (csr_cert_model != 0)) {
                 return LIBSPDM_STATUS_INVALID_PARAMETER;
             }
         }

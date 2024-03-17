@@ -10,7 +10,6 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
 
-
 libspdm_return_t libspdm_requester_set_certificate_test_send_message(
     void *spdm_context, size_t request_size, const void *request,
     uint64_t timeout)
@@ -65,6 +64,9 @@ libspdm_return_t libspdm_requester_set_certificate_test_send_message(
         return LIBSPDM_STATUS_SUCCESS;
     case 0x7:
         return LIBSPDM_STATUS_SUCCESS;
+    case 0x8:
+        assert_true(false);
+        return LIBSPDM_STATUS_SEND_FAIL;
 
     default:
         return LIBSPDM_STATUS_SEND_FAIL;
@@ -231,8 +233,12 @@ libspdm_return_t libspdm_requester_set_certificate_test_receive_message(
     }
         return LIBSPDM_STATUS_SUCCESS;
 
+    case 0x8:
+        assert_true(false);
+        return LIBSPDM_STATUS_RECEIVE_FAIL;
+
     default:
-        return LIBSPDM_STATUS_SEND_FAIL;
+        return LIBSPDM_STATUS_RECEIVE_FAIL;
     }
 }
 
@@ -453,6 +459,42 @@ void libspdm_test_requester_set_certificate_case7(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 }
 
+/**
+ * Test 8: Illegal combination of MULTI_KEY_CONN_RSP = true, Erase = false, and SetCertModel = 0.
+ * Expected Behavior: function returns LIBSPDM_STATUS_INVALID_PARAMETER.
+ **/
+void libspdm_test_requester_set_certificate_case8(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    void *data;
+    size_t data_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x8;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP;
+    spdm_context->connection_info.multi_key_conn_rsp = true;
+
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo,
+                                                    &data, &data_size, NULL, NULL);
+
+    status = libspdm_set_certificate_ex(spdm_context, NULL, 0, NULL, 0,
+                                        (SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE <<
+                                         SPDM_SET_CERTIFICATE_REQUEST_ATTRIBUTES_CERT_MODEL_OFFSET),
+                                        1);
+
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_PARAMETER);
+}
+
 libspdm_test_context_t m_libspdm_requester_set_certificate_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     true,
@@ -475,6 +517,7 @@ int libspdm_requester_set_certificate_test_main(void)
         cmocka_unit_test(libspdm_test_requester_set_certificate_case6),
         /* Successful response to erase certificate*/
         cmocka_unit_test(libspdm_test_requester_set_certificate_case7),
+        cmocka_unit_test(libspdm_test_requester_set_certificate_case8),
     };
 
     libspdm_setup_test_context(

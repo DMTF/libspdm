@@ -706,9 +706,9 @@ libspdm_return_t libspdm_get_csr(void *spdm_context,
                                  void *opaque_data, uint16_t opaque_data_length,
                                  void *csr, size_t *csr_len);
 
+#if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX
 /**
- * This function sends GET_CSR for SPDM 1.3
- * to get csr from the device.
+ * This function sends GET_CSR for SPDM 1.3 to get CSR from the device.
  *
  * @param[in]  context                A pointer to the SPDM context.
  * @param[in]  session_id             Indicates if it is a secured message protected via SPDM session.
@@ -721,14 +721,13 @@ libspdm_return_t libspdm_get_csr(void *spdm_context,
  * @param[out] csr                    Address to store CSR.
  * @param[in, out] csr_len            On input, *csr_len indicates the max csr buffer size.
  *                                    On output, *csr_len indicates the actual csr buffer size.
- * @param[in]  request_attribute      Set certificate request attributes. This field is only used for SPDM 1.3 and above.
+ * @param[in]  request_attribute      GET_CSR request attributes that includes the CSRCertModel,
+ *                                    CSRTrackingTag, and Overwrite fields.
+ *                                    This field is only used for SPDM 1.3 and above.
  * @param[in]  key_pair_id            The value of this field shall be the unique key pair number identifying the desired
  *                                    asymmetric key pair to associate with SlotID.
  * @param[out] available_csr_tracking_tag   available CSRTrackingTag when the Responder sends a ResetRequired error message
- *
  **/
-
-#if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX
 libspdm_return_t libspdm_get_csr_ex(void * spdm_context,
                                     const uint32_t *session_id,
                                     void * requester_info, uint16_t requester_info_length,

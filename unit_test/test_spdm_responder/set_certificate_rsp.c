@@ -938,7 +938,9 @@ void libspdm_test_responder_set_cetificate_rsp_case11(void **state)
 
     m_libspdm_set_certificate_request->header.spdm_version = SPDM_MESSAGE_VERSION_13;
     m_libspdm_set_certificate_request->header.request_response_code = SPDM_SET_CERTIFICATE;
-    m_libspdm_set_certificate_request->header.param1 = slot_id;
+    m_libspdm_set_certificate_request->header.param1 =
+        slot_id | (SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT <<
+                   SPDM_SET_CERTIFICATE_REQUEST_ATTRIBUTES_CERT_MODEL_OFFSET);
     m_libspdm_set_certificate_request->header.param2 = key_pair_id;
 
     libspdm_copy_mem(m_libspdm_set_certificate_request + 1,
@@ -958,6 +960,80 @@ void libspdm_test_responder_set_cetificate_rsp_case11(void **state)
     spdm_response = (void *)response;
     assert_int_equal(spdm_response->header.request_response_code,
                      SPDM_SET_CERTIFICATE_RSP);
+
+    free(cert_chain);
+    free(m_libspdm_set_certificate_request);
+}
+
+/**
+ * Test 12: Illegal combination of MULTI_KEY_CONN_RSP = true, Erase = false, and SetCertModel = 0.
+ * Expected Behavior: produces SPDM_ERROR_CODE_INVALID_REQUEST message.
+ **/
+void libspdm_test_responder_set_certificate_rsp_case12(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_set_certificate_response_t *spdm_response;
+    void *cert_chain;
+    size_t cert_chain_size;
+    spdm_set_certificate_request_t *m_libspdm_set_certificate_request;
+    uint8_t slot_id;
+    uint8_t key_pair_id;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xc;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    slot_id = 1;
+    key_pair_id = 1;
+
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.multi_key_conn_rsp = true;
+
+    spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &cert_chain,
+                                                    &cert_chain_size, NULL, NULL);
+
+    m_libspdm_set_certificate_request = malloc(sizeof(spdm_set_certificate_request_t) +
+                                               cert_chain_size);
+
+    m_libspdm_set_certificate_request->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    m_libspdm_set_certificate_request->header.request_response_code = SPDM_SET_CERTIFICATE;
+    m_libspdm_set_certificate_request->header.param1 =
+        slot_id | (SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE <<
+                   SPDM_SET_CERTIFICATE_REQUEST_ATTRIBUTES_CERT_MODEL_OFFSET);
+    m_libspdm_set_certificate_request->header.param2 = key_pair_id;
+
+    libspdm_copy_mem(m_libspdm_set_certificate_request + 1,
+                     LIBSPDM_MAX_CERT_CHAIN_SIZE,
+                     (uint8_t *)cert_chain, cert_chain_size);
+
+    size_t m_libspdm_set_certificate_request_size = sizeof(spdm_set_certificate_request_t) +
+                                                    cert_chain_size;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_set_certificate(spdm_context,
+                                                  m_libspdm_set_certificate_request_size,
+                                                  m_libspdm_set_certificate_request,
+                                                  &response_size, response);
+
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.param2, 0);
 
     free(cert_chain);
     free(m_libspdm_set_certificate_request);
@@ -993,6 +1069,7 @@ int libspdm_responder_set_certificate_rsp_test_main(void)
         cmocka_unit_test(libspdm_test_responder_set_cetificate_rsp_case10),
         /* Success Case for set_certificate to slot_id:1 with key_pair_id*/
         cmocka_unit_test(libspdm_test_responder_set_cetificate_rsp_case11),
+        cmocka_unit_test(libspdm_test_responder_set_certificate_rsp_case12),
     };
 
     libspdm_setup_test_context(&m_libspdm_responder_set_certificate_rsp_test_context);

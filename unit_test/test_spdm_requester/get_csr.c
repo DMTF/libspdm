@@ -150,6 +150,9 @@ libspdm_return_t libspdm_requester_get_csr_test_send_message(
         return LIBSPDM_STATUS_SUCCESS;
     case 0x6:
         return LIBSPDM_STATUS_SUCCESS;
+    case 0x7:
+        assert_true(false);
+        return LIBSPDM_STATUS_SUCCESS;
     default:
         return LIBSPDM_STATUS_SEND_FAIL;
     }
@@ -297,8 +300,11 @@ libspdm_return_t libspdm_requester_get_csr_test_receive_message(
                                               response);
     }
         return LIBSPDM_STATUS_SUCCESS;
+    case 0x7:
+        assert_true(false);
+        return LIBSPDM_STATUS_SUCCESS;
     default:
-        return LIBSPDM_STATUS_SEND_FAIL;
+        return LIBSPDM_STATUS_RECEIVE_FAIL;
     }
 }
 
@@ -537,6 +543,46 @@ void libspdm_test_requester_get_csr_case6(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
 }
 
+/**
+ * Test 7: Illegal combination of MULTI_KEY_CONN_RSP = true and CSRCertModel = 0.
+ * Expected Behavior: returns LIBSPDM_STATUS_INVALID_PARAMETER.
+ **/
+void libspdm_test_requester_get_csr_case7(void **state)
+{
+#if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    uint8_t csr_form_get[LIBSPDM_MAX_CSR_SIZE] = {0};
+    size_t csr_len;
+    uint8_t tracking_tag;
+
+    csr_len = LIBSPDM_MAX_CSR_SIZE;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x7;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->local_context.capability.flags = 0;
+    spdm_context->connection_info.capability.flags = SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CSR_CAP;
+    spdm_context->connection_info.multi_key_conn_rsp = true;
+
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+
+    spdm_context->connection_info.algorithm.other_params_support =
+        SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_0;
+
+    status = libspdm_get_csr_ex(spdm_context, NULL, NULL, 0, NULL, 0, (void *)&csr_form_get,
+                                &csr_len, SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE, 1, &tracking_tag);
+
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_PARAMETER);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX */
+}
 
 libspdm_test_context_t m_libspdm_requester_get_csr_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
@@ -560,6 +606,7 @@ int libspdm_requester_get_csr_test_main(void)
         cmocka_unit_test(libspdm_test_requester_get_csr_case5),
         /* Illegal ResetRequired error response. */
         cmocka_unit_test(libspdm_test_requester_get_csr_case6),
+        cmocka_unit_test(libspdm_test_requester_get_csr_case7),
     };
 
     libspdm_setup_test_context(
