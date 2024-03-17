@@ -1406,7 +1406,8 @@ void libspdm_test_responder_csr_case13(void **state)
     m_libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
     m_libspdm_get_csr_request->header.param1 = 1;
     m_libspdm_get_csr_request->header.param2 =
-        csr_tracking_tag << SPDM_GET_CSR_REQUEST_ATTRIBUTES_CSR_TRACKING_TAG_OFFSET;
+        SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT |
+        (csr_tracking_tag << SPDM_GET_CSR_REQUEST_ATTRIBUTES_CSR_TRACKING_TAG_OFFSET);
 
     m_libspdm_get_csr_request->opaque_data_length = 0;
     m_libspdm_get_csr_request->requester_info_length = req_info_len;
@@ -1441,7 +1442,8 @@ void libspdm_test_responder_csr_case13(void **state)
     m_libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
     m_libspdm_get_csr_request->header.param1 = 1;
     m_libspdm_get_csr_request->header.param2 =
-        csr_tracking_tag << SPDM_GET_CSR_REQUEST_ATTRIBUTES_CSR_TRACKING_TAG_OFFSET;
+        SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT |
+        (csr_tracking_tag << SPDM_GET_CSR_REQUEST_ATTRIBUTES_CSR_TRACKING_TAG_OFFSET);
 
     m_libspdm_get_csr_request->opaque_data_length = 0;
     m_libspdm_get_csr_request->requester_info_length = req_info_len;
@@ -1543,7 +1545,8 @@ void libspdm_test_responder_csr_case14(void **state)
     m_libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
     m_libspdm_get_csr_request->header.param1 = 1;
     m_libspdm_get_csr_request->header.param2 =
-        csr_tracking_tag << SPDM_GET_CSR_REQUEST_ATTRIBUTES_CSR_TRACKING_TAG_OFFSET;
+        SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT |
+        (csr_tracking_tag << SPDM_GET_CSR_REQUEST_ATTRIBUTES_CSR_TRACKING_TAG_OFFSET);
 
     m_libspdm_get_csr_request->opaque_data_length = 0;
     m_libspdm_get_csr_request->requester_info_length = req_info_len;
@@ -1579,7 +1582,8 @@ void libspdm_test_responder_csr_case14(void **state)
         m_libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
         m_libspdm_get_csr_request->header.param1 = 1;
         m_libspdm_get_csr_request->header.param2 =
-            csr_tracking_tag << SPDM_GET_CSR_REQUEST_ATTRIBUTES_CSR_TRACKING_TAG_OFFSET;
+            SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT |
+            (csr_tracking_tag << SPDM_GET_CSR_REQUEST_ATTRIBUTES_CSR_TRACKING_TAG_OFFSET);
 
         m_libspdm_get_csr_request->opaque_data_length = 0;
         m_libspdm_get_csr_request->requester_info_length = req_info_len;
@@ -1607,7 +1611,8 @@ void libspdm_test_responder_csr_case14(void **state)
     m_libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
     m_libspdm_get_csr_request->header.param1 = 1;
     m_libspdm_get_csr_request->header.param2 =
-        csr_tracking_tag << SPDM_GET_CSR_REQUEST_ATTRIBUTES_CSR_TRACKING_TAG_OFFSET;
+        SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT |
+        (csr_tracking_tag << SPDM_GET_CSR_REQUEST_ATTRIBUTES_CSR_TRACKING_TAG_OFFSET);
 
     m_libspdm_get_csr_request->opaque_data_length = 0;
     m_libspdm_get_csr_request->requester_info_length = req_info_len;
@@ -1708,7 +1713,8 @@ void libspdm_test_responder_csr_case15(void **state)
     m_libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
     m_libspdm_get_csr_request->header.param1 = 1;
     m_libspdm_get_csr_request->header.param2 =
-        csr_tracking_tag << SPDM_GET_CSR_REQUEST_ATTRIBUTES_CSR_TRACKING_TAG_OFFSET;
+        SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT |
+        (csr_tracking_tag << SPDM_GET_CSR_REQUEST_ATTRIBUTES_CSR_TRACKING_TAG_OFFSET);
 
     m_libspdm_get_csr_request->opaque_data_length = 0;
     m_libspdm_get_csr_request->requester_info_length = req_info_len;
@@ -1741,7 +1747,8 @@ void libspdm_test_responder_csr_case15(void **state)
     m_libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
     m_libspdm_get_csr_request->header.param1 = 1;
     m_libspdm_get_csr_request->header.param2 =
-        csr_tracking_tag << SPDM_GET_CSR_REQUEST_ATTRIBUTES_CSR_TRACKING_TAG_OFFSET;
+        SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT |
+        (csr_tracking_tag << SPDM_GET_CSR_REQUEST_ATTRIBUTES_CSR_TRACKING_TAG_OFFSET);
 
     m_libspdm_get_csr_request->opaque_data_length = 0;
     m_libspdm_get_csr_request->requester_info_length = req_info_len;
@@ -1769,7 +1776,8 @@ void libspdm_test_responder_csr_case15(void **state)
     m_libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
     m_libspdm_get_csr_request->header.param1 = 1;
     m_libspdm_get_csr_request->header.param2 =
-        csr_tracking_tag << SPDM_GET_CSR_REQUEST_ATTRIBUTES_CSR_TRACKING_TAG_OFFSET;
+        SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT |
+        (csr_tracking_tag << SPDM_GET_CSR_REQUEST_ATTRIBUTES_CSR_TRACKING_TAG_OFFSET);
 
     m_libspdm_get_csr_request->opaque_data_length = 0;
     m_libspdm_get_csr_request->requester_info_length = req_info_len;
@@ -1830,7 +1838,8 @@ void libspdm_test_responder_csr_case15(void **state)
     m_libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
     m_libspdm_get_csr_request->header.param1 = 1;
     m_libspdm_get_csr_request->header.param2 =
-        csr_tracking_tag << SPDM_GET_CSR_REQUEST_ATTRIBUTES_CSR_TRACKING_TAG_OFFSET;
+        SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT |
+        (csr_tracking_tag << SPDM_GET_CSR_REQUEST_ATTRIBUTES_CSR_TRACKING_TAG_OFFSET);
 
     m_libspdm_get_csr_request->opaque_data_length = 0;
     m_libspdm_get_csr_request->requester_info_length = req_info_len;
@@ -1857,6 +1866,7 @@ void libspdm_test_responder_csr_case15(void **state)
     m_libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
     m_libspdm_get_csr_request->header.param1 = 1;
     m_libspdm_get_csr_request->header.param2 =
+        SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT |
         (csr_tracking_tag << SPDM_GET_CSR_REQUEST_ATTRIBUTES_CSR_TRACKING_TAG_OFFSET) |
         SPDM_GET_CSR_REQUEST_ATTRIBUTES_OVERWRITE;
 
@@ -1894,6 +1904,84 @@ void libspdm_test_responder_csr_case15(void **state)
     /*clear cached req_info*/
     libspdm_test_clear_cached_last_request();
     free(m_libspdm_get_csr_request);
+}
+
+/**
+ * Test 16: Illegal combination of MULTI_KEY_CONN_RSP = true and CSRCertModel = 0.
+ * Expected Behavior: produces SPDM_ERROR_CODE_INVALID_REQUEST message.
+ **/
+void libspdm_test_responder_csr_case16(void **state)
+{
+#if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_csr_response_t *spdm_response;
+    spdm_get_csr_request_t *m_libspdm_get_csr_request;
+    uint8_t cached_csr[LIBSPDM_MAX_CSR_SIZE];
+    libspdm_zero_mem(cached_csr, LIBSPDM_MAX_CSR_SIZE);
+
+    uint8_t *csr_pointer;
+    size_t csr_len;
+    uint8_t csr_tracking_tag;
+
+    csr_tracking_tag = 0;
+
+    if (!libspdm_test_read_cached_csr(&csr_pointer, &csr_len)) {
+        assert_false(true);
+    }
+
+    libspdm_copy_mem(cached_csr, LIBSPDM_MAX_CSR_SIZE, csr_pointer, csr_len);
+    free(csr_pointer);
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x10;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->local_context.capability.flags = SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CSR_CAP;
+
+    spdm_context->connection_info.multi_key_conn_rsp = true;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+
+    m_libspdm_get_csr_request = malloc(sizeof(spdm_get_csr_request_t) + req_info_len);
+
+    m_libspdm_get_csr_request->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    m_libspdm_get_csr_request->header.request_response_code = SPDM_GET_CSR;
+    m_libspdm_get_csr_request->header.param1 = 1;
+    m_libspdm_get_csr_request->header.param2 =
+        SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE |
+        (csr_tracking_tag << SPDM_GET_CSR_REQUEST_ATTRIBUTES_CSR_TRACKING_TAG_OFFSET);
+
+    m_libspdm_get_csr_request->opaque_data_length = 0;
+    m_libspdm_get_csr_request->requester_info_length = req_info_len;
+
+    libspdm_copy_mem(m_libspdm_get_csr_request + 1, req_info_len, right_req_info, req_info_len);
+
+    size_t m_libspdm_get_csr_request_size = sizeof(spdm_get_csr_request_t) + req_info_len;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_csr(spdm_context,
+                                      m_libspdm_get_csr_request_size,
+                                      m_libspdm_get_csr_request,
+                                      &response_size, response);
+
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
+    assert_int_equal(spdm_response->header.param2, 0);
+
+    /*clear cached req_info*/
+    libspdm_test_clear_cached_last_request();
+    free(m_libspdm_get_csr_request);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX */
 }
 
 libspdm_test_context_t m_libspdm_responder_csr_test_context = {
@@ -1934,6 +2022,7 @@ int libspdm_responder_csr_test_main(void)
         cmocka_unit_test(libspdm_test_responder_csr_case14),
         /* Failed Case: Responder need reset to gen csr for SPDM1.3, test for unmatched csr_tracking_tag and overwrite*/
         cmocka_unit_test(libspdm_test_responder_csr_case15),
+        cmocka_unit_test(libspdm_test_responder_csr_case16),
     };
 
     libspdm_setup_test_context(&m_libspdm_responder_csr_test_context);

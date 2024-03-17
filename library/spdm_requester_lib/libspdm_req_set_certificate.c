@@ -55,12 +55,32 @@ static libspdm_return_t libspdm_try_set_certificate(libspdm_context_t *spdm_cont
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
     }
-    /* SET_CERT_CAP for a 1.2 Responder is not checked because it was not defined in SPDM 1.2.0. */
     if (libspdm_get_connection_version (spdm_context) >= SPDM_MESSAGE_VERSION_13) {
+        const uint8_t set_cert_model =
+            (request_attribute & SPDM_SET_CERTIFICATE_REQUEST_ATTRIBUTES_CERT_MODEL_MASK) >>
+            SPDM_SET_CERTIFICATE_REQUEST_ATTRIBUTES_CERT_MODEL_OFFSET;
+
+        /* SET_CERT_CAP for a 1.2 Responder is not checked because it was not defined
+         * in SPDM 1.2.0. */
         if (!libspdm_is_capabilities_flag_supported(
                 spdm_context, true, 0,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_CERT_CAP)) {
             return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+        }
+        if (spdm_context->connection_info.multi_key_conn_rsp) {
+            if (key_pair_id == 0) {
+                return LIBSPDM_STATUS_INVALID_PARAMETER;
+            }
+            if ((request_attribute & SPDM_SET_CERTIFICATE_REQUEST_ATTRIBUTES_ERASE) == 0) {
+                if ((set_cert_model == SPDM_CERTIFICATE_INFO_CERT_MODEL_NONE) ||
+                    (set_cert_model > SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT)) {
+                    return LIBSPDM_STATUS_INVALID_PARAMETER;
+                }
+            }
+        } else {
+            if ((key_pair_id != 0) || (set_cert_model != 0)) {
+                return LIBSPDM_STATUS_INVALID_PARAMETER;
+            }
         }
     }
 
