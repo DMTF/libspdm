@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -244,8 +244,14 @@ libspdm_test_context_t m_libspdm_responder_measurements_test_context = {
 void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
 {
     void *State;
-
+    spdm_message_header_t *spdm_request_header;
     libspdm_setup_test_context(&m_libspdm_responder_measurements_test_context);
+
+    spdm_request_header = (spdm_message_header_t*)test_buffer;
+
+    if (spdm_request_header->request_response_code != SPDM_GET_MEASUREMENTS) {
+        spdm_request_header->request_response_code = SPDM_GET_MEASUREMENTS;
+    }
 
     m_libspdm_responder_measurements_test_context.test_buffer = test_buffer;
     m_libspdm_responder_measurements_test_context.test_buffer_size = test_buffer_size;
