@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -9,6 +9,13 @@
 #include "toolchain_harness.h"
 
 uint8_t temp_buf[LIBSPDM_RECEIVER_BUFFER_SIZE];
+
+spdm_version_number_t m_version[] = {
+    SPDM_MESSAGE_VERSION_10,
+    SPDM_MESSAGE_VERSION_11,
+    SPDM_MESSAGE_VERSION_12,
+    SPDM_MESSAGE_VERSION_13,
+};
 
 size_t libspdm_get_max_buffer_size(void)
 {
@@ -63,7 +70,14 @@ void libspdm_test_requester_get_capabilities(void **State)
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
 
-    libspdm_get_capabilities(spdm_context);
+    for (uint8_t index = 0; index < sizeof(m_version)/sizeof(spdm_version_number_t); index++) {
+        spdm_context->connection_info.version = m_version[index] <<
+                                                SPDM_VERSION_NUMBER_SHIFT_BIT;
+        spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+        libspdm_reset_message_a(spdm_context);
+
+        libspdm_get_capabilities(spdm_context);
+    }
 }
 
 libspdm_test_context_t m_libspdm_test_requester_context = {
@@ -82,10 +96,8 @@ void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
     m_libspdm_test_requester_context.test_buffer = test_buffer;
     m_libspdm_test_requester_context.test_buffer_size = test_buffer_size;
 
-    libspdm_unit_test_group_setup(&State);
-
     /* Successful response*/
+    libspdm_unit_test_group_setup(&State);
     libspdm_test_requester_get_capabilities(&State);
-
     libspdm_unit_test_group_teardown(&State);
 }
