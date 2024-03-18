@@ -316,7 +316,7 @@ Enumeration value used for the `libspdm_set_data` and/or `libspdm_get_data` func
               fails then little-endian is tried.
 - `LIBSPDM_DATA_SEQUENCE_NUMBER_ENDIAN`
     - Specifies the endianness of the AEAD sequence number used in secured message encryption and
-      decryption when the negotiated secured SDPM version is 1.0 or 1.1. Its value is one of
+      decryption when the negotiated secured SPDM version is 1.0 or 1.1. Its value is one of
         - `LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_LITTLE`
             - Data is both encrypted and decrypted with a little-endian sequence number. (default)
         - `LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_BOTH`
@@ -392,7 +392,7 @@ Enumeration value used for the `libspdm_set_data` and/or `libspdm_get_data` func
      `LIBSPDM_SESSION_STATE_ESTABLISHED` state.
 - `LIBSPDM_DATA_SESSION_SEQUENCE_NUMBER_ENDIAN`
     - For a given session ID, returns the endianness of the AEAD sequence number when the
-      negotiated secured SDPM version is 1.0 or 1.1. Its value is one of
+      negotiated secured SPDM version is 1.0 or 1.1. Its value is one of
         - `LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_LITTLE`
             - The endianness of the sequence number is little-endian.
         - `LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_BIG_DEC_BIG`

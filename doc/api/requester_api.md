@@ -168,7 +168,7 @@ The SPDM context.
 Indicates if it is a secured message (non-NULL) or an unsecured message (NULL).
 
 **request_attribute**<br/>
-Species directives to the Responder. It is a bitmask and its value can contain any combination of
+Specifies directives to the Responder. It is a bitmask and its value can contain any combination of
 - `SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE`
     - If set then Responder will provide a signature.
 - `SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_RAW_BIT_STREAM_REQUESTED`
@@ -177,7 +177,7 @@ Species directives to the Responder. It is a bitmask and its value can contain a
     - Only supported in SPDM version 1.2 and later.
 
 **measurement_operation**<br/>
-Species the measurement operation to be performed by the Responder. Its value is one of
+Specifies the measurement operation to be performed by the Responder. Its value is one of
 - `SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_TOTAL_NUMBER_OF_MEASUREMENTS`
     - Returns the total number of measurement blocks available through the `number_of_blocks`
       parameter.
