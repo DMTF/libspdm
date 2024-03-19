@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -358,6 +358,94 @@ void libspdm_test_responder_algorithms_case11(void **State)
                                     spdm_test_context->test_buffer, &response_size, response);
 }
 
+void libspdm_test_responder_algorithms_case12(void **State)
+{
+    libspdm_test_context_t    *spdm_test_context;
+    libspdm_context_t  *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+
+    spdm_test_context = *State;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.measurement_hash_algo = 0;
+    spdm_context->local_context.algorithm.measurement_spec = 0;
+    spdm_context->local_context.capability.flags = 0;
+    spdm_context->local_context.algorithm.other_params_support = 0;
+    spdm_context->local_context.algorithm.mel_spec = SPDM_MEL_SPECIFICATION_DMTF;
+    libspdm_reset_message_a(spdm_context);
+
+    spdm_context->connection_info.algorithm.other_params_support = SPDM_ALGORITHMS_MULTI_KEY_CONN;
+
+    /* Sub Case 1: MEL_CAP set 1*/
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEL_CAP;
+
+    response_size = sizeof(response);
+    libspdm_get_response_algorithms(spdm_context, spdm_test_context->test_buffer_size,
+                                    spdm_test_context->test_buffer, &response_size, response);
+
+    /* Sub Case 2: MEL_CAP set 0*/
+    spdm_context->local_context.capability.flags = 0;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    libspdm_reset_message_a(spdm_context);
+
+    response_size = sizeof(response);
+    libspdm_get_response_algorithms(spdm_context, spdm_test_context->test_buffer_size,
+                                    spdm_test_context->test_buffer, &response_size, response);
+
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    libspdm_reset_message_a(spdm_context);
+
+    spdm_context->local_context.algorithm.other_params_support = 0;
+    spdm_context->connection_info.capability.flags =
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MULTI_KEY_CAP_ONLY;
+
+    response_size = sizeof(response);
+    libspdm_get_response_algorithms(spdm_context, spdm_test_context->test_buffer_size,
+                                    spdm_test_context->test_buffer, &response_size, response);
+
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    libspdm_reset_message_a(spdm_context);
+
+    spdm_context->local_context.algorithm.other_params_support = SPDM_ALGORITHMS_MULTI_KEY_CONN;
+    spdm_context->connection_info.capability.flags =
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MULTI_KEY_CAP_ONLY;
+
+    response_size = sizeof(response);
+    libspdm_get_response_algorithms(spdm_context, spdm_test_context->test_buffer_size,
+                                    spdm_test_context->test_buffer, &response_size, response);
+
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    libspdm_reset_message_a(spdm_context);
+
+    spdm_context->local_context.algorithm.other_params_support = 0;
+    spdm_context->connection_info.capability.flags =
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MULTI_KEY_CAP_NEG;
+
+    response_size = sizeof(response);
+    libspdm_get_response_algorithms(spdm_context, spdm_test_context->test_buffer_size,
+                                    spdm_test_context->test_buffer, &response_size, response);
+
+
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
+    libspdm_reset_message_a(spdm_context);
+
+    spdm_context->local_context.algorithm.other_params_support = SPDM_ALGORITHMS_MULTI_KEY_CONN;
+    spdm_context->connection_info.capability.flags =
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MULTI_KEY_CAP_NEG;
+
+    response_size = sizeof(response);
+    libspdm_get_response_algorithms(spdm_context, spdm_test_context->test_buffer_size,
+                                    spdm_test_context->test_buffer, &response_size, response);
+
+}
+
 libspdm_test_context_t libspdm_test_responder_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     false,
@@ -425,4 +513,8 @@ void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
     libspdm_test_responder_algorithms_case11(&State);
     libspdm_unit_test_group_teardown(&State);
 
+    /* V1.3 requester*/
+    libspdm_unit_test_group_setup(&State);
+    libspdm_test_responder_algorithms_case12(&State);
+    libspdm_unit_test_group_teardown(&State);
 }
