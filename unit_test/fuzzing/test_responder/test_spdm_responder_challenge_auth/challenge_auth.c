@@ -358,8 +358,14 @@ void libspdm_test_responder_challenge_case8(void **State)
 void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
 {
     void *State;
-
+    spdm_message_header_t *spdm_request_header;
     libspdm_setup_test_context(&m_libspdm_responder_challenge_test_context);
+
+    spdm_request_header = (spdm_message_header_t*)test_buffer;
+
+    if (spdm_request_header->request_response_code != SPDM_CHALLENGE) {
+        spdm_request_header->request_response_code = SPDM_CHALLENGE;
+    }
 
     m_libspdm_responder_challenge_test_context.test_buffer = test_buffer;
     m_libspdm_responder_challenge_test_context.test_buffer_size = test_buffer_size;
