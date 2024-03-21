@@ -84,26 +84,30 @@ void libspdm_test_responder_chunk_send_ack_case1(void **State)
     chunk_num = 0;
     bytes_sent = 0;
     bytes_total = spdm_test_context->test_buffer_size;
-
+    /* All chunk send message sequences, including chunk_send_header and spdm_chunk. */
     request = (uint8_t *)spdm_test_context->test_buffer;
 
     do
     {
         if (chunk_num == 0) {
+            /* (uint32_t)LargeMessageSize , This field shall only be present when ChunkSeqNo
+             * is zero and shall have a non-zero value.
+             * The bytes_total should not be less than the minimum effective size.*/
+            if(bytes_total < sizeof(spdm_chunk_send_request_t) + sizeof(uint32_t)) {
+                break;
+            }
             chunk_send_request = (spdm_chunk_send_request_t *)request;
             spdm_message_header_t *test_spdm_message_header_t;
 
             request_size = sizeof(spdm_chunk_send_request_t) + sizeof(uint32_t) +
                            chunk_send_request->chunk_size;
 
-            if (chunk_send_request->chunk_size > bytes_total) {
+            /* Remaining space should meet the chunk_size. */
+            if(bytes_total - sizeof(spdm_chunk_send_request_t) - sizeof(uint32_t) <
+               chunk_send_request->chunk_size) {
                 break;
             }
-            if (chunk_send_request->chunk_size >
-                (request_size - sizeof(spdm_chunk_send_request_t) - sizeof(uint32_t)) ||
-                chunk_send_request->chunk_size == 0) {
-                break;
-            }
+
             test_spdm_message_header_t =
                 (spdm_message_header_t *)(((uint8_t*) (chunk_send_request + 1)) + sizeof(uint32_t));
             if (test_spdm_message_header_t->request_response_code == SPDM_RESPOND_IF_READY) {
@@ -113,17 +117,18 @@ void libspdm_test_responder_chunk_send_ack_case1(void **State)
                 chunk_send_request->chunk_size + sizeof(spdm_chunk_send_request_t) +
                 sizeof(uint32_t);
         } else {
+            /* The remaining number of bytes should not be less than the minimum effective size*/
+            if(bytes_total - bytes_sent < sizeof(spdm_chunk_send_request_t)) {
+                break;
+            }
             chunk_send_request = (spdm_chunk_send_request_t *)request;
             spdm_message_header_t *test_spdm_message_header_t;
 
             request_size = sizeof(spdm_chunk_send_request_t) + chunk_send_request->chunk_size;
 
-            if (chunk_send_request->chunk_size > bytes_total) {
-                break;
-            }
-            if (chunk_send_request->chunk_size >
-                (request_size - sizeof(spdm_chunk_send_request_t) - bytes_sent) ||
-                chunk_send_request->chunk_size == 0) {
+            /* Remaining space should meet the chunk_size. */
+            if(bytes_total - bytes_sent - sizeof(spdm_chunk_send_request_t) <
+               chunk_send_request->chunk_size) {
                 break;
             }
 
@@ -155,7 +160,7 @@ void libspdm_test_responder_chunk_send_ack_case1(void **State)
         if (status != LIBSPDM_STATUS_SUCCESS) {
             break;
         }
-    } while (bytes_sent < bytes_total);
+    }while (true);
 }
 
 libspdm_test_context_t m_libspdm_responder_chunk_send_ack_test_context = {
