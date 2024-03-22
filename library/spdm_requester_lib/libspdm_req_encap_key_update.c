@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -31,7 +31,7 @@ libspdm_return_t libspdm_get_encap_response_key_update(void *spdm_context,
     if (libspdm_get_connection_version(context) < SPDM_MESSAGE_VERSION_11) {
         return libspdm_generate_encap_error_response(
             context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
-            0, response_size, response);
+            SPDM_KEY_UPDATE, response_size, response);
     }
 
     if (spdm_request->header.spdm_version != libspdm_get_connection_version(context)) {

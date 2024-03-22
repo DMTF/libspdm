@@ -106,7 +106,8 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
 
     if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_11) {
         return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_UNSUPPORTED_REQUEST, 0,
+                                               SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
+                                               SPDM_PSK_EXCHANGE,
                                                response_size, response);
     }
 
