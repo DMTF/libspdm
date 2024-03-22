@@ -37,7 +37,7 @@ libspdm_return_t libspdm_get_encap_response_challenge_auth(
     if (libspdm_get_connection_version(context) < SPDM_MESSAGE_VERSION_11) {
         return libspdm_generate_encap_error_response(
             context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
-            0, response_size, response);
+            SPDM_CHALLENGE, response_size, response);
     }
 
     if (spdm_request->header.spdm_version != libspdm_get_connection_version(context)) {
