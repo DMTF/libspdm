@@ -76,6 +76,14 @@
 #define LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN 1024
 #endif
 
+/* Partial MEL(measurement extension log) can be retrieved from a Requester or Responder and through multiple messages
+ * the complete MEL can be constructed. This value specifies the maximum size,
+ * in bytes, of a partial MEL that can be sent or received.
+ */
+#ifndef LIBSPDM_MAX_MEL_BLOCK_LEN
+#define LIBSPDM_MAX_MEL_BLOCK_LEN 1024
+#endif
+
 /* To ensure integrity in communication between the Requester and the Responder libspdm calculates
  * cryptographic digests and signatures over multiple requests and responses. This value specifies
  * whether libspdm will use a running calculation over the transcript, where requests and responses
