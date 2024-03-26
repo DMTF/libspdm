@@ -102,6 +102,15 @@ bool libspdm_read_requester_gen_csr(void **csr_data, size_t *csr_len)
     return res;
 }
 
+/*ensure that cached.csr exists in test_csr at the beginning*/
+void libspdm_clear_cached_csr()
+{
+    char *new_name = "test_csr/cached.csr";
+    char *file_name = "test_csr/cached.staging";
+
+    rename(file_name, new_name);
+}
+
 libspdm_return_t libspdm_requester_get_csr_test_send_message(
     void *spdm_context, size_t request_size, const void *request,
     uint64_t timeout)
@@ -555,6 +564,9 @@ int libspdm_requester_get_csr_test_main(void)
 
     libspdm_setup_test_context(
         &m_libspdm_requester_get_csr_test_context);
+
+    /*ensure that cached.csr exists in test_csr at the beginning*/
+    libspdm_clear_cached_csr();
 
     return cmocka_run_group_tests(spdm_requester_get_csr_tests,
                                   libspdm_unit_test_group_setup,
