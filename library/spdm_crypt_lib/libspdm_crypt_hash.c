@@ -1,10 +1,18 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
+#include "internal/libspdm_common_lib.h"
 #include "internal/libspdm_crypt_lib.h"
+
+uint32_t libspdm_get_base_hash_algo(void *context)
+{
+    libspdm_context_t *spdm_context = context;
+
+    return spdm_context->connection_info.algorithm.base_hash_algo;
+}
 
 uint32_t libspdm_get_hash_size(uint32_t base_hash_algo)
 {
