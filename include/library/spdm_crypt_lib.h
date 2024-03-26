@@ -81,6 +81,16 @@
 #endif /* LIBSPDM_MAX_AEAD_KEY_SIZE */
 
 /**
+ * This function returns the SPDM base hash algorithm.
+ *
+ * @param  context  A pointer to the SPDM context.
+ *
+ * @return SPDM base hash algorithm
+ *     (spdm_context->connection_info.algorithm.base_hash_algo).
+ **/
+uint32_t libspdm_get_base_hash_algo(void *context);
+
+/**
  * This function returns the SPDM hash algorithm size.
  *
  * @param  base_hash_algo SPDM base_hash_algo
