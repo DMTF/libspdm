@@ -169,6 +169,15 @@ bool libspdm_set_csr_after_reset()
     return true;
 }
 
+/*ensure that cached.csr exists in test_csr at the beginning*/
+void libspdm_clear_cached_csr()
+{
+    char *new_name = "test_csr/cached.csr";
+    char *file_name = "test_csr/cached.staging";
+
+    rename(file_name, new_name);
+}
+
 /*clean the cached last SPDM csr request*/
 void libspdm_test_clear_cached_last_request()
 {
@@ -1928,6 +1937,9 @@ int libspdm_responder_csr_test_main(void)
     };
 
     libspdm_setup_test_context(&m_libspdm_responder_csr_test_context);
+
+    /*ensure that cached.csr exists in test_csr at the beginning*/
+    libspdm_clear_cached_csr();
 
     return cmocka_run_group_tests(spdm_responder_csr_tests,
                                   libspdm_unit_test_group_setup,
