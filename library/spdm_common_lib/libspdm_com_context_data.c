@@ -1444,7 +1444,7 @@ void libspdm_reset_message_buffer_via_request_code(void *context, void *session_
     /**
      * If the Requester issued GET_MEASUREMENTS or KEY_EXCHANGE or FINISH or PSK_EXCHANGE
      * or PSK_FINISH or KEY_UPDATE or HEARTBEAT or GET_ENCAPSULATED_REQUEST or DELIVER_ENCAPSULATED_RESPONSE
-     * or END_SESSION request(s) and skipped CHALLENGE completion, M1 and M2 are reset to null.
+     * or END_SESSION request(s) or SPDM_GET_MEASUREMENT_EXTENSION_LOG and skipped CHALLENGE completion, M1 and M2 are reset to null.
      */
     switch (request_code)
     {
@@ -1457,6 +1457,7 @@ void libspdm_reset_message_buffer_via_request_code(void *context, void *session_
     case SPDM_HEARTBEAT:
     case SPDM_GET_ENCAPSULATED_REQUEST:
     case SPDM_END_SESSION:
+    case SPDM_GET_MEASUREMENT_EXTENSION_LOG:
         if (spdm_context->connection_info.connection_state <
             LIBSPDM_CONNECTION_STATE_AUTHENTICATED) {
             libspdm_reset_message_b(spdm_context);
