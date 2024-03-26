@@ -877,7 +877,6 @@ bool libspdm_aead_decryption(const spdm_version_number_t secured_message_version
 /**
  * Generates a random byte stream of the specified size.
  *
- * @param  spdm_context  A pointer to the SPDM context.
  * @param  size          Size of random bytes to generate.
  * @param  rand          Pointer to buffer to receive random value.
  **/
