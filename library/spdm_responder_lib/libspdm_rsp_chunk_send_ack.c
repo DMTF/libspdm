@@ -102,7 +102,7 @@ libspdm_return_t libspdm_get_response_chunk_send(libspdm_context_t *spdm_context
         large_message_size = *(const uint32_t*) (spdm_request + 1);
         chunk = (((const uint8_t*) (spdm_request + 1)) + sizeof(uint32_t));
         calc_max_chunk_size =
-            ((uint32_t)request_size - (uint32_t)(chunk - (const uint8_t*) spdm_request));
+            (uint32_t)request_size - (sizeof(spdm_chunk_send_request_t) + sizeof(uint32_t));
 
         if (spdm_request->chunk_seq_no != 0
             || (spdm_request->chunk_size
@@ -139,7 +139,7 @@ libspdm_return_t libspdm_get_response_chunk_send(libspdm_context_t *spdm_context
 
         chunk = (const uint8_t*) (spdm_request + 1);
         calc_max_chunk_size =
-            ((uint32_t)request_size - (uint32_t) (chunk - (const uint8_t *) spdm_request));
+            (uint32_t)request_size - sizeof(spdm_chunk_send_request_t);
 
         if (spdm_request->chunk_seq_no != send_info->chunk_seq_no + 1
             || spdm_request->header.param2 != send_info->chunk_handle
