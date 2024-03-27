@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -637,6 +637,7 @@ bool libspdm_verify_key_exchange_rsp_signature(
     libspdm_context_t *spdm_context, libspdm_session_info_t *session_info,
     const void *sign_data, const size_t sign_data_size);
 
+#if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 /**
  * This function verifies the measurement signature based upon l1l2.
  * If session_info is NULL, this function will use M cache of SPDM context,
@@ -654,5 +655,6 @@ bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
                                           libspdm_session_info_t *session_info,
                                           const void *sign_data,
                                           size_t sign_data_size);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP*/
 
 #endif /* SPDM_REQUESTER_LIB_INTERNAL_H */

@@ -900,6 +900,7 @@ bool libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context
                                                  libspdm_session_info_t *session_info,
                                                  uint8_t *signature);
 
+#if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 /**
  * This function generates the measurement signature to response message based upon l1l2.
  * If session_info is NULL, this function will use M cache of SPDM context,
@@ -915,5 +916,6 @@ bool libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context
 bool libspdm_generate_measurement_signature(libspdm_context_t *spdm_context,
                                             libspdm_session_info_t *session_info,
                                             uint8_t *signature);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP*/
 
 #endif /* SPDM_RESPONDER_LIB_INTERNAL_H */

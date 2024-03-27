@@ -233,6 +233,7 @@ libspdm_return_t libspdm_challenge_ex2(void *spdm_context, void *reserved,
                                        void *opaque_data,
                                        size_t *opaque_data_size);
 
+#if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 /**
  * This function sends GET_MEASUREMENT
  * to get measurement from the device.
@@ -345,6 +346,7 @@ libspdm_return_t libspdm_get_measurement_ex2(void *spdm_context, const uint32_t 
                                              void *responder_nonce,
                                              void *opaque_data,
                                              size_t *opaque_data_size);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP*/
 
 #if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)
 /**
