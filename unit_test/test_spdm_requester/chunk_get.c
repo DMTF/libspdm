@@ -259,31 +259,6 @@ void libspdm_requester_chunk_get_test_case4_build_digest_response(
     spdm_response->header.param2 |= (0xFF << 0);
 }
 
-void libspdm_requester_chunk_get_test_case5_build_algorithms_response(
-    void* context, void* response, size_t* response_size)
-{
-    spdm_algorithms_response_t* spdm_response;
-
-    *response_size = sizeof(spdm_algorithms_response_t);
-    spdm_response = (spdm_algorithms_response_t*) response;
-
-    libspdm_zero_mem(spdm_response, *response_size);
-    spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_12;
-    spdm_response->header.request_response_code = SPDM_ALGORITHMS;
-    spdm_response->header.param1 = 0;
-    spdm_response->header.param2 = 0;
-    spdm_response->length = sizeof(spdm_algorithms_response_t);
-    spdm_response->measurement_specification_sel =
-        SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-    spdm_response->measurement_hash_algo =
-        m_libspdm_use_measurement_hash_algo;
-    spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
-    spdm_response->base_hash_sel = m_libspdm_use_hash_algo;
-    spdm_response->ext_asym_sel_count = 0;
-    spdm_response->ext_hash_sel_count = 0;
-}
-
-
 libspdm_return_t libspdm_requester_chunk_get_test_send_message(
     void* spdm_context, size_t request_size, const void* request,
     uint64_t timeout)
@@ -456,9 +431,6 @@ libspdm_return_t libspdm_requester_chunk_get_test_receive_message(
     } else if (spdm_test_context->case_id == 0x4) {
         build_response_func =
             libspdm_requester_chunk_get_test_case4_build_digest_response;
-    } else if (spdm_test_context->case_id == 0x5) {
-        build_response_func =
-            libspdm_requester_chunk_get_test_case5_build_algorithms_response;
     } else {
         LIBSPDM_ASSERT(0);
         return LIBSPDM_STATUS_RECEIVE_FAIL;
@@ -860,52 +832,6 @@ void libspdm_test_requester_chunk_get_case4(void** state)
 }
 #endif
 
-void libspdm_test_requester_chunk_get_case5(void** state)
-{
-    /* Copied from Neg. Algorithms test case 2 */
-    libspdm_return_t status;
-    libspdm_test_context_t* spdm_test_context;
-    libspdm_context_t* spdm_context;
-
-    spdm_test_context = *state;
-    spdm_context = spdm_test_context->spdm_context;
-    spdm_test_context->case_id = 0x5;
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
-                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
-    spdm_context->connection_info.capability.flags |=
-        (SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP
-         | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP);
-
-    spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
-    spdm_context->local_context.capability.data_transfer_size
-        = CHUNK_GET_REQUESTER_UNIT_TEST_DATA_TRANSFER_SIZE;
-    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP;
-    spdm_context->local_context.algorithm.measurement_spec = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
-
-    spdm_context->local_context.algorithm.measurement_hash_algo =
-        m_libspdm_use_measurement_hash_algo;
-    spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
-    spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->local_context.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
-    spdm_context->local_context.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
-    spdm_context->local_context.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
-    spdm_context->local_context.algorithm.key_schedule = m_libspdm_use_key_schedule_algo;
-    libspdm_reset_message_a(spdm_context);
-
-    status = libspdm_negotiate_algorithms(spdm_context);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    assert_int_equal(
-        spdm_context->transcript.message_a.buffer_size,
-        sizeof(spdm_negotiate_algorithms_request_t) +
-        4 * sizeof(spdm_negotiate_algorithms_common_struct_table_t) +
-        sizeof(spdm_algorithms_response_t));
-    #endif
-}
-
 libspdm_test_context_t m_libspdm_requester_chunk_get_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     true,
@@ -933,9 +859,6 @@ int libspdm_requester_chunk_get_test_main(void)
         /* Request Digests */
         cmocka_unit_test(libspdm_test_requester_chunk_get_case4),
 #endif
-
-        /* Request Algorithms */
-        cmocka_unit_test(libspdm_test_requester_chunk_get_case5),
     };
 
     libspdm_setup_test_context(
