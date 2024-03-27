@@ -112,6 +112,7 @@ libspdm_return_t libspdm_get_response_chunk_send(libspdm_context_t *spdm_context
             || spdm_request->chunk_size > calc_max_chunk_size
             || (uint32_t)request_size > spdm_context->local_context.capability.data_transfer_size
             || large_message_size > spdm_context->local_context.capability.max_spdm_msg_size
+            || large_message_size <= SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12
             || (spdm_request->header.param1 & SPDM_CHUNK_SEND_REQUEST_ATTRIBUTE_LAST_CHUNK)
             ) {
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
