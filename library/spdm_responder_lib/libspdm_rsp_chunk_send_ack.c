@@ -92,6 +92,13 @@ libspdm_return_t libspdm_get_response_chunk_send(libspdm_context_t *spdm_context
 
     if (!send_info->chunk_in_use) {
 
+        if (request_size < sizeof(spdm_chunk_send_request_t) + sizeof(uint32_t)) {
+            libspdm_generate_error_response(
+                spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                response_size, response);
+            return LIBSPDM_STATUS_SUCCESS;
+        }
+
         large_message_size = *(const uint32_t*) (spdm_request + 1);
         chunk = (((const uint8_t*) (spdm_request + 1)) + sizeof(uint32_t));
         calc_max_chunk_size =
