@@ -211,12 +211,14 @@ libspdm_return_t libspdm_get_response_chunk_send(libspdm_context_t *spdm_context
         send_info->large_message = NULL;
         send_info->large_message_size = 0;
     } else if (send_info->chunk_bytes_transferred == send_info->large_message_size) {
+        uint8_t opcode;
 
+        opcode = ((spdm_message_header_t*)send_info->large_message)->request_response_code;
         libspdm_get_spdm_response_func response_func =
-            libspdm_get_response_func_via_request_code(
-                ((spdm_message_header_t*)send_info->large_message)->request_response_code);
+            libspdm_get_response_func_via_request_code(opcode);
 
-        if (response_func != NULL) {
+        if ((response_func != NULL) &&
+            (opcode != SPDM_CHUNK_SEND) && (opcode != SPDM_CHUNK_GET)) {
             status = response_func(
                 spdm_context,
                 send_info->large_message_size, send_info->large_message,
