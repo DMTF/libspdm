@@ -27,7 +27,7 @@ libspdm_return_t libspdm_get_response_supported_event_types(libspdm_context_t *s
     spdm_request = request;
 
     /* -=[Check Parameters Phase]=- */
-    LIBSPDM_ASSERT(spdm_request->header.request_response_code == SPDM_SUPPORTED_EVENT_TYPES);
+    LIBSPDM_ASSERT(spdm_request->header.request_response_code == SPDM_GET_SUPPORTED_EVENT_TYPES);
 
     /* -=[Verify State Phase]=- */
     if (spdm_context->response_state != LIBSPDM_RESPONSE_STATE_NORMAL) {

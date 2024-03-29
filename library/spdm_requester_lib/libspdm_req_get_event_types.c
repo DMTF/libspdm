@@ -66,7 +66,7 @@ static libspdm_return_t libspdm_try_get_event_types(libspdm_context_t *spdm_cont
     spdm_request->header.request_response_code = SPDM_GET_SUPPORTED_EVENT_TYPES;
     spdm_request->header.param1 = 0;
     spdm_request->header.param2 = 0;
-    spdm_request_size = sizeof(spdm_heartbeat_request_t);
+    spdm_request_size = sizeof(spdm_get_supported_event_types_request_t);
 
     /* -=[Send Request Phase]=- */
     status = libspdm_send_spdm_request(spdm_context, &session_id, spdm_request_size, spdm_request);
@@ -118,11 +118,20 @@ static libspdm_return_t libspdm_try_get_event_types(libspdm_context_t *spdm_cont
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
+    if (spdm_response_size < sizeof(spdm_supported_event_types_response_t)) {
+        status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+        goto receive_done;
+    }
     if (spdm_response->supported_event_groups_list_len == 0) {
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     } else if (spdm_response->supported_event_groups_list_len > *supported_event_groups_list_len) {
         status = LIBSPDM_STATUS_BUFFER_TOO_SMALL;
+        goto receive_done;
+    }
+    if (spdm_response_size != sizeof(spdm_supported_event_types_response_t) +
+        (uint64_t)spdm_response->supported_event_groups_list_len) {
+        status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
     }
 

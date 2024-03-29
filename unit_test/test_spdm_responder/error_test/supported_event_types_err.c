@@ -81,7 +81,7 @@ static void libspdm_test_responder_supported_event_types_err_case1(void **state)
     spdm_context->local_context.capability.flags &= ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_EVENT_CAP;
 
     spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_13;
-    spdm_request.header.request_response_code = SPDM_SUPPORTED_EVENT_TYPES;
+    spdm_request.header.request_response_code = SPDM_GET_SUPPORTED_EVENT_TYPES;
     spdm_request.header.param1 = 0;
     spdm_request.header.param2 = 0;
 
