@@ -97,7 +97,6 @@ void libspdm_test_responder_chunk_send_ack_case1(void **State)
                 break;
             }
             chunk_send_request = (spdm_chunk_send_request_t *)request;
-            spdm_message_header_t *test_spdm_message_header_t;
 
             request_size = sizeof(spdm_chunk_send_request_t) + sizeof(uint32_t) +
                            chunk_send_request->chunk_size;
@@ -108,11 +107,6 @@ void libspdm_test_responder_chunk_send_ack_case1(void **State)
                 break;
             }
 
-            test_spdm_message_header_t =
-                (spdm_message_header_t *)(((uint8_t*) (chunk_send_request + 1)) + sizeof(uint32_t));
-            if (test_spdm_message_header_t->request_response_code == SPDM_RESPOND_IF_READY) {
-                break;
-            }
             spdm_context->local_context.capability.data_transfer_size =
                 chunk_send_request->chunk_size + sizeof(spdm_chunk_send_request_t) +
                 sizeof(uint32_t);
@@ -122,19 +116,12 @@ void libspdm_test_responder_chunk_send_ack_case1(void **State)
                 break;
             }
             chunk_send_request = (spdm_chunk_send_request_t *)request;
-            spdm_message_header_t *test_spdm_message_header_t;
 
             request_size = sizeof(spdm_chunk_send_request_t) + chunk_send_request->chunk_size;
 
             /* Remaining space should meet the chunk_size. */
             if(bytes_total - bytes_sent - sizeof(spdm_chunk_send_request_t) <
                chunk_send_request->chunk_size) {
-                break;
-            }
-
-            test_spdm_message_header_t =
-                (spdm_message_header_t *)(((uint8_t*) (chunk_send_request + 1)));
-            if (test_spdm_message_header_t->request_response_code == SPDM_RESPOND_IF_READY) {
                 break;
             }
 
