@@ -22,7 +22,9 @@
  * @retval RETURN_SUCCESS               The message is encoded successfully.
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
-libspdm_return_t libspdm_mctp_encode_message(const uint32_t *session_id, size_t message_size,
+libspdm_return_t libspdm_mctp_encode_message(const uint32_t *session_id,
+                                             bool need_alignment,
+                                             size_t message_size,
                                              void *message,
                                              size_t *transport_message_size,
                                              void **transport_message);
@@ -42,6 +44,7 @@ libspdm_return_t libspdm_mctp_encode_message(const uint32_t *session_id, size_t 
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
 libspdm_return_t libspdm_mctp_decode_message(uint32_t **session_id,
+                                             bool need_alignment,
                                              size_t transport_message_size,
                                              void *transport_message,
                                              size_t *message_size,
@@ -118,7 +121,7 @@ libspdm_return_t libspdm_transport_mctp_encode_message(
             /* SPDM message to APP message*/
             app_message = NULL;
             app_message_size = app_trans_header_size + message_size;
-            status = libspdm_mctp_encode_message(NULL, message_size,
+            status = libspdm_mctp_encode_message(NULL, false, message_size,
                                                  message,
                                                  &app_message_size,
                                                  &app_message);
@@ -148,7 +151,7 @@ libspdm_return_t libspdm_transport_mctp_encode_message(
 
         /* secured message to secured MCTP message*/
         status = libspdm_mctp_encode_message(
-            session_id, secured_message_size, secured_message,
+            session_id, true, secured_message_size, secured_message,
             transport_message_size, transport_message);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "transport_encode_message - %xu\n",
@@ -157,7 +160,7 @@ libspdm_return_t libspdm_transport_mctp_encode_message(
         }
     } else {
         /* SPDM message to normal MCTP message*/
-        status = libspdm_mctp_encode_message(NULL, message_size, message,
+        status = libspdm_mctp_encode_message(NULL, true, message_size, message,
                                              transport_message_size,
                                              transport_message);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
@@ -236,7 +239,7 @@ libspdm_return_t libspdm_transport_mctp_decode_message(
     secured_message_session_id = NULL;
     /* Detect received message*/
     status = libspdm_mctp_decode_message(
-        &secured_message_session_id, transport_message_size,
+        &secured_message_session_id, true, transport_message_size,
         transport_message, &secured_message_size, (void **)&secured_message);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "transport_decode_message - %xu\n", status));
@@ -276,7 +279,7 @@ libspdm_return_t libspdm_transport_mctp_decode_message(
         }
 
         /* APP message to SPDM message.*/
-        status = libspdm_mctp_decode_message(&secured_message_session_id,
+        status = libspdm_mctp_decode_message(&secured_message_session_id, false,
                                              app_message_size, app_message,
                                              message_size, message);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
@@ -299,7 +302,7 @@ libspdm_return_t libspdm_transport_mctp_decode_message(
         }
     } else {
         /* get non-secured message*/
-        status = libspdm_mctp_decode_message(&secured_message_session_id,
+        status = libspdm_mctp_decode_message(&secured_message_session_id, true,
                                              transport_message_size,
                                              transport_message,
                                              message_size, message);

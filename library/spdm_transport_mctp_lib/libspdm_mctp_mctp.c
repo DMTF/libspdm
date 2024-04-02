@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -74,7 +74,9 @@ spdm_version_number_t libspdm_mctp_get_secured_spdm_version(
  * @retval RETURN_SUCCESS               The message is encoded successfully.
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
-libspdm_return_t libspdm_mctp_encode_message(const uint32_t *session_id, size_t message_size,
+libspdm_return_t libspdm_mctp_encode_message(const uint32_t *session_id,
+                                             bool need_alignment,
+                                             size_t message_size,
                                              void *message,
                                              size_t *transport_message_size,
                                              void **transport_message)
@@ -84,7 +86,11 @@ libspdm_return_t libspdm_mctp_encode_message(const uint32_t *session_id, size_t 
     uint32_t data32;
     mctp_message_header_t *mctp_message_header;
 
-    alignment = LIBSPDM_MCTP_ALIGNMENT;
+    if (need_alignment) {
+        alignment = LIBSPDM_MCTP_ALIGNMENT;
+    } else {
+        alignment = 1;
+    }
     aligned_message_size =
         (message_size + (alignment - 1)) & ~(alignment - 1);
 
@@ -132,6 +138,7 @@ libspdm_return_t libspdm_mctp_encode_message(const uint32_t *session_id, size_t 
  * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
 libspdm_return_t libspdm_mctp_decode_message(uint32_t **session_id,
+                                             bool need_alignment,
                                              size_t transport_message_size,
                                              void *transport_message,
                                              size_t *message_size, void **message)
@@ -167,8 +174,10 @@ libspdm_return_t libspdm_mctp_decode_message(uint32_t **session_id,
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
 
-    LIBSPDM_ASSERT(((transport_message_size - sizeof(mctp_message_header_t)) &
-                    (LIBSPDM_MCTP_ALIGNMENT - 1)) == 0);
+    if (need_alignment) {
+        LIBSPDM_ASSERT(((transport_message_size - sizeof(mctp_message_header_t)) &
+                        (LIBSPDM_MCTP_ALIGNMENT - 1)) == 0);
+    }
 
     *message_size = transport_message_size - sizeof(mctp_message_header_t);
     *message = (uint8_t *)transport_message + sizeof(mctp_message_header_t);
