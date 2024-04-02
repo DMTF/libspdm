@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -198,11 +198,19 @@ static libspdm_return_t libspdm_try_get_csr(libspdm_context_t *spdm_context,
         goto receive_done;
     }
 
+    if (spdm_response_size < sizeof(spdm_csr_response_t)) {
+        status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+        goto receive_done;
+    }
     if (spdm_response->csr_length == 0) {
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
 
+    if (spdm_response_size < sizeof(spdm_csr_response_t) + spdm_response->csr_length) {
+        status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+        goto receive_done;
+    }
     if (*csr_len < spdm_response->csr_length) {
         *csr_len = spdm_response->csr_length;
         status =  LIBSPDM_STATUS_BUFFER_TOO_SMALL;
