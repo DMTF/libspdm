@@ -402,8 +402,8 @@ static libspdm_return_t libspdm_requester_get_measurements_test_send_message(
           *)(session_info->secured_message_context))
         ->application_secret.response_data_sequence_number--;
         libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
-                         app_message, app_message_size - 3);
-        m_libspdm_local_buffer_size += app_message_size - 3;
+                         app_message, app_message_size);
+        m_libspdm_local_buffer_size += app_message_size;
         return LIBSPDM_STATUS_SUCCESS;
     case 0x23:
         /* m_libspdm_local_buffer_size is set by case35 and already contains the arbitrary fill
