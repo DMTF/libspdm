@@ -308,9 +308,9 @@ libspdm_internal_x509_get_nid_name(mbedtls_x509_name *name, const uint8_t *oid,
                                    size_t oid_size, char *common_name,
                                    size_t *common_name_size)
 {
-    mbedtls_asn1_named_data *data;
+    const mbedtls_asn1_named_data *data;
 
-    data = mbedtls_asn1_find_named_data(name, oid, oid_size);
+    data = mbedtls_asn1_find_named_data(name, (const char *)oid, oid_size);
     if (data != NULL) {
         if (*common_name_size <= data->val.len) {
             *common_name_size = data->val.len + 1;
@@ -692,8 +692,8 @@ bool libspdm_x509_verify_cert_chain(const uint8_t *root_cert, size_t root_cert_l
     size_t preceding_cert_len;
     const uint8_t *preceding_cert;
     size_t current_cert_len;
-    const uint8_t *current_cert;
-    const uint8_t *tmp_ptr;
+    const unsigned char *current_cert;
+    const unsigned char *tmp_ptr;
     int ret;
     bool verify_flag;
 
@@ -701,7 +701,7 @@ bool libspdm_x509_verify_cert_chain(const uint8_t *root_cert, size_t root_cert_l
     preceding_cert = root_cert;
     preceding_cert_len = root_cert_length;
 
-    current_cert = cert_chain;
+    current_cert = (const unsigned char *)cert_chain;
 
 
     /* Get Current certificate from certificates buffer and Verify with preciding cert*/
@@ -767,8 +767,8 @@ bool libspdm_x509_get_cert_from_cert_chain(const uint8_t *cert_chain,
     size_t asn1_len;
     int32_t current_index;
     size_t current_cert_len;
-    const uint8_t *current_cert;
-    const uint8_t *tmp_ptr;
+    const unsigned char *current_cert;
+    const unsigned char *tmp_ptr;
     int ret;
 
     current_cert_len = 0;
@@ -780,7 +780,7 @@ bool libspdm_x509_get_cert_from_cert_chain(const uint8_t *cert_chain,
         return false;
     }
 
-    current_cert = cert_chain;
+    current_cert = (const unsigned char *)cert_chain;
     current_index = -1;
 
 
@@ -1817,7 +1817,7 @@ bool libspdm_set_attribute_for_req(mbedtls_x509write_csr *req,
     }
 
     /*set subject name*/
-    ret = mbedtls_x509write_csr_set_subject_name(req, buffer);
+    ret = mbedtls_x509write_csr_set_subject_name(req, (const char *)buffer);
     if (ret != 0) {
         return false;
     }
@@ -1884,7 +1884,9 @@ bool libspdm_set_attribute_for_req(mbedtls_x509write_csr *req,
             val_len = obj_len;
 
             /*set attributes*/
-            ret = mbedtls_x509write_csr_set_extension(req, oid, oid_len, val, val_len);
+            ret = mbedtls_x509write_csr_set_extension(req, (const char *)oid, oid_len, 0, val,
+                                                      val_len);
+
             if (ret) {
                 return false;
             }
@@ -2073,6 +2075,7 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
     /*set basicConstraints*/
     if (mbedtls_x509write_csr_set_extension(&req, MBEDTLS_OID_BASIC_CONSTRAINTS,
                                             MBEDTLS_OID_SIZE(MBEDTLS_OID_BASIC_CONSTRAINTS),
+                                            0,
                                             is_ca ? basic_constraints_true : basic_constraints_false,
                                             is_ca ?
                                             sizeof(basic_constraints_true) :
@@ -2118,8 +2121,8 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
             continue;
         }
 
-        if (mbedtls_x509write_csr_set_extension(&req, next_oid->buf.p,
-                                                oid_tag_len,
+        if (mbedtls_x509write_csr_set_extension(&req, (const char *)next_oid->buf.p,
+                                                oid_tag_len, 0,
                                                 next_oid->buf.p + oid_tag_len,
                                                 next_oid->buf.len - oid_tag_len
                                                 ) != 0) {

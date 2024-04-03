@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -65,7 +65,7 @@ bool libspdm_sha256_init(void *sha256_context)
 
     mbedtls_sha256_init(sha256_context);
 
-    ret = mbedtls_sha256_starts_ret(sha256_context, false);
+    ret = mbedtls_sha256_starts(sha256_context, false);
     if (ret != 0) {
         return false;
     }
@@ -131,7 +131,7 @@ bool libspdm_sha256_update(void *sha256_context, const void *data,
         return false;
     }
 
-    ret = mbedtls_sha256_update_ret(sha256_context, data, data_size);
+    ret = mbedtls_sha256_update(sha256_context, data, data_size);
     if (ret != 0) {
         return false;
     }
@@ -166,7 +166,7 @@ bool libspdm_sha256_final(void *sha256_context, uint8_t *hash_value)
         return false;
     }
 
-    ret = mbedtls_sha256_finish_ret(sha256_context, hash_value);
+    ret = mbedtls_sha256_finish(sha256_context, hash_value);
     mbedtls_sha256_free(sha256_context);
     if (ret != 0) {
         return false;
@@ -207,7 +207,7 @@ bool libspdm_sha256_hash_all(const void *data, size_t data_size,
         return false;
     }
 
-    ret = mbedtls_sha256_ret(data, data_size, hash_value, false);
+    ret = mbedtls_sha256(data, data_size, hash_value, false);
     if (ret != 0) {
         return false;
     }
@@ -267,7 +267,7 @@ bool libspdm_sha384_init(void *sha384_context)
 
     mbedtls_sha512_init(sha384_context);
 
-    ret = mbedtls_sha512_starts_ret(sha384_context, true);
+    ret = mbedtls_sha512_starts(sha384_context, true);
     if (ret != 0) {
         return false;
     }
@@ -335,7 +335,7 @@ bool libspdm_sha384_update(void *sha384_context, const void *data,
         return false;
     }
 
-    ret = mbedtls_sha512_update_ret(sha384_context, data, data_size);
+    ret = mbedtls_sha512_update(sha384_context, data, data_size);
     if (ret != 0) {
         return false;
     }
@@ -370,7 +370,8 @@ bool libspdm_sha384_final(void *sha384_context, uint8_t *hash_value)
         return false;
     }
 
-    ret = mbedtls_sha512_finish_ret(sha384_context, hash_value);
+    ret = mbedtls_sha512_finish(sha384_context, hash_value);
+
     mbedtls_sha512_free(sha384_context);
     if (ret != 0) {
         return false;
@@ -411,7 +412,7 @@ bool libspdm_sha384_hash_all(const void *data, size_t data_size,
         return false;
     }
 
-    ret = mbedtls_sha512_ret(data, data_size, hash_value, true);
+    ret = mbedtls_sha512(data, data_size, hash_value, true);
     if (ret != 0) {
         return false;
     }
@@ -471,7 +472,7 @@ bool libspdm_sha512_init(void *sha512_context)
 
     mbedtls_sha512_init(sha512_context);
 
-    ret = mbedtls_sha512_starts_ret(sha512_context, false);
+    ret = mbedtls_sha512_starts(sha512_context, false);
     if (ret != 0) {
         return false;
     }
@@ -539,7 +540,7 @@ bool libspdm_sha512_update(void *sha512_context, const void *data,
         return false;
     }
 
-    ret = mbedtls_sha512_update_ret(sha512_context, data, data_size);
+    ret = mbedtls_sha512_update(sha512_context, data, data_size);
     if (ret != 0) {
         return false;
     }
@@ -574,7 +575,7 @@ bool libspdm_sha512_final(void *sha512_context, uint8_t *hash_value)
         return false;
     }
 
-    ret = mbedtls_sha512_finish_ret(sha512_context, hash_value);
+    ret = mbedtls_sha512_finish(sha512_context, hash_value);
     mbedtls_sha512_free(sha512_context);
     if (ret != 0) {
         return false;
@@ -615,7 +616,7 @@ bool libspdm_sha512_hash_all(const void *data, size_t data_size,
         return false;
     }
 
-    ret = mbedtls_sha512_ret(data, data_size, hash_value, false);
+    ret = mbedtls_sha512(data, data_size, hash_value, false);
     if (ret != 0) {
         return false;
     }
