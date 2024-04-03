@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -85,7 +85,8 @@ bool libspdm_rsa_get_private_key_from_pem(const uint8_t *pem_data,
     }
 
     ret = mbedtls_pk_parse_key(&pk, pem_data, pem_size,
-                               (const uint8_t *)password, password_len);
+                               (const uint8_t *)password, password_len,
+                               NULL, NULL);
 
     if (new_pem_data != NULL) {
         free_pool(new_pem_data);
@@ -171,7 +172,8 @@ bool libspdm_ec_get_private_key_from_pem(const uint8_t *pem_data, size_t pem_siz
     }
 
     ret = mbedtls_pk_parse_key(&pk, pem_data, pem_size,
-                               (const uint8_t *)password, password_len);
+                               (const uint8_t *)password, password_len,
+                               NULL, NULL);
 
     if (new_pem_data != NULL) {
         free_pool(new_pem_data);

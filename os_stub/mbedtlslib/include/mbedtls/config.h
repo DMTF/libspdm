@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -859,7 +859,7 @@ extern void my_free( void *ptr );
  *        MBEDTLS_ECP_ALT, MBEDTLS_ECDH_XXX_ALT, MBEDTLS_ECDSA_XXX_ALT
  *        and MBEDTLS_ECDH_LEGACY_CONTEXT.
  */
-/*#define MBEDTLS_ECP_RESTARTABLE*/
+#define MBEDTLS_ECP_RESTARTABLE
 
 /**
  * \def MBEDTLS_ECDH_LEGACY_CONTEXT
@@ -2165,17 +2165,31 @@ extern void my_free( void *ptr );
  * This setting allows support for cryptographic mechanisms through the PSA
  * API to be configured separately from support through the mbedtls API.
  *
- * Uncomment this to enable use of PSA Crypto configuration settings which
- * can be found in include/psa/crypto_config.h.
+ * When this option is disabled, the PSA API exposes the cryptographic
+ * mechanisms that can be implemented on top of the `mbedtls_xxx` API
+ * configured with `MBEDTLS_XXX` symbols.
  *
- * If you enable this option and write your own configuration file, you must
- * include mbedtls/config_psa.h in your configuration file. The default
- * provided mbedtls/config.h contains the necessary inclusion.
+ * When this option is enabled, the PSA API exposes the cryptographic
+ * mechanisms requested by the `PSA_WANT_XXX` symbols defined in
+ * include/psa/crypto_config.h. The corresponding `MBEDTLS_XXX` settings are
+ * automatically enabled if required (i.e. if no PSA driver provides the
+ * mechanism). You may still freely enable additional `MBEDTLS_XXX` symbols
+ * in mbedtls_config.h.
  *
- * This feature is still experimental and is not ready for production since
- * it is not completed.
+ * If the symbol #MBEDTLS_PSA_CRYPTO_CONFIG_FILE is defined, it specifies
+ * an alternative header to include instead of include/psa/crypto_config.h.
+ *
+ * \warning This option is experimental, in that the set of `PSA_WANT_XXX`
+ *          symbols is not completely finalized yet, and the configuration
+ *          tooling is not ideally adapted to having two separate configuration
+ *          files.
+ *          Future minor releases of Mbed TLS may make minor changes to those
+ *          symbols, but we will endeavor to provide a transition path.
+ *          Nonetheless, this option is considered mature enough to use in
+ *          production, as long as you accept that you may need to make
+ *          minor changes to psa/crypto_config.h when upgrading Mbed TLS.
  */
-/*#define MBEDTLS_PSA_CRYPTO_CONFIG*/
+#define MBEDTLS_PSA_CRYPTO_CONFIG
 
 /**
  * \def MBEDTLS_VERSION_FEATURES
@@ -3347,6 +3361,22 @@ extern void my_free( void *ptr );
 #define MBEDTLS_SHA256_C
 
 /**
+ * \def MBEDTLS_SHA384_C
+ *
+ * Enable the SHA-384 cryptographic hash algorithm.
+ *
+ * Module:  library/sha512.c
+ * Caller:  library/md.c
+ *          library/psa_crypto_hash.c
+ *          library/ssl_tls.c
+ *          library/ssl*_client.c
+ *          library/ssl*_server.c
+ *
+ * Comment to disable SHA-384
+ */
+#define MBEDTLS_SHA384_C
+
+/**
  * \def MBEDTLS_SHA512_C
  *
  * Enable the SHA-384 and SHA-512 cryptographic hash algorithms.
@@ -3749,6 +3779,12 @@ extern int my_snprintf(char *str, size_t size, const char *format, ...);
  */
 /*#define MBEDTLS_PSA_KEY_SLOT_COUNT 32*/
 
+/* RSA OPTIONS */
+/** Minimum RSA key size that can be generated in bits (Minimum possible value
+ * is 128 bits)
+ */
+#define MBEDTLS_RSA_GEN_KEY_MIN_BITS        512
+
 /* SSL Cache options
  *#define MBEDTLS_SSL_CACHE_DEFAULT_TIMEOUT       86400   *< 1 day
  *#define MBEDTLS_SSL_CACHE_DEFAULT_MAX_ENTRIES      50   *< Maximum entries in cache*/
@@ -3996,6 +4032,14 @@ extern int my_snprintf(char *str, size_t size, const char *format, ...);
  */
 /*#define MBEDTLS_ECDH_VARIANT_EVEREST_ENABLED*/
 
+/**
+ * Allow library to access its structs' private members.
+ *
+ * Although structs defined in header files are publicly available,
+ * their members are private and should not be accessed by the user.
+ */
+#define MBEDTLS_ALLOW_PRIVATE_ACCESS
+
 /* \} name SECTION: Customisation configuration options */
 
 /* Target and application specific configurations
@@ -4007,10 +4051,19 @@ extern int my_snprintf(char *str, size_t size, const char *format, ...);
 #include MBEDTLS_USER_CONFIG_FILE
 #endif
 
-#if defined(MBEDTLS_PSA_CRYPTO_CONFIG)
-#include "mbedtls/config_psa.h"
-#endif
-
-#include "mbedtls/check_config.h"
-
+/**
+ * Header files like mbedtls/config_psa.h, mbedtls/check_config.h are included
+ * by mbedtls/build_info.h.
+ *
+ * mbedtls/build_info.h includes other header files like
+ * mbedtls/config_adjust_legacy_crypto.h
+ * mbedtls/config_adjust_x509.h
+ * mbedtls/config_adjust_ssl.h
+ * and finally
+ * mbedtls/check_config.h
+ *
+ * config_adjust header files automatically enables certain dependencies. So do
+ * not include check_config.h here as the config check might fail when included
+ * before config_adjust header files.
+ */
 #endif /* MBEDTLS_CONFIG_H */

@@ -5,6 +5,13 @@ else()
     set(LIB_INSTALL_DIR lib)
 endif()
 
+# Starting Mbed TLS 3.x release, mbedtls/library/CMakeLists.txt has dependency on
+# link_to_source() function that is in mbedtls/CMakeLists.txt, so define
+# link_to_source here. This shall be later expanded to add a link to the mbedtls
+# source file from the build directory if required by libspdm.
+function(link_to_source base_name)
+endfunction(link_to_source)
+
 ADD_SUBDIRECTORY(${CMAKE_CURRENT_LIST_DIR}/mbedtls/library)
 
 # mbedtls
@@ -20,7 +27,7 @@ TARGET_INCLUDE_DIRECTORIES(mbedtls PRIVATE
 )
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     if((TOOLCHAIN STREQUAL "CBMC") OR (TOOLCHAIN STREQUAL "VS2015") OR (TOOLCHAIN STREQUAL "VS2019") OR (TOOLCHAIN STREQUAL "VS2022"))
-        TARGET_COMPILE_OPTIONS(mbedtls PRIVATE /wd4090 /wd4244 /wd4132 /wd4245 /wd4310 /wd4701 /wd4127 /wd4204 /wd4702)
+        TARGET_COMPILE_OPTIONS(mbedtls PRIVATE /wd4090 /wd4244 /wd4132 /wd4245 /wd4310 /wd4701 /wd4127 /wd4204 /wd4702 /wd4200 /wd4389)
     endif()
 else()
     TARGET_COMPILE_OPTIONS(mbedtls PRIVATE -Wno-cast-qual ${MBEDTLS_FLAGS})
@@ -43,7 +50,7 @@ TARGET_INCLUDE_DIRECTORIES(mbedx509 PRIVATE
 )
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     if((TOOLCHAIN STREQUAL "CBMC") OR (TOOLCHAIN STREQUAL "VS2015") OR (TOOLCHAIN STREQUAL "VS2019") OR (TOOLCHAIN STREQUAL "VS2022"))
-        TARGET_COMPILE_OPTIONS(mbedx509 PRIVATE /wd4090 /wd4244 /wd4132 /wd4245 /wd4310 /wd4701 /wd4127 /wd4204 /wd4702)
+        TARGET_COMPILE_OPTIONS(mbedx509 PRIVATE /wd4090 /wd4244 /wd4132 /wd4245 /wd4310 /wd4701 /wd4127 /wd4204 /wd4702 /wd4200 /wd4389)
     endif()
 else()
     TARGET_COMPILE_OPTIONS(mbedx509 PRIVATE -Wno-cast-qual ${MBEDTLS_FLAGS})
@@ -66,7 +73,7 @@ TARGET_INCLUDE_DIRECTORIES(mbedcrypto PRIVATE
 )
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     if((TOOLCHAIN STREQUAL "CBMC") OR (TOOLCHAIN STREQUAL "VS2015") OR (TOOLCHAIN STREQUAL "VS2019") OR (TOOLCHAIN STREQUAL "VS2022"))
-        TARGET_COMPILE_OPTIONS(mbedcrypto PRIVATE /wd4090 /wd4244 /wd4132 /wd4245 /wd4310 /wd4701 /wd4127 /wd4204 /wd4702)
+        TARGET_COMPILE_OPTIONS(mbedcrypto PRIVATE /wd4090 /wd4244 /wd4132 /wd4245 /wd4310 /wd4701 /wd4127 /wd4204 /wd4702 /wd4200 /wd4389)
     endif()
 else()
     TARGET_COMPILE_OPTIONS(mbedcrypto PRIVATE -Wno-cast-qual ${MBEDTLS_FLAGS})
