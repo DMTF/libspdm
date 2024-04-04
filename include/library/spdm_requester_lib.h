@@ -792,25 +792,6 @@ libspdm_return_t libspdm_get_event_types(void *spdm_context,
                                          uint8_t *event_group_count,
                                          uint32_t *supported_event_groups_list_len,
                                          void *supported_event_groups_list);
-
-/** This function subscribes to the specified event types.
- *
- *  This function can only be called after a secure session has been established with the device.
- *
- *  @param  spdm_context       A pointer to the SPDM context.
- *  @param  session_id         The session ID of the session.
- *  @param  subscribe_event_group_count The number of event groups in subscribe_list. If this value
- *                                      is 0 then subscription to all events will be cleared and
- *                                      subscribe_list_len must be 0 and subscribe_list must be
- *                                      NULL.
- *  @param  subscribe_list_len The size, in bytes, of subscribe_list.
- *  @param  subscribe_list     List of event types and event groups.
- **/
-libspdm_return_t libspdm_subscribe_event_types(void *spdm_context,
-                                               uint32_t session_id,
-                                               uint8_t subscribe_event_group_count,
-                                               uint32_t subscribe_list_len,
-                                               void *subscribe_list);
 #endif /* LIBSPDM_EVENT_RECIPIENT_SUPPORT */
 
 #if LIBSPDM_ENABLE_MSG_LOG

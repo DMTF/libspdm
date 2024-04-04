@@ -38,7 +38,7 @@
 
    SPDM 1.2: `GET_CSR`, `SET_CERTIFICATE`, `CHUNK_SEND`, and `CHUNK_GET`.
 
-   SPDM 1.3: No new commands are supported at this momemnt. No new SPDM 1.3 features are supported.
+   SPDM 1.3: `GET_SUPPORTED_EVENT_TYPES`. Additional SPDM 1.3 messages will be implemented in future releases.
 
 5) Cryptography Support
 
@@ -67,7 +67,7 @@
 
    Support to be included in [OpenBMC](https://github.com/openbmc). It is in planning, see [SPDM Integration](https://www.youtube.com/watch?v=PmgXkLJYI-E).
 
-   Support to be linked by other language. For example, [JAVA verifier](https://github.com/altera-opensource/verifier).
+   Support to be linked by other languages. For example, [JAVA verifier](https://github.com/altera-opensource/verifier).
 
    Support interoperability testing with other SPDM implementations. For example, [intel-server-prot-spdm](https://github.com/intel/intel-server-prot-spdm) and [spdm-rs](https://github.com/ccc-spdm-tools/spdm-rs).
 
@@ -281,7 +281,7 @@ For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/m
 
 ### Other Tests
 
-  libspdm also supports other tests such as code coverage, fuzzing, symbolic execution, model checker.
+  libspdm also supports other tests such as code coverage, fuzzing, symbolic execution, and model checker.
 
   Refer to [test](https://github.com/DMTF/libspdm/blob/main/doc/test.md) for more details.
 
