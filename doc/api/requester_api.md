@@ -318,7 +318,7 @@ If `true` then only the Responder direction secrets will updated. If `false` the
 direction and Requester direction secrets will be updated.
 
 ### Details
-TBD
+Before calling this function a secure session must first be established via `libspdm_start_session`.
 
 
 ---
@@ -413,6 +413,36 @@ The size, in bytes, of the `cert_chain` buffer.
 
 ### Details
 TBD
+<br/><br/>
+
+
+---
+### libspdm_get_event_types
+---
+
+### Description
+Sends `GET_SUPPORTED_EVENT_TYPES` to retrieve the event types supported by the Responder.
+
+### Parameters
+
+**spdm_context**<br/>
+The SPDM context.
+
+**session_id**<br/>
+The session through which the event types will be retrieved.
+
+**event_group_count**<br/>
+The number of event groups in `supported_event_groups_list`.
+
+**supported_event_groups_list_len**<br/>
+On input, indicates the size, in bytes, of the buffer in which the event groups list will be stored.
+On output, indicates the size, in bytes, of the event groups list.
+
+**supported_event_groups_list**<br/>
+A pointer to a buffer to store the supported event groups list.
+
+### Details
+Before calling this function a secure session must first be established via `libspdm_start_session`.
 <br/><br/>
 
 
