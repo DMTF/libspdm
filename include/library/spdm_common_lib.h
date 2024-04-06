@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -15,7 +15,7 @@
 #define LIBSPDM_MAJOR_VERSION 0x03
 #define LIBSPDM_MINOR_VERSION 0x03
 #define LIBSPDM_PATCH_VERSION 0x00
-#define LIBSPDM_ALPHA         0xFF
+#define LIBSPDM_ALPHA         0x00
 
 /* Connection: When a host sends messages to a device, they create a connection.
  *             The host can and only can create one connection with one device.
