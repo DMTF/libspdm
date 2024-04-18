@@ -1,5 +1,6 @@
 /**
- *  Copyright 2023 DMTF. All rights reserved.
+ *  Copyright Notice:
+ *  Copyright 2023-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -46,6 +47,7 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
     const uint8_t *req_vendor_id;
     const uint8_t *req_data;
     uint16_t resp_size = 0;
+    uint16_t req_size = 0;
 
     /* -=[Check Parameters Phase]=- */
     if (request == NULL ||
@@ -166,9 +168,10 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
 
     req_vendor_id = ((const uint8_t *)request) +
                     sizeof(spdm_vendor_defined_response_msg_t);
+    req_size = *(const uint16_t *)(req_vendor_id + spdm_request->len);
     req_data = ((const uint8_t *)request) +
                sizeof(spdm_vendor_defined_request_msg_t) +
-               ((const spdm_vendor_defined_response_msg_t*)request)->len +
+               ((const spdm_vendor_defined_request_msg_t*)request)->len +
                sizeof(uint16_t);
 
     status = spdm_context->vendor_response_get_id(
@@ -185,7 +188,7 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
     status = spdm_context->vendor_response_callback(spdm_context,
                                                     spdm_request->standard_id,
                                                     spdm_request->len,
-                                                    req_vendor_id, (uint16_t)request_size, req_data,
+                                                    req_vendor_id, req_size, req_data,
                                                     &resp_size,
                                                     resp_data
                                                     );
