@@ -67,7 +67,7 @@
 
    Support to be included in [OpenBMC](https://github.com/openbmc). It is in planning, see [SPDM Integration](https://www.youtube.com/watch?v=PmgXkLJYI-E).
 
-   Support to be linked by other languages. For example, [JAVA verifier](https://github.com/altera-opensource/verifier).
+   Support to be linked by other languages. For example, [Java verifier](https://github.com/altera-opensource/verifier) and [Rust spdm-utils](https://github.com/westerndigitalcorporation/spdm-utils).
 
    Support interoperability testing with other SPDM implementations. For example, [intel-server-prot-spdm](https://github.com/intel/intel-server-prot-spdm) and [spdm-rs](https://github.com/ccc-spdm-tools/spdm-rs).
 
