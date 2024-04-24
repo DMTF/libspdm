@@ -1,5 +1,6 @@
 /**
- *  Copyright 2023 DMTF. All rights reserved.
+ *  Copyright Notice:
+ *  Copyright 2023-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -46,6 +47,7 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
     const uint8_t *req_vendor_id;
     const uint8_t *req_data;
     uint16_t resp_size = 0;
+    uint16_t req_size = 0;
 
     /* -=[Check Parameters Phase]=- */
     if (request == NULL ||
@@ -93,6 +95,21 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
     }
 
     if (request_size < sizeof(spdm_vendor_defined_request_msg_t)) {
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                               response_size, response);
+    }
+    if (request_size < sizeof(spdm_vendor_defined_request_msg_t) +
+        spdm_request->len + sizeof(uint16_t)) {
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                               response_size, response);
+    }
+    req_vendor_id = ((const uint8_t *)request) +
+                    sizeof(spdm_vendor_defined_request_msg_t);
+    req_size = *(const uint16_t *)(req_vendor_id + spdm_request->len);
+    if (request_size < sizeof(spdm_vendor_defined_request_msg_t) +
+        spdm_request->len + sizeof(uint16_t) + req_size) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
