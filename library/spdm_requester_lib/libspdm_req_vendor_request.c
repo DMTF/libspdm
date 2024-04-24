@@ -1,5 +1,6 @@
 /**
- *  Copyright 2023 DMTF. All rights reserved.
+ *  Copyright Notice:
+ *  Copyright 2023-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -147,10 +148,7 @@ libspdm_return_t libspdm_try_vendor_send_request_receive_response(
     }
 
     /* -=[Validate Response Phase]=- */
-    /* check response buffer size at least spdm response default header plus
-     * number of bytes required by vendor id and 2 bytes for response payload size */
-    if (spdm_response_size < sizeof(spdm_vendor_defined_response_msg_t) +
-        spdm_response->vendor_id_len + sizeof(uint16_t)) {
+    if (spdm_response_size < sizeof(spdm_message_header_t)) {
         status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto done;
     }
@@ -169,6 +167,18 @@ libspdm_return_t libspdm_try_vendor_send_request_receive_response(
         }
     } else if (spdm_response->header.request_response_code != SPDM_VENDOR_DEFINED_RESPONSE) {
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+        goto done;
+    }
+
+    if (spdm_response_size < sizeof(spdm_vendor_defined_response_msg_t)) {
+        status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+        goto done;
+    }
+    /* check response buffer size at least spdm response default header plus
+     * number of bytes required by vendor id and 2 bytes for response payload size */
+    if (spdm_response_size < sizeof(spdm_vendor_defined_response_msg_t) +
+        spdm_response->vendor_id_len + sizeof(uint16_t)) {
+        status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto done;
     }
 
