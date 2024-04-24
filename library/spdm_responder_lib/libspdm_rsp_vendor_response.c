@@ -99,6 +99,21 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
     }
+    if (request_size < sizeof(spdm_vendor_defined_request_msg_t) +
+        spdm_request->len + sizeof(uint16_t)) {
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                               response_size, response);
+    }
+    req_vendor_id = ((const uint8_t *)request) +
+                    sizeof(spdm_vendor_defined_request_msg_t);
+    req_size = *(const uint16_t *)(req_vendor_id + spdm_request->len);
+    if (request_size < sizeof(spdm_vendor_defined_request_msg_t) +
+        spdm_request->len + sizeof(uint16_t) + req_size) {
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                               response_size, response);
+    }
 
     if (spdm_context->vendor_response_get_id == NULL) {
         return libspdm_generate_error_response(spdm_context,
