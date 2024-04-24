@@ -182,7 +182,7 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
     resp_data = ((uint8_t *)response) + sizeof(spdm_vendor_defined_response_msg_t);
 
     req_vendor_id = ((const uint8_t *)request) +
-                    sizeof(spdm_vendor_defined_response_msg_t);
+                    sizeof(spdm_vendor_defined_request_msg_t);
     req_size = *(const uint16_t *)(req_vendor_id + spdm_request->len);
     req_data = ((const uint8_t *)request) +
                sizeof(spdm_vendor_defined_request_msg_t) +
