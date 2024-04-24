@@ -11,6 +11,17 @@
 
 #define CHUNK_GET_UNIT_TEST_OVERRIDE_DATA_TRANSFER_SIZE (64)
 
+typedef struct {
+    spdm_message_header_t header;
+    /* param1 == RSVD
+     * param2 == RSVD*/
+    uint16_t standard_id;
+    uint8_t len;
+    /*uint8_t                vendor_id[len];*/
+    uint16_t payload_length;
+    /* uint8_t                vendor_defined_payload[payload_length];*/
+} my_spdm_vendor_defined_request_msg_t;
+
 libspdm_return_t my_test_get_vendor_id_func(
     void *spdm_context,
     uint16_t *resp_standard_id,
@@ -194,7 +205,7 @@ void libspdm_test_responder_receive_send_rsp_case2(void** state)
     size_t response_size;
     uint8_t* response;
     spdm_error_response_t* spdm_response;
-    spdm_vendor_defined_request_msg_t spdm_request;
+    my_spdm_vendor_defined_request_msg_t spdm_request;
     void* message;
     size_t message_size;
     uint32_t transport_header_size;
@@ -275,7 +286,7 @@ void libspdm_test_responder_receive_send_rsp_case3(void** state)
     size_t response_size;
     uint8_t* response;
     spdm_error_response_t* spdm_response;
-    spdm_vendor_defined_request_msg_t spdm_request;
+    my_spdm_vendor_defined_request_msg_t spdm_request;
     void* message;
     size_t message_size;
     uint32_t transport_header_size;
