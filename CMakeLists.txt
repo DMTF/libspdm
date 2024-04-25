@@ -1000,6 +1000,8 @@ else()
             ADD_SUBDIRECTORY(unit_test/fuzzing/test_requester/test_spdm_requester_chunk_send)
             ADD_SUBDIRECTORY(unit_test/fuzzing/test_responder/test_spdm_responder_supported_event_types)
             ADD_SUBDIRECTORY(unit_test/fuzzing/test_requester/test_spdm_requester_get_event_types)
+            ADD_SUBDIRECTORY(unit_test/fuzzing/test_requester/test_spdm_requester_vendor_cmds)
+            ADD_SUBDIRECTORY(unit_test/fuzzing/test_responder/test_spdm_responder_vendor_cmds)
             endif()
 
             ADD_SUBDIRECTORY(os_stub/cryptlib_null)
