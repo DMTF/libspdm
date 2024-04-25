@@ -112,6 +112,8 @@ test_spdm_responder_heartbeat_ack
 test_spdm_responder_key_update
 test_spdm_responder_end_session
 test_spdm_responder_if_ready
+test_spdm_requester_vendor_cmds
+test_spdm_responder_vendor_cmds
 )
 
 for ((i=0;i<${#cmds[*]};i++))

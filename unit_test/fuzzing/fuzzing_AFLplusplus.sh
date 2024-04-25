@@ -166,6 +166,8 @@ test_spdm_responder_chunk_send_ack
 test_spdm_requester_chunk_send
 test_spdm_responder_supported_event_types
 test_spdm_requester_get_event_types
+test_spdm_requester_vendor_cmds
+test_spdm_responder_vendor_cmds
 )
 
 export FUZZ_START_TIME=`date +%Y-%m-%d_%H:%M:%S`
