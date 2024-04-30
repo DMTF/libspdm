@@ -19,6 +19,7 @@ SET(CRYPTO ${CRYPTO} CACHE STRING "Choose the crypto of build: mbedtls openssl" 
 SET(GCOV ${GCOV} CACHE STRING "Choose the target of Gcov: ON  OFF, and default is OFF" FORCE)
 SET(STACK_USAGE ${STACK_USAGE} CACHE STRING "Choose the target of STACK_USAGE: ON  OFF, and default is OFF" FORCE)
 SET(BUILD_LINUX_SHARED_LIB ${BUILD_LINUX_SHARED_LIB} CACHE STRING "Choose if libspdm shared library should be built for linux: ON OFF, and default is OFF" FORCE)
+SET(X509_IGNORE_CRITICAL ${X509_IGNORE_CRITICAL} CACHE STRING "Choose if libspdm-provided cryptography libraries (OpenSSL and MbedTLS) ignore unsupported critical extensions in certificates : ON OFF, and default is OFF" FORCE)
 
 if(NOT GCOV)
     SET(GCOV "OFF")
@@ -30,6 +31,10 @@ endif()
 
 if(NOT BUILD_LINUX_SHARED_LIB)
     SET(BUILD_LINUX_SHARED_LIB "OFF")
+endif()
+
+if(NOT X509_IGNORE_CRITICAL)
+    SET(X509_IGNORE_CRITICAL "OFF")
 endif()
 
 SET(LIBSPDM_DIR ${PROJECT_SOURCE_DIR})
@@ -162,6 +167,14 @@ elseif(CRYPTO STREQUAL "openssl")
     add_definitions(-DLIBSPDM_AEAD_SM4_128_GCM_SUPPORT=0)
 else()
     MESSAGE(FATAL_ERROR "Unknown CRYPTO")
+endif()
+
+if (X509_IGNORE_CRITICAL STREQUAL "ON")
+    if (CRYPTO STREQUAL "openssl")
+        add_definitions(-DOPENSSL_IGNORE_CRITICAL=1)
+    elseif(CRYPTO STREQUAL "mbedtls")
+        add_definitions(-DMBEDTLS_X509_ALLOW_UNSUPPORTED_CRITICAL_EXTENSION)
+    endif()
 endif()
 
 if(ENABLE_BINARY_BUILD STREQUAL "1")
