@@ -33,6 +33,7 @@ SET(src_test_spdm_responder
     heartbeat.c
     key_update.c
     end_session.c
+    vendor_response.c
     encap_get_certificate.c
     encap_get_digests.c
     encap_key_update.c
@@ -40,6 +41,7 @@ SET(src_test_spdm_responder
     encap_response.c
     supported_event_types.c
     error_test/supported_event_types_err.c
+    error_test/vendor_response_err.c
     set_certificate_rsp.c
     csr.c
     receive_send.c
