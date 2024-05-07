@@ -77,6 +77,11 @@ int libspdm_responder_supported_event_types_test_main(void);
 int libspdm_responder_supported_event_types_error_test_main(void);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
 
+#if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
+int libspdm_responder_vendor_cmds_test_main(void);
+int libspdm_responder_vendor_cmds_error_test_main(void);
+#endif /* LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES */
+
 int main(void)
 {
     int return_value = 0;
@@ -218,6 +223,15 @@ int main(void)
         return_value = 1;
     }
     #endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
+
+    #if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
+    if (libspdm_responder_vendor_cmds_test_main() != 0) {
+        return_value = 1;
+    }
+    if (libspdm_responder_vendor_cmds_error_test_main() != 0) {
+        return_value = 1;
+    }
+    #endif /* LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES */
 
     return return_value;
 }
