@@ -20,7 +20,15 @@
 size_t libspdm_alignment_size(size_t size)
 {
     size_t alignment;
+    size_t max_buffer_size;
+
     alignment = LIBSPDM_TEST_ALIGNMENT;
+    max_buffer_size = libspdm_get_max_buffer_size();
+
+    /* In the situation where max_buffer_size is not four-byte aligned, reserve sufficient size for the buffer_size */
+    if ((size > max_buffer_size - alignment) && (size & (alignment - 1)) != 0) {
+        size -= alignment;
+    }
 
     if (((size) & (alignment - 1)) == 3) {
         size += 1;
