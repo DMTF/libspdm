@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -201,13 +201,13 @@ libspdm_return_t libspdm_process_encap_response_certificate(
         if (!result) {
             return LIBSPDM_STATUS_VERIF_FAIL;
         }
-    }
 
-    /*verify peer cert chain authority*/
-    result = libspdm_verify_peer_cert_chain_buffer_authority(
-        spdm_context, cert_chain_buffer, cert_chain_buffer_size, NULL, NULL);
-    if (!result) {
-        status = LIBSPDM_STATUS_VERIF_NO_AUTHORITY;
+        /*verify peer cert chain authority*/
+        result = libspdm_verify_peer_cert_chain_buffer_authority(
+            spdm_context, cert_chain_buffer, cert_chain_buffer_size, NULL, NULL);
+        if (!result) {
+            status = LIBSPDM_STATUS_VERIF_NO_AUTHORITY;
+        }
     }
 
     spdm_context->connection_info.peer_used_cert_chain_slot_id =
