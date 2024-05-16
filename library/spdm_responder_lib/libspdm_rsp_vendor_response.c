@@ -43,6 +43,7 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
 
     libspdm_session_info_t *session_info = NULL;
     libspdm_session_state_t session_state = 0;
+    const uint32_t *session_id = NULL;
     uint8_t *resp_data = NULL;
     const uint8_t *req_vendor_id;
     const uint8_t *req_data;
@@ -56,6 +57,27 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
         return LIBSPDM_STATUS_INVALID_PARAMETER;
     }
 
+    if (spdm_context->last_spdm_request_session_id_valid) {
+        session_info = libspdm_get_session_info_via_session_id(
+            spdm_context,
+            spdm_context->last_spdm_request_session_id);
+        if (session_info == NULL) {
+            return libspdm_generate_error_response(
+                spdm_context,
+                SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
+                response_size, response);
+        }
+        session_state = libspdm_secured_message_get_session_state(
+            session_info->secured_message_context);
+        if (session_state != LIBSPDM_SESSION_STATE_ESTABLISHED) {
+            return libspdm_generate_error_response(
+                spdm_context,
+                SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
+                response_size, response);
+        }
+        session_id = &session_info->session_id;
+    }
+
     /* Check if caller is using the old Vendor Defined API */
     if ((spdm_context->vendor_response_callback == NULL ||
          spdm_context->vendor_response_get_id == NULL)) {
@@ -64,7 +86,7 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
 
             return ((libspdm_get_response_func)spdm_context->get_response_func)(
                 spdm_context,
-                &spdm_context->session_info->session_id,
+                session_id,
                 false,
                 request_size,
                 request,
@@ -125,26 +147,6 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
-    }
-
-    if (spdm_context->last_spdm_request_session_id_valid) {
-        session_info = libspdm_get_session_info_via_session_id(
-            spdm_context,
-            spdm_context->last_spdm_request_session_id);
-        if (session_info == NULL) {
-            return libspdm_generate_error_response(
-                spdm_context,
-                SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
-                response_size, response);
-        }
-        session_state = libspdm_secured_message_get_session_state(
-            session_info->secured_message_context);
-        if (session_state != LIBSPDM_SESSION_STATE_ESTABLISHED) {
-            return libspdm_generate_error_response(
-                spdm_context,
-                SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
-                response_size, response);
-        }
     }
 
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
