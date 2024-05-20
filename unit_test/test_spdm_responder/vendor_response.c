@@ -92,8 +92,8 @@ static void libspdm_test_responder_vendor_cmds_case1(void **state)
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    uint8_t request_buffer[255] = {0};
-    uint8_t response_buffer[255] = {0};
+    uint8_t request_buffer[LIBSPDM_MAX_SPDM_MSG_SIZE] = {0};
+    uint8_t response_buffer[LIBSPDM_MAX_SPDM_MSG_SIZE] = {0};
     libspdm_vendor_request_test request = {0};
     libspdm_vendor_response_test response = {0};
     size_t response_len = 0;
@@ -120,16 +120,15 @@ static void libspdm_test_responder_vendor_cmds_case1(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
     request.standard_id = 6;
-    request.vendor_id_len = 2;
-    request.vendor_id[0] = 0xAA;
-    request.vendor_id[1] = 0xAA;
+    request.vendor_id_len = sizeof(request.vendor_id);
+    libspdm_set_mem(request.vendor_id, sizeof(request.vendor_id), 0xAA);
     request.data_len = sizeof(request.data);
     libspdm_set_mem(request.data, sizeof(request.data), 0xAA);
 
     response_len = sizeof(response);
 
     /* copy header of request structure to buffer */
-    libspdm_copy_mem(request_buffer, 255, &request,
+    libspdm_copy_mem(request_buffer, sizeof(request_buffer), &request,
                      sizeof(request.header) + 3 + request.vendor_id_len);
     /* copy the request data to the correct offset in the request_buffer */
     libspdm_copy_mem(request_buffer + sizeof(request.header) + 3 + request.vendor_id_len,
