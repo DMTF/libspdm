@@ -744,6 +744,9 @@ void libspdm_test_responder_measurements_case11(void **state)
                      (sizeof(spdm_measurement_block_dmtf_t) +
                       sizeof(spdm_measurements_secure_version_number_t)) +
                      (sizeof(spdm_measurement_block_dmtf_t) +
+                      libspdm_get_measurement_hash_size(
+                          m_libspdm_use_measurement_hash_algo)) +
+                     (sizeof(spdm_measurement_block_dmtf_t) +
                       LIBSPDM_MEASUREMENT_MANIFEST_SIZE) +
                      (sizeof(spdm_measurement_block_dmtf_t) +
                       sizeof(spdm_measurements_device_mode_t)) +
@@ -807,6 +810,9 @@ void libspdm_test_responder_measurements_case12(void **state)
                      (sizeof(spdm_measurement_block_dmtf_t) +
                       sizeof(spdm_measurements_secure_version_number_t)) +
                      (sizeof(spdm_measurement_block_dmtf_t) +
+                      libspdm_get_measurement_hash_size(
+                          m_libspdm_use_measurement_hash_algo)) +
+                     (sizeof(spdm_measurement_block_dmtf_t) +
                       LIBSPDM_MEASUREMENT_MANIFEST_SIZE) +
                      (sizeof(spdm_measurement_block_dmtf_t) +
                       sizeof(spdm_measurements_device_mode_t)) +
@@ -826,6 +832,9 @@ void libspdm_test_responder_measurements_case12(void **state)
                           m_libspdm_use_measurement_hash_algo)) +
                      (sizeof(spdm_measurement_block_dmtf_t) +
                       sizeof(spdm_measurements_secure_version_number_t)) +
+                     (sizeof(spdm_measurement_block_dmtf_t) +
+                      libspdm_get_measurement_hash_size(
+                          m_libspdm_use_measurement_hash_algo)) +
                      (sizeof(spdm_measurement_block_dmtf_t) +
                       LIBSPDM_MEASUREMENT_MANIFEST_SIZE) +
                      (sizeof(spdm_measurement_block_dmtf_t) +
@@ -1451,6 +1460,8 @@ void libspdm_test_responder_measurements_case24(void **state)
                       libspdm_get_measurement_hash_size(m_libspdm_use_measurement_hash_algo)) +
                      (sizeof(spdm_measurement_block_dmtf_t) +
                       sizeof(spdm_measurements_secure_version_number_t)) +
+                     (sizeof(spdm_measurement_block_dmtf_t) +
+                      libspdm_get_measurement_hash_size(m_libspdm_use_measurement_hash_algo)) +
                      (sizeof(spdm_measurement_block_dmtf_t) + LIBSPDM_MEASUREMENT_MANIFEST_SIZE) +
                      (sizeof(spdm_measurement_block_dmtf_t) +
                       sizeof(spdm_measurements_device_mode_t)) +
@@ -1466,6 +1477,8 @@ void libspdm_test_responder_measurements_case24(void **state)
                       libspdm_get_measurement_hash_size(m_libspdm_use_measurement_hash_algo)) +
                      (sizeof(spdm_measurement_block_dmtf_t) +
                       sizeof(spdm_measurements_secure_version_number_t)) +
+                     (sizeof(spdm_measurement_block_dmtf_t) +
+                      libspdm_get_measurement_hash_size(m_libspdm_use_measurement_hash_algo)) +
                      (sizeof(spdm_measurement_block_dmtf_t) + LIBSPDM_MEASUREMENT_MANIFEST_SIZE) +
                      (sizeof(spdm_measurement_block_dmtf_t) +
                       sizeof(spdm_measurements_device_mode_t)) +
