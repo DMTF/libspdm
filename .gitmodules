@@ -6,4 +6,4 @@
     url = https://github.com/ARMmbed/mbedtls
 [submodule "unit_test/cmockalib/cmocka"]
     path = unit_test/cmockalib/cmocka
-    url = https://git.cryptomilk.org/projects/cmocka.git
+	url = https://gitlab.com/cmocka/cmocka.git
