@@ -42,7 +42,7 @@ static bool libspdm_set_cert_verify_certchain(const uint8_t *cert_chain, size_t 
     /*verify leaf cert*/
     if (!libspdm_x509_set_cert_certificate_check(leaf_cert_buffer, leaf_cert_buffer_size,
                                                  base_asym_algo, base_hash_algo,
-                                                 false, is_device_cert_model)) {
+                                                 true, is_device_cert_model)) {
         return false;
     }
 
