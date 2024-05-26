@@ -10,6 +10,7 @@ SET(src_spdm_common_lib
     libspdm_com_opaque_data.c
     libspdm_com_support.c
     libspdm_com_msg_log.c
+    libspdm_com_send_receive.c
 )
 
 ADD_LIBRARY(spdm_common_lib STATIC ${src_spdm_common_lib})
