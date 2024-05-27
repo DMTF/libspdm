@@ -1399,7 +1399,7 @@ bool libspdm_x509_get_key_usage(const uint8_t *cert, size_t cert_size,
     ret = mbedtls_x509_crt_parse_der(&crt, cert, cert_size);
 
     if (ret == 0) {
-        *usage = crt.key_usage;
+        *usage = crt.MBEDTLS_PRIVATE(key_usage);
         status = true;
     }
     mbedtls_x509_crt_free(&crt);

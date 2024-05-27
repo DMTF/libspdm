@@ -54,36 +54,36 @@ void *libspdm_dh_new_by_nid(size_t nid)
 
     switch (nid) {
     case LIBSPDM_CRYPTO_NID_FFDHE2048:
-        ret = mbedtls_mpi_read_binary(&ctx->P, m_ffehde2048_p,
+        ret = mbedtls_mpi_read_binary(&ctx->MBEDTLS_PRIVATE(P), m_ffehde2048_p,
                                       sizeof(m_ffehde2048_p));
         if (ret != 0) {
             goto error;
         }
-        ret = mbedtls_mpi_read_binary(&ctx->G, m_ffehde2048_g,
+        ret = mbedtls_mpi_read_binary(&ctx->MBEDTLS_PRIVATE(G), m_ffehde2048_g,
                                       sizeof(m_ffehde2048_g));
         if (ret != 0) {
             goto error;
         }
         break;
     case LIBSPDM_CRYPTO_NID_FFDHE3072:
-        ret = mbedtls_mpi_read_binary(&ctx->P, m_ffehde3072_p,
+        ret = mbedtls_mpi_read_binary(&ctx->MBEDTLS_PRIVATE(P), m_ffehde3072_p,
                                       sizeof(m_ffehde3072_p));
         if (ret != 0) {
             goto error;
         }
-        ret = mbedtls_mpi_read_binary(&ctx->G, m_ffehde3072_g,
+        ret = mbedtls_mpi_read_binary(&ctx->MBEDTLS_PRIVATE(G), m_ffehde3072_g,
                                       sizeof(m_ffehde3072_g));
         if (ret != 0) {
             goto error;
         }
         break;
     case LIBSPDM_CRYPTO_NID_FFDHE4096:
-        ret = mbedtls_mpi_read_binary(&ctx->P, m_ffehde4096_p,
+        ret = mbedtls_mpi_read_binary(&ctx->MBEDTLS_PRIVATE(P), m_ffehde4096_p,
                                       sizeof(m_ffehde4096_p));
         if (ret != 0) {
             goto error;
         }
-        ret = mbedtls_mpi_read_binary(&ctx->G, m_ffehde4096_g,
+        ret = mbedtls_mpi_read_binary(&ctx->MBEDTLS_PRIVATE(G), m_ffehde4096_g,
                                       sizeof(m_ffehde4096_g));
         if (ret != 0) {
             goto error;
@@ -209,7 +209,7 @@ bool libspdm_dh_generate_key(void *dh_context, uint8_t *public_key,
     }
 
     ctx = dh_context;
-    switch (mbedtls_mpi_size(&ctx->P)) {
+    switch (mbedtls_mpi_size(&ctx->MBEDTLS_PRIVATE(P))) {
     case 256:
         final_pub_key_size = 256;
         break;
@@ -288,7 +288,7 @@ bool libspdm_dh_compute_key(void *dh_context, const uint8_t *peer_public_key,
     }
 
     ctx = dh_context;
-    switch (mbedtls_mpi_size(&ctx->P)) {
+    switch (mbedtls_mpi_size(&ctx->MBEDTLS_PRIVATE(P))) {
     case 256:
         dh_key_size = 256;
         break;

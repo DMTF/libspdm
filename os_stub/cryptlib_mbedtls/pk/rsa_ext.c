@@ -426,7 +426,7 @@ bool libspdm_rsa_pss_sign(void *rsa_context, size_t hash_nid,
     if (ret != 0) {
         return false;
     }
-    *sig_size = ((mbedtls_rsa_context *)rsa_context)->len;
+    *sig_size = mbedtls_rsa_get_len(rsa_context);
     return true;
 }
 
@@ -539,7 +539,7 @@ bool libspdm_rsa_pss_sign_fips(void *rsa_context, size_t hash_nid,
     if (ret != 0) {
         return false;
     }
-    *sig_size = ((mbedtls_rsa_context *)rsa_context)->len;
+    *sig_size = mbedtls_rsa_get_len(rsa_context);
     return true;
 }
 #endif /*LIBSPDM_FIPS_MODE*/
