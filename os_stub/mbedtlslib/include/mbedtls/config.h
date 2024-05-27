@@ -4391,13 +4391,6 @@ extern int my_snprintf(char *str, size_t size, const char *format, ...);
 /** \} name SECTION: Module configuration options */
 
 /**
- * libspdm specific: Many internal data structures in mbedtls are marked as
- * private. To access these now MBEDTLS_ALLOW_PRIVATE_ACCESS has to be
- * defined.
- */
-#define MBEDTLS_ALLOW_PRIVATE_ACCESS
-
-/**
  * Header files like mbedtls/config_psa.h, mbedtls/check_config.h are included
  * by mbedtls/build_info.h.
  *

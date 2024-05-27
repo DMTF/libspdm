@@ -384,8 +384,8 @@ bool libspdm_rsa_pss_verify_fips(void *rsa_context, size_t hash_nid,
 
     mbedtls_rsa_set_padding(rsa_context, MBEDTLS_RSA_PKCS_V21, md_alg);
 
-    mgf1_hash_id = (rsa_key->hash_id != MBEDTLS_MD_NONE) ?
-                   (mbedtls_md_type_t) rsa_key->hash_id : md_alg;
+    mgf1_hash_id = (rsa_key->MBEDTLS_PRIVATE(hash_id) != MBEDTLS_MD_NONE) ?
+                   (mbedtls_md_type_t) rsa_key->MBEDTLS_PRIVATE(hash_id) : md_alg;
 
     /*salt len is 0*/
     ret = mbedtls_rsa_rsassa_pss_verify_ext(rsa_context, md_alg,
