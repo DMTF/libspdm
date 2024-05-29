@@ -301,10 +301,10 @@ bool libspdm_asn1_get_tag(uint8_t **ptr, const uint8_t *end, size_t *length,
  * If cert is NULL, then return false.
  * If subject_size is NULL, then return false.
  *
- * @retval  true   The certificate subject retrieved successfully.
- * @retval  false  Invalid certificate, or the subject_size is too small for the result.
- *                The subject_size will be updated with the required size.
- *
+ * @retval  true   If the subject_size is not equal 0. The certificate subject retrieved successfully.
+ * @retval  true   If the subject_size is equal 0. The certificate parse successful. But the cert doen't have subject.
+ * @retval  false  If the subject_size is not equal 0. The certificate subject retrieved successfully.But the subject_size is too small for the result.
+ * @retval  false  If the subject_size is equal 0. Invalid certificate.
  **/
 bool libspdm_x509_get_subject_name(const uint8_t *cert, size_t cert_size,
                                    uint8_t *cert_subject,
@@ -315,31 +315,31 @@ bool libspdm_x509_get_subject_name(const uint8_t *cert, size_t cert_size,
     X509_NAME *x509_name;
     size_t x509_name_size;
 
-
     /* Check input parameters.*/
-
-    if (cert == NULL || subject_size == NULL) {
+    if (cert == NULL || cert == 0 || subject_size == NULL) {
+        if (subject_size != NULL) {
+            *subject_size = 0;
+        }
         return false;
     }
 
     x509_cert = NULL;
 
-
     /* Read DER-encoded X509 Certificate and Construct X509 object.*/
-
     res = libspdm_x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
     if ((x509_cert == NULL) || (!res)) {
+        *subject_size = 0;
         res = false;
         goto done;
     }
 
     res = false;
 
-
     /* Retrieve subject name from certificate object.*/
-
     x509_name = X509_get_subject_name(x509_cert);
     if (x509_name == NULL) {
+        *subject_size = 0;
+        res = true;
         goto done;
     }
 
@@ -357,7 +357,6 @@ bool libspdm_x509_get_subject_name(const uint8_t *cert, size_t cert_size,
 done:
 
     /* Release Resources.*/
-
     if (x509_cert != NULL) {
         X509_free(x509_cert);
     }
@@ -847,10 +846,10 @@ done:
  * @param[in, out] issuer_size  The size in bytes of the cert_issuer buffer on input,
  *                             and the size of buffer returned cert_issuer on output.
  *
- * @retval  true   The certificate issuer retrieved successfully.
- * @retval  false  Invalid certificate, or the issuer_size is too small for the result.
- *                The issuer_size will be updated with the required size.
- * @retval  false  This interface is not supported.
+ * @retval  true   If the issuer_size is not equal 0. The certificate issuer retrieved successfully.
+ * @retval  true   If the issuer_size is equal 0. The certificate parse successful. But the cert doen't have issuer.
+ * @retval  false  If the issuer_size is not equal 0. The certificate issuer retrieved successfully. But the issuer_size is too small for the result.
+ * @retval  false  If the issuer_size is equal 0. Invalid certificate.
  *
  **/
 bool libspdm_x509_get_issuer_name(const uint8_t *cert, size_t cert_size,
@@ -862,31 +861,31 @@ bool libspdm_x509_get_issuer_name(const uint8_t *cert, size_t cert_size,
     X509_NAME *x509_name;
     size_t x509_name_size;
 
-
     /* Check input parameters.*/
-
-    if (cert == NULL || issuer_size == NULL) {
+    if (cert == NULL || cert_size == 0 || issuer_size == NULL) {
+        if (issuer_size != NULL) {
+            *issuer_size = 0;
+        }
         return false;
     }
 
     x509_cert = NULL;
 
-
     /* Read DER-encoded X509 Certificate and Construct X509 object.*/
-
     res = libspdm_x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
     if ((x509_cert == NULL) || (!res)) {
         res = false;
+        *issuer_size = 0;
         goto done;
     }
 
     res = false;
 
-
     /* Retrieve issuer name from certificate object.*/
-
     x509_name = X509_get_issuer_name(x509_cert);
     if (x509_name == NULL) {
+        *issuer_size = 0;
+        res = true;
         goto done;
     }
 
@@ -904,7 +903,6 @@ bool libspdm_x509_get_issuer_name(const uint8_t *cert, size_t cert_size,
 done:
 
     /* Release Resources.*/
-
     if (x509_cert != NULL) {
         X509_free(x509_cert);
     }
@@ -1101,38 +1099,45 @@ bool libspdm_x509_get_validity(const uint8_t *cert, size_t cert_size,
     size_t t_size;
     size_t f_size;
 
-
     /* Check input parameters.*/
-
     if (cert == NULL || from_size == NULL || to_size == NULL ||
         cert_size == 0) {
+        if (from_size != NULL) {
+            *from_size = 0;
+        }
+        if (to_size != NULL) {
+            *to_size = 0;
+        }
         return false;
     }
 
     x509_cert = NULL;
     res = false;
 
-
     /* Read DER-encoded X509 Certificate and Construct X509 object.*/
-
     res = libspdm_x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
     if ((x509_cert == NULL) || (!res)) {
+        *from_size = 0;
+        *to_size = 0;
+        res = false;
         goto done;
     }
 
-
     /* Retrieve Validity from/to from certificate object.*/
-
     f_time = X509_get0_notBefore(x509_cert);
     t_time = X509_get0_notAfter(x509_cert);
 
     if (f_time == NULL || t_time == NULL) {
+        *from_size = 0;
+        *to_size = 0;
+        res = true;
         goto done;
     }
 
     f_size = sizeof(ASN1_TIME) + f_time->length;
     if (*from_size < f_size) {
         *from_size = f_size;
+        res = false;
         goto done;
     }
     if (from != NULL) {
@@ -1147,6 +1152,7 @@ bool libspdm_x509_get_validity(const uint8_t *cert, size_t cert_size,
     t_size = sizeof(ASN1_TIME) + t_time->length;
     if (*to_size < t_size) {
         *to_size = t_size;
+        res = false;
         goto done;
     }
     if (to != NULL) {
@@ -1163,7 +1169,6 @@ bool libspdm_x509_get_validity(const uint8_t *cert, size_t cert_size,
 done:
 
     /* Release Resources.*/
-
     if (x509_cert != NULL) {
         X509_free(x509_cert);
     }
@@ -1268,9 +1273,9 @@ int32_t libspdm_x509_compare_date_time(const void *date_time1, const void *date_
  * @param[in]      cert_size         size of the X509 certificate in bytes.
  * @param[out]     usage            key usage (LIBSPDM_CRYPTO_X509_KU_*)
  *
- * @retval  true   The certificate key usage retrieved successfully.
- * @retval  false  Invalid certificate, or usage is NULL
- * @retval  false  This interface is not supported.
+ * @retval  true   if the usage is no equal 0. The certificate key usage retrieved successfully.
+ * @retval  true   if the usage is equal 0. The certificate parse successfully, but the cert doen't have key usage.
+ * @retval  false  Invalid certificate, or usage is NULL.
  **/
 bool libspdm_x509_get_key_usage(const uint8_t *cert, size_t cert_size,
                                 size_t *usage)
@@ -1278,37 +1283,32 @@ bool libspdm_x509_get_key_usage(const uint8_t *cert, size_t cert_size,
     bool res;
     X509 *x509_cert;
 
-
     /* Check input parameters.*/
-
-    if (cert == NULL || usage == NULL) {
+    if (cert == NULL || cert_size == 0 || usage == NULL) {
+        if (usage != NULL) {
+            *usage = 0;
+        }
         return false;
     }
 
     x509_cert = NULL;
     res = false;
 
-
     /* Read DER-encoded X509 Certificate and Construct X509 object.*/
-
     res = libspdm_x509_construct_certificate(cert, cert_size, (uint8_t **)&x509_cert);
     if ((x509_cert == NULL) || (!res)) {
+        res = false;
+        *usage = 0;
         goto done;
     }
 
-
-    /* Retrieve subject name from certificate object.*/
-
+    /* Retrieve key usage from certificate object.*/
     *usage = X509_get_key_usage(x509_cert);
-    if (*usage == NID_undef) {
-        goto done;
-    }
     res = true;
 
 done:
 
     /* Release Resources.*/
-
     if (x509_cert != NULL) {
         X509_free(x509_cert);
     }

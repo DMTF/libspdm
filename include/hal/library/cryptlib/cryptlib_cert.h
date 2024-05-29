@@ -35,10 +35,10 @@ extern bool libspdm_asn1_get_tag(uint8_t **ptr, const uint8_t *end, size_t *leng
  * @param[in, out] subject_size  The size in bytes of the cert_subject buffer on input,
  *                               and the size of buffer returned cert_subject on output.
  *
- * @retval  true   The certificate subject retrieved successfully.
- * @retval  false  Invalid certificate, or the subject_size is too small for the result.
- *                 The subject_size will be updated with the required size.
- * @retval  false  This interface is not supported.
+ * @retval  true   If the subject_size is not equal 0. The certificate subject retrieved successfully.
+ * @retval  true   If the subject_size is equal 0. The certificate parse successful. But the cert doen't have subject.
+ * @retval  false  If the subject_size is not equal 0. The certificate subject retrieved successfully.But the subject_size is too small for the result.
+ * @retval  false  If the subject_size is equal 0. Invalid certificate.
  **/
 extern bool libspdm_x509_get_subject_name(const uint8_t *cert, size_t cert_size,
                                           uint8_t *cert_subject,
@@ -93,10 +93,10 @@ extern bool libspdm_x509_get_serial_number(const uint8_t *cert, size_t cert_size
  * @param[in, out] issuer_size  The size in bytes of the cert_issuer buffer on input,
  *                              and the size of buffer returned cert_issuer on output.
  *
- * @retval  true   The certificate issuer retrieved successfully.
- * @retval  false  Invalid certificate, or the issuer_size is too small for the result.
- *                 The issuer_size will be updated with the required size.
- * @retval  false  This interface is not supported.
+ * @retval  true   If the issuer_size is not equal 0. The certificate issuer retrieved successfully.
+ * @retval  true   If the issuer_size is equal 0. The certificate parse successful. But the cert doen't have issuer.
+ * @retval  false  If the issuer_size is not equal 0. The certificate issuer retrieved successfully. But the issuer_size is too small for the result.
+ * @retval  false  If the issuer_size is equal 0. Invalid certificate.
  **/
 extern bool libspdm_x509_get_issuer_name(const uint8_t *cert, size_t cert_size,
                                          uint8_t *cert_issuer,
@@ -140,9 +140,14 @@ extern bool libspdm_x509_get_extension_data(const uint8_t *cert, size_t cert_siz
  * Note: libspdm_x509_compare_date_time to compare date_time oject
  *       x509SetDateTime to get a date_time object from a date_time_str
  *
- * @retval  true   The certificate Validity retrieved successfully.
- * @retval  false  Invalid certificate, or Validity retrieve failed.
- * @retval  false  This interface is not supported.
+ * @retval  true   if the from_size and from_size are not equal 0.
+ *                 The certificate Validity retrieved successfully.
+ * @retval  true   if the from_size and from_size are equal 0.
+ *                 The certificate Validity does not exist.
+ * @retval  false  if the from_size and from_size are not equal 0.
+ *                 The certificate Validity retrieved successfully, but the input buffer size is small.
+ * @retval  false  if the from_size and from_size are equal 0.
+ *                 Invalid certificate, or Validity retrieve failed.
  **/
 extern bool libspdm_x509_get_validity(const uint8_t *cert, size_t cert_size,
                                       uint8_t *from, size_t *from_size, uint8_t *to,
@@ -192,9 +197,9 @@ extern int32_t libspdm_x509_compare_date_time(const void *date_time1, const void
  * @param[in]      cert_size  Size of the X509 certificate in bytes.
  * @param[out]     usage      Key usage (LIBSPDM_CRYPTO_X509_KU_*)
  *
- * @retval  true   The certificate key usage retrieved successfully.
- * @retval  false  Invalid certificate, or usage is NULL
- * @retval  false  This interface is not supported.
+ * @retval  true   if the usage is no equal 0. The certificate key usage retrieved successfully.
+ * @retval  true   if the usage is equal 0. The certificate parse successfully, but the cert doen't have key usage.
+ * @retval  false  Invalid certificate, or usage is NULL.
  **/
 extern bool libspdm_x509_get_key_usage(const uint8_t *cert, size_t cert_size, size_t *usage);
 

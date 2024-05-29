@@ -1095,31 +1095,58 @@ bool libspdm_x509_common_certificate_check(const uint8_t *cert, size_t cert_size
     /* 4. issuer_name*/
     asn1_buffer_len = 0;
     status = libspdm_x509_get_issuer_name(cert, cert_size, NULL, &asn1_buffer_len);
-    if (asn1_buffer_len == 0) {
-        status = false;
-        goto cleanup;
+    if (status) {
+        if ((asn1_buffer_len == 0) &&
+            (cert_model != SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT)) {
+            status = false;
+            goto cleanup;
+        }
+    } else {
+        if (asn1_buffer_len == 0) {
+            status = false;
+            goto cleanup;
+        }
     }
 
     /* 5. subject_name*/
     asn1_buffer_len = 0;
     status = libspdm_x509_get_subject_name(cert, cert_size, NULL, &asn1_buffer_len);
-    if (asn1_buffer_len == 0) {
-        status = false;
-        goto cleanup;
+    if (status) {
+        if ((asn1_buffer_len == 0) &&
+            (cert_model != SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT)) {
+            status = false;
+            goto cleanup;
+        }
+    } else {
+        if (asn1_buffer_len == 0) {
+            status = false;
+            goto cleanup;
+        }
     }
 
-    /* 6. validaity*/
+    /* 6. validity*/
     status = libspdm_x509_get_validity(cert, cert_size, end_cert_from,
                                        &end_cert_from_len, end_cert_to,
                                        &end_cert_to_len);
-    if (!status) {
-        goto cleanup;
+    if (status) {
+        if ((end_cert_from_len == 0) &&
+            (cert_model != SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT)) {
+            status = false;
+            goto cleanup;
+        }
+    } else {
+        if (end_cert_from_len == 0) {
+            status = false;
+            goto cleanup;
+        }
     }
 
-    status = libspdm_internal_x509_date_time_check(
-        end_cert_from, end_cert_from_len, end_cert_to, end_cert_to_len);
-    if (!status) {
-        goto cleanup;
+    if (end_cert_from_len != 0) {
+        status = libspdm_internal_x509_date_time_check(
+            end_cert_from, end_cert_from_len, end_cert_to, end_cert_to_len);
+        if (!status) {
+            goto cleanup;
+        }
     }
 
     /* 7. subject_public_key*/
@@ -1133,12 +1160,18 @@ bool libspdm_x509_common_certificate_check(const uint8_t *cert, size_t cert_size
     status = libspdm_x509_get_key_usage(cert, cert_size, &value);
     if (!status) {
         goto cleanup;
-    }
-    if (LIBSPDM_CRYPTO_X509_KU_DIGITAL_SIGNATURE & value) {
-        status = true;
     } else {
-        status = false;
-        goto cleanup;
+        if (value == 0) {
+            if (cert_model != SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT) {
+                status = false;
+                goto cleanup;
+            }
+        } else {
+            if ((LIBSPDM_CRYPTO_X509_KU_DIGITAL_SIGNATURE & value) == 0) {
+                status = false;
+                goto cleanup;
+            }
+        }
     }
 
     /* 9. verify spdm defined extended key usage*/
