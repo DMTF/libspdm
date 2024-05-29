@@ -4,12 +4,10 @@
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
-/** @file
- * mbedtls customized configuration file.
- **/
-
 /**
- * \file config.h
+ * \file libspdm_mbedtls_config.h
+ *
+ *  mbedtls customized configuration file.
  *
  * \brief Configuration options (set of defines)
  *
@@ -21,9 +19,6 @@
  *  Copyright The Mbed TLS Contributors
  *  SPDX-License-Identifier: Apache-2.0 OR GPL-2.0-or-later
  */
-
-#ifndef MBEDTLS_CONFIG_H
-#define MBEDTLS_CONFIG_H
 
 /**
  * This is an optional version symbol that enables compatibility handling of
@@ -4405,5 +4400,3 @@ extern int my_snprintf(char *str, size_t size, const char *format, ...);
  * not include check_config.h here as the config check might fail when included
  * before config_adjust header files.
  */
-
-#endif /* MBEDTLS_CONFIG_H */

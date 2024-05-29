@@ -48,3 +48,8 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
         TARGET_COMPILE_OPTIONS(cryptlib_mbedtls PRIVATE /wd4090 /wd4200)
     endif()
 endif()
+
+if(MBEDTLS_CONFIG_FILE)
+else()
+    TARGET_COMPILE_DEFINITIONS(cryptlib_mbedtls PRIVATE -DMBEDTLS_CONFIG_FILE=<libspdm_mbedtls_config.h>)
+endif()
