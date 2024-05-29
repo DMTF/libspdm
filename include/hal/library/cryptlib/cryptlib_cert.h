@@ -80,6 +80,25 @@ extern bool libspdm_x509_get_serial_number(const uint8_t *cert, size_t cert_size
                                            uint8_t *serial_number,
                                            size_t *serial_number_size);
 
+#if LIBSPDM_ADDITIONAL_CHECK_CERT
+/**
+ * Retrieve the signature algorithm from one X.509 certificate.
+ *
+ * @param[in]      cert       Pointer to the DER-encoded X509 certificate.
+ * @param[in]      cert_size  Size of the X509 certificate in bytes.
+ * @param[out]     oid        Signature algorithm Object identifier buffer.
+ * @param[in,out]  oid_size   Signature algorithm Object identifier buffer size.
+ *
+ * @retval  true    if the oid_size is equal 0, the cert parse successfully, but cert doesn't have signature algo.
+ * @retval  true    if the oid_size is not equal 0, the cert parse and get signature algo successfully.
+ * @retval  false   if the oid_size is equal 0, the cert parse failed.
+ * @retval  false   if the oid_size is not equal 0, the cert parse and get signature algo successfully, but the input buffer size is small.
+ **/
+extern bool libspdm_x509_get_signature_algorithm(const uint8_t *cert,
+                                                 size_t cert_size, uint8_t *oid,
+                                                 size_t *oid_size);
+#endif /* LIBSPDM_ADDITIONAL_CHECK_CERT */
+
 /**
  * Retrieve the issuer bytes from one X.509 certificate.
  *

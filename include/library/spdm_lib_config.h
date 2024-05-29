@@ -410,4 +410,9 @@
 #define LIBSPDM_HAL_PASS_SPDM_CONTEXT 0
 #endif
 
+/* Enable additional checks for cert. */
+#ifndef LIBSPDM_ADDITIONAL_CHECK_CERT
+#define LIBSPDM_ADDITIONAL_CHECK_CERT 0
+#endif
+
 #endif /* SPDM_LIB_CONFIG_H */

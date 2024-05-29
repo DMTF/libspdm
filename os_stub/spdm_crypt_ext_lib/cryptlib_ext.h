@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -107,21 +107,6 @@ extern bool libspdm_x509_get_issuer_common_name(const uint8_t *cert, size_t cert
 extern bool libspdm_x509_get_issuer_orgnization_name(const uint8_t *cert, size_t cert_size,
                                                      char *name_buffer,
                                                      size_t *name_buffer_size);
-
-/**
- * Retrieve the signature algorithm from one X.509 certificate.
- *
- * @param[in]      cert       Pointer to the DER-encoded X509 certificate.
- * @param[in]      cert_size  Size of the X509 certificate in bytes.
- * @param[out]     oid        Signature algorithm Object identifier buffer.
- * @param[in,out]  oid_size   Signature algorithm Object identifier buffer size.
- *
- * @retval  true
- * @retval  false
- **/
-extern bool libspdm_x509_get_signature_algorithm(const uint8_t *cert,
-                                                 size_t cert_size, uint8_t *oid,
-                                                 size_t *oid_size);
 
 /**
  * Construct a X509 object from DER-encoded certificate data.
