@@ -260,10 +260,10 @@ bool libspdm_asn1_get_tag(uint8_t **ptr, const uint8_t *end, size_t *length,
  * If cert is NULL, then return false.
  * If subject_size is NULL, then return false.
  *
- * @retval  true   The certificate subject retrieved successfully.
- * @retval  false  Invalid certificate, or the subject_size is too small for the result.
- *                The subject_size will be updated with the required size.
- *
+ * @retval  true   If the subject_size is not equal 0. The certificate subject retrieved successfully.
+ * @retval  true   If the subject_size is equal 0. The certificate parse successful. But the cert doen't have subject.
+ * @retval  false  If the subject_size is not equal 0. The certificate subject retrieved successfully.But the subject_size is too small for the result.
+ * @retval  false  If the subject_size is equal 0. Invalid certificate.
  **/
 bool libspdm_x509_get_subject_name(const uint8_t *cert, size_t cert_size,
                                    uint8_t *cert_subject,
@@ -273,7 +273,11 @@ bool libspdm_x509_get_subject_name(const uint8_t *cert, size_t cert_size,
     int ret;
     bool status;
 
-    if (cert == NULL) {
+    /* Check input parameters.*/
+    if (cert == NULL || cert == 0 || subject_size == NULL) {
+        if (subject_size != NULL) {
+            *subject_size = 0;
+        }
         return false;
     }
 
@@ -295,6 +299,8 @@ bool libspdm_x509_get_subject_name(const uint8_t *cert, size_t cert_size,
         }
         *subject_size = crt.subject_raw.len;
         status = true;
+    } else {
+        *subject_size = 0;
     }
 
 cleanup:
@@ -963,10 +969,10 @@ cleanup:
  * @param[in, out] issuer_size  The size in bytes of the cert_issuer buffer on input,
  *                             and the size of buffer returned cert_issuer on output.
  *
- * @retval  true   The certificate issuer retrieved successfully.
- * @retval  false  Invalid certificate, or the issuer_size is too small for the result.
- *                The issuer_size will be updated with the required size.
- * @retval  false  This interface is not supported.
+ * @retval  true   If the issuer_size is not equal 0. The certificate issuer retrieved successfully.
+ * @retval  true   If the issuer_size is equal 0. The certificate parse successful. But the cert doen't have issuer.
+ * @retval  false  If the issuer_size is not equal 0. The certificate issuer retrieved successfully. But the issuer_size is too small for the result.
+ * @retval  false  If the issuer_size is equal 0. Invalid certificate.
  *
  **/
 bool libspdm_x509_get_issuer_name(const uint8_t *cert, size_t cert_size,
@@ -977,7 +983,11 @@ bool libspdm_x509_get_issuer_name(const uint8_t *cert, size_t cert_size,
     int ret;
     bool status;
 
-    if (cert == NULL) {
+    /* Check input parameters.*/
+    if (cert == NULL || cert_size == 0 || issuer_size == NULL) {
+        if (issuer_size != NULL) {
+            *issuer_size = 0;
+        }
         return false;
     }
 
@@ -998,6 +1008,8 @@ bool libspdm_x509_get_issuer_name(const uint8_t *cert, size_t cert_size,
         }
         *issuer_size = crt.issuer_raw.len;
         status = true;
+    } else {
+        *issuer_size = 0;
     }
 
 cleanup:
@@ -1329,19 +1341,37 @@ bool libspdm_x509_get_validity(const uint8_t *cert, size_t cert_size,
     bool status;
     size_t t_size;
     size_t f_size;
+    mbedtls_x509_time zero_time;
 
-    if (cert == NULL) {
+    /* Check input parameters.*/
+    if (cert == NULL || from_size == NULL || to_size == NULL ||
+        cert_size == 0) {
+        if (from_size != NULL) {
+            *from_size = 0;
+        }
+        if (to_size != NULL) {
+            *to_size = 0;
+        }
         return false;
     }
 
     status = false;
 
     mbedtls_x509_crt_init(&crt);
+    libspdm_zero_mem(&zero_time, sizeof(mbedtls_x509_time));
 
     ret = mbedtls_x509_crt_parse_der(&crt, cert, cert_size);
 
     if (ret == 0) {
         f_size = sizeof(mbedtls_x509_time);
+        if ((libspdm_consttime_is_mem_equal(&zero_time, &(crt.valid_from), f_size)) &&
+            (libspdm_consttime_is_mem_equal(&zero_time, &(crt.valid_to), f_size))) {
+            *from_size = 0;
+            *to_size = 0;
+            status = true;
+            goto done;
+        }
+
         if (*from_size < f_size) {
             *from_size = f_size;
             goto done;
@@ -1362,6 +1392,9 @@ bool libspdm_x509_get_validity(const uint8_t *cert, size_t cert_size,
         }
         *to_size = t_size;
         status = true;
+    } else {
+        *from_size = 0;
+        *to_size = 0;
     }
 
 done:
@@ -1377,9 +1410,9 @@ done:
  * @param[in]      cert_size         size of the X509 certificate in bytes.
  * @param[out]     usage            key usage (LIBSPDM_CRYPTO_X509_KU_*)
  *
- * @retval  true   The certificate key usage retrieved successfully.
- * @retval  false  Invalid certificate, or usage is NULL
- * @retval  false  This interface is not supported.
+ * @retval  true   if the usage is no equal 0. The certificate key usage retrieved successfully.
+ * @retval  true   if the usage is equal 0. The certificate parse successfully, but the cert doen't have key usage.
+ * @retval  false  Invalid certificate, or usage is NULL.
  **/
 bool libspdm_x509_get_key_usage(const uint8_t *cert, size_t cert_size,
                                 size_t *usage)
@@ -1388,7 +1421,11 @@ bool libspdm_x509_get_key_usage(const uint8_t *cert, size_t cert_size,
     int ret;
     bool status;
 
-    if (cert == NULL) {
+    /* Check input parameters.*/
+    if (cert == NULL || cert_size == 0 || usage == NULL) {
+        if (usage != NULL) {
+            *usage = 0;
+        }
         return false;
     }
 
@@ -1401,6 +1438,8 @@ bool libspdm_x509_get_key_usage(const uint8_t *cert, size_t cert_size,
     if (ret == 0) {
         *usage = crt.MBEDTLS_PRIVATE(key_usage);
         status = true;
+    } else {
+        *usage = 0;
     }
     mbedtls_x509_crt_free(&crt);
 
