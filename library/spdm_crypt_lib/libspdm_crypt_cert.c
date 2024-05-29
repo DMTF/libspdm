@@ -1057,6 +1057,9 @@ bool libspdm_x509_common_certificate_check(const uint8_t *cert, size_t cert_size
     size_t cert_version;
     size_t value;
     void *context;
+#if LIBSPDM_ADDITIONAL_CHECK_CERT
+    size_t signature_algo_oid_size;
+#endif /* LIBSPDM_ADDITIONAL_CHECK_CERT */
 
     if (cert == NULL || cert_size == 0) {
         return false;
@@ -1086,13 +1089,31 @@ bool libspdm_x509_common_certificate_check(const uint8_t *cert, size_t cert_size
         goto cleanup;
     }
 
-    /* 3. Verify public key algorithm. */
+#if LIBSPDM_ADDITIONAL_CHECK_CERT
+    /* 3. Verify signature algorithm. */
+    signature_algo_oid_size = 0;
+    status = libspdm_x509_get_signature_algorithm(cert, cert_size, NULL, &signature_algo_oid_size);
+    if (status) {
+        if ((signature_algo_oid_size == 0) &&
+            (cert_model != SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT)) {
+            status = false;
+            goto cleanup;
+        }
+    } else {
+        if (signature_algo_oid_size == 0) {
+            status = false;
+            goto cleanup;
+        }
+    }
+#endif /* LIBSPDM_ADDITIONAL_CHECK_CERT */
+
+    /* 4. Verify public key algorithm. */
     status = libspdm_verify_cert_subject_public_key_info(cert, cert_size, base_asym_algo);
     if (!status) {
         goto cleanup;
     }
 
-    /* 4. issuer_name*/
+    /* 5. issuer_name*/
     asn1_buffer_len = 0;
     status = libspdm_x509_get_issuer_name(cert, cert_size, NULL, &asn1_buffer_len);
     if (status) {
@@ -1108,7 +1129,7 @@ bool libspdm_x509_common_certificate_check(const uint8_t *cert, size_t cert_size
         }
     }
 
-    /* 5. subject_name*/
+    /* 6. subject_name*/
     asn1_buffer_len = 0;
     status = libspdm_x509_get_subject_name(cert, cert_size, NULL, &asn1_buffer_len);
     if (status) {
@@ -1124,7 +1145,7 @@ bool libspdm_x509_common_certificate_check(const uint8_t *cert, size_t cert_size
         }
     }
 
-    /* 6. validity*/
+    /* 7. validity*/
     status = libspdm_x509_get_validity(cert, cert_size, end_cert_from,
                                        &end_cert_from_len, end_cert_to,
                                        &end_cert_to_len);
@@ -1149,13 +1170,13 @@ bool libspdm_x509_common_certificate_check(const uint8_t *cert, size_t cert_size
         }
     }
 
-    /* 7. subject_public_key*/
+    /* 8. subject_public_key*/
     status = libspdm_asym_get_public_key_from_x509(base_asym_algo, cert, cert_size, &context);
     if (!status) {
         goto cleanup;
     }
 
-    /* 8. key_usage*/
+    /* 9. key_usage*/
     value = 0;
     status = libspdm_x509_get_key_usage(cert, cert_size, &value);
     if (!status) {
@@ -1174,13 +1195,13 @@ bool libspdm_x509_common_certificate_check(const uint8_t *cert, size_t cert_size
         }
     }
 
-    /* 9. verify spdm defined extended key usage*/
+    /* 10. verify spdm defined extended key usage*/
     status = libspdm_verify_leaf_cert_spdm_eku(cert, cert_size, is_requester_cert);
     if (!status) {
         goto cleanup;
     }
 
-    /* 10. verify spdm defined extension*/
+    /* 11. verify spdm defined extension*/
     status = libspdm_verify_leaf_cert_spdm_extension(cert, cert_size,
                                                      is_requester_cert, cert_model);
     if (!status) {

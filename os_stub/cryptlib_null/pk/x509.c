@@ -534,6 +534,7 @@ libspdm_x509_get_issuer_orgnization_name(const uint8_t *cert, size_t cert_size,
     return false;
 }
 
+#if LIBSPDM_ADDITIONAL_CHECK_CERT
 /**
  * Retrieve the signature algorithm from one X.509 certificate.
  *
@@ -542,15 +543,10 @@ libspdm_x509_get_issuer_orgnization_name(const uint8_t *cert, size_t cert_size,
  * @param[out]     oid              signature algorithm Object identifier buffer.
  * @param[in,out]  oid_size          signature algorithm Object identifier buffer size
  *
- * @retval RETURN_SUCCESS           The certificate Extension data retrieved successfully.
- * @retval RETURN_INVALID_PARAMETER If cert is NULL.
- *                                 If oid_size is NULL.
- *                                 If oid is not NULL and *oid_size is 0.
- *                                 If Certificate is invalid.
- * @retval RETURN_NOT_FOUND         If no SignatureType.
- * @retval RETURN_BUFFER_TOO_SMALL  If the oid is NULL. The required buffer size
- *                                 is returned in the oid_size.
- * @retval RETURN_UNSUPPORTED       The operation is not supported.
+ * @retval  true    if the oid_size is equal 0, the cert parse successfully, but cert doesn't have signature algo.
+ * @retval  true    if the oid_size is not equal 0, the cert parse and get signature algo successfully.
+ * @retval  false   if the oid_size is equal 0, the cert parse failed.
+ * @retval  false   if the oid_size is not equal 0, the cert parse and get signature algo successfully, but the input buffer size is small.
  **/
 bool libspdm_x509_get_signature_algorithm(const uint8_t *cert,
                                           size_t cert_size, uint8_t *oid,
@@ -559,6 +555,7 @@ bool libspdm_x509_get_signature_algorithm(const uint8_t *cert,
     LIBSPDM_ASSERT(false);
     return false;
 }
+#endif /* LIBSPDM_ADDITIONAL_CHECK_CERT */
 
 /**
  * Retrieve Extension data from one X.509 certificate.
