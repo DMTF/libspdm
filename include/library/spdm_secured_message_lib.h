@@ -1,11 +1,15 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2023 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
 #ifndef SPDM_SECURED_MESSAGE_LIB_H
 #define SPDM_SECURED_MESSAGE_LIB_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "hal/base.h"
 #include "industry_standard/spdm.h"
@@ -294,5 +298,9 @@ libspdm_return_t libspdm_decode_secured_message(
 void libspdm_secured_message_get_last_spdm_error_struct(
     void *spdm_secured_message_context,
     libspdm_error_struct_t *last_spdm_error);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* SPDM_SECURED_MESSAGE_LIB_H */

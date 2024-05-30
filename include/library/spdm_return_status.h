@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -203,4 +203,4 @@ typedef uint32_t libspdm_return_t;
 #define LIBSPDM_STATUS_LOW_ENTROPY \
     LIBSPDM_STATUS_CONSTRUCT(LIBSPDM_SEVERITY_ERROR, LIBSPDM_SOURCE_RNG, 0x0000)
 
-#endif
+#endif /* SPDM_RETURN_STATUS_H */

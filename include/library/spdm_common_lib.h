@@ -7,6 +7,10 @@
 #ifndef SPDM_COMMON_LIB_H
 #define SPDM_COMMON_LIB_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "internal/libspdm_lib_config.h"
 #include "hal/base.h"
 #include "library/spdm_secured_message_lib.h"
@@ -1001,5 +1005,9 @@ typedef libspdm_return_t (*libspdm_vendor_response_callback_func)(
     void *resp_data);
 
 #endif /* LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* SPDM_COMMON_LIB_H */
