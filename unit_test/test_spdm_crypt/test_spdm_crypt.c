@@ -447,6 +447,18 @@ void libspdm_test_crypt_spdm_x509_certificate_check_ex(void **state)
                                                    SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT);
         assert_false(status);
         free(file_buffer);
+
+        status = libspdm_read_input_file("ecp256/end_requester_without_basic_constraint.cert.der",
+                                         (void **)&file_buffer, &file_buffer_size);
+        assert_true(status);
+        status = libspdm_x509_certificate_check_ex(file_buffer, file_buffer_size,
+                                                   SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256,
+                                                   SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256,
+                                                   false,
+                                                   SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
+        /*the expected result is false, because basic_constraint is mandatory in SPDM 1.3*/
+        assert_false(status);
+        free(file_buffer);
     }
 
 }
