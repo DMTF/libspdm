@@ -7,6 +7,10 @@
 #ifndef SPDM_CRYPT_LIB_H
 #define SPDM_CRYPT_LIB_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "internal/libspdm_lib_config.h"
 
 #include "hal/base.h"
@@ -1119,6 +1123,10 @@ bool libspdm_verify_req_info(uint8_t *req_info, uint16_t req_info_len);
 #if LIBSPDM_FIPS_MODE
 /*run all of the self-tests and returns the results.*/
 bool libspdm_fips_run_selftest(void *fips_selftest_context);
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif /* SPDM_CRYPT_LIB_H */

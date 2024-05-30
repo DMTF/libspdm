@@ -7,6 +7,10 @@
 #ifndef SPDM_REQUESTER_LIB_H
 #define SPDM_REQUESTER_LIB_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "library/spdm_common_lib.h"
 
 /**
@@ -899,5 +903,9 @@ libspdm_return_t libspdm_vendor_send_request_receive_response(
     void *resp_data);
 
 #endif /* LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* SPDM_REQUESTER_LIB_H */

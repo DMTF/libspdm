@@ -1,11 +1,15 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
 #ifndef SPDM_MCTP_TRANSPORT_LIB_H
 #define SPDM_MCTP_TRANSPORT_LIB_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "library/spdm_common_lib.h"
 #include "library/spdm_crypt_lib.h"
@@ -137,5 +141,9 @@ uint32_t libspdm_mctp_get_max_random_number_count(void);
  */
 spdm_version_number_t libspdm_mctp_get_secured_spdm_version(
     spdm_version_number_t secured_message_version);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* SPDM_MCTP_TRANSPORT_LIB_H */

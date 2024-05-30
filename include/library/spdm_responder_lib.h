@@ -1,11 +1,15 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
 #ifndef SPDM_RESPONDER_LIB_H
 #define SPDM_RESPONDER_LIB_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "library/spdm_common_lib.h"
 #include "library/spdm_secured_message_lib.h"
@@ -293,5 +297,9 @@ libspdm_return_t libspdm_register_vendor_callback_func(void *spdm_context,
                                                        libspdm_vendor_response_callback_func resp_callback);
 
 #endif /* LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* SPDM_RESPONDER_LIB_H */
