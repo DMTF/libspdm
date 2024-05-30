@@ -739,12 +739,14 @@ static bool libspdm_verify_cert_subject_public_key_info(const uint8_t *cert, siz
  *
  * @param[in]  cert                  Pointer to the DER-encoded certificate data.
  * @param[in]  cert_size             The size of certificate data in bytes.
+ * @param[in]  need_basic_constraints  This value indicates whether basic_constraints must be present in the Cert
  *
- * @retval  true   verify pass,two case: 1.basic constraints is not present in cert;
+ * @retval  true   verify pass,two case: 1.basic constraints is not present in cert, when need_basic_constraints is false;
  *                                       2. cert basic_constraints CA is false;
  * @retval  false  verify fail
  **/
-static bool libspdm_verify_leaf_cert_basic_constraints(const uint8_t *cert, size_t cert_size)
+static bool libspdm_verify_leaf_cert_basic_constraints(const uint8_t *cert, size_t cert_size,
+                                                       bool need_basic_constraints)
 {
     bool status;
     /*basic_constraints from cert*/
@@ -762,7 +764,11 @@ static bool libspdm_verify_leaf_cert_basic_constraints(const uint8_t *cert, size
         return false;
     } else if (len == 0) {
         /* basic constraints is not present in cert */
-        return true;
+        if (need_basic_constraints) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     if ((len == sizeof(basic_constraints_false_case1)) &&
@@ -1190,7 +1196,7 @@ bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
     }
 
     /* verify basic constraints: the leaf cert always is ca:false in get_cert*/
-    status = libspdm_verify_leaf_cert_basic_constraints(cert, cert_size);
+    status = libspdm_verify_leaf_cert_basic_constraints(cert, cert_size, false);
     return status;
 }
 
@@ -1223,8 +1229,9 @@ bool libspdm_x509_certificate_check_ex(const uint8_t *cert, size_t cert_size,
         return false;
     }
 
-    /* verify basic constraints: the leaf cert always is ca:false in get_cert*/
-    status = libspdm_verify_leaf_cert_basic_constraints(cert, cert_size);
+    /* verify basic constraints: the leaf cert always is ca:false in get_cert
+     * basic_constraints is mandatory in SPDM 1.3*/
+    status = libspdm_verify_leaf_cert_basic_constraints(cert, cert_size, true);
     return status;
 }
 
