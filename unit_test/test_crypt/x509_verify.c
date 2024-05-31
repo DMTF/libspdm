@@ -189,7 +189,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
     status = libspdm_x509_verify_cert_chain((const uint8_t *)test_ca_cert, test_ca_cert_len,
                                             (const uint8_t *)test_ca_cert,
                                             test_ca_cert_len + 1);
-    if (!status) {
+    if (status) {
         libspdm_my_print("[Fail]\n");
         goto cleanup;
     } else {
