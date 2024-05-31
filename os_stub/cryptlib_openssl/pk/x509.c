@@ -2074,6 +2074,9 @@ bool libspdm_x509_verify_cert_chain(const uint8_t *root_cert, size_t root_cert_l
             (int *)&asn1_tag, (int *)&obj_class,
             (long)(cert_chain_length + cert_chain - tmp_ptr));
         if (asn1_tag != V_ASN1_SEQUENCE || ret & OPENSSL_ASN1_ERROR_MASK) {
+            if (current_cert < cert_chain + cert_chain_length) {
+                verify_flag = false;
+            }
             break;
         }
 
@@ -2081,6 +2084,10 @@ bool libspdm_x509_verify_cert_chain(const uint8_t *root_cert, size_t root_cert_l
         /* Calculate current_cert length;*/
 
         current_cert_len = tmp_ptr - current_cert + length;
+        if (current_cert + current_cert_len > cert_chain + cert_chain_length) {
+            verify_flag = false;
+            break;
+        }
 
 
         /* Verify current_cert with preceding cert;*/

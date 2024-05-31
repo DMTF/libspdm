@@ -712,10 +712,18 @@ bool libspdm_x509_verify_cert_chain(const uint8_t *root_cert, size_t root_cert_l
             &tmp_ptr, cert_chain + cert_chain_length, &asn1_len,
             MBEDTLS_ASN1_CONSTRUCTED | MBEDTLS_ASN1_SEQUENCE);
         if (ret != 0) {
+            if (current_cert < cert_chain + cert_chain_length) {
+                verify_flag = false;
+            }
             break;
         }
 
         current_cert_len = asn1_len + (tmp_ptr - current_cert);
+
+        if (current_cert + current_cert_len > cert_chain + cert_chain_length) {
+            verify_flag = false;
+            break;
+        }
 
         if (libspdm_x509_verify_cert(current_cert, current_cert_len,
                                      preceding_cert,
@@ -799,6 +807,10 @@ bool libspdm_x509_get_cert_from_cert_chain(const uint8_t *cert_chain,
         }
 
         current_cert_len = asn1_len + (tmp_ptr - current_cert);
+        if (current_cert + current_cert_len > cert_chain + cert_chain_length) {
+            return false;
+        }
+
         current_index++;
 
         if (current_index == cert_index) {
