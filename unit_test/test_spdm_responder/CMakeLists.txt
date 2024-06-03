@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.5)
 
 INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/test_spdm_responder
                     ${LIBSPDM_DIR}/include

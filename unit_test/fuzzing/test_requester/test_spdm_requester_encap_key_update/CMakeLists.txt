@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.5)
 INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/fuzzing/test_requester/test_spdm_requester_encap_key_update
                     ${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/unit_test/include
