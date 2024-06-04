@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/test_spdm_requester
+include_directories(${LIBSPDM_DIR}/unit_test/test_spdm_requester
                     ${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/unit_test/include
                     ${LIBSPDM_DIR}/os_stub/spdm_device_secret_lib_sample
@@ -12,11 +12,11 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/test_spdm_requester
 
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     if((TOOLCHAIN STREQUAL "VS2015") OR (TOOLCHAIN STREQUAL "VS2019") OR (TOOLCHAIN STREQUAL "VS2022"))
-        ADD_COMPILE_OPTIONS(/wd4819)
+        add_compile_options(/wd4819)
     endif()
 endif()
 
-SET(src_test_spdm_common
+set(src_test_spdm_common
     test_spdm_common.c
     context_data.c
     support.c
@@ -25,7 +25,7 @@ SET(src_test_spdm_common
     ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/support.c
 )
 
-SET(test_spdm_common_LIBRARY
+set(test_spdm_common_LIBRARY
     memlib
     debuglib
     spdm_responder_lib
@@ -45,12 +45,12 @@ SET(test_spdm_common_LIBRARY
 )
 
 if(TOOLCHAIN STREQUAL "ARM_DS2022")
-    SET(test_spdm_common_LIBRARY ${test_spdm_common_LIBRARY} armbuild_lib)
+    set(test_spdm_common_LIBRARY ${test_spdm_common_LIBRARY} armbuild_lib)
 endif()
 
 if(NOT ((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC")))
-    ADD_EXECUTABLE(test_spdm_common ${src_test_spdm_common})
-    TARGET_LINK_LIBRARIES(test_spdm_common ${test_spdm_common_LIBRARY})
+    add_executable(test_spdm_common ${src_test_spdm_common})
+    target_link_libraries(test_spdm_common ${test_spdm_common_LIBRARY})
 endif()
 
 

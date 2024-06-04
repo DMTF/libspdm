@@ -1,34 +1,34 @@
 cmake_minimum_required(VERSION 3.5)
 
-ADD_COMPILE_OPTIONS(-DL_ENDIAN -DOPENSSL_SMALL_FOOTPRINT -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -DOPENSSL_SYS_UEFI=1 -DOPENSSL_API_COMPAT=0x10101000 ${OPENSSL_FLAGS})
+add_compile_options(-DL_ENDIAN -DOPENSSL_SMALL_FOOTPRINT -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -DOPENSSL_SYS_UEFI=1 -DOPENSSL_API_COMPAT=0x10101000 ${OPENSSL_FLAGS})
 
 if(CMAKE_SYSTEM_NAME MATCHES "Windows" AND (ARCH STREQUAL "x64" OR ARCH STREQUAL "ia32"))
     if(TOOLCHAIN STREQUAL "VS2015" OR TOOLCHAIN STREQUAL "VS2019" OR TOOLCHAIN STREQUAL "VS2022" OR TOOLCHAIN STREQUAL "GCC" OR TOOLCHAIN STREQUAL "CLANG")
-        ADD_COMPILE_OPTIONS(-DLIBSPDM_OPENSSL_STDINT_WORKAROUND)
+        add_compile_options(-DLIBSPDM_OPENSSL_STDINT_WORKAROUND)
     endif()
 endif()
 
 if (TOOLCHAIN STREQUAL "CLANG")
-    ADD_COMPILE_OPTIONS(-Wno-everything)
+    add_compile_options(-Wno-everything)
 endif()
 
 if(ARCH STREQUAL "x64")
-    ADD_COMPILE_OPTIONS(-DLIBSPDM_CPU_X64)
+    add_compile_options(-DLIBSPDM_CPU_X64)
 elseif(ARCH STREQUAL "ia32")
-    ADD_COMPILE_OPTIONS(-DLIBSPDM_CPU_IA32)
+    add_compile_options(-DLIBSPDM_CPU_IA32)
 elseif(ARCH STREQUAL "aarch64")
-    ADD_COMPILE_OPTIONS(-DLIBSPDM_CPU_AARCH64)
+    add_compile_options(-DLIBSPDM_CPU_AARCH64)
 elseif(ARCH STREQUAL "riscv32")
-    ADD_COMPILE_OPTIONS(-DLIBSPDM_CPU_RISCV32)
+    add_compile_options(-DLIBSPDM_CPU_RISCV32)
 elseif(ARCH STREQUAL "riscv64")
-    ADD_COMPILE_OPTIONS(-DLIBSPDM_CPU_RISCV64)
+    add_compile_options(-DLIBSPDM_CPU_RISCV64)
 elseif((ARCH STREQUAL "arm") OR (ARCH STREQUAL "aarch64"))
-    ADD_COMPILE_OPTIONS(-DLIBSPDM_CPU_ARM)
+    add_compile_options(-DLIBSPDM_CPU_ARM)
 else()
-    MESSAGE(FATAL_ERROR "Unknown ARCH")
+    message(FATAL_ERROR "Unknown ARCH")
 endif()
 
-INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
+include_directories(${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/include/hal
                     ${LIBSPDM_DIR}/os_stub/include
                     ${LIBSPDM_DIR}/os_stub/openssllib
@@ -87,7 +87,7 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
 
 )
 
-SET(src_openssllib
+set(src_openssllib
     openssl/crypto/aes/aes_cbc.c
     openssl/crypto/aes/aes_cfb.c
     openssl/crypto/aes/aes_core.c
@@ -751,4 +751,4 @@ SET(src_openssllib
     ossl_store.c
 )
 
-ADD_LIBRARY(openssllib STATIC ${src_openssllib})
+add_library(openssllib STATIC ${src_openssllib})

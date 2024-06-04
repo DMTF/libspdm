@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.5)
 
-INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
+include_directories(${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/os_stub
 )
 
-SET(src_spdm_responder_lib
+set(src_spdm_responder_lib
     libspdm_rsp_algorithms.c
     libspdm_rsp_capabilities.c
     libspdm_rsp_certificate.c
@@ -38,4 +38,4 @@ SET(src_spdm_responder_lib
     libspdm_rsp_vendor_response.c
 )
 
-ADD_LIBRARY(spdm_responder_lib STATIC ${src_spdm_responder_lib})
+add_library(spdm_responder_lib STATIC ${src_spdm_responder_lib})
