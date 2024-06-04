@@ -1,38 +1,41 @@
 cmake_minimum_required(VERSION 3.5)
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-    ADD_COMPILE_OPTIONS(-Wno-incompatible-pointer-types -Wno-pointer-sign)
+    add_compile_options(-Wno-incompatible-pointer-types -Wno-pointer-sign)
 endif()
 
-INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/os_stub/cryptlib_null
-                    ${LIBSPDM_DIR}/include
-                    ${LIBSPDM_DIR}/include/hal
-                    ${LIBSPDM_DIR}/os_stub/include
+add_library(cryptlib_null STATIC "")
+
+target_include_directories(cryptlib_null
+    PUBLIC
+        ${LIBSPDM_DIR}/os_stub/cryptlib_null
+        ${LIBSPDM_DIR}/include
+        ${LIBSPDM_DIR}/include/hal
+        ${LIBSPDM_DIR}/os_stub/include
 )
 
-SET(src_cryptlib_null
-    cipher/aead_aes_gcm.c
-    cipher/aead_chacha20_poly1305.c
-    cipher/aead_sm4_gcm.c
-    der/der.c
-    hash/sha.c
-    hash/sha3.c
-    hash/sm3.c
-    hmac/hmac_sha.c
-    hmac/hmac_sha3.c
-    hmac/hmac_sm3.c
-    kdf/hkdf_sha.c
-    kdf/hkdf_sha3.c
-    kdf/hkdf_sm3.c
-    pem/pem.c
-    pk/ec.c
-    pk/ecd.c
-    pk/dh.c
-    pk/sm2.c
-    pk/rsa_basic.c
-    pk/rsa_ext.c
-    pk/x509.c
-    rand/rand.c
+target_sources(cryptlib_null
+    PUBLIC
+        ${CMAKE_CURRENT_LIST_DIR}/cipher/aead_aes_gcm.c
+        ${CMAKE_CURRENT_LIST_DIR}/cipher/aead_chacha20_poly1305.c
+        ${CMAKE_CURRENT_LIST_DIR}/cipher/aead_sm4_gcm.c
+        ${CMAKE_CURRENT_LIST_DIR}/der/der.c
+        ${CMAKE_CURRENT_LIST_DIR}/hash/sha.c
+        ${CMAKE_CURRENT_LIST_DIR}/hash/sha3.c
+        ${CMAKE_CURRENT_LIST_DIR}/hash/sm3.c
+        ${CMAKE_CURRENT_LIST_DIR}/hmac/hmac_sha.c
+        ${CMAKE_CURRENT_LIST_DIR}/hmac/hmac_sha3.c
+        ${CMAKE_CURRENT_LIST_DIR}/hmac/hmac_sm3.c
+        ${CMAKE_CURRENT_LIST_DIR}/kdf/hkdf_sha.c
+        ${CMAKE_CURRENT_LIST_DIR}/kdf/hkdf_sha3.c
+        ${CMAKE_CURRENT_LIST_DIR}/kdf/hkdf_sm3.c
+        ${CMAKE_CURRENT_LIST_DIR}/pem/pem.c
+        ${CMAKE_CURRENT_LIST_DIR}/pk/ec.c
+        ${CMAKE_CURRENT_LIST_DIR}/pk/ecd.c
+        ${CMAKE_CURRENT_LIST_DIR}/pk/dh.c
+        ${CMAKE_CURRENT_LIST_DIR}/pk/sm2.c
+        ${CMAKE_CURRENT_LIST_DIR}/pk/rsa_basic.c
+        ${CMAKE_CURRENT_LIST_DIR}/pk/rsa_ext.c
+        ${CMAKE_CURRENT_LIST_DIR}/pk/x509.c
+        ${CMAKE_CURRENT_LIST_DIR}/rand/rand.c
 )
-
-ADD_LIBRARY(cryptlib_null STATIC ${src_cryptlib_null})

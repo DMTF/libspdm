@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/fuzzing/test_transport/test_spdm_transport_pci_doe_decode_message
+include_directories(${LIBSPDM_DIR}/unit_test/fuzzing/test_transport/test_spdm_transport_pci_doe_decode_message
                     ${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/include/library
                     ${LIBSPDM_DIR}/unit_test/include
@@ -9,17 +9,17 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/fuzzing/test_transport/test_spdm_tr
 )
 
 if(TOOLCHAIN STREQUAL "KLEE")
-    INCLUDE_DIRECTORIES($ENV{KLEE_SRC_PATH}/include)
+    include_directories($ENV{KLEE_SRC_PATH}/include)
 endif()
 
-SET(src_test_spdm_transport_pci_doe_decode_message
+set(src_test_spdm_transport_pci_doe_decode_message
     spdm_transport_pci_doe_decode_message.c
     ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/common.c
     ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/toolchain_harness.c
     ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/algo.c
 )
 
-SET(test_spdm_transport_pci_doe_decode_message_LIBRARY
+set(test_spdm_transport_pci_doe_decode_message_LIBRARY
     memlib
     debuglib
     spdm_transport_pcidoe_lib
@@ -35,7 +35,7 @@ SET(test_spdm_transport_pci_doe_decode_message_LIBRARY
 )
 
 if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
-    ADD_EXECUTABLE(test_spdm_transport_pci_doe_decode_message
+    add_executable(test_spdm_transport_pci_doe_decode_message
                    ${src_test_spdm_transport_pci_doe_decode_message}
                    $<TARGET_OBJECTS:memlib>
                    $<TARGET_OBJECTS:debuglib>
@@ -51,6 +51,6 @@ if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
                    $<TARGET_OBJECTS:spdm_device_secret_lib_null>
     )
 else()
-    ADD_EXECUTABLE(test_spdm_transport_pci_doe_decode_message ${src_test_spdm_transport_pci_doe_decode_message})
-    TARGET_LINK_LIBRARIES(test_spdm_transport_pci_doe_decode_message ${test_spdm_transport_pci_doe_decode_message_LIBRARY})
+    add_executable(test_spdm_transport_pci_doe_decode_message ${src_test_spdm_transport_pci_doe_decode_message})
+    target_link_libraries(test_spdm_transport_pci_doe_decode_message ${test_spdm_transport_pci_doe_decode_message_LIBRARY})
 endif()

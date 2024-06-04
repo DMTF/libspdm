@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/fuzzing/test_responder/test_x509_certificate_check
+include_directories(${LIBSPDM_DIR}/unit_test/fuzzing/test_responder/test_x509_certificate_check
                     ${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/unit_test/include
                     ${LIBSPDM_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common
@@ -8,16 +8,16 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/fuzzing/test_responder/test_x509_ce
 )
 
 if(TOOLCHAIN STREQUAL "KLEE")
-    INCLUDE_DIRECTORIES($ENV{KLEE_SRC_PATH}/include)
+    include_directories($ENV{KLEE_SRC_PATH}/include)
 endif()
 
-SET(src_test_x509_certificate_check
+set(src_test_x509_certificate_check
     x509_certificate_check.c
     ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/common.c
     ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/toolchain_harness.c
 )
 
-SET(test_x509_certificate_check_LIBRARY
+set(test_x509_certificate_check_LIBRARY
     memlib
     debuglib
     spdm_responder_lib
@@ -34,7 +34,7 @@ SET(test_x509_certificate_check_LIBRARY
 )
 
 if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
-    ADD_EXECUTABLE(test_x509_certificate_check
+    add_executable(test_x509_certificate_check
                    ${src_test_x509_certificate_check}
                    $<TARGET_OBJECTS:memlib>
                    $<TARGET_OBJECTS:debuglib>
@@ -51,6 +51,6 @@ if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
                    $<TARGET_OBJECTS:platform_lib_null>
     )
 else()
-    ADD_EXECUTABLE(test_x509_certificate_check ${src_test_x509_certificate_check})
-    TARGET_LINK_LIBRARIES(test_x509_certificate_check ${test_x509_certificate_check_LIBRARY})
+    add_executable(test_x509_certificate_check ${src_test_x509_certificate_check})
+    target_link_libraries(test_x509_certificate_check ${test_x509_certificate_check_LIBRARY})
 endif()

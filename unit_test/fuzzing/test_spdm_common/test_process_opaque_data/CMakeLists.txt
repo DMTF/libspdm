@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/fuzzing/test_spdm_common/test_process_opaque_data
+include_directories(${LIBSPDM_DIR}/unit_test/fuzzing/test_spdm_common/test_process_opaque_data
                     ${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/unit_test/include
                     ${LIBSPDM_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common
@@ -8,16 +8,16 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/fuzzing/test_spdm_common/test_proce
 )
 
 if(TOOLCHAIN STREQUAL "KLEE")
-    INCLUDE_DIRECTORIES($ENV{KLEE_SRC_PATH}/include)
+    include_directories($ENV{KLEE_SRC_PATH}/include)
 endif()
 
-SET(src_test_process_opaque_data
+set(src_test_process_opaque_data
     test_process_opaque_data_supported_version_data.c
     ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/common.c
     ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/toolchain_harness.c
 )
 
-SET(test_process_opaque_data_LIBRARY
+set(test_process_opaque_data_LIBRARY
     memlib
     debuglib
     spdm_responder_lib
@@ -34,7 +34,7 @@ SET(test_process_opaque_data_LIBRARY
 )
 
 if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
-    ADD_EXECUTABLE(test_process_opaque_data_check
+    add_executable(test_process_opaque_data_check
                    ${src_test_process_opaque_data}
                    $<TARGET_OBJECTS:memlib>
                    $<TARGET_OBJECTS:debuglib>
@@ -51,6 +51,6 @@ if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
                    $<TARGET_OBJECTS:platform_lib_null>
     )
 else()
-    ADD_EXECUTABLE(test_process_opaque_data_check ${src_test_process_opaque_data})
-    TARGET_LINK_LIBRARIES(test_process_opaque_data_check ${test_process_opaque_data_LIBRARY})
+    add_executable(test_process_opaque_data_check ${src_test_process_opaque_data})
+    target_link_libraries(test_process_opaque_data_check ${test_process_opaque_data_LIBRARY})
 endif()

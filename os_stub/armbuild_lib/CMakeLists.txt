@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 
-SET(src_armbuild_lib
-    div64.c
-)
+add_library(armbuild_lib STATIC "")
 
-ADD_LIBRARY(armbuild_lib STATIC ${src_armbuild_lib})
+target_sources(armbuild_lib
+    PUBLIC
+        ${CMAKE_CURRENT_LIST_DIR}/div64.c
+)

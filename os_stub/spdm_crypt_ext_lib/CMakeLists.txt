@@ -1,11 +1,14 @@
 cmake_minimum_required(VERSION 3.5)
 
-INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
-                    ${LIBSPDM_DIR}/os_stub
+add_library(spdm_crypt_ext_lib STATIC "")
+
+target_include_directories(spdm_crypt_ext_lib
+    PUBLIC
+        ${LIBSPDM_DIR}/include
+        ${LIBSPDM_DIR}/os_stub
 )
 
-SET(src_spdm_crypt_ext_lib
-    spdm_crypt_ext.c
+target_sources(spdm_crypt_ext_lib
+    PUBLIC
+        ${CMAKE_CURRENT_LIST_DIR}/spdm_crypt_ext.c
 )
-
-ADD_LIBRARY(spdm_crypt_ext_lib STATIC ${src_spdm_crypt_ext_lib})

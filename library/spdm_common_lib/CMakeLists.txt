@@ -1,15 +1,19 @@
 cmake_minimum_required(VERSION 3.5)
 
-INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include)
+add_library(spdm_common_lib STATIC "")
 
-SET(src_spdm_common_lib
-    libspdm_com_context_data.c
-    libspdm_com_context_data_session.c
-    libspdm_com_crypto_service.c
-    libspdm_com_crypto_service_session.c
-    libspdm_com_opaque_data.c
-    libspdm_com_support.c
-    libspdm_com_msg_log.c
+target_include_directories(spdm_common_lib
+    PUBLIC
+        ${LIBSPDM_DIR}/include
 )
 
-ADD_LIBRARY(spdm_common_lib STATIC ${src_spdm_common_lib})
+target_sources(spdm_common_lib
+    PUBLIC
+        ${CMAKE_CURRENT_LIST_DIR}/libspdm_com_context_data.c
+        ${CMAKE_CURRENT_LIST_DIR}/libspdm_com_context_data_session.c
+        ${CMAKE_CURRENT_LIST_DIR}/libspdm_com_crypto_service.c
+        ${CMAKE_CURRENT_LIST_DIR}/libspdm_com_crypto_service_session.c
+        ${CMAKE_CURRENT_LIST_DIR}/libspdm_com_opaque_data.c
+        ${CMAKE_CURRENT_LIST_DIR}/libspdm_com_support.c
+        ${CMAKE_CURRENT_LIST_DIR}/libspdm_com_msg_log.c
+)

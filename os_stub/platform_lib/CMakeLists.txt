@@ -1,23 +1,29 @@
 cmake_minimum_required(VERSION 3.5)
 
-INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
-                    ${LIBSPDM_DIR}/include/hal)
+add_library(platform_lib STATIC "")
+
+target_include_directories(platform_lib
+    PUBLIC
+        ${LIBSPDM_DIR}/include
+        ${LIBSPDM_DIR}/include/hal
+)
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux" AND (NOT TOOLCHAIN STREQUAL "ARM_DS2022") AND (NOT TOOLCHAIN STREQUAL "RISCV_XPACK")  AND (NOT TOOLCHAIN STREQUAL "ARM_GNU_BARE_METAL"))
-SET(src_platform_lib
-    time_linux.c
-    watchdog.c
-)
+    target_sources(platform_lib
+        PUBLIC
+        ${CMAKE_CURRENT_LIST_DIR}/time_linux.c
+        ${CMAKE_CURRENT_LIST_DIR}/watchdog.c
+    )
 elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
-SET(src_platform_lib
-    time_win.c
-    watchdog.c
-)
+    target_sources(platform_lib
+        PUBLIC
+        ${CMAKE_CURRENT_LIST_DIR}/time_win.c
+        ${CMAKE_CURRENT_LIST_DIR}/watchdog.c
+    )
 else()
-SET(src_platform_lib
-    time_sample.c
-    watchdog.c
-)
+    target_sources(platform_lib
+        PUBLIC
+        ${CMAKE_CURRENT_LIST_DIR}/time_sample.c
+        ${CMAKE_CURRENT_LIST_DIR}/watchdog.c
+    )
 endif()
-
-ADD_LIBRARY(platform_lib STATIC ${src_platform_lib})

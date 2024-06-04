@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/fuzzing/test_requester/test_spdm_requester_encap_key_update
+include_directories(${LIBSPDM_DIR}/unit_test/fuzzing/test_requester/test_spdm_requester_encap_key_update
                     ${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/unit_test/include
                     ${LIBSPDM_DIR}/os_stub/spdm_device_secret_lib_sample
@@ -11,17 +11,17 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/fuzzing/test_requester/test_spdm_re
 )
 
 if(TOOLCHAIN STREQUAL "KLEE")
-    INCLUDE_DIRECTORIES($ENV{KLEE_SRC_PATH}/include)
+    include_directories($ENV{KLEE_SRC_PATH}/include)
 endif()
 
-SET(src_test_spdm_requester_encap_key_update
+set(src_test_spdm_requester_encap_key_update
     encap_key_update.c
     ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/common.c
     ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/toolchain_harness.c
     ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/algo.c
 )
 
-SET(test_spdm_requester_encap_key_update_LIBRARY
+set(test_spdm_requester_encap_key_update_LIBRARY
     memlib
     debuglib
     spdm_requester_lib
@@ -39,7 +39,7 @@ SET(test_spdm_requester_encap_key_update_LIBRARY
 )
 
 if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
-    ADD_EXECUTABLE(test_spdm_requester_encap_key_update
+    add_executable(test_spdm_requester_encap_key_update
                    ${src_test_spdm_requester_encap_key_update}
                    $<TARGET_OBJECTS:memlib>
                    $<TARGET_OBJECTS:debuglib>
@@ -56,6 +56,6 @@ if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
                    $<TARGET_OBJECTS:cmockalib>
     )
 else()
-    ADD_EXECUTABLE(test_spdm_requester_encap_key_update ${src_test_spdm_requester_encap_key_update})
-    TARGET_LINK_LIBRARIES(test_spdm_requester_encap_key_update ${test_spdm_requester_encap_key_update_LIBRARY})
+    add_executable(test_spdm_requester_encap_key_update ${src_test_spdm_requester_encap_key_update})
+    target_link_libraries(test_spdm_requester_encap_key_update ${test_spdm_requester_encap_key_update_LIBRARY})
 endif()

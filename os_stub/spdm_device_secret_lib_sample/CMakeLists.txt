@@ -1,18 +1,21 @@
 cmake_minimum_required(VERSION 3.5)
 
-INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/os_stub/spdm_device_secret_lib_sample
-                    ${LIBSPDM_DIR}/include
-                    ${LIBSPDM_DIR}/include/hal
-                    ${LIBSPDM_DIR}/os_stub
-)
-
-SET(src_spdm_device_secret_lib_sample
-    lib.c
-    cert.c
-)
-
 if ((ARCH STREQUAL "arm") OR (ARCH STREQUAL "aarch64"))
-    ADD_COMPILE_OPTIONS(-DLIBSPDM_CPU_ARM)
+    add_compile_options(-DLIBSPDM_CPU_ARM)
 endif()
 
-ADD_LIBRARY(spdm_device_secret_lib_sample STATIC ${src_spdm_device_secret_lib_sample})
+add_library(spdm_device_secret_lib_sample STATIC "")
+
+target_include_directories(spdm_device_secret_lib_sample
+    PUBLIC
+        ${LIBSPDM_DIR}/os_stub/spdm_device_secret_lib_sample
+        ${LIBSPDM_DIR}/include
+        ${LIBSPDM_DIR}/include/hal
+        ${LIBSPDM_DIR}/os_stub
+)
+
+target_sources(spdm_device_secret_lib_sample
+    PUBLIC
+        ${CMAKE_CURRENT_LIST_DIR}/lib.c
+        ${CMAKE_CURRENT_LIST_DIR}/cert.c
+)
