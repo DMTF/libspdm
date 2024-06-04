@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 
-INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include)
+include_directories(${LIBSPDM_DIR}/include)
 
-SET(src_spdm_requester_lib
+set(src_spdm_requester_lib
     libspdm_req_challenge.c
     libspdm_req_common.c
     libspdm_req_communication.c
@@ -33,4 +33,4 @@ SET(src_spdm_requester_lib
     libspdm_req_vendor_request.c
 )
 
-ADD_LIBRARY(spdm_requester_lib STATIC ${src_spdm_requester_lib})
+add_library(spdm_requester_lib STATIC ${src_spdm_requester_lib})

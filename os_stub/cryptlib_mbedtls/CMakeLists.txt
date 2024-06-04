@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.5)
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-    ADD_COMPILE_OPTIONS(-Wno-incompatible-pointer-types -Wno-pointer-sign)
+    add_compile_options(-Wno-incompatible-pointer-types -Wno-pointer-sign)
 endif()
 
-INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
+include_directories(${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/include/hal
                     ${LIBSPDM_DIR}/os_stub/include
                     ${LIBSPDM_DIR}/os_stub
@@ -15,7 +15,7 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/os_stub/mbedtlslib/mbedtls/include/mbedtls
 )
 
-SET(src_cryptlib_mbedtls
+set(src_cryptlib_mbedtls
     cipher/aead_aes_gcm.c
     cipher/aead_chacha20_poly1305.c
     cipher/aead_sm4_gcm.c
@@ -42,14 +42,14 @@ SET(src_cryptlib_mbedtls
     sys_call/crt_wrapper_host.c
 )
 
-ADD_LIBRARY(cryptlib_mbedtls STATIC ${src_cryptlib_mbedtls})
+add_library(cryptlib_mbedtls STATIC ${src_cryptlib_mbedtls})
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     if((TOOLCHAIN STREQUAL "CBMC") OR (TOOLCHAIN STREQUAL "VS2015") OR (TOOLCHAIN STREQUAL "VS2019") OR (TOOLCHAIN STREQUAL "VS2022"))
-        TARGET_COMPILE_OPTIONS(cryptlib_mbedtls PRIVATE /wd4090 /wd4200)
+        target_compile_options(cryptlib_mbedtls PRIVATE /wd4090 /wd4200)
     endif()
 endif()
 
 if(MBEDTLS_CONFIG_FILE)
 else()
-    TARGET_COMPILE_DEFINITIONS(cryptlib_mbedtls PRIVATE -DMBEDTLS_CONFIG_FILE=<libspdm_mbedtls_config.h>)
+    target_compile_definitions(cryptlib_mbedtls PRIVATE -DMBEDTLS_CONFIG_FILE=<libspdm_mbedtls_config.h>)
 endif()

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
+include_directories(${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/unit_test/include
                     ${LIBSPDM_DIR}/os_stub/spdm_device_secret_lib_sample
                     ${LIBSPDM_DIR}/unit_test/cmockalib/cmocka/include
@@ -12,17 +12,17 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
 
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     if((TOOLCHAIN STREQUAL "VS2015") OR (TOOLCHAIN STREQUAL "VS2019") OR (TOOLCHAIN STREQUAL "VS2022"))
-        ADD_COMPILE_OPTIONS(/wd4819)
+        add_compile_options(/wd4819)
     endif()
 endif()
 
-SET(src_test_spdm_crypt
+set(src_test_spdm_crypt
     test_spdm_crypt.c
     ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/support.c
     ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/algo.c
 )
 
-SET(test_spdm_crypt_LIBRARY
+set(test_spdm_crypt_LIBRARY
     memlib
     debuglib
     spdm_crypt_lib
@@ -36,11 +36,11 @@ SET(test_spdm_crypt_LIBRARY
 )
 
 if(TOOLCHAIN STREQUAL "ARM_DS2022")
-    SET(test_spdm_crypt_LIBRARY ${test_spdm_crypt_LIBRARY} armbuild_lib)
+    set(test_spdm_crypt_LIBRARY ${test_spdm_crypt_LIBRARY} armbuild_lib)
 endif()
 
 if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
-    ADD_EXECUTABLE(test_spdm_crypt
+    add_executable(test_spdm_crypt
                    ${src_test_spdm_crypt}
                    $<TARGET_OBJECTS:memlib>
                    $<TARGET_OBJECTS:debuglib>
@@ -51,8 +51,8 @@ if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
                    $<TARGET_OBJECTS:malloclib>
     )
 else()
-    ADD_EXECUTABLE(test_spdm_crypt ${src_test_spdm_crypt})
-    TARGET_LINK_LIBRARIES(test_spdm_crypt ${test_spdm_crypt_LIBRARY})
+    add_executable(test_spdm_crypt ${src_test_spdm_crypt})
+    target_link_libraries(test_spdm_crypt ${test_spdm_crypt_LIBRARY})
 endif()
 
 

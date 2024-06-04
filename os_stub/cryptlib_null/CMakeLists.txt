@@ -1,16 +1,16 @@
 cmake_minimum_required(VERSION 3.5)
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-    ADD_COMPILE_OPTIONS(-Wno-incompatible-pointer-types -Wno-pointer-sign)
+    add_compile_options(-Wno-incompatible-pointer-types -Wno-pointer-sign)
 endif()
 
-INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/os_stub/cryptlib_null
+include_directories(${LIBSPDM_DIR}/os_stub/cryptlib_null
                     ${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/include/hal
                     ${LIBSPDM_DIR}/os_stub/include
 )
 
-SET(src_cryptlib_null
+set(src_cryptlib_null
     cipher/aead_aes_gcm.c
     cipher/aead_chacha20_poly1305.c
     cipher/aead_sm4_gcm.c
@@ -35,4 +35,4 @@ SET(src_cryptlib_null
     rand/rand.c
 )
 
-ADD_LIBRARY(cryptlib_null STATIC ${src_cryptlib_null})
+add_library(cryptlib_null STATIC ${src_cryptlib_null})

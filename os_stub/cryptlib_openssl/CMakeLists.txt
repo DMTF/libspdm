@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
+include_directories(${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/include/hal
                     ${LIBSPDM_DIR}/os_stub/include
                     ${LIBSPDM_DIR}/os_stub/cryptlib_openssl
@@ -12,22 +12,22 @@ INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
 )
 
 if(ARCH STREQUAL "x64")
-    ADD_COMPILE_OPTIONS(-DLIBSPDM_CPU_X64)
+    add_compile_options(-DLIBSPDM_CPU_X64)
 elseif(ARCH STREQUAL "ia32")
-    ADD_COMPILE_OPTIONS(-DLIBSPDM_CPU_IA32)
+    add_compile_options(-DLIBSPDM_CPU_IA32)
 elseif(ARCH STREQUAL "aarch64")
-    ADD_COMPILE_OPTIONS(-DLIBSPDM_CPU_AARCH64)
+    add_compile_options(-DLIBSPDM_CPU_AARCH64)
 elseif(ARCH STREQUAL "riscv32")
-    ADD_COMPILE_OPTIONS(-DLIBSPDM_CPU_RISCV32)
+    add_compile_options(-DLIBSPDM_CPU_RISCV32)
 elseif(ARCH STREQUAL "riscv64")
-    ADD_COMPILE_OPTIONS(-DLIBSPDM_CPU_RISCV64)
+    add_compile_options(-DLIBSPDM_CPU_RISCV64)
 elseif((ARCH STREQUAL "arm") OR (ARCH STREQUAL "aarch64"))
-    ADD_COMPILE_OPTIONS(-DLIBSPDM_CPU_ARM)
+    add_compile_options(-DLIBSPDM_CPU_ARM)
 else()
-    MESSAGE(FATAL_ERROR "Unknown ARCH")
+    message(FATAL_ERROR "Unknown ARCH")
 endif()
 
-SET(src_cryptlib_openssl
+set(src_cryptlib_openssl
     cipher/aead_aes_gcm.c
     cipher/aead_chacha20_poly1305.c
     cipher/aead_sm4_gcm.c
@@ -53,5 +53,5 @@ SET(src_cryptlib_openssl
     sys_call/crt_wrapper_host.c
 )
 
-ADD_LIBRARY(cryptlib_openssl STATIC ${src_cryptlib_openssl})
-TARGET_COMPILE_OPTIONS(cryptlib_openssl PRIVATE ${OPENSSL_FLAGS})
+add_library(cryptlib_openssl STATIC ${src_cryptlib_openssl})
+target_compile_options(cryptlib_openssl PRIVATE ${OPENSSL_FLAGS})

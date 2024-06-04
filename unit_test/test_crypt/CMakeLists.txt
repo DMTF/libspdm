@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.5)
 
-INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/unit_test/test_crypt
+include_directories(${LIBSPDM_DIR}/unit_test/test_crypt
                     ${LIBSPDM_DIR}/include
                     ${LIBSPDM_DIR}/os_stub/include
                     ${LIBSPDM_DIR}/os_stub
 )
 
-SET(src_test_crypt
+set(src_test_crypt
     test_crypt.c
     hash_verify.c
     hmac_verify.c
@@ -26,7 +26,7 @@ SET(src_test_crypt
     os_support.c
 )
 
-SET(test_crypt_LIBRARY
+set(test_crypt_LIBRARY
     memlib
     debuglib
     ${CRYPTO_LIB_PATHS}
@@ -38,11 +38,11 @@ SET(test_crypt_LIBRARY
 )
 
 if(TOOLCHAIN STREQUAL "ARM_DS2022")
-    SET(test_crypt_LIBRARY ${test_crypt_LIBRARY} armbuild_lib)
+    set(test_crypt_LIBRARY ${test_crypt_LIBRARY} armbuild_lib)
 endif()
 
 if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
-    ADD_EXECUTABLE(test_crypt
+    add_executable(test_crypt
                    ${src_test_crypt}
                    $<TARGET_OBJECTS:memlib>
                    $<TARGET_OBJECTS:debuglib>
@@ -52,7 +52,7 @@ if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
                    $<TARGET_OBJECTS:malloclib>
     )
 else()
-    ADD_EXECUTABLE(test_crypt ${src_test_crypt})
-    TARGET_LINK_LIBRARIES(test_crypt ${test_crypt_LIBRARY})
+    add_executable(test_crypt ${src_test_crypt})
+    target_link_libraries(test_crypt ${test_crypt_LIBRARY})
 endif()
 

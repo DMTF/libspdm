@@ -1,17 +1,17 @@
 cmake_minimum_required(VERSION 3.5)
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-    ADD_COMPILE_OPTIONS(-Wno-incompatible-pointer-types -Wno-pointer-sign)
+    add_compile_options(-Wno-incompatible-pointer-types -Wno-pointer-sign)
 endif()
 
-INCLUDE_DIRECTORIES(${LIBSPDM_DIR}/include
+include_directories(${LIBSPDM_DIR}/include
 
                     ${LIBSPDM_DIR}/os_stub/include
 )
 
-SET(src_cryptstublib_dummy
+set(src_cryptstublib_dummy
     rand_dummy.c
     timeclock_dummy.c
 )
 
-ADD_LIBRARY(cryptstublib_dummy STATIC ${src_cryptstublib_dummy})
+add_library(cryptstublib_dummy STATIC ${src_cryptstublib_dummy})
