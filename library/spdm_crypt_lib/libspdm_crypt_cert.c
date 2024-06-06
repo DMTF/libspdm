@@ -1040,13 +1040,15 @@ static bool libspdm_verify_leaf_cert_spdm_extension(const uint8_t *cert, size_t 
  * @param[in]  base_hash_algo        SPDM base_hash_algo
  * @param[in]  is_requester_cert     Is the function verifying requester or responder cert.
  * @param[in]  cert_model            One of the SPDM_CERTIFICATE_INFO_CERT_MODEL_* macros.
+ * @param[in]  set_cert              Is the function verifying a set certificate operation.
  *
  * @retval  true   Success.
  * @retval  false  Certificate is not valid.
  **/
 bool libspdm_x509_common_certificate_check(const uint8_t *cert, size_t cert_size,
                                            uint32_t base_asym_algo, uint32_t base_hash_algo,
-                                           bool is_requester_cert, uint8_t cert_model)
+                                           bool is_requester_cert, uint8_t cert_model,
+                                           bool set_cert)
 {
     uint8_t end_cert_from[64];
     size_t end_cert_from_len;
@@ -1201,11 +1203,13 @@ bool libspdm_x509_common_certificate_check(const uint8_t *cert, size_t cert_size
         goto cleanup;
     }
 
-    /* 11. verify spdm defined extension*/
-    status = libspdm_verify_leaf_cert_spdm_extension(cert, cert_size,
-                                                     is_requester_cert, cert_model);
-    if (!status) {
-        goto cleanup;
+    if ((!set_cert) || (cert_model == SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT)) {
+        /* 11. verify spdm defined extension*/
+        status = libspdm_verify_leaf_cert_spdm_extension(cert, cert_size,
+                                                         is_requester_cert, cert_model);
+        if (!status) {
+            goto cleanup;
+        }
     }
 
 cleanup:
@@ -1244,7 +1248,7 @@ bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
 
     status = libspdm_x509_common_certificate_check(cert, cert_size, base_asym_algo,
                                                    base_hash_algo, is_requester,
-                                                   cert_model);
+                                                   cert_model, false);
     if (!status) {
         return false;
     }
@@ -1278,7 +1282,7 @@ bool libspdm_x509_certificate_check_ex(const uint8_t *cert, size_t cert_size,
 
     status = libspdm_x509_common_certificate_check(cert, cert_size, base_asym_algo,
                                                    base_hash_algo, is_requester,
-                                                   cert_model);
+                                                   cert_model, false);
     if (!status) {
         return false;
     }
@@ -1318,7 +1322,7 @@ bool libspdm_x509_set_cert_certificate_check(const uint8_t *cert, size_t cert_si
 
     status = libspdm_x509_common_certificate_check(cert, cert_size, base_asym_algo,
                                                    base_hash_algo, is_requester,
-                                                   cert_model);
+                                                   cert_model, true);
     if (!status) {
         return false;
     }
@@ -1350,7 +1354,7 @@ bool libspdm_x509_set_cert_certificate_check_ex(const uint8_t *cert, size_t cert
 
     status = libspdm_x509_common_certificate_check(cert, cert_size, base_asym_algo,
                                                    base_hash_algo, is_requester,
-                                                   cert_model);
+                                                   cert_model, true);
     if (!status) {
         return false;
     }
