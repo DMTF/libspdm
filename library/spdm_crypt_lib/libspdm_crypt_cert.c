@@ -1220,7 +1220,7 @@ cleanup:
  * @param[in]  cert_size             The size of certificate data in bytes.
  * @param[in]  base_asym_algo        SPDM base_asym_algo
  * @param[in]  base_hash_algo        SPDM base_hash_algo
- * @param[in]  is_requester_cert     Is the function verifying requester or responder cert.
+ * @param[in]  is_requester          Is the function verifying a cert as a requester or responder.
  * @param[in]  is_device_cert_model  If true, the local endpoint uses the DeviceCert model.
  *                                   If false, the local endpoint uses the AliasCert model.
  *
@@ -1230,7 +1230,7 @@ cleanup:
 bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
                                     uint32_t base_asym_algo,
                                     uint32_t base_hash_algo,
-                                    bool is_requester_cert,
+                                    bool is_requester,
                                     bool is_device_cert_model)
 {
     bool status;
@@ -1243,7 +1243,7 @@ bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
     }
 
     status = libspdm_x509_common_certificate_check(cert, cert_size, base_asym_algo,
-                                                   base_hash_algo, is_requester_cert,
+                                                   base_hash_algo, is_requester,
                                                    cert_model);
     if (!status) {
         return false;
@@ -1262,7 +1262,7 @@ bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
  * @param[in]  cert_size             The size of certificate data in bytes.
  * @param[in]  base_asym_algo        SPDM base_asym_algo
  * @param[in]  base_hash_algo        SPDM base_hash_algo
- * @param[in]  is_requester_cert     Is the function verifying requester or responder cert.
+ * @param[in]  is_requester          Is the function verifying a cert as a requester or responder.
  * @param[in]  cert_model            One of the SPDM_CERTIFICATE_INFO_CERT_MODEL_* macros.
  *
  * @retval  true   Success.
@@ -1271,13 +1271,13 @@ bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
 bool libspdm_x509_certificate_check_ex(const uint8_t *cert, size_t cert_size,
                                        uint32_t base_asym_algo,
                                        uint32_t base_hash_algo,
-                                       bool is_requester_cert,
+                                       bool is_requester,
                                        uint8_t cert_model)
 {
     bool status;
 
     status = libspdm_x509_common_certificate_check(cert, cert_size, base_asym_algo,
-                                                   base_hash_algo, is_requester_cert,
+                                                   base_hash_algo, is_requester,
                                                    cert_model);
     if (!status) {
         return false;
@@ -1296,7 +1296,7 @@ bool libspdm_x509_certificate_check_ex(const uint8_t *cert, size_t cert_size,
  * @param[in]  cert_size             The size of certificate data in bytes.
  * @param[in]  base_asym_algo        SPDM base_asym_algo
  * @param[in]  base_hash_algo        SPDM base_hash_algo
- * @param[in]  is_requester_cert     Is the function verifying requester or responder cert.
+ * @param[in]  is_requester          Is the function verifying a cert as a requester or responder.
  * @param[in]  is_device_cert_model  If true, the local endpoint uses the DeviceCert model.
  *                                   If false, the local endpoint uses the AliasCert model.
  *
@@ -1305,7 +1305,7 @@ bool libspdm_x509_certificate_check_ex(const uint8_t *cert, size_t cert_size,
  **/
 bool libspdm_x509_set_cert_certificate_check(const uint8_t *cert, size_t cert_size,
                                              uint32_t base_asym_algo, uint32_t base_hash_algo,
-                                             bool is_requester_cert, bool is_device_cert_model)
+                                             bool is_requester, bool is_device_cert_model)
 {
     bool status;
     uint8_t cert_model;
@@ -1317,7 +1317,7 @@ bool libspdm_x509_set_cert_certificate_check(const uint8_t *cert, size_t cert_si
     }
 
     status = libspdm_x509_common_certificate_check(cert, cert_size, base_asym_algo,
-                                                   base_hash_algo, is_requester_cert,
+                                                   base_hash_algo, is_requester,
                                                    cert_model);
     if (!status) {
         return false;
@@ -1336,7 +1336,7 @@ bool libspdm_x509_set_cert_certificate_check(const uint8_t *cert, size_t cert_si
  * @param[in]  cert_size             The size of certificate data in bytes.
  * @param[in]  base_asym_algo        SPDM base_asym_algo
  * @param[in]  base_hash_algo        SPDM base_hash_algo
- * @param[in]  is_requester_cert     Is the function verifying requester or responder cert.
+ * @param[in]  is_requester          Is the function verifying a cert as a requester or responder.
  * @param[in]  cert_model            One of the SPDM_CERTIFICATE_INFO_CERT_MODEL_* macros.
  *
  * @retval  true   Success.
@@ -1344,12 +1344,12 @@ bool libspdm_x509_set_cert_certificate_check(const uint8_t *cert, size_t cert_si
  **/
 bool libspdm_x509_set_cert_certificate_check_ex(const uint8_t *cert, size_t cert_size,
                                                 uint32_t base_asym_algo, uint32_t base_hash_algo,
-                                                bool is_requester_cert, uint8_t cert_model)
+                                                bool is_requester, uint8_t cert_model)
 {
     bool status;
 
     status = libspdm_x509_common_certificate_check(cert, cert_size, base_asym_algo,
-                                                   base_hash_algo, is_requester_cert,
+                                                   base_hash_algo, is_requester,
                                                    cert_model);
     if (!status) {
         return false;

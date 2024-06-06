@@ -886,7 +886,7 @@ bool libspdm_get_random_number(size_t size, uint8_t *rand);
  * @param[in]  cert_size             The size of certificate data in bytes.
  * @param[in]  base_asym_algo        SPDM base_asym_algo
  * @param[in]  base_hash_algo        SPDM base_hash_algo
- * @param[in]  is_requester_cert     Is the function verifying requester or responder cert.
+ * @param[in]  is_requester          Is the function verifying a cert as a requester or responder.
  * @param[in]  is_device_cert_model  If true, the local endpoint uses the DeviceCert model.
  *                                   If false, the local endpoint uses the AliasCert model.
  *
@@ -895,7 +895,7 @@ bool libspdm_get_random_number(size_t size, uint8_t *rand);
  **/
 bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
                                     uint32_t base_asym_algo, uint32_t base_hash_algo,
-                                    bool is_requester_cert, bool is_device_cert_model);
+                                    bool is_requester, bool is_device_cert_model);
 
 /**
  * Certificate Check for SPDM leaf cert. It is used for SPDM 1.3.
@@ -904,7 +904,7 @@ bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
  * @param[in]  cert_size             The size of certificate data in bytes.
  * @param[in]  base_asym_algo        SPDM base_asym_algo
  * @param[in]  base_hash_algo        SPDM base_hash_algo
- * @param[in]  is_requester_cert     Is the function verifying requester or responder cert.
+ * @param[in]  is_requester          Is the function verifying a cert as a requester or responder.
  * @param[in]  cert_model            One of the SPDM_CERTIFICATE_INFO_CERT_MODEL_* macros.
  *
  * @retval  true   Success.
@@ -912,7 +912,7 @@ bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
  **/
 bool libspdm_x509_certificate_check_ex(const uint8_t *cert, size_t cert_size,
                                        uint32_t base_asym_algo, uint32_t base_hash_algo,
-                                       bool is_requester_cert, uint8_t cert_model);
+                                       bool is_requester, uint8_t cert_model);
 /**
  * Certificate Check for SPDM leaf cert when set_cert.
  *
@@ -920,7 +920,7 @@ bool libspdm_x509_certificate_check_ex(const uint8_t *cert, size_t cert_size,
  * @param[in]  cert_size             The size of certificate data in bytes.
  * @param[in]  base_asym_algo        SPDM base_asym_algo
  * @param[in]  base_hash_algo        SPDM base_hash_algo
- * @param[in]  is_requester_cert     Is the function verifying requester or responder cert.
+ * @param[in]  is_requester          Is the function verifying a cert as a requester or responder.
  * @param[in]  is_device_cert_model  If true, the local endpoint uses the DeviceCert model.
  *                                   If false, the local endpoint uses the AliasCert model.
  *
@@ -929,7 +929,7 @@ bool libspdm_x509_certificate_check_ex(const uint8_t *cert, size_t cert_size,
  **/
 bool libspdm_x509_set_cert_certificate_check(const uint8_t *cert, size_t cert_size,
                                              uint32_t base_asym_algo, uint32_t base_hash_algo,
-                                             bool is_requester_cert, bool is_device_cert_model);
+                                             bool is_requester, bool is_device_cert_model);
 
 /**
  * Certificate Check for SPDM leaf cert when set_cert. It is used for SPDM 1.3.
@@ -938,7 +938,7 @@ bool libspdm_x509_set_cert_certificate_check(const uint8_t *cert, size_t cert_si
  * @param[in]  cert_size             The size of certificate data in bytes.
  * @param[in]  base_asym_algo        SPDM base_asym_algo
  * @param[in]  base_hash_algo        SPDM base_hash_algo
- * @param[in]  is_requester_cert     Is the function verifying requester or responder cert.
+ * @param[in]  is_requester          Is the function verifying a cert as a requester or responder.
  * @param[in]  cert_model            One of the SPDM_CERTIFICATE_INFO_CERT_MODEL_* macros.
  *
  * @retval  true   Success.
@@ -946,7 +946,7 @@ bool libspdm_x509_set_cert_certificate_check(const uint8_t *cert, size_t cert_si
  **/
 bool libspdm_x509_set_cert_certificate_check_ex(const uint8_t *cert, size_t cert_size,
                                                 uint32_t base_asym_algo, uint32_t base_hash_algo,
-                                                bool is_requester_cert, uint8_t cert_model);
+                                                bool is_requester, uint8_t cert_model);
 
 /**
  * Return certificate is root cert or not.
