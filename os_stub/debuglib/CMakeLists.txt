@@ -1,10 +1,14 @@
 cmake_minimum_required(VERSION 3.5)
 
-include_directories(${LIBSPDM_DIR}/include
-                    ${LIBSPDM_DIR}/include/hal)
+add_library(debuglib STATIC "")
 
-set(src_debuglib
-    debuglib.c
+target_include_directories(debuglib
+    PRIVATE
+        ${LIBSPDM_DIR}/include
+        ${LIBSPDM_DIR}/include/hal
 )
 
-add_library(debuglib STATIC ${src_debuglib})
+target_sources(debuglib
+    PRIVATE
+        ${CMAKE_CURRENT_LIST_DIR}/debuglib.c
+)

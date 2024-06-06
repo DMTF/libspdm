@@ -1,10 +1,14 @@
 cmake_minimum_required(VERSION 3.5)
 
-include_directories(${LIBSPDM_DIR}/include)
+add_library(spdm_transport_mctp_lib STATIC "")
 
-set(src_spdm_transport_mctp_lib
-    libspdm_mctp_common.c
-    libspdm_mctp_mctp.c
+target_include_directories(spdm_transport_mctp_lib
+    PRIVATE
+        ${LIBSPDM_DIR}/include
 )
 
-add_library(spdm_transport_mctp_lib STATIC ${src_spdm_transport_mctp_lib})
+target_sources(spdm_transport_mctp_lib
+    PRIVATE
+        ${CMAKE_CURRENT_LIST_DIR}/libspdm_mctp_common.c
+        ${CMAKE_CURRENT_LIST_DIR}/libspdm_mctp_mctp.c
+)
