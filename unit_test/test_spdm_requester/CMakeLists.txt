@@ -1,105 +1,107 @@
 cmake_minimum_required(VERSION 3.5)
 
-include_directories(${LIBSPDM_DIR}/unit_test/test_spdm_requester
-                    ${LIBSPDM_DIR}/include
-                    ${LIBSPDM_DIR}/unit_test/include
-                    ${LIBSPDM_DIR}/os_stub/spdm_device_secret_lib_sample
-                    ${LIBSPDM_DIR}/unit_test/cmockalib/cmocka/include
-                    ${LIBSPDM_DIR}/unit_test/cmockalib/cmocka/include/cmockery
-                    ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common
-                    ${LIBSPDM_DIR}/os_stub
+add_executable(test_spdm_requester)
+
+target_include_directories(test_spdm_requester
+    PRIVATE
+        ${LIBSPDM_DIR}/unit_test/test_spdm_requester
+        ${LIBSPDM_DIR}/include
+        ${LIBSPDM_DIR}/unit_test/include
+        ${LIBSPDM_DIR}/os_stub/spdm_device_secret_lib_sample
+        ${LIBSPDM_DIR}/unit_test/cmockalib/cmocka/include
+        ${LIBSPDM_DIR}/unit_test/cmockalib/cmocka/include/cmockery
+        ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common
+        ${LIBSPDM_DIR}/os_stub
+)
+
+target_sources(test_spdm_requester
+    PRIVATE
+        ${CMAKE_CURRENT_LIST_DIR}/test_spdm_requester.c
+        ${CMAKE_CURRENT_LIST_DIR}/get_version.c
+        ${CMAKE_CURRENT_LIST_DIR}/get_capabilities.c
+        ${CMAKE_CURRENT_LIST_DIR}/negotiate_algorithms.c
+        ${CMAKE_CURRENT_LIST_DIR}/get_digests.c
+        ${CMAKE_CURRENT_LIST_DIR}/get_certificate.c
+        ${CMAKE_CURRENT_LIST_DIR}/challenge.c
+        ${CMAKE_CURRENT_LIST_DIR}/get_event_types.c
+        ${CMAKE_CURRENT_LIST_DIR}/get_measurements.c
+        ${CMAKE_CURRENT_LIST_DIR}/key_exchange.c
+        ${CMAKE_CURRENT_LIST_DIR}/finish.c
+        ${CMAKE_CURRENT_LIST_DIR}/psk_exchange.c
+        ${CMAKE_CURRENT_LIST_DIR}/psk_finish.c
+        ${CMAKE_CURRENT_LIST_DIR}/heartbeat.c
+        ${CMAKE_CURRENT_LIST_DIR}/key_update.c
+        ${CMAKE_CURRENT_LIST_DIR}/end_session.c
+        ${CMAKE_CURRENT_LIST_DIR}/encap_certificate.c
+        ${CMAKE_CURRENT_LIST_DIR}/encap_challenge_auth.c
+        ${CMAKE_CURRENT_LIST_DIR}/encap_digests.c
+        ${CMAKE_CURRENT_LIST_DIR}/encap_key_update.c
+        ${CMAKE_CURRENT_LIST_DIR}/encap_request.c
+        ${CMAKE_CURRENT_LIST_DIR}/set_certificate.c
+        ${CMAKE_CURRENT_LIST_DIR}/get_csr.c
+        ${CMAKE_CURRENT_LIST_DIR}/chunk_get.c
+        ${CMAKE_CURRENT_LIST_DIR}/chunk_send.c
+        ${CMAKE_CURRENT_LIST_DIR}/vendor_request.c
+        ${CMAKE_CURRENT_LIST_DIR}/error_test/get_version_err.c
+        ${CMAKE_CURRENT_LIST_DIR}/error_test/get_capabilities_err.c
+        ${CMAKE_CURRENT_LIST_DIR}/error_test/negotiate_algorithms_err.c
+        ${CMAKE_CURRENT_LIST_DIR}/error_test/get_digests_err.c
+        ${CMAKE_CURRENT_LIST_DIR}/error_test/key_exchange_err.c
+        ${CMAKE_CURRENT_LIST_DIR}/error_test/get_measurements_err.c
+        ${CMAKE_CURRENT_LIST_DIR}/error_test/get_event_types_err.c
+        ${CMAKE_CURRENT_LIST_DIR}/error_test/vendor_request_err.c
+        ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/common.c
+        ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/algo.c
+        ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/support.c
 )
 
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     if((TOOLCHAIN STREQUAL "VS2015") OR (TOOLCHAIN STREQUAL "VS2019") OR (TOOLCHAIN STREQUAL "VS2022"))
-        add_compile_options(/wd4819)
+        target_compile_options(test_spdm_requester PRIVATE /wd4819)
     endif()
 endif()
 
-set(src_test_spdm_requester
-    test_spdm_requester.c
-    get_version.c
-    get_capabilities.c
-    negotiate_algorithms.c
-    get_digests.c
-    get_certificate.c
-    challenge.c
-    get_event_types.c
-    get_measurements.c
-    key_exchange.c
-    finish.c
-    psk_exchange.c
-    psk_finish.c
-    heartbeat.c
-    key_update.c
-    end_session.c
-    encap_certificate.c
-    encap_challenge_auth.c
-    encap_digests.c
-    encap_key_update.c
-    encap_request.c
-    set_certificate.c
-    get_csr.c
-    chunk_get.c
-    chunk_send.c
-    vendor_request.c
-    error_test/get_version_err.c
-    error_test/get_capabilities_err.c
-    error_test/negotiate_algorithms_err.c
-    error_test/get_digests_err.c
-    error_test/key_exchange_err.c
-    error_test/get_measurements_err.c
-    error_test/get_event_types_err.c
-    error_test/vendor_request_err.c
-    ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/common.c
-    ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/algo.c
-    ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/support.c
-)
-
-set(test_spdm_requester_LIBRARY
-    memlib
-    debuglib
-    spdm_responder_lib
-    spdm_requester_lib
-    spdm_common_lib
-    ${CRYPTO_LIB_PATHS}
-    rnglib
-    cryptlib_${CRYPTO}
-    malloclib
-    spdm_crypt_lib
-    spdm_crypt_ext_lib
-    spdm_secured_message_lib
-    spdm_device_secret_lib_sample
-    spdm_transport_test_lib
-    cmockalib
-    platform_lib
-)
-
 if(TOOLCHAIN STREQUAL "ARM_DS2022")
     set(test_spdm_requester_LIBRARY ${test_spdm_requester_LIBRARY} armbuild_lib)
+    target_link_libraries(test_spdm_requester PRIVATE armbuild_lib)
 endif()
 
 if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
-    add_executable(test_spdm_requester
-                   ${src_test_spdm_requester}
-                   $<TARGET_OBJECTS:memlib>
-                   $<TARGET_OBJECTS:debuglib>
-                   $<TARGET_OBJECTS:spdm_requester_lib>
-                   $<TARGET_OBJECTS:spdm_common_lib>
-                   $<TARGET_OBJECTS:${CRYPTO_LIB_PATHS}>
-                   $<TARGET_OBJECTS:rnglib>
-                   $<TARGET_OBJECTS:cryptlib_${CRYPTO}>
-                   $<TARGET_OBJECTS:malloclib>
-                   $<TARGET_OBJECTS:spdm_crypt_lib>
-                   $<TARGET_OBJECTS:spdm_secured_message_lib>
-                   $<TARGET_OBJECTS:spdm_device_secret_lib_sample>
-                   $<TARGET_OBJECTS:spdm_transport_test_lib>
-                   $<TARGET_OBJECTS:cmockalib>
-                   $<TARGET_OBJECTS:platform_lib>
+target_link_libraries(test_spdm_requester
+        PRIVATE
+            $<TARGET_OBJECTS:memlib>
+            $<TARGET_OBJECTS:debuglib>
+            $<TARGET_OBJECTS:spdm_requester_lib>
+            $<TARGET_OBJECTS:spdm_common_lib>
+            $<TARGET_OBJECTS:${CRYPTO_LIB_PATHS}>
+            $<TARGET_OBJECTS:rnglib>
+            $<TARGET_OBJECTS:cryptlib_${CRYPTO}>
+            $<TARGET_OBJECTS:malloclib>
+            $<TARGET_OBJECTS:spdm_crypt_lib>
+            $<TARGET_OBJECTS:spdm_secured_message_lib>
+            $<TARGET_OBJECTS:spdm_device_secret_lib_sample>
+            $<TARGET_OBJECTS:spdm_transport_test_lib>
+            $<TARGET_OBJECTS:cmockalib>
+            $<TARGET_OBJECTS:platform_lib>
     )
 else()
-    add_executable(test_spdm_requester ${src_test_spdm_requester})
-    target_link_libraries(test_spdm_requester ${test_spdm_requester_LIBRARY})
+    target_link_libraries(test_spdm_requester
+        PRIVATE
+            memlib
+            debuglib
+            spdm_responder_lib
+            spdm_requester_lib
+            spdm_common_lib
+            ${CRYPTO_LIB_PATHS}
+            rnglib
+            cryptlib_${CRYPTO}
+            malloclib
+            spdm_crypt_lib
+            spdm_crypt_ext_lib
+            spdm_secured_message_lib
+            spdm_device_secret_lib_sample
+            spdm_transport_test_lib
+            cmockalib
+            platform_lib
+    )
 endif()
-
-
