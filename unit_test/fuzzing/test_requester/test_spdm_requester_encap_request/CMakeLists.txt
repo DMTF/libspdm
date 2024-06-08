@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-add_library(test_spdm_requester_encap_request STATIC "")
+add_executable(test_spdm_requester_encap_request)
 
 target_include_directories(test_spdm_requester_encap_request
     PRIVATE
@@ -56,6 +56,7 @@ else()
             spdm_common_lib
             ${CRYPTO_LIB_PATHS}
             rnglib
+            platform_lib_null
             cryptlib_${CRYPTO}
             malloclib
             spdm_crypt_lib

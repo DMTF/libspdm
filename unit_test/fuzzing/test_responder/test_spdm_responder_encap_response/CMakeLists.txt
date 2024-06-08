@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-add_library(test_spdm_responder_encap_response STATIC "")
+add_executable(test_spdm_responder_encap_response)
 
 target_include_directories(test_spdm_responder_encap_response
     PRIVATE

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-add_library(test_spdm_transport_mctp_encode_message STATIC "")
+add_executable(test_spdm_transport_mctp_encode_message)
 
 target_include_directories(test_spdm_transport_mctp_encode_message
     PRIVATE

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-add_library(test_spdm_requester_set_certificate STATIC "")
+add_executable(test_spdm_requester_set_certificate)
 
 target_include_directories(test_spdm_requester_set_certificate
     PRIVATE

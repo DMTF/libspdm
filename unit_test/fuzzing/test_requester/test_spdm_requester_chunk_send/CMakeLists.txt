@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-add_library(test_spdm_requester_chunk_send STATIC "")
+add_executable(test_spdm_requester_chunk_send)
 
 target_include_directories(test_spdm_requester_chunk_send
     PRIVATE

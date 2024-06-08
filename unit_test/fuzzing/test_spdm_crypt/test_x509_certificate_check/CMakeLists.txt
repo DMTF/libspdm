@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-add_library(test_x509_certificate_check STATIC "")
+add_executable(test_x509_certificate_check)
 
 target_include_directories(test_x509_certificate_check
     PRIVATE

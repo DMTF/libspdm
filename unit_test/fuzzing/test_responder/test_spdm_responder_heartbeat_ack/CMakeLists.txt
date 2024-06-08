@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-add_library(test_spdm_responder_heartbeat_ack STATIC "")
+add_executable(test_spdm_responder_heartbeat_ack)
 
 target_include_directories(test_spdm_responder_heartbeat_ack
     PRIVATE
@@ -68,4 +68,3 @@ else()
             platform_lib_null
     )
 endif()
-

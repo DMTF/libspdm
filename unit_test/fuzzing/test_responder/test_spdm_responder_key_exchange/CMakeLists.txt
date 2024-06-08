@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-add_library(test_spdm_responder_key_exchange STATIC "")
+add_executable(test_spdm_responder_key_exchange)
 
 target_include_directories(test_spdm_responder_key_exchange
     PRIVATE
@@ -53,6 +53,7 @@ else()
         PRIVATE
             memlib
             debuglib
+            spdm_requester_lib
             spdm_responder_lib
             spdm_common_lib
             ${CRYPTO_LIB_PATHS}

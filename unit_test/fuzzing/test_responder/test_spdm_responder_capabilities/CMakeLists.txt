@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-add_library(test_spdm_responder_capabilities STATIC "")
+add_executable(test_spdm_responder_capabilities)
 
 target_include_directories(test_spdm_responder_capabilities
     PRIVATE
