@@ -1,57 +1,64 @@
 cmake_minimum_required(VERSION 3.5)
-include_directories(${LIBSPDM_DIR}/unit_test/fuzzing/test_requester/test_spdm_requester_get_version
-                    ${LIBSPDM_DIR}/include
-                    ${LIBSPDM_DIR}/unit_test/include
-                    ${LIBSPDM_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common
-                    ${LIBSPDM_DIR}/os_stub/include
-                    ${LIBSPDM_DIR}/os_stub
+
+add_library(test_spdm_requester_get_version STATIC "")
+
+target_include_directories(test_spdm_requester_get_version
+    PRIVATE
+        ${LIBSPDM_DIR}/unit_test/fuzzing/test_requester/test_spdm_requester_get_version
+        ${LIBSPDM_DIR}/include
+        ${LIBSPDM_DIR}/unit_test/include
+        ${LIBSPDM_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common
+        ${LIBSPDM_DIR}/os_stub/include
+        ${LIBSPDM_DIR}/os_stub
 )
 
 if(TOOLCHAIN STREQUAL "KLEE")
-    include_directories($ENV{KLEE_SRC_PATH}/include)
+    target_include_directories(test_spdm_requester_get_version
+        PRIVATE
+            $ENV{KLEE_SRC_PATH}/include
+    )
 endif()
 
-set(src_test_spdm_requester_get_version
-    get_version.c
-    ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/common.c
-    ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/toolchain_harness.c
-)
-
-set(test_spdm_requester_get_version_LIBRARY
-    memlib
-    debuglib
-    spdm_requester_lib
-    spdm_common_lib
-    ${CRYPTO_LIB_PATHS}
-    rnglib
-    platform_lib_null
-    cryptlib_${CRYPTO}
-    malloclib
-    spdm_crypt_lib
-    spdm_crypt_ext_lib
-    spdm_secured_message_lib
-    spdm_transport_test_lib
-    spdm_device_secret_lib_null
+target_sources(test_spdm_requester_get_version
+    PRIVATE
+        ${CMAKE_CURRENT_LIST_DIR}/get_version.c
+        ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/common.c
+        ${PROJECT_SOURCE_DIR}/unit_test/fuzzing/spdm_unit_fuzzing_common/toolchain_harness.c
 )
 
 if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
-    add_executable(test_spdm_requester_get_version
-                   ${src_test_spdm_requester_get_version}
-                   $<TARGET_OBJECTS:memlib>
-                   $<TARGET_OBJECTS:debuglib>
-                   $<TARGET_OBJECTS:spdm_requester_lib>
-                   $<TARGET_OBJECTS:spdm_common_lib>
-                   $<TARGET_OBJECTS:${CRYPTO_LIB_PATHS}>
-                   $<TARGET_OBJECTS:rnglib>
-                   $<TARGET_OBJECTS:platform_lib_null>
-                   $<TARGET_OBJECTS:cryptlib_${CRYPTO}>
-                   $<TARGET_OBJECTS:malloclib>
-                   $<TARGET_OBJECTS:spdm_crypt_lib>
-                   $<TARGET_OBJECTS:spdm_secured_message_lib>
-                   $<TARGET_OBJECTS:spdm_transport_test_lib>
-                   $<TARGET_OBJECTS:spdm_device_secret_lib_null>
+    target_link_libraries(test_spdm_requester_get_version
+        PRIVATE
+            $<TARGET_OBJECTS:memlib>
+            $<TARGET_OBJECTS:debuglib>
+            $<TARGET_OBJECTS:spdm_requester_lib>
+            $<TARGET_OBJECTS:spdm_common_lib>
+            $<TARGET_OBJECTS:${CRYPTO_LIB_PATHS}>
+            $<TARGET_OBJECTS:rnglib>
+            $<TARGET_OBJECTS:platform_lib_null>
+            $<TARGET_OBJECTS:cryptlib_${CRYPTO}>
+            $<TARGET_OBJECTS:malloclib>
+            $<TARGET_OBJECTS:spdm_crypt_lib>
+            $<TARGET_OBJECTS:spdm_secured_message_lib>
+            $<TARGET_OBJECTS:spdm_transport_test_lib>
+            $<TARGET_OBJECTS:spdm_device_secret_lib_null>
     )
 else()
-    add_executable(test_spdm_requester_get_version ${src_test_spdm_requester_get_version})
-    target_link_libraries(test_spdm_requester_get_version ${test_spdm_requester_get_version_LIBRARY})
+    target_link_libraries(test_spdm_requester_get_version
+        PRIVATE
+            memlib
+            debuglib
+            spdm_requester_lib
+            spdm_common_lib
+            ${CRYPTO_LIB_PATHS}
+            rnglib
+            platform_lib_null
+            cryptlib_${CRYPTO}
+            malloclib
+            spdm_crypt_lib
+            spdm_crypt_ext_lib
+            spdm_secured_message_lib
+            spdm_transport_test_lib
+            spdm_device_secret_lib_null
+    )
 endif()
