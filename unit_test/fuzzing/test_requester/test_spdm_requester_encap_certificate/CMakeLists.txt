@@ -39,6 +39,7 @@ if((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC"))
             $<TARGET_OBJECTS:spdm_common_lib>
             $<TARGET_OBJECTS:${CRYPTO_LIB_PATHS}>
             $<TARGET_OBJECTS:rnglib>
+            $<TARGET_OBJECTS:platform_lib_null>
             $<TARGET_OBJECTS:cryptlib_${CRYPTO}>
             $<TARGET_OBJECTS:malloclib>
             $<TARGET_OBJECTS:spdm_crypt_lib>
@@ -56,6 +57,7 @@ else()
             spdm_common_lib
             ${CRYPTO_LIB_PATHS}
             rnglib
+            platform_lib_null
             cryptlib_${CRYPTO}
             malloclib
             spdm_crypt_lib

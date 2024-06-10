@@ -47,6 +47,7 @@ else()
             memlib
             debuglib
             spdm_crypt_lib
+            spdm_crypt_ext_lib
             ${CRYPTO_LIB_PATHS}
             cryptlib_${CRYPTO}
             rnglib
