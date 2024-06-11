@@ -1,10 +1,14 @@
 cmake_minimum_required(VERSION 3.5)
 
-include_directories(${LIBSPDM_DIR}/include
-                    ${LIBSPDM_DIR}/include/hal)
+add_library(rnglib_null STATIC "")
 
-set(src_rnglib_null
-    rnglib.c
+target_include_directories(rnglib_null
+    PRIVATE
+        ${LIBSPDM_DIR}/include
+        ${LIBSPDM_DIR}/include/hal
 )
 
-add_library(rnglib_null STATIC ${src_rnglib_null})
+target_sources(rnglib_null
+    PRIVATE
+        rnglib.c
+)

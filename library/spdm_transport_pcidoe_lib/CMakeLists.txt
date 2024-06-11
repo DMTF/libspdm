@@ -1,10 +1,14 @@
 cmake_minimum_required(VERSION 3.5)
 
-include_directories(${LIBSPDM_DIR}/include)
+add_library(spdm_transport_pcidoe_lib STATIC "")
 
-set(src_spdm_transport_pcidoe_lib
-    libspdm_doe_common.c
-    libspdm_doe_pcidoe.c
+target_include_directories(spdm_transport_pcidoe_lib
+    PRIVATE
+        ${LIBSPDM_DIR}/include
 )
 
-add_library(spdm_transport_pcidoe_lib STATIC ${src_spdm_transport_pcidoe_lib})
+target_sources(spdm_transport_pcidoe_lib
+    PRIVATE
+        libspdm_doe_common.c
+        libspdm_doe_pcidoe.c
+)
