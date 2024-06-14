@@ -106,7 +106,7 @@
 
 2) Library Threat Model
 
-   The user guide can be found at [threat_model](https://github.com/DMTF/libspdm/blob/main/doc/threat_model.md).
+   The threat model can be found at [threat_model](https://github.com/DMTF/libspdm/blob/main/doc/threat_model.md).
 
 3) Library Design
 
