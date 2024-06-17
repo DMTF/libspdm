@@ -56,8 +56,7 @@ libspdm_return_t libspdm_try_vendor_send_request_receive_response(
         resp_size == NULL ||
         (*resp_size != 0 && resp_data == NULL)
         ) {
-        status = LIBSPDM_STATUS_INVALID_PARAMETER;
-        goto done;
+        return LIBSPDM_STATUS_INVALID_PARAMETER;
     }
 
     if (spdm_context->connection_info.connection_state < LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
@@ -122,8 +121,7 @@ libspdm_return_t libspdm_try_vendor_send_request_receive_response(
         libspdm_send_spdm_request(spdm_context, session_id, spdm_request_size, spdm_request);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_release_sender_buffer (spdm_context);
-        status = LIBSPDM_STATUS_SEND_FAIL;
-        goto done;
+        return LIBSPDM_STATUS_SEND_FAIL;
     }
     libspdm_release_sender_buffer (spdm_context);
     spdm_request = (void *)spdm_context->last_spdm_request;
