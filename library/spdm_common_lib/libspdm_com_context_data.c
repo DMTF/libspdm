@@ -261,6 +261,10 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
             LIBSPDM_ASSERT((data32 & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP) == 0);
             #endif /* !LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
 
+            #if !(LIBSPDM_ENABLE_CAPABILITY_MEL_CAP)
+            LIBSPDM_ASSERT((data32 & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEL_CAP) == 0);
+            #endif /* !LIBSPDM_ENABLE_CAPABILITY_MEL_CAP */
+
             #if !(LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP)
             LIBSPDM_ASSERT((data32 & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP) == 0);
             #endif /* !LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP */
@@ -1444,7 +1448,7 @@ void libspdm_reset_message_buffer_via_request_code(void *context, void *session_
     /**
      * If the Requester issued GET_MEASUREMENTS or KEY_EXCHANGE or FINISH or PSK_EXCHANGE
      * or PSK_FINISH or KEY_UPDATE or HEARTBEAT or GET_ENCAPSULATED_REQUEST or DELIVER_ENCAPSULATED_RESPONSE
-     * or END_SESSION request(s) and skipped CHALLENGE completion, M1 and M2 are reset to null.
+     * or END_SESSION request(s) or SPDM_GET_MEASUREMENT_EXTENSION_LOG and skipped CHALLENGE completion, M1 and M2 are reset to null.
      */
     switch (request_code)
     {
@@ -1457,6 +1461,7 @@ void libspdm_reset_message_buffer_via_request_code(void *context, void *session_
     case SPDM_HEARTBEAT:
     case SPDM_GET_ENCAPSULATED_REQUEST:
     case SPDM_END_SESSION:
+    case SPDM_GET_MEASUREMENT_EXTENSION_LOG:
         if (spdm_context->connection_info.connection_state <
             LIBSPDM_CONNECTION_STATE_AUTHENTICATED) {
             libspdm_reset_message_b(spdm_context);

@@ -68,12 +68,23 @@
 #ifndef LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE
 #define LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE 0x1000
 #endif
+#ifndef LIBSPDM_MAX_MEASUREMENT_EXTENSION_LOG_SIZE
+#define LIBSPDM_MAX_MEASUREMENT_EXTENSION_LOG_SIZE 0x1000
+#endif
 /* Partial certificates can be retrieved from a Requester or Responder and through multiple messages
  * the complete certificate chain can be constructed. This value specifies the maximum size,
  * in bytes, of a partial certificate that can be sent or received.
  */
 #ifndef LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN
 #define LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN 1024
+#endif
+
+/* Partial MEL(measurement extension log) can be retrieved from a Responder and through multiple messages
+ * the complete MEL can be constructed. This value specifies the maximum size,
+ * in bytes, of a partial MEL that can be sent or received.
+ */
+#ifndef LIBSPDM_MAX_MEL_BLOCK_LEN
+#define LIBSPDM_MAX_MEL_BLOCK_LEN 1024
 #endif
 
 /* To ensure integrity in communication between the Requester and the Responder libspdm calculates
@@ -224,6 +235,8 @@
 /* LIBSPDM_ENABLE_CAPABILITY_CSR_CAP - Enable/Disable get csr capability.
  * LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP - Enable/Disable set certificate capability. */
 
+/* LIBSPDM_ENABLE_CAPABILITY_MEL_CAP - Enable/Disable MEL capability.*/
+
 #ifndef LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 #define LIBSPDM_ENABLE_CAPABILITY_CERT_CAP 1
 #endif
@@ -267,6 +280,11 @@
 
 #ifndef LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
 #define LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP 1
+#endif
+
+/*Only needed if the endpoints supports SPDM 1.3*/
+#ifndef LIBSPDM_ENABLE_CAPABILITY_MEL_CAP
+#define LIBSPDM_ENABLE_CAPABILITY_MEL_CAP 1
 #endif
 
 #ifndef LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP

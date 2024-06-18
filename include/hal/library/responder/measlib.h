@@ -151,4 +151,30 @@ extern bool libspdm_generate_measurement_summary_hash(
     uint32_t measurement_summary_hash_size);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
 
+#if LIBSPDM_ENABLE_CAPABILITY_MEL_CAP
+/**
+ * Collect the measurement extension log.
+ *
+ * @param  spdm_context               A pointer to the SPDM context.
+ * @param  mel_specification          Indicates the measurement extension log specification.
+ * @param  measurement_specification  Indicates the measurement specification.
+ *                                    It must align with measurement_specification.
+ *                                    (SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_*)
+ * @param  measurement_hash_algo  Indicates the measurement hash algorithm.
+ *                                Must be SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_* value in spdm.h.
+ * @param  spdm_mel               Return the pointer of MEL.
+ * @param  spdm_mel_size          Return the size of MEL.
+ *
+ * @retval true  measurement extension log is generated or skipped.
+ * @retval false measurement extension log is not generated.
+ **/
+extern bool libspdm_measurement_extension_log_collection(
+    void *spdm_context,
+    uint8_t mel_specification,
+    uint8_t measurement_specification,
+    uint32_t measurement_hash_algo,
+    void **spdm_mel,
+    size_t *spdm_mel_size);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MEL_CAP */
+
 #endif /* RESPONDER_MEASLIB_H */

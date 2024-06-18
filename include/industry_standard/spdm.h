@@ -56,6 +56,7 @@
 
 /* SPDM response code (1.3) */
 #define SPDM_SUPPORTED_EVENT_TYPES 0x62
+#define SPDM_MEASUREMENT_EXTENSION_LOG 0x6F
 
 /* SPDM request code (1.0) */
 #define SPDM_GET_DIGESTS 0x81
@@ -87,6 +88,7 @@
 
 /* SPDM request code (1.3) */
 #define SPDM_GET_SUPPORTED_EVENT_TYPES 0xE2
+#define SPDM_GET_MEASUREMENT_EXTENSION_LOG 0xEF
 
 /* SPDM message header*/
 typedef struct {
@@ -565,6 +567,9 @@ typedef struct {
 /* Maximum size, in bytes, of a certificate chain. */
 #define SPDM_MAX_CERTIFICATE_CHAIN_SIZE 65535
 
+/* Maximum size, in bytes, of a measurement extension log.*/
+#define SPDM_MAX_MEASUREMENT_EXTENSION_LOG_SIZE 0xFFFFFFFF
+
 /* SPDM CHALLENGE request */
 typedef struct {
     spdm_message_header_t header;
@@ -654,6 +659,20 @@ typedef struct {
     spdm_measurement_block_dmtf_header_t measurement_block_dmtf_header;
     /*uint8_t                                 hash_value[hash_size];*/
 } spdm_measurement_block_dmtf_t;
+
+typedef struct {
+    uint32_t mel_index;
+    uint8_t meas_index;
+    uint8_t reserved[3];
+    spdm_measurement_block_dmtf_header_t measurement_block_dmtf_header;
+}spdm_mel_entry_dmtf_t;
+
+typedef struct {
+    uint32_t number_of_entries;
+    uint32_t mel_entries_len;
+    uint64_t reserved;
+    /*spdm_mel_entry_dmtf_t mel_entries[mel_entries_len];*/
+}spdm_measurement_extension_log_dmtf_t;
 
 /* SPDM MEASUREMENTS block MeasurementValueType */
 #define SPDM_MEASUREMENT_BLOCK_MEASUREMENT_TYPE_IMMUTABLE_ROM 0
@@ -1175,6 +1194,25 @@ typedef struct {
     uint32_t supported_event_groups_list_len;
     /* uint8_t supported_event_groups_list[supported_event_groups_list_len] */
 } spdm_supported_event_types_response_t;
+
+/* SPDM GET_MEASUREMENT_EXTENSION_LOG request */
+typedef struct {
+    spdm_message_header_t header;
+    /* param1 == RSVD
+     * param2 == RSVD */
+    uint32_t offset;
+    uint32_t length;
+} spdm_get_measurement_extension_log_request_t;
+
+/* SPDM GET_MEASUREMENT_EXTENSION_LOG response */
+typedef struct {
+    spdm_message_header_t header;
+    /* param1 == RSVD
+     * param2 == RSVD */
+    uint32_t portion_length;
+    uint32_t remainder_length;
+    /*uint8_t                mel[portion_length];*/
+} spdm_measurement_extension_log_response_t;
 
 #pragma pack()
 

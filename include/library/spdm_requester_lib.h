@@ -352,6 +352,24 @@ libspdm_return_t libspdm_get_measurement_ex2(void *spdm_context, const uint32_t 
                                              size_t *opaque_data_size);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP*/
 
+#if LIBSPDM_ENABLE_CAPABILITY_MEL_CAP
+/**
+ * This function sends GET_MEASUREMENT_EXTENSION_LOG to get MEL from device.
+ *
+ * @param  spdm_context               A pointer to the SPDM context.
+ * @param  session_id                 Indicates if it is a secured message protected via SPDM session.
+ *                                    If session_id is NULL, it is a normal message.
+ *                                    If session_id is not NULL, it is a secured message.
+ * @param  mel_size                   On input, indicate the size in bytes of the destination buffer to store.
+ *                                    On output, indicate the size in bytes of the MEL.
+ * @param  measure_exten_log          A pointer to a destination buffer to store the MEL.
+ **/
+libspdm_return_t libspdm_get_measurement_extension_log(void *spdm_context,
+                                                       const uint32_t *session_id,
+                                                       size_t *mel_size,
+                                                       void *measure_exten_log);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MEL_CAP */
+
 #if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)
 /**
  * This function sends KEY_EXCHANGE/FINISH or PSK_EXCHANGE/PSK_FINISH

@@ -94,6 +94,20 @@ bool libspdm_generate_measurement_summary_hash(
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
 
+#if LIBSPDM_ENABLE_CAPABILITY_MEL_CAP
+/*Collect the measurement extension log.*/
+bool libspdm_measurement_extension_log_collection(
+    void *spdm_context,
+    uint8_t mel_specification,
+    uint8_t measurement_specification,
+    uint32_t measurement_hash_algo,
+    void **spdm_mel,
+    size_t *spdm_mel_size)
+{
+    return false;
+}
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MEL_CAP */
+
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
 bool libspdm_requester_data_sign(
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT

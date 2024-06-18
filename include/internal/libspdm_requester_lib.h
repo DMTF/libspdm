@@ -207,6 +207,28 @@ libspdm_return_t libspdm_get_certificate_choose_length_ex(void *spdm_context,
                                                           const void **trust_anchor,
                                                           size_t *trust_anchor_size);
 
+#if LIBSPDM_ENABLE_CAPABILITY_MEL_CAP
+/**
+ * This function sends GET_MEASUREMENT_EXTENSION_LOG to get MEL from device.
+ *
+ * @param  measure_exten_log A pointer to a destination buffer to store the MEL.
+ *
+ * @param  spdm_context               A pointer to the SPDM context.
+ * @param  session_id                 Indicates if it is a secured message protected via SPDM session.
+ *                                    If session_id is NULL, it is a normal message.
+ *                                    If session_id is not NULL, it is a secured message.
+ * @param  length                     The len of get MEL in every time.
+ * @param  mel_size                   On input, indicate the size in bytes of the destination buffer to store.
+ *                                    On output, indicate the size in bytes of the MEL.
+ * @param  measure_exten_log          A pointer to a destination buffer to store the MEL.
+ **/
+libspdm_return_t libspdm_get_measurement_extension_log_choose_length(void *spdm_context,
+                                                                     const uint32_t *session_id,
+                                                                     uint32_t length,
+                                                                     size_t *mel_size,
+                                                                     void *measure_exten_log);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MEL_CAP */
+
 #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 /**
  * This function sends KEY_EXCHANGE and receives KEY_EXCHANGE_RSP for SPDM key exchange.

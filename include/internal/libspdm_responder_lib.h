@@ -242,6 +242,26 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
                                                    void *response);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
 
+#if LIBSPDM_ENABLE_CAPABILITY_MEL_CAP
+/**
+ * Process the SPDM GET_MEASUREMENT_EXTENSION_LOG request and return the response.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  request_size                  size in bytes of the request data.
+ * @param  request                      A pointer to the request data.
+ * @param  response_size                 size in bytes of the response data.
+ *                                     On input, it means the size in bytes of response data buffer.
+ *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
+ *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ * @param  response                     A pointer to the response data.
+ **/
+libspdm_return_t libspdm_get_response_measurement_extension_log(libspdm_context_t *spdm_context,
+                                                                size_t request_size,
+                                                                const void *request,
+                                                                size_t *response_size,
+                                                                void *response);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MEL_CAP */
+
 #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 /**
  * Process the SPDM KEY_EXCHANGE request and return the response.
