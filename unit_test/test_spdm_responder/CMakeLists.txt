@@ -24,6 +24,7 @@ target_sources(test_spdm_responder
         certificate.c
         challenge_auth.c
         measurements.c
+        measurement_extension_log.c
         respond_if_ready.c
         key_exchange.c
         finish.c
