@@ -2793,9 +2793,9 @@ libspdm_return_t libspdm_init_fips_selftest_context(void *fips_selftest_context)
 
     context = fips_selftest_context;
 
-    /*No tested for every uesd algo*/
+    /*No tested for every used algo*/
     context->tested_algo = 0;
-    /*self_test reuslt is false for every uesd algo*/
+    /*self_test result is false for every used algo*/
     context->self_test_result = 0;
 
     return LIBSPDM_STATUS_SUCCESS;

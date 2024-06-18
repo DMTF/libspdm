@@ -302,7 +302,7 @@ bool libspdm_asn1_get_tag(uint8_t **ptr, const uint8_t *end, size_t *length,
  * If subject_size is NULL, then return false.
  *
  * @retval  true   If the subject_size is not equal 0. The certificate subject retrieved successfully.
- * @retval  true   If the subject_size is equal 0. The certificate parse successful. But the cert doen't have subject.
+ * @retval  true   If the subject_size is equal 0. The certificate parse successful. But the cert doesn't have subject.
  * @retval  false  If the subject_size is not equal 0. The certificate subject retrieved successfully.But the subject_size is too small for the result.
  * @retval  false  If the subject_size is equal 0. Invalid certificate.
  **/
@@ -847,7 +847,7 @@ done:
  *                             and the size of buffer returned cert_issuer on output.
  *
  * @retval  true   If the issuer_size is not equal 0. The certificate issuer retrieved successfully.
- * @retval  true   If the issuer_size is equal 0. The certificate parse successful. But the cert doen't have issuer.
+ * @retval  true   If the issuer_size is equal 0. The certificate parse successful. But the cert doesn't have issuer.
  * @retval  false  If the issuer_size is not equal 0. The certificate issuer retrieved successfully. But the issuer_size is too small for the result.
  * @retval  false  If the issuer_size is equal 0. Invalid certificate.
  *
@@ -1274,7 +1274,7 @@ int32_t libspdm_x509_compare_date_time(const void *date_time1, const void *date_
  * @param[out]     usage            key usage (LIBSPDM_CRYPTO_X509_KU_*)
  *
  * @retval  true   if the usage is no equal 0. The certificate key usage retrieved successfully.
- * @retval  true   if the usage is equal 0. The certificate parse successfully, but the cert doen't have key usage.
+ * @retval  true   if the usage is equal 0. The certificate parse successfully, but the cert doesn't have key usage.
  * @retval  false  Invalid certificate, or usage is NULL.
  **/
 bool libspdm_x509_get_key_usage(const uint8_t *cert, size_t cert_size,

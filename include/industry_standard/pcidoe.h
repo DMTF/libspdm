@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -24,7 +24,7 @@ typedef struct {
     uint16_t vendor_id;
     uint8_t data_object_type;
     uint8_t reserved;
-    /* length of the data object being transfered in number of DW, including the header (2 DW)
+    /* length of the data object being transferred in number of DW, including the header (2 DW)
      * It only includes bit[0~17], bit[18~31] are reserved.
      * A value of 00000h indicate 2^18 DW == 2^20 byte.*/
     uint32_t length;
