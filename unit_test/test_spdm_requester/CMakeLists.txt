@@ -25,6 +25,7 @@ target_sources(test_spdm_requester
         challenge.c
         get_event_types.c
         get_measurements.c
+        get_measurement_extension_log.c
         key_exchange.c
         finish.c
         psk_exchange.c

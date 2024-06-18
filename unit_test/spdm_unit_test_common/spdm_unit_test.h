@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -104,6 +104,7 @@ typedef struct {
 #endif
 
 extern uint8_t m_libspdm_use_measurement_spec;
+extern uint8_t m_libspdm_use_mel_spec;
 extern uint32_t m_libspdm_use_measurement_hash_algo;
 extern uint32_t m_libspdm_use_hash_algo;
 extern uint32_t m_libspdm_use_asym_algo;
