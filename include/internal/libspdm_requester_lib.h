@@ -375,7 +375,7 @@ libspdm_return_t libspdm_send_receive_end_session(libspdm_context_t *spdm_contex
  * @param  session_id                    Indicate if the encapsulated request is a secured message.
  *                                     If session_id is NULL, it is a normal message.
  *                                     If session_id is NOT NULL, it is a secured message.
- * @param  mut_auth_requested             Indicate of the mut_auth_requested through KEY_EXCHANGE or CHALLENG response.
+ * @param  mut_auth_requested             Indicate of the mut_auth_requested through KEY_EXCHANGE or CHALLENGE response.
  * @param  req_slot_id_param               req_slot_id_param from the RESPONSE_PAYLOAD_TYPE_REQ_SLOT_NUMBER.
  *
  * @retval RETURN_SUCCESS               The SPDM Encapsulated requests are sent and the responses are received.

@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -104,8 +104,8 @@ size_t libspdm_get_untrusted_opaque_data_supported_version_data_size(
  * @param[in]  data_in_size                size of multi element opaque data.
  * @param[in]  data_in                     A pointer to the multi element opaque data.
  * @param[in]  element_id                  element id.
- * @param[in]  sm_data_id                  sm_data_id to identifiy for the Secured Message data type.
- * @param[out] get_element_ptr             pointer to store finded element
+ * @param[in]  sm_data_id                  sm_data_id to identify for the Secured Message data type.
+ * @param[out] get_element_ptr             pointer to store found element
  *
  * @retval true                            get element successfully
  * @retval false                           get element failed

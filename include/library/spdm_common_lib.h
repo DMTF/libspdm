@@ -808,7 +808,7 @@ void libspdm_get_scratch_buffer (
  * @param  trust_anchor_size  A buffer to hold the trust_anchor_size, if not NULL.
  *
  * @retval RETURN_SUCCESS                The cert chain verification pass.
- * @retval RETURN_SECURIY_VIOLATION      The cert chain verification fail.
+ * @retval RETURN_SECURITY_VIOLATION      The cert chain verification fail.
  **/
 typedef bool (*libspdm_verify_spdm_cert_chain_func)(
     void *spdm_context, uint8_t slot_id,

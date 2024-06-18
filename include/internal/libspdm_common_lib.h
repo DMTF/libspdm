@@ -431,7 +431,7 @@ typedef struct {
 
 #define LIBSPDM_MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT 3
 typedef struct {
-    /* Valid OpCode: GET_DIEGST/GET_CERTIFICATE/CHALLENGE/KEY_UPDATE
+    /* Valid OpCode: GET_DIGEST/GET_CERTIFICATE/CHALLENGE/KEY_UPDATE
      * The last one is 0x00, as terminator.*/
     uint8_t request_op_code_sequence[LIBSPDM_MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT + 1];
     uint8_t request_op_code_count;
@@ -766,7 +766,7 @@ libspdm_return_t libspdm_append_managed_buffer(void *managed_buffer,
  * The max_buffer_size is unchanged.
  * The buffer is not freed.
  *
- * @param  managed_buffer                The managed buffer to be shrinked.
+ * @param  managed_buffer                The managed buffer.
  **/
 void libspdm_reset_managed_buffer(void *managed_buffer);
 
@@ -1047,7 +1047,7 @@ bool libspdm_calculate_l1l2_hash(libspdm_context_t *spdm_context,
  * @param[in]  data_in          A pointer to the multi element opaque data.
  * @param[in]  element_id       Element id.
  * @param[in]  sm_data_id       ID for the Secured Message data type.
- * @param[out] get_element_ptr  Pointer to store finded element.
+ * @param[out] get_element_ptr  Pointer to store found element.
  *
  * @retval true   Get element successfully
  * @retval false  Get element failed

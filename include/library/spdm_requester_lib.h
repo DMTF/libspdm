@@ -706,7 +706,7 @@ libspdm_return_t libspdm_get_csr(void *spdm_context,
  * @param[in]  request_attribute      Set certificate request attributes. This field is only used for SPDM 1.3 and above.
  * @param[in]  key_pair_id            The value of this field shall be the unique key pair number identifying the desired
  *                                    asymmetric key pair to associate with SlotID.
- * @param[out] available_csr_tracking_tag   available CSRTrackingTag when the Responder sends a ResetRequired error messag
+ * @param[out] available_csr_tracking_tag   available CSRTrackingTag when the Responder sends a ResetRequired error message
  *
  **/
 

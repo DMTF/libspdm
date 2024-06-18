@@ -58,10 +58,10 @@ extern bool libspdm_gen_csr(
     bool is_device_cert_model);
 
 /**
- * Gen CSR, which is uesd for SPDM 1.3
+ * Gen CSR, which is used for SPDM 1.3
  *
  *   If the device need reset to gen csr, the all case is in the table.
- *   | Overwrite | Req CSRTtrackingTag | Pending CSR | Reset |             Res Action       |
+ *   | Overwrite | Req CSRTrackingTag  | Pending CSR | Reset |             Res Action       |
  *   |-----------|---------------------|-------------|-------|------------------------------|
  *   |    No     |          0          |      No     |   -   |          ResetRequired       |
  *   |    No     |          0          |      Yes    |   -   |     ResetRequired or Busy    |

@@ -23,9 +23,9 @@ libspdm_return_t libspdm_get_encap_response_digest(void *spdm_context,
     libspdm_context_t *context;
     libspdm_return_t status;
     bool result;
-    /*total populated solt count*/
+    /*total populated slot count*/
     uint8_t slot_count;
-    /*populated solt index*/
+    /*populated slot index*/
     uint8_t slot_index;
     uint32_t session_id;
     libspdm_session_info_t *session_info;
