@@ -41,6 +41,10 @@ libspdm_get_spdm_response_func libspdm_get_response_func_via_request_code(uint8_
         { SPDM_GET_MEASUREMENTS, libspdm_get_response_measurements },
         #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP*/
 
+        #if LIBSPDM_ENABLE_CAPABILITY_MEL_CAP
+        { SPDM_GET_MEASUREMENT_EXTENSION_LOG, libspdm_get_response_measurement_extension_log },
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_MEL_CAP */
+
         #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
         { SPDM_KEY_EXCHANGE, libspdm_get_response_key_exchange },
         #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP*/

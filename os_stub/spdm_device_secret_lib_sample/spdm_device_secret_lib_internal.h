@@ -28,10 +28,12 @@
 #define LIBSPDM_MEASUREMENT_BLOCK_HASH_NUMBER 4
 #define LIBSPDM_MEASUREMENT_BLOCK_NUMBER (LIBSPDM_MEASUREMENT_BLOCK_HASH_NUMBER /*Index - 1~4*/ + \
                                           1 /*SVN - 0x10*/ + \
+                                          1 /*HEM - 0x11*/ + \
                                           1 /*Manifest - 0xFD*/ + 1 /*DEVICE_MODE - 0xFE*/)
 #define LIBSPDM_MEASUREMENT_RAW_DATA_SIZE 72
 #define LIBSPDM_MEASUREMENT_MANIFEST_SIZE 128
 #define LIBSPDM_MEASUREMENT_INDEX_SVN 0x10
+#define LIBSPDM_MEASUREMENT_INDEX_HEM 0x11
 
 #define LIBSPDM_TEST_PSK_DATA_STRING "TestPskData"
 #define LIBSPDM_TEST_PSK_HINT_STRING "TestPskHint"

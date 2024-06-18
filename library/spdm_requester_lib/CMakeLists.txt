@@ -37,4 +37,5 @@ target_sources(spdm_requester_lib
         libspdm_req_set_certificate.c
         libspdm_req_get_csr.c
         libspdm_req_vendor_request.c
+        libspdm_req_get_measurement_extension_log.c
 )

@@ -41,4 +41,5 @@ target_sources(spdm_responder_lib
         libspdm_rsp_chunk_send_ack.c
         libspdm_rsp_chunk_get.c
         libspdm_rsp_vendor_response.c
+        libspdm_rsp_measurement_extension_log.c
 )
