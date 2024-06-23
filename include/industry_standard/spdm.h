@@ -133,6 +133,11 @@ typedef uint16_t spdm_version_number_t;
     (sizeof(SPDM_VERSION_1_2_SIGNING_PREFIX_CONTEXT) - 1)
 #define SPDM_VERSION_1_2_SIGNING_CONTEXT_SIZE 100
 
+#define SPDM_VERSION_1_3_SIGNING_PREFIX_CONTEXT "dmtf-spdm-v1.3.*"
+#define SPDM_VERSION_1_3_SIGNING_PREFIX_CONTEXT_SIZE \
+    (sizeof(SPDM_VERSION_1_3_SIGNING_PREFIX_CONTEXT) - 1)
+#define SPDM_VERSION_1_3_SIGNING_CONTEXT_SIZE 100
+
 /* SPDM GET_CAPABILITIES request */
 typedef struct {
     spdm_message_header_t header;
@@ -1175,6 +1180,7 @@ typedef struct {
 
 #define SPDM_VERSION_1_1_BIN_CONCAT_LABEL "spdm1.1 "
 #define SPDM_VERSION_1_2_BIN_CONCAT_LABEL "spdm1.2 "
+#define SPDM_VERSION_1_3_BIN_CONCAT_LABEL "spdm1.3 "
 #define SPDM_BIN_STR_0_LABEL "derived"
 #define SPDM_BIN_STR_1_LABEL "req hs data"
 #define SPDM_BIN_STR_2_LABEL "rsp hs data"
