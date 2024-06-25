@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -153,6 +153,7 @@ static libspdm_return_t libspdm_try_send_receive_psk_finish(libspdm_context_t *s
     spdm_request_size = message_size - transport_header_size -
                         spdm_context->local_context.capability.transport_tail_size;
 
+    LIBSPDM_ASSERT (spdm_request_size >= sizeof(spdm_request->header));
     spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request->header.request_response_code = SPDM_PSK_FINISH;
     spdm_request->header.param1 = 0;
@@ -160,6 +161,7 @@ static libspdm_return_t libspdm_try_send_receive_psk_finish(libspdm_context_t *s
 
     hmac_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
+    LIBSPDM_ASSERT (spdm_request_size >= sizeof(spdm_request->header) + hmac_size);
     spdm_request_size = sizeof(spdm_psk_finish_request_t) + hmac_size;
 
     status = libspdm_append_message_f(spdm_context, session_info, true, (uint8_t *)spdm_request,

@@ -106,7 +106,8 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
     spdm_request_size = message_size - transport_header_size -
                         spdm_context->local_context.capability.transport_tail_size;
 
-    libspdm_zero_mem(spdm_request, sizeof(libspdm_negotiate_algorithms_request_mine_t));
+    LIBSPDM_ASSERT(spdm_request_size >= sizeof(spdm_negotiate_algorithms_request_t));
+    libspdm_zero_mem(spdm_request, spdm_request_size);
     spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
         /* Number of Algorithms Structure Tables based on supported algorithms */
@@ -134,6 +135,8 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
                                sizeof(spdm_request->struct_table);
         spdm_request->header.param1 = 0;
     }
+
+    LIBSPDM_ASSERT(spdm_request_size >= spdm_request->length);
     spdm_request->header.request_response_code = SPDM_NEGOTIATE_ALGORITHMS;
     spdm_request->header.param2 = 0;
     spdm_request->measurement_specification =

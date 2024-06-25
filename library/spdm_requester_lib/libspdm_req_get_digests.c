@@ -107,6 +107,7 @@ static libspdm_return_t libspdm_try_get_digest(libspdm_context_t *spdm_context,
     spdm_request_size = message_size - transport_header_size -
                         spdm_context->local_context.capability.transport_tail_size;
 
+    LIBSPDM_ASSERT (spdm_request_size >= sizeof(spdm_get_digest_request_t));
     spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request->header.request_response_code = SPDM_GET_DIGESTS;
     spdm_request->header.param1 = 0;
