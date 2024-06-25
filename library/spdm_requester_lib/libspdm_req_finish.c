@@ -412,6 +412,7 @@ static libspdm_return_t libspdm_try_send_receive_finish(libspdm_context_t *spdm_
     spdm_request_size = message_size - transport_header_size -
                         spdm_context->local_context.capability.transport_tail_size;
 
+    LIBSPDM_ASSERT(spdm_request_size >= sizeof(spdm_request->header));
     spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request->header.request_response_code = SPDM_FINISH;
     spdm_request->header.param1 = 0;
@@ -436,6 +437,8 @@ static libspdm_return_t libspdm_try_send_receive_finish(libspdm_context_t *spdm_
     }
 
     hmac_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+    LIBSPDM_ASSERT (spdm_request_size >= sizeof(spdm_finish_request_t) + signature_size +
+                    hmac_size);
     spdm_request_size = sizeof(spdm_finish_request_t) + signature_size + hmac_size;
     ptr = spdm_request->signature;
 

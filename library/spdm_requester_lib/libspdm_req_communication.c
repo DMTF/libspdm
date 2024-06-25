@@ -327,6 +327,8 @@ libspdm_return_t libspdm_send_data(void *spdm_context, const uint32_t *session_i
     spdm_request = (void *)(message + transport_header_size);
     spdm_request_size = message_size - transport_header_size -
                         context->local_context.capability.transport_tail_size;
+
+    LIBSPDM_ASSERT (spdm_request_size >= request_size);
     libspdm_copy_mem (spdm_request, spdm_request_size, request, request_size);
     spdm_request_size = request_size;
 

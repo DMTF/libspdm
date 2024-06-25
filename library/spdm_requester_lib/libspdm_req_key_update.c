@@ -91,6 +91,7 @@ static libspdm_return_t libspdm_try_key_update(libspdm_context_t *spdm_context,
         spdm_request_size = message_size - transport_header_size -
                             spdm_context->local_context.capability.transport_tail_size;
 
+        LIBSPDM_ASSERT (spdm_request_size >= sizeof(spdm_key_update_request_t));
         spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
         spdm_request->header.request_response_code = SPDM_KEY_UPDATE;
         if (single_direction) {
@@ -241,6 +242,7 @@ static libspdm_return_t libspdm_try_key_update(libspdm_context_t *spdm_context,
     spdm_request_size = message_size - transport_header_size -
                         spdm_context->local_context.capability.transport_tail_size;
 
+    LIBSPDM_ASSERT (spdm_request_size >= sizeof(spdm_key_update_request_t));
     spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request->header.request_response_code = SPDM_KEY_UPDATE;
     spdm_request->header.param1 = SPDM_KEY_UPDATE_OPERATIONS_TABLE_VERIFY_NEW_KEY;

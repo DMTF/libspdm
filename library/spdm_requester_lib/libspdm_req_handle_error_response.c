@@ -51,6 +51,7 @@ static libspdm_return_t libspdm_requester_respond_if_ready(libspdm_context_t *sp
     spdm_request_size = message_size - transport_header_size -
                         spdm_context->local_context.capability.transport_tail_size;
 
+    LIBSPDM_ASSERT (spdm_request_size >= sizeof(spdm_response_if_ready_request_t));
     spdm_context->crypto_request = true;
     spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request->header.request_response_code = SPDM_RESPOND_IF_READY;
@@ -272,6 +273,7 @@ libspdm_return_t libspdm_handle_error_large_response(
         spdm_request = (spdm_chunk_get_request_t*)(void*) (message + transport_header_size);
         spdm_request_size = message_size - transport_header_size;
 
+        LIBSPDM_ASSERT(spdm_request_size >= sizeof(spdm_chunk_get_request_t));
         spdm_request->header.spdm_version = libspdm_get_connection_version(spdm_context);
         spdm_request->header.request_response_code = SPDM_CHUNK_GET;
         spdm_request->header.param1 = 0;

@@ -106,6 +106,7 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
     spdm_request_size = message_size - transport_header_size -
                         spdm_context->local_context.capability.transport_tail_size;
 
+    LIBSPDM_ASSERT(spdm_request_size >= sizeof(libspdm_negotiate_algorithms_request_mine_t));
     libspdm_zero_mem(spdm_request, sizeof(libspdm_negotiate_algorithms_request_mine_t));
     spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
