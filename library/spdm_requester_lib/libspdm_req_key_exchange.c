@@ -347,6 +347,7 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
     spdm_request_size = message_size - transport_header_size -
                         spdm_context->local_context.capability.transport_tail_size;
 
+    LIBSPDM_ASSERT (spdm_request_size >= sizeof(spdm_key_exchange_request_t));
     spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request->header.request_response_code = SPDM_KEY_EXCHANGE;
     spdm_request->header.param1 = measurement_hash_type;
@@ -388,6 +389,7 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
         return LIBSPDM_STATUS_CRYPTO_ERROR;
     }
 
+    LIBSPDM_ASSERT (spdm_request_size >= sizeof(spdm_key_exchange_request_t) + dhe_key_size);
     result = libspdm_secured_message_dhe_generate_key(
         spdm_context->connection_info.algorithm.dhe_named_group,
         dhe_context, ptr, &dhe_key_size);
@@ -404,6 +406,9 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
     if (requester_opaque_data != NULL) {
         LIBSPDM_ASSERT(requester_opaque_data_size <= SPDM_MAX_OPAQUE_DATA_SIZE);
 
+        LIBSPDM_ASSERT (spdm_request_size >= sizeof(spdm_key_exchange_request_t) + dhe_key_size +
+                        sizeof(uint16_t) + requester_opaque_data_size);
+
         libspdm_write_uint16(ptr, (uint16_t)requester_opaque_data_size);
         ptr += sizeof(uint16_t);
 
@@ -414,6 +419,9 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
     } else {
         opaque_key_exchange_req_size =
             libspdm_get_opaque_data_supported_version_data_size(spdm_context);
+        LIBSPDM_ASSERT (spdm_request_size >= sizeof(spdm_key_exchange_request_t) + dhe_key_size +
+                        sizeof(uint16_t) + opaque_key_exchange_req_size);
+
         libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
         ptr += sizeof(uint16_t);
 

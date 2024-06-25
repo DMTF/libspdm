@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -226,11 +226,16 @@ static libspdm_return_t libspdm_try_get_capabilities(libspdm_context_t *spdm_con
     spdm_request_size = message_size - transport_header_size -
                         spdm_context->local_context.capability.transport_tail_size;
 
-    libspdm_zero_mem(spdm_request, sizeof(spdm_get_capabilities_request_t));
+    LIBSPDM_ASSERT (spdm_request_size >= sizeof(spdm_request->header));
+    libspdm_zero_mem(spdm_request, spdm_request_size);
     spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+        LIBSPDM_ASSERT (spdm_request_size >= sizeof(spdm_get_capabilities_request_t));
         spdm_request_size = sizeof(spdm_get_capabilities_request_t);
     } else if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
+        LIBSPDM_ASSERT (spdm_request_size >= sizeof(spdm_get_capabilities_request_t) -
+                        sizeof(spdm_request->data_transfer_size) -
+                        sizeof(spdm_request->max_spdm_msg_size));
         spdm_request_size = sizeof(spdm_get_capabilities_request_t) -
                             sizeof(spdm_request->data_transfer_size) -
                             sizeof(spdm_request->max_spdm_msg_size);
