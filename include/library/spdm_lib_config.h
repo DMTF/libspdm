@@ -23,7 +23,7 @@
 #define LIBSPDM_DEBUG_ENABLE 1
 #endif
 
-/* The SPDM specification allows a Responder to return up to 256 version entries in the `VERSION`
+/* The SPDM specification allows a Responder to return up to 255 version entries in the `VERSION`
  * response to the Requester, including duplicate entries. For a Requester this value specifies the
  * maximum number of entries that libspdm will tolerate in a `VERSION` response before returning an
  * error. A similar macro, `SPDM_MAX_VERSION_COUNT`, exists for the Responder. However this macro
@@ -40,7 +40,7 @@
 #ifndef LIBSPDM_PSK_CONTEXT_LENGTH
 #define LIBSPDM_PSK_CONTEXT_LENGTH LIBSPDM_MAX_HASH_SIZE
 #endif
-/* This value specifies the maximum size, in bytes, of the `PSK_EXCHANGE.PSKHint` field.*/
+/* This value specifies the maximum size, in bytes, of the `PSK_EXCHANGE.PSKHint` field. */
 #ifndef LIBSPDM_PSK_MAX_HINT_LENGTH
 #define LIBSPDM_PSK_MAX_HINT_LENGTH 16
 #endif
@@ -59,18 +59,21 @@
 #ifndef LIBSPDM_MAX_SESSION_COUNT
 #define LIBSPDM_MAX_SESSION_COUNT 4
 #endif
+
 /* This value specifies the maximum size, in bytes, of a certificate chain that can be stored in a
  * libspdm context.
  */
 #ifndef LIBSPDM_MAX_CERT_CHAIN_SIZE
 #define LIBSPDM_MAX_CERT_CHAIN_SIZE 0x1000
 #endif
+
 #ifndef LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE
 #define LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE 0x1000
 #endif
 #ifndef LIBSPDM_MAX_MEASUREMENT_EXTENSION_LOG_SIZE
 #define LIBSPDM_MAX_MEASUREMENT_EXTENSION_LOG_SIZE 0x1000
 #endif
+
 /* Partial certificates can be retrieved from a Requester or Responder and through multiple messages
  * the complete certificate chain can be constructed. This value specifies the maximum size,
  * in bytes, of a partial certificate that can be sent or received.
@@ -79,9 +82,9 @@
 #define LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN 1024
 #endif
 
-/* Partial MEL(measurement extension log) can be retrieved from a Responder and through multiple messages
- * the complete MEL can be constructed. This value specifies the maximum size,
- * in bytes, of a partial MEL that can be sent or received.
+/* Partial measurement extension log (MEL) can be retrieved from a Responder and through multiple
+ * messages the complete MEL can be constructed. This value specifies the maximum size, in bytes, of
+ * a partial MEL that can be sent or received.
  */
 #ifndef LIBSPDM_MAX_MEL_BLOCK_LEN
 #define LIBSPDM_MAX_MEL_BLOCK_LEN 1024
@@ -92,6 +95,11 @@
  * whether libspdm will use a running calculation over the transcript, where requests and responses
  * are discarded as they are cryptographically consumed, or whether libspdm will buffer the entire
  * transcript before calculating the digest or signature.
+ *
+ * When LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT is 0 then a running calculation is used and less
+ * memory is needed.
+ * When LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT is 1 then the entire transcript is buffered and more
+ * memory is needed.
  */
 #ifndef LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 #define LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT 0
@@ -205,7 +213,7 @@
 #define LIBSPDM_SM3_256_SUPPORT 1
 #endif
 
-/* This can be set to 0 for the device which does not need X509 parser.*/
+/* If 1 then endpoint supports parsing X.509 certificate chains. */
 #ifndef LIBSPDM_CERT_PARSE_SUPPORT
 #define LIBSPDM_CERT_PARSE_SUPPORT 1
 #endif
@@ -237,6 +245,7 @@
 
 /* LIBSPDM_ENABLE_CAPABILITY_MEL_CAP - Enable/Disable MEL capability.*/
 
+/* SPDM 1.0 capabilities and messages. */
 #ifndef LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 #define LIBSPDM_ENABLE_CAPABILITY_CERT_CAP 1
 #endif
@@ -249,6 +258,11 @@
 #define LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP 1
 #endif
 
+#ifndef LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
+#define LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES 1
+#endif
+
+/* SPDM 1.1 capabilities. */
 #ifndef LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 #define LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP 1
 #endif
@@ -269,34 +283,33 @@
 #define LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP 1
 #endif
 
+/* SPDM 1.2 capabilities. */
 #ifndef LIBSPDM_ENABLE_CAPABILITY_CSR_CAP
 #define LIBSPDM_ENABLE_CAPABILITY_CSR_CAP 1
-#endif
-
-/*Only needed if the endpoints supports SPDM 1.3*/
-#ifndef LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX
-#define LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX 1
 #endif
 
 #ifndef LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
 #define LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP 1
 #endif
 
-/*Only needed if the endpoints supports SPDM 1.3*/
-#ifndef LIBSPDM_ENABLE_CAPABILITY_MEL_CAP
-#define LIBSPDM_ENABLE_CAPABILITY_MEL_CAP 1
-#endif
-
 #ifndef LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
 #define LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP 1
+#endif
+
+/* SPDM 1.3 capabilities. */
+#ifndef LIBSPDM_ENABLE_CAPABILITY_MEL_CAP
+#define LIBSPDM_ENABLE_CAPABILITY_MEL_CAP 1
 #endif
 
 #ifndef LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP
 #define LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP 1
 #endif
 
-#ifndef LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
-#define LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES 1
+/* Includes SPDM 1.3 features for CSR messages. If enabled then LIBSPDM_ENABLE_CAPABILITY_CSR_CAP
+ * must also be enabled.
+ */
+#ifndef LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX
+#define LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX 1
 #endif
 
 /* If 1 then endpoint supports sending GET_CERTIFICATE and GET_DIGESTS requests.
@@ -407,7 +420,8 @@
 
 /* Enable message logging.
  * See https://github.com/DMTF/libspdm/blob/main/doc/user_guide.md#message-logging
- * for more information */
+ * for more information.
+ */
 #ifndef LIBSPDM_ENABLE_MSG_LOG
 #define LIBSPDM_ENABLE_MSG_LOG 1
 #endif
@@ -417,18 +431,23 @@
 #define LIBSPDM_CHECK_MACRO 0
 #endif
 
-/* Enable checks to the SPDM context during runtime. */
+/* Enable compilation of libspdm_check_context function. After a libspdm context has been
+ * configured libspdm_check_context can be called to check that its configuration is correct.
+ */
 #ifndef LIBSPDM_CHECK_SPDM_CONTEXT
 #define LIBSPDM_CHECK_SPDM_CONTEXT 1
 #endif
 
 /* Enable passing the SPDM context to HAL functions.
- * This macro will be removed when libspdm 4.0 is released. */
+ * This macro will be removed when libspdm 4.0 is released.
+ */
 #ifndef LIBSPDM_HAL_PASS_SPDM_CONTEXT
 #define LIBSPDM_HAL_PASS_SPDM_CONTEXT 0
 #endif
 
-/* Enable additional checks for cert. */
+/* Enable additional checks for certificates.
+ * This macro will be removed when libspdm 4.0 is released.
+ */
 #ifndef LIBSPDM_ADDITIONAL_CHECK_CERT
 #define LIBSPDM_ADDITIONAL_CHECK_CERT 0
 #endif
