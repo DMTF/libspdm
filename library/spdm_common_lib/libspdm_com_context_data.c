@@ -2947,11 +2947,14 @@ libspdm_return_t libspdm_init_context_with_secured_context(void *spdm_context,
                                                      SPDM_VERSION_NUMBER_SHIFT_BIT;
     context->local_context.version.spdm_version[3] = SPDM_MESSAGE_VERSION_13 <<
                                                      SPDM_VERSION_NUMBER_SHIFT_BIT;
-    context->local_context.secured_message_version.spdm_version_count = 2;
+    context->local_context.secured_message_version.spdm_version_count =
+        SECURED_SPDM_MAX_VERSION_COUNT;
     context->local_context.secured_message_version.spdm_version[0] =
-        SPDM_MESSAGE_VERSION_10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        SECURED_SPDM_VERSION_10 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     context->local_context.secured_message_version.spdm_version[1] =
-        SPDM_MESSAGE_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+        SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
+    context->local_context.secured_message_version.spdm_version[2] =
+        SECURED_SPDM_VERSION_12 << SPDM_VERSION_NUMBER_SHIFT_BIT;
     context->local_context.capability.st1 = SPDM_ST1_VALUE_US;
 
     context->mut_auth_cert_chain_buffer_size = 0;
