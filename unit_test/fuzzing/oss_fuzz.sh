@@ -114,6 +114,8 @@ test_spdm_responder_end_session
 test_spdm_responder_if_ready
 test_spdm_requester_vendor_cmds
 test_spdm_responder_vendor_cmds
+test_spdm_responder_measurement_extension_log
+test_spdm_requester_get_measurement_extension_log
 )
 
 for ((i=0;i<${#cmds[*]};i++))
