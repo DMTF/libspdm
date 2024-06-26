@@ -1017,6 +1017,8 @@ else()
             add_subdirectory(unit_test/fuzzing/test_requester/test_spdm_requester_get_event_types)
             add_subdirectory(unit_test/fuzzing/test_requester/test_spdm_requester_vendor_cmds)
             add_subdirectory(unit_test/fuzzing/test_responder/test_spdm_responder_vendor_cmds)
+            add_subdirectory(unit_test/fuzzing/test_requester/test_spdm_requester_get_measurement_extension_log)
+            add_subdirectory(unit_test/fuzzing/test_responder/test_spdm_responder_measurement_extension_log)
             endif()
 
             add_subdirectory(os_stub/cryptlib_null)

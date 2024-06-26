@@ -160,6 +160,8 @@ test_spdm_responder_supported_event_types
 test_spdm_requester_get_event_types
 test_spdm_requester_vendor_cmds
 test_spdm_responder_vendor_cmds
+test_spdm_responder_measurement_extension_log
+test_spdm_requester_get_measurement_extension_log
 )
 
 export FUZZ_START_TIME=`date +%Y-%m-%d_%H:%M:%S`

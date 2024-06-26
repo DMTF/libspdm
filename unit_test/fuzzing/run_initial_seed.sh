@@ -51,6 +51,8 @@ test_spdm_responder_if_ready
 test_x509_certificate_check
 test_spdm_requester_vendor_cmds
 test_spdm_responder_vendor_cmds
+test_spdm_responder_measurement_extension_log
+test_spdm_requester_get_measurement_extension_log
 )
 
 flag=0
