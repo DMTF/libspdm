@@ -10,6 +10,8 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_MEL_CAP
 
+#define LIBSPDM_MAX_MEASUREMENT_EXTENSION_LOG_SIZE 0x1000
+
 uint8_t m_libspdm_mel_test[LIBSPDM_MAX_MEASUREMENT_EXTENSION_LOG_SIZE];
 size_t m_libspdm_mel_len;
 uint8_t m_libspdm_mel_number;

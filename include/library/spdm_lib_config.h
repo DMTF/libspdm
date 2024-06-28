@@ -70,9 +70,6 @@
 #ifndef LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE
 #define LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE 0x1000
 #endif
-#ifndef LIBSPDM_MAX_MEASUREMENT_EXTENSION_LOG_SIZE
-#define LIBSPDM_MAX_MEASUREMENT_EXTENSION_LOG_SIZE 0x1000
-#endif
 
 /* Partial certificates can be retrieved from a Requester or Responder and through multiple messages
  * the complete certificate chain can be constructed. This value specifies the maximum size,
