@@ -10,9 +10,10 @@
 
 #if LIBSPDM_CERT_PARSE_SUPPORT
 /*set_cert verify cert_chain*/
-static bool libspdm_set_cert_verify_certchain(const uint8_t *cert_chain, size_t cert_chain_size,
+static bool libspdm_set_cert_verify_certchain(uint8_t spdm_version,
+                                              const uint8_t *cert_chain, size_t cert_chain_size,
                                               uint32_t base_asym_algo, uint32_t base_hash_algo,
-                                              bool is_device_cert_model)
+                                              uint8_t cert_model)
 {
     const uint8_t *root_cert_buffer;
     size_t root_cert_buffer_size;
@@ -39,11 +40,22 @@ static bool libspdm_set_cert_verify_certchain(const uint8_t *cert_chain, size_t 
         return false;
     }
 
-    /*verify leaf cert*/
-    if (!libspdm_x509_set_cert_certificate_check(leaf_cert_buffer, leaf_cert_buffer_size,
-                                                 base_asym_algo, base_hash_algo,
-                                                 false, is_device_cert_model)) {
-        return false;
+    if (spdm_version == SPDM_MESSAGE_VERSION_12) {
+        const bool is_device_cert_model =
+            (cert_model == SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT);
+
+        /*verify leaf cert*/
+        if (!libspdm_x509_set_cert_certificate_check(leaf_cert_buffer, leaf_cert_buffer_size,
+                                                     base_asym_algo, base_hash_algo,
+                                                     false, is_device_cert_model)) {
+            return false;
+        }
+    } else {
+        if (!libspdm_x509_set_cert_certificate_check_ex(leaf_cert_buffer, leaf_cert_buffer_size,
+                                                        base_asym_algo, base_hash_algo,
+                                                        false, cert_model)) {
+            return false;
+        }
     }
 
     return true;
@@ -58,8 +70,10 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
     spdm_set_certificate_response_t *spdm_response;
 
     bool result;
+    uint8_t spdm_version;
     uint8_t slot_id;
     bool erase;
+    uint8_t set_cert_model;
 
     size_t root_cert_hash_size;
     const spdm_cert_chain_t *cert_chain_header;
@@ -69,21 +83,21 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
 
-    bool is_device_cert_model;
-
     spdm_request = request;
 
     /* -=[Check Parameters Phase]=- */
     LIBSPDM_ASSERT(spdm_request->header.request_response_code == SPDM_SET_CERTIFICATE);
 
-    if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_12) {
+    spdm_version = libspdm_get_connection_version(spdm_context);
+
+    if (spdm_version < SPDM_MESSAGE_VERSION_12) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
                                                SPDM_SET_CERTIFICATE,
                                                response_size, response);
     }
 
-    if (spdm_request->header.spdm_version != libspdm_get_connection_version(spdm_context)) {
+    if (spdm_request->header.spdm_version != spdm_version) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_VERSION_MISMATCH, 0,
                                                response_size, response);
@@ -153,13 +167,13 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
     root_cert_hash_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
 
-    if (libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_13) {
-        const uint8_t set_cert_model =
+    if (spdm_version >= SPDM_MESSAGE_VERSION_13) {
+        const uint8_t key_pair_id = spdm_request->header.param2;
+
+        set_cert_model =
             (spdm_request->header.param1 &
              SPDM_SET_CERTIFICATE_REQUEST_ATTRIBUTES_CERT_MODEL_MASK) >>
             SPDM_SET_CERTIFICATE_REQUEST_ATTRIBUTES_CERT_MODEL_OFFSET;
-        const uint8_t key_pair_id = spdm_request->header.param2;
-
         erase = (spdm_request->header.param1 & SPDM_SET_CERTIFICATE_REQUEST_ATTRIBUTES_ERASE) != 0;
 
         if (spdm_context->connection_info.multi_key_conn_rsp) {
@@ -182,10 +196,23 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
                                                        SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                        response_size, response);
             }
+            if ((spdm_context->local_context.capability.flags &
+                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP) != 0) {
+                set_cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT;
+            } else {
+                set_cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT;
+            }
+        }
+    } else {
+        if ((spdm_context->local_context.capability.flags &
+             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP) != 0) {
+            set_cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT;
+        } else {
+            set_cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT;
         }
     }
 
-    if ((libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_13) && erase) {
+    if ((spdm_version >= SPDM_MESSAGE_VERSION_13) && erase) {
         /*the CertChain field shall be absent;the value of SetCertModel shall be zero*/
         if ((request_size < sizeof(spdm_set_certificate_request_t)) ||
             ((spdm_request->header.param1 &
@@ -237,18 +264,13 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
         cert_chain = (const void*)((const uint8_t *)cert_chain
                                    + sizeof(spdm_cert_chain_t) + root_cert_hash_size);
 
-        is_device_cert_model = false;
-        if((spdm_context->local_context.capability.flags &
-            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP) == 0) {
-            is_device_cert_model = true;
-        }
-
 #if LIBSPDM_CERT_PARSE_SUPPORT
         /*check the cert_chain*/
-        result = libspdm_set_cert_verify_certchain(cert_chain, cert_chain_size,
+        result = libspdm_set_cert_verify_certchain(spdm_version,
+                                                   cert_chain, cert_chain_size,
                                                    spdm_context->connection_info.algorithm.base_asym_algo,
                                                    spdm_context->connection_info.algorithm.base_hash_algo,
-                                                   is_device_cert_model);
+                                                   set_cert_model);
         if (!result) {
             return libspdm_generate_error_response(spdm_context,
                                                    SPDM_ERROR_CODE_UNSPECIFIED, 0,
