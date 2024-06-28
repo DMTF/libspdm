@@ -917,7 +917,10 @@ bool libspdm_x509_certificate_check_ex(const uint8_t *cert, size_t cert_size,
                                        uint32_t base_asym_algo, uint32_t base_hash_algo,
                                        bool is_requester, uint8_t cert_model);
 /**
- * Certificate Check for SPDM leaf cert when set_cert.
+ * Certificate Check for SPDM leaf cert when set_cert. It is used for SPDM 1.2.
+ *
+ * This function differs from libspdm_x509_set_cert_certificate_check_ex in that in SPDM 1.2 the
+ * BasicConstraints CA field is optional while in SPDM 1.3 and later it is mandatory.
  *
  * @param[in]  cert                  Pointer to the DER-encoded certificate data.
  * @param[in]  cert_size             The size of certificate data in bytes.
@@ -935,7 +938,10 @@ bool libspdm_x509_set_cert_certificate_check(const uint8_t *cert, size_t cert_si
                                              bool is_requester, bool is_device_cert_model);
 
 /**
- * Certificate Check for SPDM leaf cert when set_cert. It is used for SPDM 1.3.
+ * Certificate Check for SPDM leaf cert when set_cert. It is used for SPDM 1.3 and later.
+ *
+ * This function differs from libspdm_x509_set_cert_certificate_check in that in SPDM 1.2 the
+ * BasicConstraints CA field is optional while in SPDM 1.3 and later it is mandatory.
  *
  * @param[in]  cert                  Pointer to the DER-encoded certificate data.
  * @param[in]  cert_size             The size of certificate data in bytes.
