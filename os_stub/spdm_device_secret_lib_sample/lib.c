@@ -1209,7 +1209,7 @@ size_t libspdm_fill_measurement_hem_block (
     size_t hash_size;
     spdm_measurement_extension_log_dmtf_t *measurement_extension_log;
     spdm_mel_entry_dmtf_t *mel_entry;
-    uint8_t index;
+    uint32_t index;
     uint8_t *verify_hem;
 
     if (measurement_hash_algo == SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_RAW_BIT_STREAM_ONLY) {
