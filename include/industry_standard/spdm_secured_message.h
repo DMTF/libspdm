@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -51,11 +51,12 @@
  *                AssociatedData           AeadTag
  */
 
-/* 2 means SPDM secured message version 1.0, 1.1 */
-#define SECURED_SPDM_MAX_VERSION_COUNT 2
+/* 3 means SPDM secured message version 1.0, 1.1, 1.2 */
+#define SECURED_SPDM_MAX_VERSION_COUNT 3
 /* the DSP0277 specification version */
 #define SECURED_SPDM_VERSION_10 0x10
 #define SECURED_SPDM_VERSION_11 0x11
+#define SECURED_SPDM_VERSION_12 0x12
 
 typedef struct {
     uint32_t session_id;

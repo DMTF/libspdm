@@ -8,7 +8,7 @@
 
    [DSP0274](https://www.dmtf.org/dsp/DSP0274)  Security Protocol and Data Model (SPDM) Specification (version [1.0.2](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.0.2.pdf), version [1.1.3](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.1.3.pdf), version [1.2.2](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.2.2.pdf) and version [1.3.0](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.3.0.pdf))
 
-   [DSP0277](https://www.dmtf.org/dsp/DSP0277)  Secured Messages using SPDM Specification (version [1.1.0](https://www.dmtf.org/sites/default/files/standards/documents/DSP0277_1.1.0.pdf))
+   [DSP0277](https://www.dmtf.org/dsp/DSP0277)  Secured Messages using SPDM Specification (version [1.0.1](https://www.dmtf.org/sites/default/files/standards/documents/DSP0277_1.0.1.pdf), version [1.1.1](https://www.dmtf.org/sites/default/files/standards/documents/DSP0277_1.1.1.pdf), version [1.2.0](https://www.dmtf.org/sites/default/files/standards/documents/DSP0277_1.2.0.pdf))
 
    MCTP and secured MCTP follow :
 
