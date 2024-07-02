@@ -22,8 +22,11 @@ int libspdm_responder_challenge_auth_test_main(void);
 
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 int libspdm_responder_measurements_test_main(void);
-int libspdm_responder_measurement_extension_log_test_main(void);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP*/
+
+#if LIBSPDM_ENABLE_CAPABILITY_MEL_CAP
+int libspdm_responder_measurement_extension_log_test_main(void);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MEL_CAP*/
 
 #if LIBSPDM_RESPOND_IF_READY_SUPPORT
 #if (LIBSPDM_ENABLE_CAPABILITY_CERT_CAP || LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP || \
@@ -118,10 +121,13 @@ int main(void)
     if (libspdm_responder_measurements_test_main() != 0) {
         return_value = 1;
     }
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP*/
+
+    #if LIBSPDM_ENABLE_CAPABILITY_MEL_CAP
     if (libspdm_responder_measurement_extension_log_test_main() != 0) {
         return_value = 1;
     }
-    #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP*/
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_MEL_CAP*/
 
     #if LIBSPDM_RESPOND_IF_READY_SUPPORT
     #if (LIBSPDM_ENABLE_CAPABILITY_CERT_CAP || LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP || \
