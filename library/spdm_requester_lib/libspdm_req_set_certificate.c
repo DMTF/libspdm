@@ -93,6 +93,7 @@ static libspdm_return_t libspdm_try_set_certificate(libspdm_context_t *spdm_cont
     spdm_request_size = message_size - transport_header_size -
                         spdm_context->local_context.capability.transport_tail_size;
 
+    LIBSPDM_ASSERT(spdm_request_size >= sizeof(spdm_set_certificate_request_t));
     spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request->header.request_response_code = SPDM_SET_CERTIFICATE;
     spdm_request->header.param1 = slot_id & SPDM_SET_CERTIFICATE_REQUEST_SLOT_ID_MASK;
@@ -126,6 +127,8 @@ static libspdm_return_t libspdm_try_set_certificate(libspdm_context_t *spdm_cont
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
 
+        LIBSPDM_ASSERT(spdm_request_size >=
+                       sizeof(spdm_set_certificate_request_t) + cert_chain_size);
         libspdm_copy_mem(spdm_request + 1,
                          spdm_request_size - sizeof(spdm_set_certificate_request_t),
                          (uint8_t *)cert_chain, cert_chain_size);

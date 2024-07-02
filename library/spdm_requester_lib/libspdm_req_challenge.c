@@ -109,13 +109,17 @@ static libspdm_return_t libspdm_try_challenge(libspdm_context_t *spdm_context,
     spdm_request_size = message_size - transport_header_size -
                         spdm_context->local_context.capability.transport_tail_size;
 
+    LIBSPDM_ASSERT (spdm_request_size >= sizeof(spdm_challenge_request_t));
     spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
     spdm_request->header.request_response_code = SPDM_CHALLENGE;
     spdm_request->header.param1 = slot_id;
     spdm_request->header.param2 = measurement_hash_type;
-    spdm_request_size = sizeof(spdm_challenge_request_t);
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+        LIBSPDM_ASSERT (spdm_request_size >= sizeof(spdm_challenge_request_t) +
+                        SPDM_REQ_CONTEXT_SIZE);
         spdm_request_size = sizeof(spdm_challenge_request_t) + SPDM_REQ_CONTEXT_SIZE;
+    } else {
+        spdm_request_size = sizeof(spdm_challenge_request_t);
     }
     if (requester_nonce_in == NULL) {
         if(!libspdm_get_random_number(SPDM_NONCE_SIZE, spdm_request->nonce)) {
