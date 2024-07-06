@@ -106,10 +106,7 @@ extern void libspdm_debug_assert(const char *file_name, size_t line_number,
 #if LIBSPDM_DEBUG_BLOCK_ENABLE
 #define LIBSPDM_DEBUG_CODE(expression) \
     do { \
-        uint8_t __debug_code_local; \
         expression \
-            __debug_code_local = 0; \
-        __debug_code_local++; \
     } while (false)
 #else
 #define LIBSPDM_DEBUG_CODE(expression)
