@@ -25,14 +25,14 @@ libspdm follows that for SPDM 1.1+. Because the definition aligns with existing 
 
 ## Endianness of AEAD IV
 
-Versions 1.2 of the Secured Messages using SPDM specification describes:
-* The sequence number shall be encoded as little endian in memory.
-
-When the negotiated Secured Messages using SPDM version is 1.2 or later libspdm follows this definition.
+Version 1.2 of the Secured Messages using SPDM specification explicitly specifies the endianness of
+the sequence number used to construct the AEAD IV as little endian. When the negotiated secured
+message version of the session is 1.2 libspdm unconditionally uses little endian.
 
 Versions 1.0 and 1.1 of the Secured Messages using SPDM specification do not explicitly specify how
 the AEAD IV is formed. In particular the endianness of the sequence number is either missing (1.0)
 or ill-defined (1.1). libspdm allows an Integrator to specify the endianness encoding of the
 sequence number through `LIBSPDM_DATA_SEQUENCE_NUMBER_ENDIAN` when the negotiated Secured SPDM
 version is 1.0 or 1.1. The default value is `LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_LITTLE`.
-Please refer to [common_api](https://github.com/DMTF/libspdm/blob/main/doc/api/common_api.md).
+Refer to [common_api](https://github.com/DMTF/libspdm/blob/main/doc/api/common_api.md) for more
+information.
