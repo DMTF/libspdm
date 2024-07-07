@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -84,8 +84,19 @@ void libspdm_session_info_init(libspdm_context_t *spdm_context,
     session_info->use_psk = use_psk;
     libspdm_secured_message_set_use_psk(session_info->secured_message_context, use_psk);
     libspdm_secured_message_set_session_type(session_info->secured_message_context, session_type);
-    libspdm_secured_message_set_sequence_number_endian(session_info->secured_message_context,
-                                                       spdm_context->sequence_number_endian);
+
+    /* 277 1.2 explicitly specifies a little-endian sequence number. 1.0 and 1.1 leave it up to the
+     * Integrator to specify. */
+    if ((spdm_context->connection_info.secured_message_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) >=
+        SECURED_SPDM_VERSION_12) {
+        libspdm_secured_message_set_sequence_number_endian(
+            session_info->secured_message_context,
+            LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_LITTLE);
+    } else {
+        libspdm_secured_message_set_sequence_number_endian(session_info->secured_message_context,
+                                                           spdm_context->sequence_number_endian);
+    }
+
     libspdm_secured_message_set_max_spdm_session_sequence_number(
         session_info->secured_message_context, spdm_context->max_spdm_session_sequence_number);
     libspdm_secured_message_set_algorithms(
