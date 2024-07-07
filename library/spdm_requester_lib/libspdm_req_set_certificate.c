@@ -60,6 +60,12 @@ static libspdm_return_t libspdm_try_set_certificate(libspdm_context_t *spdm_cont
             (request_attribute & SPDM_SET_CERTIFICATE_REQUEST_ATTRIBUTES_CERT_MODEL_MASK) >>
             SPDM_SET_CERTIFICATE_REQUEST_ATTRIBUTES_CERT_MODEL_OFFSET;
 
+        /* Bit[0~3] of request_attribute must be 0 since this value is provided by the slot_id
+         * parameter. */
+        if ((request_attribute & SPDM_SET_CERTIFICATE_REQUEST_SLOT_ID_MASK) != 0) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+
         /* SET_CERT_CAP for a 1.2 Responder is not checked because it was not defined
          * in SPDM 1.2.0. */
         if (!libspdm_is_capabilities_flag_supported(
@@ -119,11 +125,6 @@ static libspdm_return_t libspdm_try_set_certificate(libspdm_context_t *spdm_cont
     spdm_request->header.param2 = 0;
 
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
-        /*And the bit[0~3] of request_attribute must be 0.*/
-        if ((request_attribute & SPDM_SET_CERTIFICATE_REQUEST_SLOT_ID_MASK) != 0) {
-            return LIBSPDM_STATUS_INVALID_PARAMETER;
-        }
-
         if ((request_attribute & SPDM_SET_CERTIFICATE_REQUEST_ATTRIBUTES_ERASE) != 0) {
             /*the CertChain field shall be absent*/
             cert_chain_size = 0;
@@ -131,6 +132,8 @@ static libspdm_return_t libspdm_try_set_certificate(libspdm_context_t *spdm_cont
             spdm_request->header.param1 &= ~SPDM_SET_CERTIFICATE_REQUEST_ATTRIBUTES_CERT_MODEL_MASK;
             /*set Erase bit */
             spdm_request->header.param1 |= SPDM_SET_CERTIFICATE_REQUEST_ATTRIBUTES_ERASE;
+        } else {
+            spdm_request->header.param1 |= request_attribute;
         }
 
         if (spdm_context->connection_info.multi_key_conn_rsp) {
@@ -143,6 +146,7 @@ static libspdm_return_t libspdm_try_set_certificate(libspdm_context_t *spdm_cont
     if ((libspdm_get_connection_version (spdm_context) < SPDM_MESSAGE_VERSION_13) ||
         (cert_chain_size != 0)) {
         if (cert_chain == NULL) {
+            libspdm_release_sender_buffer (spdm_context);
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
 
