@@ -336,6 +336,8 @@ Enumeration value used for the `libspdm_set_data` and/or `libspdm_get_data` func
       endianness to the opposite value and try again with session establishment. Once a session has
       been successfully established, the correct endianness can be queried from
       `LIBSPDM_DATA_SESSION_SEQUENCE_NUMBER_ENDIAN`.
+    - When the negotiated secured SPDM version is 1.2 or greater then libspdm unconditionally uses
+      `LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_LITTLE`.
 - `LIBSPDM_DATA_MULTI_KEY_CONN_REQ`
     - Specifies the Requester's multi-key state for the connection. This is set following
       `NEGOTIATE_ALGORITHMS / ALGORITHMS`.
@@ -343,7 +345,6 @@ Enumeration value used for the `libspdm_set_data` and/or `libspdm_get_data` func
         - If `false` then Requester does not support multi-key capabilities and only supports a
           single asymmetric key during the connection.
     - Only `LIBSPDM_DATA_LOCATION_CONNECTION` is allowed.
-
 - `LIBSPDM_DATA_MULTI_KEY_CONN_RSP`
     - Specifies the Responder's multi-key state for the connection. This is set following
       `NEGOTIATE_ALGORITHMS / ALGORITHMS`.
