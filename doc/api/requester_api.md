@@ -446,6 +446,34 @@ Before calling this function a secure session must first be established via `lib
 <br/><br/>
 
 
+---
+### libspdm_get_measurement_extension_log
+---
+
+### Description
+Sends `GET_MEASUREMENT_EXTENSION_LOG` to retrieve the measurement extension log from the Responder.
+
+### Parameters
+
+**spdm_context**<br/>
+The SPDM context.
+
+**session_id**<br/>
+Indicates if it is a secured message (non-NULL) or an unsecured message (NULL).
+
+**mel_size**<br/>
+On input, indicates the size, in bytes, of the buffer in which the measurement extension log will be
+stored.
+On output, indicates the size, in bytes, of the measurement extension log.
+
+**measure_exten_log**<br/>
+A pointer to a buffer to store the measurement extension log.
+
+### Details
+TBD
+<br/><br/>
+
+
 ## Message Logging
 libspdm allows an Integrator to log request and response messages to an Integrator-provided buffer.
 It is currently only supported by a Requester. In the future it may be supported by a Responder, in
