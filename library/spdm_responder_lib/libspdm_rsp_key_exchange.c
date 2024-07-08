@@ -501,6 +501,7 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
 
     ptr += dhe_key_size;
 
+#if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
     if (libspdm_is_capabilities_flag_supported(
             spdm_context, false, 0, SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
 
@@ -525,6 +526,8 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,
                                                response_size, response);
     }
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
+
     ptr += measurement_summary_hash_size;
 
     libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_rsp_size);

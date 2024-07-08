@@ -218,9 +218,9 @@ libspdm_return_t libspdm_get_response_challenge_auth(libspdm_context_t *spdm_con
 
     measurement_summary_hash = ptr;
 
+#if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
     if (libspdm_is_capabilities_flag_supported(
             spdm_context, false, 0, SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
-
         result = libspdm_generate_measurement_summary_hash(
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT
             spdm_context,
@@ -241,6 +241,8 @@ libspdm_return_t libspdm_get_response_challenge_auth(libspdm_context_t *spdm_con
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,
                                                response_size, response);
     }
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
+
     ptr += measurement_summary_hash_size;
 
     opaque_data_size = *response_size - (sizeof(spdm_challenge_auth_response_t) + hash_size +

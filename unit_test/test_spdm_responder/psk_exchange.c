@@ -913,7 +913,9 @@ void libspdm_test_responder_psk_exchange_case10(void **state)
     libspdm_context_t *spdm_context;
     size_t response_size;
     uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
     uint32_t measurement_summary_hash_size;
     spdm_psk_exchange_response_t *spdm_response;
     void *data1;
@@ -1002,6 +1004,8 @@ void libspdm_test_responder_psk_exchange_case10(void **state)
 
     measurement_summary_hash_size = libspdm_get_measurement_summary_hash_size(
         spdm_context, false, m_libspdm_psk_exchange_request4.header.param1);
+
+#if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
     libspdm_generate_measurement_summary_hash(
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT
         spdm_context,
@@ -1013,11 +1017,13 @@ void libspdm_test_responder_psk_exchange_case10(void **state)
         m_libspdm_psk_exchange_request4.header.param1,
         measurement_hash,
         measurement_summary_hash_size);
+
     assert_memory_equal(
         (uint8_t *)response +
         sizeof(spdm_psk_exchange_response_t),
         measurement_hash,
         measurement_summary_hash_size);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_m.buffer_size,
@@ -1033,7 +1039,9 @@ void libspdm_test_responder_psk_exchange_case11(void **state)
     libspdm_context_t *spdm_context;
     size_t response_size;
     uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
     uint32_t measurement_summary_hash_size;
     spdm_psk_exchange_response_t *spdm_response;
     void *data1;
@@ -1122,6 +1130,8 @@ void libspdm_test_responder_psk_exchange_case11(void **state)
 
     measurement_summary_hash_size = libspdm_get_measurement_summary_hash_size(
         spdm_context, false, m_libspdm_psk_exchange_request5.header.param1);
+
+#if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
     libspdm_generate_measurement_summary_hash(
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT
         spdm_context,
@@ -1133,11 +1143,13 @@ void libspdm_test_responder_psk_exchange_case11(void **state)
         m_libspdm_psk_exchange_request5.header.param1,
         measurement_hash,
         measurement_summary_hash_size);
+
     assert_memory_equal(
         (uint8_t *)response +
         sizeof(spdm_psk_exchange_response_t),
         measurement_hash,
         measurement_summary_hash_size);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     assert_int_equal(spdm_context->transcript.message_m.buffer_size,

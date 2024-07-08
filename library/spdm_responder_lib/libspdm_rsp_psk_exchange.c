@@ -319,6 +319,7 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
 
     ptr = (void *)(spdm_response + 1);
 
+#if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
     if (libspdm_is_capabilities_flag_supported(
             spdm_context, false, 0,  SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
 
@@ -343,6 +344,8 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,
                                                response_size, response);
     }
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
+
     ptr += measurement_summary_hash_size;
 
     if (context_length != 0) {
