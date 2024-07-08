@@ -707,7 +707,9 @@ void libspdm_test_responder_key_exchange_case8(void **state)
     libspdm_context_t *spdm_context;
     size_t response_size;
     uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+#if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
     uint32_t measurement_summary_hash_size;
     spdm_key_exchange_response_t *spdm_response;
     void *data1;
@@ -792,6 +794,7 @@ void libspdm_test_responder_key_exchange_case8(void **state)
 
     measurement_summary_hash_size = libspdm_get_measurement_summary_hash_size(
         spdm_context, false, m_libspdm_key_exchange_request3.header.param1);
+#if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
     libspdm_generate_measurement_summary_hash(
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT
         spdm_context,
@@ -810,6 +813,7 @@ void libspdm_test_responder_key_exchange_case8(void **state)
         dhe_key_size,
         measurement_hash,
         measurement_summary_hash_size);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
     free(data1);
 }
 
@@ -820,7 +824,9 @@ void libspdm_test_responder_key_exchange_case9(void **state)
     libspdm_context_t *spdm_context;
     size_t response_size;
     uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+#if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
     uint8_t measurement_hash[LIBSPDM_MAX_HASH_SIZE];
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
     uint32_t measurement_summary_hash_size;
     spdm_key_exchange_response_t *spdm_response;
     void *data1;
@@ -906,6 +912,7 @@ void libspdm_test_responder_key_exchange_case9(void **state)
 
     measurement_summary_hash_size = libspdm_get_measurement_summary_hash_size(
         spdm_context, false, m_libspdm_key_exchange_request4.header.param1);
+#if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
     libspdm_generate_measurement_summary_hash(
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT
         spdm_context,
@@ -924,6 +931,7 @@ void libspdm_test_responder_key_exchange_case9(void **state)
         dhe_key_size,
         measurement_hash,
         measurement_summary_hash_size);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
 
     session_id = (m_libspdm_key_exchange_request4.req_session_id << 16) |
                  spdm_response->rsp_session_id;

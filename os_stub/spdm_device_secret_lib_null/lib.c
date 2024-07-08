@@ -50,34 +50,6 @@ bool libspdm_measurement_opaque_data(
     return false;
 }
 
-bool libspdm_challenge_opaque_data(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
-    void *spdm_context,
-#endif
-    spdm_version_number_t spdm_version,
-    uint8_t slot_id,
-    uint8_t *measurement_summary_hash,
-    size_t measurement_summary_hash_size,
-    void *opaque_data,
-    size_t *opaque_data_size)
-{
-    return false;
-}
-
-bool libspdm_encap_challenge_opaque_data(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
-    void *spdm_context,
-#endif
-    spdm_version_number_t spdm_version,
-    uint8_t slot_id,
-    uint8_t *measurement_summary_hash,
-    size_t measurement_summary_hash_size,
-    void *opaque_data,
-    size_t *opaque_data_size)
-{
-    return false;
-}
-
 bool libspdm_generate_measurement_summary_hash(
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT
     void *spdm_context,
@@ -93,6 +65,38 @@ bool libspdm_generate_measurement_summary_hash(
     return false;
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
+
+#if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
+bool libspdm_challenge_opaque_data(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+    void *spdm_context,
+#endif
+    spdm_version_number_t spdm_version,
+    uint8_t slot_id,
+    uint8_t *measurement_summary_hash,
+    size_t measurement_summary_hash_size,
+    void *opaque_data,
+    size_t *opaque_data_size)
+{
+    return false;
+}
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP */
+
+#if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
+bool libspdm_encap_challenge_opaque_data(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+    void *spdm_context,
+#endif
+    spdm_version_number_t spdm_version,
+    uint8_t slot_id,
+    uint8_t *measurement_summary_hash,
+    size_t measurement_summary_hash_size,
+    void *opaque_data,
+    size_t *opaque_data_size)
+{
+    return false;
+}
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_MEL_CAP
 /*Collect the measurement extension log.*/
