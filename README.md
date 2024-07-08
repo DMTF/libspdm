@@ -32,13 +32,13 @@
 
 4) Implemented Requests and Responses
 
-   SPDM 1.0: `GET_VERSION`, `GET_CAPABILITIES`, `NEGOTIATE_ALGORITHMS`, `GET_DIGESTS`, `GET_CERTIFICATE`, `CHALLENGE`, and `GET_MEASUREMENTS`.
+   SPDM 1.0: `GET_VERSION`, `GET_CAPABILITIES`, `NEGOTIATE_ALGORITHMS`, `GET_DIGESTS`, `GET_CERTIFICATE`, `CHALLENGE`, `GET_MEASUREMENTS`, and `VENDOR_DEFINED_REQUEST`.
 
    SPDM 1.1: `KEY_EXCHANGE`, `FINISH`, `PSK_EXCHANGE`, `PSK_FINISH`, `END_SESSION`, `HEARTBEAT`, `KEY_UPDATE`, and `ENCAPSULATED` messages.
 
    SPDM 1.2: `GET_CSR`, `SET_CERTIFICATE`, `CHUNK_SEND`, and `CHUNK_GET`.
 
-   SPDM 1.3: `GET_SUPPORTED_EVENT_TYPES`. Additional SPDM 1.3 messages will be implemented in future releases.
+   SPDM 1.3: `GET_SUPPORTED_EVENT_TYPES` and `GET_MEASUREMENT_EXTENSION_LOG`. Additional SPDM 1.3 messages will be implemented in future releases.
 
 5) Cryptography Support
 
@@ -63,7 +63,7 @@
 
    Support to build an OS application for spdm_requester_emu and spdm_responder_emu to trace communication between Requester and Responder.
 
-   Support to be included in UEFI host environment [EDKII](https://github.com/tianocore/edk2), such as [edkii_spdm_requester](https://github.com/jyao1/edk2/tree/DeviceSecurity/DeviceSecurityPkg)
+   Support is included in UEFI host environment [EDKII](https://github.com/tianocore/edk2/tree/master/SecurityPkg/DeviceSecurity).
 
    Support to be included in [OpenBMC](https://github.com/openbmc). It is in planning, see [SPDM Integration](https://www.youtube.com/watch?v=PmgXkLJYI-E).
 
@@ -71,7 +71,7 @@
 
    Support interoperability testing with other SPDM implementations. For example, [intel-server-prot-spdm](https://github.com/intel/intel-server-prot-spdm) and [spdm-rs](https://github.com/ccc-spdm-tools/spdm-rs).
 
-7) Supported Architecture and Cross-Compiler based on X64 platform.
+7) Supported architecture and cross-compiler based on X64 platform.
 
 | Windows System  | ia32 | x64 | arm | aarch64 | riscv32 | riscv64 |
 | --------------- | ---- | --- | --- | ------- | ------- | ------- |
