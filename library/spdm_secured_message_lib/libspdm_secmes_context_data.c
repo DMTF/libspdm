@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -137,13 +137,7 @@ void libspdm_secured_message_set_algorithms(void *spdm_secured_message_context,
         secured_message_context->aead_cipher_suite);
 }
 
-/**
- * Set the psk_hint to an SPDM secured message context.
- *
- * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- * @param  psk_hint                      Indicate the PSK hint.
- * @param  psk_hint_size                  The size in bytes of the PSK hint.
- */
+#if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
 void libspdm_secured_message_set_psk_hint(void *spdm_secured_message_context,
                                           const void *psk_hint,
                                           size_t psk_hint_size)
@@ -159,6 +153,7 @@ void libspdm_secured_message_set_psk_hint(void *spdm_secured_message_context,
                          psk_hint_size);
     }
 }
+#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
 
 /**
  * Set the maximum sequence_number to an SPDM secured message context.

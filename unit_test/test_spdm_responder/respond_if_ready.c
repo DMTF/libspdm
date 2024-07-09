@@ -192,6 +192,7 @@ typedef struct {
     uint8_t verify_data[LIBSPDM_MAX_HASH_SIZE];
 } libspdm_finish_request_mine_t;
 
+#if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
 typedef struct {
     spdm_message_header_t header;
     uint16_t req_session_id;
@@ -207,6 +208,7 @@ typedef struct {
     spdm_message_header_t header;
     uint8_t verify_data[LIBSPDM_MAX_HASH_SIZE];
 } libspdm_psk_finish_request_mine_t;
+#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
 
 #pragma pack()
 
@@ -230,6 +232,7 @@ libspdm_finish_request_mine_t m_libspdm_finish_request = {
 };
 size_t m_libspdm_finish_request_size = sizeof(m_libspdm_finish_request);
 
+#if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
 libspdm_psk_exchange_request_mine_t m_libspdm_psk_exchange_request = {
     {
         SPDM_MESSAGE_VERSION_11,
@@ -249,6 +252,7 @@ libspdm_psk_finish_request_mine_t m_libspdm_psk_finish_request = {
     },
 };
 size_t m_libspdm_psk_finish_request_size = sizeof(m_libspdm_psk_finish_request);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
 
 spdm_end_session_request_t m_libspdm_end_session_request = {
     {

@@ -7,6 +7,121 @@
 #ifndef SPDM_LIB_CONFIG_H
 #define SPDM_LIB_CONFIG_H
 
+/* Code space optimization for optional messages.
+ *
+ * An Integrator of libspdm may not need all of the optional SPDM messages. The
+ * LIBSPDM_ENABLE_CAPABILITY_***_CAP compile time switches allow the Integrator to enable or disable
+ * capabilities and messages.
+ */
+
+/* SPDM 1.0 capabilities and messages. */
+#ifndef LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
+#define LIBSPDM_ENABLE_CAPABILITY_CERT_CAP 1
+#endif
+
+#ifndef LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
+#define LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP 1
+#endif
+
+#ifndef LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
+#define LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP 1
+#endif
+
+#ifndef LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
+#define LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES 1
+#endif
+
+/* SPDM 1.1 capabilities. */
+#ifndef LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
+#define LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP 1
+#endif
+
+#ifndef LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
+#define LIBSPDM_ENABLE_CAPABILITY_PSK_CAP 1
+#endif
+
+#ifndef LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP
+#define LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP 1
+#endif
+
+#ifndef LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+#define LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP 1
+#endif
+
+#ifndef LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+#define LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP 1
+#endif
+
+/* SPDM 1.2 capabilities. */
+#ifndef LIBSPDM_ENABLE_CAPABILITY_CSR_CAP
+#define LIBSPDM_ENABLE_CAPABILITY_CSR_CAP 1
+#endif
+
+#ifndef LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
+#define LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP 1
+#endif
+
+#ifndef LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
+#define LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP 1
+#endif
+
+/* SPDM 1.3 capabilities. */
+#ifndef LIBSPDM_ENABLE_CAPABILITY_MEL_CAP
+#define LIBSPDM_ENABLE_CAPABILITY_MEL_CAP 1
+#endif
+
+#ifndef LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP
+#define LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP 1
+#endif
+
+/* Includes SPDM 1.3 features for CSR messages. If enabled then LIBSPDM_ENABLE_CAPABILITY_CSR_CAP
+ * must also be enabled.
+ */
+#ifndef LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX
+#define LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX 1
+#endif
+
+/* If 1 then endpoint supports sending GET_CERTIFICATE and GET_DIGESTS requests.
+ * If enabled and endpoint is a Responder then LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+ * must also be enabled.
+ */
+#ifndef LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
+#define LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT 1
+#endif
+
+/* If 1 then endpoint supports sending CHALLENGE request.
+ * If enabled and endpoint is a Responder then LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+ * must also be enabled.
+ */
+#ifndef LIBSPDM_SEND_CHALLENGE_SUPPORT
+#define LIBSPDM_SEND_CHALLENGE_SUPPORT 1
+#endif
+
+/* If 1 then endpoint supports sending the GET_SUPPORTED_EVENT_TYPES, SUBSCRIBE_EVENT_TYPES, and
+ * encapsulated EVENT_ACK messages. In addition, LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP must also be
+ * 1.
+ */
+#ifndef LIBSPDM_EVENT_RECIPIENT_SUPPORT
+#define LIBSPDM_EVENT_RECIPIENT_SUPPORT 1
+#endif
+
+/* When LIBSPDM_RESPOND_IF_READY_SUPPORT is 0 then
+ *      - For a Requester, if the Responder sends a ResponseNotReady ERROR response then the error
+ *        is immediately returned to the Integrator. The Requester cannot send a RESPOND_IF_READY
+ *        request.
+ *      - For a Responder, it cannot send a RESPOND_IF_READY ERROR response and does not support
+ *        RESPOND_IF_READY.
+ * When LIBSPDM_RESPOND_IF_READY_SUPPORT is 1 then
+ *      - For a Requester, if the Responder sends a ResponseNotReady ERROR response then libspdm
+ *        waits an amount of time, as specified by the RDTExponent parameter, before sending
+ *        RESPOND_IF_READY.
+ *      - For a Responder, if its response state is NOT_READY then it will send a ResponseNotReady
+ *        ERROR response to the Requester, and will accept a subsequent RESPOND_IF_READY request.
+ */
+#ifndef LIBSPDM_RESPOND_IF_READY_SUPPORT
+#define LIBSPDM_RESPOND_IF_READY_SUPPORT 1
+#endif
+
 /* Enables FIPS 140-3 mode. */
 #ifndef LIBSPDM_FIPS_MODE
 #define LIBSPDM_FIPS_MODE 0
@@ -33,6 +148,7 @@
 #define LIBSPDM_MAX_VERSION_COUNT 5
 #endif
 
+#if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
 /* This value specifies the maximum size, in bytes, of the `PSK_EXCHANGE.RequesterContext` and,
  * if supported by the Responder, `PSK_EXCHANGE_RSP.ResponderContext` fields. The fields are
  * typically random or monotonically increasing numbers.
@@ -40,10 +156,12 @@
 #ifndef LIBSPDM_PSK_CONTEXT_LENGTH
 #define LIBSPDM_PSK_CONTEXT_LENGTH LIBSPDM_MAX_HASH_SIZE
 #endif
+
 /* This value specifies the maximum size, in bytes, of the `PSK_EXCHANGE.PSKHint` field. */
 #ifndef LIBSPDM_PSK_MAX_HINT_LENGTH
 #define LIBSPDM_PSK_MAX_HINT_LENGTH 16
 #endif
+#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
 
 /* libspdm allows an Integrator to specify multiple root certificates as trust anchors when
  * verifying certificate chains from an endpoint. This value specifies the maximum number of root
@@ -215,140 +333,7 @@
 #define LIBSPDM_CERT_PARSE_SUPPORT 1
 #endif
 
-/* Code space optimization for Optional request/response messages.*/
 
-/* Consumers of libspdm may wish to not fully implement all of the optional
- * SPDM request/response messages. Therefore we have provided these
- * SPDM_ENABLE_CAPABILITY_***_CAP compile time switches as an optimization
- * disable the code (#if 0) related to said optional capability, thereby
- * reducing the code space used in the image.*/
-
-/* A single switch may enable/disable a single capability or group of related
- * capabilities.*/
-
-/* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP - Enable/Disable single CERT capability.
- * LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP - Enable/Disable single CHAL capability.
- * LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP - Enable/Disables multiple MEAS capabilities:
- *                                  (MEAS_CAP_NO_SIG, MEAS_CAP_SIG, MEAS_FRESH_CAP)*/
-
-/* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP - Enable/Disable single Key Exchange capability.
- * LIBSPDM_ENABLE_CAPABILITY_PSK_CAP - Enable/Disable PSK_EX and PSK_FINISH.*/
-
-/* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP - Enable/Disable mutual authentication.
-* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP    - Enable/Disable encapsulated message.*/
-
-/* LIBSPDM_ENABLE_CAPABILITY_CSR_CAP - Enable/Disable get csr capability.
- * LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP - Enable/Disable set certificate capability. */
-
-/* LIBSPDM_ENABLE_CAPABILITY_MEL_CAP - Enable/Disable MEL capability.*/
-
-/* SPDM 1.0 capabilities and messages. */
-#ifndef LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
-#define LIBSPDM_ENABLE_CAPABILITY_CERT_CAP 1
-#endif
-
-#ifndef LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
-#define LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP 1
-#endif
-
-#ifndef LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
-#define LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP 1
-#endif
-
-#ifndef LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
-#define LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES 1
-#endif
-
-/* SPDM 1.1 capabilities. */
-#ifndef LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
-#define LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP 1
-#endif
-
-#ifndef LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
-#define LIBSPDM_ENABLE_CAPABILITY_PSK_CAP 1
-#endif
-
-#ifndef LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP
-#define LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP 1
-#endif
-
-#ifndef LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
-#define LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP 1
-#endif
-
-#ifndef LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
-#define LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP 1
-#endif
-
-/* SPDM 1.2 capabilities. */
-#ifndef LIBSPDM_ENABLE_CAPABILITY_CSR_CAP
-#define LIBSPDM_ENABLE_CAPABILITY_CSR_CAP 1
-#endif
-
-#ifndef LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
-#define LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP 1
-#endif
-
-#ifndef LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
-#define LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP 1
-#endif
-
-/* SPDM 1.3 capabilities. */
-#ifndef LIBSPDM_ENABLE_CAPABILITY_MEL_CAP
-#define LIBSPDM_ENABLE_CAPABILITY_MEL_CAP 1
-#endif
-
-#ifndef LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP
-#define LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP 1
-#endif
-
-/* Includes SPDM 1.3 features for CSR messages. If enabled then LIBSPDM_ENABLE_CAPABILITY_CSR_CAP
- * must also be enabled.
- */
-#ifndef LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX
-#define LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX 1
-#endif
-
-/* If 1 then endpoint supports sending GET_CERTIFICATE and GET_DIGESTS requests.
- * If enabled and endpoint is a Responder then LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
- * must also be enabled.
- */
-#ifndef LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
-#define LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT 1
-#endif
-
-/* If 1 then endpoint supports sending CHALLENGE request.
- * If enabled and endpoint is a Responder then LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
- * must also be enabled.
- */
-#ifndef LIBSPDM_SEND_CHALLENGE_SUPPORT
-#define LIBSPDM_SEND_CHALLENGE_SUPPORT 1
-#endif
-
-/* If 1 then endpoint supports sending the GET_SUPPORTED_EVENT_TYPES, SUBSCRIBE_EVENT_TYPES, and
- * encapsulated EVENT_ACK messages. In addition, LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP must also be
- * 1.
- */
-#ifndef LIBSPDM_EVENT_RECIPIENT_SUPPORT
-#define LIBSPDM_EVENT_RECIPIENT_SUPPORT 1
-#endif
-
-/* When LIBSPDM_RESPOND_IF_READY_SUPPORT is 0 then
- *      - For a Requester, if the Responder sends a ResponseNotReady ERROR response then the error
- *        is immediately returned to the Integrator. The Requester cannot send a RESPOND_IF_READY
- *        request.
- *      - For a Responder, it cannot send a RESPOND_IF_READY ERROR response and does not support
- *        RESPOND_IF_READY.
- * When LIBSPDM_RESPOND_IF_READY_SUPPORT is 1 then
- *      - For a Requester, if the Responder sends a ResponseNotReady ERROR response then libspdm
- *        waits an amount of time, as specified by the RDTExponent parameter, before sending
- *        RESPOND_IF_READY.
- *      - For a Responder, if its response state is NOT_READY then it will send a ResponseNotReady
- *        ERROR response to the Requester, and will accept a subsequent RESPOND_IF_READY request.
- */
-#ifndef LIBSPDM_RESPOND_IF_READY_SUPPORT
-#define LIBSPDM_RESPOND_IF_READY_SUPPORT 1
-#endif
 
 /*
  * MinDataTransferSize = 42

@@ -119,13 +119,7 @@ void libspdm_session_info_init(libspdm_context_t *spdm_context,
 #endif
 }
 
-/**
- * Set the psk_hint to a session info.
- *
- * @param  session_info                  A pointer to a session info.
- * @param  psk_hint                      Indicate the PSK hint.
- * @param  psk_hint_size                  The size in bytes of the PSK hint.
- */
+#if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
 void libspdm_session_info_set_psk_hint(libspdm_session_info_t *session_info,
                                        const void *psk_hint,
                                        size_t psk_hint_size)
@@ -135,6 +129,7 @@ void libspdm_session_info_set_psk_hint(libspdm_session_info_t *session_info,
         psk_hint,
         psk_hint_size);
 }
+#endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
 
 /**
  * This function gets the session info via session ID.
