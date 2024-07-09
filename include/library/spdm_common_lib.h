@@ -19,7 +19,7 @@ extern "C" {
 #define LIBSPDM_MAJOR_VERSION 0x03
 #define LIBSPDM_MINOR_VERSION 0x04
 #define LIBSPDM_PATCH_VERSION 0x00
-#define LIBSPDM_ALPHA         0xff
+#define LIBSPDM_ALPHA         0x00
 
 /* Connection: When a host sends messages to a device, they create a connection.
  *             The host can and only can create one connection with one device.
