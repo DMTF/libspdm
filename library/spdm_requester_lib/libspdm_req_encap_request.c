@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -236,7 +236,6 @@ libspdm_return_t libspdm_encapsulated_request(libspdm_context_t *spdm_context,
         spdm_response = (void *)(message);
         spdm_response_size = message_size;
 
-        libspdm_zero_mem(spdm_response, spdm_response_size);
         status = libspdm_receive_spdm_response(
             spdm_context, session_id, &spdm_response_size,
             (void **)&spdm_response);
@@ -339,8 +338,6 @@ libspdm_return_t libspdm_encapsulated_request(libspdm_context_t *spdm_context,
         LIBSPDM_ASSERT (message_size >= transport_header_size);
         spdm_response = (void *)(message);
         spdm_response_size = message_size;
-
-        libspdm_zero_mem(spdm_response, spdm_response_size);
 
         status = libspdm_receive_spdm_response(
             spdm_context, session_id, &spdm_response_size,

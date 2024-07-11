@@ -174,7 +174,6 @@ static libspdm_return_t libspdm_try_get_csr(libspdm_context_t *spdm_context,
     spdm_response = (void *)(message);
     spdm_response_size = message_size;
 
-    libspdm_zero_mem(spdm_response, spdm_response_size);
     status = libspdm_receive_spdm_response(spdm_context, session_id,
                                            &spdm_response_size, (void **)&spdm_response);
 
