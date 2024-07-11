@@ -139,7 +139,6 @@ libspdm_return_t libspdm_try_vendor_send_request_receive_response(
     spdm_response = (void *)(message);
     spdm_response_size = message_size;
 
-    libspdm_zero_mem(spdm_response, spdm_response_size);
     status = libspdm_receive_spdm_response(spdm_context, session_id,
                                            &spdm_response_size,
                                            (void **)&spdm_response);

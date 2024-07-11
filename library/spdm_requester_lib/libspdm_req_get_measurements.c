@@ -318,7 +318,6 @@ static libspdm_return_t libspdm_try_get_measurement(libspdm_context_t *spdm_cont
     spdm_response = (void *)(message);
     spdm_response_size = message_size;
 
-    libspdm_zero_mem(spdm_response, spdm_response_size);
     status = libspdm_receive_spdm_response(
         spdm_context, session_id, &spdm_response_size, (void **)&spdm_response);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {

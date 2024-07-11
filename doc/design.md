@@ -264,13 +264,15 @@
 
    * libspdm never writes data to the receive buffer so the buffer may be read-only.
    * libspdm both reads from and writes to the send buffer. Note that in a future release libspdm
-   may never read from the send buffer, allowing it to be write-only.
+     may never read from the send buffer, allowing it to be write-only.
    * libspdm always releases the send buffer before acquiring the receive buffer and releases the
-   receive buffer before acquiring the send buffer. Because of this the send buffer and receive buffer
-   may overlap or be the same buffer.
-   * libspdm assumes that, when populating the send buffer or parsing the receive buffer, both buffers
-   cannot be modified by external agents. It is the library Integrator's responsibility to ensure that
-   the buffers cannot be tampered with while libspdm is accessing them.
+     receive buffer before acquiring the send buffer. Because of this the send buffer and receive
+     buffer may overlap or be the same buffer.
+   * libspdm assumes that, when populating the send buffer or parsing the receive buffer, both
+     buffers cannot be modified by external agents. It is the library Integrator's responsibility to
+     ensure that the buffers cannot be tampered with while libspdm is accessing them.
+   * If the buffers contain data that should not be shared with libspdm, the Integrator must erase
+     or zeroize the buffers before granting access to libspdm.
 
 8) [spdm_lib_config.h](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_lib_config.h) provides an example of the configuration macros used in the libspdm library.
 

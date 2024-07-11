@@ -77,7 +77,6 @@ static libspdm_return_t libspdm_requester_respond_if_ready(libspdm_context_t *sp
     }
     LIBSPDM_ASSERT (*response_size >= transport_header_size);
 
-    libspdm_zero_mem(*response, *response_size);
     status = libspdm_receive_spdm_response(spdm_context, session_id,
                                            response_size, response);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
