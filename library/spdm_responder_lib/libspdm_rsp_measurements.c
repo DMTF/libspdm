@@ -252,9 +252,6 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
         measurements,
         &measurements_size);
 
-    LIBSPDM_ASSERT(measurements_size <= SPDM_MAX_MEASUREMENT_RECORD_LENGTH);
-    LIBSPDM_ASSERT(measurements_size <= meas_opaque_buffer_size);
-
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         if (status == LIBSPDM_STATUS_MEAS_INVALID_INDEX) {
             libspdm_reset_message_m(spdm_context, session_info);
@@ -268,6 +265,11 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
                 0, response_size, response);
         }
     }
+
+    LIBSPDM_ASSERT(measurements_count != 0);
+    LIBSPDM_ASSERT((measurements_index == 0) || (measurements_size > 0));
+    LIBSPDM_ASSERT(measurements_size <= SPDM_MAX_MEASUREMENT_RECORD_LENGTH);
+    LIBSPDM_ASSERT(measurements_size <= meas_opaque_buffer_size);
 
     if (measurements_index == 0) {
         measurements_size = 0;
