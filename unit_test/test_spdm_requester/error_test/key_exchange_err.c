@@ -6147,8 +6147,8 @@ static void libspdm_test_requester_key_exchange_err_case30(void **state)
 }
 
 /**
- * Test 31: Fail case, Muth Auth requested bit 0 set, and SlotID is 9 in KEY_EXCHANGE_RSP response message,
- * but SlotID should be 0xF or between 0 and 7 inclusive.
+ * Test 31: Fail case, MutAuthRequested bit 0 set, and SlotID is 9 in KEY_EXCHANGE_RSP response
+ * message but SlotID should be between 0 and 7 inclusive.
  * Expected Behavior: returns a status of INVALID_MSG_FIELD.
  **/
 static void libspdm_test_requester_key_exchange_err_case31(void **state)
@@ -6188,6 +6188,8 @@ static void libspdm_test_requester_key_exchange_err_case31(void **state)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
 
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,

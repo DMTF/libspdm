@@ -264,26 +264,30 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
     }
 
     slot_id = spdm_request->header.param2;
-    if ((slot_id != 0xFF) &&
-        (slot_id >= SPDM_MAX_SLOT_COUNT)) {
-        return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-                                               response_size, response);
-    }
 
-    if (slot_id != 0xFF) {
-        if (spdm_context->local_context
-            .local_cert_chain_provision[slot_id] == NULL) {
-            return libspdm_generate_error_response(
-                spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
-                0, response_size, response);
+    if (libspdm_is_capabilities_flag_supported(
+            spdm_context, false,
+            0, SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP)) {
+        if (slot_id >= SPDM_MAX_SLOT_COUNT) {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                                   response_size, response);
+        }
+        if (spdm_context->local_context.local_cert_chain_provision[slot_id] == NULL) {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                                   response_size, response);
         }
     } else {
-        if (spdm_context->local_context
-            .local_public_key_provision == NULL) {
-            return libspdm_generate_error_response(
-                spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
-                0, response_size, response);
+        if (slot_id != 0xff) {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                                   response_size, response);
+        }
+        if (spdm_context->local_context.local_public_key_provision == NULL) {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                                   response_size, response);
         }
     }
 
@@ -413,13 +417,7 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
     if (libspdm_is_capabilities_flag_supported(
             spdm_context, false,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP,
-            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP) &&
-        (libspdm_is_capabilities_flag_supported(
-             spdm_context, false,
-             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP, 0) ||
-         libspdm_is_capabilities_flag_supported(
-             spdm_context, false,
-             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP, 0))) {
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP)) {
         spdm_response->mut_auth_requested =
             spdm_context->local_context.mut_auth_requested;
     }
@@ -445,8 +443,7 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
         spdm_response->req_slot_id_param = 0;
     }
 
-    if(!libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
-                                  spdm_response->random_data)) {
+    if(!libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, spdm_response->random_data)) {
         libspdm_free_session_id(spdm_context, session_id);
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,
