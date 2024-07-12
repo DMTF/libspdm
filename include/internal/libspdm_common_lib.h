@@ -303,12 +303,6 @@ typedef struct {
 
 #endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
 
-typedef struct {
-    size_t max_buffer_size;
-    size_t buffer_size;
-    uint8_t buffer[LIBSPDM_MAX_CERT_CHAIN_SIZE];
-} libspdm_cert_chain_managed_buffer_t;
-
 /* signature = Sign(SK, hash(M1))
  * Verify(PK, hash(M2), signature)*/
 
