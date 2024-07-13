@@ -61,7 +61,13 @@
 
 6) Execution Context
 
-   Support to build an OS application for spdm_requester_emu and spdm_responder_emu to trace communication between Requester and Responder.
+   Support to build an OS application for spdm_requester_emu and spdm_responder_emu to trace communication between Requester and Responder in [spdm-emu](https://github.com/DMTF/spdm-emu).
+
+   Support to build an OS application for SPDM validation in [SPDM-Responder-Validator](https://github.com/DMTF/SPDM-Responder-Validator) and TEE-IO validation in [tee-io-validator](https://github.com/intel/tee-io-validator).
+
+   Support to build as part of the NVIDIA Linux kernel module driver in [open-gpu-kernel-modules](https://github.com/NVIDIA/open-gpu-kernel-modules).
+
+   Support to build as backend server for [qemu](https://gitlab.com/alistair23/qemu/-/blob/mainline/alistair/spdm-socket.next/docs/specs/spdm.rst).
 
    Support is included in UEFI host environment [EDKII](https://github.com/tianocore/edk2/tree/master/SecurityPkg/DeviceSecurity).
 
