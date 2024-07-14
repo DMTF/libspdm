@@ -1830,7 +1830,8 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->rsp_session_id = libspdm_allocate_rsp_session_id(spdm_context, false);
         /* Mutual authentication is requested even though it is not supported. */
-        spdm_response->mut_auth_requested = 1;
+        spdm_response->mut_auth_requested =
+            SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST;
         spdm_response->req_slot_id_param = 0;
         libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, spdm_response->random_data);
         ptr = (void *)(spdm_response + 1);
@@ -2997,24 +2998,19 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         size_t transport_header_size;
 
         ((libspdm_context_t *)spdm_context)
-        ->connection_info.algorithm.base_asym_algo =
-            m_libspdm_use_asym_algo;
+        ->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
         ((libspdm_context_t *)spdm_context)
-        ->connection_info.algorithm.base_hash_algo =
-            m_libspdm_use_hash_algo;
+        ->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
         ((libspdm_context_t *)spdm_context)
-        ->connection_info.algorithm.dhe_named_group =
-            m_libspdm_use_dhe_algo;
+        ->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
         ((libspdm_context_t *)spdm_context)
-        ->connection_info.algorithm.measurement_hash_algo =
-            m_libspdm_use_measurement_hash_algo;
+        ->connection_info.algorithm.measurement_hash_algo = m_libspdm_use_measurement_hash_algo;
         signature_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         hash_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
         hmac_size = libspdm_get_hash_size(m_libspdm_use_hash_algo);
         dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
         opaque_key_exchange_rsp_size =
-            libspdm_get_opaque_data_version_selection_data_size(
-                spdm_context);
+            libspdm_get_opaque_data_version_selection_data_size(spdm_context);
         spdm_response_size = sizeof(spdm_key_exchange_response_t) +
                              dhe_key_size + 0 + sizeof(uint16_t) +
                              opaque_key_exchange_rsp_size + signature_size +
@@ -3024,22 +3020,20 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         libspdm_zero_mem(spdm_response,spdm_response_size);
 
         spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
-        spdm_response->header.request_response_code =
-            SPDM_KEY_EXCHANGE_RSP;
+        spdm_response->header.request_response_code = SPDM_KEY_EXCHANGE_RSP;
         spdm_response->header.param1 = 0;
-        spdm_response->rsp_session_id =
-            libspdm_allocate_rsp_session_id(spdm_context, false);
-        spdm_response->mut_auth_requested = 0;
+        spdm_response->rsp_session_id = libspdm_allocate_rsp_session_id(spdm_context, false);
+        /* Requester's PUB_KEY_ID_CAP is set and Responder requests the encapsulated flow. */
+        spdm_response->mut_auth_requested =
+            SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST;
         spdm_response->req_slot_id_param = 0;
-        libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
-                                  spdm_response->random_data);
+        libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, spdm_response->random_data);
         ptr = (void *)(spdm_response + 1);
         dhe_context = libspdm_dhe_new(
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 m_libspdm_use_dhe_algo,
                 true);
-        libspdm_dhe_generate_key(m_libspdm_use_dhe_algo, dhe_context, ptr,
-                                 &dhe_key_size);
+        libspdm_dhe_generate_key(m_libspdm_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
         final_key_size = sizeof(final_key);
         libspdm_dhe_compute_key(
             m_libspdm_use_dhe_algo, dhe_context,
@@ -3200,8 +3194,8 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         spdm_response->rsp_session_id =
             libspdm_allocate_rsp_session_id(spdm_context, false);
         spdm_response->mut_auth_requested =
-            SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED;
-        spdm_response->req_slot_id_param = 0xF;
+            SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST;
+        spdm_response->req_slot_id_param = 0x0;
         libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
                                   spdm_response->random_data);
         ptr = (void *)(spdm_response + 1);
@@ -3712,6 +3706,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->rsp_session_id =
             libspdm_allocate_rsp_session_id(spdm_context, false);
+        /* Illegal combination. At most one bit can be set. */
         spdm_response->mut_auth_requested =
             SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED |
             SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST;
@@ -3884,6 +3879,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->rsp_session_id =
             libspdm_allocate_rsp_session_id(spdm_context, false);
+        /* Illegal combination. At most one bit can be set. */
         spdm_response->mut_auth_requested =
             SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED |
             SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS;
@@ -4056,6 +4052,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->rsp_session_id =
             libspdm_allocate_rsp_session_id(spdm_context, false);
+        /* Illegal combination. At most one bit can be set. */
         spdm_response->mut_auth_requested =
             SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_ENCAP_REQUEST |
             SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS;
@@ -5852,12 +5849,72 @@ static void libspdm_test_requester_key_exchange_err_case21(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
+/**
+ * Test 22: Requester's PUB_KEY_ID_CAP is 1 but Responder sets MutAuthRequested to 2 (encapsulated
+ *          flow).
+ * Expected Behavior: Returns with LIBSPDM_STATUS_INVALID_MSG_FIELD.
+ **/
 static void libspdm_test_requester_key_exchange_err_case22(void **state)
 {
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint32_t session_id;
+    uint8_t slot_id_param;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x16;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PUB_KEY_ID_CAP;
+
+    status = libspdm_send_receive_key_exchange(
+        spdm_context, SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
+        &session_id, NULL, &slot_id_param, NULL);
+
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
+/**
+ * Test 23: Responder attempts to initiate a mutual authentication encapsulated flow but both
+ *          endpoints do not support ENCAP_CAP.
+ * Expected Behavior: Returns with LIBSPDM_STATUS_INVALID_MSG_FIELD.
+ **/
 static void libspdm_test_requester_key_exchange_err_case23(void **state)
 {
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint32_t session_id;
+    uint8_t slot_id_param;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x17;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags =
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP;
+    spdm_context->local_context.capability.flags =
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
+
+    status = libspdm_send_receive_key_exchange(
+        spdm_context, SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
+        &session_id, NULL, &slot_id_param, NULL);
+
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
 static void libspdm_test_requester_key_exchange_err_case24(void **state)
@@ -6288,19 +6345,14 @@ int libspdm_requester_key_exchange_error_test_main(void)
         cmocka_unit_test(libspdm_test_requester_key_exchange_err_case17),
         /* Wrong signature*/
         cmocka_unit_test(libspdm_test_requester_key_exchange_err_case18),
-        /* Can be populated with new test.*/
         cmocka_unit_test(libspdm_test_requester_key_exchange_err_case19),
         /* Heartbeat not supported, heartbeat period different from 0 sent*/
         cmocka_unit_test(libspdm_test_requester_key_exchange_err_case20),
         /* Heartbeat supported, heartbeat period different from 0 sent*/
         cmocka_unit_test(libspdm_test_requester_key_exchange_err_case21),
-        /* Heartbeat supported, heartbeat period 0 sent NOTE: This should disable heartbeat*/
         cmocka_unit_test(libspdm_test_requester_key_exchange_err_case22),
-        /* Muth Auth requested*/
         cmocka_unit_test(libspdm_test_requester_key_exchange_err_case23),
-        /* Muth Auth requested with Encapsulated request*/
         cmocka_unit_test(libspdm_test_requester_key_exchange_err_case24),
-        /* Muth Auth requested with implicit get digest*/
         cmocka_unit_test(libspdm_test_requester_key_exchange_err_case25),
         /* Muth Auth requested with Encapsulated request and bit 0 set*/
         cmocka_unit_test(libspdm_test_requester_key_exchange_err_case26),
@@ -6308,9 +6360,7 @@ int libspdm_requester_key_exchange_error_test_main(void)
         cmocka_unit_test(libspdm_test_requester_key_exchange_err_case27),
         /* Muth Auth requested with Encapsulated request and Muth Auth requested with implicit get digest simultaneously*/
         cmocka_unit_test(libspdm_test_requester_key_exchange_err_case28),
-        /* Buffer verification*/
         cmocka_unit_test(libspdm_test_requester_key_exchange_err_case29),
-        /* Successful response V1.2*/
         cmocka_unit_test(libspdm_test_requester_key_exchange_err_case30),
         /* Muth Auth requested bit 0 set, but Invalid SlotID in KEY_EXCHANGE_RSP response message*/
         cmocka_unit_test(libspdm_test_requester_key_exchange_err_case31),
