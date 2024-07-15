@@ -300,7 +300,3 @@ For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/m
 ## Features not implemented yet
 
 1) Refer to [issues](https://github.com/DMTF/libspdm/issues) for more details.
-
-## Known limitations
-This package is only the sample code to show the concept of SPDM and should not be considered fit for production.
-Any code including the API definition is subject to change.
