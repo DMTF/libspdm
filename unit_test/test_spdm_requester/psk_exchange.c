@@ -4564,9 +4564,9 @@ void libspdm_test_requester_psk_exchange_case21(void **state)
         &heartbeat_period, measurement_hash);
     /* clear Heartbeat flags */
     spdm_context->connection_info.capability.flags &=
-        !SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP;
+        ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP;
     spdm_context->local_context.capability.flags &=
-        !SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP;
+        ~SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP;
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(session_id, 0xFFFFFFFF);
     assert_int_equal(
@@ -4657,9 +4657,9 @@ void libspdm_test_requester_psk_exchange_case22(void **state)
 
     /*clear Heartbeat flags*/
     spdm_context->connection_info.capability.flags &=
-        !SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP;
+        ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP;
     spdm_context->local_context.capability.flags &=
-        !SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP;
+        ~SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP;
 
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(session_id, 0xFFFFFFFF);

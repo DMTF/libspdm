@@ -4215,9 +4215,9 @@ void libspdm_test_requester_key_update_case12(void **state)
 
     /*no capabilities*/
     spdm_context->connection_info.capability.flags &=
-        !SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_UPD_CAP;
+        ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_UPD_CAP;
     spdm_context->local_context.capability.flags &=
-        !SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_UPD_CAP;
+        ~SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_UPD_CAP;
 
     session_info = &spdm_context->session_info[0];
 

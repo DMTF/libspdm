@@ -1283,7 +1283,7 @@ void libspdm_test_responder_psk_exchange_case13(void **state)
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
 
     spdm_context->local_context.capability.flags &=
-        !SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP;
+        ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP;
 
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
