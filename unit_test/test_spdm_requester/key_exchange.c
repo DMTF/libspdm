@@ -6780,9 +6780,9 @@ static void libspdm_test_requester_key_exchange_case19(void **state)
         measurement_hash);
     /* Clear Handshake in the clear flags */
     spdm_context->connection_info.capability.flags &=
-        !SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+        ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
     spdm_context->local_context.capability.flags &=
-        !SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
+        ~SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP;
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(session_id, 0xFFFFFFFF);
     assert_int_equal(
@@ -6955,9 +6955,9 @@ static void libspdm_test_requester_key_exchange_case21(void **state)
         measurement_hash);
     /* clear Heartbeat flags */
     spdm_context->connection_info.capability.flags &=
-        !SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP;
+        ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP;
     spdm_context->local_context.capability.flags &=
-        !SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP;
+        ~SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP;
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(session_id, 0xFFFFFFFF);
     assert_int_equal(
@@ -7052,9 +7052,9 @@ static void libspdm_test_requester_key_exchange_case22(void **state)
 
     /*clear Heartbeat flags*/
     spdm_context->connection_info.capability.flags &=
-        !SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP;
+        ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HBEAT_CAP;
     spdm_context->local_context.capability.flags &=
-        !SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP;
+        ~SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HBEAT_CAP;
 
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(session_id, 0xFFFFFFFF);
@@ -7149,9 +7149,9 @@ static void libspdm_test_requester_key_exchange_case23(void **state)
         measurement_hash);
     /* Clear Mut_auth flags */
     spdm_context->connection_info.capability.flags &=
-        !SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP;
+        ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP;
     spdm_context->local_context.capability.flags &=
-        !SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP;
+        ~SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP;
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(session_id, 0xFFFFFFFF);
     assert_int_equal(
@@ -7242,9 +7242,9 @@ static void libspdm_test_requester_key_exchange_case24(void **state)
         measurement_hash);
     /* Clear Mut_auth flags */
     spdm_context->connection_info.capability.flags &=
-        !SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP;
+        ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP;
     spdm_context->local_context.capability.flags &=
-        !SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP;
+        ~SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP;
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(session_id, 0xFFFFFFFF);
     assert_int_equal(
@@ -7340,9 +7340,9 @@ static void libspdm_test_requester_key_exchange_case25(void **state)
         measurement_hash);
     /* Clear Mut_auth flags */
     spdm_context->connection_info.capability.flags &=
-        !SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP;
+        ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP;
     spdm_context->local_context.capability.flags &=
-        !SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP;
+        ~SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP;
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(session_id, 0xFFFFFFFF);
     assert_int_equal(
@@ -7438,9 +7438,9 @@ static void libspdm_test_requester_key_exchange_case26(void **state)
         measurement_hash);
     /* Clear Mut_auth flags */
     spdm_context->connection_info.capability.flags &=
-        !SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP;
+        ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP;
     spdm_context->local_context.capability.flags &=
-        !SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP;
+        ~SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP;
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     free(data);
 }
@@ -7528,9 +7528,9 @@ static void libspdm_test_requester_key_exchange_case27(void **state)
         measurement_hash);
     /*Clear Mut_auth flags*/
     spdm_context->connection_info.capability.flags &=
-        !SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP;
+        ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP;
     spdm_context->local_context.capability.flags &=
-        !SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP;
+        ~SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP;
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     free(data);
 }
@@ -7618,9 +7618,9 @@ static void libspdm_test_requester_key_exchange_case28(void **state)
         measurement_hash);
     /* Clear Mut_auth flags */
     spdm_context->connection_info.capability.flags &=
-        !SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP;
+        ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP;
     spdm_context->local_context.capability.flags &=
-        !SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP;
+        ~SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP;
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
     free(data);
 }

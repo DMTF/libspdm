@@ -1057,7 +1057,7 @@ void libspdm_test_responder_key_exchange_case11(void **state)
 
     /* Clear capabilities flag */
     spdm_context->local_context.capability.flags &=
-        !SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP;
+        ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP;
 
     /*set capabilities flags */
     spdm_context->connection_info.capability.flags |=
