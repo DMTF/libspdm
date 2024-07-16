@@ -131,7 +131,7 @@ libspdm_return_t libspdm_receive_response(void *spdm_context, const uint32_t *se
     libspdm_return_t status;
     uint8_t *message;
     size_t message_size;
-    uint32_t *message_session_id;
+    uint32_t *message_session_id, message_id;
     bool is_message_app_message;
     uint64_t timeout;
     size_t transport_header_size;
@@ -163,7 +163,22 @@ libspdm_return_t libspdm_receive_response(void *spdm_context, const uint32_t *se
         return status;
     }
 
-    message_session_id = NULL;
+    /*
+     * The storage transport encoding, defined by DSP0286, does not indicate
+     * if we are/are not in a secure session in the transport data. This is
+     * different to most other transport encodings, which includes session
+     * information in the encoding.
+     *
+     * As such if we are in a secure session, session_id != NULL, we set
+     * message_session_id to be non-NULL to indicate to the lower layer
+     * that we are in a secure session.
+     */
+    if (session_id != NULL) {
+        message_session_id = &message_id;
+        message_id = *session_id;
+    } else {
+        message_session_id = NULL;
+    }
     is_message_app_message = false;
 
     /* always use scratch buffer to response.
@@ -211,7 +226,11 @@ libspdm_return_t libspdm_receive_response(void *spdm_context, const uint32_t *se
 
         /* Retry decoding message with backup Requester key.
          * Must reset some of the parameters in case they were modified */
-        message_session_id = NULL;
+        if (session_id != NULL) {
+            *message_session_id = *session_id;
+        } else {
+            message_session_id = NULL;
+        }
         is_message_app_message = false;
         *response = backup_response;
         *response_size = backup_response_size;
