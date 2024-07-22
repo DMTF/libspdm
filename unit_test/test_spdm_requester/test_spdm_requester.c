@@ -82,6 +82,12 @@ int libspdm_requester_vendor_cmds_test_main(void);
 int libspdm_requester_vendor_cmds_error_test_main(void);
 #endif /* LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES */
 
+#if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
+int libspdm_requester_get_key_pair_info_test_main(void);
+int libspdm_requester_get_key_pair_info_error_test_main(void);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP */
+
+
 int main(void)
 {
     int return_value = 0;
@@ -231,6 +237,15 @@ int main(void)
         return_value = 1;
     }
     #endif /* LIBSPDM_EVENT_RECIPIENT_SUPPORT */
+
+    #if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
+    if (libspdm_requester_get_key_pair_info_test_main() != 0) {
+        return_value = 1;
+    }
+    if (libspdm_requester_get_key_pair_info_error_test_main() != 0) {
+        return_value = 1;
+    }
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP */
 
     #if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
     if (libspdm_requester_vendor_cmds_test_main() != 0) {
