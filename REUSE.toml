@@ -1,0 +1,23 @@
+# SPDX-FileCopyrightText: 2021-2024 DMTF
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
+version = 1
+
+# Bulk add license and copyright for markdown files, key files and seeds.
+[[annotations]]
+path = [
+    "doc/**",
+    "**README.md",
+    "SECURITY.md",
+    "VERSION.md",
+    "unit_test/sample_key/**",
+    "unit_test/fuzzing/seeds/**"
+]
+SPDX-FileCopyrightText = "2021-2024 DMTF"
+SPDX-License-Identifier = "BSD-3-Clause"
+
+# Bulk add original license for auto generated files
+[[annotations]]
+path = ["os_stub/openssllib/openssl_gen/**"]
+SPDX-License-Identifier = "Apache-2.0"
