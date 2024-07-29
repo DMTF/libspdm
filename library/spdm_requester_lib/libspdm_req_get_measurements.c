@@ -688,6 +688,11 @@ static libspdm_return_t libspdm_try_get_measurement(libspdm_context_t *spdm_cont
                 measurement_block_header->measurement_size);
         }
 
+        if (measurement_block_size != measurement_record_data_length) {
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+            goto receive_done;
+        }
+
         *measurement_record_length = measurement_record_data_length;
         libspdm_copy_mem(measurement_record,
                          measurement_record_data_length,
