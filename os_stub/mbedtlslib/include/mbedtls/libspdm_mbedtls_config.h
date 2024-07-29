@@ -1,7 +1,7 @@
 /**
- *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
- *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ * SPDX-FileCopyrightText: The Mbed TLS Contributors
+ * SPDX-FileCopyrightText: 2021-2024 DMTF
+ * SPDX-License-Identifier: Apache-2.0 OR GPL-2.0-or-later
  **/
 
 /**
@@ -14,10 +14,6 @@
  *  This set of compile-time options may be used to enable
  *  or disable features selectively, and reduce the global
  *  memory footprint.
- */
-/*
- *  Copyright The Mbed TLS Contributors
- *  SPDX-License-Identifier: Apache-2.0 OR GPL-2.0-or-later
  */
 
 /**
