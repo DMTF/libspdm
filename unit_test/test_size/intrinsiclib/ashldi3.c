@@ -1,7 +1,6 @@
 /**
- *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
- *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ * SPDX-FileCopyrightText: 2021-2024 DMTF
+ * SPDX-License-Identifier: BSD-3-Clause
  **/
 
 /*Portions of this file have been modified from the original (https://github.com/intel/linux-sgx/blob/master/sdk/compiler-rt/ashldi3.c) under the following copyright and license.*/
