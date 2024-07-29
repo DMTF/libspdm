@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2021-2024 DMTF
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
 #!/bin/bash
 
 # Check if the modified files' copyright dates are current.

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2021-2024 DMTF
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
 #!/bin/bash
 
 # this script will run one program one time, with a known good seed, to ensure it can pass the flow without any exception.
