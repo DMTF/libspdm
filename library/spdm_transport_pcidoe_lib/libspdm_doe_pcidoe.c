@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -296,6 +296,50 @@ libspdm_return_t libspdm_pci_doe_decode_discovery_request(size_t transport_messa
     }
     if (length != transport_message_size) {
         return LIBSPDM_STATUS_INVALID_MSG_SIZE;
+    }
+
+    return LIBSPDM_STATUS_SUCCESS;
+}
+
+/**
+ * Decode a DOE discovery request message to get the DOE Discovery Version field.
+ * DOE Discovery Version is introduced in PCIE Spec 6.1 Section 6.30.1.1.
+ *
+ * @param  transport_message_size               Size in bytes of the transport message data buffer.
+ * @param  transport_message                    A pointer to a source buffer to store the transport message.
+ * @param  version                              A pointer to a destination to store the DOE Discovery Version.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS               The message is encoded successfully.
+ * @retval LIBSPDM_STATUS_INVALID_PARAMETER     The message is NULL or the message_size is zero.
+ **/
+libspdm_return_t libspdm_pci_doe_decode_discovery_request_version(size_t transport_message_size,
+                                                                  const void *transport_message,
+                                                                  uint8_t *version)
+{
+    const uint8_t *message;
+    libspdm_return_t status;
+
+    /*
+     * Calling libspdm_pci_doe_decode_discovery_request to check the format of transport_message.
+     * So that the duplicated checking code is skipped.
+     */
+    status = libspdm_pci_doe_decode_discovery_request(transport_message_size, transport_message,
+                                                      NULL);
+    if(LIBSPDM_STATUS_IS_ERROR(status)) {
+        return status;
+    }
+
+    /*
+     * DOE discovery is not part of the SPDM spec, instead it's part
+     * of the PCIe DOE spec. DOE discovery is mandatory for all
+     * implementations.
+     *
+     * DOE Discovery Version is introduced in PCIE Spec 6.1 Section 6.30.1.1.
+     * It is Byte-1 in DOE discovery request.
+     */
+    message = (const uint8_t *)transport_message + sizeof(pci_doe_data_object_header_t) + 1;
+    if (version != NULL) {
+        *version = *message;
     }
 
     return LIBSPDM_STATUS_SUCCESS;

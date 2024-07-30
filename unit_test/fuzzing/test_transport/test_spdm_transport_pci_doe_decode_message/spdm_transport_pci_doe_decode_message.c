@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -52,10 +52,15 @@ void libspdm_test_transport_pci_doe_decode_discovery(void **State)
 
     if (is_requester) {
         uint8_t index = 0;
+        uint8_t version = 0;
 
         libspdm_pci_doe_decode_discovery_request(spdm_test_context->test_buffer_size,
                                                  spdm_test_context->test_buffer,
                                                  &index);
+
+        libspdm_pci_doe_decode_discovery_request_version(spdm_test_context->test_buffer_size,
+                                                         spdm_test_context->test_buffer,
+                                                         &version);
     } else {
         uint16_t vendor_id = 0;
         uint8_t protocol = 0;

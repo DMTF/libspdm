@@ -132,6 +132,22 @@ libspdm_return_t libspdm_transport_pci_doe_decode_message(
 libspdm_return_t libspdm_pci_doe_decode_discovery_request(size_t transport_message_size,
                                                           const void *transport_message,
                                                           uint8_t *index);
+
+/**
+ * Decode a DOE discovery request message to get the DOE Discovery Version field.
+ * DOE Discovery Version is introduced in PCIE Spec 6.1 Section 6.30.1.1.
+ *
+ * @param  transport_message_size               Size in bytes of the transport message data buffer.
+ * @param  transport_message                    A pointer to a source buffer to store the transport message.
+ * @param  version                              A pointer to a destination to store the DOE Discovery Version.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS               The message is encoded successfully.
+ * @retval LIBSPDM_STATUS_INVALID_PARAMETER     The message is NULL or the message_size is zero.
+ **/
+libspdm_return_t libspdm_pci_doe_decode_discovery_request_version(size_t transport_message_size,
+                                                                  const void *transport_message,
+                                                                  uint8_t *version);
+
 /**
  * Decode a DOE discovery response message.
  *

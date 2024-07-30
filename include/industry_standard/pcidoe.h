@@ -45,7 +45,8 @@ typedef struct {
 
 typedef struct {
     uint8_t index;
-    uint8_t reserved[3];
+    uint8_t version;
+    uint8_t reserved[2];
 } pci_doe_discovery_request_t;
 
 typedef struct {
