@@ -2659,12 +2659,15 @@ void libspdm_test_responder_measurements_case36(void **state)
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     size_t response_size;
+    uint8_t request[LIBSPDM_MAX_SPDM_MSG_SIZE];
     uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_get_measurements_request_t *spdm_request;
     spdm_measurements_response_t *spdm_response;
     uint8_t *requester_context;
     uint8_t slot_id;
     void *data;
     size_t data_size;
+    size_t request_size;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -2698,30 +2701,27 @@ void libspdm_test_responder_measurements_case36(void **state)
         spdm_context->local_context.local_cert_chain_provision[i] = data;
     }
 
+    spdm_request = (void *)request;
+    spdm_request->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    spdm_request->header.request_response_code = SPDM_GET_MEASUREMENTS;
+    spdm_request->header.param1 = SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE;
+    spdm_request->header.param2 = 1;
+    libspdm_get_random_number(SPDM_NONCE_SIZE, spdm_request->nonce);
     /* If set, the SlotID fields in GET_MEASUREMENTS and MEASUREMENTS can specify this certificate slot. If not set,
      * the SlotID fields in GET_MEASUREMENTS and MEASUREMENTS shall not specify this certificate slot. */
     slot_id = 0;
-    m_libspdm_get_measurements_request17.slot_id_param = slot_id;
+    spdm_request->slot_id_param = slot_id;
     spdm_context->local_context.local_key_usage_bit_mask[slot_id] =
         SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE |
         SPDM_KEY_USAGE_BIT_MASK_CHALLENGE_USE;
-
-    libspdm_get_random_number(SPDM_NONCE_SIZE,
-                              m_libspdm_get_measurements_request17.nonce);
-    m_libspdm_get_measurements_request17.header.param1 =
-        SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE;
-    m_libspdm_get_measurements_request17.header.param2 = 1;
-
-    requester_context = ((uint8_t *)&m_libspdm_get_measurements_request17) +
-                        sizeof(m_libspdm_get_measurements_request17);
+    requester_context = ((uint8_t *)spdm_request) + sizeof(spdm_get_measurements_request_t);
     libspdm_set_mem(requester_context, SPDM_REQ_CONTEXT_SIZE, 0xAA);
-    m_libspdm_get_measurements_request17_size = sizeof(m_libspdm_get_measurements_request17) +
-                                                SPDM_REQ_CONTEXT_SIZE;
+    request_size = sizeof(spdm_get_measurements_request_t) + SPDM_REQ_CONTEXT_SIZE;
 
     response_size = sizeof(response);
     status = libspdm_get_response_measurements(
-        spdm_context, m_libspdm_get_measurements_request17_size,
-        &m_libspdm_get_measurements_request17, &response_size, response);
+        spdm_context, request_size,
+        (void *)spdm_request, &response_size, response);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
     spdm_response = (void *)response;
