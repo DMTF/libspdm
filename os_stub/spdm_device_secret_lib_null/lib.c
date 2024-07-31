@@ -222,6 +222,7 @@ bool libspdm_gen_csr_ex(
     return false;
 }
 #endif /*LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX*/
+#endif /* LIBSPDM_ENABLE_CAPABILITY_CSR_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP
 bool libspdm_event_get_types(
@@ -234,5 +235,3 @@ bool libspdm_event_get_types(
     return false;
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
-
-#endif /* LIBSPDM_ENABLE_CAPABILITY_CSR_CAP */
