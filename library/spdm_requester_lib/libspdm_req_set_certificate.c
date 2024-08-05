@@ -142,8 +142,6 @@ static libspdm_return_t libspdm_try_set_certificate(libspdm_context_t *spdm_cont
         }
     }
 
-    LIBSPDM_ASSERT(spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12);
-
     if ((libspdm_get_connection_version (spdm_context) < SPDM_MESSAGE_VERSION_13) ||
         (cert_chain_size != 0)) {
         if (cert_chain == NULL) {
