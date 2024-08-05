@@ -152,8 +152,6 @@ static libspdm_return_t libspdm_try_get_csr(libspdm_context_t *spdm_context,
                          (uint8_t *)opaque_data, opaque_data_length);
     }
 
-    LIBSPDM_ASSERT(spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12);
-
     spdm_request_size = sizeof(spdm_get_csr_request_t) + opaque_data_length
                         + requester_info_length;
 
