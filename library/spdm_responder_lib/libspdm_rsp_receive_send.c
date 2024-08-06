@@ -84,6 +84,10 @@ libspdm_get_spdm_response_func libspdm_get_response_func_via_request_code(uint8_
         { SPDM_SET_CERTIFICATE, libspdm_get_response_set_certificate },
         #endif /*LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP*/
 
+        #if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
+        { SPDM_GET_KEY_PAIR_INFO, libspdm_get_response_key_pair_info },
+        #endif /*LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP*/
+
         #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
         { SPDM_CHUNK_GET, libspdm_get_response_chunk_get},
         { SPDM_CHUNK_SEND, libspdm_get_response_chunk_send},

@@ -790,6 +790,15 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         }
         context->connection_info.multi_key_conn_rsp = *(bool *)data;
         break;
+    case LIBSPDM_DATA_TOTAL_KEY_PAIRS:
+        if (data_size != sizeof(uint8_t)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        context->local_context.total_key_pairs = *(uint8_t *)data;
+        break;
     default:
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         break;
@@ -1145,6 +1154,13 @@ libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_t
         }
         target_data_size = sizeof(bool);
         target_data = &context->connection_info.multi_key_conn_rsp;
+        break;
+    case LIBSPDM_DATA_TOTAL_KEY_PAIRS:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        target_data_size = sizeof(uint8_t);
+        target_data = &context->local_context.total_key_pairs;
         break;
     default:
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;

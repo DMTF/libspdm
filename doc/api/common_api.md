@@ -353,6 +353,8 @@ Enumeration value used for the `libspdm_set_data` and/or `libspdm_get_data` func
         - If `false` then Responder does not support multi-key capabilities and only supports a
           single asymmetric key during the connection.
     - Only `LIBSPDM_DATA_LOCATION_CONNECTION` is allowed.
+- `LIBSPDM_DATA_TOTAL_KEY_PAIRS`
+    - the total number of key pairs on the responder.
 
 ### Values that can only be `get`.
 

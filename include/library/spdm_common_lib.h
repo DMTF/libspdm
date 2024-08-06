@@ -154,6 +154,8 @@ typedef enum {
     LIBSPDM_DATA_MULTI_KEY_CONN_REQ,
     LIBSPDM_DATA_MULTI_KEY_CONN_RSP,
 
+    LIBSPDM_DATA_TOTAL_KEY_PAIRS,
+
     /* MAX */
     LIBSPDM_DATA_MAX
 } libspdm_data_type_t;

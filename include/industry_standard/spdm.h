@@ -57,6 +57,7 @@
 /* SPDM response code (1.3) */
 #define SPDM_SUPPORTED_EVENT_TYPES 0x62
 #define SPDM_MEASUREMENT_EXTENSION_LOG 0x6F
+#define SPDM_KEY_PAIR_INFO 0x7C
 
 /* SPDM request code (1.0) */
 #define SPDM_GET_DIGESTS 0x81
@@ -89,6 +90,7 @@
 /* SPDM request code (1.3) */
 #define SPDM_GET_SUPPORTED_EVENT_TYPES 0xE2
 #define SPDM_GET_MEASUREMENT_EXTENSION_LOG 0xEF
+#define SPDM_GET_KEY_PAIR_INFO 0xFC
 
 /* SPDM message header*/
 typedef struct {
@@ -508,12 +510,20 @@ typedef uint8_t spdm_certificate_info_t;
 #define SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT 0x3
 
 typedef uint16_t spdm_key_usage_bit_mask_t;
-#define SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE 0x1
-#define SPDM_KEY_USAGE_BIT_MASK_CHALLENGE_USE 0x2
-#define SPDM_KEY_USAGE_BIT_MASK_MEASUREMENT_USE 0x4
-#define SPDM_KEY_USAGE_BIT_MASK_ENDPOINT_INFO_USE 0x8
+#define SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE 0x0001
+#define SPDM_KEY_USAGE_BIT_MASK_CHALLENGE_USE 0x0002
+#define SPDM_KEY_USAGE_BIT_MASK_MEASUREMENT_USE 0x0004
+#define SPDM_KEY_USAGE_BIT_MASK_ENDPOINT_INFO_USE 0x0008
 #define SPDM_KEY_USAGE_BIT_MASK_STANDARDS_KEY_USE 0x4000
 #define SPDM_KEY_USAGE_BIT_MASK_VENDOR_KEY_USE 0x8000
+
+#define SPDM_KEY_USAGE_BIT_MASK ( \
+        SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE | \
+        SPDM_KEY_USAGE_BIT_MASK_CHALLENGE_USE | \
+        SPDM_KEY_USAGE_BIT_MASK_MEASUREMENT_USE | \
+        SPDM_KEY_USAGE_BIT_MASK_ENDPOINT_INFO_USE | \
+        SPDM_KEY_USAGE_BIT_MASK_STANDARDS_KEY_USE | \
+        SPDM_KEY_USAGE_BIT_MASK_VENDOR_KEY_USE)
 
 /* SPDM GET_CERTIFICATE request */
 typedef struct {
@@ -1205,6 +1215,76 @@ typedef struct {
     uint32_t remainder_length;
     /*uint8_t                mel[portion_length];*/
 } spdm_measurement_extension_log_response_t;
+
+/* Key pair capabilities */
+#define SPDM_KEY_PAIR_CAP_GEN_KEY_CAP 0x00000001
+#define SPDM_KEY_PAIR_CAP_ERASABLE_CAP 0x00000002
+#define SPDM_KEY_PAIR_CAP_CERT_ASSOC_CAP 0x00000004
+#define SPDM_KEY_PAIR_CAP_KEY_USAGE_CAP 0x00000008
+#define SPDM_KEY_PAIR_CAP_ASYM_ALGO_CAP 0x00000010
+#define SPDM_KEY_PAIR_CAP_SHAREABLE_CAP 0x00000020
+#define SPDM_KEY_PAIR_CAP_MASK ( \
+        SPDM_KEY_PAIR_CAP_GEN_KEY_CAP | \
+        SPDM_KEY_PAIR_CAP_ERASABLE_CAP | \
+        SPDM_KEY_PAIR_CAP_CERT_ASSOC_CAP | \
+        SPDM_KEY_PAIR_CAP_KEY_USAGE_CAP | \
+        SPDM_KEY_PAIR_CAP_ASYM_ALGO_CAP | \
+        SPDM_KEY_PAIR_CAP_SHAREABLE_CAP)
+
+/* Key pair asym algorithm capabilities */
+#define SPDM_KEY_PAIR_ASYM_ALGO_CAP_RSA2048 0x00000001
+#define SPDM_KEY_PAIR_ASYM_ALGO_CAP_RSA3072 0x00000002
+#define SPDM_KEY_PAIR_ASYM_ALGO_CAP_RSA4096 0x00000004
+#define SPDM_KEY_PAIR_ASYM_ALGO_CAP_ECC256 0x00000008
+#define SPDM_KEY_PAIR_ASYM_ALGO_CAP_ECC384 0x00000010
+#define SPDM_KEY_PAIR_ASYM_ALGO_CAP_ECC521 0x00000020
+#define SPDM_KEY_PAIR_ASYM_ALGO_CAP_SM2 0x00000040
+#define SPDM_KEY_PAIR_ASYM_ALGO_CAP_ED25519 0x00000080
+#define SPDM_KEY_PAIR_ASYM_ALGO_CAP_ED448 0x00000100
+#define SPDM_KEY_PAIR_ASYM_ALGO_CAP_MASK ( \
+        SPDM_KEY_PAIR_ASYM_ALGO_CAP_RSA2048 | \
+        SPDM_KEY_PAIR_ASYM_ALGO_CAP_RSA3072 | \
+        SPDM_KEY_PAIR_ASYM_ALGO_CAP_RSA4096 | \
+        SPDM_KEY_PAIR_ASYM_ALGO_CAP_ECC256 | \
+        SPDM_KEY_PAIR_ASYM_ALGO_CAP_ECC384 | \
+        SPDM_KEY_PAIR_ASYM_ALGO_CAP_ECC521 | \
+        SPDM_KEY_PAIR_ASYM_ALGO_CAP_SM2 | \
+        SPDM_KEY_PAIR_ASYM_ALGO_CAP_ED25519 | \
+        SPDM_KEY_PAIR_ASYM_ALGO_CAP_ED448)
+
+/**
+ * The Max len of DER encoding of the AlgorithmIdentifier structure in an X.509 v3 certificate.
+ * The RSA public key info len is 15.
+ * The ecp256 public key info len is 21.
+ * The ecp384 public key info len is 18.
+ * The ecp521 public key info len is 18.
+ * The sm2 public key info len is 21.
+ * The ed25519 public key info len is 7.
+ * The ed448 public key info len is 7.
+ **/
+#define SPDM_MAX_PUBLIC_KEY_INFO_LEN 65535
+
+/* SPDM GET_KEY_PAIR_INFO request */
+typedef struct {
+    spdm_message_header_t header;
+    /* param1 == RSVD
+     * param2 == RSVD*/
+    uint8_t key_pair_id;
+} spdm_get_key_pair_info_request_t;
+
+typedef struct {
+    spdm_message_header_t header;
+    uint8_t total_key_pairs;
+    uint8_t key_pair_id;
+    uint16_t capabilities;
+    uint16_t key_usage_capabilities;
+    uint16_t current_key_usage;
+    uint32_t asym_algo_capabilities;
+    uint32_t current_asym_algo;
+    uint16_t public_key_info_len;
+    uint8_t assoc_cert_slot_mask;
+    /*uint8_t public_key_info[public_key_info_len];*/
+} spdm_key_pair_info_response_t;
 
 #pragma pack()
 

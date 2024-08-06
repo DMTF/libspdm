@@ -938,4 +938,10 @@ bool libspdm_generate_measurement_signature(libspdm_context_t *spdm_context,
                                             uint8_t *signature);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP*/
 
+#if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
+libspdm_return_t libspdm_get_response_key_pair_info(libspdm_context_t *spdm_context,
+                                                    size_t request_size, const void *request,
+                                                    size_t *response_size, void *response);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP */
+
 #endif /* SPDM_RESPONDER_LIB_INTERNAL_H */
