@@ -24,6 +24,7 @@ target_sources(spdm_requester_lib
         libspdm_req_get_certificate.c
         libspdm_req_get_digests.c
         libspdm_req_get_event_types.c
+        libspdm_req_subscribe_event_types.c
         libspdm_req_get_measurements.c
         libspdm_req_get_version.c
         libspdm_req_handle_error_response.c

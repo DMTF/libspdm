@@ -75,6 +75,8 @@ int libspdm_requester_chunk_send_test_main(void);
 #if LIBSPDM_EVENT_RECIPIENT_SUPPORT
 int libspdm_requester_get_event_types_test_main(void);
 int libspdm_requester_get_event_types_error_test_main(void);
+int libspdm_requester_subscribe_event_types_test_main(void);
+int libspdm_requester_subscribe_event_types_error_test_main(void);
 #endif /* LIBSPDM_EVENT_RECIPIENT_SUPPORT */
 
 #if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
@@ -234,6 +236,12 @@ int main(void)
         return_value = 1;
     }
     if (libspdm_requester_get_event_types_error_test_main() != 0) {
+        return_value = 1;
+    }
+    if (libspdm_requester_subscribe_event_types_test_main() != 0) {
+        return_value = 1;
+    }
+    if (libspdm_requester_subscribe_event_types_error_test_main() != 0) {
         return_value = 1;
     }
     #endif /* LIBSPDM_EVENT_RECIPIENT_SUPPORT */

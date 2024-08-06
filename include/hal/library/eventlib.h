@@ -38,5 +38,29 @@ extern bool libspdm_event_get_types(
     void *supported_event_groups_list,
     uint32_t *supported_event_groups_list_len,
     uint8_t *event_group_count);
+
+/**
+ * Subscribe to the events given in SubscribeList.
+ *
+ * If subscribe_event_group_count is 0 then the event recipient unsubscribes from all events and
+ * subscribe_list_len is 0 and subscribe_list is NULL. For a given event group, if
+ * SPDM_SUBSCRIBE_EVENT_TYPES_REQUEST_ATTRIBUTE_ALL is set in the Attributes field then the event
+ * recipient subscribes to all events in that group.
+ *
+ * @param  spdm_context                 A pointer to the SPDM context.
+ * @param  spdm_version                 Indicates the negotiated version.
+ * @param  subscribe_event_group_count  Number of event groups in subscribe_list.
+ * @param  subscribe_list_len           Size, in bytes, of subscribe_list.
+ * @param  subscribe_list               Buffer that contains the event groups to be subscribed.
+ *
+ * @retval true   All events were successfully subscribed or unsubscribed to.
+ * @retval false  An error occurred when processing the event group list.
+ **/
+extern bool libspdm_event_subscribe(
+    void *spdm_context,
+    spdm_version_number_t spdm_version,
+    uint8_t subscribe_event_group_count,
+    uint32_t subscribe_list_len,
+    const void *subscribe_list);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
 #endif /* EVENTLIB_H */

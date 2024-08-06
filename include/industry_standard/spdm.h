@@ -56,6 +56,7 @@
 
 /* SPDM response code (1.3) */
 #define SPDM_SUPPORTED_EVENT_TYPES 0x62
+#define SPDM_SUBSCRIBE_EVENT_TYPES_ACK 0x70
 #define SPDM_MEASUREMENT_EXTENSION_LOG 0x6F
 #define SPDM_KEY_PAIR_INFO 0x7C
 
@@ -89,6 +90,7 @@
 
 /* SPDM request code (1.3) */
 #define SPDM_GET_SUPPORTED_EVENT_TYPES 0xE2
+#define SPDM_SUBSCRIBE_EVENT_TYPES 0xF0
 #define SPDM_GET_MEASUREMENT_EXTENSION_LOG 0xEF
 #define SPDM_GET_KEY_PAIR_INFO 0xFC
 
@@ -1196,6 +1198,22 @@ typedef struct {
     uint32_t supported_event_groups_list_len;
     /* uint8_t supported_event_groups_list[supported_event_groups_list_len] */
 } spdm_supported_event_types_response_t;
+
+typedef struct {
+    spdm_message_header_t header;
+    /* param1 == SubscribeEventGroupCount
+     * param2 == RSVD */
+    uint32_t subscribe_list_len;
+    /* uint8_t subscribe_list[subscribe_list_len] */
+} spdm_subscribe_event_types_request_t;
+
+#define SPDM_SUBSCRIBE_EVENT_TYPES_REQUEST_ATTRIBUTE_ALL (1 << 0)
+
+typedef struct {
+    spdm_message_header_t header;
+    /* param1 == RSVD
+     * param2 == RSVD */
+} spdm_subscribe_event_types_ack_response_t;
 
 /* SPDM GET_MEASUREMENT_EXTENSION_LOG request */
 typedef struct {

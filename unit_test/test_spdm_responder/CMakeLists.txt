@@ -40,7 +40,9 @@ target_sources(test_spdm_responder
         encap_challenge.c
         encap_response.c
         supported_event_types.c
+        subscribe_event_types_ack.c
         error_test/supported_event_types_err.c
+        error_test/subscribe_event_types_ack_err.c
         error_test/vendor_response_err.c
         set_certificate_rsp.c
         csr.c
@@ -51,6 +53,7 @@ target_sources(test_spdm_responder
         ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/common.c
         ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/algo.c
         ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/support.c
+        ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/event_support.c
 )
 
 

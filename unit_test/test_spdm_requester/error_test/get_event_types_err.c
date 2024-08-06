@@ -15,31 +15,6 @@ static uint8_t m_spdm_request_buffer[0x1000];
 
 static const uint32_t m_session_id = 0xffffffff;
 
-#pragma pack(1)
-typedef struct {
-    uint8_t id;
-    uint8_t vendor_id_len;
-} event_group_id_0byte_t;
-
-typedef struct {
-    uint8_t id;
-    uint8_t vendor_id_len;
-    uint16_t vendor_id;
-} event_group_id_2byte_t;
-
-typedef struct {
-    uint16_t event_type_count;
-    uint16_t event_group_ver;
-    uint32_t attributes;
-    /* uint8_t event_type_list[] */
-} event_group_t;
-
-typedef struct {
-    uint16_t event_type_id;
-    uint16_t reserved;
-} event_type_t;
-#pragma pack()
-
 static void set_standard_state(libspdm_context_t *spdm_context, uint32_t *session_id)
 {
     libspdm_session_info_t *session_info;
@@ -74,69 +49,6 @@ static void set_standard_state(libspdm_context_t *spdm_context, uint32_t *sessio
     libspdm_session_info_init(spdm_context, session_info, *session_id, true);
     libspdm_secured_message_set_session_state(
         session_info->secured_message_context, LIBSPDM_SESSION_STATE_ESTABLISHED);
-}
-
-static void generate_dmtf_event_group(void *buffer, uint8_t *total_bytes,
-                                      bool inc_event_lost, bool inc_meas_changed,
-                                      bool inc_meas_pre_update, bool inc_cert_changed)
-{
-    uint8_t *ptr;
-    uint16_t event_type_count;
-
-    event_type_count = 0;
-
-    if (inc_event_lost) {
-        event_type_count++;
-    }
-    if (inc_meas_changed) {
-        event_type_count++;
-    }
-    if (inc_meas_pre_update) {
-        event_type_count++;
-    }
-    if (inc_cert_changed) {
-        event_type_count++;
-    }
-
-    ptr = buffer;
-    *total_bytes = 0;
-
-    ((event_group_id_0byte_t *)ptr)->id = SPDM_REGISTRY_ID_DMTF;
-    ((event_group_id_0byte_t *)ptr)->vendor_id_len = 0;
-
-    ptr += sizeof(event_group_id_0byte_t);
-    *total_bytes += (uint8_t)sizeof(event_group_id_0byte_t);
-
-    ((event_group_t *)ptr)->event_type_count = event_type_count;
-    ((event_group_t *)ptr)->event_group_ver = 1;
-    ((event_group_t *)ptr)->attributes = 0;
-
-    ptr += sizeof(event_group_t);
-    *total_bytes += (uint8_t)sizeof(event_group_t);
-
-    if (inc_event_lost) {
-        ((event_type_t *)ptr)->event_type_id = SPDM_DMTF_EVENT_TYPE_EVENT_LOST;
-        ((event_type_t *)ptr)->reserved = 0;
-        ptr += sizeof(event_type_t);
-        *total_bytes += (uint8_t)sizeof(event_type_t);
-    }
-    if (inc_meas_changed) {
-        ((event_type_t *)ptr)->event_type_id = SPDM_DMTF_EVENT_TYPE_MEASUREMENT_CHANGED;
-        ((event_type_t *)ptr)->reserved = 0;
-        ptr += sizeof(event_type_t);
-        *total_bytes += (uint8_t)sizeof(event_type_t);
-    }
-    if (inc_meas_pre_update) {
-        ((event_type_t *)ptr)->event_type_id = SPDM_DMTF_EVENT_TYPE_MEASUREMENT_PRE_UPDATE;
-        ((event_type_t *)ptr)->reserved = 0;
-        ptr += sizeof(event_type_t);
-        *total_bytes += (uint8_t)sizeof(event_type_t);
-    }
-    if (inc_cert_changed) {
-        ((event_type_t *)ptr)->event_type_id = SPDM_DMTF_EVENT_TYPE_CERTIFICATE_CHANGED;
-        ((event_type_t *)ptr)->reserved = 0;
-        *total_bytes += (uint8_t)sizeof(event_type_t);
-    }
 }
 
 static libspdm_return_t send_message(
@@ -213,7 +125,7 @@ static libspdm_return_t receive_message(
         spdm_response->header.param1 = 0;
         spdm_response->header.param2 = 0;
 
-        generate_dmtf_event_group(spdm_response + 1, &event_group_total_bytes,
+        generate_dmtf_event_group(spdm_response + 1, &event_group_total_bytes, 0,
                                   true, true, true, true);
         spdm_response->supported_event_groups_list_len = event_group_total_bytes;
 
