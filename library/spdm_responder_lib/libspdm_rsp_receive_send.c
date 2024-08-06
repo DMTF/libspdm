@@ -95,6 +95,7 @@ libspdm_get_spdm_response_func libspdm_get_response_func_via_request_code(uint8_
 
         #if LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP
         { SPDM_SUPPORTED_EVENT_TYPES, libspdm_get_response_supported_event_types },
+        { SPDM_SUBSCRIBE_EVENT_TYPES, libspdm_get_response_subscribe_event_types_ack },
         #endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
 
         #if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES

@@ -778,14 +778,19 @@ libspdm_return_t libspdm_get_response_chunk_send(libspdm_context_t *spdm_context
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP
-/**
- * Process the SPDM GET_SUPPORTED_EVENT_TYPES request and return the response.
- **/
+/* Process the SPDM GET_SUPPORTED_EVENT_TYPES request and return the response. */
 libspdm_return_t libspdm_get_response_supported_event_types(libspdm_context_t *spdm_context,
                                                             size_t request_size,
                                                             const void *request,
                                                             size_t *response_size,
                                                             void *response);
+
+/* Process the SPDM SUBSCRIBE_EVENT_TYPES request and return the response. */
+libspdm_return_t libspdm_get_response_subscribe_event_types_ack(libspdm_context_t *spdm_context,
+                                                                size_t request_size,
+                                                                const void *request,
+                                                                size_t *response_size,
+                                                                void *response);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
 
 #if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES

@@ -235,6 +235,16 @@ bool libspdm_event_get_types(
 {
     return false;
 }
+
+bool libspdm_event_subscribe(
+    void *spdm_context,
+    spdm_version_number_t spdm_version,
+    uint8_t subscribe_event_group_count,
+    uint32_t subscribe_list_len,
+    const void *subscribe_list)
+{
+    return false;
+}
 #endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP

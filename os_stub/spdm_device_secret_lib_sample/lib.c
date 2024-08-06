@@ -2249,6 +2249,35 @@ bool libspdm_event_get_types(
 
     return true;
 }
+
+bool libspdm_event_subscribe(
+    void *spdm_context,
+    spdm_version_number_t spdm_version,
+    uint8_t subscribe_event_group_count,
+    uint32_t subscribe_list_len,
+    const void *subscribe_list)
+{
+    if (subscribe_event_group_count == 0) {
+        if ((subscribe_list_len != 0) || (subscribe_list != NULL)) {
+            return false;
+        }
+    } else {
+        if ((subscribe_list_len == 0) || (subscribe_list == NULL)) {
+            return false;
+        }
+    }
+
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                   "subscribe_event_group_count == %d, subscribe_list_len = %d\n",
+                   subscribe_event_group_count, subscribe_list_len));
+
+    for (uint32_t index = 0; index < subscribe_list_len; index++) {
+        printf("%02x ", ((const char *)subscribe_list)[index]);
+    }
+    printf("\n");
+
+    return true;
+}
 #endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP

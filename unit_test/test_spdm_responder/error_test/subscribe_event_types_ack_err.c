@@ -54,19 +54,19 @@ static void set_standard_state(libspdm_context_t *spdm_context)
 }
 
 /**
- * Test 1: Responder has not set EVENT_CAP.
- * Expected Behavior: Responder returns SPDM_ERROR_CODE_UNSUPPORTED_REQUEST.
+ * Test 1: Responder does not support event mechanism.
+ * Expected Behavior: Returns SPDM_ERROR_CODE_UNSUPPORTED_REQUEST.
  **/
-static void libspdm_test_responder_supported_event_types_err_case1(void **state)
+static void libspdm_test_responder_subscribe_event_types_ack_err_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
-    spdm_get_supported_event_types_request_t spdm_request;
-    size_t spdm_request_size = sizeof(spdm_request);
+    spdm_subscribe_event_types_request_t spdm_request;
+    size_t spdm_request_size;
     uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     size_t response_size = sizeof(response);
-    spdm_error_response_t *spdm_response;
+    spdm_subscribe_event_types_ack_response_t *spdm_response;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -74,27 +74,72 @@ static void libspdm_test_responder_supported_event_types_err_case1(void **state)
 
     set_standard_state(spdm_context);
 
-    /* Responder is not an event notifier. */
+    /* Responder does not support event mechanism. */
     spdm_context->local_context.capability.flags &= ~SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_EVENT_CAP;
 
     spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_13;
-    spdm_request.header.request_response_code = SPDM_GET_SUPPORTED_EVENT_TYPES;
+    spdm_request.header.request_response_code = SPDM_SUBSCRIBE_EVENT_TYPES;
     spdm_request.header.param1 = 0;
     spdm_request.header.param2 = 0;
 
-    status = libspdm_get_response_supported_event_types(spdm_context,
-                                                        spdm_request_size, &spdm_request,
-                                                        &response_size, response);
-    spdm_response = (spdm_error_response_t *)response;
+    spdm_request_size = sizeof(spdm_message_header_t);
+
+    status = libspdm_get_response_subscribe_event_types_ack(spdm_context,
+                                                            spdm_request_size, &spdm_request,
+                                                            &response_size, response);
+    spdm_response = (spdm_subscribe_event_types_ack_response_t *)response;
 
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(spdm_response->header.spdm_version, SPDM_MESSAGE_VERSION_13);
     assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST);
-    assert_int_equal(spdm_response->header.param2, SPDM_GET_SUPPORTED_EVENT_TYPES);
+    assert_int_equal(spdm_response->header.param2, SPDM_SUBSCRIBE_EVENT_TYPES);
 }
 
-int libspdm_responder_supported_event_types_error_test_main(void)
+/**
+ * Test 2: Negotiated version is less than 1.3.
+ * Expected Behavior: Returns SPDM_ERROR_CODE_UNSUPPORTED_REQUEST.
+ **/
+static void libspdm_test_responder_subscribe_event_types_ack_err_case2(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    spdm_subscribe_event_types_request_t spdm_request;
+    size_t spdm_request_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    size_t response_size = sizeof(response);
+    spdm_subscribe_event_types_ack_response_t *spdm_response;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 1;
+
+    set_standard_state(spdm_context);
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    /* Unsupported version for subscribe event types. */
+    spdm_request.header.spdm_version = SPDM_MESSAGE_VERSION_12;
+    spdm_request.header.request_response_code = SPDM_SUBSCRIBE_EVENT_TYPES;
+    spdm_request.header.param1 = 0;
+    spdm_request.header.param2 = 0;
+
+    spdm_request_size = sizeof(spdm_message_header_t);
+
+    status = libspdm_get_response_subscribe_event_types_ack(spdm_context,
+                                                            spdm_request_size, &spdm_request,
+                                                            &response_size, response);
+    spdm_response = (spdm_subscribe_event_types_ack_response_t *)response;
+
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(spdm_response->header.spdm_version, SPDM_MESSAGE_VERSION_12);
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST);
+    assert_int_equal(spdm_response->header.param2, SPDM_SUBSCRIBE_EVENT_TYPES);
+}
+
+int libspdm_responder_subscribe_event_types_ack_error_test_main(void)
 {
     libspdm_test_context_t m_test_context = {
         LIBSPDM_TEST_CONTEXT_VERSION,
@@ -102,7 +147,8 @@ int libspdm_responder_supported_event_types_error_test_main(void)
     };
 
     const struct CMUnitTest spdm_responder_supported_event_types_err_tests[] = {
-        cmocka_unit_test(libspdm_test_responder_supported_event_types_err_case1),
+        cmocka_unit_test(libspdm_test_responder_subscribe_event_types_ack_err_case1),
+        cmocka_unit_test(libspdm_test_responder_subscribe_event_types_ack_err_case2)
     };
 
     libspdm_setup_test_context(&m_test_context);

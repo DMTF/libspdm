@@ -37,6 +37,7 @@ target_sources(spdm_responder_lib
         libspdm_rsp_version.c
         libspdm_rsp_set_certificate.c
         libspdm_rsp_supported_event_types.c
+        libspdm_rsp_subscribe_event_types_ack.c
         libspdm_rsp_csr.c
         libspdm_rsp_chunk_send_ack.c
         libspdm_rsp_chunk_get.c
