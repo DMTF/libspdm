@@ -18,6 +18,7 @@
 #include "hal/library/responder/asymsignlib.h"
 #include "hal/library/responder/csrlib.h"
 #include "hal/library/responder/measlib.h"
+#include "hal/library/responder/key_pair_info.h"
 #include "hal/library/responder/psklib.h"
 #include "hal/library/responder/setcertlib.h"
 #include "hal/library/eventlib.h"
@@ -113,6 +114,8 @@ typedef struct {
 
     /*The device role*/
     bool is_requester;
+
+    uint8_t total_key_pairs;
 } libspdm_local_context_t;
 
 typedef struct {

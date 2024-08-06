@@ -421,6 +421,12 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
 
    1.7, if PSK is required, optionally deploy PSK Hint in the call to libspdm_start_session().
 
+   1.8, if Responder sets GET_KEY_PAIR_INFO_CAP then LIBSPDM_DATA_TOTAL_KEY_PAIRS must be set.
+   ```
+   parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
+   libspdm_set_data (spdm_context, LIBSPDM_DATA_TOTAL_KEY_PAIRS, &parameter, total_key_pairs, total_key_pairs_size);
+   ```
+
 2. Dispatch SPDM messages.
 
    ```

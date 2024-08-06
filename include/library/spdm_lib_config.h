@@ -74,6 +74,10 @@
 #define LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP 1
 #endif
 
+#ifndef LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
+#define LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP 1
+#endif
+
 /* Includes SPDM 1.3 features for CSR messages. If enabled then LIBSPDM_ENABLE_CAPABILITY_CSR_CAP
  * must also be enabled.
  */
