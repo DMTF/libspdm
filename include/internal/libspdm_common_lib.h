@@ -507,17 +507,15 @@ typedef struct {
 
     /* Cached plain text command
      * If the command is cipher text, decrypt then cache it. */
-    uint8_t *last_spdm_request;
+    void *last_spdm_request;
     size_t last_spdm_request_size;
 
-    /* scratch buffer */
-    uint8_t *scratch_buffer;
+    /* Buffers used for data processing and transport. */
+    void *scratch_buffer;
     size_t scratch_buffer_size;
-    /* sender buffer */
-    uint8_t *sender_buffer;
+    void *sender_buffer;
     size_t sender_buffer_size;
-    /* receiver buffer */
-    uint8_t *receiver_buffer;
+    void *receiver_buffer;
     size_t receiver_buffer_size;
 
     /* Cache session_id in this spdm_message, only valid for secured message. */
@@ -568,7 +566,7 @@ typedef struct {
     /* Cached data for SPDM_ERROR_CODE_RESPONSE_NOT_READY/SPDM_RESPOND_IF_READY */
     spdm_error_data_response_not_ready_t error_data;
 #if LIBSPDM_RESPOND_IF_READY_SUPPORT
-    uint8_t *cache_spdm_request;
+    void *cache_spdm_request;
     size_t cache_spdm_request_size;
 #endif
     uint8_t current_token;
