@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2021-2024 DMTF
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
 #!/bin/bash
 
 # Before run this script, please Download and install AFL. Unzip and follow docs\QuickStartGuide.txt. Build it with make.

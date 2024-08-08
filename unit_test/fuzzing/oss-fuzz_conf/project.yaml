@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2021-2024 DMTF
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
 homepage: "https://github.com/DMTF/libspdm"
 language: c
 primary_contact: "<primary_contact_email>"

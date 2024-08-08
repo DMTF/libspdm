@@ -1,8 +1,8 @@
 /**
- *  Copyright Notice:
- *  Copyright 2022-2023 DMTF. All rights reserved.
- *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
+ * SPDX-FileCopyrightText: 2022-2024 DMTF
+ * SPDX-License-Identifier: BSD-3-Clause
  **/
+
 #ifndef REQUESTER_WATCHDOGLIB_H
 #define REQUESTER_WATCHDOGLIB_H
 

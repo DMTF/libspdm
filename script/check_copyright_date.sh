@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2021-2024 DMTF
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
 #!/bin/bash
 
 # Check if the modified files' copyright dates are current.
@@ -23,7 +27,7 @@ do
     if [[ $file == "include/"* ]] || [[ $file == "library/"* ]]; then
         if [[ $file == *".h" ]] || [[ $file == *".c" ]]; then
             # Assume that the copyright is located at the third line of the file.
-            if [[ $(sed -n '3p' $file) != *$current_year* ]]; then
+            if [[ $(sed -n '2p' $file) != *$current_year* ]]; then
                 echo $file needs to be updated with $current_year copyright.
                 exit_code=1
             fi

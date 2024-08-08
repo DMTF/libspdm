@@ -1,16 +1,10 @@
 /**
- * Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
- * See https://llvm.org/LICENSE.txt for license information.
+ * SPDX-FileCopyrightText: 2003-2019 University of Illinois at Urbana-Champaign.
+ * SPDX-FileCopyrightText: 2021-2024 DMTF
  * SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  **/
 
-/*Portions of this file have been modified from the original (https://github.com/llvm/llvm-project/blob/main/compiler-rt/lib/builtins/udivmodti4.c) under the following copyright and license.*/
-
-/**
- *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
- *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
- **/
+/*Portions of this file have been modified from the original (https://github.com/llvm/llvm-project/blob/main/compiler-rt/lib/builtins/udivmodti4.c).*/
 
 typedef int si_int;
 typedef unsigned su_int;

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2021-2024 DMTF
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
 #!/usr/bin/perl -w
 #
 # This script runs the OpenSSL Configure script, then processes the
