@@ -7,6 +7,8 @@
 #include "spdm_unit_test.h"
 #include "internal/libspdm_secured_message_lib.h"
 
+#if LIBSPDM_AEAD_AES_256_GCM_SUPPORT
+
 static uint8_t m_secured_message[0x1000];
 static uint8_t m_app_message[0x1000];
 static libspdm_secured_message_context_t m_secured_message_context;
@@ -925,3 +927,5 @@ int libspdm_secured_message_encode_decode_test_main(void)
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }
+
+#endif /* LIBSPDM_AEAD_AES_256_GCM_SUPPORT */
