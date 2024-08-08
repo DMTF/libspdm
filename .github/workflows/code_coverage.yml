@@ -41,6 +41,10 @@ jobs:
         run: |
           cd build/bin
           ./test_spdm_crypt
+      - name: Test Secured Message
+        run: |
+          cd build/bin
+          ./test_spdm_secured_message
       - name: Test FIPS
         run: |
           cd build/bin
