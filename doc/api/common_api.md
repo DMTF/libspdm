@@ -233,9 +233,10 @@ Enumeration value used for the `libspdm_set_data` and/or `libspdm_get_data` func
       endpoint, or appended to the partial (without root certificate) certificate chain returned by
       a peer endpoint. The root certificate(s) must be encoded as ASN.1 DER.
 - `LIBSPDM_DATA_LOCAL_PUBLIC_CERT_CHAIN`
-    - Allows multiple pointers to certificate chains to be stored in slots through the
-      `additional_data` field. A certificate chain can then be returned through a `CERTIFICATE`
-      response message. The certificate chain(s) must be encoded as ASN.1 DER.
+    - Allows multiple pointers to SPDM certificate chains to be stored in slots through the
+      `additional_data` field. An SPDM certificate chain can then be returned through a
+      `CERTIFICATE` response message. The structure of the SPDM certificate chain is defined in the
+      `spdm_cert_chain_t` struct in the `spdm.h` header.
 - `LIBSPDM_DATA_PEER_USED_CERT_CHAIN_BUFFER`
     - Allows multiple certificates, or values derived from the certificates, to be stored in the
       `spdm_context`. If `LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT` is `1` then the provided

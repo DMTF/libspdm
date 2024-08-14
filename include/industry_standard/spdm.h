@@ -545,23 +545,15 @@ typedef struct {
 #define SPDM_CERTIFICATE_RESPONSE_ATTRIBUTES_CERTIFICATE_INFO_MASK 0x7
 
 typedef struct {
-    /* Total length of the certificate chain, in bytes,
-     * including all fields in this table.*/
-
+    /* Total length of the SPDM certificate chain, in bytes, including all fields in this struct. */
     uint16_t length;
     uint16_t reserved;
 
-    /* digest of the Root Certificate.
-     * Note that Root Certificate is ASN.1 DER-encoded for this digest.
-     * The hash size is determined by the SPDM device.*/
+    /* Hash of the root certificate using the negotiated base hashing algorithm.
+     * uint8_t root_hash[hash_size]; */
 
-    /*uint8_t    root_hash[hash_size];*/
-
-    /* One or more ASN.1 DER-encoded X509v3 certificates where the first certificate is signed by the Root
-     * Certificate or is the Root Certificate itself and each subsequent certificate is signed by the preceding
-     * certificate. The last certificate is the Leaf Certificate.*/
-
-    /*uint8_t    certificates[length - 4 - hash_size];*/
+    /* An ASN.1 DER-encoded X.509 v3 certificate chain.
+     * uint8_t certificates[length - 4 - hash_size]; */
 } spdm_cert_chain_t;
 
 /* Maximum size, in bytes, of a certificate chain. */
