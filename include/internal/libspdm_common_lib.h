@@ -1711,4 +1711,17 @@ static inline uint64_t libspdm_le_to_be_64(uint64_t value)
             ((value & 0xff00000000000000) >> 56));
 }
 
+/**
+ * Return capability flags that are masked by the negotiated SPDM version.
+ *
+ * @param  spdm_context      A pointer to the SPDM context.
+ * @param  is_request_flags  If true then flags are from a request message or Requester.
+ *                           If false then flags are from a response message or Responder.
+ * @param  flags             A bitmask of capability flags.
+ *
+ * @return The masked capability flags.
+ */
+uint32_t libspdm_mask_capability_flags(libspdm_context_t *spdm_context,
+                                       bool is_request_flags, uint32_t flags);
+
 #endif /* SPDM_COMMON_LIB_INTERNAL_H */

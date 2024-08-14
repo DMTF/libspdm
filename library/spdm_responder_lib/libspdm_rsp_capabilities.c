@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -247,7 +247,9 @@ libspdm_return_t libspdm_get_response_capabilities(libspdm_context_t *spdm_conte
     spdm_response->header.param1 = 0;
     spdm_response->header.param2 = 0;
     spdm_response->ct_exponent = spdm_context->local_context.capability.ct_exponent;
-    spdm_response->flags = spdm_context->local_context.capability.flags;
+    spdm_response->flags =
+        libspdm_mask_capability_flags(spdm_context, false,
+                                      spdm_context->local_context.capability.flags);
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
         spdm_response->data_transfer_size =
             spdm_context->local_context.capability.data_transfer_size;
@@ -284,18 +286,8 @@ libspdm_return_t libspdm_get_response_capabilities(libspdm_context_t *spdm_conte
         spdm_context->connection_info.capability.ct_exponent = 0;
     }
 
-    if (spdm_response->header.spdm_version == SPDM_MESSAGE_VERSION_10) {
-        spdm_context->connection_info.capability.flags = 0;
-    } else if (spdm_response->header.spdm_version == SPDM_MESSAGE_VERSION_11) {
-        spdm_context->connection_info.capability.flags =
-            spdm_request->flags & SPDM_GET_CAPABILITIES_REQUEST_FLAGS_11_MASK;
-    } else if (spdm_response->header.spdm_version == SPDM_MESSAGE_VERSION_12) {
-        spdm_context->connection_info.capability.flags =
-            spdm_request->flags & SPDM_GET_CAPABILITIES_REQUEST_FLAGS_12_MASK;
-    } else {
-        spdm_context->connection_info.capability.flags =
-            spdm_request->flags & SPDM_GET_CAPABILITIES_REQUEST_FLAGS_13_MASK;
-    }
+    spdm_context->connection_info.capability.flags =
+        libspdm_mask_capability_flags(spdm_context, true, spdm_request->flags);
 
     if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
         spdm_context->connection_info.capability.data_transfer_size =

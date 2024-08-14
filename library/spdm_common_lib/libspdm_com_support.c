@@ -331,3 +331,38 @@ bool libspdm_get_fips_mode(void)
     return false;
 #endif
 }
+
+uint32_t libspdm_mask_capability_flags(libspdm_context_t *spdm_context,
+                                       bool is_request_flags, uint32_t flags)
+{
+    switch (libspdm_get_connection_version(spdm_context)) {
+    case SPDM_MESSAGE_VERSION_10:
+        if (is_request_flags) {
+            /* A 1.0 Requester does not have any capability flags. */
+            return 0;
+        } else {
+            return (flags & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_10_MASK);
+        }
+    case SPDM_MESSAGE_VERSION_11:
+        if (is_request_flags) {
+            return (flags & SPDM_GET_CAPABILITIES_REQUEST_FLAGS_11_MASK);
+        } else {
+            return (flags & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_11_MASK);
+        }
+    case SPDM_MESSAGE_VERSION_12:
+        if (is_request_flags) {
+            return (flags & SPDM_GET_CAPABILITIES_REQUEST_FLAGS_12_MASK);
+        } else {
+            return (flags & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_12_MASK);
+        }
+    case SPDM_MESSAGE_VERSION_13:
+        if (is_request_flags) {
+            return (flags & SPDM_GET_CAPABILITIES_REQUEST_FLAGS_13_MASK);
+        } else {
+            return (flags & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_13_MASK);
+        }
+    default:
+        LIBSPDM_ASSERT(false);
+        return 0;
+    }
+}
