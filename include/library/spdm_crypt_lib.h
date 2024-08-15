@@ -874,6 +874,9 @@ bool libspdm_aead_decryption(const spdm_version_number_t secured_message_version
  * @param  spdm_context  A pointer to the SPDM context.
  * @param  size          Size of random bytes to generate.
  * @param  rand          Pointer to buffer to receive random value.
+ *
+ * @retval true   The random bytes were successfully generated.
+ * @retval false  The random bytes were not successfully generated.
  **/
 bool libspdm_get_random_number(size_t size, uint8_t *rand);
 
