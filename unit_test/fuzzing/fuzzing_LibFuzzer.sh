@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2021-2024 DMTF
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
 #!/bin/bash
 
 # Before run this script, please install LLVM with: sudo apt install llvm, and install CLANG with: sudo apt install clang.
