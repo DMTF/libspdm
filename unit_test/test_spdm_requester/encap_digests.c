@@ -406,11 +406,6 @@ void test_spdm_requester_encap_get_digests_case6(void **state)
     }
 }
 
-libspdm_test_context_t m_spdm_requester_digests_test_context = {
-    LIBSPDM_TEST_CONTEXT_VERSION,
-    false,
-};
-
 int libspdm_requester_encap_digests_test_main(void)
 {
     const struct CMUnitTest spdm_requester_digests_tests[] = {
@@ -428,7 +423,12 @@ int libspdm_requester_encap_digests_test_main(void)
         cmocka_unit_test(test_spdm_requester_encap_get_digests_case6),
     };
 
-    libspdm_setup_test_context(&m_spdm_requester_digests_test_context);
+    libspdm_test_context_t test_context = {
+        LIBSPDM_TEST_CONTEXT_VERSION,
+        false,
+    };
+
+    libspdm_setup_test_context(&test_context);
 
     return cmocka_run_group_tests(spdm_requester_digests_tests,
                                   libspdm_unit_test_group_setup,
