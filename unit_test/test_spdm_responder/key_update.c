@@ -2156,11 +2156,6 @@ void libspdm_test_responder_key_update_case27(void **state)
                         m_rsp_secret_buffer, secured_message_context->hash_size);
 }
 
-libspdm_test_context_t m_libspdm_responder_key_update_test_context = {
-    LIBSPDM_TEST_CONTEXT_VERSION,
-    false,
-};
-
 int libspdm_responder_key_update_test_main(void)
 {
     const struct CMUnitTest spdm_responder_key_update_tests[] = {
@@ -2222,7 +2217,12 @@ int libspdm_responder_key_update_test_main(void)
         cmocka_unit_test(libspdm_test_responder_key_update_case27),
     };
 
-    libspdm_setup_test_context(&m_libspdm_responder_key_update_test_context);
+    libspdm_test_context_t test_context = {
+        LIBSPDM_TEST_CONTEXT_VERSION,
+        false,
+    };
+
+    libspdm_setup_test_context(&test_context);
 
     return cmocka_run_group_tests(spdm_responder_key_update_tests,
                                   libspdm_unit_test_group_setup,

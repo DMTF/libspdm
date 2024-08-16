@@ -1359,11 +1359,6 @@ void libspdm_test_responder_respond_if_ready_case14(void **state) {
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
-libspdm_test_context_t m_libspdm_responder_respond_if_ready_test_context = {
-    LIBSPDM_TEST_CONTEXT_VERSION,
-    false,
-};
-
 int libspdm_responder_respond_if_ready_test_main(void) {
     const struct CMUnitTest spdm_responder_respond_if_ready_tests[] = {
         /* Success Case*/
@@ -1401,7 +1396,12 @@ int libspdm_responder_respond_if_ready_test_main(void) {
 
     };
 
-    libspdm_setup_test_context (&m_libspdm_responder_respond_if_ready_test_context);
+    libspdm_test_context_t test_context = {
+        LIBSPDM_TEST_CONTEXT_VERSION,
+        false,
+    };
+
+    libspdm_setup_test_context (&test_context);
 
     return cmocka_run_group_tests(spdm_responder_respond_if_ready_tests,
                                   libspdm_unit_test_group_setup,

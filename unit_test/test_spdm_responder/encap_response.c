@@ -1039,14 +1039,8 @@ void libspdm_test_get_response_encapsulated_response_ack_case9(void **State)
                      m_libspdm_m_deliver_encapsulated_response_request_t2.header.param1);
 }
 
-libspdm_test_context_t m_libspdm_response_encapsulated_request_test_context = {
-    LIBSPDM_TEST_CONTEXT_VERSION,
-    false,
-};
-
 int libspdm_responder_encapsulated_response_test_main(void)
 {
-
     const struct CMUnitTest spdm_responder_encapsulated_response_tests[] = {
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)
         /*Success Case request_op_code_sequence: SPDM_GET_DIGESTS*/
@@ -1088,7 +1082,12 @@ int libspdm_responder_encapsulated_response_test_main(void)
         cmocka_unit_test(libspdm_test_get_response_encapsulated_response_ack_case9),
     };
 
-    libspdm_setup_test_context(&m_libspdm_response_encapsulated_request_test_context);
+    libspdm_test_context_t test_context = {
+        LIBSPDM_TEST_CONTEXT_VERSION,
+        false,
+    };
+
+    libspdm_setup_test_context(&test_context);
 
     return cmocka_run_group_tests(spdm_responder_encapsulated_response_tests,
                                   libspdm_unit_test_group_setup,
