@@ -2730,11 +2730,6 @@ void libspdm_test_responder_measurements_case36(void **state)
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
-libspdm_test_context_t m_libspdm_responder_measurements_test_context = {
-    LIBSPDM_TEST_CONTEXT_VERSION,
-    false,
-};
-
 int libspdm_responder_measurements_test_main(void)
 {
     m_libspdm_get_measurements_request11.slot_id_param = SPDM_MAX_SLOT_COUNT - 1;
@@ -2815,7 +2810,12 @@ int libspdm_responder_measurements_test_main(void)
         cmocka_unit_test(libspdm_test_responder_measurements_case36),
     };
 
-    libspdm_setup_test_context(&m_libspdm_responder_measurements_test_context);
+    libspdm_test_context_t test_context = {
+        LIBSPDM_TEST_CONTEXT_VERSION,
+        false,
+    };
+
+    libspdm_setup_test_context(&test_context);
 
     return cmocka_run_group_tests(spdm_responder_measurements_tests,
                                   libspdm_unit_test_group_setup,
