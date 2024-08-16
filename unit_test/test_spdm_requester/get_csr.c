@@ -584,13 +584,6 @@ void libspdm_test_requester_get_csr_case7(void **state)
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX */
 }
 
-libspdm_test_context_t m_libspdm_requester_get_csr_test_context = {
-    LIBSPDM_TEST_CONTEXT_VERSION,
-    true,
-    libspdm_requester_get_csr_test_send_message,
-    libspdm_requester_get_csr_test_receive_message,
-};
-
 int libspdm_requester_get_csr_test_main(void)
 {
     const struct CMUnitTest spdm_requester_get_csr_tests[] = {
@@ -609,8 +602,14 @@ int libspdm_requester_get_csr_test_main(void)
         cmocka_unit_test(libspdm_test_requester_get_csr_case7),
     };
 
-    libspdm_setup_test_context(
-        &m_libspdm_requester_get_csr_test_context);
+    libspdm_test_context_t test_context = {
+        LIBSPDM_TEST_CONTEXT_VERSION,
+        true,
+        libspdm_requester_get_csr_test_send_message,
+        libspdm_requester_get_csr_test_receive_message,
+    };
+
+    libspdm_setup_test_context(&test_context);
 
     /*ensure that cached.csr exists in test_csr at the beginning*/
     libspdm_clear_cached_csr();
