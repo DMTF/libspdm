@@ -33,7 +33,7 @@ typedef struct {
 static size_t m_libspdm_local_buffer_size;
 static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_VCA_BUFFER_SIZE];
 
-libspdm_return_t libspdm_vendor_get_id_func_err_test(
+static libspdm_return_t libspdm_vendor_get_id_func_err_test(
     void *spdm_context,
     uint16_t *resp_standard_id,
     uint8_t *resp_vendor_id_len,
@@ -47,7 +47,7 @@ libspdm_return_t libspdm_vendor_get_id_func_err_test(
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-libspdm_return_t libspdm_vendor_response_func_err_test(
+static libspdm_return_t libspdm_vendor_response_func_err_test(
     void *spdm_context,
     uint16_t req_standard_id,
     uint8_t req_vendor_id_len,
