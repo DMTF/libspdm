@@ -563,11 +563,6 @@ void test_libspdm_requester_encap_challenge_auth_case8(void **state)
     free(data);
 }
 
-libspdm_test_context_t m_spdm_requester_challenge_auth_test_context = {
-    LIBSPDM_TEST_CONTEXT_VERSION,
-    false,
-};
-
 int libspdm_requester_encap_challenge_auth_test_main(void)
 {
     const struct CMUnitTest spdm_requester_challenge_auth_tests[] = {
@@ -587,7 +582,12 @@ int libspdm_requester_encap_challenge_auth_test_main(void)
         cmocka_unit_test(test_libspdm_requester_encap_challenge_auth_case8),
     };
 
-    libspdm_setup_test_context(&m_spdm_requester_challenge_auth_test_context);
+    libspdm_test_context_t test_context = {
+        LIBSPDM_TEST_CONTEXT_VERSION,
+        false,
+    };
+
+    libspdm_setup_test_context(&test_context);
 
     return cmocka_run_group_tests(spdm_requester_challenge_auth_tests,
                                   libspdm_unit_test_group_setup,
