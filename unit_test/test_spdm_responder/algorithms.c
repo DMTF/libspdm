@@ -2946,11 +2946,6 @@ void libspdm_test_responder_algorithms_case32(void **state)
     assert_int_equal(spdm_context->connection_info.algorithm.measurement_spec, 0);
 }
 
-libspdm_test_context_t m_libspdm_responder_algorithms_test_context = {
-    LIBSPDM_TEST_CONTEXT_VERSION,
-    false,
-};
-
 int libspdm_responder_algorithms_test_main(void)
 {
     const struct CMUnitTest spdm_responder_algorithms_tests[] = {
@@ -3094,7 +3089,13 @@ int libspdm_responder_algorithms_test_main(void)
         m_libspdm_use_asym_algo;
     m_libspdm_negotiate_algorithm_request24.spdm_request_version10.base_asym_algo =
         m_libspdm_use_asym_algo;
-    libspdm_setup_test_context(&m_libspdm_responder_algorithms_test_context);
+
+    libspdm_test_context_t test_context = {
+        LIBSPDM_TEST_CONTEXT_VERSION,
+        false,
+    };
+
+    libspdm_setup_test_context(&test_context);
 
     return cmocka_run_group_tests(spdm_responder_algorithms_tests,
                                   libspdm_unit_test_group_setup,

@@ -1039,11 +1039,6 @@ void libspdm_test_responder_set_certificate_rsp_case12(void **state)
     free(m_libspdm_set_certificate_request);
 }
 
-libspdm_test_context_t m_libspdm_responder_set_certificate_rsp_test_context = {
-    LIBSPDM_TEST_CONTEXT_VERSION,
-    false,
-};
-
 int libspdm_responder_set_certificate_rsp_test_main(void)
 {
     const struct CMUnitTest spdm_responder_set_cetificate_tests[] = {
@@ -1072,7 +1067,12 @@ int libspdm_responder_set_certificate_rsp_test_main(void)
         cmocka_unit_test(libspdm_test_responder_set_certificate_rsp_case12),
     };
 
-    libspdm_setup_test_context(&m_libspdm_responder_set_certificate_rsp_test_context);
+    libspdm_test_context_t test_context = {
+        LIBSPDM_TEST_CONTEXT_VERSION,
+        false,
+    };
+
+    libspdm_setup_test_context(&test_context);
 
     return cmocka_run_group_tests(spdm_responder_set_cetificate_tests,
                                   libspdm_unit_test_group_setup,
