@@ -335,7 +335,7 @@ void libspdm_test_responder_certificate_case7(void **state)
     size_t data_size;
 
     /* Testing Lengths at the boundary of maximum integer values*/
-    uint16_t test_lenghts[] = {
+    uint16_t test_lengths[] = {
         1,        0x7F,     (uint16_t)(0x7F + 1),
         0xFF,  0x7FFF,     (uint16_t)(0x7FFF + 1),
         0xFFFF, (uint16_t)(-1)
@@ -364,9 +364,9 @@ void libspdm_test_responder_certificate_case7(void **state)
     /* This tests considers only offset = 0, other tests vary offset value*/
     m_libspdm_get_certificate_request3.offset = 0;
 
-    for (int i = 0; i < sizeof(test_lenghts) / sizeof(test_lenghts[0]); i++) {
-        TEST_LIBSPDM_DEBUG_PRINT("i:%d test_lenghts[i]:%u\n", i, test_lenghts[i]);
-        m_libspdm_get_certificate_request3.length = test_lenghts[i];
+    for (int i = 0; i < sizeof(test_lengths) / sizeof(test_lengths[0]); i++) {
+        TEST_LIBSPDM_DEBUG_PRINT("i:%d test_lengths[i]:%u\n", i, test_lengths[i]);
+        m_libspdm_get_certificate_request3.length = test_lengths[i];
         /* Expected received length is limited by LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN (implementation specific?)*/
         expected_chunk_size = LIBSPDM_MIN(m_libspdm_get_certificate_request3.length,
                                           LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
