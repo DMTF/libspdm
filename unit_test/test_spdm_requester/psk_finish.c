@@ -2467,13 +2467,6 @@ void libspdm_test_requester_psk_finish_case16(void **state)
     free(data);
 }
 
-libspdm_test_context_t m_libspdm_requester_psk_finish_test_context = {
-    LIBSPDM_TEST_CONTEXT_VERSION,
-    true,
-    libspdm_requester_psk_finish_test_send_message,
-    libspdm_requester_psk_finish_test_receive_message,
-};
-
 int libspdm_requester_psk_finish_test_main(void)
 {
     const struct CMUnitTest spdm_requester_psk_finish_tests[] = {
@@ -2511,7 +2504,14 @@ int libspdm_requester_psk_finish_test_main(void)
         cmocka_unit_test(libspdm_test_requester_psk_finish_case16),
     };
 
-    libspdm_setup_test_context(&m_libspdm_requester_psk_finish_test_context);
+    libspdm_test_context_t test_context = {
+        LIBSPDM_TEST_CONTEXT_VERSION,
+        true,
+        libspdm_requester_psk_finish_test_send_message,
+        libspdm_requester_psk_finish_test_receive_message,
+    };
+
+    libspdm_setup_test_context(&test_context);
 
     return cmocka_run_group_tests(spdm_requester_psk_finish_tests,
                                   libspdm_unit_test_group_setup,

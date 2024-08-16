@@ -4342,13 +4342,6 @@ void libspdm_test_requester_get_certificate_case30(void **state)
     free(m_libspdm_local_certificate_chain);
 }
 
-libspdm_test_context_t m_libspdm_requester_get_certificate_test_context = {
-    LIBSPDM_TEST_CONTEXT_VERSION,
-    true,
-    libspdm_requester_get_certificate_test_send_message,
-    libspdm_requester_get_certificate_test_receive_message,
-};
-
 int libspdm_requester_get_certificate_test_main(void)
 {
     const struct CMUnitTest spdm_requester_get_certificate_tests[] = {
@@ -4417,7 +4410,14 @@ int libspdm_requester_get_certificate_test_main(void)
         cmocka_unit_test(libspdm_test_requester_get_certificate_case30),
     };
 
-    libspdm_setup_test_context(&m_libspdm_requester_get_certificate_test_context);
+    libspdm_test_context_t test_context = {
+        LIBSPDM_TEST_CONTEXT_VERSION,
+        true,
+        libspdm_requester_get_certificate_test_send_message,
+        libspdm_requester_get_certificate_test_receive_message,
+    };
+
+    libspdm_setup_test_context(&test_context);
 
     return cmocka_run_group_tests(spdm_requester_get_certificate_tests,
                                   libspdm_unit_test_group_setup,
