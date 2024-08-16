@@ -30,7 +30,7 @@ typedef struct {
 #pragma pack()
 
 
-libspdm_return_t libspdm_vendor_get_id_func_test(
+static libspdm_return_t libspdm_vendor_get_id_func_test(
     void *spdm_context,
     uint16_t *resp_standard_id,
     uint8_t *resp_vendor_id_len,
@@ -54,7 +54,7 @@ libspdm_return_t libspdm_vendor_get_id_func_test(
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-libspdm_return_t libspdm_vendor_response_func_test(
+static libspdm_return_t libspdm_vendor_response_func_test(
     void *spdm_context,
     uint16_t req_standard_id,
     uint8_t req_vendor_id_len,
