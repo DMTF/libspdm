@@ -156,18 +156,18 @@ static void libspdm_test_responder_vendor_cmds_case1(void **state)
         SPDM_MESSAGE_VERSION_10);
 }
 
-libspdm_test_context_t m_libspdm_responder_vendor_cmds_test_context = {
-    LIBSPDM_TEST_CONTEXT_VERSION,
-    true,
-};
-
 int libspdm_responder_vendor_cmds_test_main(void)
 {
     const struct CMUnitTest spdm_responder_vendor_cmds_tests[] = {
         cmocka_unit_test(libspdm_test_responder_vendor_cmds_case1),
     };
 
-    libspdm_setup_test_context(&m_libspdm_responder_vendor_cmds_test_context);
+    libspdm_test_context_t test_context = {
+        LIBSPDM_TEST_CONTEXT_VERSION,
+        true,
+    };
+
+    libspdm_setup_test_context(&test_context);
 
     return cmocka_run_group_tests(spdm_responder_vendor_cmds_tests,
                                   libspdm_unit_test_group_setup,

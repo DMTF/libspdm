@@ -1984,11 +1984,6 @@ void libspdm_test_responder_csr_case16(void **state)
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX */
 }
 
-libspdm_test_context_t m_libspdm_responder_csr_test_context = {
-    LIBSPDM_TEST_CONTEXT_VERSION,
-    false,
-};
-
 int libspdm_responder_csr_test_main(void)
 {
     const struct CMUnitTest spdm_responder_csr_tests[] = {
@@ -2025,7 +2020,12 @@ int libspdm_responder_csr_test_main(void)
         cmocka_unit_test(libspdm_test_responder_csr_case16),
     };
 
-    libspdm_setup_test_context(&m_libspdm_responder_csr_test_context);
+    libspdm_test_context_t test_context = {
+        LIBSPDM_TEST_CONTEXT_VERSION,
+        false,
+    };
+
+    libspdm_setup_test_context(&test_context);
 
     /*ensure that cached.csr exists in test_csr at the beginning*/
     libspdm_clear_cached_csr();
