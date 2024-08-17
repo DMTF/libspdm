@@ -417,9 +417,6 @@ libspdm_return_t libspdm_handle_large_request(
             spdm_context, session_id, false,
             spdm_request_size, spdm_request);
 
-        spdm_request = NULL;
-        spdm_request_size = 0;
-
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             break;
         }
