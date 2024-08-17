@@ -285,8 +285,7 @@ libspdm_return_t libspdm_handle_error_large_response(
 
         status = libspdm_send_spdm_request(spdm_context, session_id,
                                            spdm_request_size, spdm_request);
-        spdm_request = NULL;
-        spdm_request_size = 0;
+
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             break;
         }

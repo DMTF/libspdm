@@ -3102,9 +3102,7 @@ void libspdm_deinit_context(void *spdm_context)
                     context->connection_info.algorithm.req_base_asym_alg, pubkey_context);
             }
 
-            pubkey_context = NULL;
-            context->connection_info.peer_used_cert_chain[slot_index].
-            leaf_cert_public_key = NULL;
+            context->connection_info.peer_used_cert_chain[slot_index].leaf_cert_public_key = NULL;
         }
     }
 #endif
