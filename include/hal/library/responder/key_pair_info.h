@@ -11,7 +11,8 @@
 #include "internal/libspdm_lib_config.h"
 #include "industry_standard/spdm.h"
 
-#if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
+#if (LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP || \
+     LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP)
 
 /**
  * read the key pair info of the key_pair_id.
@@ -43,6 +44,36 @@ extern bool libspdm_read_key_pair_info(
     uint8_t *assoc_cert_slot_mask,
     uint16_t *public_key_info_len,
     uint8_t *public_key_info);
-#endif /* LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP */
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP || LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP) */
+
+#if LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP
+/**
+ * write the key pair info of the key_pair_id.
+ *
+ * @param  spdm_context                 A pointer to the SPDM context.
+ * @param  key_pair_id                  Indicate which key pair ID's information to retrieve.
+ *
+ * @param  key_pair_id                  Indicate which key pair ID's information to retrieve.
+ * @param  operation                    Set key pair info operation: change/erase/generate.
+ * @param  desired_key_usage            Indicate the desired key usage for the requested key pair ID.
+ * @param  desired_asym_algo            Indicate the desired asymmetric algorithm for the requested key pair ID.
+ * @param  desired_assoc_cert_slot_mask Indicate the desired certificate slot association for the requested key pair ID.
+ * @param  need_reset                   For input, it gives the value of CERT_INSTALL_RESET_CAP:
+ *                                                  If true, then device needs to be reset to complete the set_key_pair_info.
+ *                                                  If false, the device doesn`t need to be reset to complete the set_key_pair_info.
+ *                                       For output, it specifies whether the device needs to be reset to complete the set_key_pair_info or not.
+ *
+ * @retval true  set key pair info successfully.
+ * @retval false set key pair info failed.
+ **/
+extern bool libspdm_write_key_pair_info(
+    void *spdm_context,
+    uint8_t key_pair_id,
+    uint8_t operation,
+    uint16_t desired_key_usage,
+    uint32_t desired_asym_algo,
+    uint8_t desired_assoc_cert_slot_mask,
+    bool * need_reset);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP */
 
 #endif /* RESPONDER_KEY_PAIR_INFO_H */

@@ -404,6 +404,29 @@ libspdm_return_t libspdm_get_key_pair_info(void *spdm_context, const uint32_t *s
                                            );
 #endif /* LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP */
 
+#if LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP
+/**
+ * This function sends GET_KEY_PAIR_INFO to get key pair info from device.
+ *
+ * @param  spdm_context                 A pointer to the SPDM context.
+ * @param  session_id                   Indicates if it is a secured message protected via SPDM session.
+ *                                      If session_id is NULL, it is a normal message.
+ *                                      If session_id is not NULL, it is a secured message.
+ * @param  key_pair_id                  Indicate which key pair ID's information to retrieve.
+ * @param  operation                    Set key pair info operation: change/erase/generate.
+ * @param  desired_key_usage            Indicate the desired key usage for the requested key pair ID.
+ * @param  desired_asym_algo            Indicate the desired asymmetric algorithm for the requested key pair ID.
+ * @param  desired_assoc_cert_slot_mask Indicate the desired certificate slot association for the requested key pair ID.
+ **/
+libspdm_return_t libspdm_set_key_pair_info(void *spdm_context, const uint32_t *session_id,
+                                           uint8_t key_pair_id,
+                                           uint8_t operation,
+                                           uint16_t desired_key_usage,
+                                           uint32_t desired_asym_algo,
+                                           uint8_t desired_assoc_cert_slot_mask
+                                           );
+#endif /* LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP */
+
 #if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)
 /**
  * This function sends KEY_EXCHANGE/FINISH or PSK_EXCHANGE/PSK_FINISH

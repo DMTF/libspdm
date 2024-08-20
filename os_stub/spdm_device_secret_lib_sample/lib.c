@@ -2280,7 +2280,8 @@ bool libspdm_event_subscribe(
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
 
-#if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
+#if (LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP || \
+     LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP)
 
 void libspdm_init_key_pair_info(uint8_t total_key_pairs) {
     uint8_t public_key_info_rsa[] = {0x30, 0x0D, 0x06, 0x09, 0x2A, 0x86, 0x48, 0x86, 0xF7,
@@ -2495,4 +2496,142 @@ bool libspdm_read_key_pair_info(
 
     return true;
 }
-#endif /* LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP */
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP || LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP) */
+
+#if LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP
+
+typedef struct
+{
+    uint8_t key_pair_id;
+    uint8_t operation;
+    uint16_t desired_key_usage;
+    uint32_t desired_asym_algo;
+    uint8_t desired_assoc_cert_slot_mask;
+} libspdm_cached_key_pair_info_data_t;
+
+
+bool libspdm_read_cached_last_set_key_pair_info_request(uint8_t **last_set_key_pair_info_request,
+                                                        size_t *last_set_key_pair_info_request_len)
+{
+    bool res;
+    char file[] = "cached_last_set_key_pair_info_request";
+
+    res = libspdm_read_input_file(file, (void **)last_set_key_pair_info_request,
+                                  last_set_key_pair_info_request_len);
+
+    return res;
+}
+
+bool libspdm_cache_last_set_key_pair_info_request(const uint8_t *last_set_key_pair_info_request,
+                                                  size_t last_set_key_pair_info_request_len)
+{
+    bool res;
+    char file[] = "cached_last_set_key_pair_info_request";
+
+    res = libspdm_write_output_file(file, last_set_key_pair_info_request,
+                                    last_set_key_pair_info_request_len);
+
+    return res;
+}
+
+bool libspdm_write_key_pair_info(
+    void *spdm_context,
+    uint8_t key_pair_id,
+    uint8_t operation,
+    uint16_t desired_key_usage,
+    uint32_t desired_asym_algo,
+    uint8_t desired_assoc_cert_slot_mask,
+    bool *need_reset)
+{
+    bool result;
+    libspdm_cached_key_pair_info_data_t *cached_key_pair_info;
+    libspdm_cached_key_pair_info_data_t current_key_pair_info;
+    size_t cached_key_pair_info_len;
+
+
+    cached_key_pair_info_len = 0;
+    if (*need_reset) {
+        result = libspdm_read_cached_last_set_key_pair_info_request(
+            (uint8_t **)&cached_key_pair_info,
+            &cached_key_pair_info_len);
+
+        if ((result) &&
+            (cached_key_pair_info_len == sizeof(libspdm_cached_key_pair_info_data_t)) &&
+            (cached_key_pair_info->operation == operation) &&
+            (cached_key_pair_info->key_pair_id == key_pair_id) &&
+            (cached_key_pair_info->desired_key_usage == desired_key_usage) &&
+            (cached_key_pair_info->desired_asym_algo == desired_asym_algo) &&
+            (cached_key_pair_info->desired_assoc_cert_slot_mask == desired_assoc_cert_slot_mask)) {
+            if (operation == SPDM_SET_KEY_PAIR_INFO_ERASE_OPERATION) {
+                m_key_pair_info[key_pair_id - 1].current_key_usage = 0;
+                m_key_pair_info[key_pair_id - 1].current_asym_algo = 0;
+                m_key_pair_info[key_pair_id - 1].assoc_cert_slot_mask = 0;
+            } else if (operation == SPDM_SET_KEY_PAIR_INFO_GENERATE_OPERATION) {
+                m_key_pair_info[key_pair_id - 1].current_key_usage = desired_key_usage;
+                m_key_pair_info[key_pair_id - 1].current_asym_algo = desired_asym_algo;
+                m_key_pair_info[key_pair_id - 1].assoc_cert_slot_mask =
+                    desired_assoc_cert_slot_mask;
+            } else if (operation == SPDM_SET_KEY_PAIR_INFO_CHANGE_OPERATION) {
+                if (desired_key_usage != 0) {
+                    m_key_pair_info[key_pair_id - 1].current_key_usage = desired_key_usage;
+                }
+                if (desired_asym_algo != 0) {
+                    m_key_pair_info[key_pair_id - 1].current_asym_algo = desired_asym_algo;
+                }
+                m_key_pair_info[key_pair_id - 1].assoc_cert_slot_mask =
+                    desired_assoc_cert_slot_mask;
+            } else {
+                return false;
+            }
+
+            /*device don't need reset this time*/
+            *need_reset = false;
+            free(cached_key_pair_info);
+            return true;
+        } else {
+            if (cached_key_pair_info != NULL) {
+                free(cached_key_pair_info);
+            }
+
+            current_key_pair_info.operation = operation;
+            current_key_pair_info.key_pair_id = key_pair_id;
+            current_key_pair_info.desired_key_usage = desired_key_usage;
+            current_key_pair_info.desired_asym_algo = desired_asym_algo;
+            current_key_pair_info.desired_assoc_cert_slot_mask = desired_assoc_cert_slot_mask;
+            /*device need reset this time: cache the last_set_key_pair_info_request */
+            result = libspdm_cache_last_set_key_pair_info_request(
+                (const uint8_t *)&current_key_pair_info,
+                sizeof(libspdm_cached_key_pair_info_data_t));
+            if (!result) {
+                return result;
+            }
+
+            /*device need reset this time*/
+            *need_reset = true;
+            return true;
+        }
+    } else {
+        if (operation == SPDM_SET_KEY_PAIR_INFO_ERASE_OPERATION) {
+            m_key_pair_info[key_pair_id - 1].current_key_usage = 0;
+            m_key_pair_info[key_pair_id - 1].current_asym_algo = 0;
+            m_key_pair_info[key_pair_id - 1].assoc_cert_slot_mask = 0;
+        } else if (operation == SPDM_SET_KEY_PAIR_INFO_GENERATE_OPERATION) {
+            m_key_pair_info[key_pair_id - 1].current_key_usage = desired_key_usage;
+            m_key_pair_info[key_pair_id - 1].current_asym_algo = desired_asym_algo;
+            m_key_pair_info[key_pair_id - 1].assoc_cert_slot_mask = desired_assoc_cert_slot_mask;
+        } else if (operation == SPDM_SET_KEY_PAIR_INFO_CHANGE_OPERATION) {
+            if (desired_key_usage != 0) {
+                m_key_pair_info[key_pair_id - 1].current_key_usage = desired_key_usage;
+            }
+            if (desired_asym_algo != 0) {
+                m_key_pair_info[key_pair_id - 1].current_asym_algo = desired_asym_algo;
+            }
+            m_key_pair_info[key_pair_id - 1].assoc_cert_slot_mask = desired_assoc_cert_slot_mask;
+        } else {
+            return false;
+        }
+
+        return true;
+    }
+}
+#endif /* #if LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP */

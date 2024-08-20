@@ -949,4 +949,12 @@ libspdm_return_t libspdm_get_response_key_pair_info(libspdm_context_t *spdm_cont
                                                     size_t *response_size, void *response);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP */
 
+#if LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP
+libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *spdm_context,
+                                                            size_t request_size,
+                                                            const void *request,
+                                                            size_t *response_size,
+                                                            void *response);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP */
+
 #endif /* SPDM_RESPONDER_LIB_INTERNAL_H */
