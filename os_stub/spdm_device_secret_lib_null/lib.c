@@ -237,7 +237,8 @@ bool libspdm_event_get_types(
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
 
-#if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
+#if (LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP || \
+     LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP)
 
 /**
  * read the key pair info of the key_pair_id.
@@ -272,4 +273,18 @@ bool libspdm_read_key_pair_info(
 {
     return false;
 }
-#endif /* LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP */
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP || LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP) */
+
+#if LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP
+bool libspdm_write_key_pair_info(
+    void *spdm_context,
+    uint8_t key_pair_id,
+    uint8_t operation,
+    uint16_t desired_key_usage,
+    uint32_t desired_asym_algo,
+    uint8_t desired_assoc_cert_slot_mask,
+    bool *need_reset)
+{
+    return false;
+}
+#endif /* #if LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP */

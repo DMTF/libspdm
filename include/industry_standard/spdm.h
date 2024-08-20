@@ -58,6 +58,7 @@
 #define SPDM_SUPPORTED_EVENT_TYPES 0x62
 #define SPDM_MEASUREMENT_EXTENSION_LOG 0x6F
 #define SPDM_KEY_PAIR_INFO 0x7C
+#define SPDM_SET_KEY_PAIR_INFO_ACK 0x7D
 
 /* SPDM request code (1.0) */
 #define SPDM_GET_DIGESTS 0x81
@@ -91,6 +92,7 @@
 #define SPDM_GET_SUPPORTED_EVENT_TYPES 0xE2
 #define SPDM_GET_MEASUREMENT_EXTENSION_LOG 0xEF
 #define SPDM_GET_KEY_PAIR_INFO 0xFC
+#define SPDM_SET_KEY_PAIR_INFO 0xFD
 
 /* SPDM message header*/
 typedef struct {
@@ -1286,6 +1288,27 @@ typedef struct {
     /*uint8_t public_key_info[public_key_info_len];*/
 } spdm_key_pair_info_response_t;
 
+
+/* SPDM SET_KEY_PAIR_INFO request */
+typedef struct {
+    spdm_message_header_t header;
+    /* param1 == Operation
+     * param2 == RSVD*/
+    uint8_t key_pair_id;
+    /* uint8_t reserved;
+     * uint16_t desired_key_usage;
+     * uint32_t desired_asym_algo;
+     * uint8_t desired_assoc_cert_slot_mask;
+     */
+} spdm_set_key_pair_info_request_t;
+
+/* SPDM SET_KEY_PAIR_INFO_ACK response */
+typedef struct {
+    spdm_message_header_t header;
+    /* param1 == RSVD
+     * param2 == RSVD*/
+} spdm_set_key_pair_info_ack_response_t;
+
 #pragma pack()
 
 #define SPDM_VERSION_1_1_BIN_CONCAT_LABEL "spdm1.1 "
@@ -1338,5 +1361,10 @@ typedef struct {
 #define SPDM_DMTF_EVENT_TYPE_MEASUREMENT_CHANGED 2
 #define SPDM_DMTF_EVENT_TYPE_MEASUREMENT_PRE_UPDATE 3
 #define SPDM_DMTF_EVENT_TYPE_CERTIFICATE_CHANGED 4
+
+/*SPDM SET_KEY_PAIR_INFO operation*/
+#define SPDM_SET_KEY_PAIR_INFO_CHANGE_OPERATION 0
+#define SPDM_SET_KEY_PAIR_INFO_ERASE_OPERATION 1
+#define SPDM_SET_KEY_PAIR_INFO_GENERATE_OPERATION 2
 
 #endif /* SPDM_H */
