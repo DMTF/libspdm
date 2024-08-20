@@ -284,7 +284,7 @@ libspdm_return_t libspdm_get_measurement_extension_log_choose_length(void *spdm_
         status = libspdm_try_get_measurement_extension_log(context, session_id,
                                                            length,
                                                            mel_size, measure_exten_log);
-        if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
+        if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
         }
 
