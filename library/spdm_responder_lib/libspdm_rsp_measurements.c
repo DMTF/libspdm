@@ -400,7 +400,8 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
             }
 
             if ((spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) &&
-                spdm_context->connection_info.multi_key_conn_rsp) {
+                spdm_context->connection_info.multi_key_conn_rsp &&
+                (slot_id_param != 0xF)) {
                 if ((spdm_context->local_context.local_key_usage_bit_mask[slot_id_param] &
                      SPDM_KEY_USAGE_BIT_MASK_MEASUREMENT_USE) == 0) {
                     return libspdm_generate_error_response(
