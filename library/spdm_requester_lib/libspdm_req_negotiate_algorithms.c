@@ -655,7 +655,7 @@ libspdm_return_t libspdm_negotiate_algorithms(libspdm_context_t *spdm_context)
     retry_delay_time = spdm_context->retry_delay_time;
     do {
         status = libspdm_try_negotiate_algorithms(spdm_context);
-        if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
+        if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
         }
 

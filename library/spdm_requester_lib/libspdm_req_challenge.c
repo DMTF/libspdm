@@ -420,7 +420,7 @@ libspdm_return_t libspdm_challenge(void *spdm_context, void *reserved,
                                        measurement_hash_type,
                                        measurement_hash, slot_mask,
                                        NULL, NULL, NULL, NULL, NULL);
-        if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
+        if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
         }
 
@@ -459,7 +459,7 @@ libspdm_return_t libspdm_challenge_ex(void *spdm_context, void *reserved,
                                        requester_nonce, responder_nonce,
                                        opaque_data,
                                        opaque_data_size);
-        if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
+        if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
         }
 
@@ -499,7 +499,7 @@ libspdm_return_t libspdm_challenge_ex2(void *spdm_context, void *reserved,
                                        requester_nonce, responder_nonce,
                                        opaque_data,
                                        opaque_data_size);
-        if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
+        if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
         }
 

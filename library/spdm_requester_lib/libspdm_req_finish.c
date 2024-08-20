@@ -627,7 +627,7 @@ libspdm_return_t libspdm_send_receive_finish(libspdm_context_t *spdm_context,
     do {
         status = libspdm_try_send_receive_finish(spdm_context, session_id,
                                                  req_slot_id_param);
-        if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
+        if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
         }
 

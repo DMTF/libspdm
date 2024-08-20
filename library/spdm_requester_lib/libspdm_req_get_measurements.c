@@ -740,7 +740,7 @@ libspdm_return_t libspdm_get_measurement(void *spdm_context, const uint32_t *ses
             measurement_operation, slot_id_param, NULL, content_changed, number_of_blocks,
             measurement_record_length, measurement_record,
             NULL, NULL, NULL, NULL, NULL);
-        if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
+        if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
         }
 
@@ -781,7 +781,7 @@ libspdm_return_t libspdm_get_measurement_ex(void *spdm_context, const uint32_t *
             requester_nonce_in,
             requester_nonce, responder_nonce,
             opaque_data, opaque_data_size);
-        if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
+        if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
         }
 
@@ -824,7 +824,7 @@ libspdm_return_t libspdm_get_measurement_ex2(void *spdm_context, const uint32_t 
             requester_nonce_in,
             requester_nonce, responder_nonce,
             opaque_data, opaque_data_size);
-        if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
+        if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
         }
 

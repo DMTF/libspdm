@@ -340,7 +340,7 @@ libspdm_return_t libspdm_key_update(void *spdm_context, uint32_t session_id,
     do {
         status = libspdm_try_key_update(spdm_context, session_id,
                                         single_direction, &key_updated);
-        if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
+        if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
         }
 

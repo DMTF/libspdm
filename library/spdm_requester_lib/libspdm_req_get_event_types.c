@@ -168,7 +168,7 @@ libspdm_return_t libspdm_get_event_types(void *spdm_context,
                                              event_group_count,
                                              supported_event_groups_list_len,
                                              supported_event_groups_list);
-        if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
+        if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
         }
 

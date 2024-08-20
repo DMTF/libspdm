@@ -259,7 +259,7 @@ libspdm_return_t libspdm_get_csr(void * spdm_context,
                                      opaque_data, opaque_data_length,
                                      csr, csr_len,
                                      0, 0, NULL);
-        if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
+        if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
         }
 
@@ -296,7 +296,7 @@ libspdm_return_t libspdm_get_csr_ex(void * spdm_context,
                                      csr, csr_len,
                                      request_attribute, key_pair_id,
                                      available_csr_tracking_tag);
-        if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
+        if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
         }
 

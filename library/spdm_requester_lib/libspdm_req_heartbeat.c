@@ -159,7 +159,7 @@ libspdm_return_t libspdm_heartbeat(void *spdm_context, uint32_t session_id)
     retry_delay_time = context->retry_delay_time;
     do {
         status = libspdm_try_heartbeat(context, session_id);
-        if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
+        if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
         }
 

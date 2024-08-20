@@ -259,7 +259,7 @@ libspdm_return_t libspdm_vendor_send_request_receive_response(
             resp_vendor_id,
             resp_size,
             resp_data);
-        if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
+        if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
         }
 
