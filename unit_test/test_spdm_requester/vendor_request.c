@@ -128,7 +128,7 @@ static libspdm_return_t libspdm_requester_vendor_cmds_test_receive_message(
         size_t spdm_response_size;
         size_t transport_header_size;
         status = libspdm_transport_test_decode_message(
-            spdm_test_context, &session_id, &is_app_message, true,
+            spdm_context, &session_id, &is_app_message, true,
             m_libspdm_local_buffer_size, m_libspdm_local_buffer,
             &transport_message_size, (void **)(&spdm_request));
         assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
