@@ -132,6 +132,8 @@ test_spdm_requester_vendor_cmds
 test_spdm_responder_vendor_cmds
 test_spdm_responder_measurement_extension_log
 test_spdm_requester_get_measurement_extension_log
+test_spdm_requester_get_key_pair_info
+test_spdm_responder_key_pair_info
 )
 object_parameters=()
 cp -r $fuzzing_seeds ./
