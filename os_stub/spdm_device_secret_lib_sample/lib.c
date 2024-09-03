@@ -2251,8 +2251,7 @@ bool libspdm_event_get_types(
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
 
-#if (LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP || \
-     LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP)
+#if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
 
 void libspdm_init_key_pair_info(uint8_t total_key_pairs) {
     uint8_t public_key_info_rsa[] = {0x30, 0x0D, 0x06, 0x09, 0x2A, 0x86, 0x48, 0x86, 0xF7,
@@ -2467,7 +2466,7 @@ bool libspdm_read_key_pair_info(
 
     return true;
 }
-#endif /* (LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP || LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP) */
+#endif /* LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP
 
