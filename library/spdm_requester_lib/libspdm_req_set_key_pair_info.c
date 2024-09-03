@@ -53,12 +53,6 @@ static libspdm_return_t libspdm_try_set_key_pair_info(libspdm_context_t *spdm_co
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
     }
-    if (operation == SPDM_SET_KEY_PAIR_INFO_GENERATE_OPERATION) {
-        if ((desired_key_usage == 0) || (desired_asym_algo == 0) ||
-            (desired_assoc_cert_slot_mask == 0)) {
-            return LIBSPDM_STATUS_INVALID_PARAMETER;
-        }
-    }
 
     /* -=[Verify State Phase]=- */
     if (!libspdm_is_capabilities_flag_supported(
