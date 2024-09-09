@@ -17,16 +17,15 @@
 
 #pragma pack(1)
 
-
-/* DOE header*/
-
+/* DOE header
+ * The PCIe specification defines the size of a DW as four bytes. */
 typedef struct {
     uint16_t vendor_id;
     uint8_t data_object_type;
     uint8_t reserved;
-    /* length of the data object being transferred in number of DW, including the header (2 DW)
+    /* Length of the data object being transferred in number of DW, including the header (2 DW).
      * It only includes bit[0~17], bit[18~31] are reserved.
-     * A value of 00000h indicate 2^18 DW == 2^20 byte.*/
+     * A value of 00000h indicate 2^18 DW == 2^20 bytes. */
     uint32_t length;
     /*uint32_t   data_object_dw[length];*/
 } pci_doe_data_object_header_t;
@@ -38,11 +37,9 @@ typedef struct {
 #define PCI_DOE_DATA_OBJECT_TYPE_SECURED_SPDM 0x02
 
 #define PCI_DOE_MAX_SIZE_IN_BYTE 0x00100000
-#define PCI_DOE_MAX_SIZE_IN_DW 0x00040000
+#define PCI_DOE_MAX_SIZE_IN_DW (PCI_DOE_MAX_SIZE_IN_BYTE / 4)
 
-
-/* DOE Discovery*/
-
+/* DOE Discovery */
 typedef struct {
     uint8_t index;
     uint8_t version;
@@ -55,20 +52,16 @@ typedef struct {
     uint8_t next_index;
 } pci_doe_discovery_response_t;
 
+/* SPDM Vendor Defined Message for PCI DOE. */
 
-/* SPDM Vendor Defined Message for PCI DOE*/
-
-
-/* PCI Protocol definition*/
-
+/* PCI Protocol definition. */
 typedef struct {
     uint8_t protocol_id;
 } pci_protocol_header_t;
 
 #define PCI_PROTOCOL_ID_IDE_KM 0x00
 
-/* Standard ID and Vendor ID for PCISIG*/
-
+/* Standard ID and Vendor ID for PCISIG */
 #define SPDM_STANDARD_ID_PCISIG SPDM_REGISTRY_ID_PCISIG
 #define SPDM_VENDOR_ID_PCISIG 0x0001
 
