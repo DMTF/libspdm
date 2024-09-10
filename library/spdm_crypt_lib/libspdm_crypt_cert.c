@@ -1109,10 +1109,15 @@ bool libspdm_x509_common_certificate_check(const uint8_t *cert, size_t cert_size
     }
 #endif /* LIBSPDM_ADDITIONAL_CHECK_CERT */
 
-    /* 4. Verify public key algorithm. */
-    status = libspdm_verify_cert_subject_public_key_info(cert, cert_size, base_asym_algo);
-    if (!status) {
-        goto cleanup;
+    /* 4. Verify public key algorithm.
+     *    If this is a SET_CERTIFICATE operation and the endpoint uses the AliasCert model then the
+     *    check should be skipped as the Device Certificate CA's public key does not have to use
+     *    the same algorithms as the connection's negotiated algorithms. */
+    if (!set_cert || (cert_model != SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT)) {
+        status = libspdm_verify_cert_subject_public_key_info(cert, cert_size, base_asym_algo);
+        if (!status) {
+            goto cleanup;
+        }
     }
 
     /* 5. issuer_name*/
