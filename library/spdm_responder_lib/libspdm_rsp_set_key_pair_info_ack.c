@@ -127,7 +127,7 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
         NULL, NULL);
     if (!result) {
         return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                               SPDM_ERROR_CODE_UNSPECIFIED, 0,
                                                response_size, response);
     }
 
@@ -170,6 +170,7 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
                                                response_size, response);
     }
     if (((capabilities & SPDM_KEY_PAIR_CAP_CERT_ASSOC_CAP) == 0) &&
+        (desired_assoc_cert_slot_mask != 0) &&
         (desired_assoc_cert_slot_mask != assoc_cert_slot_mask)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
@@ -213,15 +214,8 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
                                                response_size, response);
     }
 
-    if (operation == SPDM_SET_KEY_PAIR_INFO_ERASE_OPERATION) {
-        if (assoc_cert_slot_mask != 0) {
-            return libspdm_generate_error_response(spdm_context,
-                                                   SPDM_ERROR_CODE_OPERATION_FAILED, 0,
-                                                   response_size, response);
-        }
-    }
-
-    if (operation == SPDM_SET_KEY_PAIR_INFO_GENERATE_OPERATION) {
+    if ((operation == SPDM_SET_KEY_PAIR_INFO_ERASE_OPERATION) ||
+        (operation == SPDM_SET_KEY_PAIR_INFO_GENERATE_OPERATION)) {
         if (assoc_cert_slot_mask != 0) {
             return libspdm_generate_error_response(spdm_context,
                                                    SPDM_ERROR_CODE_OPERATION_FAILED, 0,
@@ -249,11 +243,7 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
     spdm_response = response;
     *response_size = sizeof(spdm_set_key_pair_info_ack_response_t);
 
-
-    if (libspdm_is_capabilities_flag_supported(
-            spdm_context, false, 0,
-            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_INSTALL_RESET_CAP) &&
-        need_reset) {
+    if (need_reset) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_RESET_REQUIRED, 0,
                                                response_size, response);
