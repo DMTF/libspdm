@@ -27,7 +27,9 @@
  * @param  assoc_cert_slot_mask       This field is a bit mask representing the currently associated certificate slots.
  * @param  public_key_info_len        On input, indicate the size in bytes of the destination buffer to store.
  *                                    On output, indicate the size in bytes of the public_key_info.
+ *                                    It can be NULL, if public_key_info is not required.
  * @param  public_key_info            A pointer to a destination buffer to store the public_key_info.
+ *                                    It can be NULL, if public_key_info is not required.
  *
  * @retval true  get key pair info successfully.
  * @retval false get key pair info failed.
