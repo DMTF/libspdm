@@ -261,7 +261,7 @@ libspdm_return_t libspdm_get_key_pair_info(void *spdm_context, const uint32_t *s
                                                asym_algo_capabilities, current_asym_algo,
                                                assoc_cert_slot_mask, public_key_info_len,
                                                public_key_info);
-        if ((status != LIBSPDM_STATUS_BUSY_PEER) || (retry == 0)) {
+        if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
         }
 
