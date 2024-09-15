@@ -33,6 +33,8 @@
 bool g_in_trusted_environment = false;
 uint32_t g_supported_event_groups_list_len = 8;
 uint8_t g_event_group_count = 1;
+bool g_event_all_subscribe = false;
+bool g_event_all_unsubscribe = false;
 
 #if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
 typedef struct {
@@ -2253,19 +2255,40 @@ bool libspdm_event_get_types(
 bool libspdm_event_subscribe(
     void *spdm_context,
     spdm_version_number_t spdm_version,
+    uint32_t session_id,
+    uint8_t subscribe_type,
     uint8_t subscribe_event_group_count,
     uint32_t subscribe_list_len,
     const void *subscribe_list)
 {
-    if (subscribe_event_group_count == 0) {
+    switch (subscribe_type) {
+    case LIBSPDM_EVENT_SUBSCRIBE_ALL:
         if ((subscribe_list_len != 0) || (subscribe_list != NULL)) {
             return false;
         }
-    } else {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Subscribing to all events for session ID 0x.%x\n"));
+        g_event_all_subscribe = true;
+        g_event_all_unsubscribe = false;
+        return true;
+    case LIBSPDM_EVENT_SUBSCRIBE_NONE:
+        if ((subscribe_list_len != 0) || (subscribe_list != NULL)) {
+            return false;
+        }
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Unsubscribing from all events for session ID 0x.%x\n"));
+        g_event_all_subscribe = false;
+        g_event_all_unsubscribe = true;
+        return true;
+    case LIBSPDM_EVENT_SUBSCRIBE_LIST:
         if ((subscribe_list_len == 0) || (subscribe_list == NULL)) {
             return false;
         }
+        break;
+    default:
+        return false;
     }
+
+    g_event_all_subscribe = false;
+    g_event_all_unsubscribe = false;
 
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                    "subscribe_event_group_count == %d, subscribe_list_len = %d\n",

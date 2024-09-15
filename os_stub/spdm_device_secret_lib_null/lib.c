@@ -239,6 +239,8 @@ bool libspdm_event_get_types(
 bool libspdm_event_subscribe(
     void *spdm_context,
     spdm_version_number_t spdm_version,
+    uint32_t session_id,
+    uint8_t subscribe_type,
     uint8_t subscribe_event_group_count,
     uint32_t subscribe_list_len,
     const void *subscribe_list)

@@ -7783,7 +7783,8 @@ static void libspdm_test_requester_key_exchange_case30(void **state)
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_send_receive_key_exchange(
         spdm_context,
-        SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0xFF,
+        SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0,
+        SPDM_KEY_EXCHANGE_REQUEST_SESSION_POLICY_TERMINATION_POLICY_RUNTIME_UPDATE,
         &session_id, &heartbeat_period, &slot_id_param,
         measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
@@ -7792,7 +7793,8 @@ static void libspdm_test_requester_key_exchange_case30(void **state)
         libspdm_secured_message_get_session_state(
             spdm_context->session_info[0].secured_message_context),
         LIBSPDM_SESSION_STATE_HANDSHAKING);
-    assert_int_equal(spdm_context->session_info[0].session_policy, 0xFF);
+    assert_int_equal(spdm_context->session_info[0].session_policy,
+                     SPDM_KEY_EXCHANGE_REQUEST_SESSION_POLICY_TERMINATION_POLICY_RUNTIME_UPDATE);
     free(data);
 }
 
@@ -7953,7 +7955,8 @@ void libspdm_test_requester_key_exchange_case32(void **state)
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_send_receive_key_exchange(
         spdm_context,
-        SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0xFF, 0xFF,
+        SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0xFF,
+        SPDM_KEY_EXCHANGE_REQUEST_SESSION_POLICY_TERMINATION_POLICY_RUNTIME_UPDATE,
         &session_id, &heartbeat_period, &slot_id_param,
         measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
@@ -7962,9 +7965,8 @@ void libspdm_test_requester_key_exchange_case32(void **state)
         libspdm_secured_message_get_session_state(
             spdm_context->session_info[0].secured_message_context),
         LIBSPDM_SESSION_STATE_HANDSHAKING);
-    assert_int_equal(
-        spdm_context->session_info[0].session_policy,
-        0xFF);
+    assert_int_equal(spdm_context->session_info[0].session_policy,
+                     SPDM_KEY_EXCHANGE_REQUEST_SESSION_POLICY_TERMINATION_POLICY_RUNTIME_UPDATE);
     free(data);
 }
 
@@ -8037,7 +8039,8 @@ static void libspdm_test_requester_key_exchange_case33(void **state)
     libspdm_zero_mem(measurement_hash, sizeof(measurement_hash));
     status = libspdm_send_receive_key_exchange(
         spdm_context,
-        SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0xFF,
+        SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0,
+        SPDM_KEY_EXCHANGE_REQUEST_SESSION_POLICY_TERMINATION_POLICY_RUNTIME_UPDATE,
         &session_id, &heartbeat_period, &slot_id_param,
         measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
@@ -8046,8 +8049,8 @@ static void libspdm_test_requester_key_exchange_case33(void **state)
         libspdm_secured_message_get_session_state(
             spdm_context->session_info[0].secured_message_context),
         LIBSPDM_SESSION_STATE_HANDSHAKING);
-    assert_int_equal(
-        spdm_context->session_info[0].session_policy, 0xFF);
+    assert_int_equal(spdm_context->session_info[0].session_policy,
+                     SPDM_KEY_EXCHANGE_REQUEST_SESSION_POLICY_TERMINATION_POLICY_RUNTIME_UPDATE);
     free(data);
 }
 

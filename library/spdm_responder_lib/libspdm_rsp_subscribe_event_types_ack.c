@@ -21,6 +21,7 @@ libspdm_return_t libspdm_get_response_subscribe_event_types_ack(libspdm_context_
     uint32_t session_id;
     libspdm_session_info_t *session_info;
     libspdm_session_state_t session_state;
+    uint8_t subscribe_type;
     uint8_t subscribe_event_group_count;
     uint32_t subscribe_list_len;
     const void *subscribe_list;
@@ -118,15 +119,18 @@ libspdm_return_t libspdm_get_response_subscribe_event_types_ack(libspdm_context_
     }
 
     if (subscribe_event_group_count == 0) {
+        subscribe_type = LIBSPDM_EVENT_SUBSCRIBE_NONE;
         subscribe_list_len = 0;
         subscribe_list = NULL;
     } else {
+        subscribe_type = LIBSPDM_EVENT_SUBSCRIBE_LIST;
         subscribe_list_len = spdm_request->subscribe_list_len;
         subscribe_list = (const void *)(spdm_request + 1);
     }
 
-    if (!libspdm_event_subscribe(spdm_context, spdm_context->connection_info.version,
-                                 subscribe_event_group_count, subscribe_list_len, subscribe_list)) {
+    if (!libspdm_event_subscribe(spdm_context, spdm_context->connection_info.version, session_id,
+                                 subscribe_type, subscribe_event_group_count,
+                                 subscribe_list_len, subscribe_list)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
