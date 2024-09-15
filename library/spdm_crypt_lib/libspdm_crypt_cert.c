@@ -1057,7 +1057,6 @@ bool libspdm_x509_common_certificate_check(const uint8_t *cert, size_t cert_size
     size_t asn1_buffer_len;
     bool status;
     size_t cert_version;
-    size_t value;
     void *context;
 #if LIBSPDM_ADDITIONAL_CHECK_CERT
     size_t signature_algo_oid_size;
@@ -1183,21 +1182,27 @@ bool libspdm_x509_common_certificate_check(const uint8_t *cert, size_t cert_size
         goto cleanup;
     }
 
-    /* 9. key_usage*/
-    value = 0;
-    status = libspdm_x509_get_key_usage(cert, cert_size, &value);
-    if (!status) {
-        goto cleanup;
-    } else {
-        if (value == 0) {
-            if (cert_model != SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT) {
-                status = false;
-                goto cleanup;
-            }
+    /* 9. key_usage
+     *    If this is a SET_CERTIFICATE operation and the endpoint uses the AliasCert model then the
+     *    check should be skipped as the SPDM specification does not specify the presence or absence
+     *    of the Device Certificate CA's keyUsage field. */
+    if (!set_cert || (cert_model != SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT)) {
+        size_t value = 0;
+
+        status = libspdm_x509_get_key_usage(cert, cert_size, &value);
+        if (!status) {
+            goto cleanup;
         } else {
-            if ((LIBSPDM_CRYPTO_X509_KU_DIGITAL_SIGNATURE & value) == 0) {
-                status = false;
-                goto cleanup;
+            if (value == 0) {
+                if (cert_model != SPDM_CERTIFICATE_INFO_CERT_MODEL_GENERIC_CERT) {
+                    status = false;
+                    goto cleanup;
+                }
+            } else {
+                if ((LIBSPDM_CRYPTO_X509_KU_DIGITAL_SIGNATURE & value) == 0) {
+                    status = false;
+                    goto cleanup;
+                }
             }
         }
     }
