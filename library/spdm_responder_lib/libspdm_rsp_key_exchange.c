@@ -291,17 +291,25 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
         }
     }
 
-    if ((spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) &&
-        spdm_context->connection_info.multi_key_conn_rsp &&
-        (slot_id != 0xff)) {
-        if ((spdm_context->local_context.local_key_usage_bit_mask[slot_id] &
-             SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE) == 0) {
-            return libspdm_generate_error_response(
-                spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
-                0, response_size, response);
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+        if (spdm_context->connection_info.multi_key_conn_rsp && (slot_id != 0xff)) {
+            if ((spdm_context->local_context.local_key_usage_bit_mask[slot_id] &
+                 SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE) == 0) {
+                return libspdm_generate_error_response(
+                    spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST, 0, response_size, response);
+            }
+        }
+
+        if ((spdm_request->session_policy &
+             SPDM_KEY_EXCHANGE_REQUEST_SESSION_POLICY_EVENT_ALL_POLICY) != 0) {
+            if (!libspdm_is_capabilities_flag_supported(
+                    spdm_context, false, 0, SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_EVENT_CAP)) {
+                return libspdm_generate_error_response(spdm_context,
+                                                       SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                                       response_size, response);
+            }
         }
     }
-
     spdm_context->connection_info.local_used_cert_chain_slot_id = slot_id;
 
     signature_size = libspdm_get_asym_signature_size(
@@ -619,6 +627,21 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
 
         ptr += hmac_size;
     }
+
+    #if LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+        if ((spdm_request->session_policy &
+             SPDM_KEY_EXCHANGE_REQUEST_SESSION_POLICY_EVENT_ALL_POLICY) != 0) {
+            if (!libspdm_event_subscribe(spdm_context, spdm_context->connection_info.version,
+                                         session_id, LIBSPDM_EVENT_SUBSCRIBE_ALL, 0, 0, NULL)) {
+                libspdm_free_session_id(spdm_context, session_id);
+                return libspdm_generate_error_response(spdm_context,
+                                                       SPDM_ERROR_CODE_UNSPECIFIED, 0,
+                                                       response_size, response);
+            }
+        }
+    }
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
 
     session_info->mut_auth_requested = spdm_response->mut_auth_requested;
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {

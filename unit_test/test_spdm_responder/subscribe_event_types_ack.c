@@ -7,6 +7,9 @@
 #include "spdm_unit_test.h"
 #include "internal/libspdm_responder_lib.h"
 
+extern bool g_event_all_subscribe;
+extern bool g_event_all_unsubscribe;
+
 #if LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP
 
 static void set_standard_state(libspdm_context_t *spdm_context)
@@ -92,6 +95,8 @@ static void libspdm_test_responder_subscribe_event_types_ack_case1(void **state)
     assert_int_equal(spdm_response->header.request_response_code, SPDM_SUBSCRIBE_EVENT_TYPES_ACK);
     assert_int_equal(spdm_response->header.param1, 0);
     assert_int_equal(spdm_response->header.param2, 0);
+
+    assert_true(!g_event_all_subscribe && g_event_all_unsubscribe);
 }
 
 /**
@@ -141,6 +146,8 @@ static void libspdm_test_responder_subscribe_event_types_ack_case2(void **state)
     assert_int_equal(spdm_response->header.request_response_code, SPDM_SUBSCRIBE_EVENT_TYPES_ACK);
     assert_int_equal(spdm_response->header.param1, 0);
     assert_int_equal(spdm_response->header.param2, 0);
+
+    assert_true(!g_event_all_subscribe && !g_event_all_unsubscribe);
 }
 
 int libspdm_responder_subscribe_event_types_ack_test_main(void)

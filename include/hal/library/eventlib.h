@@ -39,26 +39,39 @@ extern bool libspdm_event_get_types(
     uint32_t *supported_event_groups_list_len,
     uint8_t *event_group_count);
 
+#define LIBSPDM_EVENT_SUBSCRIBE_ALL 0
+#define LIBSPDM_EVENT_SUBSCRIBE_NONE 1
+#define LIBSPDM_EVENT_SUBSCRIBE_LIST 2
+
 /**
- * Subscribe to the events given in SubscribeList.
+ * Subscribe or unsubscribe to events.
  *
- * If subscribe_event_group_count is 0 then the event recipient unsubscribes from all events and
- * subscribe_list_len is 0 and subscribe_list is NULL. For a given event group, if
+ * If subscribe_type is LIBSPDM_EVENT_SUBSCRIBE_ALL then the Event Recipient subscribes to all
+ * events, and subsequent parameters are ignored. If subscribe_type is LIBSPDM_EVENT_SUBSCRIBE_NONE
+ * then the Event Recipient unsubscribes from all events and subsequent parameters are ignored. If
+ * subscribe_type is LIBSPDM_EVENT_SUBSCRIBE_LIST then the Event Recipient subscribes to the events
+ * given in subscribe_list. For a given event group, if
  * SPDM_SUBSCRIBE_EVENT_TYPES_REQUEST_ATTRIBUTE_ALL is set in the Attributes field then the event
  * recipient subscribes to all events in that group.
  *
+ * Events can only be sent when the session state is LIBSPDM_SESSION_STATE_ESTABLISHED.
+ *
  * @param  spdm_context                 A pointer to the SPDM context.
  * @param  spdm_version                 Indicates the negotiated version.
+ * @param  session_id                   Secure session identifier.
+ * @param  subscribe_type               One of the LIBSPDM_EVENT_SUBSCRIBE_* macros.
  * @param  subscribe_event_group_count  Number of event groups in subscribe_list.
  * @param  subscribe_list_len           Size, in bytes, of subscribe_list.
  * @param  subscribe_list               Buffer that contains the event groups to be subscribed.
  *
- * @retval true   All events were successfully subscribed or unsubscribed to.
+ * @retval true   All events were successfully subscribed to or unsubscribed from.
  * @retval false  An error occurred when processing the event group list.
  **/
 extern bool libspdm_event_subscribe(
     void *spdm_context,
     spdm_version_number_t spdm_version,
+    uint32_t session_id,
+    uint8_t subscribe_type,
     uint8_t subscribe_event_group_count,
     uint32_t subscribe_list_len,
     const void *subscribe_list);
