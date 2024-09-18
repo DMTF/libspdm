@@ -163,6 +163,8 @@ test_spdm_responder_measurement_extension_log
 test_spdm_requester_get_measurement_extension_log
 test_spdm_requester_get_key_pair_info
 test_spdm_responder_key_pair_info
+test_spdm_requester_set_key_pair_info
+test_spdm_responder_set_key_pair_info_ack
 )
 for ((i=0;i<${#cmds[*]};i++))
 do

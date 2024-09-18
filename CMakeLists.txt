@@ -1021,6 +1021,8 @@ else()
             add_subdirectory(unit_test/fuzzing/test_responder/test_spdm_responder_measurement_extension_log)
             add_subdirectory(unit_test/fuzzing/test_requester/test_spdm_requester_get_key_pair_info)
             add_subdirectory(unit_test/fuzzing/test_responder/test_spdm_responder_key_pair_info)
+            add_subdirectory(unit_test/fuzzing/test_requester/test_spdm_requester_set_key_pair_info)
+            add_subdirectory(unit_test/fuzzing/test_responder/test_spdm_responder_set_key_pair_info_ack)
             endif()
 
             add_subdirectory(os_stub/cryptlib_null)
