@@ -194,6 +194,11 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
     }
+    if(!libspdm_onehot0(desired_asym_algo)) {
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                               response_size, response);
+    }
     if ((desired_asym_algo != 0) &&
         ((asym_algo_capabilities | desired_asym_algo) != asym_algo_capabilities)) {
         return libspdm_generate_error_response(
