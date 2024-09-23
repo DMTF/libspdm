@@ -229,6 +229,7 @@ bool libspdm_gen_csr_ex(
 bool libspdm_event_get_types(
     void *spdm_context,
     spdm_version_number_t spdm_version,
+    uint32_t session_id,
     void *supported_event_groups_list,
     uint32_t *supported_event_groups_list_len,
     uint8_t *event_group_count)

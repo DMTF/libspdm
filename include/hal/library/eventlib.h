@@ -20,6 +20,7 @@
  *
  * @param  spdm_context  A pointer to the SPDM context.
  * @param  spdm_version  Indicates the negotiated version.
+ * @param  session_id    Secure session identifier.
  * @param  supported_event_groups_list      A pointer to the buffer that holds the list of event.
  *                                          groups.
  * @param  supported_event_groups_list_len  On input, the size, in bytes, of the buffer to hold the
@@ -35,6 +36,7 @@
 extern bool libspdm_event_get_types(
     void *spdm_context,
     spdm_version_number_t spdm_version,
+    uint32_t session_id,
     void *supported_event_groups_list,
     uint32_t *supported_event_groups_list_len,
     uint8_t *event_group_count);

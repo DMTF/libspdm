@@ -98,7 +98,7 @@ libspdm_return_t libspdm_get_response_supported_event_types(libspdm_context_t *s
     supported_event_groups_list_len = (uint32_t)response_buffer_size -
                                       sizeof(spdm_supported_event_types_response_t);
 
-    if (!libspdm_event_get_types(spdm_context, spdm_context->connection_info.version,
+    if (!libspdm_event_get_types(spdm_context, spdm_context->connection_info.version, session_id,
                                  (void *)(spdm_response + 1), &supported_event_groups_list_len,
                                  &event_group_count)) {
         return libspdm_generate_error_response(spdm_context,
