@@ -55,16 +55,28 @@ libspdm_return_t libspdm_get_response_heartbeat(libspdm_context_t *spdm_context,
     }
 
     if (!spdm_context->last_spdm_request_session_id_valid) {
-        return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_SESSION_REQUIRED, 0,
-                                               response_size, response);
+        if (libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_12) {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_SESSION_REQUIRED, 0,
+                                                   response_size, response);
+        } else {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_UNSPECIFIED, 0,
+                                                   response_size, response);
+        }
     }
     session_info = libspdm_get_session_info_via_session_id(
         spdm_context, spdm_context->last_spdm_request_session_id);
     if (session_info == NULL) {
-        return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_SESSION_REQUIRED, 0,
-                                               response_size, response);
+        if (libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_12) {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_SESSION_REQUIRED, 0,
+                                                   response_size, response);
+        } else {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_UNSPECIFIED, 0,
+                                                   response_size, response);
+        }
     }
     session_state = libspdm_secured_message_get_session_state(
         session_info->secured_message_context);
