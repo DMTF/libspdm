@@ -2267,7 +2267,8 @@ bool libspdm_event_subscribe(
         if ((subscribe_list_len != 0) || (subscribe_list != NULL)) {
             return false;
         }
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Subscribing to all events for session ID 0x.%x\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                       "Subscribing to all events for session ID 0x%x.\n", session_id));
         g_event_all_subscribe = true;
         g_event_all_unsubscribe = false;
         return true;
@@ -2275,7 +2276,8 @@ bool libspdm_event_subscribe(
         if ((subscribe_list_len != 0) || (subscribe_list != NULL)) {
             return false;
         }
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Unsubscribing from all events for session ID 0x.%x\n"));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
+                       "Unsubscribing from all events for session ID 0x%x.\n", session_id));
         g_event_all_subscribe = false;
         g_event_all_unsubscribe = true;
         return true;
