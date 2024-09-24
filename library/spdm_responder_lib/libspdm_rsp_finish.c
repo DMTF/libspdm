@@ -418,15 +418,24 @@ libspdm_return_t libspdm_get_response_finish(libspdm_context_t *spdm_context, si
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)) {
         /* No handshake in clear, then it must be in a session.*/
         if (!spdm_context->last_spdm_request_session_id_valid) {
-            return libspdm_generate_error_response(
-                spdm_context, SPDM_ERROR_CODE_SESSION_REQUIRED, 0, response_size, response);
+            if (libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_12) {
+                return libspdm_generate_error_response(
+                    spdm_context, SPDM_ERROR_CODE_SESSION_REQUIRED, 0, response_size, response);
+            } else {
+                return libspdm_generate_error_response(
+                    spdm_context, SPDM_ERROR_CODE_UNSPECIFIED, 0, response_size, response);
+            }
         }
     } else {
         /* handshake in clear, then it must not be in a session.*/
         if (spdm_context->last_spdm_request_session_id_valid) {
-            return libspdm_generate_error_response(
-                spdm_context, SPDM_ERROR_CODE_SESSION_REQUIRED, 0,
-                response_size, response);
+            if (libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_12) {
+                return libspdm_generate_error_response(
+                    spdm_context, SPDM_ERROR_CODE_SESSION_REQUIRED, 0, response_size, response);
+            } else {
+                return libspdm_generate_error_response(
+                    spdm_context, SPDM_ERROR_CODE_UNSPECIFIED, 0, response_size, response);
+            }
         }
     }
     if (spdm_context->last_spdm_request_session_id_valid) {
@@ -436,9 +445,15 @@ libspdm_return_t libspdm_get_response_finish(libspdm_context_t *spdm_context, si
     }
     session_info = libspdm_get_session_info_via_session_id(spdm_context, session_id);
     if (session_info == NULL) {
-        return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_SESSION_REQUIRED, 0,
-                                               response_size, response);
+        if (libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_12) {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_SESSION_REQUIRED, 0,
+                                                   response_size, response);
+        } else {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_UNSPECIFIED, 0,
+                                                   response_size, response);
+        }
     }
     if (session_info->use_psk) {
         return libspdm_generate_error_response(spdm_context,
