@@ -31,7 +31,14 @@ typedef struct {
 #define CXL_TSP_OPCODE_GET_TARGET_CONFIGURATION 0x84
 #define CXL_TSP_OPCODE_GET_TARGET_CONFIGURATION_REPORT 0x85
 #define CXL_TSP_OPCODE_LOCK_TARGET_CONFIGURATION 0x86
+#define CXL_TSP_OPCODE_SET_TARGET_CKID_SPECIFIC_KEY 0x87
+#define CXL_TSP_OPCODE_SET_TARGET_CKID_RANDOM_KEY 0x88
+#define CXL_TSP_OPCODE_CLEAR_TARGET_CKID_KEY 0x89
+#define CXL_TSP_OPCODE_SET_TARGET_RANGE_SPECIFIC_KEY 0x8A
+#define CXL_TSP_OPCODE_SET_TARGET_RANGE_RANDOM_KEY 0x8B
+#define CXL_TSP_OPCODE_CLEAR_TARGET_RANGE_KEY 0x8C
 #define CXL_TSP_OPCODE_SET_TARGET_TE_STATE 0x8D
+#define CXL_TSP_OPCODE_CHECK_TARGET_DELAYED_COMPLETION 0x8E
 
 #define CXL_TSP_OPCODE_GET_TARGET_TSP_VERSION_RSP 0x01
 #define CXL_TSP_OPCODE_GET_TARGET_CAPABILITIES_RSP 0x02
@@ -39,7 +46,15 @@ typedef struct {
 #define CXL_TSP_OPCODE_GET_TARGET_CONFIGURATION_RSP 0x04
 #define CXL_TSP_OPCODE_GET_TARGET_CONFIGURATION_REPORT_RSP 0x05
 #define CXL_TSP_OPCODE_LOCK_TARGET_CONFIGURATION_RSP 0x06
+#define CXL_TSP_OPCODE_SET_TARGET_CKID_SPECIFIC_KEY_RSP 0x07
+#define CXL_TSP_OPCODE_SET_TARGET_CKID_RANDOM_KEY_RSP 0x08
+#define CXL_TSP_OPCODE_CLEAR_TARGET_CKID_KEY_RSP 0x09
+#define CXL_TSP_OPCODE_SET_TARGET_RANGE_SPECIFIC_KEY_RSP 0x0A
+#define CXL_TSP_OPCODE_SET_TARGET_RANGE_RANDOM_KEY_RSP 0x0B
+#define CXL_TSP_OPCODE_CLEAR_TARGET_RANGE_KEY_RSP 0x0C
 #define CXL_TSP_OPCODE_SET_TARGET_TE_STATE_RSP 0x0D
+#define CXL_TSP_OPCODE_CHECK_TARGET_DELAYED_COMPLETION_RSP 0x0E
+#define CXL_TSP_OPCODE_DELAYED_RSP 0x7E
 #define CXL_TSP_OPCODE_ERROR_RSP 0x7F
 
 /* Get Target TSP Version */
@@ -306,6 +321,150 @@ typedef struct {
     cxl_tsp_header_t header;
     uint16_t reserved;
 } cxl_tsp_set_target_te_state_rsp_t;
+
+/* Set Target CKID Specific Key */
+
+typedef struct {
+    cxl_tsp_header_t header;
+    uint16_t reserved;
+    uint32_t ckid;
+    uint8_t ckid_type;
+    uint8_t reserved2[6];
+    uint8_t validity_flags;
+    uint8_t data_encryption_key[0x20];
+    uint8_t tweak_key[0x20];
+} cxl_tsp_set_target_ckid_specific_key_req_t;
+
+#define CXL_TSP_SET_CKID_SPECIFIC_KEY_CKID_TYPE_TVM_CKID 1
+#define CXL_TSP_SET_CKID_SPECIFIC_KEY_CKID_TYPE_OS_CKID 2
+
+#define CXL_TSP_KEY_VALIDITY_FLAGS_DATA_ENC_KEY 0x1
+#define CXL_TSP_KEY_VALIDITY_FLAGS_TWEAK_KEY 0x2
+
+/* Set Target CKID Specific Key Response */
+
+typedef struct {
+    cxl_tsp_header_t header;
+    uint16_t reserved;
+} cxl_tsp_set_target_ckid_specific_key_rsp_t;
+
+/* Set Target CKID Random Key */
+
+typedef struct {
+    cxl_tsp_header_t header;
+    uint16_t reserved;
+    uint32_t ckid;
+    uint8_t attributes;
+    uint8_t reserved2[6];
+    uint8_t validity_flags;
+    uint8_t data_encryption_key[0x20];
+    uint8_t tweak_key[0x20];
+} cxl_tsp_set_target_ckid_random_key_req_t;
+
+#define CXL_TSP_SET_CKID_RANDOM_KEY_ATTRIBUTES_CKID_TYPE_MASK 0x1
+#define CXL_TSP_SET_CKID_RANDOM_KEY_ATTRIBUTES_CKID_TYPE_TVM_CKID 0x1
+#define CXL_TSP_SET_CKID_RANDOM_KEY_ATTRIBUTES_CKID_TYPE_OS_CKID 0x0
+
+/* Set Target CKID Random Key Response */
+
+typedef struct {
+    cxl_tsp_header_t header;
+    uint16_t reserved;
+} cxl_tsp_set_target_ckid_random_key_rsp_t;
+
+/* Clear Target CKID Key */
+
+typedef struct {
+    cxl_tsp_header_t header;
+    uint16_t reserved;
+    uint32_t ckid;
+} cxl_tsp_clear_target_ckid_key_req_t;
+
+/* Clear Target CKID Key Response */
+
+typedef struct {
+    cxl_tsp_header_t header;
+    uint16_t reserved;
+} cxl_tsp_clear_target_ckid_key_rsp_t;
+
+/* Set Target Range Specific Key */
+
+typedef struct {
+    cxl_tsp_header_t header;
+    uint16_t reserved;
+    uint32_t range_id;
+    uint64_t range_start;
+    uint64_t range_end;
+    uint8_t reserved2[7];
+    uint8_t validity_flags;
+    uint8_t data_encryption_key[0x20];
+    uint8_t tweak_key[0x20];
+} cxl_tsp_set_target_range_specific_key_req_t;
+
+/* Set Target Range Specific Key Response */
+
+typedef struct {
+    cxl_tsp_header_t header;
+    uint16_t reserved;
+} cxl_tsp_set_target_range_specific_key_rsp_t;
+
+/* Set Target Range Random Key */
+
+typedef struct {
+    cxl_tsp_header_t header;
+    uint16_t reserved;
+    uint32_t range_id;
+    uint64_t range_start;
+    uint64_t range_end;
+    uint8_t reserved2[7];
+    uint8_t validity_flags;
+    uint8_t data_encryption_key[0x20];
+    uint8_t tweak_key[0x20];
+} cxl_tsp_set_target_range_random_key_req_t;
+
+/* Set Target Range Random Key Response */
+
+typedef struct {
+    cxl_tsp_header_t header;
+    uint16_t reserved;
+} cxl_tsp_set_target_range_random_key_rsp_t;
+
+/* Clear Target Range Key */
+
+typedef struct {
+    cxl_tsp_header_t header;
+    uint16_t reserved;
+    uint32_t range_id;
+} cxl_tsp_clear_target_range_key_req_t;
+
+/* Clear Target Range Key Response */
+
+typedef struct {
+    cxl_tsp_header_t header;
+    uint16_t reserved;
+} cxl_tsp_clear_target_range_key_rsp_t;
+
+/* Delayed Response */
+
+typedef struct {
+    cxl_tsp_header_t header;
+    uint16_t reserved;
+    uint32_t delay_time;
+} cxl_tsp_delayed_rsp_t;
+
+/* Check Target Delayed Completion */
+
+typedef struct {
+    cxl_tsp_header_t header;
+    uint16_t reserved;
+} cxl_tsp_check_delayed_completion_req_t;
+
+/* Check Target Delayed Completion Response */
+
+typedef struct {
+    cxl_tsp_header_t header;
+    uint16_t reserved;
+} cxl_tsp_check_delayed_completion_rsp_t;
 
 /* Error Response */
 
