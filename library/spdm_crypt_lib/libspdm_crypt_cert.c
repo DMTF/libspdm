@@ -32,9 +32,9 @@
 #define LIBSPDM_MAX_ENCRYPTION_ALGO_OID_LEN 10
 #endif
 
-/*leaf cert basic constraints len,CA = false: 30 03 01 01 00*/
+/* Maximum size of basicConstraints. This includes space for both cA and pathLen. */
 #ifndef LIBSPDM_MAX_BASIC_CONSTRAINTS_CA_LEN
-#define LIBSPDM_MAX_BASIC_CONSTRAINTS_CA_LEN 5
+#define LIBSPDM_MAX_BASIC_CONSTRAINTS_CA_LEN 10
 #endif
 
 /**
@@ -817,9 +817,9 @@ static bool libspdm_verify_set_cert_leaf_cert_basic_constraints(
     uint8_t cert_basic_constraints[LIBSPDM_MAX_BASIC_CONSTRAINTS_CA_LEN];
     size_t len;
 
-    uint8_t basic_constraints_false_case1[] = BASIC_CONSTRAINTS_STRING_FALSE_CASE1;
-    uint8_t basic_constraints_false_case2[] = BASIC_CONSTRAINTS_STRING_FALSE_CASE2;
-    uint8_t basic_constraints_true_case[] = BASIC_CONSTRAINTS_STRING_TRUE_CASE;
+    const uint8_t basic_constraints_false_case1[] = BASIC_CONSTRAINTS_STRING_FALSE_CASE1;
+    const uint8_t basic_constraints_false_case2[] = BASIC_CONSTRAINTS_STRING_FALSE_CASE2;
+    const uint8_t basic_constraints_true_case[] = BASIC_CONSTRAINTS_STRING_TRUE_CASE;
 
     len = LIBSPDM_MAX_BASIC_CONSTRAINTS_CA_LEN;
 
@@ -851,11 +851,17 @@ static bool libspdm_verify_set_cert_leaf_cert_basic_constraints(
     } else {
         /* Alias certificate model. */
         if (need_basic_constraints || (len != 0)) {
-            if ((len == sizeof(basic_constraints_true_case)) &&
-                (libspdm_consttime_is_mem_equal(cert_basic_constraints,
-                                                basic_constraints_true_case,
-                                                sizeof(basic_constraints_true_case)))) {
-                return true;
+            /* basicConstraints may include the pathLen field. Therefore do not check sequence
+             * length. */
+            if (len >= sizeof(basic_constraints_true_case)) {
+                if (cert_basic_constraints[0] != basic_constraints_true_case[0]) {
+                    return false;
+                }
+                if  (libspdm_consttime_is_mem_equal(&cert_basic_constraints[2],
+                                                    &basic_constraints_true_case[2],
+                                                    sizeof(basic_constraints_true_case) - 2)) {
+                    return true;
+                }
             }
         }
     }
