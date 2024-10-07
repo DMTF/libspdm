@@ -106,6 +106,12 @@
 | [RISCV_XPACK](https://github.com/xpack-dev-tools/riscv-none-elf-gcc-xpack) |  -   |  -  |  -  |    -    | riscv-none-elf-gcc | riscv-none-elf-gcc |
 | [RISCV_NONE](https://archlinux.org/packages/extra/x86_64/riscv64-elf-gcc/) |  -   |  -  |  -  |    -    | riscv64-elf-gcc | riscv64-elf-gcc |
 
+8) Static Analysis
+
+Support [Coverity](https://scan.coverity.com/) scan tool.
+
+Support [CodeQL](https://codeql.github.com/) tool.
+
 ## Documents
 
 1) Presentation
