@@ -20,6 +20,10 @@
 
    PCI Express Base Specification [Revision 6.2](https://members.pcisig.com/wg/PCI-SIG/document/20590)
 
+   CXL follows :
+
+   Compute Express Link Specification [Revision 3.1](https://computeexpresslink.org/cxl-specification)
+
 2) Includes libraries that can be used to construct an SPDM Requester and an SPDM Responder.
 
    Refer to the [libspdm API](https://github.com/DMTF/libspdm/tree/main/doc/api) for more information.
@@ -38,7 +42,7 @@
 
    SPDM 1.2: `GET_CSR`, `SET_CERTIFICATE`, `CHUNK_SEND`, and `CHUNK_GET`.
 
-   SPDM 1.3: `GET_SUPPORTED_EVENT_TYPES` and `GET_MEASUREMENT_EXTENSION_LOG`. Additional SPDM 1.3 messages will be implemented in future releases.
+   SPDM 1.3: `GET_KEY_PAIR_INFO`, `SET_KEY_PAIR_INFO`, `SUBSCRIBE_EVENT_TYPE`, `GET_SUPPORTED_EVENT_TYPES` and `GET_MEASUREMENT_EXTENSION_LOG`. Additional SPDM 1.3 messages will be implemented in future releases.
 
 5) Cryptography Support
 
