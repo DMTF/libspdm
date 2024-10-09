@@ -1128,6 +1128,10 @@ libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_t
         target_data_size = context->transcript.message_a.buffer_size;
         target_data = context->transcript.message_a.buffer;
         break;
+    case LIBSPDM_DATA_REQUEST_AND_SIZE:
+        target_data_size = context->last_spdm_request_size;
+        target_data = context->last_spdm_request;
+        break;
     case LIBSPDM_DATA_SPDM_VERSION_10_11_VERIFY_SIGNATURE_ENDIAN:
         target_data_size = sizeof(uint8_t);
         target_data = &context->spdm_10_11_verify_signature_endian;
