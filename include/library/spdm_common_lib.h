@@ -107,6 +107,9 @@ typedef enum {
     /* VCA cached for CACHE_CAP in 1.2 for transcript. */
     LIBSPDM_DATA_VCA_CACHE,
 
+    /* Raw request buffer and size */
+    LIBSPDM_DATA_REQUEST_AND_SIZE,
+
     /* if the context is for a requester. It only needs to be set in VCA cache.
      * In normal flow, the value is set in GET_VERSION or VERSION automatically.
      * false means responder
