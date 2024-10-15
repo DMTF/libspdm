@@ -172,6 +172,9 @@ typedef struct {
 
 /* Set Target Configuration */
 
+#define CXL_TSP_2ND_SESSION_COUNT 4
+#define CXL_TSP_2ND_SESSION_KEY_SIZE 0x20
+
 typedef struct {
     uint64_t te_state_granularity;
     uint8_t length_index;
@@ -179,7 +182,7 @@ typedef struct {
 } cxl_tsp_explicit_ib_te_state_granularity_entry_t;
 
 typedef struct {
-    uint8_t key_material[0x20];
+    uint8_t key_material[CXL_TSP_2ND_SESSION_KEY_SIZE];
 } cxl_tsp_secondary_session_psk_key_material_t;
 
 typedef struct {
@@ -203,7 +206,8 @@ typedef struct {
     uint8_t reserved7[0xe];
     uint8_t secondary_session_ckid_type;
     uint8_t reserved8[0xf];
-    cxl_tsp_secondary_session_psk_key_material_t secondary_session_psk_key_material[4];
+    cxl_tsp_secondary_session_psk_key_material_t
+        secondary_session_psk_key_material[CXL_TSP_2ND_SESSION_COUNT];
 } cxl_tsp_set_target_configuration_req_t;
 
 #define CXL_TSP_MEMORY_ENCRYPTION_FEATURES_ENABLE_ENCRYPTION 0x1
@@ -214,6 +218,11 @@ typedef struct {
 #define CXL_TSP_CONFIGURATION_FEATURES_ENABLE_LOCKED_TARGET_FW_UPDATE 0x1
 /* only valid in SET, not in GET */
 #define CXL_TSP_CONFIGURATION_FEATURES_ENABLE_SPECIAL_PURPOSE_MEMORY 0x2
+
+#define CXL_TSP_2ND_SESSION_0_PSK_HINT_STRING "SECONDARY_SESSION_0_PSK"
+#define CXL_TSP_2ND_SESSION_1_PSK_HINT_STRING "SECONDARY_SESSION_1_PSK"
+#define CXL_TSP_2ND_SESSION_2_PSK_HINT_STRING "SECONDARY_SESSION_2_PSK"
+#define CXL_TSP_2ND_SESSION_3_PSK_HINT_STRING "SECONDARY_SESSION_3_PSK"
 
 /* Set Target Configuration Response */
 
