@@ -167,7 +167,7 @@
 
 /* This value specifies the maximum size, in bytes, of the `PSK_EXCHANGE.PSKHint` field. */
 #ifndef LIBSPDM_PSK_MAX_HINT_LENGTH
-#define LIBSPDM_PSK_MAX_HINT_LENGTH 16
+#define LIBSPDM_PSK_MAX_HINT_LENGTH 32
 #endif
 #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
 
