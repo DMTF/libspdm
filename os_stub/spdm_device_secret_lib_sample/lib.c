@@ -2041,6 +2041,15 @@ uint8_t m_libspdm_bin_str0[0x11] = {
     0x64, 0x65, 0x72, 0x69, 0x76, 0x65, 0x64,
 };
 
+uint8_t m_cxl_tsp_2nd_session_psk[CXL_TSP_2ND_SESSION_COUNT][CXL_TSP_2ND_SESSION_KEY_SIZE] = {
+    LIBSPDM_CXL_TSP_2ND_SESSION_0_PSK_DATA_STRING,
+    LIBSPDM_CXL_TSP_2ND_SESSION_1_PSK_DATA_STRING,
+    LIBSPDM_CXL_TSP_2ND_SESSION_2_PSK_DATA_STRING,
+    LIBSPDM_CXL_TSP_2ND_SESSION_3_PSK_DATA_STRING,
+};
+
+uint8_t m_cxl_tsp_current_psk_session_index = 0xFF;
+
 bool libspdm_psk_handshake_secret_hkdf_expand(
     spdm_version_number_t spdm_version,
     uint32_t base_hash_algo,
@@ -2063,11 +2072,32 @@ bool libspdm_psk_handshake_secret_hkdf_expand(
     if (psk_hint_size == 0) {
         psk = LIBSPDM_TEST_PSK_DATA_STRING;
         psk_size = sizeof(LIBSPDM_TEST_PSK_DATA_STRING);
-    } else if ((strcmp((const char *)psk_hint, LIBSPDM_TEST_PSK_HINT_STRING) ==
-                0) &&
+        m_cxl_tsp_current_psk_session_index = 0xFF;
+    } else if ((strcmp((const char *)psk_hint, LIBSPDM_TEST_PSK_HINT_STRING) == 0) &&
                (psk_hint_size == sizeof(LIBSPDM_TEST_PSK_HINT_STRING))) {
         psk = LIBSPDM_TEST_PSK_DATA_STRING;
         psk_size = sizeof(LIBSPDM_TEST_PSK_DATA_STRING);
+        m_cxl_tsp_current_psk_session_index = 0xFF;
+    } else if ((strcmp((const char *)psk_hint, CXL_TSP_2ND_SESSION_0_PSK_HINT_STRING) == 0) &&
+               (psk_hint_size == sizeof(CXL_TSP_2ND_SESSION_0_PSK_HINT_STRING))) {
+        psk = m_cxl_tsp_2nd_session_psk[0];
+        psk_size = sizeof(m_cxl_tsp_2nd_session_psk[0]);
+        m_cxl_tsp_current_psk_session_index = 0;
+    } else if ((strcmp((const char *)psk_hint, CXL_TSP_2ND_SESSION_1_PSK_HINT_STRING) == 0) &&
+               (psk_hint_size == sizeof(CXL_TSP_2ND_SESSION_1_PSK_HINT_STRING))) {
+        psk = m_cxl_tsp_2nd_session_psk[1];
+        psk_size = sizeof(m_cxl_tsp_2nd_session_psk[1]);
+        m_cxl_tsp_current_psk_session_index = 1;
+    } else if ((strcmp((const char *)psk_hint, CXL_TSP_2ND_SESSION_2_PSK_HINT_STRING) == 0) &&
+               (psk_hint_size == sizeof(CXL_TSP_2ND_SESSION_2_PSK_HINT_STRING))) {
+        psk = m_cxl_tsp_2nd_session_psk[2];
+        psk_size = sizeof(m_cxl_tsp_2nd_session_psk[2]);
+        m_cxl_tsp_current_psk_session_index = 2;
+    } else if ((strcmp((const char *)psk_hint, CXL_TSP_2ND_SESSION_3_PSK_HINT_STRING) == 0) &&
+               (psk_hint_size == sizeof(CXL_TSP_2ND_SESSION_3_PSK_HINT_STRING))) {
+        psk = m_cxl_tsp_2nd_session_psk[3];
+        psk_size = sizeof(m_cxl_tsp_2nd_session_psk[3]);
+        m_cxl_tsp_current_psk_session_index = 3;
     } else {
         return false;
     }
@@ -2110,11 +2140,32 @@ bool libspdm_psk_master_secret_hkdf_expand(
     if (psk_hint_size == 0) {
         psk = LIBSPDM_TEST_PSK_DATA_STRING;
         psk_size = sizeof(LIBSPDM_TEST_PSK_DATA_STRING);
-    } else if ((strcmp((const char *)psk_hint, LIBSPDM_TEST_PSK_HINT_STRING) ==
-                0) &&
+        m_cxl_tsp_current_psk_session_index = 0xFF;
+    } else if ((strcmp((const char *)psk_hint, LIBSPDM_TEST_PSK_HINT_STRING) == 0) &&
                (psk_hint_size == sizeof(LIBSPDM_TEST_PSK_HINT_STRING))) {
         psk = LIBSPDM_TEST_PSK_DATA_STRING;
         psk_size = sizeof(LIBSPDM_TEST_PSK_DATA_STRING);
+        m_cxl_tsp_current_psk_session_index = 0xFF;
+    } else if ((strcmp((const char *)psk_hint, CXL_TSP_2ND_SESSION_0_PSK_HINT_STRING) == 0) &&
+               (psk_hint_size == sizeof(CXL_TSP_2ND_SESSION_0_PSK_HINT_STRING))) {
+        psk = m_cxl_tsp_2nd_session_psk[0];
+        psk_size = sizeof(m_cxl_tsp_2nd_session_psk[0]);
+        m_cxl_tsp_current_psk_session_index = 0;
+    } else if ((strcmp((const char *)psk_hint, CXL_TSP_2ND_SESSION_1_PSK_HINT_STRING) == 0) &&
+               (psk_hint_size == sizeof(CXL_TSP_2ND_SESSION_1_PSK_HINT_STRING))) {
+        psk = m_cxl_tsp_2nd_session_psk[1];
+        psk_size = sizeof(m_cxl_tsp_2nd_session_psk[1]);
+        m_cxl_tsp_current_psk_session_index = 1;
+    } else if ((strcmp((const char *)psk_hint, CXL_TSP_2ND_SESSION_2_PSK_HINT_STRING) == 0) &&
+               (psk_hint_size == sizeof(CXL_TSP_2ND_SESSION_2_PSK_HINT_STRING))) {
+        psk = m_cxl_tsp_2nd_session_psk[2];
+        psk_size = sizeof(m_cxl_tsp_2nd_session_psk[2]);
+        m_cxl_tsp_current_psk_session_index = 2;
+    } else if ((strcmp((const char *)psk_hint, CXL_TSP_2ND_SESSION_3_PSK_HINT_STRING) == 0) &&
+               (psk_hint_size == sizeof(CXL_TSP_2ND_SESSION_3_PSK_HINT_STRING))) {
+        psk = m_cxl_tsp_2nd_session_psk[3];
+        psk_size = sizeof(m_cxl_tsp_2nd_session_psk[3]);
+        m_cxl_tsp_current_psk_session_index = 3;
     } else {
         return false;
     }
