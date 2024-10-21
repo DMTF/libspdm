@@ -485,7 +485,6 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
-        slot_id = parameter->additional_data[0];
         if (data_size != sizeof(uint8_t)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
