@@ -87,6 +87,13 @@ libspdm_return_t libspdm_get_response_certificate(libspdm_context_t *spdm_contex
                                                response_size, response);
     }
 
+    if ((spdm_context->local_context.cert_slot_reset_mask & (1 << slot_id)) != 0) {
+        LIBSPDM_ASSERT(spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12);
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_RESET_REQUIRED, 0,
+                                               response_size, response);
+    }
+
     if (spdm_context->local_context.local_cert_chain_provision[slot_id] == NULL) {
         return libspdm_generate_error_response(
             spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
