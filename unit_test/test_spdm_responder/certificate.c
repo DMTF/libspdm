@@ -1325,6 +1325,55 @@ void libspdm_test_responder_certificate_case18(void **state)
     free(data);
 }
 
+/**
+ * Test 19: Attempt to retrieve a certificate chain from a slot that needs to be reset.
+ * Expected Behavior: Responder responds with ResetRequired.
+ **/
+void libspdm_test_responder_certificate_case19(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_error_response_t *spdm_response;
+    void *data;
+    size_t data_size;
+    const uint8_t slot_id = 5;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 19;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_DIGESTS;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size, NULL, NULL);
+    spdm_context->local_context.local_cert_chain_provision[0] = data;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size;
+
+    /* Responder needs to be reset before certificate can be retrieved from specified SlotID. */
+    m_libspdm_get_certificate_request5.header.param1 = slot_id;
+    spdm_context->local_context.cert_slot_reset_mask = 1 << slot_id;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_certificate(
+        spdm_context, m_libspdm_get_certificate_request5_size,
+        &m_libspdm_get_certificate_request5, &response_size, response);
+
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_RESET_REQUIRED);
+    assert_int_equal(spdm_response->header.param2, 0);
+
+    free(data);
+}
+
 int libspdm_responder_certificate_test_main(void)
 {
     const struct CMUnitTest spdm_responder_certificate_tests[] = {
@@ -1365,6 +1414,7 @@ int libspdm_responder_certificate_test_main(void)
         cmocka_unit_test(libspdm_test_responder_certificate_case17),
         /* check request attributes and response attributes*/
         cmocka_unit_test(libspdm_test_responder_certificate_case18),
+        cmocka_unit_test(libspdm_test_responder_certificate_case19),
     };
 
     libspdm_test_context_t test_context = {

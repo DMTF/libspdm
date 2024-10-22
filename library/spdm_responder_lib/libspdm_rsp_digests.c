@@ -87,6 +87,12 @@ libspdm_return_t libspdm_get_response_digests(libspdm_context_t *spdm_context, s
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
     }
+    if (spdm_context->local_context.cert_slot_reset_mask != 0) {
+        LIBSPDM_ASSERT(spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12);
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_RESET_REQUIRED, 0,
+                                               response_size, response);
+    }
 
     libspdm_reset_message_buffer_via_request_code(spdm_context, session_info,
                                                   spdm_request->header.request_response_code);

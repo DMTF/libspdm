@@ -595,6 +595,50 @@ void libspdm_test_responder_digests_case10(void **state)
     }
 }
 
+/**
+ * Test 11: GET_DIGESTS is sent when at least one certificate slot is in the reset state.
+ * Expected Behavior: Responder responds with ResetRequired.
+ **/
+void libspdm_test_responder_digests_case11(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_error_response_t *spdm_response;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x0B;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->local_context.capability.flags = 0;
+    spdm_context->last_spdm_request_session_id_valid = false;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+
+    /* Responder needs to be reset before DIGESTS can be successful. */
+    spdm_context->local_context.cert_slot_reset_mask = 0x1a;
+
+    spdm_context->connection_info.multi_key_conn_rsp = true;
+    libspdm_reset_message_d(spdm_context);
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_digests(spdm_context,
+                                          m_libspdm_get_digests_request2_size,
+                                          &m_libspdm_get_digests_request2,
+                                          &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1, SPDM_ERROR_CODE_RESET_REQUIRED);
+    assert_int_equal(spdm_response->header.param2, 0);
+}
+
 int libspdm_responder_digests_test_main(void)
 {
     const struct CMUnitTest spdm_responder_digests_tests[] = {
@@ -620,6 +664,7 @@ int libspdm_responder_digests_test_main(void)
         cmocka_unit_test(libspdm_test_responder_digests_case9),
         /* Check KeyPairID CertificateInfo and KeyUsageMask*/
         cmocka_unit_test(libspdm_test_responder_digests_case10),
+        cmocka_unit_test(libspdm_test_responder_digests_case11),
     };
 
     libspdm_test_context_t test_context = {

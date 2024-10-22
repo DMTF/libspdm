@@ -303,6 +303,8 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
     if (libspdm_is_capabilities_flag_supported(
             spdm_context, false, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_INSTALL_RESET_CAP)) {
+        spdm_context->local_context.cert_slot_reset_mask |= (1 << slot_id);
+
         /*the device will reset to set cert*/
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_RESET_REQUIRED, 0,

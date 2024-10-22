@@ -90,6 +90,7 @@ typedef struct {
     const void *local_cert_chain_provision[SPDM_MAX_SLOT_COUNT];
     size_t local_cert_chain_provision_size[SPDM_MAX_SLOT_COUNT];
     uint8_t local_supported_slot_mask;
+    uint8_t cert_slot_reset_mask;
     spdm_key_pair_id_t local_key_pair_id[SPDM_MAX_SLOT_COUNT];
     spdm_certificate_info_t local_cert_info[SPDM_MAX_SLOT_COUNT];
     spdm_key_usage_bit_mask_t local_key_usage_bit_mask[SPDM_MAX_SLOT_COUNT];
