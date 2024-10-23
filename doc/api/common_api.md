@@ -401,3 +401,8 @@ Enumeration value used for the `libspdm_set_data` and/or `libspdm_get_data` func
             - The endianness of the sequence number is little-endian.
         - `LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_BIG_DEC_BIG`
             - The endianness of the sequence number is big-endian.
+- `LIBSPDM_DATA_REQUEST_AND_SIZE`
+    - Returns a pointer to the raw command buffer and the size of the command in bytes.
+    - This pointer is valid after libspdm_set_scratch_buffer is called, but the command itself is
+      not valid unless the size returned is greater than zero. The command and its size will
+      persist until the next command is received or the libspdm context is reset.
