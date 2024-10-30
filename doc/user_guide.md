@@ -302,7 +302,7 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
 
    0.5, implement required SPDM device IO functions - `libspdm_device_send_message_func` and `libspdm_device_receive_message_func` according to [spdm_common_lib](https://github.com/DMTF/libspdm/blob/main/include/library/spdm_common_lib.h).
 
-   0.6, if the device does not have access to a real-time clock and if the device uses OpenSSL or Mbed TLS then undefine `OPENSSL_CHECK_TIME` or `MBEDTLS_HAVE_TIME_DATE`.
+   0.6, if the device does not have access to a real-time clock and if the device uses OpenSSL or MbedTLS then undefine `OPENSSL_CHECK_TIME` or `MBEDTLS_HAVE_TIME_DATE`.
 
 0. Implement a proper spdm_device_secret_lib.
 

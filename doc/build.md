@@ -6,7 +6,7 @@
 
 #### Compiler for ARM/AARCH64 (Choose one)
 
-a) [ARM Developerment Studio 2022](https://developer.arm.com/downloads/-/arm-development-studio-downloads) for ARM/AARCH64.
+a) [ARM Development Studio 2022](https://developer.arm.com/downloads/-/arm-development-studio-downloads) for ARM/AARCH64.
   - Install [MSYS2](https://www.msys2.org/).
   - Install ARM DS2022. Change the default installation path C:\ArmStudio.
   - Launch MSYS2 -> MSYS2 MINGW64.
@@ -27,7 +27,7 @@ a) [ARM Developerment Studio 2022](https://developer.arm.com/downloads/-/arm-dev
 
 #### Compiler for ARM/AARCH64 (Choose one)
 
-a) [ARM Developerment Studio 2022](https://developer.arm.com/downloads/-/arm-development-studio-downloads) for ARM/AARCH64.
+a) [ARM Development Studio 2022](https://developer.arm.com/downloads/-/arm-development-studio-downloads) for ARM/AARCH64.
   - Follow the [Arm Development Studio Getting Started Guide](https://developer.arm.com/documentation/101469/2022-1/Installing-and-configuring-Arm-Development-Studio/Installing-on-Linux) to install Linux version.
   - Setup build environment
       ```
