@@ -43,12 +43,12 @@
     - `LIBSPDM_SCRATCH_BUFFER_SIZE` - The Integrator may calculate the `scratch_buffer_size` according to the `max_spdm_msg_size` value input to `libspdm_register_transport_layer_func()`, according to `libspdm_get_scratch_buffer_capacity()` API implementation in [libspdm_com_context_data.c](https://github.com/DMTF/libspdm/blob/main/library/spdm_common_lib/libspdm_com_context_data.c). NOTE: The size requirement depends on `LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP` and `LIBSPDM_RESPOND_IF_READY_SUPPORT`.
     - `LIBSPDM_MAX_SPDM_MSG_SIZE` - The Integrator needs to input `max_spdm_msg_size` to `libspdm_register_transport_layer_func()`.
     - `LIBSPDM_DATA_TRANSFER_SIZE` - It is no longer needed.
-    - `LIBSPDM_TRANSPORT_ADDITIONAL_SIZE` - The Integrator needs to inpuit `transport_header_size` and `transport_tail_size` to `libspdm_register_transport_layer_func()`. For example, `LIBSPDM_MCTP_TRANSPORT_HEADER_SIZE` and `LIBSPDM_MCTP_TRANSPORT_TAIL_SIZE`, or `LIBSPDM_PCI_DOE_TRANSPORT_HEADER_SIZE` and `LIBSPDM_PCI_DOE_TRANSPORT_TAIL_SIZE`.
+    - `LIBSPDM_TRANSPORT_ADDITIONAL_SIZE` - The Integrator needs to input `transport_header_size` and `transport_tail_size` to `libspdm_register_transport_layer_func()`. For example, `LIBSPDM_MCTP_TRANSPORT_HEADER_SIZE` and `LIBSPDM_MCTP_TRANSPORT_TAIL_SIZE`, or `LIBSPDM_PCI_DOE_TRANSPORT_HEADER_SIZE` and `LIBSPDM_PCI_DOE_TRANSPORT_TAIL_SIZE`.
     - `LIBSPDM_SENDER_RECEIVE_BUFFER_SIZE` - The Integrator needs to input `sender_buffer_size` and `receiver_buffer_size` to `libspdm_register_device_buffer_func()`.
     - `LIBSPDM_MAX_MESSAGE_BUFFER_SIZE`, `LIBSPDM_MAX_MESSAGE_SMALL_BUFFER_SIZE`, `LIBSPDM_MAX_MESSAGE_MEDIUM_BUFFER_SIZE` - They are no longer needed. The managed buffer is defined individually, such as cert chain buffer, VCA transcript buffer, L1/L2 transcript buffer, M1/M2 transcript buffer, TH transcript buffer, etc.
     - `LIBSPDM_MAX_REQUEST_RETRY_TIMES` - The Integrator needs to input `LIBSPDM_DATA_REQUEST_RETRY_TIMES`.
     - `LIBSPDM_MAX_SESSION_STATE_CALLBACK_NUM` - The Integrator can only register one `libspdm_session_state_callback_func`.
-    - `LIBSPDM_MAX_CONNECTION_STATE_CALLBACK_NUM` - The Integrator can only regsiter one `libspdm_connection_state_callback_func`.
+    - `LIBSPDM_MAX_CONNECTION_STATE_CALLBACK_NUM` - The Integrator can only register one `libspdm_connection_state_callback_func`.
     - `LIBSPDM_MAX_KEY_UPDATE_CALLBACK_NUM` - The Integrator can only register one `libspdm_key_update_callback_func`.
     - `LIBSPDM_MAX_CSR_SIZE` - The real max CSR size is determined by the max SPDM message size.
     - define fine granularity control of crypto algo.
