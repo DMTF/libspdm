@@ -562,17 +562,20 @@ libspdm_return_t libspdm_send_spdm_request(libspdm_context_t *spdm_context,
     size_t msg_log_size;
     #endif /* LIBSPDM_ENABLE_MSG_LOG */
 
-    /* large SPDM message is the SPDM message whose size is greater than the DataTransferSize of the receiving
-     * SPDM endpoint or greater than the transmit buffer size of the sending SPDM endpoint */
-    if (((spdm_context->connection_info.capability.data_transfer_size != 0 &&
-          request_size > spdm_context->connection_info.capability.data_transfer_size) ||
-         (spdm_context->local_context.capability.sender_data_transfer_size != 0 &&
-          request_size > spdm_context->local_context.capability.sender_data_transfer_size)) &&
-        !libspdm_is_capabilities_flag_supported(
+    /* If chunking is not supported then message must fit in both the send buffer and the receive
+     * buffer. */
+    if (!libspdm_is_capabilities_flag_supported(
             spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP)) {
-        return LIBSPDM_STATUS_SEND_FAIL;
+        if ((spdm_context->connection_info.capability.data_transfer_size != 0) &&
+            (request_size > spdm_context->connection_info.capability.data_transfer_size)) {
+            return LIBSPDM_STATUS_PEER_BUFFER_TOO_SMALL;
+        }
+        if ((spdm_context->local_context.capability.sender_data_transfer_size != 0) &&
+            (request_size > spdm_context->local_context.capability.sender_data_transfer_size)) {
+            return LIBSPDM_STATUS_BUFFER_TOO_SMALL;
+        }
     }
 
     if ((session_id != NULL) &&
