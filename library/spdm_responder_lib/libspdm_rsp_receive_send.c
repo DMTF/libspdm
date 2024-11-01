@@ -247,10 +247,8 @@ libspdm_return_t libspdm_process_request(void *spdm_context, uint32_t **session_
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "transport_decode_message : %xu\n", status));
         if (context->last_spdm_error.error_code != 0) {
-
             /* If the SPDM error code is Non-Zero, that means we need send the error message back to requester.
              * In this case, we need return SUCCESS and let caller invoke libspdm_build_response() to send an ERROR message.*/
-
             *session_id = &context->last_spdm_error.session_id;
             *is_app_message = false;
             return LIBSPDM_STATUS_SUCCESS;
@@ -403,8 +401,7 @@ void libspdm_trigger_key_update_callback(void *spdm_context, uint32_t session_id
     context = spdm_context;
     if (context->spdm_key_update_callback != NULL) {
         ((libspdm_key_update_callback_func)
-         context->spdm_key_update_callback)(context, session_id, key_update_op,
-                                            key_update_action);
+         context->spdm_key_update_callback)(context, session_id, key_update_op, key_update_action);
     }
 }
 
@@ -452,7 +449,7 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
     #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
     uint8_t *large_buffer;
     size_t large_buffer_size;
-    libspdm_chunk_info_t* get_info;
+    libspdm_chunk_info_t *get_info;
     spdm_chunk_response_response_t *chunk_rsp;
     uint8_t *chunk_ptr;
     #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
@@ -486,9 +483,7 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
     spdm_response = (void *)my_response;
 
     if (context->last_spdm_error.error_code != 0) {
-
-        /* Error in libspdm_process_request(), and we need send error message directly.*/
-
+        /* Error in libspdm_process_request(), and we need send error message directly. */
         switch (context->last_spdm_error.error_code) {
         case SPDM_ERROR_CODE_DECRYPT_ERROR:
             /* session ID is valid. Use it to encrypt the error message.*/
@@ -531,8 +526,7 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "SpdmSendResponse[%x]: msg %s(0x%x), size (0x%zx): \n",
                        (session_id != NULL) ? *session_id : 0,
                        libspdm_get_code_str(spdm_response->request_response_code),
-                       spdm_response->request_response_code,
-                       my_response_size));
+                       spdm_response->request_response_code, my_response_size));
         LIBSPDM_INTERNAL_DUMP_HEX(my_response, my_response_size);
 
         status = context->transport_encode_message(
@@ -568,10 +562,7 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
     if (*response == NULL) {
         return LIBSPDM_STATUS_INVALID_PARAMETER;
     }
-    if (response_size == NULL) {
-        return LIBSPDM_STATUS_INVALID_PARAMETER;
-    }
-    if (*response_size == 0) {
+    if ((response_size == NULL) || (*response_size == 0)) {
         return LIBSPDM_STATUS_INVALID_PARAMETER;
     }
 
@@ -672,8 +663,7 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
 
             /* The first section of the scratch
              * buffer may be used for other purposes. Use only after that section. */
-
-            large_buffer = (uint8_t*)scratch_buffer +
+            large_buffer = (uint8_t *)scratch_buffer +
                            libspdm_get_scratch_buffer_large_message_offset(spdm_context);
             large_buffer_size = libspdm_get_scratch_buffer_large_message_capacity(spdm_context);
 
@@ -690,7 +680,7 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
              * a CHUNK_SEND_ACK + non-chunk response. In this case, to prevent chunking within
              * chunking, only send back the actual response, by saving only non-chunk portion
              * in the scratch buffer, used to respond to the next CHUNK_GET request. */
-            if (((spdm_message_header_t*) my_response)
+            if (((spdm_message_header_t *)my_response)
                 ->request_response_code == SPDM_CHUNK_SEND_ACK) {
                 libspdm_copy_mem(large_buffer, large_buffer_size,
                                  my_response + sizeof(spdm_chunk_send_ack_response_t),
@@ -700,8 +690,7 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
                 get_info->large_message_size =
                     my_response_size - sizeof(spdm_chunk_send_ack_response_t);
             } else {
-                libspdm_copy_mem(large_buffer, large_buffer_size,
-                                 my_response, my_response_size);
+                libspdm_copy_mem(large_buffer, large_buffer_size, my_response, my_response_size);
 
                 get_info->large_message = large_buffer;
                 get_info->large_message_size = my_response_size;
@@ -739,8 +728,7 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         status = libspdm_generate_error_response(
             context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
-            spdm_request->request_response_code, &my_response_size,
-            my_response);
+            spdm_request->request_response_code, &my_response_size, my_response);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return status;
         }
@@ -772,15 +760,15 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
     case SPDM_CHUNK_SEND_ACK:
         if (my_response_size > sizeof(spdm_chunk_send_ack_response_t)) {
             request_response_code =
-                ((spdm_message_header_t*)(my_response + sizeof(spdm_chunk_send_ack_response_t)))
+                ((spdm_message_header_t *)(my_response + sizeof(spdm_chunk_send_ack_response_t)))
                 ->request_response_code;
         }
         break;
     case SPDM_CHUNK_RESPONSE:
         chunk_rsp = (spdm_chunk_response_response_t *)my_response;
-        chunk_ptr = (uint8_t*) (((uint32_t*) (chunk_rsp + 1)) + 1);
+        chunk_ptr = (uint8_t *)(((uint32_t *)(chunk_rsp + 1)) + 1);
         if (chunk_rsp->chunk_seq_no == 0) {
-            request_response_code = ((spdm_message_header_t*)chunk_ptr)->request_response_code;
+            request_response_code = ((spdm_message_header_t *)chunk_ptr)->request_response_code;
         }
         break;
     default:
@@ -801,12 +789,10 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
             }
             break;
         case SPDM_PSK_FINISH_RSP:
-            libspdm_set_session_state(context, *session_id,
-                                      LIBSPDM_SESSION_STATE_ESTABLISHED);
+            libspdm_set_session_state(context, *session_id, LIBSPDM_SESSION_STATE_ESTABLISHED);
             break;
         case SPDM_END_SESSION_ACK:
-            libspdm_set_session_state(context, *session_id,
-                                      LIBSPDM_SESSION_STATE_NOT_STARTED);
+            libspdm_set_session_state(context, *session_id, LIBSPDM_SESSION_STATE_NOT_STARTED);
             #if LIBSPDM_ENABLE_CAPABILITY_HBEAT_CAP
             if (libspdm_is_capabilities_flag_supported(
                     context, false,
