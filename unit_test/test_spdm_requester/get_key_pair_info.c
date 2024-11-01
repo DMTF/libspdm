@@ -10,14 +10,14 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
 
-uint8_t m_response_total_key_pairs;
-uint8_t m_response_key_pair_id;
-uint16_t m_response_capabilities;
-uint16_t m_response_key_usage_capabilities;
-uint16_t m_response_current_key_usage;
-uint32_t m_response_asym_algo_capabilities;
-uint32_t m_response_current_asym_algo;
-uint8_t m_response_assoc_cert_slot_mask;
+static uint8_t m_response_total_key_pairs;
+static uint8_t m_response_key_pair_id;
+static uint16_t m_response_capabilities;
+static uint16_t m_response_key_usage_capabilities;
+static uint16_t m_response_current_key_usage;
+static uint32_t m_response_asym_algo_capabilities;
+static uint32_t m_response_current_asym_algo;
+static uint8_t m_response_assoc_cert_slot_mask;
 
 libspdm_return_t libspdm_requester_get_key_pair_info_test_send_message(
     void *spdm_context, size_t request_size, const void *request,
