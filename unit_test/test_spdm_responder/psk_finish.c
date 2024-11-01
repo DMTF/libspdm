@@ -21,12 +21,12 @@ static libspdm_th_managed_buffer_t th_curr;
 libspdm_psk_finish_request_mine_t m_libspdm_psk_finish_request1 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_PSK_FINISH, 0, 0 },
 };
-size_t m_libspdm_psk_finish_request1_size = sizeof(m_libspdm_psk_finish_request1);
+static size_t m_libspdm_psk_finish_request1_size = sizeof(m_libspdm_psk_finish_request1);
 
 libspdm_psk_finish_request_mine_t m_libspdm_psk_finish_request2 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_PSK_FINISH, 0, 0 },
 };
-size_t m_libspdm_psk_finish_request2_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
+static size_t m_libspdm_psk_finish_request2_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
 
 static uint8_t m_libspdm_dummy_buffer[LIBSPDM_MAX_HASH_SIZE];
 

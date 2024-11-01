@@ -14,7 +14,7 @@
 /*refer to https://github.com/Mbed-TLS/mbedtls/blob/3048c8c90654eb116a6b17c0d2d27c3ccbe6782c/programs/x509/cert_req.c#L119-L129*/
 #define LIBSPDM_MAX_REQ_INFO_BUFFER_SIZE 4096
 
-uint8_t m_csr_opaque_data[8] = "libspdm";
+static uint8_t m_csr_opaque_data[8] = "libspdm";
 
 /*ECC 256 req_info(include right req_info attribute)*/
 uint8_t req_info_sequence[] = {0x30, 0x81, 0xBF,};

@@ -14,7 +14,7 @@ spdm_get_measurement_extension_log_request_t m_libspdm_get_measurement_extension
     0,
     LIBSPDM_MAX_MEL_BLOCK_LEN
 };
-size_t m_libspdm_get_measurement_extension_log_request1_size =
+static size_t m_libspdm_get_measurement_extension_log_request1_size =
     sizeof(m_libspdm_get_measurement_extension_log_request1);
 
 spdm_get_measurement_extension_log_request_t m_libspdm_get_measurement_extension_log_request2 = {
@@ -22,7 +22,7 @@ spdm_get_measurement_extension_log_request_t m_libspdm_get_measurement_extension
     0,
     0
 };
-size_t m_libspdm_get_measurement_extension_log_request2_size =
+static size_t m_libspdm_get_measurement_extension_log_request2_size =
     sizeof(m_libspdm_get_measurement_extension_log_request2);
 
 spdm_get_measurement_extension_log_request_t m_libspdm_get_measurement_extension_log_request3 = {
@@ -30,7 +30,7 @@ spdm_get_measurement_extension_log_request_t m_libspdm_get_measurement_extension
     0,
     LIBSPDM_MAX_MEL_BLOCK_LEN + 1
 };
-size_t m_libspdm_get_measurement_extension_log_request3_size =
+static size_t m_libspdm_get_measurement_extension_log_request3_size =
     sizeof(m_libspdm_get_measurement_extension_log_request3);
 
 spdm_get_measurement_extension_log_request_t m_libspdm_get_measurement_extension_log_request4 = {
@@ -38,7 +38,7 @@ spdm_get_measurement_extension_log_request_t m_libspdm_get_measurement_extension
     LIBSPDM_MAX_MEL_BLOCK_LEN,
     LIBSPDM_MAX_MEL_BLOCK_LEN
 };
-size_t m_libspdm_get_measurement_extension_log_request4_size =
+static size_t m_libspdm_get_measurement_extension_log_request4_size =
     sizeof(m_libspdm_get_measurement_extension_log_request4);
 
 /**

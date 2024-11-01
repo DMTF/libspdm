@@ -14,58 +14,58 @@ spdm_get_measurements_request_t m_libspdm_get_measurements_request1 = {
     { SPDM_MESSAGE_VERSION_10, SPDM_GET_MEASUREMENTS, 0,
       SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_TOTAL_NUMBER_OF_MEASUREMENTS },
 };
-size_t m_libspdm_get_measurements_request1_size = sizeof(spdm_message_header_t);
+static size_t m_libspdm_get_measurements_request1_size = sizeof(spdm_message_header_t);
 
 spdm_get_measurements_request_t m_libspdm_get_measurements_request3 = {
     { SPDM_MESSAGE_VERSION_10, SPDM_GET_MEASUREMENTS,
       SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE, 1 },
 };
-size_t m_libspdm_get_measurements_request3_size =
+static size_t m_libspdm_get_measurements_request3_size =
     sizeof(m_libspdm_get_measurements_request3) - sizeof(uint8_t);
 
 spdm_get_measurements_request_t m_libspdm_get_measurements_request4 = {
     { SPDM_MESSAGE_VERSION_10, SPDM_GET_MEASUREMENTS,
       SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE, 1 },
 };
-size_t m_libspdm_get_measurements_request4_size = sizeof(spdm_message_header_t);
+static size_t m_libspdm_get_measurements_request4_size = sizeof(spdm_message_header_t);
 
 spdm_get_measurements_request_t m_libspdm_get_measurements_request5 = {
     { SPDM_MESSAGE_VERSION_10, SPDM_GET_MEASUREMENTS,
       SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE,
       SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_TOTAL_NUMBER_OF_MEASUREMENTS },
 };
-size_t m_libspdm_get_measurements_request5_size =
+static size_t m_libspdm_get_measurements_request5_size =
     sizeof(m_libspdm_get_measurements_request5) - sizeof(uint8_t);
 
 spdm_get_measurements_request_t m_libspdm_get_measurements_request6 = {
     { SPDM_MESSAGE_VERSION_10, SPDM_GET_MEASUREMENTS, 0, 1 },
 };
-size_t m_libspdm_get_measurements_request6_size = sizeof(spdm_message_header_t);
+static size_t m_libspdm_get_measurements_request6_size = sizeof(spdm_message_header_t);
 
 spdm_get_measurements_request_t m_libspdm_get_measurements_request7 = {
     { SPDM_MESSAGE_VERSION_10, SPDM_GET_MEASUREMENTS, 0,
       SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_ALL_MEASUREMENTS },
 };
-size_t m_libspdm_get_measurements_request7_size = sizeof(spdm_message_header_t);
+static size_t m_libspdm_get_measurements_request7_size = sizeof(spdm_message_header_t);
 
 spdm_get_measurements_request_t m_libspdm_get_measurements_request8 = {
     { SPDM_MESSAGE_VERSION_10, SPDM_GET_MEASUREMENTS,
       SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE,
       SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_ALL_MEASUREMENTS },
 };
-size_t m_libspdm_get_measurements_request8_size =
+static size_t m_libspdm_get_measurements_request8_size =
     sizeof(m_libspdm_get_measurements_request8) - sizeof(uint8_t);
 
 spdm_get_measurements_request_t m_libspdm_get_measurements_request9 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_GET_MEASUREMENTS, 0, 1 },
 };
-size_t m_libspdm_get_measurements_request9_size = sizeof(spdm_message_header_t);
+static size_t m_libspdm_get_measurements_request9_size = sizeof(spdm_message_header_t);
 
 spdm_get_measurements_request_t m_libspdm_get_measurements_request10 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_GET_MEASUREMENTS,
       SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE, 1 },
 };
-size_t m_libspdm_get_measurements_request10_size =
+static size_t m_libspdm_get_measurements_request10_size =
     sizeof(m_libspdm_get_measurements_request10);
 
 spdm_get_measurements_request_t m_libspdm_get_measurements_request11 = {
@@ -74,7 +74,7 @@ spdm_get_measurements_request_t m_libspdm_get_measurements_request11 = {
     /* nonce
      * SlotId != 0*/
 };
-size_t m_libspdm_get_measurements_request11_size =
+static size_t m_libspdm_get_measurements_request11_size =
     sizeof(m_libspdm_get_measurements_request11);
 
 spdm_get_measurements_request_t m_libspdm_get_measurements_request12 = {
@@ -83,37 +83,37 @@ spdm_get_measurements_request_t m_libspdm_get_measurements_request12 = {
     /* nonce
      * SlotId >= SPDM_MAX_SLOT_COUNT*/
 };
-size_t m_libspdm_get_measurements_request12_size =
+static size_t m_libspdm_get_measurements_request12_size =
     sizeof(m_libspdm_get_measurements_request12);
 
 spdm_get_measurements_request_t m_libspdm_get_measurements_request13 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_GET_MEASUREMENTS, 0, 0xF0 },
 };
-size_t m_libspdm_get_measurements_request13_size = sizeof(spdm_message_header_t);
+static size_t m_libspdm_get_measurements_request13_size = sizeof(spdm_message_header_t);
 
 spdm_get_measurements_request_t m_libspdm_get_measurements_request14 = {
     { SPDM_MESSAGE_VERSION_12, SPDM_GET_MEASUREMENTS,
       SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_RAW_BIT_STREAM_REQUESTED, 1},
 };
-size_t m_libspdm_get_measurements_request14_size = sizeof(spdm_message_header_t);
+static size_t m_libspdm_get_measurements_request14_size = sizeof(spdm_message_header_t);
 
 spdm_get_measurements_request_t m_libspdm_get_measurements_request15 = {
     { SPDM_MESSAGE_VERSION_12, SPDM_GET_MEASUREMENTS,
       SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE, 1},
 };
-size_t m_libspdm_get_measurements_request15_size = sizeof(m_libspdm_get_measurements_request14);
+static size_t m_libspdm_get_measurements_request15_size = sizeof(m_libspdm_get_measurements_request14);
 
 spdm_get_measurements_request_t m_libspdm_get_measurements_request16 = {
     { SPDM_MESSAGE_VERSION_12, SPDM_GET_MEASUREMENTS,
       SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE, 1 },
 };
-size_t m_libspdm_get_measurements_request16_size = sizeof(m_libspdm_get_measurements_request16);
+static size_t m_libspdm_get_measurements_request16_size = sizeof(m_libspdm_get_measurements_request16);
 
 spdm_get_measurements_request_t m_libspdm_get_measurements_request17 = {
     { SPDM_MESSAGE_VERSION_13, SPDM_GET_MEASUREMENTS, 0,
       SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_TOTAL_NUMBER_OF_MEASUREMENTS },
 };
-size_t m_libspdm_get_measurements_request17_size = sizeof(spdm_message_header_t);
+static size_t m_libspdm_get_measurements_request17_size = sizeof(spdm_message_header_t);
 
 extern size_t libspdm_secret_lib_meas_opaque_data_size;
 

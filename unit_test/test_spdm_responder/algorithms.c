@@ -55,7 +55,7 @@ spdm_negotiate_algorithms_request_t m_libspdm_negotiate_algorithms_request1 = {
     sizeof(spdm_negotiate_algorithms_request_t),
     SPDM_MEASUREMENT_SPECIFICATION_DMTF,
 };
-size_t m_libspdm_negotiate_algorithms_request1_size =
+static size_t m_libspdm_negotiate_algorithms_request1_size =
     sizeof(m_libspdm_negotiate_algorithms_request1);
 
 spdm_negotiate_algorithms_request_t m_libspdm_negotiate_algorithms_request2 = {
@@ -63,7 +63,7 @@ spdm_negotiate_algorithms_request_t m_libspdm_negotiate_algorithms_request2 = {
     sizeof(spdm_negotiate_algorithms_request_t),
     SPDM_MEASUREMENT_SPECIFICATION_DMTF,
 };
-size_t m_libspdm_negotiate_algorithms_request2_size = sizeof(spdm_message_header_t);
+static size_t m_libspdm_negotiate_algorithms_request2_size = sizeof(spdm_message_header_t);
 
 libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_request3 = {
     {
@@ -99,7 +99,7 @@ libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_requ
         }
     }
 };
-size_t m_libspdm_negotiate_algorithm_request3_size = sizeof(m_libspdm_negotiate_algorithm_request3);
+static size_t m_libspdm_negotiate_algorithm_request3_size = sizeof(m_libspdm_negotiate_algorithm_request3);
 
 libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_request4 = {
     {
@@ -135,7 +135,7 @@ libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_requ
         }
     }
 };
-size_t m_libspdm_negotiate_algorithm_request4_size = sizeof(m_libspdm_negotiate_algorithm_request4);
+static size_t m_libspdm_negotiate_algorithm_request4_size = sizeof(m_libspdm_negotiate_algorithm_request4);
 
 libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_request5 = {
     {
@@ -171,7 +171,7 @@ libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_requ
         }
     }
 };
-size_t m_libspdm_negotiate_algorithm_request5_size = sizeof(m_libspdm_negotiate_algorithm_request5);
+static size_t m_libspdm_negotiate_algorithm_request5_size = sizeof(m_libspdm_negotiate_algorithm_request5);
 
 libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_request6 = {
     {
@@ -207,7 +207,7 @@ libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_requ
         }
     }
 };
-size_t m_libspdm_negotiate_algorithm_request6_size = sizeof(m_libspdm_negotiate_algorithm_request6);
+static size_t m_libspdm_negotiate_algorithm_request6_size = sizeof(m_libspdm_negotiate_algorithm_request6);
 
 libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_request7 = {
     {
@@ -243,7 +243,7 @@ libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_requ
         }
     }
 };
-size_t m_libspdm_negotiate_algorithm_request7_size = sizeof(m_libspdm_negotiate_algorithm_request7);
+static size_t m_libspdm_negotiate_algorithm_request7_size = sizeof(m_libspdm_negotiate_algorithm_request7);
 
 libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_request8 = {
     {
@@ -279,7 +279,7 @@ libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_requ
         }
     }
 };
-size_t m_libspdm_negotiate_algorithm_request8_size = sizeof(m_libspdm_negotiate_algorithm_request8);
+static size_t m_libspdm_negotiate_algorithm_request8_size = sizeof(m_libspdm_negotiate_algorithm_request8);
 
 libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_request9 = {
     {
@@ -315,7 +315,7 @@ libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_requ
         }
     }
 };
-size_t m_libspdm_negotiate_algorithm_request9_size = sizeof(m_libspdm_negotiate_algorithm_request9);
+static size_t m_libspdm_negotiate_algorithm_request9_size = sizeof(m_libspdm_negotiate_algorithm_request9);
 
 spdm_negotiate_algorithms_request_t m_libspdm_negotiate_algorithm_request10 = {
     {
@@ -327,7 +327,7 @@ spdm_negotiate_algorithms_request_t m_libspdm_negotiate_algorithm_request10 = {
     0x44,
     SPDM_MEASUREMENT_SPECIFICATION_DMTF,
 };
-size_t m_libspdm_negotiate_algorithm_request10_size = 0x44;
+static size_t m_libspdm_negotiate_algorithm_request10_size = 0x44;
 
 libspdm_negotiate_algorithms_request_spdm11_oversized_t m_libspdm_negotiate_algorithm_request11 = {
     {
@@ -364,7 +364,7 @@ libspdm_negotiate_algorithms_request_spdm11_oversized_t m_libspdm_negotiate_algo
         }
     }
 };
-size_t m_libspdm_negotiate_algorithm_request11_size =
+static size_t m_libspdm_negotiate_algorithm_request11_size =
     sizeof(m_libspdm_negotiate_algorithm_request11);
 
 libspdm_negotiate_algorithms_request_spdm11_multiple_tables_t
@@ -443,7 +443,7 @@ libspdm_negotiate_algorithms_request_spdm11_multiple_tables_t
         }
     }
 };
-size_t m_libspdm_negotiate_algorithm_request12_size =
+static size_t m_libspdm_negotiate_algorithm_request12_size =
     sizeof(m_libspdm_negotiate_algorithm_request12);
 
 libspdm_negotiate_algorithms_request_spdm11_t
@@ -483,7 +483,7 @@ libspdm_negotiate_algorithms_request_spdm11_t
         }
     }
 };
-size_t m_libspdm_negotiate_algorithm_request13_size =
+static size_t m_libspdm_negotiate_algorithm_request13_size =
     sizeof(m_libspdm_negotiate_algorithm_request13)-
     sizeof(
         spdm_negotiate_algorithms_common_struct_table_t);
@@ -525,7 +525,7 @@ libspdm_negotiate_algorithms_request_spdm11_t
         },
     }
 };
-size_t m_libspdm_negotiate_algorithm_request14_size =
+static size_t m_libspdm_negotiate_algorithm_request14_size =
     sizeof(m_libspdm_negotiate_algorithm_request14)+
     sizeof(
         spdm_negotiate_algorithms_common_struct_table_t);
@@ -566,7 +566,7 @@ libspdm_negotiate_algorithms_request_spdm11_t
         }
     }
 };
-size_t m_libspdm_negotiate_algorithm_request15_size =
+static size_t m_libspdm_negotiate_algorithm_request15_size =
     sizeof(m_libspdm_negotiate_algorithm_request15);
 
 libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_request16 = {
@@ -604,7 +604,7 @@ libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_requ
         }
     }
 };
-size_t m_libspdm_negotiate_algorithm_request16_size =
+static size_t m_libspdm_negotiate_algorithm_request16_size =
     sizeof(m_libspdm_negotiate_algorithm_request16);
 
 libspdm_negotiate_algorithms_request_spdm12_t
@@ -644,7 +644,7 @@ libspdm_negotiate_algorithms_request_spdm12_t
         }
     }
 };
-size_t m_libspdm_negotiate_algorithm_request17_size =
+static size_t m_libspdm_negotiate_algorithm_request17_size =
     sizeof(m_libspdm_negotiate_algorithm_request17);
 
 libspdm_negotiate_algorithms_request_spdm12_t
@@ -685,7 +685,7 @@ libspdm_negotiate_algorithms_request_spdm12_t
         }
     }
 };
-size_t m_libspdm_negotiate_algorithm_request18_size =
+static size_t m_libspdm_negotiate_algorithm_request18_size =
     sizeof(m_libspdm_negotiate_algorithm_request18);
 
 libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_request24 = {
@@ -725,7 +725,7 @@ libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_requ
         }
     }
 };
-size_t m_libspdm_negotiate_algorithm_request24_size =
+static size_t m_libspdm_negotiate_algorithm_request24_size =
     sizeof(m_libspdm_negotiate_algorithm_request24);
 
 libspdm_negotiate_algorithms_request_spdm12_t
@@ -767,7 +767,7 @@ libspdm_negotiate_algorithms_request_spdm12_t
         }
     }
 };
-size_t m_libspdm_negotiate_algorithm_request25_size =
+static size_t m_libspdm_negotiate_algorithm_request25_size =
     sizeof(m_libspdm_negotiate_algorithm_request25);
 
 libspdm_negotiate_algorithms_request_spdm12_t
@@ -809,7 +809,7 @@ libspdm_negotiate_algorithms_request_spdm12_t
         }
     }
 };
-size_t m_libspdm_negotiate_algorithm_request26_size =
+static size_t m_libspdm_negotiate_algorithm_request26_size =
     sizeof(m_libspdm_negotiate_algorithm_request26);
 
 libspdm_negotiate_algorithms_request_spdm12_more_algo_t
@@ -856,7 +856,7 @@ libspdm_negotiate_algorithms_request_spdm12_more_algo_t
         },
     }
 };
-size_t m_libspdm_negotiate_algorithm_request27_size =
+static size_t m_libspdm_negotiate_algorithm_request27_size =
     sizeof(m_libspdm_negotiate_algorithm_request27);
 
 libspdm_negotiate_algorithms_request_spdm12_more_algo_t
@@ -903,7 +903,7 @@ libspdm_negotiate_algorithms_request_spdm12_more_algo_t
         }
     }
 };
-size_t m_libspdm_negotiate_algorithm_request28_size =
+static size_t m_libspdm_negotiate_algorithm_request28_size =
     sizeof(m_libspdm_negotiate_algorithm_request28);
 
 libspdm_negotiate_algorithms_request_spdm12_t
@@ -946,7 +946,7 @@ libspdm_negotiate_algorithms_request_spdm12_t
         }
     }
 };
-size_t m_libspdm_negotiate_algorithm_request29_size =
+static size_t m_libspdm_negotiate_algorithm_request29_size =
     sizeof(m_libspdm_negotiate_algorithm_request29);
 
 spdm_negotiate_algorithms_request_t m_libspdm_negotiate_algorithms_request30 = {
@@ -955,7 +955,7 @@ spdm_negotiate_algorithms_request_t m_libspdm_negotiate_algorithms_request30 = {
     SPDM_MEASUREMENT_SPECIFICATION_DMTF,
     SPDM_ALGORITHMS_MULTI_KEY_CONN,
 };
-size_t m_libspdm_negotiate_algorithms_request30_size =
+static size_t m_libspdm_negotiate_algorithms_request30_size =
     sizeof(m_libspdm_negotiate_algorithms_request30);
 
 void libspdm_test_responder_algorithms_case1(void **state)

@@ -21,34 +21,34 @@ typedef struct {
 libspdm_finish_request_mine_t m_libspdm_finish_request1 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_FINISH, 0, 0 },
 };
-size_t m_libspdm_finish_request1_size = sizeof(m_libspdm_finish_request1);
+static size_t m_libspdm_finish_request1_size = sizeof(m_libspdm_finish_request1);
 
 libspdm_finish_request_mine_t m_libspdm_finish_request3 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_FINISH, 1, 0 },
 };
-size_t m_libspdm_finish_request3_size = sizeof(m_libspdm_finish_request3);
+static size_t m_libspdm_finish_request3_size = sizeof(m_libspdm_finish_request3);
 
 libspdm_finish_request_mine_t m_libspdm_finish_request4 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_FINISH, 1, 0xFF },
 };
-size_t m_libspdm_finish_request4_size = sizeof(m_libspdm_finish_request4);
+static size_t m_libspdm_finish_request4_size = sizeof(m_libspdm_finish_request4);
 
 libspdm_finish_request_mine_t m_libspdm_finish_request5 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_FINISH, 1, 10 },
 };
-size_t m_libspdm_finish_request5_size = sizeof(m_libspdm_finish_request5);
+static size_t m_libspdm_finish_request5_size = sizeof(m_libspdm_finish_request5);
 
 libspdm_finish_request_mine_t m_libspdm_finish_request6 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_FINISH, 6, 10 },
 };
-size_t m_libspdm_finish_request6_size = sizeof(m_libspdm_finish_request6);
+static size_t m_libspdm_finish_request6_size = sizeof(m_libspdm_finish_request6);
 
 libspdm_finish_request_mine_t m_libspdm_finish_request7 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_FINISH, 1, 3 },
 };
-size_t m_libspdm_finish_request7_size = sizeof(m_libspdm_finish_request7);
+static size_t m_libspdm_finish_request7_size = sizeof(m_libspdm_finish_request7);
 
-uint8_t m_dummy_buffer[LIBSPDM_MAX_HASH_SIZE];
+static uint8_t m_dummy_buffer[LIBSPDM_MAX_HASH_SIZE];
 
 #if LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP
 

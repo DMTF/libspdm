@@ -24,7 +24,7 @@ spdm_get_version_request_t m_libspdm_get_version_request1 = {
         SPDM_GET_VERSION,
     },
 };
-size_t m_libspdm_get_version_request1_size = sizeof(m_libspdm_get_version_request1);
+static size_t m_libspdm_get_version_request1_size = sizeof(m_libspdm_get_version_request1);
 
 spdm_get_version_request_t m_libspdm_get_version_request3 = {
     {
@@ -32,7 +32,7 @@ spdm_get_version_request_t m_libspdm_get_version_request3 = {
         SPDM_GET_VERSION,
     },
 };
-size_t m_libspdm_get_version_request3_size = sizeof(m_libspdm_get_version_request3);
+static size_t m_libspdm_get_version_request3_size = sizeof(m_libspdm_get_version_request3);
 
 spdm_get_version_request_t m_libspdm_get_version_request4 = {
     {
@@ -40,7 +40,7 @@ spdm_get_version_request_t m_libspdm_get_version_request4 = {
         SPDM_VERSION,
     },
 };
-size_t m_libspdm_get_version_request4_size = sizeof(m_libspdm_get_version_request4);
+static size_t m_libspdm_get_version_request4_size = sizeof(m_libspdm_get_version_request4);
 
 /**
  * Test 1: receiving a correct GET_VERSION from the requester.

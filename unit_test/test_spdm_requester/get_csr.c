@@ -19,8 +19,8 @@ uint8_t csr_pointer[LIBSPDM_MAX_CSR_SIZE] = {0};
 uint8_t *csr_data_pointer = csr_pointer;
 size_t global_csr_len;
 
-uint8_t m_csr_opaque_data[8] = "libspdm";
-uint16_t m_csr_opaque_data_size = sizeof(m_csr_opaque_data);
+static uint8_t m_csr_opaque_data[8] = "libspdm";
+static uint16_t m_csr_opaque_data_size = sizeof(m_csr_opaque_data);
 
 /*ECC 256 req_info(include right req_info attribute)*/
 uint8_t req_info_sequence[] = {0x30, 0x81, 0xBF,};

@@ -54,7 +54,7 @@ libspdm_negotiate_algorithms_request_spdm_tables_t
     }
 };
 
-size_t m_libspdm_chunk_send_negotiate_algorithm_request1_size =
+static size_t m_libspdm_chunk_send_negotiate_algorithm_request1_size =
     sizeof(m_libspdm_chunk_send_negotiate_algorithm_request1);
 
 void libspdm_test_responder_chunk_send_ack_setup_algo_state(libspdm_context_t* spdm_context)

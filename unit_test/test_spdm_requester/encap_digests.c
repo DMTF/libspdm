@@ -15,7 +15,7 @@ spdm_get_digest_request_t m_spdm_get_digests_request1 = {
         SPDM_GET_DIGESTS,
     },
 };
-size_t m_spdm_get_digests_request1_size = sizeof(m_spdm_get_digests_request1);
+static size_t m_spdm_get_digests_request1_size = sizeof(m_spdm_get_digests_request1);
 
 
 spdm_get_digest_request_t m_spdm_get_digests_request2 = {
@@ -24,7 +24,7 @@ spdm_get_digest_request_t m_spdm_get_digests_request2 = {
         SPDM_GET_DIGESTS,
     },
 };
-size_t m_spdm_get_digests_request2_size = sizeof(m_spdm_get_digests_request2);
+static size_t m_spdm_get_digests_request2_size = sizeof(m_spdm_get_digests_request2);
 
 static uint8_t m_local_certificate_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
 

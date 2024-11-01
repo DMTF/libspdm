@@ -12,13 +12,13 @@
 spdm_get_encapsulated_request_request_t m_libspdm_encapsulated_request_t1 = {
     {SPDM_MESSAGE_VERSION_11, SPDM_GET_ENCAPSULATED_REQUEST, 0, 0}
 };
-size_t m_libspdm_encapsulated_request_t1_size = sizeof(m_libspdm_encapsulated_request_t1);
+static size_t m_libspdm_encapsulated_request_t1_size = sizeof(m_libspdm_encapsulated_request_t1);
 
 spdm_deliver_encapsulated_response_request_t m_libspdm_m_deliver_encapsulated_response_request_t1 =
 {
     {SPDM_MESSAGE_VERSION_11, SPDM_DELIVER_ENCAPSULATED_RESPONSE, 0, 0}
 };
-size_t m_libspdm_m_deliver_encapsulated_response_request_t1_size =
+static size_t m_libspdm_m_deliver_encapsulated_response_request_t1_size =
     sizeof(m_libspdm_m_deliver_encapsulated_response_request_t1);
 
 static uint8_t m_libspdm_local_certificate_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
@@ -27,7 +27,7 @@ spdm_deliver_encapsulated_response_request_t m_libspdm_m_deliver_encapsulated_re
 {
     {SPDM_MESSAGE_VERSION_12, SPDM_DELIVER_ENCAPSULATED_RESPONSE, 0xFF, 0}
 };
-size_t m_libspdm_m_deliver_encapsulated_response_request_t2_size =
+static size_t m_libspdm_m_deliver_encapsulated_response_request_t2_size =
     sizeof(m_libspdm_m_deliver_encapsulated_response_request_t2);
 
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)

@@ -13,14 +13,14 @@ static void *m_libspdm_local_certificate_chain;
 static size_t m_libspdm_local_certificate_chain_size;
 
 spdm_certificate_response_t m_spdm_get_certificate_response1;
-size_t m_spdm_get_certificate_response1_size;
+static size_t m_spdm_get_certificate_response1_size;
 
 spdm_certificate_response_t m_spdm_get_certificate_response2 = {
     {SPDM_MESSAGE_VERSION_10, SPDM_ERROR, SPDM_ERROR_CODE_INVALID_REQUEST, 0},
     0,
     0
 };
-size_t m_spdm_get_certificate_response2_size = sizeof(m_spdm_get_certificate_response2);
+static size_t m_spdm_get_certificate_response2_size = sizeof(m_spdm_get_certificate_response2);
 
 /**
  * Test 1: Normal case, request a certificate chain

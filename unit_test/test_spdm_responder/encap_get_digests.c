@@ -10,7 +10,7 @@
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && \
     (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)
 
-uint8_t m_local_digests_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
+static uint8_t m_local_digests_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
 static uint8_t m_libspdm_local_certificate_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
 
 /**

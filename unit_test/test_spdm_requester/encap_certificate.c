@@ -23,13 +23,13 @@ spdm_get_certificate_request_t m_spdm_get_certificate_request1 = {
     0,
     LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN
 };
-size_t m_spdm_get_certificate_request1_size =
+static size_t m_spdm_get_certificate_request1_size =
     sizeof(m_spdm_get_certificate_request1);
 
 spdm_get_certificate_request_t m_spdm_get_certificate_request3 = {
     {SPDM_MESSAGE_VERSION_11, SPDM_GET_CERTIFICATE, 0, 0}, 0, 0
 };
-size_t m_spdm_get_certificate_request3_size =
+static size_t m_spdm_get_certificate_request3_size =
     sizeof(m_spdm_get_certificate_request3);
 
 spdm_get_certificate_request_t m_spdm_get_certificate_request4 = {
@@ -37,7 +37,7 @@ spdm_get_certificate_request_t m_spdm_get_certificate_request4 = {
     0,
     LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN
 };
-size_t m_spdm_get_certificate_request4_size =
+static size_t m_spdm_get_certificate_request4_size =
     sizeof(m_spdm_get_certificate_request4);
 
 /**

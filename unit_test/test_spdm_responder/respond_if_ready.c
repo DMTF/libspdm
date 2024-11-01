@@ -30,7 +30,7 @@ spdm_response_if_ready_request_t m_libspdm_respond_if_ready_request1 = {
         LIBSPDM_MY_TEST_TOKEN
     },
 };
-size_t m_libspdm_respond_if_ready_request1_size = sizeof(spdm_message_header_t);
+static size_t m_libspdm_respond_if_ready_request1_size = sizeof(spdm_message_header_t);
 
 spdm_response_if_ready_request_t m_libspdm_respond_if_ready_request2 = {
     {
@@ -40,7 +40,7 @@ spdm_response_if_ready_request_t m_libspdm_respond_if_ready_request2 = {
         LIBSPDM_MY_TEST_TOKEN
     },
 };
-size_t m_libspdm_respond_if_ready_request2_size = sizeof(spdm_message_header_t);
+static size_t m_libspdm_respond_if_ready_request2_size = sizeof(spdm_message_header_t);
 
 spdm_response_if_ready_request_t m_libspdm_respond_if_ready_request3 = {
     {
@@ -50,7 +50,7 @@ spdm_response_if_ready_request_t m_libspdm_respond_if_ready_request3 = {
         LIBSPDM_MY_TEST_TOKEN
     },
 };
-size_t m_libspdm_respond_if_ready_request3_size = sizeof(spdm_message_header_t);
+static size_t m_libspdm_respond_if_ready_request3_size = sizeof(spdm_message_header_t);
 
 spdm_response_if_ready_request_t m_libspdm_respond_if_ready_request4 = {
     {
@@ -60,7 +60,7 @@ spdm_response_if_ready_request_t m_libspdm_respond_if_ready_request4 = {
         LIBSPDM_MY_TEST_TOKEN
     },
 };
-size_t m_libspdm_respond_if_ready_request4_size = sizeof(spdm_message_header_t);
+static size_t m_libspdm_respond_if_ready_request4_size = sizeof(spdm_message_header_t);
 
 spdm_response_if_ready_request_t m_libspdm_respond_if_ready_request5 = {
     {
@@ -70,7 +70,7 @@ spdm_response_if_ready_request_t m_libspdm_respond_if_ready_request5 = {
         LIBSPDM_MY_TEST_TOKEN
     },
 };
-size_t m_libspdm_respond_if_ready_request5_size = sizeof(spdm_message_header_t);
+static size_t m_libspdm_respond_if_ready_request5_size = sizeof(spdm_message_header_t);
 
 spdm_response_if_ready_request_t m_libspdm_respond_if_ready_request6 = {
     {
@@ -80,7 +80,7 @@ spdm_response_if_ready_request_t m_libspdm_respond_if_ready_request6 = {
         LIBSPDM_MY_TEST_TOKEN
     },
 };
-size_t m_libspdm_respond_if_ready_request6_size = sizeof(spdm_message_header_t);
+static size_t m_libspdm_respond_if_ready_request6_size = sizeof(spdm_message_header_t);
 
 spdm_response_if_ready_request_t m_libspdm_respond_if_ready_request7 = {
     {
@@ -90,7 +90,7 @@ spdm_response_if_ready_request_t m_libspdm_respond_if_ready_request7 = {
         LIBSPDM_MY_TEST_TOKEN
     },
 };
-size_t m_libspdm_respond_if_ready_request7_size = sizeof(spdm_message_header_t);
+static size_t m_libspdm_respond_if_ready_request7_size = sizeof(spdm_message_header_t);
 
 spdm_response_if_ready_request_t m_libspdm_respond_if_ready_request8 = {
     {
@@ -100,7 +100,7 @@ spdm_response_if_ready_request_t m_libspdm_respond_if_ready_request8 = {
         LIBSPDM_MY_TEST_TOKEN
     },
 };
-size_t m_libspdm_respond_if_ready_request8_size = sizeof(spdm_message_header_t);
+static size_t m_libspdm_respond_if_ready_request8_size = sizeof(spdm_message_header_t);
 
 spdm_response_if_ready_request_t m_libspdm_respond_if_ready_request10 = {
     {
@@ -110,7 +110,7 @@ spdm_response_if_ready_request_t m_libspdm_respond_if_ready_request10 = {
         LIBSPDM_MY_WRONG_TEST_TOKEN /*wrong token*/
     },
 };
-size_t m_libspdm_respond_if_ready_request10_size = sizeof(spdm_message_header_t);
+static size_t m_libspdm_respond_if_ready_request10_size = sizeof(spdm_message_header_t);
 
 spdm_response_if_ready_request_t m_libspdm_respond_if_ready_request11 = {
     {
@@ -120,7 +120,7 @@ spdm_response_if_ready_request_t m_libspdm_respond_if_ready_request11 = {
         LIBSPDM_MY_TEST_TOKEN
     },
 };
-size_t m_libspdm_respond_if_ready_request11_size = sizeof(spdm_message_header_t);
+static size_t m_libspdm_respond_if_ready_request11_size = sizeof(spdm_message_header_t);
 
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 spdm_get_digest_request_t m_libspdm_get_digest_request = {
@@ -131,7 +131,7 @@ spdm_get_digest_request_t m_libspdm_get_digest_request = {
         0
     },
 };
-size_t m_libspdm_get_digest_request_size = sizeof(spdm_message_header_t);
+static size_t m_libspdm_get_digest_request_size = sizeof(spdm_message_header_t);
 
 spdm_get_certificate_request_t m_libspdm_get_certificate_request = {
     {
@@ -143,7 +143,7 @@ spdm_get_certificate_request_t m_libspdm_get_certificate_request = {
     0,
     LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN
 };
-size_t m_libspdm_get_certificate_request_size = sizeof(m_libspdm_get_certificate_request);
+static size_t m_libspdm_get_certificate_request_size = sizeof(m_libspdm_get_certificate_request);
 
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
@@ -157,7 +157,7 @@ spdm_challenge_request_t m_libspdm_challenge_request = {
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH
     },
 };
-size_t m_libspdm_challenge_request_size = sizeof(m_libspdm_challenge_request);
+static size_t m_libspdm_challenge_request_size = sizeof(m_libspdm_challenge_request);
 
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/
 
@@ -170,7 +170,7 @@ spdm_get_measurements_request_t m_libspdm_get_measurements_request = {
         SPDM_GET_MEASUREMENTS_REQUEST_MEASUREMENT_OPERATION_TOTAL_NUMBER_OF_MEASUREMENTS
     },
 };
-size_t m_libspdm_get_measurements_request_size = sizeof(spdm_message_header_t);
+static size_t m_libspdm_get_measurements_request_size = sizeof(spdm_message_header_t);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP*/
 
 #pragma pack(1)
@@ -220,7 +220,7 @@ libspdm_key_exchange_request_mine_t m_libspdm_key_exchange_request = {
         0
     },
 };
-size_t m_libspdm_key_exchange_request_size = sizeof(m_libspdm_key_exchange_request);
+static size_t m_libspdm_key_exchange_request_size = sizeof(m_libspdm_key_exchange_request);
 
 libspdm_finish_request_mine_t m_libspdm_finish_request = {
     {
@@ -230,7 +230,7 @@ libspdm_finish_request_mine_t m_libspdm_finish_request = {
         0
     },
 };
-size_t m_libspdm_finish_request_size = sizeof(m_libspdm_finish_request);
+static size_t m_libspdm_finish_request_size = sizeof(m_libspdm_finish_request);
 
 #if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
 libspdm_psk_exchange_request_mine_t m_libspdm_psk_exchange_request = {
@@ -241,7 +241,7 @@ libspdm_psk_exchange_request_mine_t m_libspdm_psk_exchange_request = {
         0
     },
 };
-size_t m_libspdm_psk_exchange_request_size = sizeof(m_libspdm_psk_exchange_request);
+static size_t m_libspdm_psk_exchange_request_size = sizeof(m_libspdm_psk_exchange_request);
 
 libspdm_psk_finish_request_mine_t m_libspdm_psk_finish_request = {
     {
@@ -251,7 +251,7 @@ libspdm_psk_finish_request_mine_t m_libspdm_psk_finish_request = {
         0
     },
 };
-size_t m_libspdm_psk_finish_request_size = sizeof(m_libspdm_psk_finish_request);
+static size_t m_libspdm_psk_finish_request_size = sizeof(m_libspdm_psk_finish_request);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
 
 spdm_end_session_request_t m_libspdm_end_session_request = {
@@ -262,7 +262,7 @@ spdm_end_session_request_t m_libspdm_end_session_request = {
         0
     }
 };
-size_t m_libspdm_end_session_request_size = sizeof(m_libspdm_end_session_request);
+static size_t m_libspdm_end_session_request_size = sizeof(m_libspdm_end_session_request);
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 static uint8_t m_libspdm_local_certificate_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
 #endif

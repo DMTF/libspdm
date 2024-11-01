@@ -14,25 +14,25 @@ spdm_challenge_request_t m_spdm_challenge_request1 = {
     {SPDM_MESSAGE_VERSION_11, SPDM_CHALLENGE, 0,
      SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH},
 };
-size_t m_spdm_challenge_request1_size = sizeof(m_spdm_challenge_request1);
+static size_t m_spdm_challenge_request1_size = sizeof(m_spdm_challenge_request1);
 
 spdm_challenge_request_t m_spdm_challenge_request3 = {
     {SPDM_MESSAGE_VERSION_11, SPDM_CHALLENGE, SPDM_MAX_SLOT_COUNT,
      SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH},
 };
-size_t m_spdm_challenge_request3_size = sizeof(m_spdm_challenge_request3);
+static size_t m_spdm_challenge_request3_size = sizeof(m_spdm_challenge_request3);
 
 spdm_challenge_request_t m_spdm_challenge_request4 = {
     {SPDM_MESSAGE_VERSION_11, SPDM_CHALLENGE, 0xFF,
      SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH},
 };
-size_t m_spdm_challenge_request4_size = sizeof(m_spdm_challenge_request4);
+static size_t m_spdm_challenge_request4_size = sizeof(m_spdm_challenge_request4);
 
 spdm_challenge_request_t m_spdm_challenge_request5 = {
     {SPDM_MESSAGE_VERSION_13, SPDM_CHALLENGE, 0,
      SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH},
 };
-size_t m_spdm_challenge_request5_size = sizeof(m_spdm_challenge_request5);
+static size_t m_spdm_challenge_request5_size = sizeof(m_spdm_challenge_request5);
 
 extern size_t libspdm_secret_lib_challenge_opaque_data_size;
 

@@ -13,18 +13,18 @@
 spdm_end_session_request_t m_libspdm_end_session_request1 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_END_SESSION, 0, 0 }
 };
-size_t m_libspdm_end_session_request1_size = sizeof(m_libspdm_end_session_request1);
+static size_t m_libspdm_end_session_request1_size = sizeof(m_libspdm_end_session_request1);
 
 spdm_end_session_request_t m_libspdm_end_session_request2 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_END_SESSION, 0, 0 }
 };
-size_t m_libspdm_end_session_request2_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
+static size_t m_libspdm_end_session_request2_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
 
 spdm_end_session_request_t m_libspdm_end_session_request3 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_END_SESSION,
       SPDM_END_SESSION_REQUEST_ATTRIBUTES_PRESERVE_NEGOTIATED_STATE_CLEAR, 0 }
 };
-size_t m_libspdm_end_session_request3_size = sizeof(m_libspdm_end_session_request1);
+static size_t m_libspdm_end_session_request3_size = sizeof(m_libspdm_end_session_request1);
 
 void libspdm_test_responder_end_session_case1(void **state)
 {

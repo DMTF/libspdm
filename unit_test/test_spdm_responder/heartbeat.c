@@ -13,12 +13,12 @@
 spdm_heartbeat_request_t m_libspdm_heartbeat_request1 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_HEARTBEAT, 0, 0 }
 };
-size_t m_libspdm_heartbeat_request1_size = sizeof(m_libspdm_heartbeat_request1);
+static size_t m_libspdm_heartbeat_request1_size = sizeof(m_libspdm_heartbeat_request1);
 
 spdm_heartbeat_request_t m_libspdm_heartbeat_request2 = {
     { SPDM_MESSAGE_VERSION_11, SPDM_HEARTBEAT, 0, 0 }
 };
-size_t m_libspdm_heartbeat_request2_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
+static size_t m_libspdm_heartbeat_request2_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
 
 
 void libspdm_test_responder_heartbeat_case1(void **state)
