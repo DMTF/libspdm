@@ -476,6 +476,31 @@ void libspdm_test_responder_set_key_pair_info_ack_case3(void **state)
     assert_int_equal(spdm_response->header.param1,
                      SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
+
+    /*Before reset, change: remove an association with slot*/
+    set_key_pair_info_request_size =
+        sizeof(spdm_set_key_pair_info_request_t) +
+        sizeof(uint8_t) + sizeof(uint16_t) + sizeof(uint32_t) + sizeof(uint8_t);
+
+    libspdm_zero_mem(set_key_pair_info_request, set_key_pair_info_request_size);
+    set_key_pair_info_request->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+    set_key_pair_info_request->header.request_response_code = SPDM_SET_KEY_PAIR_INFO;
+    set_key_pair_info_request->header.param1 = SPDM_SET_KEY_PAIR_INFO_CHANGE_OPERATION;
+    set_key_pair_info_request->header.param2 = 0;
+    set_key_pair_info_request->key_pair_id = 0x1;
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_set_key_pair_info_ack(
+        spdm_context, set_key_pair_info_request_size,
+        set_key_pair_info_request, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1,
+                     SPDM_ERROR_CODE_RESET_REQUIRED);
+    assert_int_equal(spdm_response->header.param2, 0);
 }
 
 int libspdm_responder_set_key_pair_info_ack_test_main(void)
