@@ -84,6 +84,72 @@ extern "C" {
 #define LIBSPDM_MAX_AEAD_TAG_SIZE 1
 #endif /* LIBSPDM_MAX_AEAD_KEY_SIZE */
 
+#if (LIBSPDM_ML_KEM_1024_SUPPORT)
+#define LIBSPDM_MAX_KEM_ENCAP_KEY_SIZE 1568
+#define LIBSPDM_MAX_KEM_DECAP_KEY_SIZE 3168
+#define LIBSPDM_MAX_KEM_CT_KEY_SIZE 1568
+#define LIBSPDM_MAX_KEM_SS_KEY_SIZE 32
+#elif (LIBSPDM_ML_KEM_768_SUPPORT)
+#define LIBSPDM_MAX_KEM_ENCAP_KEY_SIZE 1184
+#define LIBSPDM_MAX_KEM_DECAP_KEY_SIZE 2400
+#define LIBSPDM_MAX_KEM_CT_KEY_SIZE 1088
+#define LIBSPDM_MAX_KEM_SS_KEY_SIZE 32
+#elif (LIBSPDM_ML_KEM_512_SUPPORT)
+#define LIBSPDM_MAX_KEM_ENCAP_KEY_SIZE 800
+#define LIBSPDM_MAX_KEM_DECAP_KEY_SIZE 1632
+#define LIBSPDM_MAX_KEM_CT_KEY_SIZE 768
+#define LIBSPDM_MAX_KEM_SS_KEY_SIZE 32
+#else
+/* set 1 to pass build only */
+#define LIBSPDM_MAX_KEM_ENCAP_KEY_SIZE 1
+#define LIBSPDM_MAX_KEM_DECAP_KEY_SIZE 1
+#define LIBSPDM_MAX_KEM_CT_KEY_SIZE 1
+#define LIBSPDM_MAX_KEM_SS_KEY_SIZE 1
+#endif
+
+#if (LIBSPDM_ML_DSA_87_SUPPORT)
+#define LIBSPDM_MAX_PQC_ASYM_PRIV_KEY_SIZE 4896
+#define LIBSPDM_MAX_PQC_ASYM_PUB_KEY_SIZE 2592
+#define LIBSPDM_MAX_PQC_ASYM_SIG_SIZE 4627
+#elif (LIBSPDM_ML_DSA_65_SUPPORT)
+#define LIBSPDM_MAX_PQC_ASYM_PRIV_KEY_SIZE 4032
+#define LIBSPDM_MAX_PQC_ASYM_PUB_KEY_SIZE 1952
+#define LIBSPDM_MAX_PQC_ASYM_SIG_SIZE 3309
+#elif (LIBSPDM_ML_DSA_44_SUPPORT)
+#define LIBSPDM_MAX_PQC_ASYM_PRIV_KEY_SIZE 2560
+#define LIBSPDM_MAX_PQC_ASYM_PUB_KEY_SIZE 1312
+#define LIBSPDM_MAX_PQC_ASYM_SIG_SIZE 2420
+#else
+/* set 1 to pass build only */
+#define LIBSPDM_MAX_PQC_ASYM_PRIV_KEY_SIZE 1
+#define LIBSPDM_MAX_PQC_ASYM_PUB_KEY_SIZE 1
+#define LIBSPDM_MAX_PQC_ASYM_SIG_SIZE 1
+#endif
+
+#if (LIBSPDM_MAX_KEM_ENCAP_KEY_SIZE > LIBSPDM_MAX_DHE_KEY_SIZE)
+#define LIBSPDM_REQ_EXCHANGE_DATA_MAX_SIZE LIBSPDM_MAX_KEM_ENCAP_KEY_SIZE
+#else
+#define LIBSPDM_REQ_EXCHANGE_DATA_MAX_SIZE LIBSPDM_MAX_DHE_KEY_SIZE
+#endif
+
+#if (LIBSPDM_MAX_KEM_CT_KEY_SIZE > LIBSPDM_MAX_DHE_KEY_SIZE)
+#define LIBSPDM_RSP_EXCHANGE_DATA_MAX_SIZE LIBSPDM_MAX_KEM_CT_KEY_SIZE
+#else
+#define LIBSPDM_RSP_EXCHANGE_DATA_MAX_SIZE LIBSPDM_MAX_DHE_KEY_SIZE
+#endif
+
+#if (LIBSPDM_MAX_PQC_ASYM_SIG_SIZE > LIBSPDM_MAX_ASYM_KEY_SIZE)
+#define LIBSPDM_REQ_SIGNATURE_DATA_MAX_SIZE LIBSPDM_MAX_PQC_ASYM_SIG_SIZE
+#else
+#define LIBSPDM_REQ_SIGNATURE_DATA_MAX_SIZE LIBSPDM_MAX_ASYM_KEY_SIZE
+#endif
+
+#if (LIBSPDM_MAX_PQC_ASYM_SIG_SIZE > LIBSPDM_MAX_ASYM_KEY_SIZE)
+#define LIBSPDM_RSP_SIGNATURE_DATA_MAX_SIZE LIBSPDM_MAX_PQC_ASYM_SIG_SIZE
+#else
+#define LIBSPDM_RSP_SIGNATURE_DATA_MAX_SIZE LIBSPDM_MAX_ASYM_KEY_SIZE
+#endif
+
 /**
  * This function returns the SPDM hash algorithm size.
  *
@@ -1113,6 +1179,96 @@ bool libspdm_get_leaf_cert_public_key_from_cert_chain(uint32_t base_hash_algo,
                                                       size_t cert_chain_data_size,
                                                       void **public_key);
 
+/**
+ * Certificate Check for SPDM leaf cert.
+ *
+ * @param[in]  cert                  Pointer to the DER-encoded certificate data.
+ * @param[in]  cert_size             The size of certificate data in bytes.
+ * @param[in]  pqc_asym_algo        SPDM pqc_asym_algo
+ * @param[in]  base_hash_algo        SPDM base_hash_algo
+ * @param[in]  is_requester          Is the function verifying a cert as a requester or responder.
+ * @param[in]  cert_model            One of the SPDM_CERTIFICATE_INFO_CERT_MODEL_* macros.
+ *
+ * @retval  true   Success.
+ * @retval  false  Certificate is not valid.
+ **/
+bool libspdm_x509_pqc_certificate_check(const uint8_t *cert, size_t cert_size,
+                                        uint32_t pqc_asym_algo, uint32_t base_hash_algo,
+                                        bool is_requester, uint8_t cert_model);
+
+/**
+ * Certificate Check for SPDM leaf cert when set_cert.
+ *
+ * @param[in]  cert                  Pointer to the DER-encoded certificate data.
+ * @param[in]  cert_size             The size of certificate data in bytes.
+ * @param[in]  pqc_asym_algo         SPDM pqc_asym_algo
+ * @param[in]  base_hash_algo        SPDM base_hash_algo
+ * @param[in]  is_requester          Is the function verifying a cert as a requester or responder.
+ * @param[in]  cert_model            One of the SPDM_CERTIFICATE_INFO_CERT_MODEL_* macros.
+ *
+ * @retval  true   Success.
+ * @retval  false  Certificate is not valid.
+ **/
+bool libspdm_x509_pqc_set_cert_certificate_check(const uint8_t *cert, size_t cert_size,
+                                                 uint32_t pqc_asym_algo, uint32_t base_hash_algo,
+                                                 bool is_requester, uint8_t cert_model);
+
+/**
+ * This function verifies the integrity of certificate chain data without spdm_cert_chain_t header.
+ *
+ * @param  cert_chain_data       The certificate chain data without spdm_cert_chain_t header.
+ * @param  cert_chain_data_size  Size in bytes of the certificate chain data.
+ * @param  pqc_asym_algo         SPDM pqc_asym_algo
+ * @param  base_hash_algo        SPDM base_hash_algo
+ * @param  is_requester_cert     Is the function verifying requester or responder cert.
+ * @param  cert_model            One of the SPDM_CERTIFICATE_INFO_CERT_MODEL_* macros.
+ *
+ * @retval true  Certificate chain data integrity verification pass.
+ * @retval false Certificate chain data integrity verification fail.
+ **/
+bool libspdm_verify_pqc_cert_chain_data(uint8_t *cert_chain_data, size_t cert_chain_data_size,
+                                        uint32_t pqc_asym_algo, uint32_t base_hash_algo,
+                                        bool is_requester_cert, uint8_t cert_model);
+
+/**
+ * This function verifies the integrity of certificate chain buffer including
+ * spdm_cert_chain_t header.
+ *
+ * @param  base_hash_algo          SPDM base_hash_algo
+ * @param  pqc_asym_algo           SPDM pqc_asym_algo
+ * @param  cert_chain_buffer       The certificate chain buffer including spdm_cert_chain_t header.
+ * @param  cert_chain_buffer_size  Size in bytes of the certificate chain buffer.
+ * @param  is_requester_cert       Is the function verifying requester or responder cert.
+ * @param  cert_model              One of the SPDM_CERTIFICATE_INFO_CERT_MODEL_* macros.
+ *
+ * @retval true   Certificate chain buffer integrity verification pass.
+ * @retval false  Certificate chain buffer integrity verification fail.
+ **/
+bool libspdm_verify_pqc_certificate_chain_buffer(uint32_t base_hash_algo, uint32_t pqc_asym_algo,
+                                                 const void *cert_chain_buffer,
+                                                 size_t cert_chain_buffer_size,
+                                                 bool is_requester_cert, uint8_t cert_model);
+
+/**
+ * Retrieve the asymmetric public key from one DER-encoded X509 certificate,
+ * based upon negotiated asymmetric or requester asymmetric algorithm.
+ *
+ * @param  base_hash_algo        SPDM base_hash_algo.
+ * @param  pqc_asym_alg          SPDM pqc_asym_algo or req_pqc_asym_alg.
+ * @param  cert_chain_data       Certificate chain data with spdm_cert_chain_t header.
+ * @param  cert_chain_data_size  Size in bytes of the certificate chain data.
+ * @param  public_key            Pointer to newly generated asymmetric context which contain the
+ *                               retrieved public key component.
+ *
+ * @retval  true   Public key was retrieved successfully.
+ * @retval  false  Fail to retrieve public key from X509 certificate.
+ **/
+bool libspdm_get_pqc_leaf_cert_public_key_from_cert_chain(uint32_t base_hash_algo,
+                                                          uint32_t pqc_asym_alg,
+                                                          uint8_t *cert_chain_data,
+                                                          size_t cert_chain_data_size,
+                                                          void **public_key);
+
 #endif
 
 /**
@@ -1128,6 +1284,420 @@ bool libspdm_get_leaf_cert_public_key_from_cert_chain(uint32_t base_hash_algo,
  * @retval  false   Invalid req info.
  **/
 bool libspdm_verify_req_info(uint8_t *req_info, uint16_t req_info_len);
+
+
+/**
+ * This function returns the SPDM asymmetric algorithm size.
+ *
+ * @param  pqc_asym_algo  SPDM pqc_asym_algo
+ *
+ * @return SPDM asymmetric algorithm size.
+ **/
+uint32_t libspdm_get_pqc_asym_signature_size(uint32_t pqc_asym_algo);
+
+/**
+ * Retrieve the asymmetric public key from one DER-encoded X509 certificate,
+ * based upon negotiated asymmetric algorithm.
+ *
+ * @param  pqc_asym_algo   SPDM pqc_asym_algo
+ * @param  cert            Pointer to the DER-encoded X509 certificate.
+ * @param  cert_size       Size of the X509 certificate in bytes.
+ * @param  context         Pointer to newly generated asymmetric context which contain the retrieved
+ *                         public key component. Use libspdm_asym_free() function to free the
+ *                         resource.
+ *
+ * @retval  true   Public key was retrieved successfully.
+ * @retval  false  Fail to retrieve public key from X509 certificate.
+ **/
+bool libspdm_pqc_asym_get_public_key_from_x509(uint32_t pqc_asym_algo,
+                                               const uint8_t *cert,
+                                               size_t cert_size,
+                                               void **context);
+
+/**
+ * Retrieve the asymmetric public key from the DER-encoded public key data,
+ * based upon negotiated asymmetric algorithm.
+ *
+ * @param  pqc_asym_algo   SPDM pqc_asym_algo
+ * @param  der_data        Pointer to the DER-encoded public key data.
+ * @param  der_size        Size of the DER-encoded public key data in bytes.
+ * @param  context         Pointer to newly generated asymmetric context which contain the
+ *                         retrieved public key component.
+ *                         Use libspdm_asym_free() function to free the resource.
+ *
+ * @retval  true   Private key was retrieved successfully.
+ * @retval  false  Invalid DER key data.
+ **/
+bool libspdm_pqc_asym_get_public_key_from_der(uint32_t pqc_asym_algo,
+                                              const uint8_t *der_data,
+                                              size_t der_size,
+                                              void **context);
+
+/**
+ * Release the specified asymmetric context, based upon negotiated asymmetric algorithm.
+ *
+ * @param  pqc_asym_algo   SPDM pqc_asym_algo
+ * @param  context         Pointer to the asymmetric context to be released.
+ **/
+void libspdm_pqc_asym_free(uint32_t pqc_asym_algo, void *context);
+
+/**
+ * Verifies the asymmetric signature, based upon negotiated asymmetric algorithm.
+ *
+ * @param  pqc_asym_algo   SPDM pqc_asym_algo
+ * @param  base_hash_algo  SPDM base_hash_algo
+ * @param  context         Pointer to asymmetric context for signature verification.
+ * @param  message         Pointer to octet message to be checked (before hash).
+ * @param  message_size    Size of the message in bytes.
+ * @param  signature       Pointer to asymmetric signature to be verified.
+ * @param  sig_size        Size of signature in bytes.
+ *
+ * @retval  true   Valid asymmetric signature.
+ * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
+ **/
+bool libspdm_pqc_asym_verify(
+    spdm_version_number_t spdm_version, uint8_t op_code,
+    uint32_t pqc_asym_algo, uint32_t base_hash_algo,
+    void *context,
+    const uint8_t *message, size_t message_size,
+    const uint8_t *signature, size_t sig_size);
+
+/**
+ * Verifies the asymmetric signature, based upon negotiated asymmetric algorithm.
+ *
+ * @param  pqc_asym_algo   SPDM pqc_asym_algo
+ * @param  base_hash_algo  SPDM base_hash_algo
+ * @param  context         Pointer to asymmetric context for signature verification.
+ * @param  message_hash    Pointer to octet message hash to be checked (after hash).
+ * @param  hash_size       Size of the hash in bytes.
+ * @param  signature       Pointer to asymmetric signature to be verified.
+ * @param  sig_size        Size of signature in bytes.
+ *
+ * @retval  true   Valid asymmetric signature.
+ * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
+ **/
+bool libspdm_pqc_asym_verify_hash(
+    spdm_version_number_t spdm_version, uint8_t op_code,
+    uint32_t pqc_asym_algo, uint32_t base_hash_algo, void *context,
+    const uint8_t *message_hash, size_t hash_size,
+    const uint8_t *signature, size_t sig_size);
+
+
+/**
+ * Carries out the signature generation.
+ *
+ * If the signature buffer is too small to hold the contents of signature, false
+ * is returned and sig_size is set to the required buffer size to obtain the signature.
+ *
+ * @param  pqc_asym_algo   SPDM pqc_asym_algo
+ * @param  base_hash_algo  SPDM base_hash_algo
+ * @param  context         Pointer to asymmetric context for signature generation.
+ * @param  message         Pointer to octet message to be signed (before hash).
+ * @param  message_size    Size of the message in bytes.
+ * @param  signature       Pointer to buffer to receive signature.
+ * @param  sig_size        On input, the size of signature buffer in bytes.
+ *                         On output, the size of data returned in signature buffer in bytes.
+ *
+ * @retval  true   Signature successfully generated.
+ * @retval  false  Signature generation failed.
+ * @retval  false  sig_size is too small.
+ **/
+bool libspdm_pqc_asym_sign(
+    spdm_version_number_t spdm_version, uint8_t op_code,
+    uint32_t pqc_asym_algo, uint32_t base_hash_algo,
+    void *context, const uint8_t *message,
+    size_t message_size, uint8_t *signature,
+    size_t *sig_size);
+
+/**
+ * Carries out the signature generation.
+ *
+ * If the signature buffer is too small to hold the contents of signature, false
+ * is returned and sig_size is set to the required buffer size to obtain the signature.
+ *
+ * @param  pqc_asym_algo   SPDM pqc_asym_algo
+ * @param  base_hash_algo  SPDM base_hash_algo
+ * @param  context         Pointer to asymmetric context for signature generation.
+ * @param  message_hash    Pointer to octet message hash to be signed (after hash).
+ * @param  hash_size       Size of the hash in bytes.
+ * @param  signature       Pointer to buffer to receive signature.
+ * @param  sig_size        On input, the size of signature buffer in bytes.
+ *                         On output, the size of data returned in signature buffer in bytes.
+ *
+ * @retval  true   Signature successfully generated.
+ * @retval  false  Signature generation failed.
+ * @retval  false  sig_size is too small.
+ **/
+bool libspdm_pqc_asym_sign_hash(
+    spdm_version_number_t spdm_version, uint8_t op_code,
+    uint32_t pqc_asym_algo, uint32_t base_hash_algo,
+    void *context, const uint8_t *message_hash,
+    size_t hash_size, uint8_t *signature,
+    size_t *sig_size);
+
+/**
+ * This function returns the SPDM requester asymmetric algorithm size.
+ *
+ * @param  req_pqc_asym_alg  SPDM req_pqc_asym_alg
+ *
+ * @return SPDM requester asymmetric algorithm size.
+ **/
+uint32_t libspdm_get_req_pqc_asym_signature_size(uint32_t req_pqc_asym_alg);
+
+/**
+ * Retrieve the asymmetric public key from one DER-encoded X509 certificate,
+ * based upon negotiated requester asymmetric algorithm.
+ *
+ * @param  req_pqc_asym_alg   SPDM req_pqc_asym_alg
+ * @param  cert               Pointer to the DER-encoded X509 certificate.
+ * @param  cert_size          Size of the X509 certificate in bytes.
+ * @param  context            Pointer to newly generated asymmetric context which contain the
+ *                            retrieved public key component. Use libspdm_asym_free() function to
+ *                            free the resource.
+ *
+ * @retval  true   Public key was retrieved successfully.
+ * @retval  false  Fail to retrieve public key from X509 certificate.
+ **/
+bool libspdm_req_pqc_asym_get_public_key_from_x509(uint32_t req_pqc_asym_alg,
+                                                   const uint8_t *cert,
+                                                   size_t cert_size,
+                                                   void **context);
+
+/**
+ * Retrieve the asymmetric public key from the DER-encoded public key data,
+ * based upon negotiated requester asymmetric algorithm.
+ *
+ * @param  req_pqc_asym_alg  SPDM req_pqc_asym_alg
+ * @param  der_data           Pointer to the DER-encoded public key data.
+ * @param  der_size           Size of the DER-encoded public key data in bytes.
+ * @param  context            Pointer to newly generated asymmetric context which contain the
+ *                            retrieved public key component.
+ *                            Use libspdm_req_asym_free() function to free the resource.
+ *
+ * @retval  true   Public key was retrieved successfully.
+ * @retval  false  Invalid DER key data.
+ **/
+bool libspdm_req_pqc_asym_get_public_key_from_der(uint32_t req_pqc_asym_alg,
+                                                  const uint8_t *der_data,
+                                                  size_t der_size,
+                                                  void **context);
+
+/**
+ * Release the specified asymmetric context, based upon negotiated requester asymmetric algorithm.
+ *
+ * @param  req_pqc_asym_alg   SPDM req_pqc_asym_alg
+ * @param  context            Pointer to the asymmetric context to be released.
+ **/
+void libspdm_req_pqc_asym_free(uint32_t req_pqc_asym_alg, void *context);
+
+/**
+ * Verifies the asymmetric signature, based upon negotiated requester asymmetric algorithm.
+ *
+ * @param  req_pqc_asym_alg   SPDM req_pqc_asym_alg
+ * @param  base_hash_algo     SPDM base_hash_algo
+ * @param  context            Pointer to asymmetric context for signature verification.
+ * @param  message            Pointer to octet message to be checked (before hash).
+ * @param  message_size       Size of the message in bytes.
+ * @param  signature          Pointer to asymmetric signature to be verified.
+ * @param  sig_size           Size of signature in bytes.
+ * @param  endian             Endian to be tried. If both endians are selected,
+ *                            the one actually used successfully is returned.
+ *
+ * @retval  true   Valid asymmetric signature.
+ * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
+ **/
+bool libspdm_req_pqc_asym_verify(
+    spdm_version_number_t spdm_version, uint8_t op_code,
+    uint32_t req_pqc_asym_alg,
+    uint32_t base_hash_algo, void *context,
+    const uint8_t *message, size_t message_size,
+    const uint8_t *signature, size_t sig_size);
+
+/**
+ * Verifies the asymmetric signature, based upon negotiated requester asymmetric algorithm.
+ *
+ * @param  req_pqc_asym_alg   SPDM req_pqc_asym_alg
+ * @param  base_hash_algo     SPDM base_hash_algo
+ * @param  context            Pointer to asymmetric context for signature verification.
+ * @param  message_hash       Pointer to octet message hash to be checked (after hash).
+ * @param  hash_size          Size of the hash in bytes.
+ * @param  signature          Pointer to asymmetric signature to be verified.
+ * @param  sig_size           Size of signature in bytes.
+ * @param  endian             Endian to be tried. If both endians are selected,
+ *                            the one actually used successfully is returned.
+ *
+ * @retval  true   Valid asymmetric signature.
+ * @retval  false  Invalid asymmetric signature or invalid asymmetric context.
+ **/
+bool libspdm_req_pqc_asym_verify_hash(
+    spdm_version_number_t spdm_version, uint8_t op_code,
+    uint32_t req_pqc_asym_alg,
+    uint32_t base_hash_algo, void *context,
+    const uint8_t *message_hash, size_t hash_size,
+    const uint8_t *signature, size_t sig_size);
+
+/**
+ * Carries out the signature generation.
+ *
+ * If the signature buffer is too small to hold the contents of signature, false
+ * is returned and sig_size is set to the required buffer size to obtain the signature.
+ *
+ * @param  req_pqc_asym_alg   SPDM req_pqc_asym_alg
+ * @param  base_hash_algo     SPDM base_hash_algo
+ * @param  context            Pointer to asymmetric context for signature generation.
+ * @param  message            Pointer to octet message to be signed (before hash).
+ * @param  message_size       Size of the message in bytes.
+ * @param  signature          Pointer to buffer to receive signature.
+ * @param  sig_size           On input, the size of signature buffer in bytes.
+ *                            On output, the size of data returned in signature buffer in bytes.
+ *
+ * @retval  true   Signature successfully generated.
+ * @retval  false  Signature generation failed.
+ * @retval  false  sig_size is too small.
+ **/
+bool libspdm_req_pqc_asym_sign(
+    spdm_version_number_t spdm_version, uint8_t op_code,
+    uint32_t req_pqc_asym_alg,
+    uint32_t base_hash_algo, void *context,
+    const uint8_t *message, size_t message_size,
+    uint8_t *signature, size_t *sig_size);
+
+/**
+ * Carries out the signature generation.
+ *
+ * If the signature buffer is too small to hold the contents of signature, false
+ * is returned and sig_size is set to the required buffer size to obtain the signature.
+ *
+ * @param  req_pqc_asym_alg   SPDM req_pqc_asym_alg
+ * @param  base_hash_algo     SPDM base_hash_algo
+ * @param  context            Pointer to asymmetric context for signature generation.
+ * @param  message_hash       Pointer to octet message hash to be signed (after hash).
+ * @param  hash_size          Size of the hash in bytes.
+ * @param  signature          Pointer to buffer to receive signature.
+ * @param  sig_size           On input, the size of signature buffer in bytes.
+ *                            On output, the size of data returned in signature buffer in bytes.
+ *
+ * @retval  true   Signature successfully generated.
+ * @retval  false  Signature generation failed.
+ * @retval  false  sig_size is too small.
+ **/
+bool libspdm_req_pqc_asym_sign_hash(
+    spdm_version_number_t spdm_version, uint8_t op_code,
+    uint32_t req_pqc_asym_alg,
+    uint32_t base_hash_algo, void *context,
+    const uint8_t *message_hash, size_t hash_size,
+    uint8_t *signature, size_t *sig_size);
+
+/**
+ * This function returns the SPDM KEM algorithm key size.
+ *
+ * @param  kem_alg  SPDM kem_alg
+ *
+ * @return SPDM KEM algorithm key size.
+ **/
+uint32_t libspdm_get_kem_encap_key_size(uint32_t kem_alg);
+
+/**
+ * This function returns the SPDM KEM algorithm key size.
+ *
+ * @param  kem_alg  SPDM kem_alg
+ *
+ * @return SPDM KEM algorithm key size.
+ **/
+uint32_t libspdm_get_kem_cipher_text_size(uint32_t kem_alg);
+
+/**
+ * This function returns the SPDM KEM algorithm key size.
+ *
+ * @param  kem_alg  SPDM kem_alg
+ *
+ * @return SPDM KEM algorithm key size.
+ **/
+uint32_t libspdm_get_kem_shared_secret_size(uint32_t kem_alg);
+
+/**
+ * Allocates and Initializes one KEM context for subsequent use,
+ * based upon negotiated KEM algorithm.
+ *
+ * @param  kem_alg  SPDM kem_alg
+ * @param  is_initiator     If the caller is initiator.
+ *
+ * @return  Pointer to the KEM context that has been initialized.
+ **/
+void *libspdm_kem_new(spdm_version_number_t spdm_version,
+                      uint32_t kem_alg, bool is_initiator);
+
+/**
+ * Release the specified KEM context, based upon negotiated KEM algorithm.
+ *
+ * @param  kem_alg  SPDM kem_alg
+ * @param  context          Pointer to the KEM context to be released.
+ **/
+void libspdm_kem_free(uint32_t kem_alg, void *context);
+
+/**
+ * Generates KEM public key, based upon negotiated KEM algorithm.
+ *
+ * @param  kem_alg           SPDM kem_alg
+ * @param  context           Pointer to the DHE context.
+ * @param  encap_key         Pointer to the buffer to receive generated public key.
+ * @param  encap_key_size    On input, the size of public_key buffer in bytes.
+ *                           On output, the size of data returned in public_key buffer in bytes.
+ *
+ * @retval true   KEM public key generation succeeded.
+ * @retval false  KEM public key generation failed.
+ * @retval false  public_key_size is not large enough.
+ **/
+bool libspdm_kem_generate_key(uint32_t kem_alg, void *context,
+                              uint8_t *encap_key,
+                              size_t *encap_key_size);
+
+/**
+ * Computes exchanged common key, based upon negotiated KEM algorithm.
+ *
+ * @param  kem_alg       SPDM kem_alg
+ * @param  context               Pointer to the KEM context.
+ * @param  peer_encap_key        Pointer to the peer's public key.
+ * @param  peer_encap_key_size   Size of peer's public key in bytes.
+ * @param  cipher_text           Pointer to the buffer to receive generated cipher text.
+ * @param  cipher_text_size      On input, the size of cipher text buffer in bytes.
+ *                               On output, the size of data returned in cipher_text buffer in bytes.
+ * @param  shared_secret         Pointer to the buffer to receive generated key.
+ * @param  shared_secret_size    On input, the size of key buffer in bytes.
+ *                               On output, the size of data returned in key buffer in bytes.
+ *
+ * @retval true   KEM exchanged key generation succeeded.
+ * @retval false  KEM exchanged key generation failed.
+ * @retval false  key_size is not large enough.
+ **/
+bool libspdm_kem_encapsulate(uint32_t kem_alg, void *context,
+                             const uint8_t *peer_encap_key,
+                             size_t peer_encap_key_size,
+                             uint8_t *cipher_text,
+                             size_t *cipher_text_size,
+                             uint8_t *shared_secret,
+                             size_t *shared_secret_size);
+
+/**
+ * Computes exchanged common key, based upon negotiated KEM algorithm.
+ *
+ * @param  kem_alg       SPDM kem_alg
+ * @param  context               Pointer to the KEM context.
+ * @param  peer_cipher_text      Pointer to the peer's cipher text.
+ * @param  peer_cipher_text_size Size of peer's cipher text in bytes.
+ * @param  shared_secret         Pointer to the buffer to receive generated key.
+ * @param  shared_secret_size    On input, the size of key buffer in bytes.
+ *                               On output, the size of data returned in key buffer in bytes.
+ *
+ * @retval true   KEM exchanged key generation succeeded.
+ * @retval false  KEM exchanged key generation failed.
+ * @retval false  key_size is not large enough.
+ **/
+bool libspdm_kem_decapsulate(uint32_t kem_alg, void *context,
+                             const uint8_t *peer_cipher_text,
+                             size_t peer_cipher_text_size,
+                             uint8_t *shared_secret,
+                             size_t *shared_secret_size);
 
 #if LIBSPDM_FIPS_MODE
 /*run all of the self-tests and returns the results.*/
