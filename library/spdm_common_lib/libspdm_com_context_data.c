@@ -2966,6 +2966,8 @@ libspdm_return_t libspdm_init_context_with_secured_context(void *spdm_context,
                                                      SPDM_VERSION_NUMBER_SHIFT_BIT;
     context->local_context.version.spdm_version[3] = SPDM_MESSAGE_VERSION_13 <<
                                                      SPDM_VERSION_NUMBER_SHIFT_BIT;
+    context->local_context.version.spdm_version[4] = SPDM_MESSAGE_VERSION_14 <<
+                                                     SPDM_VERSION_NUMBER_SHIFT_BIT;
     context->local_context.secured_message_version.spdm_version_count =
         SECURED_SPDM_MAX_VERSION_COUNT;
     context->local_context.secured_message_version.spdm_version[0] =
