@@ -333,7 +333,9 @@ typedef struct {
     uint8_t other_params_support;
     uint32_t base_asym_algo;
     uint32_t base_hash_algo;
-    uint8_t reserved2[12];
+    /* pqc_asym_algo is added in 1.4 */
+    uint32_t pqc_asym_algo;
+    uint8_t reserved2[8];
     uint8_t ext_asym_count;
     uint8_t ext_hash_count;
     uint8_t reserved3;
@@ -347,9 +349,13 @@ typedef struct {
 #define SPDM_NEGOTIATE_ALGORITHMS_REQUEST_MAX_LENGTH_VERSION_10 0x40
 #define SPDM_NEGOTIATE_ALGORITHMS_REQUEST_MAX_LENGTH_VERSION_11 0x80
 #define SPDM_NEGOTIATE_ALGORITHMS_REQUEST_MAX_LENGTH_VERSION_12 0x80
+#define SPDM_NEGOTIATE_ALGORITHMS_REQUEST_MAX_LENGTH_VERSION_13 0x80
+#define SPDM_NEGOTIATE_ALGORITHMS_REQUEST_MAX_LENGTH_VERSION_14 0x80
 #define SPDM_NEGOTIATE_ALGORITHMS_REQUEST_MAX_EXT_ALG_COUNT_VERSION_10 0x08
 #define SPDM_NEGOTIATE_ALGORITHMS_REQUEST_MAX_EXT_ALG_COUNT_VERSION_11 0x14
 #define SPDM_NEGOTIATE_ALGORITHMS_REQUEST_MAX_EXT_ALG_COUNT_VERSION_12 0x14
+#define SPDM_NEGOTIATE_ALGORITHMS_REQUEST_MAX_EXT_ALG_COUNT_VERSION_13 0x14
+#define SPDM_NEGOTIATE_ALGORITHMS_REQUEST_MAX_EXT_ALG_COUNT_VERSION_14 0x14
 
 typedef struct {
     uint8_t alg_type;
@@ -359,10 +365,13 @@ typedef struct {
 } spdm_negotiate_algorithms_struct_table_t;
 
 #define SPDM_NEGOTIATE_ALGORITHMS_MAX_NUM_STRUCT_TABLE_ALG 4
+#define SPDM_NEGOTIATE_ALGORITHMS_MAX_NUM_STRUCT_TABLE_ALG_14 6
 #define SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_DHE 2
 #define SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_AEAD 3
 #define SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_REQ_BASE_ASYM_ALG 4
 #define SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE 5
+#define SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_REQ_PQC_ASYM_ALG 6
+#define SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEM_ALG 7
 
 typedef struct {
     uint8_t alg_type;
@@ -398,6 +407,23 @@ typedef struct {
 /* SPDM NEGOTIATE_ALGORITHMS request base_hash_algo (1.2) */
 #define SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SM3_256 0x00000040
 
+/* SPDM NEGOTIATE_ALGORITHMS request pqc_asym_algo/REQ_PQC_ASYM_ALG (1.4) */
+#define SPDM_ALGORITHMS_PQC_ASYM_ALGO_ML_DSA_44 0x00000001
+#define SPDM_ALGORITHMS_PQC_ASYM_ALGO_ML_DSA_65 0x00000002
+#define SPDM_ALGORITHMS_PQC_ASYM_ALGO_ML_DSA_87 0x00000004
+#define SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_128S 0x00000008
+#define SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_128S 0x00000010
+#define SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_128F 0x00000020
+#define SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_128F 0x00000040
+#define SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_192S 0x00000080
+#define SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_192S 0x00000100
+#define SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_192F 0x00000200
+#define SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_192F 0x00000400
+#define SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_256S 0x00000800
+#define SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_256S 0x00001000
+#define SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_256F 0x00002000
+#define SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_256F 0x00004000
+
 /* SPDM NEGOTIATE_ALGORITHMS request DHE */
 #define SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_2048 0x00000001
 #define SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_3072 0x00000002
@@ -420,6 +446,11 @@ typedef struct {
 /* SPDM NEGOTIATE_ALGORITHMS request KEY_SCHEDULE */
 #define SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH 0x00000001
 
+/* SPDM NEGOTIATE_ALGORITHMS request KEM (1.4) */
+#define SPDM_ALGORITHMS_KEM_ALG_ML_KEM_512 0x00000001
+#define SPDM_ALGORITHMS_KEM_ALG_ML_KEM_768 0x00000002
+#define SPDM_ALGORITHMS_KEM_ALG_ML_KEM_1024 0x00000004
+
 /* SPDM NEGOTIATE_ALGORITHMS response */
 typedef struct {
     spdm_message_header_t header;
@@ -435,7 +466,9 @@ typedef struct {
     uint32_t measurement_hash_algo;
     uint32_t base_asym_sel;
     uint32_t base_hash_sel;
-    uint8_t reserved2[11];
+    /* pqc_asym_sel is added in 1.4 */
+    uint32_t pqc_asym_sel;
+    uint8_t reserved2[7];
     uint8_t mel_specification_sel;
     uint8_t ext_asym_sel_count;
     uint8_t ext_hash_sel_count;
@@ -1327,6 +1360,12 @@ typedef struct {
         SPDM_KEY_PAIR_CAP_ASYM_ALGO_CAP | \
         SPDM_KEY_PAIR_CAP_SHAREABLE_CAP)
 
+/* Key pair capabilities (1.4) */
+#define SPDM_KEY_PAIR_CAP_PQC_ASYM_ALGO_CAP 0x00000040
+#define SPDM_KEY_PAIR_CAP_14_MASK ( \
+        SPDM_KEY_PAIR_CAP_MASK | \
+        SPDM_KEY_PAIR_CAP_PQC_ASYM_ALGO_CAP)
+
 /* Key pair asym algorithm capabilities */
 #define SPDM_KEY_PAIR_ASYM_ALGO_CAP_RSA2048 0x00000001
 #define SPDM_KEY_PAIR_ASYM_ALGO_CAP_RSA3072 0x00000002
@@ -1348,6 +1387,39 @@ typedef struct {
         SPDM_KEY_PAIR_ASYM_ALGO_CAP_ED25519 | \
         SPDM_KEY_PAIR_ASYM_ALGO_CAP_ED448)
 
+/* Key pair pqc asym algorithm capabilities (1.4) */
+#define SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_44 0x00000001
+#define SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_65 0x00000002
+#define SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_87 0x00000004
+#define SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_SLH_DSA_SHA2_128S 0x00000008
+#define SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_SLH_DSA_SHAKE_128S 0x00000010
+#define SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_SLH_DSA_SHA2_128F 0x00000020
+#define SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_SLH_DSA_SHAKE_128F 0x00000040
+#define SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_SLH_DSA_SHA2_192S 0x00000080
+#define SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_SLH_DSA_SHAKE_192S 0x00000100
+#define SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_SLH_DSA_SHA2_192F 0x00000200
+#define SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_SLH_DSA_SHAKE_192F 0x00000400
+#define SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_SLH_DSA_SHA2_256S 0x00000800
+#define SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_SLH_DSA_SHAKE_256S 0x00001000
+#define SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_SLH_DSA_SHA2_256F 0x00002000
+#define SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_SLH_DSA_SHAKE_256F 0x00004000
+#define SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_MASK ( \
+        SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_44 | \
+        SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_65 | \
+        SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_ML_DSA_87 | \
+        SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_SLH_DSA_SHA2_128S | \
+        SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_SLH_DSA_SHAKE_128S | \
+        SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_SLH_DSA_SHA2_128F | \
+        SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_SLH_DSA_SHAKE_128F | \
+        SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_SLH_DSA_SHA2_192S | \
+        SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_SLH_DSA_SHAKE_192S | \
+        SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_SLH_DSA_SHA2_192F | \
+        SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_SLH_DSA_SHAKE_192F | \
+        SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_SLH_DSA_SHA2_256S | \
+        SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_SLH_DSA_SHAKE_256S | \
+        SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_SLH_DSA_SHA2_256F | \
+        SPDM_KEY_PAIR_PQC_ASYM_ALGO_CAP_SLH_DSA_SHAKE_256F)
+
 /**
  * The Max len of DER encoding of the AlgorithmIdentifier structure in an X.509 v3 certificate.
  * The RSA public key info len is 15.
@@ -1357,6 +1429,12 @@ typedef struct {
  * The sm2 public key info len is 21.
  * The ed25519 public key info len is 7.
  * The ed448 public key info len is 7.
+ *
+ * Below is added in 1.4.
+ * https://datatracker.ietf.org/doc/draft-ietf-lamps-dilithium-certificates/
+ * The PQC mldsa public key info len is 13.
+ * https://datatracker.ietf.org/doc/draft-ietf-lamps-x509-slhdsa/
+ * The PQC slhdsa public key info len is 13.
  **/
 #define SPDM_MAX_PUBLIC_KEY_INFO_LEN 65535
 
@@ -1379,7 +1457,14 @@ typedef struct {
     uint32_t current_asym_algo;
     uint16_t public_key_info_len;
     uint8_t assoc_cert_slot_mask;
-    /*uint8_t public_key_info[public_key_info_len];*/
+    /* uint8_t public_key_info[public_key_info_len];
+     *
+     * Below is added in SPDM 1.4.
+     * uint32_t pqc_asym_algo_cap_len;
+     * uint8_t pqc_asym_algo_capabilities[pqc_asym_algo_cap_len];
+     * uint32_t current_pqc_asym_algo_len;
+     * uint8_t current_pqc_asym_algo[current_pqc_asym_algo_len];
+     */
 } spdm_key_pair_info_response_t;
 
 
@@ -1393,6 +1478,10 @@ typedef struct {
      * uint16_t desired_key_usage;
      * uint32_t desired_asym_algo;
      * uint8_t desired_assoc_cert_slot_mask;
+     *
+     * Below is added in SPDM 1.4.
+     * uint32_t desired_pqc_asym_algo_len;
+     * uint8_t desired_pqc_asym_algo[desired_pqc_asym_algo_len];
      */
 } spdm_set_key_pair_info_request_t;
 
