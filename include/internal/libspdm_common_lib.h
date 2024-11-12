@@ -66,6 +66,9 @@ typedef struct {
     uint16_t aead_cipher_suite;
     uint16_t req_base_asym_alg;
     uint16_t key_schedule;
+    uint32_t pqc_asym_algo;
+    uint32_t req_pqc_asym_alg;
+    uint32_t kem_alg;
 } libspdm_device_algorithm_t;
 
 typedef struct {
