@@ -102,7 +102,7 @@ static bool libspdm_sm2_dsa_sign_wrap (void *context, size_t hash_nid,
  * @param  is_requester                         indicate if the signing is from a requester
  * @param  context_size                         SPDM signing context size
  **/
-static const void *libspdm_get_signing_context_string (
+const void *libspdm_get_signing_context_string (
     spdm_version_number_t spdm_version,
     uint8_t op_code,
     bool is_requester,
@@ -132,7 +132,7 @@ static const void *libspdm_get_signing_context_string (
  * @param  is_requester                         indicate if the signing is from a requester
  * @param  spdm_signing_context                 SPDM signing context
  **/
-static void libspdm_create_signing_context (
+void libspdm_create_signing_context (
     spdm_version_number_t spdm_version,
     uint8_t op_code,
     bool is_requester,

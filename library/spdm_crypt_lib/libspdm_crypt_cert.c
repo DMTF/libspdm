@@ -88,6 +88,74 @@
 #define ENCRY_ALGO_ED448_OID {0x2B, 0x65, 0x71}
 #endif
 
+/**
+ * MLDSA OID: https://datatracker.ietf.org/doc/draft-ietf-lamps-dilithium-certificates
+ * MLDSA44 OID: 2.16.840.1.101.3.4.3.17
+ * MLDSA65 OID: 2.16.840.1.101.3.4.3.18
+ * MLDSA87 OID: 2.16.840.1.101.3.4.3.19
+ **/
+#if LIBSPDM_ML_DSA_44_SUPPORT
+#define ALGO_MLDSA44_OID {0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04, 0x03, 0x11}
+#endif
+#if LIBSPDM_ML_DSA_65_SUPPORT
+#define ALGO_MLDSA65_OID {0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04, 0x03, 0x12}
+#endif
+#if LIBSPDM_ML_DSA_87_SUPPORT
+#define ALGO_MLDSA87_OID {0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04, 0x03, 0x13}
+#endif
+
+/**
+ * SLHDSA OID: https://datatracker.ietf.org/doc/draft-ietf-lamps-x509-slhdsa
+ * SLHDSA_SHA2_128S OID: 2.16.840.1.101.3.4.3.20
+ * SLHDSA_SHA2_128F OID: 2.16.840.1.101.3.4.3.21
+ * SLHDSA_SHA2_192S OID: 2.16.840.1.101.3.4.3.22
+ * SLHDSA_SHA2_192F OID: 2.16.840.1.101.3.4.3.23
+ * SLHDSA_SHA2_256S OID: 2.16.840.1.101.3.4.3.24
+ * SLHDSA_SHA2_256F OID: 2.16.840.1.101.3.4.3.25
+ * SLHDSA_SHAKE_128S OID: 2.16.840.1.101.3.4.3.26
+ * SLHDSA_SHAKE_128F OID: 2.16.840.1.101.3.4.3.27
+ * SLHDSA_SHAKE_192S OID: 2.16.840.1.101.3.4.3.28
+ * SLHDSA_SHAKE_192F OID: 2.16.840.1.101.3.4.3.29
+ * SLHDSA_SHAKE_256S OID: 2.16.840.1.101.3.4.3.30
+ * SLHDSA_SHAKE_256F OID: 2.16.840.1.101.3.4.3.31
+ **/
+#if LIBSPDM_SLH_DSA_SHA2_128S_SUPPORT
+#define ALGO_SLHDSA_SHA2_128S_OID {0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04, 0x03, 0x14}
+#endif
+#if LIBSPDM_SLH_DSA_SHA2_128F_SUPPORT
+#define ALGO_SLHDSA_SHA2_128F_OID {0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04, 0x03, 0x15}
+#endif
+#if LIBSPDM_SLH_DSA_SHA2_192S_SUPPORT
+#define ALGO_SLHDSA_SHA2_192S_OID {0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04, 0x03, 0x16}
+#endif
+#if LIBSPDM_SLH_DSA_SHA2_192F_SUPPORT
+#define ALGO_SLHDSA_SHA2_192F_OID {0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04, 0x03, 0x17}
+#endif
+#if LIBSPDM_SLH_DSA_SHA2_256S_SUPPORT
+#define ALGO_SLHDSA_SHA2_256S_OID {0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04, 0x03, 0x18}
+#endif
+#if LIBSPDM_SLH_DSA_SHA2_256F_SUPPORT
+#define ALGO_SLHDSA_SHA2_256F_OID {0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04, 0x03, 0x19}
+#endif
+#if LIBSPDM_SLH_DSA_SHAKE_128S_SUPPORT
+#define ALGO_SLHDSA_SHAKE_128S_OID {0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04, 0x03, 0x1A}
+#endif
+#if LIBSPDM_SLH_DSA_SHAKE_128F_SUPPORT
+#define ALGO_SLHDSA_SHAKE_128F_OID {0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04, 0x03, 0x1B}
+#endif
+#if LIBSPDM_SLH_DSA_SHAKE_192S_SUPPORT
+#define ALGO_SLHDSA_SHAKE_192S_OID {0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04, 0x03, 0x1C}
+#endif
+#if LIBSPDM_SLH_DSA_SHAKE_192F_SUPPORT
+#define ALGO_SLHDSA_SHAKE_192F_OID {0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04, 0x03, 0x1D}
+#endif
+#if LIBSPDM_SLH_DSA_SHAKE_256S_SUPPORT
+#define ALGO_SLHDSA_SHAKE_256S_OID {0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04, 0x03, 0x1E}
+#endif
+#if LIBSPDM_SLH_DSA_SHAKE_256F_SUPPORT
+#define ALGO_SLHDSA_SHAKE_256F_OID {0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04, 0x03, 0x1F}
+#endif
+
 /*leaf cert basic_constraints false case1: CA: false and CA object is excluded */
 #define BASIC_CONSTRAINTS_STRING_FALSE_CASE1 {0x30, 0x00}
 
@@ -325,79 +393,181 @@ static bool libspdm_internal_x509_date_time_check(const uint8_t *from,
  *
  * @return SPDM public key encryption algorithms OID len.
  **/
-static uint32_t libspdm_get_public_key_algo_OID_len(uint32_t base_asym_algo)
+static uint32_t libspdm_get_public_key_algo_OID_len(
+    uint32_t base_asym_algo, uint32_t pqc_asym_algo)
 {
-    switch (base_asym_algo) {
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
-#if LIBSPDM_RSA_SSA_2048_SUPPORT
-        return 4;
-#else
-        return 0;
-#endif
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048:
-#if LIBSPDM_RSA_PSS_2048_SUPPORT
-        return 4;
-#else
-        return 0;
-#endif
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
-#if LIBSPDM_RSA_SSA_3072_SUPPORT
-        return 4;
-#else
-        return 0;
-#endif
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
-#if LIBSPDM_RSA_PSS_3072_SUPPORT
-        return 4;
-#else
-        return 0;
-#endif
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
-#if LIBSPDM_RSA_SSA_4096_SUPPORT
-        return 4;
-#else
-        return 0;
-#endif
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
-#if LIBSPDM_RSA_PSS_4096_SUPPORT
-        return 4;
-#else
-        return 0;
-#endif
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
-#if LIBSPDM_ECDSA_P256_SUPPORT
-        return 8;
-#else
-        return 0;
-#endif
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
-#if LIBSPDM_ECDSA_P384_SUPPORT
-        return 5;
-#else
-        return 0;
-#endif
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
-#if LIBSPDM_ECDSA_P521_SUPPORT
-        return 5;
-#else
-        return 0;
-#endif
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519:
-#if LIBSPDM_EDDSA_ED25519_SUPPORT
-        return 3;
-#else
-        return 0;
-#endif
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
-#if LIBSPDM_EDDSA_ED448_SUPPORT
-        return 3;
-#else
-        return 0;
-#endif
-    default:
-        LIBSPDM_ASSERT(false);
-        return 0;
+    if (base_asym_algo != 0) {
+        switch (base_asym_algo) {
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
+    #if LIBSPDM_RSA_SSA_2048_SUPPORT
+            return 4;
+    #else
+            return 0;
+    #endif
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048:
+    #if LIBSPDM_RSA_PSS_2048_SUPPORT
+            return 4;
+    #else
+            return 0;
+    #endif
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
+    #if LIBSPDM_RSA_SSA_3072_SUPPORT
+            return 4;
+    #else
+            return 0;
+    #endif
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
+    #if LIBSPDM_RSA_PSS_3072_SUPPORT
+            return 4;
+    #else
+            return 0;
+    #endif
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
+    #if LIBSPDM_RSA_SSA_4096_SUPPORT
+            return 4;
+    #else
+            return 0;
+    #endif
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
+    #if LIBSPDM_RSA_PSS_4096_SUPPORT
+            return 4;
+    #else
+            return 0;
+    #endif
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
+    #if LIBSPDM_ECDSA_P256_SUPPORT
+            return 8;
+    #else
+            return 0;
+    #endif
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
+    #if LIBSPDM_ECDSA_P384_SUPPORT
+            return 5;
+    #else
+            return 0;
+    #endif
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
+    #if LIBSPDM_ECDSA_P521_SUPPORT
+            return 5;
+    #else
+            return 0;
+    #endif
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519:
+    #if LIBSPDM_EDDSA_ED25519_SUPPORT
+            return 3;
+    #else
+            return 0;
+    #endif
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
+    #if LIBSPDM_EDDSA_ED448_SUPPORT
+            return 3;
+    #else
+            return 0;
+    #endif
+        default:
+            LIBSPDM_ASSERT(false);
+            return 0;
+        }
     }
+    if (pqc_asym_algo != 0) {
+        switch (pqc_asym_algo) {
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_ML_DSA_44:
+    #if LIBSPDM_ML_DSA_44_SUPPORT
+            return 9;
+    #else
+            return 0;
+    #endif
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_ML_DSA_65:
+    #if LIBSPDM_ML_DSA_65_SUPPORT
+            return 9;
+    #else
+            return 0;
+    #endif
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_ML_DSA_87:
+    #if LIBSPDM_ML_DSA_87_SUPPORT
+            return 9;
+    #else
+            return 0;
+    #endif
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_128S:
+    #if LIBSPDM_SLH_DSA_SHA2_128S_SUPPORT
+            return 9;
+    #else
+            return 0;
+    #endif
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_128S:
+    #if LIBSPDM_SLH_DSA_SHAKE_128S_SUPPORT
+            return 9;
+    #else
+            return 0;
+    #endif
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_128F:
+    #if LIBSPDM_SLH_DSA_SHA2_128F_SUPPORT
+            return 9;
+    #else
+            return 0;
+    #endif
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_128F:
+    #if LIBSPDM_SLH_DSA_SHAKE_128F_SUPPORT
+            return 9;
+    #else
+            return 0;
+    #endif
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_192S:
+    #if LIBSPDM_SLH_DSA_SHA2_192S_SUPPORT
+            return 9;
+    #else
+            return 0;
+    #endif
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_192S:
+    #if LIBSPDM_SLH_DSA_SHAKE_192S_SUPPORT
+            return 9;
+    #else
+            return 0;
+    #endif
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_192F:
+    #if LIBSPDM_SLH_DSA_SHA2_192F_SUPPORT
+            return 9;
+    #else
+            return 0;
+    #endif
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_192F:
+    #if LIBSPDM_SLH_DSA_SHAKE_192F_SUPPORT
+            return 9;
+    #else
+            return 0;
+    #endif
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_256S:
+    #if LIBSPDM_SLH_DSA_SHA2_256S_SUPPORT
+            return 9;
+    #else
+            return 0;
+    #endif
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_256S:
+    #if LIBSPDM_SLH_DSA_SHAKE_256S_SUPPORT
+            return 9;
+    #else
+            return 0;
+    #endif
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_256F:
+    #if LIBSPDM_SLH_DSA_SHA2_256F_SUPPORT
+            return 9;
+    #else
+            return 0;
+    #endif
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_256F:
+    #if LIBSPDM_SLH_DSA_SHAKE_256F_SUPPORT
+            return 9;
+    #else
+            return 0;
+    #endif
+        default:
+            LIBSPDM_ASSERT(false);
+            return 0;
+        }
+    }
+    LIBSPDM_ASSERT(false);
+    return 0;
 }
 
 /**
@@ -411,110 +581,272 @@ static uint32_t libspdm_get_public_key_algo_OID_len(uint32_t base_asym_algo)
  * @retval  true   get OID successful.
  * @retval  false  get OID fail.
  **/
-static bool libspdm_get_public_key_algo_OID(uint32_t base_asym_algo, uint8_t *oid,
-                                            uint8_t *oid_other)
+static bool libspdm_get_public_key_algo_OID(
+    uint32_t base_asym_algo, uint32_t pqc_asym_algo, uint8_t *oid,
+    uint8_t *oid_other)
 {
     uint32_t oid_len;
-    oid_len = libspdm_get_public_key_algo_OID_len(base_asym_algo);
+    oid_len = libspdm_get_public_key_algo_OID_len(base_asym_algo, pqc_asym_algo);
     if(oid_len == 0) {
         return false;
     }
 
-    switch (base_asym_algo) {
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048: {
-#if (LIBSPDM_RSA_SSA_2048_SUPPORT) || (LIBSPDM_RSA_PSS_2048_SUPPORT)
-        uint8_t encry_algo_oid_rsa2048[] = KEY_ENCRY_ALGO_RSA2048_FLAG;
-        uint8_t encry_algo_oid_rsa2048_ohter[] = KEY_ENCRY_ALGO_RSA2048_FLAG_OTHER;
-        libspdm_copy_mem(oid, oid_len, encry_algo_oid_rsa2048, oid_len);
-        libspdm_copy_mem(oid_other, oid_len, encry_algo_oid_rsa2048_ohter, oid_len);
-        return true;
-#else
-        return false;
-#endif
-    }
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072: {
-#if (LIBSPDM_RSA_SSA_3072_SUPPORT) || (LIBSPDM_RSA_PSS_3072_SUPPORT)
-        uint8_t encry_algo_oid_rsa3072[] = KEY_ENCRY_ALGO_RSA3072_FLAG;
-        uint8_t encry_algo_oid_rsa3072_ohter[] = KEY_ENCRY_ALGO_RSA3072_FLAG_OTHER;
-        libspdm_copy_mem(oid, oid_len, encry_algo_oid_rsa3072, oid_len);
-        libspdm_copy_mem(oid_other, oid_len, encry_algo_oid_rsa3072_ohter, oid_len);
-        return true;
-#else
-        return false;
-#endif
-    }
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096: {
-#if (LIBSPDM_RSA_SSA_4096_SUPPORT) || (LIBSPDM_RSA_PSS_4096_SUPPORT)
-        uint8_t encry_algo_oid_rsa4096[] = KEY_ENCRY_ALGO_RSA4096_FLAG;
-        uint8_t encry_algo_oid_rsa4096_ohter[] = KEY_ENCRY_ALGO_RSA4096_FLAG_OTHER;
-        libspdm_copy_mem(oid, oid_len, encry_algo_oid_rsa4096, oid_len);
-        libspdm_copy_mem(oid_other, oid_len, encry_algo_oid_rsa4096_ohter, oid_len);
-        return true;
-#else
-        return false;
-#endif
-    }
+    if (base_asym_algo != 0) {
+        switch (base_asym_algo) {
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048: {
+    #if (LIBSPDM_RSA_SSA_2048_SUPPORT) || (LIBSPDM_RSA_PSS_2048_SUPPORT)
+            uint8_t encry_algo_oid_rsa2048[] = KEY_ENCRY_ALGO_RSA2048_FLAG;
+            uint8_t encry_algo_oid_rsa2048_ohter[] = KEY_ENCRY_ALGO_RSA2048_FLAG_OTHER;
+            libspdm_copy_mem(oid, oid_len, encry_algo_oid_rsa2048, oid_len);
+            libspdm_copy_mem(oid_other, oid_len, encry_algo_oid_rsa2048_ohter, oid_len);
+            return true;
+    #else
+            return false;
+    #endif
+        }
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072: {
+    #if (LIBSPDM_RSA_SSA_3072_SUPPORT) || (LIBSPDM_RSA_PSS_3072_SUPPORT)
+            uint8_t encry_algo_oid_rsa3072[] = KEY_ENCRY_ALGO_RSA3072_FLAG;
+            uint8_t encry_algo_oid_rsa3072_ohter[] = KEY_ENCRY_ALGO_RSA3072_FLAG_OTHER;
+            libspdm_copy_mem(oid, oid_len, encry_algo_oid_rsa3072, oid_len);
+            libspdm_copy_mem(oid_other, oid_len, encry_algo_oid_rsa3072_ohter, oid_len);
+            return true;
+    #else
+            return false;
+    #endif
+        }
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096: {
+    #if (LIBSPDM_RSA_SSA_4096_SUPPORT) || (LIBSPDM_RSA_PSS_4096_SUPPORT)
+            uint8_t encry_algo_oid_rsa4096[] = KEY_ENCRY_ALGO_RSA4096_FLAG;
+            uint8_t encry_algo_oid_rsa4096_ohter[] = KEY_ENCRY_ALGO_RSA4096_FLAG_OTHER;
+            libspdm_copy_mem(oid, oid_len, encry_algo_oid_rsa4096, oid_len);
+            libspdm_copy_mem(oid_other, oid_len, encry_algo_oid_rsa4096_ohter, oid_len);
+            return true;
+    #else
+            return false;
+    #endif
+        }
 
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256: {
-#if LIBSPDM_ECDSA_P256_SUPPORT
-        uint8_t encry_algo_oid_ecc256[] = KEY_ENCRY_ALGO_ECC256_OID;
-        libspdm_copy_mem(oid, oid_len, encry_algo_oid_ecc256, oid_len);
-        return true;
-#else
-        return false;
-#endif
-    }
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384: {
-#if LIBSPDM_ECDSA_P384_SUPPORT
-        uint8_t encry_algo_oid_ecc384[] = KEY_ENCRY_ALGO_ECC384_OID;
-        libspdm_copy_mem(oid, oid_len, encry_algo_oid_ecc384, oid_len);
-        return true;
-#else
-        return false;
-#endif
-    }
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521: {
-#if LIBSPDM_ECDSA_P521_SUPPORT
-        uint8_t encry_algo_oid_ecc521[] = KEY_ENCRY_ALGO_ECC521_OID;
-        libspdm_copy_mem(oid, oid_len, encry_algo_oid_ecc521, oid_len);
-        return true;
-#else
-        return false;
-#endif
-    }
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256: {
+    #if LIBSPDM_ECDSA_P256_SUPPORT
+            uint8_t encry_algo_oid_ecc256[] = KEY_ENCRY_ALGO_ECC256_OID;
+            libspdm_copy_mem(oid, oid_len, encry_algo_oid_ecc256, oid_len);
+            return true;
+    #else
+            return false;
+    #endif
+        }
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384: {
+    #if LIBSPDM_ECDSA_P384_SUPPORT
+            uint8_t encry_algo_oid_ecc384[] = KEY_ENCRY_ALGO_ECC384_OID;
+            libspdm_copy_mem(oid, oid_len, encry_algo_oid_ecc384, oid_len);
+            return true;
+    #else
+            return false;
+    #endif
+        }
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521: {
+    #if LIBSPDM_ECDSA_P521_SUPPORT
+            uint8_t encry_algo_oid_ecc521[] = KEY_ENCRY_ALGO_ECC521_OID;
+            libspdm_copy_mem(oid, oid_len, encry_algo_oid_ecc521, oid_len);
+            return true;
+    #else
+            return false;
+    #endif
+        }
 
-    /*sm2 oid  TBD*/
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
-        return true;
+        /*sm2 oid  TBD*/
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_SM2_ECC_SM2_P256:
+            return true;
 
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519: {
-#if LIBSPDM_EDDSA_ED25519_SUPPORT
-        uint8_t encry_algo_oid_ed25519[] = ENCRY_ALGO_ED25519_OID;
-        libspdm_copy_mem(oid, oid_len, encry_algo_oid_ed25519, oid_len);
-        return true;
-#else
-        return false;
-#endif
-        break;
-    }
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448: {
-#if LIBSPDM_EDDSA_ED448_SUPPORT
-        uint8_t encry_algo_oid_ed448[] = ENCRY_ALGO_ED448_OID;
-        libspdm_copy_mem(oid, oid_len, encry_algo_oid_ed448, oid_len);
-        return true;
-#else
-        return false;
-#endif
-        break;
-    }
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519: {
+    #if LIBSPDM_EDDSA_ED25519_SUPPORT
+            uint8_t encry_algo_oid_ed25519[] = ENCRY_ALGO_ED25519_OID;
+            libspdm_copy_mem(oid, oid_len, encry_algo_oid_ed25519, oid_len);
+            return true;
+    #else
+            return false;
+    #endif
+            break;
+        }
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448: {
+    #if LIBSPDM_EDDSA_ED448_SUPPORT
+            uint8_t encry_algo_oid_ed448[] = ENCRY_ALGO_ED448_OID;
+            libspdm_copy_mem(oid, oid_len, encry_algo_oid_ed448, oid_len);
+            return true;
+    #else
+            return false;
+    #endif
+            break;
+        }
 
-    default:
-        LIBSPDM_ASSERT(false);
-        return false;
+        default:
+            LIBSPDM_ASSERT(false);
+            return false;
+        }
     }
+    if (pqc_asym_algo != 0) {
+        switch (pqc_asym_algo) {
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_ML_DSA_44: {
+    #if LIBSPDM_ML_DSA_44_SUPPORT
+            uint8_t algo_oid_mldsa44[] = ALGO_MLDSA44_OID;
+            libspdm_copy_mem(oid, oid_len, algo_oid_mldsa44, oid_len);
+            return true;
+    #else
+            return false;
+    #endif
+            break;
+        }
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_ML_DSA_65: {
+    #if LIBSPDM_ML_DSA_65_SUPPORT
+            uint8_t algo_oid_mldsa65[] = ALGO_MLDSA65_OID;
+            libspdm_copy_mem(oid, oid_len, algo_oid_mldsa65, oid_len);
+            return true;
+    #else
+            return false;
+    #endif
+            break;
+        }
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_ML_DSA_87: {
+    #if LIBSPDM_ML_DSA_87_SUPPORT
+            uint8_t algo_oid_mldsa87[] = ALGO_MLDSA87_OID;
+            libspdm_copy_mem(oid, oid_len, algo_oid_mldsa87, oid_len);
+            return true;
+    #else
+            return false;
+    #endif
+            break;
+        }
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_128S: {
+    #if LIBSPDM_SLH_DSA_SHA2_128S_SUPPORT
+            uint8_t algo_oid_slhdsa_sha2_128s[] = ALGO_SLHDSA_SHA2_128S_OID;
+            libspdm_copy_mem(oid, oid_len, algo_oid_slhdsa_sha2_128s, oid_len);
+            return true;
+    #else
+            return false;
+    #endif
+            break;
+        }
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_128S: {
+    #if LIBSPDM_SLH_DSA_SHAKE_128S_SUPPORT
+            uint8_t algo_oid_slhdsa_shake_128s[] = ALGO_SLHDSA_SHAKE_128S_OID;
+            libspdm_copy_mem(oid, oid_len, algo_oid_slhdsa_shake_128s, oid_len);
+            return true;
+    #else
+            return false;
+    #endif
+            break;
+        }
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_128F: {
+    #if LIBSPDM_SLH_DSA_SHA2_128F_SUPPORT
+            uint8_t algo_oid_slhdsa_sha2_128f[] = ALGO_SLHDSA_SHA2_128F_OID;
+            libspdm_copy_mem(oid, oid_len, algo_oid_slhdsa_sha2_128f, oid_len);
+            return true;
+    #else
+            return false;
+    #endif
+            break;
+        }
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_128F: {
+    #if LIBSPDM_SLH_DSA_SHAKE_128F_SUPPORT
+            uint8_t algo_oid_slhdsa_shake_128f[] = ALGO_SLHDSA_SHAKE_128F_OID;
+            libspdm_copy_mem(oid, oid_len, algo_oid_slhdsa_shake_128f, oid_len);
+            return true;
+    #else
+            return false;
+    #endif
+            break;
+        }
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_192S: {
+    #if LIBSPDM_SLH_DSA_SHA2_192S_SUPPORT
+            uint8_t algo_oid_slhdsa_sha2_192s[] = ALGO_SLHDSA_SHA2_192S_OID;
+            libspdm_copy_mem(oid, oid_len, algo_oid_slhdsa_sha2_192s, oid_len);
+            return true;
+    #else
+            return false;
+    #endif
+            break;
+        }
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_192S: {
+    #if LIBSPDM_SLH_DSA_SHAKE_192S_SUPPORT
+            uint8_t algo_oid_slhdsa_shake_192s[] = ALGO_SLHDSA_SHAKE_192S_OID;
+            libspdm_copy_mem(oid, oid_len, algo_oid_slhdsa_shake_192s, oid_len);
+            return true;
+    #else
+            return false;
+    #endif
+            break;
+        }
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_192F: {
+    #if LIBSPDM_SLH_DSA_SHA2_192F_SUPPORT
+            uint8_t algo_oid_slhdsa_sha2_192f[] = ALGO_SLHDSA_SHA2_192F_OID;
+            libspdm_copy_mem(oid, oid_len, algo_oid_slhdsa_sha2_192f, oid_len);
+            return true;
+    #else
+            return false;
+    #endif
+            break;
+        }
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_192F: {
+    #if LIBSPDM_SLH_DSA_SHAKE_192F_SUPPORT
+            uint8_t algo_oid_slhdsa_shake_192f[] = ALGO_SLHDSA_SHAKE_192F_OID;
+            libspdm_copy_mem(oid, oid_len, algo_oid_slhdsa_shake_192f, oid_len);
+            return true;
+    #else
+            return false;
+    #endif
+            break;
+        }
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_256S: {
+    #if LIBSPDM_SLH_DSA_SHA2_256S_SUPPORT
+            uint8_t algo_oid_slhdsa_sha2_256s[] = ALGO_SLHDSA_SHA2_256S_OID;
+            libspdm_copy_mem(oid, oid_len, algo_oid_slhdsa_sha2_256s, oid_len);
+            return true;
+    #else
+            return false;
+    #endif
+            break;
+        }
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_256S: {
+    #if LIBSPDM_SLH_DSA_SHAKE_256S_SUPPORT
+            uint8_t algo_oid_slhdsa_shake_256s[] = ALGO_SLHDSA_SHAKE_256S_OID;
+            libspdm_copy_mem(oid, oid_len, algo_oid_slhdsa_shake_256s, oid_len);
+            return true;
+    #else
+            return false;
+    #endif
+            break;
+        }
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_256F: {
+    #if LIBSPDM_SLH_DSA_SHA2_256F_SUPPORT
+            uint8_t algo_oid_slhdsa_sha2_256f[] = ALGO_SLHDSA_SHA2_256F_OID;
+            libspdm_copy_mem(oid, oid_len, algo_oid_slhdsa_sha2_256f, oid_len);
+            return true;
+    #else
+            return false;
+    #endif
+            break;
+        }
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_256F: {
+    #if LIBSPDM_SLH_DSA_SHAKE_256F_SUPPORT
+            uint8_t algo_oid_slhdsa_shake_256f[] = ALGO_SLHDSA_SHAKE_256F_OID;
+            libspdm_copy_mem(oid, oid_len, algo_oid_slhdsa_shake_256f, oid_len);
+            return true;
+    #else
+            return false;
+    #endif
+            break;
+        }
+        default:
+            LIBSPDM_ASSERT(false);
+            return false;
+        }
+    }
+    LIBSPDM_ASSERT(false);
+    return false;
 }
 
 /**
@@ -529,8 +861,9 @@ static bool libspdm_get_public_key_algo_OID(uint32_t base_asym_algo, uint8_t *oi
  * @retval  true   get public key oid from cert successfully
  * @retval  false  get public key oid from cert fail
  **/
-static bool libspdm_get_public_key_oid(const uint8_t *cert, size_t cert_size,
-                                       uint8_t *oid, size_t oid_size, uint32_t base_asym_algo)
+static bool libspdm_get_public_key_oid(
+    const uint8_t *cert, size_t cert_size,
+    uint8_t *oid, size_t oid_size, uint32_t base_asym_algo, uint32_t pqc_asym_algo)
 {
     bool ret;
     uint8_t *ptr;
@@ -595,86 +928,129 @@ static bool libspdm_get_public_key_oid(const uint8_t *cert, size_t cert_size,
         }
     }
 
-    switch (base_asym_algo)
-    {
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
-        ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
-                                   LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
-        if (!ret) {
-            return false;
-        }
+    if (base_asym_algo != 0) {
+        switch (base_asym_algo)
+        {
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048:
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_2048:
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_3072:
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_3072:
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_4096:
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSAPSS_4096:
+            ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                                       LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+            if (!ret) {
+                return false;
+            }
 
-        ptr += obj_len;
-        ret = libspdm_asn1_get_tag(&ptr, end, &obj_len, LIBSPDM_CRYPTO_ASN1_BIT_STRING);
-        if (!ret) {
-            return false;
-        }
+            ptr += obj_len;
+            ret = libspdm_asn1_get_tag(&ptr, end, &obj_len, LIBSPDM_CRYPTO_ASN1_BIT_STRING);
+            if (!ret) {
+                return false;
+            }
 
-        /*get rsa key len*/
-        ptr++;
-        ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
-                                   LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
-        if (!ret) {
-            return false;
-        }
-        libspdm_copy_mem(oid, oid_size, ptr, oid_size);
-        break;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
-        ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
-                                   LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
-        if (!ret) {
-            return false;
-        }
-        ret = libspdm_asn1_get_tag(&ptr, end, &obj_len, LIBSPDM_CRYPTO_ASN1_OID);
-        if (!ret) {
-            return false;
-        }
+            /*get rsa key len*/
+            ptr++;
+            ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                                       LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+            if (!ret) {
+                return false;
+            }
+            libspdm_copy_mem(oid, oid_size, ptr, oid_size);
+            break;
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P256:
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P384:
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_ECDSA_ECC_NIST_P521:
+            ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                                       LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+            if (!ret) {
+                return false;
+            }
+            ret = libspdm_asn1_get_tag(&ptr, end, &obj_len, LIBSPDM_CRYPTO_ASN1_OID);
+            if (!ret) {
+                return false;
+            }
 
-        /*get ecc second oid*/
-        ptr +=obj_len;
-        ret = libspdm_asn1_get_tag(&ptr, end, &obj_len, LIBSPDM_CRYPTO_ASN1_OID);
-        if (!ret) {
+            /*get ecc second oid*/
+            ptr +=obj_len;
+            ret = libspdm_asn1_get_tag(&ptr, end, &obj_len, LIBSPDM_CRYPTO_ASN1_OID);
+            if (!ret) {
+                return false;
+            }
+
+            if (oid_size != obj_len) {
+                return false;
+            }
+
+            libspdm_copy_mem(oid, oid_size, ptr, obj_len);
+            break;
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519:
+        case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
+            ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                                       LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+            if (!ret) {
+                return false;
+            }
+
+            /*get eddsa oid*/
+            ret = libspdm_asn1_get_tag(&ptr, end, &obj_len, LIBSPDM_CRYPTO_ASN1_OID);
+            if (!ret) {
+                return false;
+            }
+
+            if (oid_size != obj_len) {
+                return false;
+            }
+
+            libspdm_copy_mem(oid, oid_size, ptr, obj_len);
+            break;
+        default:
+            LIBSPDM_ASSERT(false);
             return false;
         }
-
-        if (oid_size != obj_len) {
-            return false;
-        }
-
-        libspdm_copy_mem(oid, oid_size, ptr, obj_len);
-        break;
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED25519:
-    case SPDM_ALGORITHMS_BASE_ASYM_ALGO_EDDSA_ED448:
-        ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
-                                   LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
-        if (!ret) {
-            return false;
-        }
-
-        /*get eddsa oid*/
-        ret = libspdm_asn1_get_tag(&ptr, end, &obj_len, LIBSPDM_CRYPTO_ASN1_OID);
-        if (!ret) {
-            return false;
-        }
-
-        if (oid_size != obj_len) {
-            return false;
-        }
-
-        libspdm_copy_mem(oid, oid_size, ptr, obj_len);
-        break;
-    default:
-        LIBSPDM_ASSERT(false);
-        return false;
     }
+    if (pqc_asym_algo != 0) {
+        switch (pqc_asym_algo)
+        {
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_ML_DSA_44:
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_ML_DSA_65:
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_ML_DSA_87:
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_128S:
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_128S:
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_128F:
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_128F:
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_192S:
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_192S:
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_192F:
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_192F:
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_256S:
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_256S:
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHA2_256F:
+        case SPDM_ALGORITHMS_PQC_ASYM_ALGO_SLH_DSA_SHAKE_256F:
+            /* algorithm AlgorithmIdentifier SEQUENCE */
+            ret = libspdm_asn1_get_tag(&ptr, end, &obj_len,
+                                       LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
+            if (!ret) {
+                return false;
+            }
 
+            /* OID */
+            ret = libspdm_asn1_get_tag(&ptr, end, &obj_len, LIBSPDM_CRYPTO_ASN1_OID);
+            if (!ret) {
+                return false;
+            }
+
+            if (oid_size != obj_len) {
+                return false;
+            }
+
+            libspdm_copy_mem(oid, oid_size, ptr, obj_len);
+            break;
+        default:
+            LIBSPDM_ASSERT(false);
+            return false;
+        }
+    }
     return true;
 }
 
@@ -689,7 +1065,7 @@ static bool libspdm_get_public_key_oid(const uint8_t *cert, size_t cert_size,
  * @retval  false  verify fail
  **/
 static bool libspdm_verify_cert_subject_public_key_info(const uint8_t *cert, size_t cert_size,
-                                                        uint32_t base_asym_algo)
+                                                        uint32_t base_asym_algo, uint32_t pqc_asym_algo)
 {
     size_t oid_len;
     bool status;
@@ -708,12 +1084,12 @@ static bool libspdm_verify_cert_subject_public_key_info(const uint8_t *cert, siz
         return true;
     }
 
-    oid_len = libspdm_get_public_key_algo_OID_len(base_asym_algo);
+    oid_len = libspdm_get_public_key_algo_OID_len(base_asym_algo, pqc_asym_algo);
     if(oid_len == 0) {
         return false;
     }
     /*get public key encrypt algo OID from libspdm stored*/
-    status = libspdm_get_public_key_algo_OID(base_asym_algo,
+    status = libspdm_get_public_key_algo_OID(base_asym_algo, pqc_asym_algo,
                                              libspdm_public_key_crypt_algo_oid,
                                              libspdm_public_key_crypt_algo_oid_other);
     if (!status) {
@@ -722,7 +1098,7 @@ static bool libspdm_verify_cert_subject_public_key_info(const uint8_t *cert, siz
 
     /*get public key encrypt algo OID from cert*/
     status = libspdm_get_public_key_oid(cert, cert_size, cert_public_key_crypt_algo_oid, oid_len,
-                                        base_asym_algo);
+                                        base_asym_algo, pqc_asym_algo);
     if (!status || (!libspdm_consttime_is_mem_equal(cert_public_key_crypt_algo_oid,
                                                     libspdm_public_key_crypt_algo_oid, oid_len) &&
                     !libspdm_consttime_is_mem_equal(cert_public_key_crypt_algo_oid,
@@ -1064,10 +1440,11 @@ static bool libspdm_verify_leaf_cert_spdm_extension(const uint8_t *cert, size_t 
  * @retval  true   Success.
  * @retval  false  Certificate is not valid.
  **/
-bool libspdm_x509_common_certificate_check(const uint8_t *cert, size_t cert_size,
-                                           uint32_t base_asym_algo, uint32_t base_hash_algo,
-                                           bool is_requester_cert, uint8_t cert_model,
-                                           bool set_cert)
+bool libspdm_x509_common_certificate_check(
+    const uint8_t *cert, size_t cert_size,
+    uint32_t base_asym_algo, uint32_t pqc_asym_algo, uint32_t base_hash_algo,
+    bool is_requester_cert, uint8_t cert_model,
+    bool set_cert)
 {
     uint8_t end_cert_from[64];
     size_t end_cert_from_len;
@@ -1132,7 +1509,7 @@ bool libspdm_x509_common_certificate_check(const uint8_t *cert, size_t cert_size
      *    check should be skipped as the Device Certificate CA's public key does not have to use
      *    the same algorithms as the connection's negotiated algorithms. */
     if (!set_cert || (cert_model != SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT)) {
-        status = libspdm_verify_cert_subject_public_key_info(cert, cert_size, base_asym_algo);
+        status = libspdm_verify_cert_subject_public_key_info(cert, cert_size, base_asym_algo, pqc_asym_algo);
         if (!status) {
             goto cleanup;
         }
@@ -1196,7 +1573,12 @@ bool libspdm_x509_common_certificate_check(const uint8_t *cert, size_t cert_size
     }
 
     /* 8. subject_public_key*/
-    status = libspdm_asym_get_public_key_from_x509(base_asym_algo, cert, cert_size, &context);
+    if (base_asym_algo != 0) {
+        status = libspdm_asym_get_public_key_from_x509(base_asym_algo, cert, cert_size, &context);
+    }
+    if (pqc_asym_algo != 0) {
+        status = libspdm_pqc_asym_get_public_key_from_x509(pqc_asym_algo, cert, cert_size, &context);
+    }
     if (!status) {
         goto cleanup;
     }
@@ -1242,7 +1624,12 @@ bool libspdm_x509_common_certificate_check(const uint8_t *cert, size_t cert_size
     }
 
 cleanup:
-    libspdm_asym_free(base_asym_algo, context);
+    if (base_asym_algo != 0) {
+        libspdm_asym_free(base_asym_algo, context);
+    }
+    if (pqc_asym_algo != 0) {
+        libspdm_pqc_asym_free(pqc_asym_algo, context);
+    }
     return status;
 }
 
@@ -1275,7 +1662,7 @@ bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
         cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT;
     }
 
-    status = libspdm_x509_common_certificate_check(cert, cert_size, base_asym_algo,
+    status = libspdm_x509_common_certificate_check(cert, cert_size, base_asym_algo, 0,
                                                    base_hash_algo, is_requester,
                                                    cert_model, false);
     if (!status) {
@@ -1301,17 +1688,18 @@ bool libspdm_x509_certificate_check(const uint8_t *cert, size_t cert_size,
  * @retval  true   Success.
  * @retval  false  Certificate is not valid
  **/
-bool libspdm_x509_certificate_check_ex(const uint8_t *cert, size_t cert_size,
-                                       uint32_t base_asym_algo,
-                                       uint32_t base_hash_algo,
-                                       bool is_requester,
-                                       uint8_t cert_model)
+bool libspdm_x509_certificate_check_with_pqc(const uint8_t *cert, size_t cert_size,
+                                             uint32_t base_asym_algo, uint32_t pqc_asym_algo,
+                                             uint32_t base_hash_algo,
+                                             bool is_requester,
+                                             uint8_t cert_model)
 {
     bool status;
 
-    status = libspdm_x509_common_certificate_check(cert, cert_size, base_asym_algo,
-                                                   base_hash_algo, is_requester,
-                                                   cert_model, false);
+    status = libspdm_x509_common_certificate_check(
+        cert, cert_size, base_asym_algo, pqc_asym_algo,
+        base_hash_algo, is_requester,
+        cert_model, false);
     if (!status) {
         return false;
     }
@@ -1320,6 +1708,18 @@ bool libspdm_x509_certificate_check_ex(const uint8_t *cert, size_t cert_size,
      * basic_constraints is mandatory in SPDM 1.3*/
     status = libspdm_verify_leaf_cert_basic_constraints(cert, cert_size, true);
     return status;
+}
+
+bool libspdm_x509_certificate_check_ex(const uint8_t *cert, size_t cert_size,
+                                       uint32_t base_asym_algo,
+                                       uint32_t base_hash_algo,
+                                       bool is_requester,
+                                       uint8_t cert_model)
+{
+    return libspdm_x509_certificate_check_with_pqc (
+        cert, cert_size,
+        base_asym_algo, 0, base_hash_algo,
+        is_requester, cert_model);
 }
 
 bool libspdm_x509_set_cert_certificate_check(const uint8_t *cert, size_t cert_size,
@@ -1335,7 +1735,7 @@ bool libspdm_x509_set_cert_certificate_check(const uint8_t *cert, size_t cert_si
         cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT;
     }
 
-    status = libspdm_x509_common_certificate_check(cert, cert_size, base_asym_algo,
+    status = libspdm_x509_common_certificate_check(cert, cert_size, base_asym_algo, 0,
                                                    base_hash_algo, is_requester,
                                                    cert_model, true);
     if (!status) {
@@ -1348,15 +1748,17 @@ bool libspdm_x509_set_cert_certificate_check(const uint8_t *cert, size_t cert_si
     return status;
 }
 
-bool libspdm_x509_set_cert_certificate_check_ex(const uint8_t *cert, size_t cert_size,
-                                                uint32_t base_asym_algo, uint32_t base_hash_algo,
-                                                bool is_requester, uint8_t cert_model)
+bool libspdm_x509_set_cert_certificate_check_with_pqc(
+    const uint8_t *cert, size_t cert_size,
+    uint32_t base_asym_algo, uint32_t pqc_asym_algo, uint32_t base_hash_algo,
+    bool is_requester, uint8_t cert_model)
 {
     bool status;
 
-    status = libspdm_x509_common_certificate_check(cert, cert_size, base_asym_algo,
-                                                   base_hash_algo, is_requester,
-                                                   cert_model, true);
+    status = libspdm_x509_common_certificate_check(
+        cert, cert_size, base_asym_algo, pqc_asym_algo,
+        base_hash_algo, is_requester,
+        cert_model, true);
     if (!status) {
         return false;
     }
@@ -1366,6 +1768,16 @@ bool libspdm_x509_set_cert_certificate_check_ex(const uint8_t *cert, size_t cert
         cert, cert_size, cert_model, true);
 
     return status;
+}
+
+bool libspdm_x509_set_cert_certificate_check_ex(const uint8_t *cert, size_t cert_size,
+                                                uint32_t base_asym_algo, uint32_t base_hash_algo,
+                                                bool is_requester, uint8_t cert_model)
+{
+    return libspdm_x509_set_cert_certificate_check_with_pqc (
+        cert, cert_size,
+        base_asym_algo, 0, base_hash_algo,
+        is_requester, cert_model);
 }
 
 /**
@@ -1610,7 +2022,7 @@ bool libspdm_verify_cert_chain_data_ex(uint8_t *cert_chain_data, size_t cert_cha
     size_t leaf_cert_buffer_size;
 
     if (cert_chain_data_size >
-        0xFFFF - (sizeof(spdm_cert_chain_t) + LIBSPDM_MAX_HASH_SIZE)) {
+        SPDM_MAX_CERTIFICATE_CHAIN_SIZE - (sizeof(spdm_cert_chain_t) + LIBSPDM_MAX_HASH_SIZE)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "!!! VerifyCertificateChainData - FAIL (chain size too large) !!!\n"));
         return false;
@@ -1663,9 +2075,10 @@ bool libspdm_verify_cert_chain_data_ex(uint8_t *cert_chain_data, size_t cert_cha
  * @retval true  certificate chain data integrity verification pass.
  * @retval false certificate chain data integrity verification fail.
  **/
-bool libspdm_verify_cert_chain_data(uint8_t *cert_chain_data, size_t cert_chain_data_size,
-                                    uint32_t base_asym_algo, uint32_t base_hash_algo,
-                                    bool is_requester_cert, bool is_device_cert_model)
+bool libspdm_verify_cert_chain_data_with_pqc(
+    uint8_t *cert_chain_data, size_t cert_chain_data_size,
+    uint32_t base_asym_algo, uint32_t pqc_asym_algo, uint32_t base_hash_algo,
+    bool is_requester_cert, bool is_device_cert_model)
 {
     const uint8_t *root_cert_buffer;
     size_t root_cert_buffer_size;
@@ -1673,7 +2086,7 @@ bool libspdm_verify_cert_chain_data(uint8_t *cert_chain_data, size_t cert_chain_
     size_t leaf_cert_buffer_size;
 
     if (cert_chain_data_size >
-        0xFFFF - (sizeof(spdm_cert_chain_t) + LIBSPDM_MAX_HASH_SIZE)) {
+        SPDM_MAX_CERTIFICATE_CHAIN_SIZE - (sizeof(spdm_cert_chain_t) + LIBSPDM_MAX_HASH_SIZE)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "!!! VerifyCertificateChainData - FAIL (chain size too large) !!!\n"));
         return false;
@@ -1702,15 +2115,25 @@ bool libspdm_verify_cert_chain_data(uint8_t *cert_chain_data, size_t cert_chain_
         return false;
     }
 
-    if (!libspdm_x509_certificate_check(leaf_cert_buffer, leaf_cert_buffer_size,
-                                        base_asym_algo, base_hash_algo,
-                                        is_requester_cert, is_device_cert_model)) {
+    if (!libspdm_x509_certificate_check_with_pqc(leaf_cert_buffer, leaf_cert_buffer_size,
+                                                 base_asym_algo, pqc_asym_algo, base_hash_algo,
+                                                 is_requester_cert, is_device_cert_model)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "!!! VerifyCertificateChainData - FAIL (leaf certificate check failed)!!!\n"));
         return false;
     }
 
     return true;
+}
+
+bool libspdm_verify_cert_chain_data(uint8_t *cert_chain_data, size_t cert_chain_data_size,
+                                    uint32_t base_asym_algo, uint32_t base_hash_algo,
+                                    bool is_requester_cert, bool is_device_cert_model)
+{
+    return libspdm_verify_cert_chain_data_with_pqc (
+        cert_chain_data, cert_chain_data_size,
+        base_asym_algo, 0, base_hash_algo,
+        is_requester_cert, is_device_cert_model);
 }
 
 /**
@@ -1727,10 +2150,11 @@ bool libspdm_verify_cert_chain_data(uint8_t *cert_chain_data, size_t cert_chain_
  * @retval true   Certificate chain buffer integrity verification pass.
  * @retval false  Certificate chain buffer integrity verification fail.
  **/
-bool libspdm_verify_certificate_chain_buffer_ex(uint32_t base_hash_algo, uint32_t base_asym_algo,
-                                                const void *cert_chain_buffer,
-                                                size_t cert_chain_buffer_size,
-                                                bool is_requester_cert, uint8_t cert_model)
+bool libspdm_verify_certificate_chain_buffer_with_pqc(
+    uint32_t base_hash_algo, uint32_t base_asym_algo, uint32_t pqc_asym_algo,
+    const void *cert_chain_buffer,
+    size_t cert_chain_buffer_size,
+    bool is_requester_cert, uint8_t cert_model)
 {
     const uint8_t *cert_chain_data;
     size_t cert_chain_data_size;
@@ -1807,15 +2231,26 @@ bool libspdm_verify_certificate_chain_buffer_ex(uint32_t base_hash_algo, uint32_
         return false;
     }
 
-    if (!libspdm_x509_certificate_check_ex(leaf_cert_buffer, leaf_cert_buffer_size,
-                                           base_asym_algo, base_hash_algo,
-                                           is_requester_cert, cert_model)) {
+    if (!libspdm_x509_certificate_check_with_pqc(leaf_cert_buffer, leaf_cert_buffer_size,
+                                                 base_asym_algo, pqc_asym_algo, base_hash_algo,
+                                                 is_requester_cert, cert_model)) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,
                        "!!! VerifyCertificateChainBuffer - FAIL (leaf certificate check failed)!!!\n"));
         return false;
     }
 
     return true;
+}
+
+bool libspdm_verify_certificate_chain_buffer_ex(uint32_t base_hash_algo, uint32_t base_asym_algo,
+                                                const void *cert_chain_buffer,
+                                                size_t cert_chain_buffer_size,
+                                                bool is_requester_cert, uint8_t cert_model)
+{
+    return libspdm_verify_certificate_chain_buffer_with_pqc (
+        base_hash_algo, base_asym_algo, 0,
+        cert_chain_buffer, cert_chain_buffer_size,
+        is_requester_cert, cert_model);
 }
 
 bool libspdm_verify_certificate_chain_buffer(uint32_t base_hash_algo, uint32_t base_asym_algo,
@@ -1936,6 +2371,54 @@ bool libspdm_get_leaf_cert_public_key_from_cert_chain(uint32_t base_hash_algo,
 
     result = libspdm_asym_get_public_key_from_x509(
         base_asym_alg,
+        cert_buffer, cert_buffer_size, public_key);
+    if (!result) {
+        return false;
+    }
+
+    return true;
+}
+
+/**
+ * Retrieve the asymmetric public key from one DER-encoded X509 certificate,
+ * based upon negotiated asymmetric or requester asymmetric algorithm.
+ *
+ * @param  base_hash_algo        SPDM base_hash_algo.
+ * @param  pqc_asym_alg          SPDM pqc_asym_algo or req_pqc_asym_alg.
+ * @param  cert_chain_data       Certificate chain data with spdm_cert_chain_t header.
+ * @param  cert_chain_data_size  Size in bytes of the certificate chain data.
+ * @param  public_key            Pointer to newly generated asymmetric context which contain the
+ *                               retrieved public key component.
+ *
+ * @retval  true   Public key was retrieved successfully.
+ * @retval  false  Fail to retrieve public key from X509 certificate.
+ **/
+bool libspdm_get_pqc_leaf_cert_public_key_from_cert_chain(uint32_t base_hash_algo,
+                                                          uint32_t pqc_asym_alg,
+                                                          uint8_t *cert_chain_data,
+                                                          size_t cert_chain_data_size,
+                                                          void **public_key)
+{
+    size_t hash_size;
+    const uint8_t *cert_buffer;
+    size_t cert_buffer_size;
+    bool result;
+
+    hash_size = libspdm_get_hash_size(base_hash_algo);
+
+    cert_chain_data = cert_chain_data + sizeof(spdm_cert_chain_t) + hash_size;
+    cert_chain_data_size = cert_chain_data_size - (sizeof(spdm_cert_chain_t) + hash_size);
+
+    /* Get leaf cert from cert chain */
+    result = libspdm_x509_get_cert_from_cert_chain(cert_chain_data,
+                                                   cert_chain_data_size, -1,
+                                                   &cert_buffer, &cert_buffer_size);
+    if (!result) {
+        return false;
+    }
+
+    result = libspdm_pqc_asym_get_public_key_from_x509(
+        pqc_asym_alg,
         cert_buffer, cert_buffer_size, public_key);
     if (!result) {
         return false;
