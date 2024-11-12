@@ -91,7 +91,7 @@ static bool validate_responder_capability(uint32_t capabilities_flag, uint8_t ve
                 (hbeat_cap == 1) || (key_upd_cap == 1)) {
                 return false;
             }
-            if (version == SPDM_MESSAGE_VERSION_13) {
+            if (version >= SPDM_MESSAGE_VERSION_13) {
                 if (event_cap == 1) {
                     return false;
                 }
@@ -118,7 +118,7 @@ static bool validate_responder_capability(uint32_t capabilities_flag, uint8_t ve
             if ((chal_cap == 1) || (key_ex_cap == 1) || (meas_cap == 2) || (mut_auth_cap == 1)) {
                 return false;
             }
-            if (version == SPDM_MESSAGE_VERSION_13) {
+            if (version >= SPDM_MESSAGE_VERSION_13) {
                 if (ep_info_cap == 2) {
                     return false;
                 }
@@ -153,8 +153,8 @@ static bool validate_responder_capability(uint32_t capabilities_flag, uint8_t ve
         }
     }
 
-    /* Checks specific to 1.3. */
-    if (version == SPDM_MESSAGE_VERSION_13) {
+    /* Checks specific to 1.3 and higher. */
+    if (version >= SPDM_MESSAGE_VERSION_13) {
         /* Illegal to return reserved values. */
         if ((ep_info_cap == 3) || (multi_key_cap == 3)) {
             return false;

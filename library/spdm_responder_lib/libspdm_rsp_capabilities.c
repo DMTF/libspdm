@@ -83,7 +83,7 @@ static bool libspdm_check_request_flag_compatibility(uint32_t capabilities_flag,
                 (hbeat_cap == 1) || (key_upd_cap == 1)) {
                 return false;
             }
-            if (version == SPDM_MESSAGE_VERSION_13) {
+            if (version >= SPDM_MESSAGE_VERSION_13) {
                 if (event_cap == 1) {
                     return false;
                 }
@@ -110,7 +110,7 @@ static bool libspdm_check_request_flag_compatibility(uint32_t capabilities_flag,
             if ((chal_cap == 1) || (mut_auth_cap == 1)) {
                 return false;
             }
-            if (version == SPDM_MESSAGE_VERSION_13) {
+            if (version >= SPDM_MESSAGE_VERSION_13) {
                 if (ep_info_cap == 2) {
                     return false;
                 }
@@ -132,8 +132,8 @@ static bool libspdm_check_request_flag_compatibility(uint32_t capabilities_flag,
         }
     }
 
-    /* Checks specific to 1.3. */
-    if (version == SPDM_MESSAGE_VERSION_13) {
+    /* Checks specific to 1.3 and higher. */
+    if (version >= SPDM_MESSAGE_VERSION_13) {
         /* Illegal to return reserved values. */
         if ((ep_info_cap == 3) || (multi_key_cap == 3)) {
             return false;
