@@ -18,6 +18,9 @@ target_sources(spdm_crypt_lib
         libspdm_crypt_aead.c
         libspdm_crypt_dhe.c
         libspdm_crypt_rng.c
+        libspdm_crypt_cert_pqc.c
+        libspdm_crypt_pqc_asym.c
+        libspdm_crypt_pqc_kem.c
         fips/libspdm_selftest.c
         fips/libspdm_selftest_hmac.c
         fips/libspdm_selftest_aes_gcm.c
