@@ -84,6 +84,27 @@
 
 #define LIBSPDM_SM3_SUPPORT (LIBSPDM_SM3_256_SUPPORT)
 
+#define LIBSPDM_ML_DSA_SUPPORT ((LIBSPDM_ML_DSA_44_SUPPORT) || \
+                                (LIBSPDM_ML_DSA_65_SUPPORT) || \
+                                (LIBSPDM_ML_DSA_87_SUPPORT))
+
+#define LIBSPDM_SLH_DSA_SUPPORT ((LIBSPDM_SLH_DSA_SHA2_128S_SUPPORT) || \
+                                 (LIBSPDM_SLH_DSA_SHAKE_128S_SUPPORT) || \
+                                 (LIBSPDM_SLH_DSA_SHA2_128F_SUPPORT) || \
+                                 (LIBSPDM_SLH_DSA_SHAKE_128F_SUPPORT) || \
+                                 (LIBSPDM_SLH_DSA_SHA2_192S_SUPPORT) || \
+                                 (LIBSPDM_SLH_DSA_SHAKE_192S_SUPPORT) || \
+                                 (LIBSPDM_SLH_DSA_SHA2_192F_SUPPORT) || \
+                                 (LIBSPDM_SLH_DSA_SHAKE_192F_SUPPORT) || \
+                                 (LIBSPDM_SLH_DSA_SHA2_256S_SUPPORT) || \
+                                 (LIBSPDM_SLH_DSA_SHAKE_256S_SUPPORT) || \
+                                 (LIBSPDM_SLH_DSA_SHA2_256F_SUPPORT) || \
+                                 (LIBSPDM_SLH_DSA_SHAKE_256F_SUPPORT))
+
+#define LIBSPDM_ML_KEM_SUPPORT ((LIBSPDM_ML_KEM_512_SUPPORT) || \
+                                (LIBSPDM_ML_KEM_768_SUPPORT) || \
+                                (LIBSPDM_ML_KEM_1024_SUPPORT))
+
 #if LIBSPDM_CHECK_MACRO
 #include "internal/libspdm_macro_check.h"
 #endif /* LIBSPDM_CHECK_MACRO */
