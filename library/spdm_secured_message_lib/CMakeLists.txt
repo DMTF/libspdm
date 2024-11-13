@@ -12,5 +12,6 @@ target_sources(spdm_secured_message_lib
         libspdm_secmes_context_data.c
         libspdm_secmes_encode_decode.c
         libspdm_secmes_key_exchange.c
+        libspdm_secmes_key_exchange_pqc.c
         libspdm_secmes_session.c
 )

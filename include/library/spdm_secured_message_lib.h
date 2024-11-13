@@ -72,6 +72,17 @@ bool libspdm_secured_message_import_dhe_secret(void *spdm_secured_message_contex
                                                size_t dhe_secret_size);
 
 /**
+ * Import the KEM Secret to an SPDM secured message context.
+ *
+ * @param  spdm_secured_message_context  A pointer to the SPDM secured message context.
+ * @param  kem_secret                    Indicate the KEM secret.
+ * @param  kem_secret_size               The size, in bytes, of the KEM secret.
+ */
+bool libspdm_secured_message_import_kem_secret(void *spdm_secured_message_context,
+                                               const void *kem_secret,
+                                               size_t kem_secret_size);
+
+/**
  * Export the Export Master Secret from an SPDM secured message context.
  *
  * The size of the Export Master Secret is the size of the digest of the negotiated hash algorithm.
