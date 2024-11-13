@@ -58,6 +58,8 @@ else()
             rnglib
             platform_lib_null
             cryptlib_${CRYPTO}
+            oqslib
+            pqccryptlib_oqs
             malloclib
             spdm_crypt_lib
             spdm_crypt_ext_lib

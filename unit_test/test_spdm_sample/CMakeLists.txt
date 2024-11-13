@@ -51,6 +51,8 @@ else()
             spdm_crypt_lib
             ${CRYPTO_LIB_PATHS}
             cryptlib_${CRYPTO}
+            oqslib
+            pqccryptlib_oqs
             rnglib
             malloclib
             cmockalib

@@ -34,6 +34,8 @@ if(NOT ((TOOLCHAIN STREQUAL "KLEE") OR (TOOLCHAIN STREQUAL "CBMC")))
             ${CRYPTO_LIB_PATHS}
             rnglib
             cryptlib_${CRYPTO}
+            oqslib
+            pqccryptlib_oqs
             malloclib
             spdm_crypt_lib
             spdm_crypt_ext_lib
