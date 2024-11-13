@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -70,6 +70,34 @@ extern bool libspdm_responder_data_sign(
 #endif
     spdm_version_number_t spdm_version,
     uint8_t op_code, uint32_t base_asym_algo,
+    uint32_t base_hash_algo, bool is_data_hash,
+    const uint8_t *message, size_t message_size,
+    uint8_t *signature, size_t *sig_size);
+
+/**
+ * Sign an SPDM message data.
+ *
+ * @param  spdm_context    A pointer to the SPDM context.
+ * @param  spdm_version    Indicates the negotiated s version.
+ * @param  base_asym_algo  Indicates the signing algorithm.
+ * @param  base_hash_algo  Indicates the hash algorithm.
+ * @param  is_data_hash    Indicate the message type.
+ *                         If true, raw message before hash.
+ *                         If false, message hash.
+ * @param  message         A pointer to a message to be signed.
+ * @param  message_size    The size, in bytes, of the message to be signed.
+ * @param  signature       A pointer to a destination buffer to store the signature.
+ * @param  sig_size        On input, indicates the size, in bytes, of the destination buffer to
+ *                         store the signature.
+ *                         On output, indicates the size, in bytes, of the signature in the buffer.
+ *
+ * @retval true  Signing success.
+ * @retval false Signing fail.
+ **/
+extern bool libspdm_responder_data_pqc_sign(
+    void *spdm_context,
+    spdm_version_number_t spdm_version,
+    uint8_t op_code, uint32_t pqc_asym_algo,
     uint32_t base_hash_algo, bool is_data_hash,
     const uint8_t *message, size_t message_size,
     uint8_t *signature, size_t *sig_size);
