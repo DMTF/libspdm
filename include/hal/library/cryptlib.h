@@ -58,6 +58,30 @@
 #define LIBSPDM_CRYPTO_NID_CHACHA20_POLY1305 0x0303
 #define LIBSPDM_CRYPTO_NID_SM4_128_GCM 0x0304
 
+/* ML-KEM */
+#define LIBSPDM_CRYPTO_NID_ML_KEM_512 0x8001
+#define LIBSPDM_CRYPTO_NID_ML_KEM_768 0x8002
+#define LIBSPDM_CRYPTO_NID_ML_KEM_1024 0x8003
+
+/* ML-DSA */
+#define LIBSPDM_CRYPTO_NID_ML_DSA_44 0x8101
+#define LIBSPDM_CRYPTO_NID_ML_DSA_65 0x8102
+#define LIBSPDM_CRYPTO_NID_ML_DSA_87 0x8103
+
+/* SLH-DSA */
+#define LIBSPDM_CRYPTO_NID_SLH_DSA_SHA2_128S 0x8201
+#define LIBSPDM_CRYPTO_NID_SLH_DSA_SHAKE_128S 0x8202
+#define LIBSPDM_CRYPTO_NID_SLH_DSA_SHA2_128F 0x8203
+#define LIBSPDM_CRYPTO_NID_SLH_DSA_SHAKE_128F 0x8204
+#define LIBSPDM_CRYPTO_NID_SLH_DSA_SHA2_192S 0x8205
+#define LIBSPDM_CRYPTO_NID_SLH_DSA_SHAKE_192S 0x8206
+#define LIBSPDM_CRYPTO_NID_SLH_DSA_SHA2_192F 0x8207
+#define LIBSPDM_CRYPTO_NID_SLH_DSA_SHAKE_192F 0x8208
+#define LIBSPDM_CRYPTO_NID_SLH_DSA_SHA2_256S 0x8209
+#define LIBSPDM_CRYPTO_NID_SLH_DSA_SHAKE_256S 0x820A
+#define LIBSPDM_CRYPTO_NID_SLH_DSA_SHA2_256F 0x820B
+#define LIBSPDM_CRYPTO_NID_SLH_DSA_SHAKE_256F 0x820C
+
 /* X.509 v3 key usage extension flags. */
 #define LIBSPDM_CRYPTO_X509_KU_DIGITAL_SIGNATURE 0x80
 #define LIBSPDM_CRYPTO_X509_KU_NON_REPUDIATION 0x40
@@ -105,5 +129,8 @@
 #include "hal/library/cryptlib/cryptlib_ecd.h"
 #include "hal/library/cryptlib/cryptlib_sm2.h"
 #include "hal/library/cryptlib/cryptlib_rng.h"
+#include "hal/library/cryptlib/cryptlib_cert_pqc.h"
+#include "hal/library/cryptlib/cryptlib_mldsa.h"
+#include "hal/library/cryptlib/cryptlib_mlkem.h"
 
 #endif /* CRYPTLIB_H */
