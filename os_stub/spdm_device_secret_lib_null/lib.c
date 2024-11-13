@@ -126,6 +126,17 @@ bool libspdm_requester_data_sign(
 {
     return false;
 }
+
+bool libspdm_requester_data_pqc_sign(
+    void *spdm_context,
+    spdm_version_number_t spdm_version, uint8_t op_code,
+    uint32_t req_pqc_asym_alg,
+    uint32_t base_hash_algo, bool is_data_hash,
+    const uint8_t *message, size_t message_size,
+    uint8_t *signature, size_t *sig_size)
+{
+    return false;
+}
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
 
 bool libspdm_responder_data_sign(
@@ -134,6 +145,17 @@ bool libspdm_responder_data_sign(
 #endif
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint32_t base_asym_algo,
+    uint32_t base_hash_algo, bool is_data_hash,
+    const uint8_t *message, size_t message_size,
+    uint8_t *signature, size_t *sig_size)
+{
+    return false;
+}
+
+bool libspdm_responder_data_pqc_sign(
+    void *spdm_context,
+    spdm_version_number_t spdm_version, uint8_t op_code,
+    uint32_t pqc_asym_algo,
     uint32_t base_hash_algo, bool is_data_hash,
     const uint8_t *message, size_t message_size,
     uint8_t *signature, size_t *sig_size)
@@ -192,6 +214,17 @@ bool libspdm_write_certificate_to_nvm(
     return false;
 }
 
+bool libspdm_write_pqc_certificate_to_nvm(
+    void *spdm_context,
+    uint8_t slot_id, const void * cert_chain,
+    size_t cert_chain_size,
+    uint32_t base_hash_algo, uint32_t pqc_asym_algo,
+    bool *need_reset, bool *is_busy
+    )
+{
+    return false;
+}
+
 #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP
@@ -230,6 +263,23 @@ bool libspdm_gen_csr_ex(
 #if LIBSPDM_SET_CERT_CSR_PARAMS
     , bool *is_busy, bool *unexpected_request
 #endif
+    )
+{
+    return false;
+}
+
+bool libspdm_gen_pqc_csr(
+    void *spdm_context,
+    uint32_t base_hash_algo, uint32_t base_asym_algo, bool *need_reset,
+    const void *request, size_t request_size,
+    uint8_t *requester_info, size_t requester_info_length,
+    uint8_t *opaque_data, uint16_t opaque_data_length,
+    size_t *csr_len, uint8_t *csr_pointer,
+    uint8_t req_cert_model,
+    uint8_t *csr_tracking_tag,
+    uint8_t req_key_pair_id,
+    bool overwrite,
+    bool *is_busy, bool *unexpected_request
     )
 {
     return false;
@@ -299,6 +349,23 @@ bool libspdm_read_key_pair_info(
 {
     return false;
 }
+
+bool libspdm_read_key_pair_info_ex(
+    void *spdm_context,
+    uint8_t key_pair_id,
+    uint16_t *capabilities,
+    uint16_t *key_usage_capabilities,
+    uint16_t *current_key_usage,
+    uint32_t *asym_algo_capabilities,
+    uint32_t *current_asym_algo,
+    uint32_t *pqc_asym_algo_capabilities,
+    uint32_t *current_pqc_asym_algo,
+    uint8_t *assoc_cert_slot_mask,
+    uint16_t *public_key_info_len,
+    uint8_t *public_key_info)
+{
+    return false;
+}
 #endif /* LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP
@@ -308,6 +375,19 @@ bool libspdm_write_key_pair_info(
     uint8_t operation,
     uint16_t desired_key_usage,
     uint32_t desired_asym_algo,
+    uint8_t desired_assoc_cert_slot_mask,
+    bool *need_reset)
+{
+    return false;
+}
+
+bool libspdm_write_key_pair_info_ex(
+    void *spdm_context,
+    uint8_t key_pair_id,
+    uint8_t operation,
+    uint16_t desired_key_usage,
+    uint32_t desired_asym_algo,
+    uint32_t desired_pqc_asym_algo,
     uint8_t desired_assoc_cert_slot_mask,
     bool *need_reset)
 {
