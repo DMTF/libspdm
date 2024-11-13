@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -190,18 +190,33 @@ bool libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
     hash_size = secured_message_context->hash_size;
 
     if (!(secured_message_context->use_psk)) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "[DHE Secret]: "));
-        LIBSPDM_INTERNAL_DUMP_HEX_STR(
-            secured_message_context->master_secret.dhe_secret,
-            secured_message_context->dhe_key_size);
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
         libspdm_zero_mem(salt0, sizeof(salt0));
-        status = libspdm_hkdf_extract(
-            secured_message_context->base_hash_algo,
-            secured_message_context->master_secret.dhe_secret,
-            secured_message_context->dhe_key_size,
-            salt0, hash_size,
-            secured_message_context->master_secret.handshake_secret, hash_size);
+        if (secured_message_context->dhe_named_group != 0) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "[DHE Secret]: "));
+            LIBSPDM_INTERNAL_DUMP_HEX_STR(
+                secured_message_context->master_secret.dhe_secret,
+                secured_message_context->dhe_key_size);
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
+            status = libspdm_hkdf_extract(
+                secured_message_context->base_hash_algo,
+                secured_message_context->master_secret.dhe_secret,
+                secured_message_context->dhe_key_size,
+                salt0, hash_size,
+                secured_message_context->master_secret.handshake_secret, hash_size);
+        }
+        if (secured_message_context->kem_alg != 0) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "[KEM Secret]: "));
+            LIBSPDM_INTERNAL_DUMP_HEX_STR(
+                secured_message_context->master_secret.kem_secret,
+                secured_message_context->kem_key_size);
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
+            status = libspdm_hkdf_extract(
+                secured_message_context->base_hash_algo,
+                secured_message_context->master_secret.kem_secret,
+                secured_message_context->kem_key_size,
+                salt0, hash_size,
+                secured_message_context->master_secret.handshake_secret, hash_size);
+        }
         if (!status) {
             return false;
         }

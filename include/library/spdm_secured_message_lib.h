@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -70,6 +70,17 @@ libspdm_session_state_t libspdm_secured_message_get_session_state(
 bool libspdm_secured_message_import_dhe_secret(void *spdm_secured_message_context,
                                                const void *dhe_secret,
                                                size_t dhe_secret_size);
+
+/**
+ * Import the KEM Secret to an SPDM secured message context.
+ *
+ * @param  spdm_secured_message_context  A pointer to the SPDM secured message context.
+ * @param  kem_secret                    Indicate the KEM secret.
+ * @param  kem_secret_size               The size, in bytes, of the KEM secret.
+ */
+bool libspdm_secured_message_import_kem_secret(void *spdm_secured_message_context,
+                                               const void *kem_secret,
+                                               size_t kem_secret_size);
 
 /**
  * Export the Export Master Secret from an SPDM secured message context.

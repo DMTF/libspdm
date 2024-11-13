@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -112,6 +112,7 @@ void libspdm_secured_message_set_algorithms(void *spdm_secured_message_context,
                                             const spdm_version_number_t secured_message_version,
                                             uint32_t base_hash_algo,
                                             uint16_t dhe_named_group,
+                                            uint32_t kem_alg,
                                             uint16_t aead_cipher_suite,
                                             uint16_t key_schedule)
 {
@@ -122,6 +123,7 @@ void libspdm_secured_message_set_algorithms(void *spdm_secured_message_context,
     secured_message_context->secured_message_version = secured_message_version;
     secured_message_context->base_hash_algo = base_hash_algo;
     secured_message_context->dhe_named_group = dhe_named_group;
+    secured_message_context->kem_alg = kem_alg;
     secured_message_context->aead_cipher_suite = aead_cipher_suite;
     secured_message_context->key_schedule = key_schedule;
 
@@ -129,6 +131,8 @@ void libspdm_secured_message_set_algorithms(void *spdm_secured_message_context,
         libspdm_get_hash_size(secured_message_context->base_hash_algo);
     secured_message_context->dhe_key_size = libspdm_get_dhe_pub_key_size(
         secured_message_context->dhe_named_group);
+    secured_message_context->kem_key_size = libspdm_get_kem_shared_secret_size(
+        secured_message_context->kem_alg);
     secured_message_context->aead_key_size = libspdm_get_aead_key_size(
         secured_message_context->aead_cipher_suite);
     secured_message_context->aead_iv_size = libspdm_get_aead_iv_size(
@@ -197,6 +201,9 @@ bool libspdm_secured_message_import_dhe_secret(void *spdm_secured_message_contex
     libspdm_secured_message_context_t *secured_message_context;
 
     secured_message_context = spdm_secured_message_context;
+    if (secured_message_context->dhe_named_group == 0) {
+        return false;
+    }
     if (dhe_secret_size > secured_message_context->dhe_key_size) {
         return false;
     }
@@ -204,6 +211,35 @@ bool libspdm_secured_message_import_dhe_secret(void *spdm_secured_message_contex
     libspdm_copy_mem(secured_message_context->master_secret.dhe_secret,
                      sizeof(secured_message_context->master_secret.dhe_secret),
                      dhe_secret, dhe_secret_size);
+    return true;
+}
+
+/**
+ * Import the KEM Secret to an SPDM secured message context.
+ *
+ * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
+ * @param  kem_secret                    Indicate the KEM secret.
+ * @param  kem_secret_size                The size in bytes of the KEM secret.
+ *
+ * @retval RETURN_SUCCESS  DHE Secret is imported.
+ */
+bool libspdm_secured_message_import_kem_secret(void *spdm_secured_message_context,
+                                               const void *kem_secret,
+                                               size_t kem_secret_size)
+{
+    libspdm_secured_message_context_t *secured_message_context;
+
+    secured_message_context = spdm_secured_message_context;
+    if (secured_message_context->kem_alg == 0) {
+        return false;
+    }
+    if (kem_secret_size > secured_message_context->kem_key_size) {
+        return false;
+    }
+    secured_message_context->kem_key_size = kem_secret_size;
+    libspdm_copy_mem(secured_message_context->master_secret.kem_secret,
+                     sizeof(secured_message_context->master_secret.kem_secret),
+                     kem_secret, kem_secret_size);
     return true;
 }
 
