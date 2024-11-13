@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -99,10 +99,10 @@ bool libspdm_secured_message_dhe_compute_key(
     if (!ret) {
         return ret;
     }
-    libspdm_copy_mem(secured_message_context->master_secret.dhe_secret,
-                     sizeof(secured_message_context->master_secret.dhe_secret),
+    libspdm_copy_mem(secured_message_context->master_secret.shared_secret,
+                     sizeof(secured_message_context->master_secret.shared_secret),
                      final_key, final_key_size);
     libspdm_zero_mem(final_key, final_key_size);
-    secured_message_context->dhe_key_size = final_key_size;
+    secured_message_context->shared_key_size = final_key_size;
     return true;
 }
