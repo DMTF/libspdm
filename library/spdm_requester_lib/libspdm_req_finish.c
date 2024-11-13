@@ -12,7 +12,7 @@
 #pragma pack(1)
 typedef struct {
     spdm_message_header_t header;
-    uint8_t signature[LIBSPDM_MAX_ASYM_KEY_SIZE];
+    uint8_t signature[LIBSPDM_REQ_SIGNATURE_DATA_MAX_SIZE];
     uint8_t verify_data[LIBSPDM_MAX_HASH_SIZE];
 } libspdm_finish_request_mine_t;
 
@@ -235,8 +235,13 @@ bool libspdm_generate_finish_req_signature(libspdm_context_t *spdm_context,
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
 #endif
 
-    signature_size = libspdm_get_req_asym_signature_size(
-        spdm_context->connection_info.algorithm.req_base_asym_alg);
+    if (spdm_context->connection_info.algorithm.req_pqc_asym_alg != 0) {
+        signature_size = libspdm_get_req_pqc_asym_signature_size(
+            spdm_context->connection_info.algorithm.req_pqc_asym_alg);
+    } else {
+        signature_size = libspdm_get_req_asym_signature_size(
+            spdm_context->connection_info.algorithm.req_base_asym_alg);
+    }
 
 #if !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) || (LIBSPDM_DEBUG_PRINT_ENABLE)
     hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
@@ -424,8 +429,13 @@ static libspdm_return_t libspdm_try_send_receive_finish(libspdm_context_t *spdm_
     if (session_info->mut_auth_requested != 0) {
         spdm_request->header.param1 = SPDM_FINISH_REQUEST_ATTRIBUTES_SIGNATURE_INCLUDED;
         spdm_request->header.param2 = req_slot_id_param;
-        signature_size = libspdm_get_req_asym_signature_size(
-            spdm_context->connection_info.algorithm.req_base_asym_alg);
+        if (spdm_context->connection_info.algorithm.req_pqc_asym_alg != 0) {
+            signature_size = libspdm_get_req_pqc_asym_signature_size(
+                spdm_context->connection_info.algorithm.req_pqc_asym_alg);
+        } else {
+            signature_size = libspdm_get_req_asym_signature_size(
+                spdm_context->connection_info.algorithm.req_base_asym_alg);
+        }
     }
 #endif
 
