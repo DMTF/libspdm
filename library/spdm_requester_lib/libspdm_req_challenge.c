@@ -17,7 +17,7 @@ typedef struct {
     uint16_t opaque_length;
     uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
     uint8_t requester_context[SPDM_REQ_CONTEXT_SIZE];
-    uint8_t signature[LIBSPDM_MAX_ASYM_KEY_SIZE];
+    uint8_t signature[LIBSPDM_RSP_SIGNATURE_DATA_MAX_SIZE];
 } libspdm_challenge_auth_response_max_t;
 #pragma pack()
 
@@ -228,8 +228,14 @@ static libspdm_return_t libspdm_try_challenge(libspdm_context_t *spdm_context,
 
     /* -=[Process Response Phase]=- */
     hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
-    signature_size = libspdm_get_asym_signature_size(
-        spdm_context->connection_info.algorithm.base_asym_algo);
+    if (spdm_context->connection_info.algorithm.base_asym_algo != 0) {
+        signature_size = libspdm_get_asym_signature_size(
+            spdm_context->connection_info.algorithm.base_asym_algo);
+    }
+    if (spdm_context->connection_info.algorithm.pqc_asym_algo != 0) {
+        signature_size = libspdm_get_pqc_asym_signature_size(
+            spdm_context->connection_info.algorithm.pqc_asym_algo);
+    }
     measurement_summary_hash_size = libspdm_get_measurement_summary_hash_size(
         spdm_context, true, measurement_hash_type);
 
