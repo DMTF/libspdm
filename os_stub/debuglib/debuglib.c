@@ -37,9 +37,10 @@ void libspdm_debug_assert(const char *file_name, size_t line_number, const char 
 #elif (LIBSPDM_DEBUG_LIBSPDM_ASSERT_CONFIG == LIBSPDM_DEBUG_LIBSPDM_ASSERT_BREAKPOINT)
 #if defined(_MSC_EXTENSIONS)
     __debugbreak();
-#endif
-#if defined(__GNUC__)
+#elif defined(__GNUC__) && (defined(__i386__) || defined(__x86_64__))
     __asm__ __volatile__ ("int $3");
+#else
+#error Breakpoint asserts are not available on this architecture and/or compiler
 #endif
 #elif (LIBSPDM_DEBUG_LIBSPDM_ASSERT_CONFIG == LIBSPDM_DEBUG_LIBSPDM_ASSERT_EXIT)
     exit(1);
