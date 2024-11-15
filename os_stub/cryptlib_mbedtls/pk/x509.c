@@ -2083,6 +2083,15 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
     case LIBSPDM_CRYPTO_NID_SHA512:
         md_alg = MBEDTLS_MD_SHA512;
         break;
+    case LIBSPDM_CRYPTO_NID_SHA3_256:
+        md_alg = MBEDTLS_MD_SHA3_256;
+        break;
+    case LIBSPDM_CRYPTO_NID_SHA3_384:
+        md_alg = MBEDTLS_MD_SHA3_384;
+        break;
+    case LIBSPDM_CRYPTO_NID_SHA3_512:
+        md_alg = MBEDTLS_MD_SHA3_512;
+        break;
     default:
         ret = 1;
         goto free_all;

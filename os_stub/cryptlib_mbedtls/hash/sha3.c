@@ -9,6 +9,7 @@
  **/
 
 #include "internal_crypt_lib.h"
+#include <mbedtls/sha3.h>
 
 /**
  * Allocates and initializes one HASH_CTX context for subsequent SHA3-256 use.
@@ -19,7 +20,14 @@
  **/
 void *libspdm_sha3_256_new(void)
 {
-    return NULL;
+    void *hmac_md_ctx;
+
+    hmac_md_ctx = allocate_zero_pool(sizeof(mbedtls_sha3_context));
+    if (hmac_md_ctx == NULL) {
+        return NULL;
+    }
+
+    return hmac_md_ctx;
 }
 
 /**
@@ -30,6 +38,8 @@ void *libspdm_sha3_256_new(void)
  **/
 void libspdm_sha3_256_free(void *sha3_256_ctx)
 {
+    mbedtls_sha3_free(sha3_256_ctx);
+    free_pool (sha3_256_ctx);
 }
 
 /**
@@ -46,7 +56,19 @@ void libspdm_sha3_256_free(void *sha3_256_ctx)
  **/
 bool libspdm_sha3_256_init(void *sha3_256_context)
 {
-    return false;
+    int ret;
+
+    if (sha3_256_context == NULL) {
+        return false;
+    }
+
+    mbedtls_sha3_init(sha3_256_context);
+
+    ret = mbedtls_sha3_starts(sha3_256_context, MBEDTLS_SHA3_256);
+    if (ret != 0) {
+        return false;
+    }
+    return true;
 }
 
 /**
@@ -67,7 +89,13 @@ bool libspdm_sha3_256_init(void *sha3_256_context)
 bool libspdm_sha3_256_duplicate(const void *sha3_256_context,
                                 void *new_sha3_256_context)
 {
-    return false;
+    if (sha3_256_context == NULL || new_sha3_256_context == NULL) {
+        return false;
+    }
+
+    mbedtls_sha3_clone(new_sha3_256_context, sha3_256_context);
+
+    return true;
 }
 
 /**
@@ -91,7 +119,24 @@ bool libspdm_sha3_256_duplicate(const void *sha3_256_context,
 bool libspdm_sha3_256_update(void *sha3_256_context, const void *data,
                              size_t data_size)
 {
-    return false;
+    int ret;
+
+    if (sha3_256_context == NULL) {
+        return false;
+    }
+
+    if (data == NULL && data_size != 0) {
+        return false;
+    }
+    if (data_size > INT_MAX) {
+        return false;
+    }
+
+    ret = mbedtls_sha3_update(sha3_256_context, data, data_size);
+    if (ret != 0) {
+        return false;
+    }
+    return true;
 }
 
 /**
@@ -116,7 +161,18 @@ bool libspdm_sha3_256_update(void *sha3_256_context, const void *data,
  **/
 bool libspdm_sha3_256_final(void *sha3_256_context, uint8_t *hash_value)
 {
-    return false;
+    int ret;
+
+    if (sha3_256_context == NULL || hash_value == NULL) {
+        return false;
+    }
+
+    ret = mbedtls_sha3_finish(sha3_256_context, hash_value, LIBSPDM_SHA3_256_DIGEST_SIZE);
+    mbedtls_sha3_free(sha3_256_context);
+    if (ret != 0) {
+        return false;
+    }
+    return true;
 }
 
 /**
@@ -140,7 +196,23 @@ bool libspdm_sha3_256_final(void *sha3_256_context, uint8_t *hash_value)
 bool libspdm_sha3_256_hash_all(const void *data, size_t data_size,
                                uint8_t *hash_value)
 {
-    return false;
+    int ret;
+
+    if (hash_value == NULL) {
+        return false;
+    }
+    if (data == NULL && data_size != 0) {
+        return false;
+    }
+    if (data_size > INT_MAX) {
+        return false;
+    }
+
+    ret = mbedtls_sha3(MBEDTLS_SHA3_256, data, data_size, hash_value, LIBSPDM_SHA3_256_DIGEST_SIZE);
+    if (ret != 0) {
+        return false;
+    }
+    return true;
 }
 
 /**
@@ -152,7 +224,14 @@ bool libspdm_sha3_256_hash_all(const void *data, size_t data_size,
  **/
 void *libspdm_sha3_384_new(void)
 {
-    return NULL;
+    void *hmac_md_ctx;
+
+    hmac_md_ctx = allocate_zero_pool(sizeof(mbedtls_sha3_context));
+    if (hmac_md_ctx == NULL) {
+        return NULL;
+    }
+
+    return hmac_md_ctx;
 }
 
 /**
@@ -163,6 +242,8 @@ void *libspdm_sha3_384_new(void)
  **/
 void libspdm_sha3_384_free(void *sha3_384_ctx)
 {
+    mbedtls_sha3_free(sha3_384_ctx);
+    free_pool (sha3_384_ctx);
 }
 
 /**
@@ -179,7 +260,19 @@ void libspdm_sha3_384_free(void *sha3_384_ctx)
  **/
 bool libspdm_sha3_384_init(void *sha3_384_context)
 {
-    return false;
+    int ret;
+
+    if (sha3_384_context == NULL) {
+        return false;
+    }
+
+    mbedtls_sha3_init(sha3_384_context);
+
+    ret = mbedtls_sha3_starts(sha3_384_context, MBEDTLS_SHA3_384);
+    if (ret != 0) {
+        return false;
+    }
+    return true;
 }
 
 /**
@@ -200,7 +293,13 @@ bool libspdm_sha3_384_init(void *sha3_384_context)
 bool libspdm_sha3_384_duplicate(const void *sha3_384_context,
                                 void *new_sha3_384_context)
 {
-    return false;
+    if (sha3_384_context == NULL || new_sha3_384_context == NULL) {
+        return false;
+    }
+
+    mbedtls_sha3_clone(new_sha3_384_context, sha3_384_context);
+
+    return true;
 }
 
 /**
@@ -224,7 +323,24 @@ bool libspdm_sha3_384_duplicate(const void *sha3_384_context,
 bool libspdm_sha3_384_update(void *sha3_384_context, const void *data,
                              size_t data_size)
 {
-    return false;
+    int ret;
+
+    if (sha3_384_context == NULL) {
+        return false;
+    }
+
+    if (data == NULL && data_size != 0) {
+        return false;
+    }
+    if (data_size > INT_MAX) {
+        return false;
+    }
+
+    ret = mbedtls_sha3_update(sha3_384_context, data, data_size);
+    if (ret != 0) {
+        return false;
+    }
+    return true;
 }
 
 /**
@@ -249,7 +365,18 @@ bool libspdm_sha3_384_update(void *sha3_384_context, const void *data,
  **/
 bool libspdm_sha3_384_final(void *sha3_384_context, uint8_t *hash_value)
 {
-    return false;
+    int ret;
+
+    if (sha3_384_context == NULL || hash_value == NULL) {
+        return false;
+    }
+
+    ret = mbedtls_sha3_finish(sha3_384_context, hash_value, LIBSPDM_SHA3_384_DIGEST_SIZE);
+    mbedtls_sha3_free(sha3_384_context);
+    if (ret != 0) {
+        return false;
+    }
+    return true;
 }
 
 /**
@@ -273,7 +400,23 @@ bool libspdm_sha3_384_final(void *sha3_384_context, uint8_t *hash_value)
 bool libspdm_sha3_384_hash_all(const void *data, size_t data_size,
                                uint8_t *hash_value)
 {
-    return false;
+    int ret;
+
+    if (hash_value == NULL) {
+        return false;
+    }
+    if (data == NULL && data_size != 0) {
+        return false;
+    }
+    if (data_size > INT_MAX) {
+        return false;
+    }
+
+    ret = mbedtls_sha3(MBEDTLS_SHA3_384, data, data_size, hash_value, LIBSPDM_SHA3_384_DIGEST_SIZE);
+    if (ret != 0) {
+        return false;
+    }
+    return true;
 }
 
 /**
@@ -285,7 +428,14 @@ bool libspdm_sha3_384_hash_all(const void *data, size_t data_size,
  **/
 void *libspdm_sha3_512_new(void)
 {
-    return NULL;
+    void *hmac_md_ctx;
+
+    hmac_md_ctx = allocate_zero_pool(sizeof(mbedtls_sha3_context));
+    if (hmac_md_ctx == NULL) {
+        return NULL;
+    }
+
+    return hmac_md_ctx;
 }
 
 /**
@@ -296,6 +446,8 @@ void *libspdm_sha3_512_new(void)
  **/
 void libspdm_sha3_512_free(void *sha3_512_ctx)
 {
+    mbedtls_sha3_free(sha3_512_ctx);
+    free_pool (sha3_512_ctx);
 }
 
 /**
@@ -312,7 +464,19 @@ void libspdm_sha3_512_free(void *sha3_512_ctx)
  **/
 bool libspdm_sha3_512_init(void *sha3_512_context)
 {
-    return false;
+    int ret;
+
+    if (sha3_512_context == NULL) {
+        return false;
+    }
+
+    mbedtls_sha3_init(sha3_512_context);
+
+    ret = mbedtls_sha3_starts(sha3_512_context, MBEDTLS_SHA3_512);
+    if (ret != 0) {
+        return false;
+    }
+    return true;
 }
 
 /**
@@ -333,7 +497,13 @@ bool libspdm_sha3_512_init(void *sha3_512_context)
 bool libspdm_sha3_512_duplicate(const void *sha3_512_context,
                                 void *new_sha3_512_context)
 {
-    return false;
+    if (sha3_512_context == NULL || new_sha3_512_context == NULL) {
+        return false;
+    }
+
+    mbedtls_sha3_clone(new_sha3_512_context, sha3_512_context);
+
+    return true;
 }
 
 /**
@@ -357,7 +527,24 @@ bool libspdm_sha3_512_duplicate(const void *sha3_512_context,
 bool libspdm_sha3_512_update(void *sha3_512_context, const void *data,
                              size_t data_size)
 {
-    return false;
+    int ret;
+
+    if (sha3_512_context == NULL) {
+        return false;
+    }
+
+    if (data == NULL && data_size != 0) {
+        return false;
+    }
+    if (data_size > INT_MAX) {
+        return false;
+    }
+
+    ret = mbedtls_sha3_update(sha3_512_context, data, data_size);
+    if (ret != 0) {
+        return false;
+    }
+    return true;
 }
 
 /**
@@ -382,7 +569,18 @@ bool libspdm_sha3_512_update(void *sha3_512_context, const void *data,
  **/
 bool libspdm_sha3_512_final(void *sha3_512_context, uint8_t *hash_value)
 {
-    return false;
+    int ret;
+
+    if (sha3_512_context == NULL || hash_value == NULL) {
+        return false;
+    }
+
+    ret = mbedtls_sha3_finish(sha3_512_context, hash_value, LIBSPDM_SHA3_512_DIGEST_SIZE);
+    mbedtls_sha3_free(sha3_512_context);
+    if (ret != 0) {
+        return false;
+    }
+    return true;
 }
 
 /**
@@ -406,5 +604,21 @@ bool libspdm_sha3_512_final(void *sha3_512_context, uint8_t *hash_value)
 bool libspdm_sha3_512_hash_all(const void *data, size_t data_size,
                                uint8_t *hash_value)
 {
-    return false;
+    int ret;
+
+    if (hash_value == NULL) {
+        return false;
+    }
+    if (data == NULL && data_size != 0) {
+        return false;
+    }
+    if (data_size > INT_MAX) {
+        return false;
+    }
+
+    ret = mbedtls_sha3(MBEDTLS_SHA3_512, data, data_size, hash_value, LIBSPDM_SHA3_512_DIGEST_SIZE);
+    if (ret != 0) {
+        return false;
+    }
+    return true;
 }
