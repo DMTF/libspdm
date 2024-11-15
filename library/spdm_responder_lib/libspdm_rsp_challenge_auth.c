@@ -124,8 +124,13 @@ libspdm_return_t libspdm_get_response_challenge_auth(libspdm_context_t *spdm_con
         }
     }
 
-    signature_size = libspdm_get_asym_signature_size(
-        spdm_context->connection_info.algorithm.base_asym_algo);
+    if (spdm_context->connection_info.algorithm.pqc_asym_algo != 0) {
+        signature_size = libspdm_get_pqc_asym_signature_size(
+            spdm_context->connection_info.algorithm.pqc_asym_algo);
+    } else {
+        signature_size = libspdm_get_asym_signature_size(
+            spdm_context->connection_info.algorithm.base_asym_algo);
+    }
     hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
     measurement_summary_hash_size = libspdm_get_measurement_summary_hash_size(
         spdm_context, false, spdm_request->header.param2);
