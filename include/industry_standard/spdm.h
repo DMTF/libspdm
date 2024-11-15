@@ -730,8 +730,7 @@ typedef struct {
 
 typedef struct {
     /* Total length of the SPDM certificate chain, in bytes, including all fields in this struct. */
-    uint16_t length;
-    uint16_t reserved;
+    uint32_t length;
 
     /* Hash of the root certificate using the negotiated base hashing algorithm.
      * uint8_t root_hash[hash_size]; */
