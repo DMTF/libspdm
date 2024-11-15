@@ -202,6 +202,27 @@ bool libspdm_rsa_pkcs1_verify_with_nid(void *rsa_context, size_t hash_nid,
         }
         break;
 
+    case LIBSPDM_CRYPTO_NID_SHA3_256:
+        md_alg = MBEDTLS_MD_SHA3_256;
+        if (hash_size != LIBSPDM_SHA3_256_DIGEST_SIZE) {
+            return false;
+        }
+        break;
+
+    case LIBSPDM_CRYPTO_NID_SHA3_384:
+        md_alg = MBEDTLS_MD_SHA3_384;
+        if (hash_size != LIBSPDM_SHA3_384_DIGEST_SIZE) {
+            return false;
+        }
+        break;
+
+    case LIBSPDM_CRYPTO_NID_SHA3_512:
+        md_alg = MBEDTLS_MD_SHA3_512;
+        if (hash_size != LIBSPDM_SHA3_512_DIGEST_SIZE) {
+            return false;
+        }
+        break;
+
     default:
         return false;
     }
@@ -288,6 +309,27 @@ bool libspdm_rsa_pss_verify(void *rsa_context, size_t hash_nid,
         }
         break;
 
+    case LIBSPDM_CRYPTO_NID_SHA3_256:
+        md_alg = MBEDTLS_MD_SHA3_256;
+        if (hash_size != LIBSPDM_SHA3_256_DIGEST_SIZE) {
+            return false;
+        }
+        break;
+
+    case LIBSPDM_CRYPTO_NID_SHA3_384:
+        md_alg = MBEDTLS_MD_SHA3_384;
+        if (hash_size != LIBSPDM_SHA3_384_DIGEST_SIZE) {
+            return false;
+        }
+        break;
+
+    case LIBSPDM_CRYPTO_NID_SHA3_512:
+        md_alg = MBEDTLS_MD_SHA3_512;
+        if (hash_size != LIBSPDM_SHA3_512_DIGEST_SIZE) {
+            return false;
+        }
+        break;
+
     default:
         return false;
     }
@@ -370,6 +412,27 @@ bool libspdm_rsa_pss_verify_fips(void *rsa_context, size_t hash_nid,
     case LIBSPDM_CRYPTO_NID_SHA512:
         md_alg = MBEDTLS_MD_SHA512;
         if (hash_size != LIBSPDM_SHA512_DIGEST_SIZE) {
+            return false;
+        }
+        break;
+
+    case LIBSPDM_CRYPTO_NID_SHA3_256:
+        md_alg = MBEDTLS_MD_SHA3_256;
+        if (hash_size != LIBSPDM_SHA3_256_DIGEST_SIZE) {
+            return false;
+        }
+        break;
+
+    case LIBSPDM_CRYPTO_NID_SHA3_384:
+        md_alg = MBEDTLS_MD_SHA3_384;
+        if (hash_size != LIBSPDM_SHA3_384_DIGEST_SIZE) {
+            return false;
+        }
+        break;
+
+    case LIBSPDM_CRYPTO_NID_SHA3_512:
+        md_alg = MBEDTLS_MD_SHA3_512;
+        if (hash_size != LIBSPDM_SHA3_512_DIGEST_SIZE) {
             return false;
         }
         break;
