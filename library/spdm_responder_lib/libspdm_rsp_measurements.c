@@ -33,8 +33,13 @@ bool libspdm_generate_measurement_signature(libspdm_context_t *spdm_context,
         return false;
     }
 
-    signature_size = libspdm_get_asym_signature_size(
-        spdm_context->connection_info.algorithm.base_asym_algo);
+    if (spdm_context->connection_info.algorithm.pqc_asym_algo != 0) {
+        signature_size = libspdm_get_pqc_asym_signature_size(
+            spdm_context->connection_info.algorithm.pqc_asym_algo);
+    } else {
+        signature_size = libspdm_get_asym_signature_size(
+            spdm_context->connection_info.algorithm.base_asym_algo);
+    }
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     l1l2_buffer = libspdm_get_managed_buffer(&l1l2);
     l1l2_buffer_size = libspdm_get_managed_buffer_size(&l1l2);
@@ -219,8 +224,13 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
          SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) == 0) {
         signature_size = 0;
     } else {
-        signature_size = libspdm_get_asym_signature_size(
-            spdm_context->connection_info.algorithm.base_asym_algo);
+        if (spdm_context->connection_info.algorithm.pqc_asym_algo != 0) {
+            signature_size = libspdm_get_pqc_asym_signature_size(
+                spdm_context->connection_info.algorithm.pqc_asym_algo);
+        } else {
+            signature_size = libspdm_get_asym_signature_size(
+                spdm_context->connection_info.algorithm.base_asym_algo);
+        }
     }
 
 
