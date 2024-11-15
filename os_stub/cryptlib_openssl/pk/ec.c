@@ -705,6 +705,24 @@ bool libspdm_ecdsa_sign(void *ec_context, size_t hash_nid,
         }
         break;
 
+    case LIBSPDM_CRYPTO_NID_SHA3_256:
+        if (hash_size != LIBSPDM_SHA3_256_DIGEST_SIZE) {
+            return false;
+        }
+        break;
+
+    case LIBSPDM_CRYPTO_NID_SHA3_384:
+        if (hash_size != LIBSPDM_SHA3_384_DIGEST_SIZE) {
+            return false;
+        }
+        break;
+
+    case LIBSPDM_CRYPTO_NID_SHA3_512:
+        if (hash_size != LIBSPDM_SHA3_512_DIGEST_SIZE) {
+            return false;
+        }
+        break;
+
     default:
         return false;
     }
@@ -811,6 +829,24 @@ bool libspdm_ecdsa_verify(void *ec_context, size_t hash_nid,
 
     case LIBSPDM_CRYPTO_NID_SHA512:
         if (hash_size != LIBSPDM_SHA512_DIGEST_SIZE) {
+            return false;
+        }
+        break;
+
+    case LIBSPDM_CRYPTO_NID_SHA3_256:
+        if (hash_size != LIBSPDM_SHA3_256_DIGEST_SIZE) {
+            return false;
+        }
+        break;
+
+    case LIBSPDM_CRYPTO_NID_SHA3_384:
+        if (hash_size != LIBSPDM_SHA3_384_DIGEST_SIZE) {
+            return false;
+        }
+        break;
+
+    case LIBSPDM_CRYPTO_NID_SHA3_512:
+        if (hash_size != LIBSPDM_SHA3_512_DIGEST_SIZE) {
             return false;
         }
         break;
@@ -1044,6 +1080,24 @@ bool libspdm_ecdsa_sign_ex(void *ec_context, size_t hash_nid,
 
     case LIBSPDM_CRYPTO_NID_SHA512:
         if (hash_size != LIBSPDM_SHA512_DIGEST_SIZE) {
+            return false;
+        }
+        break;
+
+    case LIBSPDM_CRYPTO_NID_SHA3_256:
+        if (hash_size != LIBSPDM_SHA3_256_DIGEST_SIZE) {
+            return false;
+        }
+        break;
+
+    case LIBSPDM_CRYPTO_NID_SHA3_384:
+        if (hash_size != LIBSPDM_SHA3_384_DIGEST_SIZE) {
+            return false;
+        }
+        break;
+
+    case LIBSPDM_CRYPTO_NID_SHA3_512:
+        if (hash_size != LIBSPDM_SHA3_512_DIGEST_SIZE) {
             return false;
         }
         break;
