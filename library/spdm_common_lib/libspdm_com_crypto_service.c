@@ -172,7 +172,7 @@ bool libspdm_get_local_public_key_buffer(void *spdm_context,
     libspdm_context_t *context;
 
     context = spdm_context;
-    if (context->local_context.peer_public_key_provision_size != 0) {
+    if (context->local_context.local_public_key_provision_size != 0) {
         *local_public_key_buffer = context->local_context.local_public_key_provision;
         *local_public_key_buffer_size = context->local_context.local_public_key_provision_size;
         return true;
