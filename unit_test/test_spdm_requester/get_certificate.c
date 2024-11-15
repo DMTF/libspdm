@@ -64,8 +64,7 @@ bool libspdm_libspdm_read_responder_public_certificate_chain_expiration(
         free(file_data);
         return false;
     }
-    cert_chain->length = (uint16_t)cert_chain_size;
-    cert_chain->reserved = 0;
+    cert_chain->length = (uint32_t)cert_chain_size;
 
     /* Get Root Certificate and calculate hash value*/
 
