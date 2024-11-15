@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -33,30 +33,53 @@ bool libspdm_generate_measurement_signature(libspdm_context_t *spdm_context,
         return false;
     }
 
-    signature_size = libspdm_get_asym_signature_size(
-        spdm_context->connection_info.algorithm.base_asym_algo);
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     l1l2_buffer = libspdm_get_managed_buffer(&l1l2);
     l1l2_buffer_size = libspdm_get_managed_buffer_size(&l1l2);
+#endif
 
-    result = libspdm_responder_data_sign(
+    if (spdm_context->connection_info.algorithm.base_asym_algo != 0) {
+        signature_size = libspdm_get_asym_signature_size(
+            spdm_context->connection_info.algorithm.base_asym_algo);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+        result = libspdm_responder_data_sign(
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT
-        spdm_context,
+            spdm_context,
 #endif
-        spdm_context->connection_info.version, SPDM_MEASUREMENTS,
-        spdm_context->connection_info.algorithm.base_asym_algo,
-        spdm_context->connection_info.algorithm.base_hash_algo,
-        false, l1l2_buffer, l1l2_buffer_size, signature, &signature_size);
+            spdm_context->connection_info.version, SPDM_MEASUREMENTS,
+            spdm_context->connection_info.algorithm.base_asym_algo,
+            spdm_context->connection_info.algorithm.base_hash_algo,
+            false, l1l2_buffer, l1l2_buffer_size, signature, &signature_size);
 #else
-    result = libspdm_responder_data_sign(
+        result = libspdm_responder_data_sign(
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT
-        spdm_context,
+            spdm_context,
 #endif
-        spdm_context->connection_info.version, SPDM_MEASUREMENTS,
-        spdm_context->connection_info.algorithm.base_asym_algo,
-        spdm_context->connection_info.algorithm.base_hash_algo,
-        true, l1l2_hash, l1l2_hash_size, signature, &signature_size);
+            spdm_context->connection_info.version, SPDM_MEASUREMENTS,
+            spdm_context->connection_info.algorithm.base_asym_algo,
+            spdm_context->connection_info.algorithm.base_hash_algo,
+            true, l1l2_hash, l1l2_hash_size, signature, &signature_size);
 #endif
+    }
+    if (spdm_context->connection_info.algorithm.pqc_asym_algo != 0) {
+        signature_size = libspdm_get_pqc_asym_signature_size(
+            spdm_context->connection_info.algorithm.pqc_asym_algo);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+        result = libspdm_responder_data_pqc_sign(
+            spdm_context,
+            spdm_context->connection_info.version, SPDM_MEASUREMENTS,
+            spdm_context->connection_info.algorithm.pqc_asym_algo,
+            spdm_context->connection_info.algorithm.base_hash_algo,
+            false, l1l2_buffer, l1l2_buffer_size, signature, &signature_size);
+#else
+        result = libspdm_responder_data_pqc_sign(
+            spdm_context,
+            spdm_context->connection_info.version, SPDM_MEASUREMENTS,
+            spdm_context->connection_info.algorithm.pqc_asym_algo,
+            spdm_context->connection_info.algorithm.base_hash_algo,
+            true, l1l2_hash, l1l2_hash_size, signature, &signature_size);
+#endif
+    }
     return result;
 }
 libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_context,
@@ -217,8 +240,14 @@ libspdm_return_t libspdm_get_response_measurements(libspdm_context_t *spdm_conte
          SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) == 0) {
         signature_size = 0;
     } else {
-        signature_size = libspdm_get_asym_signature_size(
-            spdm_context->connection_info.algorithm.base_asym_algo);
+        if (spdm_context->connection_info.algorithm.base_asym_algo != 0) {
+            signature_size = libspdm_get_asym_signature_size(
+                spdm_context->connection_info.algorithm.base_asym_algo);
+        }
+        if (spdm_context->connection_info.algorithm.pqc_asym_algo != 0) {
+            signature_size = libspdm_get_pqc_asym_signature_size(
+                spdm_context->connection_info.algorithm.pqc_asym_algo);
+        }
     }
 
 
