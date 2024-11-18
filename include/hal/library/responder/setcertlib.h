@@ -38,7 +38,12 @@ extern bool libspdm_is_in_trusted_environment(
  * @param[in]  cert_chain_size  The size of the certificate chain to set.
  * @param[in]  base_hash_algo   Indicates the negotiated hash algorithm.
  * @param[in]  base_asym_algo   Indicates the negotiated signing algorithms.
- *
+ * @param[in,out] need_reset    On input, indicates the value of CERT_INSTALL_RESET_CAP.
+ *                              On output, indicates whether the device needs to be reset (true) for
+ *                              the SET_CERTIFICATE operation to complete.
+ * @param[out]  is_busy         If true, indicates that the certificate chain cannot be written at
+ *                              this time, but it may be successful in a later call. The function's
+ *                              return value must be false if this parameter is true.
  * @retval true   The certificate chain was successfully written to non-volatile memory.
  * @retval false  Unable to write certificate chain to non-volatile memory.
  **/
@@ -48,8 +53,11 @@ extern bool libspdm_write_certificate_to_nvm(
 #endif
     uint8_t slot_id, const void * cert_chain,
     size_t cert_chain_size,
-    uint32_t base_hash_algo, uint32_t base_asym_algo);
-
+    uint32_t base_hash_algo, uint32_t base_asym_algo
+#if LIBSPDM_SET_CERT_CSR_PARAMS
+    , bool *need_reset, bool *is_busy
+#endif /* LIBSPDM_SET_CERT_CSR_PARAMS */
+    );
 #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP */
 
 #endif /* RESPONDER_SETCERTLIB_H */
