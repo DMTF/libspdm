@@ -72,6 +72,8 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
     bool result;
     uint8_t spdm_version;
     uint8_t slot_id;
+    bool need_reset;
+    bool is_busy;
     bool erase;
     uint8_t set_cert_model;
 
@@ -212,6 +214,11 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
         }
     }
 
+    need_reset = libspdm_is_capabilities_flag_supported(
+        spdm_context, false, 0,
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_INSTALL_RESET_CAP);
+    is_busy = false;
+
     if ((spdm_version >= SPDM_MESSAGE_VERSION_13) && erase) {
         /*the CertChain field shall be absent;the value of SetCertModel shall be zero*/
         if ((request_size < sizeof(spdm_set_certificate_request_t)) ||
@@ -227,11 +234,21 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT
             spdm_context,
 #endif
-            slot_id, NULL, 0, 0, 0);
+            slot_id, NULL, 0, 0, 0
+#if LIBSPDM_SET_CERT_CSR_PARAMS
+            , &need_reset, &is_busy
+#endif /* LIBSPDM_SET_CERT_CSR_PARAMS */
+            );
         if (!result) {
-            return libspdm_generate_error_response(spdm_context,
-                                                   SPDM_ERROR_CODE_OPERATION_FAILED, 0,
-                                                   response_size, response);
+            if (is_busy) {
+                return libspdm_generate_error_response(spdm_context,
+                                                       SPDM_ERROR_CODE_BUSY, 0,
+                                                       response_size, response);
+            } else {
+                return libspdm_generate_error_response(spdm_context,
+                                                       SPDM_ERROR_CODE_OPERATION_FAILED, 0,
+                                                       response_size, response);
+            }
         }
     } else {
         if (request_size < sizeof(spdm_set_certificate_request_t) +
@@ -286,11 +303,22 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
             slot_id, cert_chain,
             cert_chain_size,
             spdm_context->connection_info.algorithm.base_hash_algo,
-            spdm_context->connection_info.algorithm.base_asym_algo);
+            spdm_context->connection_info.algorithm.base_asym_algo
+#if LIBSPDM_SET_CERT_CSR_PARAMS
+            , &need_reset, &is_busy
+#endif /* LIBSPDM_SET_CERT_CSR_PARAMS */
+            );
+
         if (!result) {
-            return libspdm_generate_error_response(spdm_context,
-                                                   SPDM_ERROR_CODE_UNSPECIFIED, 0,
-                                                   response_size, response);
+            if (is_busy) {
+                return libspdm_generate_error_response(spdm_context,
+                                                       SPDM_ERROR_CODE_BUSY, 0,
+                                                       response_size, response);
+            } else {
+                return libspdm_generate_error_response(spdm_context,
+                                                       SPDM_ERROR_CODE_UNSPECIFIED, 0,
+                                                       response_size, response);
+            }
         }
     }
 
@@ -302,7 +330,7 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
     /*requires a reset to complete the SET_CERTIFICATE request*/
     if (libspdm_is_capabilities_flag_supported(
             spdm_context, false, 0,
-            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_INSTALL_RESET_CAP)) {
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_INSTALL_RESET_CAP) && need_reset) {
         spdm_context->local_context.cert_slot_reset_mask |= (1 << slot_id);
 
         /*the device will reset to set cert*/
