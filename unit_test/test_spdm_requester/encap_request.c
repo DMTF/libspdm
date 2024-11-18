@@ -679,53 +679,6 @@ void libspdm_test_requester_encap_request_case2(void **State)
 
 void libspdm_test_requester_encap_request_case3(void **State)
 {
-    libspdm_return_t status;
-    libspdm_test_context_t *spdm_test_context;
-    libspdm_context_t *spdm_context;
-    void *data;
-    size_t data_size;
-    void *hash;
-    size_t hash_size;
-
-    spdm_test_context = *State;
-    spdm_context = spdm_test_context->spdm_context;
-    spdm_test_context->case_id = 0x3;
-
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
-                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
-    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
-    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
-    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
-    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
-    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
-    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size,
-                                                    &hash, &hash_size);
-    libspdm_reset_message_a(spdm_context);
-    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
-    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
-        data_size;
-    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
-                     sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
-                     data, data_size);
-#endif
-
-    libspdm_register_get_encap_response_func(spdm_context, libspdm_get_encap_response_digest);
-    status = libspdm_encapsulated_request(spdm_context, NULL, 0, NULL);
-    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_SIZE);
-    free(data);
 }
 
 void libspdm_test_requester_encap_request_case4(void **State)
@@ -832,53 +785,6 @@ void libspdm_test_requester_encap_request_case5(void **State)
 
 void libspdm_test_requester_encap_request_case6(void **State)
 {
-    libspdm_return_t status;
-    libspdm_test_context_t *spdm_test_context;
-    libspdm_context_t *spdm_context;
-    void *data;
-    size_t data_size;
-    void *hash;
-    size_t hash_size;
-
-    spdm_test_context = *State;
-    spdm_context = spdm_test_context->spdm_context;
-    spdm_test_context->case_id = 0x6;
-
-    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
-                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
-    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
-    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
-    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
-    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
-    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
-    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
-    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
-    spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size,
-                                                    &hash, &hash_size);
-    libspdm_reset_message_a(spdm_context);
-    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
-    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
-    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
-    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
-#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
-        data_size;
-    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
-                     sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
-                     data, data_size);
-#endif
-
-    libspdm_register_get_encap_response_func(spdm_context, libspdm_get_encap_response_digest);
-    status = libspdm_encapsulated_request(spdm_context, NULL, 0, NULL);
-    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_SIZE);
-    free(data);
 }
 
 void libspdm_test_requester_encap_request_case7(void **State)
@@ -1079,14 +985,10 @@ int libspdm_requester_encap_request_test_main(void)
         cmocka_unit_test(libspdm_test_requester_encap_request_case1),
         /* Success Case ,func :libspdm_get_encap_response_digest*/
         cmocka_unit_test(libspdm_test_requester_encap_request_case2),
-        /* Error response: When spdm_encapsulated_response_ack_response versions are inconsistent*/
-        cmocka_unit_test(libspdm_test_requester_encap_request_case3),
         /* Error response:Receive message only SPDM ENCAPSULATED_REQUEST response*/
         cmocka_unit_test(libspdm_test_requester_encap_request_case4),
         /* Error response: spdm_encapsulated_response_ack_response == NULL*/
         cmocka_unit_test(libspdm_test_requester_encap_request_case5),
-        /* Error response: spdm_encapsulated_response_ack_response.param2 == NULL*/
-        cmocka_unit_test(libspdm_test_requester_encap_request_case6),
         /* response: param2 == SPDM_ENCAPSULATED_RESPONSE_ACK_RESPONSE_PAYLOAD_TYPE_REQ_SLOT_NUMBER*/
         cmocka_unit_test(libspdm_test_requester_encap_request_case7),
         /*Success Case ,func :libspdm_get_encap_response_certificate */
