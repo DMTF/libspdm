@@ -245,7 +245,7 @@ libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
         } else {
             return libspdm_generate_error_response(
                 spdm_context,
-                SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
+                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                 response_size, response);
         }
     }

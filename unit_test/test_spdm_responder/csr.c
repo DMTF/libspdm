@@ -1767,7 +1767,7 @@ void libspdm_test_responder_csr_case15(void **state)
     assert_int_equal(spdm_response->header.request_response_code,
                      SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
+                     SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 
     /*matched csr_tracking_tag without overwrite*/
@@ -1857,7 +1857,7 @@ void libspdm_test_responder_csr_case15(void **state)
     assert_int_equal(spdm_response->header.request_response_code,
                      SPDM_ERROR);
     assert_int_equal(spdm_response->header.param1,
-                     SPDM_ERROR_CODE_UNEXPECTED_REQUEST);
+                     SPDM_ERROR_CODE_INVALID_REQUEST);
     assert_int_equal(spdm_response->header.param2, 0);
 
     /*csr_tracking_tag 0 and overwrite*/
