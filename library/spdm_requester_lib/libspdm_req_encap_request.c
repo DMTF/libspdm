@@ -380,14 +380,8 @@ libspdm_return_t libspdm_encapsulated_request(libspdm_context_t *spdm_context,
 
         switch (spdm_encapsulated_response_ack_response->header.param2) {
         case SPDM_ENCAPSULATED_RESPONSE_ACK_RESPONSE_PAYLOAD_TYPE_ABSENT:
-            if (spdm_response_size == ack_header_size) {
-                libspdm_release_receiver_buffer (spdm_context);
-                return LIBSPDM_STATUS_SUCCESS;
-            } else {
-                libspdm_release_receiver_buffer (spdm_context);
-                return LIBSPDM_STATUS_INVALID_MSG_SIZE;
-            }
-            break;
+            libspdm_release_receiver_buffer (spdm_context);
+            return LIBSPDM_STATUS_SUCCESS;
         case SPDM_ENCAPSULATED_RESPONSE_ACK_RESPONSE_PAYLOAD_TYPE_PRESENT:
             break;
         case SPDM_ENCAPSULATED_RESPONSE_ACK_RESPONSE_PAYLOAD_TYPE_REQ_SLOT_NUMBER:
