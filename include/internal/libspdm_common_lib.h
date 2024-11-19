@@ -1838,7 +1838,7 @@ static inline bool libspdm_onehot0(uint32_t mask)
     return !mask || !(mask & (mask - 1));
 }
 
-static inline uint64_t libspdm_le_to_be_64(uint64_t value)
+static inline uint64_t libspdm_byte_swap_64(uint64_t value)
 {
     return (((value & 0x00000000000000ff) << 56) |
             ((value & 0x000000000000ff00) << 40) |
@@ -1848,6 +1848,20 @@ static inline uint64_t libspdm_le_to_be_64(uint64_t value)
             ((value & 0x0000ff0000000000) >> 24) |
             ((value & 0x00ff000000000000) >> 40) |
             ((value & 0xff00000000000000) >> 56));
+}
+
+static inline uint32_t libspdm_byte_swap_32(uint32_t value)
+{
+    return ((value & 0x000000FF) << 24) |
+           ((value & 0x0000FF00) << 8)  |
+           ((value & 0x00FF0000) >> 8)  |
+           ((value & 0xFF000000) >> 24);
+}
+
+static inline uint16_t libspdm_byte_swap_16(uint16_t value)
+{
+    return ((value & 0x00FF) << 8) |
+           ((value & 0xFF00) >> 8);
 }
 
 /**
