@@ -1,4 +1,4 @@
-# libspdm is a sample implementation that follows the DMTF [SPDM](https://www.dmtf.org/standards/spdm) specifications
+# DMTF's Reference Implementation of [SPDM](https://www.dmtf.org/standards/spdm)
 
 ## Features
 
