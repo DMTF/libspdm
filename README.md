@@ -167,7 +167,7 @@ For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/m
 
 ### Cryptography Library
 
-1) [Mbed TLS](https://tls.mbed.org) as cryptography library. Version 3.6.0.
+1) [Mbed TLS](https://tls.mbed.org) as cryptography library. Version 3.6.2.
 
 2) [OpenSSL](https://www.openssl.org) as cryptography library. Version 3.0.9.
 
