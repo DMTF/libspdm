@@ -125,6 +125,23 @@ extern bool libspdm_x509_get_issuer_orgnization_name(const uint8_t *cert, size_t
  **/
 extern bool libspdm_x509_construct_certificate(const uint8_t *cert, size_t cert_size,
                                                uint8_t **single_x509_cert);
+/**
+ * Construct a X509 object from DER-encoded certificate data.
+ *
+ * If cert is NULL, then return false.
+ * If single_x509_cert is NULL, then return false.
+ * If this interface is not supported, then return false.
+ *
+ * @param[in]  cert              Pointer to the DER-encoded certificate data.
+ * @param[in]  cert_size         The size of certificate data in bytes.
+ * @param[out] single_x509_cert  The generated X509 object.
+ *
+ * @retval  true   The X509 object generation succeeded.
+ * @retval  false  The operation failed.
+ * @retval  false  This interface is not supported.
+ **/
+extern bool libspdm_pqc_x509_construct_certificate(const uint8_t *cert, size_t cert_size,
+                                                   uint8_t **single_x509_cert);
 
 /**
  * Construct a X509 stack object from a list of DER-encoded certificate data.
@@ -345,6 +362,30 @@ extern bool libspdm_sm2_get_private_key_from_pem(const uint8_t *pem_data,
                                                  size_t pem_size,
                                                  const char *password,
                                                  void **sm2_context);
+
+/**
+ * Retrieve the DSA Private key from the password-protected PEM key data.
+ *
+ * OID is defined in https://datatracker.ietf.org/doc/html/draft-ietf-lamps-dilithium-certificates
+ *
+ * @param[in]  pem_data     Pointer to the PEM-encoded key data to be retrieved.
+ * @param[in]  pem_size     Size of the PEM key data in bytes.
+ * @param[in]  password     NULL-terminated passphrase used for encrypted PEM key data.
+ * @param[out] dsa_context  Pointer to newly generated dsa context which contain the retrieved
+ *                          dsa private key component. Use dsa_free() function to free the
+ *                          resource.
+ *
+ * If pem_data is NULL, then return false.
+ * If dsa_context is NULL, then return false.
+ *
+ * @retval  true   dsa Private key was retrieved successfully.
+ * @retval  false  Invalid PEM key data or incorrect password.
+ *
+ **/
+extern bool libspdm_mldsa_get_private_key_from_pem(const uint8_t *pem_data,
+                                                   size_t pem_size,
+                                                   const char *password,
+                                                   void **dsa_context);
 
 /**
  * Derive key data using HMAC-SHA256 based KDF.
@@ -750,6 +791,47 @@ extern bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
                                  void *context, char *subject_name,
                                  size_t *csr_len, uint8_t *csr_pointer,
                                  void *base_cert);
+
+/**
+ * Generate a CSR.
+ *
+ * @param[in]      hash_nid              hash algo for sign
+ * @param[in]      pqc_asym_nid          pqc_asym algo for sign
+ *
+ * @param[in]      requester_info        requester info to gen CSR
+ * @param[in]      requester_info_length The len of requester info
+ *
+ * @param[in]       is_ca                if true, set basic_constraints: CA:true; Otherwise, set to false.
+ *
+ * @param[in]      context               Pointer to asymmetric context
+ * @param[in]      subject_name          Subject name: should be break with ',' in the middle
+ *                                       example: "C=AA,CN=BB"
+ *
+ * Subject names should contain a comma-separated list of OID types and values:
+ * The valid OID type name is in:
+ * {"CN", "commonName", "C", "countryName", "O", "organizationName","L",
+ * "OU", "organizationalUnitName", "ST", "stateOrProvinceName", "emailAddress",
+ * "serialNumber", "postalAddress", "postalCode", "dnQualifier", "title",
+ * "SN","givenName","GN", "initials", "pseudonym", "generationQualifier", "domainComponent", "DC"}.
+ * Note: The object of C and countryName should be CSR Supported Country Codes
+ *
+ * @param[in, out]      csr_len               For input, csr_len is the size of store CSR buffer.
+ *                                            For output, csr_len is CSR len for DER format
+ * @param[in, out]      csr_pointer           For input, csr_pointer is buffer address to store CSR.
+ *                                            For output, csr_pointer is address for stored CSR.
+ *                                            The csr_pointer address will be changed.
+ * @param[in]           base_cert             An optional leaf certificate whose
+ *                                            extensions should be copied to the CSR
+ *
+ * @retval  true   Success.
+ * @retval  false  Failed to gen CSR.
+ **/
+extern bool libspdm_gen_pqc_x509_csr(size_t hash_nid, size_t pqc_asym_nid,
+                                     uint8_t *requester_info, size_t requester_info_length,
+                                     bool is_ca,
+                                     void *context, char *subject_name,
+                                     size_t *csr_len, uint8_t *csr_pointer,
+                                     void *base_cert);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CSR_CAP */
 
 #endif /* CRYPTLIB_EXT_H */
