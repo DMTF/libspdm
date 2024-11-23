@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -74,6 +74,55 @@ bool libspdm_req_asym_get_private_key_from_pem(uint16_t req_base_asym_alg,
  * @return asym NID
  **/
 size_t libspdm_get_aysm_nid(uint32_t base_asym_algo);
+
+/**
+ * Retrieve the Private key from the password-protected PEM key data.
+ *
+ * @param  pqc_asym_algo   SPDM pqc_asym_algo
+ * @param  pem_data        Pointer to the PEM-encoded key data to be retrieved.
+ * @param  pem_size        Size of the PEM key data in bytes.
+ * @param  password        NULL-terminated passphrase used for encrypted PEM key data.
+ * @param  context         Pointer to newly generated asymmetric context which contain the retrieved
+ *                         private key component.
+ *                         Use libspdm_asym_free() function to free the resource.
+ *
+ * @retval  true   Private key was retrieved successfully.
+ * @retval  false  Invalid PEM key data or incorrect password.
+ **/
+bool libspdm_pqc_asym_get_private_key_from_pem(uint32_t pqc_asym_algo,
+                                               const uint8_t *pem_data,
+                                               size_t pem_size,
+                                               const char *password,
+                                               void **context);
+
+/**
+ * Retrieve the Private key from the password-protected PEM key data.
+ *
+ * @param  req_pqc_asym_alg   SPDM req_pqc_asym_alg
+ * @param  pem_data           Pointer to the PEM-encoded key data to be retrieved.
+ * @param  pem_size           Size of the PEM key data in bytes.
+ * @param  password           NULL-terminated passphrase used for encrypted PEM key data.
+ * @param  context            Pointer to newly generated asymmetric context which contain the
+ *                            retrieved private key component. Use libspdm_asym_free() function to
+ *                            free the resource.
+ *
+ * @retval  true   Private key was retrieved successfully.
+ * @retval  false  Invalid PEM key data or incorrect password.
+ **/
+bool libspdm_req_pqc_asym_get_private_key_from_pem(uint32_t req_pqc_asym_alg,
+                                                   const uint8_t *pem_data,
+                                                   size_t pem_size,
+                                                   const char *password,
+                                                   void **context);
+
+/**
+ * Return asym NID, based upon the negotiated asym algorithm.
+ *
+ * @param  pqc_asym_algo   SPDM pqc_asym_algo
+ *
+ * @return asym NID
+ **/
+size_t libspdm_get_pqc_aysm_nid(uint32_t pqc_asym_algo);
 
 /**
  * Computes the hash of a input data buffer, based upon the negotiated measurement hash algorithm.
