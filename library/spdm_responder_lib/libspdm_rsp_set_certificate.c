@@ -60,6 +60,14 @@ static bool libspdm_set_cert_verify_certchain(uint8_t spdm_version,
 
     return true;
 }
+static bool libspdm_pqc_set_cert_verify_certchain(uint8_t spdm_version,
+                                                  const uint8_t *cert_chain, size_t cert_chain_size,
+                                                  uint32_t pqc_asym_algo, uint32_t base_hash_algo,
+                                                  uint8_t cert_model)
+{
+    // TBD 1.4 - Need cert chain parsing for PQC.
+    return true;
+}
 #endif /*LIBSPDM_CERT_PARSE_SUPPORT*/
 
 libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_context,
@@ -230,15 +238,24 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
         }
 
         /* erase slot_id cert_chain*/
-        result = libspdm_write_certificate_to_nvm(
+        if (spdm_context->connection_info.algorithm.base_asym_algo != 0) {
+            result = libspdm_write_certificate_to_nvm(
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT
-            spdm_context,
+                spdm_context,
 #endif
-            slot_id, NULL, 0, 0, 0
+                slot_id, NULL, 0, 0, 0
 #if LIBSPDM_SET_CERT_CSR_PARAMS
-            , &need_reset, &is_busy
+                , &need_reset, &is_busy
 #endif /* LIBSPDM_SET_CERT_CSR_PARAMS */
-            );
+                );
+        }
+        if (spdm_context->connection_info.algorithm.pqc_asym_algo != 0) {
+            result = libspdm_write_pqc_certificate_to_nvm(
+                spdm_context,
+                slot_id, NULL, 0, 0, 0,
+                &need_reset, &is_busy
+                );
+        }
         if (!result) {
             if (is_busy) {
                 return libspdm_generate_error_response(spdm_context,
@@ -283,11 +300,20 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
 
 #if LIBSPDM_CERT_PARSE_SUPPORT
         /*check the cert_chain*/
-        result = libspdm_set_cert_verify_certchain(spdm_version,
-                                                   cert_chain, cert_chain_size,
-                                                   spdm_context->connection_info.algorithm.base_asym_algo,
-                                                   spdm_context->connection_info.algorithm.base_hash_algo,
-                                                   set_cert_model);
+        if (spdm_context->connection_info.algorithm.base_asym_algo != 0) {
+            result = libspdm_set_cert_verify_certchain(spdm_version,
+                                                       cert_chain, cert_chain_size,
+                                                       spdm_context->connection_info.algorithm.base_asym_algo,
+                                                       spdm_context->connection_info.algorithm.base_hash_algo,
+                                                       set_cert_model);
+        }
+        if (spdm_context->connection_info.algorithm.pqc_asym_algo != 0) {
+            result = libspdm_pqc_set_cert_verify_certchain(spdm_version,
+                                                           cert_chain, cert_chain_size,
+                                                           spdm_context->connection_info.algorithm.pqc_asym_algo,
+                                                           spdm_context->connection_info.algorithm.base_hash_algo,
+                                                           set_cert_model);
+        }
         if (!result) {
             return libspdm_generate_error_response(spdm_context,
                                                    SPDM_ERROR_CODE_UNSPECIFIED, 0,
@@ -296,19 +322,30 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
 #endif /*LIBSPDM_CERT_PARSE_SUPPORT*/
 
         /* set certificate to NV*/
-        result = libspdm_write_certificate_to_nvm(
+        if (spdm_context->connection_info.algorithm.base_asym_algo != 0) {
+            result = libspdm_write_certificate_to_nvm(
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT
-            spdm_context,
+                spdm_context,
 #endif
-            slot_id, cert_chain,
-            cert_chain_size,
-            spdm_context->connection_info.algorithm.base_hash_algo,
-            spdm_context->connection_info.algorithm.base_asym_algo
+                slot_id, cert_chain,
+                cert_chain_size,
+                spdm_context->connection_info.algorithm.base_hash_algo,
+                spdm_context->connection_info.algorithm.base_asym_algo
 #if LIBSPDM_SET_CERT_CSR_PARAMS
-            , &need_reset, &is_busy
+                , &need_reset, &is_busy
 #endif /* LIBSPDM_SET_CERT_CSR_PARAMS */
-            );
-
+                );
+        }
+        if (spdm_context->connection_info.algorithm.pqc_asym_algo != 0) {
+            result = libspdm_write_pqc_certificate_to_nvm(
+                spdm_context,
+                slot_id, cert_chain,
+                cert_chain_size,
+                spdm_context->connection_info.algorithm.base_hash_algo,
+                spdm_context->connection_info.algorithm.pqc_asym_algo,
+                &need_reset, &is_busy
+                );
+        }
         if (!result) {
             if (is_busy) {
                 return libspdm_generate_error_response(spdm_context,
