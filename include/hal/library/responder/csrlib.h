@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -115,7 +115,8 @@ extern bool libspdm_gen_csr_ex(
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT
     void *spdm_context,
 #endif
-    uint32_t base_hash_algo, uint32_t base_asym_algo, bool *need_reset,
+    uint32_t base_hash_algo, uint32_t base_asym_algo, uint32_t pqc_asym_algo,
+    bool *need_reset,
     const void *request, size_t request_size,
     uint8_t *requester_info, size_t requester_info_length,
     uint8_t *opaque_data, uint16_t opaque_data_length,
