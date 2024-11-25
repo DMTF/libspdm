@@ -606,17 +606,35 @@ bool libspdm_verify_peer_cert_chain_buffer_integrity(libspdm_context_t *spdm_con
     }
 
     if (is_requester) {
-        result = libspdm_verify_certificate_chain_buffer(
-            spdm_context->connection_info.algorithm.base_hash_algo,
-            spdm_context->connection_info.algorithm.base_asym_algo,
-            cert_chain_buffer, cert_chain_buffer_size,
-            false, is_device_cert_model);
+        if (spdm_context->connection_info.algorithm.base_asym_algo != 0) {
+            result = libspdm_verify_certificate_chain_buffer(
+                spdm_context->connection_info.algorithm.base_hash_algo,
+                spdm_context->connection_info.algorithm.base_asym_algo,
+                cert_chain_buffer, cert_chain_buffer_size,
+                false, is_device_cert_model);
+        }
+        if (spdm_context->connection_info.algorithm.pqc_asym_algo != 0) {
+            result = libspdm_verify_pqc_certificate_chain_buffer(
+                spdm_context->connection_info.algorithm.base_hash_algo,
+                spdm_context->connection_info.algorithm.pqc_asym_algo,
+                cert_chain_buffer, cert_chain_buffer_size,
+                false, is_device_cert_model);
+        }
     } else {
-        result = libspdm_verify_certificate_chain_buffer(
-            spdm_context->connection_info.algorithm.base_hash_algo,
-            spdm_context->connection_info.algorithm.req_base_asym_alg,
-            cert_chain_buffer, cert_chain_buffer_size,
-            true, is_device_cert_model);
+        if (spdm_context->connection_info.algorithm.req_base_asym_alg != 0) {
+            result = libspdm_verify_certificate_chain_buffer(
+                spdm_context->connection_info.algorithm.base_hash_algo,
+                spdm_context->connection_info.algorithm.req_base_asym_alg,
+                cert_chain_buffer, cert_chain_buffer_size,
+                true, is_device_cert_model);
+        }
+        if (spdm_context->connection_info.algorithm.req_pqc_asym_alg != 0) {
+            result = libspdm_verify_pqc_certificate_chain_buffer(
+                spdm_context->connection_info.algorithm.base_hash_algo,
+                spdm_context->connection_info.algorithm.req_pqc_asym_alg,
+                cert_chain_buffer, cert_chain_buffer_size,
+                true, is_device_cert_model);
+        }
     }
 
     return result;
@@ -649,6 +667,12 @@ bool libspdm_verify_peer_cert_chain_buffer_authority(libspdm_context_t *spdm_con
     const uint8_t *received_root_cert;
     size_t received_root_cert_size;
     bool result;
+
+    if ((spdm_context->connection_info.algorithm.pqc_asym_algo != 0) ||
+        (spdm_context->connection_info.algorithm.req_pqc_asym_alg != 0)) {
+        // TBD 1.4 - Need cert chain parsing for PQC.
+        return true;
+    }
 
     root_cert_index = 0;
     root_cert = spdm_context->local_context.peer_root_cert_provision[root_cert_index];
