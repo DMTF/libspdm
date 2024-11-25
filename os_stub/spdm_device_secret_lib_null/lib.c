@@ -204,7 +204,11 @@ bool libspdm_gen_csr(
     uint8_t *requester_info, size_t requester_info_length,
     uint8_t *opaque_data, uint16_t opaque_data_length,
     size_t *csr_len, uint8_t *csr_pointer,
-    bool is_device_cert_model)
+    bool is_device_cert_model
+#if LIBSPDM_SET_CERT_CSR_PARAMS
+    , bool *is_busy, bool *unexpected_request
+#endif
+    )
 {
     return false;
 }
@@ -222,7 +226,11 @@ bool libspdm_gen_csr_ex(
     uint8_t req_cert_model,
     uint8_t *csr_tracking_tag,
     uint8_t req_key_pair_id,
-    bool overwrite)
+    bool overwrite
+#if LIBSPDM_SET_CERT_CSR_PARAMS
+    , bool *is_busy, bool *unexpected_request
+#endif
+    )
 {
     return false;
 }
