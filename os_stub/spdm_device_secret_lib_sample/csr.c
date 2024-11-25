@@ -213,7 +213,11 @@ bool libspdm_gen_csr(
     uint8_t *requester_info, size_t requester_info_length,
     uint8_t *opaque_data, uint16_t opaque_data_length,
     size_t *csr_len, uint8_t *csr_pointer,
-    bool is_device_cert_model)
+    bool is_device_cert_model
+#if LIBSPDM_SET_CERT_CSR_PARAMS
+    , bool *is_busy, bool *unexpected_request
+#endif
+    )
 {
     bool result;
     uint8_t *cached_last_csr_request;
@@ -293,7 +297,11 @@ bool libspdm_gen_csr_ex(
     uint8_t req_cert_model,
     uint8_t *req_csr_tracking_tag,
     uint8_t req_key_pair_id,
-    bool overwrite)
+    bool overwrite
+#if LIBSPDM_SET_CERT_CSR_PARAMS
+    , bool *is_busy, bool *unexpected_request
+#endif
+    )
 {
     bool result;
     uint8_t *cached_last_csr_request;
@@ -327,7 +335,9 @@ bool libspdm_gen_csr_ex(
         if (*req_csr_tracking_tag == 0) {
             if (available_csr_tracking_tag == 0) {
                 /*no available tracking tag*/
-                *req_csr_tracking_tag = 0xFF;
+                #if LIBSPDM_SET_CERT_CSR_PARAMS
+                *is_busy = true;
+                #endif
                 return false;
             } else {
                 flag = false;
@@ -406,7 +416,9 @@ bool libspdm_gen_csr_ex(
                 return true;
             } else {
                 /*the device is busy*/
-                *req_csr_tracking_tag = 0xFF;
+                #if LIBSPDM_SET_CERT_CSR_PARAMS
+                *is_busy = true;
+                #endif
                 return false;
             }
         }
