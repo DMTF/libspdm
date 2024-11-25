@@ -786,32 +786,34 @@ bool libspdm_verify_peer_cert_chain_buffer_integrity(libspdm_context_t *spdm_con
                                                      size_t cert_chain_buffer_size)
 {
     bool result;
-    bool is_device_cert_model;
+    uint8_t cert_model;
     bool is_requester;
 
     is_requester = spdm_context->local_context.is_requester;
 
-    is_device_cert_model = false;
+    cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT;
     /* Responder does not determine Requester's certificate model */
     if (is_requester) {
         if((spdm_context->connection_info.capability.flags &
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP) == 0) {
-            is_device_cert_model = true;
+            cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT;
         }
     }
 
     if (is_requester) {
-        result = libspdm_verify_certificate_chain_buffer(
+        result = libspdm_verify_certificate_chain_buffer_with_pqc(
             spdm_context->connection_info.algorithm.base_hash_algo,
             spdm_context->connection_info.algorithm.base_asym_algo,
+            spdm_context->connection_info.algorithm.pqc_asym_algo,
             cert_chain_buffer, cert_chain_buffer_size,
-            false, is_device_cert_model);
+            false, cert_model);
     } else {
-        result = libspdm_verify_certificate_chain_buffer(
+        result = libspdm_verify_certificate_chain_buffer_with_pqc(
             spdm_context->connection_info.algorithm.base_hash_algo,
             spdm_context->connection_info.algorithm.req_base_asym_alg,
+            spdm_context->connection_info.algorithm.req_pqc_asym_alg,
             cert_chain_buffer, cert_chain_buffer_size,
-            true, is_device_cert_model);
+            true, cert_model);
     }
 
     return result;
