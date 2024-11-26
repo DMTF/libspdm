@@ -473,31 +473,24 @@ size_t libspdm_get_context_size(void);
 size_t libspdm_get_context_size_without_secured_context(void);
 
 /**
- * Send an SPDM transport layer message to a device.
+ * Send an SPDM transport layer message to an endpoint.
  *
- * The message is an SPDM message with transport layer wrapper,
- * or a secured SPDM message with transport layer wrapper.
+ * The message is an SPDM message with transport layer wrapper, or a secured SPDM message with
+ * transport layer wrapper.
  *
- * For requester, the message is a transport layer SPDM request.
- * For responder, the message is a transport layer SPDM response.
+ * For Requester, the message is a transport layer SPDM request.
+ * For Responder, the message is a transport layer SPDM response.
  *
  * @param  spdm_context  A pointer to the SPDM context.
- * @param  message_size  Size in bytes of the message data buffer.
+ * @param  message_size  Size, in bytes, of the message data buffer.
  * @param  message       A pointer to a destination buffer to store the message.
  *                       The caller is responsible for having either implicit or explicit ownership
  *                       of the buffer. The message pointer shall be inside of
  *                       [msg_buf_ptr, msg_buf_ptr + max_msg_size] from acquired sender_buffer.
- * @param  timeout       The timeout, in us units, to use for the execution of the message. A
- *                       timeout value of 0 means that this function will wait indefinitely for the
- *                       message to execute. If timeout is greater than zero, then this function
- *                       will return RETURN_TIMEOUT if the time required to execute the message is
- *                       greater than timeout.
- *
- * @retval RETURN_SUCCESS            The SPDM message is sent successfully.
- * @retval RETURN_DEVICE_ERROR       A device error occurs when the SPDM message is sent to the device.
- * @retval RETURN_INVALID_PARAMETER  The message is NULL or the message_size is zero.
- * @retval RETURN_TIMEOUT            A timeout occurred while waiting for the SPDM message
- *                                   to execute.
+ * @param  timeout       The timeout, in microsends, to use for the execution of the message.
+ *                       If called in a Requester context then timeout is equal to RTT.
+ *                       If called in a Responder context then timeout is equal to 0 and Responder
+ *                       should not timeout when sending the message.
  **/
 typedef libspdm_return_t (*libspdm_device_send_message_func)(void *spdm_context,
                                                              size_t message_size,
@@ -505,37 +498,31 @@ typedef libspdm_return_t (*libspdm_device_send_message_func)(void *spdm_context,
                                                              uint64_t timeout);
 
 /**
- * Receive an SPDM transport layer message from a device.
+ * Receive an SPDM transport layer message from an endpoint.
  *
- * The message is an SPDM message with transport layer wrapper,
- * or a secured SPDM message with transport layer wrapper.
+ * The message is an SPDM message with transport layer wrapper or a secured SPDM message with
+ * transport layer wrapper.
  *
- * For requester, the message is a transport layer SPDM response.
- * For responder, the message is a transport layer SPDM request.
+ * For Requester, the message is a transport layer SPDM response.
+ * For Responder, the message is a transport layer SPDM request.
  *
  * @param  spdm_context  A pointer to the SPDM context.
- * @param  message_size  Size in bytes of the message data buffer.
+ * @param  message_size  Size, in bytes, of the message data buffer.
  * @param  message       A pointer to a destination buffer to store the message.
  *                       The caller is responsible for having either implicit or explicit ownership
  *                       of the buffer. On input, the message pointer shall be msg_buf_ptr from
  *                       acquired receiver_buffer. On output, the message pointer shall be inside of
  *                       [msg_buf_ptr, msg_buf_ptr + max_msg_size] from acquired receiver_buffer.
- * @param  timeout       The timeout, in us units, to use for the execution of the message. A
- *                       timeout value of 0 means that this function will wait indefinitely for the
- *                       message to execute. If timeout is greater than zero, then this function
- *                       will return RETURN_TIMEOUT if the time required to execute the message is
- *                       greater than timeout.
- *
- * @retval RETURN_SUCCESS               The SPDM message is received successfully.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM message is received from the device.
- * @retval RETURN_INVALID_PARAMETER     The message is NULL, message_size is NULL or
- *                                     the *message_size is zero.
- * @retval RETURN_TIMEOUT              A timeout occurred while waiting for the SPDM message
- *                                     to execute.
+ * @param  timeout       The timeout, in microsends, to use for the execution of the message.
+ *                       If called in a Requester context then timeout is equal to RTT plus either
+ *                       CT or ST1.
+ *                       If called in a Responder context then timeout is equal to 0 and Responder
+ *                       should not timeout when receiving the message.
  **/
-typedef libspdm_return_t (*libspdm_device_receive_message_func)(
-    void *spdm_context, size_t *message_size, void **message,
-    uint64_t timeout);
+typedef libspdm_return_t (*libspdm_device_receive_message_func)(void *spdm_context,
+                                                                size_t *message_size,
+                                                                void **message,
+                                                                uint64_t timeout);
 
 /**
  * Register SPDM device input/output functions.
