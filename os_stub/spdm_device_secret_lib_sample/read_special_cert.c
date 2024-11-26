@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2024 DMTF. All rights reserved.
+ *  Copyright 2024-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -69,8 +69,7 @@ bool libspdm_read_responder_root_public_certificate_by_size(
         free(file_data);
         return false;
     }
-    cert_chain->length = (uint16_t)cert_chain_size;
-    cert_chain->reserved = 0;
+    cert_chain->length = (uint32_t)cert_chain_size;
 
     res = libspdm_hash_all(base_hash_algo, file_data, file_size,
                            (uint8_t *)(cert_chain + 1));
@@ -156,8 +155,7 @@ bool libspdm_read_responder_public_certificate_chain_by_size(
         free(file_data);
         return false;
     }
-    cert_chain->length = (uint16_t)cert_chain_size;
-    cert_chain->reserved = 0;
+    cert_chain->length = (uint32_t)cert_chain_size;
 
     res = libspdm_verify_cert_chain_data(file_data, file_size,
                                          base_asym_algo, base_hash_algo,
