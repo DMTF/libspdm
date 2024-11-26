@@ -4,11 +4,6 @@
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
-/** @file
- * SPDM common library.
- * It follows the SPDM Specification.
- **/
-
 #ifndef __SPDM_DEVICE_SECRET_LIB_INTERNAL_H__
 #define __SPDM_DEVICE_SECRET_LIB_INTERNAL_H__
 
@@ -27,6 +22,7 @@
 #include "hal/library/cryptlib.h"
 #include "industry_standard/cxl_tsp.h"
 
+/* for meas test */
 #define LIBSPDM_MEASUREMENT_BLOCK_HASH_NUMBER 4
 #define LIBSPDM_MEASUREMENT_BLOCK_NUMBER (LIBSPDM_MEASUREMENT_BLOCK_HASH_NUMBER /*Index - 1~4*/ + \
                                           1 /*SVN - 0x10*/ + \
@@ -37,24 +33,31 @@
 #define LIBSPDM_MEASUREMENT_INDEX_SVN 0x10
 #define LIBSPDM_MEASUREMENT_INDEX_HEM 0x11
 
+/* for psk test */
 #define LIBSPDM_TEST_PSK_DATA_STRING "TestPskData"
 #define LIBSPDM_TEST_PSK_HINT_STRING "TestPskHint"
 
-#define LIBSPDM_CXL_TSP_2ND_SESSION_0_PSK_DATA_STRING "CxlTsp_2ndSess0_Psk"
-#define LIBSPDM_CXL_TSP_2ND_SESSION_1_PSK_DATA_STRING "CxlTsp_2ndSess1_Psk"
-#define LIBSPDM_CXL_TSP_2ND_SESSION_2_PSK_DATA_STRING "CxlTsp_2ndSess2_Psk"
-#define LIBSPDM_CXL_TSP_2ND_SESSION_3_PSK_DATA_STRING "CxlTsp_2ndSess3_Psk"
-
+/* for cert test */
 #define LIBSPDM_TEST_CERT_MAXINT16 1
 #define LIBSPDM_TEST_CERT_MAXUINT16 2
 #define LIBSPDM_LIBSPDM_TEST_CERT_MAXUINT16_LARGER 3
 #define LIBSPDM_TEST_CERT_SMALL 4
 
+/* "LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY = 1" means use the RAW private key only
+ * "LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY = 0" means controlled by g_private_key_mode
+ **/
+#define LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY 0
+/* "g_private_key_mode = 1" means use the PEM mode
+ * "g_private_key_mode = 0" means use the RAW mode
+ **/
+#if !LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY
+extern bool g_private_key_mode;
+#endif
 
 /* Option to change signing algorithm to little endian. Default is big endian. */
 #define LIBSPDM_SECRET_LIB_SIGN_LITTLE_ENDIAN (0)
 
-/* public cert*/
+/* read pub cert */
 
 bool libspdm_read_responder_public_certificate_chain(
     uint32_t base_hash_algo, uint32_t base_asym_algo, void **data,
@@ -97,6 +100,11 @@ bool libspdm_read_requester_root_public_certificate(uint32_t base_hash_algo,
                                                     void **hash,
                                                     size_t *hash_size);
 
+bool libspdm_read_responder_certificate(uint32_t base_asym_algo,
+                                        void **data, size_t *size);
+
+/* read special cert */
+
 bool libspdm_read_responder_public_certificate_chain_by_size(
     uint32_t base_hash_algo, uint32_t base_asym_algo, uint16_t CertId,
     void **data, size_t *size, void **hash,
@@ -107,11 +115,32 @@ bool libspdm_read_responder_root_public_certificate_by_size(
     void **data, size_t *size, void **hash,
     size_t *hash_size);
 
+/* read pub key der */
+
 bool libspdm_read_responder_public_key(
     uint32_t base_asym_algo, void **data, size_t *size);
 
 bool libspdm_read_requester_public_key(
     uint16_t req_base_asym_alg, void **data, size_t *size);
+
+/* read priv key pem */
+
+#if !LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY
+bool libspdm_read_responder_private_key(uint32_t base_asym_algo,
+                                        void **data, size_t *size);
+#endif
+
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+bool libspdm_read_requester_private_key(uint16_t req_base_asym_alg,
+                                        void **data, size_t *size);
+#endif
+
+/* read priv key raw data */
+
+bool libspdm_get_responder_private_key_from_raw_data(uint32_t base_asym_algo, void **context);
+
+bool libspdm_get_requester_private_key_from_raw_data(uint32_t base_asym_algo, void **context);
+
 
 /* External*/
 
