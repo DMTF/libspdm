@@ -103,6 +103,52 @@ bool libspdm_read_requester_root_public_certificate(uint32_t base_hash_algo,
 bool libspdm_read_responder_certificate(uint32_t base_asym_algo,
                                         void **data, size_t *size);
 
+/* read pub cert pqc */
+
+bool libspdm_read_pqc_responder_public_certificate_chain(
+    uint32_t base_hash_algo, uint32_t pqc_asym_algo, void **data,
+    size_t *size, void **hash, size_t *hash_size);
+
+/*This alias cert chain is partial, from root CA to device certificate CA.*/
+bool libspdm_read_pqc_responder_public_certificate_chain_alias_cert_till_dev_cert_ca(
+    uint32_t base_hash_algo, uint32_t pqc_asym_algo, void **data,
+    size_t *size, void **hash, size_t *hash_size);
+
+/*This alias cert chain is entire, from root CA to leaf certificate.*/
+bool libspdm_read_pqc_responder_public_certificate_chain_alias_cert(
+    uint32_t base_hash_algo, uint32_t pqc_asym_algo, void **data,
+    size_t *size, void **hash, size_t *hash_size);
+
+bool libspdm_read_pqc_responder_public_certificate_chain_per_slot(
+    uint8_t slot_id, uint32_t base_hash_algo, uint32_t pqc_asym_algo,
+    void **data, size_t *size, void **hash, size_t *hash_size);
+
+bool libspdm_read_pqc_requester_public_certificate_chain(
+    uint32_t base_hash_algo, uint32_t req_pqc_asym_alg, void **data,
+    size_t *size, void **hash, size_t *hash_size);
+
+bool libspdm_read_pqc_responder_root_public_certificate(uint32_t base_hash_algo,
+                                                        uint32_t pqc_asym_algo,
+                                                        void **data, size_t *size,
+                                                        void **hash,
+                                                        size_t *hash_size);
+
+bool libspdm_read_pqc_responder_root_public_certificate_slot(uint8_t slot_id,
+                                                             uint32_t base_hash_algo,
+                                                             uint32_t pqc_asym_algo,
+                                                             void **data, size_t *size,
+                                                             void **hash,
+                                                             size_t *hash_size);
+
+bool libspdm_read_pqc_requester_root_public_certificate(uint32_t base_hash_algo,
+                                                        uint32_t req_pqc_asym_alg,
+                                                        void **data, size_t *size,
+                                                        void **hash,
+                                                        size_t *hash_size);
+
+bool libspdm_read_responder_pqc_certificate(uint32_t base_asym_algo,
+                                            void **data, size_t *size);
+
 /* read special cert */
 
 bool libspdm_read_responder_public_certificate_chain_by_size(
@@ -123,6 +169,14 @@ bool libspdm_read_responder_public_key(
 bool libspdm_read_requester_public_key(
     uint16_t req_base_asym_alg, void **data, size_t *size);
 
+/* read pub key der pqc */
+
+bool libspdm_read_responder_pqc_public_key(
+    uint32_t pqc_asym_algo, void **data, size_t *size);
+
+bool libspdm_read_requester_pqc_public_key(
+    uint32_t req_pqc_asym_alg, void **data, size_t *size);
+
 /* read priv key pem */
 
 #if !LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY
@@ -135,11 +189,29 @@ bool libspdm_read_requester_private_key(uint16_t req_base_asym_alg,
                                         void **data, size_t *size);
 #endif
 
+/* read priv key pem pqc */
+
+#if !LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY
+bool libspdm_read_responder_pqc_private_key(uint32_t pqc_asym_algo,
+                                            void **data, size_t *size);
+#endif
+
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+bool libspdm_read_requester_pqc_private_key(uint32_t req_pqc_asym_alg,
+                                            void **data, size_t *size);
+#endif
+
 /* read priv key raw data */
 
 bool libspdm_get_responder_private_key_from_raw_data(uint32_t base_asym_algo, void **context);
 
 bool libspdm_get_requester_private_key_from_raw_data(uint32_t base_asym_algo, void **context);
+
+/* read priv key raw data pqc */
+
+bool libspdm_get_responder_pqc_private_key_from_raw_data(uint32_t pqc_asym_algo, void **context);
+
+bool libspdm_get_requester_pqc_private_key_from_raw_data(uint32_t req_pqc_asym_algo, void **context);
 
 /* key pairs */
 #if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
