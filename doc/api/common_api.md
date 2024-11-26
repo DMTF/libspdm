@@ -113,11 +113,17 @@ Enumeration value used for the `libspdm_set_data` and/or `libspdm_get_data` func
         - The `CTExponent` value of the peer endpoint.
     - `LIBSPDM_DATA_LOCATION_LOCAL`
         - The `CTExponent` value of the local endpoint.
-- `LIBSPDM_DATA_CAPABILITY_RTT`
+- `LIBSPDM_DATA_CAPABILITY_RTT_US`
     - The SPDM specification defines this value (`RTT`) as "the worst-case round-trip transport
-      timing." and is in units of microseconds. This value is only used by a Requester.
+      timing." and is in units of microseconds. This value is only used by a Requester and is used
+      in the following scenarios.
+        - It is the value of the `timeout` argument in `libspdm_device_send_message_func`. When
+          sending a message this is a worst-case value, and the implementor of the function is free
+          to reduce the timeout value based on knowledge of the underlying transport.
+        - It is added to the Responder's `CT` or `ST1` value and passed via the `timeout` argument
+          in `libspdm_device_receive_message_func`.
     - `LIBSPDM_DATA_LOCATION_LOCAL`
-        - The `RTT` of the Requester endpoint.
+        - The `RTT` value as measured by the Requester endpoint.
 - `LIBSPDM_DATA_MEASUREMENT_SPEC`
     - This value specifies the measurement specification(s) supported by an endpoint. These are are
       communicated through the `NEGOTIATE_ALGORITHMS / ALGORITHMS` messages. However the SPDM
