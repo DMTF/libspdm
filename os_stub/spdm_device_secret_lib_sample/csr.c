@@ -98,6 +98,7 @@ bool libspdm_read_cached_csr(uint8_t **csr_pointer, size_t *csr_len)
 }
 
 bool libspdm_gen_csr_without_reset(uint32_t base_hash_algo, uint32_t base_asym_algo,
+                                   uint32_t pqc_asym_algo,
                                    uint8_t *requester_info, size_t requester_info_length,
                                    uint8_t *opaque_data, uint16_t opaque_data_length,
                                    size_t *csr_len, uint8_t *csr_pointer,
@@ -106,6 +107,7 @@ bool libspdm_gen_csr_without_reset(uint32_t base_hash_algo, uint32_t base_asym_a
     bool result;
     size_t hash_nid;
     size_t asym_nid;
+    size_t pqc_asym_nid;
     void *context;
     size_t csr_buffer_size;
 
@@ -117,14 +119,24 @@ bool libspdm_gen_csr_without_reset(uint32_t base_hash_algo, uint32_t base_asym_a
         void *prikey, *cert;
         size_t prikey_size, cert_size;
 
-        result = libspdm_read_responder_private_key(
-            base_asym_algo, &prikey, &prikey_size);
+        if (pqc_asym_algo != 0) {
+            result = libspdm_read_responder_pqc_private_key(
+                pqc_asym_algo, &prikey, &prikey_size);
+        } else {
+            result = libspdm_read_responder_private_key(
+                base_asym_algo, &prikey, &prikey_size);
+        }
         if (!result) {
             return false;
         }
 
-        result = libspdm_read_responder_certificate(
-            base_asym_algo, &cert, &cert_size);
+        if (pqc_asym_algo != 0) {
+            result = libspdm_read_responder_pqc_certificate(
+                pqc_asym_algo, &cert, &cert_size);
+        } else {
+            result = libspdm_read_responder_certificate(
+                base_asym_algo, &cert, &cert_size);
+        }
         if (!result) {
             return false;
         }
@@ -135,8 +147,13 @@ bool libspdm_gen_csr_without_reset(uint32_t base_hash_algo, uint32_t base_asym_a
             return false;
         }
 
-        result = libspdm_asym_get_private_key_from_pem(
-            base_asym_algo, prikey, prikey_size, NULL, &context);
+        if (pqc_asym_algo != 0) {
+            result = libspdm_pqc_asym_get_private_key_from_pem(
+                pqc_asym_algo, prikey, prikey_size, NULL, &context);
+        } else {
+            result = libspdm_asym_get_private_key_from_pem(
+                base_asym_algo, prikey, prikey_size, NULL, &context);
+        }
         if (!result) {
             libspdm_zero_mem(prikey, prikey_size);
             free(prikey);
@@ -144,16 +161,27 @@ bool libspdm_gen_csr_without_reset(uint32_t base_hash_algo, uint32_t base_asym_a
         }
         hash_nid = libspdm_get_hash_nid(base_hash_algo);
         asym_nid = libspdm_get_aysm_nid(base_asym_algo);
+        pqc_asym_nid = libspdm_get_pqc_aysm_nid(pqc_asym_algo);
 
         char *subject_name = "C=NL,O=PolarSSL,CN=PolarSSL Server 1";
 
-        result = libspdm_gen_x509_csr(hash_nid, asym_nid,
-                                      requester_info, requester_info_length,
-                                      !is_device_cert_model,
-                                      context, subject_name,
-                                      csr_len, csr_pointer,
-                                      x509_ca_cert);
-        libspdm_asym_free(base_asym_algo, context);
+        if (pqc_asym_algo != 0) {
+            result = libspdm_gen_x509_csr_with_pqc(hash_nid, 0, pqc_asym_nid,
+                                                   requester_info, requester_info_length,
+                                                   !is_device_cert_model,
+                                                   context, subject_name,
+                                                   csr_len, csr_pointer,
+                                                   x509_ca_cert);
+            libspdm_pqc_asym_free(pqc_asym_algo, context);
+        } else {
+            result = libspdm_gen_x509_csr(hash_nid, asym_nid,
+                                          requester_info, requester_info_length,
+                                          !is_device_cert_model,
+                                          context, subject_name,
+                                          csr_len, csr_pointer,
+                                          x509_ca_cert);
+            libspdm_asym_free(base_asym_algo, context);
+        }
         libspdm_zero_mem(prikey, prikey_size);
         free(prikey);
         free(cert);
@@ -163,13 +191,22 @@ bool libspdm_gen_csr_without_reset(uint32_t base_hash_algo, uint32_t base_asym_a
     void *cert;
     size_t cert_size;
 
-    result = libspdm_get_responder_private_key_from_raw_data(base_asym_algo, &context);
+    if (pqc_asym_algo != 0) {
+        result = libspdm_get_responder_pqc_private_key_from_raw_data(pqc_asym_algo, &context);
+    } else {
+        result = libspdm_get_responder_private_key_from_raw_data(base_asym_algo, &context);
+    }
     if (!result) {
         return false;
     }
 
-    result = libspdm_read_responder_certificate(
-        base_asym_algo, &cert, &cert_size);
+    if (pqc_asym_algo != 0) {
+        result = libspdm_read_responder_pqc_certificate(
+            pqc_asym_algo, &cert, &cert_size);
+    } else {
+        result = libspdm_read_responder_certificate(
+            base_asym_algo, &cert, &cert_size);
+    }
     if (!result) {
         return false;
     }
@@ -182,16 +219,27 @@ bool libspdm_gen_csr_without_reset(uint32_t base_hash_algo, uint32_t base_asym_a
 
     hash_nid = libspdm_get_hash_nid(base_hash_algo);
     asym_nid = libspdm_get_aysm_nid(base_asym_algo);
+    pqc_asym_nid = libspdm_get_pqc_aysm_nid(pqc_asym_algo);
 
     char *subject_name = "C=NL,O=PolarSSL,CN=PolarSSL Server 1";
 
-    result = libspdm_gen_x509_csr(hash_nid, asym_nid,
-                                  requester_info, requester_info_length,
-                                  !is_device_cert_model,
-                                  context, subject_name,
-                                  csr_len, csr_pointer,
-                                  x509_ca_cert);
-    libspdm_asym_free(base_asym_algo, context);
+    if (pqc_asym_algo != 0) {
+        result = libspdm_gen_x509_csr_with_pqc(hash_nid, 0, pqc_asym_nid,
+                                               requester_info, requester_info_length,
+                                               !is_device_cert_model,
+                                               context, subject_name,
+                                               csr_len, csr_pointer,
+                                               x509_ca_cert);
+        libspdm_pqc_asym_free(pqc_asym_algo, context);
+    } else {
+        result = libspdm_gen_x509_csr(hash_nid, asym_nid,
+                                      requester_info, requester_info_length,
+                                      !is_device_cert_model,
+                                      context, subject_name,
+                                      csr_len, csr_pointer,
+                                      x509_ca_cert);
+        libspdm_asym_free(base_asym_algo, context);
+    }
     free(cert);
 #if !LIBSPDM_PRIVATE_KEY_MODE_RAW_KEY_ONLY
 }
@@ -275,7 +323,7 @@ bool libspdm_gen_csr(
             return true;
         }
     } else {
-        result = libspdm_gen_csr_without_reset(base_hash_algo, base_asym_algo,
+        result = libspdm_gen_csr_without_reset(base_hash_algo, base_asym_algo, 0,
                                                requester_info, requester_info_length,
                                                opaque_data, opaque_data_length,
                                                csr_len, csr_pointer, is_device_cert_model);
@@ -289,7 +337,8 @@ bool libspdm_gen_csr_ex(
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT
     void *spdm_context,
 #endif
-    uint32_t base_hash_algo, uint32_t base_asym_algo, bool *need_reset,
+    uint32_t base_hash_algo, uint32_t base_asym_algo, uint32_t pqc_asym_algo,
+    bool *need_reset,
     const void *request, size_t request_size,
     uint8_t *requester_info, size_t requester_info_length,
     uint8_t *opaque_data, uint16_t opaque_data_length,
@@ -428,7 +477,7 @@ bool libspdm_gen_csr_ex(
         } else {
             is_device_cert_model = false;
         }
-        result = libspdm_gen_csr_without_reset(base_hash_algo, base_asym_algo,
+        result = libspdm_gen_csr_without_reset(base_hash_algo, base_asym_algo, pqc_asym_algo,
                                                requester_info, requester_info_length,
                                                opaque_data, opaque_data_length,
                                                csr_len, csr_pointer, is_device_cert_model);
