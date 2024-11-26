@@ -71,8 +71,7 @@ bool libspdm_read_pqc_responder_root_public_certificate(uint32_t base_hash_algo,
         free(file_data);
         return false;
     }
-    cert_chain->length = (uint16_t)cert_chain_size;
-    cert_chain->reserved = 0;
+    cert_chain->length = (uint32_t)cert_chain_size;
 
     res = libspdm_hash_all(base_hash_algo, file_data, file_size,
                            (uint8_t *)(cert_chain + 1));
@@ -170,8 +169,7 @@ bool libspdm_read_pqc_responder_root_public_certificate_slot(uint8_t slot_id,
         free(file_data);
         return false;
     }
-    cert_chain->length = (uint16_t)cert_chain_size;
-    cert_chain->reserved = 0;
+    cert_chain->length = (uint32_t)cert_chain_size;
 
     res = libspdm_hash_all(base_hash_algo, file_data, file_size,
                            (uint8_t *)(cert_chain + 1));
@@ -252,8 +250,7 @@ bool libspdm_read_pqc_requester_root_public_certificate(uint32_t base_hash_algo,
         free(file_data);
         return false;
     }
-    cert_chain->length = (uint16_t)cert_chain_size;
-    cert_chain->reserved = 0;
+    cert_chain->length = (uint32_t)cert_chain_size;
     res = libspdm_hash_all(base_hash_algo, file_data, file_size,
                            (uint8_t *)(cert_chain + 1));
     if (!res) {
@@ -339,8 +336,7 @@ bool libspdm_read_pqc_responder_public_certificate_chain(
         free(file_data);
         return false;
     }
-    cert_chain->length = (uint16_t)cert_chain_size;
-    cert_chain->reserved = 0;
+    cert_chain->length = (uint32_t)cert_chain_size;
 
     res = libspdm_verify_pqc_cert_chain_data(file_data, file_size,
                                              pqc_asym_algo, base_hash_algo,
@@ -450,8 +446,7 @@ bool libspdm_read_pqc_responder_public_certificate_chain_alias_cert_till_dev_cer
         free(file_data);
         return false;
     }
-    cert_chain->length = (uint16_t)cert_chain_size;
-    cert_chain->reserved = 0;
+    cert_chain->length = (uint32_t)cert_chain_size;
 
     /* Get leaf Certificate*/
     res = libspdm_x509_get_cert_from_cert_chain(file_data, file_size, -1, &leaf_cert,
@@ -577,8 +572,7 @@ bool libspdm_read_pqc_responder_public_certificate_chain_alias_cert(
         free(file_data);
         return false;
     }
-    cert_chain->length = (uint16_t)cert_chain_size;
-    cert_chain->reserved = 0;
+    cert_chain->length = (uint32_t)cert_chain_size;
 
     /* Get leaf Certificate*/
     res = libspdm_x509_get_cert_from_cert_chain(file_data, file_size, -1, &leaf_cert,
@@ -718,8 +712,7 @@ bool libspdm_read_pqc_responder_public_certificate_chain_per_slot(
         free(file_data);
         return false;
     }
-    cert_chain->length = (uint16_t)cert_chain_size;
-    cert_chain->reserved = 0;
+    cert_chain->length = (uint32_t)cert_chain_size;
 
     res = libspdm_verify_pqc_cert_chain_data(file_data, file_size,
                                              pqc_asym_algo, base_hash_algo,
@@ -827,8 +820,7 @@ bool libspdm_read_pqc_requester_public_certificate_chain(
         free(file_data);
         return false;
     }
-    cert_chain->length = (uint16_t)cert_chain_size;
-    cert_chain->reserved = 0;
+    cert_chain->length = (uint32_t)cert_chain_size;
 
     res = libspdm_verify_pqc_cert_chain_data(file_data, file_size,
                                              req_pqc_asym_alg, base_hash_algo,
