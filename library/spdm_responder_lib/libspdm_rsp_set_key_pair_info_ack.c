@@ -25,6 +25,8 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
     uint16_t current_key_usage;
     uint32_t asym_algo_capabilities;
     uint32_t current_asym_algo;
+    uint32_t pqc_asym_algo_capabilities;
+    uint32_t current_pqc_asym_algo;
     uint8_t assoc_cert_slot_mask;
     uint8_t key_pair_id;
     uint8_t total_key_pairs;
@@ -33,6 +35,8 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
     uint16_t desired_key_usage;
     uint32_t desired_asym_algo;
     uint8_t desired_assoc_cert_slot_mask;
+    uint32_t desired_pqc_asym_algo_len;
+    uint32_t desired_pqc_asym_algo;
     uint8_t operation;
     bool need_reset;
     const uint8_t *ptr;
@@ -123,6 +127,8 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
         &current_key_usage,
         &asym_algo_capabilities,
         &current_asym_algo,
+        &pqc_asym_algo_capabilities,
+        &current_pqc_asym_algo,
         &assoc_cert_slot_mask,
         NULL, NULL);
     if (!result) {
@@ -151,9 +157,41 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
         ptr += sizeof(uint32_t);
 
         desired_assoc_cert_slot_mask = *ptr;
+        ptr += sizeof(uint8_t);
+
+        desired_pqc_asym_algo = 0;
+        if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_14) {
+            if (request_size < sizeof(spdm_set_key_pair_info_request_t) +
+                sizeof(uint8_t) + sizeof(uint16_t) + sizeof(uint32_t) + sizeof(uint8_t) +
+                sizeof(uint32_t)) {
+                return libspdm_generate_error_response(spdm_context,
+                                                       SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                                       response_size, response);
+            }
+
+            desired_pqc_asym_algo_len = libspdm_read_uint32((const uint8_t *)ptr);
+            ptr += sizeof(uint32_t);
+
+            if (request_size < sizeof(spdm_set_key_pair_info_request_t) +
+                sizeof(uint8_t) + sizeof(uint16_t) + sizeof(uint32_t) + sizeof(uint8_t) +
+                sizeof(uint32_t) + desired_pqc_asym_algo_len) {
+                return libspdm_generate_error_response(spdm_context,
+                                                       SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                                       response_size, response);
+            }
+
+            if (desired_pqc_asym_algo_len > sizeof(uint32_t)) {
+                desired_pqc_asym_algo_len = sizeof(uint32_t);
+            }
+            libspdm_copy_mem (&desired_pqc_asym_algo, sizeof(desired_pqc_asym_algo),
+                              ptr, desired_pqc_asym_algo_len);
+            ptr += desired_pqc_asym_algo_len;
+        }
+
     } else {
         desired_key_usage = 0;
         desired_asym_algo = 0;
+        desired_pqc_asym_algo = 0;
         desired_assoc_cert_slot_mask = 0;
     }
 
@@ -189,12 +227,18 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
                                                response_size, response);
     }
 
-    if (((capabilities & SPDM_KEY_PAIR_CAP_ASYM_ALGO_CAP) == 0) && (desired_asym_algo != 0)) {
+    if (((capabilities & SPDM_KEY_PAIR_CAP_ASYM_ALGO_CAP) == 0) &&
+        ((desired_asym_algo != 0) || (desired_pqc_asym_algo != 0))) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
     }
-    if(!libspdm_onehot0(desired_asym_algo)) {
+    if(!libspdm_onehot0(desired_asym_algo) || !libspdm_onehot0(desired_pqc_asym_algo)) {
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                               response_size, response);
+    }
+    if ((desired_asym_algo != 0) && (desired_pqc_asym_algo != 0)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
@@ -205,6 +249,13 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
     }
+    if ((desired_pqc_asym_algo != 0) &&
+        ((pqc_asym_algo_capabilities | desired_pqc_asym_algo) != pqc_asym_algo_capabilities)) {
+        return libspdm_generate_error_response(
+            spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
+            SPDM_SET_KEY_PAIR_INFO, response_size, response);
+    }
+
     if (((capabilities & SPDM_KEY_PAIR_CAP_SHAREABLE_CAP) == 0) &&
         (!libspdm_onehot0(desired_assoc_cert_slot_mask))) {
         return libspdm_generate_error_response(spdm_context,
@@ -234,6 +285,7 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
         operation,
         desired_key_usage,
         desired_asym_algo,
+        desired_pqc_asym_algo,
         desired_assoc_cert_slot_mask,
         &need_reset);
     if (!result) {
