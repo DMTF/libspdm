@@ -111,8 +111,7 @@ static libspdm_return_t libspdm_try_set_key_pair_info(libspdm_context_t *spdm_co
 
         *ptr = desired_assoc_cert_slot_mask;
         ptr += sizeof(uint8_t);
-        spdm_request_size = sizeof(spdm_set_key_pair_info_request_t);
-        spdm_request_size += ((size_t)ptr - (size_t)spdm_request);
+        spdm_request_size = ((size_t)ptr - (size_t)spdm_request);
     } else {
         spdm_request_size = sizeof(spdm_set_key_pair_info_request_t);
     }
