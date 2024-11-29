@@ -30,147 +30,191 @@ typedef struct {
     uint8_t public_key_info[SPDM_MAX_PUBLIC_KEY_INFO_LEN];
 } libspdm_key_pair_info_t;
 
-#ifndef LIBSPDM_MAX_KEY_PAIR_COUNT
-#define LIBSPDM_MAX_KEY_PAIR_COUNT 16
-#endif
+#define LIBSPDM_MAX_KEY_PAIR_COUNT 9
 
 libspdm_key_pair_info_t m_key_pair_info[LIBSPDM_MAX_KEY_PAIR_COUNT];
 
-bool g_need_init_key_pair_info = true;
+uint8_t m_total_key_pair_count = 0;
 #endif /*LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP*/
 
 #if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
 
-void libspdm_init_key_pair_info(uint8_t total_key_pairs) {
+void libspdm_init_key_pair_info() {
+#if (LIBSPDM_RSA_SSA_SUPPORT || LIBSPDM_RSA_PSS_SUPPORT)
     uint8_t public_key_info_rsa[] = {0x30, 0x0D, 0x06, 0x09, 0x2A, 0x86, 0x48, 0x86, 0xF7,
                                      0x0D, 0x01, 0x01, 0x01, 0x05, 0x00};
+#endif
+#if LIBSPDM_ECDSA_P256_SUPPORT
     uint8_t public_key_info_ecp256[] = {0x30, 0x13, 0x06, 0x07, 0x2A, 0x86, 0x48, 0xCE, 0x3D,
                                         0x02, 0x01, 0x06, 0x08, 0x2A, 0x86, 0x48, 0xCE, 0x3D,
                                         0x03, 0x01, 0x07};
+#endif
+#if LIBSPDM_ECDSA_P384_SUPPORT
     uint8_t public_key_info_ecp384[] = {0x30, 0x10, 0x06, 0x07, 0x2A, 0x86, 0x48, 0xCE, 0x3D,
                                         0x02, 0x01, 0x06, 0x05, 0x2B, 0x81, 0x04, 0x00, 0x22};
+#endif
+#if LIBSPDM_ECDSA_P521_SUPPORT
     uint8_t public_key_info_ecp521[] = {0x30, 0x10, 0x06, 0x07, 0x2A, 0x86, 0x48, 0xCE, 0x3D,
                                         0x02, 0x01, 0x06, 0x05, 0x2B, 0x81, 0x04, 0x00, 0x23};
+#endif
+#if LIBSPDM_SM2_DSA_P256_SUPPORT
     uint8_t public_key_info_sm2[] = {0x30, 0x13, 0x06, 0x07, 0x2A, 0x86, 0x48, 0xCE, 0x3D,
                                      0x02, 0x01, 0x06, 0x08, 0x2A, 0x81, 0x1C, 0xCF, 0x55,
                                      0x01, 0x82, 0x2D};
+#endif
+#if LIBSPDM_EDDSA_ED25519_SUPPORT
     uint8_t public_key_info_ed25519[] = {0x30, 0x05, 0x06, 0x03, 0x2B, 0x65, 0x70};
+#endif
+#if LIBSPDM_EDDSA_ED448_SUPPORT
     uint8_t public_key_info_ed448[] = {0x30, 0x05, 0x06, 0x03, 0x2B, 0x65, 0x71};
-    uint8_t index;
+#endif
+    uint8_t index = 0;
     /*provisioned key pair info*/
 
+#if (LIBSPDM_RSA_SSA_2048_SUPPORT || LIBSPDM_RSA_PSS_2048_SUPPORT)
     /*key_pair_id 1*/
-    m_key_pair_info[0].capabilities = SPDM_KEY_PAIR_CAP_MASK;
-    m_key_pair_info[0].key_usage_capabilities = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
-    m_key_pair_info[0].current_key_usage = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
-    m_key_pair_info[0].asym_algo_capabilities = SPDM_KEY_PAIR_ASYM_ALGO_CAP_MASK;
-    m_key_pair_info[0].assoc_cert_slot_mask = 0x01;
-    m_key_pair_info[0].current_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_RSA2048;
-    m_key_pair_info[0].public_key_info_len = (uint16_t)sizeof(public_key_info_rsa);
-    libspdm_copy_mem(m_key_pair_info[0].public_key_info, m_key_pair_info[0].public_key_info_len,
-                     public_key_info_rsa, m_key_pair_info[0].public_key_info_len);
+    m_key_pair_info[index].capabilities = SPDM_KEY_PAIR_CAP_MASK;
+    m_key_pair_info[index].key_usage_capabilities = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
+    m_key_pair_info[index].current_key_usage = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
+    m_key_pair_info[index].asym_algo_capabilities = SPDM_KEY_PAIR_ASYM_ALGO_CAP_MASK;
+    m_key_pair_info[index].assoc_cert_slot_mask = 0x01;
+    m_key_pair_info[index].current_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_RSA2048;
+    m_key_pair_info[index].public_key_info_len = (uint16_t)sizeof(public_key_info_rsa);
+    libspdm_copy_mem(m_key_pair_info[index].public_key_info,
+                     m_key_pair_info[index].public_key_info_len,
+                     public_key_info_rsa, m_key_pair_info[index].public_key_info_len);
+    index++;
+#endif
 
+#if (LIBSPDM_RSA_SSA_3072_SUPPORT || LIBSPDM_RSA_PSS_3072_SUPPORT)
     /*key_pair_id 2*/
-    m_key_pair_info[1].capabilities = SPDM_KEY_PAIR_CAP_MASK;
-    m_key_pair_info[1].key_usage_capabilities = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
-    m_key_pair_info[1].current_key_usage = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
-    m_key_pair_info[1].asym_algo_capabilities = SPDM_KEY_PAIR_ASYM_ALGO_CAP_MASK;
-    m_key_pair_info[1].assoc_cert_slot_mask = 0x02;
-    m_key_pair_info[1].current_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_RSA3072;
-    m_key_pair_info[1].public_key_info_len = (uint16_t)sizeof(public_key_info_rsa);
-    libspdm_copy_mem(m_key_pair_info[1].public_key_info, m_key_pair_info[1].public_key_info_len,
-                     public_key_info_rsa, m_key_pair_info[1].public_key_info_len);
+    m_key_pair_info[index].capabilities = SPDM_KEY_PAIR_CAP_MASK;
+    m_key_pair_info[index].key_usage_capabilities = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
+    m_key_pair_info[index].current_key_usage = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
+    m_key_pair_info[index].asym_algo_capabilities = SPDM_KEY_PAIR_ASYM_ALGO_CAP_MASK;
+    m_key_pair_info[index].assoc_cert_slot_mask = 0x02;
+    m_key_pair_info[index].current_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_RSA3072;
+    m_key_pair_info[index].public_key_info_len = (uint16_t)sizeof(public_key_info_rsa);
+    libspdm_copy_mem(m_key_pair_info[index].public_key_info,
+                     m_key_pair_info[index].public_key_info_len,
+                     public_key_info_rsa, m_key_pair_info[index].public_key_info_len);
+    index++;
+#endif
 
+#if (LIBSPDM_RSA_SSA_4096_SUPPORT || LIBSPDM_RSA_PSS_4096_SUPPORT)
     /*key_pair_id 3*/
-    m_key_pair_info[2].capabilities = SPDM_KEY_PAIR_CAP_MASK;
-    m_key_pair_info[2].key_usage_capabilities = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
-    m_key_pair_info[2].current_key_usage = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
-    m_key_pair_info[2].asym_algo_capabilities = SPDM_KEY_PAIR_ASYM_ALGO_CAP_MASK;
-    m_key_pair_info[2].assoc_cert_slot_mask = 0x04;
-    m_key_pair_info[2].current_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_RSA4096;
-    m_key_pair_info[2].public_key_info_len = (uint16_t)sizeof(public_key_info_rsa);
-    libspdm_copy_mem(m_key_pair_info[2].public_key_info, m_key_pair_info[2].public_key_info_len,
-                     public_key_info_rsa, m_key_pair_info[2].public_key_info_len);
+    m_key_pair_info[index].capabilities = SPDM_KEY_PAIR_CAP_MASK;
+    m_key_pair_info[index].key_usage_capabilities = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
+    m_key_pair_info[index].current_key_usage = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
+    m_key_pair_info[index].asym_algo_capabilities = SPDM_KEY_PAIR_ASYM_ALGO_CAP_MASK;
+    m_key_pair_info[index].assoc_cert_slot_mask = 0x04;
+    m_key_pair_info[index].current_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_RSA4096;
+    m_key_pair_info[index].public_key_info_len = (uint16_t)sizeof(public_key_info_rsa);
+    libspdm_copy_mem(m_key_pair_info[index].public_key_info,
+                     m_key_pair_info[index].public_key_info_len,
+                     public_key_info_rsa, m_key_pair_info[index].public_key_info_len);
+    index++;
+#endif
 
+#if LIBSPDM_ECDSA_P256_SUPPORT
     /*key_pair_id 4*/
-    m_key_pair_info[3].capabilities = SPDM_KEY_PAIR_CAP_MASK;
-    m_key_pair_info[3].key_usage_capabilities = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
-    m_key_pair_info[3].current_key_usage = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
-    m_key_pair_info[3].asym_algo_capabilities = SPDM_KEY_PAIR_ASYM_ALGO_CAP_MASK;
-    m_key_pair_info[3].assoc_cert_slot_mask = 0x08;
-    m_key_pair_info[3].current_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_ECC256;
-    m_key_pair_info[3].public_key_info_len = (uint16_t)sizeof(public_key_info_ecp256);
-    libspdm_copy_mem(m_key_pair_info[3].public_key_info, m_key_pair_info[3].public_key_info_len,
-                     public_key_info_ecp256, m_key_pair_info[3].public_key_info_len);
+    m_key_pair_info[index].capabilities = SPDM_KEY_PAIR_CAP_MASK;
+    m_key_pair_info[index].key_usage_capabilities = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
+    m_key_pair_info[index].current_key_usage = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
+    m_key_pair_info[index].asym_algo_capabilities = SPDM_KEY_PAIR_ASYM_ALGO_CAP_MASK;
+    m_key_pair_info[index].assoc_cert_slot_mask = 0x08;
+    m_key_pair_info[index].current_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_ECC256;
+    m_key_pair_info[index].public_key_info_len = (uint16_t)sizeof(public_key_info_ecp256);
+    libspdm_copy_mem(m_key_pair_info[index].public_key_info,
+                     m_key_pair_info[index].public_key_info_len,
+                     public_key_info_ecp256, m_key_pair_info[index].public_key_info_len);
+    index++;
+#endif
 
+#if LIBSPDM_ECDSA_P384_SUPPORT
     /*key_pair_id 5*/
-    m_key_pair_info[4].capabilities = SPDM_KEY_PAIR_CAP_MASK;
-    m_key_pair_info[4].key_usage_capabilities = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
-    m_key_pair_info[4].current_key_usage = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
-    m_key_pair_info[4].asym_algo_capabilities = SPDM_KEY_PAIR_ASYM_ALGO_CAP_MASK;
-    m_key_pair_info[4].assoc_cert_slot_mask = 0x10;
-    m_key_pair_info[4].current_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_ECC384;
-    m_key_pair_info[4].public_key_info_len = (uint16_t)sizeof(public_key_info_ecp384);
-    libspdm_copy_mem(m_key_pair_info[4].public_key_info, m_key_pair_info[4].public_key_info_len,
-                     public_key_info_ecp384, m_key_pair_info[4].public_key_info_len);
+    m_key_pair_info[index].capabilities = SPDM_KEY_PAIR_CAP_MASK;
+    m_key_pair_info[index].key_usage_capabilities = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
+    m_key_pair_info[index].current_key_usage = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
+    m_key_pair_info[index].asym_algo_capabilities = SPDM_KEY_PAIR_ASYM_ALGO_CAP_MASK;
+    m_key_pair_info[index].assoc_cert_slot_mask = 0x10;
+    m_key_pair_info[index].current_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_ECC384;
+    m_key_pair_info[index].public_key_info_len = (uint16_t)sizeof(public_key_info_ecp384);
+    libspdm_copy_mem(m_key_pair_info[index].public_key_info,
+                     m_key_pair_info[index].public_key_info_len,
+                     public_key_info_ecp384, m_key_pair_info[index].public_key_info_len);
+    index++;
+#endif
 
+#if LIBSPDM_ECDSA_P521_SUPPORT
     /*key_pair_id 6*/
-    m_key_pair_info[5].capabilities = SPDM_KEY_PAIR_CAP_MASK;
-    m_key_pair_info[5].key_usage_capabilities = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
-    m_key_pair_info[5].current_key_usage = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
-    m_key_pair_info[5].asym_algo_capabilities = SPDM_KEY_PAIR_ASYM_ALGO_CAP_MASK;
-    m_key_pair_info[5].assoc_cert_slot_mask = 0x20;
-    m_key_pair_info[5].current_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_ECC521;
-    m_key_pair_info[5].public_key_info_len = (uint16_t)sizeof(public_key_info_ecp521);
-    libspdm_copy_mem(m_key_pair_info[5].public_key_info, m_key_pair_info[5].public_key_info_len,
-                     public_key_info_ecp521, m_key_pair_info[5].public_key_info_len);
+    m_key_pair_info[index].capabilities = SPDM_KEY_PAIR_CAP_MASK;
+    m_key_pair_info[index].key_usage_capabilities = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
+    m_key_pair_info[index].current_key_usage = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
+    m_key_pair_info[index].asym_algo_capabilities = SPDM_KEY_PAIR_ASYM_ALGO_CAP_MASK;
+    m_key_pair_info[index].assoc_cert_slot_mask = 0x20;
+    m_key_pair_info[index].current_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_ECC521;
+    m_key_pair_info[index].public_key_info_len = (uint16_t)sizeof(public_key_info_ecp521);
+    libspdm_copy_mem(m_key_pair_info[index].public_key_info,
+                     m_key_pair_info[index].public_key_info_len,
+                     public_key_info_ecp521, m_key_pair_info[index].public_key_info_len);
+    index++;
+#endif
 
+#if LIBSPDM_SM2_DSA_P256_SUPPORT
     /*key_pair_id 7*/
-    m_key_pair_info[6].capabilities = SPDM_KEY_PAIR_CAP_MASK;
-    m_key_pair_info[6].key_usage_capabilities = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
-    m_key_pair_info[6].current_key_usage = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
-    m_key_pair_info[6].asym_algo_capabilities = SPDM_KEY_PAIR_ASYM_ALGO_CAP_MASK;
-    m_key_pair_info[6].assoc_cert_slot_mask = 0x40;
-    m_key_pair_info[6].current_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_SM2;
-    m_key_pair_info[6].public_key_info_len = (uint16_t)sizeof(public_key_info_sm2);
-    libspdm_copy_mem(m_key_pair_info[6].public_key_info, m_key_pair_info[6].public_key_info_len,
-                     public_key_info_sm2, m_key_pair_info[6].public_key_info_len);
+    m_key_pair_info[index].capabilities = SPDM_KEY_PAIR_CAP_MASK;
+    m_key_pair_info[index].key_usage_capabilities = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
+    m_key_pair_info[index].current_key_usage = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
+    m_key_pair_info[index].asym_algo_capabilities = SPDM_KEY_PAIR_ASYM_ALGO_CAP_MASK;
+    m_key_pair_info[index].assoc_cert_slot_mask = 0x40;
+    m_key_pair_info[index].current_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_SM2;
+    m_key_pair_info[index].public_key_info_len = (uint16_t)sizeof(public_key_info_sm2);
+    libspdm_copy_mem(m_key_pair_info[index].public_key_info,
+                     m_key_pair_info[index].public_key_info_len,
+                     public_key_info_sm2, m_key_pair_info[index].public_key_info_len);
+    index++;
+#endif
 
+#if LIBSPDM_EDDSA_ED25519_SUPPORT
     /*key_pair_id 8*/
-    m_key_pair_info[7].capabilities = SPDM_KEY_PAIR_CAP_MASK;
-    m_key_pair_info[7].key_usage_capabilities = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
-    m_key_pair_info[7].current_key_usage = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
-    m_key_pair_info[7].asym_algo_capabilities = SPDM_KEY_PAIR_ASYM_ALGO_CAP_MASK;
-    m_key_pair_info[7].assoc_cert_slot_mask = 0x80;
-    m_key_pair_info[7].current_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_ED25519;
-    m_key_pair_info[7].public_key_info_len = (uint16_t)sizeof(public_key_info_ed25519);
-    libspdm_copy_mem(m_key_pair_info[7].public_key_info, m_key_pair_info[7].public_key_info_len,
-                     public_key_info_ed25519, m_key_pair_info[7].public_key_info_len);
+    m_key_pair_info[index].capabilities = SPDM_KEY_PAIR_CAP_MASK;
+    m_key_pair_info[index].key_usage_capabilities = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
+    m_key_pair_info[index].current_key_usage = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
+    m_key_pair_info[index].asym_algo_capabilities = SPDM_KEY_PAIR_ASYM_ALGO_CAP_MASK;
+    m_key_pair_info[index].assoc_cert_slot_mask = 0x80;
+    m_key_pair_info[index].current_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_ED25519;
+    m_key_pair_info[index].public_key_info_len = (uint16_t)sizeof(public_key_info_ed25519);
+    libspdm_copy_mem(m_key_pair_info[index].public_key_info,
+                     m_key_pair_info[index].public_key_info_len,
+                     public_key_info_ed25519, m_key_pair_info[index].public_key_info_len);
+    index++;
+#endif
 
+#if LIBSPDM_EDDSA_ED448_SUPPORT
     /*key_pair_id 9*/
-    m_key_pair_info[8].capabilities = SPDM_KEY_PAIR_CAP_MASK;
-    m_key_pair_info[8].key_usage_capabilities = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
-    m_key_pair_info[8].current_key_usage = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
-    m_key_pair_info[8].asym_algo_capabilities = SPDM_KEY_PAIR_ASYM_ALGO_CAP_MASK;
-    m_key_pair_info[8].assoc_cert_slot_mask = 0x00;
-    m_key_pair_info[8].current_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_ED448;
-    m_key_pair_info[8].public_key_info_len = (uint16_t)sizeof(public_key_info_ed448);
-    libspdm_copy_mem(m_key_pair_info[8].public_key_info, m_key_pair_info[8].public_key_info_len,
-                     public_key_info_ed448, m_key_pair_info[8].public_key_info_len);
+    m_key_pair_info[index].capabilities = SPDM_KEY_PAIR_CAP_MASK;
+    m_key_pair_info[index].key_usage_capabilities = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
+    m_key_pair_info[index].current_key_usage = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
+    m_key_pair_info[index].asym_algo_capabilities = SPDM_KEY_PAIR_ASYM_ALGO_CAP_MASK;
+    m_key_pair_info[index].assoc_cert_slot_mask = 0x00;
+    m_key_pair_info[index].current_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_ED448;
+    m_key_pair_info[index].public_key_info_len = (uint16_t)sizeof(public_key_info_ed448);
+    libspdm_copy_mem(m_key_pair_info[index].public_key_info,
+                     m_key_pair_info[index].public_key_info_len,
+                     public_key_info_ed448, m_key_pair_info[index].public_key_info_len);
+    index++;
+#endif
 
-    /*provisioned more key pair info*/
-    for (index = 10; index <= total_key_pairs; index++) {
-        m_key_pair_info[index - 1].capabilities = SPDM_KEY_PAIR_CAP_MASK;
-        m_key_pair_info[index - 1].key_usage_capabilities = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
-        m_key_pair_info[index - 1].current_key_usage = SPDM_KEY_USAGE_BIT_MASK_KEY_EX_USE;
-        m_key_pair_info[index - 1].asym_algo_capabilities = SPDM_KEY_PAIR_ASYM_ALGO_CAP_MASK;
-        m_key_pair_info[index - 1].assoc_cert_slot_mask = 0x00;
-        m_key_pair_info[index - 1].current_asym_algo = SPDM_KEY_PAIR_ASYM_ALGO_CAP_ED448;
-        m_key_pair_info[index - 1].public_key_info_len = (uint16_t)sizeof(public_key_info_ed448);
-        libspdm_copy_mem(m_key_pair_info[index - 1].public_key_info,
-                         m_key_pair_info[index - 1].public_key_info_len,
-                         public_key_info_ed448, m_key_pair_info[index - 1].public_key_info_len);
+    m_total_key_pair_count = index;
+}
+
+uint8_t libspdm_read_total_key_pairs ()
+{
+    if (m_total_key_pair_count == 0) {
+        libspdm_init_key_pair_info();
     }
+    return m_total_key_pair_count;
 }
 
 /**
@@ -206,28 +250,8 @@ bool libspdm_read_key_pair_info(
     uint16_t *public_key_info_len,
     uint8_t *public_key_info)
 {
-    uint8_t total_key_pairs;
-    libspdm_data_parameter_t parameter;
-    size_t data_return_size;
-    libspdm_return_t status;
-
-    parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
-    data_return_size = sizeof(uint8_t);
-    status = libspdm_get_data(spdm_context, LIBSPDM_DATA_TOTAL_KEY_PAIRS,
-                              &parameter, &total_key_pairs, &data_return_size);
-    if (status != LIBSPDM_STATUS_SUCCESS) {
-        return false;
-    }
-
-    LIBSPDM_ASSERT(total_key_pairs <= LIBSPDM_MAX_KEY_PAIR_COUNT);
-
-    if (g_need_init_key_pair_info) {
-        libspdm_init_key_pair_info(total_key_pairs);
-        g_need_init_key_pair_info = false;
-    }
-
     /*check*/
-    if (key_pair_id > total_key_pairs) {
+    if (key_pair_id > libspdm_read_total_key_pairs()) {
         return false;
     }
 
@@ -308,6 +332,9 @@ bool libspdm_write_key_pair_info(
     libspdm_cached_key_pair_info_data_t current_key_pair_info;
     size_t cached_key_pair_info_len;
 
+    if (key_pair_id > libspdm_read_total_key_pairs()) {
+        return false;
+    }
 
     cached_key_pair_info_len = 0;
     if (*need_reset) {
