@@ -50,11 +50,14 @@ bool libspdm_write_certificate_to_nvm(
 #endif /* LIBSPDM_SET_CERT_CSR_PARAMS */
     )
 {
+#if LIBSPDM_SET_CERT_CSR_PARAMS
     if (g_set_cert_is_busy) {
         *is_busy = true;
 
         return false;
-    } else {
+    } else
+#endif /* LIBSPDM_SET_CERT_CSR_PARAMS */
+    {
     #if defined(_WIN32) || (defined(__clang__) && (defined (LIBSPDM_CPU_AARCH64) || \
         defined(LIBSPDM_CPU_ARM)))
         FILE *fp_out;

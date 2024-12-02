@@ -446,7 +446,7 @@
  * This macro will be removed when libspdm 4.0 is released.
  */
 #ifndef LIBSPDM_SET_CERT_CSR_PARAMS
-#define LIBSPDM_SET_CERT_CSR_PARAMS 1
+#define LIBSPDM_SET_CERT_CSR_PARAMS 0
 #endif
 
 #endif /* SPDM_LIB_CONFIG_H */
