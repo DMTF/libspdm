@@ -491,6 +491,9 @@ size_t libspdm_get_context_size_without_secured_context(void);
  *                       If called in a Requester context then timeout is equal to RTT.
  *                       If called in a Responder context then timeout is equal to 0 and Responder
  *                       should not timeout when sending the message.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS   The message was successfully sent to the receiving endpoint.
+ * @retval LIBSPDM_STATUS_SEND_FAIL Unable to send message to the receiving endpoint.
  **/
 typedef libspdm_return_t (*libspdm_device_send_message_func)(void *spdm_context,
                                                              size_t message_size,
@@ -518,6 +521,10 @@ typedef libspdm_return_t (*libspdm_device_send_message_func)(void *spdm_context,
  *                       CT or ST1.
  *                       If called in a Responder context then timeout is equal to 0 and Responder
  *                       should not timeout when receiving the message.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS      The message was successfully received from the sending
+ *                                     endpoint.
+ * @retval LIBSPDM_STATUS_RECEIVE_FAIL Unable to receive message from the sending endpoint.
  **/
 typedef libspdm_return_t (*libspdm_device_receive_message_func)(void *spdm_context,
                                                                 size_t *message_size,
