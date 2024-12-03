@@ -7,6 +7,7 @@
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
 #include "internal/libspdm_responder_lib.h"
+#include "spdm_device_secret_lib_internal.h"
 
 #if LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP
 
@@ -33,7 +34,7 @@ void libspdm_test_responder_set_key_pair_info_ack(void **State)
         m_libspdm_use_asym_algo;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_KEY_PAIR_INFO_CAP;
-    spdm_context->local_context.total_key_pairs = 16;
+    spdm_context->local_context.total_key_pairs = libspdm_read_total_key_pairs();
 
     response_size = sizeof(response);
     libspdm_get_response_set_key_pair_info_ack(spdm_context,
