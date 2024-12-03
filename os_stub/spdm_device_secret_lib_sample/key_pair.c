@@ -35,9 +35,6 @@ typedef struct {
 libspdm_key_pair_info_t m_key_pair_info[LIBSPDM_MAX_KEY_PAIR_COUNT];
 
 uint8_t m_total_key_pair_count = 0;
-#endif /*LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP*/
-
-#if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
 
 void libspdm_init_key_pair_info() {
 #if (LIBSPDM_RSA_SSA_SUPPORT || LIBSPDM_RSA_PSS_SUPPORT)
@@ -250,6 +247,23 @@ bool libspdm_read_key_pair_info(
     uint16_t *public_key_info_len,
     uint8_t *public_key_info)
 {
+    LIBSPDM_DEBUG_CODE (
+        uint8_t total_key_pairs;
+        libspdm_data_parameter_t parameter;
+        size_t data_return_size;
+        libspdm_return_t status;
+
+        parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
+        data_return_size = sizeof(uint8_t);
+        status = libspdm_get_data(spdm_context, LIBSPDM_DATA_TOTAL_KEY_PAIRS,
+                                  &parameter, &total_key_pairs, &data_return_size);
+        if (status != LIBSPDM_STATUS_SUCCESS) {
+        return false;
+    }
+
+        LIBSPDM_ASSERT(total_key_pairs == libspdm_read_total_key_pairs());
+        );
+
     /*check*/
     if (key_pair_id > libspdm_read_total_key_pairs()) {
         return false;
@@ -332,6 +346,24 @@ bool libspdm_write_key_pair_info(
     libspdm_cached_key_pair_info_data_t current_key_pair_info;
     size_t cached_key_pair_info_len;
 
+    LIBSPDM_DEBUG_CODE (
+        uint8_t total_key_pairs;
+        libspdm_data_parameter_t parameter;
+        size_t data_return_size;
+        libspdm_return_t status;
+
+        parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
+        data_return_size = sizeof(uint8_t);
+        status = libspdm_get_data(spdm_context, LIBSPDM_DATA_TOTAL_KEY_PAIRS,
+                                  &parameter, &total_key_pairs, &data_return_size);
+        if (status != LIBSPDM_STATUS_SUCCESS) {
+        return false;
+    }
+
+        LIBSPDM_ASSERT(total_key_pairs == libspdm_read_total_key_pairs());
+        );
+
+    /*check*/
     if (key_pair_id > libspdm_read_total_key_pairs()) {
         return false;
     }

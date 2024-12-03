@@ -141,6 +141,10 @@ bool libspdm_get_responder_private_key_from_raw_data(uint32_t base_asym_algo, vo
 
 bool libspdm_get_requester_private_key_from_raw_data(uint32_t base_asym_algo, void **context);
 
+/* key pairs */
+#if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
+uint8_t libspdm_read_total_key_pairs();
+#endif
 
 /* External*/
 
