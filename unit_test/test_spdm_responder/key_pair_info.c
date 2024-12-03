@@ -45,7 +45,7 @@ void libspdm_test_responder_key_pair_info_case1(void **state)
         m_libspdm_use_asym_algo;
     spdm_context->local_context.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_GET_KEY_PAIR_INFO_CAP;
-    spdm_context->local_context.total_key_pairs = 16;
+    spdm_context->local_context.total_key_pairs = libspdm_read_total_key_pairs();
 
     key_pair_id = 4;
     public_key_info_len = sizeof(public_key_info_ecp256);
@@ -96,7 +96,7 @@ void libspdm_test_responder_key_pair_info_case2(void **state)
     key_pair_id = 0;
     m_libspdm_get_key_pair_info_request1.key_pair_id = key_pair_id;
 
-    spdm_context->local_context.total_key_pairs = 1;
+    spdm_context->local_context.total_key_pairs = libspdm_read_total_key_pairs();
 
     response_size = sizeof(response);
 
@@ -136,9 +136,9 @@ void libspdm_test_responder_key_pair_info_case3(void **state)
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_GET_KEY_PAIR_INFO_CAP;
 
     /* key_pair_id > total_key_pairs*/
-    key_pair_id = 2;
+    key_pair_id = libspdm_read_total_key_pairs() + 1;
     m_libspdm_get_key_pair_info_request1.key_pair_id = key_pair_id;
-    spdm_context->local_context.total_key_pairs = 1;
+    spdm_context->local_context.total_key_pairs = libspdm_read_total_key_pairs();
 
     response_size = sizeof(response);
 
@@ -181,7 +181,7 @@ void libspdm_test_responder_key_pair_info_case4(void **state)
     key_pair_id = 1;
     m_libspdm_get_key_pair_info_request1.key_pair_id = key_pair_id;
 
-    spdm_context->local_context.total_key_pairs = key_pair_id;
+    spdm_context->local_context.total_key_pairs = libspdm_read_total_key_pairs();
 
     response_size = sizeof(response);
 
