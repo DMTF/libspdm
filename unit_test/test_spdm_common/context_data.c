@@ -1564,21 +1564,21 @@ int libspdm_common_context_data_test_main(void)
 
         cmocka_unit_test(libspdm_test_set_data_case9),
 
-        /* Successful response V1.1 for multi element opaque data supported vesion, element number is 2*/
+        /* Successful response V1.1 for multi element opaque data supported version, element number is 2*/
         cmocka_unit_test(libspdm_test_process_opaque_data_supported_version_data_case10),
-        /* Failed response V1.1 for multi element opaque data supported vesion, element id is wrong*/
+        /* Failed response V1.1 for multi element opaque data supported version, element id is wrong*/
         cmocka_unit_test(libspdm_test_process_opaque_data_supported_version_data_case11),
-        /* Successful response V1.2 for multi element opaque data supported vesion, element number is 2*/
+        /* Successful response V1.2 for multi element opaque data supported version, element number is 2*/
         cmocka_unit_test(libspdm_test_process_opaque_data_supported_version_data_case12),
-        /* Failed response V1.2 for multi element opaque data supported vesion, element id is wrong*/
+        /* Failed response V1.2 for multi element opaque data supported version, element id is wrong*/
         cmocka_unit_test(libspdm_test_process_opaque_data_supported_version_data_case13),
-        /* Successful response V1.1 for multi element opaque data selecetion vesion, element number is 2*/
+        /* Successful response V1.1 for multi element opaque data selection version, element number is 2*/
         cmocka_unit_test(libspdm_test_process_opaque_data_selection_version_data_case14),
-        /* Failed response V1.1 for multi element opaque data selecetion vesion, element number is wrong*/
+        /* Failed response V1.1 for multi element opaque data selection version, element number is wrong*/
         cmocka_unit_test(libspdm_test_process_opaque_data_selection_version_data_case15),
-        /* Successful response V1.2 for multi element opaque data selecetion vesion, element number is 2*/
+        /* Successful response V1.2 for multi element opaque data selection version, element number is 2*/
         cmocka_unit_test(libspdm_test_process_opaque_data_selection_version_data_case16),
-        /* Failed response V1.2 for multi element opaque data selecetion vesion, element number is wrong*/
+        /* Failed response V1.2 for multi element opaque data selection version, element number is wrong*/
         cmocka_unit_test(libspdm_test_process_opaque_data_selection_version_data_case17),
 
         /* Successful initialization and setting of secured message context location. */

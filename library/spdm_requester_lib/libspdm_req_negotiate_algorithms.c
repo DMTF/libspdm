@@ -312,7 +312,7 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
                  sizeof(uint32_t) * spdm_response->ext_hash_sel_count);
     if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
         alg_type_pre = struct_table->alg_type;
-        /* header.param1 is implictly checked through spdm_response_size. */
+        /* header.param1 is implicitly checked through spdm_response_size. */
         for (index = 0; index < spdm_response->header.param1; index++) {
             if ((size_t)spdm_response + spdm_response_size < (size_t)struct_table) {
                 status = LIBSPDM_STATUS_INVALID_MSG_SIZE;

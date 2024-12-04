@@ -537,8 +537,8 @@ typedef libspdm_return_t (*libspdm_device_receive_message_func)(void *spdm_conte
  * This function must be called after libspdm_init_context, and before any SPDM communication.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
- * @param  send_message                  The fuction to send an SPDM transport layer message.
- * @param  receive_message               The fuction to receive an SPDM transport layer message.
+ * @param  send_message                  The function to send an SPDM transport layer message.
+ * @param  receive_message               The function to receive an SPDM transport layer message.
  **/
 void libspdm_register_device_io_func(
     void *spdm_context, libspdm_device_send_message_func send_message,
@@ -628,10 +628,10 @@ typedef void (*libspdm_device_release_receiver_buffer_func)(void *spdm_context,
  * @param  spdm_context             A pointer to the SPDM context.
  * @param  sender_buffer_size       Size in bytes of the sender buffer.
  * @param  receiver_buffer_size     Size in bytes of the receiver buffer.
- * @param  acquire_sender_buffer    The fuction to acquire transport layer sender buffer.
- * @param  release_sender_buffer    The fuction to release transport layer sender buffer.
- * @param  acquire_receiver_buffer  The fuction to acquire transport layer receiver buffer.
- * @param  release_receiver_buffer  The fuction to release transport layer receiver buffer.
+ * @param  acquire_sender_buffer    The function to acquire transport layer sender buffer.
+ * @param  release_sender_buffer    The function to release transport layer sender buffer.
+ * @param  acquire_receiver_buffer  The function to acquire transport layer receiver buffer.
+ * @param  release_receiver_buffer  The function to release transport layer receiver buffer.
  **/
 void libspdm_register_device_buffer_func(
     void *spdm_context,
@@ -732,8 +732,8 @@ typedef uint32_t (*libspdm_transport_get_header_size_func)(void *spdm_context);
  * This function must be called after libspdm_init_context, and before any SPDM communication.
  *
  * @param  spdm_context               A pointer to the SPDM context.
- * @param  transport_encode_message   The fuction to encode an SPDM or APP message to a transport layer message.
- * @param  transport_decode_message   The fuction to decode an SPDM or APP message from a transport layer message.
+ * @param  transport_encode_message   The function to encode an SPDM or APP message to a transport layer message.
+ * @param  transport_decode_message   The function to decode an SPDM or APP message from a transport layer message.
  **/
 void libspdm_register_transport_layer_func(
     void *spdm_context,
@@ -827,7 +827,7 @@ typedef bool (*libspdm_verify_spdm_cert_chain_func)(
  * This function must be called after libspdm_init_context, and before any SPDM communication.
  *
  * @param  spdm_context        A pointer to the SPDM context.
- * @param  verify_certificate  The fuction to verify an SPDM certificate after GET_CERTIFICATE.
+ * @param  verify_certificate  The function to verify an SPDM certificate after GET_CERTIFICATE.
  **/
 void libspdm_register_verify_spdm_cert_chain_func(
     void *spdm_context,

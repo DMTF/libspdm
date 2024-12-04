@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -146,7 +146,7 @@ libspdm_return_t libspdm_process_opaque_data_version_selection_data(libspdm_cont
     opaque_element_table_header = (const secured_message_opaque_element_table_header_t*)
                                   get_element_ptr;
 
-    /*check for selection vesion data*/
+    /* Check for selection version data. */
     if ((opaque_element_table_header->vendor_len != 0) ||
         (opaque_element_table_header->opaque_element_data_len !=
          sizeof(secured_message_opaque_element_version_selection_t))) {
