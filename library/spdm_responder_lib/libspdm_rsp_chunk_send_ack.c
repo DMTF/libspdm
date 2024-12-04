@@ -82,7 +82,7 @@ libspdm_return_t libspdm_get_response_chunk_send(libspdm_context_t *spdm_context
     }
 
     if (spdm_context->chunk_context.get.chunk_in_use) {
-        /* Spec does not support simultanious chunk send and chunk get */
+        /* Specification does not support simultaneous chunk send and chunk get. */
         return libspdm_generate_error_response(
             spdm_context, SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
             response_size, response);

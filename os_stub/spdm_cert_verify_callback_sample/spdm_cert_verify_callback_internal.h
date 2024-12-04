@@ -14,7 +14,7 @@
  *
  * @param  spdm_context            A pointer to the SPDM context.
  * @param  slot_id                 The number of slot for the certificate chain.
- *                                 This params is not uesed, just for compatible in this function.
+ *                                 This params is not used, just for compatible in this function.
  * @param  cert_chain_size         size in bytes of the certificate chain buffer.
  * @param  cert_chain              Certificate chain buffer including spdm_cert_chain_t header.
  * @param  trust_anchor            A buffer to hold the trust_anchor which is used to validate the peer certificate, if not NULL.

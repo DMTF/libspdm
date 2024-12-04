@@ -489,7 +489,7 @@ typedef struct {
 typedef struct {
     spdm_message_header_t header;
     /* param1 == RSVD (supported_slot_mask in 1.3)
-     * param2 == slot_mask (provisioned_slot_mask in 1.3) determing slot_count
+     * param2 == slot_mask (provisioned_slot_mask in 1.3) determine slot_count
      * cert slot state:
      * 1) not exist:           supported_slot_mask[slot_id] = 0
      * 2) exist and empty:     supported_slot_mask[slot_id] = 1 && provisioned_slot_mask[slot_id] = 0

@@ -148,7 +148,7 @@ libspdm_return_t libspdm_handle_simple_error_response(libspdm_context_t *spdm_co
  *                                     On input, it means the size in bytes of response data buffer.
  *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned.
  * @param  response                     The SPDM response message.
- * @param  original_request_code          Indicate the orginal request code.
+ * @param  original_request_code          Indicate the original request code.
  * @param  expected_response_code         Indicate the expected response code.
  *
  * @retval RETURN_SUCCESS               The RESPOND_IF_READY is sent and an expected SPDM response is received.

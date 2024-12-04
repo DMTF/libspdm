@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2024 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -25,7 +25,7 @@
  * the 64-bit definition defined in libspdm and generates compile errors. */
 
 /* To workaround this issue, LIBSPDM_OPENSSL_STDINT_WORKAROUND was created
- * that is only defined for compilation via tha makefile of the OpenSSL library
+ * that is only defined for compilation via the makefile of the OpenSSL library
  * portion of libspdm. */
 
 /* This will lead to _WIN32 and _WIN64 to be NOT defined when reaching the OpenSSL

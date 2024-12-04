@@ -156,7 +156,7 @@ extern bool libspdm_x509_get_extension_data(const uint8_t *cert, size_t cert_siz
  * @param[out]     to         notAfter Pointer to date_time object.
  * @param[in,out]  to_size    notAfter date_time object size.
  *
- * Note: libspdm_x509_compare_date_time to compare date_time oject
+ * Note: libspdm_x509_compare_date_time to compare date_time object
  *       x509SetDateTime to get a date_time object from a date_time_str
  *
  * @retval  true   if the from_size and from_size are not equal 0.
@@ -200,7 +200,7 @@ extern bool libspdm_x509_set_date_time(const char *date_time_str, void *date_tim
  * If date_time1 > date_time2, then return 1
  * If date_time1 < date_time2, then return -1
  *
- * @param[in]      date_time1  Pointer to a date_time Ojbect
+ * @param[in]      date_time1  Pointer to a date_time Object
  * @param[in]      date_time2  Pointer to a date_time Object
  *
  * @retval   0  If date_time1 == date_time2
