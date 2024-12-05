@@ -169,7 +169,7 @@ For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/m
 
 1) [Mbed TLS](https://tls.mbed.org) as cryptography library. Version 3.6.2.
 
-2) [OpenSSL](https://www.openssl.org) as cryptography library. Version 3.0.9.
+2) [OpenSSL](https://www.openssl.org) as cryptography library. Version 3.0.14.
 
 ### Unit Test framework
 
