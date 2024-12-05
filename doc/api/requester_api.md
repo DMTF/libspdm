@@ -102,6 +102,53 @@ libspdm will perform the following checks over the leaf certificate.
 <br/><br/>
 
 ---
+### libspdm_get_certificate_choose_length_ex
+---
+
+### Description
+Sends GET_CERTIFICATE and retrieves a certificate chain in one slot from the device, allowing the Integrator to specify the size of the certificate chain blocks.
+
+### Parameters
+
+**spdm_context**<br/>
+The SPDM context.
+
+**session_id**<br/>
+Indicates if it is a secured message (non-NULL) or an unsecured message (NULL).
+
+**slot_id**<br/>
+The certificate chain slot number.
+
+**length**<br/>
+The length of the certificate chain block to be retrieved.
+
+**cert_chain_size**<br/>
+On input, indicates the size, in bytes, of the buffer in which the certificate chain will be stored.
+The maximum size of an SPDM certificate chain is given by `SPDM_MAX_CERTIFICATE_CHAIN_SIZE` and is
+65535 bytes.
+On output, indicates the size, in bytes, of the certificate chain.
+
+**cert_chain**<br/>
+A pointer to a buffer of size `cert_chain_size` in which the certificate chain will be stored.
+
+**trust_anchor**<br/>
+A buffer to hold the trust anchor which is used to validate the peer certificate. If NULL, the trust anchor is not stored.
+
+**trust_anchor_size**<br/>
+A buffer to hold the size of the trust anchor. If NULL, the trust anchor size is not stored.
+
+### Details
+Before calling this function the Integrator should have determined which certificate chain slots are
+populated through `libspdm_get_digest`, although that is not strictly required. Once the certificate
+chain has been retrieved libspdm will validate the chain and its leaf certificate. This function performs the following operations:
+1. Sends the `GET_CERTIFICATE` request to the device for the specified slot.
+2. Retrieves the certificate chain in blocks of the specified size (`length`).
+3. Verifies the integrity of the certificate chain from the root certificate to the leaf certificate, following the structure:
+   - root_hash -> Root certificate -> Intermediate certificate -> Leaf certificate.
+4. If a peer root certificate hash is deployed, validates the root certificate digest against the deployed root hash.
+<br/><br/>
+
+---
 ### libspdm_challenge
 ---
 
