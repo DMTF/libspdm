@@ -471,7 +471,7 @@ libspdm_return_t libspdm_get_certificate_choose_length(void *spdm_context,
 libspdm_return_t libspdm_get_certificate_choose_length_ex(void *spdm_context,
                                                           const uint32_t *session_id,
                                                           uint8_t slot_id,
-                                                          uint16_t length,
+                                                          uint32_t length,
                                                           size_t *cert_chain_size,
                                                           void *cert_chain,
                                                           const void **trust_anchor,
@@ -482,12 +482,15 @@ libspdm_return_t libspdm_get_certificate_choose_length_ex(void *spdm_context,
     uint64_t retry_delay_time;
     libspdm_return_t status;
 
+    /* -=[Check Parameters Phase]=- */
+    LIBSPDM_ASSERT(length <= 0xFFFF);
+
     context = spdm_context;
     context->crypto_request = true;
     retry = context->retry_times;
     retry_delay_time = context->retry_delay_time;
     do {
-        status = libspdm_try_get_certificate(context, session_id, slot_id, length,
+        status = libspdm_try_get_certificate(context, session_id, slot_id, (uint16_t)length,
                                              cert_chain_size, cert_chain, trust_anchor,
                                              trust_anchor_size);
         if (status != LIBSPDM_STATUS_BUSY_PEER) {
