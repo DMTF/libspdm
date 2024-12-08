@@ -1,0 +1,385 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - os_stub/mbedtlslib/mbedtls/library/base64.c</title>
+  <link rel="stylesheet" type="text/css" href="../../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../../../index.html">top level</a> - <a href="index.html">os_stub/mbedtlslib/mbedtls/library</a> - base64.c<span style="font-size: 80%;"> (source / <a href="base64.c.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">49</td>
+            <td class="headerCovTableEntry">125</td>
+            <td class="headerCovTableEntryLo">39.2 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2024-12-08 08:04:43</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">5</td>
+            <td class="headerCovTableEntryLo">40.0 %</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntry">33</td>
+            <td class="headerCovTableEntry">84</td>
+            <td class="headerCovTableEntryLo">39.3 %</td>
+          </tr>
+          <tr><td><img src="../../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">           Branch data     Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>                :            : /*</a>
+<a name="2"><span class="lineNum">       2 </span>                :            :  *  RFC 1521 base64 encoding/decoding</a>
+<a name="3"><span class="lineNum">       3 </span>                :            :  *</a>
+<a name="4"><span class="lineNum">       4 </span>                :            :  *  Copyright The Mbed TLS Contributors</a>
+<a name="5"><span class="lineNum">       5 </span>                :            :  *  SPDX-License-Identifier: Apache-2.0 OR GPL-2.0-or-later</a>
+<a name="6"><span class="lineNum">       6 </span>                :            :  */</a>
+<a name="7"><span class="lineNum">       7 </span>                :            : </a>
+<a name="8"><span class="lineNum">       8 </span>                :            : #include &lt;limits.h&gt;</a>
+<a name="9"><span class="lineNum">       9 </span>                :            : </a>
+<a name="10"><span class="lineNum">      10 </span>                :            : #include &quot;common.h&quot;</a>
+<a name="11"><span class="lineNum">      11 </span>                :            : </a>
+<a name="12"><span class="lineNum">      12 </span>                :            : #if defined(MBEDTLS_BASE64_C)</a>
+<a name="13"><span class="lineNum">      13 </span>                :            : </a>
+<a name="14"><span class="lineNum">      14 </span>                :            : #include &quot;mbedtls/base64.h&quot;</a>
+<a name="15"><span class="lineNum">      15 </span>                :            : #include &quot;base64_internal.h&quot;</a>
+<a name="16"><span class="lineNum">      16 </span>                :            : #include &quot;constant_time_internal.h&quot;</a>
+<a name="17"><span class="lineNum">      17 </span>                :            : </a>
+<a name="18"><span class="lineNum">      18 </span>                :            : #include &lt;stdint.h&gt;</a>
+<a name="19"><span class="lineNum">      19 </span>                :            : </a>
+<a name="20"><span class="lineNum">      20 </span>                :            : #if defined(MBEDTLS_SELF_TEST)</a>
+<a name="21"><span class="lineNum">      21 </span>                :            : #include &lt;string.h&gt;</a>
+<a name="22"><span class="lineNum">      22 </span>                :            : #include &quot;mbedtls/platform.h&quot;</a>
+<a name="23"><span class="lineNum">      23 </span>                :            : #endif /* MBEDTLS_SELF_TEST */</a>
+<a name="24"><span class="lineNum">      24 </span>                :            : </a>
+<a name="25"><span class="lineNum">      25 </span>                :            : MBEDTLS_STATIC_TESTABLE</a>
+<a name="26"><span class="lineNum">      26 </span>                :<span class="lineNoCov">          0 : unsigned char mbedtls_ct_base64_enc_char(unsigned char value)</span></a>
+<a name="27"><span class="lineNum">      27 </span>                :            : {</a>
+<a name="28"><span class="lineNum">      28 </span>                :<span class="lineNoCov">          0 :     unsigned char digit = 0;</span></a>
+<a name="29"><span class="lineNum">      29 </span>                :            :     /* For each range of values, if value is in that range, mask digit with</a>
+<a name="30"><span class="lineNum">      30 </span>                :            :      * the corresponding value. Since value can only be in a single range,</a>
+<a name="31"><span class="lineNum">      31 </span>                :            :      * only at most one masking will change digit. */</a>
+<a name="32"><span class="lineNum">      32 </span>                :<span class="lineNoCov">          0 :     digit |= mbedtls_ct_uchar_in_range_if(0, 25, value, 'A' + value);</span></a>
+<a name="33"><span class="lineNum">      33 </span>                :<span class="lineNoCov">          0 :     digit |= mbedtls_ct_uchar_in_range_if(26, 51, value, 'a' + value - 26);</span></a>
+<a name="34"><span class="lineNum">      34 </span>                :<span class="lineNoCov">          0 :     digit |= mbedtls_ct_uchar_in_range_if(52, 61, value, '0' + value - 52);</span></a>
+<a name="35"><span class="lineNum">      35 </span>                :<span class="lineNoCov">          0 :     digit |= mbedtls_ct_uchar_in_range_if(62, 62, value, '+');</span></a>
+<a name="36"><span class="lineNum">      36 </span>                :<span class="lineNoCov">          0 :     digit |= mbedtls_ct_uchar_in_range_if(63, 63, value, '/');</span></a>
+<a name="37"><span class="lineNum">      37 </span>                :<span class="lineNoCov">          0 :     return digit;</span></a>
+<a name="38"><span class="lineNum">      38 </span>                :            : }</a>
+<a name="39"><span class="lineNum">      39 </span>                :            : </a>
+<a name="40"><span class="lineNum">      40 </span>                :            : MBEDTLS_STATIC_TESTABLE</a>
+<a name="41"><span class="lineNum">      41 </span>                :<span class="lineCov">     193008 : signed char mbedtls_ct_base64_dec_value(unsigned char c)</span></a>
+<a name="42"><span class="lineNum">      42 </span>                :            : {</a>
+<a name="43"><span class="lineNum">      43 </span>                :<span class="lineCov">     193008 :     unsigned char val = 0;</span></a>
+<a name="44"><span class="lineNum">      44 </span>                :            :     /* For each range of digits, if c is in that range, mask val with</a>
+<a name="45"><span class="lineNum">      45 </span>                :            :      * the corresponding value. Since c can only be in a single range,</a>
+<a name="46"><span class="lineNum">      46 </span>                :            :      * only at most one masking will change val. Set val to one plus</a>
+<a name="47"><span class="lineNum">      47 </span>                :            :      * the desired value so that it stays 0 if c is in none of the ranges. */</a>
+<a name="48"><span class="lineNum">      48 </span>                :<span class="lineCov">     193008 :     val |= mbedtls_ct_uchar_in_range_if('A', 'Z', c, c - 'A' +  0 + 1);</span></a>
+<a name="49"><span class="lineNum">      49 </span>                :<span class="lineCov">     193008 :     val |= mbedtls_ct_uchar_in_range_if('a', 'z', c, c - 'a' + 26 + 1);</span></a>
+<a name="50"><span class="lineNum">      50 </span>                :<span class="lineCov">     193008 :     val |= mbedtls_ct_uchar_in_range_if('0', '9', c, c - '0' + 52 + 1);</span></a>
+<a name="51"><span class="lineNum">      51 </span>                :<span class="lineCov">     193008 :     val |= mbedtls_ct_uchar_in_range_if('+', '+', c, c - '+' + 62 + 1);</span></a>
+<a name="52"><span class="lineNum">      52 </span>                :<span class="lineCov">     193008 :     val |= mbedtls_ct_uchar_in_range_if('/', '/', c, c - '/' + 63 + 1);</span></a>
+<a name="53"><span class="lineNum">      53 </span>                :            :     /* At this point, val is 0 if c is an invalid digit and v+1 if c is</a>
+<a name="54"><span class="lineNum">      54 </span>                :            :      * a digit with the value v. */</a>
+<a name="55"><span class="lineNum">      55 </span>                :<span class="lineCov">     193008 :     return val - 1;</span></a>
+<a name="56"><span class="lineNum">      56 </span>                :            : }</a>
+<a name="57"><span class="lineNum">      57 </span>                :            : </a>
+<a name="58"><span class="lineNum">      58 </span>                :            : /*</a>
+<a name="59"><span class="lineNum">      59 </span>                :            :  * Encode a buffer into base64 format</a>
+<a name="60"><span class="lineNum">      60 </span>                :            :  */</a>
+<a name="61"><span class="lineNum">      61 </span>                :<span class="lineNoCov">          0 : int mbedtls_base64_encode(unsigned char *dst, size_t dlen, size_t *olen,</span></a>
+<a name="62"><span class="lineNum">      62 </span>                :            :                           const unsigned char *src, size_t slen)</a>
+<a name="63"><span class="lineNum">      63 </span>                :            : {</a>
+<a name="64"><span class="lineNum">      64 </span>                :            :     size_t i, n;</a>
+<a name="65"><span class="lineNum">      65 </span>                :            :     int C1, C2, C3;</a>
+<a name="66"><span class="lineNum">      66 </span>                :            :     unsigned char *p;</a>
+<a name="67"><span class="lineNum">      67 </span>                :            : </a>
+<a name="68"><span class="lineNum">      68 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     if (slen == 0) {</span></a>
+<a name="69"><span class="lineNum">      69 </span>                :<span class="lineNoCov">          0 :         *olen = 0;</span></a>
+<a name="70"><span class="lineNum">      70 </span>                :<span class="lineNoCov">          0 :         return 0;</span></a>
+<a name="71"><span class="lineNum">      71 </span>                :            :     }</a>
+<a name="72"><span class="lineNum">      72 </span>                :            : </a>
+<a name="73"><span class="lineNum">      73 </span>                :<span class="lineNoCov">          0 :     n = slen / 3 + (slen % 3 != 0);</span></a>
+<a name="74"><span class="lineNum">      74 </span>                :            : </a>
+<a name="75"><span class="lineNum">      75 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     if (n &gt; (SIZE_MAX - 1) / 4) {</span></a>
+<a name="76"><span class="lineNum">      76 </span>                :<span class="lineNoCov">          0 :         *olen = SIZE_MAX;</span></a>
+<a name="77"><span class="lineNum">      77 </span>                :<span class="lineNoCov">          0 :         return MBEDTLS_ERR_BASE64_BUFFER_TOO_SMALL;</span></a>
+<a name="78"><span class="lineNum">      78 </span>                :            :     }</a>
+<a name="79"><span class="lineNum">      79 </span>                :            : </a>
+<a name="80"><span class="lineNum">      80 </span>                :<span class="lineNoCov">          0 :     n *= 4;</span></a>
+<a name="81"><span class="lineNum">      81 </span>                :            : </a>
+<a name="82"><span class="lineNum">      82 </span>  [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span><span class="branchNoExec" title="Branch 2 was not executed"> # </span><span class="branchNoExec" title="Branch 3 was not executed"> # </span>]:<span class="lineNoCov">          0 :     if ((dlen &lt; n + 1) || (NULL == dst)) {</span></a>
+<a name="83"><span class="lineNum">      83 </span>                :<span class="lineNoCov">          0 :         *olen = n + 1;</span></a>
+<a name="84"><span class="lineNum">      84 </span>                :<span class="lineNoCov">          0 :         return MBEDTLS_ERR_BASE64_BUFFER_TOO_SMALL;</span></a>
+<a name="85"><span class="lineNum">      85 </span>                :            :     }</a>
+<a name="86"><span class="lineNum">      86 </span>                :            : </a>
+<a name="87"><span class="lineNum">      87 </span>                :<span class="lineNoCov">          0 :     n = (slen / 3) * 3;</span></a>
+<a name="88"><span class="lineNum">      88 </span>                :            : </a>
+<a name="89"><span class="lineNum">      89 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     for (i = 0, p = dst; i &lt; n; i += 3) {</span></a>
+<a name="90"><span class="lineNum">      90 </span>                :<span class="lineNoCov">          0 :         C1 = *src++;</span></a>
+<a name="91"><span class="lineNum">      91 </span>                :<span class="lineNoCov">          0 :         C2 = *src++;</span></a>
+<a name="92"><span class="lineNum">      92 </span>                :<span class="lineNoCov">          0 :         C3 = *src++;</span></a>
+<a name="93"><span class="lineNum">      93 </span>                :            : </a>
+<a name="94"><span class="lineNum">      94 </span>                :<span class="lineNoCov">          0 :         *p++ = mbedtls_ct_base64_enc_char((C1 &gt;&gt; 2) &amp; 0x3F);</span></a>
+<a name="95"><span class="lineNum">      95 </span>                :<span class="lineNoCov">          0 :         *p++ = mbedtls_ct_base64_enc_char((((C1 &amp;  3) &lt;&lt; 4) + (C2 &gt;&gt; 4))</span></a>
+<a name="96"><span class="lineNum">      96 </span>                :<span class="lineNoCov">          0 :                                           &amp; 0x3F);</span></a>
+<a name="97"><span class="lineNum">      97 </span>                :<span class="lineNoCov">          0 :         *p++ = mbedtls_ct_base64_enc_char((((C2 &amp; 15) &lt;&lt; 2) + (C3 &gt;&gt; 6))</span></a>
+<a name="98"><span class="lineNum">      98 </span>                :<span class="lineNoCov">          0 :                                           &amp; 0x3F);</span></a>
+<a name="99"><span class="lineNum">      99 </span>                :<span class="lineNoCov">          0 :         *p++ = mbedtls_ct_base64_enc_char(C3 &amp; 0x3F);</span></a>
+<a name="100"><span class="lineNum">     100 </span>                :            :     }</a>
+<a name="101"><span class="lineNum">     101 </span>                :            : </a>
+<a name="102"><span class="lineNum">     102 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     if (i &lt; slen) {</span></a>
+<a name="103"><span class="lineNum">     103 </span>                :<span class="lineNoCov">          0 :         C1 = *src++;</span></a>
+<a name="104"><span class="lineNum">     104 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :         C2 = ((i + 1) &lt; slen) ? *src++ : 0;</span></a>
+<a name="105"><span class="lineNum">     105 </span>                :            : </a>
+<a name="106"><span class="lineNum">     106 </span>                :<span class="lineNoCov">          0 :         *p++ = mbedtls_ct_base64_enc_char((C1 &gt;&gt; 2) &amp; 0x3F);</span></a>
+<a name="107"><span class="lineNum">     107 </span>                :<span class="lineNoCov">          0 :         *p++ = mbedtls_ct_base64_enc_char((((C1 &amp; 3) &lt;&lt; 4) + (C2 &gt;&gt; 4))</span></a>
+<a name="108"><span class="lineNum">     108 </span>                :<span class="lineNoCov">          0 :                                           &amp; 0x3F);</span></a>
+<a name="109"><span class="lineNum">     109 </span>                :            : </a>
+<a name="110"><span class="lineNum">     110 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :         if ((i + 1) &lt; slen) {</span></a>
+<a name="111"><span class="lineNum">     111 </span>                :<span class="lineNoCov">          0 :             *p++ = mbedtls_ct_base64_enc_char(((C2 &amp; 15) &lt;&lt; 2) &amp; 0x3F);</span></a>
+<a name="112"><span class="lineNum">     112 </span>                :            :         } else {</a>
+<a name="113"><span class="lineNum">     113 </span>                :<span class="lineNoCov">          0 :             *p++ = '=';</span></a>
+<a name="114"><span class="lineNum">     114 </span>                :            :         }</a>
+<a name="115"><span class="lineNum">     115 </span>                :            : </a>
+<a name="116"><span class="lineNum">     116 </span>                :<span class="lineNoCov">          0 :         *p++ = '=';</span></a>
+<a name="117"><span class="lineNum">     117 </span>                :            :     }</a>
+<a name="118"><span class="lineNum">     118 </span>                :            : </a>
+<a name="119"><span class="lineNum">     119 </span>                :<span class="lineNoCov">          0 :     *olen = (size_t) (p - dst);</span></a>
+<a name="120"><span class="lineNum">     120 </span>                :<span class="lineNoCov">          0 :     *p = 0;</span></a>
+<a name="121"><span class="lineNum">     121 </span>                :            : </a>
+<a name="122"><span class="lineNum">     122 </span>                :<span class="lineNoCov">          0 :     return 0;</span></a>
+<a name="123"><span class="lineNum">     123 </span>                :            : }</a>
+<a name="124"><span class="lineNum">     124 </span>                :            : </a>
+<a name="125"><span class="lineNum">     125 </span>                :            : /*</a>
+<a name="126"><span class="lineNum">     126 </span>                :            :  * Decode a base64-formatted buffer</a>
+<a name="127"><span class="lineNum">     127 </span>                :            :  */</a>
+<a name="128"><span class="lineNum">     128 </span>                :<span class="lineCov">        308 : int mbedtls_base64_decode(unsigned char *dst, size_t dlen, size_t *olen,</span></a>
+<a name="129"><span class="lineNum">     129 </span>                :            :                           const unsigned char *src, size_t slen)</a>
+<a name="130"><span class="lineNum">     130 </span>                :            : {</a>
+<a name="131"><span class="lineNum">     131 </span>                :            :     size_t i; /* index in source */</a>
+<a name="132"><span class="lineNum">     132 </span>                :            :     size_t n; /* number of digits or trailing = in source */</a>
+<a name="133"><span class="lineNum">     133 </span>                :            :     uint32_t x; /* value accumulator */</a>
+<a name="134"><span class="lineNum">     134 </span>                :<span class="lineCov">        308 :     unsigned accumulated_digits = 0;</span></a>
+<a name="135"><span class="lineNum">     135 </span>                :<span class="lineCov">        308 :     unsigned equals = 0;</span></a>
+<a name="136"><span class="lineNum">     136 </span>                :<span class="lineCov">        308 :     int spaces_present = 0;</span></a>
+<a name="137"><span class="lineNum">     137 </span>                :            :     unsigned char *p;</a>
+<a name="138"><span class="lineNum">     138 </span>                :            : </a>
+<a name="139"><span class="lineNum">     139 </span>                :            :     /* First pass: check for validity and get output length */</a>
+<a name="140"><span class="lineNum">     140 </span>        [<span class="branchCov" title="Branch 0 was taken 132820 times"> + </span><span class="branchCov" title="Branch 1 was taken 308 times"> + </span>]:<span class="lineCov">     133128 :     for (i = n = 0; i &lt; slen; i++) {</span></a>
+<a name="141"><span class="lineNum">     141 </span>                :            :         /* Skip spaces before checking for EOL */</a>
+<a name="142"><span class="lineNum">     142 </span>                :<span class="lineCov">     132820 :         spaces_present = 0;</span></a>
+<a name="143"><span class="lineNum">     143 </span>  [<span class="branchCov" title="Branch 0 was taken 132820 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 132820 times"> + </span>]:<span class="lineCov">     132820 :         while (i &lt; slen &amp;&amp; src[i] == ' ') {</span></a>
+<a name="144"><span class="lineNum">     144 </span>                :<span class="lineNoCov">          0 :             ++i;</span></a>
+<a name="145"><span class="lineNum">     145 </span>                :<span class="lineNoCov">          0 :             spaces_present = 1;</span></a>
+<a name="146"><span class="lineNum">     146 </span>                :            :         }</a>
+<a name="147"><span class="lineNum">     147 </span>                :            : </a>
+<a name="148"><span class="lineNum">     148 </span>                :            :         /* Spaces at end of buffer are OK */</a>
+<a name="149"><span class="lineNum">     149 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 132820 times"> + </span>]:<span class="lineCov">     132820 :         if (i == slen) {</span></a>
+<a name="150"><span class="lineNum">     150 </span>                :<span class="lineNoCov">          0 :             break;</span></a>
+<a name="151"><span class="lineNum">     151 </span>                :            :         }</a>
+<a name="152"><span class="lineNum">     152 </span>                :            : </a>
+<a name="153"><span class="lineNum">     153 </span>        [<span class="branchCov" title="Branch 0 was taken 132512 times"> + </span><span class="branchCov" title="Branch 1 was taken 308 times"> + </span>]:<span class="lineCov">     132820 :         if ((slen - i) &gt;= 2 &amp;&amp;</span></a>
+<a name="154"><span class="lineNum">     154 </span>  [<span class="branchCov" title="Branch 0 was taken 2074 times"> + </span><span class="branchCov" title="Branch 1 was taken 130438 times"> + </span><span class="branchCov" title="Branch 2 was taken 2074 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>]:<span class="lineCov">     132512 :             src[i] == '\r' &amp;&amp; src[i + 1] == '\n') {</span></a>
+<a name="155"><span class="lineNum">     155 </span>                :<span class="lineCov">       2074 :             continue;</span></a>
+<a name="156"><span class="lineNum">     156 </span>                :            :         }</a>
+<a name="157"><span class="lineNum">     157 </span>                :            : </a>
+<a name="158"><span class="lineNum">     158 </span>        [<span class="branchCov" title="Branch 0 was taken 2074 times"> + </span><span class="branchCov" title="Branch 1 was taken 128672 times"> + </span>]:<span class="lineCov">     130746 :         if (src[i] == '\n') {</span></a>
+<a name="159"><span class="lineNum">     159 </span>                :<span class="lineCov">       2074 :             continue;</span></a>
+<a name="160"><span class="lineNum">     160 </span>                :            :         }</a>
+<a name="161"><span class="lineNum">     161 </span>                :            : </a>
+<a name="162"><span class="lineNum">     162 </span>                :            :         /* Space inside a line is an error */</a>
+<a name="163"><span class="lineNum">     163 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 128672 times"> + </span>]:<span class="lineCov">     128672 :         if (spaces_present) {</span></a>
+<a name="164"><span class="lineNum">     164 </span>                :<span class="lineNoCov">          0 :             return MBEDTLS_ERR_BASE64_INVALID_CHARACTER;</span></a>
+<a name="165"><span class="lineNum">     165 </span>                :            :         }</a>
+<a name="166"><span class="lineNum">     166 </span>                :            : </a>
+<a name="167"><span class="lineNum">     167 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 128672 times"> + </span>]:<span class="lineCov">     128672 :         if (src[i] &gt; 127) {</span></a>
+<a name="168"><span class="lineNum">     168 </span>                :<span class="lineNoCov">          0 :             return MBEDTLS_ERR_BASE64_INVALID_CHARACTER;</span></a>
+<a name="169"><span class="lineNum">     169 </span>                :            :         }</a>
+<a name="170"><span class="lineNum">     170 </span>                :            : </a>
+<a name="171"><span class="lineNum">     171 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 128672 times"> + </span>]:<span class="lineCov">     128672 :         if (src[i] == '=') {</span></a>
+<a name="172"><span class="lineNum">     172 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :             if (++equals &gt; 2) {</span></a>
+<a name="173"><span class="lineNum">     173 </span>                :<span class="lineNoCov">          0 :                 return MBEDTLS_ERR_BASE64_INVALID_CHARACTER;</span></a>
+<a name="174"><span class="lineNum">     174 </span>                :            :             }</a>
+<a name="175"><span class="lineNum">     175 </span>                :            :         } else {</a>
+<a name="176"><span class="lineNum">     176 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 128672 times"> + </span>]:<span class="lineCov">     128672 :             if (equals != 0) {</span></a>
+<a name="177"><span class="lineNum">     177 </span>                :<span class="lineNoCov">          0 :                 return MBEDTLS_ERR_BASE64_INVALID_CHARACTER;</span></a>
+<a name="178"><span class="lineNum">     178 </span>                :            :             }</a>
+<a name="179"><span class="lineNum">     179 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 128672 times"> + </span>]:<span class="lineCov">     128672 :             if (mbedtls_ct_base64_dec_value(src[i]) &lt; 0) {</span></a>
+<a name="180"><span class="lineNum">     180 </span>                :<span class="lineNoCov">          0 :                 return MBEDTLS_ERR_BASE64_INVALID_CHARACTER;</span></a>
+<a name="181"><span class="lineNum">     181 </span>                :            :             }</a>
+<a name="182"><span class="lineNum">     182 </span>                :            :         }</a>
+<a name="183"><span class="lineNum">     183 </span>                :<span class="lineCov">     128672 :         n++;</span></a>
+<a name="184"><span class="lineNum">     184 </span>                :            :     }</a>
+<a name="185"><span class="lineNum">     185 </span>                :            : </a>
+<a name="186"><span class="lineNum">     186 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 308 times"> + </span>]:<span class="lineCov">        308 :     if (n == 0) {</span></a>
+<a name="187"><span class="lineNum">     187 </span>                :<span class="lineNoCov">          0 :         *olen = 0;</span></a>
+<a name="188"><span class="lineNum">     188 </span>                :<span class="lineNoCov">          0 :         return 0;</span></a>
+<a name="189"><span class="lineNum">     189 </span>                :            :     }</a>
+<a name="190"><span class="lineNum">     190 </span>                :            : </a>
+<a name="191"><span class="lineNum">     191 </span>                :            :     /* The following expression is to calculate the following formula without</a>
+<a name="192"><span class="lineNum">     192 </span>                :            :      * risk of integer overflow in n:</a>
+<a name="193"><span class="lineNum">     193 </span>                :            :      *     n = ( ( n * 6 ) + 7 ) &gt;&gt; 3;</a>
+<a name="194"><span class="lineNum">     194 </span>                :            :      */</a>
+<a name="195"><span class="lineNum">     195 </span>                :<span class="lineCov">        308 :     n = (6 * (n &gt;&gt; 3)) + ((6 * (n &amp; 0x7) + 7) &gt;&gt; 3);</span></a>
+<a name="196"><span class="lineNum">     196 </span>                :<span class="lineCov">        308 :     n -= equals;</span></a>
+<a name="197"><span class="lineNum">     197 </span>                :            : </a>
+<a name="198"><span class="lineNum">     198 </span>  [<span class="branchCov" title="Branch 0 was taken 154 times"> + </span><span class="branchCov" title="Branch 1 was taken 154 times"> + </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 154 times"> + </span>]:<span class="lineCov">        308 :     if (dst == NULL || dlen &lt; n) {</span></a>
+<a name="199"><span class="lineNum">     199 </span>                :<span class="lineCov">        154 :         *olen = n;</span></a>
+<a name="200"><span class="lineNum">     200 </span>                :<span class="lineCov">        154 :         return MBEDTLS_ERR_BASE64_BUFFER_TOO_SMALL;</span></a>
+<a name="201"><span class="lineNum">     201 </span>                :            :     }</a>
+<a name="202"><span class="lineNum">     202 </span>                :            : </a>
+<a name="203"><span class="lineNum">     203 </span>                :<span class="lineCov">        154 :     equals = 0;</span></a>
+<a name="204"><span class="lineNum">     204 </span>        [<span class="branchCov" title="Branch 0 was taken 66410 times"> + </span><span class="branchCov" title="Branch 1 was taken 154 times"> + </span>]:<span class="lineCov">      66564 :     for (x = 0, p = dst; i &gt; 0; i--, src++) {</span></a>
+<a name="205"><span class="lineNum">     205 </span>  [<span class="branchCov" title="Branch 0 was taken 65373 times"> + </span><span class="branchCov" title="Branch 1 was taken 1037 times"> + </span><span class="branchCov" title="Branch 2 was taken 64336 times"> + </span><span class="branchCov" title="Branch 3 was taken 1037 times"> + </span> :<span class="lineCov">      66410 :         if (*src == '\r' || *src == '\n' || *src == ' ') {</span></a>
+<span class="lineNum">         </span>         <span class="branchNoCov" title="Branch 4 was not taken"> - </span><span class="branchCov" title="Branch 5 was taken 64336 times"> + </span>]
+<a name="206"><span class="lineNum">     206 </span>                :<span class="lineCov">       2074 :             continue;</span></a>
+<a name="207"><span class="lineNum">     207 </span>                :            :         }</a>
+<a name="208"><span class="lineNum">     208 </span>                :            : </a>
+<a name="209"><span class="lineNum">     209 </span>                :<span class="lineCov">      64336 :         x = x &lt;&lt; 6;</span></a>
+<a name="210"><span class="lineNum">     210 </span>        [<span class="branchNoCov" title="Branch 0 was not taken"> - </span><span class="branchCov" title="Branch 1 was taken 64336 times"> + </span>]:<span class="lineCov">      64336 :         if (*src == '=') {</span></a>
+<a name="211"><span class="lineNum">     211 </span>                :<span class="lineNoCov">          0 :             ++equals;</span></a>
+<a name="212"><span class="lineNum">     212 </span>                :            :         } else {</a>
+<a name="213"><span class="lineNum">     213 </span>                :<span class="lineCov">      64336 :             x |= mbedtls_ct_base64_dec_value(*src);</span></a>
+<a name="214"><span class="lineNum">     214 </span>                :            :         }</a>
+<a name="215"><span class="lineNum">     215 </span>                :            : </a>
+<a name="216"><span class="lineNum">     216 </span>        [<span class="branchCov" title="Branch 0 was taken 16084 times"> + </span><span class="branchCov" title="Branch 1 was taken 48252 times"> + </span>]:<span class="lineCov">      64336 :         if (++accumulated_digits == 4) {</span></a>
+<a name="217"><span class="lineNum">     217 </span>                :<span class="lineCov">      16084 :             accumulated_digits = 0;</span></a>
+<a name="218"><span class="lineNum">     218 </span>                :<span class="lineCov">      16084 :             *p++ = MBEDTLS_BYTE_2(x);</span></a>
+<a name="219"><span class="lineNum">     219 </span>        [<span class="branchCov" title="Branch 0 was taken 16084 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">      16084 :             if (equals &lt;= 1) {</span></a>
+<a name="220"><span class="lineNum">     220 </span>                :<span class="lineCov">      16084 :                 *p++ = MBEDTLS_BYTE_1(x);</span></a>
+<a name="221"><span class="lineNum">     221 </span>                :            :             }</a>
+<a name="222"><span class="lineNum">     222 </span>        [<span class="branchCov" title="Branch 0 was taken 16084 times"> + </span><span class="branchNoCov" title="Branch 1 was not taken"> - </span>]:<span class="lineCov">      16084 :             if (equals &lt;= 0) {</span></a>
+<a name="223"><span class="lineNum">     223 </span>                :<span class="lineCov">      16084 :                 *p++ = MBEDTLS_BYTE_0(x);</span></a>
+<a name="224"><span class="lineNum">     224 </span>                :            :             }</a>
+<a name="225"><span class="lineNum">     225 </span>                :            :         }</a>
+<a name="226"><span class="lineNum">     226 </span>                :            :     }</a>
+<a name="227"><span class="lineNum">     227 </span>                :            : </a>
+<a name="228"><span class="lineNum">     228 </span>                :<span class="lineCov">        154 :     *olen = (size_t) (p - dst);</span></a>
+<a name="229"><span class="lineNum">     229 </span>                :            : </a>
+<a name="230"><span class="lineNum">     230 </span>                :<span class="lineCov">        154 :     return 0;</span></a>
+<a name="231"><span class="lineNum">     231 </span>                :            : }</a>
+<a name="232"><span class="lineNum">     232 </span>                :            : </a>
+<a name="233"><span class="lineNum">     233 </span>                :            : #if defined(MBEDTLS_SELF_TEST)</a>
+<a name="234"><span class="lineNum">     234 </span>                :            : </a>
+<a name="235"><span class="lineNum">     235 </span>                :            : static const unsigned char base64_test_dec[64] =</a>
+<a name="236"><span class="lineNum">     236 </span>                :            : {</a>
+<a name="237"><span class="lineNum">     237 </span>                :            :     0x24, 0x48, 0x6E, 0x56, 0x87, 0x62, 0x5A, 0xBD,</a>
+<a name="238"><span class="lineNum">     238 </span>                :            :     0xBF, 0x17, 0xD9, 0xA2, 0xC4, 0x17, 0x1A, 0x01,</a>
+<a name="239"><span class="lineNum">     239 </span>                :            :     0x94, 0xED, 0x8F, 0x1E, 0x11, 0xB3, 0xD7, 0x09,</a>
+<a name="240"><span class="lineNum">     240 </span>                :            :     0x0C, 0xB6, 0xE9, 0x10, 0x6F, 0x22, 0xEE, 0x13,</a>
+<a name="241"><span class="lineNum">     241 </span>                :            :     0xCA, 0xB3, 0x07, 0x05, 0x76, 0xC9, 0xFA, 0x31,</a>
+<a name="242"><span class="lineNum">     242 </span>                :            :     0x6C, 0x08, 0x34, 0xFF, 0x8D, 0xC2, 0x6C, 0x38,</a>
+<a name="243"><span class="lineNum">     243 </span>                :            :     0x00, 0x43, 0xE9, 0x54, 0x97, 0xAF, 0x50, 0x4B,</a>
+<a name="244"><span class="lineNum">     244 </span>                :            :     0xD1, 0x41, 0xBA, 0x95, 0x31, 0x5A, 0x0B, 0x97</a>
+<a name="245"><span class="lineNum">     245 </span>                :            : };</a>
+<a name="246"><span class="lineNum">     246 </span>                :            : </a>
+<a name="247"><span class="lineNum">     247 </span>                :            : static const unsigned char base64_test_enc[] =</a>
+<a name="248"><span class="lineNum">     248 </span>                :            :     &quot;JEhuVodiWr2/F9mixBcaAZTtjx4Rs9cJDLbpEG8i7hPK&quot;</a>
+<a name="249"><span class="lineNum">     249 </span>                :            :     &quot;swcFdsn6MWwINP+Nwmw4AEPpVJevUEvRQbqVMVoLlw==&quot;;</a>
+<a name="250"><span class="lineNum">     250 </span>                :            : </a>
+<a name="251"><span class="lineNum">     251 </span>                :            : /*</a>
+<a name="252"><span class="lineNum">     252 </span>                :            :  * Checkup routine</a>
+<a name="253"><span class="lineNum">     253 </span>                :            :  */</a>
+<a name="254"><span class="lineNum">     254 </span>                :<span class="lineNoCov">          0 : int mbedtls_base64_self_test(int verbose)</span></a>
+<a name="255"><span class="lineNum">     255 </span>                :            : {</a>
+<a name="256"><span class="lineNum">     256 </span>                :            :     size_t len;</a>
+<a name="257"><span class="lineNum">     257 </span>                :            :     const unsigned char *src;</a>
+<a name="258"><span class="lineNum">     258 </span>                :            :     unsigned char buffer[128];</a>
+<a name="259"><span class="lineNum">     259 </span>                :            : </a>
+<a name="260"><span class="lineNum">     260 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     if (verbose != 0) {</span></a>
+<a name="261"><span class="lineNum">     261 </span>                :<span class="lineNoCov">          0 :         mbedtls_printf(&quot;  Base64 encoding test: &quot;);</span></a>
+<a name="262"><span class="lineNum">     262 </span>                :            :     }</a>
+<a name="263"><span class="lineNum">     263 </span>                :            : </a>
+<a name="264"><span class="lineNum">     264 </span>                :<span class="lineNoCov">          0 :     src = base64_test_dec;</span></a>
+<a name="265"><span class="lineNum">     265 </span>                :            : </a>
+<a name="266"><span class="lineNum">     266 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     if (mbedtls_base64_encode(buffer, sizeof(buffer), &amp;len, src, 64) != 0 ||</span></a>
+<a name="267"><span class="lineNum">     267 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :         memcmp(base64_test_enc, buffer, 88) != 0) {</span></a>
+<a name="268"><span class="lineNum">     268 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :         if (verbose != 0) {</span></a>
+<a name="269"><span class="lineNum">     269 </span>                :<span class="lineNoCov">          0 :             mbedtls_printf(&quot;failed\n&quot;);</span></a>
+<a name="270"><span class="lineNum">     270 </span>                :            :         }</a>
+<a name="271"><span class="lineNum">     271 </span>                :            : </a>
+<a name="272"><span class="lineNum">     272 </span>                :<span class="lineNoCov">          0 :         return 1;</span></a>
+<a name="273"><span class="lineNum">     273 </span>                :            :     }</a>
+<a name="274"><span class="lineNum">     274 </span>                :            : </a>
+<a name="275"><span class="lineNum">     275 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     if (verbose != 0) {</span></a>
+<a name="276"><span class="lineNum">     276 </span>                :<span class="lineNoCov">          0 :         mbedtls_printf(&quot;passed\n  Base64 decoding test: &quot;);</span></a>
+<a name="277"><span class="lineNum">     277 </span>                :            :     }</a>
+<a name="278"><span class="lineNum">     278 </span>                :            : </a>
+<a name="279"><span class="lineNum">     279 </span>                :<span class="lineNoCov">          0 :     src = base64_test_enc;</span></a>
+<a name="280"><span class="lineNum">     280 </span>                :            : </a>
+<a name="281"><span class="lineNum">     281 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     if (mbedtls_base64_decode(buffer, sizeof(buffer), &amp;len, src, 88) != 0 ||</span></a>
+<a name="282"><span class="lineNum">     282 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :         memcmp(base64_test_dec, buffer, 64) != 0) {</span></a>
+<a name="283"><span class="lineNum">     283 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :         if (verbose != 0) {</span></a>
+<a name="284"><span class="lineNum">     284 </span>                :<span class="lineNoCov">          0 :             mbedtls_printf(&quot;failed\n&quot;);</span></a>
+<a name="285"><span class="lineNum">     285 </span>                :            :         }</a>
+<a name="286"><span class="lineNum">     286 </span>                :            : </a>
+<a name="287"><span class="lineNum">     287 </span>                :<span class="lineNoCov">          0 :         return 1;</span></a>
+<a name="288"><span class="lineNum">     288 </span>                :            :     }</a>
+<a name="289"><span class="lineNum">     289 </span>                :            : </a>
+<a name="290"><span class="lineNum">     290 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     if (verbose != 0) {</span></a>
+<a name="291"><span class="lineNum">     291 </span>                :<span class="lineNoCov">          0 :         mbedtls_printf(&quot;passed\n\n&quot;);</span></a>
+<a name="292"><span class="lineNum">     292 </span>                :            :     }</a>
+<a name="293"><span class="lineNum">     293 </span>                :            : </a>
+<a name="294"><span class="lineNum">     294 </span>                :<span class="lineNoCov">          0 :     return 0;</span></a>
+<a name="295"><span class="lineNum">     295 </span>                :            : }</a>
+<a name="296"><span class="lineNum">     296 </span>                :            : </a>
+<a name="297"><span class="lineNum">     297 </span>                :            : #endif /* MBEDTLS_SELF_TEST */</a>
+<a name="298"><span class="lineNum">     298 </span>                :            : </a>
+<a name="299"><span class="lineNum">     299 </span>                :            : #endif /* MBEDTLS_BASE64_C */</a>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.14</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>
