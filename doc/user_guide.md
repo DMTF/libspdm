@@ -15,7 +15,7 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
     - Capability Configuration, such as `LIBSPDM_ENABLE_CAPABILITY_PSK_CAP`, `LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP`, `LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP`.
     - Data Size Configuration, such as `LIBSPDM_MAX_CERT_CHAIN_SIZE`, `LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE`.
 
-   0.1, implement [requester library](https://github.com/DMTF/libspdm/tree/main/include/hal/requester).
+   0.1, implement [requester library](https://github.com/DMTF/libspdm/tree/main/include/hal/library/requester).
 
    Implement [timelib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/requester/timelib.h).
 
@@ -252,7 +252,7 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
    6.1, Use the SPDM vendor defined request. In libspdm, libspdm_init_connection call is needed first, so NEGOTIATE_ALGORITHMS step is done before sending a vendor defined request. Also, for each VENDOR_DEFINED_REQUEST, a VENDOR_DEFINED_RESPONSE message is expected, even if it has a data payload field of size zero.
    ```
    libspdm_vendor_send_request_receive_response (spdm_context, session_id,
-      req_standard_id, req_vendor_id_len, req_vendor_id, req_size, req_data, 
+      req_standard_id, req_vendor_id_len, req_vendor_id, req_size, req_data,
       &resp_standard_id, &resp_vendor_id_len, resp_vendor_id, &resp_size, resp_data);
    ```
 
@@ -278,7 +278,7 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
     - Capability Configuration, such as `LIBSPDM_ENABLE_CAPABILITY_PSK_CAP`, `LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP`, `LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP`.
     - Data Size Configuration, such as `LIBSPDM_MAX_CERT_CHAIN_SIZE`, `LIBSPDM_MAX_MEASUREMENT_RECORD_SIZE`.
 
-   0.1, implement [responder library](https://github.com/DMTF/libspdm/tree/main/include/hal/responder).
+   0.1, implement [responder library](https://github.com/DMTF/libspdm/tree/main/include/hal/library/responder).
 
    Implement [watchdoglib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/responder/watchdoglib.h).
 
