@@ -101,6 +101,50 @@ libspdm will perform the following checks over the leaf certificate.
 - If the `BasicConstraints` field exists then verify that the `cA` is false.
 <br/><br/>
 
+
+---
+### libspdm_get_certificate_choose_length
+---
+
+### Description
+Sends `GET_CERTIFICATE` and retrieves a certificate chain from the specified certificate chain slot, with a specified length of certificate chain block.
+
+### Parameters
+
+**spdm_context**<br/>
+The SPDM context.
+
+**session_id**<br/>
+Indicates if it is a secured message (non-NULL) or an unsecured message (NULL).
+
+**slot_id**<br/>
+The certificate chain slot number.
+
+**length**<br/>
+The length of the certificate chain block to be retrieved.
+
+**cert_chain_size**<br/>
+On input, indicates the size, in bytes, of the buffer in which the certificate chain will be stored.
+The maximum size of an SPDM certificate chain is given by `SPDM_MAX_CERTIFICATE_CHAIN_SIZE` and is
+65535 bytes.
+On output, indicates the size, in bytes, of the certificate chain.
+
+**cert_chain**<br/>
+A pointer to a buffer of size `cert_chain_size` in which the certificate chain will be stored.
+
+### Details
+Before calling this function the Integrator should have determined which certificate chain slots are
+populated through `libspdm_get_digest`, although that is not strictly required. Once the certificate
+chain has been retrieved libspdm will validate the chain and its leaf certificate. In particular
+libspdm will perform the following checks over the leaf certificate.
+- Check that the x.509 version is 3 (encoded as 2).
+- Check that the `CertificateSerialNumber`, `subject`, `Issuer` fields exist.
+- Verify that the asymmetric key algorithm matches the negotiated asymmetric key algorithm of the
+  connection.
+- Check that the `KeyUsage` field exists and that it supports `digitalSignature`.
+- If the `BasicConstraints` field exists then verify that the `cA` is false.
+<br/><br/>
+
 ---
 ### libspdm_challenge
 ---
