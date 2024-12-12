@@ -43,6 +43,8 @@ static bool validate_responder_capability(uint32_t capabilities_flag, uint8_t ve
     const uint8_t multi_key_cap = (uint8_t)(capabilities_flag >> 26) & 0x03;
     const uint8_t get_key_pair_info_cap = (uint8_t)(capabilities_flag >> 28) & 0x01;
     const uint8_t set_key_pair_info_cap = (uint8_t)(capabilities_flag >> 29) & 0x01;
+    const uint8_t set_key_pair_reset_cap = (uint8_t)(capabilities_flag >> 30) & 0x01;
+    /* const uint8_t large_resp_cap = (uint8_t)(capabilities_flag >> 31) & 0x01; */
 
     /* Checks common to all SPDM versions. */
 
@@ -184,6 +186,13 @@ static bool validate_responder_capability(uint32_t capabilities_flag, uint8_t ve
      * negotiated SPDM version is greater than 1.1 then the negotiated opaque data format must be
      * OpaqueDataFmt1.
      */
+
+    /* Checks specific to 1.4 and higher. */
+    if (version >= SPDM_MESSAGE_VERSION_14) {
+        if ((set_key_pair_reset_cap == 1) && (set_key_pair_info_cap == 0)) {
+            return false;
+        }
+    }
 
     return true;
 }
