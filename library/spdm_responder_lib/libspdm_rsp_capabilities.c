@@ -62,6 +62,7 @@ static bool libspdm_check_request_flag_compatibility(uint32_t capabilities_flag,
     const uint8_t ep_info_cap = (uint8_t)(capabilities_flag >> 22) & 0x03;
     const uint8_t event_cap = (uint8_t)(capabilities_flag >> 25) & 0x01;
     const uint8_t multi_key_cap = (uint8_t)(capabilities_flag >> 26) & 0x03;
+    const uint8_t large_cert_cap = (uint8_t)(capabilities_flag >> 31) & 0x01;
 
     /* Checks common to 1.1 and higher */
     if (version >= SPDM_MESSAGE_VERSION_11) {
@@ -150,6 +151,13 @@ static bool libspdm_check_request_flag_compatibility(uint32_t capabilities_flag,
      * negotiated SPDM version is greater than 1.1 then the negotiated opaque data format must be
      * OpaqueDataFmt1.
      */
+
+    /* Checks specific to 1.4 and higher. */
+    if (version >= SPDM_MESSAGE_VERSION_14) {
+        if ((large_cert_cap == 1) && (cert_cap == 0)) {
+            return false;
+        }
+    }
 
     return true;
 }
