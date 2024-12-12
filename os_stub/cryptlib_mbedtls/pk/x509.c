@@ -197,23 +197,25 @@ bool libspdm_x509_construct_certificate_stack(uint8_t **x509_stack, ...)
 /**
  * Release the specified X509 object.
  *
- * If x509_cert is NULL, then return false.
+ * If x509_cert is NULL, then return early.
  *
  * @param[in]  x509_cert  Pointer to the X509 object to be released.
  *
  **/
 void libspdm_x509_free(void *x509_cert)
 {
-    if (x509_cert) {
-        mbedtls_x509_crt_free(x509_cert);
-        free_pool(x509_cert);
+    if (x509_cert == NULL) {
+        return;
     }
+
+    mbedtls_x509_crt_free(x509_cert);
+    free_pool(x509_cert);
 }
 
 /**
  * Release the specified X509 stack object.
  *
- * If x509_stack is NULL, then return false.
+ * If x509_stack is NULL, then return early.
  *
  * @param[in]  x509_stack  Pointer to the X509 stack object to be released.
  *
@@ -236,7 +238,7 @@ void libspdm_x509_stack_free(void *x509_stack)
  * @param tag      The expected tag
  *
  * @retval      true   Get tag successful
- * @retval      FALSe  Failed to get tag or tag not match
+ * @retval      false  Failed to get tag or tag not match
  **/
 bool libspdm_asn1_get_tag(uint8_t **ptr, const uint8_t *end, size_t *length,
                           uint32_t tag)
@@ -678,16 +680,16 @@ bool libspdm_x509_verify_cert(const uint8_t *cert, size_t cert_size,
  *
  * @param[in]      cert_chain         One or more ASN.1 DER-encoded X.509 certificates
  *                                  where the first certificate is signed by the Root
- *                                  Certificate or is the Root Cerificate itself. and
- *                                  subsequent cerificate is signed by the preceding
- *                                  cerificate.
+ *                                  Certificate or is the Root Certificate itself. and
+ *                                  subsequent certificate is signed by the preceding
+ *                                  certificate.
  * @param[in]      cert_chain_length   Total length of the certificate chain, in bytes.
  *
  * @param[in]      root_cert          Trusted Root Certificate buffer
  *
  * @param[in]      root_cert_length    Trusted Root Certificate buffer length
  *
- * @retval  true   All cerificates was issued by the first certificate in X509Certchain.
+ * @retval  true   All certificates were issued by the first certificate in X509Certchain.
  * @retval  false  Invalid certificate or the certificate was not issued by the given
  *                trusted CA.
  **/
@@ -760,9 +762,9 @@ bool libspdm_x509_verify_cert_chain(const uint8_t *root_cert, size_t root_cert_l
  *
  * @param[in]      cert_chain         One or more ASN.1 DER-encoded X.509 certificates
  *                                  where the first certificate is signed by the Root
- *                                  Certificate or is the Root Cerificate itself. and
- *                                  subsequent cerificate is signed by the preceding
- *                                  cerificate.
+ *                                  Certificate or is the Root Certificate itself. and
+ *                                  subsequent certificate is signed by the preceding
+ *                                  certificate.
  * @param[in]      cert_chain_length   Total length of the certificate chain, in bytes.
  *
  * @param[in]      cert_index         index of certificate.
@@ -1908,7 +1910,7 @@ bool libspdm_set_attribute_for_req(mbedtls_x509write_csr *req,
                                    LIBSPDM_CRYPTO_ASN1_SEQUENCE |
                                    LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
         if (ret) {
-            /*save old positon*/
+            /*save old position*/
             ptr_old = ptr;
 
             /*move to the next sequence*/
