@@ -503,7 +503,8 @@ typedef struct {
 #define SPDM_REGISTRY_ID_JEDEC 0x8
 #define SPDM_REGISTRY_ID_VESA 0x9
 #define SPDM_REGISTRY_ID_IANA_CBOR 0xa
-#define SPDM_REGISTRY_ID_MAX  0xa
+#define SPDM_REGISTRY_ID_DMTF_DSP 0xb
+#define SPDM_REGISTRY_ID_MAX  0xb
 
 typedef struct {
     uint8_t id;
@@ -563,6 +564,11 @@ typedef struct {
     spdm_svh_header_t header; /* SPDM_REGISTRY_ID_IANA_CBOR */
     /* uint8_t vendor_id[vendor_id_len]; */
 } spdm_svh_iana_cbor_header_t;
+
+typedef struct {
+    spdm_svh_header_t header; /* SPDM_REGISTRY_ID_DMTF_DSP */
+    uint16_t vendor_id;
+} spdm_svh_dmtf_dsp_header_t;
 
 /* SPDM GET_DIGESTS request */
 typedef struct {
