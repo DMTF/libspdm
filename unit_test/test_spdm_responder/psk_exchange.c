@@ -133,9 +133,11 @@ void libspdm_test_responder_psk_exchange_case1(void **state)
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
     spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
     spdm_context->connection_info.algorithm.base_hash_algo =
         m_libspdm_use_hash_algo;
     spdm_context->connection_info.algorithm.measurement_spec =

@@ -174,6 +174,17 @@ static libspdm_return_t libspdm_try_send_receive_psk_exchange(
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP)) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }
+
+    /* While clearing MAC_CAP and setting ENCRYPT_CAP is legal according to DSP0274, libspdm
+     * also implements DSP0277 secure messages, which requires at least MAC_CAP to be set.
+     */
+    if (!libspdm_is_capabilities_flag_supported(
+            spdm_context, true,
+            SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP,
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP)) {
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+    }
+
     if (spdm_context->connection_info.connection_state < LIBSPDM_CONNECTION_STATE_NEGOTIATED) {
         return LIBSPDM_STATUS_INVALID_STATE_LOCAL;
     }
