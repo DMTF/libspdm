@@ -1542,6 +1542,156 @@ static void libspdm_test_max_session_count_case21(void **state)
     }
 }
 
+#pragma pack(1)
+
+typedef struct {
+    spdm_general_opaque_data_table_header_t opaque_header;
+    spdm_svh_iana_cbor_header_t cbor_header;
+    uint8_t cbor_vendor_id[10];
+    uint16_t cbor_opaque_len;
+    uint8_t cbor_opaque[10];
+    /* uint8_t cbor_align[]; */
+    spdm_svh_vesa_header_t vesa_header;
+    uint16_t vesa_opaque_len;
+    uint8_t vesa_opaque[9];
+    uint8_t vesa_align[3];
+    spdm_svh_jedec_header_t jedec_header;
+    uint16_t jedec_opaque_len;
+    uint8_t jedec_opaque[8];
+    uint8_t jedec_align[2];
+    spdm_svh_cxl_header_t cxl_header;
+    uint16_t cxl_opaque_len;
+    uint8_t cxl_opaque[7];
+    uint8_t cxl_align[3];
+    spdm_svh_mipi_header_t mipi_header;
+    uint16_t mipi_opaque_len;
+    uint8_t mipi_opaque[6];
+    /* uint8_t mipi_align[0]; */
+    spdm_svh_hdbaset_header_t hdbaset_header;
+    uint16_t hdbaset_opaque_len;
+    uint8_t hdbaset_opaque[5];
+    uint8_t hdbaset_align[3];
+    spdm_svh_iana_header_t iana_header;
+    uint16_t iana_opaque_len;
+    uint8_t iana_opaque[4];
+    /* uint8_t iana_align[0]; */
+    spdm_svh_pcisig_header_t pcisig_header;
+    uint16_t pcisig_opaque_len;
+    uint8_t pcisig_opaque[3];
+    uint8_t pcisig_align[3];
+    spdm_svh_usb_header_t usb_header;
+    uint16_t usb_opaque_len;
+    uint8_t usb_opaque[2];
+    /* uint8_t usb_align[0]; */
+    spdm_svh_tcg_header_t tcg_header;
+    uint16_t tcg_opaque_len;
+    uint8_t tcg_opaque[1];
+    uint8_t tcg_align[1];
+    spdm_svh_dmtf_header_t dmtf_sm_ver_sel_header;
+    uint16_t dmtf_sm_ver_sel_opaque_len;
+    secured_message_opaque_element_version_selection_t dmtf_sm_ver_sel_opaque;
+    /* uint8_t dmtf_sm_ver_sel_align[0]; */
+    spdm_svh_dmtf_header_t dmtf_sm_sup_ver_header;
+    uint16_t dmtf_sm_sup_ver_opaque_len;
+    secured_message_opaque_element_supported_version_t dmtf_sm_sup_ver_opaque;
+    spdm_version_number_t dmtf_sm_sup_ver_versions_list[3];
+    uint8_t dmtf_sm_sup_ver_align[3];
+} test_spdm12_opaque_data_table_t;
+
+#pragma pack()
+
+static void libspdm_test_process_opaque_data_case22(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    const void *get_element_ptr;
+    size_t get_element_len;
+    size_t opaque_data_size;
+    uint8_t *opaque_data_ptr;
+    test_spdm12_opaque_data_table_t opaque_data;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x16;
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+
+    spdm_context->local_context.secured_message_version.spdm_version_count = 1;
+
+    libspdm_set_mem ((uint8_t *)&opaque_data, sizeof(opaque_data), 0xFF);
+    opaque_data.opaque_header.total_elements = SPDM_REGISTRY_ID_MAX + 2;
+    opaque_data.cbor_header.header.id = SPDM_REGISTRY_ID_IANA_CBOR;
+    opaque_data.cbor_header.header.vendor_id_len = sizeof(opaque_data.cbor_vendor_id);
+    opaque_data.cbor_opaque_len = sizeof(opaque_data.cbor_opaque);
+    opaque_data.vesa_header.header.id = SPDM_REGISTRY_ID_VESA;
+    opaque_data.vesa_header.header.vendor_id_len = 0;
+    opaque_data.vesa_opaque_len = sizeof(opaque_data.vesa_opaque);
+    opaque_data.jedec_header.header.id = SPDM_REGISTRY_ID_JEDEC;
+    opaque_data.jedec_header.header.vendor_id_len = sizeof(opaque_data.jedec_header.vendor_id);
+    opaque_data.jedec_opaque_len = sizeof(opaque_data.jedec_opaque);
+    opaque_data.cxl_header.header.id = SPDM_REGISTRY_ID_CXL;
+    opaque_data.cxl_header.header.vendor_id_len = sizeof(opaque_data.cxl_header.vendor_id);
+    opaque_data.cxl_opaque_len = sizeof(opaque_data.cxl_opaque);
+    opaque_data.mipi_header.header.id = SPDM_REGISTRY_ID_MIPI;
+    opaque_data.mipi_header.header.vendor_id_len = sizeof(opaque_data.mipi_header.vendor_id);
+    opaque_data.mipi_opaque_len = sizeof(opaque_data.mipi_opaque);
+    opaque_data.hdbaset_header.header.id = SPDM_REGISTRY_ID_HDBASET;
+    opaque_data.hdbaset_header.header.vendor_id_len = sizeof(opaque_data.hdbaset_header.vendor_id);
+    opaque_data.hdbaset_opaque_len = sizeof(opaque_data.hdbaset_opaque);
+    opaque_data.iana_header.header.id = SPDM_REGISTRY_ID_IANA;
+    opaque_data.iana_header.header.vendor_id_len = sizeof(opaque_data.iana_header.vendor_id);
+    opaque_data.iana_opaque_len = sizeof(opaque_data.iana_opaque);
+    opaque_data.pcisig_header.header.id = SPDM_REGISTRY_ID_PCISIG;
+    opaque_data.pcisig_header.header.vendor_id_len = sizeof(opaque_data.pcisig_header.vendor_id);
+    opaque_data.pcisig_opaque_len = sizeof(opaque_data.pcisig_opaque);
+    opaque_data.usb_header.header.id = SPDM_REGISTRY_ID_USB;
+    opaque_data.usb_header.header.vendor_id_len = sizeof(opaque_data.usb_header.vendor_id);
+    opaque_data.usb_opaque_len = sizeof(opaque_data.usb_opaque);
+    opaque_data.tcg_header.header.id = SPDM_REGISTRY_ID_TCG;
+    opaque_data.tcg_header.header.vendor_id_len = sizeof(opaque_data.tcg_header.vendor_id);
+    opaque_data.tcg_opaque_len = sizeof(opaque_data.tcg_opaque);
+    opaque_data.dmtf_sm_ver_sel_header.header.id = SPDM_REGISTRY_ID_DMTF;
+    opaque_data.dmtf_sm_ver_sel_header.header.vendor_id_len = 0;
+    opaque_data.dmtf_sm_ver_sel_opaque_len = sizeof(opaque_data.dmtf_sm_ver_sel_opaque);
+    opaque_data.dmtf_sm_ver_sel_opaque.sm_data_version =
+        SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_DATA_VERSION;
+    opaque_data.dmtf_sm_ver_sel_opaque.sm_data_id =
+        SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_VERSION_SELECTION;
+    opaque_data.dmtf_sm_ver_sel_opaque.selected_version = SECURED_SPDM_VERSION_12 << 8;
+    opaque_data.dmtf_sm_sup_ver_header.header.id = SPDM_REGISTRY_ID_DMTF;
+    opaque_data.dmtf_sm_sup_ver_header.header.vendor_id_len = 0;
+    opaque_data.dmtf_sm_sup_ver_opaque_len = sizeof(opaque_data.dmtf_sm_sup_ver_opaque) +
+                                             sizeof(opaque_data.dmtf_sm_sup_ver_versions_list);
+    opaque_data.dmtf_sm_sup_ver_opaque.sm_data_version =
+        SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_DATA_VERSION;
+    opaque_data.dmtf_sm_sup_ver_opaque.sm_data_id =
+        SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_SUPPORTED_VERSION;
+    opaque_data.dmtf_sm_sup_ver_opaque.version_count =
+        LIBSPDM_ARRAY_SIZE(opaque_data.dmtf_sm_sup_ver_versions_list);
+    opaque_data.dmtf_sm_sup_ver_versions_list[0] = SECURED_SPDM_VERSION_10 << 8;
+    opaque_data.dmtf_sm_sup_ver_versions_list[1] = SECURED_SPDM_VERSION_11 << 8;
+    opaque_data.dmtf_sm_sup_ver_versions_list[2] = SECURED_SPDM_VERSION_12 << 8;
+
+    opaque_data_ptr = (uint8_t *)&opaque_data;
+    opaque_data_size = sizeof(opaque_data);
+    status = libspdm_get_element_from_opaque_data(spdm_context,
+                                                  opaque_data_size, opaque_data_ptr,
+                                                  SPDM_REGISTRY_ID_DMTF,
+                                                  SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_VERSION_SELECTION,
+                                                  &get_element_ptr, &get_element_len
+                                                  );
+    assert_int_equal (status, true);
+    status = libspdm_get_element_from_opaque_data(spdm_context,
+                                                  opaque_data_size, opaque_data_ptr,
+                                                  SPDM_REGISTRY_ID_DMTF,
+                                                  SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_ID_SUPPORTED_VERSION,
+                                                  &get_element_ptr, &get_element_len
+                                                  );
+    assert_int_equal (status, true);
+}
+
 static libspdm_test_context_t m_libspdm_common_context_data_test_context = {
     LIBSPDM_TEST_CONTEXT_VERSION,
     true,
@@ -1590,6 +1740,9 @@ int libspdm_common_context_data_test_main(void)
 
         /* Test the max DHE/PSK session count */
         cmocka_unit_test(libspdm_test_max_session_count_case21),
+
+        /* Successful response V1.2 for multi element */
+        cmocka_unit_test(libspdm_test_process_opaque_data_case22),
     };
 
     libspdm_setup_test_context(&m_libspdm_common_context_data_test_context);
