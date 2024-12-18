@@ -119,10 +119,13 @@ bool libspdm_get_element_from_opaque_data(libspdm_context_t *spdm_context,
     *general_opaque_data_table_header;
     const spdm_general_opaque_data_table_header_t
     *spdm_general_opaque_data_table_header;
-    const secured_message_opaque_element_table_header_t
+    const opaque_element_table_header_t
     *opaque_element_table_header;
+    uint16_t opaque_element_data_len;
+    const secured_message_opaque_element_table_header_t
+    *secured_message_element_table_header;
     const secured_message_opaque_element_header_t
-    * secured_message_element_header;
+    *secured_message_element_header;
 
     bool result;
     uint8_t element_num;
@@ -177,19 +180,30 @@ bool libspdm_get_element_from_opaque_data(libspdm_context_t *spdm_context,
 
     for (element_index = 0; element_index < element_num; element_index++) {
         /*ensure the opaque_element_table_header is valid*/
-        if (total_element_len + sizeof(secured_message_opaque_element_table_header_t) >
+        if (total_element_len + sizeof(opaque_element_table_header_t) >
             data_element_size) {
             return false;
         }
 
         /*check element header id*/
-        if ((opaque_element_table_header->id > SPDM_REGISTRY_ID_MAX) ||
-            (opaque_element_table_header->vendor_len != 0)) {
+        if ((opaque_element_table_header->id > SPDM_REGISTRY_ID_MAX)) {
             return false;
         }
 
-        current_element_len = sizeof(secured_message_opaque_element_table_header_t) +
-                              opaque_element_table_header->opaque_element_data_len;
+        if (total_element_len + sizeof(opaque_element_table_header_t) +
+            opaque_element_table_header->vendor_len + 2 >
+            data_element_size) {
+            return false;
+        }
+
+        opaque_element_data_len = libspdm_read_uint16(
+            (const uint8_t *)opaque_element_table_header +
+            sizeof(opaque_element_table_header_t) +
+            opaque_element_table_header->vendor_len);
+
+        current_element_len = sizeof(opaque_element_table_header_t) +
+                              opaque_element_table_header->vendor_len +
+                              2 + opaque_element_data_len;
         /* Add Padding*/
         current_element_len = (current_element_len + 3) & ~3;
 
@@ -200,25 +214,29 @@ bool libspdm_get_element_from_opaque_data(libspdm_context_t *spdm_context,
         }
 
         if (opaque_element_table_header->id == element_id) {
-            secured_message_element_header = (const void *)(opaque_element_table_header + 1);
-            if ((const uint8_t *)secured_message_element_header +
-                sizeof(secured_message_opaque_element_header_t) >
-                (const uint8_t *)data_in + data_in_size) {
-                return false;
-            }
+            secured_message_element_table_header = (const void *)opaque_element_table_header;
+            if (secured_message_element_table_header->vendor_len == 0) {
+                secured_message_element_header =
+                    (const void *)(secured_message_element_table_header + 1);
+                if ((const uint8_t *)secured_message_element_header +
+                    sizeof(secured_message_opaque_element_header_t) >
+                    (const uint8_t *)data_in + data_in_size) {
+                    return false;
+                }
 
-            if ((secured_message_element_header->sm_data_id == sm_data_id) &&
-                (secured_message_element_header->sm_data_version ==
-                 SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_DATA_VERSION)) {
-                /*get element by element id*/
-                *get_element_ptr = opaque_element_table_header;
-                *get_element_len = current_element_len;
-                result = true;
+                if ((secured_message_element_header->sm_data_id == sm_data_id) &&
+                    (secured_message_element_header->sm_data_version ==
+                     SECURED_MESSAGE_OPAQUE_ELEMENT_SMDATA_DATA_VERSION)) {
+                    /*get element by element id*/
+                    *get_element_ptr = opaque_element_table_header;
+                    *get_element_len = current_element_len;
+                    result = true;
+                }
             }
         }
 
         /*move to next element*/
-        opaque_element_table_header = (const secured_message_opaque_element_table_header_t *)
+        opaque_element_table_header = (const opaque_element_table_header_t *)
                                       ((const uint8_t *)opaque_element_table_header +
                                        current_element_len);
     }
