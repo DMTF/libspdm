@@ -71,14 +71,7 @@ static bool libspdm_check_request_flag_compatibility(uint32_t capabilities_flag,
         }
 
         /* Checks that originate from key exchange capabilities. */
-        if ((key_ex_cap == 1) || (psk_cap == 1)) {
-            /* While clearing MAC_CAP and setting ENCRYPT_CAP is legal according to DSP0274, libspdm
-             * also implements DSP0277 secure messages, which requires at least MAC_CAP to be set.
-             */
-            if (mac_cap == 0) {
-                return false;
-            }
-        } else {
+        if ((key_ex_cap == 0) && (psk_cap == 0)) {
             if ((mac_cap == 1) || (encrypt_cap == 1) || (handshake_in_the_clear_cap == 1) ||
                 (hbeat_cap == 1) || (key_upd_cap == 1)) {
                 return false;
@@ -143,6 +136,13 @@ static bool libspdm_check_request_flag_compatibility(uint32_t capabilities_flag,
             return false;
         }
     }
+
+    /* Checks that are deferred to when a message is received.
+     *
+     * If the Requester supports key exchange then MAC_CAP must be set. In addition, if the
+     * negotiated SPDM version is greater than 1.1 then the negotiated opaque data format must be
+     * OpaqueDataFmt1.
+     */
 
     return true;
 }

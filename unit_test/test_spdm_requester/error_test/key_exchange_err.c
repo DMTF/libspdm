@@ -4684,9 +4684,11 @@ static void libspdm_test_requester_key_exchange_err_case1(void **state)
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
     spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, &hash, &hash_size);
@@ -4753,9 +4755,11 @@ static void libspdm_test_requester_key_exchange_err_case2(void **state)
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
     spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
     spdm_context->local_context.secured_message_version.spdm_version_count = 1;
     spdm_context->local_context.secured_message_version.spdm_version[0] =
         SECURED_SPDM_VERSION_11 << SPDM_VERSION_NUMBER_SHIFT_BIT;
@@ -4830,9 +4834,11 @@ static void libspdm_test_requester_key_exchange_err_case3(void **state)
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NOT_STARTED;
     spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
     spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, &hash, &hash_size);
@@ -4899,9 +4905,11 @@ static void libspdm_test_requester_key_exchange_err_case4(void **state)
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
     spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, &hash, &hash_size);
@@ -4968,9 +4976,11 @@ static void libspdm_test_requester_key_exchange_err_case5(void **state)
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
     spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, &hash, &hash_size);
@@ -5064,9 +5074,11 @@ static void libspdm_test_requester_key_exchange_err_case7(void **state)
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
     spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, &hash, &hash_size);
@@ -5135,9 +5147,11 @@ static void libspdm_test_requester_key_exchange_err_case8(void **state)
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
     spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
     libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                     m_libspdm_use_asym_algo, &data,
                                                     &data_size, &hash, &hash_size);
@@ -5201,9 +5215,11 @@ static void libspdm_test_requester_key_exchange_err_case9(void **state)
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
     spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
 
     libspdm_force_error (LIBSPDM_ERR_ACQUIRE_SENDER_BUFFER);
     status = libspdm_send_receive_key_exchange(
@@ -5312,9 +5328,11 @@ static void libspdm_test_requester_key_exchange_err_case11(void **state)
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
     spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
 
     libspdm_force_error (LIBSPDM_ERR_ACQUIRE_RECEIVER_BUFFER);
     status = libspdm_send_receive_key_exchange(
@@ -5344,9 +5362,11 @@ static void libspdm_test_requester_key_exchange_err_case12(void **state)
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
     spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
 
     status = libspdm_send_receive_key_exchange(
         spdm_context, SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
@@ -5374,9 +5394,11 @@ static void libspdm_test_requester_key_exchange_err_case13(void **state)
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
     spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
 
     status = libspdm_send_receive_key_exchange(
         spdm_context, SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
@@ -5404,9 +5426,11 @@ static void libspdm_test_requester_key_exchange_err_case14(void **state)
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
     spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
 
     status = libspdm_send_receive_key_exchange(
         spdm_context, SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
@@ -5838,9 +5862,11 @@ static void libspdm_test_requester_key_exchange_err_case21(void **state)
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags |=
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
     spdm_context->local_context.capability.flags |=
-        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP;
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
 
     status = libspdm_send_receive_key_exchange(
         spdm_context, SPDM_KEY_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, 0,
@@ -5904,9 +5930,11 @@ static void libspdm_test_requester_key_exchange_err_case23(void **state)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->connection_info.capability.flags =
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP |
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP;
     spdm_context->local_context.capability.flags =
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP |
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP |
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
 
