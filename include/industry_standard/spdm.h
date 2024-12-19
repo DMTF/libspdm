@@ -478,6 +478,65 @@ typedef struct {
 #define SPDM_REGISTRY_ID_IANA_CBOR 0xa
 #define SPDM_REGISTRY_ID_MAX  0xa
 
+typedef struct {
+    uint8_t id;
+    uint8_t vendor_id_len;
+    /* uint8_t vendor_id[vendor_id_len]; */
+} spdm_svh_header_t;
+
+typedef struct {
+    spdm_svh_header_t header; /* SPDM_REGISTRY_ID_DMTF */
+} spdm_svh_dmtf_header_t;
+
+typedef struct {
+    spdm_svh_header_t header; /* SPDM_REGISTRY_ID_TCG */
+    uint16_t vendor_id;
+} spdm_svh_tcg_header_t;
+
+typedef struct {
+    spdm_svh_header_t header; /* SPDM_REGISTRY_ID_USB */
+    uint16_t vendor_id;
+} spdm_svh_usb_header_t;
+
+typedef struct {
+    spdm_svh_header_t header; /* SPDM_REGISTRY_ID_PCISIG */
+    uint16_t vendor_id;
+} spdm_svh_pcisig_header_t;
+
+typedef struct {
+    spdm_svh_header_t header; /* SPDM_REGISTRY_ID_IANA */
+    uint32_t vendor_id;
+} spdm_svh_iana_header_t;
+
+typedef struct {
+    spdm_svh_header_t header; /* SPDM_REGISTRY_ID_HDBASET */
+    uint32_t vendor_id;
+} spdm_svh_hdbaset_header_t;
+
+typedef struct {
+    spdm_svh_header_t header; /* SPDM_REGISTRY_ID_MIPI */
+    uint16_t vendor_id;
+} spdm_svh_mipi_header_t;
+
+typedef struct {
+    spdm_svh_header_t header; /* SPDM_REGISTRY_ID_CXL */
+    uint16_t vendor_id;
+} spdm_svh_cxl_header_t;
+
+typedef struct {
+    spdm_svh_header_t header; /* SPDM_REGISTRY_ID_JEDEC */
+    uint16_t vendor_id;
+} spdm_svh_jedec_header_t;
+
+typedef struct {
+    spdm_svh_header_t header; /* SPDM_REGISTRY_ID_VESA */
+} spdm_svh_vesa_header_t;
+
+typedef struct {
+    spdm_svh_header_t header; /* SPDM_REGISTRY_ID_IANA_CBOR */
+    /* uint8_t vendor_id[vendor_id_len]; */
+} spdm_svh_iana_cbor_header_t;
+
 /* SPDM GET_DIGESTS request */
 typedef struct {
     spdm_message_header_t header;
