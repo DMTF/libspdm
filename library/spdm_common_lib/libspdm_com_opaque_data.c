@@ -312,8 +312,8 @@ bool libspdm_process_general_opaque_data_check(libspdm_context_t *spdm_context,
                     return false;
                 }
 
-                opaque_element_data_len = *(uint16_t *)((size_t)(opaque_element_table_header + 1)) +
-                                          opaque_element_table_header->vendor_len;
+                opaque_element_data_len = *(uint16_t *)((size_t)(opaque_element_table_header + 1) +
+                                                        opaque_element_table_header->vendor_len);
 
                 current_element_len = sizeof(opaque_element_table_header_t) +
                                       opaque_element_table_header->vendor_len +
