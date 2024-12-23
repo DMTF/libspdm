@@ -120,6 +120,9 @@ static bool validate_responder_capability(uint32_t capabilities_flag, uint8_t ve
 
         /* Checks that originate from mutual authentication capabilities. */
         if (mut_auth_cap == 1) {
+            /* Mutual authentication with asymmetric keys can only occur through the basic mutual
+             * authentication flow (CHAL_CAP == 1) or the session-based mutual authentication flow
+             * (KEY_EX_CAP == 1). */
             if ((key_ex_cap == 0) && (chal_cap == 0)) {
                 return false;
             }
