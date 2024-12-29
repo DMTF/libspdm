@@ -891,6 +891,7 @@ if(ENABLE_CODEQL STREQUAL "ON")
     add_subdirectory(library/spdm_secured_message_lib)
     add_subdirectory(library/spdm_transport_mctp_lib)
     add_subdirectory(library/spdm_transport_pcidoe_lib)
+    ADD_SUBDIRECTORY(library/spdm_transport_storage_lib)
     add_subdirectory(os_stub/memlib)
     add_subdirectory(os_stub/debuglib)
     add_subdirectory(os_stub/debuglib_null)
@@ -928,6 +929,7 @@ else()
         add_subdirectory(library/spdm_secured_message_lib)
         add_subdirectory(library/spdm_transport_mctp_lib)
         add_subdirectory(library/spdm_transport_pcidoe_lib)
+        ADD_SUBDIRECTORY(library/spdm_transport_storage_lib)
         add_subdirectory(os_stub/memlib)
         add_subdirectory(os_stub/debuglib)
         add_subdirectory(os_stub/debuglib_null)
@@ -1001,6 +1003,8 @@ else()
             add_subdirectory(unit_test/fuzzing/test_transport/test_spdm_transport_mctp_decode_message)
             add_subdirectory(unit_test/fuzzing/test_transport/test_spdm_transport_pci_doe_encode_message)
             add_subdirectory(unit_test/fuzzing/test_transport/test_spdm_transport_pci_doe_decode_message)
+            add_subdirectory(unit_test/fuzzing/test_transport/test_spdm_transport_storage_encode_message)
+            add_subdirectory(unit_test/fuzzing/test_transport/test_spdm_transport_storage_decode_message)
             add_subdirectory(unit_test/fuzzing/test_secured_message/test_spdm_decode_secured_message)
             add_subdirectory(unit_test/fuzzing/test_secured_message/test_spdm_encode_secured_message)
             add_subdirectory(unit_test/fuzzing/test_spdm_crypt/test_x509_certificate_check)
@@ -1067,6 +1071,7 @@ else()
             $<TARGET_OBJECTS:spdm_secured_message_lib>
             $<TARGET_OBJECTS:spdm_transport_mctp_lib>
             $<TARGET_OBJECTS:spdm_transport_pcidoe_lib>
+            $<TARGET_OBJECTS:spdm_transport_storage_lib>
         )
 
         add_library(${LIB_NAME}_platform SHARED
