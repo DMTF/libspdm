@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -71,7 +71,11 @@ static bool libspdm_check_request_flag_compatibility(uint32_t capabilities_flag,
         }
 
         /* Checks that originate from key exchange capabilities. */
-        if ((key_ex_cap == 0) && (psk_cap == 0)) {
+        if ((key_ex_cap == 1) || (psk_cap != 0)) {
+            if ((mac_cap == 0) && (encrypt_cap == 0)) {
+                return false;
+            }
+        } else {
             if ((mac_cap == 1) || (encrypt_cap == 1) || (handshake_in_the_clear_cap == 1) ||
                 (hbeat_cap == 1) || (key_upd_cap == 1)) {
                 return false;
