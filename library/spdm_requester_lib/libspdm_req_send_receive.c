@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -316,6 +316,7 @@ libspdm_return_t libspdm_handle_large_request(
     size_t copy_size;
     libspdm_chunk_info_t *send_info;
     uint32_t min_data_transfer_size;
+    uint64_t max_chunk_data_transfer_size;
     spdm_error_response_t *spdm_error;
 
     if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_12) {
@@ -328,6 +329,20 @@ libspdm_return_t libspdm_handle_large_request(
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP)) {
         return LIBSPDM_STATUS_ERROR_PEER;
+    }
+
+    /* Fail if exceed max chunks */
+    min_data_transfer_size = LIBSPDM_MIN(
+        spdm_context->connection_info.capability.data_transfer_size,
+        spdm_context->local_context.capability.sender_data_transfer_size);
+
+    max_chunk_data_transfer_size =
+        ((size_t) min_data_transfer_size - sizeof(spdm_chunk_send_request_t)) * 65536 -
+        sizeof(uint32_t);
+    /* max_spdm_msg_size is already checked in caller */
+
+    if (request_size > max_chunk_data_transfer_size) {
+        return LIBSPDM_STATUS_BUFFER_TOO_SMALL;
     }
 
     /* now we can get sender buffer */
@@ -358,10 +373,6 @@ libspdm_return_t libspdm_handle_large_request(
     send_info->chunk_seq_no = 0;
     request = NULL; /* Invalidate to prevent accidental use. */
     request_size = 0;
-
-    min_data_transfer_size = LIBSPDM_MIN(
-        spdm_context->connection_info.capability.data_transfer_size,
-        spdm_context->local_context.capability.sender_data_transfer_size);
 
     do {
         LIBSPDM_ASSERT(send_info->large_message_capacity >= transport_header_size);
