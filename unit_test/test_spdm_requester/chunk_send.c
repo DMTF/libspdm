@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -104,6 +104,10 @@ libspdm_return_t libspdm_requester_chunk_send_test_send_message(
          * if not then something is wrong. */
         LIBSPDM_ASSERT(chunk_send->header.request_response_code == SPDM_CHUNK_SEND);
         return LIBSPDM_STATUS_SUCCESS;
+    }
+    if (spdm_test_context->case_id == 13) {
+        /* Should never reach here since the test case is meant to fail before send */
+        LIBSPDM_ASSERT(0);
     }
     return LIBSPDM_STATUS_SEND_FAIL;
 }
@@ -323,6 +327,10 @@ libspdm_return_t libspdm_requester_chunk_send_test_receive_message(
 
         return LIBSPDM_STATUS_SUCCESS;
     }
+    if (spdm_test_context->case_id == 13) {
+        /* Should never reach here since the test case is meant to fail before send */
+        LIBSPDM_ASSERT(0);
+    }
     return LIBSPDM_STATUS_RECEIVE_FAIL;
 }
 
@@ -377,6 +385,56 @@ libspdm_return_t libspdm_test_requester_chunk_send_generic_test_case(
     libspdm_reset_message_a(spdm_context);
 
     status = libspdm_negotiate_algorithms(spdm_context);
+    return status;
+}
+
+libspdm_return_t libspdm_test_requester_chunk_send_vendor_specific_test_case(
+    void** state, uint32_t case_id)
+{
+    /* Use vendor specific request to generate a large request. */
+    libspdm_return_t status;
+    libspdm_test_context_t* spdm_test_context;
+    libspdm_context_t* spdm_context;
+
+    uint16_t standard_id = 6;
+    uint8_t vendor_id_len = 2;
+    uint8_t vendor_id[SPDM_MAX_VENDOR_ID_LENGTH] = {0xAA, 0xAA};
+    uint16_t data_len = 65535;
+    uint8_t data[65535] = {0};
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = case_id;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    /* Large request need a large scratch buffer. */
+    spdm_context->connection_info.capability.max_spdm_msg_size = 0x12000;
+    spdm_context->local_context.capability.max_spdm_msg_size = 0x12000;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        (SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP
+         | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP);
+    spdm_context->connection_info.capability.data_transfer_size
+        = sizeof(spdm_chunk_send_request_t) + 1;
+    spdm_context->local_context.capability.sender_data_transfer_size
+        = CHUNK_SEND_REQUESTER_UNIT_TEST_DATA_TRANSFER_SIZE;
+    spdm_context->local_context.is_requester = true;
+
+    spdm_test_context->scratch_buffer_size =
+        libspdm_get_sizeof_required_scratch_buffer(spdm_context);
+    spdm_test_context->scratch_buffer = (void *)malloc(spdm_test_context->scratch_buffer_size);
+    libspdm_set_scratch_buffer (spdm_context,
+                                spdm_test_context->scratch_buffer,
+                                spdm_test_context->scratch_buffer_size);
+
+    libspdm_reset_message_a(spdm_context);
+
+    status = libspdm_vendor_send_request_receive_response(spdm_context, NULL,
+                                                          standard_id, vendor_id_len, vendor_id,
+                                                          data_len, data,
+                                                          &standard_id, &vendor_id_len, vendor_id,
+                                                          &data_len, data);
     return status;
 }
 
@@ -472,6 +530,20 @@ void libspdm_test_requester_chunk_send_case12(void** state)
     assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
 }
 
+#if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
+/**
+ * Test 13: Request size shall not exceed max supported transfer size.
+ * Expected behavior: returns a status of LIBSPDM_STATUS_SEND_FAIL,
+ **/
+void libspdm_test_requester_chunk_send_case13(void** state)
+{
+    libspdm_return_t status;
+
+    status = libspdm_test_requester_chunk_send_vendor_specific_test_case(state, 13);
+    assert_int_equal(status, LIBSPDM_STATUS_SEND_FAIL);
+}
+#endif
+
 int libspdm_requester_chunk_send_test_main(void)
 {
     /* Test the CHUNK_SEND handlers in various requester handlers */
@@ -500,6 +572,10 @@ int libspdm_requester_chunk_send_test_main(void)
         cmocka_unit_test(libspdm_test_requester_chunk_send_case11),
         /* ErrorCode == LargeResponse shall not be allowed in ResponseToLargeRequest */
         cmocka_unit_test(libspdm_test_requester_chunk_send_case12),
+#if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
+        /* Request size exceed max chunks */
+        cmocka_unit_test(libspdm_test_requester_chunk_send_case13),
+#endif
     };
 
     libspdm_test_context_t test_context = {
