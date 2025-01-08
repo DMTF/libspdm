@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -14,6 +14,10 @@ static void *m_libspdm_local_certificate_chain_test_case_1;
 static size_t m_libspdm_local_certificate_chain_size_test_case_1;
 
 static uint8_t m_libspdm_local_large_response_buffer[LIBSPDM_MAX_SPDM_MSG_SIZE];
+
+#define BUFFER_SIZE_FOR_CHUNK_SEQ_NO_WRAP_TEST 0x200000
+static uint8_t m_libspdm_local_response_buffer_for_chunk_seq_no_wrap_test[
+    BUFFER_SIZE_FOR_CHUNK_SEQ_NO_WRAP_TEST];
 
 static size_t m_libspdm_local_buffer_size;
 static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_M1M2_BUFFER_SIZE];
@@ -259,6 +263,29 @@ void libspdm_requester_chunk_get_test_case4_build_digest_response(
     spdm_response->header.param2 |= (0xFF << 0);
 }
 
+void libspdm_requester_chunk_get_test_case5_build_vendor_response(
+    void* context, void* response, size_t* response_size)
+{
+    spdm_vendor_defined_response_msg_t *spdm_response;
+
+    /* For exceed max chunk seq no */
+    *response_size =
+        (CHUNK_GET_REQUESTER_UNIT_TEST_DATA_TRANSFER_SIZE -
+         sizeof(spdm_chunk_response_response_t)) * 65536 - sizeof(uint32_t) + 0x10;
+
+    libspdm_set_mem(response, *response_size, 0xff);
+
+    spdm_response = response;
+
+    spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_12;
+    spdm_response->header.request_response_code = SPDM_VENDOR_DEFINED_RESPONSE;
+    spdm_response->header.param1 = 0;
+    spdm_response->header.param2 = 0;
+
+    spdm_response->standard_id = 6;
+    spdm_response->len = 2;
+}
+
 libspdm_return_t libspdm_requester_chunk_get_test_send_message(
     void* spdm_context, size_t request_size, const void* request,
     uint64_t timeout)
@@ -431,6 +458,9 @@ libspdm_return_t libspdm_requester_chunk_get_test_receive_message(
     } else if (spdm_test_context->case_id == 0x4) {
         build_response_func =
             libspdm_requester_chunk_get_test_case4_build_digest_response;
+    } else if (spdm_test_context->case_id == 0x5) {
+        build_response_func =
+            libspdm_requester_chunk_get_test_case5_build_vendor_response;
     } else {
         LIBSPDM_ASSERT(0);
         return LIBSPDM_STATUS_RECEIVE_FAIL;
@@ -453,6 +483,12 @@ libspdm_return_t libspdm_requester_chunk_get_test_receive_message(
 
             sub_rsp = (spdm_message_header_t*) m_libspdm_local_large_response_buffer;
             sub_rsp_size = sizeof(m_libspdm_local_large_response_buffer);
+            if (spdm_test_context->case_id == 0x5) {
+                sub_rsp =
+                    (spdm_message_header_t*)
+                    m_libspdm_local_response_buffer_for_chunk_seq_no_wrap_test;
+                sub_rsp_size = sizeof(m_libspdm_local_response_buffer_for_chunk_seq_no_wrap_test);
+            }
             libspdm_zero_mem(sub_rsp, sub_rsp_size);
 
             build_response_func(spdm_context, sub_rsp, &sub_rsp_size);
@@ -832,6 +868,57 @@ void libspdm_test_requester_chunk_get_case4(void** state)
 }
 #endif
 
+#if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
+static void libspdm_test_requester_chunk_get_case5(void **state)
+{
+    /* Copied from Vendor Request case 1*/
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    uint16_t standard_id = 6;
+    uint8_t vendor_id_len = 2;
+    uint8_t vendor_id[SPDM_MAX_VENDOR_ID_LENGTH] = {0xAA, 0xAA};
+    uint16_t data_len = 16;
+    uint8_t data[16];
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x5;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    /* Large response need a large scratch buffer. */
+    spdm_context->connection_info.capability.max_spdm_msg_size =
+        BUFFER_SIZE_FOR_CHUNK_SEQ_NO_WRAP_TEST;
+    spdm_context->local_context.capability.max_spdm_msg_size =
+        BUFFER_SIZE_FOR_CHUNK_SEQ_NO_WRAP_TEST;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.data_transfer_size =
+        CHUNK_GET_REQUESTER_UNIT_TEST_DATA_TRANSFER_SIZE;
+    spdm_context->local_context.capability.sender_data_transfer_size =
+        CHUNK_GET_REQUESTER_UNIT_TEST_DATA_TRANSFER_SIZE;
+    spdm_context->local_context.is_requester = true;
+
+    spdm_test_context->scratch_buffer_size =
+        libspdm_get_sizeof_required_scratch_buffer(spdm_context);
+    spdm_test_context->scratch_buffer = (void *)malloc(spdm_test_context->scratch_buffer_size);
+    libspdm_set_scratch_buffer (spdm_context,
+                                spdm_test_context->scratch_buffer,
+                                spdm_test_context->scratch_buffer_size);
+
+    libspdm_set_mem(data, sizeof(data), 0xAA);
+
+    status = libspdm_vendor_send_request_receive_response(spdm_context, NULL,
+                                                          standard_id, vendor_id_len, vendor_id,
+                                                          data_len, data,
+                                                          &standard_id, &vendor_id_len, vendor_id,
+                                                          &data_len, data);
+
+    assert_int_equal(status, LIBSPDM_STATUS_RECEIVE_FAIL);
+}
+#endif /* LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES */
+
 int libspdm_requester_chunk_get_test_main(void)
 {
     /* Test the CHUNK_GET handlers in various requester handlers */
@@ -851,6 +938,10 @@ int libspdm_requester_chunk_get_test_main(void)
 #if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
         /* Request Digests */
         cmocka_unit_test(libspdm_test_requester_chunk_get_case4),
+#endif
+#if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
+        /* Request Vendor Specific Response and chunk seq no wrapped */
+        cmocka_unit_test(libspdm_test_requester_chunk_get_case5),
 #endif
     };
 
