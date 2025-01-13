@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -111,16 +111,16 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
     spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
         /* Number of Algorithms Structure Tables based on supported algorithms */
-        if (spdm_context->local_context.algorithm.dhe_named_group) {
+        if (spdm_context->local_context.algorithm.dhe_named_group != 0) {
             req_param1++;
         }
-        if (spdm_context->local_context.algorithm.aead_cipher_suite) {
+        if (spdm_context->local_context.algorithm.aead_cipher_suite != 0) {
             req_param1++;
         }
-        if (spdm_context->local_context.algorithm.req_base_asym_alg) {
+        if (spdm_context->local_context.algorithm.req_base_asym_alg != 0) {
             req_param1++;
         }
-        if (spdm_context->local_context.algorithm.key_schedule) {
+        if (spdm_context->local_context.algorithm.key_schedule != 0) {
             req_param1++;
         }
         LIBSPDM_ASSERT(req_param1 <=
