@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -1727,5 +1727,57 @@ static inline uint64_t libspdm_le_to_be_64(uint64_t value)
  */
 uint32_t libspdm_mask_capability_flags(libspdm_context_t *spdm_context,
                                        bool is_request_flags, uint32_t flags);
+
+/**
+ * Return BaseHashAlgo that is masked by the negotiated SPDM version.
+ *
+ * @param  spdm_context    A pointer to the SPDM context.
+ * @param  base_hash_algo  Unmasked BaseHashAlgo.
+ *
+ * @return The masked BaseHashAlgo.
+ */
+uint32_t libspdm_mask_base_hash_algo(libspdm_context_t *spdm_context, uint32_t base_hash_algo);
+
+/**
+ * Return MeasurementHashAlgo that is masked by the negotiated SPDM version.
+ *
+ * @param  spdm_context           A pointer to the SPDM context.
+ * @param  measurement_hash_algo  Unmasked MeasurementHashAlgo.
+ *
+ * @return The masked MeasurementHashAlgo.
+ */
+uint32_t libspdm_mask_measurement_hash_algo(libspdm_context_t *spdm_context,
+                                            uint32_t measurement_hash_algo);
+
+/**
+ * Return MeasurementSpecification that is masked by the negotiated SPDM version.
+ *
+ * @param  spdm_context               A pointer to the SPDM context.
+ * @param  measurement_specification  Unmasked MeasurementSpecification.
+ *
+ * @return The masked MeasurementSpecification.
+ */
+uint8_t libspdm_mask_measurement_specification(libspdm_context_t *spdm_context,
+                                               uint8_t measurement_specification);
+
+/**
+ * Return MELspecification that is masked by the negotiated SPDM version.
+ *
+ * @param  spdm_context       A pointer to the SPDM context.
+ * @param  mel_specification  Unmasked MELspecification.
+ *
+ * @return The masked MELspecification.
+ */
+uint8_t libspdm_mask_mel_specification(libspdm_context_t *spdm_context, uint8_t mel_specification);
+
+/**
+ * Return BaseAsymAlgo that is masked by the negotiated SPDM version.
+ *
+ * @param  spdm_context    A pointer to the SPDM context.
+ * @param  base_asym_algo  Unmasked BaseAsymAlgo.
+ *
+ * @return The masked BaseAsymAlgo.
+ */
+uint32_t libspdm_mask_base_asym_algo(libspdm_context_t *spdm_context, uint32_t base_asym_algo);
 
 #endif /* SPDM_COMMON_LIB_INTERNAL_H */

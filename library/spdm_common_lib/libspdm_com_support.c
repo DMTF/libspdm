@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -369,6 +369,89 @@ uint32_t libspdm_mask_capability_flags(libspdm_context_t *spdm_context,
         } else {
             return (flags & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_13_MASK);
         }
+    default:
+        LIBSPDM_ASSERT(false);
+        return 0;
+    }
+}
+
+uint32_t libspdm_mask_base_hash_algo(libspdm_context_t *spdm_context, uint32_t base_hash_algo)
+{
+    const uint8_t spdm_version = libspdm_get_connection_version(spdm_context);
+
+    if (spdm_version >= SPDM_MESSAGE_VERSION_12) {
+        return (base_hash_algo & SPDM_ALGORITHMS_BASE_HASH_ALGO_12_MASK);
+    } else {
+        return (base_hash_algo & SPDM_ALGORITHMS_BASE_HASH_ALGO_10_MASK);
+    }
+}
+
+uint32_t libspdm_mask_measurement_hash_algo(libspdm_context_t *spdm_context,
+                                            uint32_t measurement_hash_algo)
+{
+    const uint8_t spdm_version = libspdm_get_connection_version(spdm_context);
+
+    if (spdm_version >= SPDM_MESSAGE_VERSION_12) {
+        return (measurement_hash_algo & SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_12_MASK);
+    } else {
+        return (measurement_hash_algo & SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_10_MASK);
+    }
+}
+
+uint8_t libspdm_mask_measurement_specification(libspdm_context_t *spdm_context,
+                                               uint8_t measurement_specification)
+{
+    return (measurement_specification & SPDM_MEASUREMENT_SPECIFICATION_10_MASK);
+}
+
+uint8_t libspdm_mask_mel_specification(libspdm_context_t *spdm_context, uint8_t mel_specification)
+{
+    LIBSPDM_ASSERT(libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_13);
+
+    return (mel_specification & SPDM_MEL_SPECIFICATION_13_MASK);
+}
+
+uint32_t libspdm_mask_base_asym_algo(libspdm_context_t *spdm_context, uint32_t base_asym_algo)
+{
+    const uint8_t spdm_version = libspdm_get_connection_version(spdm_context);
+
+    if (spdm_version >= SPDM_MESSAGE_VERSION_12) {
+        return (base_asym_algo & SPDM_ALGORITHMS_BASE_ASYM_ALGO_12_MASK);
+    } else {
+        return (base_asym_algo & SPDM_ALGORITHMS_BASE_ASYM_ALGO_10_MASK);
+    }
+}
+
+uint16_t libspdm_mask_alg_supported(libspdm_context_t *spdm_context, uint8_t alg_type,
+                                    uint16_t alg_supported)
+{
+    const uint8_t spdm_version = libspdm_get_connection_version(spdm_context);
+
+    LIBSPDM_ASSERT(spdm_version >= SPDM_MESSAGE_VERSION_11);
+
+    switch (alg_type) {
+    case SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_DHE:
+        if (spdm_version >= SPDM_MESSAGE_VERSION_12) {
+            return (alg_supported & SPDM_NEGOTIATE_ALGORITHMS_ALG_SUPPORTED_DHE_12_MASK);
+        } else {
+            return (alg_supported & SPDM_NEGOTIATE_ALGORITHMS_ALG_SUPPORTED_DHE_11_MASK);
+        }
+    case SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_AEAD:
+        if (spdm_version >= SPDM_MESSAGE_VERSION_12) {
+            return (alg_supported & SPDM_NEGOTIATE_ALGORITHMS_ALG_SUPPORTED_AEAD_12_MASK);
+        } else {
+            return (alg_supported & SPDM_NEGOTIATE_ALGORITHMS_ALG_SUPPORTED_AEAD_11_MASK);
+        }
+    case SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_REQ_BASE_ASYM_ALG:
+        if (spdm_version >= SPDM_MESSAGE_VERSION_12) {
+            return (alg_supported &
+                    SPDM_NEGOTIATE_ALGORITHMS_ALG_SUPPORTED_REQ_BASE_ASYM_ALG_12_MASK);
+        } else {
+            return (alg_supported &
+                    SPDM_NEGOTIATE_ALGORITHMS_ALG_SUPPORTED_REQ_BASE_ASYM_ALG_11_MASK);
+        }
+    case SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE:
+        return (alg_supported & SPDM_NEGOTIATE_ALGORITHMS_ALG_SUPPORTED_KEY_SCHEDULE_11_MASK);
     default:
         LIBSPDM_ASSERT(false);
         return 0;
