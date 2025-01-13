@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -456,8 +456,8 @@ libspdm_negotiate_algorithms_request_spdm11_t
             3,
             0
         },
-        sizeof(libspdm_negotiate_algorithms_request_spdm11_t)-
-        sizeof(spdm_negotiate_algorithms_common_struct_table_t),
+        /* Size is too large for param1 == 3. */
+        sizeof(libspdm_negotiate_algorithms_request_spdm11_t),
         SPDM_MEASUREMENT_SPECIFICATION_DMTF,
     },
     {
@@ -484,9 +484,8 @@ libspdm_negotiate_algorithms_request_spdm11_t
     }
 };
 size_t m_libspdm_negotiate_algorithm_request13_size =
-    sizeof(m_libspdm_negotiate_algorithm_request13)-
-    sizeof(
-        spdm_negotiate_algorithms_common_struct_table_t);
+    sizeof(m_libspdm_negotiate_algorithm_request13) -
+    sizeof(spdm_negotiate_algorithms_common_struct_table_t);
 
 libspdm_negotiate_algorithms_request_spdm11_t
     m_libspdm_negotiate_algorithm_request14 =

@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -53,6 +53,39 @@ static uint32_t libspdm_prioritize_algorithm(const uint32_t *priority_table,
     }
 
     return 0;
+}
+
+static uint16_t get_alg_supported_mask(uint8_t spdm_version, uint8_t alg_type)
+{
+    LIBSPDM_ASSERT(spdm_version >= SPDM_MESSAGE_VERSION_11);
+
+    switch (alg_type) {
+    case SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_DHE:
+        if (spdm_version >= SPDM_MESSAGE_VERSION_12) {
+            return SPDM_NEGOTIATE_ALGORITHMS_ALG_SUPPORTED_DHE_MASK_12;
+        } else {
+            return SPDM_NEGOTIATE_ALGORITHMS_ALG_SUPPORTED_DHE_MASK_11;
+        }
+        break;
+    case SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_AEAD:
+        if (spdm_version >= SPDM_MESSAGE_VERSION_12) {
+            return SPDM_NEGOTIATE_ALGORITHMS_ALG_SUPPORTED_AEAD_MASK_12;
+        } else {
+            return SPDM_NEGOTIATE_ALGORITHMS_ALG_SUPPORTED_AEAD_MASK_11;
+        }
+        break;
+    case SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_REQ_BASE_ASYM_ALG:
+        if (spdm_version >= SPDM_MESSAGE_VERSION_12) {
+            return SPDM_NEGOTIATE_ALGORITHMS_ALG_SUPPORTED_REQ_BASE_ASYM_ALG_MASK_12;
+        } else {
+            return SPDM_NEGOTIATE_ALGORITHMS_ALG_SUPPORTED_AEAD_MASK_11;
+        }
+        break;
+    case SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE:
+        return SPDM_NEGOTIATE_ALGORITHMS_ALG_SUPPORTED_KEY_SCHEDULE_11;
+    default:
+        return 0;
+    }
 }
 
 libspdm_return_t libspdm_get_response_algorithms(libspdm_context_t *spdm_context,
@@ -316,6 +349,9 @@ libspdm_return_t libspdm_get_response_algorithms(libspdm_context_t *spdm_context
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
         alg_type_pre = struct_table->alg_type;
         for (index = 0; index < spdm_request->header.param1; index++) {
+            const uint16_t alg_supported_mask =
+                get_alg_supported_mask(spdm_request->header.spdm_version, struct_table->alg_type);
+
             if ((size_t)spdm_request + request_size < (size_t)struct_table) {
                 return libspdm_generate_error_response(
                     spdm_context,
@@ -362,6 +398,13 @@ libspdm_return_t libspdm_get_response_algorithms(libspdm_context_t *spdm_context
                     SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                     response_size, response);
             }
+            /* If Requester sends AlgType then AlgSupported must be populated. */
+            if ((struct_table->alg_supported & alg_supported_mask) == 0) {
+                return libspdm_generate_error_response(
+                    spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
+                    0, response_size, response);
+            }
+
             struct_table =
                 (void *)((size_t)struct_table +
                          sizeof(spdm_negotiate_algorithms_common_struct_table_t) +
@@ -455,12 +498,6 @@ libspdm_return_t libspdm_get_response_algorithms(libspdm_context_t *spdm_context
         for (index = 0; index < spdm_request->header.param1; index++) {
             switch (struct_table->alg_type) {
             case SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_DHE:
-                if (struct_table->alg_supported == 0) {
-                    return libspdm_generate_error_response(
-                        spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
-                        0, response_size, response);
-                }
-
                 spdm_context->connection_info.algorithm.dhe_named_group =
                     struct_table->alg_supported;
                 spdm_response->struct_table[index].alg_type =
@@ -473,12 +510,6 @@ libspdm_return_t libspdm_get_response_algorithms(libspdm_context_t *spdm_context
                         spdm_context->connection_info.algorithm.dhe_named_group);
                 break;
             case SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_AEAD:
-                if (struct_table->alg_supported == 0) {
-                    return libspdm_generate_error_response(
-                        spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
-                        0, response_size, response);
-                }
-
                 spdm_context->connection_info.algorithm.aead_cipher_suite =
                     struct_table->alg_supported;
                 spdm_response->struct_table[index].alg_type =
@@ -491,12 +522,6 @@ libspdm_return_t libspdm_get_response_algorithms(libspdm_context_t *spdm_context
                         spdm_context->connection_info.algorithm.aead_cipher_suite);
                 break;
             case SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_REQ_BASE_ASYM_ALG:
-                if (struct_table->alg_supported == 0) {
-                    return libspdm_generate_error_response(
-                        spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
-                        0, response_size, response);
-                }
-
                 spdm_context->connection_info.algorithm.req_base_asym_alg =
                     struct_table->alg_supported;
                 spdm_response->struct_table[index].alg_type =
@@ -510,12 +535,6 @@ libspdm_return_t libspdm_get_response_algorithms(libspdm_context_t *spdm_context
                         spdm_context->connection_info.algorithm.req_base_asym_alg);
                 break;
             case SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE:
-                if (struct_table->alg_supported == 0) {
-                    return libspdm_generate_error_response(
-                        spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
-                        0, response_size, response);
-                }
-
                 spdm_context->connection_info.algorithm.key_schedule =
                     struct_table->alg_supported;
                 spdm_response->struct_table[index].alg_type =
