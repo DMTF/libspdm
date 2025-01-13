@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -220,7 +220,7 @@ libspdm_return_t libspdm_get_response_algorithms(libspdm_context_t *spdm_context
     };
 
     uint32_t key_schedule_priority_table[] = {
-        SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH,
+        SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM,
     };
 
     uint32_t measurement_hash_priority_table[] = {
@@ -803,7 +803,7 @@ libspdm_return_t libspdm_get_response_algorithms(libspdm_context_t *spdm_context
                 SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP,
                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP)) {
             if (spdm_context->connection_info.algorithm.key_schedule !=
-                SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH) {
+                SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM) {
                 return libspdm_generate_error_response(
                     spdm_context,
                     SPDM_ERROR_CODE_INVALID_REQUEST, 0,

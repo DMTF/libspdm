@@ -15,4 +15,4 @@ uint32_t m_libspdm_use_asym_algo =
 uint16_t m_libspdm_use_req_asym_algo = SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048;
 uint16_t m_libspdm_use_dhe_algo = SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_256_R1;
 uint16_t m_libspdm_use_aead_algo = SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_256_GCM;
-uint16_t m_libspdm_use_key_schedule_algo = SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH;
+uint16_t m_libspdm_use_key_schedule_algo = SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM;

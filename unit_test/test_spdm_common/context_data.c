@@ -1485,7 +1485,7 @@ static void libspdm_test_max_session_count_case21(void **state)
         spdm_context->connection_info.algorithm.aead_cipher_suite =
             SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_256_GCM;
         spdm_context->connection_info.algorithm.key_schedule =
-            SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH;
+            SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM;
 
         libspdm_zero_mem(&parameter, sizeof(parameter));
         parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
