@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -17,6 +17,7 @@ libspdm_return_t libspdm_get_response_chunk_get(
 {
     libspdm_chunk_info_t* get_info;
     uint32_t min_data_transfer_size;
+    uint64_t max_chunk_data_transfer_size;
 
     const spdm_chunk_get_request_t* spdm_request;
     spdm_chunk_response_response_t* spdm_response;
@@ -103,11 +104,24 @@ libspdm_return_t libspdm_get_response_chunk_get(
             response_size, response);
     }
 
-    libspdm_zero_mem(response, *response_size);
-
     min_data_transfer_size = LIBSPDM_MIN(
         spdm_context->connection_info.capability.data_transfer_size,
         spdm_context->local_context.capability.sender_data_transfer_size);
+
+    /* Fail if exceed max chunks */
+    max_chunk_data_transfer_size =
+        ((size_t) min_data_transfer_size - sizeof(spdm_chunk_response_response_t)) * 65536 -
+        sizeof(uint32_t);
+    /* max_spdm_msg_size already checked in caller */
+
+    if (get_info->large_message_size > max_chunk_data_transfer_size) {
+        return libspdm_generate_error_response(
+            spdm_context,
+            SPDM_ERROR_CODE_RESPONSE_TOO_LARGE, 0,
+            response_size, response);
+    }
+
+    libspdm_zero_mem(response, *response_size);
 
     /* Assert the data transfer size is smaller than the response size.
      * Otherwise there is no reason to chunk this response. */
