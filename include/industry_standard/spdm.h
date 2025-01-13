@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -402,7 +402,10 @@ typedef struct {
 #define SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AEAD_SM4_GCM 0x00000008
 
 /* SPDM NEGOTIATE_ALGORITHMS request KEY_SCHEDULE */
-#define SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH 0x00000001
+#define SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM 0x00000001
+
+/* Legacy macro. Will be removed in libspdm 4.0. */
+#define SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM
 
 /* SPDM NEGOTIATE_ALGORITHMS response */
 typedef struct {

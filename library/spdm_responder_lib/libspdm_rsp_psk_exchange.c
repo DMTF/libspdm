@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -196,7 +196,7 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
                 0, response_size, response);
         }
         if (spdm_context->connection_info.algorithm.key_schedule !=
-            SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH) {
+            SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM) {
             return libspdm_generate_error_response(
                 spdm_context,
                 SPDM_ERROR_CODE_INVALID_REQUEST,

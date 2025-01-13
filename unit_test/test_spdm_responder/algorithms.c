@@ -95,7 +95,7 @@ libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_requ
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE,
             0x20,
-            SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH
+            SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM
         }
     }
 };
@@ -131,7 +131,7 @@ libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_requ
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE,
             0x20,
-            SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH
+            SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM
         }
     }
 };
@@ -167,7 +167,7 @@ libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_requ
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE,
             0x20,
-            SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH
+            SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM
         }
     }
 };
@@ -203,7 +203,7 @@ libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_requ
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE,
             0x20,
-            SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH
+            SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM
         }
     }
 };
@@ -239,7 +239,7 @@ libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_requ
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE,
             0x20,
-            SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH
+            SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM
         }
     }
 };
@@ -275,7 +275,7 @@ libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_requ
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE,
             0x20,
-            SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH
+            SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM
         }
     }
 };
@@ -360,7 +360,7 @@ libspdm_negotiate_algorithms_request_spdm11_oversized_t m_libspdm_negotiate_algo
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE,
             0x20,
-            SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH
+            SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM
         }
     }
 };
@@ -399,7 +399,7 @@ libspdm_negotiate_algorithms_request_spdm11_multiple_tables_t
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE,
             0x20,
-            SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH
+            SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM
         },
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_DHE,
@@ -419,7 +419,7 @@ libspdm_negotiate_algorithms_request_spdm11_multiple_tables_t
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE,
             0x20,
-            SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH
+            SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM
         },
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_DHE,
@@ -439,7 +439,7 @@ libspdm_negotiate_algorithms_request_spdm11_multiple_tables_t
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE,
             0x20,
-            SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH
+            SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM
         }
     }
 };
@@ -479,7 +479,7 @@ libspdm_negotiate_algorithms_request_spdm11_t
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE,
             0x20,
-            SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH
+            SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM
         }
     }
 };
@@ -521,7 +521,7 @@ libspdm_negotiate_algorithms_request_spdm11_t
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE,
             0x20,
-            SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH
+            SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM
         },
     }
 };
@@ -562,7 +562,7 @@ libspdm_negotiate_algorithms_request_spdm11_t
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE,
             0x20,
-            SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH
+            SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM
         }
     }
 };
@@ -600,7 +600,7 @@ libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_requ
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE,
             0x20,
-            SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH
+            SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM
         }
     }
 };
@@ -640,7 +640,7 @@ libspdm_negotiate_algorithms_request_spdm12_t
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE,
             0x20,
-            SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH
+            SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM
         }
     }
 };
@@ -681,7 +681,7 @@ libspdm_negotiate_algorithms_request_spdm12_t
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE,
             0x20,
-            SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH
+            SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM
         }
     }
 };
@@ -721,7 +721,7 @@ libspdm_negotiate_algorithms_request_spdm11_t m_libspdm_negotiate_algorithm_requ
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE,
             0x20,
-            SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH
+            SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM
         }
     }
 };
@@ -763,7 +763,7 @@ libspdm_negotiate_algorithms_request_spdm12_t
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE,
             0x20,
-            SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH
+            SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM
         }
     }
 };
@@ -800,7 +800,7 @@ libspdm_negotiate_algorithms_request_spdm12_t
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE,
             0x20,
-            SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH
+            SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM
         },
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_AEAD,
@@ -852,7 +852,7 @@ libspdm_negotiate_algorithms_request_spdm12_more_algo_t
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE,
             0x20,
-            SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH
+            SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM
         },
     }
 };
@@ -894,12 +894,12 @@ libspdm_negotiate_algorithms_request_spdm12_more_algo_t
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE,
             0x20,
-            SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH
+            SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM
         },
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE + 1,
             0x20,
-            SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH
+            SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM
         }
     }
 };
@@ -942,7 +942,7 @@ libspdm_negotiate_algorithms_request_spdm12_t
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE,
             0x20,
-            SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH
+            SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM
         }
     }
 };

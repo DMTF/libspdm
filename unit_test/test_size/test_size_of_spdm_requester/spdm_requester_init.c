@@ -139,10 +139,10 @@ void *spdm_client_init(void)
     data16 = SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_2048;
     libspdm_set_data(spdm_context, LIBSPDM_DATA_DHE_NAME_GROUP, &parameter,
                      &data16, sizeof(data16));
-    data16 = SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH;
+    data16 = SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM;
     libspdm_set_data(spdm_context, LIBSPDM_DATA_AEAD_CIPHER_SUITE, &parameter,
                      &data16, sizeof(data16));
-    data16 = SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH;
+    data16 = SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM;
     libspdm_set_data(spdm_context, LIBSPDM_DATA_KEY_SCHEDULE, &parameter, &data16,
                      sizeof(data16));
 

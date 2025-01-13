@@ -49,7 +49,7 @@ libspdm_negotiate_algorithms_request_spdm_tables_t
         {
             SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE,
             0x20,
-            SPDM_ALGORITHMS_KEY_SCHEDULE_HMAC_HASH
+            SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM
         }
     }
 };
