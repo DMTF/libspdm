@@ -7,3 +7,6 @@
 [submodule "unit_test/cmockalib/cmocka"]
     path = unit_test/cmockalib/cmocka
 	url = https://gitlab.com/cmocka/cmocka.git
+[submodule "os_stub/oqslib/liboqs"]
+	path = os_stub/oqslib/liboqs
+	url = https://github.com/open-quantum-safe/liboqs

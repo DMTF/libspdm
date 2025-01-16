@@ -6,7 +6,7 @@
 
    The SPDM and secured message libraries follow :
 
-   [DSP0274](https://www.dmtf.org/dsp/DSP0274)  Security Protocol and Data Model (SPDM) Specification (version [1.0.2](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.0.2.pdf), version [1.1.3](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.1.3.pdf), version [1.2.2](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.2.2.pdf) and version [1.3.1](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.3.1.pdf))
+   [DSP0274](https://www.dmtf.org/dsp/DSP0274)  Security Protocol and Data Model (SPDM) Specification (version [1.0.2](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.0.2.pdf), version [1.1.3](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.1.3.pdf), version [1.2.2](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.2.2.pdf), version [1.3.1](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.3.1.pdf)) and version [1.4.0WIP70](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.4.0WIP70.pdf)
 
    [DSP0277](https://www.dmtf.org/dsp/DSP0277)  Secured Messages using SPDM Specification (version [1.0.1](https://www.dmtf.org/sites/default/files/standards/documents/DSP0277_1.0.1.pdf), version [1.1.1](https://www.dmtf.org/sites/default/files/standards/documents/DSP0277_1.1.1.pdf), version [1.2.0](https://www.dmtf.org/sites/default/files/standards/documents/DSP0277_1.2.0.pdf))
 
@@ -58,6 +58,9 @@
 
    An [OpenSSL](https://www.openssl.org/) wrapper is included in [cryptlib_openssl](https://github.com/DMTF/libspdm/tree/main/os_stub/openssllib).
    NOTE: SM2-KeyExchange and SM4_GCM are not supported.
+
+   An [OQS](https://github.com/open-quantum-safe/liboqs) wrapper is included in [pqccryptlib_oqs](https://github.com/DMTF/libspdm/tree/main/os_stub/pqccryptlib_oqs).
+   NOTE: SLH-DSA and PQC X.509cert/PEM parsing are not supported.
 
    libspdm provides support for [FIPS 140-3](https://csrc.nist.gov/publications/detail/fips/140/3/final). Refer to [libspdm FIPS](https://github.com/DMTF/libspdm/blob/main/doc/fips.md) for more information.
 
@@ -170,6 +173,8 @@ For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/m
 1) [Mbed TLS](https://tls.mbed.org) as cryptography library. Version 3.6.2.
 
 2) [OpenSSL](https://www.openssl.org) as cryptography library. Version 3.0.14.
+
+3) [OQS](https://github.com/open-quantum-safe/liboqs) as PQC cryptography library. Version 0.12.0. (NOTE: This library is NOT recommended in a production envrionment. It is only for research and prototyping.)
 
 ### Unit Test framework
 

@@ -11,4 +11,5 @@ target_include_directories(spdm_crypt_ext_lib
 target_sources(spdm_crypt_ext_lib
     PRIVATE
         spdm_crypt_ext.c
+        spdm_crypt_ext_pqc.c
 )

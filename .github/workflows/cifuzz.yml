@@ -4,6 +4,8 @@ on:
     paths-ignore:
       - 'doc/**'
       - '**/*.md'
+    branches:
+      - main
 permissions: {}
 jobs:
   Fuzzing:
