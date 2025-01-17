@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -14,53 +14,53 @@ void *libspdm_hmac_new(uint32_t base_hash_algo)
         return libspdm_hmac_sha256_new();
 #else
         LIBSPDM_ASSERT(false);
-        return false;
+        return NULL;
 #endif
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_384:
 #if LIBSPDM_SHA384_SUPPORT
         return libspdm_hmac_sha384_new();
 #else
         LIBSPDM_ASSERT(false);
-        return false;
+        return NULL;
 #endif
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_512:
 #if LIBSPDM_SHA512_SUPPORT
         return libspdm_hmac_sha512_new();
 #else
         LIBSPDM_ASSERT(false);
-        return false;
+        return NULL;
 #endif
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_256:
 #if LIBSPDM_SHA3_256_SUPPORT
         return libspdm_hmac_sha3_256_new();
 #else
         LIBSPDM_ASSERT(false);
-        return false;
+        return NULL;
 #endif
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_384:
 #if LIBSPDM_SHA3_384_SUPPORT
         return libspdm_hmac_sha3_384_new();
 #else
         LIBSPDM_ASSERT(false);
-        return false;
+        return NULL;
 #endif
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA3_512:
 #if LIBSPDM_SHA3_512_SUPPORT
         return libspdm_hmac_sha3_512_new();
 #else
         LIBSPDM_ASSERT(false);
-        return false;
+        return NULL;
 #endif
     case SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SM3_256:
 #if LIBSPDM_SM3_256_SUPPORT
         return libspdm_hmac_sm3_256_new();
 #else
         LIBSPDM_ASSERT(false);
-        return false;
+        return NULL;
 #endif
     default:
         LIBSPDM_ASSERT(false);
-        return false;
+        return NULL;
     }
 }
 
