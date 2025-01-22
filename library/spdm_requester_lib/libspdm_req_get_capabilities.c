@@ -251,6 +251,10 @@ static libspdm_return_t libspdm_try_get_capabilities(libspdm_context_t *spdm_con
     }
     spdm_request->header.request_response_code = SPDM_GET_CAPABILITIES;
     spdm_request->header.param1 = 0;
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13 &&
+        ((spdm_request->flags & SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP) == 0)) {
+        spdm_request->header.param1 = spdm_context->local_context.capability.param1;
+    }
     spdm_request->header.param2 = 0;
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
         spdm_request->ct_exponent = spdm_context->local_context.capability.ct_exponent;
@@ -308,22 +312,36 @@ static libspdm_return_t libspdm_try_get_capabilities(libspdm_context_t *spdm_con
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
-    if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+    if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
         if (spdm_response_size < sizeof(spdm_capabilities_response_t)) {
             status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
             goto receive_done;
         }
+    } else if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+        if (spdm_response_size < (sizeof(spdm_capabilities_response_t) -
+                                  sizeof(spdm_supported_algorithms_block_t))) {
+            status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+            goto receive_done;
+        }
     } else {
-        if (spdm_response_size < sizeof(spdm_capabilities_response_t) -
-            sizeof(spdm_response->data_transfer_size) - sizeof(spdm_response->max_spdm_msg_size)) {
+        if (spdm_response_size < (sizeof(spdm_capabilities_response_t) -
+                                  sizeof(spdm_supported_algorithms_block_t) -
+                                  sizeof(spdm_response->data_transfer_size) -
+                                  sizeof(spdm_response->max_spdm_msg_size))) {
             status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
             goto receive_done;
         }
     }
-    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+
+    if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_13 &&
+        (spdm_request->header.param1 & 0x01)) {
         spdm_response_size = sizeof(spdm_capabilities_response_t);
+    } else if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+        spdm_response_size = sizeof(spdm_capabilities_response_t)-
+                             sizeof(spdm_supported_algorithms_block_t);
     } else {
         spdm_response_size = sizeof(spdm_capabilities_response_t) -
+                             sizeof(spdm_supported_algorithms_block_t) -
                              sizeof(spdm_response->data_transfer_size) -
                              sizeof(spdm_response->max_spdm_msg_size);
     }
