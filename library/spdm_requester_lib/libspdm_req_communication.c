@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -19,7 +19,7 @@ libspdm_return_t libspdm_init_connection(void *spdm_context, bool get_version_on
     }
 
     if (!get_version_only) {
-        status = libspdm_get_capabilities(context);
+        status = libspdm_get_capabilities(context, false, NULL);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return status;
         }
@@ -28,6 +28,51 @@ libspdm_return_t libspdm_init_connection(void *spdm_context, bool get_version_on
             return status;
         }
     }
+    return LIBSPDM_STATUS_SUCCESS;
+}
+
+libspdm_return_t libspdm_get_supported_algorithms(void *spdm_context,
+                                                  void *responder_supported_algorithms)
+{
+    libspdm_return_t status;
+    libspdm_context_t *context;
+    spdm_responder_supported_algorithms_t *algorithms;
+    bool has_version_1_3_or_above;
+    size_t index;
+
+    context = spdm_context;
+    algorithms = responder_supported_algorithms;
+    has_version_1_3_or_above = false;
+
+    /* Pre-check: Verify requester supports at least one version >= 1.3 */
+    for (index = 0; index < context->local_context.version.spdm_version_count; index++) {
+        if (context->local_context.version.spdm_version[index] >= SPDM_MESSAGE_VERSION_13) {
+            has_version_1_3_or_above = true;
+            break;
+        }
+    }
+    LIBSPDM_ASSERT(has_version_1_3_or_above);
+    if (!has_version_1_3_or_above) {
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+    }
+
+    LIBSPDM_ASSERT((context->local_context.capability.flags &
+                    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP) != 0);
+
+    status = libspdm_get_version(context, NULL, NULL);
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
+        return status;
+    }
+
+    if (context->connection_info.version < SPDM_MESSAGE_VERSION_13) {
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+    }
+
+    status = libspdm_get_capabilities(context, true, algorithms);
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
+        return status;
+    }
+
     return LIBSPDM_STATUS_SUCCESS;
 }
 

@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -133,6 +133,7 @@ libspdm_return_t libspdm_get_version(libspdm_context_t *spdm_context,
  * This function sends GET_CAPABILITIES and receives CAPABILITIES.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  get_supported_algorithms     If true, indicates that the requester wants the responder to include its supported algorithms in the CAPABILITIES response.
  * @param  RequesterCTExponent          RequesterCTExponent to the GET_CAPABILITIES request.
  * @param  RequesterFlags               RequesterFlags to the GET_CAPABILITIES request.
  * @param  ResponderCTExponent          ResponderCTExponent from the CAPABILITIES response.
@@ -141,7 +142,9 @@ libspdm_return_t libspdm_get_version(libspdm_context_t *spdm_context,
  * @retval RETURN_SUCCESS               The GET_CAPABILITIES is sent and the CAPABILITIES is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-libspdm_return_t libspdm_get_capabilities(libspdm_context_t *spdm_context);
+libspdm_return_t libspdm_get_capabilities(libspdm_context_t *spdm_context,
+                                          bool get_supported_algorithms,
+                                          spdm_responder_supported_algorithms_t *supported_algs);
 
 /**
  * This function sends NEGOTIATE_ALGORITHMS and receives ALGORITHMS.
