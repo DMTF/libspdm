@@ -129,10 +129,35 @@ libspdm_return_t libspdm_get_version(libspdm_context_t *spdm_context,
                                      uint8_t *version_number_entry_count,
                                      spdm_version_number_t *version_number_entry);
 
+#define LIBSPDM_MAX_EXT_ALG_COUNT 5
+
+#pragma pack(1)
+typedef struct {
+    spdm_negotiate_algorithms_common_struct_table_t alg_struct;
+    spdm_extended_algorithm_t alg_external[LIBSPDM_MAX_EXT_ALG_COUNT];
+} libspdm_supported_algorithms_alg_struct_t;
+#pragma pack()
+
+typedef struct {
+    uint8_t spdm_version;
+    uint8_t measurement_specification;
+    uint8_t other_params_support;
+    uint32_t base_asym_algo;
+    uint32_t base_hash_algo;
+    uint8_t mel_specification;
+    uint8_t ext_asym_count;
+    spdm_extended_algorithm_t ext_asym[LIBSPDM_MAX_EXT_ALG_COUNT];
+    uint8_t ext_hash_count;
+    spdm_extended_algorithm_t ext_hash[LIBSPDM_MAX_EXT_ALG_COUNT];
+    uint8_t struct_table_count;
+    libspdm_supported_algorithms_alg_struct_t
+        struct_table[LIBSPDM_MAX_EXT_ALG_COUNT];
+} libspdm_responder_supported_algorithms_13_t;
+
 /**
  * This function sends GET_CAPABILITIES and receives CAPABILITIES.
  *
- * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  spdm_context                 A pointer to the SPDM context.
  * @param  RequesterCTExponent          RequesterCTExponent to the GET_CAPABILITIES request.
  * @param  RequesterFlags               RequesterFlags to the GET_CAPABILITIES request.
  * @param  ResponderCTExponent          ResponderCTExponent from the CAPABILITIES response.
@@ -142,6 +167,26 @@ libspdm_return_t libspdm_get_version(libspdm_context_t *spdm_context,
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
 libspdm_return_t libspdm_get_capabilities(libspdm_context_t *spdm_context);
+
+/**
+ * This function sends GET_CAPABILITIES and receives CAPABILITIES.
+ *
+ * @param  spdm_context                 A pointer to the SPDM context.
+ * @param  get_supported_algorithms     If true, indicates that the requester wants the responder to include its supported algorithms in the CAPABILITIES response.
+ * @param  supported_algs_length        On input, the size of the supported_algs buffer.
+ * @param  supported_algs               A pointer to a buffer to store the supported algorithms.
+ * @param  RequesterCTExponent          RequesterCTExponent to the GET_CAPABILITIES request.
+ * @param  RequesterFlags               RequesterFlags to the GET_CAPABILITIES request.
+ * @param  ResponderCTExponent          ResponderCTExponent from the CAPABILITIES response.
+ * @param  ResponderFlags               ResponderFlags from the CAPABILITIES response.
+ *
+ * @retval RETURN_SUCCESS               The GET_CAPABILITIES is sent and the CAPABILITIES is received.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ **/
+libspdm_return_t libspdm_get_capabilities_with_supported_algs(libspdm_context_t *spdm_context,
+                                                              bool get_supported_algorithms,
+                                                              size_t *supported_algs_length,
+                                                              void *supported_algs);
 
 /**
  * This function sends NEGOTIATE_ALGORITHMS and receives ALGORITHMS.

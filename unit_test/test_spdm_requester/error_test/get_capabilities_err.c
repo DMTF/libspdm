@@ -1735,7 +1735,7 @@ static void libspdm_test_requester_get_capabilities_err_case29(void **state) {
         spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
         libspdm_reset_message_a(spdm_context);
 
-        status = libspdm_get_capabilities (spdm_context);
+        status = libspdm_get_capabilities(spdm_context);
         LIBSPDM_ASSERT_INT_EQUAL_CASE (status, LIBSPDM_STATUS_ERROR_PEER, error_code);
 
         error_code++;
