@@ -6,7 +6,7 @@
 
    The SPDM and secured message libraries follow :
 
-   [DSP0274](https://www.dmtf.org/dsp/DSP0274)  Security Protocol and Data Model (SPDM) Specification (version [1.0.2](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.0.2.pdf), version [1.1.3](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.1.3.pdf), version [1.2.2](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.2.2.pdf) and version [1.3.1](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.3.1.pdf))
+   [DSP0274](https://www.dmtf.org/dsp/DSP0274)  Security Protocol and Data Model (SPDM) Specification (version [1.0.2](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.0.2.pdf), version [1.1.4](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.1.4.pdf), version [1.2.3](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.2.3.pdf) and version [1.3.2](https://www.dmtf.org/sites/default/files/standards/documents/DSP0274_1.3.2.pdf))
 
    [DSP0277](https://www.dmtf.org/dsp/DSP0277)  Secured Messages using SPDM Specification (version [1.0.1](https://www.dmtf.org/sites/default/files/standards/documents/DSP0277_1.0.1.pdf), version [1.1.1](https://www.dmtf.org/sites/default/files/standards/documents/DSP0277_1.1.1.pdf), version [1.2.0](https://www.dmtf.org/sites/default/files/standards/documents/DSP0277_1.2.0.pdf))
 
@@ -14,7 +14,7 @@
 
    [DSP0275](https://www.dmtf.org/dsp/DSP0275)  Security Protocol and Data Model (SPDM) over MCTP Binding Specification (version [1.0.2](https://www.dmtf.org/sites/default/files/standards/documents/DSP0275_1.0.2.pdf))
 
-   [DSP0276](https://www.dmtf.org/dsp/DSP0276)  Secured Messages using SPDM over MCTP Binding Specification (version [1.1.1](https://www.dmtf.org/sites/default/files/standards/documents/DSP0276_1.1.1.pdf))
+   [DSP0276](https://www.dmtf.org/dsp/DSP0276)  Secured Messages using SPDM over MCTP Binding Specification (version [1.2.0](https://www.dmtf.org/sites/default/files/standards/documents/DSP0276_1.2.0.pdf))
 
    PCIE follows :
 
