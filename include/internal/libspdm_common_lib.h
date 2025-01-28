@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -43,6 +43,7 @@ typedef struct {
 } libspdm_device_version_t;
 
 typedef struct {
+    uint8_t param1;
     uint8_t ct_exponent;
     uint64_t rtt;
     uint32_t st1;
@@ -55,6 +56,7 @@ typedef struct {
 } libspdm_device_capability_t;
 
 typedef struct {
+    uint8_t param1;
     uint8_t measurement_spec;
     uint8_t other_params_support;
     uint8_t mel_spec;
