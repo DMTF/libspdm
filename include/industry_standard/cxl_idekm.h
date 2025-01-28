@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -80,7 +80,7 @@ typedef struct {
     uint8_t reserved2;
     uint8_t key_sub_stream;
     uint8_t port_index;
-    /*KEY 8 DW - same as PCIE IDE
+    /*KEY 8 DW - same as PCIe IDE
      * Pending Initial IV 3 DW - ignore if IV_DEFAULT = 1*/
 } cxl_ide_km_key_prog_t;
 

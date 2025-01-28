@@ -16,7 +16,7 @@
 
    [DSP0276](https://www.dmtf.org/dsp/DSP0276)  Secured Messages using SPDM over MCTP Binding Specification (version [1.2.0](https://www.dmtf.org/sites/default/files/standards/documents/DSP0276_1.2.0.pdf))
 
-   PCIE follows :
+   PCIe follows :
 
    PCI Express Base Specification [Revision 6.2](https://members.pcisig.com/wg/PCI-SIG/document/20590)
 

@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -303,7 +303,7 @@ libspdm_return_t libspdm_pci_doe_decode_discovery_request(size_t transport_messa
 
 /**
  * Decode a DOE discovery request message to get the DOE Discovery Version field.
- * DOE Discovery Version is introduced in PCIE Spec 6.1 Section 6.30.1.1.
+ * DOE Discovery Version is introduced in PCIe Spec 6.1 Section 6.30.1.1.
  *
  * @param  transport_message_size               Size in bytes of the transport message data buffer.
  * @param  transport_message                    A pointer to a source buffer to store the transport message.
@@ -334,7 +334,7 @@ libspdm_return_t libspdm_pci_doe_decode_discovery_request_version(size_t transpo
      * of the PCIe DOE spec. DOE discovery is mandatory for all
      * implementations.
      *
-     * DOE Discovery Version is introduced in PCIE Spec 6.1 Section 6.30.1.1.
+     * DOE Discovery Version is introduced in PCIe Spec 6.1 Section 6.30.1.1.
      * It is Byte-1 in DOE discovery request.
      */
     message = (const uint8_t *)transport_message + sizeof(pci_doe_data_object_header_t) + 1;
