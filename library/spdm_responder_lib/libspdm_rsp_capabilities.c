@@ -98,7 +98,14 @@ static bool libspdm_check_request_flag_compatibility(uint32_t capabilities_flag,
             if ((cert_cap == 1) && (pub_key_id_cap == 1)) {
                 return false;
             }
+            /* If certificates or public keys are enabled then at least one of these capabilities
+             * must be enabled to use the key. */
             if ((chal_cap == 0) && (key_ex_cap == 0)) {
+                if (version >= SPDM_MESSAGE_VERSION_13) {
+                    if ((ep_info_cap == 0) || (ep_info_cap == 1)) {
+                        return false;
+                    }
+                }
                 return false;
             }
         } else {
