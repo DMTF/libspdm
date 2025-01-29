@@ -49,6 +49,8 @@ message("CMAKE_GENERATOR = ${CMAKE_GENERATOR}")
 
 if(ARCH STREQUAL "x64")
     message("ARCH = x64")
+elseif(ARCH STREQUAL "x86_64")
+    message("ARCH = x64")
 elseif(ARCH STREQUAL "ia32")
     message("ARCH = ia32")
 elseif(ARCH STREQUAL "arm")
