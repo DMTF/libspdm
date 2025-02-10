@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -538,10 +538,6 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
             spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP);
-        const bool encap_cap_both = libspdm_is_capabilities_flag_supported(
-            spdm_context, true,
-            SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP,
-            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP);
         const bool cert_cap = libspdm_is_capabilities_flag_supported(
             spdm_context, true,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP,
@@ -600,8 +596,8 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
                 status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
                 goto receive_done;
             }
-            /* Encapsulated flow requires ENCAP_CAP for both endpoints. */
-            if (!encap_cap_both) {
+            /* Encapsulated flow requires support for encapsulated messages by both endpoints. */
+            if (!libspdm_is_encap_supported(spdm_context)) {
                 libspdm_secured_message_dhe_free(
                     spdm_context->connection_info.algorithm.dhe_named_group, dhe_context);
                 status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
