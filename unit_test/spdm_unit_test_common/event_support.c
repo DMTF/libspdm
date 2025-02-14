@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2023-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -29,6 +29,14 @@ typedef struct {
     uint16_t event_type_id;
     uint16_t reserved;
 } event_type_t;
+
+typedef struct {
+    uint32_t event_instance_id;
+    uint8_t reserved[4];
+    event_group_id_0byte_t event_group_id;
+    uint16_t event_type_id;
+    uint16_t event_detail_len;
+} event_data_dmtf_t;
 #pragma pack()
 
 void generate_dmtf_event_group(void *buffer, uint8_t *total_bytes, uint32_t attributes,
@@ -96,4 +104,43 @@ void generate_dmtf_event_group(void *buffer, uint8_t *total_bytes, uint32_t attr
         ((event_type_t *)ptr)->reserved = 0;
         *total_bytes += (uint8_t)sizeof(event_type_t);
     }
+}
+
+void generate_dmtf_event_data(void *buffer, uint8_t *total_bytes, uint32_t event_instance_id,
+                              uint16_t event_type_id, void *event_detail)
+{
+    event_data_dmtf_t *event_data;
+    uint16_t event_detail_len;
+
+    event_data = buffer;
+
+    event_data->event_instance_id = event_instance_id;
+    event_data->reserved[0] = 0;
+    event_data->reserved[1] = 0;
+    event_data->reserved[2] = 0;
+    event_data->reserved[3] = 0;
+    event_data->event_group_id.id = SPDM_REGISTRY_ID_DMTF;
+    event_data->event_group_id.vendor_id_len = 0;
+    event_data->event_type_id = event_type_id;
+
+    switch (event_type_id) {
+    case SPDM_DMTF_EVENT_TYPE_EVENT_LOST:
+        event_detail_len = SPDM_DMTF_EVENT_TYPE_EVENT_LOST_SIZE;
+        break;
+    case SPDM_DMTF_EVENT_TYPE_MEASUREMENT_CHANGED:
+        event_detail_len = SPDM_DMTF_EVENT_TYPE_MEASUREMENT_CHANGED_SIZE;
+        break;
+    case SPDM_DMTF_EVENT_TYPE_MEASUREMENT_PRE_UPDATE:
+        event_detail_len = SPDM_DMTF_EVENT_TYPE_MEASUREMENT_PRE_UPDATE_SIZE;
+        break;
+    case SPDM_DMTF_EVENT_TYPE_CERTIFICATE_CHANGED:
+        event_detail_len = SPDM_DMTF_EVENT_TYPE_CERTIFICATE_CHANGED_SIZE;
+        break;
+    }
+
+    event_data->event_detail_len = event_detail_len;
+
+    memcpy(event_data + 1, event_detail, (size_t)event_detail_len);
+
+    *total_bytes = (uint8_t)sizeof(event_data_dmtf_t) + (uint8_t)event_detail_len;
 }

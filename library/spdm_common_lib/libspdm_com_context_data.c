@@ -3278,3 +3278,14 @@ bool libspdm_negotiate_connection_version(spdm_version_number_t *common_version,
     }
     return false;
 }
+
+#if LIBSPDM_EVENT_RECIPIENT_SUPPORT
+void libspdm_register_event_callback(void *context,
+                                     libspdm_process_event_func process_event_func)
+{
+    libspdm_context_t *spdm_context;
+
+    spdm_context = context;
+    spdm_context->process_event = process_event_func;
+}
+#endif /* LIBSPDM_EVENT_RECIPIENT_SUPPORT */

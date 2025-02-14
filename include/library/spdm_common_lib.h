@@ -1005,6 +1005,48 @@ typedef libspdm_return_t (*libspdm_vendor_response_callback_func)(
 
 #endif /* LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES */
 
+#if LIBSPDM_EVENT_RECIPIENT_SUPPORT
+/**
+ * SPDM Event callback function.
+ *
+ * When an event is received the library performs basic validation to ensure that SVH ID and SVH
+ * VendorIDLen are legal. If the event is of a DMTF event type then the library will ensure that
+ * EventTypeId and EventDetailLen are legal. If a SEND_EVENT message contains multiple events then
+ * the library will call this function with sequentially-increasing Event Instance ID.
+ *
+ * @param spdm_context       A pointer to the SPDM context.
+ * @param session_id         Secure session ID.
+ * @param event_instance_id  Counter that increases by one for each event.
+ * @param svh_id             Registry or standards body identifier (SPDM_REGISTRY_ID_*).
+ * @param svh_vendor_id_len  Length, in bytes, of the svh_vendor_id field.
+ * @param svh_vendor_id      Vendor ID assigned by the Registry or Standards Body. If the value of
+ *                           svh_vendor_id_len is 0 then this is NULL.
+ * @param event_type_id      Event type identifier. If svh_id is SPDM_REGISTRY_ID_ DMTF then this is
+ *                           one of the SPDM_DMTF_EVENT_TYPE_* macros.
+ * @param event_detail_len   Size, in bytes, of event_detail.
+ * @param event_detail       Details of the event.
+ **/
+typedef libspdm_return_t (*libspdm_process_event_func)(void *spdm_context,
+                                                       uint32_t session_id,
+                                                       uint32_t event_instance_id,
+                                                       uint8_t svh_id,
+                                                       uint8_t svh_vendor_id_len,
+                                                       void *svh_vendor_id,
+                                                       uint16_t event_type_id,
+                                                       uint16_t event_detail_len,
+                                                       void *event_detail);
+
+/**
+ * Register callback to process SPDM events.
+ *
+ * @param spdm_context       A pointer to the SPDM context.
+ * @param process_event_func Function that processes individual SPDM events. If NULL then function
+ *                           will not be called as events are processed.
+ **/
+void libspdm_register_event_callback(void *spdm_context,
+                                     libspdm_process_event_func process_event_func);
+#endif /* LIBSPDM_EVENT_RECIPIENT_SUPPORT */
+
 #ifdef __cplusplus
 }
 #endif

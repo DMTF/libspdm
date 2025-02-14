@@ -457,3 +457,26 @@ uint16_t libspdm_mask_alg_supported(libspdm_context_t *spdm_context, uint8_t alg
         return 0;
     }
 }
+
+bool libspdm_validate_svh_vendor_id_len(uint8_t id, uint8_t vendor_id_len)
+{
+    switch (id) {
+    case SPDM_REGISTRY_ID_DMTF:
+    case SPDM_REGISTRY_ID_VESA:
+        return (vendor_id_len == 0);
+    case SPDM_REGISTRY_ID_TCG:
+    case SPDM_REGISTRY_ID_USB:
+    case SPDM_REGISTRY_ID_PCISIG:
+    case SPDM_REGISTRY_ID_MIPI:
+    case SPDM_REGISTRY_ID_CXL:
+    case SPDM_REGISTRY_ID_JEDEC:
+        return ((vendor_id_len == 0) || (vendor_id_len == 2));
+    case SPDM_REGISTRY_ID_IANA:
+    case SPDM_REGISTRY_ID_HDBASET:
+        return ((vendor_id_len == 0) || (vendor_id_len == 4));
+    case SPDM_REGISTRY_ID_IANA_CBOR:
+        return true;
+    default:
+        return false;
+    }
+}

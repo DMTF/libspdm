@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -473,6 +473,14 @@ libspdm_return_t libspdm_get_encap_response_key_update(void *spdm_context,
                                                        void *request,
                                                        size_t *response_size,
                                                        void *response);
+
+#if LIBSPDM_EVENT_RECIPIENT_SUPPORT
+libspdm_return_t libspdm_get_encap_response_event_ack(void *spdm_context,
+                                                      size_t request_size,
+                                                      void *request,
+                                                      size_t *response_size,
+                                                      void *response);
+#endif /* LIBSPDM_EVENT_RECIPIENT_SUPPORT */
 #endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
 
 /**
