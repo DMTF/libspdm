@@ -1,11 +1,12 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
 /** @file
  * Intrinsic Memory Routines Wrapper Implementation.
+ * Only to be used to characterize the size of libspdm.
  **/
 
 #include "hal/base.h"
@@ -68,10 +69,10 @@ void *memmove(void *dest, const void *src, size_t count)
     return dest;
 }
 
-/* Compare bytes in two buffers. */
+/* Compare bytes in two buffers. This is not a full implementation as it only returns 0 or 1. */
 int memcmp(const void *buf1, const void *buf2, size_t count)
 {
-    return (int)libspdm_consttime_is_mem_equal(buf1, buf2, count);
+    return libspdm_consttime_is_mem_equal(buf1, buf2, count) ? 0 : 1;
 }
 
 #if defined(__clang__) && !defined(__APPLE__)
