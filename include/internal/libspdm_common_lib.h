@@ -623,6 +623,10 @@ typedef struct {
     libspdm_vendor_response_callback_func vendor_response_callback;
     libspdm_vendor_get_id_callback_func vendor_response_get_id;
 #endif /* LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES */
+
+#if LIBSPDM_EVENT_RECIPIENT_SUPPORT
+    libspdm_process_event_func process_event;
+#endif /* LIBSPDM_EVENT_RECIPIENT_SUPPORT */
 } libspdm_context_t;
 
 #define LIBSPDM_CONTEXT_SIZE_WITHOUT_SECURED_CONTEXT (sizeof(libspdm_context_t))
@@ -1779,5 +1783,16 @@ uint8_t libspdm_mask_mel_specification(libspdm_context_t *spdm_context, uint8_t 
  * @return The masked BaseAsymAlgo.
  */
 uint32_t libspdm_mask_base_asym_algo(libspdm_context_t *spdm_context, uint32_t base_asym_algo);
+
+/**
+ * Check if the combination of SVH ID and VendorIDLen are legal.
+ *
+ * @param  id             Registry or standards body identifier (SPDM_REGISTRY_ID_*).
+ * @param  vendor_id_len  Length, in bytes, of the VendorID field.
+ *
+ * @retval true  The ID and VendorIDLen are legal.
+ * @retval false The ID and VendorIDLen are illegal.
+ */
+bool libspdm_validate_svh_vendor_id_len(uint8_t id, uint8_t vendor_id_len);
 
 #endif /* SPDM_COMMON_LIB_INTERNAL_H */

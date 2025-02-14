@@ -57,6 +57,7 @@
 /* SPDM response code (1.3) */
 #define SPDM_SUPPORTED_EVENT_TYPES 0x62
 #define SPDM_SUBSCRIBE_EVENT_TYPES_ACK 0x70
+#define SPDM_EVENT_ACK 0x71
 #define SPDM_MEASUREMENT_EXTENSION_LOG 0x6F
 #define SPDM_KEY_PAIR_INFO 0x7C
 #define SPDM_SET_KEY_PAIR_INFO_ACK 0x7D
@@ -92,6 +93,7 @@
 /* SPDM request code (1.3) */
 #define SPDM_GET_SUPPORTED_EVENT_TYPES 0xE2
 #define SPDM_SUBSCRIBE_EVENT_TYPES 0xF0
+#define SPDM_SEND_EVENT 0xF1
 #define SPDM_GET_MEASUREMENT_EXTENSION_LOG 0xEF
 #define SPDM_GET_KEY_PAIR_INFO 0xFC
 #define SPDM_SET_KEY_PAIR_INFO 0xFD
@@ -1305,6 +1307,20 @@ typedef struct {
      * param2 == RSVD */
 } spdm_subscribe_event_types_ack_response_t;
 
+typedef struct {
+    spdm_message_header_t header;
+    /* param1 == RSVD
+     * param2 == RSVD */
+    uint32_t event_count;
+    /* event_list[event_count]*/
+} spdm_send_event_request_t;
+
+typedef struct {
+    spdm_message_header_t header;
+    /* param1 == RSVD
+     * param2 == RSVD */
+} spdm_event_ack_response_t;
+
 /* SPDM GET_MEASUREMENT_EXTENSION_LOG request */
 typedef struct {
     spdm_message_header_t header;
@@ -1415,8 +1431,6 @@ typedef struct {
      * param2 == RSVD*/
 } spdm_set_key_pair_info_ack_response_t;
 
-#pragma pack()
-
 #define SPDM_VERSION_1_1_BIN_CONCAT_LABEL "spdm1.1 "
 #define SPDM_VERSION_1_2_BIN_CONCAT_LABEL "spdm1.2 "
 #define SPDM_VERSION_1_3_BIN_CONCAT_LABEL "spdm1.3 "
@@ -1468,9 +1482,34 @@ typedef struct {
 #define SPDM_DMTF_EVENT_TYPE_MEASUREMENT_PRE_UPDATE 3
 #define SPDM_DMTF_EVENT_TYPE_CERTIFICATE_CHANGED 4
 
+/* DMTF Event sizes in bytes. */
+#define SPDM_DMTF_EVENT_TYPE_EVENT_LOST_SIZE 8
+#define SPDM_DMTF_EVENT_TYPE_MEASUREMENT_CHANGED_SIZE 32
+#define SPDM_DMTF_EVENT_TYPE_MEASUREMENT_PRE_UPDATE_SIZE 32
+#define SPDM_DMTF_EVENT_TYPE_CERTIFICATE_CHANGED_SIZE 1
+
+typedef struct {
+    uint32_t last_acked_event_inst_id;
+    uint32_t last_lost_event_inst_id;
+} spdm_dmtf_event_type_event_lost_t;
+
+typedef struct {
+    uint8_t changed_measurements[SPDM_DMTF_EVENT_TYPE_MEASUREMENT_CHANGED_SIZE];
+} spdm_dmtf_event_type_measurement_changed_t;
+
+typedef struct {
+    uint8_t pre_update_measurement_changes[SPDM_DMTF_EVENT_TYPE_MEASUREMENT_PRE_UPDATE_SIZE];
+} spdm_dmtf_event_type_measurement_pre_update_t;
+
+typedef struct {
+    uint8_t certificate_changed;
+} spdm_dmtf_event_type_certificate_changed_t;
+
 /*SPDM SET_KEY_PAIR_INFO operation*/
 #define SPDM_SET_KEY_PAIR_INFO_CHANGE_OPERATION 0
 #define SPDM_SET_KEY_PAIR_INFO_ERASE_OPERATION 1
 #define SPDM_SET_KEY_PAIR_INFO_GENERATE_OPERATION 2
+
+#pragma pack()
 
 #endif /* SPDM_H */

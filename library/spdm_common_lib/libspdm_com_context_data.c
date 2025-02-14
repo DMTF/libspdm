@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -3278,3 +3278,14 @@ bool libspdm_negotiate_connection_version(spdm_version_number_t *common_version,
     }
     return false;
 }
+
+#if LIBSPDM_EVENT_RECIPIENT_SUPPORT
+void libspdm_register_event_callback(void *context,
+                                     libspdm_process_event_func process_event_func)
+{
+    libspdm_context_t *spdm_context;
+
+    spdm_context = context;
+    spdm_context->process_event = process_event_func;
+}
+#endif /* LIBSPDM_EVENT_RECIPIENT_SUPPORT */

@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -165,5 +165,8 @@ void libspdm_release_error (libspdm_error_target_t target);
 void generate_dmtf_event_group(void *buffer, uint8_t *total_bytes, uint32_t attributes,
                                bool inc_event_lost, bool inc_meas_changed,
                                bool inc_meas_pre_update, bool inc_cert_changed);
+
+void generate_dmtf_event_data(void *buffer, uint8_t *total_bytes, uint32_t event_instance_id,
+                              uint16_t event_type_id, void *event_detail);
 
 #endif
