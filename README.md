@@ -71,7 +71,7 @@
 
    Support to build as part of the NVIDIA Linux kernel module driver in [open-gpu-kernel-modules](https://github.com/NVIDIA/open-gpu-kernel-modules).
 
-   Support to build as backend server for [qemu](https://gitlab.com/alistair23/qemu/-/blob/mainline/alistair/spdm-socket.next/docs/specs/spdm.rst).
+   Support to build as backend server for [QEMU](https://gitlab.com/qemu-project/qemu/-/blob/master/docs/specs/spdm.rst).
 
    Support is included in UEFI host environment [EDKII](https://github.com/tianocore/edk2/tree/master/SecurityPkg/DeviceSecurity).
 
