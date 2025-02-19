@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -19,7 +19,7 @@ libspdm_return_t libspdm_init_connection(void *spdm_context, bool get_version_on
     }
 
     if (!get_version_only) {
-        status = libspdm_get_capabilities(context);
+        status = libspdm_get_capabilities(context, false);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
             return status;
         }

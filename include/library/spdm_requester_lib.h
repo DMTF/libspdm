@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -490,6 +490,19 @@ libspdm_return_t libspdm_start_session(void *spdm_context, bool use_psk,
                                        uint32_t *session_id,
                                        uint8_t *heartbeat_period,
                                        void *measurement_hash);
+
+/**
+ * Sends the `GET_VERSION` and `GET_CAPABILITIES` requests, where GET_CAPABILITIES.Param1[0] is set
+ * If the Responder supports this extended capability, the Responder will include the Supported
+ * Algorithms Block in its CAPABILITIES response.
+ *
+ * @param spdm_context The SPDM context.
+ *
+ * @retval RETURN_SUCCESS               The connection is initialized successfully.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ **/
+libspdm_return_t libspdm_get_supported_algorithms(
+    void *spdm_context);
 
 /**
  * This function sends KEY_EXCHANGE/FINISH or PSK_EXCHANGE/PSK_FINISH to start an SPDM Session.

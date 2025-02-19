@@ -211,7 +211,8 @@ static bool validate_responder_capability(uint32_t capabilities_flag, uint8_t ve
  * @retval LIBSPDM_STATUS_BUFFER_FULL
  *         The buffer used to store transcripts is exhausted.
  **/
-static libspdm_return_t libspdm_try_get_capabilities(libspdm_context_t *spdm_context)
+static libspdm_return_t libspdm_try_get_capabilities(libspdm_context_t *spdm_context,
+                                                     bool get_supported_algorithms)
 {
     libspdm_return_t status;
     spdm_get_capabilities_request_t *spdm_request;
@@ -241,6 +242,11 @@ static libspdm_return_t libspdm_try_get_capabilities(libspdm_context_t *spdm_con
                         spdm_context->local_context.capability.transport_tail_size;
 
     LIBSPDM_ASSERT (spdm_request_size >= sizeof(spdm_request->header));
+
+    LIBSPDM_ASSERT(!((spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) &&
+                     get_supported_algorithms &&
+                     ((spdm_request->flags & SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP) == 0)));
+
     libspdm_zero_mem(spdm_request, spdm_request_size);
     spdm_request->header.spdm_version = libspdm_get_connection_version (spdm_context);
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
@@ -258,6 +264,10 @@ static libspdm_return_t libspdm_try_get_capabilities(libspdm_context_t *spdm_con
     }
     spdm_request->header.request_response_code = SPDM_GET_CAPABILITIES;
     spdm_request->header.param1 = 0;
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13 &&
+        get_supported_algorithms) {
+        spdm_request->header.param1 |= 0x01;
+    }
     spdm_request->header.param2 = 0;
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_11) {
         spdm_request->ct_exponent = spdm_context->local_context.capability.ct_exponent;
@@ -315,22 +325,60 @@ static libspdm_return_t libspdm_try_get_capabilities(libspdm_context_t *spdm_con
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
-    if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+    if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
         if (spdm_response_size < sizeof(spdm_capabilities_response_t)) {
             status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
             goto receive_done;
         }
+    } else if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+        if (spdm_response_size < (sizeof(spdm_capabilities_response_t) -
+                                  sizeof(spdm_supported_algorithms_block_t))) {
+            status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+            goto receive_done;
+        }
     } else {
-        if (spdm_response_size < sizeof(spdm_capabilities_response_t) -
-            sizeof(spdm_response->data_transfer_size) - sizeof(spdm_response->max_spdm_msg_size)) {
+        if (spdm_response_size < (sizeof(spdm_capabilities_response_t) -
+                                  sizeof(spdm_supported_algorithms_block_t) -
+                                  sizeof(spdm_response->data_transfer_size) -
+                                  sizeof(spdm_response->max_spdm_msg_size))) {
             status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
             goto receive_done;
         }
     }
-    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
-        spdm_response_size = sizeof(spdm_capabilities_response_t);
+
+    if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_13 &&
+        (spdm_request->header.param1 & 0x01)) {
+
+        uint8_t index = 0;
+        if (spdm_context->connection_info.capability.flags &
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP) {
+            index++;
+        }
+        if ((spdm_context->connection_info.capability.flags &
+             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP) ||
+            (spdm_context->connection_info.capability.flags &
+             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP)) {
+            index++;
+        }
+        if (spdm_context->connection_info.capability.flags &
+            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP) {
+            index++;
+        }
+        if ((spdm_context->connection_info.capability.flags &
+             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_UPD_CAP) ||
+            (spdm_context->connection_info.capability.flags &
+             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP)) {
+            index++;
+        }
+        spdm_response_size = sizeof(spdm_capabilities_response_t)+
+                             index*sizeof(spdm_negotiate_algorithms_common_struct_table_t);
+
+    } else if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+        spdm_response_size = sizeof(spdm_capabilities_response_t)-
+                             sizeof(spdm_supported_algorithms_block_t);
     } else {
         spdm_response_size = sizeof(spdm_capabilities_response_t) -
+                             sizeof(spdm_supported_algorithms_block_t) -
                              sizeof(spdm_response->data_transfer_size) -
                              sizeof(spdm_response->max_spdm_msg_size);
     }
@@ -397,7 +445,8 @@ receive_done:
     return status;
 }
 
-libspdm_return_t libspdm_get_capabilities(libspdm_context_t *spdm_context)
+libspdm_return_t libspdm_get_capabilities(libspdm_context_t *spdm_context,
+                                          bool get_supported_algorithms)
 {
     size_t retry;
     uint64_t retry_delay_time;
@@ -407,7 +456,7 @@ libspdm_return_t libspdm_get_capabilities(libspdm_context_t *spdm_context)
     retry = spdm_context->retry_times;
     retry_delay_time = spdm_context->retry_delay_time;
     do {
-        status = libspdm_try_get_capabilities(spdm_context);
+        status = libspdm_try_get_capabilities(spdm_context, get_supported_algorithms);
         if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
         }
@@ -416,4 +465,24 @@ libspdm_return_t libspdm_get_capabilities(libspdm_context_t *spdm_context)
     } while (retry-- != 0);
 
     return status;
+}
+
+libspdm_return_t libspdm_get_supported_algorithms(void *spdm_context)
+{
+    libspdm_return_t status;
+    libspdm_context_t *context;
+
+    context = spdm_context;
+
+    status = libspdm_get_version(context, NULL, NULL);
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
+        return status;
+    }
+
+    status = libspdm_get_capabilities(context, true);
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
+        return status;
+    }
+
+    return LIBSPDM_STATUS_SUCCESS;
 }
