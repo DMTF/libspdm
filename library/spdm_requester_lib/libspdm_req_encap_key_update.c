@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -50,9 +50,15 @@ libspdm_return_t libspdm_get_encap_response_key_update(void *spdm_context,
     }
 
     if (!context->last_spdm_request_session_id_valid) {
-        return libspdm_generate_encap_error_response(
-            context, SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-            response_size, response);
+        if (libspdm_get_connection_version(context) >= SPDM_MESSAGE_VERSION_12) {
+            return libspdm_generate_encap_error_response(context,
+                                                         SPDM_ERROR_CODE_SESSION_REQUIRED, 0,
+                                                         response_size, response);
+        } else {
+            return libspdm_generate_encap_error_response(context,
+                                                         SPDM_ERROR_CODE_UNSPECIFIED, 0,
+                                                         response_size, response);
+        }
     }
     session_id = context->last_spdm_request_session_id;
     session_info =
