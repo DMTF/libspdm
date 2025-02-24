@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -2812,7 +2812,7 @@ void libspdm_set_last_spdm_error_struct(void *spdm_context, libspdm_error_struct
  */
 libspdm_return_t libspdm_init_fips_selftest_context(void *fips_selftest_context)
 {
-    libspdm_fips_selftest_context *context;
+    libspdm_fips_selftest_context_t *context;
     LIBSPDM_ASSERT(fips_selftest_context != NULL);
 
     context = fips_selftest_context;
@@ -2834,7 +2834,7 @@ size_t libspdm_get_fips_selftest_context_size(void)
 {
     size_t size;
 
-    size = sizeof(libspdm_fips_selftest_context);
+    size = sizeof(libspdm_fips_selftest_context_t);
     return size;
 }
 
@@ -2852,7 +2852,7 @@ bool libspdm_import_fips_selftest_context_to_spdm_context(void *spdm_context,
                                                           void *fips_selftest_context,
                                                           size_t fips_selftest_context_size)
 {
-    libspdm_fips_selftest_context *libspdm_fips_selftest_context;
+    libspdm_fips_selftest_context_t *libspdm_fips_selftest_context;
     libspdm_context_t *libspdm_context;
 
     libspdm_context = spdm_context;
@@ -2861,13 +2861,13 @@ bool libspdm_import_fips_selftest_context_to_spdm_context(void *spdm_context,
     if ((libspdm_context == NULL) || (libspdm_fips_selftest_context == NULL)) {
         return false;
     }
-    if (fips_selftest_context_size != sizeof(libspdm_fips_selftest_context)) {
+    if (fips_selftest_context_size != sizeof(libspdm_fips_selftest_context_t)) {
         return false;
     }
 
     libspdm_copy_mem(&(libspdm_context->fips_selftest_context),
-                     sizeof(libspdm_fips_selftest_context),
-                     libspdm_fips_selftest_context, sizeof(libspdm_fips_selftest_context));
+                     sizeof(libspdm_fips_selftest_context_t),
+                     libspdm_fips_selftest_context, sizeof(libspdm_fips_selftest_context_t));
     return true;
 }
 
@@ -2885,7 +2885,7 @@ bool libspdm_export_fips_selftest_context_from_spdm_context(void *spdm_context,
                                                             void *fips_selftest_context,
                                                             size_t fips_selftest_context_size)
 {
-    libspdm_fips_selftest_context *libspdm_fips_selftest_context;
+    libspdm_fips_selftest_context_t *libspdm_fips_selftest_context;
     libspdm_context_t *libspdm_context;
 
     libspdm_context = spdm_context;
@@ -2894,14 +2894,14 @@ bool libspdm_export_fips_selftest_context_from_spdm_context(void *spdm_context,
     if ((libspdm_context == NULL) || (libspdm_fips_selftest_context == NULL)) {
         return false;
     }
-    if (fips_selftest_context_size != sizeof(libspdm_fips_selftest_context)) {
+    if (fips_selftest_context_size != sizeof(libspdm_fips_selftest_context_t)) {
         return false;
     }
 
     libspdm_copy_mem(libspdm_fips_selftest_context,
-                     sizeof(libspdm_fips_selftest_context),
+                     sizeof(libspdm_fips_selftest_context_t),
                      &(libspdm_context->fips_selftest_context),
-                     sizeof(libspdm_fips_selftest_context));
+                     sizeof(libspdm_fips_selftest_context_t));
     return true;
 }
 

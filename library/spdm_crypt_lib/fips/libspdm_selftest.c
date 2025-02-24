@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2023 DMTF. All rights reserved.
+ *  Copyright 2023-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -13,7 +13,7 @@
 /*run all of the self-tests and returns the results.*/
 bool libspdm_fips_run_selftest(void *fips_selftest_context)
 {
-    libspdm_fips_selftest_context *context;
+    libspdm_fips_selftest_context_t *context;
     LIBSPDM_ASSERT(fips_selftest_context != NULL);
 
     context = fips_selftest_context;
