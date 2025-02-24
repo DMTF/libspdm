@@ -73,7 +73,7 @@ void libspdm_test_requester_get_capabilities(void **State)
         spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
         libspdm_reset_message_a(spdm_context);
 
-        libspdm_get_capabilities(spdm_context);
+        libspdm_get_capabilities(spdm_context, false);
     }
 }
 
