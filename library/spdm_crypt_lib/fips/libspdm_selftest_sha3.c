@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2023 DMTF. All rights reserved.
+ *  Copyright 2023-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -18,7 +18,7 @@ bool libspdm_fips_selftest_sha3_256(void *fips_selftest_context)
     bool result = true;
 
 #if LIBSPDM_SHA3_256_SUPPORT
-    libspdm_fips_selftest_context *context = fips_selftest_context;
+    libspdm_fips_selftest_context_t *context = fips_selftest_context;
     LIBSPDM_ASSERT(fips_selftest_context != NULL);
 
     /* any test fail cause the FIPS fail*/
@@ -79,7 +79,7 @@ bool libspdm_fips_selftest_sha3_384(void *fips_selftest_context)
     bool result = true;
 
 #if LIBSPDM_SHA3_384_SUPPORT
-    libspdm_fips_selftest_context *context = fips_selftest_context;
+    libspdm_fips_selftest_context_t *context = fips_selftest_context;
     LIBSPDM_ASSERT(fips_selftest_context != NULL);
 
     /* any test fail cause the FIPS fail*/
@@ -142,7 +142,7 @@ bool libspdm_fips_selftest_sha3_512(void *fips_selftest_context)
     bool result = true;
 
 #if LIBSPDM_SHA3_512_SUPPORT
-    libspdm_fips_selftest_context *context = fips_selftest_context;
+    libspdm_fips_selftest_context_t *context = fips_selftest_context;
     LIBSPDM_ASSERT(fips_selftest_context != NULL);
 
     /* any test fail cause the FIPS fail*/

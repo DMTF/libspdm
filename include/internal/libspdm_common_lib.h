@@ -482,7 +482,7 @@ typedef struct {
      * See LIBSPDM_FIPS_SELF_TEST_xxx;
      **/
     uint32_t self_test_result;
-} libspdm_fips_selftest_context;
+} libspdm_fips_selftest_context_t;
 #endif /* LIBSPDM_FIPS_MODE */
 
 #define LIBSPDM_CONTEXT_STRUCT_VERSION 0x3
@@ -612,7 +612,7 @@ typedef struct {
 #endif /* LIBSPDM_ENABLE_MSG_LOG */
 
 #if LIBSPDM_FIPS_MODE
-    libspdm_fips_selftest_context fips_selftest_context;
+    libspdm_fips_selftest_context_t fips_selftest_context;
 #endif /* LIBSPDM_FIPS_MODE */
 
     /* Endianness (BE/LE/Both) to use for signature verification on SPDM 1.0 and 1.1
