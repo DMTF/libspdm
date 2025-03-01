@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2024 DMTF. All rights reserved.
+ *  Copyright 2024-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 #include "internal/libspdm_responder_lib.h"
@@ -33,7 +33,7 @@ libspdm_return_t libspdm_get_response_measurement_extension_log(libspdm_context_
     if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_13) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
-                                               0,
+                                               SPDM_GET_MEASUREMENT_EXTENSION_LOG,
                                                response_size, response);
     }
 
@@ -79,7 +79,7 @@ libspdm_return_t libspdm_get_response_measurement_extension_log(libspdm_context_
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEL_CAP)) {
         return libspdm_generate_error_response(
             spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
-            0, response_size, response);
+            SPDM_GET_MEASUREMENT_EXTENSION_LOG, response_size, response);
     }
 
     if ((spdm_context->connection_info.algorithm.mel_spec == 0) ||
