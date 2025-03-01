@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2024-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -9,7 +9,7 @@
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
 
-#if LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP
+#if LIBSPDM_EVENT_RECIPIENT_SUPPORT
 
 uint8_t temp_buf[LIBSPDM_RECEIVER_BUFFER_SIZE];
 
@@ -143,4 +143,4 @@ size_t libspdm_get_max_buffer_size(void)
 void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size){
 
 }
-#endif /*LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP*/
+#endif /* LIBSPDM_EVENT_RECIPIENT_SUPPORT */
