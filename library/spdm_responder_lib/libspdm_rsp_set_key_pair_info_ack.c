@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2024 DMTF. All rights reserved.
+ *  Copyright 2024-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -201,24 +201,21 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
     }
     if ((desired_asym_algo != 0) &&
         ((asym_algo_capabilities | desired_asym_algo) != asym_algo_capabilities)) {
-        return libspdm_generate_error_response(
-            spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
-            SPDM_SET_KEY_PAIR_INFO, response_size, response);
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                               response_size, response);
     }
-
     if (((capabilities & SPDM_KEY_PAIR_CAP_SHAREABLE_CAP) == 0) &&
         (!libspdm_onehot0(desired_assoc_cert_slot_mask))) {
-        return libspdm_generate_error_response(
-            spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
-            SPDM_SET_KEY_PAIR_INFO, response_size, response);
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                               response_size, response);
     }
-
     if (operation > SPDM_SET_KEY_PAIR_INFO_GENERATE_OPERATION) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
     }
-
     if ((operation == SPDM_SET_KEY_PAIR_INFO_ERASE_OPERATION) ||
         (operation == SPDM_SET_KEY_PAIR_INFO_GENERATE_OPERATION)) {
         if (assoc_cert_slot_mask != 0) {
