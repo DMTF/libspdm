@@ -105,8 +105,9 @@ static bool libspdm_check_request_flag_compatibility(uint32_t capabilities_flag,
                     if ((ep_info_cap == 0) || (ep_info_cap == 1)) {
                         return false;
                     }
+                } else {
+                    return false;
                 }
-                return false;
             }
         } else {
             /* If certificates or public keys are not enabled then these capabilities
