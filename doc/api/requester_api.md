@@ -31,6 +31,29 @@ returns early with value not equal to `LIBSPDM_STATUS_SUCCESS` then the SPDM con
 before attempting establish a new connection.
 <br/><br/>
 
+---
+### libspdm_get_supported_algorithms
+---
+
+### Description
+Sends the `GET_VERSION` and `GET_CAPABILITIES` requests, where GET_CAPABILITIES.Param1[0] is set.
+If the Responder supports this extended capability, the Responder will include the Supported
+Algorithms Block in its CAPABILITIES response. If the requester wishes to continue with the
+connection, they can call `libspdm_init_connection` to restart the connection process.
+
+### Parameters
+
+**spdm_context**<br/>
+The SPDM context.
+
+### Details
+Before calling this function, the integrator must ensure that the SPDM context is initialized
+with the necessary configuration, including the requester's capabilities and supported
+cryptographic algorithms. When this function returns with the value `RETURN_SUCCESS`,
+the SPDM context can be queried to determine the capabilities and algorithms supported
+by the responder. If this function returns with a value not equal to `RETURN_SUCCESS`,
+the SPDM context should be reset before attempting to establish a new connection.
+<br/><br/>
 
 ---
 ### libspdm_get_digest
