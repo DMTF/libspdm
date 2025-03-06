@@ -958,6 +958,31 @@ uint32_t libspdm_module_version(void);
 /*true: FIPS enabled, false: FIPS disabled*/
 bool libspdm_get_fips_mode(void);
 
+
+#if LIBSPDM_ENABLE_ENDPOINT_INFO_CAP
+
+/**
+ * Endpoint Info Response Get Device Class Identifier Function Pointer.
+ * Required to be able to return the Device Class Identifier correctly
+ *
+ * @param  spdm_context         A pointer to the SPDM context.
+ * @param  sub_code             The subcode of endpoint info.
+ * @param  endpoint_info_size   Length in bytes of the size of device class identifier.
+ * @param  endpoint_info        The buffer to store device class identifier content.
+ *                              If NULL, only return the size of device class identifier.
+ *                              If not NULL, copy the device class identifier to the buffer.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS Success
+ * @retval LIBSPDM_STATUS_INVALID_PARAMETER Some parameters invalid or NULL
+ **/
+typedef libspdm_return_t (*libspdm_endpoint_info_device_func)(
+    void *spdm_context,
+    uint8_t sub_code,
+    uint32_t *endpoint_info_size,
+    void *endpoint_info);
+
+#endif /* LIBSPDM_ENABLE_ENDPOINT_INFO_CAP */
+
 #if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
 
 /**

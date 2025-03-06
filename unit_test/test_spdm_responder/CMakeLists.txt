@@ -51,6 +51,7 @@ target_sources(test_spdm_responder
         chunk_send_ack.c
         key_pair_info.c
         set_key_pair_info_ack.c
+        endpoint_info.c
         ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/common.c
         ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/algo.c
         ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/support.c
