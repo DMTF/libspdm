@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -75,6 +75,10 @@ libspdm_get_spdm_response_func libspdm_get_response_func_via_request_code(uint8_
         { SPDM_HEARTBEAT, libspdm_get_response_heartbeat },
         { SPDM_KEY_UPDATE, libspdm_get_response_key_update },
         #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP || LIBSPDM_ENABLE_CAPABILITY_PSK_CAP*/
+
+        #if LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP
+        { SPDM_GET_ENDPOINT_INFO, libspdm_get_response_endpoint_info },
+        #endif /*LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP*/
 
         #if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP
         { SPDM_GET_CSR, libspdm_get_response_csr },

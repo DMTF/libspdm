@@ -55,6 +55,7 @@
 #define SPDM_CHUNK_RESPONSE 0x06
 
 /* SPDM response code (1.3) */
+#define SPDM_ENDPOINT_INFO 0x07
 #define SPDM_SUPPORTED_EVENT_TYPES 0x62
 #define SPDM_SUBSCRIBE_EVENT_TYPES_ACK 0x70
 #define SPDM_EVENT_ACK 0x71
@@ -91,6 +92,7 @@
 #define SPDM_CHUNK_GET 0x86
 
 /* SPDM request code (1.3) */
+#define SPDM_GET_ENDPOINT_INFO 0x87
 #define SPDM_GET_SUPPORTED_EVENT_TYPES 0xE2
 #define SPDM_SUBSCRIBE_EVENT_TYPES 0xF0
 #define SPDM_SEND_EVENT 0xF1
@@ -1276,6 +1278,65 @@ typedef struct {
 } spdm_chunk_response_response_t;
 
 #define SPDM_CHUNK_GET_RESPONSE_ATTRIBUTE_LAST_CHUNK (1 << 0)
+
+/* SPDM GET_ENDPOINT_INFO request */
+typedef struct {
+    spdm_message_header_t header;
+    /* param1 - subcode of the request
+     * param2 - Bit[7:4]: reserved
+     *          Bit[3:0]: slot_id */
+    uint8_t request_attributes;
+    uint8_t reserved[3];
+    /* uint8_t nonce[32]; */
+} spdm_get_endpoint_info_request_t;
+
+#define SPDM_GET_ENDPOINT_INFO_REQUEST_SLOT_ID_MASK 0xF
+
+/* SPDM GET_ENDPOINT_INFO request subcode */
+#define SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER 0x01
+
+/* SPDM GET_ENDPOINT_INFO request attribute */
+#define SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED (1 << 0)
+
+/* SPDM ENDPOINT_INFO response */
+typedef struct {
+    spdm_message_header_t header;
+    /* param1 - reserved
+     * param2 - Bit[7:4]: reserved
+     *          Bit[3:0]: slot_id*/
+    uint32_t reserved;
+    /* uint8_t nonce[32];
+     * uint32_t ep_info_len
+     * uint8_t ep_info[ep_info_len];
+     * uint8_t signature[sig_len]; */
+} spdm_endpoint_info_response_t;
+
+#define SPDM_ENDPOINT_INFO_RESPONSE_SLOT_ID_MASK 0xF
+
+typedef struct {
+    uint8_t num_identifiers;
+    uint8_t reserved[3];
+    /* uint8_t identifier_elements; */
+} spdm_endpoint_info_device_class_identifier_t;
+
+typedef struct {
+    uint8_t id_elem_length;
+    spdm_svh_header_t svh;
+    /* size of svh is 2 + vendor_id_len */
+
+    /* uint8_t num_sub_ids;
+     * uint8_t subordinate_id[]; */
+} spdm_endpoint_info_device_class_identifier_element_t;
+
+typedef struct {
+    uint8_t sub_id_len;
+    /* uint8_t sub_identifier[sub_id_len]; */
+} spdm_endpoint_info_device_class_identifier_subordinate_id_t;
+
+#define SPDM_ENDPOINT_INFO_SIGN_CONTEXT "responder-endpoint_info signing"
+#define SPDM_ENDPOINT_INFO_SIGN_CONTEXT_SIZE (sizeof(SPDM_ENDPOINT_INFO_SIGN_CONTEXT) - 1)
+#define SPDM_MUT_ENDPOINT_INFO_SIGN_CONTEXT "requester-endpoint_info signing"
+#define SPDM_MUT_ENDPOINT_INFO_SIGN_CONTEXT_SIZE (sizeof(SPDM_MUT_ENDPOINT_INFO_SIGN_CONTEXT) - 1)
 
 typedef struct {
     spdm_message_header_t header;
