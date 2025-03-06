@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -82,6 +82,10 @@
 #define LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP 1
 #endif
 
+#ifndef LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP
+#define LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP 1
+#endif
+
 /* Includes SPDM 1.3 features for CSR messages. If enabled then LIBSPDM_ENABLE_CAPABILITY_CSR_CAP
  * must also be enabled.
  */
@@ -111,6 +115,11 @@
  */
 #ifndef LIBSPDM_EVENT_RECIPIENT_SUPPORT
 #define LIBSPDM_EVENT_RECIPIENT_SUPPORT 1
+#endif
+
+/* If 1 then endpoint supports sending the GET_ENDPOINT_INFO request. */
+#ifndef LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT
+#define LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT 1
 #endif
 
 /* When LIBSPDM_RESPOND_IF_READY_SUPPORT is 0 then
@@ -227,6 +236,17 @@
 #ifndef LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
 #define LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT 0
 #endif
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+
+/* This value specifies the maximum size, in bytes, of a endpoint info that can be stored in a
+ * libspdm context.
+ */
+#ifndef LIBSPDM_MAX_ENDPOINT_INFO_LENGTH
+#define LIBSPDM_MAX_ENDPOINT_INFO_LENGTH 1024
+#endif
+
+#endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
 
 /* Cryptography Configuration
  * In each category, at least one should be selected.

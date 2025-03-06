@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -314,3 +314,15 @@ bool libspdm_write_key_pair_info(
     return false;
 }
 #endif /* #if LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP */
+
+#ifdef LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP
+libspdm_return_t libspdm_generate_device_endpoint_info(
+    void *spdm_context,
+    uint8_t sub_code,
+    uint8_t request_attributes,
+    uint32_t *endpoint_info_size,
+    void *endpoint_info)
+{
+    return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+}
+#endif /* #if LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP */

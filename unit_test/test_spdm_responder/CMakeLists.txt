@@ -44,6 +44,7 @@ target_sources(test_spdm_responder
         error_test/supported_event_types_err.c
         error_test/subscribe_event_types_ack_err.c
         error_test/vendor_response_err.c
+        error_test/endpoint_info_err.c
         set_certificate_rsp.c
         csr.c
         receive_send.c
@@ -51,6 +52,7 @@ target_sources(test_spdm_responder
         chunk_send_ack.c
         key_pair_info.c
         set_key_pair_info_ack.c
+        endpoint_info.c
         ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/common.c
         ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/algo.c
         ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/support.c

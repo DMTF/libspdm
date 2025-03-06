@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -27,6 +27,11 @@ static const libspdm_signing_context_str_t m_libspdm_signing_context_str_table[]
      36 - SPDM_KEY_EXCHANGE_RESPONSE_SIGN_CONTEXT_SIZE},
     {true, SPDM_FINISH, SPDM_FINISH_SIGN_CONTEXT, SPDM_FINISH_SIGN_CONTEXT_SIZE,
      36 - SPDM_FINISH_SIGN_CONTEXT_SIZE},
+    {false, SPDM_ENDPOINT_INFO, SPDM_ENDPOINT_INFO_SIGN_CONTEXT,
+     SPDM_ENDPOINT_INFO_SIGN_CONTEXT_SIZE,
+     36 - SPDM_ENDPOINT_INFO_SIGN_CONTEXT_SIZE},
+    {true, SPDM_ENDPOINT_INFO, SPDM_MUT_ENDPOINT_INFO_SIGN_CONTEXT,
+     SPDM_MUT_ENDPOINT_INFO_SIGN_CONTEXT_SIZE, 36 - SPDM_MUT_ENDPOINT_INFO_SIGN_CONTEXT_SIZE},
 };
 
 #if LIBSPDM_RSA_SSA_SUPPORT

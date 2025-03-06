@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -116,6 +116,10 @@ void libspdm_session_info_init(libspdm_context_t *spdm_context,
         sizeof(session_info->session_transcript.message_f.buffer);
     session_info->session_transcript.message_m.max_buffer_size =
         sizeof(session_info->session_transcript.message_m.buffer);
+    session_info->session_transcript.message_e.max_buffer_size =
+        sizeof(session_info->session_transcript.message_e.buffer);
+    session_info->session_transcript.message_encap_e.max_buffer_size =
+        sizeof(session_info->session_transcript.message_encap_e.buffer);
 #endif
 }
 

@@ -47,6 +47,7 @@ target_sources(test_spdm_requester
         vendor_request.c
         get_key_pair_info.c
         set_key_pair_info.c
+        get_endpoint_info.c
         error_test/get_version_err.c
         error_test/get_capabilities_err.c
         error_test/negotiate_algorithms_err.c
@@ -59,6 +60,7 @@ target_sources(test_spdm_requester
         error_test/get_key_pair_info_err.c
         error_test/set_key_pair_info_err.c
         error_test/encap_event_ack_err.c
+        error_test/get_endpoint_info_err.c
         ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/common.c
         ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/algo.c
         ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/support.c

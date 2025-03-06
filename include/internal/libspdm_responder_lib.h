@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -956,5 +956,14 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
                                                             size_t *response_size,
                                                             void *response);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP */
+
+
+#if LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP
+libspdm_return_t libspdm_get_response_endpoint_info(libspdm_context_t *spdm_context,
+                                                    size_t request_size,
+                                                    const void *request,
+                                                    size_t *response_size,
+                                                    void *response);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP */
 
 #endif /* SPDM_RESPONDER_LIB_INTERNAL_H */
