@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -45,7 +45,7 @@ bool libspdm_verify_finish_req_hmac(libspdm_context_t *spdm_context,
         return false;
     }
 
-    if (session_info->mut_auth_requested) {
+    if (session_info->mut_auth_requested != 0) {
         slot_id = spdm_context->connection_info.peer_used_cert_chain_slot_id;
         LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xFF));
         if (slot_id == 0xFF) {
@@ -303,7 +303,7 @@ bool libspdm_generate_finish_rsp_hmac(libspdm_context_t *spdm_context,
         return false;
     }
 
-    if (session_info->mut_auth_requested) {
+    if (session_info->mut_auth_requested != 0) {
         slot_id = spdm_context->connection_info.peer_used_cert_chain_slot_id;
         LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xFF));
         if (slot_id == 0xFF) {
@@ -482,7 +482,7 @@ libspdm_return_t libspdm_get_response_finish(libspdm_context_t *spdm_context, si
     hmac_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
     signature_size = 0;
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
-    if (session_info->mut_auth_requested) {
+    if (session_info->mut_auth_requested != 0) {
         signature_size = libspdm_get_req_asym_signature_size(
             spdm_context->connection_info.algorithm.req_base_asym_alg);
     }
@@ -531,7 +531,7 @@ libspdm_return_t libspdm_get_response_finish(libspdm_context_t *spdm_context, si
                                                response_size, response);
     }
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
-    if (session_info->mut_auth_requested) {
+    if (session_info->mut_auth_requested != 0) {
         result = libspdm_verify_finish_req_signature(
             spdm_context, session_info,
             (const uint8_t *)request + sizeof(spdm_finish_request_t), signature_size);
