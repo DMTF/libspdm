@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -674,7 +674,7 @@ bool libspdm_calculate_th2_hash(libspdm_context_t *spdm_context,
         if (!result) {
             return false;
         }
-        if (session_info->mut_auth_requested) {
+        if (session_info->mut_auth_requested != 0) {
             if (is_requester) {
                 slot_id = spdm_context->connection_info.local_used_cert_chain_slot_id;
                 LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xFF));

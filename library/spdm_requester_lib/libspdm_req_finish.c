@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -58,7 +58,7 @@ bool libspdm_verify_finish_rsp_hmac(libspdm_context_t *spdm_context,
         return false;
     }
 
-    if (session_info->mut_auth_requested) {
+    if (session_info->mut_auth_requested != 0) {
         slot_id = spdm_context->connection_info.local_used_cert_chain_slot_id;
         LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xFF));
         if (slot_id == 0xFF) {
@@ -153,7 +153,7 @@ bool libspdm_generate_finish_req_hmac(libspdm_context_t *spdm_context,
         return false;
     }
 
-    if (session_info->mut_auth_requested) {
+    if (session_info->mut_auth_requested != 0) {
         slot_id = spdm_context->connection_info.local_used_cert_chain_slot_id;
         LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xFF));
         if (slot_id == 0xFF) {
@@ -419,7 +419,7 @@ static libspdm_return_t libspdm_try_send_receive_finish(libspdm_context_t *spdm_
     spdm_request->header.param2 = 0;
     signature_size = 0;
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
-    if (session_info->mut_auth_requested) {
+    if (session_info->mut_auth_requested != 0) {
         spdm_request->header.param1 = SPDM_FINISH_REQUEST_ATTRIBUTES_SIGNATURE_INCLUDED;
         spdm_request->header.param2 = req_slot_id_param;
         signature_size = libspdm_get_req_asym_signature_size(
@@ -428,7 +428,7 @@ static libspdm_return_t libspdm_try_send_receive_finish(libspdm_context_t *spdm_
 #endif
 
     spdm_context->connection_info.local_used_cert_chain_slot_id = req_slot_id_param;
-    if (session_info->mut_auth_requested && (req_slot_id_param != 0xFF)) {
+    if ((session_info->mut_auth_requested != 0) && (req_slot_id_param != 0xFF)) {
         LIBSPDM_ASSERT(req_slot_id_param < SPDM_MAX_SLOT_COUNT);
         spdm_context->connection_info.local_used_cert_chain_buffer =
             spdm_context->local_context.local_cert_chain_provision[req_slot_id_param];
@@ -449,7 +449,7 @@ static libspdm_return_t libspdm_try_send_receive_finish(libspdm_context_t *spdm_
         goto error;
     }
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
-    if (session_info->mut_auth_requested) {
+    if (session_info->mut_auth_requested != 0) {
         result = libspdm_generate_finish_req_signature(spdm_context, session_info, ptr);
         if (!result) {
             libspdm_release_sender_buffer (spdm_context);

@@ -2164,7 +2164,7 @@ libspdm_return_t libspdm_append_message_f(libspdm_context_t *spdm_context,
                 }
             }
 
-            if (!spdm_session_info->use_psk && spdm_session_info->mut_auth_requested) {
+            if (!spdm_session_info->use_psk && (spdm_session_info->mut_auth_requested != 0)) {
                 if (is_requester) {
                     slot_id = spdm_context->connection_info.local_used_cert_chain_slot_id;
                     LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xFF));
@@ -2249,7 +2249,7 @@ libspdm_return_t libspdm_append_message_f(libspdm_context_t *spdm_context,
 
         LIBSPDM_ASSERT (spdm_session_info->session_transcript.digest_context_th != NULL);
         if (!spdm_session_info->session_transcript.message_f_initialized) {
-            if (!spdm_session_info->use_psk && spdm_session_info->mut_auth_requested) {
+            if (!spdm_session_info->use_psk && (spdm_session_info->mut_auth_requested != 0)) {
                 if (spdm_context->connection_info.multi_key_conn_req) {
                     result = libspdm_hash_update (
                         spdm_context->connection_info.algorithm.base_hash_algo,
