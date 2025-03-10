@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -297,6 +297,24 @@ libspdm_return_t libspdm_register_vendor_callback_func(void *spdm_context,
                                                        libspdm_vendor_response_callback_func resp_callback);
 
 #endif /* LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES */
+
+#if LIBSPDM_ENABLE_ENDPOINT_INFO_CAP
+
+/**
+ * This function registers the endpoint info function for device to create ENDPOINT_INFO response.
+ *
+ * This is useful for creating unique responses to devices.
+ *
+ * @param  spdm_context     A pointer to the SPDM context.
+ * @param  func             Endpoint info device function
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS Success
+ * @retval LIBSPDM_STATUS_INVALID_PARAMETER Some parameters invalid or NULL
+ **/
+libspdm_return_t libspdm_register_endpoint_info_device_func(
+    void *spdm_context, libspdm_endpoint_info_device_func func);
+
+#endif /* LIBSPDM_ENABLE_ENDPOINT_INFO_CAP */
 
 #ifdef __cplusplus
 }

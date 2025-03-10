@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -80,6 +80,10 @@
 
 #ifndef LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP
 #define LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP 1
+#endif
+
+#ifndef LIBSPDM_ENABLE_ENDPOINT_INFO_CAP
+#define LIBSPDM_ENABLE_ENDPOINT_INFO_CAP 1
 #endif
 
 /* Includes SPDM 1.3 features for CSR messages. If enabled then LIBSPDM_ENABLE_CAPABILITY_CSR_CAP
@@ -211,6 +215,13 @@
  */
 #ifndef LIBSPDM_MAX_MEL_BLOCK_LEN
 #define LIBSPDM_MAX_MEL_BLOCK_LEN 1024
+#endif
+
+/* This value specifies the maximum size, in bytes, of a endpoint info that can be stored in a
+ * libspdm context.
+ */
+#ifndef LIBSPDM_MAX_ENDPOINT_INFO_LENGTH
+#define LIBSPDM_MAX_ENDPOINT_INFO_LENGTH 1024
 #endif
 
 /* To ensure integrity in communication between the Requester and the Responder libspdm calculates
