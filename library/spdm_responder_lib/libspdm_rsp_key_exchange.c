@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -23,7 +23,7 @@ bool libspdm_generate_key_exchange_rsp_hmac(libspdm_context_t *spdm_context,
     size_t th_curr_data_size;
     libspdm_th_managed_buffer_t th_curr;
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
-#endif
+#endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
     bool result;
 
     hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
@@ -43,8 +43,7 @@ bool libspdm_generate_key_exchange_rsp_hmac(libspdm_context_t *spdm_context,
     }
 
     result = libspdm_calculate_th_for_exchange(
-        spdm_context, session_info, cert_chain_buffer,
-        cert_chain_buffer_size, &th_curr);
+        spdm_context, session_info, cert_chain_buffer, cert_chain_buffer_size, &th_curr);
     if (!result) {
         return false;
     }
@@ -58,8 +57,7 @@ bool libspdm_generate_key_exchange_rsp_hmac(libspdm_context_t *spdm_context,
     }
 
     result = libspdm_hmac_all_with_response_finished_key(
-        session_info->secured_message_context, hash_data,
-        hash_size, hmac_data);
+        session_info->secured_message_context, hash_data, hash_size, hmac_data);
     if (!result) {
         return false;
     }
@@ -69,7 +67,7 @@ bool libspdm_generate_key_exchange_rsp_hmac(libspdm_context_t *spdm_context,
     if (!result) {
         return false;
     }
-#endif
+#endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "th_curr hmac - "));
     LIBSPDM_INTERNAL_DUMP_DATA(hmac_data, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
@@ -91,7 +89,7 @@ bool libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context
     libspdm_th_managed_buffer_t th_curr;
     const uint8_t *cert_chain_buffer;
     size_t cert_chain_buffer_size;
-#endif
+#endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
 #if ((LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT) && (LIBSPDM_DEBUG_BLOCK_ENABLE)) || \
     !(LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT)
     uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
@@ -120,8 +118,7 @@ bool libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context
     }
 
     result = libspdm_calculate_th_for_exchange(
-        spdm_context, session_info, cert_chain_buffer,
-        cert_chain_buffer_size, &th_curr);
+        spdm_context, session_info, cert_chain_buffer, cert_chain_buffer_size, &th_curr);
     if (!result) {
         return false;
     }
@@ -142,7 +139,7 @@ bool libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context
     if (!result) {
         return false;
     }
-#endif
+#endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "th_curr hash - "));
     LIBSPDM_INTERNAL_DUMP_DATA(hash_data, hash_size);
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
@@ -151,7 +148,7 @@ bool libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context
     result = libspdm_responder_data_sign(
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT
         spdm_context,
-#endif
+#endif /* LIBSPDM_HAL_PASS_SPDM_CONTEXT */
         spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
         spdm_context->connection_info.algorithm.base_asym_algo,
         spdm_context->connection_info.algorithm.base_hash_algo,
@@ -160,12 +157,12 @@ bool libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context
     result = libspdm_responder_data_sign(
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT
         spdm_context,
-#endif
+#endif /* LIBSPDM_HAL_PASS_SPDM_CONTEXT */
         spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
         spdm_context->connection_info.algorithm.base_asym_algo,
         spdm_context->connection_info.algorithm.base_hash_algo,
         true, hash_data, hash_size, signature, &signature_size);
-#endif
+#endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
     if (result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "signature - "));
         LIBSPDM_INTERNAL_DUMP_DATA(signature, signature_size);
@@ -340,8 +337,7 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
                                                SPDM_ERROR_CODE_INVALID_REQUEST,
                                                0, response_size, response);
     }
-    if (request_size < sizeof(spdm_key_exchange_request_t) + dhe_key_size +
-        sizeof(uint16_t)) {
+    if (request_size < sizeof(spdm_key_exchange_request_t) + dhe_key_size + sizeof(uint16_t)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
@@ -354,12 +350,12 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
     }
-    request_size = sizeof(spdm_key_exchange_request_t) + dhe_key_size +
-                   sizeof(uint16_t) + opaque_data_length;
+    request_size = sizeof(spdm_key_exchange_request_t) + dhe_key_size + sizeof(uint16_t) +
+                   opaque_data_length;
 
     if (opaque_data_length != 0) {
-        cptr = (const uint8_t *)request + sizeof(spdm_key_exchange_request_t) +
-               dhe_key_size + sizeof(uint16_t);
+        cptr = (const uint8_t *)request + sizeof(spdm_key_exchange_request_t) + dhe_key_size +
+               sizeof(uint16_t);
         result = libspdm_process_general_opaque_data_check(spdm_context, opaque_data_length, cptr);
         if (!result) {
             return libspdm_generate_error_response(spdm_context,
@@ -434,8 +430,8 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
     }
 
     spdm_response->rsp_session_id = rsp_session_id;
-
     spdm_response->mut_auth_requested = 0;
+
     if (libspdm_is_capabilities_flag_supported(
             spdm_context, false,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MUT_AUTH_CAP,
@@ -447,12 +443,10 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
         spdm_context->connection_info.peer_used_cert_chain_slot_id =
             spdm_context->encap_context.req_slot_id;
-        libspdm_init_mut_auth_encap_state(
-            spdm_context, spdm_response->mut_auth_requested);
+        libspdm_init_mut_auth_encap_state(spdm_context, spdm_response->mut_auth_requested);
         if (spdm_response->mut_auth_requested == SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED) {
             /* no need to libspdm_init_mut_auth_encap_state() because of no ENCAP message */
-            spdm_response->req_slot_id_param =
-                (spdm_context->encap_context.req_slot_id & 0xF);
+            spdm_response->req_slot_id_param = spdm_context->encap_context.req_slot_id & 0xF;
         } else {
             /* req_slot_id is always 0 if ENCAP message is needed */
             spdm_response->req_slot_id_param = 0;
@@ -484,12 +478,10 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
     }
 
     result = libspdm_secured_message_dhe_generate_key(
-        spdm_context->connection_info.algorithm.dhe_named_group,
-        dhe_context, ptr, &dhe_key_size);
+        spdm_context->connection_info.algorithm.dhe_named_group, dhe_context, ptr, &dhe_key_size);
     if (!result) {
         libspdm_secured_message_dhe_free(
-            spdm_context->connection_info.algorithm.dhe_named_group,
-            dhe_context);
+            spdm_context->connection_info.algorithm.dhe_named_group, dhe_context);
         libspdm_free_session_id(spdm_context, session_id);
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,
@@ -509,8 +501,7 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
         (const uint8_t *)request + sizeof(spdm_key_exchange_request_t),
         dhe_key_size, session_info->secured_message_context);
     libspdm_secured_message_dhe_free(
-        spdm_context->connection_info.algorithm.dhe_named_group,
-        dhe_context);
+        spdm_context->connection_info.algorithm.dhe_named_group, dhe_context);
     if (!result) {
         libspdm_free_session_id(spdm_context, session_id);
         return libspdm_generate_error_response(spdm_context,
@@ -523,11 +514,10 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
     if (libspdm_is_capabilities_flag_supported(
             spdm_context, false, 0, SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
-
         result = libspdm_generate_measurement_summary_hash(
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT
             spdm_context,
-#endif
+#endif /* LIBSPDM_HAL_PASS_SPDM_CONTEXT */
             spdm_context->connection_info.version,
             spdm_context->connection_info.algorithm.base_hash_algo,
             spdm_context->connection_info.algorithm.measurement_spec,
@@ -559,8 +549,7 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
         spdm_context->connection_info.local_used_cert_chain_buffer =
             spdm_context->local_context.local_cert_chain_provision[slot_id];
         spdm_context->connection_info.local_used_cert_chain_buffer_size =
-            spdm_context->local_context
-            .local_cert_chain_provision_size[slot_id];
+            spdm_context->local_context.local_cert_chain_provision_size[slot_id];
     }
 
     status = libspdm_append_message_k(spdm_context, session_info, false, request, request_size);
@@ -579,8 +568,7 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
                                                SPDM_ERROR_CODE_UNSPECIFIED, 0,
                                                response_size, response);
     }
-    result = libspdm_generate_key_exchange_rsp_signature(spdm_context,
-                                                         session_info, ptr);
+    result = libspdm_generate_key_exchange_rsp_signature(spdm_context, session_info, ptr);
     if (!result) {
         libspdm_free_session_id(spdm_context, session_id);
         return libspdm_generate_error_response(
@@ -596,10 +584,8 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
                                                response_size, response);
     }
 
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_generate_session_handshake_key[%x]\n",
-                   session_id));
-    result = libspdm_calculate_th1_hash(spdm_context, session_info, false,
-                                        th1_hash_data);
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "libspdm_generate_session_handshake_key[%x]\n", session_id));
+    result = libspdm_calculate_th1_hash(spdm_context, session_info, false, th1_hash_data);
     if (!result) {
         libspdm_free_session_id(spdm_context, session_id);
         return libspdm_generate_error_response(spdm_context,
@@ -621,8 +607,7 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
             spdm_context, false,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_HANDSHAKE_IN_THE_CLEAR_CAP)) {
-        result = libspdm_generate_key_exchange_rsp_hmac(spdm_context,
-                                                        session_info, ptr);
+        result = libspdm_generate_key_exchange_rsp_hmac(spdm_context, session_info, ptr);
         if (!result) {
             libspdm_free_session_id(spdm_context, session_id);
             return libspdm_generate_error_response(
