@@ -850,7 +850,7 @@ typedef struct {
 
 #define SPDM_EXTENDED_ERROR_DATA_MAX_SIZE 32
 
-/* SPDM error code */
+/* SPDM error code (1.0) */
 #define SPDM_ERROR_CODE_INVALID_REQUEST 0x01
 #define SPDM_ERROR_CODE_BUSY 0x03
 #define SPDM_ERROR_CODE_UNEXPECTED_REQUEST 0x04
@@ -876,7 +876,9 @@ typedef struct {
 #define SPDM_ERROR_CODE_MESSAGE_LOST 0x10
 
 /* SPDM error code (1.3) */
+#define SPDM_ERROR_CODE_INVALID_POLICY 0x11
 #define SPDM_ERROR_CODE_OPERATION_FAILED 0x44
+#define SPDM_ERROR_CODE_NO_PENDING_REQUESTS 0x45
 
 /* SPDM ResponseNotReady extended data */
 typedef struct {
