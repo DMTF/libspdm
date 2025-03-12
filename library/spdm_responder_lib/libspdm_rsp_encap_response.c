@@ -224,10 +224,18 @@ libspdm_return_t libspdm_get_response_encapsulated_request(
     }
     if (spdm_context->response_state != LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP) {
         if (spdm_context->response_state == LIBSPDM_RESPONSE_STATE_NORMAL) {
-            return libspdm_generate_error_response(
-                spdm_context,
-                SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
-                response_size, response);
+            if (libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_13) {
+                return libspdm_generate_error_response(
+                    spdm_context,
+                    SPDM_ERROR_CODE_NO_PENDING_REQUESTS, 0,
+                    response_size, response);
+
+            } else {
+                return libspdm_generate_error_response(
+                    spdm_context,
+                    SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
+                    response_size, response);
+            }
         }
         return libspdm_responder_handle_response_state(
             spdm_context,
