@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -376,6 +376,51 @@ void libspdm_test_get_response_encapsulated_request_case6(void **State)
                      0x1);
     assert_int_equal(spdm_response_requester->header.param2, 0);
     free(data);
+}
+
+void libspdm_test_get_response_encapsulated_request_case7(void **State)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    spdm_error_response_t *spdm_response_requester;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    uint8_t m_local_certificate_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
+
+    spdm_test_context = *State;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x7;
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
+
+    spdm_context->encap_context.current_request_op_code = 0;
+    spdm_context->encap_context.request_id = 0;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->local_context.local_cert_chain_provision[0] = m_local_certificate_chain;
+    spdm_context->local_context.local_cert_chain_provision_size[0] =
+        sizeof(m_local_certificate_chain);
+    libspdm_set_mem(m_local_certificate_chain, sizeof(m_local_certificate_chain), 0xFF);
+
+    response_size = sizeof(response);
+    status = libspdm_get_response_encapsulated_request(spdm_context,
+                                                       m_libspdm_encapsulated_request_t1_size,
+                                                       &m_libspdm_encapsulated_request_t1,
+                                                       &response_size,
+                                                       response);
+
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response_requester = (void *)response;
+    assert_int_equal(spdm_response_requester->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(spdm_response_requester->header.param1, SPDM_ERROR_CODE_NO_PENDING_REQUESTS);
+    assert_int_equal(spdm_response_requester->header.param2, 0);
 }
 
 void libspdm_test_get_response_encapsulated_response_ack_case1(void **State)
@@ -1047,7 +1092,7 @@ int libspdm_responder_encapsulated_response_test_main(void)
         cmocka_unit_test(libspdm_test_get_response_encapsulated_request_case1),
         /*Success Case current_request_op_code: SPDM_GET_CERTIFICATE */
         cmocka_unit_test(libspdm_test_get_response_encapsulated_request_case2),
-        /*response_state : LIBSPDM_RESPONSE_STATE_NORMAL */
+        /*response_state : LIBSPDM_RESPONSE_STATE_NORMAL with UnexpectedRequest error. */
         cmocka_unit_test(libspdm_test_get_response_encapsulated_request_case3),
         /*response_state : LIBSPDM_RESPONSE_STATE_NEED_RESYNC */
         cmocka_unit_test(libspdm_test_get_response_encapsulated_request_case4),
@@ -1058,6 +1103,8 @@ int libspdm_responder_encapsulated_response_test_main(void)
 #endif
         /* Success Case current_request_op_code: SPDM_KEY_UPDATE */
         cmocka_unit_test(libspdm_test_get_response_encapsulated_request_case6),
+        /*response_state : LIBSPDM_RESPONSE_STATE_NORMAL with NoPendingRequests error. */
+        cmocka_unit_test(libspdm_test_get_response_encapsulated_request_case7),
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)
         /*Success Case current_request_op_code: SPDM_GET_DIGESTS*/
         cmocka_unit_test(libspdm_test_get_response_encapsulated_response_ack_case1),
