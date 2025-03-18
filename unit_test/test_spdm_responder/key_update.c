@@ -1878,7 +1878,7 @@ void libspdm_test_responder_key_update_case23(void **state)
 }
 
 /**
- * Test 24: :other command + UpdateKey, last requeset is not key_update command, current key operation is update key
+ * Test 24: :other command + UpdateKey, last request is not key_update command, current key operation is update key
  * Expected behavior: the responder accepts the request, produces a valid
  * KEY_UPDATE_ACK response message, and the request data key is updated.
  **/
@@ -1922,7 +1922,7 @@ void libspdm_test_responder_key_update_case24(void **state)
                                   secured_message_context->hash_size);
     /*response side *not* updated*/
 
-    /*ohter command with cleared last_key_update_request*/
+    /*other command with cleared last_key_update_request*/
     libspdm_zero_mem (&(session_info->last_key_update_request), sizeof(spdm_key_update_request_t));
 
     /*updatekey*/
@@ -1950,7 +1950,7 @@ void libspdm_test_responder_key_update_case24(void **state)
 }
 
 /**
- * Test 25: :other command + UpdateAllKeys, last requeset is not key_update command, current key operation is update all key
+ * Test 25: :other command + UpdateAllKeys, last request is not key_update command, current key operation is update all key
  * Expected behavior: the responder accepts the request, produces a valid
  * KEY_UPDATE_ACK response message, and the request data key is updated.
  **/
@@ -1998,7 +1998,7 @@ void libspdm_test_responder_key_update_case25(void **state)
                                   m_rsp_secret_buffer, m_rsp_secret_buffer,
                                   secured_message_context->hash_size);
 
-    /*ohter command with cleared last_key_update_request*/
+    /*other command with cleared last_key_update_request*/
     libspdm_zero_mem (&(session_info->last_key_update_request), sizeof(spdm_key_update_request_t));
 
     response_size = sizeof(response);
@@ -2025,7 +2025,7 @@ void libspdm_test_responder_key_update_case25(void **state)
 }
 
 /**
- * Test 26: :other command + VerifyNewKey, last requeset is not key_update command, current key operation is verify key
+ * Test 26: :other command + VerifyNewKey, last request is not key_update command, current key operation is verify key
  * Expected behavior: the responder refuses the KEY_UPDATE message and
  * produces an ERROR message indicating the InvalidRequest. No keys are
  * updated.
@@ -2074,7 +2074,7 @@ void libspdm_test_responder_key_update_case26(void **state)
                                   m_rsp_secret_buffer, m_rsp_secret_buffer,
                                   secured_message_context->hash_size);
 
-    /*ohter command with cleared last_key_update_request*/
+    /*other command with cleared last_key_update_request*/
     libspdm_zero_mem (&(session_info->last_key_update_request), sizeof(spdm_key_update_request_t));
 
     /*VerifyNewKey*/
@@ -2207,11 +2207,11 @@ int libspdm_responder_key_update_test_main(void)
         cmocka_unit_test(libspdm_test_responder_key_update_case22),
         /* VerifyNewKey + VerifyNewKey: failed*/
         cmocka_unit_test(libspdm_test_responder_key_update_case23),
-        /* ohter command + UpdateKey: success*/
+        /* other command + UpdateKey: success*/
         cmocka_unit_test(libspdm_test_responder_key_update_case24),
-        /* ohter command + UpdateAllKeys: success*/
+        /* other command + UpdateAllKeys: success*/
         cmocka_unit_test(libspdm_test_responder_key_update_case25),
-        /* ohter command + VerifyNewKey: failed*/
+        /* other command + VerifyNewKey: failed*/
         cmocka_unit_test(libspdm_test_responder_key_update_case26),
         /* Invalid operation,other key_update operation: failed*/
         cmocka_unit_test(libspdm_test_responder_key_update_case27),

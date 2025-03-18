@@ -1181,7 +1181,7 @@ static void libspdm_test_requester_get_digests_err_case9(void **state)
 }
 
 /**
- * Test 10: flag cert_cap from CAPABILITIES is not setted meaning the Requester does not support DIGESTS and
+ * Test 10: flag cert_cap from CAPABILITIES is not set meaning the Requester does not support DIGESTS and
  * CERTIFICATE response messages
  * Expected Behavior: requester returns the status LIBSPDM_STATUS_UNSUPPORTED_CAP, with no DIGESTS message received
  **/
@@ -1375,7 +1375,7 @@ static void libspdm_test_requester_get_digests_err_case17(void **state)
 /**
  * Test 18: a request message is successfully sent but the number of digests received in the response message is different than
  * the number of bits set in param2 - Slot mask
- * Expected Behavior: requester returns the status RETURN_DEVICE_ERROR, with no successful DIGESTS message received (managed buffer not shrinked)
+ * Expected Behavior: requester returns the status RETURN_DEVICE_ERROR, with no successful DIGESTS message received (managed buffer is not shrunk)
  **/
 static void libspdm_test_requester_get_digests_err_case18(void **state)
 {
@@ -1441,7 +1441,7 @@ static void libspdm_test_requester_get_digests_err_case19(void **state)
 /**
  * Test 20: a request message is successfully sent but the size of the response message is smaller than the minimum size of a SPDM DIGESTS response,
  * meaning it is an invalid response message.
- * Expected Behavior: requester returns the status RETURN_DEVICE_ERROR, with no successful DIGESTS message received (managed buffer not shrinked)
+ * Expected Behavior: requester returns the status RETURN_DEVICE_ERROR, with no successful DIGESTS message received (managed buffer is not shrunk)
  **/
 static void libspdm_test_requester_get_digests_err_case20(void **state)
 {
@@ -1476,7 +1476,7 @@ static void libspdm_test_requester_get_digests_err_case20(void **state)
 /**
  * Test 21: a request message is successfully sent but the size of the response message is bigger than the maximum size of a SPDM DIGESTS response,
  * meaning it is an invalid response message.
- * Expected Behavior: requester returns the status RETURN_DEVICE_ERROR, with no successful DIGESTS message received (managed buffer not shrinked)
+ * Expected Behavior: requester returns the status RETURN_DEVICE_ERROR, with no successful DIGESTS message received (managed buffer is not shrunk)
  **/
 static void libspdm_test_requester_get_digests_err_case21(void **state)
 {

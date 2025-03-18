@@ -109,7 +109,7 @@ void test_spdm_responder_encap_get_digests_case2(void **state)
 }
 
 /**
- * Test 3: Error response message with error code busy reponse seize incorrect
+ * Test 3: Error response message with error code busy response seize incorrect
  * Expected Behavior:  Expected Behavior: requester returns the status RETURN_DEVICE_ERROR, with no DIGESTS message received
  **/
 void test_spdm_responder_encap_get_digests_case3(void **state)
@@ -198,7 +198,7 @@ void test_spdm_responder_encap_get_digests_case4(void **state)
 }
 
 /**
- * Test 5: flag cert_cap from CAPABILITIES is not setted meaning the Requester does not support DIGESTS and
+ * Test 5: flag cert_cap from CAPABILITIES is not set meaning the Requester does not support DIGESTS and
  * CERTIFICATE response messages
  * Expected Behavior: requester returns the status RETURN_DEVICE_ERROR, with no DIGESTS message received
  **/

@@ -125,7 +125,7 @@ destination buffer.
 This function should only be called after the session has been fully established and
 `libspdm_secured_message_get_session_state()` returns `LIBSPDM_SESSION_STATE_ESTABLISHED`.
 
-The structure is packed and is layed out as
+The structure is packed and is laid out as
 - Struct Version (4 bytes)
 - AEAD Key Size (4 bytes)
 - AEAD IV Size (4 bytes)

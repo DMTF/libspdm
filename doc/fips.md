@@ -77,7 +77,7 @@ If FIPS mode is enabled, then only FIPS-approved algorithms will be enabled, whi
 
 ### Key zeroization
 
-If a key is not used, then the variable to hold the key must be explictly zeroized. This is done in the libspdm.
+If a key is not used, then the variable to hold the key must be explicitly zeroized. This is done in the libspdm.
 
 The private key for signing is managed by the [requester-asymsignlib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/requester/reqasymsignlib.h) and [responder-asymlib](https://github.com/DMTF/libspdm/blob/main/include/hal/library/responder/asymsignlib.h). The library provider shall guarantee the key is zeroized after use.
 
@@ -132,4 +132,4 @@ The expected step is as follows:
 #endif
 ```
 
-NOTE: If a crypto library does not support a FIPS algorithm, then the algorithm must be disabled explictly. Otherwise `libspdm_fips_run_selftest()` will fail. For example, if the integrator links libspdm with mbedtls, then SHA3 and RdDSA related algorithms must be disabled via `LIBSPDM_SHA3_256_SUPPORT=0`, `LIBSPDM_SHA3_384_SUPPORT=0`, `LIBSPDM_SHA3_512_SUPPORT=0`, `LIBSPDM_EDDSA_ED25519_SUPPORT=0`, `LIBSPDM_EDDSA_ED448_SUPPORT=0`, because they are not supported by mbedtls yet.
+NOTE: If a crypto library does not support a FIPS algorithm, then the algorithm must be disabled explicitly. Otherwise `libspdm_fips_run_selftest()` will fail. For example, if the integrator links libspdm with mbedtls, then SHA3 and RdDSA related algorithms must be disabled via `LIBSPDM_SHA3_256_SUPPORT=0`, `LIBSPDM_SHA3_384_SUPPORT=0`, `LIBSPDM_SHA3_512_SUPPORT=0`, `LIBSPDM_EDDSA_ED25519_SUPPORT=0`, `LIBSPDM_EDDSA_ED448_SUPPORT=0`, because they are not supported by mbedtls yet.

@@ -114,7 +114,7 @@ bool libspdm_read_responder_public_certificate_chain_by_size(
 
     is_requester_cert = false;
 
-    /*defalut is true*/
+    /*default is true*/
     is_device_cert_model = true;
 
     *data = NULL;

@@ -73,7 +73,7 @@ void libspdm_debug_print(size_t error_level, const char *format, ...)
     status = vsnprintf(buffer, sizeof(buffer), format, marker);
     va_end(marker);
 
-    /* If status is negative then an encoding error has ocurred. */
+    /* If status is negative then an encoding error has occurred. */
     assert(status >= 0);
     /* If status is greater than or equal to the size of the buffer then the buffer is not
      * large enough to handle the formatted string. */

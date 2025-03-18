@@ -712,7 +712,7 @@ bool libspdm_x509_verify_cert_chain(const uint8_t *root_cert, size_t root_cert_l
     current_cert = (const unsigned char *)cert_chain;
 
 
-    /* Get Current certificate from certificates buffer and Verify with preciding cert*/
+    /* Get Current certificate from certificates buffer and Verify with preceding cert*/
 
     do {
         tmp_ptr = current_cert;
@@ -1750,7 +1750,7 @@ static bool libspdm_convert_subject_to_string(uint8_t *ptr, size_t obj_len,
         /*move to next SET*/
         ptr += obj_len;
 
-        /*sequece*/
+        /*sequence*/
         ret = libspdm_asn1_get_tag(&internal_p, end, &obj_len,
                                    LIBSPDM_CRYPTO_ASN1_SEQUENCE | LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
         if (!ret) {
@@ -1855,7 +1855,7 @@ bool libspdm_set_attribute_for_req(mbedtls_x509write_csr *req,
 
     /*integer:version*/
     ret = libspdm_asn1_get_tag(&ptr, end, &obj_len, LIBSPDM_CRYPTO_ASN1_INTEGER);
-    /*check req_info verson. spec PKCS#10: It shall be 0 for this version of the standard.*/
+    /*check req_info version. spec PKCS#10: It shall be 0 for this version of the standard.*/
     if ((obj_len != 1) || (*ptr != 0)) {
         return false;
     }

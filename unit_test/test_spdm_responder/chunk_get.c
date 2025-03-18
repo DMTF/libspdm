@@ -780,7 +780,7 @@ void libspdm_test_responder_chunk_get_rsp_case11(void** state)
 }
 
 /**
- * Test 12: Succesful request of last chunk where size is exactly max chunk size
+ * Test 12: Successful request of last chunk where size is exactly max chunk size
  **/
 void libspdm_test_responder_chunk_get_rsp_case12(void** state)
 {
@@ -876,7 +876,7 @@ void libspdm_test_responder_chunk_get_rsp_case12(void** state)
     assert_int_equal(spdm_response->chunk_seq_no, chunk_seq_no);
     assert_int_equal(spdm_response->chunk_size, third_chunk_size);
 
-    /* Verify the 3nd chunk is filled with 3 */
+    /* Verify the 3rd chunk is filled with 3 */
     chunk_ptr = (uint8_t*) (spdm_response + 1);
     for (i = 0; i < spdm_response->chunk_size; i++) {
         assert_int_equal(chunk_ptr[i], 3);
@@ -884,7 +884,7 @@ void libspdm_test_responder_chunk_get_rsp_case12(void** state)
 }
 
 /**
- * Test 13: Succesful request of last chunk where size is exactly 1.
+ * Test 13: Successful request of last chunk where size is exactly 1.
  **/
 void libspdm_test_responder_chunk_get_rsp_case13(void** state)
 {
@@ -998,7 +998,7 @@ void libspdm_test_responder_chunk_get_rsp_case13(void** state)
 
 
 /**
- * Test 14: Responder has reponse exceed chunk seq no
+ * Test 14: Responder has response exceed chunk seq no
  **/
 void libspdm_test_responder_chunk_get_rsp_case14(void** state)
 {
@@ -1116,11 +1116,11 @@ int libspdm_responder_chunk_get_rsp_test_main(void)
         cmocka_unit_test(libspdm_test_responder_chunk_get_rsp_case10),
         /* Successful request of middle chunk */
         cmocka_unit_test(libspdm_test_responder_chunk_get_rsp_case11),
-        /* Succesful request of last chunk, where size is exactly max chunk size */
+        /* Successful request of last chunk, where size is exactly max chunk size */
         cmocka_unit_test(libspdm_test_responder_chunk_get_rsp_case12),
         /* Successful request of last chunk where chunk size is exactly 1 byte */
         cmocka_unit_test(libspdm_test_responder_chunk_get_rsp_case13),
-        /* Responder has reponse exceed chunk seq no */
+        /* Responder has response exceed chunk seq no */
         cmocka_unit_test(libspdm_test_responder_chunk_get_rsp_case14),
     };
 

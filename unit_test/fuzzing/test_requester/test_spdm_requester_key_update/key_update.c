@@ -322,7 +322,7 @@ void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
     libspdm_test_requester_key_update_case1(&State);
     libspdm_unit_test_group_teardown(&State);
 
-    /* Sucessful response  update all keys*/
+    /* Successful response  update all keys*/
     libspdm_unit_test_group_setup(&State);
     libspdm_test_requester_key_update_case2(&State);
     libspdm_unit_test_group_teardown(&State);

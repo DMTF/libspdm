@@ -1256,7 +1256,7 @@ void libspdm_test_responder_measurements_case21(void **state)
 }
 
 /**
- * Test 22: request a large number of measurements before requesting a singed response
+ * Test 22: request a large number of measurements before requesting a signed response
  * Expected Behavior: while transcript.message_m is not full, get a RETURN_SUCCESS return code, empty transcript.message_m, and correct response message size and fields
  *                    if transcript.message_m has no more room, an error response is expected
  **/
