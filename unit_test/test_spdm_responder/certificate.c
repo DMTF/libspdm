@@ -45,7 +45,7 @@ spdm_get_certificate_request_t m_libspdm_get_certificate_request5 = {
 size_t m_libspdm_get_certificate_request5_size = sizeof(m_libspdm_get_certificate_request5);
 /**
  * Test 1: request the first LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN bytes of the certificate chain
- * Expected Behavior: generate a correctly formed Certficate message, including its portion_length and remainder_length fields
+ * Expected Behavior: generate a correctly formed Certificate message, including its portion_length and remainder_length fields
  **/
 void libspdm_test_responder_certificate_case1(void **state)
 {
@@ -321,7 +321,7 @@ void libspdm_test_responder_certificate_case6(void **state)
 
 /**
  * Test 7: request length at the boundary of maximum integer values, while keeping offset 0
- * Expected Behavior: generate correctly formed Certficate messages, including its portion_length and remainder_length fields
+ * Expected Behavior: generate correctly formed Certificate messages, including its portion_length and remainder_length fields
  **/
 void libspdm_test_responder_certificate_case7(void **state)
 {
@@ -371,7 +371,7 @@ void libspdm_test_responder_certificate_case7(void **state)
         expected_chunk_size = LIBSPDM_MIN(m_libspdm_get_certificate_request3.length,
                                           LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN);
 
-        /* reseting an internal buffer to avoid overflow and prevent tests to succeed*/
+        /* resetting an internal buffer to avoid overflow and prevent tests to succeed*/
         libspdm_reset_message_b(spdm_context);
         response_size = sizeof(response);
         status = libspdm_get_response_certificate(
@@ -396,7 +396,7 @@ void libspdm_test_responder_certificate_case7(void **state)
 
 /**
  * Test 8: request offset at the boundary of maximum integer values, while keeping length 0
- * Expected Behavior: generate correctly formed Certficate messages, including its portion_length and remainder_length fields
+ * Expected Behavior: generate correctly formed Certificate messages, including its portion_length and remainder_length fields
  **/
 void libspdm_test_responder_certificate_case8(void **state)
 {
@@ -453,7 +453,7 @@ void libspdm_test_responder_certificate_case8(void **state)
         TEST_LIBSPDM_DEBUG_PRINT("i:%d test_offsets[i]:%u\n", i, test_offsets[i]);
         m_libspdm_get_certificate_request3.offset = test_offsets[i];
 
-        /* reseting an internal buffer to avoid overflow and prevent tests to succeed*/
+        /* resetting an internal buffer to avoid overflow and prevent tests to succeed*/
         libspdm_reset_message_b(spdm_context);
         response_size = sizeof(response);
         status = libspdm_get_response_certificate(
@@ -492,7 +492,7 @@ void libspdm_test_responder_certificate_case8(void **state)
 
 /**
  * Test 9: request offset and length at the boundary of maximum integer values
- * Expected Behavior: generate correctly formed Certficate messages, including its portion_length and remainder_length fields
+ * Expected Behavior: generate correctly formed Certificate messages, including its portion_length and remainder_length fields
  **/
 void libspdm_test_responder_certificate_case9(void **state)
 {
@@ -562,7 +562,7 @@ void libspdm_test_responder_certificate_case9(void **state)
                                      test_sizes[j]);
             m_libspdm_get_certificate_request3.offset = test_sizes[j];
 
-            /* reseting an internal buffer to avoid overflow and prevent tests to succeed*/
+            /* resetting an internal buffer to avoid overflow and prevent tests to succeed*/
             libspdm_reset_message_b(spdm_context);
             response_size = sizeof(response);
             status = libspdm_get_response_certificate(
@@ -623,7 +623,7 @@ void libspdm_test_responder_certificate_case9(void **state)
 
 /**
  * Test 10: request LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN bytes of long certificate chains, with the largest valid offset
- * Expected Behavior: generate correctly formed Certficate messages, including its portion_length and remainder_length fields
+ * Expected Behavior: generate correctly formed Certificate messages, including its portion_length and remainder_length fields
  **/
 void libspdm_test_responder_certificate_case10(void **state)
 {
@@ -680,7 +680,7 @@ void libspdm_test_responder_certificate_case10(void **state)
             m_libspdm_get_certificate_request3.offset +
             m_libspdm_get_certificate_request3.length);
 
-        /* reseting an internal buffer to avoid overflow and prevent tests to succeed*/
+        /* resetting an internal buffer to avoid overflow and prevent tests to succeed*/
         libspdm_reset_message_b(spdm_context);
         response_size = sizeof(response);
         status = libspdm_get_response_certificate(
@@ -739,7 +739,7 @@ void libspdm_test_responder_certificate_case10(void **state)
 
 /**
  * Test 11: request LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN bytes of a short certificate chain (fits in 1 message)
- * Expected Behavior: generate correctly formed Certficate messages, including its portion_length and remainder_length fields
+ * Expected Behavior: generate correctly formed Certificate messages, including its portion_length and remainder_length fields
  **/
 void libspdm_test_responder_certificate_case11(void **state)
 {
@@ -800,7 +800,7 @@ void libspdm_test_responder_certificate_case11(void **state)
             m_libspdm_get_certificate_request3.offset +
             m_libspdm_get_certificate_request3.length);
 
-        /* reseting an internal buffer to avoid overflow and prevent tests to succeed*/
+        /* resetting an internal buffer to avoid overflow and prevent tests to succeed*/
         libspdm_reset_message_b(spdm_context);
         response_size = sizeof(response);
         status = libspdm_get_response_certificate(
@@ -854,7 +854,7 @@ void libspdm_test_responder_certificate_case11(void **state)
 
 /**
  * Test 12: request a whole certificate chain byte by byte
- * Expected Behavior: generate correctly formed Certficate messages, including its portion_length and remainder_length fields
+ * Expected Behavior: generate correctly formed Certificate messages, including its portion_length and remainder_length fields
  **/
 void libspdm_test_responder_certificate_case12(void **state)
 {
@@ -894,7 +894,7 @@ void libspdm_test_responder_certificate_case12(void **state)
     expected_chunk_size = 1;
 
 
-    /* reseting an internal buffer to avoid overflow and prevent tests to succeed*/
+    /* resetting an internal buffer to avoid overflow and prevent tests to succeed*/
     libspdm_reset_message_b(spdm_context);
 
     spdm_response = NULL;
@@ -1026,7 +1026,7 @@ void libspdm_test_responder_certificate_case13(void **state)
 
 /**
  * Test 14: request the first LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN bytes of the certificate chain in a session
- * Expected Behavior: generate a correctly formed Certficate message, including its portion_length and remainder_length fields
+ * Expected Behavior: generate a correctly formed Certificate message, including its portion_length and remainder_length fields
  **/
 void libspdm_test_responder_certificate_case14(void **state)
 {
@@ -1272,8 +1272,8 @@ void libspdm_test_responder_certificate_case17(void **state)
 
 /**
  * Test 18: check request attributes and response attributes , SlotSizeRequested=1b the Offset and Length fields in the
- * GET_CERTIFICATE request shall be ignored by the Responde
- * Expected Behavior: generate a correctly formed Certficate message, including its portion_length and remainder_length fields
+ * GET_CERTIFICATE request shall be ignored by the Responder
+ * Expected Behavior: generate a correctly formed Certificate message, including its portion_length and remainder_length fields
  **/
 void libspdm_test_responder_certificate_case18(void **state)
 {

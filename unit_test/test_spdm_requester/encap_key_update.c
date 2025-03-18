@@ -947,7 +947,7 @@ void test_libspdm_requester_encap_key_update_case12(void **state)
 }
 
 
-/* ohter command + UpdateKey: success*/
+/* other command + UpdateKey: success*/
 void test_libspdm_requester_encap_key_update_case13(void **state)
 {
     libspdm_return_t status;
@@ -983,7 +983,7 @@ void test_libspdm_requester_encap_key_update_case13(void **state)
 
     /*request side *not* updated*/
 
-    /*ohter command with cleared last_key_update_request*/
+    /*other command with cleared last_key_update_request*/
     libspdm_zero_mem (&(session_info->last_key_update_request), sizeof(spdm_key_update_request_t));
 
     /*response side updated */
@@ -1016,7 +1016,7 @@ void test_libspdm_requester_encap_key_update_case13(void **state)
 }
 
 
-/* ohter command + VerifyNewKey: failed*/
+/* other command + VerifyNewKey: failed*/
 void test_libspdm_requester_encap_key_update_case14(void **state)
 {
     libspdm_return_t status;
@@ -1052,7 +1052,7 @@ void test_libspdm_requester_encap_key_update_case14(void **state)
 
     /*request side *not* updated*/
 
-    /*ohter command with cleared last_key_update_request*/
+    /*other command with cleared last_key_update_request*/
     libspdm_zero_mem (&(session_info->last_key_update_request), sizeof(spdm_key_update_request_t));
 
     /*response side updated */
@@ -1105,9 +1105,9 @@ int libspdm_requester_encap_key_update_test_main(void)
         cmocka_unit_test(test_libspdm_requester_encap_key_update_case11),
         /* VerifyNewKey + VerifyNewKey: failed*/
         cmocka_unit_test(test_libspdm_requester_encap_key_update_case12),
-        /* ohter command + UpdateKey: success*/
+        /* other command + UpdateKey: success*/
         cmocka_unit_test(test_libspdm_requester_encap_key_update_case13),
-        /* ohter command + VerifyNewKey: failed*/
+        /* other command + VerifyNewKey: failed*/
         cmocka_unit_test(test_libspdm_requester_encap_key_update_case14),
     };
 

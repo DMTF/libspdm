@@ -476,32 +476,32 @@ void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
     libspdm_test_responder_algorithms_case2(&State);
     libspdm_unit_test_group_teardown(&State);
 
-    /* Support capablities flag: SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP*/
+    /* Support capabilities flag: SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP*/
     libspdm_unit_test_group_setup(&State);
     libspdm_test_responder_algorithms_case3(&State);
     libspdm_unit_test_group_teardown(&State);
 
-    /* Support capablities flag */
+    /* Support capabilities flag */
     libspdm_unit_test_group_setup(&State);
     libspdm_test_responder_algorithms_case4(&State);
     libspdm_unit_test_group_teardown(&State);
 
-    /* Support capablities flag: SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP*/
+    /* Support capabilities flag: SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP*/
     libspdm_unit_test_group_setup(&State);
     libspdm_test_responder_algorithms_case5(&State);
     libspdm_unit_test_group_teardown(&State);
 
-    /* Support capablities flag: SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP */
+    /* Support capabilities flag: SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP */
     libspdm_unit_test_group_setup(&State);
     libspdm_test_responder_algorithms_case6(&State);
     libspdm_unit_test_group_teardown(&State);
 
-    /* Support capablities flag: SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP*/
+    /* Support capabilities flag: SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP*/
     libspdm_unit_test_group_setup(&State);
     libspdm_test_responder_algorithms_case7(&State);
     libspdm_unit_test_group_teardown(&State);
 
-    /* Support capablities flag: SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP*/
+    /* Support capabilities flag: SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP*/
     libspdm_unit_test_group_setup(&State);
     libspdm_test_responder_algorithms_case8(&State);
     libspdm_unit_test_group_teardown(&State);
@@ -511,7 +511,7 @@ void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
     libspdm_test_responder_algorithms_case9(&State);
     libspdm_unit_test_group_teardown(&State);
 
-    /* capablities: SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP */
+    /* capabilities: SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP */
     libspdm_unit_test_group_setup(&State);
     libspdm_test_responder_algorithms_case10(&State);
     libspdm_unit_test_group_teardown(&State);

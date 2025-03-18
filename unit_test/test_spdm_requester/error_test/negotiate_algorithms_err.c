@@ -2836,7 +2836,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case37(void **stat
 }
 
 /**
- * Test 38: Reserverd alg_type value.
+ * Test 38: Reserved alg_type value.
  * Expected behavior: returns with status LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
 static void libspdm_test_requester_negotiate_algorithms_error_case38(void **state)

@@ -5078,7 +5078,7 @@ static void libspdm_test_requester_get_measurements_case23(void **state)
 }
 
 /**
- * Test 24: Error case, reponse contains opaque data larger than the maximum allowed
+ * Test 24: Error case, response contains opaque data larger than the maximum allowed
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code, correct transcript.message_m.buffer_size
  **/
 static void libspdm_test_requester_get_measurements_case24(void **state)

@@ -1909,7 +1909,7 @@ int libspdm_responder_chunk_send_ack_test_main(void)
         cmocka_unit_test(libspdm_test_responder_chunk_send_ack_rsp_case18),
         /* Request missing LAST_CHUNK when request size != data transfer size. */
         cmocka_unit_test(libspdm_test_responder_chunk_send_ack_rsp_case19),
-        /* Request chunk seq warpped. */
+        /* Request chunk seq wrapped. */
         cmocka_unit_test(libspdm_test_responder_chunk_send_ack_rsp_case20),
         /* Request size exceed max chunk seq no. */
         cmocka_unit_test(libspdm_test_responder_chunk_send_ack_rsp_case21),

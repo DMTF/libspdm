@@ -118,7 +118,7 @@ Enumeration value used for the `libspdm_set_data` and/or `libspdm_get_data` func
       timing." and is in units of microseconds. This value is only used by a Requester and is used
       in the following scenarios.
         - It is the value of the `timeout` argument in `libspdm_device_send_message_func`. When
-          sending a message this is a worst-case value, and the implementor of the function is free
+          sending a message this is a worst-case value, and the implementer of the function is free
           to reduce the timeout value based on knowledge of the underlying transport.
         - It is added to the Responder's `CT` or `ST1` value and passed via the `timeout` argument
           in `libspdm_device_receive_message_func`.

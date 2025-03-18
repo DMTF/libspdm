@@ -103,7 +103,7 @@ size_t libspdm_get_multi_element_opaque_data_supported_version_data_size(
  *                                           On input, it means the size in bytes of data_out buffer.
  *                                           On output, it means the size in bytes of copied data_out buffer if RETURN_SUCCESS is returned,
  *                                           and means the size in bytes of desired data_out buffer if RETURN_BUFFER_TOO_SMALL is returned.
- * @param  data_out[in]                      A pointer to the desination buffer to store the opaque data supported version.
+ * @param  data_out[in]                      A pointer to the destination buffer to store the opaque data supported version.
  * @param  element_num[in]                   in this test function, the element number < 9 is right. because element id is changed with element_index
  *
  * @retval RETURN_SUCCESS               The opaque data supported version is built successfully.
@@ -266,7 +266,7 @@ size_t libspdm_get_multi_element_opaque_data_version_selection_data_size(
  *                                           On input, it means the size in bytes of data_out buffer.
  *                                           On output, it means the size in bytes of copied data_out buffer if RETURN_SUCCESS is returned,
  *                                           and means the size in bytes of desired data_out buffer if RETURN_BUFFER_TOO_SMALL is returned.
- * @param  data_out[in]                      A pointer to the desination buffer to store the opaque data selection version.
+ * @param  data_out[in]                      A pointer to the destination buffer to store the opaque data selection version.
  * @param  element_num[in]                   in this test function, the element number < 9 is right. because element id is changed with element_index
  *
  * @retval RETURN_SUCCESS               The opaque data selection version is built successfully.

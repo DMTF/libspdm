@@ -4567,7 +4567,7 @@ static void libspdm_test_requester_get_measurements_err_case30(void **state)
 }
 
 /**
- * Test 31: Error case, reponse contains opaque data larger than the maximum allowed. MAXUINT16 is used
+ * Test 31: Error case, response contains opaque data larger than the maximum allowed. MAXUINT16 is used
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code, correct transcript.message_m.buffer_size
  **/
 static void libspdm_test_requester_get_measurements_err_case31(void **state)

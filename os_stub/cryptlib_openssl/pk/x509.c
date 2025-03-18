@@ -417,7 +417,7 @@ libspdm_internal_x509_get_nid_name(X509_NAME *x509_name, const int32_t request_n
     }
 
 
-    /* Retrive the string from X.509 Subject base on the request_nid*/
+    /* Retrieve the string from X.509 Subject base on the request_nid*/
 
     index = X509_NAME_get_index_by_NID(x509_name, request_nid, -1);
     if (index < 0) {
@@ -1996,16 +1996,16 @@ bool libspdm_x509_get_tbs_cert(const uint8_t *cert, size_t cert_size,
  *
  * @param[in]      cert_chain         One or more ASN.1 DER-encoded X.509 certificates
  *                                  where the first certificate is signed by the Root
- *                                  Certificate or is the Root Cerificate itself. and
- *                                  subsequent cerificate is signed by the preceding
- *                                  cerificate.
+ *                                  Certificate or is the Root Certificate itself. and
+ *                                  subsequent certificate is signed by the preceding
+ *                                  certificate.
  * @param[in]      cert_chain_length   Total length of the certificate chain, in bytes.
  *
  * @param[in]      root_cert          Trusted Root Certificate buffer
  *
  * @param[in]      root_cert_length    Trusted Root Certificate buffer length
  *
- * @retval  true   All cerificates was issued by the first certificate in X509Certchain.
+ * @retval  true   All certificates was issued by the first certificate in X509Certchain.
  * @retval  false  Invalid certificate or the certificate was not issued by the given
  *                trusted CA.
  **/
@@ -2113,9 +2113,9 @@ bool libspdm_x509_verify_cert_chain(const uint8_t *root_cert, size_t root_cert_l
  *
  * @param[in]      cert_chain         One or more ASN.1 DER-encoded X.509 certificates
  *                                  where the first certificate is signed by the Root
- *                                  Certificate or is the Root Cerificate itself. and
- *                                  subsequent cerificate is signed by the preceding
- *                                  cerificate.
+ *                                  Certificate or is the Root Certificate itself. and
+ *                                  subsequent certificate is signed by the preceding
+ *                                  certificate.
  * @param[in]      cert_chain_length   Total length of the certificate chain, in bytes.
  *
  * @param[in]      cert_index         index of certificate.
@@ -2354,7 +2354,7 @@ bool libspdm_set_attribute_for_req(X509_REQ *req, uint8_t *req_info, size_t req_
 
     /*integer:version*/
     ret = libspdm_asn1_get_tag(&ptr, end, &obj_len, LIBSPDM_CRYPTO_ASN1_INTEGER);
-    /*check req_info verson. spec PKCS#10: It shall be 0 for this version of the standard.*/
+    /*check req_info version. spec PKCS#10: It shall be 0 for this version of the standard.*/
     if ((obj_len != 1) || (*ptr != 0)) {
         return false;
     }
@@ -2401,7 +2401,7 @@ bool libspdm_set_attribute_for_req(X509_REQ *req, uint8_t *req_info, size_t req_
                                    LIBSPDM_CRYPTO_ASN1_SEQUENCE |
                                    LIBSPDM_CRYPTO_ASN1_CONSTRUCTED);
         if (ret) {
-            /*save old positon*/
+            /*save old position*/
             ptr_old = ptr;
 
             /*move to the next sequence*/

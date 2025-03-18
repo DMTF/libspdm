@@ -325,7 +325,7 @@ void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size)
     libspdm_test_responder_chunk_get_case3(&State);
     libspdm_unit_test_group_teardown(&State);
 
-    /* Succesful request of  chunk, where size is exactly max chunk size */
+    /* Successful request of  chunk, where size is exactly max chunk size */
     libspdm_unit_test_group_setup(&State);
     libspdm_test_responder_chunk_get_case4(&State);
     libspdm_unit_test_group_teardown(&State);

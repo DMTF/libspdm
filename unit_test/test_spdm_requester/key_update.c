@@ -5710,7 +5710,7 @@ int libspdm_requester_key_update_test_main(void)
         cmocka_unit_test(libspdm_test_requester_key_update_case25),
         cmocka_unit_test(libspdm_test_requester_key_update_case26),
         /* update all keys
-         * Sucessful response*/
+         * Successful response*/
         cmocka_unit_test(libspdm_test_requester_key_update_case27),
         /* Error response: SPDM_ERROR_CODE_INVALID_REQUEST*/
         cmocka_unit_test(libspdm_test_requester_key_update_case28),

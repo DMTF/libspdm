@@ -94,7 +94,7 @@ void libspdm_test_responder_set_certificate_rsp_case1(void **state)
     free(cert_chain);
     free(m_libspdm_set_certificate_request);
 
-    /*test overwirte same slot_id cert*/
+    /*test overwrite same slot_id cert*/
 
     /*read a different cert_chain*/
     libspdm_read_responder_public_certificate_chain_per_slot(1, m_libspdm_use_hash_algo,

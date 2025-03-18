@@ -2911,7 +2911,7 @@ void libspdm_test_requester_get_certificate_case11(void **state)
     spdm_context->connection_info.algorithm.req_base_asym_alg =
         m_libspdm_use_req_asym_algo;
 
-    /* Reseting message buffer*/
+    /* Resetting message buffer*/
     libspdm_reset_message_b(spdm_context);
     /* Calculating expected number of messages received*/
 
@@ -2983,7 +2983,7 @@ void libspdm_test_requester_get_certificate_case12(void **state)
         m_libspdm_use_asym_algo;
     spdm_context->connection_info.algorithm.req_base_asym_alg =
         m_libspdm_use_req_asym_algo;
-    /* Reseting message buffer*/
+    /* Resetting message buffer*/
     libspdm_reset_message_b(spdm_context);
     /* Calculating expected number of messages received*/
     spdm_context->local_context.is_requester = true;
@@ -3059,7 +3059,7 @@ void libspdm_test_requester_get_certificate_case13(void **state)
     spdm_context->connection_info.algorithm.req_base_asym_alg =
         m_libspdm_use_req_asym_algo;
     spdm_context->local_context.is_requester = true;
-    /* Reseting message buffer*/
+    /* Resetting message buffer*/
     libspdm_reset_message_b(spdm_context);
     /* Calculating expected number of messages received*/
 
@@ -3129,7 +3129,7 @@ void libspdm_test_requester_get_certificate_case14(void **state)
         m_libspdm_use_asym_algo;
     spdm_context->connection_info.algorithm.req_base_asym_alg =
         m_libspdm_use_req_asym_algo;
-    /* Reseting message buffer*/
+    /* Resetting message buffer*/
     libspdm_reset_message_b(spdm_context);
     /* Calculating expected number of messages received*/
 
@@ -3201,7 +3201,7 @@ void libspdm_test_requester_get_certificate_case15(void **state)
         m_libspdm_use_asym_algo;
     spdm_context->connection_info.algorithm.req_base_asym_alg =
         m_libspdm_use_req_asym_algo;
-    /* Reseting message buffer*/
+    /* Resetting message buffer*/
     libspdm_reset_message_b(spdm_context);
     /* Calculating expected number of messages received*/
 
@@ -3450,7 +3450,7 @@ void libspdm_test_requester_get_certificate_case19(void **state)
         m_libspdm_use_asym_algo;
     spdm_context->connection_info.algorithm.req_base_asym_alg =
         m_libspdm_use_req_asym_algo;
-    /* Reseting message buffer*/
+    /* Resetting message buffer*/
     libspdm_reset_message_b(spdm_context);
     /* Calculating expected number of messages received*/
 
@@ -4369,15 +4369,15 @@ int libspdm_requester_get_certificate_test_main(void)
         cmocka_unit_test(libspdm_test_requester_get_certificate_case11),
         /* Fail certificate chain check*/
         cmocka_unit_test(libspdm_test_requester_get_certificate_case12),
-        /* Sucessful response: get a certificate chain that fits in one single message*/
+        /* Successful response: get a certificate chain that fits in one single message*/
         cmocka_unit_test(libspdm_test_requester_get_certificate_case13),
-        /* Sucessful response: get certificate chain byte by byte*/
+        /* Successful response: get certificate chain byte by byte*/
         cmocka_unit_test(libspdm_test_requester_get_certificate_case14),
-        /* Sucessful response: get a long certificate chain*/
+        /* Successful response: get a long certificate chain*/
         cmocka_unit_test(libspdm_test_requester_get_certificate_case15),
         /* Unexpected errors*/
         cmocka_unit_test(libspdm_test_requester_get_certificate_case16),
-        /* Sucessful response: get a certificate chain not start with root cert.*/
+        /* Successful response: get a certificate chain not start with root cert.*/
         cmocka_unit_test(libspdm_test_requester_get_certificate_case17),
         /* Fail response: get a certificate chain not start with root cert but with wrong signature.*/
         cmocka_unit_test(libspdm_test_requester_get_certificate_case18),
