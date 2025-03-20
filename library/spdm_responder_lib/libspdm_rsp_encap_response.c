@@ -63,6 +63,11 @@ static libspdm_return_t libspdm_get_encap_struct_via_op_code
 
         { SPDM_KEY_UPDATE, libspdm_get_encap_request_key_update,
           libspdm_process_encap_response_key_update },
+
+        #if LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT
+        { SPDM_GET_ENDPOINT_INFO, libspdm_get_encap_request_get_endpoint_info,
+          libspdm_process_encap_response_endpoint_info }
+        #endif /* LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT */
     };
 
     for (index = 0; index < LIBSPDM_ARRAY_SIZE(encap_response_struct); index++) {
@@ -197,6 +202,28 @@ void libspdm_init_key_update_encap_state(void *spdm_context)
     context->encap_context.request_op_code_count = 1;
     context->encap_context.request_op_code_sequence[0] = SPDM_KEY_UPDATE;
 }
+
+
+#if LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT
+void libspdm_init_get_endpoint_info_encap_state(void *spdm_context)
+{
+    libspdm_context_t *context;
+
+    context = spdm_context;
+
+    context->encap_context.current_request_op_code = 0x00;
+    context->encap_context.request_id = 0;
+    context->encap_context.last_encap_request_size = 0;
+    libspdm_zero_mem(&context->encap_context.last_encap_request_header,
+                     sizeof(context->encap_context.last_encap_request_header));
+    context->response_state = LIBSPDM_RESPONSE_STATE_PROCESSING_ENCAP;
+
+    libspdm_zero_mem(context->encap_context.request_op_code_sequence,
+                     sizeof(context->encap_context.request_op_code_sequence));
+    context->encap_context.request_op_code_count = 1;
+    context->encap_context.request_op_code_sequence[0] = SPDM_GET_ENDPOINT_INFO;
+}
+#endif /* LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT */
 
 libspdm_return_t libspdm_get_response_encapsulated_request(
     libspdm_context_t *spdm_context, size_t request_size, const void *request,

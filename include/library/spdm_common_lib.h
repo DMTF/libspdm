@@ -1051,6 +1051,27 @@ void libspdm_register_event_callback(void *spdm_context,
                                      libspdm_process_event_func process_event_func);
 #endif /* LIBSPDM_EVENT_RECIPIENT_SUPPORT */
 
+#if (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && (LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT)
+/**
+ * Encapsulate Get Endpoint Info Callback Function Pointer.
+ *
+ * @param spdm_context       A pointer to the SPDM context.
+ * @param subcode            The subcode of the GET_ENDPOINT_INFO request.
+ * @param param2             Bit [7:4]. Reserved.
+ *                           Bit [3:0]. SlotID.
+ * @param request_attributes The request attributes of the GET_ENDPOINT_INFO request.
+ * @param endpoint_info_size The size in bytes of the endpoint_info buffer.
+ * @param endpoint_info      A pointer to the buffer to store the endpoint information.
+ */
+typedef libspdm_return_t (*libspdm_get_endpoint_info_callback_func)(
+    void *spdm_context,
+    uint8_t subcode,
+    uint8_t param2,
+    uint8_t request_attributes,
+    uint32_t endpoint_info_size,
+    const void *endpoint_info);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP && LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT */
+
 #ifdef __cplusplus
 }
 #endif

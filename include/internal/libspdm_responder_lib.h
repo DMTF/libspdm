@@ -607,6 +607,44 @@ libspdm_return_t libspdm_get_encap_request_key_update(libspdm_context_t *spdm_co
 libspdm_return_t libspdm_process_encap_response_key_update(
     libspdm_context_t *spdm_context, size_t encap_response_size,
     const void *encap_response, bool *need_continue);
+
+#if LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT
+/**
+ * Get the SPDM encapsulated GET_ENDPOINT_INFO request.
+ *
+ * @param  spdm_context                 A pointer to the SPDM context.
+ * @param  encap_request_size           size in bytes of the encapsulated request data.
+ *                                      On input, it means the size in bytes of encapsulated request data buffer.
+ *                                      On output, it means the size in bytes of copied encapsulated request data buffer if RETURN_SUCCESS is returned,
+ *                                      and means the size in bytes of desired encapsulated request data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ * @param  encap_request                A pointer to the encapsulated request data.
+ *
+ * @retval RETURN_SUCCESS               The encapsulated request is returned.
+ * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
+ **/
+libspdm_return_t libspdm_get_encap_request_get_endpoint_info(
+    libspdm_context_t *spdm_context,
+    size_t *encap_request_size,
+    void *encap_request);
+
+/**
+ * Process the SPDM encapsulated GET_ENDPOINT_INFO response.
+ *
+ * @param  spdm_context                 A pointer to the SPDM context.
+ * @param  encap_response_size          size in bytes of the encapsulated response data.
+ * @param  encap_response               A pointer to the encapsulated response data.
+ * @param  need_continue                Indicate if encapsulated communication need continue.
+ *
+ * @retval RETURN_SUCCESS               The encapsulated response is processed.
+ * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
+ * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ **/
+libspdm_return_t libspdm_process_encap_response_endpoint_info(
+    libspdm_context_t *spdm_context, size_t encap_response_size,
+    const void *encap_response, bool *need_continue);
+
+#endif /* LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT */
+
 #endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
 
 /**

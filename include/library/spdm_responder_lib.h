@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -250,6 +250,15 @@ void libspdm_register_key_update_callback_func(
  **/
 void libspdm_init_key_update_encap_state(void *spdm_context);
 
+#if (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && (LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT)
+/**
+ * This function initializes the get_endpoint_info encapsulated state.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ **/
+void libspdm_init_get_endpoint_info_encap_state(void *spdm_context);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP && LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT */
+
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && \
     (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)
 /**
@@ -297,6 +306,21 @@ libspdm_return_t libspdm_register_vendor_callback_func(void *spdm_context,
                                                        libspdm_vendor_response_callback_func resp_callback);
 
 #endif /* LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES */
+
+#if (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && (LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT)
+/**
+ * This function registers the callback function for doing a
+ * encapsulate GET_ENDPOINT_INFO to the device.
+ *
+ * @param  spdm_context                 A pointer to the SPDM context.
+ * @param  get_endpoint_info_callback   get endpoint info callback function
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS Success
+ * @retval LIBSPDM_STATUS_INVALID_PARAMETER Some parameters invalid or NULL
+ **/
+libspdm_return_t libspdm_register_get_endpoint_info_callback_func(
+    void *spdm_context, libspdm_get_endpoint_info_callback_func get_endpoint_info_callback);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP && LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT */
 
 #ifdef __cplusplus
 }
