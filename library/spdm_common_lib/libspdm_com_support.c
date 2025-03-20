@@ -48,6 +48,7 @@ const char *libspdm_get_code_str(uint8_t request_code)
         { SPDM_MEASUREMENT_EXTENSION_LOG, "SPDM_MEASUREMENT_EXTENSION_LOG" },
         { SPDM_KEY_PAIR_INFO, "SPDM_KEY_PAIR_INFO" },
         { SPDM_SET_KEY_PAIR_INFO_ACK, "SPDM_SET_KEY_PAIR_INFO_ACK" },
+        { SPDM_ENDPOINT_INFO, "SPDM_ENDPOINT_INFO" },
         /* SPDM request code (1.0) */
         { SPDM_GET_DIGESTS, "SPDM_GET_DIGESTS" },
         { SPDM_GET_CERTIFICATE, "SPDM_GET_CERTIFICATE" },
@@ -79,6 +80,7 @@ const char *libspdm_get_code_str(uint8_t request_code)
         { SPDM_GET_MEASUREMENT_EXTENSION_LOG, "SPDM_GET_MEASUREMENT_EXTENSION_LOG" },
         { SPDM_GET_KEY_PAIR_INFO, "SPDM_GET_KEY_PAIR_INFO" },
         { SPDM_GET_SUPPORTED_EVENT_TYPES, "SPDM_SET_KEY_PAIR_INFO" },
+        { SPDM_GET_ENDPOINT_INFO, "SPDM_GET_ENDPOINT_INFO" },
     };
 
     for (index = 0; index < LIBSPDM_ARRAY_SIZE(code_str_struct); index++) {

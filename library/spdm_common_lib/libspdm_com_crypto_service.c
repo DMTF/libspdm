@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -491,6 +491,201 @@ static bool libspdm_calculate_m1m2_hash(void *context, bool is_mut,
     return true;
 }
 #endif
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+/*
+ * This function calculates il1il2.
+ * If session_info is NULL, this function will use E cache of SPDM context,
+ * else will use E cache of SPDM session context.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_info                  A pointer to the SPDM session context.
+ * @param  is_mut                        Indicate if this is from mutual authentication.
+ * @param  il1il2                        The buffer to store the il1il2.
+ *
+ * @retval RETURN_SUCCESS  il1il2 is calculated.
+ */
+bool libspdm_calculate_il1il2(libspdm_context_t *spdm_context,
+                              void *session_info,
+                              bool is_mut,
+                              libspdm_il1il2_managed_buffer_t *il1il2)
+{
+    libspdm_return_t status;
+    libspdm_session_info_t *spdm_session_info;
+
+    spdm_session_info = session_info;
+
+    libspdm_init_managed_buffer(il1il2, sizeof(il1il2->buffer));
+
+
+    if (is_mut) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_a data :\n"));
+        LIBSPDM_INTERNAL_DUMP_HEX(
+            libspdm_get_managed_buffer(&spdm_context->transcript.message_a),
+            libspdm_get_managed_buffer_size(&spdm_context->transcript.message_a));
+        status = libspdm_append_managed_buffer(
+            il1il2,
+            libspdm_get_managed_buffer(&spdm_context->transcript.message_a),
+            libspdm_get_managed_buffer_size(&spdm_context->transcript.message_a));
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
+            return false;
+        }
+
+        if (spdm_session_info == NULL) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_encap_e data :\n"));
+            LIBSPDM_INTERNAL_DUMP_HEX(
+                libspdm_get_managed_buffer(&spdm_context->transcript.message_encap_e),
+                libspdm_get_managed_buffer_size(&spdm_context->transcript.message_encap_e));
+            status = libspdm_append_managed_buffer(
+                il1il2,
+                libspdm_get_managed_buffer(&spdm_context->transcript.message_encap_e),
+                libspdm_get_managed_buffer_size(&spdm_context->transcript.message_encap_e));
+        } else {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "use message_encap_e in session :\n"));
+            LIBSPDM_INTERNAL_DUMP_HEX(
+                libspdm_get_managed_buffer(&spdm_session_info->session_transcript.message_encap_e),
+                libspdm_get_managed_buffer_size(
+                    &spdm_session_info->session_transcript.message_encap_e));
+            status = libspdm_append_managed_buffer(
+                il1il2,
+                libspdm_get_managed_buffer(&spdm_session_info->session_transcript.message_encap_e),
+                libspdm_get_managed_buffer_size(
+                    &spdm_session_info->session_transcript.message_encap_e));
+        }
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
+            return false;
+        }
+
+        /* Debug code only - calculate and print value of il1il2 hash*/
+        LIBSPDM_DEBUG_CODE(
+            uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
+            uint32_t hash_size = libspdm_get_hash_size(
+                spdm_context->connection_info.algorithm.base_hash_algo);
+            if (!libspdm_hash_all(
+                    spdm_context->connection_info.algorithm.base_hash_algo,
+                    libspdm_get_managed_buffer(il1il2),
+                    libspdm_get_managed_buffer_size(il1il2), hash_data)) {
+            return false;
+        }
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "il1il2 mut hash - "));
+            LIBSPDM_INTERNAL_DUMP_DATA(hash_data, hash_size);
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
+            );
+    } else {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_a data :\n"));
+        LIBSPDM_INTERNAL_DUMP_HEX(
+            libspdm_get_managed_buffer(&spdm_context->transcript.message_a),
+            libspdm_get_managed_buffer_size(&spdm_context->transcript.message_a));
+        status = libspdm_append_managed_buffer(
+            il1il2,
+            libspdm_get_managed_buffer(&spdm_context->transcript.message_a),
+            libspdm_get_managed_buffer_size(&spdm_context->transcript.message_a));
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
+            return false;
+        }
+
+        if (spdm_session_info == NULL) {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "message_e data :\n"));
+            LIBSPDM_INTERNAL_DUMP_HEX(
+                libspdm_get_managed_buffer(&spdm_context->transcript.message_e),
+                libspdm_get_managed_buffer_size(&spdm_context->transcript.message_e));
+            status = libspdm_append_managed_buffer(
+                il1il2,
+                libspdm_get_managed_buffer(&spdm_context->transcript.message_e),
+                libspdm_get_managed_buffer_size(&spdm_context->transcript.message_e));
+        } else {
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "use message_e in session :\n"));
+            LIBSPDM_INTERNAL_DUMP_HEX(
+                libspdm_get_managed_buffer(&spdm_session_info->session_transcript.message_e),
+                libspdm_get_managed_buffer_size(&spdm_session_info->session_transcript.message_e));
+            status = libspdm_append_managed_buffer(
+                il1il2,
+                libspdm_get_managed_buffer(&spdm_session_info->session_transcript.message_e),
+                libspdm_get_managed_buffer_size(&spdm_session_info->session_transcript.message_e));
+        }
+        if (LIBSPDM_STATUS_IS_ERROR(status)) {
+            return false;
+        }
+
+        /* Debug code only - calculate and print value of il1il2 hash*/
+        LIBSPDM_DEBUG_CODE(
+            uint8_t hash_data[LIBSPDM_MAX_HASH_SIZE];
+            uint32_t hash_size = libspdm_get_hash_size(
+                spdm_context->connection_info.algorithm.base_hash_algo);
+            if (!libspdm_hash_all(
+                    spdm_context->connection_info.algorithm.base_hash_algo,
+                    libspdm_get_managed_buffer(il1il2),
+                    libspdm_get_managed_buffer_size(il1il2), hash_data)) {
+            return false;
+        }
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "il1il2 hash - "));
+            LIBSPDM_INTERNAL_DUMP_DATA(hash_data, hash_size);
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
+            );
+    }
+
+    return true;
+}
+#else
+/*
+ * This function calculates il1il2 hash.
+ * If session_info is NULL, this function will use E cache of SPDM context,
+ * else will use E cache of SPDM session context.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_info                  A pointer to the SPDM session context.
+ * @param  is_encap                      Indicate if this is from encapsulate request.
+ * @param  il1il2_hash_size              size in bytes of the il1il2 hash
+ * @param  il1il2_hash                   The buffer to store the il1il2 hash
+ *
+ * @retval RETURN_SUCCESS  il1il2 is calculated.
+ */
+bool libspdm_calculate_il1il2_hash(libspdm_context_t *spdm_context,
+                                   void *session_info, bool is_encap,
+                                   size_t *il1il2_hash_size, void *il1il2_hash)
+{
+    libspdm_session_info_t *spdm_session_info;
+    bool result;
+
+    uint32_t hash_size;
+
+    spdm_session_info = session_info;
+
+    hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
+
+    if (spdm_session_info == NULL) {
+        if (is_encap) {
+            result = libspdm_hash_final (spdm_context->connection_info.algorithm.base_hash_algo,
+                                         spdm_context->transcript.digest_context_encap_il1il2,
+                                         il1il2_hash);
+        } else {
+            result = libspdm_hash_final (spdm_context->connection_info.algorithm.base_hash_algo,
+                                         spdm_context->transcript.digest_context_il1il2,
+                                         il1il2_hash);
+        }
+    } else {
+        if (is_encap) {
+            result = libspdm_hash_final (spdm_context->connection_info.algorithm.base_hash_algo,
+                                         spdm_session_info->session_transcript.digest_context_encap_il1il2,
+                                         il1il2_hash);
+        } else {
+            result = libspdm_hash_final (spdm_context->connection_info.algorithm.base_hash_algo,
+                                         spdm_session_info->session_transcript.digest_context_il1il2,
+                                         il1il2_hash);
+        }
+    }
+    if (!result) {
+        return false;
+    }
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "il1il2 hash - "));
+    LIBSPDM_INTERNAL_DUMP_DATA(il1il2_hash, hash_size);
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
+
+    *il1il2_hash_size = hash_size;
+
+    return true;
+}
+#endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */
 
 /**
  * This function generates the certificate chain hash.
@@ -1148,4 +1343,264 @@ libspdm_get_measurement_summary_hash_size(libspdm_context_t *spdm_context,
         return 0;
         break;
     }
+}
+
+/**
+ * This function generates the endpoint info signature based upon il1il2 for authentication.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_info                  A pointer to the SPDM session context.
+ * @param  is_requester                  Indicate of the signature generation for a requester or a responder.
+ * @param  signature                     The buffer to store the endpoint info signature.
+ *
+ * @retval true  challenge signature is generated.
+ * @retval false challenge signature is not generated.
+ **/
+bool libspdm_generate_endpoint_info_signature(libspdm_context_t *spdm_context,
+                                              libspdm_session_info_t *session_info,
+                                              bool is_requester,
+                                              uint8_t *signature)
+{
+    bool result;
+    size_t signature_size;
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    libspdm_il1il2_managed_buffer_t il1il2;
+    uint8_t *il1il2_buffer;
+    size_t il1il2_buffer_size;
+#else
+    uint8_t il1il2_hash[LIBSPDM_MAX_HASH_SIZE];
+    size_t il1il2_hash_size;
+#endif
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    result = libspdm_calculate_il1il2(spdm_context, session_info, is_requester, &il1il2);
+    il1il2_buffer = libspdm_get_managed_buffer(&il1il2);
+    il1il2_buffer_size = libspdm_get_managed_buffer_size(&il1il2);
+#else
+    il1il2_hash_size = sizeof(il1il2_hash);
+    result = libspdm_calculate_il1il2_hash(spdm_context, session_info, is_requester,
+                                           &il1il2_hash_size, &il1il2_hash);
+#endif
+    if (is_requester) {
+        libspdm_reset_message_encap_e(spdm_context, session_info);
+    } else {
+        libspdm_reset_message_e(spdm_context, session_info);
+    }
+    if (!result) {
+        return false;
+    }
+
+    if (is_requester) {
+#if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+        signature_size = libspdm_get_req_asym_signature_size(
+            spdm_context->connection_info.algorithm.req_base_asym_alg);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+        result = libspdm_requester_data_sign(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+            spdm_context,
+#endif
+            spdm_context->connection_info.version, SPDM_ENDPOINT_INFO,
+            spdm_context->connection_info.algorithm.req_base_asym_alg,
+            spdm_context->connection_info.algorithm.base_hash_algo,
+            false, il1il2_buffer, il1il2_buffer_size, signature, &signature_size);
+#else
+        result = libspdm_requester_data_sign(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+            spdm_context,
+#endif
+            spdm_context->connection_info.version, SPDM_ENDPOINT_INFO,
+            spdm_context->connection_info.algorithm.req_base_asym_alg,
+            spdm_context->connection_info.algorithm.base_hash_algo,
+            true, il1il2_hash, il1il2_hash_size, signature, &signature_size);
+#endif
+#else /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
+        result = false;
+#endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
+    } else {
+        signature_size = libspdm_get_asym_signature_size(
+            spdm_context->connection_info.algorithm.base_asym_algo);
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+        result = libspdm_responder_data_sign(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+            spdm_context,
+#endif
+            spdm_context->connection_info.version, SPDM_ENDPOINT_INFO,
+            spdm_context->connection_info.algorithm.base_asym_algo,
+            spdm_context->connection_info.algorithm.base_hash_algo,
+            false, il1il2_buffer, il1il2_buffer_size, signature,
+            &signature_size);
+#else
+        result = libspdm_responder_data_sign(
+#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
+            spdm_context,
+#endif
+            spdm_context->connection_info.version, SPDM_ENDPOINT_INFO,
+            spdm_context->connection_info.algorithm.base_asym_algo,
+            spdm_context->connection_info.algorithm.base_hash_algo,
+            true, il1il2_hash, il1il2_hash_size, signature,
+            &signature_size);
+#endif
+    }
+
+    return result;
+}
+
+/**
+ * This function verifies the endpoint info signature based upon il1il2.
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_info                  A pointer to the SPDM session context.
+ * @param  is_requester                  Indicate of the signature verification for a requester or a responder.
+ * @param  sign_data                     The signature data buffer.
+ * @param  sign_data_size                size in bytes of the signature data buffer.
+ *
+ * @retval true  signature verification pass.
+ * @retval false signature verification fail.
+ **/
+bool libspdm_verify_endpoint_info_signature(libspdm_context_t *spdm_context,
+                                            libspdm_session_info_t *session_info,
+                                            bool is_requester,
+                                            const void *sign_data,
+                                            size_t sign_data_size)
+{
+    bool result;
+    void *context;
+    uint8_t slot_id;
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    libspdm_il1il2_managed_buffer_t il1il2;
+    uint8_t *il1il2_buffer;
+    size_t il1il2_buffer_size;
+    const uint8_t *cert_chain_data;
+    size_t cert_chain_data_size;
+    const uint8_t *cert_buffer;
+    size_t cert_buffer_size;
+#else
+    uint8_t il1il2_hash[LIBSPDM_MAX_HASH_SIZE];
+    size_t il1il2_hash_size;
+#endif
+
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    result = libspdm_calculate_il1il2(spdm_context, session_info,!is_requester, &il1il2);
+    il1il2_buffer = libspdm_get_managed_buffer(&il1il2);
+    il1il2_buffer_size = libspdm_get_managed_buffer_size(&il1il2);
+#else
+    il1il2_hash_size = sizeof(il1il2_hash);
+    result = libspdm_calculate_il1il2_hash(spdm_context, session_info, !is_requester,
+                                           &il1il2_hash_size, il1il2_hash);
+#endif
+    if (is_requester) {
+        libspdm_reset_message_e(spdm_context, session_info);
+    } else {
+        libspdm_reset_message_encap_e(spdm_context, session_info);
+    }
+    if (!result) {
+        return false;
+    }
+
+    slot_id = spdm_context->connection_info.peer_used_cert_chain_slot_id;
+    LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xF));
+
+    if (slot_id == 0xF) {
+        if (is_requester) {
+            result = libspdm_asym_get_public_key_from_der(
+                spdm_context->connection_info.algorithm.base_asym_algo,
+                spdm_context->local_context.peer_public_key_provision,
+                spdm_context->local_context.peer_public_key_provision_size,
+                &context);
+        } else {
+            result = libspdm_req_asym_get_public_key_from_der(
+                spdm_context->connection_info.algorithm.req_base_asym_alg,
+                spdm_context->local_context.peer_public_key_provision,
+                spdm_context->local_context.peer_public_key_provision_size,
+                &context);
+        }
+        if (!result) {
+            return false;
+        }
+    } else {
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+        result = libspdm_get_peer_cert_chain_data(
+            spdm_context, (const void **)&cert_chain_data, &cert_chain_data_size);
+        if (!result) {
+            return false;
+        }
+
+        /* Get leaf cert from cert chain*/
+        result = libspdm_x509_get_cert_from_cert_chain(cert_chain_data,
+                                                       cert_chain_data_size, -1,
+                                                       &cert_buffer, &cert_buffer_size);
+        if (!result) {
+            return false;
+        }
+
+        if (is_requester) {
+            result = libspdm_asym_get_public_key_from_x509(
+                spdm_context->connection_info.algorithm.base_asym_algo,
+                cert_buffer, cert_buffer_size, &context);
+        } else {
+            result = libspdm_req_asym_get_public_key_from_x509(
+                spdm_context->connection_info.algorithm.req_base_asym_alg,
+                cert_buffer, cert_buffer_size, &context);
+        }
+        if (!result) {
+            return false;
+        }
+#else
+        context = spdm_context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key;
+        LIBSPDM_ASSERT(context != NULL);
+#endif
+    }
+
+    if (is_requester) {
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+        result = libspdm_asym_verify_ex(
+            spdm_context->connection_info.version, SPDM_ENDPOINT_INFO,
+            spdm_context->connection_info.algorithm.base_asym_algo,
+            spdm_context->connection_info.algorithm.base_hash_algo,
+            context, il1il2_buffer, il1il2_buffer_size, sign_data, sign_data_size,
+            &spdm_context->spdm_10_11_verify_signature_endian);
+        libspdm_asym_free(
+            spdm_context->connection_info.algorithm.base_asym_algo, context);
+#else
+        result = libspdm_asym_verify_hash_ex(
+            spdm_context->connection_info.version, SPDM_ENDPOINT_INFO,
+            spdm_context->connection_info.algorithm.base_asym_algo,
+            spdm_context->connection_info.algorithm.base_hash_algo,
+            context, il1il2_hash, il1il2_hash_size, sign_data, sign_data_size,
+            &spdm_context->spdm_10_11_verify_signature_endian);
+        if (slot_id == 0xF) {
+            libspdm_asym_free(
+                spdm_context->connection_info.algorithm.base_asym_algo, context);
+        }
+#endif
+    } else {
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+        result = libspdm_req_asym_verify_ex(
+            spdm_context->connection_info.version, SPDM_ENDPOINT_INFO,
+            spdm_context->connection_info.algorithm.req_base_asym_alg,
+            spdm_context->connection_info.algorithm.base_hash_algo,
+            context, il1il2_buffer, il1il2_buffer_size, sign_data, sign_data_size,
+            &spdm_context->spdm_10_11_verify_signature_endian);
+        libspdm_req_asym_free(
+            spdm_context->connection_info.algorithm.req_base_asym_alg, context);
+#else
+        result = libspdm_req_asym_verify_hash_ex(
+            spdm_context->connection_info.version, SPDM_ENDPOINT_INFO,
+            spdm_context->connection_info.algorithm.req_base_asym_alg,
+            spdm_context->connection_info.algorithm.base_hash_algo,
+            context, il1il2_hash, il1il2_hash_size, sign_data, sign_data_size,
+            &spdm_context->spdm_10_11_verify_signature_endian);
+        if (slot_id == 0xF) {
+            libspdm_req_asym_free(
+                spdm_context->connection_info.algorithm.req_base_asym_alg, context);
+        }
+#endif
+    }
+    if (!result) {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "!!! verify_endpoint_info_signature - FAIL !!!\n"));
+        return false;
+    }
+
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "!!! verify_endpoint_info_signature - PASS !!!\n"));
+    return true;
 }

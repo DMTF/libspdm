@@ -98,6 +98,11 @@ int libspdm_requester_set_key_pair_info_test_main(void);
 int libspdm_requester_set_key_pair_info_error_test_main(void);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP */
 
+#if LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT
+int libspdm_requester_get_endpoint_info_test_main(void);
+int libspdm_requester_get_endpoint_info_error_test_main(void);
+#endif /* LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT */
+
 int main(void)
 {
     int return_value = 0;
@@ -193,6 +198,15 @@ int main(void)
         return_value = 1;
     }
     #endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP) */
+
+    #if LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT
+    if (libspdm_requester_get_endpoint_info_test_main() != 0) {
+        return_value = 1;
+    }
+    if (libspdm_requester_get_endpoint_info_error_test_main() != 0) {
+        return_value = 1;
+    }
+    #endif /* LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT */
 
     #if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
     if (libspdm_requester_encap_request_test_main() != 0) {
