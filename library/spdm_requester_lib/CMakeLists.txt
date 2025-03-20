@@ -18,6 +18,7 @@ target_sources(spdm_requester_lib
         libspdm_req_encap_error.c
         libspdm_req_encap_key_update.c
         libspdm_req_encap_event_ack.c
+        libspdm_req_encap_endpoint_info.c
         libspdm_req_encap_request.c
         libspdm_req_end_session.c
         libspdm_req_finish.c
