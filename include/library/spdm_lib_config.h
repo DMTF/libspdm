@@ -117,7 +117,10 @@
 #define LIBSPDM_EVENT_RECIPIENT_SUPPORT 1
 #endif
 
-/* If 1 then endpoint supports sending the GET_ENDPOINT_INFO request. */
+/* If 1 then endpoint supports sending the GET_ENDPOINT_INFO request.
+ * If enabled and endpoint is a Responder then LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+ * must also be enabled.
+ */
 #ifndef LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT
 #define LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT 1
 #endif

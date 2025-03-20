@@ -52,6 +52,10 @@ libspdm_get_encap_response_func_via_request_code(uint8_t request_response_code)
         #if LIBSPDM_EVENT_RECIPIENT_SUPPORT
         { SPDM_SEND_EVENT, libspdm_get_encap_response_event_ack },
         #endif /* LIBSPDM_EVENT_RECIPIENT_SUPPORT */
+
+        #if LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP
+        { SPDM_GET_ENDPOINT_INFO, libspdm_get_encap_response_endpoint_info },
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP */
     };
 
     for (index = 0; index < LIBSPDM_ARRAY_SIZE(get_encap_response_struct); index++) {

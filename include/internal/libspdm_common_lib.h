@@ -468,7 +468,7 @@ typedef struct {
 
 #define LIBSPDM_MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT 3
 typedef struct {
-    /* Valid OpCode: GET_DIGEST/GET_CERTIFICATE/CHALLENGE/KEY_UPDATE
+    /* Valid OpCode: GET_DIGEST/GET_CERTIFICATE/CHALLENGE/KEY_UPDATE/GET_ENDPOINT_INFO
      * The last one is 0x00, as terminator.*/
     uint8_t request_op_code_sequence[LIBSPDM_MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT + 1];
     uint8_t request_op_code_count;
@@ -666,6 +666,10 @@ typedef struct {
 #if LIBSPDM_EVENT_RECIPIENT_SUPPORT
     libspdm_process_event_func process_event;
 #endif /* LIBSPDM_EVENT_RECIPIENT_SUPPORT */
+
+#if (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && (LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT)
+    libspdm_get_endpoint_info_callback_func get_endpoint_info_callback;
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && (LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT) */
 } libspdm_context_t;
 
 #define LIBSPDM_CONTEXT_SIZE_WITHOUT_SECURED_CONTEXT (sizeof(libspdm_context_t))
