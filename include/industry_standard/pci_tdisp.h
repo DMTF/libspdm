@@ -1,11 +1,11 @@
 /**
  *  Copyright Notice:
- *  Copyright 2022 DMTF. All rights reserved.
+ *  Copyright 2022-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
 /** @file
- * Definitions of TEE Device Interface Security Protocol (TDISP) ECN in PCI-SIG.
+ * Definitions of TEE Device Interface Security Protocol (TDISP) in the PCIe Base specification.
  **/
 
 #ifndef PCI_TDISP_H
