@@ -75,6 +75,8 @@
 
    Support is included in UEFI host environment [EDKII](https://github.com/tianocore/edk2/tree/master/SecurityPkg/DeviceSecurity).
 
+   Support is included in ARM Trusted Firmware Implementation of the Realm Management Monitor [TF-RMM](https://github.com/TF-RMM/tf-rmm).
+
    Support is included in [wolfSSL](https://www.wolfssl.com/wolfssl-libspdm-support).
 
    Support to be included in [OpenBMC](https://github.com/openbmc). It is in planning, see [SPDM Integration](https://www.youtube.com/watch?v=PmgXkLJYI-E).
