@@ -369,6 +369,12 @@ uint32_t libspdm_mask_capability_flags(libspdm_context_t *spdm_context,
         } else {
             return (flags & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_13_MASK);
         }
+    case SPDM_MESSAGE_VERSION_14:
+        if (is_request_flags) {
+            return (flags & SPDM_GET_CAPABILITIES_REQUEST_FLAGS_14_MASK);
+        } else {
+            return (flags & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_14_MASK);
+        }
     default:
         LIBSPDM_ASSERT(false);
         return 0;

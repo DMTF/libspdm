@@ -72,8 +72,11 @@ else()
         #    cryptstublib_dummy
         #    ${CRYPTO_LIB_PATHS}
         #    cryptlib_${CRYPTO}
+        #    oqslib
+        #    pqccryptlib_oqs
         #    rnglib_null
             cryptlib_null
+            pqccryptlib_null
             malloclib_simple
             spdm_crypt_lib
             spdm_secured_message_lib
