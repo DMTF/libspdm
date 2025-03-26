@@ -82,6 +82,7 @@ void libspdm_test_responder_endpoint_info_case1(void **state)
     uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_endpoint_info_response_t *spdm_response;
     uint32_t endpoint_info_size;
+    uint8_t endpoint_info_buffer[LIBSPDM_MAX_ENDPOINT_INFO_LENGTH];
     void* signature;
     size_t signature_size;
     bool result;
@@ -145,10 +146,11 @@ void libspdm_test_responder_endpoint_info_case1(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
     /* response size check */
+    endpoint_info_size = 0;
     libspdm_generate_device_endpoint_info(
         spdm_context, SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER,
         SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED,
-        &endpoint_info_size, NULL);
+        &endpoint_info_size, endpoint_info_buffer);
     signature_size = libspdm_get_asym_signature_size(
         spdm_context->connection_info.algorithm.base_asym_algo);
     assert_int_equal(response_size,
@@ -198,6 +200,7 @@ void libspdm_test_responder_endpoint_info_case2(void **state)
     uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_endpoint_info_response_t *spdm_response;
     uint32_t endpoint_info_size;
+    uint8_t endpoint_info_buffer[LIBSPDM_MAX_ENDPOINT_INFO_LENGTH];
     void* signature;
     size_t signature_size;
     bool result;
@@ -240,10 +243,11 @@ void libspdm_test_responder_endpoint_info_case2(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
     /* response size check */
+    endpoint_info_size = 0;
     libspdm_generate_device_endpoint_info(
         spdm_context, SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER,
         SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED,
-        &endpoint_info_size, NULL);
+        &endpoint_info_size, endpoint_info_buffer);
     signature_size = libspdm_get_asym_signature_size(
         spdm_context->connection_info.algorithm.base_asym_algo);
     assert_int_equal(response_size,
@@ -294,6 +298,7 @@ void libspdm_test_responder_endpoint_info_case3(void **state)
     uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_endpoint_info_response_t *spdm_response;
     uint32_t endpoint_info_size;
+    uint8_t endpoint_info_buffer[LIBSPDM_MAX_ENDPOINT_INFO_LENGTH];
     void* signature;
     size_t signature_size;
     bool result;
@@ -361,10 +366,11 @@ void libspdm_test_responder_endpoint_info_case3(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
     /* response size check */
+    endpoint_info_size = 0;
     libspdm_generate_device_endpoint_info(
         spdm_context, SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER,
         SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED,
-        &endpoint_info_size, NULL);
+        &endpoint_info_size, endpoint_info_buffer);
     signature_size = libspdm_get_asym_signature_size(
         spdm_context->connection_info.algorithm.base_asym_algo);
     assert_int_equal(response_size,
@@ -412,6 +418,7 @@ void libspdm_test_responder_endpoint_info_case4(void **state)
     uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_endpoint_info_response_t *spdm_response;
     uint32_t endpoint_info_size;
+    uint8_t endpoint_info_buffer[LIBSPDM_MAX_ENDPOINT_INFO_LENGTH];
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -440,10 +447,11 @@ void libspdm_test_responder_endpoint_info_case4(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
     /* response size check */
+    endpoint_info_size = 0;
     libspdm_generate_device_endpoint_info(
         spdm_context, SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER,
         SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED,
-        &endpoint_info_size, NULL);
+        &endpoint_info_size, endpoint_info_buffer);
     assert_int_equal(response_size,
                      sizeof(spdm_endpoint_info_response_t) +
                      sizeof(uint32_t) + endpoint_info_size);
@@ -472,6 +480,7 @@ void libspdm_test_responder_endpoint_info_case5(void **state)
     uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
     spdm_endpoint_info_response_t *spdm_response;
     uint32_t endpoint_info_size;
+    uint8_t endpoint_info_buffer[LIBSPDM_MAX_ENDPOINT_INFO_LENGTH];
     void* signature;
     size_t signature_size;
     bool result;
@@ -546,10 +555,11 @@ void libspdm_test_responder_endpoint_info_case5(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
     /* response size check */
+    endpoint_info_size = 0;
     libspdm_generate_device_endpoint_info(
         spdm_context, SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER,
         SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED,
-        &endpoint_info_size, NULL);
+        &endpoint_info_size, endpoint_info_buffer);
     signature_size = libspdm_get_asym_signature_size(
         spdm_context->connection_info.algorithm.base_asym_algo);
     assert_int_equal(response_size,

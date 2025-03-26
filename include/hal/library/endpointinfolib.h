@@ -22,13 +22,14 @@
  * @param  sub_code             The subcode of endpoint info, should be one of the
  *                              SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_* values.
  * @param  request_attributes   The request attributes of the endpoint info.
- * @param  endpoint_info_size   On output, the size, in bytes, of the buffer to
- *                              hold the device class identifier.
- * @param  endpoint_info        On output, the buffer to hold the device class identifier
- *                              content.
+ * @param  endpoint_info_size   On input, the size, in bytes, of the buffer to hold
+ *                              the device class identifier.
+ *                              On output, the size, in bytes, of the device class identifier.
+ * @param  endpoint_info        The buffer to hold the device class identifier content.
  *
  * @retval LIBSPDM_STATUS_SUCCESS          Success.
  * @retval LIBSPDM_STATUS_UNSUPPORTED_CAP  The operation is not supported.
+ * @retval LIBSPDM_STATUS_BUFFER_TOO_SMALL The buffer is too small to hold the device class identifier.
  **/
 extern libspdm_return_t libspdm_generate_device_endpoint_info(
     void *spdm_context,

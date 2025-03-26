@@ -21,7 +21,6 @@ libspdm_return_t libspdm_get_response_endpoint_info(libspdm_context_t *spdm_cont
     libspdm_return_t status;
     size_t signature_size;
     uint32_t endpoint_info_size;
-    size_t endpoint_info_buffer_size;
     uint8_t slot_id;
     uint8_t sub_code;
     libspdm_session_info_t *session_info;
@@ -177,27 +176,8 @@ libspdm_return_t libspdm_get_response_endpoint_info(libspdm_context_t *spdm_cont
         spdm_response_size = sizeof(spdm_endpoint_info_response_t) + sizeof(uint32_t);
     }
     libspdm_zero_mem(response, *response_size);
-    endpoint_info_buffer_size = *response_size - spdm_response_size;
 
     sub_code = spdm_request->header.param1;
-    status = libspdm_generate_device_endpoint_info(
-        spdm_context, sub_code, spdm_request->request_attributes,
-        &endpoint_info_size, NULL);
-    if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        return libspdm_generate_error_response(
-            spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
-            SPDM_GET_ENDPOINT_INFO, response_size, response);
-    }
-
-    if (endpoint_info_buffer_size < endpoint_info_size) {
-        return libspdm_generate_error_response(
-            spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
-            SPDM_GET_ENDPOINT_INFO, response_size, response);
-    }
-    spdm_response_size += endpoint_info_size;
-
-    LIBSPDM_ASSERT(*response_size >= spdm_response_size);
-    *response_size = spdm_response_size;
     spdm_response = response;
 
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
@@ -219,10 +199,9 @@ libspdm_return_t libspdm_get_response_endpoint_info(libspdm_context_t *spdm_cont
         }
         ptr += SPDM_NONCE_SIZE;
     }
-
-    libspdm_write_uint32(ptr, endpoint_info_size);
     ptr += sizeof(uint32_t);
 
+    endpoint_info_size = (uint32_t) (*response_size - spdm_response_size);
     status = libspdm_generate_device_endpoint_info(
         spdm_context, sub_code, spdm_request->request_attributes,
         &endpoint_info_size, ptr);
@@ -231,6 +210,9 @@ libspdm_return_t libspdm_get_response_endpoint_info(libspdm_context_t *spdm_cont
             spdm_context, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
             SPDM_GET_ENDPOINT_INFO, response_size, response);
     }
+    libspdm_write_uint32(ptr - sizeof(uint32_t), endpoint_info_size);
+    spdm_response_size += endpoint_info_size;
+    *response_size = spdm_response_size;
     ptr += endpoint_info_size;
 
     if ((spdm_request->request_attributes &
