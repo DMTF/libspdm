@@ -93,6 +93,7 @@ static libspdm_return_t libspdm_requester_get_endpoint_info_test_receive_message
     libspdm_test_context_t *spdm_test_context;
     uint32_t endpoint_info_buffer_size;
 
+    endpoint_info_buffer_size = LIBSPDM_TEST_ENDPOINT_INFO_BUFFER_SIZE;
     spdm_test_context = libspdm_get_test_context();
     libspdm_generate_device_endpoint_info(
         spdm_context, SPDM_GET_ENDPOINT_INFO_REQUEST_SUBCODE_DEVICE_CLASS_IDENTIFIER,
