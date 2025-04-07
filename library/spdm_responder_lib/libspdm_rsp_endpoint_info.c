@@ -98,8 +98,14 @@ libspdm_return_t libspdm_get_response_endpoint_info(libspdm_context_t *spdm_cont
 
     if ((spdm_request->request_attributes &
          SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED) != 0) {
-        signature_size = libspdm_get_asym_signature_size(
-            spdm_context->connection_info.algorithm.base_asym_algo);
+        if (spdm_context->connection_info.algorithm.base_asym_algo != 0) {
+            signature_size = libspdm_get_asym_signature_size(
+                spdm_context->connection_info.algorithm.base_asym_algo);
+        }
+        if (spdm_context->connection_info.algorithm.pqc_asym_algo != 0) {
+            signature_size = libspdm_get_pqc_asym_signature_size(
+                spdm_context->connection_info.algorithm.pqc_asym_algo);
+        }
         if (request_size <
             sizeof(spdm_get_endpoint_info_request_t) +
             SPDM_NONCE_SIZE) {

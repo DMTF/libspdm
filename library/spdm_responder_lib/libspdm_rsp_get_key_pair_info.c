@@ -114,7 +114,7 @@ libspdm_return_t libspdm_get_response_key_pair_info(libspdm_context_t *spdm_cont
     libspdm_zero_mem(response, *response_size);
 
     public_key_info = (uint8_t*)response + sizeof(spdm_key_pair_info_response_t);
-    result = libspdm_read_key_pair_info(
+    result = libspdm_read_key_pair_info_ex(
         spdm_context,
         key_pair_id,
         &capabilities,

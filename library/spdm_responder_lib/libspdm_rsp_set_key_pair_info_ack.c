@@ -119,7 +119,7 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
 
     libspdm_zero_mem(response, *response_size);
 
-    result = libspdm_read_key_pair_info(
+    result = libspdm_read_key_pair_info_ex(
         spdm_context,
         key_pair_id,
         &capabilities,
@@ -279,7 +279,7 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
     need_reset = libspdm_is_capabilities_flag_supported(
         spdm_context, false, 0,
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_INSTALL_RESET_CAP);
-    result = libspdm_write_key_pair_info(
+    result = libspdm_write_key_pair_info_ex(
         spdm_context,
         key_pair_id,
         operation,
