@@ -12,6 +12,7 @@ extern "C" {
 #endif
 
 #include "library/spdm_common_lib.h"
+#include "internal/libspdm_common_lib.h"
 
 /**
  * This function sends GET_VERSION, GET_CAPABILITIES, NEGOTIATE_ALGORITHMS
@@ -524,6 +525,19 @@ libspdm_return_t libspdm_start_session(void *spdm_context, bool use_psk,
                                        uint32_t *session_id,
                                        uint8_t *heartbeat_period,
                                        void *measurement_hash);
+
+/**
+ * Sends the `GET_VERSION` and `GET_CAPABILITIES` requests, where GET_CAPABILITIES.Param1[0] is set
+ * If the Responder supports this extended capability, the Responder will include the Supported
+ * Algorithms Block in its CAPABILITIES response.
+ *
+ * @param spdm_context The SPDM context.
+ * @param responder_supported_algorithms The responder supported algorithms.
+ * @retval RETURN_SUCCESS               The connection is initialized successfully.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ **/
+libspdm_return_t libspdm_get_supported_algorithms(
+    void *spdm_context, libspdm_responder_supported_algorithms_t *responder_supported_algorithms);
 
 /**
  * This function sends KEY_EXCHANGE/FINISH or PSK_EXCHANGE/PSK_FINISH to start an SPDM Session.
