@@ -6,7 +6,7 @@
  **/
 static void libspdm_test_common_context_data_case1(void **state)
 {
-    assert_int_equal(0x0001020304050607, libspdm_le_to_be_64(UINT64_C(0x0706050403020100)));
+    assert_int_equal(0x0001020304050607, libspdm_byte_swap_64(UINT64_C(0x0706050403020100)));
 }
 
 int libspdm_common_support_test_main(void)
