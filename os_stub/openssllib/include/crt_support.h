@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -18,6 +18,10 @@
 
 #if defined(_MSC_VER) && defined(__clang__)
 #include <corecrt.h>
+#endif
+
+#if defined(_MSC_VER) && _MSC_VER>=1300
+#include <intrin.h>
 #endif
 #define OPENSSLDIR ""
 #define ENGINESDIR ""
@@ -244,7 +248,7 @@ typedef uint8_t sa_family_t;
 typedef uint8_t u_char;
 typedef uint32_t uid_t;
 typedef uint32_t gid_t;
-
+typedef long off_t;
 
 /* file operations are not required for EFI building,
  * so FILE is mapped to void * to pass build*/
@@ -271,6 +275,11 @@ struct tm {
 struct timeval {
     long tv_sec; /* time value, in seconds */
     long tv_usec; /* time value, in microseconds */
+};
+
+struct timezone {
+    int     tz_minuteswest;
+    int     tz_dsttime;
 };
 
 struct sockaddr {
@@ -348,10 +357,7 @@ int sprintf(char *string, const char *format, ...);
 #define localtime(timer) NULL
 #define assert(expression)
 int atoi(const char *nptr);
-#define gettimeofday(tvp, tz)                                                  \
-    do {                                                                   \
-        (tvp)->tv_sec = time(NULL);                                    \
-        (tvp)->tv_usec = 0;                                            \
-    } while (0)
+unsigned int sleep (unsigned int seconds);
+int gettimeofday (struct timeval *tv, struct timezone *tz);
 
 #endif
