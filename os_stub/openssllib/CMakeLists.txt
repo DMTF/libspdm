@@ -428,6 +428,15 @@ target_sources(openssllib
         openssl/crypto/mem.c
         openssl/crypto/mem_clr.c
         openssl/crypto/mem_sec.c
+        openssl/crypto/ml_dsa/ml_dsa_encoders.c
+        openssl/crypto/ml_dsa/ml_dsa_key.c
+        openssl/crypto/ml_dsa/ml_dsa_key_compress.c
+        openssl/crypto/ml_dsa/ml_dsa_matrix.c
+        openssl/crypto/ml_dsa/ml_dsa_ntt.c
+        openssl/crypto/ml_dsa/ml_dsa_params.c
+        openssl/crypto/ml_dsa/ml_dsa_sample.c
+        openssl/crypto/ml_dsa/ml_dsa_sign.c
+        openssl/crypto/ml_kem/ml_kem.c
         openssl/crypto/modes/cbc128.c
         openssl/crypto/modes/ccm128.c
         openssl/crypto/modes/cfb128.c
@@ -546,6 +555,16 @@ target_sources(openssllib
         openssl/crypto/self_test_core.c
         openssl/crypto/siphash/siphash.c
         openssl/crypto/sleep.c
+        openssl/crypto/slh_dsa/slh_adrs.c
+        openssl/crypto/slh_dsa/slh_dsa.c
+        openssl/crypto/slh_dsa/slh_dsa_hash_ctx.c
+        openssl/crypto/slh_dsa/slh_dsa_key.c
+        openssl/crypto/slh_dsa/slh_fors.c
+        openssl/crypto/slh_dsa/slh_hash.c
+        openssl/crypto/slh_dsa/slh_hypertree.c
+        openssl/crypto/slh_dsa/slh_params.c
+        openssl/crypto/slh_dsa/slh_wots.c
+        openssl/crypto/slh_dsa/slh_xmss.c
         openssl/crypto/sm2/sm2_crypt.c
         openssl/crypto/sm2/sm2_err.c
         openssl/crypto/sm2/sm2_key.c
@@ -674,8 +693,10 @@ target_sources(openssllib
         openssl/providers/common/der/der_ec_key.c
         openssl/providers/common/der/der_ec_sig.c
         openssl/providers/common/der/der_ecx_key.c
+        openssl/providers/common/der/der_ml_dsa_key.c
         openssl/providers/common/der/der_rsa_key.c
         openssl/providers/common/der/der_rsa_sig.c
+        openssl/providers/common/der/der_slh_dsa_key.c
         openssl/providers/common/der/der_sm2_key.c
         openssl/providers/common/der/der_sm2_sig.c
         openssl/providers/common/digest_to_nid.c
@@ -742,6 +763,9 @@ target_sources(openssllib
         openssl/providers/implementations/encode_decode/decode_epki2pki.c
         openssl/providers/implementations/encode_decode/decode_der2key.c
         openssl/providers/implementations/encode_decode/endecoder_common.c
+        openssl/providers/implementations/encode_decode/ml_common_codecs.c
+        openssl/providers/implementations/encode_decode/ml_dsa_codecs.c
+        openssl/providers/implementations/encode_decode/ml_kem_codecs.c
         openssl/providers/implementations/exchange/dh_exch.c
         openssl/providers/implementations/exchange/ecdh_exch.c
         openssl/providers/implementations/exchange/ecx_exch.c
@@ -757,10 +781,16 @@ target_sources(openssllib
         openssl/providers/implementations/keymgmt/kdf_legacy_kmgmt.c
         openssl/providers/implementations/keymgmt/mac_legacy_kmgmt.c
         openssl/providers/implementations/keymgmt/rsa_kmgmt.c
+        openssl/providers/implementations/keymgmt/ml_dsa_kmgmt.c
+        openssl/providers/implementations/keymgmt/ml_kem_kmgmt.c
+        openssl/providers/implementations/keymgmt/mlx_kmgmt.c
+        openssl/providers/implementations/keymgmt/slh_dsa_kmgmt.c
         openssl/providers/implementations/kem/ec_kem.c
         openssl/providers/implementations/kem/ecx_kem.c
         openssl/providers/implementations/kem/rsa_kem.c
         openssl/providers/implementations/kem/kem_util.c
+        openssl/providers/implementations/kem/ml_kem_kem.c
+        openssl/providers/implementations/kem/mlx_kem.c
         openssl/providers/implementations/kdfs/x942kdf.c
         openssl/providers/implementations/kdfs/pbkdf1.c
         openssl/providers/implementations/kdfs/pvkkdf.c
@@ -788,7 +818,9 @@ target_sources(openssllib
         openssl/providers/implementations/signature/ecdsa_sig.c
         openssl/providers/implementations/signature/eddsa_sig.c
         openssl/providers/implementations/signature/mac_legacy_sig.c
+        openssl/providers/implementations/signature/ml_dsa_sig.c
         openssl/providers/implementations/signature/rsa_sig.c
+        openssl/providers/implementations/signature/slh_dsa_sig.c
         openssl/providers/implementations/signature/sm2_sig.c
         openssl/providers/implementations/skeymgmt/aes_skmgmt.c
         openssl/providers/implementations/skeymgmt/generic.c
@@ -799,7 +831,9 @@ target_sources(openssllib
         openssl_gen/der_digests_gen.c
         openssl_gen/der_ec_gen.c
         openssl_gen/der_ecx_gen.c
+        openssl_gen/der_ml_dsa_gen.c
         openssl_gen/der_rsa_gen.c
+        openssl_gen/der_slh_dsa_gen.c
         openssl_gen/der_sm2_gen.c
         openssl_gen/der_wrap_gen.c
         openssl_gen/params_idx.c
