@@ -311,6 +311,7 @@ int tolower(int);
 int strcmp(const char *, const char *);
 int strncasecmp(const char *, const char *, size_t);
 char *strchr(const char *, int);
+char *strpbrk(const char *, const char *);
 char *strrchr(const char *, int);
 unsigned long strtoul(const char *, char **, int);
 long strtol(const char *, char **, int);
