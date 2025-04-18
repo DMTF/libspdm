@@ -17,6 +17,7 @@
 #include <openssl/bn.h>
 #include <openssl/pem.h>
 #include <openssl/bio.h>
+#include <crypto/evp.h>
 
 #if LIBSPDM_CERT_PARSE_SUPPORT
 
@@ -2492,12 +2493,13 @@ bool libspdm_set_attribute_for_req(X509_REQ *req, uint8_t *req_info, size_t req_
  * @retval  true   Success.
  * @retval  false  Failed to gen CSR.
  **/
-bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
-                          uint8_t *requester_info, size_t requester_info_length,
-                          bool is_ca,
-                          void *context, char *subject_name,
-                          size_t *csr_len, uint8_t *csr_pointer,
-                          void *base_cert)
+bool libspdm_gen_x509_csr_with_pqc(
+    size_t hash_nid, size_t asym_nid, size_t pqc_asym_nid,
+    uint8_t *requester_info, size_t requester_info_length,
+    bool is_ca,
+    void *context, char *subject_name,
+    size_t *csr_len, uint8_t *csr_pointer,
+    void *base_cert)
 {
     int ret;
     int version;
@@ -2547,44 +2549,75 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
         return false;
     }
 
-    switch (asym_nid)
-    {
-    case LIBSPDM_CRYPTO_NID_RSASSA2048:
-    case LIBSPDM_CRYPTO_NID_RSAPSS2048:
-    case LIBSPDM_CRYPTO_NID_RSASSA3072:
-    case LIBSPDM_CRYPTO_NID_RSAPSS3072:
-    case LIBSPDM_CRYPTO_NID_RSASSA4096:
-    case LIBSPDM_CRYPTO_NID_RSAPSS4096:
-        ret = EVP_PKEY_set1_RSA(private_key, (RSA *)context);
-        if (ret != 1) {
+    if (asym_nid != 0) {
+        switch (asym_nid)
+        {
+        case LIBSPDM_CRYPTO_NID_RSASSA2048:
+        case LIBSPDM_CRYPTO_NID_RSAPSS2048:
+        case LIBSPDM_CRYPTO_NID_RSASSA3072:
+        case LIBSPDM_CRYPTO_NID_RSAPSS3072:
+        case LIBSPDM_CRYPTO_NID_RSASSA4096:
+        case LIBSPDM_CRYPTO_NID_RSAPSS4096:
+            ret = EVP_PKEY_set1_RSA(private_key, (RSA *)context);
+            if (ret != 1) {
+                goto free_all;
+            }
+
+            rsa_public_key = RSAPublicKey_dup((RSA *)context);
+            EVP_PKEY_assign_RSA(public_key, rsa_public_key);
+            break;
+        case LIBSPDM_CRYPTO_NID_ECDSA_NIST_P256:
+        case LIBSPDM_CRYPTO_NID_ECDSA_NIST_P384:
+        case LIBSPDM_CRYPTO_NID_ECDSA_NIST_P521:
+            ret = EVP_PKEY_set1_EC_KEY(private_key, (EC_KEY *)context);
+            if (ret != 1) {
+                goto free_all;
+            }
+
+            ec_public_key = EC_KEY_dup((EC_KEY *)context);
+            EVP_PKEY_assign_EC_KEY(public_key, ec_public_key);
+            break;
+        case LIBSPDM_CRYPTO_NID_SM2_DSA_P256:
+        case LIBSPDM_CRYPTO_NID_EDDSA_ED25519:
+        case LIBSPDM_CRYPTO_NID_EDDSA_ED448:
+            EVP_PKEY_free(private_key);
+            EVP_PKEY_free(public_key);
+            private_key = EVP_PKEY_dup((EVP_PKEY *)context);
+            public_key = EVP_PKEY_dup((EVP_PKEY *)context);
+            hash_nid = LIBSPDM_CRYPTO_NID_NULL;
+            break;
+        default:
             goto free_all;
         }
-
-        rsa_public_key = RSAPublicKey_dup((RSA *)context);
-        EVP_PKEY_assign_RSA(public_key, rsa_public_key);
-        break;
-    case LIBSPDM_CRYPTO_NID_ECDSA_NIST_P256:
-    case LIBSPDM_CRYPTO_NID_ECDSA_NIST_P384:
-    case LIBSPDM_CRYPTO_NID_ECDSA_NIST_P521:
-        ret = EVP_PKEY_set1_EC_KEY(private_key, (EC_KEY *)context);
-        if (ret != 1) {
+    }
+    if (pqc_asym_nid != 0) {
+        switch (pqc_asym_nid)
+        {
+        case LIBSPDM_CRYPTO_NID_ML_DSA_44:
+        case LIBSPDM_CRYPTO_NID_ML_DSA_65:
+        case LIBSPDM_CRYPTO_NID_ML_DSA_87:
+        case LIBSPDM_CRYPTO_NID_SLH_DSA_SHA2_128S:
+        case LIBSPDM_CRYPTO_NID_SLH_DSA_SHAKE_128S:
+        case LIBSPDM_CRYPTO_NID_SLH_DSA_SHA2_128F:
+        case LIBSPDM_CRYPTO_NID_SLH_DSA_SHAKE_128F:
+        case LIBSPDM_CRYPTO_NID_SLH_DSA_SHA2_192S:
+        case LIBSPDM_CRYPTO_NID_SLH_DSA_SHAKE_192S:
+        case LIBSPDM_CRYPTO_NID_SLH_DSA_SHA2_192F:
+        case LIBSPDM_CRYPTO_NID_SLH_DSA_SHAKE_192F:
+        case LIBSPDM_CRYPTO_NID_SLH_DSA_SHA2_256S:
+        case LIBSPDM_CRYPTO_NID_SLH_DSA_SHAKE_256S:
+        case LIBSPDM_CRYPTO_NID_SLH_DSA_SHA2_256F:
+        case LIBSPDM_CRYPTO_NID_SLH_DSA_SHAKE_256F:
+            if (evp_keymgmt_util_copy(private_key, context, OSSL_KEYMGMT_SELECT_PRIVATE_KEY) != 1) {
+                goto free_all;
+            }
+            if (evp_keymgmt_util_copy(public_key, context, OSSL_KEYMGMT_SELECT_PUBLIC_KEY) != 1) {
+                goto free_all;
+            }
+            break;
+        default:
             goto free_all;
         }
-
-        ec_public_key = EC_KEY_dup((EC_KEY *)context);
-        EVP_PKEY_assign_EC_KEY(public_key, ec_public_key);
-        break;
-    case LIBSPDM_CRYPTO_NID_SM2_DSA_P256:
-    case LIBSPDM_CRYPTO_NID_EDDSA_ED25519:
-    case LIBSPDM_CRYPTO_NID_EDDSA_ED448:
-        EVP_PKEY_free(private_key);
-        EVP_PKEY_free(public_key);
-        private_key = EVP_PKEY_dup((EVP_PKEY *)context);
-        public_key = EVP_PKEY_dup((EVP_PKEY *)context);
-        hash_nid = LIBSPDM_CRYPTO_NID_NULL;
-        break;
-    default:
-        goto free_all;
     }
 
     /*set version of x509 req*/
@@ -2698,7 +2731,11 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
     sk_X509_EXTENSION_free(exts);
 
     /*sign for x509 req*/
-    ret = X509_REQ_sign(x509_req, private_key, md);
+    if (pqc_asym_nid != 0) {
+        ret = X509_REQ_sign(x509_req, private_key, NULL);
+    } else {
+        ret = X509_REQ_sign(x509_req, private_key, md);
+    }
     if (ret <= 0) {
         ret = 0;
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO,"sign csr error\n"));
@@ -2721,6 +2758,17 @@ free_all:
     EVP_PKEY_free(public_key);
 
     return (ret != 0);
+}
+bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
+                          uint8_t *requester_info, size_t requester_info_length,
+                          bool is_ca,
+                          void *context, char *subject_name,
+                          size_t *csr_len, uint8_t *csr_pointer,
+                          void *base_cert)
+{
+    return libspdm_gen_x509_csr_with_pqc(
+        hash_nid, asym_nid, 0, requester_info, requester_info_length,
+        is_ca, context, subject_name, csr_len, csr_pointer, base_cert);
 }
 
 #endif
