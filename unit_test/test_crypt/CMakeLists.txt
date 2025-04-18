@@ -30,6 +30,9 @@ target_sources(test_crypt
         sm2_verify2.c
         rand_verify.c
         x509_verify.c
+        mlkem_verify.c
+        mldsa_verify.c
+        slhdsa_verify.c
         os_support.c
 )
 

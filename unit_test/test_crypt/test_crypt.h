@@ -166,4 +166,29 @@ bool libspdm_validate_crypt_sm2_2(void);
  **/
 bool libspdm_validate_crypt_prng(void);
 
+/**
+ * Validate Crypto MLKEM Interfaces.
+ *
+ * @retval  true  Validation succeeded.
+ * @retval  false  Validation failed.
+ *
+ **/
+bool libspdm_validate_crypt_mlkem(void);
+
+/**
+ * Validate Crypto MLDSA Interfaces.
+ *
+ * @retval  true   Validation succeeded.
+ * @retval  false  Validation failed.
+ **/
+bool libspdm_validate_crypt_mldsa(void);
+
+/**
+ * Validate Crypto SLHDSA Interfaces.
+ *
+ * @retval  true   Validation succeeded.
+ * @retval  false  Validation failed.
+ **/
+bool libspdm_validate_crypt_slhdsa(void);
+
 #endif
