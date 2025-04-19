@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2023-2024 DMTF. All rights reserved.
+ *  Copyright 2023-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -31,7 +31,15 @@ typedef struct {
 } libspdm_vendor_response_test;
 #pragma pack()
 
-libspdm_return_t libspdm_vendor_response_func_err_test(
+static void set_standard_state(libspdm_context_t *spdm_context)
+{
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_10 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->response_state = LIBSPDM_RESPONSE_STATE_NORMAL;
+}
+
+static libspdm_return_t libspdm_vendor_response_func_err_test(
     void *spdm_context,
     uint16_t req_standard_id,
     uint8_t req_vendor_id_len,
@@ -119,10 +127,61 @@ static void libspdm_test_responder_vendor_cmds_err_case1(void **state)
     response.data_len = (uint16_t)response_len;
 }
 
+/**
+ * Test 2: Responder does not support VDMs.
+ * Expected behavior: Responder replies with UnsupportedRequest.
+ **/
+static void libspdm_test_responder_vendor_cmds_err_case2(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    libspdm_vendor_request_test request;
+    uint8_t response_buffer[LIBSPDM_MAX_SPDM_MSG_SIZE] = {0};
+    size_t response_size;
+    spdm_error_response_t *response;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x2;
+
+    set_standard_state(spdm_context);
+
+    status = libspdm_register_vendor_callback_func(spdm_context, NULL);
+    status = libspdm_register_vendor_get_id_callback_func(spdm_context, NULL);
+
+    request.header.spdm_version = SPDM_MESSAGE_VERSION_10;
+    request.header.request_response_code = SPDM_VENDOR_DEFINED_REQUEST;
+    request.header.param1 = 0;
+    request.header.param2 = 0;
+    request.standard_id = SPDM_REGISTRY_ID_IANA;
+    request.vendor_id_len = 4;
+    request.vendor_id[0] = 33;
+    request.data_len = 2;
+    request.data[0] = 0;
+    request.data[1] = 1;
+
+    response_size = sizeof(response_buffer);
+
+    status = libspdm_get_vendor_defined_response(spdm_context, sizeof(request),
+                                                 &request, &response_size, &response_buffer);
+
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+
+    response = (spdm_error_response_t *)response_buffer;
+
+    assert_int_equal(response->header.spdm_version, SPDM_MESSAGE_VERSION_10);
+    assert_int_equal(response->header.request_response_code, SPDM_ERROR);
+    assert_int_equal(response->header.param1, SPDM_ERROR_CODE_UNSUPPORTED_REQUEST);
+    assert_int_equal(response->header.param2, SPDM_VENDOR_DEFINED_REQUEST);
+}
+
 int libspdm_responder_vendor_cmds_error_test_main(void)
 {
     const struct CMUnitTest spdm_responder_vendor_cmds_tests[] = {
         cmocka_unit_test(libspdm_test_responder_vendor_cmds_err_case1),
+        cmocka_unit_test(libspdm_test_responder_vendor_cmds_err_case2),
     };
 
     libspdm_test_context_t test_context = {
@@ -136,6 +195,5 @@ int libspdm_responder_vendor_cmds_error_test_main(void)
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }
-
 
 #endif /* LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES */
