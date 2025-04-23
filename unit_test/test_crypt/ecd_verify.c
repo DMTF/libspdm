@@ -20,6 +20,7 @@ bool libspdm_validate_crypt_ecd(void)
     void *ecd1;
     void *ecd2;
     uint8_t message[] = "EdDsaTest";
+    uint8_t context[] = "EdDsaTestContext";
     uint8_t signature1[32 * 2];
     uint8_t signature2[57 * 2];
     size_t sig1_size;
@@ -67,8 +68,8 @@ bool libspdm_validate_crypt_ecd(void)
 
     sig2_size = sizeof(signature2);
     libspdm_my_print("\n- Ed-DSA Signing ... ");
-    status = libspdm_eddsa_sign(ecd2, LIBSPDM_CRYPTO_NID_NULL, NULL, 0, message, sizeof(message),
-                                signature2, &sig2_size);
+    status = libspdm_eddsa_sign(ecd2, LIBSPDM_CRYPTO_NID_NULL, context, sizeof(context) - 1,
+                                message, sizeof(message), signature2, &sig2_size);
     if (!status) {
         libspdm_my_print("[Fail]");
         libspdm_ecd_free(ecd2);
@@ -76,8 +77,8 @@ bool libspdm_validate_crypt_ecd(void)
     }
 
     libspdm_my_print("Ed-DSA Verification ... ");
-    status = libspdm_eddsa_verify(ecd2, LIBSPDM_CRYPTO_NID_NULL, NULL, 0, message, sizeof(message),
-                                  signature2, sig2_size);
+    status = libspdm_eddsa_verify(ecd2, LIBSPDM_CRYPTO_NID_NULL, context, sizeof(context) - 1,
+                                  message, sizeof(message), signature2, sig2_size);
     if (!status) {
         libspdm_my_print("[Fail]");
         libspdm_ecd_free(ecd2);
