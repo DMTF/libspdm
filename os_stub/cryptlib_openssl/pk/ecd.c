@@ -334,6 +334,13 @@ bool libspdm_eddsa_sign(const void *ecd_context, size_t hash_nid,
     EVP_MD_CTX *ctx;
     size_t half_size;
     int32_t result;
+    const OSSL_PARAM params_default[] = {
+        OSSL_PARAM_END
+    };
+    const OSSL_PARAM params_ed448[] = {
+        OSSL_PARAM_octet_string("context-string", (void *) context, context_size),
+        OSSL_PARAM_END
+    };
 
     if (ecd_context == NULL || message == NULL) {
         return false;
@@ -373,7 +380,18 @@ bool libspdm_eddsa_sign(const void *ecd_context, size_t hash_nid,
     if (ctx == NULL) {
         return false;
     }
-    result = EVP_DigestSignInit(ctx, NULL, NULL, NULL, pkey);
+
+    switch (EVP_PKEY_id(pkey)) {
+    case EVP_PKEY_ED25519:
+        result = EVP_DigestSignInit_ex(ctx, NULL, NULL, NULL, NULL, pkey, params_default);
+        break;
+    case EVP_PKEY_ED448:
+        result = EVP_DigestSignInit_ex(ctx, NULL, NULL, NULL, NULL, pkey, params_ed448);
+        break;
+    default:
+        return false;
+    }
+
     if (result != 1) {
         EVP_MD_CTX_free(ctx);
         return false;
@@ -424,6 +442,13 @@ bool libspdm_eddsa_verify(const void *ecd_context, size_t hash_nid,
     EVP_MD_CTX *ctx;
     size_t half_size;
     int32_t result;
+    const OSSL_PARAM params_default[] = {
+        OSSL_PARAM_END
+    };
+    const OSSL_PARAM params_ed448[] = {
+        OSSL_PARAM_octet_string("context-string", (void *) context, context_size),
+        OSSL_PARAM_END
+    };
 
     if (ecd_context == NULL || message == NULL || signature == NULL) {
         return false;
@@ -460,7 +485,18 @@ bool libspdm_eddsa_verify(const void *ecd_context, size_t hash_nid,
     if (ctx == NULL) {
         return false;
     }
-    result = EVP_DigestVerifyInit(ctx, NULL, NULL, NULL, pkey);
+
+    switch (EVP_PKEY_id(pkey)) {
+    case EVP_PKEY_ED25519:
+        result = EVP_DigestVerifyInit_ex(ctx, NULL, NULL, NULL, NULL, pkey, params_default);
+        break;
+    case EVP_PKEY_ED448:
+        result = EVP_DigestVerifyInit_ex(ctx, NULL, NULL, NULL, NULL, pkey, params_ed448);
+        break;
+    default:
+        return false;
+    }
+
     if (result != 1) {
         EVP_MD_CTX_free(ctx);
         return false;
