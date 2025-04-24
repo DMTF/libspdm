@@ -24,6 +24,9 @@ typedef struct {
 
 libspdm_return_t my_test_get_vendor_id_func(
     void *spdm_context,
+#if LIBSPDM_PASS_SESSION_ID
+    const uint32_t *session_id,
+#endif
     uint16_t *resp_standard_id,
     uint8_t *resp_vendor_id_len,
     void *resp_vendor_id)
@@ -48,6 +51,9 @@ libspdm_return_t my_test_get_response_func(
 
 libspdm_return_t my_test_get_response_func2(
     void *spdm_context,
+#if LIBSPDM_PASS_SESSION_ID
+    const uint32_t *session_id,
+#endif
     uint16_t req_standard_id,
     uint8_t req_vendor_id_len,
     const void *req_vendor_id,

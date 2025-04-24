@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2023-2024 DMTF. All rights reserved.
+ *  Copyright 2023-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -29,13 +29,21 @@ typedef struct {
 } libspdm_vendor_response_test;
 #pragma pack()
 
+static uint32_t m_session_id = 0xffffffff;
 
 static libspdm_return_t libspdm_vendor_get_id_func_test(
     void *spdm_context,
+#if LIBSPDM_PASS_SESSION_ID
+    const uint32_t *session_id,
+#endif
     uint16_t *resp_standard_id,
     uint8_t *resp_vendor_id_len,
     void *resp_vendor_id)
 {
+#if LIBSPDM_PASS_SESSION_ID
+    assert_int_equal(*session_id, m_session_id);
+#endif
+
     if (resp_standard_id == NULL ||
         resp_vendor_id_len == NULL ||
         resp_vendor_id == NULL)
@@ -56,6 +64,9 @@ static libspdm_return_t libspdm_vendor_get_id_func_test(
 
 static libspdm_return_t libspdm_vendor_response_func_test(
     void *spdm_context,
+#if LIBSPDM_PASS_SESSION_ID
+    const uint32_t *session_id,
+#endif
     uint16_t req_standard_id,
     uint8_t req_vendor_id_len,
     const void *req_vendor_id,
@@ -68,6 +79,10 @@ static libspdm_return_t libspdm_vendor_response_func_test(
         resp_size == NULL ||
         resp_data == NULL)
         return LIBSPDM_STATUS_INVALID_PARAMETER;
+
+#if LIBSPDM_PASS_SESSION_ID
+    assert_int_equal(*session_id, m_session_id);
+#endif
 
     libspdm_vendor_response_test test_response;
     /* get pointer to response data payload and populate */
@@ -97,6 +112,8 @@ static void libspdm_test_responder_vendor_cmds_case1(void **state)
     libspdm_vendor_request_test request = {0};
     libspdm_vendor_response_test response = {0};
     size_t response_len = 0;
+    libspdm_session_info_t *session_info;
+
     response.vendor_id_len = sizeof(response.vendor_id);
     response.data_len = sizeof(response.data);
 
@@ -105,12 +122,20 @@ static void libspdm_test_responder_vendor_cmds_case1(void **state)
     spdm_test_context->case_id = 0x1;
     spdm_context->connection_info.algorithm.base_hash_algo =
         SPDM_ALGORITHMS_BASE_HASH_ALGO_TPM_ALG_SHA_256;
-    request.header.spdm_version = SPDM_MESSAGE_VERSION_10;
+    request.header.spdm_version = SPDM_MESSAGE_VERSION_11;
     spdm_context->connection_info.version = request.header.spdm_version <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
-    spdm_context->connection_info.connection_state =
-        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->local_context.is_requester = true;
+
+    spdm_context->latest_session_id = m_session_id;
+    spdm_context->last_spdm_request_session_id_valid = true;
+    spdm_context->last_spdm_request_session_id = m_session_id;
+    session_info = &spdm_context->session_info[0];
+    libspdm_session_info_init(spdm_context, session_info, m_session_id, true);
+    libspdm_secured_message_set_session_state(
+        session_info->secured_message_context,
+        LIBSPDM_SESSION_STATE_ESTABLISHED);
 
     status = libspdm_register_vendor_get_id_callback_func(spdm_context,
                                                           libspdm_vendor_get_id_func_test);
@@ -151,9 +176,6 @@ static void libspdm_test_responder_vendor_cmds_case1(void **state)
                      response.data_len);
 
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(
-        spdm_context->connection_info.version >> SPDM_VERSION_NUMBER_SHIFT_BIT,
-        SPDM_MESSAGE_VERSION_10);
 }
 
 int libspdm_responder_vendor_cmds_test_main(void)
@@ -173,6 +195,5 @@ int libspdm_responder_vendor_cmds_test_main(void)
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }
-
 
 #endif /* LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES */

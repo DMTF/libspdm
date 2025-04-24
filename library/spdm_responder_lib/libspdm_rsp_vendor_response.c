@@ -179,6 +179,9 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
 
     status = spdm_context->vendor_response_get_id(
         spdm_context,
+#if LIBSPDM_PASS_SESSION_ID
+        session_id,
+#endif
         &spdm_response->standard_id,
         &spdm_response->len,
         resp_data);
@@ -189,12 +192,14 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
     resp_size = (uint16_t)response_capacity;
 
     status = spdm_context->vendor_response_callback(spdm_context,
+                                                #if LIBSPDM_PASS_SESSION_ID
+                                                    session_id,
+                                                #endif
                                                     spdm_request->standard_id,
                                                     spdm_request->len,
                                                     req_vendor_id, req_size, req_data,
                                                     &resp_size,
-                                                    resp_data
-                                                    );
+                                                    resp_data);
 
     /* store back the response payload size */
     *((uint16_t*)(resp_data - sizeof(uint16_t))) = resp_size;
