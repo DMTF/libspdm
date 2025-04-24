@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -37,7 +37,7 @@ libspdm_return_t libspdm_get_encap_request_get_certificate(libspdm_context_t *sp
     spdm_request->header.request_response_code = SPDM_GET_CERTIFICATE;
     spdm_request->header.param1 = spdm_context->encap_context.req_slot_id;
     spdm_request->header.param2 = 0;
-    spdm_request->offset = (uint16_t)spdm_context->mut_auth_cert_chain_buffer_size;;
+    spdm_request->offset = (uint16_t)spdm_context->mut_auth_cert_chain_buffer_size;
     spdm_request->length = LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN;
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "request (offset 0x%x, size 0x%x):\n",
                    spdm_request->offset, spdm_request->length));
