@@ -245,15 +245,11 @@ libspdm_return_t libspdm_encapsulated_request(libspdm_context_t *spdm_context,
             libspdm_release_receiver_buffer (spdm_context);
             return LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
-        if (spdm_response_size < sizeof(spdm_encapsulated_request_response_t)) {
+        if (spdm_response_size <= sizeof(spdm_encapsulated_request_response_t)) {
             libspdm_release_receiver_buffer (spdm_context);
             return LIBSPDM_STATUS_INVALID_MSG_SIZE;
         }
-        if (spdm_response_size == sizeof(spdm_encapsulated_request_response_t)) {
-            /* Done */
-            libspdm_release_receiver_buffer (spdm_context);
-            return LIBSPDM_STATUS_SUCCESS;
-        }
+
         request_id = libspdm_encapsulated_request_response->header.param1;
 
         encapsulated_request = (void *)(libspdm_encapsulated_request_response + 1);
