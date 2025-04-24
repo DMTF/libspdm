@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2023-2024 DMTF. All rights reserved.
+ *  Copyright 2023-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -32,59 +32,6 @@ typedef struct {
 
 static size_t m_libspdm_local_buffer_size;
 static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_VCA_BUFFER_SIZE];
-
-static libspdm_return_t libspdm_vendor_get_id_func_test(
-    void *spdm_context,
-    uint16_t *resp_standard_id,
-    uint8_t *resp_vendor_id_len,
-    void *resp_vendor_id)
-{
-    if (resp_standard_id == NULL ||
-        resp_vendor_id_len == NULL ||
-        resp_vendor_id == NULL)
-        return LIBSPDM_STATUS_INVALID_PARAMETER;
-
-    /* vendor id length in bytes */
-    if (*resp_vendor_id_len < 2)
-        return LIBSPDM_STATUS_INVALID_PARAMETER;
-
-    *resp_standard_id = 6;
-    /* vendor id length in bytes */
-    *resp_vendor_id_len = 2;
-    ((uint8_t*)resp_vendor_id)[0] = 0xAA;
-    ((uint8_t*)resp_vendor_id)[1] = 0xAA;
-
-    return LIBSPDM_STATUS_SUCCESS;
-}
-
-static libspdm_return_t libspdm_vendor_response_func_test(
-    void *spdm_context,
-    uint16_t req_standard_id,
-    uint8_t req_vendor_id_len,
-    const void *req_vendor_id,
-    uint16_t req_size,
-    const void *req_data,
-    uint16_t *resp_size,
-    void *resp_data)
-{
-    if (req_data == NULL ||
-        resp_size == NULL ||
-        resp_data == NULL)
-        return LIBSPDM_STATUS_INVALID_PARAMETER;
-
-    libspdm_vendor_response_test test_response;
-    /* get pointer to response data payload and populate */
-    uint8_t *resp_payload = (uint8_t *)resp_data;
-    /* get pointer to response length and populate */
-    *resp_size = sizeof(test_response.data);
-    /* store length of response */
-    libspdm_set_mem(resp_payload, *resp_size, 0xFF);
-
-    printf("Got request 0x%x, sent response 0x%x\n",
-           ((const uint8_t*)req_data)[0], ((uint8_t*)resp_data)[0]);
-
-    return LIBSPDM_STATUS_SUCCESS;
-}
 
 static libspdm_return_t libspdm_requester_vendor_cmds_test_send_message(
     void *spdm_context, size_t request_size, const void *request,
@@ -187,13 +134,6 @@ static void libspdm_test_requester_vendor_cmds_case1(void **state)
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_NEGOTIATED;
     spdm_context->local_context.is_requester = true;
-
-    status = libspdm_register_vendor_get_id_callback_func(spdm_context,
-                                                          libspdm_vendor_get_id_func_test);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    status = libspdm_register_vendor_callback_func(spdm_context,
-                                                   libspdm_vendor_response_func_test);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 
     request.standard_id = 6;
     request.vendor_id_len = 2;

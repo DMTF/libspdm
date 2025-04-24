@@ -964,16 +964,18 @@ bool libspdm_get_fips_mode(void);
  * Vendor Response Get Vendor ID Callback Function Pointer.
  * Required to be able to compose the Vendor Defined Response correctly
  *
- * @param  spdm_context         A pointer to the SPDM context.
- * @param  resp_standard_id     Registry or Standards body used for response
- * @param  resp_vendor_id_len   Length in bytes of the vendor id field for the response
- * @param  resp_vendor_id       Vendor ID assigned by the Registry or Standards Body. Little-endian format
- *
- * @retval LIBSPDM_STATUS_SUCCESS Success
- * @retval LIBSPDM_STATUS_INVALID_PARAMETER Some parameters invalid or NULL
+ * @param  spdm_context        A pointer to the SPDM context.
+ * @param  session_id          If non-NULL then message is within a secure session.
+ *                             If NULL then message is outside a secure session.
+ * @param  resp_standard_id    Registry or Standards body used for response
+ * @param  resp_vendor_id_len  Length in bytes of the vendor id field for the response
+ * @param  resp_vendor_id      Vendor ID assigned by the Registry or Standards Body. Little-endian format
  **/
 typedef libspdm_return_t (*libspdm_vendor_get_id_callback_func)(
     void *spdm_context,
+#if LIBSPDM_PASS_SESSION_ID
+    const uint32_t *session_id,
+#endif
     uint16_t *resp_standard_id,
     uint8_t *resp_vendor_id_len,
     void *resp_vendor_id);
@@ -981,20 +983,22 @@ typedef libspdm_return_t (*libspdm_vendor_get_id_callback_func)(
 /**
  * Vendor Response Callback Function Pointer.
  *
- * @param  spdm_context         A pointer to the SPDM context.
- * @param  req_standard_id      Registry or Standards body used for request
- * @param  req_vendor_id_len    Length in bytes of the vendor id field for the request
- * @param  req_vendor_id        Vendor ID assigned by the Registry or Standards Body. Little-endian format
- * @param  req_size             Length of the request
- * @param  req_data             The vendor defined request
- * @param  resp_size            Length of the response
- * @param  resp_data            The vendor defined response
- *
- * @retval LIBSPDM_STATUS_SUCCESS Success
- * @retval LIBSPDM_STATUS_INVALID_PARAMETER Some parameters invalid or NULL
+ * @param  spdm_context       A pointer to the SPDM context.
+ * @param  session_id         If non-NULL then message is within a secure session.
+ *                            If NULL then message is outside a secure session.
+ * @param  req_standard_id    Registry or Standards body used for request
+ * @param  req_vendor_id_len  Length in bytes of the vendor id field for the request
+ * @param  req_vendor_id      Vendor ID assigned by the Registry or Standards Body. Little-endian format
+ * @param  req_size           Length of the request
+ * @param  req_data           The vendor defined request
+ * @param  resp_size          Length of the response
+ * @param  resp_data          The vendor defined response
  **/
 typedef libspdm_return_t (*libspdm_vendor_response_callback_func)(
     void *spdm_context,
+#if LIBSPDM_PASS_SESSION_ID
+    const uint32_t *session_id,
+#endif
     uint16_t req_standard_id,
     uint8_t req_vendor_id_len,
     const void *req_vendor_id,

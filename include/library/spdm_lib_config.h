@@ -455,6 +455,13 @@
 #define LIBSPDM_HAL_PASS_SPDM_CONTEXT 0
 #endif
 
+/* Enable passing the SessionID to functions.
+ * This macro will be removed when libspdm 4.0 is released.
+ */
+#ifndef LIBSPDM_PASS_SESSION_ID
+#define LIBSPDM_PASS_SESSION_ID 0
+#endif
+
 /* Enable additional checks for certificates.
  * This macro will be removed when libspdm 4.0 is released.
  */
