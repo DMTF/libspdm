@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -728,7 +728,7 @@ void libspdm_test_requester_encap_request_case4(void **State)
 
     libspdm_register_get_encap_response_func(spdm_context, libspdm_get_encap_response_digest);
     status = libspdm_encapsulated_request(spdm_context, NULL, 0, NULL);
-    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_SIZE);
     free(data);
 }
 
