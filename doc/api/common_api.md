@@ -198,7 +198,8 @@ Enumeration value used for the `libspdm_set_data` and/or `libspdm_get_data` func
               standards body.
         - `SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1`
             - The format for all `OpaqueData` fields is defined by the SPDM specification's general
-              opaque data format.
+              opaque data format. For libspdm this format is required during key exchange to
+              negotiate the version of the secured message binding specification.
         - `SPDM_ALGORITHMS_MULTI_KEY_CONN`
             - Specifies whether the Integrator wants the peer endpoint to support multi-key or not.
               This only applies when the value of the peer endpoint's `MULTI_KEY_CAP` is
