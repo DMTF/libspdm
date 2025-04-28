@@ -85,8 +85,8 @@ void libspdm_session_info_init(libspdm_context_t *spdm_context,
     libspdm_secured_message_set_use_psk(session_info->secured_message_context, use_psk);
     libspdm_secured_message_set_session_type(session_info->secured_message_context, session_type);
 
-    /* 277 1.2 explicitly specifies a little-endian sequence number. 1.0 and 1.1 leave it up to the
-     * Integrator to specify. */
+    /* DSP0277 1.2 explicitly specifies a little-endian sequence number. 1.0 and 1.1 leave it up to
+     * the Integrator to specify. */
     if ((spdm_context->connection_info.secured_message_version >> SPDM_VERSION_NUMBER_SHIFT_BIT) >=
         SECURED_SPDM_VERSION_12) {
         libspdm_secured_message_set_sequence_number_endian(

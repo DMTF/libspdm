@@ -77,7 +77,7 @@ Enumeration value used for the `libspdm_set_data` and/or `libspdm_get_data` func
 
 ### Values that can be both `get` and `set`.
 - `LIBSPDM_DATA_SPDM_VERSION`
-    - The SPDM (DSP0274) version(s) (1.0, 1.1, or 1.2) of an endpoint. These are communicated
+    - The SPDM (DSP0274) version(s) (1.0, 1.1, 1.2, or 1.3) of an endpoint. These are communicated
       through the `GET_VERSION / VERSION` messages.
     - `LIBSPDM_DATA_LOCATION_CONNECTION`
         - The SPDM version of the peer endpoint.
