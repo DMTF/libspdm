@@ -5,8 +5,7 @@
  **/
 
 /** @file
- * Definitions of DSP0274 Security Protocol & data Model Specification (SPDM)
- * version 1.2.0 in Distributed Management Task Force (DMTF).
+ * Definitions from DSP0274.
  **/
 
 #ifndef SPDM_H
