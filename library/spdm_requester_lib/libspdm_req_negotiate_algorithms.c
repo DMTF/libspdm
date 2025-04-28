@@ -575,28 +575,20 @@ static libspdm_return_t libspdm_try_negotiate_algorithms(libspdm_context_t *spdm
                 status = LIBSPDM_STATUS_NEGOTIATION_FAIL;
                 goto receive_done;
             }
-            if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
-                if ((spdm_context->connection_info.algorithm.other_params_support &
-                     SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_MASK) !=
-                    SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1) {
-                    status = LIBSPDM_STATUS_NEGOTIATION_FAIL;
-                    goto receive_done;
-                }
-                if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
-                    if (libspdm_is_capabilities_flag_supported(
-                            spdm_context, true, 0,
-                            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEL_CAP) &&
-                        (spdm_request->mel_specification != 0)) {
-                        if (spdm_context->connection_info.algorithm.mel_spec !=
-                            SPDM_MEL_SPECIFICATION_DMTF) {
-                            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-                            goto receive_done;
-                        }
-                    } else {
-                        if (spdm_context->connection_info.algorithm.mel_spec != 0) {
-                            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-                            goto receive_done;
-                        }
+            if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_13) {
+                if (libspdm_is_capabilities_flag_supported(
+                        spdm_context, true, 0,
+                        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEL_CAP) &&
+                    (spdm_request->mel_specification != 0)) {
+                    if (spdm_context->connection_info.algorithm.mel_spec !=
+                        SPDM_MEL_SPECIFICATION_DMTF) {
+                        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                        goto receive_done;
+                    }
+                } else {
+                    if (spdm_context->connection_info.algorithm.mel_spec != 0) {
+                        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                        goto receive_done;
                     }
                 }
             }

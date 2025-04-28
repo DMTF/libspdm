@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -2166,24 +2166,7 @@ void libspdm_test_responder_algorithms_case23(void **state)
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
     spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
 
-    /* Sub Case 1: other_params_support set Illegal OpaqueDataFmt */
-    m_libspdm_negotiate_algorithm_request18.spdm_request_version10.other_params_support = 0x04;
-    libspdm_reset_message_a(spdm_context);
-
-    response_size = sizeof(response);
-    status = libspdm_get_response_algorithms (spdm_context,
-                                              m_libspdm_negotiate_algorithm_request18_size,
-                                              &m_libspdm_negotiate_algorithm_request18,
-                                              &response_size,
-                                              response);
-    assert_int_equal (status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal (response_size, sizeof(spdm_error_response_t));
-    spdm_response = (void *)response;
-    assert_int_equal (spdm_response->header.request_response_code, SPDM_ERROR);
-    assert_int_equal (spdm_response->header.param1, SPDM_ERROR_CODE_INVALID_REQUEST);
-    assert_int_equal (spdm_response->header.param2, 0);
-
-    /* Sub Case 2: other_params_support set OpaqueDataFmt1 */
+    /* Sub Case 1: other_params_support set OpaqueDataFmt1 */
     m_libspdm_negotiate_algorithm_request18.spdm_request_version10.other_params_support =
         SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1;
     spdm_context->local_context.algorithm.other_params_support =
@@ -2208,7 +2191,8 @@ void libspdm_test_responder_algorithms_case23(void **state)
     assert_int_equal(spdm_context->connection_info.algorithm.other_params_support,
                      SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1);
 
-    /* Sub Case 3: Populate reserved field for version 1.2, field values marked as Reserved shall be written as zero ( 0 )*/
+    /* Sub Case 2: Populate reserved field for version 1.2.
+     * Field values marked as Reserved shall be written as zero (0). */
     spdm_context->local_context.algorithm.other_params_support =
         SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1 |
         SPDM_ALGORITHMS_MULTI_KEY_CONN;
@@ -2231,7 +2215,8 @@ void libspdm_test_responder_algorithms_case23(void **state)
     assert_int_equal(spdm_context->connection_info.algorithm.other_params_support,
                      SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1);
 
-    /* Sub Case 4: OpaqueDataFmt. Supports both SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_0 and SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1*/
+    /* Sub Case 3: OpaqueDataFmt. Supports both SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_0 and
+     * SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1. */
     m_libspdm_negotiate_algorithm_request18.spdm_request_version10.other_params_support =
         SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_0 |
         SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1;
