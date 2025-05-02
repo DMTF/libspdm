@@ -489,7 +489,8 @@ void libspdm_test_responder_respond_if_ready_case3(void **state) {
                                                    response);
     assert_int_equal (status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal (response_size, sizeof(spdm_challenge_auth_response_t) + libspdm_get_hash_size (
-                          m_libspdm_use_hash_algo) + SPDM_NONCE_SIZE + 0 + sizeof(uint16_t) + 0 + libspdm_get_asym_signature_size (
+                          m_libspdm_use_hash_algo) + SPDM_NONCE_SIZE + 0 + sizeof(uint16_t) + 0 +
+                      libspdm_get_asym_signature_size (
                           m_libspdm_use_asym_algo));
     spdm_response = (void *)response;
     assert_int_equal (spdm_response->header.request_response_code, SPDM_CHALLENGE_AUTH);
@@ -668,7 +669,9 @@ void libspdm_test_responder_respond_if_ready_case5(void **state) {
                                                    &response_size,
                                                    response);
     assert_int_equal (status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal (response_size, sizeof(spdm_key_exchange_response_t) + dhe_key_size + 2 + libspdm_get_opaque_data_version_selection_data_size(
+    assert_int_equal (response_size,
+                      sizeof(spdm_key_exchange_response_t) + dhe_key_size + 2 +
+                      libspdm_get_opaque_data_version_selection_data_size(
                           spdm_context) + libspdm_get_asym_signature_size (
                           m_libspdm_use_asym_algo) +
                       libspdm_get_hash_size (m_libspdm_use_hash_algo));
@@ -904,7 +907,9 @@ void libspdm_test_responder_respond_if_ready_case7(void **state) {
                                                    &response_size,
                                                    response);
     assert_int_equal (status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal (response_size, sizeof(spdm_psk_exchange_response_t) + LIBSPDM_PSK_CONTEXT_LENGTH + libspdm_get_opaque_data_version_selection_data_size(
+    assert_int_equal (response_size,
+                      sizeof(spdm_psk_exchange_response_t) + LIBSPDM_PSK_CONTEXT_LENGTH +
+                      libspdm_get_opaque_data_version_selection_data_size(
                           spdm_context) + libspdm_get_hash_size (m_libspdm_use_hash_algo));
     assert_int_equal (libspdm_secured_message_get_session_state (spdm_context->session_info[0].
                                                                  secured_message_context),

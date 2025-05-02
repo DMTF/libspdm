@@ -711,7 +711,8 @@ void libspdm_test_get_response_encapsulated_response_ack_case4(void **State)
     response_size = sizeof(response);
     status = libspdm_get_response_encapsulated_response_ack(spdm_context,
                                                             m_libspdm_m_deliver_encapsulated_response_request_t1_size,
-                                                            &m_libspdm_m_deliver_encapsulated_response_request_t1, &response_size,
+                                                            &m_libspdm_m_deliver_encapsulated_response_request_t1,
+                                                            &response_size,
                                                             response);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
@@ -744,7 +745,8 @@ void libspdm_test_get_response_encapsulated_response_ack_case5(void **State)
     response_size = sizeof(response);
     status = libspdm_get_response_encapsulated_response_ack(spdm_context,
                                                             m_libspdm_m_deliver_encapsulated_response_request_t1_size,
-                                                            &m_libspdm_m_deliver_encapsulated_response_request_t1, &response_size,
+                                                            &m_libspdm_m_deliver_encapsulated_response_request_t1,
+                                                            &response_size,
                                                             response);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));
@@ -789,7 +791,8 @@ void libspdm_test_get_response_encapsulated_response_ack_case6(void **State)
     response_size = sizeof(response);
     status = libspdm_get_response_encapsulated_response_ack(spdm_context,
                                                             m_libspdm_m_deliver_encapsulated_response_request_t1_size,
-                                                            &m_libspdm_m_deliver_encapsulated_response_request_t1, &response_size,
+                                                            &m_libspdm_m_deliver_encapsulated_response_request_t1,
+                                                            &response_size,
                                                             response);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response_size, sizeof(spdm_error_response_t));

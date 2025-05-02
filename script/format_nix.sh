@@ -15,7 +15,7 @@ fi
 
 # Extract the version number.
 VERSION=$(uncrustify --version 2>/dev/null | sed -E 's/Uncrustify-([0-9]+\.[0-9]+).*/\1/')
-REQUIRED_VERSION="0.72"
+REQUIRED_VERSION="0.78"
 
 if [ "$VERSION" != "$REQUIRED_VERSION" ]; then
     echo "ERROR: uncrustify version $REQUIRED_VERSION is required, but found $VERSION."
