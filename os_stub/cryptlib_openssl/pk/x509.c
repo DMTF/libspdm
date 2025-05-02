@@ -237,7 +237,7 @@ void libspdm_x509_stack_free(void *x509_stack)
 
     /* Free OpenSSL X509 stack object.*/
 
-    sk_X509_pop_free((STACK_OF(X509) *)x509_stack, X509_free);
+    sk_X509_pop_free((STACK_OF(X509) *) x509_stack, X509_free);
 }
 
 /**

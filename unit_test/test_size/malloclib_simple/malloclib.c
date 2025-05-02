@@ -13,7 +13,7 @@
 #define LIBSPDM_RT_PAGE_SHIFT  6
 
 #define LIBSPDM_RT_SIZE_TO_PAGES(a)  (((a) >> LIBSPDM_RT_PAGE_SHIFT) + \
-                                      (((a) & LIBSPDM_RT_PAGE_MASK) ? 1 : 0))
+                                      (((a)&LIBSPDM_RT_PAGE_MASK) ? 1 : 0))
 #define LIBSPDM_RT_PAGES_TO_SIZE(a)  ((a) << LIBSPDM_RT_PAGE_SHIFT)
 
 /* Page Flag Definitions*/
