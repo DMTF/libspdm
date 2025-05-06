@@ -68,6 +68,30 @@ typedef struct {
     uint16_t key_schedule;
 } libspdm_device_algorithm_t;
 
+#define LIBSPDM_MAX_EXT_ALG_COUNT 5
+
+#pragma pack(1)
+typedef struct {
+    spdm_negotiate_algorithms_common_struct_table_t alg_struct;
+    spdm_extended_algorithm_t alg_external[LIBSPDM_MAX_EXT_ALG_COUNT];
+} libspdm_supported_algorithms_alg_struct_t;
+#pragma pack()
+
+typedef struct {
+    uint8_t measurement_specification;
+    uint8_t other_params_support;
+    uint32_t base_asym_algo;
+    uint32_t base_hash_algo;
+    uint8_t mel_specification;
+    uint8_t ext_asym_count;
+    spdm_extended_algorithm_t ext_asym[LIBSPDM_MAX_EXT_ALG_COUNT];
+    uint8_t ext_hash_count;
+    spdm_extended_algorithm_t ext_hash[LIBSPDM_MAX_EXT_ALG_COUNT];
+    uint8_t struct_table_count;
+    libspdm_supported_algorithms_alg_struct_t
+        struct_table[SPDM_NEGOTIATE_ALGORITHMS_MAX_NUM_STRUCT_TABLE_ALG];
+} libspdm_responder_supported_algorithms_t;
+
 typedef struct {
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     uint8_t buffer[LIBSPDM_MAX_CERT_CHAIN_SIZE];
