@@ -2574,6 +2574,14 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
         ec_public_key = EC_KEY_dup((EC_KEY *)context);
         EVP_PKEY_assign_EC_KEY(public_key, ec_public_key);
         break;
+    case LIBSPDM_CRYPTO_NID_EDDSA_ED25519:
+    case LIBSPDM_CRYPTO_NID_EDDSA_ED448:
+        EVP_PKEY_free(private_key);
+        EVP_PKEY_free(public_key);
+        private_key = EVP_PKEY_dup((EVP_PKEY *)context);
+        public_key = EVP_PKEY_dup((EVP_PKEY *)context);
+        hash_nid = LIBSPDM_CRYPTO_NID_NULL;
+        break;
     default:
         goto free_all;
     }
@@ -2616,6 +2624,9 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
 
     /*get hash algo*/
     switch (hash_nid) {
+    case LIBSPDM_CRYPTO_NID_NULL:
+        md = NULL;
+        break;
     case LIBSPDM_CRYPTO_NID_SHA256:
         md = EVP_sha256();
         break;
