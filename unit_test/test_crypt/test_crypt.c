@@ -93,6 +93,17 @@ bool libspdm_cryptest_main(void)
         return status;
     }
 
+    #if LIBSPDM_EDDSA_SUPPORT
+    status = libspdm_validate_crypt_x509("ed25519", sizeof("ed25519"));
+    if (!status) {
+        return status;
+    }
+
+    status = libspdm_validate_crypt_x509("ed448", sizeof("ed448"));
+    if (!status) {
+    }
+    #endif /* LIBSPDM_EDDSA_SUPPORT */
+
     #if LIBSPDM_FFDHE_SUPPORT
     status = libspdm_validate_crypt_dh();
     if (!status) {
