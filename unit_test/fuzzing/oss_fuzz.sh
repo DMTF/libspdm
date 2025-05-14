@@ -68,6 +68,8 @@ else
 fi
 
 cmds=(
+test_spdm_transport_tcp_encode_message
+test_spdm_transport_tcp_decode_message
 test_spdm_transport_mctp_encode_message
 test_spdm_transport_mctp_decode_message
 test_spdm_transport_pci_doe_encode_message
