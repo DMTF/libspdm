@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -128,15 +128,16 @@ extern bool libspdm_measurement_opaque_data(
  *                                    It must align with measurement_specification.
  *                                    (SPDM_MEASUREMENT_BLOCK_HEADER_SPECIFICATION_*)
  * @param  measurement_hash_algo      Indicates the measurement hash algorithm.
- *                                    It must align with measurement_hash_alg
  *                                    (SPDM_ALGORITHMS_MEASUREMENT_HASH_ALGO_*)
  *
- * @param  measurement_summary_hash_type   The type of the measurement summary hash.
- * @param  measurement_summary_hash        The buffer to store the measurement summary hash.
- * @param  measurement_summary_hash_size   The size in bytes of the buffer.
+ * @param  measurement_summary_hash_type  The type of the measurement summary hash. Either
+ *                                        SPDM_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH or
+ *                                        SPDM_REQUEST_ALL_MEASUREMENTS_HASH.
+ * @param  measurement_summary_hash       The buffer to store the measurement summary hash.
+ * @param  measurement_summary_hash_size  The size in bytes of the buffer.
  *
- * @retval true  measurement summary hash is generated or skipped.
- * @retval false measurement summary hash is not generated.
+ * @retval true   Measurement summary hash is successfully generated.
+ * @retval false  Error when generating the measurement summary hash.
  **/
 extern bool libspdm_generate_measurement_summary_hash(
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT
