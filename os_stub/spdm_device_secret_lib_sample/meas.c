@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2024 DMTF. All rights reserved.
+ *  Copyright 2024-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -659,7 +659,7 @@ bool libspdm_generate_measurement_summary_hash(
 
     switch (measurement_summary_hash_type) {
     case SPDM_REQUEST_NO_MEASUREMENT_SUMMARY_HASH:
-        break;
+        return false;
 
     case SPDM_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH:
     case SPDM_REQUEST_ALL_MEASUREMENTS_HASH:

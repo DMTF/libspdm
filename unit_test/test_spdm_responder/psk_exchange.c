@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -924,6 +924,7 @@ void libspdm_test_responder_psk_exchange_case10(void **state)
     size_t data_size1;
     uint8_t *ptr;
     size_t opaque_psk_exchange_req_size;
+    bool result;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1008,7 +1009,7 @@ void libspdm_test_responder_psk_exchange_case10(void **state)
         spdm_context, false, m_libspdm_psk_exchange_request4.header.param1);
 
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
-    libspdm_generate_measurement_summary_hash(
+    result = libspdm_generate_measurement_summary_hash(
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT
         spdm_context,
 #endif
@@ -1020,11 +1021,10 @@ void libspdm_test_responder_psk_exchange_case10(void **state)
         measurement_hash,
         measurement_summary_hash_size);
 
-    assert_memory_equal(
-        (uint8_t *)response +
-        sizeof(spdm_psk_exchange_response_t),
-        measurement_hash,
-        measurement_summary_hash_size);
+    assert_true(result);
+
+    assert_memory_equal((uint8_t *)response + sizeof(spdm_psk_exchange_response_t),
+                        measurement_hash, measurement_summary_hash_size);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
@@ -1050,6 +1050,7 @@ void libspdm_test_responder_psk_exchange_case11(void **state)
     size_t data_size1;
     uint8_t *ptr;
     size_t opaque_psk_exchange_req_size;
+    bool result;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -1134,7 +1135,7 @@ void libspdm_test_responder_psk_exchange_case11(void **state)
         spdm_context, false, m_libspdm_psk_exchange_request5.header.param1);
 
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
-    libspdm_generate_measurement_summary_hash(
+    result = libspdm_generate_measurement_summary_hash(
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT
         spdm_context,
 #endif
@@ -1146,11 +1147,10 @@ void libspdm_test_responder_psk_exchange_case11(void **state)
         measurement_hash,
         measurement_summary_hash_size);
 
-    assert_memory_equal(
-        (uint8_t *)response +
-        sizeof(spdm_psk_exchange_response_t),
-        measurement_hash,
-        measurement_summary_hash_size);
+    assert_true(result);
+
+    assert_memory_equal((uint8_t *)response + sizeof(spdm_psk_exchange_response_t),
+                        measurement_hash, measurement_summary_hash_size);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT

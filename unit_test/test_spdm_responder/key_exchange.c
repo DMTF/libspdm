@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -728,6 +728,7 @@ void libspdm_test_responder_key_exchange_case8(void **state)
     size_t dhe_key_size;
     void *dhe_context;
     size_t opaque_key_exchange_req_size;
+    bool result;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -806,8 +807,9 @@ void libspdm_test_responder_key_exchange_case8(void **state)
 
     measurement_summary_hash_size = libspdm_get_measurement_summary_hash_size(
         spdm_context, false, m_libspdm_key_exchange_request3.header.param1);
+
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
-    libspdm_generate_measurement_summary_hash(
+    result = libspdm_generate_measurement_summary_hash(
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT
         spdm_context,
 #endif
@@ -819,12 +821,10 @@ void libspdm_test_responder_key_exchange_case8(void **state)
         measurement_hash,
         measurement_summary_hash_size);
 
-    assert_memory_equal(
-        (uint8_t *)response +
-        sizeof(spdm_key_exchange_response_t) +
-        dhe_key_size,
-        measurement_hash,
-        measurement_summary_hash_size);
+    assert_true(result);
+
+    assert_memory_equal((uint8_t *)response + sizeof(spdm_key_exchange_response_t) + dhe_key_size,
+                        measurement_hash, measurement_summary_hash_size);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
     free(data1);
 }
@@ -848,6 +848,7 @@ void libspdm_test_responder_key_exchange_case9(void **state)
     void *dhe_context;
     size_t opaque_key_exchange_req_size;
     uint32_t session_id;
+    bool result;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -927,7 +928,7 @@ void libspdm_test_responder_key_exchange_case9(void **state)
     measurement_summary_hash_size = libspdm_get_measurement_summary_hash_size(
         spdm_context, false, m_libspdm_key_exchange_request4.header.param1);
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
-    libspdm_generate_measurement_summary_hash(
+    result = libspdm_generate_measurement_summary_hash(
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT
         spdm_context,
 #endif
@@ -939,12 +940,10 @@ void libspdm_test_responder_key_exchange_case9(void **state)
         measurement_hash,
         measurement_summary_hash_size);
 
-    assert_memory_equal(
-        (uint8_t *)response +
-        sizeof(spdm_key_exchange_response_t) +
-        dhe_key_size,
-        measurement_hash,
-        measurement_summary_hash_size);
+    assert_true(result);
+
+    assert_memory_equal((uint8_t *)response + sizeof(spdm_key_exchange_response_t) + dhe_key_size,
+                        measurement_hash, measurement_summary_hash_size);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
 
     session_id = (m_libspdm_key_exchange_request4.req_session_id << 16) |
