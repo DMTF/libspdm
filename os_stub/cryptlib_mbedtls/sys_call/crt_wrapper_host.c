@@ -11,6 +11,7 @@
 #include <base.h>
 #include "library/debuglib.h"
 #include "library/memlib.h"
+#include "mbedtls/libspdm_mbedtls_config.h"
 #include <stddef.h>
 
 int my_printf(const char *fmt, ...)
@@ -25,7 +26,9 @@ int my_snprintf(char *str, size_t size, const char *format, ...)
     return 0;
 }
 
+#ifdef MBEDTLS_PLATFORM_ZEROIZE_ALT
 void mbedtls_platform_zeroize(void *buf, size_t len)
 {
     libspdm_zero_mem(buf, len);
 }
+#endif /* MBEDTLS_PLATFORM_ZEROIZE_ALT */
