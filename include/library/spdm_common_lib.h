@@ -284,7 +284,7 @@ typedef enum {
  **/
 libspdm_return_t libspdm_set_data(void *spdm_context,
                                   libspdm_data_type_t data_type,
-                                  const libspdm_data_parameter_t *parameter, void *data,
+                                  const libspdm_data_parameter_t *parameter, const void *data,
                                   size_t data_size);
 
 /**
