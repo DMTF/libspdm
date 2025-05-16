@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -221,7 +221,9 @@ libspdm_return_t libspdm_get_response_challenge_auth(libspdm_context_t *spdm_con
 
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
     if (libspdm_is_capabilities_flag_supported(
-            spdm_context, false, 0, SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP)) {
+            spdm_context, false, 0, SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP) &&
+        ((spdm_request->header.param2 == SPDM_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH) ||
+         (spdm_request->header.param2 == SPDM_REQUEST_ALL_MEASUREMENTS_HASH))) {
         result = libspdm_generate_measurement_summary_hash(
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT
             spdm_context,
@@ -233,14 +235,12 @@ libspdm_return_t libspdm_get_response_challenge_auth(libspdm_context_t *spdm_con
             spdm_request->header.param2,
             ptr,
             measurement_summary_hash_size);
-    } else {
-        result = true;
-    }
 
-    if (!result) {
-        return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_UNSPECIFIED, 0,
-                                               response_size, response);
+        if (!result) {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_UNSPECIFIED, 0,
+                                                   response_size, response);
+        }
     }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
 
