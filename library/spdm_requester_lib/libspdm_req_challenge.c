@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -373,6 +373,10 @@ static libspdm_return_t libspdm_try_challenge(libspdm_context_t *spdm_context,
         *slot_mask = spdm_response->header.param2;
     }
 
+    /* At this point the Requester has successfully authenticated the Responder, even if the
+     * the Responder intends to authenticate the Requester. */
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
+
     /* -=[Update State Phase]=- */
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
     if ((auth_attribute & SPDM_CHALLENGE_AUTH_RESPONSE_ATTRIBUTE_BASIC_MUT_AUTH_REQ) != 0) {
@@ -387,12 +391,10 @@ static libspdm_return_t libspdm_try_challenge(libspdm_context_t *spdm_context,
             libspdm_reset_message_c(spdm_context);
             return status;
         }
-        spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
         return LIBSPDM_STATUS_SUCCESS;
     }
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) */
 
-    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     status = LIBSPDM_STATUS_SUCCESS;
 
 receive_done:
