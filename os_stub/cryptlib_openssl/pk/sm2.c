@@ -170,6 +170,11 @@ bool libspdm_sm2_dsa_set_pub_key(void *sm2_context, const uint8_t *public_key,
         goto done;
     }
 
+    ret_val = EVP_PKEY_set1_EC_KEY(pkey, ec_key);
+    if (!ret_val) {
+        return false;
+    }
+
     ret_val = true;
 
 done:
@@ -383,6 +388,12 @@ bool libspdm_sm2_dsa_generate_key(void *sm2_context, uint8_t *public_data,
     if (!ret_val) {
         return false;
     }
+
+    ret_val = EVP_PKEY_set1_EC_KEY(pkey, ec_key);
+    if (!ret_val) {
+        return false;
+    }
+
     openssl_nid = EC_GROUP_get_curve_name(EC_KEY_get0_group(ec_key));
     switch (openssl_nid) {
     case NID_sm2:
@@ -840,6 +851,7 @@ bool libspdm_sm2_dsa_verify(const void *sm2_context, size_t hash_nid,
     int32_t result;
     uint8_t der_signature[32 * 2 + 8];
     size_t der_sig_size;
+    int32_t nid;
 
     if (sm2_context == NULL || message == NULL || signature == NULL) {
         return false;
@@ -850,7 +862,12 @@ bool libspdm_sm2_dsa_verify(const void *sm2_context, size_t hash_nid,
     }
 
     pkey = (EVP_PKEY *)sm2_context;
-    switch (EVP_PKEY_id(pkey)) {
+    nid = EVP_PKEY_id(pkey);
+    if (nid == EVP_PKEY_KEYMGMT) {
+        nid = OBJ_sn2nid(EVP_PKEY_get0_type_name(pkey));
+    }
+
+    switch (nid) {
     case EVP_PKEY_SM2:
         half_size = 32;
         break;
