@@ -2574,6 +2574,7 @@ bool libspdm_gen_x509_csr(size_t hash_nid, size_t asym_nid,
         ec_public_key = EC_KEY_dup((EC_KEY *)context);
         EVP_PKEY_assign_EC_KEY(public_key, ec_public_key);
         break;
+    case LIBSPDM_CRYPTO_NID_SM2_DSA_P256:
     case LIBSPDM_CRYPTO_NID_EDDSA_ED25519:
     case LIBSPDM_CRYPTO_NID_EDDSA_ED448:
         EVP_PKEY_free(private_key);
