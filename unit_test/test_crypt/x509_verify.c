@@ -76,6 +76,8 @@ size_t libspdm_get_aysm_nid_from_file_name(char *Path, size_t len)
         return LIBSPDM_CRYPTO_NID_RSASSA2048;
     } else if (libspdm_consttime_is_mem_equal(Path, "rsa3072", len - 1)) {
         return LIBSPDM_CRYPTO_NID_RSASSA3072;
+    } else if (libspdm_consttime_is_mem_equal(Path, "sm2", len - 1)) {
+        return LIBSPDM_CRYPTO_NID_SM2_DSA_P256;
     } else if (libspdm_consttime_is_mem_equal(Path, "ed25519", len - 1)) {
         return LIBSPDM_CRYPTO_NID_EDDSA_ED25519;
     } else if (libspdm_consttime_is_mem_equal(Path, "ed448", len - 1)) {
@@ -524,6 +526,10 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
         status = libspdm_ec_get_private_key_from_pem(
             test_private_key, test_private_key_len, NULL, &context);
         break;
+    case LIBSPDM_CRYPTO_NID_SM2_DSA_P256:
+        status = libspdm_sm2_get_private_key_from_pem(
+            test_private_key, test_private_key_len, NULL, &context);
+        break;
     case LIBSPDM_CRYPTO_NID_EDDSA_ED25519:
     case LIBSPDM_CRYPTO_NID_EDDSA_ED448:
         status = libspdm_ecd_get_private_key_from_pem(
@@ -531,6 +537,7 @@ bool libspdm_validate_crypt_x509(char *Path, size_t len)
         break;
     default:
         libspdm_my_print("\n  - Get Private Key - [Fail]");
+        status = false;
         goto cleanup;
     }
 
