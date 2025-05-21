@@ -515,7 +515,7 @@ and also aids in debugging. Message logging is enabled at compile time by settin
 function. When enabled both request messages and response messages are written to the buffer.
 Writing to the message log buffer may fill the buffer after which subsequent writes to the
 buffer will be ignored. Once the desired messages have been captured in the message log buffer the
-`libspdm_get_msg_log_size` returns the size, in bytes, of all the concatenated messages.
+`libspdm_get_msg_log_size` function returns the size, in bytes, of all the concatenated messages.
 ```
 libspdm_init_msg_log (spdm_context, msg_log_buffer, sizeof(msg_log_buffer));
 libspdm_set_msg_log_mode (spdm_context, LIBSPDM_MSG_LOG_MODE_ENABLE);
