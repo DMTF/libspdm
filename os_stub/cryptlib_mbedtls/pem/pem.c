@@ -86,7 +86,7 @@ bool libspdm_rsa_get_private_key_from_pem(const uint8_t *pem_data,
 
     ret = mbedtls_pk_parse_key(&pk, pem_data, pem_size,
                                (const uint8_t *)password, password_len,
-                               NULL, NULL);
+                               libspdm_myrand, NULL);
 
     if (new_pem_data != NULL) {
         free_pool(new_pem_data);
@@ -173,7 +173,7 @@ bool libspdm_ec_get_private_key_from_pem(const uint8_t *pem_data, size_t pem_siz
 
     ret = mbedtls_pk_parse_key(&pk, pem_data, pem_size,
                                (const uint8_t *)password, password_len,
-                               NULL, NULL);
+                               libspdm_myrand, NULL);
 
     if (new_pem_data != NULL) {
         free_pool(new_pem_data);
