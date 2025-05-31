@@ -164,8 +164,41 @@ typedef struct {
     uint32_t max_spdm_msg_size;
 } spdm_get_capabilities_request_t;
 
-/* SPDM GET_CAPABILITIES response*/
+/* SPDM extended algorithm */
+typedef struct {
+    uint8_t registry_id;
+    uint8_t reserved;
+    uint16_t algorithm_id;
+} spdm_extended_algorithm_t;
 
+typedef struct {
+    uint8_t alg_type;
+    uint8_t alg_count;
+    uint16_t alg_supported;
+} spdm_negotiate_algorithms_common_struct_table_t;
+
+/* SPDM supported algorithms block */
+typedef struct {
+    uint8_t param1;  /* Number of Algorithms Structure Tables */
+    uint8_t param2;  /* Reserved */
+    uint16_t length;
+    uint8_t measurement_specification;
+    uint8_t other_params_support;
+    uint32_t base_asym_algo;
+    uint32_t base_hash_algo;
+    uint8_t reserved2[12];
+    uint8_t ext_asym_count;
+    uint8_t ext_hash_count;
+    uint8_t reserved3;
+    uint8_t mel_specification;
+    /* Followed by dynamic arrays for ext_asym, ext_hash, and struct_tableif needed
+     * spdm_extended_algorithm_t ext_asym[ext_asym_count];
+     * spdm_extended_algorithm_t ext_hash[ext_hash_count];
+     * spdm_negotiate_algorithms_common_struct_table_t struct_table[
+     *  SPDM_NEGOTIATE_ALGORITHMS_MAX_NUM_STRUCT_TABLE_ALG];*/
+} spdm_supported_algorithms_block_t;
+
+/* SPDM GET_CAPABILITIES response*/
 typedef struct {
     spdm_message_header_t header;
     /* param1 == RSVD
@@ -177,6 +210,8 @@ typedef struct {
     /* Below field is added in 1.2.*/
     uint32_t data_transfer_size;
     uint32_t max_spdm_msg_size;
+    /* Below field is added in 1.3.*/
+    spdm_supported_algorithms_block_t supported_algorithms;
 } spdm_capabilities_response_t;
 
 #define SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12  42
@@ -360,12 +395,6 @@ typedef struct {
 #define SPDM_NEGOTIATE_ALGORITHMS_ALG_SUPPORTED_AEAD_12_MASK 0x000f
 #define SPDM_NEGOTIATE_ALGORITHMS_ALG_SUPPORTED_REQ_BASE_ASYM_ALG_12_MASK 0x0fff
 
-typedef struct {
-    uint8_t alg_type;
-    uint8_t alg_count;
-    uint16_t alg_supported;
-} spdm_negotiate_algorithms_common_struct_table_t;
-
 
 /* SPDM NEGOTIATE_ALGORITHMS request base_asym_algo/REQ_BASE_ASYM_ALG */
 #define SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048 0x00000001
@@ -483,13 +512,6 @@ typedef struct {
     uint8_t reserved[3];
     /*opaque_element_table_t  opaque_list[];*/
 } spdm_general_opaque_data_table_header_t;
-
-/* SPDM extended algorithm */
-typedef struct {
-    uint8_t registry_id;
-    uint8_t reserved;
-    uint16_t algorithm_id;
-} spdm_extended_algorithm_t;
 
 /* SPDM registry_id */
 #define SPDM_REGISTRY_ID_DMTF 0x0

@@ -31,6 +31,32 @@ returns early with value not equal to `LIBSPDM_STATUS_SUCCESS` then the SPDM con
 before attempting establish a new connection.
 <br/><br/>
 
+---
+### libspdm_get_supported_algorithms
+---
+
+### Description
+Sends GET_VERSION and GET_CAPABILITIES requests to retrieve the Responder's supported algorithms before algorithm negotiation.
+
+### Parameters
+
+**spdm_context**<br/>
+The SPDM context.
+
+**algorithms**<br/>
+A pointer to a libspdm_responder_supported_algorithms_t structure to store the Responder's supported algorithms.
+
+### Details
+Before calling this function the Integrator must ensure that the SPDM context is initialized
+with proper configuration, including the requester's capabilities and supported cryptographic
+algorithms. The Requester must support at least one SPDM version >= 1.3 and have CHUNK_CAP
+capability enabled in its configuration.
+
+When this function returns with value `LIBSPDM_STATUS_SUCCESS`, the algorithms parameter will contain
+the Responder's supported algorithms that can be used for subsequent algorithm negotiation. If this
+function returns with value `LIBSPDM_STATUS_UNSUPPORTED_CAP`, either the Requester does not support
+version 1.3 or above, or CHUNK_CAP is not enabled.
+<br/><br/>
 
 ---
 ### libspdm_get_digest
