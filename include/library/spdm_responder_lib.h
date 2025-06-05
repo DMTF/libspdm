@@ -250,13 +250,27 @@ void libspdm_register_key_update_callback_func(
  **/
 void libspdm_init_key_update_encap_state(void *spdm_context);
 
+/**
+ * This function initializes the key_update encapsulated state with session_id
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_id                    session_id of the session to be updated.
+ *                                       LIBSPDM_INVALID_SESSION_ID means the integrator wants this
+ *                                       to be inside of any session.
+ **/
+void libspdm_init_key_update_encap_state_with_session(
+    void *spdm_context, uint32_t session_id);
+
 #if (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && (LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT)
 /**
  * This function initializes the get_endpoint_info encapsulated state.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_id                    session_id of the session to be updated.
+ *                                       LIBSPDM_INVALID_SESSION_ID means the integrator wants this
+ *                                       to be outside of a session or inside of any session.
  **/
-void libspdm_init_get_endpoint_info_encap_state(void *spdm_context);
+void libspdm_init_get_endpoint_info_encap_state(void *spdm_context, uint32_t session_id);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP && LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT */
 
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && \
