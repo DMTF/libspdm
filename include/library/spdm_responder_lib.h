@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -249,6 +249,15 @@ void libspdm_register_key_update_callback_func(
  * @param  spdm_context                  A pointer to the SPDM context.
  **/
 void libspdm_init_key_update_encap_state(void *spdm_context);
+
+/**
+ * This function initializes the key_update encapsulated state with session_id
+ *
+ * @param  spdm_context                  A pointer to the SPDM context.
+ * @param  session_id                    session_id of the session to be updated.
+ **/
+void libspdm_init_key_update_encap_state_with_session(
+    void *spdm_context, uint32_t session_id);
 
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && \
     (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)

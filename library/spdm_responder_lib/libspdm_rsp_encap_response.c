@@ -130,6 +130,15 @@ static libspdm_return_t libspdm_process_encapsulated_response(
         if (encap_response_struct.process_encap_response == NULL) {
             return LIBSPDM_STATUS_UNSUPPORTED_CAP;
         }
+        if (spdm_context->encap_context.session_id != INVALID_SESSION_ID) {
+            if (!spdm_context->last_spdm_request_session_id_valid) {
+                return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+            }
+            if (spdm_context->encap_context.session_id !=
+                spdm_context->last_spdm_request_session_id) {
+                return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+            }
+        }
         status = encap_response_struct.process_encap_response(
             spdm_context, encap_response_size, encap_response, &need_continue);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
@@ -196,6 +205,18 @@ void libspdm_init_key_update_encap_state(void *spdm_context)
                      sizeof(context->encap_context.request_op_code_sequence));
     context->encap_context.request_op_code_count = 1;
     context->encap_context.request_op_code_sequence[0] = SPDM_KEY_UPDATE;
+    context->encap_context.session_id = INVALID_SESSION_ID;
+}
+
+void libspdm_init_key_update_encap_state_with_session(
+    void *spdm_context, uint32_t session_id)
+{
+    libspdm_context_t *context;
+
+    libspdm_init_key_update_encap_state (spdm_context);
+
+    context = spdm_context;
+    context->encap_context.session_id = session_id;
 }
 
 libspdm_return_t libspdm_get_response_encapsulated_request(
@@ -412,6 +433,7 @@ libspdm_return_t libspdm_handle_encap_error_response_main(
 #if LIBSPDM_SEND_CHALLENGE_SUPPORT
 void libspdm_init_basic_mut_auth_encap_state(libspdm_context_t *spdm_context)
 {
+    spdm_context->encap_context.session_id = INVALID_SESSION_ID;
     spdm_context->encap_context.current_request_op_code = 0x00;
     spdm_context->encap_context.request_id = 0;
     spdm_context->encap_context.last_encap_request_size = 0;
@@ -454,6 +476,7 @@ void libspdm_init_basic_mut_auth_encap_state(libspdm_context_t *spdm_context)
 
 void libspdm_init_mut_auth_encap_state(libspdm_context_t *spdm_context, uint8_t mut_auth_requested)
 {
+    spdm_context->encap_context.session_id = INVALID_SESSION_ID;
     spdm_context->encap_context.current_request_op_code = 0x00;
     if (mut_auth_requested == SPDM_KEY_EXCHANGE_RESPONSE_MUT_AUTH_REQUESTED_WITH_GET_DIGESTS) {
         spdm_context->encap_context.current_request_op_code = SPDM_GET_DIGESTS;
