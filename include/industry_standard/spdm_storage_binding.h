@@ -33,6 +33,34 @@ typedef struct {
     uint32_t response_length;
 } spdm_storage_pending_info_response_t;
 
+typedef struct {
+    uint8_t rsvd1;
+    uint8_t desc_type;
+    uint8_t status;
+    uint8_t rsvd2;
+    uint32_t length;
+    uint32_t offset;
+    uint32_t rsvd3;
+} spdm_storage_secured_message_descriptor;
+
+typedef enum
+{
+    SPDM_STORAGE_SECURED_MSG_DESCRIPTOR_NVME = 0x01,
+    SPDM_STORAGE_SECURED_MSG_DESCRIPTOR_SCSI = 0x02,
+    SPDM_STORAGE_SECURED_MSG_DESCRIPTOR_ATA = 0x03,
+    SPDM_STORAGE_SECURED_MSG_DESCRIPTOR_SPDM = 0x04,
+    SPDM_STORAGE_SECURED_MSG_DESCRIPTOR_DATA_BUFFER = 0x40
+} spdm_storage_secured_message_descriptor_t;
+
+typedef enum
+{
+    SPDM_STORAGE_SECURED_MSG_ENCAPSULATED_STATUS_SUCCESS = 0x00,
+    SPDM_STORAGE_SECURED_MSG_ENCAPSULATED_STATUS_GENERAL_ERROR = 0x01,
+    SPDM_STORAGE_SECURED_MSG_ENCAPSULATED_STATUS_INVALID_CMD = 0x02,
+    SPDM_STORAGE_SECURED_MSG_ENCAPSULATED_STATUS_INVALID_FIELD = 0x03,
+    SPDM_STORAGE_SECURED_MSG_ENCAPSULATED_STATUS_VENDOR_DEFINED = 0xFF
+} spdm_storage_secured_message_encapsulated_status_t;
+
 #define SPDM_STORAGE_SEQUENCE_NUMBER_COUNT 2
 #define SPDM_STORAGE_SECURITY_BINDING_VERSION 0x1000
 #define SPDM_STORAGE_SECURITY_PROTOCOL_DMTF 0xE8
