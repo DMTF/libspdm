@@ -45,6 +45,52 @@ typedef struct {
 #define LIBSPDM_STORAGE_CMD_DIRECTION_IF_SEND 0x01
 #define LIBSPDM_STORAGE_CMD_DIRECTION_IF_RECV 0x02
 
+#pragma pack(1)
+typedef struct {
+    uint8_t rsvd1;
+    uint8_t desc_type;
+    uint8_t status;
+    uint8_t rsvd2;
+    uint32_t length;
+    uint32_t offset;
+    uint32_t rsvd3;
+} spdm_storage_secured_message_descriptor;
+#pragma pack()
+
+typedef enum
+{
+    SECURED_MSG_DESCRIPTOR_NVME = 0x01,
+    SECURED_MSG_DESCRIPTOR_SCSI = 0x02,
+    SECURED_MSG_DESCRIPTOR_ATA = 0x03,
+    SECURED_MSG_DESCRIPTOR_SPDM = 0x04,
+    SECURED_MSG_DESCRIPTOR_DATA_BUFFER = 0x40
+} spmd_storage_secured_message_descriptor_t;
+
+typedef enum
+{
+    SECURED_MSG_ENCAPSULATED_STATUS_SUCCESS = 0x00,
+    SECURED_MSG_ENCAPSULATED_STATUS_INVALID_CMD = 0x02
+} spdm_storage_secured_message_encapsulated_status_t;
+
+/*
+ * In an SPDM Storage Secured Message, DSP0286 states the fields from Num Descriptors
+ * through Command or Data Buffer, inclusive, shall be treated as the Application
+ * Data as described by DSP0277. This macro defines the minimum size occupied
+ * by one such descriptor.
+ */
+#define LISBPDM_STORAGE_SECURED_MESSAGE_DESCRIPTOR_MIN_SIZE (1 + 3 + (16 * 1))
+
+/*
+ * Within an SPDM Storage Secured Message, this is the offset in the `Num Descriptors`
+ * field.
+ */
+#define LIBSPDM_STORAGE_SECURED_MESSAGE_NUM_DESCRIPTORS_OFFSET (4 + 4 + 2 + 2 + 2 + 2)
+
+/*
+ * SPDM Storage Secured Messages data buffers begin with 4 reserved bytes as per DSP0286
+ */
+#define LIBSPDM_STORAGE_SECURED_MESSAGE_HEADER_RESERVED_BYTES (4)
+
 /**
  * Decode an Security Protocol Command message to a normal message or secured message.
  *
