@@ -2034,6 +2034,169 @@ static void libspdm_test_responder_key_exchange_case22(void **state)
 #endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
 }
 
+void libspdm_test_responder_key_exchange_case23(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_key_exchange_response_t *spdm_response;
+    void *data1;
+    size_t data_size1;
+    uint8_t *ptr;
+    size_t dhe_key_size;
+    void *dhe_context;
+    size_t opaque_key_exchange_req_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x17;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data1,
+                                                    &data_size1, NULL, NULL);
+    spdm_context->local_context.local_cert_chain_provision[0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+
+    libspdm_reset_message_a(spdm_context);
+    spdm_context->local_context.mut_auth_requested = 0;
+    spdm_context->local_context.mandatory_mut_auth = true;
+
+    spdm_context->local_context.secured_message_version.spdm_version_count = 1;
+
+    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
+                              m_libspdm_key_exchange_request1.random_data);
+    m_libspdm_key_exchange_request1.req_session_id = 0xFFFF;
+    m_libspdm_key_exchange_request1.reserved = 0;
+    ptr = m_libspdm_key_exchange_request1.exchange_data;
+    dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
+    dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_libspdm_use_dhe_algo,
+                                  false);
+    libspdm_dhe_generate_key(m_libspdm_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
+    ptr += dhe_key_size;
+    libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
+    opaque_key_exchange_req_size =
+        libspdm_get_opaque_data_supported_version_data_size(spdm_context);
+    *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+    ptr += sizeof(uint16_t);
+    libspdm_build_opaque_data_supported_version_data(
+        spdm_context, &opaque_key_exchange_req_size, ptr);
+    ptr += opaque_key_exchange_req_size;
+    response_size = sizeof(response);
+    status = libspdm_get_response_key_exchange(
+        spdm_context, m_libspdm_key_exchange_request1_size,
+        &m_libspdm_key_exchange_request1, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1,
+                     SPDM_ERROR_CODE_UNSPECIFIED);
+    assert_int_equal(spdm_response->header.param2, 0);
+    free(data1);
+}
+
+
+void libspdm_test_responder_key_exchange_case24(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    size_t response_size;
+    uint8_t response[LIBSPDM_MAX_SPDM_MSG_SIZE];
+    spdm_key_exchange_response_t *spdm_response;
+    void *data1;
+    size_t data_size1;
+    uint8_t *ptr;
+    size_t dhe_key_size;
+    void *dhe_context;
+    size_t opaque_key_exchange_req_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x18;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP |
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP;
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
+    spdm_context->connection_info.algorithm.measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data1,
+                                                    &data_size1, NULL, NULL);
+    spdm_context->local_context.local_cert_chain_provision[0] = data1;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = data_size1;
+
+    libspdm_reset_message_a(spdm_context);
+    spdm_context->local_context.mut_auth_requested = 0;
+    spdm_context->local_context.mandatory_mut_auth = true;
+
+    spdm_context->local_context.secured_message_version.spdm_version_count = 1;
+
+    libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE,
+                              m_libspdm_key_exchange_request10.random_data);
+    m_libspdm_key_exchange_request10.req_session_id = 0xFFFF;
+    m_libspdm_key_exchange_request10.reserved = 0;
+    ptr = m_libspdm_key_exchange_request10.exchange_data;
+    dhe_key_size = libspdm_get_dhe_pub_key_size(m_libspdm_use_dhe_algo);
+    dhe_context = libspdm_dhe_new(spdm_context->connection_info.version, m_libspdm_use_dhe_algo,
+                                  false);
+    libspdm_dhe_generate_key(m_libspdm_use_dhe_algo, dhe_context, ptr, &dhe_key_size);
+    ptr += dhe_key_size;
+    libspdm_dhe_free(m_libspdm_use_dhe_algo, dhe_context);
+    opaque_key_exchange_req_size =
+        libspdm_get_opaque_data_supported_version_data_size(spdm_context);
+    *(uint16_t *)ptr = (uint16_t)opaque_key_exchange_req_size;
+    ptr += sizeof(uint16_t);
+    libspdm_build_opaque_data_supported_version_data(
+        spdm_context, &opaque_key_exchange_req_size, ptr);
+    ptr += opaque_key_exchange_req_size;
+    response_size = sizeof(response);
+    status = libspdm_get_response_key_exchange(
+        spdm_context, m_libspdm_key_exchange_request10_size,
+        &m_libspdm_key_exchange_request10, &response_size, response);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(response_size, sizeof(spdm_error_response_t));
+    spdm_response = (void *)response;
+    assert_int_equal(spdm_response->header.request_response_code,
+                     SPDM_ERROR);
+    assert_int_equal(spdm_response->header.param1,
+                     SPDM_ERROR_CODE_INVALID_POLICY);
+    assert_int_equal(spdm_response->header.param2, 0);
+    free(data1);
+}
+
 int libspdm_responder_key_exchange_test_main(void)
 {
     const struct CMUnitTest spdm_responder_key_exchange_tests[] = {
@@ -2078,6 +2241,9 @@ int libspdm_responder_key_exchange_test_main(void)
         /* The key usage bit mask is not set, failed Case*/
         cmocka_unit_test(libspdm_test_responder_key_exchange_case21),
         cmocka_unit_test(libspdm_test_responder_key_exchange_case22),
+        /* The Responder requires mutual authentication, but the Requester does not support it */
+        cmocka_unit_test(libspdm_test_responder_key_exchange_case23),
+        cmocka_unit_test(libspdm_test_responder_key_exchange_case24),
     };
 
     libspdm_test_context_t test_context = {
