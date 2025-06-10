@@ -112,6 +112,7 @@ typedef struct {
     /* Responder policy*/
     bool basic_mut_auth_requested;
     uint8_t mut_auth_requested;
+    bool mandatory_mut_auth;
     uint8_t heartbeat_period;
 
     /*The device role*/

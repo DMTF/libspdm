@@ -438,7 +438,20 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP)) {
         spdm_response->mut_auth_requested =
             spdm_context->local_context.mut_auth_requested;
+    } else if (spdm_context->local_context.mandatory_mut_auth) {
+        LIBSPDM_ASSERT(spdm_context->local_context.capability.flags &
+                       SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP);
+        if (libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_13) {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_INVALID_POLICY, 0,
+                                                   response_size, response);
+        } else {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_UNSPECIFIED, 0,
+                                                   response_size, response);
+        }
     }
+
     if (spdm_response->mut_auth_requested != 0) {
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
         spdm_context->connection_info.peer_used_cert_chain_slot_id =
