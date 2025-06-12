@@ -165,6 +165,93 @@ libspdm_return_t libspdm_tcp_decode_message(uint32_t **session_id,
     return LIBSPDM_STATUS_SUCCESS;
 }
 
+
+/**
+ * @brief Encode a SPDM-over-TCP message that contains no SPDM payload.
+ *
+ * This function builds a TCP binding header suitable for Role-Inquiry (0xBF) or
+ * any error message (0xC0-0xFF). It does not append any SPDM data after the header.
+ *
+ * @param[in]      message_type            The message type to encode (e.g., 0xBF, 0xC0...0xFF).
+ *                                         Must be SPDM_TCP_MESSAGE_TYPE_ROLE_INQUIRY or an error message type.
+ * @param[in,out]  transport_message_size  On input, size of the output buffer. On output, encoded size.
+ * @param[in,out]  transport_message       On input, pointer to buffer to write the encoded message.
+ *                                         On success, contains the encoded message header.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS            Encoding completed successfully.
+ * @retval LIBSPDM_STATUS_INVALID_PARAMETER  Unsupported message type for this function.
+ * @retval LIBSPDM_STATUS_BUFFER_TOO_SMALL   Provided buffer is too small for header.
+ **/
+libspdm_return_t libspdm_tcp_encode_discovery_message(uint8_t message_type,
+                                                      size_t *transport_message_size,
+                                                      void **transport_message)
+{
+    if ((message_type != SPDM_TCP_MESSAGE_TYPE_ROLE_INQUIRY &&
+         (message_type < SPDM_TCP_MESSAGE_TYPE_ERROR_TOO_LARGE ||
+          message_type > SPDM_TCP_MESSAGE_TYPE_ERROR_RESERVED_MAX))){
+        return LIBSPDM_STATUS_INVALID_PARAMETER;
+    }
+
+    if (*transport_message_size < sizeof(spdm_tcp_binding_header_t)) {
+        *transport_message_size = sizeof(spdm_tcp_binding_header_t);
+        return LIBSPDM_STATUS_BUFFER_TOO_SMALL;
+    }
+
+    *transport_message_size = sizeof(spdm_tcp_binding_header_t);
+    spdm_tcp_binding_header_t *tcp_header = (spdm_tcp_binding_header_t *)(*transport_message);
+
+    tcp_header->payload_length = 0;
+    tcp_header->binding_version = 0x01;
+    tcp_header->message_type = message_type;
+
+    return LIBSPDM_STATUS_SUCCESS;
+}
+
+
+/**
+ * @brief Decode a SPDM-over-TCP discovery or error message (no SPDM payload).
+ *
+ * Validates header fields including binding version, payload length, and message type.
+ *
+ * @param[in]  transport_message        Pointer to the incoming buffer.
+ * @param[in]  transport_message_size   Size of the incoming buffer.
+ * @param[out] message_type             On success, receives the validated message type.
+ *
+ * @retval LIBSPDM_STATUS_SUCCESS             Decoding successful.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_SIZE    Buffer too small for TCP header.
+ * @retval LIBSPDM_STATUS_UNSUPPORTED_CAP     Unsupported binding version.
+ * @retval LIBSPDM_STATUS_INVALID_MSG_FIELD   Payload length is non-zero or message type invalid.
+ **/
+libspdm_return_t libspdm_tcp_decode_discovery_message(const void *transport_message,
+                                                      size_t transport_message_size,
+                                                      uint8_t *message_type)
+{
+    if (transport_message_size < sizeof(spdm_tcp_binding_header_t)) {
+        return LIBSPDM_STATUS_INVALID_MSG_SIZE;
+    }
+
+    const spdm_tcp_binding_header_t *tcp_header = (const spdm_tcp_binding_header_t *)transport_message;
+
+    if (tcp_header->binding_version != 0x01) {
+        return LIBSPDM_STATUS_UNSUPPORTED_CAP;
+    }
+
+    if (tcp_header->payload_length != 0) {
+        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+    }
+
+    uint8_t type = tcp_header->message_type;
+    if (type != SPDM_TCP_MESSAGE_TYPE_ROLE_INQUIRY &&
+        (type < SPDM_TCP_MESSAGE_TYPE_ERROR_TOO_LARGE || type > SPDM_TCP_MESSAGE_TYPE_ERROR_RESERVED_MAX)) {
+        return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+    }
+
+    *message_type = type;
+
+    return LIBSPDM_STATUS_SUCCESS;
+}
+
+
 /**
  * Return the maximum transport layer message header size.
  *   Transport Message Header Size + sizeof(spdm_secured_message_cipher_header_t))
