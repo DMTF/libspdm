@@ -68,6 +68,8 @@ typedef struct {
     uint16_t key_schedule;
 } libspdm_device_algorithm_t;
 
+
+
 typedef struct {
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     uint8_t buffer[LIBSPDM_MAX_CERT_CHAIN_SIZE];
