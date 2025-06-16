@@ -113,6 +113,8 @@ typedef struct {
     bool basic_mut_auth_requested;
     uint8_t mut_auth_requested;
     uint8_t heartbeat_period;
+    uint8_t rd_exponent;
+    uint8_t rd_tm;
 
     /*The device role*/
     bool is_requester;

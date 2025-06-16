@@ -689,6 +689,30 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
         }
         context->local_context.heartbeat_period = *(const uint8_t *)data;
         break;
+    case LIBSPDM_DATA_RD_EXPONENT:
+        if (data_size != sizeof(uint8_t)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        if (*(const uint8_t *)data > LIBSPDM_MAX_RDT_EXPONENT) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        context->local_context.rd_exponent = *(const uint8_t *)data;
+        break;
+    case LIBSPDM_DATA_RD_TM:
+        if (data_size != sizeof(uint8_t)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        if (parameter->location != LIBSPDM_DATA_LOCATION_LOCAL) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        if (*(const uint8_t *)data <= 1) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        context->local_context.rd_tm = *(const uint8_t *)data;
+        break;
     case LIBSPDM_DATA_APP_CONTEXT_DATA:
         if (data_size != sizeof(void *) || *(void *const *)data == NULL) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;

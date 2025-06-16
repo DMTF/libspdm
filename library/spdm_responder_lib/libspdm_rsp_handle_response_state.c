@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -38,8 +38,8 @@ libspdm_return_t libspdm_responder_handle_response_state(libspdm_context_t *spdm
                              libspdm_get_scratch_buffer_cache_spdm_request_capacity(spdm_context),
                              spdm_context->last_spdm_request,
                              spdm_context->last_spdm_request_size);
-            spdm_context->error_data.rd_exponent = 1;
-            spdm_context->error_data.rd_tm = 1;
+            spdm_context->error_data.rd_exponent = spdm_context->local_context.rd_exponent;
+            spdm_context->error_data.rd_tm = spdm_context->local_context.rd_tm;
             spdm_context->error_data.request_code = request_code;
             spdm_context->error_data.token = spdm_context->current_token++;
         }
