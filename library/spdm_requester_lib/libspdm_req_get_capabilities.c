@@ -267,6 +267,16 @@ static libspdm_return_t libspdm_try_get_capabilities(libspdm_context_t *spdm_con
                                           spdm_context->local_context.capability.flags);
     }
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+        if (libspdm_is_capabilities_flag_supported(
+                spdm_context, true,
+                SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP, 0)) {
+            LIBSPDM_ASSERT(spdm_context->local_context.capability.data_transfer_size ==
+                           spdm_context->local_context.capability.max_spdm_msg_size);
+            if (spdm_context->local_context.capability.data_transfer_size !=
+                spdm_context->local_context.capability.max_spdm_msg_size) {
+                return LIBSPDM_STATUS_INVALID_MSG_FIELD;
+            }
+        }
         spdm_request->data_transfer_size =
             spdm_context->local_context.capability.data_transfer_size;
         spdm_request->max_spdm_msg_size =

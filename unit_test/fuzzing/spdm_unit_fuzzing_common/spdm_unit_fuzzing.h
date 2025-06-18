@@ -98,7 +98,11 @@ typedef struct {
  * If chunk is supported, it must be larger than DATA_TRANSFER_SIZE.
  * It matches MaxSPDMmsgSize in SPDM specification. */
 #ifndef LIBSPDM_MAX_SPDM_MSG_SIZE
+#if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
+#define LIBSPDM_MAX_SPDM_MSG_SIZE LIBSPDM_DATA_TRANSFER_SIZE
+#else
 #define LIBSPDM_MAX_SPDM_MSG_SIZE 0x1200
+#endif
 #endif
 
 extern uint8_t m_libspdm_use_measurement_spec;
