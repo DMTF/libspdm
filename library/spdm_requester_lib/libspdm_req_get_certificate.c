@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -289,6 +289,11 @@ static libspdm_return_t libspdm_try_get_certificate(libspdm_context_t *spdm_cont
         if (spdm_request->offset == 0) {
             total_responder_cert_chain_buffer_length = spdm_response->portion_length +
                                                        spdm_response->remainder_length;
+            if (total_responder_cert_chain_buffer_length > cert_chain_capacity) {
+                libspdm_release_receiver_buffer (spdm_context);
+                status = LIBSPDM_STATUS_BUFFER_TOO_SMALL;
+                goto done;
+            }
         } else if (spdm_request->offset + spdm_response->portion_length +
                    spdm_response->remainder_length != total_responder_cert_chain_buffer_length) {
             libspdm_release_receiver_buffer (spdm_context);
