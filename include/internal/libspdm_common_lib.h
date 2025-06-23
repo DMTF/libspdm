@@ -25,7 +25,7 @@
 #include "hal/library/eventlib.h"
 #include "hal/library/cryptlib.h"
 
-#define INVALID_SESSION_ID 0
+#define INVALID_SESSION_ID LIBSPDM_INVALID_SESSION_ID
 /* The SPDM specification does not limit the values of CTExponent and RDTExponent.
  * libspdm artificially limits their values to 31, which corresponds to approximately 35 minutes
  * for CT and RDT. If an endpoint takes longer than 35 minutes to generate an SPDM message then
