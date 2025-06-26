@@ -167,11 +167,9 @@ static bool validate_responder_capability(uint32_t capabilities_flag, uint8_t ve
         if ((ep_info_cap == 3) || (multi_key_cap == 3)) {
             return false;
         }
-        /* check multi-key */
-        if ((multi_key_cap != 0) && (get_key_pair_info_cap == 0)) {
+        if ((multi_key_cap != 0) && ((get_key_pair_info_cap == 0) || (cert_cap == 0))) {
             return false;
         }
-        /* check multi-key and pub_key_id */
         if (pub_key_id_cap == 1) {
             if ((multi_key_cap != 0) || (get_key_pair_info_cap == 1) ||
                 (set_key_pair_info_cap == 1)) {

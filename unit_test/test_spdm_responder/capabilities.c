@@ -461,6 +461,8 @@ spdm_get_capabilities_request_t m_libspdm_get_capabilities_request27 = {
     0x00, /*reserved*/
     0x01, /*ct_exponent*/
     0x0000, /*reserved, 2 bytes*/
+    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP |
+    SPDM_GET_CAPABILITIES_REQUEST_FLAGS_EP_INFO_CAP_SIG |
     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MULTI_KEY_CAP_ONLY,
     LIBSPDM_DATA_TRANSFER_SIZE,
     LIBSPDM_MAX_SPDM_MSG_SIZE,
@@ -1193,6 +1195,8 @@ void libspdm_test_responder_capabilities_case27(void **state)
     assert_int_equal(spdm_response->data_transfer_size, LIBSPDM_DATA_TRANSFER_SIZE);
     assert_int_equal(spdm_response->max_spdm_msg_size, LIBSPDM_MAX_SPDM_MSG_SIZE);
     assert_int_equal(spdm_context->connection_info.capability.flags,
+                     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP |
+                     SPDM_GET_CAPABILITIES_REQUEST_FLAGS_EP_INFO_CAP_SIG |
                      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MULTI_KEY_CAP_ONLY);
 }
 
