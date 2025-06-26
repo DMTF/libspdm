@@ -146,8 +146,7 @@ static bool libspdm_check_request_flag_compatibility(uint32_t capabilities_flag,
         if ((ep_info_cap == 3) || (multi_key_cap == 3)) {
             return false;
         }
-        /* check multi-key and pub_key_id */
-        if ((multi_key_cap != 0) && (pub_key_id_cap == 1)) {
+        if ((multi_key_cap != 0) && ((pub_key_id_cap == 1) || (cert_cap == 0))) {
             return false;
         }
     }
