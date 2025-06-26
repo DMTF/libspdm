@@ -305,6 +305,10 @@ For other architectures, refer to [build](https://github.com/DMTF/libspdm/blob/m
 
   Refer to [test](https://github.com/DMTF/libspdm/blob/main/doc/test.md) for more details.
 
+### Unit Test Code Coverage Report
+
+The weekly unit test code coverage report is at https://dmtf.github.io/libspdm/coverage_log/.
+
 ## Associated Repositories
 
 ### [spdm-emu](https://github.com/DMTF/spdm-emu)
