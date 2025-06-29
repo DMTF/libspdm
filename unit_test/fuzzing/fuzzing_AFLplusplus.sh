@@ -23,7 +23,7 @@ else
     exit
 fi
 
-if [[ $2 = "ON" || $2 = "OFF" ]]; then    
+if [[ $2 = "ON" || $2 = "OFF" ]]; then
     echo "<GCOV> parameter is $2"
 else
     echo "Usage: $0 <CRYPTO> <GCOV> <duration>"
@@ -36,7 +36,7 @@ fi
 echo "<duration> parameter is $3"
 export duration=$3
 
-echo "start fuzzing in Linux with AFLplusplus"     
+echo "start fuzzing in Linux with AFLplusplus"
 
 pkill screen
 
@@ -118,6 +118,8 @@ test_spdm_transport_pci_doe_encode_message
 test_spdm_transport_pci_doe_decode_message
 test_spdm_transport_tcp_encode_message
 test_spdm_transport_tcp_decode_message
+test_spdm_transport_storage_encode_message
+test_spdm_transport_storage_decode_message
 test_spdm_decode_secured_message
 test_spdm_encode_secured_message
 test_spdm_requester_encap_digests
