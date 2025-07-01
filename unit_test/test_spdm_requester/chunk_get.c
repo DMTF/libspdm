@@ -314,6 +314,8 @@ libspdm_return_t libspdm_requester_chunk_get_test_send_message(
         return LIBSPDM_STATUS_SUCCESS;
     } else if (spdm_test_context->case_id == 0x6) {
         return LIBSPDM_STATUS_SUCCESS;
+    } else if (spdm_test_context->case_id == 0x7) {
+        return LIBSPDM_STATUS_SUCCESS;
     } else {
         return LIBSPDM_STATUS_SEND_FAIL;
     }
@@ -466,6 +468,26 @@ libspdm_return_t libspdm_requester_chunk_get_test_receive_message(
     } else if (spdm_test_context->case_id == 0x6) {
         build_response_func =
             libspdm_requester_chunk_get_test_case5_case6_build_vendor_response;
+    } else if (spdm_test_context->case_id == 0x7) {
+        /* This case only return one error message with RequestResynch */
+        spdm_error_response_t* error_rsp;
+        size_t error_rsp_size;
+
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
+        error_rsp = (void*) ((uint8_t*) *response + transport_header_size);
+        error_rsp_size = sizeof(spdm_error_response_t) + sizeof(uint8_t);
+
+        error_rsp->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        error_rsp->header.request_response_code = SPDM_ERROR;
+        error_rsp->header.param1 = SPDM_ERROR_CODE_REQUEST_RESYNCH;
+        error_rsp->header.param2 = 0;
+
+        libspdm_transport_test_encode_message(
+            spdm_context, NULL, false, false,
+            error_rsp_size, error_rsp,
+            response_size, response);
+
+        return LIBSPDM_STATUS_SUCCESS;
     } else {
         LIBSPDM_ASSERT(0);
         return LIBSPDM_STATUS_RECEIVE_FAIL;
@@ -984,6 +1006,58 @@ static void libspdm_test_requester_chunk_get_case6(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_RECEIVE_FAIL);
 }
 
+static void libspdm_test_requester_chunk_get_case7(void **state)
+{
+    /* Copied from Chunk Get Request case 5*/
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+
+    uint16_t standard_id = 6;
+    uint8_t vendor_id_len = 2;
+    uint8_t vendor_id[SPDM_MAX_VENDOR_ID_LENGTH] = {0xAA, 0xAA};
+    uint16_t data_len = 16;
+    uint8_t data[16];
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x7;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    /* Large response need a large scratch buffer. */
+    spdm_context->connection_info.capability.max_spdm_msg_size =
+        BUFFER_SIZE_FOR_CHUNK_SEQ_NO_WRAP_TEST;
+    spdm_context->local_context.capability.max_spdm_msg_size =
+        BUFFER_SIZE_FOR_CHUNK_SEQ_NO_WRAP_TEST;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->local_context.capability.data_transfer_size =
+        CHUNK_GET_REQUESTER_UNIT_TEST_DATA_TRANSFER_SIZE;
+    spdm_context->connection_info.capability.data_transfer_size =
+        CHUNK_GET_REQUESTER_UNIT_TEST_DATA_TRANSFER_SIZE;
+    spdm_context->local_context.capability.sender_data_transfer_size =
+        CHUNK_GET_REQUESTER_UNIT_TEST_DATA_TRANSFER_SIZE;
+    spdm_context->local_context.is_requester = true;
+
+    spdm_test_context->scratch_buffer_size =
+        libspdm_get_sizeof_required_scratch_buffer(spdm_context);
+    spdm_test_context->scratch_buffer = (void *)malloc(spdm_test_context->scratch_buffer_size);
+    libspdm_set_scratch_buffer (spdm_context,
+                                spdm_test_context->scratch_buffer,
+                                spdm_test_context->scratch_buffer_size);
+
+    libspdm_set_mem(data, sizeof(data), 0xAA);
+
+    status = libspdm_vendor_send_request_receive_response(spdm_context, NULL,
+                                                          standard_id, vendor_id_len, vendor_id,
+                                                          data_len, data,
+                                                          &standard_id, &vendor_id_len, vendor_id,
+                                                          &data_len, data);
+
+    assert_int_equal(status, LIBSPDM_STATUS_RESYNCH_PEER);
+    assert_int_equal(spdm_context->connection_info.connection_state,
+                     LIBSPDM_CONNECTION_STATE_NOT_STARTED);
+}
 #endif /* LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES */
 
 int libspdm_requester_chunk_get_test_main(void)
@@ -1013,6 +1087,9 @@ int libspdm_requester_chunk_get_test_main(void)
         cmocka_unit_test(libspdm_test_requester_chunk_get_case5),
         /* Request Vendor Specific Response and chunk seq no wrapped */
         cmocka_unit_test(libspdm_test_requester_chunk_get_case6),
+        /* Request Vendor Specific Response
+         * and recieve error code RequestResync */
+        cmocka_unit_test(libspdm_test_requester_chunk_get_case7),
 #endif
     };
 
