@@ -117,9 +117,7 @@ libspdm_return_t libspdm_transport_tcp_encode_message(
                                                 &app_message_size,
                                                 &app_message);
             if (LIBSPDM_STATUS_IS_ERROR(status)) {
-                LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
-                               "transport_encode_message - %p\n",
-                               status));
+                LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "transport_encode_message - %xu\n", status));
                 return status;
             }
         } else {
@@ -135,8 +133,7 @@ libspdm_return_t libspdm_transport_tcp_encode_message(
             app_message_size, app_message, &secured_message_size,
             secured_message, &spdm_secured_message_callbacks);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
-                           "libspdm_encode_secured_message - %p\n", status));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "libspdm_encode_secured_message - %xu\n", status));
             return status;
         }
 
@@ -145,8 +142,7 @@ libspdm_return_t libspdm_transport_tcp_encode_message(
             session_id, secured_message_size, secured_message,
             transport_message_size, transport_message);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "transport_encode_message - %p\n",
-                           status));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "transport_encode_message - %xu\n", status));
             return status;
         }
     } else {
@@ -155,8 +151,7 @@ libspdm_return_t libspdm_transport_tcp_encode_message(
                                             transport_message_size,
                                             transport_message);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "transport_encode_message - %p\n",
-                           status));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "transport_encode_message - %xu\n", status));
             return status;
         }
     }
@@ -234,7 +229,7 @@ libspdm_return_t libspdm_transport_tcp_decode_message(
         &secured_message_session_id, transport_message_size,
         transport_message, &secured_message_size, (void **)&secured_message);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
-        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "transport_decode_message - %p\n", status));
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "transport_decode_message - %xu\n", status));
         return status;
     }
 
@@ -261,8 +256,7 @@ libspdm_return_t libspdm_transport_tcp_decode_message(
             &app_message_size, (void **)&app_message,
             &spdm_secured_message_callbacks);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR,
-                           "libspdm_decode_secured_message - %p\n", status));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "libspdm_decode_secured_message - %xu\n", status));
             libspdm_secured_message_get_last_spdm_error_struct(
                 secured_message_context, &spdm_error);
             libspdm_set_last_spdm_error_struct(spdm_context,
@@ -299,8 +293,7 @@ libspdm_return_t libspdm_transport_tcp_decode_message(
                                             transport_message,
                                             message_size, message);
         if (LIBSPDM_STATUS_IS_ERROR(status)) {
-            LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "transport_decode_message - %p\n",
-                           status));
+            LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "transport_decode_message - %xu\n", status));
             return status;
         }
         LIBSPDM_ASSERT(secured_message_session_id == NULL);
