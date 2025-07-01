@@ -563,10 +563,6 @@ static libspdm_return_t libspdm_try_send_receive_finish(
         status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
     }
-    if (spdm_response->header.spdm_version != spdm_request->header.spdm_version) {
-        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-        goto receive_done;
-    }
     if (spdm_response->header.request_response_code == SPDM_ERROR) {
         if (spdm_response->header.param1 == SPDM_ERROR_CODE_DECRYPT_ERROR) {
             status = LIBSPDM_STATUS_SESSION_MSG_ERROR;
@@ -583,6 +579,10 @@ static libspdm_return_t libspdm_try_send_receive_finish(
             goto receive_done;
         }
     } else if (spdm_response->header.request_response_code != SPDM_FINISH_RSP) {
+        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+        goto receive_done;
+    }
+    if (spdm_response->header.spdm_version != spdm_request->header.spdm_version) {
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }

@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -1177,7 +1177,7 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             return LIBSPDM_STATUS_RECEIVE_FAIL;
         }
 
-        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response->header.request_response_code = SPDM_ERROR;
         spdm_response->header.param1 = SPDM_ERROR_CODE_REQUEST_RESYNCH;
         spdm_response->header.param2 = 0;
@@ -2142,7 +2142,7 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
             transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
             spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
-            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
             spdm_response->header.request_response_code = SPDM_ERROR;
             spdm_response->header.param1 = SPDM_ERROR_CODE_REQUEST_RESYNCH;
             spdm_response->header.param2 = 0;
@@ -3124,7 +3124,7 @@ libspdm_return_t libspdm_requester_key_update_test_receive_message(
         secured_message_context->application_secret
         .response_data_sequence_number = m_libspdm_last_rsp_sequence_number;
 
-        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response->header.request_response_code = SPDM_ERROR;
         spdm_response->header.param1 = SPDM_ERROR_CODE_REQUEST_RESYNCH;
         spdm_response->header.param2 = 0;
