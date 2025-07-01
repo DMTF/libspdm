@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -360,7 +360,7 @@ libspdm_return_t libspdm_requester_heartbeat_test_receive_message(
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
         session_id = 0xFFFFFFFF;
-        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response->header.request_response_code = SPDM_ERROR;
         spdm_response->header.param1 = SPDM_ERROR_CODE_REQUEST_RESYNCH;
         spdm_response->header.param2 = 0;

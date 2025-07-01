@@ -984,7 +984,7 @@ static libspdm_return_t libspdm_requester_key_exchange_test_receive_message(
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
-        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
         spdm_response->header.request_response_code = SPDM_ERROR;
         spdm_response->header.param1 = SPDM_ERROR_CODE_REQUEST_RESYNCH;
         spdm_response->header.param2 = 0;

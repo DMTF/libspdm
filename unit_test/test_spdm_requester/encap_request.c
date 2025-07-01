@@ -92,6 +92,10 @@ libspdm_return_t libspdm_requester_encap_request_test_send_message(void *spdm_co
         return LIBSPDM_STATUS_SUCCESS;
     case 0xD:
         return LIBSPDM_STATUS_SUCCESS;
+    case 0xE:
+        return LIBSPDM_STATUS_SUCCESS;
+    case 0xF:
+        return LIBSPDM_STATUS_SUCCESS;
     default:
         return LIBSPDM_STATUS_SEND_FAIL;
     }
@@ -671,6 +675,77 @@ libspdm_return_t libspdm_requester_encap_request_test_receive_message(
                                               response_size, response);
     }
         return LIBSPDM_STATUS_SUCCESS;
+    case 0xE:
+    {
+        spdm_error_response_t *spdm_response;
+
+        temp_buf_size = sizeof(spdm_error_response_t);
+        libspdm_zero_mem(temp_buf, LIBSPDM_RECEIVER_BUFFER_SIZE);
+        temp_buf_ptr = temp_buf + sizeof(libspdm_test_message_header_t);
+        spdm_response = (void *) temp_buf_ptr;
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        spdm_response->header.request_response_code = SPDM_ERROR;
+        spdm_response->header.param1 = SPDM_ERROR_CODE_REQUEST_RESYNCH;
+        spdm_response->header.param2 = 0;
+        libspdm_transport_test_encode_message(spdm_context, NULL, false, false,
+                                              temp_buf_size, temp_buf_ptr,
+                                              response_size, response);
+    }
+        return LIBSPDM_STATUS_SUCCESS;
+    case 0xF:
+    {
+        spdm_digest_response_t *spdm_response;
+
+        ((libspdm_context_t *)spdm_context)
+        ->connection_info.algorithm.base_hash_algo =
+            m_libspdm_use_hash_algo;
+        if (sub_index == 0) {
+            temp_buf_size = sizeof(spdm_digest_response_t) +
+                            libspdm_get_hash_size(m_libspdm_use_hash_algo) +
+                            sizeof(spdm_encapsulated_request_response_t);
+            libspdm_zero_mem(temp_buf, LIBSPDM_RECEIVER_BUFFER_SIZE);
+            temp_buf_ptr = temp_buf + sizeof(libspdm_test_message_header_t);
+            libspdm_encapsulated_request_response = (void*) temp_buf_ptr;
+            libspdm_encapsulated_request_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+            libspdm_encapsulated_request_response->header.request_response_code =
+                SPDM_ENCAPSULATED_REQUEST;
+            libspdm_encapsulated_request_response->header.param1 = 0;
+            libspdm_encapsulated_request_response->header.param2 = 0;
+
+            spdm_response = (void *)(temp_buf_ptr
+                                     + sizeof(spdm_encapsulated_request_response_t));
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_11;
+            spdm_response->header.request_response_code = SPDM_GET_DIGESTS;
+            spdm_response->header.param1 = 0;
+            spdm_response->header.param2 = 0;
+            libspdm_set_mem(m_libspdm_local_certificate_chain,
+                            sizeof(m_libspdm_local_certificate_chain),
+                            (uint8_t)(0xFF));
+
+            digest = (void *)(spdm_response + 1);
+            libspdm_hash_all(m_libspdm_use_hash_algo, m_libspdm_local_certificate_chain,
+                             sizeof(m_libspdm_local_certificate_chain), &digest[0]);
+            spdm_response->header.param2 |= (0x01 << 0);
+            sub_index++;
+        } else if (sub_index == 1) {
+            temp_buf_size = sizeof(spdm_error_response_t);
+            libspdm_zero_mem(temp_buf, LIBSPDM_RECEIVER_BUFFER_SIZE);
+            temp_buf_ptr = temp_buf + sizeof(libspdm_test_message_header_t);
+            spdm_response = (void *) temp_buf_ptr;
+            spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+            spdm_response->header.request_response_code = SPDM_ERROR;
+            spdm_response->header.param1 = SPDM_ERROR_CODE_REQUEST_RESYNCH;
+            spdm_response->header.param2 = 0;
+            sub_index = 0;
+        } else {
+            temp_buf_size = 0;
+            temp_buf_ptr = NULL;
+        }
+        libspdm_transport_test_encode_message(spdm_context, NULL, false, false,
+                                              temp_buf_size, temp_buf_ptr,
+                                              response_size, response);
+    }
+        return LIBSPDM_STATUS_SUCCESS;
     default:
         return LIBSPDM_STATUS_RECEIVE_FAIL;
     }
@@ -1190,6 +1265,112 @@ void libspdm_test_requester_encap_request_case13(void **State)
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP */
 
+void libspdm_test_requester_encap_request_case14(void **State)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    void *data;
+    size_t data_size;
+    void *hash;
+    size_t hash_size;
+
+    spdm_test_context = *State;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xE;
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size,
+                                                    &hash, &hash_size);
+    libspdm_reset_message_a(spdm_context);
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
+        data_size;
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
+                     data, data_size);
+#endif
+
+    libspdm_register_get_encap_response_func(spdm_context, libspdm_get_encap_response_digest);
+    status = libspdm_encapsulated_request(spdm_context, NULL, 0, NULL);
+    assert_int_equal(status, LIBSPDM_STATUS_RESYNCH_PEER);
+    assert_int_equal(spdm_context->connection_info.connection_state,
+                     LIBSPDM_CONNECTION_STATE_NOT_STARTED);
+    free(data);
+}
+
+void libspdm_test_requester_encap_request_case15(void **State)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    void *data;
+    size_t data_size;
+    void *hash;
+    size_t hash_size;
+
+    spdm_test_context = *State;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0xF;
+
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_11 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_PSK_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
+    spdm_context->connection_info.capability.flags |= SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MAC_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_PSK_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCRYPT_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MAC_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_ENCAP_CAP;
+    spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
+    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                    m_libspdm_use_asym_algo, &data,
+                                                    &data_size,
+                                                    &hash, &hash_size);
+    libspdm_reset_message_a(spdm_context);
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->connection_info.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->connection_info.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->connection_info.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
+#if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
+        data_size;
+    libspdm_copy_mem(spdm_context->connection_info.peer_used_cert_chain[0].buffer,
+                     sizeof(spdm_context->connection_info.peer_used_cert_chain[0].buffer),
+                     data, data_size);
+#endif
+
+    libspdm_register_get_encap_response_func(spdm_context, libspdm_get_encap_response_digest);
+    status = libspdm_encapsulated_request(spdm_context, NULL, 0, NULL);
+    assert_int_equal(status, LIBSPDM_STATUS_RESYNCH_PEER);
+    assert_int_equal(spdm_context->connection_info.connection_state,
+                     LIBSPDM_CONNECTION_STATE_NOT_STARTED);
+    free(data);
+}
+
 int libspdm_requester_encap_request_test_main(void)
 {
     const struct CMUnitTest spdm_requester_encap_request_tests[] = {
@@ -1218,6 +1399,11 @@ int libspdm_requester_encap_request_test_main(void)
         /*Success Case ,func :libspdm_get_encap_response_endpoint_info */
         cmocka_unit_test(libspdm_test_requester_encap_request_case13),
 #endif /* LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP */
+        /* Error response: send SPDM_GET_ENCAPSULATED_REQUEST and receive request resync */
+        cmocka_unit_test(libspdm_test_requester_encap_request_case14),
+        /* Error response: send SPDM_DELIVER_ENCAPSULATED_RESPONSE and receive request resync */
+        cmocka_unit_test(libspdm_test_requester_encap_request_case15),
+
     };
 
     libspdm_test_context_t test_context = {

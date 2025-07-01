@@ -458,6 +458,14 @@ libspdm_return_t libspdm_handle_large_request(
             status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
             break;
         }
+
+        if (spdm_response->header.request_response_code == SPDM_ERROR
+            && spdm_response->header.param1 != SPDM_ERROR_CODE_LARGE_RESPONSE) {
+            status = libspdm_handle_simple_error_response(spdm_context,
+                                                          spdm_response->header.param1);
+            break;
+        }
+
         if (spdm_response->header.spdm_version != libspdm_get_connection_version(spdm_context)) {
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             break;

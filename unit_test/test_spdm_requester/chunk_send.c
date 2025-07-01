@@ -109,6 +109,9 @@ libspdm_return_t libspdm_requester_chunk_send_test_send_message(
         /* Should never reach here since the test case is meant to fail before send */
         LIBSPDM_ASSERT(0);
     }
+    if (spdm_test_context->case_id == 14) {
+        return LIBSPDM_STATUS_SUCCESS;
+    }
     return LIBSPDM_STATUS_SEND_FAIL;
 }
 
@@ -331,6 +334,21 @@ libspdm_return_t libspdm_requester_chunk_send_test_receive_message(
         /* Should never reach here since the test case is meant to fail before send */
         LIBSPDM_ASSERT(0);
     }
+    if (spdm_test_context->case_id == 14) {
+        /* Response an arror response with RequestResynch */
+        error_response = (void*) ((uint8_t*) *response + sizeof(libspdm_test_message_header_t));
+        error_response->header.spdm_version = SPDM_MESSAGE_VERSION_10;
+        error_response->header.request_response_code = SPDM_ERROR;
+        error_response->header.param1 = SPDM_ERROR_CODE_REQUEST_RESYNCH;
+        error_response->header.param2 = 0;
+
+        libspdm_transport_test_encode_message(
+            spdm_context, NULL, false, false,
+            sizeof(spdm_error_response_t), error_response,
+            response_size, response);
+
+        return LIBSPDM_STATUS_SUCCESS;
+    }
     return LIBSPDM_STATUS_RECEIVE_FAIL;
 }
 
@@ -471,7 +489,7 @@ void libspdm_test_requester_chunk_send_case5(void** state)
 {
     libspdm_return_t status;
     status = libspdm_test_requester_chunk_send_generic_test_case(state, 5);
-    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+    assert_int_equal(status, LIBSPDM_STATUS_ERROR_PEER);
 }
 
 void libspdm_test_requester_chunk_send_case6(void** state)
@@ -544,6 +562,27 @@ void libspdm_test_requester_chunk_send_case13(void** state)
 }
 #endif
 
+/**
+ * Test 14: the requester is sending CHUNK_SEND, but receives an
+ * ERROR message indicating the RequestResynch status of the responder
+ * Expected behavior: client returns a Status of RETURN_DEVICE_ERROR, and the
+ * communication is reset to expect a new GET_VERSION message.
+ **/
+void libspdm_test_requester_chunk_send_case14(void** state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t* spdm_test_context;
+    libspdm_context_t* spdm_context;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+
+    status = libspdm_test_requester_chunk_send_generic_test_case(state, 14);
+    assert_int_equal(status, LIBSPDM_STATUS_RESYNCH_PEER);
+    assert_int_equal(spdm_context->connection_info.connection_state,
+                     LIBSPDM_CONNECTION_STATE_NOT_STARTED);
+}
+
 int libspdm_requester_chunk_send_test_main(void)
 {
     /* Test the CHUNK_SEND handlers in various requester handlers */
@@ -576,6 +615,8 @@ int libspdm_requester_chunk_send_test_main(void)
         /* Request size exceed max chunks */
         cmocka_unit_test(libspdm_test_requester_chunk_send_case13),
 #endif
+        /* Recieved and error message indicating RequestResynch */
+        cmocka_unit_test(libspdm_test_requester_chunk_send_case14),
     };
 
     libspdm_test_context_t test_context = {
