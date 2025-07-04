@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -29,7 +29,7 @@ static void generate_iv(uint64_t sequence_number, uint8_t *iv, const uint8_t *sa
     case LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_BIG_DEC_BOTH:
         /* If big-endian then the sequence number is zero-extended to the lower indices.
          * The sequence number ends at the highest index (aead_size - 1). */
-        sequence_number = libspdm_le_to_be_64(sequence_number);
+        sequence_number = libspdm_byte_swap_64(sequence_number);
         libspdm_copy_mem(iv_temp + (aead_iv_size - sizeof(sequence_number)),
                          aead_iv_size,
                          &sequence_number,
