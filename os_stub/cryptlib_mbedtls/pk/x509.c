@@ -701,7 +701,7 @@ bool libspdm_x509_verify_cert_chain(const uint8_t *root_cert, size_t root_cert_l
     const uint8_t *preceding_cert;
     size_t current_cert_len;
     const unsigned char *current_cert;
-    const unsigned char *tmp_ptr;
+    unsigned char *tmp_ptr;
     int ret;
     bool verify_flag;
 
@@ -715,7 +715,7 @@ bool libspdm_x509_verify_cert_chain(const uint8_t *root_cert, size_t root_cert_l
     /* Get Current certificate from certificates buffer and Verify with preceding cert*/
 
     do {
-        tmp_ptr = current_cert;
+        tmp_ptr = (unsigned char *)current_cert;
         ret = mbedtls_asn1_get_tag(
             &tmp_ptr, cert_chain + cert_chain_length, &asn1_len,
             MBEDTLS_ASN1_CONSTRUCTED | MBEDTLS_ASN1_SEQUENCE);
@@ -784,7 +784,7 @@ bool libspdm_x509_get_cert_from_cert_chain(const uint8_t *cert_chain,
     int32_t current_index;
     size_t current_cert_len;
     const unsigned char *current_cert;
-    const unsigned char *tmp_ptr;
+    unsigned char *tmp_ptr;
     int ret;
 
     current_cert_len = 0;
@@ -806,7 +806,7 @@ bool libspdm_x509_get_cert_from_cert_chain(const uint8_t *cert_chain,
 
         /* Get asn1 tag len*/
 
-        tmp_ptr = current_cert;
+        tmp_ptr = (unsigned char *)current_cert;
         ret = mbedtls_asn1_get_tag(
             &tmp_ptr, cert_chain + cert_chain_length, &asn1_len,
             MBEDTLS_ASN1_CONSTRUCTED | MBEDTLS_ASN1_SEQUENCE);
