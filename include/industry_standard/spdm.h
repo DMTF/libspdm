@@ -13,8 +13,8 @@
 
 #pragma pack(1)
 
-/* 4 means SPDM spec 1.0, 1.1, 1.2, 1.3 */
-#define SPDM_MAX_VERSION_COUNT 4
+/* Covers SPDM specifications from 1.0 to 1.4. */
+#define SPDM_MAX_VERSION_COUNT 5
 #define SPDM_MAX_SLOT_COUNT 8
 #define SPDM_MAX_OPAQUE_DATA_SIZE 1024
 #define SPDM_MAX_CSR_TRACKING_TAG 7
