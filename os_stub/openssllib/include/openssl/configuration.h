@@ -251,12 +251,6 @@ typedef int64_t INT64;
 # ifndef OPENSSL_NO_MDC2
 #  define OPENSSL_NO_MDC2
 # endif
-# ifndef OPENSSL_NO_ML_DSA
-#  define OPENSSL_NO_ML_DSA
-# endif
-# ifndef OPENSSL_NO_ML_KEM
-#  define OPENSSL_NO_ML_KEM
-# endif
 # ifndef OPENSSL_NO_MSAN
 #  define OPENSSL_NO_MSAN
 # endif
@@ -310,9 +304,6 @@ typedef int64_t INT64;
 # endif
 # ifndef OPENSSL_NO_SIV
 #  define OPENSSL_NO_SIV
-# endif
-# ifndef OPENSSL_NO_SLH_DSA
-#  define OPENSSL_NO_SLH_DSA
 # endif
 # ifndef OPENSSL_NO_SOCK
 #  define OPENSSL_NO_SOCK
