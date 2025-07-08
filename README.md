@@ -50,7 +50,7 @@
 
    SPDM 1.2: `GET_CSR`, `SET_CERTIFICATE`, `CHUNK_SEND`, and `CHUNK_GET`.
 
-   SPDM 1.3: `GET_KEY_PAIR_INFO`, `SET_KEY_PAIR_INFO`, `SUBSCRIBE_EVENT_TYPE`, `GET_SUPPORTED_EVENT_TYPES` and `GET_MEASUREMENT_EXTENSION_LOG`. Additional SPDM 1.3 messages will be implemented in future releases.
+   SPDM 1.3: `GET_KEY_PAIR_INFO`, `SET_KEY_PAIR_INFO`, `SUBSCRIBE_EVENT_TYPE`, `GET_SUPPORTED_EVENT_TYPES`, `GET_ENDPOINT_INFO` and `GET_MEASUREMENT_EXTENSION_LOG`. Additional SPDM 1.3 messages will be implemented in future releases.
 
 5) Cryptography Support
 
