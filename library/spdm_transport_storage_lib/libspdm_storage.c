@@ -841,10 +841,6 @@ libspdm_return_t libspdm_transport_storage_encode_discovery_response(
         return LIBSPDM_STATUS_BUFFER_TOO_SMALL;
     }
 
-    if (!transport_message) {
-        return LIBSPDM_STATUS_INVALID_MSG_SIZE;
-    }
-
     *transport_message_size = sizeof(spdm_storage_discovery_response_t);
     libspdm_zero_mem(transport_message, *transport_message_size);
     discovery_response = transport_message;
