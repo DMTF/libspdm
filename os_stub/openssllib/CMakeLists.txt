@@ -88,6 +88,7 @@ target_include_directories(openssllib
         ${LIBSPDM_DIR}/os_stub/openssllib/openssl/providers/common/include
         ${LIBSPDM_DIR}/os_stub/openssllib/openssl/providers/implementations/include
         ${LIBSPDM_DIR}/os_stub/openssllib/openssl/providers/implementations/ciphers
+        ${LIBSPDM_DIR}/os_stub/openssllib/openssl/providers/fips/include
 )
 
 target_sources(openssllib
@@ -231,9 +232,12 @@ target_sources(openssllib
         openssl/crypto/buffer/buf_err.c
         openssl/crypto/buffer/buffer.c
         openssl/crypto/chacha/chacha_enc.c
+        openssl/crypto/comp/c_brotli.c
         openssl/crypto/comp/c_zlib.c
+        openssl/crypto/comp/c_zstd.c
         openssl/crypto/comp/comp_err.c
         openssl/crypto/comp/comp_lib.c
+        openssl/crypto/comp_methods.c
         openssl/crypto/conf/conf_api.c
         openssl/crypto/conf/conf_def.c
         openssl/crypto/conf/conf_err.c
@@ -251,7 +255,9 @@ target_sources(openssllib
         openssl/crypto/cryptlib.c
         openssl/crypto/ctype.c
         openssl/crypto/cversion.c
+        openssl/crypto/defaults.c
         openssl/crypto/der_writer.c
+        openssl/crypto/deterministic_nonce.c
         openssl/crypto/dh/dh_ameth.c
         openssl/crypto/dh/dh_asn1.c
         openssl/crypto/dh/dh_backend.c
@@ -325,7 +331,9 @@ target_sources(openssllib
         openssl/crypto/encode_decode/encoder_pkey.c
         openssl/crypto/err/err.c
         openssl/crypto/err/err_blocks.c
+        openssl/crypto/err/err_mark.c
         openssl/crypto/err/err_prn.c
+        openssl/crypto/err/err_save.c
         openssl/crypto/evp/asymcipher.c
         openssl/crypto/evp/bio_b64.c
         openssl/crypto/evp/bio_enc.c
@@ -389,6 +397,8 @@ target_sources(openssllib
         openssl/crypto/evp/pmeth_gn.c
         openssl/crypto/evp/pmeth_lib.c
         openssl/crypto/evp/signature.c
+        openssl/crypto/evp/s_lib.c
+        openssl/crypto/evp/skeymgmt_meth.c
         openssl/crypto/ex_data.c
         openssl/crypto/ffc/ffc_backend.c
         openssl/crypto/ffc/ffc_dh.c
@@ -398,10 +408,15 @@ target_sources(openssllib
         openssl/crypto/ffc/ffc_params_validate.c
         openssl/crypto/ffc/ffc_params.c
         openssl/crypto/getenv.c
+        openssl/crypto/hashtable/hashfunc.c
+        openssl/crypto/hashtable/hashtable.c
         openssl/crypto/hmac/hmac.c
+        openssl/crypto/hpke/hpke.c
+        openssl/crypto/hpke/hpke_util.c
         openssl/crypto/http/http_lib.c
         openssl/crypto/http/http_err.c
         openssl/crypto/http/http_client.c
+        openssl/crypto/indicator_core.c
         openssl/crypto/init.c
         openssl/crypto/initthread.c
         openssl/crypto/kdf/kdf_err.c
@@ -423,6 +438,7 @@ target_sources(openssllib
         openssl/crypto/modes/ofb128.c
         openssl/crypto/modes/wrap128.c
         openssl/crypto/modes/xts128.c
+        openssl/crypto/modes/xts128gb.c
         openssl/crypto/o_dir.c
         openssl/crypto/o_fopen.c
         openssl/crypto/o_init.c
@@ -494,6 +510,7 @@ target_sources(openssllib
         openssl/crypto/rand/rand_lib.c
         openssl/crypto/rand/rand_meth.c
         openssl/crypto/rand/rand_pool.c
+        openssl/crypto/rand/rand_uniform.c
         openssl/crypto/rsa/rsa_ameth.c
         openssl/crypto/rsa/rsa_asn1.c
         openssl/crypto/rsa/rsa_backend.c
@@ -528,6 +545,7 @@ target_sources(openssllib
         openssl/crypto/sha/sha3.c
         openssl/crypto/self_test_core.c
         openssl/crypto/siphash/siphash.c
+        openssl/crypto/sleep.c
         openssl/crypto/sm2/sm2_crypt.c
         openssl/crypto/sm2/sm2_err.c
         openssl/crypto/sm2/sm2_key.c
@@ -538,6 +556,7 @@ target_sources(openssllib
         openssl/crypto/sparse_array.c
         openssl/crypto/stack/stack.c
         openssl/crypto/store/store_meth.c
+        openssl/crypto/time.c
         openssl/crypto/threads_lib.c
         openssl/crypto/threads_none.c
         openssl/crypto/threads_pthread.c
@@ -555,6 +574,7 @@ target_sources(openssllib
         openssl/crypto/x509/t_crl.c
         openssl/crypto/x509/t_req.c
         openssl/crypto/x509/t_x509.c
+        openssl/crypto/x509/x509_acert.c
         openssl/crypto/x509/x509_att.c
         openssl/crypto/x509/x509_cmp.c
         openssl/crypto/x509/x509_d2.c
@@ -592,11 +612,18 @@ target_sources(openssllib
         openssl/crypto/x509/pcy_map.c
         openssl/crypto/x509/pcy_node.c
         openssl/crypto/x509/pcy_tree.c
+        openssl/crypto/x509/v3_aaa.c
+        openssl/crypto/x509/v3_ac_tgt.c
         openssl/crypto/x509/v3_addr.c
         openssl/crypto/x509/v3_admis.c
         openssl/crypto/x509/v3_akeya.c
         openssl/crypto/x509/v3_akid.c
         openssl/crypto/x509/v3_asid.c
+        openssl/crypto/x509/v3_attrdesc.c
+        openssl/crypto/x509/v3_attrmap.c
+        openssl/crypto/x509/v3_audit_id.c
+        openssl/crypto/x509/v3_authattid.c
+        openssl/crypto/x509/v3_battcons.c
         openssl/crypto/x509/v3_bcons.c
         openssl/crypto/x509/v3_bitst.c
         openssl/crypto/x509/v3_conf.c
@@ -605,12 +632,17 @@ target_sources(openssllib
         openssl/crypto/x509/v3_enum.c
         openssl/crypto/x509/v3_extku.c
         openssl/crypto/x509/v3_genn.c
+        openssl/crypto/x509/v3_group_ac.c
         openssl/crypto/x509/v3_ia5.c
+        openssl/crypto/x509/v3_ind_iss.c
         openssl/crypto/x509/v3_info.c
         openssl/crypto/x509/v3_int.c
+        openssl/crypto/x509/v3_iobo.c
         openssl/crypto/x509/v3_ist.c
         openssl/crypto/x509/v3_lib.c
         openssl/crypto/x509/v3_ncons.c
+        openssl/crypto/x509/v3_no_ass.c
+        openssl/crypto/x509/v3_no_rev_avail.c
         openssl/crypto/x509/v3_pci.c
         openssl/crypto/x509/v3_pcia.c
         openssl/crypto/x509/v3_pcons.c
@@ -618,17 +650,23 @@ target_sources(openssllib
         openssl/crypto/x509/v3_pmaps.c
         openssl/crypto/x509/v3_prn.c
         openssl/crypto/x509/v3_purp.c
+        openssl/crypto/x509/v3_rolespec.c
         openssl/crypto/x509/v3_san.c
+        openssl/crypto/x509/v3_sda.c
+        openssl/crypto/x509/v3_single_use.c
+        openssl/crypto/x509/v3_soa_id.c
         openssl/crypto/x509/v3_skid.c
         openssl/crypto/x509/v3_sxnet.c
+        openssl/crypto/x509/v3_timespec.c
         openssl/crypto/x509/v3_tlsf.c
+        openssl/crypto/x509/v3_usernotice.c
         openssl/crypto/x509/v3_utf8.c
         openssl/crypto/x509/v3_utl.c
         openssl/crypto/x509/v3err.c
 
         openssl/providers/baseprov.c
         openssl/providers/defltprov.c
-        openssl/providers/legacyprov.c
+    #    openssl/providers/legacyprov.c
         openssl/providers/nullprov.c
         openssl/providers/prov_running.c
         openssl/providers/common/bio_prov.c
@@ -680,6 +718,12 @@ target_sources(openssllib
         openssl/providers/implementations/ciphers/cipher_chacha20_poly1305.c
         openssl/providers/implementations/ciphers/cipher_sm4.c
         openssl/providers/implementations/ciphers/cipher_sm4_hw.c
+        openssl/providers/implementations/ciphers/cipher_sm4_ccm.c
+        openssl/providers/implementations/ciphers/cipher_sm4_ccm_hw.c
+        openssl/providers/implementations/ciphers/cipher_sm4_gcm.c
+        openssl/providers/implementations/ciphers/cipher_sm4_gcm_hw.c
+        openssl/providers/implementations/ciphers/cipher_sm4_xts.c
+        openssl/providers/implementations/ciphers/cipher_sm4_xts_hw.c
         openssl/providers/implementations/digests/digestcommon.c
         openssl/providers/implementations/digests/sm3_prov.c
         openssl/providers/implementations/digests/sha3_prov.c
@@ -713,8 +757,13 @@ target_sources(openssllib
         openssl/providers/implementations/keymgmt/kdf_legacy_kmgmt.c
         openssl/providers/implementations/keymgmt/mac_legacy_kmgmt.c
         openssl/providers/implementations/keymgmt/rsa_kmgmt.c
+        openssl/providers/implementations/kem/ec_kem.c
+        openssl/providers/implementations/kem/ecx_kem.c
         openssl/providers/implementations/kem/rsa_kem.c
+        openssl/providers/implementations/kem/kem_util.c
         openssl/providers/implementations/kdfs/x942kdf.c
+        openssl/providers/implementations/kdfs/pbkdf1.c
+        openssl/providers/implementations/kdfs/pvkkdf.c
         openssl/providers/implementations/kdfs/tls1_prf.c
         openssl/providers/implementations/kdfs/sskdf.c
         openssl/providers/implementations/kdfs/sshkdf.c
@@ -725,6 +774,7 @@ target_sources(openssllib
         openssl/providers/implementations/kdfs/krb5kdf.c
         openssl/providers/implementations/kdfs/kbkdf.c
         openssl/providers/implementations/kdfs/hkdf.c
+        openssl/providers/implementations/kdfs/hmacdrbg_kdf.c
         openssl/providers/implementations/rands/seeding/rand_win.c
         openssl/providers/implementations/rands/seeding/rand_unix.c
         openssl/providers/implementations/rands/seeding/rand_tsc.c
@@ -735,15 +785,16 @@ target_sources(openssllib
         openssl/providers/implementations/rands/drbg_hash.c
         openssl/providers/implementations/rands/drbg_ctr.c
         openssl/providers/implementations/rands/drbg.c
-        openssl/providers/implementations/rands/crngt.c
         openssl/providers/implementations/signature/ecdsa_sig.c
         openssl/providers/implementations/signature/eddsa_sig.c
         openssl/providers/implementations/signature/mac_legacy_sig.c
         openssl/providers/implementations/signature/rsa_sig.c
         openssl/providers/implementations/signature/sm2_sig.c
+        openssl/providers/implementations/skeymgmt/aes_skmgmt.c
+        openssl/providers/implementations/skeymgmt/generic.c
 
-        openssl/ssl/record/tls_pad.c
-        openssl/ssl/s3_cbc.c
+        openssl/ssl/record/methods/ssl3_cbc.c
+        openssl/ssl/record/methods/tls_pad.c
 
         openssl_gen/der_digests_gen.c
         openssl_gen/der_ec_gen.c
@@ -751,6 +802,8 @@ target_sources(openssllib
         openssl_gen/der_rsa_gen.c
         openssl_gen/der_sm2_gen.c
         openssl_gen/der_wrap_gen.c
+        openssl_gen/params_idx.c
         rand_pool.c
         ossl_store.c
+        timer_wrapper.c
 )
