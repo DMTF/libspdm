@@ -313,13 +313,13 @@ libspdm_return_t libspdm_handle_error_large_response(
             break;
         }
         spdm_response = (void*) (response);
-        if (spdm_response->header.spdm_version != libspdm_get_connection_version(spdm_context)) {
-            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-            break;
-        }
         if (spdm_response->header.request_response_code == SPDM_ERROR) {
             status = libspdm_handle_simple_error_response(spdm_context,
                                                           spdm_response->header.param1);
+            break;
+        }
+        if (spdm_response->header.spdm_version != libspdm_get_connection_version(spdm_context)) {
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
             break;
         }
         if (spdm_response->header.request_response_code != SPDM_CHUNK_RESPONSE) {
