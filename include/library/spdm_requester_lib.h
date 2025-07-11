@@ -678,6 +678,7 @@ libspdm_return_t libspdm_send_receive_data(void *spdm_context,
                                            const void *request, size_t request_size,
                                            void *response, size_t *response_size);
 
+#if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)
 /**
  * This function sends HEARTBEAT
  * to an SPDM Session.
@@ -707,6 +708,7 @@ libspdm_return_t libspdm_heartbeat(void *spdm_context, uint32_t session_id);
  * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 libspdm_return_t libspdm_key_update(void *spdm_context, uint32_t session_id, bool single_direction);
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP) */
 
 /**
  * This function executes a series of SPDM encapsulated requests and receives SPDM encapsulated responses.
