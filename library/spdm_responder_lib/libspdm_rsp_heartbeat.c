@@ -1,10 +1,12 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
 #include "internal/libspdm_responder_lib.h"
+
+#if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)
 
 libspdm_return_t libspdm_get_response_heartbeat(libspdm_context_t *spdm_context,
                                                 size_t request_size,
@@ -115,3 +117,5 @@ libspdm_return_t libspdm_get_response_heartbeat(libspdm_context_t *spdm_context,
 
     return LIBSPDM_STATUS_SUCCESS;
 }
+
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP) */
