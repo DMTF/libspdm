@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link:
  * https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
@@ -164,7 +164,7 @@ void libspdm_test_requester_encap_certificate_case3(void **state)
 
         /* resetting an internal buffer to avoid overflow and prevent tests to
          * succeed*/
-        libspdm_reset_message_b(spdm_context);
+        libspdm_reset_message_mut_b(spdm_context);
         response_size = sizeof(response);
         m_spdm_get_certificate_request3_size =
             sizeof(m_spdm_get_certificate_request3);
@@ -245,7 +245,7 @@ void libspdm_test_requester_encap_certificate_case4(void **state)
 
         /* resetting an internal buffer to avoid overflow and prevent tests to
          * succeed*/
-        libspdm_reset_message_b(spdm_context);
+        libspdm_reset_message_mut_b(spdm_context);
         response_size = sizeof(response);
         status = libspdm_get_encap_response_certificate(
             spdm_context, m_spdm_get_certificate_request3_size,
@@ -333,7 +333,7 @@ void libspdm_test_requester_encap_certificate_case5(void **state)
 
         /* resetting an internal buffer to avoid overflow and prevent tests to
          * succeed*/
-        libspdm_reset_message_b(spdm_context);
+        libspdm_reset_message_mut_b(spdm_context);
         response_size = sizeof(response);
         status = libspdm_get_encap_response_certificate(
             spdm_context, m_spdm_get_certificate_request3_size,
@@ -420,7 +420,7 @@ void libspdm_test_requester_encap_certificate_case6(void **state)
 
     /* resetting an internal buffer to avoid overflow and prevent tests to
      * succeed*/
-    libspdm_reset_message_b(spdm_context);
+    libspdm_reset_message_mut_b(spdm_context);
 
     spdm_response = NULL;
     for (size_t offset = 0; offset < data_size; offset++)
@@ -458,7 +458,7 @@ void libspdm_test_requester_encap_certificate_case6(void **state)
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
             count = (data_size + m_spdm_get_certificate_request3.length - 1) /
                     m_spdm_get_certificate_request3.length;
-            assert_int_equal(spdm_context->transcript.message_b.buffer_size,
+            assert_int_equal(spdm_context->transcript.message_mut_b.buffer_size,
                              sizeof(spdm_get_certificate_request_t) * count +
                              sizeof(spdm_certificate_response_t) * count +
                              data_size);
