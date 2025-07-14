@@ -16,6 +16,7 @@ target_sources(cryptlib_null
         cipher/aead_chacha20_poly1305.c
         cipher/aead_sm4_gcm.c
         der/der.c
+        der/der_pqc.c
         hash/sha.c
         hash/sha3.c
         hash/sm3.c
@@ -26,13 +27,20 @@ target_sources(cryptlib_null
         kdf/hkdf_sha3.c
         kdf/hkdf_sm3.c
         pem/pem.c
+        pem/pem_pqc.c
         pk/ec.c
         pk/ecd.c
         pk/dh.c
         pk/sm2.c
         pk/rsa_basic.c
         pk/rsa_ext.c
+        pk/mldsa_basic.c
+        pk/mldsa_ext.c
+        pk/mlkem.c
+        pk/slhdsa_basic.c
+        pk/slhdsa_ext.c
         pk/x509.c
+        pk/x509_pqc.c
         rand/rand.c
 )
 
