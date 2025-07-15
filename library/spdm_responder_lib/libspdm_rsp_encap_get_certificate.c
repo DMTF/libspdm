@@ -116,7 +116,8 @@ libspdm_return_t libspdm_process_encap_response_certificate(
         spdm_context->encap_context.cert_chain_total_len = spdm_response->portion_length +
                                                            spdm_response->remainder_length;
     } else if (spdm_context->encap_context.cert_chain_total_len !=
-               request_offset + spdm_response->portion_length + spdm_response->remainder_length) {
+               (uint32_t)request_offset + (uint32_t)spdm_response->portion_length +
+               (uint32_t)spdm_response->remainder_length) {
         return LIBSPDM_STATUS_INVALID_MSG_FIELD;
     }
     slot_id = spdm_context->encap_context.req_slot_id;
