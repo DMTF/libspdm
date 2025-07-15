@@ -478,6 +478,8 @@ bool libspdm_validate_svh_vendor_id_len(uint8_t id, uint8_t vendor_id_len)
         return ((vendor_id_len == 0) || (vendor_id_len == 4));
     case SPDM_REGISTRY_ID_IANA_CBOR:
         return true;
+    case SPDM_REGISTRY_ID_DMTF_DSP:
+        return (vendor_id_len == 2);
     default:
         return false;
     }
