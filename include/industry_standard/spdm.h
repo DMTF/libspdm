@@ -1112,6 +1112,8 @@ typedef struct {
     spdm_message_header_t header;
     /* param1 == signature_included
      * param2 == req_slot_id
+     * uint16_t               opaque_length; // 1.4+
+     * uint8_t                opaque_data[opaque_length]; // 1.4+
      * uint8_t                signature[S];
      * uint8_t                verify_data[H];*/
 } spdm_finish_request_t;
@@ -1124,6 +1126,8 @@ typedef struct {
     spdm_message_header_t header;
     /* param1 == RSVD
      * param2 == RSVD
+     * uint16_t               opaque_length; // 1.4+
+     * uint8_t                opaque_data[opaque_length]; // 1.4+
      * uint8_t                verify_data[H];*/
 } spdm_finish_response_t;
 
@@ -1171,6 +1175,8 @@ typedef struct {
     spdm_message_header_t header;
     /* param1 == RSVD
      * param2 == RSVD
+     * uint16_t               opaque_length; // 1.4+
+     * uint8_t                opaque_data[opaque_length]; // 1.4+
      * uint8_t                verify_data[H];*/
 } spdm_psk_finish_request_t;
 
@@ -1178,7 +1184,9 @@ typedef struct {
 typedef struct {
     spdm_message_header_t header;
     /* param1 == RSVD
-     * param2 == RSVD*/
+     * param2 == RSVD
+     * uint16_t               opaque_length; // 1.4+
+     * uint8_t                opaque_data[opaque_length]; // 1.4+ */
 } spdm_psk_finish_response_t;
 
 
