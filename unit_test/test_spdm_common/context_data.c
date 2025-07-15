@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -1587,6 +1587,10 @@ typedef struct {
     uint16_t tcg_opaque_len;
     uint8_t tcg_opaque[1];
     uint8_t tcg_align[1];
+    spdm_svh_dmtf_dsp_header_t dmtf_dsp_header;
+    uint16_t dmtf_dsp_opaque_len;
+    uint8_t dmtf_dsp_opaque[11];
+    uint8_t dmtf_dsp_align[3];
     spdm_svh_dmtf_header_t dmtf_sm_ver_sel_header;
     uint16_t dmtf_sm_ver_sel_opaque_len;
     secured_message_opaque_element_version_selection_t dmtf_sm_ver_sel_opaque;
@@ -1652,6 +1656,9 @@ static void libspdm_test_process_opaque_data_case22(void **state)
     opaque_data.tcg_header.header.id = SPDM_REGISTRY_ID_TCG;
     opaque_data.tcg_header.header.vendor_id_len = sizeof(opaque_data.tcg_header.vendor_id);
     opaque_data.tcg_opaque_len = sizeof(opaque_data.tcg_opaque);
+    opaque_data.dmtf_dsp_header.header.id = SPDM_REGISTRY_ID_DMTF_DSP;
+    opaque_data.dmtf_dsp_header.header.vendor_id_len = sizeof(opaque_data.dmtf_dsp_header.vendor_id);
+    opaque_data.dmtf_dsp_opaque_len = sizeof(opaque_data.dmtf_dsp_opaque);
     opaque_data.dmtf_sm_ver_sel_header.header.id = SPDM_REGISTRY_ID_DMTF;
     opaque_data.dmtf_sm_ver_sel_header.header.vendor_id_len = 0;
     opaque_data.dmtf_sm_ver_sel_opaque_len = sizeof(opaque_data.dmtf_sm_ver_sel_opaque);
