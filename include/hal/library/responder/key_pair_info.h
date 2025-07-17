@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2024 DMTF. All rights reserved.
+ *  Copyright 2024-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -12,6 +12,11 @@
 #include "industry_standard/spdm.h"
 
 #if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP
+
+/**
+ * read the total key pairs number.
+ **/
+extern uint8_t libspdm_read_total_key_pairs();
 
 /**
  * read the key pair info of the key_pair_id.
@@ -45,6 +50,20 @@ extern bool libspdm_read_key_pair_info(
     uint8_t *assoc_cert_slot_mask,
     uint16_t *public_key_info_len,
     uint8_t *public_key_info);
+
+extern bool libspdm_read_key_pair_info_ex(
+    void *spdm_context,
+    uint8_t key_pair_id,
+    uint16_t *capabilities,
+    uint16_t *key_usage_capabilities,
+    uint16_t *current_key_usage,
+    uint32_t *asym_algo_capabilities,
+    uint32_t *current_asym_algo,
+    uint32_t *pqc_asym_algo_capabilities,
+    uint32_t *current_pqc_asym_algo,
+    uint8_t *assoc_cert_slot_mask,
+    uint16_t *public_key_info_len,
+    uint8_t *public_key_info);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP
@@ -75,6 +94,17 @@ extern bool libspdm_write_key_pair_info(
     uint32_t desired_asym_algo,
     uint8_t desired_assoc_cert_slot_mask,
     bool * need_reset);
+
+extern bool libspdm_write_key_pair_info_ex(
+    void *spdm_context,
+    uint8_t key_pair_id,
+    uint8_t operation,
+    uint16_t desired_key_usage,
+    uint32_t desired_asym_algo,
+    uint32_t desired_pqc_asym_algo,
+    uint8_t desired_assoc_cert_slot_mask,
+    bool * need_reset);
+
 #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP */
 
 #endif /* RESPONDER_KEY_PAIR_INFO_H */
