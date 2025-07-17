@@ -82,6 +82,10 @@ int libspdm_responder_encap_key_update_test_main(void);
 int libspdm_responder_encap_get_endpoint_info_test_main(void);
 int libspdm_responder_encap_get_endpoint_info_error_test_main(void);
 #endif /* LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT */
+#if LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP
+int libspdm_responder_encap_send_event_test_main(void);
+int libspdm_responder_encap_send_event_error_test_main(void);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
 #endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP*/
 
 int libspdm_responder_set_certificate_rsp_test_main(void);
@@ -245,6 +249,14 @@ int main(void)
         return_value = 1;
     }
     #endif /* LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT */
+    #if LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP
+    if (libspdm_responder_encap_send_event_test_main() != 0) {
+        return_value = 1;
+    }
+    if (libspdm_responder_encap_send_event_error_test_main() != 0) {
+        return_value = 1;
+    }
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
     #endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP*/
 
     #if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
