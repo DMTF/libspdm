@@ -261,7 +261,8 @@ void libspdm_init_key_update_encap_state(void *spdm_context);
 void libspdm_init_key_update_encap_state_with_session(
     void *spdm_context, uint32_t session_id);
 
-#if (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && (LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT)
+#if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+#if LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT
 /**
  * This function initializes the get_endpoint_info encapsulated state.
  *
@@ -271,7 +272,18 @@ void libspdm_init_key_update_encap_state_with_session(
  *                                       to be outside of a session or inside of any session.
  **/
 void libspdm_init_get_endpoint_info_encap_state(void *spdm_context, uint32_t session_id);
-#endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP && LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT */
+#endif /* LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT */
+
+#if LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP
+/**
+ * This function initializes the SEND_EVENT encapsulated state.
+ *
+ * @param  spdm_context  A pointer to the SPDM context.
+ * @param  session_id    Session ID in which the event will be sent.
+ **/
+void libspdm_init_send_event_encap_state(void *spdm_context, uint32_t session_id);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
+#endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
 
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && \
     (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)
