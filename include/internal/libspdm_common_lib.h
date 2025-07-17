@@ -472,8 +472,8 @@ typedef struct {
 
 #define LIBSPDM_MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT 3
 typedef struct {
-    /* Valid OpCode: GET_DIGEST/GET_CERTIFICATE/CHALLENGE/KEY_UPDATE/GET_ENDPOINT_INFO
-     * The last one is 0x00, as terminator.*/
+    /* Valid OpCode: GET_DIGEST/GET_CERTIFICATE/CHALLENGE/KEY_UPDATE/GET_ENDPOINT_INFO/SEND_EVENT
+     * The last one is 0x00, as a terminator. */
     uint8_t request_op_code_sequence[LIBSPDM_MAX_ENCAP_REQUEST_OP_CODE_SEQUENCE_COUNT + 1];
     uint8_t request_op_code_count;
     uint8_t current_request_op_code;
