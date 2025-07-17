@@ -20,7 +20,7 @@ echo
 for file in $modified_files
 do
     # Only examine C files for now.
-    if [[ $file == "include/"* ]] || [[ $file == "library/"* ]]; then
+    if [[ $file == "include/"* ]] || [[ $file == "library/"* ]] || [[ $file == "unit_test/test_"* ]]; then
         if [[ $file == *".h" ]] || [[ $file == *".c" ]]; then
             # Assume that the copyright is located at the third line of the file.
             if [[ $(sed -n '3p' $file) != *$current_year* ]]; then
