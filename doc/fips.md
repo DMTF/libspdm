@@ -28,14 +28,19 @@ libspdm integrator is expected to choose crypto module and support CMVP.
 | SM4-GCM (*) | [GB/T 32907-2016,GM/T 0002-2012](http://www.gmbz.org.cn/upload/2018-04-04/1522788048733065051.pdf), [ISO/IEC 18033-3:2010/Amd 1:2021](https://www.iso.org/standard/81564.html), [rfc8998](https://tools.ietf.org/html/rfc8998) | KAT | not FIPS approved yet |
 | SM2-digital-signature (\*) <br> SM2-key-exchange (\*) | [GB/T 32918.1-2016,GM/T 0003.1-2012](http://www.gmbz.org.cn/upload/2018-07-24/1532401673134070738.pdf), [GB/T 32918.2-2016,GM/T 0003.2-2012](http://www.gmbz.org.cn/upload/2018-07-24/1532401673138056311.pdf), [GB/T 32918.3-2016,GM/T 0003.3-2012](http://www.gmbz.org.cn/upload/2018-07-24/1532401673149005052.pdf), <br> [GB/T 32918.4-2016,GM/T 0003.4-2012](http://www.gmbz.org.cn/upload/2018-07-24/1532401673367034870.pdf), [GB/T 32918.5-2016,GM/T 0003.5-2012](http://www.gmbz.org.cn/upload/2018-07-24/1532401863206085511.pdf), [ISO/IEC 14888-3:2018](https://www.iso.org/standard/76382.html) | KAT | not FIPS approved yet |
 | SPDM-Key-Schedule (*) | [DMTF-DSP0274](https://www.dmtf.org/dsp/DSP0274)          | KAT  | not FIPS approved yet |
+| ML-KEM              | [NIST.FIPS.203](https://doi.org/10.6028/NIST.FIPS.203)   | KAT  | TBD |
+| ML-DSA              | [NIST.FIPS.204](https://doi.org/10.6028/NIST.FIPS.204)   | KAT  | TBD |
+| SLH-DSA             | [NIST.FIPS.205](https://doi.org/10.6028/NIST.FIPS.2054)  | KAT  | TBD |
 
 The test maybe Known Answer Test (KAT) or Pairwise Consistency Test (PCT).
 
 The Test Vector (KAT) can be found at [CAVP-Testing](https://csrc.nist.gov/Projects/Cryptographic-Algorithm-Validation-Program/Component-Testing) and [Cryptographic Standards and Guidelines](https://csrc.nist.gov/projects/cryptographic-standards-and-guidelines/example-values).
 
+The latest test code and test case can be found at [Automated Cryptographic Validation Protocol (ACVP)](https://pages.nist.gov/ACVP/) [Server](https://github.com/usnistgov/ACVP-Server/tree/master/gen-val/json-files).
+
 Reference:
- * [NIST.SP.800-140Cr1](https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-140Cr1.pdf): CMVP Approved Security Functions
- * [NIST.SP.800-140Dr1](https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-140Dr1.pdf): CMVP Approved Sensitive Security Parameter Generation and Establishment Methods
+ * [NIST.SP.800-140C](https://csrc.nist.gov/projects/cryptographic-module-validation-program/sp-800-140-series-supplemental-information/sp800-140c): CMVP Approved Security Functions
+ * [NIST.SP.800-140D](https://csrc.nist.gov/projects/cryptographic-module-validation-program/sp-800-140-series-supplemental-information/sp800-140d): CMVP Approved Sensitive Security Parameter Generation and Establishment Methods
  * [FIPS 140-3 Implementation Guide](https://csrc.nist.gov/CSRC/media/Projects/cryptographic-module-validation-program/documents/fips%20140-3/FIPS%20140-3%20IG.pdf)
  * [FIPS 140-Compliant SPDM](https://icmconference.org/wp-content/uploads/C22b-RuanX.pdf), ICMC 2022.
 
@@ -73,7 +78,7 @@ Below algorithms will be disabled:
 
 ### FIPS approved algorithm
 
-If FIPS mode is enabled, then only FIPS-approved algorithms will be enabled, which is listed in [NIST.SP.800-140Cr1](https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-140Cr1.pdf).
+If FIPS mode is enabled, then only FIPS-approved algorithms will be enabled, which is listed in [NIST.SP.800-140C](https://csrc.nist.gov/projects/cryptographic-module-validation-program/sp-800-140-series-supplemental-information/sp800-140c) and [NIST.SP.800-140D](https://csrc.nist.gov/projects/cryptographic-module-validation-program/sp-800-140-series-supplemental-information/sp800-140d).
 
 ### Key zeroization
 
