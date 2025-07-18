@@ -22,7 +22,7 @@ jobs:
           sudo apt-get install lcov
           mkdir build
           cd build
-          cmake -E env CFLAGS="-DLIBSPDM_FIPS_MODE=1" cmake -DARCH=x64 -DTOOLCHAIN=GCC -DTARGET=Debug -DCRYPTO=mbedtls -DGCOV=ON ..
+          cmake -E env CFLAGS="-DLIBSPDM_FIPS_MODE=1" cmake -DTOOLCHAIN=GCC -DTARGET=Debug -DCRYPTO=mbedtls -DGCOV=ON ..
           make -j`nproc`
           make copy_sample_key
       - name: Test Requester
