@@ -56,13 +56,17 @@
 
    The SPDM library requires [cryptolib API](https://github.com/DMTF/libspdm/blob/main/include/hal/library/cryptlib.h), including random number generation, symmetric cryptography, asymmetric cryptography, hash, and message authentication code.
 
-   Currently supported algorithms: Hash:SHA2/SHA3/SM3, Signature:RSA-SSA/RSA-PSS/ECDSA/EdDSA/SM2-Sign, KeyExchange:FFDHE/ECDHE/SM2-KeyExchange, AEAD:AES_GCM/ChaCha20Poly1305/SM4_GCM.
+   Currently supported traditional algorithms: Hash:SHA2/SHA3/SM3, Signature:RSA-SSA/RSA-PSS/ECDSA/EdDSA/SM2-Sign, KeyExchange:FFDHE/ECDHE/SM2-KeyExchange, AEAD:AES_GCM/ChaCha20Poly1305/SM4_GCM.
+   Currently supported PQC algorithms: Signature:ML-DSA/SLH-DSA, KeyEncapsulation:ML-KEM.
    NOTE: NIST algorithms and Shang-Mi (SM) algorithms should not be mixed together.
+
+   ML-DSA OID is defined in [IETF Algorithm Identifiers for ML-DSA (Draft)](https://datatracker.ietf.org/doc/draft-ietf-lamps-dilithium-certificates).
+   SLH-DSA OID is defined in [IETF Algorithm Identifiers for SLH-DSA (Draft)](https://datatracker.ietf.org/doc/draft-ietf-lamps-x509-slhdsa).
 
    The endianness is defined in [crypto_endianness](https://github.com/DMTF/libspdm/blob/main/doc/crypto_endianness.md).
 
    An [Mbed TLS](https://tls.mbed.org/) wrapper is included in [cryptlib_mbedtls](https://github.com/DMTF/libspdm/tree/main/os_stub/cryptlib_mbedtls).
-   NOTE: SMx and EdDSA are not supported.
+   NOTE: SMx, EdDSA, ML-DSA, SLH-DSA and ML-KEM are not supported.
 
    An [OpenSSL](https://www.openssl.org/) wrapper is included in [cryptlib_openssl](https://github.com/DMTF/libspdm/tree/main/os_stub/cryptlib_openssl).
    NOTE: SM2-KeyExchange and SM4_GCM are not supported.
