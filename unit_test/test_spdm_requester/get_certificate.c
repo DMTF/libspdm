@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -64,8 +64,7 @@ bool libspdm_libspdm_read_responder_public_certificate_chain_expiration(
         free(file_data);
         return false;
     }
-    cert_chain->length = (uint16_t)cert_chain_size;
-    cert_chain->reserved = 0;
+    cert_chain->length = (uint32_t)cert_chain_size;
 
     /* Get Root Certificate and calculate hash value*/
 
