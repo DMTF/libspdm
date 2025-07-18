@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -129,6 +129,20 @@ extern bool libspdm_gen_csr_ex(
 #endif
     );
 #endif /*LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX*/
+
+extern bool libspdm_gen_pqc_csr(
+    void *spdm_context,
+    uint32_t base_hash_algo, uint32_t pqc_asym_algo, bool *need_reset,
+    const void *request, size_t request_size,
+    uint8_t *requester_info, size_t requester_info_length,
+    uint8_t *opaque_data, uint16_t opaque_data_length,
+    size_t *csr_len, uint8_t *csr_pointer,
+    uint8_t req_cert_model,
+    uint8_t *req_csr_tracking_tag,
+    uint8_t req_key_pair_id,
+    bool overwrite,
+    bool *is_busy, bool *unexpected_request);
+
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CSR_CAP */
 
 #endif /* RESPONDER_CSRLIB_H */

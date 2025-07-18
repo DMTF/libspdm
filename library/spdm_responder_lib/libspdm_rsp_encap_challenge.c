@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -148,8 +148,14 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
         spdm_context->encap_context.req_slot_id;
 
     hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
-    signature_size = libspdm_get_req_asym_signature_size(
-        spdm_context->connection_info.algorithm.req_base_asym_alg);
+    if (spdm_context->connection_info.algorithm.req_base_asym_alg != 0) {
+        signature_size = libspdm_get_req_asym_signature_size(
+            spdm_context->connection_info.algorithm.req_base_asym_alg);
+    }
+    if (spdm_context->connection_info.algorithm.req_pqc_asym_alg != 0) {
+        signature_size = libspdm_get_req_pqc_asym_signature_size(
+            spdm_context->connection_info.algorithm.req_pqc_asym_alg);
+    }
     measurement_summary_hash_size = 0;
 
     if (spdm_response_size <= sizeof(spdm_challenge_auth_response_t) +

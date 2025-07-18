@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -12,12 +12,15 @@
 #pragma pack(1)
 typedef struct {
     spdm_message_header_t header;
+    uint16_t opaque_length;
+    uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
     uint8_t verify_data[LIBSPDM_MAX_HASH_SIZE];
 } libspdm_psk_finish_request_mine_t;
 
 typedef struct {
     spdm_message_header_t header;
-    uint8_t dummy_data[sizeof(spdm_error_data_response_not_ready_t)];
+    uint16_t opaque_length;
+    uint8_t opaque_data[SPDM_MAX_OPAQUE_DATA_SIZE];
 } libspdm_psk_finish_response_max_t;
 #pragma pack()
 
@@ -93,8 +96,13 @@ bool libspdm_generate_psk_exchange_req_hmac(libspdm_context_t *spdm_context,
  * @retval RETURN_SUCCESS               The PSK_FINISH is sent and the PSK_FINISH_RSP is received.
  * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
-static libspdm_return_t libspdm_try_send_receive_psk_finish(libspdm_context_t *spdm_context,
-                                                            uint32_t session_id)
+static libspdm_return_t libspdm_try_send_receive_psk_finish(
+    libspdm_context_t *spdm_context,
+    uint32_t session_id,
+    const void *requester_opaque_data,
+    size_t requester_opaque_data_size,
+    void *responder_opaque_data,
+    size_t *responder_opaque_data_size)
 {
     libspdm_return_t status;
     libspdm_psk_finish_request_mine_t *spdm_request;
@@ -109,6 +117,9 @@ static libspdm_return_t libspdm_try_send_receive_psk_finish(libspdm_context_t *s
     uint8_t *message;
     size_t message_size;
     size_t transport_header_size;
+    uint8_t *ptr;
+    size_t opaque_data_entry_size;
+    size_t opaque_data_size;
 
     if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_11) {
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
@@ -159,10 +170,40 @@ static libspdm_return_t libspdm_try_send_receive_psk_finish(libspdm_context_t *s
     spdm_request->header.param1 = 0;
     spdm_request->header.param2 = 0;
 
+    ptr = (uint8_t *)spdm_request + sizeof(spdm_psk_finish_request_t);
+    if (libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_14) {
+        if (requester_opaque_data != NULL) {
+            LIBSPDM_ASSERT(requester_opaque_data_size <= SPDM_MAX_OPAQUE_DATA_SIZE);
+            LIBSPDM_ASSERT (spdm_request_size >= sizeof(spdm_psk_finish_request_t) +
+                            sizeof(uint16_t) + requester_opaque_data_size);
+
+            libspdm_write_uint16(ptr, (uint16_t)requester_opaque_data_size);
+            ptr += sizeof(uint16_t);
+
+            libspdm_copy_mem(ptr,
+                             (spdm_request_size - (sizeof(spdm_psk_finish_request_t) +
+                                                   sizeof(uint16_t))),
+                             requester_opaque_data, requester_opaque_data_size);
+            opaque_data_size = requester_opaque_data_size;
+        } else {
+            opaque_data_size = 0;
+            LIBSPDM_ASSERT (spdm_request_size >= sizeof(spdm_psk_finish_request_t) +
+                            sizeof(uint16_t) + opaque_data_size);
+
+            libspdm_write_uint16(ptr, (uint16_t)opaque_data_size);
+            ptr += sizeof(uint16_t);
+        }
+        ptr += opaque_data_size;
+        opaque_data_entry_size = sizeof(uint16_t) + opaque_data_size;
+    } else {
+        opaque_data_entry_size = 0;
+    }
+
     hmac_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
-    LIBSPDM_ASSERT (spdm_request_size >= sizeof(spdm_request->header) + hmac_size);
-    spdm_request_size = sizeof(spdm_psk_finish_request_t) + hmac_size;
+    LIBSPDM_ASSERT (spdm_request_size >= sizeof(spdm_request->header) +
+                    opaque_data_entry_size + hmac_size);
+    spdm_request_size = sizeof(spdm_psk_finish_request_t) + opaque_data_entry_size + hmac_size;
 
     status = libspdm_append_message_f(spdm_context, session_info, true, (uint8_t *)spdm_request,
                                       spdm_request_size - hmac_size);
@@ -172,7 +213,7 @@ static libspdm_return_t libspdm_try_send_receive_psk_finish(libspdm_context_t *s
     }
 
     result = libspdm_generate_psk_exchange_req_hmac(spdm_context, session_info,
-                                                    spdm_request->verify_data);
+                                                    ptr);
     if (!result) {
         libspdm_release_sender_buffer (spdm_context);
         status = LIBSPDM_STATUS_CRYPTO_ERROR;
@@ -241,12 +282,53 @@ static libspdm_return_t libspdm_try_send_receive_psk_finish(libspdm_context_t *s
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
-    /* this message can only be in secured session
-     * thus don't need to consider transport layer padding, just check its exact size */
-    if (spdm_response_size != sizeof(spdm_psk_finish_response_t)) {
-        status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
-        goto receive_done;
+
+    ptr = (uint8_t *)spdm_response + sizeof(spdm_psk_finish_response_t);
+
+    if (libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_14) {
+        if (spdm_response_size < sizeof(spdm_psk_finish_response_t) + sizeof(uint16_t)) {
+            status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+            goto receive_done;
+        }
+        opaque_data_size = libspdm_read_uint16((const uint8_t *)ptr);
+        ptr += sizeof(uint16_t);
+        if (opaque_data_size > SPDM_MAX_OPAQUE_DATA_SIZE) {
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+            goto receive_done;
+        }
+        /* this message can only be in secured session
+         * thus don't need to consider transport layer padding, just check its exact size */
+        if (spdm_response_size != sizeof(spdm_psk_finish_response_t) + sizeof(uint16_t) +
+            opaque_data_size) {
+            status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+            goto receive_done;
+        }
+
+        if ((responder_opaque_data != NULL) && (responder_opaque_data_size != NULL)) {
+            if (opaque_data_size >= *responder_opaque_data_size) {
+                status = LIBSPDM_STATUS_BUFFER_TOO_SMALL;
+                goto receive_done;
+            }
+            libspdm_copy_mem(responder_opaque_data, *responder_opaque_data_size,
+                             ptr, opaque_data_size);
+            *responder_opaque_data_size = opaque_data_size;
+        }
+
+        ptr += opaque_data_size;
+        opaque_data_entry_size = sizeof(uint16_t) + opaque_data_size;
+    } else {
+        /* this message can only be in secured session
+         * thus don't need to consider transport layer padding, just check its exact size */
+        if (spdm_response_size != sizeof(spdm_psk_finish_response_t)) {
+            status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+            goto receive_done;
+        }
+        if ((responder_opaque_data != NULL) && (responder_opaque_data_size != NULL)) {
+            *responder_opaque_data_size = 0;
+        }
+        opaque_data_entry_size = 0;
     }
+    spdm_response_size = sizeof(spdm_finish_response_t) + opaque_data_entry_size;
 
     status = libspdm_append_message_f(spdm_context, session_info, true, spdm_response,
                                       spdm_response_size);
@@ -301,7 +383,40 @@ libspdm_return_t libspdm_send_receive_psk_finish(libspdm_context_t *spdm_context
     retry_delay_time = spdm_context->retry_delay_time;
     do {
         status = libspdm_try_send_receive_psk_finish(spdm_context,
-                                                     session_id);
+                                                     session_id,
+                                                     NULL, 0, NULL, NULL);
+        if (status != LIBSPDM_STATUS_BUSY_PEER) {
+            return status;
+        }
+
+        libspdm_sleep(retry_delay_time);
+    } while (retry-- != 0);
+
+    return status;
+}
+
+libspdm_return_t libspdm_send_receive_psk_finish_ex(
+    libspdm_context_t *spdm_context,
+    uint32_t session_id,
+    const void *requester_opaque_data,
+    size_t requester_opaque_data_size,
+    void *responder_opaque_data,
+    size_t *responder_opaque_data_size)
+{
+    size_t retry;
+    uint64_t retry_delay_time;
+    libspdm_return_t status;
+
+    spdm_context->crypto_request = true;
+    retry = spdm_context->retry_times;
+    retry_delay_time = spdm_context->retry_delay_time;
+    do {
+        status = libspdm_try_send_receive_psk_finish(spdm_context,
+                                                     session_id,
+                                                     requester_opaque_data,
+                                                     requester_opaque_data_size,
+                                                     responder_opaque_data,
+                                                     responder_opaque_data_size);
         if (status != LIBSPDM_STATUS_BUSY_PEER) {
             return status;
         }
