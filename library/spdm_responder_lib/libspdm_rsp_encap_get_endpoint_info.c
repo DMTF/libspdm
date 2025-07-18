@@ -180,8 +180,14 @@ libspdm_return_t libspdm_process_encap_response_endpoint_info(
     if (libspdm_is_capabilities_flag_supported(
             spdm_context, false,
             SPDM_GET_CAPABILITIES_REQUEST_FLAGS_EP_INFO_CAP_SIG, 0)) {
-        signature_size = libspdm_get_req_asym_signature_size(
-            spdm_context->connection_info.algorithm.req_base_asym_alg);
+        if (spdm_context->connection_info.algorithm.req_base_asym_alg != 0) {
+            signature_size = libspdm_get_req_asym_signature_size(
+                spdm_context->connection_info.algorithm.req_base_asym_alg);
+        }
+        if (spdm_context->connection_info.algorithm.req_pqc_asym_alg != 0) {
+            signature_size = libspdm_get_req_pqc_asym_signature_size(
+                spdm_context->connection_info.algorithm.req_pqc_asym_alg);
+        }
         request_attributes = SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED;
 
         if ((spdm_response->header.param2 & SPDM_ENDPOINT_INFO_RESPONSE_SLOT_ID_MASK) != slot_id) {
