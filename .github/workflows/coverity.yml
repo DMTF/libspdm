@@ -35,7 +35,7 @@ jobs:
         PATH=$PATH:$(pwd)/cov-analysis/bin
         mkdir build
         cd build
-        cmake -DARCH=x64 -DTOOLCHAIN=GCC -DTARGET=${{ inputs.build }} -DCRYPTO=mbedtls ..
+        cmake -DTOOLCHAIN=GCC -DTARGET=${{ inputs.build }} -DCRYPTO=mbedtls ..
         cov-build --dir cov-int make -j`nproc`
         tar czf libspdm.tgz cov-int
         curl --form token=${{ secrets.COVERITY_SCAN_TOKEN }} \
