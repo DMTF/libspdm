@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -229,7 +229,7 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
 #endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_CHALLENGE_AUTH,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
+                m_libspdm_use_asym_algo, m_libspdm_use_pqc_asym_algo, m_libspdm_use_hash_algo,
                 false, m_libspdm_local_buffer, m_libspdm_local_buffer_size,
                 ptr, &sig_size);
         ptr += sig_size;
@@ -309,7 +309,7 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
 #endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_CHALLENGE_AUTH,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
+                m_libspdm_use_asym_algo, m_libspdm_use_pqc_asym_algo, m_libspdm_use_hash_algo,
                 false, m_libspdm_local_buffer, m_libspdm_local_buffer_size,
                 ptr, &sig_size);
         ptr += sig_size;
@@ -460,7 +460,7 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
 #endif
                 spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                     SPDM_CHALLENGE_AUTH,
-                    m_libspdm_use_asym_algo,
+                    m_libspdm_use_asym_algo, m_libspdm_use_pqc_asym_algo,
                     m_libspdm_use_hash_algo,
                     false, m_libspdm_local_buffer,
                     m_libspdm_local_buffer_size, ptr,
@@ -625,7 +625,7 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
 #endif
                 spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                     SPDM_CHALLENGE_AUTH,
-                    m_libspdm_use_asym_algo,
+                    m_libspdm_use_asym_algo, m_libspdm_use_pqc_asym_algo,
                     m_libspdm_use_hash_algo,
                     false, m_libspdm_local_buffer,
                     m_libspdm_local_buffer_size, ptr,
@@ -705,7 +705,8 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
 #endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_CHALLENGE_AUTH,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, false, m_libspdm_local_buffer,
+                m_libspdm_use_asym_algo, m_libspdm_use_pqc_asym_algo, m_libspdm_use_hash_algo,
+                false, m_libspdm_local_buffer,
                 m_libspdm_local_buffer_size, Ptr, &sig_size);
         Ptr += sig_size;
 
@@ -800,7 +801,8 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
 #endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_CHALLENGE_AUTH,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, false, m_libspdm_local_buffer,
+                m_libspdm_use_asym_algo, m_libspdm_use_pqc_asym_algo, m_libspdm_use_hash_algo,
+                false, m_libspdm_local_buffer,
                 m_libspdm_local_buffer_size, Ptr, &sig_size);
         Ptr += sig_size;
 
@@ -875,7 +877,8 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
 #endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_CHALLENGE_AUTH,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, false, m_libspdm_local_buffer,
+                m_libspdm_use_asym_algo, m_libspdm_use_pqc_asym_algo, m_libspdm_use_hash_algo,
+                false, m_libspdm_local_buffer,
                 m_libspdm_local_buffer_size, Ptr, &sig_size);
         Ptr += sig_size;
 
@@ -950,7 +953,8 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
 #endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_CHALLENGE_AUTH,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, false, m_libspdm_local_buffer,
+                m_libspdm_use_asym_algo, m_libspdm_use_pqc_asym_algo, m_libspdm_use_hash_algo,
+                false, m_libspdm_local_buffer,
                 m_libspdm_local_buffer_size, Ptr, &sig_size);
         Ptr += sig_size;
 
@@ -1025,7 +1029,8 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
 #endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_CHALLENGE_AUTH,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, false, m_libspdm_local_buffer,
+                m_libspdm_use_asym_algo, m_libspdm_use_pqc_asym_algo, m_libspdm_use_hash_algo,
+                false, m_libspdm_local_buffer,
                 m_libspdm_local_buffer_size, Ptr, &sig_size);
         Ptr += sig_size;
 
@@ -1103,7 +1108,8 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
 #endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_CHALLENGE_AUTH,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, false, m_libspdm_local_buffer,
+                m_libspdm_use_asym_algo, m_libspdm_use_pqc_asym_algo, m_libspdm_use_hash_algo,
+                false, m_libspdm_local_buffer,
                 m_libspdm_local_buffer_size, Ptr, &sig_size);
         Ptr += sig_size;
 
@@ -1180,7 +1186,8 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
 #endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_CHALLENGE_AUTH,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, false, hash_data, libspdm_get_hash_size (
+                m_libspdm_use_asym_algo, m_libspdm_use_pqc_asym_algo, m_libspdm_use_hash_algo,
+                false, hash_data, libspdm_get_hash_size (
                 m_libspdm_use_hash_algo), Ptr, &sig_size);
         Ptr += sig_size;
 
@@ -1256,7 +1263,8 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
 #endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_CHALLENGE_AUTH,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, false, m_libspdm_local_buffer,
+                m_libspdm_use_asym_algo, m_libspdm_use_pqc_asym_algo, m_libspdm_use_hash_algo,
+                false, m_libspdm_local_buffer,
                 m_libspdm_local_buffer_size, Ptr, &sig_size);
         Ptr += sig_size;
 
@@ -1365,7 +1373,8 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
 #endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_CHALLENGE_AUTH,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, false, m_libspdm_local_buffer,
+                m_libspdm_use_asym_algo, m_libspdm_use_pqc_asym_algo, m_libspdm_use_hash_algo,
+                false, m_libspdm_local_buffer,
                 m_libspdm_local_buffer_size, ptr, &sig_size);
         ptr += sig_size;
         libspdm_transport_test_encode_message (spdm_context, NULL, false, false, spdm_response_size,
@@ -1440,7 +1449,7 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
             spdm_response->header.spdm_version <<
                 SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_CHALLENGE_AUTH,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
+                m_libspdm_use_asym_algo, m_libspdm_use_pqc_asym_algo, m_libspdm_use_hash_algo,
                 false, m_libspdm_local_buffer, m_libspdm_local_buffer_size,
                 ptr, &sig_size);
         ptr += sig_size;
@@ -1534,7 +1543,7 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
 #endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_CHALLENGE_AUTH,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
+                m_libspdm_use_asym_algo, m_libspdm_use_pqc_asym_algo, m_libspdm_use_hash_algo,
                 false, m_libspdm_local_buffer, m_libspdm_local_buffer_size,
                 ptr, &sig_size);
         ptr += sig_size;
@@ -1618,7 +1627,7 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
 #endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_CHALLENGE_AUTH,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
+                m_libspdm_use_asym_algo, m_libspdm_use_pqc_asym_algo, m_libspdm_use_hash_algo,
                 false, m_libspdm_local_buffer, m_libspdm_local_buffer_size,
                 ptr, &sig_size);
         ptr += sig_size;
@@ -1701,7 +1710,8 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
 #endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_CHALLENGE_AUTH,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, false, m_libspdm_local_buffer,
+                m_libspdm_use_asym_algo, m_libspdm_use_pqc_asym_algo, m_libspdm_use_hash_algo,
+                false, m_libspdm_local_buffer,
                 m_libspdm_local_buffer_size, Ptr, &sig_size);
         Ptr += sig_size;
 
@@ -1826,7 +1836,8 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
 #endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_CHALLENGE_AUTH,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo, false, m_libspdm_local_buffer,
+                m_libspdm_use_asym_algo, m_libspdm_use_pqc_asym_algo, m_libspdm_use_hash_algo,
+                false, m_libspdm_local_buffer,
                 m_libspdm_local_buffer_size, Ptr, &sig_size);
         Ptr += sig_size;
 
@@ -1910,7 +1921,7 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
 #endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_CHALLENGE_AUTH,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
+                m_libspdm_use_asym_algo, m_libspdm_use_pqc_asym_algo, m_libspdm_use_hash_algo,
                 false, m_libspdm_local_buffer, m_libspdm_local_buffer_size,
                 ptr, &sig_size);
         ptr += sig_size;
@@ -1998,7 +2009,7 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
 #endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_CHALLENGE_AUTH,
-                m_libspdm_use_asym_algo, m_libspdm_use_hash_algo,
+                m_libspdm_use_asym_algo, m_libspdm_use_pqc_asym_algo, m_libspdm_use_hash_algo,
                 false, m_libspdm_local_buffer, m_libspdm_local_buffer_size,
                 ptr, &sig_size);
         ptr += sig_size;

@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -86,7 +86,7 @@ void libspdm_test_responder_encap_challenge_case1(void **state)
 #endif
         spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
             SPDM_CHALLENGE_AUTH,
-            m_libspdm_use_req_asym_algo, m_libspdm_use_hash_algo,
+            m_libspdm_use_req_asym_algo, m_libspdm_use_req_pqc_asym_algo, m_libspdm_use_hash_algo,
             false, (uint8_t*)spdm_response, response_size - sig_size,
             ptr, &sig_size);
 
@@ -364,7 +364,7 @@ void libspdm_test_responder_encap_challenge_case5(void **state)
 #endif
         spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
             SPDM_CHALLENGE_AUTH,
-            m_libspdm_use_req_asym_algo, m_libspdm_use_hash_algo,
+            m_libspdm_use_req_asym_algo, m_libspdm_use_req_pqc_asym_algo, m_libspdm_use_hash_algo,
             false, (uint8_t*)spdm_response, response_size - sig_size,
             ptr, &sig_size);
 
@@ -460,7 +460,7 @@ void libspdm_test_responder_encap_challenge_case6(void **state)
 #endif
         spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
             SPDM_CHALLENGE_AUTH,
-            m_libspdm_use_req_asym_algo, m_libspdm_use_hash_algo,
+            m_libspdm_use_req_asym_algo, m_libspdm_use_req_pqc_asym_algo, m_libspdm_use_hash_algo,
             false, (uint8_t*)spdm_response, response_size - sig_size,
             ptr, &sig_size);
 
