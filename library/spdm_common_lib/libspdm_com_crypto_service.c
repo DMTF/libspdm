@@ -985,6 +985,7 @@ bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
 #endif
             spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
             spdm_context->connection_info.algorithm.req_base_asym_alg,
+            spdm_context->connection_info.algorithm.req_pqc_asym_alg,
             spdm_context->connection_info.algorithm.base_hash_algo,
             false, m1m2_buffer, m1m2_buffer_size, signature, &signature_size);
 #else
@@ -994,6 +995,7 @@ bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
 #endif
             spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
             spdm_context->connection_info.algorithm.req_base_asym_alg,
+            spdm_context->connection_info.algorithm.req_pqc_asym_alg,
             spdm_context->connection_info.algorithm.base_hash_algo,
             true, m1m2_hash, m1m2_hash_size, signature, &signature_size);
 #endif
@@ -1010,6 +1012,7 @@ bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
 #endif
             spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
             spdm_context->connection_info.algorithm.base_asym_algo,
+            spdm_context->connection_info.algorithm.pqc_asym_algo,
             spdm_context->connection_info.algorithm.base_hash_algo,
             false, m1m2_buffer, m1m2_buffer_size, signature,
             &signature_size);
@@ -1020,6 +1023,7 @@ bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
 #endif
             spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
             spdm_context->connection_info.algorithm.base_asym_algo,
+            spdm_context->connection_info.algorithm.pqc_asym_algo,
             spdm_context->connection_info.algorithm.base_hash_algo,
             true, m1m2_hash, m1m2_hash_size, signature,
             &signature_size);
@@ -1401,6 +1405,7 @@ bool libspdm_generate_endpoint_info_signature(libspdm_context_t *spdm_context,
 #endif
             spdm_context->connection_info.version, SPDM_ENDPOINT_INFO,
             spdm_context->connection_info.algorithm.req_base_asym_alg,
+            spdm_context->connection_info.algorithm.req_pqc_asym_alg,
             spdm_context->connection_info.algorithm.base_hash_algo,
             false, il1il2_buffer, il1il2_buffer_size, signature, &signature_size);
 #else
@@ -1410,6 +1415,7 @@ bool libspdm_generate_endpoint_info_signature(libspdm_context_t *spdm_context,
 #endif
             spdm_context->connection_info.version, SPDM_ENDPOINT_INFO,
             spdm_context->connection_info.algorithm.req_base_asym_alg,
+            spdm_context->connection_info.algorithm.req_pqc_asym_alg,
             spdm_context->connection_info.algorithm.base_hash_algo,
             true, il1il2_hash, il1il2_hash_size, signature, &signature_size);
 #endif
@@ -1426,6 +1432,7 @@ bool libspdm_generate_endpoint_info_signature(libspdm_context_t *spdm_context,
 #endif
             spdm_context->connection_info.version, SPDM_ENDPOINT_INFO,
             spdm_context->connection_info.algorithm.base_asym_algo,
+            spdm_context->connection_info.algorithm.pqc_asym_algo,
             spdm_context->connection_info.algorithm.base_hash_algo,
             false, il1il2_buffer, il1il2_buffer_size, signature,
             &signature_size);
@@ -1436,6 +1443,7 @@ bool libspdm_generate_endpoint_info_signature(libspdm_context_t *spdm_context,
 #endif
             spdm_context->connection_info.version, SPDM_ENDPOINT_INFO,
             spdm_context->connection_info.algorithm.base_asym_algo,
+            spdm_context->connection_info.algorithm.pqc_asym_algo,
             spdm_context->connection_info.algorithm.base_hash_algo,
             true, il1il2_hash, il1il2_hash_size, signature,
             &signature_size);
