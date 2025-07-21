@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -10,10 +10,11 @@
 
 #if LIBSPDM_CERT_PARSE_SUPPORT
 /*set_cert verify cert_chain*/
-static bool libspdm_set_cert_verify_certchain(uint8_t spdm_version,
-                                              const uint8_t *cert_chain, size_t cert_chain_size,
-                                              uint32_t base_asym_algo, uint32_t base_hash_algo,
-                                              uint8_t cert_model)
+static bool libspdm_set_cert_verify_certchain(
+    uint8_t spdm_version,
+    const uint8_t *cert_chain, size_t cert_chain_size,
+    uint32_t base_asym_algo, uint32_t pqc_asym_algo, uint32_t base_hash_algo,
+    uint8_t cert_model)
 {
     const uint8_t *root_cert_buffer;
     size_t root_cert_buffer_size;
@@ -51,9 +52,10 @@ static bool libspdm_set_cert_verify_certchain(uint8_t spdm_version,
             return false;
         }
     } else {
-        if (!libspdm_x509_set_cert_certificate_check_ex(leaf_cert_buffer, leaf_cert_buffer_size,
-                                                        base_asym_algo, base_hash_algo,
-                                                        false, cert_model)) {
+        if (!libspdm_x509_set_cert_certificate_check_with_pqc(
+                leaf_cert_buffer, leaf_cert_buffer_size,
+                base_asym_algo, pqc_asym_algo, base_hash_algo,
+                false, cert_model)) {
             return false;
         }
     }
@@ -234,7 +236,7 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT
             spdm_context,
 #endif
-            slot_id, NULL, 0, 0, 0
+            slot_id, NULL, 0, 0, 0, 0
 #if LIBSPDM_SET_CERT_CSR_PARAMS
             , &need_reset, &is_busy
 #endif /* LIBSPDM_SET_CERT_CSR_PARAMS */
@@ -286,6 +288,7 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
         result = libspdm_set_cert_verify_certchain(spdm_version,
                                                    cert_chain, cert_chain_size,
                                                    spdm_context->connection_info.algorithm.base_asym_algo,
+                                                   spdm_context->connection_info.algorithm.pqc_asym_algo,
                                                    spdm_context->connection_info.algorithm.base_hash_algo,
                                                    set_cert_model);
         if (!result) {
@@ -303,7 +306,8 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
             slot_id, cert_chain,
             cert_chain_size,
             spdm_context->connection_info.algorithm.base_hash_algo,
-            spdm_context->connection_info.algorithm.base_asym_algo
+            spdm_context->connection_info.algorithm.base_asym_algo,
+            spdm_context->connection_info.algorithm.pqc_asym_algo
 #if LIBSPDM_SET_CERT_CSR_PARAMS
             , &need_reset, &is_busy
 #endif /* LIBSPDM_SET_CERT_CSR_PARAMS */

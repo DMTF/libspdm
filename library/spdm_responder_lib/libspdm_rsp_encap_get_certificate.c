@@ -232,11 +232,19 @@ libspdm_return_t libspdm_process_encap_response_certificate(
     spdm_context->connection_info.peer_used_cert_chain[slot_id].buffer_hash_size =
         libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
 
-    result = libspdm_get_leaf_cert_public_key_from_cert_chain(
-        spdm_context->connection_info.algorithm.base_hash_algo,
-        spdm_context->connection_info.algorithm.req_base_asym_alg,
-        cert_chain_buffer, cert_chain_buffer_size,
-        &spdm_context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key);
+    if (spdm_context->connection_info.algorithm.req_pqc_asym_alg != 0) {
+        result = libspdm_get_pqc_leaf_cert_public_key_from_cert_chain(
+            spdm_context->connection_info.algorithm.base_hash_algo,
+            spdm_context->connection_info.algorithm.req_pqc_asym_alg,
+            cert_chain_buffer, cert_chain_buffer_size,
+            &spdm_context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key);
+    } else {
+        result = libspdm_get_leaf_cert_public_key_from_cert_chain(
+            spdm_context->connection_info.algorithm.base_hash_algo,
+            spdm_context->connection_info.algorithm.req_base_asym_alg,
+            cert_chain_buffer, cert_chain_buffer_size,
+            &spdm_context->connection_info.peer_used_cert_chain[slot_id].leaf_cert_public_key);
+    }
     if (!result) {
         return LIBSPDM_STATUS_INVALID_CERT;
     }

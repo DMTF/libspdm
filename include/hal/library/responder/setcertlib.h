@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -53,7 +53,7 @@ extern bool libspdm_write_certificate_to_nvm(
 #endif
     uint8_t slot_id, const void * cert_chain,
     size_t cert_chain_size,
-    uint32_t base_hash_algo, uint32_t base_asym_algo
+    uint32_t base_hash_algo, uint32_t base_asym_algo, uint32_t pqc_asym_algo
 #if LIBSPDM_SET_CERT_CSR_PARAMS
     , bool *need_reset, bool *is_busy
 #endif /* LIBSPDM_SET_CERT_CSR_PARAMS */
