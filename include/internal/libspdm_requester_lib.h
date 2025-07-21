@@ -262,6 +262,15 @@ libspdm_return_t libspdm_send_receive_key_exchange_ex(
 libspdm_return_t libspdm_send_receive_finish(libspdm_context_t *spdm_context,
                                              uint32_t session_id,
                                              uint8_t req_slot_id_param);
+
+libspdm_return_t libspdm_send_receive_finish_ex(
+    libspdm_context_t *spdm_context,
+    uint32_t session_id,
+    uint8_t req_slot_id_param,
+    const void *requester_opaque_data,
+    size_t requester_opaque_data_size,
+    void *responder_opaque_data,
+    size_t *responder_opaque_data_size);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
@@ -338,6 +347,14 @@ libspdm_return_t libspdm_send_receive_psk_exchange_ex(libspdm_context_t *spdm_co
  **/
 libspdm_return_t libspdm_send_receive_psk_finish(libspdm_context_t *spdm_context,
                                                  uint32_t session_id);
+
+libspdm_return_t libspdm_send_receive_psk_finish_ex(
+    libspdm_context_t *spdm_context,
+    uint32_t session_id,
+    const void *requester_opaque_data,
+    size_t requester_opaque_data_size,
+    void *responder_opaque_data,
+    size_t *responder_opaque_data_size);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_PSK_CAP */
 
 #if (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)

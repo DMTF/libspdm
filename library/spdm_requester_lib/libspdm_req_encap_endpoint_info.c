@@ -82,8 +82,14 @@ libspdm_return_t libspdm_get_encap_response_endpoint_info(void *spdm_context,
 
     if ((spdm_request->request_attributes &
          SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED) != 0) {
-        signature_size = libspdm_get_req_asym_signature_size(
-            context->connection_info.algorithm.req_base_asym_alg);
+        if (context->connection_info.algorithm.req_base_asym_alg != 0) {
+            signature_size = libspdm_get_req_asym_signature_size(
+                context->connection_info.algorithm.req_base_asym_alg);
+        }
+        if (context->connection_info.algorithm.req_pqc_asym_alg != 0) {
+            signature_size = libspdm_get_req_pqc_asym_signature_size(
+                context->connection_info.algorithm.req_pqc_asym_alg);
+        }
         if (request_size <
             sizeof(spdm_get_endpoint_info_request_t) +
             SPDM_NONCE_SIZE) {
