@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -61,15 +61,15 @@ libspdm_session_state_t libspdm_secured_message_get_session_state(
     void *spdm_secured_message_context);
 
 /**
- * Import the DHE Secret to an SPDM secured message context.
+ * Import the Shared Secret to an SPDM secured message context.
  *
  * @param  spdm_secured_message_context  A pointer to the SPDM secured message context.
- * @param  dhe_secret                    Indicate the DHE secret.
- * @param  dhe_secret_size               The size, in bytes, of the DHE secret.
+ * @param  shared_secret                 Indicate the shared secret.
+ * @param  shared_secret_size            The size, in bytes, of the shared secret.
  */
-bool libspdm_secured_message_import_dhe_secret(void *spdm_secured_message_context,
-                                               const void *dhe_secret,
-                                               size_t dhe_secret_size);
+bool libspdm_secured_message_import_shared_secret(void *spdm_secured_message_context,
+                                                  const void *shared_secret,
+                                                  size_t shared_secret_size);
 
 /**
  * Export the Export Master Secret from an SPDM secured message context.

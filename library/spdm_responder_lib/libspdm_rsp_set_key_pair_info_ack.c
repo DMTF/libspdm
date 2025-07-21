@@ -123,6 +123,8 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
         &current_key_usage,
         &asym_algo_capabilities,
         &current_asym_algo,
+        NULL,
+        NULL,
         &assoc_cert_slot_mask,
         NULL, NULL);
     if (!result) {
@@ -234,6 +236,7 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
         operation,
         desired_key_usage,
         desired_asym_algo,
+        0,
         desired_assoc_cert_slot_mask,
         &need_reset);
     if (!result) {

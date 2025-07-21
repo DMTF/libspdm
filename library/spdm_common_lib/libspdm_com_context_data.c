@@ -445,6 +445,45 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         break;
+    case LIBSPDM_DATA_PQC_ASYM_ALGO:
+        if (data_size != sizeof(uint32_t)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        data32 = libspdm_read_uint32((const uint8_t *)data);
+        if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
+            context->connection_info.algorithm.pqc_asym_algo = data32;
+        } else if (parameter->location == LIBSPDM_DATA_LOCATION_LOCAL) {
+            context->local_context.algorithm.pqc_asym_algo = data32;
+        } else {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        break;
+    case LIBSPDM_DATA_REQ_PQC_ASYM_ALG:
+        if (data_size != sizeof(uint32_t)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        data32 = libspdm_read_uint32((const uint8_t *)data);
+        if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
+            context->connection_info.algorithm.req_pqc_asym_alg = data32;
+        } else if (parameter->location == LIBSPDM_DATA_LOCATION_LOCAL) {
+            context->local_context.algorithm.req_pqc_asym_alg = data32;
+        } else {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        break;
+    case LIBSPDM_DATA_KEM_ALG:
+        if (data_size != sizeof(uint32_t)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        data32 = libspdm_read_uint32((const uint8_t *)data);
+        if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
+            context->connection_info.algorithm.kem_alg = data32;
+        } else if (parameter->location == LIBSPDM_DATA_LOCATION_LOCAL) {
+            context->local_context.algorithm.kem_alg = data32;
+        } else {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        break;
     case LIBSPDM_DATA_CONNECTION_STATE:
         if (data_size != sizeof(libspdm_connection_state_t)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
@@ -1013,6 +1052,27 @@ libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_t
         }
         target_data_size = sizeof(uint8_t);
         target_data = &context->connection_info.algorithm.mel_spec;
+        break;
+    case LIBSPDM_DATA_PQC_ASYM_ALGO:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_CONNECTION) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        target_data_size = sizeof(uint32_t);
+        target_data = &context->connection_info.algorithm.pqc_asym_algo;
+        break;
+    case LIBSPDM_DATA_REQ_PQC_ASYM_ALG:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_CONNECTION) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        target_data_size = sizeof(uint32_t);
+        target_data = &context->connection_info.algorithm.req_pqc_asym_alg;
+        break;
+    case LIBSPDM_DATA_KEM_ALG:
+        if (parameter->location != LIBSPDM_DATA_LOCATION_CONNECTION) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        target_data_size = sizeof(uint32_t);
+        target_data = &context->connection_info.algorithm.kem_alg;
         break;
     case LIBSPDM_DATA_CONNECTION_STATE:
         if (parameter->location != LIBSPDM_DATA_LOCATION_CONNECTION) {
@@ -3286,6 +3346,8 @@ libspdm_return_t libspdm_init_context_with_secured_context(void *spdm_context,
     context->local_context.version.spdm_version[2] = SPDM_MESSAGE_VERSION_12 <<
                                                      SPDM_VERSION_NUMBER_SHIFT_BIT;
     context->local_context.version.spdm_version[3] = SPDM_MESSAGE_VERSION_13 <<
+                                                     SPDM_VERSION_NUMBER_SHIFT_BIT;
+    context->local_context.version.spdm_version[4] = SPDM_MESSAGE_VERSION_14 <<
                                                      SPDM_VERSION_NUMBER_SHIFT_BIT;
     context->local_context.secured_message_version.spdm_version_count =
         SECURED_SPDM_MAX_VERSION_COUNT;
