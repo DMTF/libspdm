@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -216,6 +216,7 @@ libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
 #endif
             spdm_context->connection_info.algorithm.base_hash_algo,
             spdm_context->connection_info.algorithm.base_asym_algo,
+            spdm_context->connection_info.algorithm.pqc_asym_algo,
             &need_reset, request, request_size,
             requester_info, requester_info_length,
             opaque_data, opaque_data_length,

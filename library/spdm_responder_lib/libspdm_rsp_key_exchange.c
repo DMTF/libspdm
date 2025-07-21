@@ -151,6 +151,7 @@ bool libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context
 #endif /* LIBSPDM_HAL_PASS_SPDM_CONTEXT */
         spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
         spdm_context->connection_info.algorithm.base_asym_algo,
+        spdm_context->connection_info.algorithm.pqc_asym_algo,
         spdm_context->connection_info.algorithm.base_hash_algo,
         false, th_curr_data, th_curr_data_size, signature, &signature_size);
 #else
@@ -160,6 +161,7 @@ bool libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context
 #endif /* LIBSPDM_HAL_PASS_SPDM_CONTEXT */
         spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
         spdm_context->connection_info.algorithm.base_asym_algo,
+        spdm_context->connection_info.algorithm.pqc_asym_algo,
         spdm_context->connection_info.algorithm.base_hash_algo,
         true, hash_data, hash_size, signature, &signature_size);
 #endif /* LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT */

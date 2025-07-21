@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -45,6 +45,7 @@ bool libspdm_generate_measurement_signature(libspdm_context_t *spdm_context,
 #endif
         spdm_context->connection_info.version, SPDM_MEASUREMENTS,
         spdm_context->connection_info.algorithm.base_asym_algo,
+        spdm_context->connection_info.algorithm.pqc_asym_algo,
         spdm_context->connection_info.algorithm.base_hash_algo,
         false, l1l2_buffer, l1l2_buffer_size, signature, &signature_size);
 #else
@@ -54,6 +55,7 @@ bool libspdm_generate_measurement_signature(libspdm_context_t *spdm_context,
 #endif
         spdm_context->connection_info.version, SPDM_MEASUREMENTS,
         spdm_context->connection_info.algorithm.base_asym_algo,
+        spdm_context->connection_info.algorithm.pqc_asym_algo,
         spdm_context->connection_info.algorithm.base_hash_algo,
         true, l1l2_hash, l1l2_hash_size, signature, &signature_size);
 #endif

@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2024 DMTF. All rights reserved.
+ *  Copyright 2024-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -117,6 +117,8 @@ libspdm_return_t libspdm_get_response_key_pair_info(libspdm_context_t *spdm_cont
         &current_key_usage,
         &asym_algo_capabilities,
         &current_asym_algo,
+        NULL,
+        NULL,
         &assoc_cert_slot_mask,
         &public_key_info_len,
         public_key_info);
