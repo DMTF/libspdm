@@ -66,6 +66,9 @@ typedef struct {
     uint16_t aead_cipher_suite;
     uint16_t req_base_asym_alg;
     uint16_t key_schedule;
+    uint32_t pqc_asym_algo;
+    uint32_t req_pqc_asym_alg;
+    uint32_t kem_alg;
 } libspdm_device_algorithm_t;
 
 typedef struct {
@@ -478,9 +481,10 @@ typedef struct {
     uint8_t req_slot_id;
     spdm_message_header_t last_encap_request_header;
     size_t last_encap_request_size;
-    uint16_t cert_chain_total_len;
+    uint32_t cert_chain_total_len;
     uint8_t req_context[SPDM_REQ_CONTEXT_SIZE];
     uint32_t session_id;
+    bool use_large_cert_chain;
 } libspdm_encap_context_t;
 
 #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP

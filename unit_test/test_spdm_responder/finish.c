@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -933,7 +933,7 @@ void libspdm_test_responder_finish_case8(void **state)
         spdm_context,
 #endif
         m_libspdm_finish_request3.header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT, SPDM_FINISH,
-            m_libspdm_use_req_asym_algo, m_libspdm_use_hash_algo,
+            m_libspdm_use_req_asym_algo, m_libspdm_use_req_pqc_asym_algo, m_libspdm_use_hash_algo,
             false, libspdm_get_managed_buffer(&th_curr),
             libspdm_get_managed_buffer_size(&th_curr),
             ptr, &req_asym_signature_size);
@@ -1639,7 +1639,7 @@ void libspdm_test_responder_finish_case15(void **state)
         spdm_context,
 #endif
         m_libspdm_finish_request3.header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT, SPDM_FINISH,
-            m_libspdm_use_req_asym_algo, m_libspdm_use_hash_algo,
+            m_libspdm_use_req_asym_algo, m_libspdm_use_req_pqc_asym_algo, m_libspdm_use_hash_algo,
             false, libspdm_get_managed_buffer(&th_curr),
             libspdm_get_managed_buffer_size(&th_curr),
             ptr, &req_asym_signature_size);
@@ -1799,7 +1799,7 @@ void libspdm_test_responder_finish_case16(void **state)
         spdm_context,
 #endif
         m_libspdm_finish_request3.header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT, SPDM_FINISH,
-            m_libspdm_use_req_asym_algo, m_libspdm_use_hash_algo,
+            m_libspdm_use_req_asym_algo, m_libspdm_use_req_pqc_asym_algo, m_libspdm_use_hash_algo,
             false, random_buffer, hash_size, ptr, &req_asym_signature_size);
 #endif
     libspdm_append_managed_buffer(&th_curr, ptr, req_asym_signature_size);
@@ -2052,7 +2052,7 @@ void libspdm_test_responder_finish_case18(void **state)
 #endif
         m_libspdm_finish_request4.header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
             SPDM_FINISH,
-            m_libspdm_use_req_asym_algo, m_libspdm_use_hash_algo,
+            m_libspdm_use_req_asym_algo, m_libspdm_use_req_pqc_asym_algo, m_libspdm_use_hash_algo,
             false, libspdm_get_managed_buffer(&th_curr),
             libspdm_get_managed_buffer_size(&th_curr),
             ptr, &req_asym_signature_size);
@@ -2219,7 +2219,7 @@ void libspdm_test_responder_finish_case19(void **state)
         spdm_context,
 #endif
         m_libspdm_finish_request5.header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT, SPDM_FINISH,
-            m_libspdm_use_req_asym_algo, m_libspdm_use_hash_algo,
+            m_libspdm_use_req_asym_algo, m_libspdm_use_req_pqc_asym_algo, m_libspdm_use_hash_algo,
             false, libspdm_get_managed_buffer(&th_curr),
             libspdm_get_managed_buffer_size(&th_curr),
             ptr, &req_asym_signature_size);
@@ -2389,7 +2389,7 @@ void libspdm_test_responder_finish_case20(void **state)
         spdm_context,
 #endif
         m_libspdm_finish_request7.header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT, SPDM_FINISH,
-            m_libspdm_use_req_asym_algo, m_libspdm_use_hash_algo,
+            m_libspdm_use_req_asym_algo, m_libspdm_use_req_pqc_asym_algo, m_libspdm_use_hash_algo,
             false, libspdm_get_managed_buffer(&th_curr),
             libspdm_get_managed_buffer_size(&th_curr),
             ptr, &req_asym_signature_size);
@@ -2672,7 +2672,7 @@ void libspdm_test_responder_finish_case22(void **state)
         spdm_context,
 #endif
         m_libspdm_finish_request7.header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT, SPDM_FINISH,
-            m_libspdm_use_req_asym_algo, m_libspdm_use_hash_algo,
+            m_libspdm_use_req_asym_algo, m_libspdm_use_req_pqc_asym_algo, m_libspdm_use_hash_algo,
             false, libspdm_get_managed_buffer(&th_curr),
             libspdm_get_managed_buffer_size(&th_curr),
             ptr, &req_asym_signature_size);
@@ -2839,7 +2839,7 @@ void libspdm_test_responder_finish_case23(void** state)
         spdm_context,
 #endif
         m_libspdm_finish_request7.header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT, SPDM_FINISH,
-            m_libspdm_use_req_asym_algo, m_libspdm_use_hash_algo,
+            m_libspdm_use_req_asym_algo, m_libspdm_use_req_pqc_asym_algo, m_libspdm_use_hash_algo,
             false, libspdm_get_managed_buffer(&th_curr),
             libspdm_get_managed_buffer_size(&th_curr),
             ptr, &req_asym_signature_size);
@@ -3006,7 +3006,7 @@ void libspdm_test_responder_finish_case24(void** state)
         spdm_context,
 #endif
         m_libspdm_finish_request7.header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT, SPDM_FINISH,
-            m_libspdm_use_req_asym_algo, m_libspdm_use_hash_algo,
+            m_libspdm_use_req_asym_algo, m_libspdm_use_req_pqc_asym_algo, m_libspdm_use_hash_algo,
             false, libspdm_get_managed_buffer(&th_curr),
             libspdm_get_managed_buffer_size(&th_curr),
             ptr, &req_asym_signature_size);
@@ -3173,7 +3173,7 @@ void libspdm_test_responder_finish_case25(void** state)
         spdm_context,
 #endif
         m_libspdm_finish_request7.header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT, SPDM_FINISH,
-            m_libspdm_use_req_asym_algo, m_libspdm_use_hash_algo,
+            m_libspdm_use_req_asym_algo, m_libspdm_use_req_pqc_asym_algo, m_libspdm_use_hash_algo,
             false, libspdm_get_managed_buffer(&th_curr),
             libspdm_get_managed_buffer_size(&th_curr),
             ptr, &req_asym_signature_size);
@@ -3338,7 +3338,7 @@ void libspdm_test_responder_finish_case26(void** state)
         spdm_context,
 #endif
         m_libspdm_finish_request7.header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT, SPDM_FINISH,
-            m_libspdm_use_req_asym_algo, m_libspdm_use_hash_algo,
+            m_libspdm_use_req_asym_algo, m_libspdm_use_req_pqc_asym_algo, m_libspdm_use_hash_algo,
             false, libspdm_get_managed_buffer(&th_curr),
             libspdm_get_managed_buffer_size(&th_curr),
             ptr, &req_asym_signature_size);
@@ -3509,7 +3509,7 @@ void libspdm_test_responder_finish_case27(void** state)
         spdm_context,
 #endif
         m_libspdm_finish_request7.header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT, SPDM_FINISH,
-            m_libspdm_use_req_asym_algo, m_libspdm_use_hash_algo,
+            m_libspdm_use_req_asym_algo, m_libspdm_use_req_pqc_asym_algo, m_libspdm_use_hash_algo,
             false, libspdm_get_managed_buffer(&th_curr),
             libspdm_get_managed_buffer_size(&th_curr),
             ptr, &req_asym_signature_size);
@@ -3680,7 +3680,7 @@ void libspdm_test_responder_finish_case28(void** state)
         spdm_context,
 #endif
         m_libspdm_finish_request7.header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT, SPDM_FINISH,
-            m_libspdm_use_req_asym_algo, m_libspdm_use_hash_algo,
+            m_libspdm_use_req_asym_algo, m_libspdm_use_req_pqc_asym_algo, m_libspdm_use_hash_algo,
             false, libspdm_get_managed_buffer(&th_curr),
             libspdm_get_managed_buffer_size(&th_curr),
             ptr, &req_asym_signature_size);

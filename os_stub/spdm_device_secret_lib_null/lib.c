@@ -119,7 +119,7 @@ bool libspdm_requester_data_sign(
     void *spdm_context,
 #endif
     spdm_version_number_t spdm_version, uint8_t op_code,
-    uint16_t req_base_asym_alg,
+    uint16_t req_base_asym_alg, uint32_t req_pqc_asym_alg,
     uint32_t base_hash_algo, bool is_data_hash,
     const uint8_t *message, size_t message_size,
     uint8_t *signature, size_t *sig_size)
@@ -133,7 +133,7 @@ bool libspdm_responder_data_sign(
     void *spdm_context,
 #endif
     spdm_version_number_t spdm_version, uint8_t op_code,
-    uint32_t base_asym_algo,
+    uint32_t base_asym_algo, uint32_t pqc_asym_algo,
     uint32_t base_hash_algo, bool is_data_hash,
     const uint8_t *message, size_t message_size,
     uint8_t *signature, size_t *sig_size)
@@ -183,7 +183,7 @@ bool libspdm_write_certificate_to_nvm(
 #endif
     uint8_t slot_id, const void * cert_chain,
     size_t cert_chain_size,
-    uint32_t base_hash_algo, uint32_t base_asym_algo
+    uint32_t base_hash_algo, uint32_t base_asym_algo, uint32_t pqc_asym_algo
 #if LIBSPDM_SET_CERT_CSR_PARAMS
     , bool *need_reset, bool *is_busy
 #endif /* LIBSPDM_SET_CERT_CSR_PARAMS */
@@ -218,7 +218,8 @@ bool libspdm_gen_csr_ex(
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT
     void *spdm_context,
 #endif
-    uint32_t base_hash_algo, uint32_t base_asym_algo, bool *need_reset,
+    uint32_t base_hash_algo, uint32_t base_asym_algo, uint32_t pqc_asym_algo,
+    bool *need_reset,
     const void *request, size_t request_size,
     uint8_t *requester_info, size_t requester_info_length,
     uint8_t *opaque_data, uint16_t opaque_data_length,
@@ -293,6 +294,8 @@ bool libspdm_read_key_pair_info(
     uint16_t *current_key_usage,
     uint32_t *asym_algo_capabilities,
     uint32_t *current_asym_algo,
+    uint32_t *pqc_asym_algo_capabilities,
+    uint32_t *current_pqc_asym_algo,
     uint8_t *assoc_cert_slot_mask,
     uint16_t *public_key_info_len,
     uint8_t *public_key_info)
@@ -308,6 +311,7 @@ bool libspdm_write_key_pair_info(
     uint8_t operation,
     uint16_t desired_key_usage,
     uint32_t desired_asym_algo,
+    uint32_t desired_pqc_asym_algo,
     uint8_t desired_assoc_cert_slot_mask,
     bool *need_reset)
 {

@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -46,11 +46,19 @@ bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
     LIBSPDM_ASSERT((slot_id < SPDM_MAX_SLOT_COUNT) || (slot_id == 0xF));
 
     if (slot_id == 0xF) {
-        result = libspdm_asym_get_public_key_from_der(
-            spdm_context->connection_info.algorithm.base_asym_algo,
-            spdm_context->local_context.peer_public_key_provision,
-            spdm_context->local_context.peer_public_key_provision_size,
-            &context);
+        if (spdm_context->connection_info.algorithm.pqc_asym_algo != 0) {
+            result = libspdm_pqc_asym_get_public_key_from_der(
+                spdm_context->connection_info.algorithm.pqc_asym_algo,
+                spdm_context->local_context.peer_public_key_provision,
+                spdm_context->local_context.peer_public_key_provision_size,
+                &context);
+        } else {
+            result = libspdm_asym_get_public_key_from_der(
+                spdm_context->connection_info.algorithm.base_asym_algo,
+                spdm_context->local_context.peer_public_key_provision,
+                spdm_context->local_context.peer_public_key_provision_size,
+                &context);
+        }
         if (!result) {
             return false;
         }
@@ -70,9 +78,15 @@ bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
             return false;
         }
 
-        result = libspdm_asym_get_public_key_from_x509(
-            spdm_context->connection_info.algorithm.base_asym_algo,
-            cert_buffer, cert_buffer_size, &context);
+        if (spdm_context->connection_info.algorithm.pqc_asym_algo != 0) {
+            result = libspdm_pqc_asym_get_public_key_from_x509(
+                spdm_context->connection_info.algorithm.pqc_asym_algo,
+                cert_buffer, cert_buffer_size, &context);
+        } else {
+            result = libspdm_asym_get_public_key_from_x509(
+                spdm_context->connection_info.algorithm.base_asym_algo,
+                cert_buffer, cert_buffer_size, &context);
+        }
         if (!result) {
             return false;
         }
@@ -83,22 +97,42 @@ bool libspdm_verify_measurement_signature(libspdm_context_t *spdm_context,
     }
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-    result = libspdm_asym_verify_ex(
-        spdm_context->connection_info.version, SPDM_MEASUREMENTS,
-        spdm_context->connection_info.algorithm.base_asym_algo,
-        spdm_context->connection_info.algorithm.base_hash_algo,
-        context, l1l2_buffer, l1l2_buffer_size, sign_data, sign_data_size,
-        &spdm_context->spdm_10_11_verify_signature_endian);
-    libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo, context);
-#else
-    result = libspdm_asym_verify_hash_ex(
-        spdm_context->connection_info.version, SPDM_MEASUREMENTS,
-        spdm_context->connection_info.algorithm.base_asym_algo,
-        spdm_context->connection_info.algorithm.base_hash_algo,
-        context, l1l2_hash, l1l2_hash_size, sign_data, sign_data_size,
-        &spdm_context->spdm_10_11_verify_signature_endian);
-    if (slot_id == 0xF) {
+    if (spdm_context->connection_info.algorithm.pqc_asym_algo != 0) {
+        result = libspdm_pqc_asym_verify(
+            spdm_context->connection_info.version, SPDM_MEASUREMENTS,
+            spdm_context->connection_info.algorithm.pqc_asym_algo,
+            spdm_context->connection_info.algorithm.base_hash_algo,
+            context, l1l2_buffer, l1l2_buffer_size, sign_data, sign_data_size);
+        libspdm_pqc_asym_free(spdm_context->connection_info.algorithm.pqc_asym_algo, context);
+    } else {
+        result = libspdm_asym_verify_ex(
+            spdm_context->connection_info.version, SPDM_MEASUREMENTS,
+            spdm_context->connection_info.algorithm.base_asym_algo,
+            spdm_context->connection_info.algorithm.base_hash_algo,
+            context, l1l2_buffer, l1l2_buffer_size, sign_data, sign_data_size,
+            &spdm_context->spdm_10_11_verify_signature_endian);
         libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo, context);
+    }
+#else
+    if (spdm_context->connection_info.algorithm.pqc_asym_algo != 0) {
+        result = libspdm_pqc_asym_verify_hash(
+            spdm_context->connection_info.version, SPDM_MEASUREMENTS,
+            spdm_context->connection_info.algorithm.pqc_asym_algo,
+            spdm_context->connection_info.algorithm.base_hash_algo,
+            context, l1l2_hash, l1l2_hash_size, sign_data, sign_data_size);
+        if (slot_id == 0xF) {
+            libspdm_pqc_asym_free(spdm_context->connection_info.algorithm.pqc_asym_algo, context);
+        }
+    } else {
+        result = libspdm_asym_verify_hash_ex(
+            spdm_context->connection_info.version, SPDM_MEASUREMENTS,
+            spdm_context->connection_info.algorithm.base_asym_algo,
+            spdm_context->connection_info.algorithm.base_hash_algo,
+            context, l1l2_hash, l1l2_hash_size, sign_data, sign_data_size,
+            &spdm_context->spdm_10_11_verify_signature_endian);
+        if (slot_id == 0xF) {
+            libspdm_asym_free(spdm_context->connection_info.algorithm.base_asym_algo, context);
+        }
     }
 #endif
     if (!result) {
@@ -212,8 +246,13 @@ static libspdm_return_t libspdm_try_get_measurement(libspdm_context_t *spdm_cont
     }
 
     if ((request_attribute & SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE) != 0) {
-        signature_size = libspdm_get_asym_signature_size(
-            spdm_context->connection_info.algorithm.base_asym_algo);
+        if (spdm_context->connection_info.algorithm.pqc_asym_algo != 0) {
+            signature_size = libspdm_get_pqc_asym_signature_size(
+                spdm_context->connection_info.algorithm.pqc_asym_algo);
+        } else {
+            signature_size = libspdm_get_asym_signature_size(
+                spdm_context->connection_info.algorithm.base_asym_algo);
+        }
     } else {
         signature_size = 0;
     }
