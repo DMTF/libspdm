@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -220,10 +220,6 @@ static libspdm_return_t libspdm_try_send_receive_psk_finish(libspdm_context_t *s
         status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
     }
-    if (spdm_response->header.spdm_version != spdm_request->header.spdm_version) {
-        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-        goto receive_done;
-    }
     if (spdm_response->header.request_response_code == SPDM_ERROR) {
         if (spdm_response->header.param1 == SPDM_ERROR_CODE_DECRYPT_ERROR) {
             status = LIBSPDM_STATUS_SESSION_MSG_ERROR;
@@ -238,6 +234,10 @@ static libspdm_return_t libspdm_try_send_receive_psk_finish(libspdm_context_t *s
         }
     } else if (spdm_response->header.request_response_code !=
                SPDM_PSK_FINISH_RSP) {
+        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+        goto receive_done;
+    }
+    if (spdm_response->header.spdm_version != spdm_request->header.spdm_version) {
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }

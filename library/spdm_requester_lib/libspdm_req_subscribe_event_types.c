@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2024 DMTF. All rights reserved.
+ *  Copyright 2024-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -125,10 +125,6 @@ static libspdm_return_t try_libspdm_subscribe_event_types(libspdm_context_t *spd
         status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
     }
-    if (spdm_response->header.spdm_version != spdm_request->header.spdm_version) {
-        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-        goto receive_done;
-    }
     if (spdm_response->header.request_response_code == SPDM_ERROR) {
         status = libspdm_handle_error_response_main(
             spdm_context, &session_id,
@@ -138,6 +134,10 @@ static libspdm_return_t try_libspdm_subscribe_event_types(libspdm_context_t *spd
             goto receive_done;
         }
     } else if (spdm_response->header.request_response_code != SPDM_SUBSCRIBE_EVENT_TYPES_ACK) {
+        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+        goto receive_done;
+    }
+    if (spdm_response->header.spdm_version != spdm_request->header.spdm_version) {
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto receive_done;
     }
