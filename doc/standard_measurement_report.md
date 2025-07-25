@@ -13,9 +13,12 @@ SPDM Requester and consumed by a Verifier while all agents are operating in prod
 particular, a production Verifier may only support a measurement report of this type and can point
 to this document to advertise that restriction to other agents.
 
-## Standard Measurement Report Definition
+There are 2 types of Standard Measurement Report. A verifier should support All-Measurements Report
+and may support One-by-One-Measurements Report.
 
-The standard measurement report is a byte buffer that consists of the L1/L2 transcript along with
+## Standard All-Measurements Report Definition
+
+The standard all-measurements report is a byte buffer that consists of the L1/L2 transcript along with
 the signature over the transcript if the Responder supports signing. It is comprised of a single
 `GET_MEASUREMENTS` request and a single `MEASUREMENTS` response.
 
@@ -31,14 +34,59 @@ request has the following properties:
 * For SPDM 1.3 and later, `NewMeasurementRequested` is not set.
     * This requests the current state of the Responder and not its future state.
 
+## Standard One-by-One-Measurements Report Definition
+
+The standard one-by-one-measurements report is a byte buffer that consists of the L1/L2 transcript along with
+the signature over the transcript if the Responder supports signing. It is comprised of multiple
+`GET_MEASUREMENTS` requests and multiple `MEASUREMENTS` responses.
+
+For SPDM 1.0 and 1.1, the byte buffer is {`GET_MEASUREMENTS`(0), `MEASUREMENTS`(0),
+`GET_MEASUREMENTS`(1), `MEASUREMENTS`(1), ..., `GET_MEASUREMENTS`(n), `MEASUREMENTS`(n)}.
+For SPDM 1.2 and later, the byte buffer is {`VCA`, `GET_MEASUREMENTS`(0), `MEASUREMENTS`(0),
+`GET_MEASUREMENTS`(1), `MEASUREMENTS`(1), ..., `GET_MEASUREMENTS`(n), `MEASUREMENTS`(n)}.
+
+The `GET_MEASUREMENTS`(0) request has the following properties:
+* `Param2 = 0x00`
+    * Total number of measurement blocks is requested.
+    * Assuming that the Responder returns `n` measurement blocks in `MEASUREMENTS`(0).
+* `SignatureRequested` is not set.
+* For SPDM 1.2 and later, `RawBitStreamRequested` is not set.
+* For SPDM 1.3 and later, `NewMeasurementRequested` is not set.
+
+The `GET_MEASUREMENTS`(1) to `GET_MEASUREMENTS`(n) request has the following properties:
+* `Param2`
+    * The requested measurement index. It should be between 0x1 and 0xFE, inclusive and incremental.
+    * Only successful `GET_MEASUREMENTS`(x) and `MEASUREMENTS`(x) are recorded in the measurement report.
+* `SignatureRequested`
+    * For `GET_MEASUREMENTS`(1), ..., and `GET_MEASUREMENTS`(n-1), it is not set.
+    * For `GET_MEASUREMENTS`(n), if the Responder supports signature generation (`MEAS_CAP = 10b`)
+      then it is set, else it is not set.
+    * For SPDM 1.2 and later, if the requester detected the signed `MEASUREMENT`(n)
+      `content change` field is `01b`(changed), the requester should discard this measurement report
+      and recollect from the beginning.
+* For SPDM 1.2 and later, `RawBitStreamRequested` is not set.
+* For SPDM 1.3 and later, `NewMeasurementRequested` is not set.
+
 ## Rationale
 
-### Single Request and Response
+### Single or One-by-One Request and Response
 
 Capturing all measurements in a single response provides an atomic snapshot of the state of the
 Responder at a specific point in time. As such, a Verifier need not have to reason about the state
 of the Responder through multiple measurement requests and responses with a possibly unknown amount
 of time between each message.
+
+The requester should collect All-Measurements Report at first. Only if the device cannot return
+all measurements at one time due to some errors (such as transport layer limitation),
+then the requester can try to collect One-by-One-Measurements Report.
+
+### Detecting Measurement Report format
+
+The verifier may check the first `GET_MEASUREMENTS` in the Measurement Report.
+* If the `Param2` is `0xFF`(All Measurements), then it is All-Measurements Report.
+  The whole Measurement report should include only one `GET_MEASUREMENTS`/`MEASUREMENTS` pair.
+* If the `Param2` is `0x00`(Total Number), then it is One-by-One-Measurements Report.
+  The whole Measurement report should include only `n`+1 `GET_MEASUREMENTS`/`MEASUREMENTS` pairs.
 
 ### Byte Buffer
 
@@ -56,3 +104,47 @@ are evaluated by the Verifier while the Responder is in production.
 
 Presumably the Verifier evaluates the current state of the Responder and not its future state. As
 such `NewMeasurementRequested` is not set.
+
+### Non-Sequentially Increased Measurement Index
+
+If One-by-One-Measurements report is used, the `Param2`(measurement index) in `GET_MEASUREMENTS`(1)
+to `GET_MEASUREMENTS`(n) is non-sequentially incremental.
+A device may implement non-sequentially increased measurement index.
+For example, a device has 3 measurement blocks. The index is 1, 4 and 6.
+Then the `Param2` of `GET_MEASUREMENTS`(1) is 1, the `Param2` of `GET_MEASUREMENTS`(2) is 4,
+and the `Param2` of `GET_MEASUREMENTS`(3) is 6.
+The requester may send a `GET_MEASUREMENTS` with `Param2` 2, but it will get `ERROR` response.
+As such, the `GET_MEASUREMENTS` with `Param2` 2 and `ERROR` response are NOT included
+in the measurement report.
+Once the successfully received number of measurement block is `n`-1, the requester should send
+the next `GET_MEASUREMENTS` with `SignatureRequested` set.
+
+### Completeness
+
+All-Measurements report includes all measurements. The compleness is guaranteed.
+If One-by-One-Measurements report is used,
+the requester should request the total number of measurement block (`n`) first,
+then request all `n` measurement blocks one by one incrementally.
+
+### Atomicity
+
+All-Measurements report is a snapshot for the device state. The atomicity is guaranteed.
+If One-by-One-Measurements report is used,
+the requester should verify the `content change` and recollect One-by-One-Measurements report
+in case that the `MeasurementRecord` fields of previous `MEASUREMENTS` responses are changed.
+
+### Freshness
+
+The verifier should input a nonce value and check the nonce value in the measurement report
+to ensure the freshness of the measurement report, if digital signature is supported.
+
+### Integrity
+
+The verifier should request a digital signature in the last message `GET_MEASUREMENTS`
+for the whole measurement report, if supported by the Responder.
+
+### Device Identity
+
+The verifier should verify the device identity at first (e.g. certificate or raw public key),
+then verify the digital signature of the measurement report.
+
