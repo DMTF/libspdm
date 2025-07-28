@@ -31,6 +31,52 @@ returns early with value not equal to `LIBSPDM_STATUS_SUCCESS` then the SPDM con
 before attempting establish a new connection.
 <br/><br/>
 
+---
+### libspdm_get_supported_algorithms
+---
+
+### Description
+Sends `GET_VERSION` and `GET_CAPABILITIES` requests to retrieve the Responder's supported algorithms before algorithm negotiation.
+
+### Parameters
+
+**spdm_context**<br/>
+The SPDM context.
+
+**responder_supported_algorithms_length**<br/>
+On input, indicates the size, in bytes, of the buffer in which the supported algorithms will be stored.
+The buffer must be at least sizeof(libspdm_responder_supported_algorithms_13_t) bytes.
+On output, indicates the size, in bytes, of the supported algorithms data.
+
+**responder_supported_algorithms_buffer**<br/>
+A pointer to a buffer to store the Responder's supported algorithms. Must not be NULL.
+
+**spdm_version**<br/>
+A pointer to store the SPDM version used for the request. The Integrator should check this value
+to determine which structure type to use when accessing the algorithms data.
+
+### Details
+Before calling this function the Integrator must ensure that the SPDM context is initialized
+with proper configuration, including the Requester's capabilities. The Requester must support
+at least one SPDM version >= 1.3 and have CHUNK_CAP capability enabled in its configuration.
+
+When this function returns with value `LIBSPDM_STATUS_SUCCESS`, the Integrator should:
+1. Check the `spdm_version` to determine which structure type to use
+2. Cast `responder_supported_algorithms_buffer` to the appropriate structure type
+3. Access the supported algorithms through the structure fields
+
+For example, if `spdm_version` indicates SPDM 1.3 or above:
+```c
+libspdm_responder_supported_algorithms_13_t *algorithms;
+algorithms = (libspdm_responder_supported_algorithms_13_t *)responder_supported_algorithms_buffer;
+// Access algorithms through algorithms->ext_asym_count, algorithms->ext_hash_count, etc.
+```
+
+If this function returns with value `LIBSPDM_STATUS_UNSUPPORTED_CAP`, either the Requester
+does not support version 1.3 or above, or CHUNK_CAP is not enabled.
+
+The function will assert if responder_supported_algorithms_buffer is NULL.
+<br/><br/>
 
 ---
 ### libspdm_get_digest
