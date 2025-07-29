@@ -16,8 +16,8 @@ extern "C" {
 #include "library/spdm_secured_message_lib.h"
 #include "library/spdm_return_status.h"
 
-#define LIBSPDM_MAJOR_VERSION 0x03
-#define LIBSPDM_MINOR_VERSION 0x09
+#define LIBSPDM_MAJOR_VERSION 0x04
+#define LIBSPDM_MINOR_VERSION 0x00
 #define LIBSPDM_PATCH_VERSION 0x00
 #define LIBSPDM_ALPHA         0xFF
 
