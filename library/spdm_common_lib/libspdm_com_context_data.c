@@ -3497,11 +3497,21 @@ void libspdm_deinit_context(void *spdm_context)
 
         if (pubkey_context != NULL) {
             if (is_requester) {
-                libspdm_asym_free(
-                    context->connection_info.algorithm.base_asym_algo, pubkey_context);
+                if (context->connection_info.algorithm.pqc_asym_algo != 0) {
+                    libspdm_pqc_asym_free(
+                        context->connection_info.algorithm.pqc_asym_algo, pubkey_context);
+                } else {
+                    libspdm_asym_free(
+                        context->connection_info.algorithm.base_asym_algo, pubkey_context);
+                }
             } else {
-                libspdm_req_asym_free(
-                    context->connection_info.algorithm.req_base_asym_alg, pubkey_context);
+                if (context->connection_info.algorithm.req_pqc_asym_alg != 0) {
+                    libspdm_req_pqc_asym_free(
+                        context->connection_info.algorithm.req_pqc_asym_alg, pubkey_context);
+                } else {
+                    libspdm_req_asym_free(
+                        context->connection_info.algorithm.req_base_asym_alg, pubkey_context);
+                }
             }
 
             context->connection_info.peer_used_cert_chain[slot_index].leaf_cert_public_key = NULL;

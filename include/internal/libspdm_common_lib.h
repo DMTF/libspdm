@@ -481,9 +481,10 @@ typedef struct {
     uint8_t req_slot_id;
     spdm_message_header_t last_encap_request_header;
     size_t last_encap_request_size;
-    uint16_t cert_chain_total_len;
+    uint32_t cert_chain_total_len;
     uint8_t req_context[SPDM_REQ_CONTEXT_SIZE];
     uint32_t session_id;
+    bool use_large_cert_chain;
 } libspdm_encap_context_t;
 
 #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP

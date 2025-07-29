@@ -236,9 +236,10 @@ typedef struct {
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MULTI_KEY_CAP)
 
 /* SPDM GET_CAPABILITIES request flags (1.4) */
+#define SPDM_GET_CAPABILITIES_REQUEST_FLAGS_LARGE_RESP_CAP 0x80000000
 #define SPDM_GET_CAPABILITIES_REQUEST_FLAGS_14_MASK ( \
         SPDM_GET_CAPABILITIES_REQUEST_FLAGS_13_MASK | \
-        0)
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_LARGE_RESP_CAP)
 
 /* SPDM GET_CAPABILITIES response flags (1.0) */
 #define SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CACHE_CAP 0x00000001
@@ -318,9 +319,12 @@ typedef struct {
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_KEY_PAIR_INFO_CAP)
 
 /* SPDM GET_CAPABILITIES response flags (1.4) */
+#define SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_KEY_PAIR_RESET_CAP 0x40000000
+#define SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_LARGE_RESP_CAP 0x80000000
 #define SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_14_MASK ( \
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_13_MASK | \
-        0)
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_KEY_PAIR_RESET_CAP | \
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_LARGE_RESP_CAP)
 
 /* SPDM NEGOTIATE_ALGORITHMS request */
 typedef struct {
@@ -673,13 +677,25 @@ typedef uint16_t spdm_key_usage_bit_mask_t;
 /* SPDM GET_CERTIFICATE request */
 typedef struct {
     spdm_message_header_t header;
-    /* param1 == BIT[0:3]=slot_id, BIT[4:7]=RSVD
+    /* param1 == BIT[0:3]=slot_id, BIT[4:6]=RSVD, BIT[7]=LargeCertChain in 1.4
      * param2 == Request Attribute in 1.3 */
     uint16_t offset;
     uint16_t length;
+    /* uint32_t large_offset;
+     * uint32_t large_length; */
 } spdm_get_certificate_request_t;
 
+typedef struct {
+    spdm_message_header_t header;
+    uint16_t offset;
+    uint16_t length;
+    uint32_t large_offset;
+    uint32_t large_length;
+} spdm_get_certificate_large_request_t;
+
 #define SPDM_GET_CERTIFICATE_REQUEST_SLOT_ID_MASK 0xF
+
+#define SPDM_GET_CERTIFICATE_REQUEST_LARGE_CERT_CHAIN 0x80
 
 /* SPDM GET_CERTIFICATE request Attributes */
 #define SPDM_GET_CERTIFICATE_REQUEST_ATTRIBUTES_SLOT_SIZE_REQUESTED 0x01
@@ -687,12 +703,25 @@ typedef struct {
 /* SPDM GET_CERTIFICATE response */
 typedef struct {
     spdm_message_header_t header;
-    /* param1 == BIT[0:3]=slot_id, BIT[4:7]=RSVD
+    /* param1 == BIT[0:3]=slot_id, BIT[4:6]=RSVD, BIT[7]=LargeCertChain in 1.4
      * param2 == Response Attribute in 1.3 */
     uint16_t portion_length;
     uint16_t remainder_length;
-    /*uint8_t                cert_chain[portion_length];*/
+    /* uint32_t large_portion_length;
+     * uint32_t large_remainder_length;
+     * uint8_t                cert_chain[portion_length]; */
 } spdm_certificate_response_t;
+
+typedef struct {
+    spdm_message_header_t header;
+    uint16_t portion_length;
+    uint16_t remainder_length;
+    uint32_t large_portion_length;
+    uint32_t large_remainder_length;
+    /* uint8_t                cert_chain[large_portion_length];*/
+} spdm_certificate_large_response_t;
+
+#define SPDM_CERTIFICATE_RESPONSE_LARGE_CERT_CHAIN 0x80
 
 #define SPDM_CERTIFICATE_RESPONSE_SLOT_ID_MASK 0xF
 
@@ -701,8 +730,7 @@ typedef struct {
 
 typedef struct {
     /* Total length of the SPDM certificate chain, in bytes, including all fields in this struct. */
-    uint16_t length;
-    uint16_t reserved;
+    uint32_t length;
 
     /* Hash of the root certificate using the negotiated base hashing algorithm.
      * uint8_t root_hash[hash_size]; */
@@ -712,7 +740,8 @@ typedef struct {
 } spdm_cert_chain_t;
 
 /* Maximum size, in bytes, of a certificate chain. */
-#define SPDM_MAX_CERTIFICATE_CHAIN_SIZE 65535
+#define SPDM_MAX_CERTIFICATE_CHAIN_SIZE 0xFFFF
+#define SPDM_MAX_CERTIFICATE_CHAIN_SIZE_14 0xFFFFFFFF
 
 /* Maximum size, in bytes, of a measurement extension log.*/
 #define SPDM_MAX_MEASUREMENT_EXTENSION_LOG_SIZE 0xFFFFFFFF
@@ -936,6 +965,9 @@ typedef struct {
 #define SPDM_ERROR_CODE_OPERATION_FAILED 0x44
 #define SPDM_ERROR_CODE_NO_PENDING_REQUESTS 0x45
 
+/* SPDM error code (1.4) */
+#define SPDM_ERROR_CODE_CERT_CHAIN_TOO_LARGE 0x12
+
 /* SPDM ResponseNotReady extended data */
 typedef struct {
     uint8_t rd_exponent;
@@ -962,6 +994,18 @@ typedef struct {
      * param2 == Error data*/
     spdm_error_data_large_response_t extend_error_data;
 } spdm_error_response_large_response_t;
+
+/* SPDM CertChainTooLarge extended data */
+typedef struct {
+    uint32_t cert_chain_length;
+} spdm_error_data_cert_chain_too_large_t;
+
+typedef struct {
+    spdm_message_header_t header;
+    /* param1 == Error Code
+     * param2 == Error data*/
+    spdm_error_data_cert_chain_too_large_t extend_error_data;
+} spdm_error_response_cert_chain_too_large_t;
 
 /* SPDM RESPONSE_IF_READY request */
 typedef struct {
@@ -1068,6 +1112,8 @@ typedef struct {
     spdm_message_header_t header;
     /* param1 == signature_included
      * param2 == req_slot_id
+     * uint16_t               opaque_length; // 1.4+
+     * uint8_t                opaque_data[opaque_length]; // 1.4+
      * uint8_t                signature[S];
      * uint8_t                verify_data[H];*/
 } spdm_finish_request_t;
@@ -1080,6 +1126,8 @@ typedef struct {
     spdm_message_header_t header;
     /* param1 == RSVD
      * param2 == RSVD
+     * uint16_t               opaque_length; // 1.4+
+     * uint8_t                opaque_data[opaque_length]; // 1.4+
      * uint8_t                verify_data[H];*/
 } spdm_finish_response_t;
 
@@ -1127,6 +1175,8 @@ typedef struct {
     spdm_message_header_t header;
     /* param1 == RSVD
      * param2 == RSVD
+     * uint16_t               opaque_length; // 1.4+
+     * uint8_t                opaque_data[opaque_length]; // 1.4+
      * uint8_t                verify_data[H];*/
 } spdm_psk_finish_request_t;
 
@@ -1134,7 +1184,9 @@ typedef struct {
 typedef struct {
     spdm_message_header_t header;
     /* param1 == RSVD
-     * param2 == RSVD*/
+     * param2 == RSVD
+     * uint16_t               opaque_length; // 1.4+
+     * uint8_t                opaque_data[opaque_length]; // 1.4+ */
 } spdm_psk_finish_response_t;
 
 
