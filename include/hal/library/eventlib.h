@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2024 DMTF. All rights reserved.
+ *  Copyright 2024-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -77,5 +77,27 @@ extern bool libspdm_event_subscribe(
     uint8_t subscribe_event_group_count,
     uint32_t subscribe_list_len,
     const void *subscribe_list);
+
+/**
+ * Generate a list of events to send via SEND_EVENT.
+ *
+ * @param  spdm_context     A pointer to the SPDM context.
+ * @param  spdm_version     Indicates the negotiated version.
+ * @param  session_id       Secure session identifier.
+ * @param  event_count      The number of events in events_list.
+ * @param  events_list_size On input, the size, in bytes, of the buffer to store the list of events.
+ *                          On output, the size, in bytes, of events_list.
+ * @param  events_list      The list of events.
+ *
+ * retval true  events_list was successfully populated with a list of events.
+ * retval false An error occurred when generating the list of events.
+ **/
+extern bool libspdm_generate_event_list(
+    void *spdm_context,
+    spdm_version_number_t spdm_version,
+    uint32_t session_id,
+    uint32_t *event_count,
+    size_t *events_list_size,
+    void *events_list);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
 #endif /* EVENTLIB_H */

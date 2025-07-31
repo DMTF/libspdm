@@ -261,6 +261,17 @@ bool libspdm_event_subscribe(
 {
     return false;
 }
+
+bool libspdm_generate_event_list(
+    void *spdm_context,
+    spdm_version_number_t spdm_version,
+    uint32_t session_id,
+    uint32_t *event_count,
+    size_t *events_list_size,
+    void *events_list)
+{
+    return false;
+}
 #endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP

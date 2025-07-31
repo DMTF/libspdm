@@ -645,6 +645,16 @@ libspdm_return_t libspdm_process_encap_response_endpoint_info(
 
 #endif /* LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT */
 
+#if LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP
+libspdm_return_t libspdm_get_encap_request_send_event(
+    libspdm_context_t *spdm_context,
+    size_t *encap_request_size,
+    void *encap_request);
+
+libspdm_return_t libspdm_process_encap_response_event_ack(
+    libspdm_context_t *spdm_context, size_t encap_response_size,
+    const void *encap_response, bool *need_continue);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
 #endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
 
 /**
