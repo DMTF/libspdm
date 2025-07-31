@@ -12,6 +12,21 @@ message("## Build Configuration ##")
 message("#########################")
 
 set(CMAKE_GENERATOR ${CMAKE_GENERATOR} CACHE STRING "Choose the generator of cmake")
+
+# Detect ARCH only if not set
+if(NOT DEFINED ARCH)
+    string(TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" DETECTED_ARCH)
+
+    if (DETECTED_ARCH STREQUAL "amd64" OR DETECTED_ARCH STREQUAL "x86_64")
+        set(DETECTED_ARCH "x64")
+    elseif (DETECTED_ARCH STREQUAL "x86" OR DETECTED_ARCH STREQUAL "i386" OR DETECTED_ARCH STREQUAL "i686")
+        set(DETECTED_ARCH "ia32")
+    endif()
+
+    message(STATUS "Auto-detected ARCH = ${DETECTED_ARCH}")
+    set(ARCH "${DETECTED_ARCH}")
+endif()
+
 set(ARCH ${ARCH} CACHE STRING "Choose the arch of build: ia32 x64 arm aarch64 riscv32 riscv64 arc" FORCE)
 set(TOOLCHAIN ${TOOLCHAIN} CACHE STRING "Choose the toolchain of build: Windows: VS2015 VS2019 VS2022 CLANG ARM_DS2022 LIBFUZZER Linux: GCC ARM_DS2022 ARM_GNU ARM_GNU_BARE_METAL ARM_GCC AARCH64_GCC RISCV_GNU RISCV64_GCC RISCV_XPACK ARC_GCC CLANG CBMC AFL KLEE LIBFUZZER" FORCE)
 set(CMAKE_BUILD_TYPE ${TARGET} CACHE STRING "Choose the target of build: Debug Release" FORCE)
@@ -68,7 +83,7 @@ elseif(ARCH STREQUAL "arc")
 elseif(ARCH STREQUAL "nios2")
     message("ARCH = nios2")
 else()
-    message(FATAL_ERROR "Unknown ARCH")
+    message(FATAL_ERROR "Unknown ARCH : ${ARCH}")
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
