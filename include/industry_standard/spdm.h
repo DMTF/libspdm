@@ -1572,9 +1572,9 @@ typedef struct {
     /* uint8_t public_key_info[public_key_info_len];
      *
      * Below is added in SPDM 1.4.
-     * uint32_t pqc_asym_algo_cap_len;
+     * uint8_t pqc_asym_algo_cap_len;
      * uint8_t pqc_asym_algo_capabilities[pqc_asym_algo_cap_len];
-     * uint32_t current_pqc_asym_algo_len;
+     * uint8_t current_pqc_asym_algo_len;
      * uint8_t current_pqc_asym_algo[current_pqc_asym_algo_len];
      */
 } spdm_key_pair_info_response_t;
@@ -1592,7 +1592,7 @@ typedef struct {
      * uint8_t desired_assoc_cert_slot_mask;
      *
      * Below is added in SPDM 1.4.
-     * uint32_t desired_pqc_asym_algo_len;
+     * uint8_t desired_pqc_asym_algo_len;
      * uint8_t desired_pqc_asym_algo[desired_pqc_asym_algo_len];
      */
 } spdm_set_key_pair_info_request_t;

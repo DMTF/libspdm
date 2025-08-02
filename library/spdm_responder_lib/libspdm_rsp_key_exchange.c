@@ -100,8 +100,13 @@ bool libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context
     hash_size = libspdm_get_hash_size(spdm_context->connection_info.algorithm.base_hash_algo);
 #endif
 
-    signature_size = libspdm_get_asym_signature_size(
-        spdm_context->connection_info.algorithm.base_asym_algo);
+    if (spdm_context->connection_info.algorithm.pqc_asym_algo != 0) {
+        signature_size = libspdm_get_pqc_asym_signature_size(
+            spdm_context->connection_info.algorithm.pqc_asym_algo);
+    } else {
+        signature_size = libspdm_get_asym_signature_size(
+            spdm_context->connection_info.algorithm.base_asym_algo);
+    }
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     slot_id = spdm_context->connection_info.local_used_cert_chain_slot_id;
@@ -182,6 +187,10 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
     const spdm_key_exchange_request_t *spdm_request;
     spdm_key_exchange_response_t *spdm_response;
     size_t dhe_key_size;
+    size_t kem_encap_key_size;
+    size_t kem_cipher_text_size;
+    size_t req_key_exchage_size;
+    size_t rsp_key_exchage_size;
     uint32_t measurement_summary_hash_size;
     uint32_t signature_size;
     uint32_t hmac_size;
@@ -192,6 +201,7 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
     uint8_t slot_id;
     uint32_t session_id;
     void *dhe_context;
+    void *kem_context;
     libspdm_session_info_t *session_info;
     size_t total_size;
     uint16_t req_session_id;
@@ -324,12 +334,28 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
     }
     spdm_context->connection_info.local_used_cert_chain_slot_id = slot_id;
 
-    signature_size = libspdm_get_asym_signature_size(
-        spdm_context->connection_info.algorithm.base_asym_algo);
+    if (spdm_context->connection_info.algorithm.pqc_asym_algo != 0) {
+        signature_size = libspdm_get_pqc_asym_signature_size(
+            spdm_context->connection_info.algorithm.pqc_asym_algo);
+    } else {
+        signature_size = libspdm_get_asym_signature_size(
+            spdm_context->connection_info.algorithm.base_asym_algo);
+    }
     hmac_size = libspdm_get_hash_size(
         spdm_context->connection_info.algorithm.base_hash_algo);
-    dhe_key_size = libspdm_get_dhe_pub_key_size(
-        spdm_context->connection_info.algorithm.dhe_named_group);
+    if (spdm_context->connection_info.algorithm.kem_alg != 0) {
+        kem_encap_key_size = libspdm_get_kem_encap_key_size(
+            spdm_context->connection_info.algorithm.kem_alg);
+        kem_cipher_text_size = libspdm_get_kem_cipher_text_size(
+            spdm_context->connection_info.algorithm.kem_alg);
+        req_key_exchage_size = kem_encap_key_size;
+        rsp_key_exchage_size = kem_cipher_text_size;
+    } else {
+        dhe_key_size = libspdm_get_dhe_pub_key_size(
+            spdm_context->connection_info.algorithm.dhe_named_group);
+        req_key_exchage_size = dhe_key_size;
+        rsp_key_exchage_size = dhe_key_size;
+    }
     measurement_summary_hash_size = libspdm_get_measurement_summary_hash_size(
         spdm_context, false, spdm_request->header.param1);
 
@@ -339,25 +365,27 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
                                                SPDM_ERROR_CODE_INVALID_REQUEST,
                                                0, response_size, response);
     }
-    if (request_size < sizeof(spdm_key_exchange_request_t) + dhe_key_size + sizeof(uint16_t)) {
+    if (request_size < sizeof(spdm_key_exchange_request_t) + req_key_exchage_size +
+        sizeof(uint16_t)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
     }
     opaque_data_length = libspdm_read_uint16((const uint8_t *)request +
-                                             sizeof(spdm_key_exchange_request_t) + dhe_key_size);
-    if (request_size < sizeof(spdm_key_exchange_request_t) + dhe_key_size +
+                                             sizeof(spdm_key_exchange_request_t) +
+                                             req_key_exchage_size);
+    if (request_size < sizeof(spdm_key_exchange_request_t) + req_key_exchage_size +
         sizeof(uint16_t) + opaque_data_length) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
     }
-    request_size = sizeof(spdm_key_exchange_request_t) + dhe_key_size + sizeof(uint16_t) +
-                   opaque_data_length;
+    request_size = sizeof(spdm_key_exchange_request_t) + req_key_exchage_size +
+                   sizeof(uint16_t) + opaque_data_length;
 
     if (opaque_data_length != 0) {
-        cptr = (const uint8_t *)request + sizeof(spdm_key_exchange_request_t) + dhe_key_size +
-               sizeof(uint16_t);
+        cptr = (const uint8_t *)request + sizeof(spdm_key_exchange_request_t) +
+               req_key_exchage_size + sizeof(uint16_t);
         result = libspdm_process_general_opaque_data_check(spdm_context, opaque_data_length, cptr);
         if (!result) {
             return libspdm_generate_error_response(spdm_context,
@@ -386,7 +414,7 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
         hmac_size = 0;
     }
 
-    total_size = sizeof(spdm_key_exchange_response_t) + dhe_key_size +
+    total_size = sizeof(spdm_key_exchange_response_t) + rsp_key_exchage_size +
                  measurement_summary_hash_size + sizeof(uint16_t) +
                  opaque_key_exchange_rsp_size + signature_size + hmac_size;
 
@@ -482,49 +510,89 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
     }
 
     ptr = (void *)(spdm_response + 1);
-    dhe_context = libspdm_secured_message_dhe_new(
-        spdm_context->connection_info.version,
-        spdm_context->connection_info.algorithm.dhe_named_group, false);
-    if (dhe_context == NULL) {
-        libspdm_free_session_id(spdm_context, session_id);
-        return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_UNSPECIFIED, 0,
-                                               response_size, response);
-    }
+    if (spdm_context->connection_info.algorithm.kem_alg != 0) {
+        kem_context = libspdm_secured_message_kem_new(
+            spdm_context->connection_info.version,
+            spdm_context->connection_info.algorithm.kem_alg, false);
+        if (kem_context == NULL) {
+            libspdm_free_session_id(spdm_context, session_id);
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_UNSPECIFIED, 0,
+                                                   response_size, response);
+        }
 
-    result = libspdm_secured_message_dhe_generate_key(
-        spdm_context->connection_info.algorithm.dhe_named_group, dhe_context, ptr, &dhe_key_size);
-    if (!result) {
+        result = libspdm_secured_message_kem_encapsulate(
+            spdm_context->connection_info.algorithm.kem_alg,
+            kem_context,
+            (const uint8_t *)request + sizeof(spdm_key_exchange_request_t),
+            kem_encap_key_size, ptr, &kem_cipher_text_size, session_info->secured_message_context);
+        libspdm_secured_message_kem_free(
+            spdm_context->connection_info.algorithm.kem_alg,
+            kem_context);
+        if (!result) {
+            libspdm_free_session_id(spdm_context, session_id);
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_UNSPECIFIED, 0,
+                                                   response_size, response);
+        }
+
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Calc Self cipher_text (0x%zx):\n", kem_cipher_text_size));
+        LIBSPDM_INTERNAL_DUMP_HEX(ptr, kem_cipher_text_size);
+
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Calc peer encap_key (0x%zx):\n", kem_encap_key_size));
+        LIBSPDM_INTERNAL_DUMP_HEX((const uint8_t *)request +
+                                  sizeof(spdm_key_exchange_request_t),
+                                  kem_encap_key_size);
+
+        ptr += kem_cipher_text_size;
+    } else {
+        dhe_context = libspdm_secured_message_dhe_new(
+            spdm_context->connection_info.version,
+            spdm_context->connection_info.algorithm.dhe_named_group, false);
+        if (dhe_context == NULL) {
+            libspdm_free_session_id(spdm_context, session_id);
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_UNSPECIFIED, 0,
+                                                   response_size, response);
+        }
+
+        result = libspdm_secured_message_dhe_generate_key(
+            spdm_context->connection_info.algorithm.dhe_named_group,
+            dhe_context, ptr, &dhe_key_size);
+        if (!result) {
+            libspdm_secured_message_dhe_free(
+                spdm_context->connection_info.algorithm.dhe_named_group,
+                dhe_context);
+            libspdm_free_session_id(spdm_context, session_id);
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_UNSPECIFIED, 0,
+                                                   response_size, response);
+        }
+
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Calc SelfKey (0x%zx):\n", dhe_key_size));
+        LIBSPDM_INTERNAL_DUMP_HEX(ptr, dhe_key_size);
+
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Calc peer_key (0x%zx):\n", dhe_key_size));
+        LIBSPDM_INTERNAL_DUMP_HEX((const uint8_t *)request +
+                                  sizeof(spdm_key_exchange_request_t),
+                                  dhe_key_size);
+
+        result = libspdm_secured_message_dhe_compute_key(
+            spdm_context->connection_info.algorithm.dhe_named_group,
+            dhe_context,
+            (const uint8_t *)request + sizeof(spdm_key_exchange_request_t),
+            dhe_key_size, session_info->secured_message_context);
         libspdm_secured_message_dhe_free(
             spdm_context->connection_info.algorithm.dhe_named_group, dhe_context);
-        libspdm_free_session_id(spdm_context, session_id);
-        return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_UNSPECIFIED, 0,
-                                               response_size, response);
+        if (!result) {
+            libspdm_free_session_id(spdm_context, session_id);
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_UNSPECIFIED, 0,
+                                                   response_size, response);
+        }
+
+        ptr += dhe_key_size;
     }
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Calc SelfKey (0x%zx):\n", dhe_key_size));
-    LIBSPDM_INTERNAL_DUMP_HEX(ptr, dhe_key_size);
-
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Calc peer_key (0x%zx):\n", dhe_key_size));
-    LIBSPDM_INTERNAL_DUMP_HEX((const uint8_t *)request +
-                              sizeof(spdm_key_exchange_request_t),
-                              dhe_key_size);
-
-    result = libspdm_secured_message_dhe_compute_key(
-        spdm_context->connection_info.algorithm.dhe_named_group,
-        dhe_context,
-        (const uint8_t *)request + sizeof(spdm_key_exchange_request_t),
-        dhe_key_size, session_info->secured_message_context);
-    libspdm_secured_message_dhe_free(
-        spdm_context->connection_info.algorithm.dhe_named_group, dhe_context);
-    if (!result) {
-        libspdm_free_session_id(spdm_context, session_id);
-        return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_UNSPECIFIED, 0,
-                                               response_size, response);
-    }
-
-    ptr += dhe_key_size;
 
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
     if (libspdm_is_capabilities_flag_supported(
