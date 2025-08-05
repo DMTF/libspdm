@@ -1761,7 +1761,7 @@ libspdm_return_t libspdm_requester_challenge_test_receive_message(
         for (element_index = 0; element_index < element_num; element_index++) {
             opaque_element_table_header->id = SPDM_REGISTRY_ID_MAX;
             opaque_element_table_header->vendor_len = 0;
-            opaque_element_data_len = (uint16_t)strlen("libspdm");;
+            opaque_element_data_len = (uint16_t)strlen("libspdm");
 
             Ptr = (void *)(opaque_element_table_header + 1);
             Ptr += opaque_element_table_header->vendor_len;

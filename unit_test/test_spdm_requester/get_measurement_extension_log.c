@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2024 DMTF. All rights reserved.
+ *  Copyright 2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -545,7 +545,7 @@ libspdm_return_t libspdm_requester_get_measurement_extension_log_test_receive_me
                                               spdm_response, response_size,
                                               response);
 
-        m_libspdm_mel_len -= portion_length;;
+        m_libspdm_mel_len -= portion_length;
         calling_index++;
 
         if (calling_index == count) {
