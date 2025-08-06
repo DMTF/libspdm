@@ -12,17 +12,17 @@
 
 #define LIBSPDM_MAX_MEASUREMENT_EXTENSION_LOG_SIZE 0x1000
 
-uint8_t m_libspdm_mel_test[LIBSPDM_MAX_MEASUREMENT_EXTENSION_LOG_SIZE];
-size_t m_libspdm_mel_len;
-uint8_t m_libspdm_mel_number;
+static uint8_t m_libspdm_mel_test[LIBSPDM_MAX_MEASUREMENT_EXTENSION_LOG_SIZE];
+static size_t m_libspdm_mel_len;
+static uint8_t m_libspdm_mel_number;
 
-void generate_mel_entry_test()
+static void generate_mel_entry_test(void)
 {
     spdm_measurement_extension_log_dmtf_t *measurement_extension_log;
     uint32_t mel_index;
     spdm_mel_entry_dmtf_t *mel_entry;
     size_t mel_entry_size;
-    uint8_t rom_infomational[] = "ROM";
+    uint8_t rom_informational[] = "ROM";
 
     /*generate MEL*/
     libspdm_zero_mem(m_libspdm_mel_test, sizeof(m_libspdm_mel_test));
@@ -41,7 +41,7 @@ void generate_mel_entry_test()
 
     while (1)
     {
-        if((m_libspdm_mel_len + sizeof(spdm_mel_entry_dmtf_t) + sizeof(rom_infomational)) >
+        if((m_libspdm_mel_len + sizeof(spdm_mel_entry_dmtf_t) + sizeof(rom_informational)) >
            sizeof(m_libspdm_mel_test)) {
             break;
         }
@@ -54,11 +54,11 @@ void generate_mel_entry_test()
             SPDM_MEASUREMENT_BLOCK_MEASUREMENT_TYPE_VERSION |
             SPDM_MEASUREMENT_BLOCK_MEASUREMENT_TYPE_RAW_BIT_STREAM;
         mel_entry->measurement_block_dmtf_header.dmtf_spec_measurement_value_size =
-            sizeof(rom_infomational);
-        libspdm_copy_mem((void *)(mel_entry + 1), sizeof(rom_infomational),
-                         rom_infomational, sizeof(rom_infomational));
+            sizeof(rom_informational);
+        libspdm_copy_mem((void *)(mel_entry + 1), sizeof(rom_informational),
+                         rom_informational, sizeof(rom_informational));
 
-        mel_entry_size = (sizeof(spdm_mel_entry_dmtf_t) + sizeof(rom_infomational));
+        mel_entry_size = (sizeof(spdm_mel_entry_dmtf_t) + sizeof(rom_informational));
         m_libspdm_mel_len += mel_entry_size;
 
         measurement_extension_log->number_of_entries = mel_index;
@@ -74,7 +74,7 @@ void generate_mel_entry_test()
 }
 
 /*generate different long mel according to the m_libspdm_mel_number*/
-void libspdm_generate_long_mel(uint32_t measurement_hash_algo)
+static void generate_long_mel(uint32_t measurement_hash_algo)
 {
     spdm_measurement_extension_log_dmtf_t *measurement_extension_log;
     spdm_mel_entry_dmtf_t *mel_entry1;
@@ -154,7 +154,7 @@ void libspdm_generate_long_mel(uint32_t measurement_hash_algo)
     }
 }
 
-libspdm_return_t libspdm_requester_get_measurement_extension_log_test_send_message(
+static libspdm_return_t send_message(
     void *spdm_context, size_t request_size, const void *request,
     uint64_t timeout)
 {
@@ -178,7 +178,7 @@ libspdm_return_t libspdm_requester_get_measurement_extension_log_test_send_messa
     }
 }
 
-libspdm_return_t libspdm_requester_get_measurement_extension_log_test_receive_message(
+static libspdm_return_t receive_message(
     void *spdm_context, size_t *response_size,
     void **response, uint64_t timeout)
 {
@@ -223,8 +223,7 @@ libspdm_return_t libspdm_requester_get_measurement_extension_log_test_receive_me
             remainder_length = 0;
         }
 
-        spdm_response_size =
-            sizeof(spdm_measurement_extension_log_response_t) + portion_length;
+        spdm_response_size = sizeof(spdm_measurement_extension_log_response_t) + portion_length;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -270,7 +269,7 @@ libspdm_return_t libspdm_requester_get_measurement_extension_log_test_receive_me
         mel_send_len = 0;
         m_libspdm_mel_number = 3;
 
-        libspdm_generate_long_mel(m_libspdm_use_measurement_hash_algo);
+        generate_long_mel(m_libspdm_use_measurement_hash_algo);
 
         measurement_extension_log = (spdm_measurement_extension_log_dmtf_t *)m_libspdm_mel_test;
         spdm_mel = (spdm_measurement_extension_log_dmtf_t *)m_libspdm_mel_test;
@@ -279,7 +278,7 @@ libspdm_return_t libspdm_requester_get_measurement_extension_log_test_receive_me
 
         if (calling_index == 1) {
             m_libspdm_mel_number = 4;
-            libspdm_generate_long_mel(m_libspdm_use_measurement_hash_algo);
+            generate_long_mel(m_libspdm_use_measurement_hash_algo);
             measurement_extension_log = (spdm_measurement_extension_log_dmtf_t *)m_libspdm_mel_test;
             mel_new_len = (size_t)(measurement_extension_log->mel_entries_len) +
                           sizeof(spdm_measurement_extension_log_dmtf_t);
@@ -304,8 +303,7 @@ libspdm_return_t libspdm_requester_get_measurement_extension_log_test_receive_me
                 portion_length);
         }
 
-        spdm_response_size =
-            sizeof(spdm_measurement_extension_log_response_t) + portion_length;
+        spdm_response_size = sizeof(spdm_measurement_extension_log_response_t) + portion_length;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -351,7 +349,7 @@ libspdm_return_t libspdm_requester_get_measurement_extension_log_test_receive_me
         mel_send_len = 0;
         m_libspdm_mel_number = 100;
 
-        libspdm_generate_long_mel(m_libspdm_use_measurement_hash_algo);
+        generate_long_mel(m_libspdm_use_measurement_hash_algo);
 
         measurement_extension_log = (spdm_measurement_extension_log_dmtf_t *)m_libspdm_mel_test;
         spdm_mel = (spdm_measurement_extension_log_dmtf_t *)m_libspdm_mel_test;
@@ -360,7 +358,7 @@ libspdm_return_t libspdm_requester_get_measurement_extension_log_test_receive_me
 
         if (calling_index == 1) {
             m_libspdm_mel_number = 105;
-            libspdm_generate_long_mel(m_libspdm_use_measurement_hash_algo);
+            generate_long_mel(m_libspdm_use_measurement_hash_algo);
             measurement_extension_log = (spdm_measurement_extension_log_dmtf_t *)m_libspdm_mel_test;
             mel_new_len = (size_t)(measurement_extension_log->mel_entries_len) +
                           sizeof(spdm_measurement_extension_log_dmtf_t);
@@ -385,8 +383,7 @@ libspdm_return_t libspdm_requester_get_measurement_extension_log_test_receive_me
                 portion_length);
         }
 
-        spdm_response_size =
-            sizeof(spdm_measurement_extension_log_response_t) + portion_length;
+        spdm_response_size = sizeof(spdm_measurement_extension_log_response_t) + portion_length;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -432,7 +429,7 @@ libspdm_return_t libspdm_requester_get_measurement_extension_log_test_receive_me
         mel_send_len = 0;
         m_libspdm_mel_number = 100;
 
-        libspdm_generate_long_mel(m_libspdm_use_measurement_hash_algo);
+        generate_long_mel(m_libspdm_use_measurement_hash_algo);
 
         measurement_extension_log = (spdm_measurement_extension_log_dmtf_t *)m_libspdm_mel_test;
         spdm_mel = (spdm_measurement_extension_log_dmtf_t *)m_libspdm_mel_test;
@@ -441,7 +438,7 @@ libspdm_return_t libspdm_requester_get_measurement_extension_log_test_receive_me
 
         if (calling_index == 1) {
             m_libspdm_mel_number = 200;
-            libspdm_generate_long_mel(m_libspdm_use_measurement_hash_algo);
+            generate_long_mel(m_libspdm_use_measurement_hash_algo);
             measurement_extension_log = (spdm_measurement_extension_log_dmtf_t *)m_libspdm_mel_test;
             mel_new_len = (size_t)(measurement_extension_log->mel_entries_len) +
                           sizeof(spdm_measurement_extension_log_dmtf_t);
@@ -466,8 +463,7 @@ libspdm_return_t libspdm_requester_get_measurement_extension_log_test_receive_me
                 portion_length);
         }
 
-        spdm_response_size =
-            sizeof(spdm_measurement_extension_log_response_t) + portion_length;
+        spdm_response_size = sizeof(spdm_measurement_extension_log_response_t) + portion_length;
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         spdm_response = (void *)((uint8_t *)*response + transport_header_size);
 
@@ -676,7 +672,7 @@ libspdm_return_t libspdm_requester_get_measurement_extension_log_test_receive_me
  * Test 1: message could not be sent
  * Expected Behavior: get a LIBSPDM_STATUS_SEND_FAIL, with no MEL messages received
  **/
-void libspdm_test_requester_get_measurement_extension_log_case1(void **state)
+static void libspdm_test_requester_get_measurement_extension_log_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -719,7 +715,7 @@ void libspdm_test_requester_get_measurement_extension_log_case1(void **state)
  * Test 2: Normal case, request a MEL, the MEL size remains unchanged
  * Expected Behavior: receives a valid MEL
  **/
-void libspdm_test_requester_get_measurement_extension_log_case2(void **state)
+static void libspdm_test_requester_get_measurement_extension_log_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -763,7 +759,7 @@ void libspdm_test_requester_get_measurement_extension_log_case2(void **state)
  * The original MEL number is 3, the new MEL number is 4.
  * Expected Behavior: receives a valid MEL, and the MEL size is same with the before MEL size.
  **/
-void libspdm_test_requester_get_measurement_extension_log_case3(void **state)
+static void libspdm_test_requester_get_measurement_extension_log_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -808,7 +804,7 @@ void libspdm_test_requester_get_measurement_extension_log_case3(void **state)
  * The original MEL number is 100, the new MEL number is 105.
  * Expected Behavior: receives a valid MEL, and the MEL size is same with the before MEL size.
  **/
-void libspdm_test_requester_get_measurement_extension_log_case4(void **state)
+static void libspdm_test_requester_get_measurement_extension_log_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -852,7 +848,7 @@ void libspdm_test_requester_get_measurement_extension_log_case4(void **state)
  * The original MEL number is 100, the new MEL number is 200.
  * Expected Behavior: receives a valid MEL, and the MEL size is same with the before MEL size.
  **/
-void libspdm_test_requester_get_measurement_extension_log_case5(void **state)
+static void libspdm_test_requester_get_measurement_extension_log_case5(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -895,7 +891,7 @@ void libspdm_test_requester_get_measurement_extension_log_case5(void **state)
  * Test 6: Normal case, request a LIBSPDM_MAX_MEASUREMENT_EXTENSION_LOG_SIZE MEL
  * Expected Behavior: receives a valid MEL
  **/
-void libspdm_test_requester_get_measurement_extension_log_case6(void **state)
+static void libspdm_test_requester_get_measurement_extension_log_case6(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -943,7 +939,7 @@ void libspdm_test_requester_get_measurement_extension_log_case6(void **state)
  * Test 7: The total amount of messages actually sent by the responder is less than the negotiated total mel len.
  * Expected Behavior: returns with status LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
-void libspdm_test_requester_get_measurement_extension_log_case7(void **state)
+static void libspdm_test_requester_get_measurement_extension_log_case7(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -987,7 +983,7 @@ void libspdm_test_requester_get_measurement_extension_log_case7(void **state)
  * Test 8: Portion_length is greater than the LIBSPDM_MAX_MEL_BLOCK_LEN
  * Expected Behavior: returns with status LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
-void libspdm_test_requester_get_measurement_extension_log_case8(void **state)
+static void libspdm_test_requester_get_measurement_extension_log_case8(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1031,7 +1027,7 @@ void libspdm_test_requester_get_measurement_extension_log_case8(void **state)
  * Test 9: The total MEL length is larger than SPDM_MAX_MEASUREMENT_EXTENSION_LOG_SIZE
  * Expected Behavior: returns with status LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
-void libspdm_test_requester_get_measurement_extension_log_case9(void **state)
+static void libspdm_test_requester_get_measurement_extension_log_case9(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1098,8 +1094,8 @@ int libspdm_requester_get_measurement_extension_log_test_main(void)
     libspdm_test_context_t test_context = {
         LIBSPDM_TEST_CONTEXT_VERSION,
         true,
-        libspdm_requester_get_measurement_extension_log_test_send_message,
-        libspdm_requester_get_measurement_extension_log_test_receive_message,
+        send_message,
+        receive_message,
     };
 
     libspdm_setup_test_context(&test_context);
