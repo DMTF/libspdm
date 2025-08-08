@@ -275,6 +275,15 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
                                                    response_size, response);
         }
 
+        if ((cert_chain_header->length > SPDM_MAX_CERTIFICATE_CHAIN_SIZE) &&
+            (!libspdm_is_capabilities_flag_supported(
+                 spdm_context, false, 0,
+                 SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_LARGE_RESP_CAP))) {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                                   response_size, response);
+        }
+
         /*get actual cert_chain size*/
         cert_chain_size = cert_chain_header->length - sizeof(spdm_cert_chain_t) -
                           root_cert_hash_size;
