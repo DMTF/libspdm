@@ -69,6 +69,7 @@ typedef struct {
     uint32_t pqc_asym_algo;
     uint32_t req_pqc_asym_alg;
     uint32_t kem_alg;
+    bool pqc_first;
 } libspdm_device_algorithm_t;
 
 typedef struct {

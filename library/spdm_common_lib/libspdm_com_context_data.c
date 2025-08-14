@@ -484,6 +484,16 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         break;
+    case LIBSPDM_DATA_ALGO_PRIORITY_PQC_FIRST:
+        if (data_size != sizeof(bool)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        if (parameter->location == LIBSPDM_DATA_LOCATION_LOCAL) {
+            context->local_context.algorithm.pqc_first = *(const bool *)data;
+        } else {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        break;
     case LIBSPDM_DATA_CONNECTION_STATE:
         if (data_size != sizeof(libspdm_connection_state_t)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
