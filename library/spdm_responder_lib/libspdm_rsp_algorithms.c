@@ -804,30 +804,60 @@ libspdm_return_t libspdm_get_response_algorithms(libspdm_context_t *spdm_context
         }
     }
 
-    /* if both PQC and traditional algo are enabled, choose PQC and disable traditional algo */
+    /* if both PQC and traditional algo are enabled, disable based on LIBSPDM_DATA_ALGO_PRIORITY_PQC_FIRST */
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_14) {
-        if (spdm_response->pqc_asym_sel != 0) {
-            spdm_response->base_asym_sel = 0;
-        }
-        for (index = 0; index < spdm_response->header.param1; ++index) {
-            if (spdm_response->struct_table[index].alg_type ==
-                SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_REQ_PQC_ASYM_ALG) {
-                if (spdm_response->struct_table[index].alg_supported != 0) {
-                    for (sub_index = 0; sub_index < spdm_response->header.param1; ++sub_index) {
-                        if (spdm_response->struct_table[sub_index].alg_type ==
-                            SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_REQ_BASE_ASYM_ALG) {
-                            spdm_response->struct_table[sub_index].alg_supported = 0;
+        if (spdm_context->local_context.algorithm.pqc_first) {
+            if (spdm_response->pqc_asym_sel != 0) {
+                spdm_response->base_asym_sel = 0;
+            }
+            for (index = 0; index < spdm_response->header.param1; ++index) {
+                if (spdm_response->struct_table[index].alg_type ==
+                    SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_REQ_PQC_ASYM_ALG) {
+                    if (spdm_response->struct_table[index].alg_supported != 0) {
+                        for (sub_index = 0; sub_index < spdm_response->header.param1; ++sub_index) {
+                            if (spdm_response->struct_table[sub_index].alg_type ==
+                                SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_REQ_BASE_ASYM_ALG) {
+                                spdm_response->struct_table[sub_index].alg_supported = 0;
+                            }
+                        }
+                    }
+                }
+                if (spdm_response->struct_table[index].alg_type ==
+                    SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEM_ALG) {
+                    if (spdm_response->struct_table[index].alg_supported != 0) {
+                        for (sub_index = 0; sub_index < spdm_response->header.param1; ++sub_index) {
+                            if (spdm_response->struct_table[sub_index].alg_type ==
+                                SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_DHE) {
+                                spdm_response->struct_table[sub_index].alg_supported = 0;
+                            }
                         }
                     }
                 }
             }
-            if (spdm_response->struct_table[index].alg_type ==
-                SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEM_ALG) {
-                if (spdm_response->struct_table[index].alg_supported != 0) {
-                    for (sub_index = 0; sub_index < spdm_response->header.param1; ++sub_index) {
-                        if (spdm_response->struct_table[sub_index].alg_type ==
-                            SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_DHE) {
-                            spdm_response->struct_table[sub_index].alg_supported = 0;
+        } else {
+            if (spdm_response->base_asym_sel != 0) {
+                spdm_response->pqc_asym_sel = 0;
+            }
+            for (index = 0; index < spdm_response->header.param1; ++index) {
+                if (spdm_response->struct_table[index].alg_type ==
+                    SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_REQ_BASE_ASYM_ALG) {
+                    if (spdm_response->struct_table[index].alg_supported != 0) {
+                        for (sub_index = 0; sub_index < spdm_response->header.param1; ++sub_index) {
+                            if (spdm_response->struct_table[sub_index].alg_type ==
+                                SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_REQ_PQC_ASYM_ALG) {
+                                spdm_response->struct_table[sub_index].alg_supported = 0;
+                            }
+                        }
+                    }
+                }
+                if (spdm_response->struct_table[index].alg_type ==
+                    SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_DHE) {
+                    if (spdm_response->struct_table[index].alg_supported != 0) {
+                        for (sub_index = 0; sub_index < spdm_response->header.param1; ++sub_index) {
+                            if (spdm_response->struct_table[sub_index].alg_type ==
+                                SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEM_ALG) {
+                                spdm_response->struct_table[sub_index].alg_supported = 0;
+                            }
                         }
                     }
                 }
