@@ -325,7 +325,7 @@ libspdm_return_t libspdm_pci_doe_decode_discovery_request_version(size_t transpo
      */
     status = libspdm_pci_doe_decode_discovery_request(transport_message_size, transport_message,
                                                       NULL);
-    if(LIBSPDM_STATUS_IS_ERROR(status)) {
+    if (LIBSPDM_STATUS_IS_ERROR(status)) {
         return status;
     }
 

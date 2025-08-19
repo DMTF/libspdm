@@ -491,8 +491,8 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
         switch (context->last_spdm_error.error_code) {
         case SPDM_ERROR_CODE_DECRYPT_ERROR:
             /* session ID is valid. Use it to encrypt the error message.*/
-            if((context->handle_error_return_policy &
-                LIBSPDM_DATA_HANDLE_ERROR_RETURN_POLICY_DROP_ON_DECRYPT_ERROR) == 0) {
+            if ((context->handle_error_return_policy &
+                 LIBSPDM_DATA_HANDLE_ERROR_RETURN_POLICY_DROP_ON_DECRYPT_ERROR) == 0) {
                 status = libspdm_generate_error_response(
                     context, SPDM_ERROR_CODE_DECRYPT_ERROR, 0,
                     &my_response_size, my_response);
@@ -724,7 +724,7 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
     /* if return the status: Responder drop the response
      * just ignore this message
      * return UNSUPPORTED and clear response_size to continue the dispatch without send response.*/
-    if((my_response_size == 0) && (status == LIBSPDM_STATUS_UNSUPPORTED_CAP)) {
+    if ((my_response_size == 0) && (status == LIBSPDM_STATUS_UNSUPPORTED_CAP)) {
         *response_size = 0;
         return LIBSPDM_STATUS_UNSUPPORTED_CAP;
     }

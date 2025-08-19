@@ -212,7 +212,7 @@ libspdm_return_t libspdm_transport_tcp_decode_message(
 
     spdm_error.error_code = 0;
     spdm_error.session_id = 0;
-    if(spdm_context) {
+    if (spdm_context) {
         libspdm_set_last_spdm_error_struct(spdm_context, &spdm_error);
     }
 

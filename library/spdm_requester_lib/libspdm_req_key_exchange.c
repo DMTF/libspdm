@@ -409,7 +409,7 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
     spdm_request->header.param1 = measurement_hash_type;
     spdm_request->header.param2 = slot_id;
     if (requester_random_in == NULL) {
-        if(!libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, spdm_request->random_data)) {
+        if (!libspdm_get_random_number(SPDM_RANDOM_DATA_SIZE, spdm_request->random_data)) {
             libspdm_release_sender_buffer (spdm_context);
             return LIBSPDM_STATUS_LOW_ENTROPY;
         }

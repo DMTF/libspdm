@@ -587,7 +587,7 @@ static bool libspdm_get_public_key_algo_OID(
 {
     uint32_t oid_len;
     oid_len = libspdm_get_public_key_algo_OID_len(base_asym_algo, pqc_asym_algo);
-    if(oid_len == 0) {
+    if (oid_len == 0) {
         return false;
     }
 
@@ -1085,7 +1085,7 @@ static bool libspdm_verify_cert_subject_public_key_info(const uint8_t *cert, siz
     }
 
     oid_len = libspdm_get_public_key_algo_OID_len(base_asym_algo, pqc_asym_algo);
-    if(oid_len == 0) {
+    if (oid_len == 0) {
         return false;
     }
     /*get public key encrypt algo OID from libspdm stored*/
@@ -1372,7 +1372,7 @@ static bool libspdm_verify_leaf_cert_spdm_extension(const uint8_t *cert, size_t 
                                              &len);
     if (!status) {
         return false;
-    } else if(len == 0) {
+    } else if (len == 0) {
         return true;
     }
 

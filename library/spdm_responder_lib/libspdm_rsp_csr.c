@@ -155,8 +155,8 @@ libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
 
     is_device_cert_model = false;
 
-    if((spdm_context->local_context.capability.flags &
-        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP) == 0) {
+    if ((spdm_context->local_context.capability.flags &
+         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP) == 0) {
         is_device_cert_model = true;
     }
 

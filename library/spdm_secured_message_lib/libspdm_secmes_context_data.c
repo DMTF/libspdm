@@ -276,7 +276,7 @@ bool libspdm_secured_message_export_session_keys(void *spdm_secured_message_cont
     session_keys_struct = session_keys;
     session_keys_struct->version = LIBSPDM_SECURE_SESSION_KEYS_STRUCT_VERSION;
     session_keys_struct->aead_key_size = (uint32_t)secured_message_context->aead_key_size;
-    session_keys_struct->aead_iv_size =  (uint32_t)secured_message_context->aead_iv_size;
+    session_keys_struct->aead_iv_size = (uint32_t)secured_message_context->aead_iv_size;
 
     ptr = (void *)(session_keys_struct + 1);
     libspdm_copy_mem(ptr,

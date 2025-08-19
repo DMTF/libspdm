@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -32,7 +32,7 @@ libspdm_return_t libspdm_responder_handle_response_state(libspdm_context_t *spdm
     #if LIBSPDM_RESPOND_IF_READY_SUPPORT
     case LIBSPDM_RESPONSE_STATE_NOT_READY:
         /*do not update ErrorData if a previous request has not been completed*/
-        if(request_code != SPDM_RESPOND_IF_READY) {
+        if (request_code != SPDM_RESPOND_IF_READY) {
             spdm_context->cache_spdm_request_size = spdm_context->last_spdm_request_size;
             libspdm_copy_mem(spdm_context->cache_spdm_request,
                              libspdm_get_scratch_buffer_cache_spdm_request_capacity(spdm_context),

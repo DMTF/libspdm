@@ -220,7 +220,7 @@ static libspdm_return_t libspdm_try_get_csr(libspdm_context_t *spdm_context,
     }
     if (*csr_len < spdm_response->csr_length) {
         *csr_len = spdm_response->csr_length;
-        status =  LIBSPDM_STATUS_BUFFER_TOO_SMALL;
+        status = LIBSPDM_STATUS_BUFFER_TOO_SMALL;
         goto receive_done;
     }
 

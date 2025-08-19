@@ -147,7 +147,7 @@ static libspdm_return_t libspdm_try_get_endpoint_info(libspdm_context_t *spdm_co
         spdm_nonce = (uint8_t *)(spdm_request + 1);
 
         if (requester_nonce_in == NULL) {
-            if(!libspdm_get_random_number(SPDM_NONCE_SIZE, spdm_nonce)) {
+            if (!libspdm_get_random_number(SPDM_NONCE_SIZE, spdm_nonce)) {
                 libspdm_release_sender_buffer (spdm_context);
                 return LIBSPDM_STATUS_LOW_ENTROPY;
             }

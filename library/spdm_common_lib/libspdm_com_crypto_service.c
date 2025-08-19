@@ -794,8 +794,8 @@ bool libspdm_verify_peer_cert_chain_buffer_integrity(libspdm_context_t *spdm_con
     cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_ALIAS_CERT;
     /* Responder does not determine Requester's certificate model */
     if (is_requester) {
-        if((spdm_context->connection_info.capability.flags &
-            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP) == 0) {
+        if ((spdm_context->connection_info.capability.flags &
+             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ALIAS_CERT_CAP) == 0) {
             cert_model = SPDM_CERTIFICATE_INFO_CERT_MODEL_DEVICE_CERT;
         }
     }

@@ -180,7 +180,7 @@ libspdm_return_t libspdm_get_encap_response_endpoint_info(void *spdm_context,
 
     if ((spdm_request->request_attributes &
          SPDM_GET_ENDPOINT_INFO_REQUEST_ATTRIBUTE_SIGNATURE_REQUESTED) != 0) {
-        if(!libspdm_get_random_number(SPDM_NONCE_SIZE, ptr)) {
+        if (!libspdm_get_random_number(SPDM_NONCE_SIZE, ptr)) {
             libspdm_reset_message_encap_e(context, session_info);
             return libspdm_generate_encap_error_response(
                 context, SPDM_ERROR_CODE_UNSPECIFIED,

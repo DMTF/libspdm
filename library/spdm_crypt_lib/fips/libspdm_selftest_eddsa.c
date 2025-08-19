@@ -80,7 +80,7 @@ bool libspdm_fips_selftest_eddsa(void *fips_selftest_context)
         goto update;
     }
 
-    result =  libspdm_ecd_get_pub_key(ecd_25519, get_pub_key_25519, &get_pub_key_25519_size);
+    result = libspdm_ecd_get_pub_key(ecd_25519, get_pub_key_25519, &get_pub_key_25519_size);
     if (!result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "EDDSA 25519 get pub key failed \n"));
         libspdm_ecd_free(ecd_25519);
@@ -196,7 +196,7 @@ bool libspdm_fips_selftest_eddsa(void *fips_selftest_context)
         goto update;
     }
 
-    result =  libspdm_ecd_get_pub_key(ecd_448, get_edd48_key, &get_pub_key_448_size);
+    result = libspdm_ecd_get_pub_key(ecd_448, get_edd48_key, &get_pub_key_448_size);
     if (!result) {
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "EDDSA 448 get pub key failed \n"));
         libspdm_ecd_free(ecd_448);

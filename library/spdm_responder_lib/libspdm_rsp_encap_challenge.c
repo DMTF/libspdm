@@ -34,7 +34,7 @@ libspdm_return_t libspdm_get_encap_request_challenge(libspdm_context_t *spdm_con
         spdm_request_size = sizeof(spdm_challenge_request_t) + SPDM_REQ_CONTEXT_SIZE;
     }
 
-    if(*encap_request_size < spdm_request_size) {
+    if (*encap_request_size < spdm_request_size) {
         return LIBSPDM_STATUS_INVALID_MSG_SIZE;
     }
     *encap_request_size = spdm_request_size;
@@ -46,7 +46,7 @@ libspdm_return_t libspdm_get_encap_request_challenge(libspdm_context_t *spdm_con
     spdm_request->header.param1 = spdm_context->encap_context.req_slot_id;
     spdm_request->header.param2 =
         SPDM_CHALLENGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH;
-    if(!libspdm_get_random_number(SPDM_NONCE_SIZE, spdm_request->nonce)) {
+    if (!libspdm_get_random_number(SPDM_NONCE_SIZE, spdm_request->nonce)) {
         return LIBSPDM_STATUS_LOW_ENTROPY;
     }
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "Encap RequesterNonce - "));
