@@ -122,7 +122,7 @@ static libspdm_return_t libspdm_try_challenge(libspdm_context_t *spdm_context,
         spdm_request_size = sizeof(spdm_challenge_request_t);
     }
     if (requester_nonce_in == NULL) {
-        if(!libspdm_get_random_number(SPDM_NONCE_SIZE, spdm_request->nonce)) {
+        if (!libspdm_get_random_number(SPDM_NONCE_SIZE, spdm_request->nonce)) {
             libspdm_release_sender_buffer (spdm_context);
             return LIBSPDM_STATUS_LOW_ENTROPY;
         }

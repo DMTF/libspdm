@@ -164,8 +164,8 @@ static libspdm_return_t libspdm_handle_response_not_ready(libspdm_context_t *spd
     spdm_error_response_t *spdm_response;
     spdm_error_data_response_not_ready_t *extend_error_data;
 
-    if(*response_size < sizeof(spdm_error_response_t) +
-       sizeof(spdm_error_data_response_not_ready_t)) {
+    if (*response_size < sizeof(spdm_error_response_t) +
+        sizeof(spdm_error_data_response_not_ready_t)) {
         return LIBSPDM_STATUS_INVALID_MSG_SIZE;
     }
 
@@ -438,7 +438,7 @@ libspdm_return_t libspdm_handle_error_response_main(
     if ((spdm_response->param1 == SPDM_ERROR_CODE_DECRYPT_ERROR) && (session_id != NULL)) {
         libspdm_free_session_id(spdm_context, *session_id);
         return LIBSPDM_STATUS_SESSION_MSG_ERROR;
-    } else if(spdm_response->param1 == SPDM_ERROR_CODE_RESPONSE_NOT_READY) {
+    } else if (spdm_response->param1 == SPDM_ERROR_CODE_RESPONSE_NOT_READY) {
         #if LIBSPDM_RESPOND_IF_READY_SUPPORT
         return libspdm_handle_response_not_ready(spdm_context, session_id,
                                                  response_size, response,
