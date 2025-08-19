@@ -35,7 +35,7 @@ libspdm_get_encap_response_func_via_request_code(uint8_t request_response_code)
 
     size_t index;
 
-    libspdm_get_encap_response_struct_t get_encap_response_struct[] = {
+    const libspdm_get_encap_response_struct_t get_encap_response_struct[] = {
         #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
         { SPDM_GET_DIGESTS, libspdm_get_encap_response_digest },
         { SPDM_GET_CERTIFICATE, libspdm_get_encap_response_certificate },
@@ -52,6 +52,10 @@ libspdm_get_encap_response_func_via_request_code(uint8_t request_response_code)
         #if LIBSPDM_EVENT_RECIPIENT_SUPPORT
         { SPDM_SEND_EVENT, libspdm_get_encap_response_event_ack },
         #endif /* LIBSPDM_EVENT_RECIPIENT_SUPPORT */
+
+        #if LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP
+        { SPDM_GET_SUPPORTED_EVENT_TYPES, libspdm_get_encap_supported_event_types },
+        #endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
 
         #if LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP
         { SPDM_GET_ENDPOINT_INFO, libspdm_get_encap_response_endpoint_info },
