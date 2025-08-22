@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -74,6 +74,11 @@
 
 #if (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP) && !LIBSPDM_HASH_ALGO_SUPPORT
     #error If PSK_CAP is enabled then at least one HASH algorithm must also be enabled.
+#endif
+
+#if !(LIBSPDM_ENABLE_CAPABILITY_GET_KEY_PAIR_INFO_CAP) && \
+    (LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP)
+    #error If SET_KEY_PAIR_INFO_CAP is enabled then GET_KEY_PAIR_INFO_CAP must also be enabled.
 #endif
 
 #if (LIBSPDM_EVENT_RECIPIENT_SUPPORT) && !(LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP)
