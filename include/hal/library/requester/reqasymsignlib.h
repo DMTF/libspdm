@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2023-2024 DMTF. All rights reserved.
+ *  Copyright 2023-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -10,7 +10,8 @@
 #include "hal/base.h"
 #include "internal/libspdm_lib_config.h"
 
-#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+#if (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && \
+    ((LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP))
 /**
  * Sign an SPDM message data.
  *
