@@ -204,7 +204,7 @@ int main(void)
     }
     #endif /* (LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP) */
 
-    #if LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT
+    #if (LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT) && (LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP)
     if (libspdm_requester_get_endpoint_info_test_main() != 0) {
         return_value = 1;
     }
