@@ -388,6 +388,7 @@ libspdm_return_t libspdm_test_requester_chunk_send_generic_test_case(
     return status;
 }
 
+#if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
 libspdm_return_t libspdm_test_requester_chunk_send_vendor_specific_test_case(
     void** state, uint32_t case_id)
 {
@@ -437,6 +438,7 @@ libspdm_return_t libspdm_test_requester_chunk_send_vendor_specific_test_case(
                                                           &data_len, data);
     return status;
 }
+#endif /* LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES */
 
 void libspdm_test_requester_chunk_send_case1(void** state)
 {
@@ -542,7 +544,7 @@ void libspdm_test_requester_chunk_send_case13(void** state)
     status = libspdm_test_requester_chunk_send_vendor_specific_test_case(state, 13);
     assert_int_equal(status, LIBSPDM_STATUS_SEND_FAIL);
 }
-#endif
+#endif /* LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES */
 
 int libspdm_requester_chunk_send_test_main(void)
 {

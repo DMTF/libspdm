@@ -130,10 +130,10 @@ bool libspdm_read_responder_private_key(uint32_t base_asym_algo,
                                         void **data, size_t *size);
 #endif
 
-#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP)
 bool libspdm_read_requester_private_key(uint16_t req_base_asym_alg,
                                         void **data, size_t *size);
-#endif
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (...) */
 
 /* read priv key raw data */
 
