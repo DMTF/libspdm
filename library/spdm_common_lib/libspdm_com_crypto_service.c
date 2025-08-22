@@ -1433,6 +1433,7 @@ libspdm_get_measurement_summary_hash_size(libspdm_context_t *spdm_context,
     }
 }
 
+#if LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP
 /**
  * This function generates the endpoint info signature based upon il1il2 for authentication.
  *
@@ -1479,7 +1480,6 @@ bool libspdm_generate_endpoint_info_signature(libspdm_context_t *spdm_context,
     }
 
     if (is_requester) {
-#if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
         if (spdm_context->connection_info.algorithm.req_pqc_asym_alg != 0) {
             signature_size = libspdm_get_req_pqc_asym_signature_size(
                 spdm_context->connection_info.algorithm.req_pqc_asym_alg);
@@ -1508,9 +1508,6 @@ bool libspdm_generate_endpoint_info_signature(libspdm_context_t *spdm_context,
             spdm_context->connection_info.algorithm.base_hash_algo,
             true, il1il2_hash, il1il2_hash_size, signature, &signature_size);
 #endif
-#else /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
-        result = false;
-#endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
     } else {
         if (spdm_context->connection_info.algorithm.pqc_asym_algo != 0) {
             signature_size = libspdm_get_pqc_asym_signature_size(
@@ -1546,6 +1543,7 @@ bool libspdm_generate_endpoint_info_signature(libspdm_context_t *spdm_context,
 
     return result;
 }
+#endif /* LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP */
 
 /**
  * This function verifies the endpoint info signature based upon il1il2.

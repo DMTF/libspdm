@@ -10,7 +10,7 @@
 #include "hal/base.h"
 #include "internal/libspdm_lib_config.h"
 
-#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP)
 /**
  * Sign an SPDM message data.
  *
@@ -74,7 +74,6 @@ extern bool libspdm_encap_challenge_opaque_data(
     void *opaque_data,
     size_t *opaque_data_size);
 #endif/*LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/
-
-#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (...) */
 
 #endif /* REQUESTER_REQASYMSIGNLIB_H */
