@@ -237,7 +237,7 @@ int main(void)
     if (libspdm_responder_encap_key_update_test_main() != 0) {
         return_value = 1;
     }
-    #if LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT
+    #if (LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT) && (LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP)
     if (libspdm_responder_encap_get_endpoint_info_test_main() != 0) {
         return_value = 1;
     }
