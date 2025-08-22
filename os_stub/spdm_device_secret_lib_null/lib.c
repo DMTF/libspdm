@@ -113,7 +113,7 @@ bool libspdm_measurement_extension_log_collection(
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MEL_CAP */
 
-#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP)
 bool libspdm_requester_data_sign(
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT
     void *spdm_context,
@@ -126,7 +126,7 @@ bool libspdm_requester_data_sign(
 {
     return false;
 }
-#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (...) */
 
 bool libspdm_responder_data_sign(
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT

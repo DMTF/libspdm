@@ -18,7 +18,7 @@
 #include "spdm_device_secret_lib_internal.h"
 #include "internal/libspdm_common_lib.h"
 
-#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP)
 bool libspdm_requester_data_sign(
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT
     void *spdm_context,
@@ -99,7 +99,7 @@ bool libspdm_requester_data_sign(
 
     return result;
 }
-#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (...) */
 
 bool libspdm_responder_data_sign(
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT
