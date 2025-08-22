@@ -65,7 +65,7 @@ bool libspdm_read_responder_private_key(uint32_t base_asym_algo,
 }
 #endif
 
-#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP)
 bool libspdm_read_requester_private_key(uint16_t req_base_asym_alg,
                                         void **data, size_t *size)
 {
@@ -110,4 +110,4 @@ bool libspdm_read_requester_private_key(uint16_t req_base_asym_alg,
     res = libspdm_read_input_file(file, data, size);
     return res;
 }
-#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (...) */
