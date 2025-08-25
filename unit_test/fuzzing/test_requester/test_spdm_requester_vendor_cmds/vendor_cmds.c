@@ -83,6 +83,7 @@ static void libspdm_test_requester_vendor_cmds_case1(void **state)
     libspdm_context_t *spdm_context;
     libspdm_vendor_request_test request = {0};
     libspdm_vendor_response_test response = {0};
+    uint32_t response_data_len;
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -109,7 +110,7 @@ static void libspdm_test_requester_vendor_cmds_case1(void **state)
                                                  request.data,
                                                  &response.standard_id,
                                                  &response.vendor_id_len,
-                                                 response.vendor_id, &response.data_len,
+                                                 response.vendor_id, &response_data_len,
                                                  response.data);
 }
 

@@ -10,14 +10,15 @@
 
 #if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
 
+#define VENDOR_DEFINED_REQUEST_PAYLOAD_SIZE  16
+#define VENDOR_DEFINED_RESPONSE_PAYLOAD_SIZE  64
+
 #pragma pack(1)
 typedef struct {
     spdm_message_header_t header;
     uint16_t standard_id;
     uint8_t vendor_id_len;
     uint8_t vendor_id[SPDM_MAX_VENDOR_ID_LENGTH];
-    uint16_t data_len;
-    uint8_t data[16];
 } libspdm_vendor_request_test;
 
 typedef struct {
@@ -25,8 +26,6 @@ typedef struct {
     uint16_t standard_id;
     uint8_t vendor_id_len;
     uint8_t vendor_id[SPDM_MAX_VENDOR_ID_LENGTH];
-    uint16_t data_len;
-    uint8_t data[64];
 } libspdm_vendor_response_test;
 #pragma pack()
 
@@ -50,6 +49,33 @@ static libspdm_return_t libspdm_requester_vendor_cmds_err_test_send_message(
         m_libspdm_local_buffer_size += request_size;
     }
         return LIBSPDM_STATUS_SUCCESS;
+    case 0x2: {
+        const uint8_t *ptr = (const uint8_t *)request;
+
+        m_libspdm_local_buffer_size = 0;
+        libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
+                         ptr, request_size);
+        m_libspdm_local_buffer_size += request_size;
+    }
+        return LIBSPDM_STATUS_SUCCESS;
+    case 0x3: {
+        const uint8_t *ptr = (const uint8_t *)request;
+
+        m_libspdm_local_buffer_size = 0;
+        libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
+                         ptr, request_size);
+        m_libspdm_local_buffer_size += request_size;
+    }
+        return LIBSPDM_STATUS_SUCCESS;
+    case 0x4: {
+        const uint8_t *ptr = (const uint8_t *)request;
+
+        m_libspdm_local_buffer_size = 0;
+        libspdm_copy_mem(m_libspdm_local_buffer, sizeof(m_libspdm_local_buffer),
+                         ptr, request_size);
+        m_libspdm_local_buffer_size += request_size;
+    }
+        return LIBSPDM_STATUS_SUCCESS;
     default:
         return LIBSPDM_STATUS_SEND_FAIL;
     }
@@ -65,20 +91,25 @@ static libspdm_return_t libspdm_requester_vendor_cmds_err_test_receive_message(
 
     uint32_t* session_id = NULL;
     bool is_app_message = false;
-    size_t transport_message_size = sizeof(libspdm_vendor_request_test);
+    size_t transport_message_size = sizeof(libspdm_vendor_request_test)
+                                    + sizeof(uint16_t) + sizeof(uint32_t)
+                                    + VENDOR_DEFINED_REQUEST_PAYLOAD_SIZE;
 
     spdm_test_context = libspdm_get_test_context();
     switch (spdm_test_context->case_id) {
     case 0x1: {
         libspdm_vendor_response_test *spdm_response;
         libspdm_vendor_request_test* spdm_request = NULL;
+        uint8_t *response_ptr;
+        size_t spdm_response_size;
+        size_t transport_header_size;
+        uint32_t response_data_len;
+
         status = libspdm_transport_test_decode_message(
             spdm_context, &session_id, &is_app_message, true,
             m_libspdm_local_buffer_size, m_libspdm_local_buffer,
             &transport_message_size, (void **)(&spdm_request));
         assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-        size_t spdm_response_size;
-        size_t transport_header_size;
 
         spdm_response_size = sizeof(libspdm_vendor_response_test);
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
@@ -96,12 +127,162 @@ static libspdm_return_t libspdm_requester_vendor_cmds_err_test_receive_message(
         assert_int_equal(spdm_response->vendor_id_len, sizeof(uint16_t));
         libspdm_copy_mem(spdm_response->vendor_id, spdm_request->vendor_id_len,
                          spdm_request->vendor_id, spdm_request->vendor_id_len);
+        response_ptr = (uint8_t *)&spdm_response->vendor_id_len + sizeof(uint8_t) + spdm_response->vendor_id_len;
+        response_data_len = VENDOR_DEFINED_RESPONSE_PAYLOAD_SIZE;
+        libspdm_copy_mem(response_ptr, sizeof(uint16_t), &response_data_len, sizeof(uint16_t));
+        response_ptr += sizeof(uint16_t);
+        libspdm_set_mem(response_ptr, VENDOR_DEFINED_RESPONSE_PAYLOAD_SIZE, 0xff);
+        spdm_response_size = sizeof(spdm_vendor_defined_response_msg_t) +
+                             spdm_response->vendor_id_len + sizeof(uint16_t) +
+                             VENDOR_DEFINED_RESPONSE_PAYLOAD_SIZE;
 
-        if (spdm_response->data_len < sizeof(spdm_response->data))
-            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        status = libspdm_transport_test_encode_message(spdm_context, NULL, false,
+                                                       false, spdm_response_size,
+                                                       spdm_response,
+                                                       response_size, response);
+        assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    }
+        return LIBSPDM_STATUS_SUCCESS;
 
-        spdm_response->data_len = sizeof(spdm_response->data);
-        libspdm_set_mem(spdm_response->data, sizeof(spdm_response->data), 0xff);
+    case 0x2: {
+        libspdm_vendor_response_test *spdm_response;
+        libspdm_vendor_request_test* spdm_request = NULL;
+        uint8_t *response_ptr;
+        size_t spdm_response_size;
+        size_t transport_header_size;
+        uint32_t response_data_len;
+
+        status = libspdm_transport_test_decode_message(
+            spdm_context, &session_id, &is_app_message, true,
+            m_libspdm_local_buffer_size, m_libspdm_local_buffer,
+            &transport_message_size, (void **)(&spdm_request));
+        assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+        spdm_response_size = sizeof(libspdm_vendor_response_test);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        libspdm_zero_mem(spdm_response, spdm_response_size);
+        spdm_response->header.spdm_version = spdm_request->header.spdm_version;
+        spdm_response->header.request_response_code = SPDM_VENDOR_DEFINED_RESPONSE;
+        spdm_response->header.param1 = 0; /* not large request */
+        spdm_response->header.param2 = 0;
+
+        spdm_response->standard_id = spdm_request->standard_id;
+        spdm_response->vendor_id_len = spdm_request->vendor_id_len;
+        /* usually 2 bytes for vendor id */
+        assert_int_equal(spdm_response->vendor_id_len, sizeof(uint16_t));
+        libspdm_copy_mem(spdm_response->vendor_id, spdm_request->vendor_id_len,
+                         spdm_request->vendor_id, spdm_request->vendor_id_len);
+        response_ptr = (uint8_t *)&spdm_response->vendor_id_len + sizeof(uint8_t) + spdm_response->vendor_id_len;
+        libspdm_set_mem(response_ptr, sizeof(uint16_t), 0);
+        response_ptr += sizeof(uint16_t);
+        response_data_len = VENDOR_DEFINED_RESPONSE_PAYLOAD_SIZE;
+        libspdm_copy_mem(response_ptr, sizeof(uint32_t), &response_data_len, sizeof(uint32_t));
+        response_ptr += sizeof(uint32_t);
+        libspdm_set_mem(response_ptr, VENDOR_DEFINED_RESPONSE_PAYLOAD_SIZE, 0xff);
+        spdm_response_size = sizeof(spdm_vendor_defined_response_msg_t) +
+                             spdm_response->vendor_id_len + sizeof(uint16_t) + sizeof(uint32_t) +
+                             VENDOR_DEFINED_RESPONSE_PAYLOAD_SIZE;
+
+        status = libspdm_transport_test_encode_message(spdm_context, NULL, false,
+                                                       false, spdm_response_size,
+                                                       spdm_response,
+                                                       response_size, response);
+        assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    }
+        return LIBSPDM_STATUS_SUCCESS;
+
+    case 0x3: {
+        libspdm_vendor_response_test *spdm_response;
+        libspdm_vendor_request_test* spdm_request = NULL;
+        uint8_t *response_ptr;
+        size_t spdm_response_size;
+        size_t transport_header_size;
+        uint32_t response_data_len;
+
+        status = libspdm_transport_test_decode_message(
+            spdm_context, &session_id, &is_app_message, true,
+            m_libspdm_local_buffer_size, m_libspdm_local_buffer,
+            &transport_message_size, (void **)(&spdm_request));
+        assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+        spdm_response_size = sizeof(libspdm_vendor_response_test);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        libspdm_zero_mem(spdm_response, spdm_response_size);
+        spdm_response->header.spdm_version = spdm_request->header.spdm_version;
+        spdm_response->header.request_response_code = SPDM_VENDOR_DEFINED_RESPONSE;
+        spdm_response->header.param1 = spdm_request->header.param1 | SPDM_VENDOR_DEFINED_REQUEST_LARGE_REQ;
+        spdm_response->header.param2 = 0;
+
+        spdm_response->standard_id = spdm_request->standard_id;
+        spdm_response->vendor_id_len = spdm_request->vendor_id_len;
+        /* usually 2 bytes for vendor id */
+        assert_int_equal(spdm_response->vendor_id_len, sizeof(uint16_t));
+        libspdm_copy_mem(spdm_response->vendor_id, spdm_request->vendor_id_len,
+                         spdm_request->vendor_id, spdm_request->vendor_id_len);
+        response_ptr = (uint8_t *)&spdm_response->vendor_id_len + sizeof(uint8_t) + spdm_response->vendor_id_len;
+        libspdm_set_mem(response_ptr, sizeof(uint16_t), 0);
+        response_ptr += sizeof(uint16_t);
+        response_data_len = VENDOR_DEFINED_RESPONSE_PAYLOAD_SIZE;
+        libspdm_copy_mem(response_ptr, sizeof(uint32_t), &response_data_len, sizeof(uint32_t));
+        response_ptr += sizeof(uint32_t);
+        libspdm_set_mem(response_ptr, VENDOR_DEFINED_RESPONSE_PAYLOAD_SIZE, 0xff);
+        /* invalid header size */
+        spdm_response_size = sizeof(spdm_vendor_defined_response_msg_t) +
+                             spdm_response->vendor_id_len + sizeof(uint16_t);
+
+        status = libspdm_transport_test_encode_message(spdm_context, NULL, false,
+                                                       false, spdm_response_size,
+                                                       spdm_response,
+                                                       response_size, response);
+        assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    }
+        return LIBSPDM_STATUS_SUCCESS;
+
+    case 0x4: {
+        libspdm_vendor_response_test *spdm_response;
+        libspdm_vendor_request_test* spdm_request = NULL;
+        uint8_t *response_ptr;
+        size_t spdm_response_size;
+        size_t transport_header_size;
+        uint32_t response_data_len;
+
+        status = libspdm_transport_test_decode_message(
+            spdm_context, &session_id, &is_app_message, true,
+            m_libspdm_local_buffer_size, m_libspdm_local_buffer,
+            &transport_message_size, (void **)(&spdm_request));
+        assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+        spdm_response_size = sizeof(libspdm_vendor_response_test);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        libspdm_zero_mem(spdm_response, spdm_response_size);
+        spdm_response->header.spdm_version = spdm_request->header.spdm_version;
+        spdm_response->header.request_response_code = SPDM_VENDOR_DEFINED_RESPONSE;
+        spdm_response->header.param1 = spdm_request->header.param1 | SPDM_VENDOR_DEFINED_REQUEST_LARGE_REQ;
+        spdm_response->header.param2 = 0;
+
+        spdm_response->standard_id = spdm_request->standard_id;
+        spdm_response->vendor_id_len = spdm_request->vendor_id_len;
+        /* usually 2 bytes for vendor id */
+        assert_int_equal(spdm_response->vendor_id_len, sizeof(uint16_t));
+        libspdm_copy_mem(spdm_response->vendor_id, spdm_request->vendor_id_len,
+                         spdm_request->vendor_id, spdm_request->vendor_id_len);
+        response_ptr = (uint8_t *)&spdm_response->vendor_id_len + sizeof(uint8_t) + spdm_response->vendor_id_len;
+        libspdm_set_mem(response_ptr, sizeof(uint16_t), 0);
+        response_ptr += sizeof(uint16_t);
+        response_data_len = VENDOR_DEFINED_RESPONSE_PAYLOAD_SIZE;
+        libspdm_copy_mem(response_ptr, sizeof(uint32_t), &response_data_len, sizeof(uint32_t));
+        response_ptr += sizeof(uint32_t);
+        libspdm_set_mem(response_ptr, VENDOR_DEFINED_RESPONSE_PAYLOAD_SIZE, 0xff);
+        /* invalid payload size */
+        spdm_response_size = sizeof(spdm_vendor_defined_response_msg_t) +
+                             spdm_response->vendor_id_len + sizeof(uint16_t) +
+                             VENDOR_DEFINED_RESPONSE_PAYLOAD_SIZE;
 
         status = libspdm_transport_test_encode_message(spdm_context, NULL, false,
                                                        false, spdm_response_size,
@@ -128,8 +309,12 @@ static void libspdm_test_requester_vendor_cmds_err_case1(void **state)
     libspdm_context_t *spdm_context;
     libspdm_vendor_request_test request;
     libspdm_vendor_response_test response = {0};
+    uint32_t request_data_len;
+    uint8_t request_data[VENDOR_DEFINED_REQUEST_PAYLOAD_SIZE];
+    uint32_t response_data_len;
+    uint8_t response_data[VENDOR_DEFINED_RESPONSE_PAYLOAD_SIZE];
     response.vendor_id_len = sizeof(response.vendor_id);
-    response.data_len = sizeof(response.data);
+    response_data_len = sizeof(response_data);
 
     spdm_test_context = *state;
     spdm_context = spdm_test_context->spdm_context;
@@ -144,32 +329,194 @@ static void libspdm_test_requester_vendor_cmds_err_case1(void **state)
     request.vendor_id_len = 2;
     request.vendor_id[0] = 0xAA;
     request.vendor_id[1] = 0xAA;
-    request.data_len = sizeof(request.data);
-    libspdm_set_mem(request.data, sizeof(request.data), 0xAA);
+    request_data_len = sizeof(request_data);
+    libspdm_set_mem(request_data, sizeof(request_data), 0xAA);
 
-    response.data_len = 0; /* will generate error */
+    response_data_len = 0; /* will generate error */
 
     status = libspdm_vendor_send_request_receive_response(spdm_context, NULL,
                                                           request.standard_id,
                                                           request.vendor_id_len,
-                                                          request.vendor_id, request.data_len,
-                                                          request.data,
+                                                          request.vendor_id, request_data_len,
+                                                          request_data,
                                                           &response.standard_id,
                                                           &response.vendor_id_len,
-                                                          response.vendor_id, &response.data_len,
-                                                          response.data);
-    assert_int_equal(status, LIBSPDM_STATUS_RECEIVE_FAIL);
+                                                          response.vendor_id, &response_data_len,
+                                                          response_data);
+    assert_int_equal(status, LIBSPDM_STATUS_BUFFER_TOO_SMALL);
     assert_int_equal(
         spdm_context->connection_info.version >> SPDM_VERSION_NUMBER_SHIFT_BIT,
         SPDM_MESSAGE_VERSION_10);
 
-    printf("case 1 %d\n", response.data[0]);
+    printf("case 1 %d\n", response_data[0]);
+}
+
+/**
+ * Test 2: Sending a vendor defined request with Large VDM support
+ *         Get a response with invalid header.param1
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_INVALID_MSG_FIELD
+ **/
+static void libspdm_test_requester_vendor_cmds_err_case2(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    libspdm_vendor_request_test request;
+    libspdm_vendor_response_test response = {0};
+    uint32_t request_data_len;
+    uint8_t request_data[VENDOR_DEFINED_REQUEST_PAYLOAD_SIZE];
+    uint32_t response_data_len;
+    uint8_t response_data[VENDOR_DEFINED_RESPONSE_PAYLOAD_SIZE];
+    response.vendor_id_len = sizeof(response.vendor_id);
+    response_data_len = sizeof(response_data);
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x2;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_14 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_LARGE_RESP_CAP;
+    spdm_context->local_context.is_requester = true;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_LARGE_RESP_CAP;
+
+    request.standard_id = 6;
+    request.vendor_id_len = 2;
+    request.vendor_id[0] = 0xAA;
+    request.vendor_id[1] = 0xAA;
+    request_data_len = sizeof(request_data);
+    libspdm_set_mem(request_data, sizeof(request_data), 0xAA);
+
+    status = libspdm_vendor_send_request_receive_response(spdm_context, NULL,
+                                                          request.standard_id,
+                                                          request.vendor_id_len,
+                                                          request.vendor_id, request_data_len,
+                                                          request_data,
+                                                          &response.standard_id,
+                                                          &response.vendor_id_len,
+                                                          response.vendor_id, &response_data_len,
+                                                          response_data);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+
+    printf("case 2 %d\n", response_data[0]);
+}
+
+/**
+ * Test 3: Sending a vendor defined request with Large VDM support
+ *         Get a response with invalid header.param1
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_INVALID_MSG_SIZE
+ **/
+static void libspdm_test_requester_vendor_cmds_err_case3(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    libspdm_vendor_request_test request;
+    libspdm_vendor_response_test response = {0};
+    uint32_t request_data_len;
+    uint8_t request_data[VENDOR_DEFINED_REQUEST_PAYLOAD_SIZE];
+    uint32_t response_data_len;
+    uint8_t response_data[VENDOR_DEFINED_RESPONSE_PAYLOAD_SIZE];
+    response.vendor_id_len = sizeof(response.vendor_id);
+    response_data_len = sizeof(response_data);
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x3;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_14 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_LARGE_RESP_CAP;
+    spdm_context->local_context.is_requester = true;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_LARGE_RESP_CAP;
+
+    request.standard_id = 6;
+    request.vendor_id_len = 2;
+    request.vendor_id[0] = 0xAA;
+    request.vendor_id[1] = 0xAA;
+    request_data_len = sizeof(request_data);
+    libspdm_set_mem(request_data, sizeof(request_data), 0xAA);
+
+    status = libspdm_vendor_send_request_receive_response(spdm_context, NULL,
+                                                          request.standard_id,
+                                                          request.vendor_id_len,
+                                                          request.vendor_id, request_data_len,
+                                                          request_data,
+                                                          &response.standard_id,
+                                                          &response.vendor_id_len,
+                                                          response.vendor_id, &response_data_len,
+                                                          response_data);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_SIZE);
+
+    printf("case 3 %d\n", response_data[0]);
+}
+
+/**
+ * Test 4: Sending a vendor defined request with Large VDM support
+ *         Get a response with invalid header.param1
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_INVALID_MSG_FIELD
+ **/
+static void libspdm_test_requester_vendor_cmds_err_case4(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    libspdm_vendor_request_test request;
+    libspdm_vendor_response_test response = {0};
+    uint32_t request_data_len;
+    uint8_t request_data[VENDOR_DEFINED_REQUEST_PAYLOAD_SIZE];
+    uint32_t response_data_len;
+    uint8_t response_data[VENDOR_DEFINED_RESPONSE_PAYLOAD_SIZE];
+    response.vendor_id_len = sizeof(response.vendor_id);
+    response_data_len = sizeof(response_data);
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x4;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_14 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state =
+        LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_LARGE_RESP_CAP;
+    spdm_context->local_context.is_requester = true;
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_LARGE_RESP_CAP;
+
+    request.standard_id = 6;
+    request.vendor_id_len = 2;
+    request.vendor_id[0] = 0xAA;
+    request.vendor_id[1] = 0xAA;
+    request_data_len = sizeof(request_data);
+    libspdm_set_mem(request_data, sizeof(request_data), 0xAA);
+
+    status = libspdm_vendor_send_request_receive_response(spdm_context, NULL,
+                                                          request.standard_id,
+                                                          request.vendor_id_len,
+                                                          request.vendor_id, request_data_len,
+                                                          request_data,
+                                                          &response.standard_id,
+                                                          &response.vendor_id_len,
+                                                          response.vendor_id, &response_data_len,
+                                                          response_data);
+    assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
+
+    printf("case 4 %d\n", response_data[0]);
 }
 
 int libspdm_requester_vendor_cmds_error_test_main(void)
 {
     const struct CMUnitTest spdm_requester_vendor_cmds_tests[] = {
         cmocka_unit_test(libspdm_test_requester_vendor_cmds_err_case1),
+        cmocka_unit_test(libspdm_test_requester_vendor_cmds_err_case2),
+        cmocka_unit_test(libspdm_test_requester_vendor_cmds_err_case3),
+        cmocka_unit_test(libspdm_test_requester_vendor_cmds_err_case4),
     };
 
     libspdm_test_context_t test_context = {

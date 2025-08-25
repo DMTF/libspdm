@@ -418,7 +418,7 @@ libspdm_return_t libspdm_test_requester_chunk_send_vendor_specific_test_case(
     uint16_t standard_id = 6;
     uint8_t vendor_id_len = 2;
     uint8_t vendor_id[SPDM_MAX_VENDOR_ID_LENGTH] = {0xAA, 0xAA};
-    uint16_t data_len = 65535;
+    uint32_t data_len = 65535;
     uint8_t data[65535] = {0};
 
     spdm_test_context = *state;

@@ -1012,9 +1012,9 @@ typedef libspdm_return_t (*libspdm_vendor_response_callback_func)(
     uint16_t req_standard_id,
     uint8_t req_vendor_id_len,
     const void *req_vendor_id,
-    uint16_t req_size,
+    uint32_t req_size,
     const void *req_data,
-    uint16_t *resp_size,
+    uint32_t *resp_size,
     void *resp_data);
 
 #endif /* LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES */
