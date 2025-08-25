@@ -57,9 +57,9 @@ libspdm_return_t my_test_get_response_func2(
     uint16_t req_standard_id,
     uint8_t req_vendor_id_len,
     const void *req_vendor_id,
-    uint16_t req_size,
+    uint32_t req_size,
     const void *req_data,
-    uint16_t *resp_size,
+    uint32_t *resp_size,
     void *resp_data)
 {
     /* response message size is greater than the sending transmit buffer size of responder */

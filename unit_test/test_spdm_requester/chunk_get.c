@@ -911,7 +911,7 @@ static void libspdm_test_requester_chunk_get_case5(void **state)
     uint16_t standard_id = 6;
     uint8_t vendor_id_len = 2;
     uint8_t vendor_id[SPDM_MAX_VENDOR_ID_LENGTH] = {0xAA, 0xAA};
-    uint16_t data_len = 16;
+    uint32_t data_len = 16;
     uint8_t data[16];
 
     spdm_test_context = *state;
@@ -962,7 +962,7 @@ static void libspdm_test_requester_chunk_get_case6(void **state)
     uint16_t standard_id = 6;
     uint8_t vendor_id_len = 2;
     uint8_t vendor_id[SPDM_MAX_VENDOR_ID_LENGTH] = {0xAA, 0xAA};
-    uint16_t data_len = 16;
+    uint32_t data_len = 16;
     uint8_t data[16];
 
     spdm_test_context = *state;
@@ -1014,7 +1014,7 @@ static void libspdm_test_requester_chunk_get_case7(void **state)
     uint16_t standard_id = 6;
     uint8_t vendor_id_len = 2;
     uint8_t vendor_id[SPDM_MAX_VENDOR_ID_LENGTH] = {0xAA, 0xAA};
-    uint16_t data_len = 16;
+    uint32_t data_len = 16;
     uint8_t data[16];
 
     spdm_test_context = *state;

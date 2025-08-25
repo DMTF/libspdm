@@ -1016,7 +1016,8 @@ typedef struct {
 
 /* Maximum size of a vendor defined message data length
  * limited by the length field size which is 2 bytes */
-#define SPDM_MAX_VENDOR_DEFINED_DATA_LEN 65535
+#define SPDM_MAX_VENDOR_DEFINED_DATA_LEN 0xFFFF
+#define SPDM_MAX_VENDOR_DEFINED_DATA_LEN_14 0xFFFFFFFF
 /* Maximum size of a vendor defined vendor id length
  * limited by the length field size which is 1 byte */
 #define SPDM_MAX_VENDOR_ID_LENGTH 255
@@ -1024,26 +1025,42 @@ typedef struct {
 /* SPDM VENDOR_DEFINED request */
 typedef struct {
     spdm_message_header_t header;
-    /* param1 == RSVD
+    /* param1 == BIT[7]=LargeReq, BIT[0:6]=RSVD
      * param2 == RSVD*/
     uint16_t standard_id;
     uint8_t len;
-    /*uint8_t                vendor_id[len];
-     * uint16_t               payload_length;
-     * uint8_t                vendor_defined_payload[payload_length];*/
+    /* uint8_t                vendor_id[len];
+     * uint16_t               payload_length; */
+
+    /* these fields are used when LargeReq == 0
+     * uint8_t                vendor_defined_payload[payload_length]; */
+
+    /* these fields are used when LargeReq == 1  // 1.4+
+     * uint32_t               large_payload_length;
+     * uint8_t                large_vendor_defined_payload[large_payload_length]; */
 } spdm_vendor_defined_request_msg_t;
+
+#define SPDM_VENDOR_DEFINED_REQUEST_LARGE_REQ 0x80
 
 /* SPDM VENDOR_DEFINED response */
 typedef struct {
     spdm_message_header_t header;
-    /* param1 == RSVD
+    /* param1 == BIT[7]=LargeResp, BIT[0:6]=RSVD
      * param2 == RSVD*/
     uint16_t standard_id;
     uint8_t len;
-    /*uint8_t                vendor_id[len];
-     * uint16_t               payload_length;
-     * uint8_t                vendor_defined_payload[payload_length];*/
+    /* uint8_t                vendor_id[len];
+     * uint16_t               payload_length; */
+
+    /* these fields are used when LargeResp == 0
+     * uint8_t                vendor_defined_payload[payload_length]; */
+
+    /* these fields are used when LargeResp == 1  // 1.4+
+     * uint32_t               large_payload_length;
+     * uint8_t                large_vendor_defined_payload[large_payload_length]; */
 } spdm_vendor_defined_response_msg_t;
+
+#define SPDM_VENDOR_DEFINED_RESONSE_LARGE_RESP 0x80
 
 /* Below command is defined in SPDM 1.1 */
 

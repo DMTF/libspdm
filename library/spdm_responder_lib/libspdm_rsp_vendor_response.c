@@ -47,8 +47,9 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
     uint8_t *resp_data = NULL;
     const uint8_t *req_vendor_id;
     const uint8_t *req_data;
-    uint16_t resp_size = 0;
-    uint16_t req_size = 0;
+    uint32_t resp_size = 0;
+    uint32_t req_size = 0;
+    bool use_large_payload;
 
     /* -=[Check Parameters Phase]=- */
     if (request == NULL ||
@@ -116,26 +117,61 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
                                                0, response_size, response);
     }
 
+    if ((spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_14) &&
+        ((spdm_request->header.param1 & SPDM_VENDOR_DEFINED_REQUEST_LARGE_REQ) != 0)) {
+        if (!libspdm_is_capabilities_flag_supported(
+                spdm_context, false,
+                SPDM_GET_CAPABILITIES_REQUEST_FLAGS_LARGE_RESP_CAP,
+                SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_LARGE_RESP_CAP)) {
+            return libspdm_generate_error_response(
+                spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
+                0, response_size, response);
+        }
+
+        use_large_payload = true;
+    } else {
+        use_large_payload = false;
+    }
+
+
     if (request_size < sizeof(spdm_vendor_defined_request_msg_t)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
     }
-    if (request_size < sizeof(spdm_vendor_defined_request_msg_t) +
-        spdm_request->len + sizeof(uint16_t)) {
-        return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-                                               response_size, response);
+    if (use_large_payload) {
+        if (request_size < sizeof(spdm_vendor_defined_request_msg_t) +
+            spdm_request->len + sizeof(uint16_t) + sizeof(uint32_t)) {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                                   response_size, response);
+        }
+    } else {
+        if (request_size < sizeof(spdm_vendor_defined_request_msg_t) +
+            spdm_request->len + sizeof(uint16_t)) {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                                   response_size, response);
+        }
     }
-
     req_vendor_id = ((const uint8_t *)request) + sizeof(spdm_vendor_defined_request_msg_t);
-    req_size = libspdm_read_uint16((const uint8_t *)(req_vendor_id + spdm_request->len));
 
-    if (request_size < sizeof(spdm_vendor_defined_request_msg_t) +
-        spdm_request->len + sizeof(uint16_t) + req_size) {
-        return libspdm_generate_error_response(spdm_context,
-                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-                                               response_size, response);
+    if (use_large_payload) {
+        req_size = libspdm_read_uint32((const uint8_t *)(req_vendor_id + spdm_request->len + sizeof(uint16_t)));
+        if (request_size < sizeof(spdm_vendor_defined_request_msg_t) +
+            spdm_request->len + sizeof(uint16_t) + sizeof(uint32_t) + req_size) {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                                   response_size, response);
+        }
+    } else {
+        req_size = libspdm_read_uint16((const uint8_t *)(req_vendor_id + spdm_request->len));
+        if (request_size < sizeof(spdm_vendor_defined_request_msg_t) +
+            spdm_request->len + sizeof(uint16_t) + req_size) {
+            return libspdm_generate_error_response(spdm_context,
+                                                   SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                                   response_size, response);
+        }
     }
 
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
@@ -144,6 +180,9 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
     /* length of spdm request/response header before payload start */
     header_length = sizeof(spdm_vendor_defined_response_msg_t) + spdm_request->len +
                     sizeof(uint16_t);
+    if (use_large_payload) {
+        header_length += sizeof(uint32_t);
+    }
 
     LIBSPDM_ASSERT(*response_size >= header_length);
     LIBSPDM_ASSERT(
@@ -157,6 +196,10 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
     spdm_response->header.param1 = 0;
     spdm_response->header.param2 = 0;
 
+    if (use_large_payload) {
+        spdm_response->header.param1 |= SPDM_VENDOR_DEFINED_RESONSE_LARGE_RESP;
+    }
+
     /* SPDM Response format
      *  1 byte SPDMVersion
      *  1 byte RequestResponseCode
@@ -164,18 +207,30 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
      *  2 bytes StandardID
      *  1 bytes VendorID Length Len1, based on StandardID
      *  Len1 bytes VendorID
-     *  2 bytes Response Length Len2
-     *  Len2 bytes Response Payload
+     *  if LargeResp == 1
+     *      2 bytes Reserved
+     *      4 bytes Response Length Len2
+     *      Len2 bytes Response Payload
+     *  if LargeResp == 0
+     *      2 bytes Response Length Len2
+     *      Len2 bytes Response Payload
      */
 
     /* replace capacity with size */
     spdm_response->len = SPDM_MAX_VENDOR_ID_LENGTH;
     resp_data = ((uint8_t *)response) + sizeof(spdm_vendor_defined_response_msg_t);
 
-    req_data = ((const uint8_t *)request) +
-               sizeof(spdm_vendor_defined_request_msg_t) +
-               ((const spdm_vendor_defined_request_msg_t*)request)->len +
-               sizeof(uint16_t);
+    if (use_large_payload) {
+        req_data = ((const uint8_t *)request) +
+                   sizeof(spdm_vendor_defined_request_msg_t) +
+                   ((const spdm_vendor_defined_request_msg_t*)request)->len +
+                   sizeof(uint16_t) + sizeof(uint32_t);
+    } else {
+        req_data = ((const uint8_t *)request) +
+                   sizeof(spdm_vendor_defined_request_msg_t) +
+                   ((const spdm_vendor_defined_request_msg_t*)request)->len +
+                   sizeof(uint16_t);
+    }
 
     status = spdm_context->vendor_response_get_id(
         spdm_context,
@@ -187,9 +242,15 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
         resp_data);
 
     /* move pointer and adjust buffer size */
-    resp_data += spdm_response->len + sizeof(uint16_t);
-    response_capacity -= spdm_response->len + sizeof(uint16_t);
-    resp_size = (uint16_t)response_capacity;
+    if (use_large_payload) {
+        resp_data += spdm_response->len + sizeof(uint16_t) + sizeof(uint32_t);
+        response_capacity -= spdm_response->len + sizeof(uint16_t) + sizeof(uint32_t);
+        resp_size = (uint32_t)response_capacity;
+    } else {
+        resp_data += spdm_response->len + sizeof(uint16_t);
+        response_capacity -= spdm_response->len + sizeof(uint16_t);
+        resp_size = (uint16_t)response_capacity;
+    }
 
     status = spdm_context->vendor_response_callback(spdm_context,
                                                 #if LIBSPDM_PASS_SESSION_ID
@@ -202,8 +263,13 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
                                                     resp_data);
 
     /* store back the response payload size */
-    libspdm_write_uint16((uint8_t *)(resp_data - sizeof(uint16_t)), resp_size);
-    *response_size = resp_size + (size_t)header_length;
+    if (use_large_payload) {
+        libspdm_write_uint32((uint8_t *)(resp_data - sizeof(uint32_t)), resp_size);
+        *response_size = resp_size + (size_t)header_length;
+    } else {
+        libspdm_write_uint16((uint8_t *)(resp_data - sizeof(uint16_t)), (uint16_t)resp_size);
+        *response_size = (uint16_t)resp_size + (size_t)header_length;
+    }
 
     LIBSPDM_ASSERT(sizeof(spdm_vendor_defined_request_msg_t) ==
                    SPDM_VENDOR_DEFINED_FIXED_HEADER_LEN);
