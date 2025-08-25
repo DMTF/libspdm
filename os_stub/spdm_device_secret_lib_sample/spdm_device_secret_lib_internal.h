@@ -196,10 +196,10 @@ bool libspdm_read_responder_pqc_private_key(uint32_t pqc_asym_algo,
                                             void **data, size_t *size);
 #endif
 
-#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP)
 bool libspdm_read_requester_pqc_private_key(uint32_t req_pqc_asym_alg,
                                             void **data, size_t *size);
-#endif
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (...) */
 
 /* read priv key raw data */
 
