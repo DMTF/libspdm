@@ -36,12 +36,12 @@ libspdm_get_encap_response_func_via_request_code(uint8_t request_response_code)
     size_t index;
 
     libspdm_get_encap_response_struct_t get_encap_response_struct[] = {
-        #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
         #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
         { SPDM_GET_DIGESTS, libspdm_get_encap_response_digest },
         { SPDM_GET_CERTIFICATE, libspdm_get_encap_response_certificate },
         #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP */
 
+        #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
         #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
         { SPDM_CHALLENGE, libspdm_get_encap_response_challenge_auth },
         #endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP */

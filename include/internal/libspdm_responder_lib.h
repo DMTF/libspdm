@@ -471,7 +471,7 @@ libspdm_return_t libspdm_get_response_encapsulated_response_ack(
     libspdm_context_t *spdm_context, size_t request_size, const void *request,
     size_t *response_size, void *response);
 
-#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)
+#if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
 /**
  * Get the SPDM encapsulated GET_DIGESTS request.
  *
@@ -538,7 +538,7 @@ libspdm_return_t libspdm_get_encap_request_get_certificate(libspdm_context_t *sp
 libspdm_return_t libspdm_process_encap_response_certificate(
     libspdm_context_t *spdm_context, size_t encap_response_size,
     const void *encap_response, bool *need_continue);
-#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT) */
+#endif /* LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT */
 
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_CHALLENGE_SUPPORT)
 /**

@@ -395,7 +395,6 @@ libspdm_return_t libspdm_encapsulated_request(libspdm_context_t *spdm_context,
                                               uint8_t mut_auth_requested,
                                               uint8_t *req_slot_id_param);
 
-#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
 #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
 /**
  * Process the SPDM encapsulated GET_DIGESTS request and return the response.
@@ -444,6 +443,7 @@ libspdm_return_t libspdm_get_encap_response_certificate(void *spdm_context,
                                                         void *response);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP */
 
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
 #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 /**
  * Process the SPDM encapsulated CHALLENGE request and return the response.

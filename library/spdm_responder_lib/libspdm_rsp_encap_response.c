@@ -47,14 +47,14 @@ static libspdm_return_t libspdm_get_encap_struct_via_op_code
 {
     size_t index;
 
-    libspdm_encap_response_struct_t encap_response_struct[] = {
-        #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)
+    const libspdm_encap_response_struct_t encap_response_struct[] = {
+        #if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
         { SPDM_GET_DIGESTS, libspdm_get_encap_request_get_digest,
           libspdm_process_encap_response_digest },
 
         { SPDM_GET_CERTIFICATE, libspdm_get_encap_request_get_certificate,
           libspdm_process_encap_response_certificate },
-        #endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (...) */
+        #endif /* LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT */
 
         #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_CHALLENGE_SUPPORT)
         { SPDM_CHALLENGE, libspdm_get_encap_request_challenge,
