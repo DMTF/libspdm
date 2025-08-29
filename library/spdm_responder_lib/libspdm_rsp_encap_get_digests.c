@@ -1,13 +1,12 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
 #include "internal/libspdm_responder_lib.h"
 
-#if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && \
-    (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)
+#if (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)
 
 libspdm_return_t libspdm_get_encap_request_get_digest(libspdm_context_t *spdm_context,
                                                       size_t *encap_request_size,
@@ -255,4 +254,4 @@ libspdm_return_t libspdm_process_encap_response_digest(
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-#endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (...) */
+#endif /* (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && (...) */
