@@ -808,6 +808,7 @@ void libspdm_test_responder_finish_case7(void **state)
     free(data1);
 }
 
+
 /**
  * Test 8: receiving a correct FINISH message from the requester with
  * correct MAC and signature (with mutual authentication), and 'handshake in
@@ -817,6 +818,7 @@ void libspdm_test_responder_finish_case7(void **state)
  **/
 void libspdm_test_responder_finish_case8(void **state)
 {
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -940,7 +942,7 @@ void libspdm_test_responder_finish_case8(void **state)
     libspdm_append_managed_buffer(&th_curr, req_cert_buffer_hash, hash_size);
     libspdm_append_managed_buffer(&th_curr, (uint8_t *)&m_libspdm_finish_request3,
                                   sizeof(spdm_finish_request_t));
-#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+
     libspdm_requester_data_sign(
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT
         spdm_context,
@@ -950,7 +952,6 @@ void libspdm_test_responder_finish_case8(void **state)
             false, libspdm_get_managed_buffer(&th_curr),
             libspdm_get_managed_buffer_size(&th_curr),
             ptr, &req_asym_signature_size);
-#endif
     libspdm_append_managed_buffer(&th_curr, ptr, req_asym_signature_size);
     ptr += req_asym_signature_size;
     libspdm_set_mem(request_finished_key, LIBSPDM_MAX_HASH_SIZE, (uint8_t)(0xFF));
@@ -973,6 +974,7 @@ void libspdm_test_responder_finish_case8(void **state)
                      SPDM_FINISH_RSP);
     free(data1);
     free(data2);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
 }
 
 /**
@@ -1537,6 +1539,7 @@ void libspdm_test_responder_finish_case14(void **state)
  **/
 void libspdm_test_responder_finish_case15(void **state)
 {
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -1646,7 +1649,7 @@ void libspdm_test_responder_finish_case15(void **state)
     libspdm_append_managed_buffer(&th_curr, req_cert_buffer_hash, hash_size);
     libspdm_append_managed_buffer(&th_curr, (uint8_t *)&m_libspdm_finish_request3,
                                   sizeof(spdm_finish_request_t));
-#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+
     libspdm_requester_data_sign(
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT
         spdm_context,
@@ -1656,7 +1659,7 @@ void libspdm_test_responder_finish_case15(void **state)
             false, libspdm_get_managed_buffer(&th_curr),
             libspdm_get_managed_buffer_size(&th_curr),
             ptr, &req_asym_signature_size);
-#endif
+
     libspdm_append_managed_buffer(&th_curr, ptr, req_asym_signature_size);
     ptr += req_asym_signature_size;
     libspdm_set_mem(request_finished_key, LIBSPDM_MAX_HASH_SIZE, (uint8_t)(0xFF));
@@ -1683,6 +1686,7 @@ void libspdm_test_responder_finish_case15(void **state)
     assert_int_equal(spdm_response->header.param2, 0);
     free(data1);
     free(data2);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
 }
 
 /**
@@ -1693,6 +1697,7 @@ void libspdm_test_responder_finish_case15(void **state)
  **/
 void libspdm_test_responder_finish_case16(void **state)
 {
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -1806,7 +1811,7 @@ void libspdm_test_responder_finish_case16(void **state)
     /*randomize signature*/
     libspdm_hash_all(m_libspdm_use_hash_algo, libspdm_get_managed_buffer(&th_curr),
                      libspdm_get_managed_buffer_size(&th_curr), random_buffer);
-#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+
     libspdm_requester_data_sign(
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT
         spdm_context,
@@ -1814,7 +1819,7 @@ void libspdm_test_responder_finish_case16(void **state)
         m_libspdm_finish_request3.header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT, SPDM_FINISH,
             m_libspdm_use_req_asym_algo, m_libspdm_use_req_pqc_asym_algo, m_libspdm_use_hash_algo,
             false, random_buffer, hash_size, ptr, &req_asym_signature_size);
-#endif
+
     libspdm_append_managed_buffer(&th_curr, ptr, req_asym_signature_size);
     ptr += req_asym_signature_size;
     libspdm_set_mem(request_finished_key, LIBSPDM_MAX_HASH_SIZE, (uint8_t)(0xFF));
@@ -1839,6 +1844,7 @@ void libspdm_test_responder_finish_case16(void **state)
     assert_int_equal(spdm_response->header.param2, 0);
     free(data1);
     free(data2);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
 }
 
 /**
@@ -1958,6 +1964,7 @@ void libspdm_test_responder_finish_case17(void **state)
  **/
 void libspdm_test_responder_finish_case18(void **state)
 {
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -2058,7 +2065,7 @@ void libspdm_test_responder_finish_case18(void **state)
     libspdm_append_managed_buffer(&th_curr, req_cert_buffer_hash, hash_size);
     libspdm_append_managed_buffer(&th_curr, (uint8_t *)&m_libspdm_finish_request4,
                                   sizeof(spdm_finish_request_t));
-#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+
     libspdm_requester_data_sign(
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT
         spdm_context,
@@ -2069,7 +2076,7 @@ void libspdm_test_responder_finish_case18(void **state)
             false, libspdm_get_managed_buffer(&th_curr),
             libspdm_get_managed_buffer_size(&th_curr),
             ptr, &req_asym_signature_size);
-#endif
+
     libspdm_append_managed_buffer(&th_curr, ptr, req_asym_signature_size);
     ptr += req_asym_signature_size;
 
@@ -2093,6 +2100,7 @@ void libspdm_test_responder_finish_case18(void **state)
                      SPDM_FINISH_RSP);
     free(data1);
     free(data2);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
 }
 
 /**
@@ -2556,6 +2564,7 @@ void libspdm_test_responder_finish_case21(void **state)
  **/
 void libspdm_test_responder_finish_case22(void **state)
 {
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -2679,7 +2688,7 @@ void libspdm_test_responder_finish_case22(void **state)
     libspdm_append_managed_buffer(&th_curr, req_cert_buffer_hash, hash_size);
     libspdm_append_managed_buffer(&th_curr, (uint8_t *)&m_libspdm_finish_request7,
                                   sizeof(spdm_finish_request_t));
-#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+
     libspdm_requester_data_sign(
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT
         spdm_context,
@@ -2689,7 +2698,7 @@ void libspdm_test_responder_finish_case22(void **state)
             false, libspdm_get_managed_buffer(&th_curr),
             libspdm_get_managed_buffer_size(&th_curr),
             ptr, &req_asym_signature_size);
-#endif
+
     libspdm_append_managed_buffer(&th_curr, ptr, req_asym_signature_size);
     ptr += req_asym_signature_size;
     libspdm_set_mem(request_finished_key, LIBSPDM_MAX_HASH_SIZE, (uint8_t)(0xFF));
@@ -2712,6 +2721,7 @@ void libspdm_test_responder_finish_case22(void **state)
                      sizeof(spdm_finish_response_t) + hmac_size);
     free(data1);
     free(data2);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
 }
 
 /**
@@ -2888,6 +2898,7 @@ void libspdm_test_responder_finish_case23(void** state)
  **/
 void libspdm_test_responder_finish_case24(void** state)
 {
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     libspdm_return_t status;
     libspdm_test_context_t* spdm_test_context;
     libspdm_context_t* spdm_context;
@@ -3013,7 +3024,7 @@ void libspdm_test_responder_finish_case24(void** state)
     libspdm_append_managed_buffer(&th_curr, req_cert_buffer_hash, hash_size);
     libspdm_append_managed_buffer(&th_curr, (uint8_t*)&m_libspdm_finish_request7,
                                   sizeof(spdm_finish_request_t));
-#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+
     libspdm_requester_data_sign(
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT
         spdm_context,
@@ -3023,7 +3034,7 @@ void libspdm_test_responder_finish_case24(void** state)
             false, libspdm_get_managed_buffer(&th_curr),
             libspdm_get_managed_buffer_size(&th_curr),
             ptr, &req_asym_signature_size);
-#endif
+
     libspdm_append_managed_buffer(&th_curr, ptr, req_asym_signature_size);
     ptr += req_asym_signature_size;
     libspdm_set_mem(request_finished_key, LIBSPDM_MAX_HASH_SIZE, (uint8_t)(0xFF));
@@ -3046,6 +3057,7 @@ void libspdm_test_responder_finish_case24(void** state)
     assert_int_equal(response_size, sizeof(spdm_finish_response_t) + hmac_size);
     free(data1);
     free(data2);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
 }
 
 /**
@@ -3055,6 +3067,7 @@ void libspdm_test_responder_finish_case24(void** state)
  **/
 void libspdm_test_responder_finish_case25(void** state)
 {
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     libspdm_return_t status;
     libspdm_test_context_t* spdm_test_context;
     libspdm_context_t* spdm_context;
@@ -3180,7 +3193,7 @@ void libspdm_test_responder_finish_case25(void** state)
     libspdm_append_managed_buffer(&th_curr, req_cert_buffer_hash, hash_size);
     libspdm_append_managed_buffer(&th_curr, (uint8_t*)&m_libspdm_finish_request7,
                                   sizeof(spdm_finish_request_t));
-#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+
     libspdm_requester_data_sign(
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT
         spdm_context,
@@ -3190,7 +3203,7 @@ void libspdm_test_responder_finish_case25(void** state)
             false, libspdm_get_managed_buffer(&th_curr),
             libspdm_get_managed_buffer_size(&th_curr),
             ptr, &req_asym_signature_size);
-#endif
+
     libspdm_append_managed_buffer(&th_curr, ptr, req_asym_signature_size);
     ptr += req_asym_signature_size;
     libspdm_set_mem(request_finished_key, LIBSPDM_MAX_HASH_SIZE, (uint8_t)(0xFF));
@@ -3211,6 +3224,7 @@ void libspdm_test_responder_finish_case25(void** state)
     assert_int_equal(response_size, sizeof(spdm_finish_response_t) + hmac_size);
     free(data1);
     free(data2);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
 }
 
 /**
@@ -3220,6 +3234,7 @@ void libspdm_test_responder_finish_case25(void** state)
  **/
 void libspdm_test_responder_finish_case26(void** state)
 {
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     libspdm_return_t status;
     libspdm_test_context_t* spdm_test_context;
     libspdm_context_t* spdm_context;
@@ -3345,7 +3360,7 @@ void libspdm_test_responder_finish_case26(void** state)
     libspdm_append_managed_buffer(&th_curr, req_cert_buffer_hash, hash_size);
     libspdm_append_managed_buffer(&th_curr, (uint8_t*)&m_libspdm_finish_request7,
                                   sizeof(spdm_finish_request_t));
-#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+
     libspdm_requester_data_sign(
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT
         spdm_context,
@@ -3361,7 +3376,7 @@ void libspdm_test_responder_finish_case26(void** state)
         m_libspdm_use_req_asym_algo,
         ptr, req_asym_signature_size,
         ptr, req_asym_signature_size);
-#endif
+
     libspdm_append_managed_buffer(&th_curr, ptr, req_asym_signature_size);
     ptr += req_asym_signature_size;
     libspdm_set_mem(request_finished_key, LIBSPDM_MAX_HASH_SIZE, (uint8_t)(0xFF));
@@ -3382,6 +3397,7 @@ void libspdm_test_responder_finish_case26(void** state)
     assert_int_equal(response_size, sizeof(spdm_finish_response_t) + hmac_size);
     free(data1);
     free(data2);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
 }
 
 /**
@@ -3562,6 +3578,7 @@ void libspdm_test_responder_finish_case27(void** state)
  **/
 void libspdm_test_responder_finish_case28(void** state)
 {
+#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     libspdm_return_t status;
     libspdm_test_context_t* spdm_test_context;
     libspdm_context_t* spdm_context;
@@ -3687,7 +3704,7 @@ void libspdm_test_responder_finish_case28(void** state)
     libspdm_append_managed_buffer(&th_curr, req_cert_buffer_hash, hash_size);
     libspdm_append_managed_buffer(&th_curr, (uint8_t*)&m_libspdm_finish_request7,
                                   sizeof(spdm_finish_request_t));
-#if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
+
     libspdm_requester_data_sign(
 #if LIBSPDM_HAL_PASS_SPDM_CONTEXT
         spdm_context,
@@ -3703,7 +3720,7 @@ void libspdm_test_responder_finish_case28(void** state)
         m_libspdm_use_req_asym_algo,
         ptr, req_asym_signature_size,
         ptr, req_asym_signature_size);
-#endif
+
     libspdm_append_managed_buffer(&th_curr, ptr, req_asym_signature_size);
     ptr += req_asym_signature_size;
     libspdm_set_mem(request_finished_key, LIBSPDM_MAX_HASH_SIZE, (uint8_t)(0xFF));
@@ -3724,6 +3741,7 @@ void libspdm_test_responder_finish_case28(void** state)
     assert_int_equal(response_size, sizeof(spdm_finish_response_t) + hmac_size);
     free(data1);
     free(data2);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
 }
 
 /**
