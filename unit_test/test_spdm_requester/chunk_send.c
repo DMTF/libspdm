@@ -13,6 +13,7 @@
 static bool m_libspdm_chunk_send_last_chunk = false;
 static uint8_t m_libspdm_chunk_send_chunk_handle = 0;
 static uint16_t m_libspdm_chunk_send_chunk_seq_no = 0;
+static uint32_t m_libspdm_chunk_send_chunk_seq_no_14 = 0;
 
 /* Override the LIBSPDM_DATA_TRANSFER_SIZE just for the unit tests in this file.
  * All other unit tests have the default data transfer size due to the specific
@@ -43,6 +44,29 @@ void libspdm_requester_chunk_send_test_case1_build_algorithms_response(
     spdm_response->ext_hash_sel_count = 0;
 }
 
+void libspdm_requester_chunk_send_test_case15_build_algorithms_response(
+    void* context, void* response, size_t* response_size)
+{
+    spdm_algorithms_response_t* spdm_response;
+
+    *response_size = sizeof(spdm_algorithms_response_t);
+    spdm_response = (spdm_algorithms_response_t*) response;
+
+    libspdm_zero_mem(spdm_response, *response_size);
+    spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_14;
+    spdm_response->header.request_response_code = SPDM_ALGORITHMS;
+    spdm_response->header.param1 = 0;
+    spdm_response->header.param2 = 0;
+    spdm_response->length = sizeof(spdm_algorithms_response_t);
+    spdm_response->measurement_specification_sel =
+        SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+    spdm_response->measurement_hash_algo =
+        m_libspdm_use_measurement_hash_algo;
+    spdm_response->base_asym_sel = m_libspdm_use_asym_algo;
+    spdm_response->base_hash_sel = m_libspdm_use_hash_algo;
+    spdm_response->ext_asym_sel_count = 0;
+    spdm_response->ext_hash_sel_count = 0;
+}
 
 libspdm_return_t libspdm_requester_chunk_send_test_send_message(
     void* spdm_context, size_t request_size, const void* request,
@@ -50,17 +74,24 @@ libspdm_return_t libspdm_requester_chunk_send_test_send_message(
 {
     libspdm_test_context_t* spdm_test_context;
     const spdm_chunk_send_request_t* chunk_send;
+    const spdm_chunk_send_request_14_t* chunk_send_14;
 
     spdm_test_context = libspdm_get_test_context();
 
     chunk_send = (const spdm_chunk_send_request_t*)
                  ((const uint8_t*) request + sizeof(libspdm_test_message_header_t));
 
+    chunk_send_14 = (const spdm_chunk_send_request_14_t*)
+                    ((const uint8_t*) request + sizeof(libspdm_test_message_header_t));
+
     m_libspdm_chunk_send_chunk_handle = chunk_send->header.param2;
     m_libspdm_chunk_send_chunk_seq_no = chunk_send->chunk_seq_no;
+    m_libspdm_chunk_send_chunk_seq_no_14 = chunk_send_14->chunk_seq_no;
 
     if (chunk_send->header.param1 & SPDM_CHUNK_SEND_REQUEST_ATTRIBUTE_LAST_CHUNK) {
         m_libspdm_chunk_send_last_chunk = true;
+    } else {
+        m_libspdm_chunk_send_last_chunk = false;
     }
 
     if (spdm_test_context->case_id == 1) {
@@ -112,6 +143,9 @@ libspdm_return_t libspdm_requester_chunk_send_test_send_message(
     if (spdm_test_context->case_id == 14) {
         return LIBSPDM_STATUS_SUCCESS;
     }
+    if (spdm_test_context->case_id == 15) {
+        return LIBSPDM_STATUS_SUCCESS;
+    }
     return LIBSPDM_STATUS_SEND_FAIL;
 }
 
@@ -122,6 +156,7 @@ libspdm_return_t libspdm_requester_chunk_send_test_receive_message(
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
     spdm_chunk_send_ack_response_t *chunk_send_ack_rsp;
+    spdm_chunk_send_ack_response_14_t *chunk_send_ack_rsp_14;
     spdm_error_response_t *error_response;
     size_t chunk_rsp_size;
     uint8_t *chunk_copy_to;
@@ -349,6 +384,39 @@ libspdm_return_t libspdm_requester_chunk_send_test_receive_message(
 
         return LIBSPDM_STATUS_SUCCESS;
     }
+    if (spdm_test_context->case_id == 15) {
+        /* Successful chunk send of algorithms request with SPDM 1.4*/
+        chunk_send_ack_rsp_14
+            = (void*) ((uint8_t*) *response + sizeof(libspdm_test_message_header_t));
+
+        chunk_send_ack_rsp_14->header.spdm_version = SPDM_MESSAGE_VERSION_14;
+        chunk_send_ack_rsp_14->header.request_response_code = SPDM_CHUNK_SEND_ACK;
+        chunk_send_ack_rsp_14->header.param1 = 0;
+        chunk_send_ack_rsp_14->header.param2 = m_libspdm_chunk_send_chunk_handle;
+        chunk_send_ack_rsp_14->chunk_seq_no = m_libspdm_chunk_send_chunk_seq_no_14;
+
+        if (m_libspdm_chunk_send_last_chunk) {
+
+            chunk_copy_to = (uint8_t*) (chunk_send_ack_rsp_14 + 1);
+            chunk_size = *response_size - (chunk_copy_to - (uint8_t*) *response);
+
+            libspdm_requester_chunk_send_test_case15_build_algorithms_response(
+                spdm_context, chunk_copy_to, &chunk_size);
+            chunk_rsp_size = sizeof(spdm_chunk_send_ack_response_14_t) + chunk_size;
+
+            libspdm_transport_test_encode_message(
+                spdm_context, NULL, false, false,
+                chunk_rsp_size, chunk_send_ack_rsp_14,
+                response_size, response);
+        } else {
+            chunk_rsp_size = sizeof(spdm_chunk_send_ack_response_14_t);
+            libspdm_transport_test_encode_message(
+                spdm_context, NULL, false, false,
+                chunk_rsp_size, chunk_send_ack_rsp_14,
+                response_size, response);
+        }
+        return LIBSPDM_STATUS_SUCCESS;
+    }
     return LIBSPDM_STATUS_RECEIVE_FAIL;
 }
 
@@ -365,6 +433,10 @@ libspdm_return_t libspdm_test_requester_chunk_send_generic_test_case(
     spdm_test_context->case_id = case_id;
     spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_12 <<
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
+    if (case_id == 15) {
+        spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_14 <<
+                                                SPDM_VERSION_NUMBER_SHIFT_BIT;
+    }
     spdm_context->connection_info.capability.max_spdm_msg_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
     spdm_context->connection_info.connection_state =
         LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
@@ -585,6 +657,14 @@ void libspdm_test_requester_chunk_send_case14(void** state)
                      LIBSPDM_CONNECTION_STATE_NOT_STARTED);
 }
 
+void libspdm_test_requester_chunk_send_case15(void** state)
+{
+    libspdm_return_t status;
+
+    status = libspdm_test_requester_chunk_send_generic_test_case(state, 15);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+}
+
 int libspdm_requester_chunk_send_test_main(void)
 {
     /* Test the CHUNK_SEND handlers in various requester handlers */
@@ -619,6 +699,8 @@ int libspdm_requester_chunk_send_test_main(void)
 #endif
         /* Recieved and error message indicating RequestResynch */
         cmocka_unit_test(libspdm_test_requester_chunk_send_case14),
+        /* Request Algorithms successfully sent in chunks, with SPDM 1.4 */
+        cmocka_unit_test(libspdm_test_requester_chunk_send_case15),
     };
 
     libspdm_test_context_t test_context = {
