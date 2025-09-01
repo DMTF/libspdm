@@ -987,9 +987,7 @@ bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
         }
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
         result = libspdm_requester_data_sign(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
             spdm_context,
-#endif
             spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
             spdm_context->connection_info.algorithm.req_base_asym_alg,
             spdm_context->connection_info.algorithm.req_pqc_asym_alg,
@@ -997,9 +995,7 @@ bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
             false, m1m2_buffer, m1m2_buffer_size, signature, &signature_size);
 #else
         result = libspdm_requester_data_sign(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
             spdm_context,
-#endif
             spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
             spdm_context->connection_info.algorithm.req_base_asym_alg,
             spdm_context->connection_info.algorithm.req_pqc_asym_alg,
@@ -1019,9 +1015,7 @@ bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
         }
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
         result = libspdm_responder_data_sign(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
             spdm_context,
-#endif
             spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
             spdm_context->connection_info.algorithm.base_asym_algo,
             spdm_context->connection_info.algorithm.pqc_asym_algo,
@@ -1030,9 +1024,7 @@ bool libspdm_generate_challenge_auth_signature(libspdm_context_t *spdm_context,
             &signature_size);
 #else
         result = libspdm_responder_data_sign(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
             spdm_context,
-#endif
             spdm_context->connection_info.version, SPDM_CHALLENGE_AUTH,
             spdm_context->connection_info.algorithm.base_asym_algo,
             spdm_context->connection_info.algorithm.pqc_asym_algo,
@@ -1489,9 +1481,7 @@ bool libspdm_generate_endpoint_info_signature(libspdm_context_t *spdm_context,
         }
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
         result = libspdm_requester_data_sign(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
             spdm_context,
-#endif
             spdm_context->connection_info.version, SPDM_ENDPOINT_INFO,
             spdm_context->connection_info.algorithm.req_base_asym_alg,
             spdm_context->connection_info.algorithm.req_pqc_asym_alg,
@@ -1499,9 +1489,7 @@ bool libspdm_generate_endpoint_info_signature(libspdm_context_t *spdm_context,
             false, il1il2_buffer, il1il2_buffer_size, signature, &signature_size);
 #else
         result = libspdm_requester_data_sign(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
             spdm_context,
-#endif
             spdm_context->connection_info.version, SPDM_ENDPOINT_INFO,
             spdm_context->connection_info.algorithm.req_base_asym_alg,
             spdm_context->connection_info.algorithm.req_pqc_asym_alg,
@@ -1518,9 +1506,7 @@ bool libspdm_generate_endpoint_info_signature(libspdm_context_t *spdm_context,
         }
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
         result = libspdm_responder_data_sign(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
             spdm_context,
-#endif
             spdm_context->connection_info.version, SPDM_ENDPOINT_INFO,
             spdm_context->connection_info.algorithm.base_asym_algo,
             spdm_context->connection_info.algorithm.pqc_asym_algo,
@@ -1529,9 +1515,7 @@ bool libspdm_generate_endpoint_info_signature(libspdm_context_t *spdm_context,
             &signature_size);
 #else
         result = libspdm_responder_data_sign(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
             spdm_context,
-#endif
             spdm_context->connection_info.version, SPDM_ENDPOINT_INFO,
             spdm_context->connection_info.algorithm.base_asym_algo,
             spdm_context->connection_info.algorithm.pqc_asym_algo,

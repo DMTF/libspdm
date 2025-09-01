@@ -156,12 +156,7 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
                                                response_size, response);
     }
 
-    if ((!libspdm_is_in_trusted_environment(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
-             spdm_context
-#endif
-             )) &&
-        (slot_id != 0) &&
+    if ((!libspdm_is_in_trusted_environment(spdm_context)) && (slot_id != 0) &&
         (!spdm_context->last_spdm_request_session_id_valid)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNEXPECTED_REQUEST, 0,
@@ -233,9 +228,7 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
 
         /* erase slot_id cert_chain*/
         result = libspdm_write_certificate_to_nvm(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
             spdm_context,
-#endif
             slot_id, NULL, 0, 0, 0, 0
 #if LIBSPDM_SET_CERT_CSR_PARAMS
             , &need_reset, &is_busy
@@ -309,9 +302,7 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
 
         /* set certificate to NV*/
         result = libspdm_write_certificate_to_nvm(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
             spdm_context,
-#endif
             slot_id, cert_chain,
             cert_chain_size,
             spdm_context->connection_info.algorithm.base_hash_algo,

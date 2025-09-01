@@ -466,9 +466,7 @@ void libspdm_test_responder_finish_case8(void **State)
 
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     libspdm_requester_data_sign(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
         spdm_context,
-#endif
         spdm_test_finish_request->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT, SPDM_FINISH,
             m_libspdm_use_req_asym_algo, m_libspdm_use_req_pqc_asym_algo, m_libspdm_use_hash_algo,
             false,

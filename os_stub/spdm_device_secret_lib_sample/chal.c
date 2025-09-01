@@ -22,9 +22,7 @@
 size_t libspdm_secret_lib_challenge_opaque_data_size;
 
 bool libspdm_challenge_opaque_data(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
     void *spdm_context,
-#endif
     spdm_version_number_t spdm_version,
     uint8_t slot_id,
     uint8_t *measurement_summary_hash,
@@ -49,9 +47,7 @@ bool libspdm_challenge_opaque_data(
 
 #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
 bool libspdm_encap_challenge_opaque_data(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
     void *spdm_context,
-#endif
     spdm_version_number_t spdm_version,
     uint8_t slot_id,
     uint8_t *measurement_summary_hash,

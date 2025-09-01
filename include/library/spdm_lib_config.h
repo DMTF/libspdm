@@ -543,13 +543,6 @@
 #define LIBSPDM_CHECK_SPDM_CONTEXT 1
 #endif
 
-/* Enable passing the SPDM context to HAL functions.
- * This macro will be removed when libspdm 4.0 is released.
- */
-#ifndef LIBSPDM_HAL_PASS_SPDM_CONTEXT
-#define LIBSPDM_HAL_PASS_SPDM_CONTEXT 0
-#endif
-
 /* Enable passing the SessionID to functions.
  * This macro will be removed when libspdm 4.0 is released.
  */

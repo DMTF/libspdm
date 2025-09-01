@@ -66,9 +66,7 @@
  * The maximum size is SPDM_MAX_MEASUREMENT_RECORD_LENGTH (2^24 - 1 bytes).
  **/
 extern libspdm_return_t libspdm_measurement_collection(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
     void *spdm_context,
-#endif
     spdm_version_number_t spdm_version,
     uint8_t measurement_specification,
     uint32_t measurement_hash_algo,
@@ -107,9 +105,7 @@ extern libspdm_return_t libspdm_measurement_collection(
  * On output, indicates the size of the opaque data.
  **/
 extern bool libspdm_measurement_opaque_data(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
     void *spdm_context,
-#endif
     spdm_version_number_t spdm_version,
     uint8_t measurement_specification,
     uint32_t measurement_hash_algo,
@@ -140,9 +136,7 @@ extern bool libspdm_measurement_opaque_data(
  * @retval false  Error when generating the measurement summary hash.
  **/
 extern bool libspdm_generate_measurement_summary_hash(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
     void *spdm_context,
-#endif
     spdm_version_number_t spdm_version,
     uint32_t base_hash_algo,
     uint8_t measurement_specification,

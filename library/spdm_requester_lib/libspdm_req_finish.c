@@ -309,9 +309,7 @@ bool libspdm_generate_finish_req_signature(libspdm_context_t *spdm_context,
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     result = libspdm_requester_data_sign(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
         spdm_context,
-#endif
         spdm_context->connection_info.version, SPDM_FINISH,
         spdm_context->connection_info.algorithm.req_base_asym_alg,
         spdm_context->connection_info.algorithm.req_pqc_asym_alg,
@@ -319,9 +317,7 @@ bool libspdm_generate_finish_req_signature(libspdm_context_t *spdm_context,
         false, th_curr_data, th_curr_data_size, signature, &signature_size);
 #else
     result = libspdm_requester_data_sign(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
         spdm_context,
-#endif
         spdm_context->connection_info.version, SPDM_FINISH,
         spdm_context->connection_info.algorithm.req_base_asym_alg,
         spdm_context->connection_info.algorithm.req_pqc_asym_alg,

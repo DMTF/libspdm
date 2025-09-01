@@ -29,19 +29,13 @@ bool g_in_trusted_environment = false;
 bool g_set_cert_is_busy = false;
 
 #if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP
-bool libspdm_is_in_trusted_environment(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
-    void *spdm_context
-#endif
-    )
+bool libspdm_is_in_trusted_environment(void *spdm_context)
 {
     return g_in_trusted_environment;
 }
 
 bool libspdm_write_certificate_to_nvm(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
     void *spdm_context,
-#endif
     uint8_t slot_id, const void * cert_chain,
     size_t cert_chain_size,
     uint32_t base_hash_algo, uint32_t base_asym_algo, uint32_t pqc_asym_algo

@@ -378,9 +378,7 @@ size_t libspdm_fill_measurement_device_mode_block (
 }
 
 libspdm_return_t libspdm_measurement_collection(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
     void *spdm_context,
-#endif
     spdm_version_number_t spdm_version,
     uint8_t measurement_specification,
     uint32_t measurement_hash_algo,
@@ -611,9 +609,7 @@ successful_return:
 size_t libspdm_secret_lib_meas_opaque_data_size;
 
 bool libspdm_measurement_opaque_data(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
     void *spdm_context,
-#endif
     spdm_version_number_t spdm_version,
     uint8_t measurement_specification,
     uint32_t measurement_hash_algo,
@@ -637,9 +633,7 @@ bool libspdm_measurement_opaque_data(
 }
 
 bool libspdm_generate_measurement_summary_hash(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
     void *spdm_context,
-#endif
     spdm_version_number_t spdm_version, uint32_t base_hash_algo,
     uint8_t measurement_specification, uint32_t measurement_hash_algo,
     uint8_t measurement_summary_hash_type,
@@ -670,9 +664,7 @@ bool libspdm_generate_measurement_summary_hash(
         /* get all measurement data*/
         device_measurement_size = sizeof(device_measurement);
         status = libspdm_measurement_collection(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
             spdm_context,
-#endif
             spdm_version, measurement_specification,
             measurement_hash_algo,
             0xFF, /* Get all measurements*/

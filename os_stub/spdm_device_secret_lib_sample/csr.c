@@ -253,9 +253,7 @@ bool libspdm_gen_csr_without_reset(uint32_t base_hash_algo, uint32_t base_asym_a
 }
 
 bool libspdm_gen_csr(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
     void *spdm_context,
-#endif
     uint32_t base_hash_algo, uint32_t base_asym_algo, bool *need_reset,
     const void *request, size_t request_size,
     uint8_t *requester_info, size_t requester_info_length,
@@ -334,9 +332,7 @@ bool libspdm_gen_csr(
 
 #if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX
 bool libspdm_gen_csr_ex(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
     void *spdm_context,
-#endif
     uint32_t base_hash_algo, uint32_t base_asym_algo, uint32_t pqc_asym_algo,
     bool *need_reset,
     const void *request, size_t request_size,

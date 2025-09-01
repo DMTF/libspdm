@@ -211,9 +211,7 @@ libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
         }
 
         result = libspdm_gen_csr_ex(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
             spdm_context,
-#endif
             spdm_context->connection_info.algorithm.base_hash_algo,
             spdm_context->connection_info.algorithm.base_asym_algo,
             spdm_context->connection_info.algorithm.pqc_asym_algo,
@@ -234,9 +232,7 @@ libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
 #endif /*LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX*/
     } else {
         result = libspdm_gen_csr(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
             spdm_context,
-#endif
             spdm_context->connection_info.algorithm.base_hash_algo,
             spdm_context->connection_info.algorithm.base_asym_algo,
             &need_reset, request, request_size,

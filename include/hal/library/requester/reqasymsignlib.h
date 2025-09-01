@@ -33,9 +33,7 @@
  * @retval false signing fail.
  **/
 extern bool libspdm_requester_data_sign(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
     void *spdm_context,
-#endif
     spdm_version_number_t spdm_version,
     uint8_t op_code,
     uint16_t req_base_asym_alg, uint32_t req_pqc_asym_alg,
@@ -64,9 +62,7 @@ extern bool libspdm_requester_data_sign(
  * On output, indicates the size of the opaque data.
  **/
 extern bool libspdm_encap_challenge_opaque_data(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
     void *spdm_context,
-#endif
     spdm_version_number_t spdm_version,
     uint8_t slot_id,
     uint8_t *measurement_summary_hash,

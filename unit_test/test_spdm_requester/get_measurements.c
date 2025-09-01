@@ -555,9 +555,7 @@ static libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         sig_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         libspdm_responder_data_sign(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
             spdm_context,
-#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_MEASUREMENTS,
                 m_libspdm_use_asym_algo, m_libspdm_use_pqc_asym_algo, m_libspdm_use_hash_algo,
@@ -644,9 +642,7 @@ static libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         sig_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         libspdm_responder_data_sign(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
             spdm_context,
-#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_MEASUREMENTS,
                 m_libspdm_use_asym_algo, m_libspdm_use_pqc_asym_algo, m_libspdm_use_hash_algo,
@@ -806,9 +802,7 @@ static libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
             sig_size =
                 libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
             libspdm_responder_data_sign(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
                 spdm_context,
-#endif
                 spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                     SPDM_MEASUREMENTS,
                     m_libspdm_use_asym_algo, m_libspdm_use_pqc_asym_algo,
@@ -983,9 +977,7 @@ static libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
             sig_size =
                 libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
             libspdm_responder_data_sign(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
                 spdm_context,
-#endif
                 spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                     SPDM_MEASUREMENTS,
                     m_libspdm_use_asym_algo, m_libspdm_use_pqc_asym_algo,
@@ -1377,9 +1369,7 @@ static libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         sig_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         libspdm_responder_data_sign(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
             spdm_context,
-#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_MEASUREMENTS,
                 m_libspdm_use_asym_algo, m_libspdm_use_pqc_asym_algo, m_libspdm_use_hash_algo,
@@ -1470,9 +1460,7 @@ static libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         sig_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         libspdm_responder_data_sign(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
             spdm_context,
-#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_MEASUREMENTS,
                 m_libspdm_use_asym_algo, m_libspdm_use_pqc_asym_algo, m_libspdm_use_hash_algo,
@@ -2042,9 +2030,7 @@ static libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         sig_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         libspdm_responder_data_sign(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
             spdm_context,
-#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_MEASUREMENTS,
                 m_libspdm_use_asym_algo, m_libspdm_use_pqc_asym_algo, m_libspdm_use_hash_algo,
@@ -2144,9 +2130,7 @@ static libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
                        libspdm_get_hash_size(m_libspdm_use_hash_algo)));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_responder_data_sign(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
             spdm_context,
-#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_MEASUREMENTS,
                 m_libspdm_use_asym_algo, m_libspdm_use_pqc_asym_algo, m_libspdm_use_hash_algo,
@@ -2246,9 +2230,7 @@ static libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
                        libspdm_get_hash_size(m_libspdm_use_hash_algo)));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_responder_data_sign(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
             spdm_context,
-#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_MEASUREMENTS,
                 m_libspdm_use_asym_algo, m_libspdm_use_pqc_asym_algo, m_libspdm_use_hash_algo,
@@ -2346,9 +2328,7 @@ static libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
                        libspdm_get_hash_size(m_libspdm_use_hash_algo)));
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         libspdm_responder_data_sign(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
             spdm_context,
-#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_MEASUREMENTS,
                 m_libspdm_use_asym_algo, m_libspdm_use_pqc_asym_algo, m_libspdm_use_hash_algo,
@@ -2737,9 +2717,7 @@ static libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         sig_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         libspdm_responder_data_sign(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
             spdm_context,
-#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_MEASUREMENTS,
                 m_libspdm_use_asym_algo, m_libspdm_use_pqc_asym_algo, m_libspdm_use_hash_algo,
@@ -2898,9 +2876,7 @@ static libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         sig_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         libspdm_responder_data_sign(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
             spdm_context,
-#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_MEASUREMENTS,
                 m_libspdm_use_asym_algo, m_libspdm_use_pqc_asym_algo, m_libspdm_use_hash_algo,
@@ -3019,9 +2995,7 @@ static libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         sig_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         libspdm_responder_data_sign(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
             spdm_context,
-#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_MEASUREMENTS,
                 m_libspdm_use_asym_algo, m_libspdm_use_pqc_asym_algo, m_libspdm_use_hash_algo,
@@ -3159,9 +3133,7 @@ static libspdm_return_t libspdm_requester_get_measurements_test_receive_message(
         libspdm_dump_hex(m_libspdm_local_buffer, m_libspdm_local_buffer_size);
         sig_size = libspdm_get_asym_signature_size(m_libspdm_use_asym_algo);
         libspdm_responder_data_sign(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
             spdm_context,
-#endif
             spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
                 SPDM_MEASUREMENTS,
                 m_libspdm_use_asym_algo, m_libspdm_use_pqc_asym_algo, m_libspdm_use_hash_algo,

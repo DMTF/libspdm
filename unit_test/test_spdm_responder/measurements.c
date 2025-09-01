@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -1693,9 +1693,7 @@ void libspdm_test_responder_measurements_case27(void **state)
     expect_opaque_data_size = sizeof(expect_opaque_data);
 
     libspdm_measurement_collection(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
         spdm_context,
-#endif
         spdm_context->connection_info.version,
         spdm_context->connection_info.algorithm.measurement_spec,
         spdm_context->connection_info.algorithm.measurement_hash_algo,
@@ -1707,9 +1705,7 @@ void libspdm_test_responder_measurements_case27(void **state)
         &expect_measurement_record_data_length);
 
     libspdm_measurement_opaque_data(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
         spdm_context,
-#endif
         spdm_context->connection_info.version,
         spdm_context->connection_info.algorithm.measurement_spec,
         spdm_context->connection_info.algorithm.measurement_hash_algo,

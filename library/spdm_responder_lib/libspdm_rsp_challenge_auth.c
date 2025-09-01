@@ -230,9 +230,7 @@ libspdm_return_t libspdm_get_response_challenge_auth(libspdm_context_t *spdm_con
         ((spdm_request->header.param2 == SPDM_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH) ||
          (spdm_request->header.param2 == SPDM_REQUEST_ALL_MEASUREMENTS_HASH))) {
         result = libspdm_generate_measurement_summary_hash(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
             spdm_context,
-#endif
             spdm_context->connection_info.version,
             spdm_context->connection_info.algorithm.base_hash_algo,
             spdm_context->connection_info.algorithm.measurement_spec,
@@ -264,9 +262,7 @@ libspdm_return_t libspdm_get_response_challenge_auth(libspdm_context_t *spdm_con
         opaque_data_size = 0;
     } else {
         result = libspdm_challenge_opaque_data(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
             spdm_context,
-#endif
             spdm_context->connection_info.version,
             slot_id,
             measurement_summary_hash, measurement_summary_hash_size,

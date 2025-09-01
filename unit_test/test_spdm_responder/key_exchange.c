@@ -810,9 +810,7 @@ void libspdm_test_responder_key_exchange_case8(void **state)
 
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
     result = libspdm_generate_measurement_summary_hash(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
         spdm_context,
-#endif
         spdm_context->connection_info.version,
         spdm_context->connection_info.algorithm.base_hash_algo,
         spdm_context->connection_info.algorithm.measurement_spec,
@@ -929,9 +927,7 @@ void libspdm_test_responder_key_exchange_case9(void **state)
         spdm_context, false, m_libspdm_key_exchange_request4.header.param1);
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
     result = libspdm_generate_measurement_summary_hash(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
         spdm_context,
-#endif
         spdm_context->connection_info.version,
         spdm_context->connection_info.algorithm.base_hash_algo,
         spdm_context->connection_info.algorithm.measurement_spec,

@@ -81,9 +81,7 @@ void libspdm_test_responder_encap_challenge_case1(void **state)
     ptr += sizeof(uint16_t);
 
     libspdm_requester_data_sign(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
         spdm_context,
-#endif
         spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
             SPDM_CHALLENGE_AUTH,
             m_libspdm_use_req_asym_algo, m_libspdm_use_req_pqc_asym_algo, m_libspdm_use_hash_algo,
@@ -359,9 +357,7 @@ void libspdm_test_responder_encap_challenge_case5(void **state)
     ptr += sizeof(uint16_t);
 
     libspdm_requester_data_sign(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
         spdm_context,
-#endif
         spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
             SPDM_CHALLENGE_AUTH,
             m_libspdm_use_req_asym_algo, m_libspdm_use_req_pqc_asym_algo, m_libspdm_use_hash_algo,
@@ -455,9 +451,7 @@ void libspdm_test_responder_encap_challenge_case6(void **state)
     ptr += SPDM_REQ_CONTEXT_SIZE;
 
     libspdm_requester_data_sign(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
         spdm_context,
-#endif
         spdm_response->header.spdm_version << SPDM_VERSION_NUMBER_SHIFT_BIT,
             SPDM_CHALLENGE_AUTH,
             m_libspdm_use_req_asym_algo, m_libspdm_use_req_pqc_asym_algo, m_libspdm_use_hash_algo,
