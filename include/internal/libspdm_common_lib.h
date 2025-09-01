@@ -492,7 +492,7 @@ typedef struct {
 typedef struct {
     bool chunk_in_use;
     uint8_t chunk_handle;
-    uint16_t chunk_seq_no;
+    uint32_t chunk_seq_no;
     size_t chunk_bytes_transferred;
 
     void* large_message;

@@ -321,8 +321,11 @@ libspdm_return_t libspdm_handle_large_request(
     libspdm_return_t status;
 
     spdm_chunk_send_request_t *spdm_request;
+    spdm_chunk_send_request_14_t *spdm_request_14;
     size_t spdm_request_size;
     spdm_chunk_send_ack_response_t *spdm_response;
+    spdm_chunk_send_ack_response_14_t *spdm_response_14;
+    size_t response_header_size;
     uint8_t *message;
     size_t message_size;
     void *response;
@@ -356,15 +359,18 @@ libspdm_return_t libspdm_handle_large_request(
         spdm_context->connection_info.capability.data_transfer_size,
         spdm_context->local_context.capability.sender_data_transfer_size);
 
-    max_chunk_data_transfer_size =
-        ((size_t) min_data_transfer_size - sizeof(spdm_chunk_send_request_t)) * 65536 -
-        sizeof(uint32_t);
-    /* max_spdm_msg_size is already checked in caller */
+    if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_14) {
+        /* chunk seq no wrap not considered in spdm 1.4+ */
 
-    if (request_size > max_chunk_data_transfer_size) {
-        return LIBSPDM_STATUS_BUFFER_TOO_SMALL;
+        max_chunk_data_transfer_size =
+            ((size_t) min_data_transfer_size - sizeof(spdm_chunk_send_request_t)) * 65536 -
+            sizeof(uint32_t);
+        /* max_spdm_msg_size is already checked in caller */
+
+        if (request_size > max_chunk_data_transfer_size) {
+            return LIBSPDM_STATUS_BUFFER_TOO_SMALL;
+        }
     }
-
     /* now we can get sender buffer */
     transport_header_size = spdm_context->local_context.capability.transport_header_size;
 
@@ -403,10 +409,18 @@ libspdm_return_t libspdm_handle_large_request(
         spdm_request->header.request_response_code = SPDM_CHUNK_SEND;
         spdm_request->header.param1 = 0;
         spdm_request->header.param2 = send_info->chunk_handle;
-        spdm_request->chunk_seq_no = send_info->chunk_seq_no;
-        spdm_request->reserved = 0;
-        chunk_ptr = (uint8_t *)(spdm_request + 1);
 
+        if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_14) {
+            spdm_request->chunk_seq_no = (uint16_t) send_info->chunk_seq_no;
+            spdm_request->reserved = 0;
+            chunk_ptr = (uint8_t *)(spdm_request + 1);
+        } else {
+            spdm_request_14 = (spdm_chunk_send_request_14_t *)spdm_request;
+            spdm_request_14->chunk_seq_no = send_info->chunk_seq_no;
+            chunk_ptr = (uint8_t *)(spdm_request_14 + 1);
+        }
+
+        LIBSPDM_ASSERT(sizeof(spdm_chunk_send_request_t) == sizeof(spdm_chunk_send_request_14_t));
         if ((min_data_transfer_size - sizeof(spdm_chunk_send_request_t)) <
             (send_info->large_message_size - send_info->chunk_bytes_transferred)) {
             copy_size = min_data_transfer_size - sizeof(spdm_chunk_send_request_t);
@@ -497,15 +511,22 @@ libspdm_return_t libspdm_handle_large_request(
                 break;
             }
 
-            if (response_size < sizeof(spdm_chunk_send_ack_response_t)) {
+            if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_14) {
+                response_header_size = sizeof(spdm_chunk_send_ack_response_t);
+            } else {
+                response_header_size = sizeof(spdm_chunk_send_ack_response_14_t);
+                spdm_response_14 = (spdm_chunk_send_ack_response_14_t *)spdm_response;
+            }
+
+            if (response_size < response_header_size) {
                 status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
                 break;
             }
             if (spdm_response->header.param1
                 & SPDM_CHUNK_SEND_ACK_RESPONSE_ATTRIBUTE_EARLY_ERROR_DETECTED) {
 
-                spdm_error = (spdm_error_response_t *)(spdm_response + 1);
-                if (response_size < (sizeof(spdm_chunk_send_ack_response_t) +
+                spdm_error = (spdm_error_response_t *)((uint8_t *)spdm_response + response_header_size);
+                if (response_size < (response_header_size +
                                      sizeof(spdm_error_response_t))) {
                     status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
                     break;
@@ -527,12 +548,11 @@ libspdm_return_t libspdm_handle_large_request(
                 libspdm_copy_mem(
                     send_info->large_message,
                     send_info->large_message_capacity,
-                    (uint8_t *)(spdm_response + 1),
-                    response_size - sizeof(spdm_chunk_send_ack_response_t));
+                    (uint8_t *)spdm_response + response_header_size,
+                    response_size - response_header_size);
 
                 send_info->large_message_size =
-                    (response_size - sizeof(spdm_chunk_send_ack_response_t));
-
+                    (response_size - response_header_size);
                 status = LIBSPDM_STATUS_SUCCESS;
                 break;
             }
@@ -540,12 +560,19 @@ libspdm_return_t libspdm_handle_large_request(
                 status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
                 break;
             }
-            if (send_info->chunk_seq_no != spdm_response->chunk_seq_no) {
-                status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-                break;
+            if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_14) {
+                if (send_info->chunk_seq_no != spdm_response->chunk_seq_no) {
+                    status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                    break;
+                }
+            } else {
+                if (send_info->chunk_seq_no != spdm_response_14->chunk_seq_no) {
+                    status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
+                    break;
+                }
             }
 
-            chunk_ptr = (uint8_t *)(spdm_response + 1);
+            chunk_ptr = (uint8_t *)spdm_response + response_header_size;
             send_info->chunk_seq_no++;
 
             if (send_info->chunk_bytes_transferred >= send_info->large_message_size) {
@@ -553,9 +580,9 @@ libspdm_return_t libspdm_handle_large_request(
                  * to be read by libspdm_receive_spdm_response */
                 libspdm_copy_mem(
                     send_info->large_message, send_info->large_message_capacity,
-                    chunk_ptr, response_size - sizeof(spdm_chunk_send_ack_response_t));
+                    chunk_ptr, response_size - response_header_size);
                 send_info->large_message_size =
-                    (response_size - sizeof(spdm_chunk_send_ack_response_t));
+                    (response_size - response_header_size);
                 break;
             }
         }

@@ -22,6 +22,9 @@ static uint8_t m_libspdm_local_response_buffer_for_chunk_seq_no_wrap_test[
 static size_t m_libspdm_local_buffer_size;
 static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_M1M2_BUFFER_SIZE];
 
+static size_t m_libspdm_local_request_buffer_size;
+static uint8_t m_libspdm_local_request_buffer[LIBSPDM_MAX_SPDM_MSG_SIZE];
+
 static uint8_t m_libspdm_local_certificate_chain_test_case_4[LIBSPDM_MAX_CERT_CHAIN_SIZE];
 
 /* Override the LIBSPDM_DATA_TRANSFER_SIZE just for the unit tests in this file.
@@ -284,13 +287,58 @@ void libspdm_requester_chunk_get_test_case5_case6_build_vendor_response(
     spdm_response->len = 2;
 }
 
+void libspdm_requester_chunk_get_test_case8_build_digest_response(
+    void* context, void* response, size_t* response_size)
+{
+    /* this is referenced from case 4, but use spdm 1.4 */
+    libspdm_context_t *spdm_context;
+    spdm_digest_response_t* spdm_response;
+    uint8_t* digest;
+    uint8_t slot_id;
+
+    spdm_context = (libspdm_context_t*)context;
+    spdm_context->connection_info.algorithm.base_hash_algo =
+        m_libspdm_use_hash_algo;
+    *response_size = sizeof(spdm_digest_response_t) +
+                     libspdm_get_hash_size(m_libspdm_use_hash_algo) * SPDM_MAX_SLOT_COUNT;
+    spdm_response = response;
+
+    spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_14;
+    spdm_response->header.param1 = 0;
+    spdm_response->header.request_response_code = SPDM_DIGESTS;
+    spdm_response->header.param2 = 0;
+    libspdm_set_mem(m_libspdm_local_certificate_chain_test_case_4,
+                    sizeof(m_libspdm_local_certificate_chain_test_case_4),
+                    (uint8_t) (0xFF));
+
+    digest = (void*) (spdm_response + 1);
+    libspdm_zero_mem(digest,
+                     libspdm_get_hash_size(m_libspdm_use_hash_algo) * SPDM_MAX_SLOT_COUNT);
+    for (slot_id = 0; slot_id < SPDM_MAX_SLOT_COUNT; slot_id++) {
+        libspdm_hash_all(
+            m_libspdm_use_hash_algo,
+            m_libspdm_local_certificate_chain_test_case_4,
+            sizeof(m_libspdm_local_certificate_chain_test_case_4), &digest[0]);
+        digest += libspdm_get_hash_size(m_libspdm_use_hash_algo);
+    }
+    spdm_response->header.param1 |= (0xFF << 0); /* 1.3+ supported_slot_mask */
+    spdm_response->header.param2 |= (0xFF << 0);
+}
+
 libspdm_return_t libspdm_requester_chunk_get_test_send_message(
     void* spdm_context, size_t request_size, const void* request,
     uint64_t timeout)
 {
     libspdm_test_context_t* spdm_test_context;
+    size_t header_size = sizeof(libspdm_test_message_header_t);
 
     spdm_test_context = libspdm_get_test_context();
+
+    m_libspdm_local_request_buffer_size = 0;
+    libspdm_copy_mem(m_libspdm_local_request_buffer, sizeof(m_libspdm_local_request_buffer),
+                     (const uint8_t *)request + header_size, request_size - header_size);
+    m_libspdm_local_request_buffer_size += request_size - header_size;
+
     if (spdm_test_context->case_id == 0x1) {
         return LIBSPDM_STATUS_SUCCESS;
     } else if (spdm_test_context->case_id == 0x2) {
@@ -314,6 +362,8 @@ libspdm_return_t libspdm_requester_chunk_get_test_send_message(
         return LIBSPDM_STATUS_SUCCESS;
     } else if (spdm_test_context->case_id == 0x7) {
         return LIBSPDM_STATUS_SUCCESS;
+    } else if (spdm_test_context->case_id == 0x8) {
+        return LIBSPDM_STATUS_SUCCESS;
     } else {
         return LIBSPDM_STATUS_SEND_FAIL;
     }
@@ -333,7 +383,9 @@ libspdm_return_t libspdm_requester_chunk_get_test_receive_message(
     static size_t sub_rsp_remaining = 0;
     static uint16_t chunk_seq_no = 0;
 
+    spdm_message_header_t* spdm_request_header;
     spdm_chunk_response_response_t* chunk_rsp;
+    spdm_chunk_response_response_14_t* chunk_rsp_14;
     size_t chunk_rsp_size;
     uint8_t* chunk_copy_to;
     size_t chunk_copy_size;
@@ -343,6 +395,7 @@ libspdm_return_t libspdm_requester_chunk_get_test_receive_message(
     build_response_func = NULL;
 
     spdm_test_context = libspdm_get_test_context();
+    spdm_request_header = (spdm_message_header_t*) m_libspdm_local_request_buffer;
 
     /* First response to these tests should always be error large response */
     if (error_large_response_sent == false) {
@@ -355,7 +408,7 @@ libspdm_return_t libspdm_requester_chunk_get_test_receive_message(
         error_rsp = (void*) ((uint8_t*) *response + transport_header_size);
         error_rsp_size = sizeof(spdm_error_response_t) + sizeof(uint8_t);
 
-        error_rsp->header.spdm_version = SPDM_MESSAGE_VERSION_12;
+        error_rsp->header.spdm_version = spdm_request_header->spdm_version;
         error_rsp->header.request_response_code = SPDM_ERROR;
         error_rsp->header.param1 = SPDM_ERROR_CODE_LARGE_RESPONSE;
         error_rsp->header.param2 = 0;
@@ -485,7 +538,18 @@ libspdm_return_t libspdm_requester_chunk_get_test_receive_message(
             error_rsp_size, error_rsp,
             response_size, response);
 
+        /* reset static status for next case */
+        sub_rsp = NULL;
+        sub_rsp_size = 0;
+        sub_rsp_copied = 0;
+        sub_rsp_remaining = 0;
+        chunk_seq_no = 0;
+        error_large_response_sent = false;
+
         return LIBSPDM_STATUS_SUCCESS;
+    } else if (spdm_test_context->case_id == 0x8) {
+        build_response_func =
+            libspdm_requester_chunk_get_test_case8_build_digest_response;
     } else {
         LIBSPDM_ASSERT(0);
         return LIBSPDM_STATUS_RECEIVE_FAIL;
@@ -495,7 +559,7 @@ libspdm_return_t libspdm_requester_chunk_get_test_receive_message(
         transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
         chunk_rsp = (void*) ((uint8_t*) *response + transport_header_size);
 
-        chunk_rsp->header.spdm_version = SPDM_MESSAGE_VERSION_12;
+        chunk_rsp->header.spdm_version = spdm_request_header->spdm_version;
         chunk_rsp->header.request_response_code = SPDM_CHUNK_RESPONSE;
         chunk_rsp->header.param1 = 0;
         chunk_rsp->header.param2 = chunk_handle;
@@ -554,7 +618,12 @@ libspdm_return_t libspdm_requester_chunk_get_test_receive_message(
         sub_rsp_copied += chunk_copy_size;
         sub_rsp_remaining -= chunk_copy_size;
         chunk_rsp->chunk_size = (uint32_t) chunk_copy_size;
-        chunk_rsp->chunk_seq_no = chunk_seq_no++;
+        if (spdm_request_header->spdm_version < SPDM_MESSAGE_VERSION_14) {
+            chunk_rsp->chunk_seq_no = chunk_seq_no++;
+        } else {
+            chunk_rsp_14 = (spdm_chunk_response_response_14_t*) chunk_rsp;
+            chunk_rsp_14->chunk_seq_no = chunk_seq_no++;
+        }
 
         libspdm_transport_test_encode_message(
             spdm_context, NULL, false, false,
@@ -1058,6 +1127,94 @@ static void libspdm_test_requester_chunk_get_case7(void **state)
 }
 #endif /* LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES */
 
+#if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
+void libspdm_test_requester_chunk_get_case8(void** state)
+{
+    /* Copied from Chunk Send Test Case 4, use spdm 1.4*/
+    libspdm_return_t status;
+    libspdm_test_context_t* spdm_test_context;
+    libspdm_context_t* spdm_context;
+    libspdm_data_parameter_t parameter;
+    uint8_t slot_mask;
+    uint8_t slot_id;
+    uint8_t total_digest_buffer[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
+    uint8_t my_total_digest_buffer[LIBSPDM_MAX_HASH_SIZE * SPDM_MAX_SLOT_COUNT];
+    uint8_t* digest;
+    size_t data_return_size;
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x8;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_14 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NEGOTIATED;
+    spdm_context->connection_info.capability.flags |=
+        (SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_CAP
+         | SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP);
+
+    spdm_context->local_context.capability.flags |=
+        SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP;
+    spdm_context->local_context.capability.data_transfer_size
+        = CHUNK_GET_REQUESTER_UNIT_TEST_DATA_TRANSFER_SIZE;
+
+    spdm_context->connection_info.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+
+    libspdm_set_mem(
+        m_libspdm_local_certificate_chain_test_case_4,
+        sizeof(m_libspdm_local_certificate_chain_test_case_4),
+        (uint8_t) (0xFF));
+    libspdm_reset_message_b(spdm_context);
+
+    #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    spdm_context->transcript.message_m.buffer_size =
+        spdm_context->transcript.message_m.max_buffer_size;
+    #endif
+    libspdm_zero_mem(total_digest_buffer, sizeof(total_digest_buffer));
+    status = libspdm_get_digest(spdm_context, NULL, &slot_mask, &total_digest_buffer);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+
+    assert_int_equal(slot_mask, 0xFF);
+    libspdm_zero_mem(my_total_digest_buffer, sizeof(my_total_digest_buffer));
+    digest = my_total_digest_buffer;
+    for (slot_id = 0; slot_id < SPDM_MAX_SLOT_COUNT; slot_id++) {
+        libspdm_hash_all(m_libspdm_use_hash_algo,
+                         m_libspdm_local_certificate_chain_test_case_4,
+                         sizeof(m_libspdm_local_certificate_chain_test_case_4), digest);
+        digest += libspdm_get_hash_size(m_libspdm_use_hash_algo);
+    }
+    assert_memory_equal(total_digest_buffer, my_total_digest_buffer,
+                        sizeof(my_total_digest_buffer));
+
+    parameter.location = LIBSPDM_DATA_LOCATION_CONNECTION;
+    data_return_size = sizeof(uint8_t);
+    status = libspdm_get_data(spdm_context, LIBSPDM_DATA_PEER_SLOT_MASK,
+                              &parameter, &slot_mask, &data_return_size);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(data_return_size, sizeof(uint8_t));
+    assert_int_equal(slot_mask, 0xFF);
+
+    data_return_size = sizeof(total_digest_buffer);
+    status = libspdm_get_data(spdm_context, LIBSPDM_DATA_PEER_TOTAL_DIGEST_BUFFER,
+                              &parameter, total_digest_buffer, &data_return_size);
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(data_return_size, libspdm_get_hash_size(
+                         m_libspdm_use_hash_algo) * SPDM_MAX_SLOT_COUNT);
+    assert_memory_equal(total_digest_buffer, my_total_digest_buffer,
+                        sizeof(my_total_digest_buffer));
+
+    #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
+    assert_int_equal(
+        spdm_context->transcript.message_b.buffer_size,
+        sizeof(spdm_get_digest_request_t) +
+        sizeof(spdm_digest_response_t) +
+        libspdm_get_hash_size(spdm_context->connection_info
+                              .algorithm.base_hash_algo) * SPDM_MAX_SLOT_COUNT);
+    assert_int_equal(spdm_context->transcript.message_m.buffer_size, 0);
+    #endif
+}
+#endif
+
+
 int libspdm_requester_chunk_get_test_main(void)
 {
     /* Test the CHUNK_GET handlers in various requester handlers */
@@ -1088,6 +1245,10 @@ int libspdm_requester_chunk_get_test_main(void)
         /* Request Vendor Specific Response
          * and recieve error code RequestResync */
         cmocka_unit_test(libspdm_test_requester_chunk_get_case7),
+#endif
+#if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
+        /* Request Digests with spdm 1.4 */
+        cmocka_unit_test(libspdm_test_requester_chunk_get_case8),
 #endif
     };
 
