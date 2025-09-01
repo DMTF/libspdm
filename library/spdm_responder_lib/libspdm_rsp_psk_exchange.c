@@ -338,9 +338,7 @@ libspdm_return_t libspdm_get_response_psk_exchange(libspdm_context_t *spdm_conte
         ((spdm_request->header.param1 == SPDM_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH) ||
          (spdm_request->header.param1 == SPDM_REQUEST_ALL_MEASUREMENTS_HASH))) {
         result = libspdm_generate_measurement_summary_hash(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
             spdm_context,
-#endif
             spdm_context->connection_info.version,
             spdm_context->connection_info.algorithm.base_hash_algo,
             spdm_context->connection_info.algorithm.measurement_spec,

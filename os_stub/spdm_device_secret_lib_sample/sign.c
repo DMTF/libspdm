@@ -20,9 +20,7 @@
 
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP)
 bool libspdm_requester_data_sign(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
     void *spdm_context,
-#endif
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint16_t req_base_asym_alg, uint32_t req_pqc_asym_alg,
     uint32_t base_hash_algo, bool is_data_hash,
@@ -147,9 +145,7 @@ bool libspdm_requester_data_sign(
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) || (...) */
 
 bool libspdm_responder_data_sign(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
     void *spdm_context,
-#endif
     spdm_version_number_t spdm_version, uint8_t op_code,
     uint32_t base_asym_algo, uint32_t pqc_asym_algo,
     uint32_t base_hash_algo, bool is_data_hash,

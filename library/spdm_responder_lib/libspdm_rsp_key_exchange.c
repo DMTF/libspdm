@@ -151,9 +151,7 @@ bool libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     result = libspdm_responder_data_sign(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
         spdm_context,
-#endif /* LIBSPDM_HAL_PASS_SPDM_CONTEXT */
         spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
         spdm_context->connection_info.algorithm.base_asym_algo,
         spdm_context->connection_info.algorithm.pqc_asym_algo,
@@ -161,9 +159,7 @@ bool libspdm_generate_key_exchange_rsp_signature(libspdm_context_t *spdm_context
         false, th_curr_data, th_curr_data_size, signature, &signature_size);
 #else
     result = libspdm_responder_data_sign(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
         spdm_context,
-#endif /* LIBSPDM_HAL_PASS_SPDM_CONTEXT */
         spdm_context->connection_info.version, SPDM_KEY_EXCHANGE_RSP,
         spdm_context->connection_info.algorithm.base_asym_algo,
         spdm_context->connection_info.algorithm.pqc_asym_algo,
@@ -600,9 +596,7 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
         ((spdm_request->header.param1 == SPDM_REQUEST_TCB_COMPONENT_MEASUREMENT_HASH) ||
          (spdm_request->header.param1 == SPDM_REQUEST_ALL_MEASUREMENTS_HASH))) {
         result = libspdm_generate_measurement_summary_hash(
-#if LIBSPDM_HAL_PASS_SPDM_CONTEXT
             spdm_context,
-#endif /* LIBSPDM_HAL_PASS_SPDM_CONTEXT */
             spdm_context->connection_info.version,
             spdm_context->connection_info.algorithm.base_hash_algo,
             spdm_context->connection_info.algorithm.measurement_spec,
