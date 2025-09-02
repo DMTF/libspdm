@@ -129,7 +129,7 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
     }
 
     req_vendor_id = ((const uint8_t *)request) + sizeof(spdm_vendor_defined_request_msg_t);
-    req_size = *(const uint16_t *)(req_vendor_id + spdm_request->len);
+    req_size = libspdm_read_uint16((const uint8_t *)(req_vendor_id + spdm_request->len));
 
     if (request_size < sizeof(spdm_vendor_defined_request_msg_t) +
         spdm_request->len + sizeof(uint16_t) + req_size) {
@@ -202,7 +202,7 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
                                                     resp_data);
 
     /* store back the response payload size */
-    *((uint16_t*)(resp_data - sizeof(uint16_t))) = resp_size;
+    libspdm_write_uint16((uint8_t *)(resp_data - sizeof(uint16_t)), resp_size);
     *response_size = resp_size + (size_t)header_length;
 
     LIBSPDM_ASSERT(sizeof(spdm_vendor_defined_request_msg_t) ==
