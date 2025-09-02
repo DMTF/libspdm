@@ -8,6 +8,7 @@ on:
     branches:
       - main
       - release-2.3
+      - release-3.8
   pull_request:
     paths-ignore:
       - 'doc/**'
@@ -15,6 +16,7 @@ on:
     branches:
       - main
       - release-2.3
+      - release-3.8
   workflow_dispatch:
 
 concurrency:
