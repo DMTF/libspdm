@@ -262,7 +262,7 @@ bool libspdm_dhe_generate_key(uint16_t dhe_named_group, void *context,
 #if !LIBSPDM_ECDHE_P521_SUPPORT
         LIBSPDM_ASSERT(dhe_named_group != SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_521_R1);
 #endif
-        return libspdm_ec_generate_key(context, public_key, public_key_size);
+        return libspdm_ec_generate_key(&context, public_key, public_key_size);
 #else
         LIBSPDM_ASSERT(false);
         return false;

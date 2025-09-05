@@ -140,7 +140,7 @@ bool libspdm_ecdsa_sign_ex(void *ec_context, size_t hash_nid,
  * @retval false  public_size is not large enough.
  *
  **/
-bool libspdm_ec_generate_key(void *ec_context, uint8_t *public_data,
+bool libspdm_ec_generate_key(void **ec_context, uint8_t *public_data,
                              size_t *public_size)
 {
     LIBSPDM_ASSERT(false);

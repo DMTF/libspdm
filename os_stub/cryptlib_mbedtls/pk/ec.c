@@ -313,7 +313,7 @@ bool libspdm_ec_check_key(const void *ec_context)
  * @retval false  public_size is not large enough.
  *
  **/
-bool libspdm_ec_generate_key(void *ec_context, uint8_t *public_data,
+bool libspdm_ec_generate_key(void **ec_context, uint8_t *public_data,
                              size_t *public_size)
 {
     mbedtls_ecdh_context *ctx;
@@ -330,7 +330,7 @@ bool libspdm_ec_generate_key(void *ec_context, uint8_t *public_data,
         return false;
     }
 
-    ctx = ec_context;
+    ctx = (mbedtls_ecdh_context *) *ec_context;
     ret = mbedtls_ecdh_gen_public(&ctx->MBEDTLS_PRIVATE(grp),
                                   &ctx->MBEDTLS_PRIVATE(d),
                                   &ctx->MBEDTLS_PRIVATE(Q), libspdm_myrand,
