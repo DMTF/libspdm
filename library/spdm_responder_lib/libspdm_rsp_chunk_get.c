@@ -20,7 +20,10 @@ libspdm_return_t libspdm_get_response_chunk_get(
     uint64_t max_chunk_data_transfer_size;
 
     const spdm_chunk_get_request_t* spdm_request;
+    const spdm_chunk_get_request_14_t* spdm_request_14;
     spdm_chunk_response_response_t* spdm_response;
+    spdm_chunk_response_response_14_t* spdm_response_14;
+    uint32_t chunk_seq_no;
 
     uint8_t* spdm_chunk;
 
@@ -61,11 +64,20 @@ libspdm_return_t libspdm_get_response_chunk_get(
             response_size, response);
     }
 
-    if (request_size < sizeof(spdm_chunk_get_request_t)) {
-        return libspdm_generate_error_response(
-            spdm_context,
-            SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-            response_size, response);
+    if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_14) {
+        if (request_size < sizeof(spdm_chunk_get_request_t)) {
+            return libspdm_generate_error_response(
+                spdm_context,
+                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                response_size, response);
+        }
+    } else {
+        if (request_size < sizeof(spdm_chunk_get_request_14_t)) {
+            return libspdm_generate_error_response(
+                spdm_context,
+                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                response_size, response);
+        }
     }
 
     if (spdm_request->header.spdm_version < SPDM_MESSAGE_VERSION_12) {
@@ -97,28 +109,44 @@ libspdm_return_t libspdm_get_response_chunk_get(
             response_size, response);
     }
 
-    if (spdm_request->chunk_seq_no != get_info->chunk_seq_no) {
-        return libspdm_generate_error_response(
-            spdm_context,
-            SPDM_ERROR_CODE_INVALID_REQUEST, 0,
-            response_size, response);
+    if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_14) {
+        if (spdm_request->chunk_seq_no != (uint16_t) get_info->chunk_seq_no) {
+            return libspdm_generate_error_response(
+                spdm_context,
+                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                response_size, response);
+        }
+        chunk_seq_no = spdm_request->chunk_seq_no;
+    } else {
+        spdm_request_14 = (const spdm_chunk_get_request_14_t*) request;
+        if (spdm_request_14->chunk_seq_no != get_info->chunk_seq_no) {
+            return libspdm_generate_error_response(
+                spdm_context,
+                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                response_size, response);
+        }
+        chunk_seq_no = spdm_request_14->chunk_seq_no;
     }
 
     min_data_transfer_size = LIBSPDM_MIN(
         spdm_context->connection_info.capability.data_transfer_size,
         spdm_context->local_context.capability.sender_data_transfer_size);
 
-    /* Fail if exceed max chunks */
-    max_chunk_data_transfer_size =
-        ((size_t) min_data_transfer_size - sizeof(spdm_chunk_response_response_t)) * 65536 -
-        sizeof(uint32_t);
-    /* max_spdm_msg_size already checked in caller */
+    if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_14) {
+        /* chunk seq no wrap not considered in spdm 1.4+ */
 
-    if (get_info->large_message_size > max_chunk_data_transfer_size) {
-        return libspdm_generate_error_response(
-            spdm_context,
-            SPDM_ERROR_CODE_RESPONSE_TOO_LARGE, 0,
-            response_size, response);
+        /* Fail if exceed max chunks */
+        max_chunk_data_transfer_size =
+            ((size_t) min_data_transfer_size - sizeof(spdm_chunk_response_response_t)) * 65536 -
+            sizeof(uint32_t);
+
+        /* max_spdm_msg_size already checked in caller */
+        if (get_info->large_message_size > max_chunk_data_transfer_size) {
+            return libspdm_generate_error_response(
+                spdm_context,
+                SPDM_ERROR_CODE_RESPONSE_TOO_LARGE, 0,
+                response_size, response);
+        }
     }
 
     libspdm_zero_mem(response, *response_size);
@@ -131,9 +159,16 @@ libspdm_return_t libspdm_get_response_chunk_get(
     spdm_response->header.request_response_code = SPDM_CHUNK_RESPONSE;
     spdm_response->header.param1 = 0;
     spdm_response->header.param2 = get_info->chunk_handle;
-    spdm_response->chunk_seq_no = get_info->chunk_seq_no;
+    if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_14) {
+        spdm_response->chunk_seq_no = (uint16_t) get_info->chunk_seq_no;
+    } else {
+        spdm_response_14 = (spdm_chunk_response_response_14_t*) response;
+        spdm_response_14->chunk_seq_no = get_info->chunk_seq_no;
+    }
 
-    if (spdm_request->chunk_seq_no == 0) {
+    LIBSPDM_ASSERT(sizeof(spdm_chunk_response_response_t) == sizeof(spdm_chunk_response_response_14_t));
+
+    if (chunk_seq_no == 0) {
         spdm_response->chunk_size =
             min_data_transfer_size
             - sizeof(spdm_chunk_response_response_t)
