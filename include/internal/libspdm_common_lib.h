@@ -48,6 +48,7 @@ typedef struct {
     uint64_t rtt;
     uint32_t st1;
     uint32_t flags;
+    uint16_t ext_flags;
     uint32_t data_transfer_size;
     uint32_t sender_data_transfer_size;
     uint32_t max_spdm_msg_size;
@@ -914,6 +915,22 @@ bool libspdm_is_capabilities_flag_supported(const libspdm_context_t *spdm_contex
                                             bool is_requester,
                                             uint32_t requester_capabilities_flag,
                                             uint32_t responder_capabilities_flag);
+
+/**
+ * This function returns if a capabilities extended flag is supported in current SPDM connection.
+ *
+ * @param  spdm_context                     A pointer to the SPDM context.
+ * @param  is_requester                     Is the function called from a requester.
+ * @param  requester_capabilities_ext_flag  The requester capabilities extended flag to be checked
+ * @param  responder_capabilities_ext_flag  The responder capabilities extended flag to be checked
+ *
+ * @retval true  the capabilities extended flag is supported.
+ * @retval false the capabilities extended flag is not supported.
+ **/
+bool libspdm_is_capabilities_ext_flag_supported(const libspdm_context_t *spdm_context,
+                                                bool is_requester,
+                                                uint16_t requester_capabilities_ext_flag,
+                                                uint16_t responder_capabilities_ext_flag);
 
 /**
  * Checks the negotiated SPDM version and endpoint capabilities to determine if encapsulated
@@ -1881,6 +1898,19 @@ static inline uint16_t libspdm_byte_swap_16(uint16_t value)
  */
 uint32_t libspdm_mask_capability_flags(libspdm_context_t *spdm_context,
                                        bool is_request_flags, uint32_t flags);
+
+/**
+ * Return capability extended flags that are masked by the negotiated SPDM version.
+ *
+ * @param  spdm_context      A pointer to the SPDM context.
+ * @param  is_request_flags  If true then flags are from a request message or Requester.
+ *                           If false then flags are from a response message or Responder.
+ * @param  ext_flags         A bitmask of capability extended flags.
+ *
+ * @return The masked capability extended flags.
+ */
+uint16_t libspdm_mask_capability_ext_flags(libspdm_context_t *spdm_context,
+                                           bool is_request_flags, uint16_t ext_flags);
 
 /**
  * Return BaseHashAlgo that is masked by the negotiated SPDM version.
