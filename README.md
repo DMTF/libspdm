@@ -91,7 +91,7 @@
 
    Support is included in [wolfSSL](https://www.wolfssl.com/wolfssl-libspdm-support).
 
-   Support to be included in [OpenBMC](https://github.com/openbmc). It is in planning, see [SPDM Integration](https://www.youtube.com/watch?v=PmgXkLJYI-E).
+   Support is planned to be included in [OpenBMC](https://github.com/openbmc/spdm). Details of the design for exposing measurements and certificate chains of SPDM-capable devices via Redfish are described in the [OpenBMC SPDM Attestation Design](https://github.com/openbmc/docs/blob/master/designs/redfish-spdm-attestation.md).
 
    Support to be linked by other languages. For example, [Java verifier](https://github.com/altera-opensource/verifier) and [Rust spdm-utils](https://github.com/westerndigitalcorporation/spdm-utils).
 
