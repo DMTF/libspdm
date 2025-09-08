@@ -383,6 +383,29 @@ uint32_t libspdm_mask_capability_flags(libspdm_context_t *spdm_context,
     }
 }
 
+uint16_t libspdm_mask_capability_ext_flags(libspdm_context_t *spdm_context,
+                                           bool is_request_flags, uint16_t ext_flags)
+{
+    switch (libspdm_get_connection_version(spdm_context)) {
+    case SPDM_MESSAGE_VERSION_10:
+    case SPDM_MESSAGE_VERSION_11:
+    case SPDM_MESSAGE_VERSION_12:
+    case SPDM_MESSAGE_VERSION_13:
+        /* No extended capability flags are defined for SPDM 1.0 - 1.3. */
+        return 0;
+    case SPDM_MESSAGE_VERSION_14:
+        if (is_request_flags) {
+            /* No extended request flags are defined for SPDM 1.4. */
+            return 0;
+        } else {
+            return (ext_flags & SPDM_GET_CAPABILITIES_EXTENDED_RESPONSE_FLAGS_14_MASK);
+        }
+    default:
+        LIBSPDM_ASSERT(false);
+        return 0;
+    }
+}
+
 uint32_t libspdm_mask_base_hash_algo(libspdm_context_t *spdm_context, uint32_t base_hash_algo)
 {
     const uint8_t spdm_version = libspdm_get_connection_version(spdm_context);
