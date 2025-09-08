@@ -269,6 +269,21 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
         break;
+    case LIBSPDM_DATA_CAPABILITY_EXT_FLAGS:
+        if (data_size != sizeof(uint16_t)) {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+
+        data16 = libspdm_read_uint16((const uint8_t *)data);
+
+        if (parameter->location == LIBSPDM_DATA_LOCATION_LOCAL) {
+            context->local_context.capability.flags = data16;
+        } else if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
+            context->connection_info.capability.flags = data16;
+        } else {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        break;
     case LIBSPDM_DATA_CAPABILITY_CT_EXPONENT:
         if (data_size != sizeof(uint8_t)) {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
@@ -915,6 +930,16 @@ libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_t
             target_data = &context->connection_info.capability.flags;
         } else if (parameter->location == LIBSPDM_DATA_LOCATION_LOCAL) {
             target_data = &context->local_context.capability.flags;
+        } else {
+            return LIBSPDM_STATUS_INVALID_PARAMETER;
+        }
+        break;
+    case LIBSPDM_DATA_CAPABILITY_EXT_FLAGS:
+        target_data_size = sizeof(uint16_t);
+        if (parameter->location == LIBSPDM_DATA_LOCATION_CONNECTION) {
+            target_data = &context->connection_info.capability.ext_flags;
+        } else if (parameter->location == LIBSPDM_DATA_LOCATION_LOCAL) {
+            target_data = &context->local_context.capability.ext_flags;
         } else {
             return LIBSPDM_STATUS_INVALID_PARAMETER;
         }
@@ -2577,6 +2602,45 @@ bool libspdm_is_capabilities_flag_supported(const libspdm_context_t *spdm_contex
         ((responder_capabilities_flag == 0) ||
          ((negotiated_responder_capabilities_flag &
            responder_capabilities_flag) != 0))) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/**
+ * This function returns if a capabilities extended flag is supported in current SPDM connection.
+ *
+ * @param  spdm_context                     A pointer to the SPDM context.
+ * @param  is_requester                     Is the function called from a requester.
+ * @param  requester_capabilities_ext_flag  The requester capabilities extended flag to be checked
+ * @param  responder_capabilities_ext_flag  The responder capabilities extended flag to be checked
+ *
+ * @retval true  the capabilities extended flag is supported.
+ * @retval false the capabilities extended flag is not supported.
+ **/
+bool libspdm_is_capabilities_ext_flag_supported(const libspdm_context_t *spdm_context,
+                                                bool is_requester,
+                                                uint16_t requester_capabilities_ext_flag,
+                                                uint16_t responder_capabilities_ext_flag)
+{
+    uint16_t negotiated_requester_capabilities_ext_flag;
+    uint16_t negotiated_responder_capabilities_ext_flag;
+
+    if (is_requester) {
+        negotiated_requester_capabilities_ext_flag = spdm_context->local_context.capability.ext_flags;
+        negotiated_responder_capabilities_ext_flag = spdm_context->connection_info.capability.ext_flags;
+    } else {
+        negotiated_requester_capabilities_ext_flag = spdm_context->connection_info.capability.ext_flags;
+        negotiated_responder_capabilities_ext_flag = spdm_context->local_context.capability.ext_flags;
+    }
+
+    if (((requester_capabilities_ext_flag == 0) ||
+         ((negotiated_requester_capabilities_ext_flag &
+           requester_capabilities_ext_flag) != 0)) &&
+        ((responder_capabilities_ext_flag == 0) ||
+         ((negotiated_responder_capabilities_ext_flag &
+           responder_capabilities_ext_flag) != 0))) {
         return true;
     } else {
         return false;

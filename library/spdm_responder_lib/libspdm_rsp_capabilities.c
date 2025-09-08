@@ -279,6 +279,14 @@ libspdm_return_t libspdm_get_response_capabilities(libspdm_context_t *spdm_conte
                          sizeof(spdm_response->max_spdm_msg_size);
     }
 
+    if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_14) {
+        spdm_response->ext_flags =
+            libspdm_mask_capability_ext_flags(spdm_context, false,
+                                              spdm_context->local_context.capability.ext_flags);
+    } else {
+        spdm_response->ext_flags = 0;
+    }
+
     /* -=[Process Request Phase]=- */
     status = libspdm_append_message_a(spdm_context, spdm_request, request_size);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
@@ -311,6 +319,13 @@ libspdm_return_t libspdm_get_response_capabilities(libspdm_context_t *spdm_conte
     } else {
         spdm_context->connection_info.capability.data_transfer_size = 0;
         spdm_context->connection_info.capability.max_spdm_msg_size = 0;
+    }
+
+    if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_14) {
+        spdm_context->connection_info.capability.ext_flags =
+            libspdm_mask_capability_ext_flags(spdm_context, true, spdm_request->ext_flags);
+    } else {
+        spdm_context->connection_info.capability.ext_flags = 0;
     }
 
     /* -=[Update State Phase]=- */

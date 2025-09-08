@@ -163,7 +163,8 @@ typedef struct {
      * Below field is added in 1.1.*/
     uint8_t reserved;
     uint8_t ct_exponent;
-    uint16_t reserved2;
+    /* ext_flags is a reserved field for SPDM versions prior to 1.4 */
+    uint16_t ext_flags;
     uint32_t flags;
     /* Below field is added in 1.2.*/
     uint32_t data_transfer_size;
@@ -178,7 +179,8 @@ typedef struct {
      * param2 == RSVD*/
     uint8_t reserved;
     uint8_t ct_exponent;
-    uint16_t reserved2;
+    /* ext_flags is a reserved field for SPDM versions prior to 1.4 */
+    uint16_t ext_flags;
     uint32_t flags;
     /* Below field is added in 1.2.*/
     uint32_t data_transfer_size;
@@ -325,6 +327,11 @@ typedef struct {
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_13_MASK | \
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_KEY_PAIR_RESET_CAP | \
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_LARGE_RESP_CAP)
+
+/* SPDM GET_CAPBILITIES extended response flags (1.4) */
+#define SPDM_GET_CAPABILITIES_EXTENDED_RESPONSE_FLAGS_SLOT_MGMT_CAP 0x0001
+#define SPDM_GET_CAPABILITIES_EXTENDED_RESPONSE_FLAGS_14_MASK ( \
+        SPDM_GET_CAPABILITIES_EXTENDED_RESPONSE_FLAGS_SLOT_MGMT_CAP)
 
 /* SPDM NEGOTIATE_ALGORITHMS request */
 typedef struct {
