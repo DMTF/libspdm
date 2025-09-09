@@ -1368,6 +1368,17 @@ typedef struct {
      * uint8_t  spdm_chunk[chunk_size]; */
 } spdm_chunk_send_request_t;
 
+typedef struct {
+    spdm_message_header_t header;
+    /* param1 - Request Attributes
+     * param2 - Handle */
+    uint32_t chunk_seq_no;
+    uint32_t chunk_size;
+
+    /* uint32_t large_message_size;
+     * uint8_t  spdm_chunk[chunk_size]; */
+} spdm_chunk_send_request_14_t;
+
 #define SPDM_CHUNK_SEND_REQUEST_ATTRIBUTE_LAST_CHUNK (1 << 0)
 
 /* SPDM CHUNK_SEND_ACK response */
@@ -1379,6 +1390,14 @@ typedef struct {
     /* uint8_t response_to_large_request[variable] */
 } spdm_chunk_send_ack_response_t;
 
+typedef struct {
+    spdm_message_header_t header;
+    /* param1 - Response Attributes
+     * param2 - Handle */
+    uint32_t chunk_seq_no;
+    /* uint8_t response_to_large_request[variable] */
+} spdm_chunk_send_ack_response_14_t;
+
 #define SPDM_CHUNK_SEND_ACK_RESPONSE_ATTRIBUTE_EARLY_ERROR_DETECTED (1 << 0)
 
 /* SPDM CHUNK_GET request */
@@ -1388,6 +1407,13 @@ typedef struct {
     * param2 - Handle */
     uint16_t chunk_seq_no;
 } spdm_chunk_get_request_t;
+
+typedef struct {
+    spdm_message_header_t header;
+    /* param1 - Reserved
+    * param2 - Handle */
+    uint32_t chunk_seq_no;
+} spdm_chunk_get_request_14_t;
 
 /* SPDM CHUNK_RESPONSE response */
 typedef struct {
@@ -1401,6 +1427,17 @@ typedef struct {
     /* uint32_t large_message_size;
      * uint8_t  spdm_chunk[chunk_size]; */
 } spdm_chunk_response_response_t;
+
+typedef struct {
+    spdm_message_header_t header;
+    /* param1 - Response Attributes
+     * param2 - Handle */
+    uint32_t chunk_seq_no;
+    uint32_t chunk_size;
+
+    /* uint32_t large_message_size;
+     * uint8_t  spdm_chunk[chunk_size]; */
+} spdm_chunk_response_response_14_t;
 
 #define SPDM_CHUNK_GET_RESPONSE_ATTRIBUTE_LAST_CHUNK (1 << 0)
 
