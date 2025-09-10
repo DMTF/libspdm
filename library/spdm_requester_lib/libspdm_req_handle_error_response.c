@@ -131,6 +131,18 @@ libspdm_return_t libspdm_handle_simple_error_response(libspdm_context_t *spdm_co
         }
     }
 
+    if (last_spdm_request->header.request_response_code == SPDM_SET_KEY_PAIR_INFO) {
+        if (error_code == SPDM_ERROR_CODE_RESET_REQUIRED) {
+            if ((libspdm_get_connection_version(spdm_context) >= SPDM_MESSAGE_VERSION_14) &&
+                !libspdm_is_capabilities_flag_supported(
+                    spdm_context, true, 0,
+                    SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_KEY_PAIR_RESET_CAP)) {
+                return LIBSPDM_STATUS_ERROR_PEER;
+            }
+            return LIBSPDM_STATUS_RESET_REQUIRED_PEER;
+        }
+    }
+
     if (error_code == SPDM_ERROR_CODE_REQUEST_RESYNCH) {
         spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_NOT_STARTED;
         return LIBSPDM_STATUS_RESYNCH_PEER;
