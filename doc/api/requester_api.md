@@ -622,3 +622,33 @@ The SPDM context.
 ### Details
 TBD
 <br/><br/>
+
+---
+
+### libspdm_get_supported_algorithms
+---
+
+### Description
+Retrieves the supported algorithms from the responder. It sends the GET_VERSION and GET_CAPABILITIES requests, where GET_CAPABILITIES.Param1[0] is set. If the Responder supports this extended capability, the Responder will include the Supported Algorithms Block in its CAPABILITIES response.
+
+### Parameters
+
+**spdm_context**<br/>
+A pointer to the SPDM context.
+
+**responder_supported_algorithms_length**<br/>
+On input, indicates the size in bytes of the provided buffer. The buffer must be large enough to hold the supported algorithms block. On output, the size in bytes of the supported algorithms data.
+
+**responder_supported_algorithms_buffer**<br/>
+A pointer to a destination buffer to store the supported algorithms. Must not be NULL. The buffer must be large enough to hold the supported algorithms data.
+
+**spdm_version**<br/>
+A pointer to store the SPDM version used for the request.
+
+### Details
+Retrieves the supported algorithms from the responder by sending GET_VERSION and GET_CAPABILITIES requests. The GET_CAPABILITIES request has Param1[0] set to request the Supported Algorithms Block. If the Responder supports this extended capability, it will include the Supported Algorithms Block in its CAPABILITIES response.
+
+The function returns `LIBSPDM_STATUS_SUCCESS` if the supported algorithms were successfully retrieved, `LIBSPDM_STATUS_UNSUPPORTED_CAP` if the requester configuration does not support this operation (either the Requester does not support version 1.3 or above, or CHUNK_CAP is not enabled), or other error codes if communication or verification fails.
+
+The buffer must be large enough to hold the supported algorithms block. The function will assert if responder_supported_algorithms_buffer is NULL.
+<br/><br/>
