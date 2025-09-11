@@ -543,13 +543,6 @@
 #define LIBSPDM_CHECK_SPDM_CONTEXT 1
 #endif
 
-/* Enable additional checks for certificates.
- * This macro will be removed when libspdm 4.0 is released.
- */
-#ifndef LIBSPDM_ADDITIONAL_CHECK_CERT
-#define LIBSPDM_ADDITIONAL_CHECK_CERT 0
-#endif
-
 /* Enable passing additional parameters to libspdm_write_certificate_to_nvm and libspdm_gen_csr*.
  * This macro will be removed when libspdm 4.0 is released.
  */

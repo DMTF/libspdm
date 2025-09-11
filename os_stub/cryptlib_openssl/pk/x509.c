@@ -982,7 +982,6 @@ libspdm_x509_get_issuer_orgnization_name(const uint8_t *cert, size_t cert_size,
                                                      name_buffer, name_buffer_size);
 }
 
-#if LIBSPDM_ADDITIONAL_CHECK_CERT
 /**
  * Retrieve the signature algorithm from one X.509 certificate.
  *
@@ -1060,7 +1059,6 @@ done:
 
     return status;
 }
-#endif /* LIBSPDM_ADDITIONAL_CHECK_CERT */
 
 /**
  * Retrieve the Validity from one X.509 certificate

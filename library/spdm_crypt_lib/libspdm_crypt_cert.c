@@ -1454,9 +1454,7 @@ bool libspdm_x509_common_certificate_check(
     bool status;
     size_t cert_version;
     void *context;
-#if LIBSPDM_ADDITIONAL_CHECK_CERT
     size_t signature_algo_oid_size;
-#endif /* LIBSPDM_ADDITIONAL_CHECK_CERT */
 
     if (cert == NULL || cert_size == 0) {
         return false;
@@ -1486,7 +1484,6 @@ bool libspdm_x509_common_certificate_check(
         goto cleanup;
     }
 
-#if LIBSPDM_ADDITIONAL_CHECK_CERT
     /* 3. Verify signature algorithm. */
     signature_algo_oid_size = 0;
     status = libspdm_x509_get_signature_algorithm(cert, cert_size, NULL, &signature_algo_oid_size);
@@ -1502,7 +1499,6 @@ bool libspdm_x509_common_certificate_check(
             goto cleanup;
         }
     }
-#endif /* LIBSPDM_ADDITIONAL_CHECK_CERT */
 
     /* 4. Verify public key algorithm.
      *    If this is a SET_CERTIFICATE operation and the endpoint uses the AliasCert model then the

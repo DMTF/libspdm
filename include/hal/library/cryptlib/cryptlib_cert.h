@@ -80,7 +80,6 @@ extern bool libspdm_x509_get_serial_number(const uint8_t *cert, size_t cert_size
                                            uint8_t *serial_number,
                                            size_t *serial_number_size);
 
-#if LIBSPDM_ADDITIONAL_CHECK_CERT
 /**
  * Retrieve the signature algorithm from one X.509 certificate.
  *
@@ -97,7 +96,6 @@ extern bool libspdm_x509_get_serial_number(const uint8_t *cert, size_t cert_size
 extern bool libspdm_x509_get_signature_algorithm(const uint8_t *cert,
                                                  size_t cert_size, uint8_t *oid,
                                                  size_t *oid_size);
-#endif /* LIBSPDM_ADDITIONAL_CHECK_CERT */
 
 /**
  * Retrieve the issuer bytes from one X.509 certificate.
