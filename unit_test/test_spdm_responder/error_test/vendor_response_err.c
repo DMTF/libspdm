@@ -40,9 +40,7 @@ static void set_standard_state(libspdm_context_t *spdm_context)
 
 static libspdm_return_t libspdm_vendor_get_id_func_err_test(
     void *spdm_context,
-#if LIBSPDM_PASS_SESSION_ID
     const uint32_t *session_id,
-#endif
     uint16_t *resp_standard_id,
     uint8_t *resp_vendor_id_len,
     void *resp_vendor_id)
@@ -67,9 +65,7 @@ static libspdm_return_t libspdm_vendor_get_id_func_err_test(
 
 static libspdm_return_t libspdm_vendor_response_func_err_test(
     void *spdm_context,
-#if LIBSPDM_PASS_SESSION_ID
     const uint32_t *session_id,
-#endif
     uint16_t req_standard_id,
     uint8_t req_vendor_id_len,
     const void *req_vendor_id,
