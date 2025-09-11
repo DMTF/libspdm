@@ -507,6 +507,33 @@ libspdm_return_t libspdm_start_session(void *spdm_context, bool use_psk,
                                        void *measurement_hash);
 
 /**
+ * This function retrieves the supported algorithms from the responder.
+ * It sends the GET_VERSION and GET_CAPABILITIES requests, where GET_CAPABILITIES.Param1[0] is set.
+ * If the Responder supports this extended capability, the Responder will include the Supported
+ * Algorithms Block in its CAPABILITIES response.
+ *
+ * @param spdm_context                          A pointer to the SPDM context.
+ * @param responder_supported_algorithms_length  On input, indicates the size in bytes of the provided buffer.
+ *                                              The buffer must be large enough to hold the supported algorithms block.
+ *                                              On output, the size in bytes of the supported algorithms data.
+ * @param responder_supported_algorithms_buffer  A pointer to a destination buffer to store the supported algorithms.
+ *                                              Must not be NULL. The buffer must be large enough to hold the supported algorithms data.
+ * @param spdm_version                          A pointer to store the SPDM version used for the request.
+ *
+ * @retval RETURN_SUCCESS                        The supported algorithms were successfully retrieved.
+ * @retval RETURN_DEVICE_ERROR                   A device error occurs when communicates with the device.
+ * @retval RETURN_UNSUPPORTED                    The operation is not supported by the device.
+ * @retval RETURN_SECURITY_VIOLATION             Any verification fails.
+ *
+ * @note   The buffer must be large enough to hold the supported algorithms block.
+ *         The function will assert if responder_supported_algorithms_buffer is NULL.
+ */
+libspdm_return_t libspdm_get_supported_algorithms(void *spdm_context,
+                                                  size_t *responder_supported_algorithms_length,
+                                                  void *responder_supported_algorithms_buffer,
+                                                  uint8_t *spdm_version);
+
+/**
  * This function sends KEY_EXCHANGE/FINISH or PSK_EXCHANGE/PSK_FINISH to start an SPDM Session.
  *
  * If encapsulated mutual authentication is requested from the responder,

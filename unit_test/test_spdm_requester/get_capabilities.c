@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -144,6 +144,8 @@ static libspdm_return_t libspdm_requester_get_capabilities_test_send_message(
     case 0x22:
         return LIBSPDM_STATUS_SUCCESS;
     case 0x23:
+        return LIBSPDM_STATUS_SUCCESS;
+    case 0x24:
         return LIBSPDM_STATUS_SUCCESS;
     default:
         return LIBSPDM_STATUS_SEND_FAIL;
@@ -1014,6 +1016,80 @@ static libspdm_return_t libspdm_requester_get_capabilities_test_receive_message(
                                               response_size, response);
     }
         return LIBSPDM_STATUS_SUCCESS;
+    case 0x24: {
+        spdm_capabilities_response_t *spdm_response;
+        size_t spdm_response_size;
+        size_t transport_header_size;
+
+        spdm_response_size = sizeof(spdm_capabilities_response_t) +
+                             sizeof(spdm_supported_algorithms_block_t) + 4*
+                             sizeof(spdm_negotiate_algorithms_common_struct_table_t);
+        transport_header_size = LIBSPDM_TEST_TRANSPORT_HEADER_SIZE;
+        spdm_response = (void *)((uint8_t *)*response + transport_header_size);
+
+        libspdm_zero_mem(spdm_response, spdm_response_size);
+        spdm_response->header.spdm_version = SPDM_MESSAGE_VERSION_13;
+        spdm_response->header.request_response_code = SPDM_CAPABILITIES;
+        spdm_response->header.param1 = 0;
+        spdm_response->header.param2 = 0;
+        spdm_response->ct_exponent = 0;
+        spdm_response->flags = LIBSPDM_DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_13;
+        spdm_response->data_transfer_size = LIBSPDM_DATA_TRANSFER_SIZE;
+        spdm_response->max_spdm_msg_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
+
+        /* Allocate space for the supported_algorithms block at the end of the response */
+        spdm_supported_algorithms_block_t *supported_algorithms =
+            (spdm_supported_algorithms_block_t*)((uint8_t*)spdm_response +
+                                                 sizeof(spdm_capabilities_response_t) );
+
+        supported_algorithms->param1 = 4;
+        supported_algorithms->param2 = 0;
+        supported_algorithms->length = sizeof(spdm_supported_algorithms_block_t) +
+                                       4 *
+                                       sizeof(
+            spdm_negotiate_algorithms_common_struct_table_t);
+        supported_algorithms->measurement_specification =
+            SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+        supported_algorithms->other_params_support = 0;
+        supported_algorithms->base_asym_algo = m_libspdm_use_asym_algo;
+        supported_algorithms->base_hash_algo = m_libspdm_use_hash_algo;
+        supported_algorithms->ext_asym_count = 0;
+        supported_algorithms->ext_hash_count = 0;
+        supported_algorithms->mel_specification = SPDM_MEL_SPECIFICATION_DMTF;
+
+        spdm_negotiate_algorithms_common_struct_table_t *struct_table =
+            (spdm_negotiate_algorithms_common_struct_table_t *)(supported_algorithms + 1);
+
+        struct_table[0].alg_type =
+            SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_DHE;
+        struct_table[0].alg_count = 0x20;
+        struct_table[0].alg_supported =
+            SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_256_R1;
+
+        struct_table[1].alg_type =
+            SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_AEAD;
+        struct_table[1].alg_count = 0x20;
+        struct_table[1].alg_supported =
+            SPDM_ALGORITHMS_AEAD_CIPHER_SUITE_AES_256_GCM;;
+
+        struct_table[2].alg_type =
+            SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_REQ_BASE_ASYM_ALG;
+        struct_table[2].alg_count = 0x20;
+        struct_table[2].alg_supported =
+            SPDM_ALGORITHMS_BASE_ASYM_ALGO_TPM_ALG_RSASSA_2048;
+
+        struct_table[3].alg_type =
+            SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE;
+        struct_table[3].alg_count = 0x20;
+        struct_table[3].alg_supported =
+            SPDM_ALGORITHMS_KEY_SCHEDULE_SPDM;
+
+        libspdm_transport_test_encode_message(spdm_context, NULL, false,
+                                              false, spdm_response_size,
+                                              spdm_response,
+                                              response_size, response);
+    }
+        return LIBSPDM_STATUS_SUCCESS;
     default:
         return LIBSPDM_STATUS_RECEIVE_FAIL;
     }
@@ -1417,6 +1493,52 @@ static void libspdm_test_requester_get_capabilities_case35(void **state)
                      LIBSPDM_DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_13);
 }
 
+static void libspdm_test_requester_get_capabilities_case36(void **state)
+{
+    libspdm_return_t status;
+    libspdm_test_context_t *spdm_test_context;
+    libspdm_context_t *spdm_context;
+    uint8_t supported_algs_buffer[1024];
+    size_t supported_algs_length = sizeof(supported_algs_buffer);
+
+    spdm_test_context = *state;
+    spdm_context = spdm_test_context->spdm_context;
+    spdm_test_context->case_id = 0x24;
+    spdm_context->connection_info.version = SPDM_MESSAGE_VERSION_13 <<
+                                            SPDM_VERSION_NUMBER_SHIFT_BIT;
+    spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_VERSION;
+    spdm_context->local_context.capability.ct_exponent = 0;
+
+    spdm_context->local_context.algorithm.measurement_spec = SPDM_MEASUREMENT_SPECIFICATION_DMTF;
+    spdm_context->local_context.algorithm.other_params_support = 0;
+    spdm_context->local_context.algorithm.base_asym_algo = m_libspdm_use_asym_algo;
+    spdm_context->local_context.algorithm.base_hash_algo = m_libspdm_use_hash_algo;
+    spdm_context->local_context.algorithm.mel_spec = SPDM_MEL_SPECIFICATION_DMTF;
+
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_KEY_EX_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCRYPT_CAP;
+    spdm_context->connection_info.capability.flags |=
+        SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MUT_AUTH_CAP;
+
+    spdm_context->local_context.algorithm.dhe_named_group = m_libspdm_use_dhe_algo;
+    spdm_context->local_context.algorithm.aead_cipher_suite = m_libspdm_use_aead_algo;
+    spdm_context->local_context.algorithm.req_base_asym_alg = m_libspdm_use_req_asym_algo;
+    spdm_context->local_context.algorithm.key_schedule = m_libspdm_use_key_schedule_algo;
+    status = libspdm_get_capabilities_with_supported_algs(spdm_context, &supported_algs_length,
+                                                          &supported_algs_buffer);
+
+    assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
+    assert_int_equal(spdm_context->connection_info.capability.max_spdm_msg_size,
+                     LIBSPDM_MAX_SPDM_MSG_SIZE);
+    assert_int_equal(spdm_context->connection_info.capability.data_transfer_size,
+                     LIBSPDM_DATA_TRANSFER_SIZE);
+    assert_int_equal(spdm_context->connection_info.capability.ct_exponent, 0);
+    assert_int_equal(spdm_context->connection_info.capability.flags,
+                     LIBSPDM_DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_13);
+}
+
 int libspdm_requester_get_capabilities_test_main(void)
 {
     const struct CMUnitTest m_spdm_requester_get_capabilities_tests[] = {
@@ -1455,6 +1577,7 @@ int libspdm_requester_get_capabilities_test_main(void)
         cmocka_unit_test(libspdm_test_requester_get_capabilities_case33),
         /* cmocka_unit_test(libspdm_test_requester_get_capabilities_case34), */
         cmocka_unit_test(libspdm_test_requester_get_capabilities_case35),
+        cmocka_unit_test(libspdm_test_requester_get_capabilities_case36),
     };
 
     libspdm_test_context_t test_context = {
