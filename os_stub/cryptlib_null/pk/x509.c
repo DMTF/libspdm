@@ -534,7 +534,6 @@ libspdm_x509_get_issuer_orgnization_name(const uint8_t *cert, size_t cert_size,
     return false;
 }
 
-#if LIBSPDM_ADDITIONAL_CHECK_CERT
 /**
  * Retrieve the signature algorithm from one X.509 certificate.
  *
@@ -555,7 +554,6 @@ bool libspdm_x509_get_signature_algorithm(const uint8_t *cert,
     LIBSPDM_ASSERT(false);
     return false;
 }
-#endif /* LIBSPDM_ADDITIONAL_CHECK_CERT */
 
 /**
  * Retrieve Extension data from one X.509 certificate.

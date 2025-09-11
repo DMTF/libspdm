@@ -1105,7 +1105,6 @@ libspdm_x509_get_issuer_orgnization_name(const uint8_t *cert, size_t cert_size,
         sizeof(m_libspdm_oid_organization_name), name_buffer, name_buffer_size);
 }
 
-#if LIBSPDM_ADDITIONAL_CHECK_CERT
 /**
  * Retrieve the signature algorithm from one X.509 certificate.
  *
@@ -1161,7 +1160,6 @@ cleanup:
 
     return status;
 }
-#endif /* LIBSPDM_ADDITIONAL_CHECK_CERT */
 
 /**
  * Find first Extension data match with given OID
