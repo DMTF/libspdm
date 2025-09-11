@@ -219,11 +219,8 @@ libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
             requester_info, requester_info_length,
             opaque_data, opaque_data_length,
             &csr_len, csr_p, req_cert_model,
-            &csr_tracking_tag, key_pair_id, overwrite
-#if LIBSPDM_SET_CERT_CSR_PARAMS
-            , &is_busy, &unexpected_request
-#endif
-            );
+            &csr_tracking_tag, key_pair_id, overwrite,
+            &is_busy, &unexpected_request);
 #else
         return libspdm_generate_error_response(
             spdm_context,
@@ -238,11 +235,8 @@ libspdm_return_t libspdm_get_response_csr(libspdm_context_t *spdm_context,
             &need_reset, request, request_size,
             requester_info, requester_info_length,
             opaque_data, opaque_data_length,
-            &csr_len, csr_p, is_device_cert_model
-#if LIBSPDM_SET_CERT_CSR_PARAMS
-            , &is_busy, &unexpected_request
-#endif
-            );
+            &csr_len, csr_p, is_device_cert_model,
+            &is_busy, &unexpected_request);
     }
 
     LIBSPDM_ASSERT(!(is_busy && unexpected_request));
