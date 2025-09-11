@@ -162,8 +162,7 @@ libspdm_return_t libspdm_try_vendor_send_request_receive_response(
     }
 
     /* -=[Send Request Phase]=- */
-    status =
-        libspdm_send_spdm_request(spdm_context, session_id, spdm_request_size, spdm_request);
+    status = libspdm_send_spdm_request(spdm_context, session_id, spdm_request_size, spdm_request);
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         libspdm_release_sender_buffer (spdm_context);
         return LIBSPDM_STATUS_SEND_FAIL;
@@ -214,6 +213,12 @@ libspdm_return_t libspdm_try_vendor_send_request_receive_response(
 
     if (spdm_response_size < sizeof(spdm_vendor_defined_response_msg_t)) {
         status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
+        goto done;
+    }
+
+    if (!libspdm_validate_svh_vendor_id_len(spdm_response->standard_id,
+                                            spdm_response->vendor_id_len)) {
+        status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto done;
     }
 
