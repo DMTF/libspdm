@@ -32,16 +32,12 @@ static uint32_t m_session_id = 0xffffffff;
 
 static libspdm_return_t libspdm_vendor_get_id_func_test(
     void *spdm_context,
-#if LIBSPDM_PASS_SESSION_ID
     const uint32_t *session_id,
-#endif
     uint16_t *resp_standard_id,
     uint8_t *resp_vendor_id_len,
     void *resp_vendor_id)
 {
-#if LIBSPDM_PASS_SESSION_ID
     assert_int_equal(*session_id, m_session_id);
-#endif
 
     if (resp_standard_id == NULL ||
         resp_vendor_id_len == NULL ||
@@ -63,9 +59,7 @@ static libspdm_return_t libspdm_vendor_get_id_func_test(
 
 static libspdm_return_t libspdm_vendor_response_func_test(
     void *spdm_context,
-#if LIBSPDM_PASS_SESSION_ID
     const uint32_t *session_id,
-#endif
     uint16_t req_standard_id,
     uint8_t req_vendor_id_len,
     const void *req_vendor_id,
@@ -79,9 +73,7 @@ static libspdm_return_t libspdm_vendor_response_func_test(
         resp_data == NULL)
         return LIBSPDM_STATUS_INVALID_PARAMETER;
 
-#if LIBSPDM_PASS_SESSION_ID
     assert_int_equal(*session_id, m_session_id);
-#endif
 
     /* get pointer to response data payload and populate */
     uint8_t *resp_payload = (uint8_t *)resp_data;
