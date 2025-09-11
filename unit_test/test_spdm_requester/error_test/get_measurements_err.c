@@ -2691,9 +2691,11 @@ static void libspdm_test_requester_get_measurements_err_case1(void **state)
         LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size, &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, &hash, &hash_size)) {
+        assert(false);
+    }
     libspdm_reset_message_m(spdm_context, NULL);
     spdm_context->connection_info.algorithm.measurement_spec =
         m_libspdm_use_measurement_spec;
@@ -2765,9 +2767,11 @@ static void libspdm_test_requester_get_measurements_err_case2(void **state)
                                             SPDM_VERSION_NUMBER_SHIFT_BIT;
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags = 0;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size, &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, &hash, &hash_size)) {
+        assert(false);
+    }
     libspdm_reset_message_m(spdm_context, NULL);
     spdm_context->connection_info.algorithm.measurement_spec =
         m_libspdm_use_measurement_spec;
@@ -2816,9 +2820,11 @@ static void libspdm_test_requester_get_measurements_err_case3(void **state)
         LIBSPDM_CONNECTION_STATE_NOT_STARTED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size, &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, &hash, &hash_size)) {
+        assert(false);
+    }
     libspdm_reset_message_m(spdm_context, NULL);
     spdm_context->connection_info.algorithm.measurement_spec =
         m_libspdm_use_measurement_spec;
@@ -2891,9 +2897,11 @@ static void libspdm_test_requester_get_measurements_err_case4(void **state)
         LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size, &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, &hash, &hash_size)) {
+        assert(false);
+    }
     libspdm_reset_message_m(spdm_context, NULL);
     spdm_context->connection_info.algorithm.measurement_spec =
         m_libspdm_use_measurement_spec;
@@ -2966,9 +2974,11 @@ static void libspdm_test_requester_get_measurements_err_case5(void **state)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size, &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, &hash, &hash_size)) {
+        assert(false);
+    }
     libspdm_reset_message_m(spdm_context, NULL);
     spdm_context->connection_info.algorithm.measurement_spec =
         m_libspdm_use_measurement_spec;
@@ -3041,9 +3051,11 @@ static void libspdm_test_requester_get_measurements_err_case6(void **state)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AFTER_CAPABILITIES;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size, &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, &hash, &hash_size)) {
+        assert(false);
+    }
     libspdm_reset_message_m(spdm_context, NULL);
     spdm_context->connection_info.algorithm.measurement_spec =
         m_libspdm_use_measurement_spec;
@@ -3091,9 +3103,11 @@ static void libspdm_test_requester_get_measurements_err_case7(void **state)
         LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size, &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, &hash, &hash_size)) {
+        assert(false);
+    }
     libspdm_reset_message_m(spdm_context, NULL);
     spdm_context->connection_info.algorithm.measurement_spec =
         m_libspdm_use_measurement_spec;
@@ -3169,9 +3183,11 @@ static void libspdm_test_requester_get_measurements_err_case8(void **state)
         LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size, &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, &hash, &hash_size)) {
+        assert(false);
+    }
     libspdm_reset_message_m(spdm_context, NULL);
     spdm_context->connection_info.algorithm.measurement_spec =
         m_libspdm_use_measurement_spec;
@@ -3241,9 +3257,11 @@ static void libspdm_test_requester_get_measurements_err_case9(void **state)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags =
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_NO_SIG;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size, &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, &hash, &hash_size)) {
+        assert(false);
+    }
     spdm_context->connection_info.algorithm.measurement_spec =
         m_libspdm_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3291,9 +3309,11 @@ static void libspdm_test_requester_get_measurements_err_case10(void **state)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags =
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_NO_SIG;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size, &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, &hash, &hash_size)) {
+        assert(false);
+    }
 
     spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3343,9 +3363,11 @@ static void libspdm_test_requester_get_measurements_err_case11(void **state)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags =
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_NO_SIG;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size, &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, &hash, &hash_size)) {
+        assert(false);
+    }
 
     spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3397,9 +3419,11 @@ static void libspdm_test_requester_get_measurements_err_case12(void **state)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size, &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, &hash, &hash_size)) {
+        assert(false);
+    }
     libspdm_reset_message_m(spdm_context, NULL);
     spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3470,9 +3494,11 @@ static void libspdm_test_requester_get_measurements_err_case13(void **state)
         LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size, &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, &hash, &hash_size)) {
+        assert(false);
+    }
     libspdm_reset_message_m(spdm_context, NULL);
     spdm_context->connection_info.algorithm.measurement_spec =
         m_libspdm_use_measurement_spec;
@@ -3547,9 +3573,11 @@ static void libspdm_test_requester_get_measurements_err_case14(void **state)
         LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size, &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, &hash, &hash_size)) {
+        assert(false);
+    }
     libspdm_reset_message_m(spdm_context, NULL);
     spdm_context->connection_info.algorithm.measurement_spec =
         m_libspdm_use_measurement_spec;
@@ -3624,9 +3652,11 @@ static void libspdm_test_requester_get_measurements_err_case15(void **state)
         LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size, &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, &hash, &hash_size)) {
+        assert(false);
+    }
     libspdm_reset_message_m(spdm_context, NULL);
     spdm_context->connection_info.algorithm.measurement_spec =
         m_libspdm_use_measurement_spec;
@@ -3700,9 +3730,11 @@ static void libspdm_test_requester_get_measurements_err_case16(void **state)
         LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size, &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, &hash, &hash_size)) {
+        assert(false);
+    }
     libspdm_reset_message_m(spdm_context, NULL);
     spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -3748,9 +3780,11 @@ static void libspdm_test_requester_get_measurements_err_case17(void **state)
         LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size, &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, &hash, &hash_size)) {
+        assert(false);
+    }
     libspdm_reset_message_m(spdm_context, NULL);
     spdm_context->connection_info.algorithm.measurement_spec =
         m_libspdm_use_measurement_spec;
@@ -3837,9 +3871,11 @@ static void libspdm_test_requester_get_measurements_err_case19(void **state)
         LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size, &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, &hash, &hash_size)) {
+        assert(false);
+    }
     libspdm_reset_message_m(spdm_context, NULL);
     spdm_context->connection_info.algorithm.measurement_spec =
         m_libspdm_use_measurement_spec;
@@ -3913,9 +3949,11 @@ static void libspdm_test_requester_get_measurements_err_case20(void **state)
         LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size, &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, &hash, &hash_size)) {
+        assert(false);
+    }
     libspdm_reset_message_m(spdm_context, NULL);
     spdm_context->connection_info.algorithm.measurement_spec =
         m_libspdm_use_measurement_spec;
@@ -3989,9 +4027,11 @@ static void libspdm_test_requester_get_measurements_err_case21(void **state)
         LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size, &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, &hash, &hash_size)) {
+        assert(false);
+    }
     libspdm_reset_message_m(spdm_context, NULL);
     spdm_context->connection_info.algorithm.measurement_spec =
         m_libspdm_use_measurement_spec;
@@ -4067,9 +4107,11 @@ static void libspdm_test_requester_get_measurements_err_case22(void **state)
         LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size, &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, &hash, &hash_size)) {
+        assert(false);
+    }
     libspdm_reset_message_m(spdm_context, NULL);
     spdm_context->connection_info.algorithm.measurement_spec =
         m_libspdm_use_measurement_spec;
@@ -4173,9 +4215,11 @@ static void libspdm_test_requester_get_measurements_err_case24(void **state)
         LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size, &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, &hash, &hash_size)) {
+        assert(false);
+    }
     libspdm_reset_message_m(spdm_context, NULL);
     spdm_context->connection_info.algorithm.measurement_spec =
         m_libspdm_use_measurement_spec;
@@ -4249,9 +4293,11 @@ static void libspdm_test_requester_get_measurements_err_case25(void **state)
     spdm_context->connection_info.connection_state = LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size, &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, &hash, &hash_size)) {
+        assert(false);
+    }
     libspdm_reset_message_m(spdm_context, NULL);
     spdm_context->connection_info.algorithm.measurement_spec = m_libspdm_use_measurement_spec;
     spdm_context->connection_info.algorithm.measurement_hash_algo =
@@ -4321,9 +4367,11 @@ static void libspdm_test_requester_get_measurements_err_case26(void **state)
         LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size, &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, &hash, &hash_size)) {
+        assert(false);
+    }
     libspdm_reset_message_m(spdm_context, NULL);
     spdm_context->connection_info.algorithm.measurement_spec =
         m_libspdm_use_measurement_spec;
@@ -4399,9 +4447,11 @@ static void libspdm_test_requester_get_measurements_err_case27(void **state)
         LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size, &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, &hash, &hash_size)) {
+        assert(false);
+    }
     libspdm_reset_message_m(spdm_context, NULL);
     spdm_context->connection_info.algorithm.measurement_spec =
         m_libspdm_use_measurement_spec;
@@ -4479,9 +4529,11 @@ static void libspdm_test_requester_get_measurements_err_case28(void **state)
         LIBSPDM_CONNECTION_STATE_AUTHENTICATED;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_MEAS_CAP_SIG;
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size, &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size, &hash, &hash_size)) {
+        assert(false);
+    }
     libspdm_reset_message_m(spdm_context, NULL);
     spdm_context->connection_info.algorithm.measurement_spec =
         m_libspdm_use_measurement_spec;

@@ -471,10 +471,12 @@ void libspdm_test_responder_measurements_case7(void **state)
     assert_int_equal(spdm_response->header.param1,
                      LIBSPDM_MEASUREMENT_BLOCK_NUMBER);
 
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size,
-                                                    &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size,
+                                                         &hash, &hash_size)) {
+        assert(false);
+    }
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
@@ -1885,10 +1887,12 @@ void libspdm_test_responder_measurements_case29(void** state)
     assert_int_equal(spdm_response->header.param1,
                      LIBSPDM_MEASUREMENT_BLOCK_NUMBER);
 
-    libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
-                                                    m_libspdm_use_asym_algo, &data,
-                                                    &data_size,
-                                                    &hash, &hash_size);
+    if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
+                                                         m_libspdm_use_asym_algo, &data,
+                                                         &data_size,
+                                                         &hash, &hash_size)) {
+        assert(false);
+    }
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
     spdm_context->connection_info.peer_used_cert_chain[0].buffer_size =
         data_size;
