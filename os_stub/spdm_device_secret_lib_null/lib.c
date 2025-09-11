@@ -163,15 +163,11 @@ bool libspdm_write_certificate_to_nvm(
     void *spdm_context,
     uint8_t slot_id, const void * cert_chain,
     size_t cert_chain_size,
-    uint32_t base_hash_algo, uint32_t base_asym_algo, uint32_t pqc_asym_algo
-#if LIBSPDM_SET_CERT_CSR_PARAMS
-    , bool *need_reset, bool *is_busy
-#endif /* LIBSPDM_SET_CERT_CSR_PARAMS */
-    )
+    uint32_t base_hash_algo, uint32_t base_asym_algo, uint32_t pqc_asym_algo,
+    bool *need_reset, bool *is_busy)
 {
     return false;
 }
-
 #endif /* LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP */
 
 #if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP
@@ -182,11 +178,8 @@ bool libspdm_gen_csr(
     uint8_t *requester_info, size_t requester_info_length,
     uint8_t *opaque_data, uint16_t opaque_data_length,
     size_t *csr_len, uint8_t *csr_pointer,
-    bool is_device_cert_model
-#if LIBSPDM_SET_CERT_CSR_PARAMS
-    , bool *is_busy, bool *unexpected_request
-#endif
-    )
+    bool is_device_cert_model,
+    bool *is_busy, bool *unexpected_request)
 {
     return false;
 }
@@ -203,11 +196,8 @@ bool libspdm_gen_csr_ex(
     uint8_t req_cert_model,
     uint8_t *csr_tracking_tag,
     uint8_t req_key_pair_id,
-    bool overwrite
-#if LIBSPDM_SET_CERT_CSR_PARAMS
-    , bool *is_busy, bool *unexpected_request
-#endif
-    )
+    bool overwrite,
+    bool *is_busy, bool *unexpected_request)
 {
     return false;
 }

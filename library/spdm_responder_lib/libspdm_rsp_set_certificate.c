@@ -229,11 +229,8 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
         /* erase slot_id cert_chain*/
         result = libspdm_write_certificate_to_nvm(
             spdm_context,
-            slot_id, NULL, 0, 0, 0, 0
-#if LIBSPDM_SET_CERT_CSR_PARAMS
-            , &need_reset, &is_busy
-#endif /* LIBSPDM_SET_CERT_CSR_PARAMS */
-            );
+            slot_id, NULL, 0, 0, 0, 0,
+            &need_reset, &is_busy);
         if (!result) {
             if (is_busy) {
                 return libspdm_generate_error_response(spdm_context,
@@ -307,11 +304,8 @@ libspdm_return_t libspdm_get_response_set_certificate(libspdm_context_t *spdm_co
             cert_chain_size,
             spdm_context->connection_info.algorithm.base_hash_algo,
             spdm_context->connection_info.algorithm.base_asym_algo,
-            spdm_context->connection_info.algorithm.pqc_asym_algo
-#if LIBSPDM_SET_CERT_CSR_PARAMS
-            , &need_reset, &is_busy
-#endif /* LIBSPDM_SET_CERT_CSR_PARAMS */
-            );
+            spdm_context->connection_info.algorithm.pqc_asym_algo,
+            &need_reset, &is_busy);
 
         if (!result) {
             if (is_busy) {

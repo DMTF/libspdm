@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -1046,7 +1046,6 @@ void libspdm_test_responder_set_certificate_rsp_case12(void **state)
  **/
 void libspdm_test_responder_set_certificate_rsp_case13(void **state)
 {
-#if LIBSPDM_SET_CERT_CSR_PARAMS
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -1112,7 +1111,6 @@ void libspdm_test_responder_set_certificate_rsp_case13(void **state)
 
     free(cert_chain);
     free(m_libspdm_set_certificate_request);
-#endif /* LIBSPDM_SET_CERT_CSR_PARAMS */
 }
 
 int libspdm_responder_set_certificate_rsp_test_main(void)

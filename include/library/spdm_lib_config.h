@@ -543,11 +543,4 @@
 #define LIBSPDM_CHECK_SPDM_CONTEXT 1
 #endif
 
-/* Enable passing additional parameters to libspdm_write_certificate_to_nvm and libspdm_gen_csr*.
- * This macro will be removed when libspdm 4.0 is released.
- */
-#ifndef LIBSPDM_SET_CERT_CSR_PARAMS
-#define LIBSPDM_SET_CERT_CSR_PARAMS 0
-#endif
-
 #endif /* SPDM_LIB_CONFIG_H */
