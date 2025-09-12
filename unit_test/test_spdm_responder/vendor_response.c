@@ -208,7 +208,7 @@ static void libspdm_test_responder_vendor_cmds_case2(void **state)
     request.header.request_response_code = SPDM_VENDOR_DEFINED_REQUEST;
     request.header.param1 = SPDM_VENDOR_DEFINED_REQUEST_LARGE_REQ;
     request.standard_id = 6;
-    request.vendor_id_len = sizeof(request.vendor_id);
+    request.vendor_id_len = 2;
     libspdm_set_mem(request.vendor_id, sizeof(request.vendor_id), 0xAA);
 
     response_len = sizeof(response) + sizeof(uint16_t) + sizeof(uint32_t)

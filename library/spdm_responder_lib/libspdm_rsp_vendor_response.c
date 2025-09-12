@@ -127,7 +127,6 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
                 spdm_context, SPDM_ERROR_CODE_INVALID_REQUEST,
                 0, response_size, response);
         }
-
         use_large_payload = true;
     } else {
         use_large_payload = false;
@@ -172,6 +171,12 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
                                                    SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                    response_size, response);
         }
+    }
+
+    if (!libspdm_validate_svh_vendor_id_len(spdm_request->standard_id, spdm_request->len)) {
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_INVALID_REQUEST, 0,
+                                               response_size, response);
     }
 
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,

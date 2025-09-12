@@ -466,7 +466,7 @@ uint16_t libspdm_mask_alg_supported(libspdm_context_t *spdm_context, uint8_t alg
     }
 }
 
-bool libspdm_validate_svh_vendor_id_len(uint8_t id, uint8_t vendor_id_len)
+bool libspdm_validate_svh_vendor_id_len(uint16_t id, uint8_t vendor_id_len)
 {
     switch (id) {
     case SPDM_REGISTRY_ID_DMTF:
