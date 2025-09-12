@@ -10,6 +10,7 @@
 
 /*ecp256 key: https://lapo.it/asn1js/#MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgjqRWI_stNQKCZwHIIL9pQLqos_cTSZ2Q3L5XaPaE-hGhRANCAAR-X9hTLdaMSJxS9gNglcAxjLCocVJ5I6msv8D7iLloQfRC_RsnQFl5UkTDAKfkavduNdy0AM2VR4XMmD6I9E1D*/
 uint8_t m_libspdm_ec_public_key[] = {
+    0x04,
     0x7E, 0x5F, 0xD8, 0x53, 0x2D, 0xD6, 0x8C, 0x48, 0x9C, 0x52, 0xF6, 0x03, 0x60, 0x95, 0xC0, 0x31,
     0x8C, 0xB0, 0xA8, 0x71, 0x52, 0x79, 0x23, 0xA9, 0xAC, 0xBF, 0xC0, 0xFB, 0x88, 0xB9, 0x68, 0x41,
     0xF4, 0x42, 0xFD, 0x1B, 0x27, 0x40, 0x59, 0x79, 0x52, 0x44, 0xC3, 0x00, 0xA7, 0xE4, 0x6A, 0xF7,
@@ -32,9 +33,9 @@ bool libspdm_validate_crypt_ec(void)
 {
     void *ec1;
     void *ec2;
-    uint8_t public1[66 * 2];
+    uint8_t public1[66 * 2 + 1];
     size_t public1_length;
-    uint8_t public2[66 * 2];
+    uint8_t public2[66 * 2 + 1];
     size_t public2_length;
     uint8_t key1[66];
     size_t key1_length;
@@ -72,8 +73,8 @@ bool libspdm_validate_crypt_ec(void)
 
     /* Verify EC-DH */
     libspdm_my_print("Generate key1 ... ");
-    status = libspdm_ec_generate_key(ec1, public1, &public1_length);
-    if (!status || public1_length != 48 * 2) {
+    status = libspdm_ec_generate_key(&ec1, public1, &public1_length);
+    if (!status || public1_length != 48 * 2 + 1) {
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
         libspdm_ec_free(ec2);
@@ -81,8 +82,8 @@ bool libspdm_validate_crypt_ec(void)
     }
 
     libspdm_my_print("Generate key2 ... ");
-    status = libspdm_ec_generate_key(ec2, public2, &public2_length);
-    if (!status || public2_length != 48 * 2) {
+    status = libspdm_ec_generate_key(&ec2, public2, &public2_length);
+    if (!status || public2_length != 48 * 2 + 1) {
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
         libspdm_ec_free(ec2);
@@ -153,8 +154,8 @@ bool libspdm_validate_crypt_ec(void)
 
     /* Verify EC-DH*/
     libspdm_my_print("Generate key1 ... ");
-    status = libspdm_ec_generate_key(ec1, public1, &public1_length);
-    if (!status || public1_length != 66 * 2) {
+    status = libspdm_ec_generate_key(&ec1, public1, &public1_length);
+    if (!status || public1_length != 66 * 2 + 1) {
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
         libspdm_ec_free(ec2);
@@ -162,8 +163,8 @@ bool libspdm_validate_crypt_ec(void)
     }
 
     libspdm_my_print("Generate key2 ... ");
-    status = libspdm_ec_generate_key(ec2, public2, &public2_length);
-    if (!status || public2_length != 66 * 2) {
+    status = libspdm_ec_generate_key(&ec2, public2, &public2_length);
+    if (!status || public2_length != 66 * 2 + 1) {
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
         libspdm_ec_free(ec2);
@@ -231,7 +232,7 @@ bool libspdm_validate_crypt_ec(void)
     }
 
     libspdm_my_print("Compute key1 ... ");
-    status = libspdm_ec_generate_key(ec1, public1, &public1_length);
+    status = libspdm_ec_generate_key(&ec1, public1, &public1_length);
     if (!status) {
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
@@ -240,7 +241,7 @@ bool libspdm_validate_crypt_ec(void)
     }
 
     libspdm_my_print("Compute key2 ... ");
-    status = libspdm_ec_generate_key(ec2, public2, &public2_length);
+    status = libspdm_ec_generate_key(&ec2, public2, &public2_length);
     if (!status) {
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
@@ -322,7 +323,7 @@ bool libspdm_validate_crypt_ec(void)
     }
 
     libspdm_my_print("Compute key in Context1 ... ");
-    status = libspdm_ec_generate_key(ec1, public1, &public1_length);
+    status = libspdm_ec_generate_key(&ec1, public1, &public1_length);
     if (!status) {
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
