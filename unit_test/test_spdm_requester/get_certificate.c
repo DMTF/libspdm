@@ -4509,6 +4509,8 @@ void libspdm_test_requester_get_certificate_case30(void **state)
 
     free(data);
     free(m_libspdm_local_certificate_chain);
+    m_libspdm_local_certificate_chain = NULL;
+    m_libspdm_local_certificate_chain_size = 0;
 }
 
 /**
@@ -4592,6 +4594,11 @@ void libspdm_test_requester_get_certificate_case31(void **state)
                                      cert_chain);
     assert_int_equal(status, LIBSPDM_STATUS_BUFFER_TOO_SMALL);
     free(data);
+    if (m_libspdm_local_certificate_chain != NULL) {
+        free(m_libspdm_local_certificate_chain);
+        m_libspdm_local_certificate_chain = NULL;
+        m_libspdm_local_certificate_chain_size = 0;
+    }
 }
 
 int libspdm_requester_get_certificate_test_main(void)

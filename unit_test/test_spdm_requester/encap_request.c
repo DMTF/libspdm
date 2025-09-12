@@ -1307,6 +1307,8 @@ void libspdm_test_requester_encap_request_case14(void **State)
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
+    spdm_context->local_context.local_cert_chain_provision[0] = NULL;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = 0;
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
@@ -1362,6 +1364,8 @@ void libspdm_test_requester_encap_request_case15(void **State)
     spdm_context->local_context.capability.flags |= SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CERT_CAP;
     spdm_context->connection_info.capability.flags |=
         SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_ENCAP_CAP;
+    spdm_context->local_context.local_cert_chain_provision[0] = NULL;
+    spdm_context->local_context.local_cert_chain_provision_size[0] = 0;
     if (!libspdm_read_responder_public_certificate_chain(m_libspdm_use_hash_algo,
                                                          m_libspdm_use_asym_algo, &data,
                                                          &data_size,
