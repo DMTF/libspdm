@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -32,9 +32,9 @@ bool libspdm_validate_crypt_ec(void)
 {
     void *ec1;
     void *ec2;
-    uint8_t public1[66 * 2];
+    uint8_t public1[66 * 2 + 1];
     size_t public1_length;
-    uint8_t public2[66 * 2];
+    uint8_t public2[66 * 2 + 1];
     size_t public2_length;
     uint8_t key1[66];
     size_t key1_length;
@@ -73,7 +73,7 @@ bool libspdm_validate_crypt_ec(void)
     /* Verify EC-DH */
     libspdm_my_print("Generate key1 ... ");
     status = libspdm_ec_generate_key(ec1, public1, &public1_length);
-    if (!status || public1_length != 48 * 2) {
+    if (!status || (public1_length != 48 * 2 && public1_length != 48 * 2 + 1)) {
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
         libspdm_ec_free(ec2);
@@ -82,7 +82,7 @@ bool libspdm_validate_crypt_ec(void)
 
     libspdm_my_print("Generate key2 ... ");
     status = libspdm_ec_generate_key(ec2, public2, &public2_length);
-    if (!status || public2_length != 48 * 2) {
+    if (!status || (public2_length != 48 * 2 && public2_length != 48 * 2 + 1)) {
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
         libspdm_ec_free(ec2);
@@ -154,7 +154,7 @@ bool libspdm_validate_crypt_ec(void)
     /* Verify EC-DH*/
     libspdm_my_print("Generate key1 ... ");
     status = libspdm_ec_generate_key(ec1, public1, &public1_length);
-    if (!status || public1_length != 66 * 2) {
+    if (!status || (public1_length != 66 * 2 && public1_length != 66 * 2 + 1)) {
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
         libspdm_ec_free(ec2);
@@ -163,7 +163,7 @@ bool libspdm_validate_crypt_ec(void)
 
     libspdm_my_print("Generate key2 ... ");
     status = libspdm_ec_generate_key(ec2, public2, &public2_length);
-    if (!status || public2_length != 66 * 2) {
+    if (!status || (public2_length != 66 * 2 && public2_length != 66 * 2 + 1)) {
         libspdm_my_print("[Fail]");
         libspdm_ec_free(ec1);
         libspdm_ec_free(ec2);
