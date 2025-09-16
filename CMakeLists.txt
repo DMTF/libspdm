@@ -206,7 +206,7 @@ if (X509_IGNORE_CRITICAL STREQUAL "ON")
     if (CRYPTO STREQUAL "openssl")
         add_definitions(-DOPENSSL_IGNORE_CRITICAL=1)
     elseif(CRYPTO STREQUAL "mbedtls")
-        add_definitions(-DMBEDTLS_X509_ALLOW_UNSUPPORTED_CRITICAL_EXTENSION)
+        add_definitions(-DLIBSPDM_MBEDTLS_X509_ALLOW_UNSUPPORTED_CRITICAL_EXTENSION)
     endif()
 endif()
 
