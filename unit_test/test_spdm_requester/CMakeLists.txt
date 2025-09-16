@@ -42,6 +42,7 @@ target_sources(test_spdm_requester
         encap_key_update.c
         encap_request.c
         encap_supported_event_types.c
+        encap_subscribe_event_types_ack.c
         set_certificate.c
         get_csr.c
         chunk_get.c
@@ -65,6 +66,7 @@ target_sources(test_spdm_requester
         error_test/get_endpoint_info_err.c
         error_test/encap_endpoint_info_err.c
         error_test/encap_supported_event_types_err.c
+        error_test/encap_subscribe_event_types_ack_err.c
         ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/common.c
         ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/algo.c
         ${LIBSPDM_DIR}/unit_test/spdm_unit_test_common/support.c
