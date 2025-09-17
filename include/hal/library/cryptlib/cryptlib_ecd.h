@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -82,8 +82,8 @@ extern bool libspdm_ecd_set_pub_key(void *ecd_context, const uint8_t *public_key
  * @retval  false  Invalid EC private key component.
  *
  **/
-bool libspdm_ecd_set_pri_key(void *ecd_context, const uint8_t *private_key,
-                             size_t private_key_size);
+extern bool libspdm_ecd_set_pri_key(void *ecd_context, const uint8_t *private_key,
+                                    size_t private_key_size);
 
 /**
  * Gets the public key component from the established Ed context.

@@ -45,7 +45,7 @@ extern bool libspdm_mldsa_set_pubkey(void *dsa_context, const uint8_t *key_data,
  *
  * @retval  true   DSA key component was set successfully.
  **/
-bool libspdm_mldsa_get_pubkey(void *dsa_context, uint8_t *key_data, size_t *key_size);
+extern bool libspdm_mldsa_get_pubkey(void *dsa_context, uint8_t *key_data, size_t *key_size);
 
 /**
  * Sets the key component into the established DSA context.

@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -29,7 +29,7 @@ extern void *libspdm_dh_new_by_nid(size_t nid);
  *
  * @param[in]  dh_context  Pointer to the DH context to be released.
  **/
-void libspdm_dh_free(void *dh_context);
+extern void libspdm_dh_free(void *dh_context);
 
 /**
  * Generates DH public key.

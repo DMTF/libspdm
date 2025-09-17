@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2024 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -30,8 +30,8 @@
  * @param    src_buf   Source buffer to copy from.
  * @param    src_len   The number of bytes to copy from the source buffer.
  **/
-void libspdm_copy_mem(void *dst_buf, size_t dst_len,
-                      const void *src_buf, size_t src_len);
+extern void libspdm_copy_mem(void *dst_buf, size_t dst_len,
+                             const void *src_buf, size_t src_len);
 
 /**
  * Fills a target buffer with a byte value.
@@ -40,7 +40,7 @@ void libspdm_copy_mem(void *dst_buf, size_t dst_len,
  * @param  length    The number of bytes to set.
  * @param  value     The value with which to fill length bytes of buffer.
  **/
-void libspdm_set_mem(void *buffer, size_t length, uint8_t value);
+extern void libspdm_set_mem(void *buffer, size_t length, uint8_t value);
 
 /**
  * Fills a target buffer with zeros.
@@ -48,7 +48,7 @@ void libspdm_set_mem(void *buffer, size_t length, uint8_t value);
  * @param  buffer      The pointer to the target buffer to fill with zeros.
  * @param  length      The number of bytes in buffer to fill with zeros.
  **/
-void libspdm_zero_mem(void *buffer, size_t length);
+extern void libspdm_zero_mem(void *buffer, size_t length);
 
 /**
  * Compares the contents of two buffers in constant time.
@@ -63,7 +63,7 @@ void libspdm_zero_mem(void *buffer, size_t length);
  * @retval true   The contents of the two buffers are the same.
  * @retval false  The contents of the two buffers are not the same.
  **/
-bool libspdm_consttime_is_mem_equal(const void *destination_buffer,
-                                    const void *source_buffer, size_t length);
+extern bool libspdm_consttime_is_mem_equal(const void *destination_buffer,
+                                           const void *source_buffer, size_t length);
 
 #endif /* MEMLIB_H */
