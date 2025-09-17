@@ -285,12 +285,6 @@ typedef enum {
  * @param  parameter     Type specific parameter of the SPDM context data.
  * @param  data          A pointer to the SPDM context data.
  * @param  data_size     Size in bytes of the SPDM context data.
- *
- * @retval RETURN_SUCCESS               The SPDM context data is set successfully.
- * @retval RETURN_INVALID_PARAMETER     The data is NULL or the data_type is zero.
- * @retval RETURN_UNSUPPORTED           The data_type is unsupported.
- * @retval RETURN_ACCESS_DENIED         The data_type cannot be set.
- * @retval RETURN_NOT_READY             data is not ready to set.
  **/
 libspdm_return_t libspdm_set_data(void *spdm_context,
                                   libspdm_data_type_t data_type,
@@ -306,15 +300,9 @@ libspdm_return_t libspdm_set_data(void *spdm_context,
  * @param  data          A pointer to the SPDM context data.
  * @param  data_size     Size in bytes of the SPDM context data.
  *                       On input, it means the size in bytes of data buffer.
- *                       On output, it means the size in bytes of copied data buffer if RETURN_SUCCESS,
- *                       and means the size in bytes of desired data buffer if RETURN_BUFFER_TOO_SMALL.
- *
- * @retval RETURN_SUCCESS               The SPDM context data is set successfully.
- * @retval RETURN_INVALID_PARAMETER     The data_size is NULL or the data is NULL and *data_size is not zero.
- * @retval RETURN_UNSUPPORTED           The data_type is unsupported.
- * @retval RETURN_NOT_FOUND             The data_type cannot be found.
- * @retval RETURN_NOT_READY             The data is not ready to return.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
+ *                       On output, it means the size in bytes of copied data buffer if
+ *                       LIBSPDM_STATUS_SUCCESS, and means the size in bytes of desired data buffer
+ *                       if LIBSPDM_STATUS_BUFFER_TOO_SMALL.
  **/
 libspdm_return_t libspdm_get_data(void *spdm_context,
                                   libspdm_data_type_t data_type,
@@ -371,9 +359,6 @@ void libspdm_set_last_spdm_error_struct(void *spdm_context,
  * @param  num_secured_contexts  Number of secured message contexts to initialize.
  *                               Currently, only LIBSPDM_MAX_SESSION_COUNT is supported.
  *                               In future releases, lesser values may be supported.
- *
- * @retval RETURN_SUCCESS        Contexts are initialized.
- * @retval RETURN_DEVICE_ERROR   Context initialization failed.
  */
 libspdm_return_t libspdm_init_context_with_secured_context(void *spdm_context,
                                                            void **secured_contexts,
@@ -383,12 +368,7 @@ libspdm_return_t libspdm_init_context_with_secured_context(void *spdm_context,
 /**
  * Initialize an libspdm_fips_selftest_context.
  *
- * The
- *
  * @param  spdm_context         A pointer to the SPDM context.
- *
- * @retval RETURN_SUCCESS       context is initialized.
- * @retval RETURN_DEVICE_ERROR  context initialization failed.
  */
 libspdm_return_t libspdm_init_fips_selftest_context(void *fips_selftest_context);
 
@@ -437,9 +417,6 @@ bool libspdm_export_fips_selftest_context_from_spdm_context(void *spdm_context,
  * contexts can be returned by libspdm_get_context_size().
  *
  * @param  spdm_context         A pointer to the SPDM context.
- *
- * @retval RETURN_SUCCESS       context is initialized.
- * @retval RETURN_DEVICE_ERROR  context initialization failed.
  */
 libspdm_return_t libspdm_init_context(void *spdm_context);
 
@@ -571,8 +548,6 @@ typedef libspdm_return_t (*libspdm_device_acquire_sender_buffer_func)(
  *
  * @param  context                       A pointer to the SPDM context.
  * @param  msg_buf_ptr                   A pointer to a sender buffer.
- *
- * @retval RETURN_SUCCESS               The sender buffer is Released.
  **/
 typedef void (*libspdm_device_release_sender_buffer_func)(void *spdm_context,
                                                           const void *msg_buf_ptr);
@@ -594,8 +569,6 @@ typedef libspdm_return_t (*libspdm_device_acquire_receiver_buffer_func)(
  *
  * @param  context      A pointer to the SPDM context.
  * @param  msg_buf_ptr  A pointer to a receiver buffer.
- *
- * @retval RETURN_SUCCESS  The receiver buffer is Released.
  **/
 typedef void (*libspdm_device_release_receiver_buffer_func)(void *spdm_context,
                                                             const void *msg_buf_ptr);
@@ -677,9 +650,6 @@ void libspdm_register_device_buffer_func(
  * @param  transport_message       A pointer to a destination buffer to store the transport message.
  *                                 On input, it shall be msg_buf_ptr from sender buffer.
  *                                 On output, it will point to acquired sender buffer.
- *
- * @retval RETURN_SUCCESS               The message is encoded successfully.
- * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
 typedef libspdm_return_t (*libspdm_transport_encode_message_func)(
     void *spdm_context, const uint32_t *session_id, bool is_app_message,
@@ -712,10 +682,6 @@ typedef libspdm_return_t (*libspdm_transport_encode_message_func)(
  *                                 On input, it shall point to the scratch buffer in spdm_context.
  *                                 On output, for normal message, it will point to the original receiver buffer.
  *                                 On output, for secured message, it will point to the scratch buffer in spdm_context.
- *
- * @retval RETURN_SUCCESS               The message is decoded successfully.
- * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
- * @retval RETURN_UNSUPPORTED           The transport_message is unsupported.
  **/
 typedef libspdm_return_t (*libspdm_transport_decode_message_func)(
     void *spdm_context, uint32_t **session_id,
@@ -815,9 +781,6 @@ void libspdm_get_scratch_buffer (
  *                            returned from GET_CERTIFICATE. It starts with spdm_cert_chain_t.
  * @param  trust_anchor       A buffer to hold the trust_anchor which is used to validate the peer certificate, if not NULL.
  * @param  trust_anchor_size  A buffer to hold the trust_anchor_size, if not NULL.
- *
- * @retval RETURN_SUCCESS                The cert chain verification pass.
- * @retval RETURN_SECURITY_VIOLATION      The cert chain verification fail.
  **/
 typedef bool (*libspdm_verify_spdm_cert_chain_func)(
     void *spdm_context, uint8_t slot_id,

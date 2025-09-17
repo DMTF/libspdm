@@ -251,9 +251,6 @@ typedef struct {
  * @param  secured_message                 A pointer to a destination buffer to store the secured message.
  *                                         It shall point to the acquired sender buffer.
  * @param  spdm_secured_message_callbacks  A pointer to a secured message callback functions structure.
- *
- * @retval RETURN_SUCCESS               The application message is encoded successfully.
- * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
 libspdm_return_t libspdm_encode_secured_message(
     void *spdm_secured_message_context, uint32_t session_id,
@@ -277,10 +274,6 @@ libspdm_return_t libspdm_encode_secured_message(
  *                                         On input, the app_message pointer shall point to a big enough buffer to hold the decrypted message
  *                                         On output, the app_message pointer shall be inside of [app_message, app_message + app_message_size]
  * @param  spdm_secured_message_callbacks  A pointer to a secured message callback functions structure.
- *
- * @retval RETURN_SUCCESS               The application message is decoded successfully.
- * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
- * @retval RETURN_UNSUPPORTED           The secured_message is unsupported.
  **/
 libspdm_return_t libspdm_decode_secured_message(
     void *spdm_secured_message_context, uint32_t session_id,

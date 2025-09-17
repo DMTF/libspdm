@@ -21,25 +21,20 @@ extern "C" {
  * The APP message format is defined by the transport layer.
  * Take MCTP as example: APP message == MCTP header (MCTP_MESSAGE_TYPE_SPDM) + SPDM message
  *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_id                    Indicates if it is a secured message protected via SPDM session.
- *                                     If session_id is NULL, it is a normal message.
- *                                     If session_id is NOT NULL, it is a secured message.
- * @param  is_app_message                 Indicates if it is an APP message or SPDM message.
- * @param  request_size                  size in bytes of the request data.
- * @param  request                      A pointer to the request data.
- * @param  response_size                 size in bytes of the response data.
- *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
- * @param  response                     A pointer to the response data.
- *
- * @retval RETURN_SUCCESS               The request is processed and the response is returned.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
- * @retval RETURN_UNSUPPORTED           Just ignore this message: return UNSUPPORTED and clear response_size.
- *                                      Continue the dispatch without send response.
+ * @param  spdm_context        A pointer to the SPDM context.
+ * @param  session_id          Indicates if it is a secured message protected via SPDM session.
+ *                             If session_id is NULL, it is a normal message.
+ *                             If session_id is NOT NULL, it is a secured message.
+ * @param  is_app_message      Indicates if it is an APP message or SPDM message.
+ * @param  request_size        size in bytes of the request data.
+ * @param  request             A pointer to the request data.
+ * @param  response_size       size in bytes of the response data.
+ *                             On input, it means the size in bytes of response data buffer.
+ *                             On output, it means the size in bytes of copied response data buffer
+ *                             if LIBSPDM_STATUS_SUCCESS is returned, and means the size in bytes of
+ *                             desired response data buffer if LIBSPDM_STATUS_BUFFER_TOO_SMALL is
+ *                             returned.
+ * @param  response            A pointer to the response data.
  **/
 typedef libspdm_return_t (*libspdm_get_response_func)(
     void *spdm_context, const uint32_t *session_id, bool is_app_message,
@@ -70,9 +65,6 @@ void libspdm_register_get_response_func(
  * @param  request                      A pointer to a destination buffer to store the request.
  *                                     The caller is responsible for having
  *                                     either implicit or explicit ownership of the buffer.
- *
- * @retval RETURN_SUCCESS               The SPDM request is received successfully.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM request is received from the device.
  **/
 libspdm_return_t libspdm_process_request(void *spdm_context,
                                          uint32_t **session_id,
@@ -91,11 +83,6 @@ libspdm_return_t libspdm_process_request(void *spdm_context,
  * @param  response                     A pointer to a destination buffer to store the response.
  *                                     The caller is responsible for having
  *                                     either implicit or explicit ownership of the buffer.
- *
- * @retval RETURN_SUCCESS               The SPDM response is sent successfully.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is sent to the device.
- * @retval RETURN_UNSUPPORTED           Just ignore this message: return UNSUPPORTED and clear response_size.
- *                                      Continue the dispatch without send response.
  **/
 libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *session_id,
                                         bool is_app_message,
@@ -110,10 +97,6 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
  * It should be called in a while loop or an timer/interrupt handler.
  *
  * @param  spdm_context                  A pointer to the SPDM context.
- *
- * @retval RETURN_SUCCESS               One SPDM request message is processed.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_UNSUPPORTED           One request message is not supported.
  **/
 libspdm_return_t libspdm_responder_dispatch_message(void *spdm_context);
 
@@ -122,17 +105,16 @@ libspdm_return_t libspdm_responder_dispatch_message(void *spdm_context);
  *
  * This function can be called in libspdm_get_response_func.
  *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  error_code                    The error code of the message.
- * @param  error_data                    The error data of the message.
- * @param  spdm_response_size             size in bytes of the response data.
- *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
- * @param  spdm_response                 A pointer to the response data.
- *
- * @retval RETURN_SUCCESS               The error message is generated.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
+ * @param  spdm_context        A pointer to the SPDM context.
+ * @param  error_code          The error code of the message.
+ * @param  error_data          The error data of the message.
+ * @param  spdm_response_size  size in bytes of the response data.
+ *                             On input, it means the size in bytes of response data buffer.
+ *                             On output, it means the size in bytes of copied response data buffer
+ *                             if LIBSPDM_STATUS_SUCCESS is returned, and means the size in bytes of
+ *                             desired response data buffer if LIBSPDM_STATUS_BUFFER_TOO_SMALL is
+ *                             returned.
+ * @param  spdm_response       A pointer to the response data.
  **/
 libspdm_return_t libspdm_generate_error_response(const void *spdm_context,
                                                  uint8_t error_code,
@@ -145,19 +127,18 @@ libspdm_return_t libspdm_generate_error_response(const void *spdm_context,
  *
  * This function can be called in libspdm_get_response_func.
  *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  error_code                    The error code of the message.
- * @param  error_data                    The error data of the message.
- * @param  extended_error_data_size        The size in bytes of the extended error data.
- * @param  extended_error_data            A pointer to the extended error data.
- * @param  spdm_response_size             size in bytes of the response data.
- *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned,
- *                                     and means the size in bytes of desired response data buffer if RETURN_BUFFER_TOO_SMALL is returned.
+ * @param  spdm_context        A pointer to the SPDM context.
+ * @param  error_code          The error code of the message.
+ * @param  error_data          The error data of the message.
+ * @param  extended_error_data_size  The size in bytes of the extended error data.
+ * @param  extended_error_data A pointer to the extended error data.
+ * @param  spdm_response_size  size in bytes of the response data.
+ *                             On input, it means the size in bytes of response data buffer.
+ *                             On output, it means the size in bytes of copied response data buffer
+ *                             if LIBSPDM_STATUS_SUCCESS is returned, and means the size in bytes of
+ *                             desired response data buffer if LIBSPDM_STATUS_BUFFER_TOO_SMALL is
+ *                             returned.
  * @param  spdm_response                 A pointer to the response data.
- *
- * @retval RETURN_SUCCESS               The error message is generated.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
 libspdm_return_t libspdm_generate_extended_error_response(
     const void *spdm_context, uint8_t error_code, uint8_t error_data,
