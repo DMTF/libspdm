@@ -181,17 +181,6 @@ bool libspdm_get_local_public_key_buffer(void *spdm_context,
 }
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-/*
- * This function calculates l1l2.
- * If session_info is NULL, this function will use M cache of SPDM context,
- * else will use M cache of SPDM session context.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  A pointer to the SPDM session context.
- * @param  l1l2                          The buffer to store the l1l2.
- *
- * @retval RETURN_SUCCESS  l1l2 is calculated.
- */
 bool libspdm_calculate_l1l2(libspdm_context_t *spdm_context,
                             void *session_info,
                             libspdm_l1l2_managed_buffer_t *l1l2)
@@ -263,18 +252,6 @@ bool libspdm_calculate_l1l2(libspdm_context_t *spdm_context,
     return true;
 }
 #else
-/*
- * This function calculates l1l2 hash.
- * If session_info is NULL, this function will use M cache of SPDM context,
- * else will use M cache of SPDM session context.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  A pointer to the SPDM session context.
- * @param  l1l2_hash_size               size in bytes of the l1l2 hash
- * @param  l1l2_hash                   The buffer to store the l1l2 hash
- *
- * @retval RETURN_SUCCESS  l1l2 is calculated.
- */
 bool libspdm_calculate_l1l2_hash(libspdm_context_t *spdm_context,
                                  void *session_info,
                                  size_t *l1l2_hash_size, void *l1l2_hash)
@@ -317,8 +294,6 @@ bool libspdm_calculate_l1l2_hash(libspdm_context_t *spdm_context,
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  is_mut                        Indicate if this is from mutual authentication.
  * @param  m1m2                          The buffer to store the m1m2
- *
- * @retval RETURN_SUCCESS  m1m2 is calculated.
  */
 static bool libspdm_calculate_m1m2(void *context, bool is_mut,
                                    libspdm_m1m2_managed_buffer_t *m1m2)
@@ -450,8 +425,6 @@ static bool libspdm_calculate_m1m2(void *context, bool is_mut,
  * @param  is_mut                        Indicate if this is from mutual authentication.
  * @param  m1m2_hash_size               size in bytes of the m1m2 hash
  * @param  m1m2_hash                   The buffer to store the m1m2 hash
- *
- * @retval RETURN_SUCCESS  m1m2 is calculated.
  */
 static bool libspdm_calculate_m1m2_hash(void *context, bool is_mut,
                                         size_t *m1m2_hash_size,
@@ -493,18 +466,6 @@ static bool libspdm_calculate_m1m2_hash(void *context, bool is_mut,
 #endif
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-/*
- * This function calculates il1il2.
- * If session_info is NULL, this function will use E cache of SPDM context,
- * else will use E cache of SPDM session context.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  A pointer to the SPDM session context.
- * @param  is_mut                        Indicate if this is from mutual authentication.
- * @param  il1il2                        The buffer to store the il1il2.
- *
- * @retval RETURN_SUCCESS  il1il2 is calculated.
- */
 bool libspdm_calculate_il1il2(libspdm_context_t *spdm_context,
                               void *session_info,
                               bool is_mut,
@@ -627,19 +588,6 @@ bool libspdm_calculate_il1il2(libspdm_context_t *spdm_context,
     return true;
 }
 #else
-/*
- * This function calculates il1il2 hash.
- * If session_info is NULL, this function will use E cache of SPDM context,
- * else will use E cache of SPDM session context.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  A pointer to the SPDM session context.
- * @param  is_encap                      Indicate if this is from encapsulate request.
- * @param  il1il2_hash_size              size in bytes of the il1il2 hash
- * @param  il1il2_hash                   The buffer to store the il1il2 hash
- *
- * @retval RETURN_SUCCESS  il1il2 is calculated.
- */
 bool libspdm_calculate_il1il2_hash(libspdm_context_t *spdm_context,
                                    void *session_info, bool is_encap,
                                    size_t *il1il2_hash_size, void *il1il2_hash)

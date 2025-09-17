@@ -60,26 +60,6 @@ static bool is_sequence_number_endian_determined(uint8_t endian)
             (endian == LIBSPDM_DATA_SESSION_SEQ_NUM_ENC_LITTLE_DEC_LITTLE)) ? true : false;
 }
 
-/**
- * Encode an application message to a secured message.
- *
- * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- * @param  session_id                      The session ID of the SPDM session.
- * @param  is_request_message              Indicates if it is a request message.
- * @param  app_message_size                size in bytes of the application message data buffer.
- * @param  app_message                     A pointer to a source buffer to store the application message.
- *                                         It shall point to the scratch buffer in spdm_context.
- *                                         On input, the app_message pointer shall point to a big enough buffer.
- *                                         Before app_message, there is room for spdm_secured_message_cipher_header_t.
- *                                         After (app_message + app_message_size), there is room for random bytes.
- * @param  secured_message_size            size in bytes of the secured message data buffer.
- * @param  secured_message                 A pointer to a destination buffer to store the secured message.
- *                                         It shall point to the acquired sender buffer.
- * @param  spdm_secured_message_callbacks  A pointer to a secured message callback functions structure.
- *
- * @retval RETURN_SUCCESS               The application message is encoded successfully.
- * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
- **/
 libspdm_return_t libspdm_encode_secured_message(
     void *spdm_secured_message_context, uint32_t session_id,
     bool is_request_message, size_t app_message_size,
@@ -316,26 +296,6 @@ libspdm_return_t libspdm_encode_secured_message(
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-/**
- * Decode an application message from a secured message.
- *
- * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- * @param  session_id                      The session ID of the SPDM session.
- * @param  is_request_message              Indicates if it is a request message.
- * @param  secured_message_size            size in bytes of the secured message data buffer.
- * @param  secured_message                 A pointer to a source buffer to store the secured message.
- *                                         It shall point to the acquired receiver buffer.
- * @param  app_message_size                size in bytes of the application message data buffer.
- * @param  app_message                     A pointer to a destination buffer to store the application message.
- *                                         It shall point to the scratch buffer in spdm_context.
- *                                         On input, the app_message pointer shall point to a big enough buffer to hold the decrypted message
- *                                         On output, the app_message pointer shall be inside of [app_message, app_message + app_message_size]
- * @param  spdm_secured_message_callbacks  A pointer to a secured message callback functions structure.
- *
- * @retval RETURN_SUCCESS               The application message is decoded successfully.
- * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
- * @retval RETURN_UNSUPPORTED           The secured_message is unsupported.
- **/
 libspdm_return_t libspdm_decode_secured_message(
     void *spdm_secured_message_context, uint32_t session_id,
     bool is_request_message, size_t secured_message_size,

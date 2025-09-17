@@ -28,10 +28,6 @@ typedef struct {
  *                                     false means the operation is UPDATE_ALL_KEYS.
  * @param  key_updated                   true means the operation is to verify key(s).
  *                                     false means the operation is to update and verify key(s).
- *
- * @retval RETURN_SUCCESS               The keys of the session are updated.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 static libspdm_return_t libspdm_try_key_update(libspdm_context_t *spdm_context,
                                                uint32_t session_id,

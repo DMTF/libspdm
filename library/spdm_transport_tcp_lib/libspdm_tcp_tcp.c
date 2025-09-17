@@ -66,9 +66,6 @@ spdm_version_number_t libspdm_tcp_get_secured_spdm_version(
  * @param  message                      A pointer to a source buffer to store the message.
  * @param  transport_message_size         size in bytes of the transport message data buffer.
  * @param  transport_message             A pointer to a destination buffer to store the transport message.
- *
- * @retval RETURN_SUCCESS               The message is encoded successfully.
- * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
 libspdm_return_t libspdm_tcp_encode_message(const uint32_t *session_id, size_t message_size,
                                             void *message,
@@ -117,9 +114,6 @@ libspdm_return_t libspdm_tcp_encode_message(const uint32_t *session_id, size_t m
  * @param  transport_message             A pointer to a source buffer to store the transport message.
  * @param  message_size                  size in bytes of the message data buffer.
  * @param  message                      A pointer to a destination buffer to store the message.
- *
- * @retval RETURN_SUCCESS               The message is encoded successfully.
- * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
 libspdm_return_t libspdm_tcp_decode_message(uint32_t **session_id,
                                             size_t transport_message_size,

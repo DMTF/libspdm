@@ -58,16 +58,6 @@ void libspdm_bin_concat(spdm_version_number_t spdm_version,
     #undef LIBSPDM_BIN_CONCAT_LABEL
 }
 
-/**
- * This function generates SPDM AEAD key and IV for a session.
- *
- * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- * @param  major_secret                  The major secret.
- * @param  key                          The buffer to store the AEAD key.
- * @param  iv                           The buffer to store the AEAD IV.
- *
- * @retval RETURN_SUCCESS  SPDM AEAD key and IV for a session is generated.
- **/
 bool libspdm_generate_aead_key_and_iv(
     libspdm_secured_message_context_t *secured_message_context,
     const uint8_t *major_secret, uint8_t *key, uint8_t *iv)
@@ -124,15 +114,6 @@ bool libspdm_generate_aead_key_and_iv(
     return true;
 }
 
-/**
- * This function generates SPDM finished_key for a session.
- *
- * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- * @param  handshake_secret              The handshake secret.
- * @param  finished_key                  The buffer to store the finished key.
- *
- * @retval RETURN_SUCCESS  SPDM finished_key for a session is generated.
- **/
 bool libspdm_generate_finished_key(
     libspdm_secured_message_context_t *secured_message_context,
     const uint8_t *handshake_secret, uint8_t *finished_key)
@@ -165,14 +146,6 @@ bool libspdm_generate_finished_key(
     return true;
 }
 
-/**
- * This function generates SPDM HandshakeKey for a session.
- *
- * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- * @param  th1_hash_data                  th1 hash
- *
- * @retval RETURN_SUCCESS  SPDM HandshakeKey for a session is generated.
- **/
 bool libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
                                             const uint8_t *th1_hash_data)
 {
@@ -346,14 +319,6 @@ bool libspdm_generate_session_handshake_key(void *spdm_secured_message_context,
     return true;
 }
 
-/**
- * This function generates SPDM DataKey for a session.
- *
- * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- * @param  th2_hash_data                  th2 hash
- *
- * @retval RETURN_SUCCESS  SPDM DataKey for a session is generated.
- **/
 bool libspdm_generate_session_data_key(void *spdm_secured_message_context,
                                        const uint8_t *th2_hash_data)
 {
@@ -568,14 +533,6 @@ cleanup:
     return status;
 }
 
-/**
- * This function creates the updates of SPDM DataKey for a session.
- *
- * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- * @param  action                       Indicate of the key update action.
- *
- * @retval RETURN_SUCCESS  SPDM DataKey update is created.
- **/
 bool libspdm_create_update_session_data_key(void *spdm_secured_message_context,
                                             libspdm_key_update_action_t action)
 {
@@ -732,15 +689,6 @@ void libspdm_clear_master_secret(void *spdm_secured_message_context)
     libspdm_zero_mem(secured_message_context->master_secret.master_secret, LIBSPDM_MAX_HASH_SIZE);
 }
 
-/**
- * This function activates the update of SPDM DataKey for a session.
- *
- * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- * @param  action                       Indicate of the key update action.
- * @param  use_new_key                    Indicate if the new key should be used.
- *
- * @retval RETURN_SUCCESS  SPDM DataKey update is activated.
- **/
 bool libspdm_activate_update_session_data_key(void *spdm_secured_message_context,
                                               libspdm_key_update_action_t action,
                                               bool use_new_key)

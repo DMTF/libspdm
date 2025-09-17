@@ -16,7 +16,7 @@
  *                             On input, it means the size in bytes of encapsulated request data
  *                             buffer.
  *                             On output, it means the size, in bytes, of copied encapsulated
- *                             request data buffer if LIBSPDM_RETURN_SUCCESS is returned,
+ *                             request data buffer if LIBSPDM_STATUS_SUCCESS is returned,
  *                             and means the size in bytes of desired encapsulated request data
  *                             buffer if LIBSPDM_STATUS_BUFFER_TOO_SMALL is returned.
  * @param  encap_request       A pointer to the encapsulated request data.

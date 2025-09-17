@@ -22,9 +22,6 @@ typedef struct {
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  session_id                    session_id to the END_SESSION request.
  * @param  end_session_attributes         end_session_attributes to the END_SESSION_ACK request.
- *
- * @retval RETURN_SUCCESS               The END_SESSION is sent and the END_SESSION_ACK is received.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
 static libspdm_return_t libspdm_try_send_receive_end_session(libspdm_context_t *spdm_context,
                                                              uint32_t session_id,

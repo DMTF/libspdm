@@ -143,21 +143,6 @@ static bool need_session_info_for_data(libspdm_data_type_t data_type)
     }
 }
 
-/**
- * Set an SPDM context data.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  data_type                     Type of the SPDM context data.
- * @param  parameter                    Type specific parameter of the SPDM context data.
- * @param  data                         A pointer to the SPDM context data.
- * @param  data_size                     size in bytes of the SPDM context data.
- *
- * @retval RETURN_SUCCESS               The SPDM context data is set successfully.
- * @retval RETURN_INVALID_PARAMETER     The data is NULL or the data_type is zero.
- * @retval RETURN_UNSUPPORTED           The data_type is unsupported.
- * @retval RETURN_ACCESS_DENIED         The data_type cannot be set.
- * @retval RETURN_NOT_READY             data is not ready to set.
- **/
 libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_type,
                                   const libspdm_data_parameter_t *parameter, const void *data,
                                   size_t data_size)
@@ -868,25 +853,6 @@ libspdm_return_t libspdm_set_data(void *spdm_context, libspdm_data_type_t data_t
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-/**
- * Get an SPDM context data.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  data_type                     Type of the SPDM context data.
- * @param  parameter                    Type specific parameter of the SPDM context data.
- * @param  data                         A pointer to the SPDM context data.
- * @param  data_size                     size in bytes of the SPDM context data.
- *                                     On input, it means the size in bytes of data buffer.
- *                                     On output, it means the size in bytes of copied data buffer if RETURN_SUCCESS,
- *                                     and means the size in bytes of desired data buffer if RETURN_BUFFER_TOO_SMALL.
- *
- * @retval RETURN_SUCCESS               The SPDM context data is set successfully.
- * @retval RETURN_INVALID_PARAMETER     The data_size is NULL or the data is NULL and *data_size is not zero.
- * @retval RETURN_UNSUPPORTED           The data_type is unsupported.
- * @retval RETURN_NOT_FOUND             The data_type cannot be found.
- * @retval RETURN_NOT_READY             The data is not ready to return.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
- **/
 libspdm_return_t libspdm_get_data(void *spdm_context, libspdm_data_type_t data_type,
                                   const libspdm_data_parameter_t *parameter,
                                   void *data, size_t *data_size)
@@ -1662,16 +1628,7 @@ void libspdm_reset_message_buffer_via_request_code(void *context, void *session_
         break;
     }
 }
-/**
- * Append message A cache in SPDM context.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  message                      message buffer.
- * @param  message_size                  size in bytes of message buffer.
- *
- * @return RETURN_SUCCESS          message is appended.
- * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
- **/
+
 libspdm_return_t libspdm_append_message_a(libspdm_context_t *spdm_context, const void *message,
                                           size_t message_size)
 {
@@ -1679,16 +1636,6 @@ libspdm_return_t libspdm_append_message_a(libspdm_context_t *spdm_context, const
                                          message, message_size);
 }
 
-/**
- * Append message D cache in SPDM context.
- *
- * @param  spdm_context  A pointer to the SPDM context.
- * @param  message       Message buffer.
- * @param  message_size  Size in bytes of message buffer.
- *
- * @return RETURN_SUCCESS          message is appended.
- * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
- **/
 libspdm_return_t libspdm_append_message_d(libspdm_context_t *spdm_context, const void *message,
                                           size_t message_size)
 {
@@ -1700,16 +1647,6 @@ libspdm_return_t libspdm_append_message_d(libspdm_context_t *spdm_context, const
                                          message, message_size);
 }
 
-/**
- * Append message B cache in SPDM context.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  message                      message buffer.
- * @param  message_size                  size in bytes of message buffer.
- *
- * @return RETURN_SUCCESS          message is appended.
- * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
- **/
 libspdm_return_t libspdm_append_message_b(libspdm_context_t *spdm_context, const void *message,
                                           size_t message_size)
 {
@@ -1763,16 +1700,6 @@ libspdm_return_t libspdm_append_message_b(libspdm_context_t *spdm_context, const
 #endif
 }
 
-/**
- * Append message C cache in SPDM context.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  message                      message buffer.
- * @param  message_size                  size in bytes of message buffer.
- *
- * @return RETURN_SUCCESS          message is appended.
- * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
- **/
 libspdm_return_t libspdm_append_message_c(libspdm_context_t *spdm_context, const void *message,
                                           size_t message_size)
 {
@@ -1826,16 +1753,6 @@ libspdm_return_t libspdm_append_message_c(libspdm_context_t *spdm_context, const
 #endif
 }
 
-/**
- * Append message MutB cache in SPDM context.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  message                      message buffer.
- * @param  message_size                  size in bytes of message buffer.
- *
- * @return RETURN_SUCCESS          message is appended.
- * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
- **/
 libspdm_return_t libspdm_append_message_mut_b(libspdm_context_t *spdm_context, const void *message,
                                               size_t message_size)
 {
@@ -1894,16 +1811,6 @@ libspdm_return_t libspdm_append_message_mut_b(libspdm_context_t *spdm_context, c
 #endif
 }
 
-/**
- * Append message MutC cache in SPDM context.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  message                      message buffer.
- * @param  message_size                  size in bytes of message buffer.
- *
- * @return RETURN_SUCCESS          message is appended.
- * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
- **/
 libspdm_return_t libspdm_append_message_mut_c(libspdm_context_t *spdm_context, const void *message,
                                               size_t message_size)
 {
@@ -1962,19 +1869,6 @@ libspdm_return_t libspdm_append_message_mut_c(libspdm_context_t *spdm_context, c
 #endif
 }
 
-/**
- * Append message M cache in SPDM context.
- * If session_info is NULL, this function will use M cache of SPDM context,
- * else will use M cache of SPDM session context.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  A pointer to the SPDM session context.
- * @param  message                      message buffer.
- * @param  message_size                  size in bytes of message buffer.
- *
- * @return RETURN_SUCCESS          message is appended.
- * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
- **/
 libspdm_return_t libspdm_append_message_m(libspdm_context_t *spdm_context, void *session_info,
                                           const void *message, size_t message_size)
 {
@@ -2087,18 +1981,6 @@ libspdm_return_t libspdm_append_message_m(libspdm_context_t *spdm_context, void 
 #endif
 }
 
-/**
- * Append message K cache in SPDM context.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  spdm_session_info              A pointer to the SPDM session context.
- * @param  is_requester                  Indicate of the key generation for a requester or a responder.
- * @param  message                      message buffer.
- * @param  message_size                  size in bytes of message buffer.
- *
- * @return RETURN_SUCCESS          message is appended.
- * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
- **/
 libspdm_return_t libspdm_append_message_k(libspdm_context_t *spdm_context,
                                           void *session_info,
                                           bool is_requester, const void *message,
@@ -2247,18 +2129,6 @@ libspdm_return_t libspdm_append_message_k(libspdm_context_t *spdm_context,
 #endif
 }
 
-/**
- * Append message EncapD cache in SPDM context.
- *
- * @param  spdm_context       A pointer to the SPDM context.
- * @param  spdm_session_info  A pointer to the SPDM session context.
- * @param  is_requester       Indicate of the key generation for a requester or a responder.
- * @param  message            Message buffer.
- * @param  message_size       Size in bytes of message buffer.
- *
- * @return RETURN_SUCCESS          message is appended.
- * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
- **/
 libspdm_return_t libspdm_append_message_encap_d(libspdm_context_t *spdm_context,
                                                 void *session_info,
                                                 bool is_requester, const void *message,
@@ -2277,18 +2147,6 @@ libspdm_return_t libspdm_append_message_encap_d(libspdm_context_t *spdm_context,
         message_size);
 }
 
-/**
- * Append message F cache in SPDM context.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  spdm_session_info              A pointer to the SPDM session context.
- * @param  is_requester                  Indicate of the key generation for a requester or a responder.
- * @param  message                      message buffer.
- * @param  message_size                  size in bytes of message buffer.
- *
- * @return RETURN_SUCCESS          message is appended.
- * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
- **/
 libspdm_return_t libspdm_append_message_f(libspdm_context_t *spdm_context,
                                           void *session_info,
                                           bool is_requester, const void *message,
@@ -2454,19 +2312,6 @@ libspdm_return_t libspdm_append_message_f(libspdm_context_t *spdm_context,
 #endif
 }
 
-/**
- * Append message E cache in SPDM context.
- * If session_info is NULL, this function will use E cache of SPDM context,
- * else will use E cache of SPDM session context.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  A pointer to the SPDM session context.
- * @param  message                      message buffer.
- * @param  message_size                  size in bytes of message buffer.
- *
- * @return RETURN_SUCCESS          message is appended.
- * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
- **/
 libspdm_return_t libspdm_append_message_e(libspdm_context_t *spdm_context, void *session_info,
                                           const void *message, size_t message_size)
 {
@@ -2568,19 +2413,6 @@ libspdm_return_t libspdm_append_message_e(libspdm_context_t *spdm_context, void 
 #endif
 }
 
-/**
- * Append message encap E cache in SPDM context.
- * If session_info is NULL, this function will use encap E cache of SPDM context,
- * else will use encap E cache of SPDM session context.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  A pointer to the SPDM session context.
- * @param  message                      message buffer.
- * @param  message_size                  size in bytes of message buffer.
- *
- * @return RETURN_SUCCESS          message is appended.
- * @return RETURN_OUT_OF_RESOURCES message is not appended because the internal cache is full.
- **/
 libspdm_return_t libspdm_append_message_encap_e(libspdm_context_t *spdm_context, void *session_info,
                                                 const void *message, size_t message_size)
 {
@@ -3031,14 +2863,6 @@ void libspdm_get_scratch_buffer (
 #endif
 }
 
-/**
- * Acquire a device sender buffer for transport layer message.
- *
- * @param  context                       A pointer to the SPDM context.
- * @param  msg_buf_ptr                   A pointer to a sender buffer.
- *
- * @retval RETURN_SUCCESS               The sender buffer is acquired.
- **/
 libspdm_return_t libspdm_acquire_sender_buffer (
     libspdm_context_t *spdm_context, size_t *max_msg_size, void **msg_buf_ptr)
 {
@@ -3061,13 +2885,6 @@ libspdm_return_t libspdm_acquire_sender_buffer (
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-/**
- * Release a device sender buffer for transport layer message.
- *
- * @param  context                       A pointer to the SPDM context.
- *
- * @retval RETURN_SUCCESS               The sender buffer is Released.
- **/
 void libspdm_release_sender_buffer (libspdm_context_t *spdm_context)
 {
     LIBSPDM_ASSERT(spdm_context->sender_buffer != NULL);
@@ -3094,15 +2911,6 @@ void libspdm_get_sender_buffer (
     *sender_buffer_size = spdm_context->sender_buffer_size;
 }
 
-/**
- * Acquire a device receiver buffer for transport layer message.
- *
- * @param  context                       A pointer to the SPDM context.
- * @param  max_msg_size                  size in bytes of the maximum size of receiver buffer.
- * @param  msg_buf_pt                    A pointer to a receiver buffer.
- *
- * @retval RETURN_SUCCESS               The receiver buffer is acquired.
- **/
 libspdm_return_t libspdm_acquire_receiver_buffer (
     libspdm_context_t *spdm_context, size_t *max_msg_size, void **msg_buf_ptr)
 {
@@ -3125,13 +2933,6 @@ libspdm_return_t libspdm_acquire_receiver_buffer (
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-/**
- * Release a device receiver buffer for transport layer message.
- *
- * @param  context                       A pointer to the SPDM context.
- *
- * @retval RETURN_SUCCESS               The receiver buffer is Released.
- **/
 void libspdm_release_receiver_buffer (libspdm_context_t *spdm_context)
 {
     LIBSPDM_ASSERT(spdm_context->receiver_buffer != NULL);
@@ -3189,14 +2990,6 @@ void libspdm_set_last_spdm_error_struct(void *spdm_context, libspdm_error_struct
 }
 
 #if LIBSPDM_FIPS_MODE
-/**
- * Initialize an libspdm_fips_selftest_context.
- *
- * @param  fips_selftest_context       A pointer to the fips_selftest_context.
- *
- * @retval RETURN_SUCCESS       context is initialized.
- * @retval RETURN_DEVICE_ERROR  context initialization failed.
- */
 libspdm_return_t libspdm_init_fips_selftest_context(void *fips_selftest_context)
 {
     libspdm_fips_selftest_context_t *context;
@@ -3294,25 +3087,6 @@ bool libspdm_export_fips_selftest_context_from_spdm_context(void *spdm_context,
 
 #endif /* LIBSPDM_FIPS_MODE */
 
-/**
- * Initialize an SPDM context, as well as all secured message contexts,
- * in the specified locations.
- *
- * The size in bytes of the spdm_context can be returned by
- * libspdm_get_context_size_without_secured_context.
- *
- * The size in bytes of a single secured message context can be returned by
- * libspdm_secured_message_get_context_size.
- *
- * @param  spdm_context          A pointer to the SPDM context.
- * @param  secured_contexts      An array of pointers, with each entry containing
- *                               the location of a secured message context.
- * @param  num_secured_contexts  Number of secured message contexts to initialize.
- *                               Currently, only LIBSPDM_MAX_SESSION_COUNT is supported.
- *
- * @retval RETURN_SUCCESS        Contexts are initialized.
- * @retval RETURN_DEVICE_ERROR   Context initialization failed.
- */
 libspdm_return_t libspdm_init_context_with_secured_context(void *spdm_context,
                                                            void **secured_contexts,
                                                            size_t num_secured_contexts)
@@ -3396,18 +3170,6 @@ libspdm_return_t libspdm_init_context_with_secured_context(void *spdm_context,
     return LIBSPDM_STATUS_SUCCESS;
 }
 
-/**
- * Initialize an SPDM context, as well as secured message contexts.
- * The secured message contexts are appended to the context structure.
- *
- * The total size in bytes of the spdm_context and all secured message
- * contexts can be returned by libspdm_get_context_size().
- *
- * @param  spdm_context         A pointer to the SPDM context.
- *
- * @retval RETURN_SUCCESS       context is initialized.
- * @retval RETURN_DEVICE_ERROR  context initialization failed.
- */
 libspdm_return_t libspdm_init_context(void *spdm_context)
 {
     libspdm_context_t *context;

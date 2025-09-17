@@ -147,9 +147,6 @@ static libspdm_get_spdm_response_func libspdm_get_response_func_via_last_request
  * @param  request                      A pointer to a destination buffer to store the request.
  *                                     The caller is responsible for having
  *                                     either implicit or explicit ownership of the buffer.
- *
- * @retval RETURN_SUCCESS               The SPDM request is received successfully.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM request is received from the device.
  **/
 libspdm_return_t libspdm_process_request(void *spdm_context, uint32_t **session_id,
                                          bool *is_app_message,
@@ -409,24 +406,6 @@ void libspdm_trigger_key_update_callback(void *spdm_context, uint32_t session_id
     }
 }
 
-/**
- * Build a SPDM response to a device.
- *
- * @param  spdm_context                  The SPDM context for the device.
- * @param  session_id                    Indicate if the response is a secured message.
- *                                     If session_id is NULL, it is a normal message.
- *                                     If session_id is NOT NULL, it is a secured message.
- * @param  is_app_message                 Indicates if it is an APP message or SPDM message.
- * @param  response_size                 size in bytes of the response data buffer.
- * @param  response                     A pointer to a destination buffer to store the response.
- *                                     The caller is responsible for having
- *                                     either implicit or explicit ownership of the buffer.
- *
- * @retval RETURN_SUCCESS               The SPDM response is sent successfully.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when the SPDM response is sent to the device.
- * @retval RETURN_UNSUPPORTED           Just ignore this message: return UNSUPPORTED and clear response_size.
- *                                      Continue the dispatch without send response.
- **/
 libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *session_id,
                                         bool is_app_message,
                                         size_t *response_size,

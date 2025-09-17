@@ -39,10 +39,6 @@ typedef struct {
  * @param  requester_nonce_in     If not NULL, a buffer that holds the requester nonce (32 bytes)
  * @param  requester_nonce        If not NULL, a buffer to hold the requester nonce (32 bytes).
  * @param  responder_nonce        If not NULL, a buffer to hold the responder nonce (32 bytes).
- *
- * @retval RETURN_SUCCESS               The challenge auth is got successfully.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 static libspdm_return_t libspdm_try_challenge(libspdm_context_t *spdm_context,
                                               uint8_t slot_id,

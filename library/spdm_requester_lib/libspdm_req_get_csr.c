@@ -27,10 +27,6 @@
  * @param[in]  key_pair_id                  The value of this field shall be the unique key pair number identifying the desired
  *                                          asymmetric key pair to associate with SlotID .
  * @param[out] available_csr_tracking_tag   available CSRTrackingTag when the Responder sends a ResetRequired error message
- *
- * @retval RETURN_SUCCESS               The measurement is got successfully.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
  **/
 static libspdm_return_t libspdm_try_get_csr(libspdm_context_t *spdm_context,
                                             const uint32_t *session_id,
