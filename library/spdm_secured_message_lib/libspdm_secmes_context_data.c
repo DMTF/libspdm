@@ -188,15 +188,6 @@ void libspdm_secured_message_set_sequence_number_endian (
     secured_message_context->sequence_number_endian = endian_value;
 }
 
-/**
- * Import the Shared Secret to an SPDM secured message context.
- *
- * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- * @param  shared_secret                   Indicate the shared secret.
- * @param  shared_secret_size              The size in bytes of the shared secret.
- *
- * @retval RETURN_SUCCESS  Shared Secret is imported.
- */
 bool libspdm_secured_message_import_shared_secret(void *spdm_secured_message_context,
                                                   const void *shared_secret,
                                                   size_t shared_secret_size)
@@ -245,15 +236,6 @@ void libspdm_secured_message_clear_export_master_secret(void *spdm_secured_messa
                      sizeof(secured_message_context->export_master_secret));
 }
 
-/**
- * Export the session_keys from an SPDM secured message context.
- *
- * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- * @param  session_keys                  Indicate the buffer to store the session_keys in libspdm_secure_session_keys_struct_t.
- * @param  session_keys_size              The size in bytes of the session_keys in libspdm_secure_session_keys_struct_t.
- *
- * @retval RETURN_SUCCESS  session_keys are exported.
- */
 bool libspdm_secured_message_export_session_keys(void *spdm_secured_message_context,
                                                  void *session_keys,
                                                  size_t *session_keys_size)
@@ -312,19 +294,9 @@ bool libspdm_secured_message_export_session_keys(void *spdm_secured_message_cont
     return true;
 }
 
-/**
- * Import the session_keys from an SPDM secured message context.
- *
- * @param  spdm_secured_message_context    A pointer to the SPDM secured message context.
- * @param  session_keys                  Indicate the buffer to store the session_keys in libspdm_secure_session_keys_struct_t.
- * @param  session_keys_size              The size in bytes of the session_keys in libspdm_secure_session_keys_struct_t.
- *
- * @retval RETURN_SUCCESS  session_keys are imported.
- */
-bool
-libspdm_secured_message_import_session_keys(void *spdm_secured_message_context,
-                                            const void *session_keys,
-                                            size_t session_keys_size)
+bool libspdm_secured_message_import_session_keys(void *spdm_secured_message_context,
+                                                 const void *session_keys,
+                                                 size_t session_keys_size)
 {
     libspdm_secured_message_context_t *secured_message_context;
     size_t struct_size;

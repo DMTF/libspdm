@@ -1340,7 +1340,7 @@ static bool libspdm_verify_leaf_cert_spdm_eku(const uint8_t *cert, size_t cert_s
  * @param[in]  is_requester_cert     Is the function verifying requester or responder cert.
  *
  * @retval  true   verify pass
- * @retval  false  verify fail,two case: 1. return is not RETURN_SUCCESS or RETURN_NOT_FOUND;
+ * @retval  false  verify fail,two case: 1. Unable to get get or validate extension data.
  *                                       2. hardware_identity_oid is found in AliasCert model;
  **/
 static bool libspdm_verify_leaf_cert_spdm_extension(const uint8_t *cert, size_t cert_size,

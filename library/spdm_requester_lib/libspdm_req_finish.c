@@ -340,9 +340,6 @@ bool libspdm_generate_finish_req_signature(libspdm_context_t *spdm_context,
  * @param  spdm_context       A pointer to the SPDM context.
  * @param  session_id         session_id to the FINISH request.
  * @param  req_slot_id_param  req_slot_id_param to the FINISH request.
- *
- * @retval RETURN_SUCCESS               The FINISH is sent and the FINISH_RSP is received.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
 static libspdm_return_t libspdm_try_send_receive_finish(
     libspdm_context_t *spdm_context,

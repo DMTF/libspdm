@@ -92,9 +92,6 @@ bool libspdm_generate_psk_exchange_req_hmac(libspdm_context_t *spdm_context,
  *
  * @param  spdm_context                  A pointer to the SPDM context.
  * @param  session_id                    session_id to the PSK_FINISH request.
- *
- * @retval RETURN_SUCCESS               The PSK_FINISH is sent and the PSK_FINISH_RSP is received.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
  **/
 static libspdm_return_t libspdm_try_send_receive_psk_finish(
     libspdm_context_t *spdm_context,

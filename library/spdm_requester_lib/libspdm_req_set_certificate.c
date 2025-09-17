@@ -22,11 +22,7 @@
  * @param  request_attribute            Set certificate request attributes. This field is only used for SPDM 1.3 and above.
  *                                      And the bit[0~3] of request_attribute must be 0.
  * @param  key_pair_id                  The value of this field shall be the unique key pair number identifying the desired
- *                                      asymmetric key pair to associate with SlotID .
- *
- * @retval RETURN_SUCCESS               The measurement is got successfully.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
- * @retval RETURN_SECURITY_VIOLATION    Any verification fails.
+ *                                      asymmetric key pair to associate with SlotID
  **/
 static libspdm_return_t libspdm_try_set_certificate(libspdm_context_t *spdm_context,
                                                     const uint32_t *session_id, uint8_t slot_id,

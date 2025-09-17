@@ -7,18 +7,6 @@
 #include "internal/libspdm_secured_message_lib.h"
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-/*
- * This function calculates current TH data with message A and message K.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  The SPDM session ID.
- * @param  cert_chain_buffer                Certificate chain buffer with spdm_cert_chain_t header.
- * @param  cert_chain_buffer_size            size in bytes of the certificate chain buffer.
- * @param  th_data_buffer_size             size in bytes of the th_data_buffer
- * @param  th_data_buffer                 The buffer to store the th_data_buffer
- *
- * @retval RETURN_SUCCESS  current TH data is calculated.
- */
 bool libspdm_calculate_th_for_exchange(
     libspdm_context_t *spdm_context, void *spdm_session_info, const uint8_t *cert_chain_buffer,
     size_t cert_chain_buffer_size,
@@ -93,16 +81,6 @@ bool libspdm_calculate_th_for_exchange(
     return true;
 }
 #else
-/*
- * This function calculates current TH hash with message A and message K.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  The SPDM session ID.
- * @param  th_hash_buffer_size             size in bytes of the th_hash_buffer
- * @param  th_hash_buffer                 The buffer to store the th_hash_buffer
- *
- * @retval RETURN_SUCCESS  current TH hash is calculated.
- */
 bool libspdm_calculate_th_hash_for_exchange(
     libspdm_context_t *spdm_context, void *spdm_session_info,
     size_t *th_hash_buffer_size, void *th_hash_buffer)
@@ -143,16 +121,6 @@ bool libspdm_calculate_th_hash_for_exchange(
     return true;
 }
 
-/*
- * This function calculates current TH hmac with message A and message K, with response finished_key.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  The SPDM session ID.
- * @param  th_hmac_buffer_size             size in bytes of the th_hmac_buffer
- * @param  th_hmac_buffer                 The buffer to store the th_hmac_buffer
- *
- * @retval RETURN_SUCCESS  current TH hmac is calculated.
- */
 bool libspdm_calculate_th_hmac_for_exchange_rsp(
     libspdm_context_t *spdm_context, void *spdm_session_info, bool is_requester,
     size_t *th_hmac_buffer_size, void *th_hmac_buffer)
@@ -202,20 +170,6 @@ bool libspdm_calculate_th_hmac_for_exchange_rsp(
 #endif
 
 #if LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT
-/*
- * This function calculates current TH data with message A, message K and message F.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  The SPDM session ID.
- * @param  cert_chain_buffer                Certificate chain buffer with spdm_cert_chain_t header.
- * @param  cert_chain_buffer_size            size in bytes of the certificate chain buffer.
- * @param  mut_cert_chain_buffer             Certificate chain buffer with spdm_cert_chain_t header in mutual authentication.
- * @param  mut_cert_chain_buffer_size         size in bytes of the certificate chain buffer in mutual authentication.
- * @param  th_data_buffer_size             size in bytes of the th_data_buffer
- * @param  th_data_buffer                 The buffer to store the th_data_buffer
- *
- * @retval RETURN_SUCCESS  current TH data is calculated.
- */
 bool libspdm_calculate_th_for_finish(libspdm_context_t *spdm_context,
                                      void *spdm_session_info,
                                      const uint8_t *cert_chain_buffer,
@@ -336,16 +290,6 @@ bool libspdm_calculate_th_for_finish(libspdm_context_t *spdm_context,
     return true;
 }
 #else
-/*
- * This function calculates current TH hash with message A, message K and message F.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  The SPDM session ID.
- * @param  th_hash_buffer_size             size in bytes of the th_hash_buffer
- * @param  th_hash_buffer                 The buffer to store the th_hash_buffer
- *
- * @retval RETURN_SUCCESS  current TH hash is calculated.
- */
 bool libspdm_calculate_th_hash_for_finish(libspdm_context_t *spdm_context,
                                           void *spdm_session_info,
                                           size_t *th_hash_buffer_size,
@@ -387,16 +331,6 @@ bool libspdm_calculate_th_hash_for_finish(libspdm_context_t *spdm_context,
     return true;
 }
 
-/*
- * This function calculates current TH hmac with message A, message K and message F, with response finished_key.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  The SPDM session ID.
- * @param  th_hmac_buffer_size             size in bytes of the th_hmac_buffer
- * @param  th_hmac_buffer                 The buffer to store the th_hmac_buffer
- *
- * @retval RETURN_SUCCESS  current TH hmac is calculated.
- */
 bool libspdm_calculate_th_hmac_for_finish_rsp(libspdm_context_t *spdm_context,
                                               void *spdm_session_info,
                                               size_t *th_hmac_buffer_size,
@@ -446,16 +380,6 @@ bool libspdm_calculate_th_hmac_for_finish_rsp(libspdm_context_t *spdm_context,
     return true;
 }
 
-/*
- * This function calculates current TH hmac with message A, message K and message F, with request finished_key.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  The SPDM session ID.
- * @param  th_hmac_buffer_size             size in bytes of the th_hmac_buffer
- * @param  th_hmac_buffer                 The buffer to store the th_hmac_buffer
- *
- * @retval RETURN_SUCCESS  current TH hmac is calculated.
- */
 bool libspdm_calculate_th_hmac_for_finish_req(libspdm_context_t *spdm_context,
                                               void *spdm_session_info,
                                               size_t *th_hmac_buffer_size,
@@ -506,16 +430,6 @@ bool libspdm_calculate_th_hmac_for_finish_req(libspdm_context_t *spdm_context,
 }
 #endif
 
-/*
- * This function calculates th1 hash.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  The SPDM session ID.
- * @param  is_requester                  Indicate of the key generation for a requester or a responder.
- * @param  th1_hash_data                  th1 hash
- *
- * @retval RETURN_SUCCESS  th1 hash is calculated.
- */
 bool libspdm_calculate_th1_hash(libspdm_context_t *spdm_context,
                                 void *spdm_session_info,
                                 bool is_requester,
@@ -605,16 +519,6 @@ bool libspdm_calculate_th1_hash(libspdm_context_t *spdm_context,
     return true;
 }
 
-/*
- * This function calculates th2 hash.
- *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  session_info                  The SPDM session ID.
- * @param  is_requester                  Indicate of the key generation for a requester or a responder.
- * @param  th1_hash_data                  th2 hash
- *
- * @retval RETURN_SUCCESS  th2 hash is calculated.
- */
 bool libspdm_calculate_th2_hash(libspdm_context_t *spdm_context,
                                 void *spdm_session_info,
                                 bool is_requester,

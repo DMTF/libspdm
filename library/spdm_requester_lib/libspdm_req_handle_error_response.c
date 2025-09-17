@@ -10,15 +10,13 @@
 /**
  * This function sends RESPOND_IF_READY and receives an expected SPDM response.
  *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  response_size                 The size of the response.
- *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned.
- * @param  response                     The SPDM response message.
- * @param  expected_response_code         Indicate the expected response code.
- *
- * @retval RETURN_SUCCESS               The RESPOND_IF_READY is sent and an expected SPDM response is received.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @param  spdm_context            A pointer to the SPDM context.
+ * @param  response_size           The size of the response.
+ *                                 On input, it means the size in bytes of response data buffer.
+ *                                 On output, it means the size in bytes of copied response data
+ *                                 buffer if LIBSPDM_STATUS_SUCCESS is returned.
+ * @param  response                The SPDM response message.
+ * @param  expected_response_code  Indicate the expected response code.
  **/
 static libspdm_return_t libspdm_requester_respond_if_ready(libspdm_context_t *spdm_context,
                                                            const uint32_t *session_id,
@@ -143,16 +141,14 @@ libspdm_return_t libspdm_handle_simple_error_response(libspdm_context_t *spdm_co
 /**
  * This function handles RESPONSE_NOT_READY error code.
  *
- * @param  spdm_context                  A pointer to the SPDM context.
- * @param  response_size                 The size of the response.
- *                                     On input, it means the size in bytes of response data buffer.
- *                                     On output, it means the size in bytes of copied response data buffer if RETURN_SUCCESS is returned.
- * @param  response                     The SPDM response message.
- * @param  original_request_code          Indicate the original request code.
- * @param  expected_response_code         Indicate the expected response code.
- *
- * @retval RETURN_SUCCESS               The RESPOND_IF_READY is sent and an expected SPDM response is received.
- * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ * @param  spdm_context            A pointer to the SPDM context.
+ * @param  response_size           The size of the response.
+ *                                 On input, it means the size in bytes of response data buffer.
+ *                                 On output, it means the size in bytes of copied response data
+ *                                 buffer if LIBSPDM_STATUS_SUCCESS is returned.
+ * @param  response                The SPDM response message.
+ * @param  original_request_code   Indicate the original request code.
+ * @param  expected_response_code  Indicate the expected response code.
  **/
 static libspdm_return_t libspdm_handle_response_not_ready(libspdm_context_t *spdm_context,
                                                           const uint32_t *session_id,
