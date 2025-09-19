@@ -95,8 +95,6 @@ bool libspdm_write_certificate_to_nvm(
                 printf("Unable to open file %s\n", file_name);
                 return false;
             }
-
-            close(fp_out);
         }
 
         close(fp_out);
