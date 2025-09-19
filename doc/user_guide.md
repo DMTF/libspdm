@@ -2,7 +2,7 @@
 
 This document provides the general information on how to construct an SPDM Requester or an SPDM Responder.
 
-Please refer to [FIPS support](fips.md) for FIPS related enabling.
+Refer to [FIPS support](fips.md) for FIPS-related enabling.
 
 ## SPDM Requester
 
@@ -176,8 +176,7 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
        &content_changed,
        &number_of_blocks,
        NULL,
-       NULL
-       );
+       NULL);
    ```
 
    4.2, Send GET_MEASUREMENT to get measurement one by one.
@@ -195,8 +194,7 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
        &content_changed,
        &number_of_block,
        &measurement_record_length,
-       &measurement_record
-       );
+       &measurement_record);
    }
    ```
 
@@ -213,8 +211,7 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
        session_policy,
        &session_id,
        &heartbeat_period,
-       &measurement_hash
-       );
+       &measurement_hash);
    ```
 
    Or with PSK, send PSK_EXCHANGE/PSK_FINISH to create a session.
@@ -228,8 +225,7 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
        session_policy,
        &session_id,
        &heartbeat_period,
-       &measurement_hash
-       );
+       &measurement_hash);
    ```
 
    5.2, Send END_SESSION to close the session.
@@ -262,7 +258,7 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
    ```
 
 7. Free the memory of contexts within the SPDM context when all flow is over.
-   This function doesn't free the SPDM context itself.
+   This function does not free the SPDM context itself.
    ```C
    libspdm_deinit_context(spdm_context);
    ```
@@ -501,7 +497,7 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
     ```
 
 4. Free the memory of contexts within the SPDM context when all flow is over.
-   This function doesn't free the SPDM context itself.
+   This function does not free the SPDM context itself.
    ```C
    libspdm_deinit_context(spdm_context);
    ```
