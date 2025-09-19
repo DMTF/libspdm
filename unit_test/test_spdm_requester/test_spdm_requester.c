@@ -68,6 +68,8 @@ int libspdm_requester_encap_event_ack_error_test_main(void);
 #if LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP
 int libspdm_requester_encap_supported_event_types_test_main(void);
 int libspdm_requester_encap_supported_event_types_error_test_main(void);
+int libspdm_requester_encap_subscribe_event_types_ack_test_main(void);
+int libspdm_requester_encap_subscribe_event_types_ack_error_test_main(void);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
 int libspdm_requester_encap_key_update_test_main(void);
 #if LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP
@@ -252,6 +254,12 @@ int main(void)
         return_value = 1;
     }
     if (libspdm_requester_encap_supported_event_types_error_test_main() != 0) {
+        return_value = 1;
+    }
+    if (libspdm_requester_encap_subscribe_event_types_ack_test_main() != 0) {
+        return_value = 1;
+    }
+    if (libspdm_requester_encap_subscribe_event_types_ack_error_test_main() != 0) {
         return_value = 1;
     }
     #endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */

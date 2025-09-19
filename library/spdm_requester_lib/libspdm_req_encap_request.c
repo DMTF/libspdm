@@ -55,6 +55,7 @@ libspdm_get_encap_response_func_via_request_code(uint8_t request_response_code)
 
         #if LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP
         { SPDM_GET_SUPPORTED_EVENT_TYPES, libspdm_get_encap_supported_event_types },
+        { SPDM_SUBSCRIBE_EVENT_TYPES, libspdm_get_encap_subscribe_event_types_ack },
         #endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
 
         #if LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP

@@ -504,6 +504,12 @@ libspdm_return_t libspdm_get_encap_supported_event_types(void *spdm_context,
                                                          void *request,
                                                          size_t *response_size,
                                                          void *response);
+
+libspdm_return_t libspdm_get_encap_subscribe_event_types_ack(void *spdm_context,
+                                                             size_t request_size,
+                                                             void *request,
+                                                             size_t *response_size,
+                                                             void *response);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
 #if LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP
 libspdm_return_t libspdm_get_encap_response_endpoint_info(void *spdm_context,
