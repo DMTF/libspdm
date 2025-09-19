@@ -144,6 +144,25 @@ libspdm_return_t libspdm_get_version(libspdm_context_t *spdm_context,
 libspdm_return_t libspdm_get_capabilities(libspdm_context_t *spdm_context);
 
 /**
+ * This function sends GET_CAPABILITIES and receives CAPABILITIES.
+ *
+ * Optionally, if supported_algs is non-NULL, the negotiated SPDM version is >= 1.3,
+ * and CHUNK_CAP is set on both requester and responder, this call retrieves the
+ * Supported Algorithms block appended to CAPABILITIES (supported_algs_length is in/out).
+ *
+ * @param  spdm_context                 A pointer to the SPDM context.
+ * @param  supported_algs_length        On input, the size of the supported_algs buffer.
+ * @param  supported_algs               A pointer to a buffer to store the supported algorithms.
+ *                                      If NULL, supported algorithms are not requested.
+ *
+ * @retval RETURN_SUCCESS               The GET_CAPABILITIES is sent and the CAPABILITIES is received.
+ * @retval RETURN_DEVICE_ERROR          A device error occurs when communicates with the device.
+ **/
+libspdm_return_t libspdm_get_capabilities_with_supported_algs(libspdm_context_t *spdm_context,
+                                                              size_t *supported_algs_length,
+                                                              void *supported_algs);
+
+/**
  * This function sends NEGOTIATE_ALGORITHMS and receives ALGORITHMS.
  *
  * @param  spdm_context                  A pointer to the SPDM context.

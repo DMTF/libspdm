@@ -5,6 +5,7 @@
  **/
 
 #include "internal/libspdm_responder_lib.h"
+#include <stddef.h>
 
 /**
  * This function checks the compatibility of the received SPDM version,
@@ -247,12 +248,68 @@ libspdm_return_t libspdm_get_response_capabilities(libspdm_context_t *spdm_conte
         }
     }
 
+    /* Check that if Param1[0] is set, Requester must have CHUNK_CAP */
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13 &&
+        (spdm_request->header.param1 & SPDM_GET_CAPABILITIES_REQUEST_PARAM1_SUPPORTED_ALGORITHMS) &&
+        ((spdm_request->flags & SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP) == 0)) {
+        return libspdm_generate_error_response(spdm_context,
+                                               SPDM_ERROR_CODE_INVALID_REQUEST,
+                                               0,
+                                               response_size,
+                                               response);
+    }
+
     libspdm_reset_message_buffer_via_request_code(spdm_context, NULL,
                                                   spdm_request->header.request_response_code);
 
-    /* -=[Construct Response Phase]=- */
-    LIBSPDM_ASSERT(*response_size >= sizeof(spdm_capabilities_response_t));
-    *response_size = sizeof(spdm_capabilities_response_t);
+    size_t required_size;
+
+    if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
+        required_size = sizeof(spdm_capabilities_response_t);
+    } else {
+        required_size = offsetof(spdm_capabilities_response_t, data_transfer_size);
+    }
+
+    uint32_t response_flags = libspdm_mask_capability_flags(
+        spdm_context, false, spdm_context->local_context.capability.flags);
+
+    bool supported_algs_requested =
+        (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_13) &&
+        ((spdm_request->header.param1 & SPDM_GET_CAPABILITIES_REQUEST_PARAM1_SUPPORTED_ALGORITHMS) != 0) &&
+        ((spdm_request->flags & SPDM_GET_CAPABILITIES_REQUEST_FLAGS_CHUNK_CAP) != 0) &&
+        ((response_flags & SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CHUNK_CAP) != 0);
+
+    if (supported_algs_requested) {
+        uint8_t table_count = 0;
+        if (spdm_context->local_context.algorithm.dhe_named_group != 0) {
+            table_count++;
+        }
+        if (spdm_context->local_context.algorithm.aead_cipher_suite != 0) {
+            table_count++;
+        }
+        if (spdm_context->local_context.algorithm.req_base_asym_alg != 0) {
+            table_count++;
+        }
+        if (spdm_context->local_context.algorithm.key_schedule != 0) {
+            table_count++;
+        }
+
+        if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_14) {
+            if (spdm_context->local_context.algorithm.req_pqc_asym_alg != 0) {
+                table_count++;
+            }
+            if (spdm_context->local_context.algorithm.kem_alg != 0) {
+                table_count++;
+            }
+        }
+
+        required_size += sizeof(spdm_supported_algorithms_block_t) +
+                         (table_count * sizeof(spdm_negotiate_algorithms_common_struct_table_t));
+    }
+
+    LIBSPDM_ASSERT(*response_size >= required_size);
+    *response_size = required_size;
+
     libspdm_zero_mem(response, *response_size);
     spdm_response = response;
 
@@ -261,9 +318,7 @@ libspdm_return_t libspdm_get_response_capabilities(libspdm_context_t *spdm_conte
     spdm_response->header.param1 = 0;
     spdm_response->header.param2 = 0;
     spdm_response->ct_exponent = spdm_context->local_context.capability.ct_exponent;
-    spdm_response->flags =
-        libspdm_mask_capability_flags(spdm_context, false,
-                                      spdm_context->local_context.capability.flags);
+    spdm_response->flags = response_flags;
     if (spdm_request->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
         spdm_response->data_transfer_size =
             spdm_context->local_context.capability.data_transfer_size;
@@ -271,9 +326,105 @@ libspdm_return_t libspdm_get_response_capabilities(libspdm_context_t *spdm_conte
             spdm_context->local_context.capability.max_spdm_msg_size;
     }
 
-    if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_12) {
-        *response_size = sizeof(spdm_capabilities_response_t);
-    } else {
+    if (supported_algs_requested) {
+        uint8_t index = 0;
+
+        /* Allocate space for the supported_algorithms block at the end of the response */
+        spdm_supported_algorithms_block_t *supported_algorithms =
+            (spdm_supported_algorithms_block_t*)((uint8_t*)spdm_response + sizeof(spdm_capabilities_response_t));
+
+        supported_algorithms->param2 = 0;
+        supported_algorithms->length = sizeof(spdm_supported_algorithms_block_t);
+        supported_algorithms->measurement_specification =
+            spdm_context->local_context.algorithm.measurement_spec;
+        supported_algorithms->other_params_support =
+            spdm_context->local_context.algorithm.other_params_support;
+        supported_algorithms->base_asym_algo=
+            spdm_context->local_context.algorithm.base_asym_algo;
+        supported_algorithms->base_hash_algo=
+            spdm_context->local_context.algorithm.base_hash_algo;
+
+        if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_14) {
+            supported_algorithms->pqc_asym_algo =
+                spdm_context->local_context.algorithm.pqc_asym_algo;
+        } else {
+            supported_algorithms->pqc_asym_algo = 0;
+        }
+
+        libspdm_zero_mem(supported_algorithms->reserved2, sizeof(supported_algorithms->reserved2));
+        supported_algorithms->ext_asym_count = 0;
+        supported_algorithms->ext_hash_count = 0;
+        supported_algorithms->reserved3 = 0;
+        supported_algorithms->mel_specification =
+            spdm_context->local_context.algorithm.mel_spec;
+
+        spdm_negotiate_algorithms_common_struct_table_t *struct_table =
+            (spdm_negotiate_algorithms_common_struct_table_t*)(
+                (uint8_t*)supported_algorithms +
+                sizeof(spdm_supported_algorithms_block_t)
+                );
+
+        if (spdm_context->local_context.algorithm.dhe_named_group != 0) {
+            struct_table[index].alg_type =
+                SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_DHE;
+            struct_table[index].alg_count = 0x20;
+            struct_table[index].alg_supported =
+                spdm_context->local_context.algorithm.dhe_named_group;
+            index++;
+        }
+
+        if (spdm_context->local_context.algorithm.aead_cipher_suite != 0) {
+            struct_table[index].alg_type =
+                SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_AEAD;
+            struct_table[index].alg_count = 0x20;
+            struct_table[index].alg_supported =
+                spdm_context->local_context.algorithm.aead_cipher_suite;
+            index++;
+        }
+
+        if (spdm_context->local_context.algorithm.req_base_asym_alg != 0) {
+            struct_table[index].alg_type =
+                SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_REQ_BASE_ASYM_ALG;
+            struct_table[index].alg_count = 0x20;
+            struct_table[index].alg_supported =
+                spdm_context->local_context.algorithm.req_base_asym_alg;
+            index++;
+        }
+
+        if (spdm_context->local_context.algorithm.key_schedule != 0) {
+            struct_table[index].alg_type =
+                SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEY_SCHEDULE;
+            struct_table[index].alg_count = 0x20;
+            struct_table[index].alg_supported =
+                spdm_context->local_context.algorithm.key_schedule;
+            index++;
+        }
+
+        if (spdm_response->header.spdm_version >= SPDM_MESSAGE_VERSION_14) {
+            if (spdm_context->local_context.algorithm.req_pqc_asym_alg != 0) {
+                struct_table[index].alg_type =
+                    SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_REQ_PQC_ASYM_ALG;
+                struct_table[index].alg_count = 0x20;
+                struct_table[index].alg_supported =
+                    (uint16_t)spdm_context->local_context.algorithm.req_pqc_asym_alg;
+                index++;
+            }
+            if (spdm_context->local_context.algorithm.kem_alg != 0) {
+                struct_table[index].alg_type =
+                    SPDM_NEGOTIATE_ALGORITHMS_STRUCT_TABLE_ALG_TYPE_KEM_ALG;
+                struct_table[index].alg_count = 0x20;
+                struct_table[index].alg_supported =
+                    (uint16_t)spdm_context->local_context.algorithm.kem_alg;
+                index++;
+            }
+        }
+
+        supported_algorithms->param1 = index;
+        supported_algorithms->length +=
+            supported_algorithms->param1*
+            sizeof(spdm_negotiate_algorithms_common_struct_table_t);
+
+    } else if (spdm_response->header.spdm_version < SPDM_MESSAGE_VERSION_12) {
         *response_size = sizeof(spdm_capabilities_response_t) -
                          sizeof(spdm_response->data_transfer_size) -
                          sizeof(spdm_response->max_spdm_msg_size);
