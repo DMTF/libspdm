@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2023 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -9,7 +9,6 @@
 
 #include "hal/base.h"
 #include "internal/libspdm_lib_config.h"
-#include "library/spdm_return_status.h"
 #include "industry_standard/spdm.h"
 
 #if LIBSPDM_ENABLE_CAPABILITY_PSK_CAP
