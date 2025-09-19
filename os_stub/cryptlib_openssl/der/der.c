@@ -11,6 +11,7 @@
 #include "internal_crypt_lib.h"
 #include <openssl/x509.h>
 #include <openssl/evp.h>
+#include <openssl/decoder.h>
 
 #if (LIBSPDM_RSA_SSA_SUPPORT) || (LIBSPDM_RSA_PSS_SUPPORT)
 /**
@@ -100,7 +101,8 @@ bool libspdm_ec_get_public_key_from_der(const uint8_t *der_data,
                                         void **ec_context)
 {
     bool status;
-    BIO *der_bio;
+    OSSL_DECODER_CTX *dctx = NULL;
+    EVP_PKEY *pkey = NULL;
 
     /* Check input parameters.*/
 
@@ -112,28 +114,29 @@ bool libspdm_ec_get_public_key_from_der(const uint8_t *der_data,
 
     /* Read DER data.*/
 
-    der_bio = BIO_new(BIO_s_mem());
-    if (der_bio == NULL) {
-        return status;
+    dctx = OSSL_DECODER_CTX_new_for_pkey(&pkey, "DER", NULL, "EC",
+                                         OSSL_KEYMGMT_SELECT_PUBLIC_KEY, NULL, NULL);
+    if (dctx == NULL) {
+        return false;
     }
 
-    if (BIO_write(der_bio, der_data, (int)der_size) <= 0) {
+    if (!OSSL_DECODER_from_data(dctx, &der_data, &der_size)) {
         goto done;
     }
 
-
-    /* Retrieve EC Public key from DER data.*/
-
-    *ec_context = d2i_EC_PUBKEY_bio(der_bio, NULL);
-    if (*ec_context != NULL) {
-        status = true;
+    if (EVP_PKEY_get_base_id(pkey) != EVP_PKEY_EC) {
+        EVP_PKEY_free(pkey);
+        goto done;
     }
+
+    status = true;
+    *ec_context = pkey;
 
 done:
 
     /* Release Resources.*/
 
-    BIO_free(der_bio);
+    OSSL_DECODER_CTX_free(dctx);
 
     return status;
 }

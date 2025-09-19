@@ -1619,10 +1619,7 @@ bool libspdm_ec_get_public_key_from_x509(const uint8_t *cert, size_t cert_size,
         goto done;
     }
 
-
-    /* Duplicate EC context from the retrieved EVP_PKEY.*/
-
-    if ((*ec_context = EC_KEY_dup(EVP_PKEY_get0_EC_KEY(pkey))) != NULL) {
+    if ((*ec_context = EVP_PKEY_dup(pkey)) != NULL) {
         res = true;
     }
 
@@ -2507,7 +2504,6 @@ bool libspdm_gen_x509_csr_with_pqc(
     EVP_PKEY *private_key;
     EVP_PKEY *public_key;
     RSA *rsa_public_key;
-    EC_KEY *ec_public_key;
     const EVP_MD *md;
     uint8_t *csr_p;
     STACK_OF(X509_EXTENSION) *exts;
@@ -2524,7 +2520,6 @@ bool libspdm_gen_x509_csr_with_pqc(
     private_key = NULL;
     public_key = NULL;
     rsa_public_key = NULL;
-    ec_public_key = NULL;
     md = NULL;
     csr_p = csr_pointer;
     num_exts = 0;
@@ -2567,13 +2562,11 @@ bool libspdm_gen_x509_csr_with_pqc(
         case LIBSPDM_CRYPTO_NID_ECDSA_NIST_P256:
         case LIBSPDM_CRYPTO_NID_ECDSA_NIST_P384:
         case LIBSPDM_CRYPTO_NID_ECDSA_NIST_P521:
-            ret = EVP_PKEY_set1_EC_KEY(private_key, (EC_KEY *)context);
-            if (ret != 1) {
-                goto free_all;
-            }
+            EVP_PKEY_free(private_key);
+            EVP_PKEY_free(public_key);
 
-            ec_public_key = EC_KEY_dup((EC_KEY *)context);
-            EVP_PKEY_assign_EC_KEY(public_key, ec_public_key);
+            private_key = EVP_PKEY_dup((EVP_PKEY *) context);
+            public_key = EVP_PKEY_dup((EVP_PKEY *) context);
             break;
         case LIBSPDM_CRYPTO_NID_SM2_DSA_P256:
         case LIBSPDM_CRYPTO_NID_EDDSA_ED25519:
