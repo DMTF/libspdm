@@ -9,7 +9,6 @@
 
 #include "hal/base.h"
 #include "internal/libspdm_lib_config.h"
-#include "library/spdm_return_status.h"
 #include "industry_standard/spdm.h"
 
 #if LIBSPDM_ENABLE_CAPABILITY_SET_CERT_CAP

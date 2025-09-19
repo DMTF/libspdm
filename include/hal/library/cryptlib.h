@@ -14,6 +14,7 @@
 #ifndef CRYPTLIB_H
 #define CRYPTLIB_H
 
+#include "hal/base.h"
 #include "internal/libspdm_lib_config.h"
 
 #define LIBSPDM_CRYPTO_NID_NULL 0x0000

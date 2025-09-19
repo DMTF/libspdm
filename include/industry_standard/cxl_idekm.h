@@ -11,6 +11,8 @@
 #ifndef CXL_IDE_KM_H
 #define CXL_IDE_KM_H
 
+#include "industry_standard/pcidoe.h"
+
 /* Standard ID and Vendor ID for CXL*/
 
 #define SPDM_STANDARD_ID_CXL SPDM_REGISTRY_ID_PCISIG
