@@ -40,7 +40,7 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
    The scratch buffer may include the decrypted secured message.
    The spdm_context and scratch buffer shall be zeroed before freed or reused.
 
-   ```
+   ```C
    spdm_context = (void *)malloc (libspdm_get_context_size());
    libspdm_init_context (spdm_context);
 
@@ -55,7 +55,7 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
    Each session holds keys in a secured context, and the location of each can be
    directly specified.
 
-   ```
+   ```C
    spdm_secured_context_size = libspdm_secured_message_get_context_size();
    spdm_secured_contexts[0] = (void *)pointer_to_secured_memory_0;
    spdm_secured_contexts[1] = (void *)pointer_to_secured_memory_1;
@@ -66,7 +66,7 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
    ```
 
    Optionally, the Integrator may use `LIBSPDM_CONTEXT_SIZE_ALL`, or `LIBSPDM_CONTEXT_SIZE_WITHOUT_SECURED_CONTEXT` together with `LIBSPDM_SECURED_MESSAGE_CONTEXT_SIZE`, to preallocate the context buffer from a fixed memory region. In this case, the Integrator needs to include the following internal header files.
-   ```
+   ```C
    #include "internal/libspdm_common_lib.h"
    #include "internal/libspdm_secured_message_lib.h"
    ```
@@ -77,7 +77,7 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
    The final sent and received message will be in the sender buffer and receiver buffer.
    Refer to [design](https://github.com/DMTF/libspdm/blob/main/doc/design.md) for the usage of those APIs.
 
-   ```
+   ```C
    libspdm_register_device_io_func (
      spdm_context,
      spdm_device_send_message,
@@ -100,7 +100,7 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
    ```
 
    1.3, set capabilities and choose algorithms, based upon need.
-   ```
+   ```C
    parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
    libspdm_set_data (spdm_context, LIBSPDM_DATA_CAPABILITY_CT_EXPONENT, &parameter, &ct_exponent, sizeof(ct_exponent));
    libspdm_set_data (spdm_context, LIBSPDM_DATA_CAPABILITY_FLAGS, &parameter, &cap_flags, sizeof(cap_flags));
@@ -117,12 +117,12 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
    ```
 
    1.4, if Responder verification is required, deploy the peer public root certificate based upon need.
-   ```
+   ```C
    parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
    libspdm_set_data (spdm_context, LIBSPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert, peer_root_cert_size);
    ```
    If there are many peer root certs to set, you can set the peer root certs in order. Note: the max number of peer root certs is LIBSPDM_MAX_ROOT_CERT_SUPPORT.
-   ```
+   ```C
    parameter.location = SPDM_DATA_LOCATION_LOCAL;
    libspdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert1, peer_root_cert_size1);
    libspdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert2, peer_root_cert_size2);
@@ -130,7 +130,7 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
    ```
 
    1.5, if mutual authentication is supported, deploy slot number, public certificate chain.
-   ```
+   ```C
    parameter.additional_data[0] = slot_id;
    libspdm_set_data (spdm_context, LIBSPDM_DATA_LOCAL_PUBLIC_CERT_CHAIN, &parameter, my_public_cert_chains, my_public_cert_chains_size);
    ```
@@ -138,7 +138,7 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
    1.6, if raw public key is provisioned for Responder verification or mutual authentication, deploy the public key.
         The public key is ASN.1 DER-encoded as [RFC7250](https://www.rfc-editor.org/rfc/rfc7250) describes,
         namely, the `SubjectPublicKeyInfo` structure of a X.509 certificate.
-   ```
+   ```C
    parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
    libspdm_set_data (spdm_context, LIBSPDM_DATA_PEER_PUBLIC_KEY, &parameter, peer_public_key, peer_public_key_size);
    libspdm_set_data (spdm_context, LIBSPDM_DATA_LOCAL_PUBLIC_KEY, &parameter, local_public_key, local_public_key_size);
@@ -150,14 +150,14 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
 2. Create connection with the Responder
 
    Send GET_VERSION, GET_CAPABILITIES and NEGOTIATE_ALGORITHM.
-   ```
+   ```C
    libspdm_init_connection (spdm_context, FALSE);
    ```
 
 3. Authentication the Responder
 
    Send GET_DIGESTS, GET_CERTIFICATES and CHALLENGE.
-   ```
+   ```C
    libspdm_get_digest (spdm_context, session_id, slot_mask, total_digest_buffer);
    libspdm_get_certificate (spdm_context, session_id, slot_id, cert_chain_size, cert_chain);
    libspdm_challenge (spdm_context, NULL, slot_id, measurement_hash_type, measurement_hash, &slot_mask);
@@ -166,7 +166,7 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
 4. Get the measurement from the Responder
 
    4.1, Send GET_MEASUREMENT to query the total number of measurements available.
-   ```
+   ```C
    libspdm_get_measurement (
        spdm_context,
        session_id,
@@ -181,7 +181,7 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
    ```
 
    4.2, Send GET_MEASUREMENT to get measurement one by one.
-   ```
+   ```C
    for (index = 1; index <= number_of_blocks; index++) {
      if (index == number_of_blocks) {
        request_attribute = SPDM_GET_MEASUREMENTS_REQUEST_ATTRIBUTES_GENERATE_SIGNATURE;
@@ -203,7 +203,7 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
 5. Manage an SPDM session
 
    5.1, Without PSK, send KEY_EXCHANGE/FINISH to create a session.
-   ```
+   ```C
    libspdm_start_session (
        spdm_context,
        FALSE, // KeyExchange
@@ -218,7 +218,7 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
    ```
 
    Or with PSK, send PSK_EXCHANGE/PSK_FINISH to create a session.
-   ```
+   ```C
    libspdm_start_session (
        spdm_context,
        TRUE, // KeyExchange
@@ -233,37 +233,37 @@ Refer to spdm_client_init() in [spdm_requester.c](https://github.com/DMTF/spdm-e
    ```
 
    5.2, Send END_SESSION to close the session.
-   ```
+   ```C
    libspdm_stop_session (spdm_context, session_id, end_session_attributes);
    ```
 
    5.3, Send HEARTBEAT, when it is required.
-   ```
+   ```C
    libspdm_heartbeat (spdm_context, session_id);
    ```
 
    5.4, Send KEY_UPDATE, when it is required.
-   ```
+   ```C
    libspdm_key_update (spdm_context, session_id, single_direction);
    ```
 
 6. Send and receive message in an SPDM session
 
    6.1, Use the SPDM vendor defined request. In libspdm, libspdm_init_connection call is needed first, so NEGOTIATE_ALGORITHMS step is done before sending a vendor defined request. Also, for each VENDOR_DEFINED_REQUEST, a VENDOR_DEFINED_RESPONSE message is expected, even if it has a data payload field of size zero.
-   ```
+   ```C
    libspdm_vendor_send_request_receive_response (spdm_context, session_id,
       req_standard_id, req_vendor_id_len, req_vendor_id, req_size, req_data,
       &resp_standard_id, &resp_vendor_id_len, resp_vendor_id, &resp_size, resp_data);
    ```
 
    6.2, Use the transport layer application message.
-   ```
+   ```C
    libspdm_send_receive_data (spdm_context, &session_id, TRUE, &request, request_size, &response, &response_size);
    ```
 
 7. Free the memory of contexts within the SPDM context when all flow is over.
    This function doesn't free the SPDM context itself.
-   ```
+   ```C
    libspdm_deinit_context(spdm_context);
    ```
 
@@ -313,7 +313,7 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
    The scratch buffer may include the decrypted secured message.
    The spdm_context and scratch buffer shall be zeroed before freed or reused.
 
-   ```
+   ```C
    spdm_context = (void *)malloc (spdm_get_context_size());
    libspdm_init_context (spdm_context);
 
@@ -327,7 +327,7 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
    Each session holds keys in a secured context, and the location of each can be
    directly specified.
 
-   ```
+   ```C
    spdm_secured_context_size = libspdm_secured_message_get_context_size();
    spdm_secured_contexts[0] = (void *)pointer_to_secured_memory_0;
    spdm_secured_contexts[1] = (void *)pointer_to_secured_memory_1;
@@ -338,7 +338,7 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
    ```
 
    Optionally, the Integrator may use `LIBSPDM_CONTEXT_SIZE_ALL`, or `LIBSPDM_CONTEXT_SIZE_WITHOUT_SECURED_CONTEXT` together with `LIBSPDM_SECURED_MESSAGE_CONTEXT_SIZE`, to preallocate the context buffer from a fixed memory region. In this case, the Integrator needs to include the following internal header files.
-   ```
+   ```C
    #include "internal/libspdm_common_lib.h"
    #include "internal/libspdm_secured_message_lib.h"
    ```
@@ -349,7 +349,7 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
    The final sent and received message will be in the sender buffer and receiver buffer.
    Refer to [design](https://github.com/DMTF/libspdm/blob/main/doc/design.md) for the usage of those APIs.
 
-   ```
+   ```C
    libspdm_register_device_io_func (
      spdm_context,
      spdm_device_send_message,
@@ -372,7 +372,7 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
    ```
 
    1.3, set capabilities and choose algorithms, based upon need.
-   ```
+   ```C
    parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
    libspdm_set_data (spdm_context, LIBSPDM_DATA_CAPABILITY_CT_EXPONENT, &parameter, &ct_exponent, sizeof(ct_exponent));
    libspdm_set_data (spdm_context, LIBSPDM_DATA_CAPABILITY_FLAGS, &parameter, &cap_flags, sizeof(cap_flags));
@@ -388,13 +388,13 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
    ```
 
    1.4, deploy slot number, public certificate chain.
-   ```
+   ```C
    parameter.additional_data[0] = slot_id;
    libspdm_set_data (spdm_context, LIBSPDM_DATA_LOCAL_PUBLIC_CERT_CHAIN, &parameter, my_public_cert_chains, my_public_cert_chains_size);
    ```
 
    1.5, if mutual authentication (Requester verification) through certificates is required, provide a buffer to store the Requester's certificate chain and deploy the peer public root certificate based upon need.
-   ```
+   ```C
    libspdm_register_cert_chain_buffer(spdm_context, cert_chain_buffer, cert_chain_buffer_max_size);
 
    parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
@@ -403,7 +403,7 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
    The maximum size of an SPDM certificate chain is SPDM_MAX_CERTIFICATE_CHAIN_SIZE, which is approximately 64 KiB. However most certificate chains are smaller than that.
 
    If there are many peer root certs to set, you can set the peer root certs in order. Note: the max number of peer root certs is LIBSPDM_MAX_ROOT_CERT_SUPPORT.
-   ```
+   ```C
    parameter.location = SPDM_DATA_LOCATION_LOCAL;
    libspdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert1, peer_root_cert_size1);
    libspdm_set_data (spdm_context, SPDM_DATA_PEER_PUBLIC_ROOT_CERT, &parameter, peer_root_cert2, peer_root_cert_size2);
@@ -413,7 +413,7 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
    If Requester's raw public key is needed for mutual authentication, deploy the public key.
    The public key is ASN.1 DER-encoded as [RFC7250](https://www.rfc-editor.org/rfc/rfc7250) describes,
    namely, the `SubjectPublicKeyInfo` structure of a X.509 certificate.
-   ```
+   ```C
    parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
    libspdm_set_data (spdm_context, LIBSPDM_DATA_PEER_PUBLIC_KEY, &parameter, peer_public_key, peer_public_key_size);
    libspdm_set_data (spdm_context, LIBSPDM_DATA_LOCAL_PUBLIC_KEY, &parameter, local_public_key, local_public_key_size);
@@ -422,14 +422,14 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
    1.7, if PSK is required, optionally deploy PSK Hint in the call to libspdm_start_session().
 
    1.8, if Responder sets GET_KEY_PAIR_INFO_CAP then LIBSPDM_DATA_TOTAL_KEY_PAIRS must be set.
-   ```
+   ```C
    parameter.location = LIBSPDM_DATA_LOCATION_LOCAL;
    libspdm_set_data (spdm_context, LIBSPDM_DATA_TOTAL_KEY_PAIRS, &parameter, total_key_pairs, total_key_pairs_size);
    ```
 
 2. Dispatch SPDM messages.
 
-   ```
+   ```C
    while (true) {
      status = libspdm_responder_dispatch_message (m_spdm_context);
      if (status != RETURN_UNSUPPORTED) {
@@ -443,7 +443,7 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
 3. Register message process callback
 
    3.1 This callback handles transport layer application message.
-    ```
+    ```C
     return_status libspdm_get_response (
       void           *spdm_context,
       const uint32_t *session_id,
@@ -464,7 +464,7 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
     libspdm_register_get_response_func (spdm_context, libspdm_get_response);
     ```
     3.2 This callbacks handle SPDM Vendor Defined Commands
-    ```
+    ```C
     libspdm_return_t libspdm_vendor_get_id_func(
       void *spdm_context,
       uint16_t *resp_standard_id,
@@ -502,7 +502,7 @@ Refer to spdm_server_init() in [spdm_responder.c](https://github.com/DMTF/spdm-e
 
 4. Free the memory of contexts within the SPDM context when all flow is over.
    This function doesn't free the SPDM context itself.
-   ```
+   ```C
    libspdm_deinit_context(spdm_context);
    ```
 
@@ -516,7 +516,7 @@ function. When enabled both request messages and response messages are written t
 Writing to the message log buffer may fill the buffer after which subsequent writes to the
 buffer will be ignored. Once the desired messages have been captured in the message log buffer the
 `libspdm_get_msg_log_size` function returns the size, in bytes, of all the concatenated messages.
-```
+```C
 libspdm_init_msg_log (spdm_context, msg_log_buffer, sizeof(msg_log_buffer));
 libspdm_set_msg_log_mode (spdm_context, LIBSPDM_MSG_LOG_MODE_ENABLE);
 
