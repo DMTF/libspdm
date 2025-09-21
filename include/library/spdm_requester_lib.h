@@ -912,6 +912,25 @@ libspdm_return_t libspdm_subscribe_event_types(void *spdm_context,
                                                void *subscribe_list);
 #endif /* LIBSPDM_EVENT_RECIPIENT_SUPPORT */
 
+#if LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP
+/** Send a list of events to the device.
+ *
+ * This function can only be called after a secure session has been established with the device and
+ * the device has subscribed to Requester events.
+ *
+ *  @param  spdm_context      A pointer to the SPDM context.
+ *  @param  session_id        The session ID of the session.
+ *  @param  event_count       The number of events in events_list.
+ *  @param  events_list_size  The size, in bytes, of events_list.
+ *  @param  events_list       Buffer containing the list of events.
+ **/
+libspdm_return_t libspdm_send_event(void *spdm_context,
+                                    uint32_t session_id,
+                                    uint32_t event_count,
+                                    size_t events_list_size,
+                                    void *events_list);
+#endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
+
 #if LIBSPDM_ENABLE_MSG_LOG
 /* For now these functions are only available to the Requester. They may become available to the
  * Responder at a later time.

@@ -51,6 +51,7 @@ target_sources(test_spdm_requester
         get_key_pair_info.c
         set_key_pair_info.c
         get_endpoint_info.c
+        send_event.c
         error_test/get_version_err.c
         error_test/get_capabilities_err.c
         error_test/negotiate_algorithms_err.c
@@ -59,6 +60,7 @@ target_sources(test_spdm_requester
         error_test/get_measurements_err.c
         error_test/get_event_types_err.c
         error_test/subscribe_event_types_err.c
+        error_test/send_event_err.c
         error_test/vendor_request_err.c
         error_test/get_key_pair_info_err.c
         error_test/set_key_pair_info_err.c
