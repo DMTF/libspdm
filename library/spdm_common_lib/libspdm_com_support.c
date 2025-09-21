@@ -16,7 +16,7 @@ const char *libspdm_get_code_str(uint8_t request_code)
 {
     size_t index;
 
-    static libspdm_code_str_struct_t code_str_struct[] = {
+    static const libspdm_code_str_struct_t code_str_struct[] = {
         /* SPDM response code (1.0) */
         { SPDM_DIGESTS, "SPDM_DIGESTS" },
         { SPDM_CERTIFICATE, "SPDM_CERTIFICATE" },
@@ -45,6 +45,7 @@ const char *libspdm_get_code_str(uint8_t request_code)
         /* SPDM response code (1.3 )*/
         { SPDM_SUPPORTED_EVENT_TYPES, "SPDM_SUPPORTED_EVENT_TYPES" },
         { SPDM_SUBSCRIBE_EVENT_TYPES_ACK, "SPDM_SUBSCRIBE_EVENT_TYPES_ACK" },
+        { SPDM_EVENT_ACK, "SPDM_EVENT_ACK" },
         { SPDM_MEASUREMENT_EXTENSION_LOG, "SPDM_MEASUREMENT_EXTENSION_LOG" },
         { SPDM_KEY_PAIR_INFO, "SPDM_KEY_PAIR_INFO" },
         { SPDM_SET_KEY_PAIR_INFO_ACK, "SPDM_SET_KEY_PAIR_INFO_ACK" },
@@ -77,6 +78,7 @@ const char *libspdm_get_code_str(uint8_t request_code)
         /* SPDM request code (1.3) */
         { SPDM_GET_SUPPORTED_EVENT_TYPES, "SPDM_GET_SUPPORTED_EVENT_TYPES" },
         { SPDM_SUBSCRIBE_EVENT_TYPES, "SPDM_SUBSCRIBE_EVENT_TYPES" },
+        { SPDM_SEND_EVENT, "SPDM_SEND_EVENT" },
         { SPDM_GET_MEASUREMENT_EXTENSION_LOG, "SPDM_GET_MEASUREMENT_EXTENSION_LOG" },
         { SPDM_GET_KEY_PAIR_INFO, "SPDM_GET_KEY_PAIR_INFO" },
         { SPDM_SET_KEY_PAIR_INFO, "SPDM_SET_KEY_PAIR_INFO" },
@@ -89,7 +91,7 @@ const char *libspdm_get_code_str(uint8_t request_code)
         }
     }
 
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "msg code 0x%x not found!!!\n", request_code));
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_ERROR, "RequestResponseCode 0x%x not found.\n", request_code));
 
     return "<unknown>";
 }

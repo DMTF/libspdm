@@ -39,6 +39,7 @@ target_sources(spdm_requester_lib
         libspdm_req_negotiate_algorithms.c
         libspdm_req_psk_exchange.c
         libspdm_req_psk_finish.c
+        libspdm_req_send_event.c
         libspdm_req_send_receive.c
         libspdm_req_set_certificate.c
         libspdm_req_get_csr.c
