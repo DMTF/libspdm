@@ -239,7 +239,7 @@ static void libspdm_test_responder_vendor_cmds_case2(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     assert_int_equal(response.header.spdm_version, SPDM_MESSAGE_VERSION_14);
     assert_int_equal(response.header.request_response_code, SPDM_VENDOR_DEFINED_RESPONSE);
-    assert_int_equal(response.header.param1, SPDM_VENDOR_DEFINED_RESONSE_LARGE_RESP);
+    assert_int_equal(response.header.param1, SPDM_VENDOR_DEFINED_RESPONSE_LARGE_RESP);
 }
 
 
