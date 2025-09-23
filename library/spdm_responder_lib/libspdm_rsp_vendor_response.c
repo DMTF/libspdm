@@ -202,7 +202,7 @@ libspdm_return_t libspdm_get_vendor_defined_response(libspdm_context_t *spdm_con
     spdm_response->header.param2 = 0;
 
     if (use_large_payload) {
-        spdm_response->header.param1 |= SPDM_VENDOR_DEFINED_RESONSE_LARGE_RESP;
+        spdm_response->header.param1 |= SPDM_VENDOR_DEFINED_RESPONSE_LARGE_RESP;
     }
 
     /* SPDM Response format

@@ -1057,7 +1057,7 @@ typedef struct {
      * uint8_t                large_vendor_defined_payload[large_payload_length]; */
 } spdm_vendor_defined_response_msg_t;
 
-#define SPDM_VENDOR_DEFINED_RESONSE_LARGE_RESP 0x80
+#define SPDM_VENDOR_DEFINED_RESPONSE_LARGE_RESP 0x80
 
 /* Below command is defined in SPDM 1.1 */
 

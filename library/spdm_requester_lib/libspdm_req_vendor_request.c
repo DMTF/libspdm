@@ -222,7 +222,7 @@ libspdm_return_t libspdm_try_vendor_send_request_receive_response(
         goto done;
     }
 
-    if ((spdm_response->header.param1 & SPDM_VENDOR_DEFINED_RESONSE_LARGE_RESP) !=
+    if ((spdm_response->header.param1 & SPDM_VENDOR_DEFINED_RESPONSE_LARGE_RESP) !=
         (spdm_request->header.param1 & SPDM_VENDOR_DEFINED_REQUEST_LARGE_REQ)) {
         status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         goto done;
