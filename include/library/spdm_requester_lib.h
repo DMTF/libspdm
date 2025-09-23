@@ -166,6 +166,7 @@ libspdm_return_t libspdm_get_certificate_choose_length_ex(void *spdm_context,
                                                           size_t *trust_anchor_size);
 #endif /* LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT */
 
+#if LIBSPDM_SEND_CHALLENGE_SUPPORT
 /**
  * This function sends CHALLENGE to authenticate the device based upon the key in one slot.
  *
@@ -255,6 +256,7 @@ libspdm_return_t libspdm_challenge_ex2(void *spdm_context, void *reserved,
                                        void *responder_nonce,
                                        void *opaque_data,
                                        size_t *opaque_data_size);
+#endif /* LIBSPDM_SEND_CHALLENGE_SUPPORT */
 
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
 /**

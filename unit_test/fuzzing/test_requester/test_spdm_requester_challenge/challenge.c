@@ -9,7 +9,7 @@
 #include "spdm_unit_fuzzing.h"
 #include "toolchain_harness.h"
 
-#if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
+#if LIBSPDM_SEND_CHALLENGE_SUPPORT
 
 static size_t m_libspdm_local_buffer_size;
 static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_M1M2_BUFFER_SIZE];
@@ -275,4 +275,4 @@ size_t libspdm_get_max_buffer_size(void)
 void libspdm_run_test_harness(void *test_buffer, size_t test_buffer_size){
 
 }
-#endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP*/
+#endif /* LIBSPDM_SEND_CHALLENGE_SUPPORT */
