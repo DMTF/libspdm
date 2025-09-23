@@ -6,7 +6,7 @@
 
 #include "internal/libspdm_requester_lib.h"
 
-#if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
+#if LIBSPDM_SEND_CHALLENGE_SUPPORT
 
 #pragma pack(1)
 typedef struct {
@@ -512,4 +512,4 @@ libspdm_return_t libspdm_challenge_ex2(void *spdm_context, void *reserved,
     return status;
 }
 
-#endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP */
+#endif /* LIBSPDM_SEND_CHALLENGE_SUPPORT */
