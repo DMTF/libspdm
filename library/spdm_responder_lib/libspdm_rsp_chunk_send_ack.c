@@ -29,6 +29,7 @@ libspdm_return_t libspdm_get_response_chunk_send(libspdm_context_t *spdm_context
     uint8_t* chunk_response;
     size_t chunk_response_size;
     uint64_t max_chunk_data_transfer_size;
+    uint32_t chunk_seq_no;
 
     spdm_request = (const spdm_chunk_send_request_t*) request;
 
@@ -93,6 +94,13 @@ libspdm_return_t libspdm_get_response_chunk_send(libspdm_context_t *spdm_context
             response_size, response);
     }
 
+    if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_14) {
+        chunk_seq_no = spdm_request->chunk_seq_no;
+    } else {
+        spdm_request_14 = (const spdm_chunk_send_request_14_t *) spdm_request;
+        chunk_seq_no = spdm_request_14->chunk_seq_no;
+    }
+
     send_info = &spdm_context->chunk_context.send;
 
     if (!send_info->chunk_in_use) {
@@ -118,7 +126,7 @@ libspdm_return_t libspdm_get_response_chunk_send(libspdm_context_t *spdm_context
             max_chunk_data_transfer_size = UINT64_MAX;
         }
 
-        if (spdm_request->chunk_seq_no != 0
+        if (chunk_seq_no != 0
             || (spdm_request->chunk_size
                 < SPDM_MIN_DATA_TRANSFER_SIZE_VERSION_12
                 - sizeof(spdm_chunk_send_request_t)
@@ -137,12 +145,7 @@ libspdm_return_t libspdm_get_response_chunk_send(libspdm_context_t *spdm_context
 
             send_info->chunk_in_use = true;
             send_info->chunk_handle = spdm_request->header.param2;
-            if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_14) {
-                send_info->chunk_seq_no = spdm_request->chunk_seq_no;
-            } else {
-                spdm_request_14 = (const spdm_chunk_send_request_14_t *) spdm_request;
-                send_info->chunk_seq_no = spdm_request_14->chunk_seq_no;
-            }
+            send_info->chunk_seq_no = chunk_seq_no;
             send_info->large_message = scratch_buffer +
                                        libspdm_get_scratch_buffer_large_message_offset(spdm_context);
             send_info->large_message_capacity =
@@ -159,15 +162,9 @@ libspdm_return_t libspdm_get_response_chunk_send(libspdm_context_t *spdm_context
         chunk = (const uint8_t*) (spdm_request + 1);
         calc_max_chunk_size =
             (uint32_t)request_size - sizeof(spdm_chunk_send_request_t);
-        if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_14) {
-            if (spdm_request->chunk_seq_no != (uint16_t)send_info->chunk_seq_no + 1) {
-                status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-            }
-        } else {
-            spdm_request_14 = (const spdm_chunk_send_request_14_t *) spdm_request;
-            if (spdm_request_14->chunk_seq_no != send_info->chunk_seq_no + 1) {
-                status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-            }
+
+        if (chunk_seq_no != send_info->chunk_seq_no + 1) {
+            status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         }
 
         if (spdm_request->header.param2 != send_info->chunk_handle
@@ -188,8 +185,7 @@ libspdm_return_t libspdm_get_response_chunk_send(libspdm_context_t *spdm_context
                        || ((uint32_t) request_size
                            > spdm_context->local_context.capability.data_transfer_size))) {
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
-        } else if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_14
-                   && spdm_request->chunk_seq_no == 0) {
+        } else if (chunk_seq_no == 0) {
             /* Chunk seq no wrapped */
             status = LIBSPDM_STATUS_INVALID_MSG_FIELD;
         } else {
@@ -199,11 +195,7 @@ libspdm_return_t libspdm_get_response_chunk_send(libspdm_context_t *spdm_context
                 send_info->large_message_size - send_info->chunk_bytes_transferred,
                 chunk, spdm_request->chunk_size);
 
-            if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_14) {
-                send_info->chunk_seq_no = spdm_request->chunk_seq_no;
-            } else {
-                send_info->chunk_seq_no = spdm_request_14->chunk_seq_no;
-            }
+            send_info->chunk_seq_no = chunk_seq_no;
             send_info->chunk_bytes_transferred += spdm_request->chunk_size;
             if (spdm_request->header.param1 & SPDM_CHUNK_SEND_REQUEST_ATTRIBUTE_LAST_CHUNK) {
                 send_info->chunk_in_use= false;
@@ -226,17 +218,14 @@ libspdm_return_t libspdm_get_response_chunk_send(libspdm_context_t *spdm_context
     spdm_response->header.param2 = spdm_request->header.param2; /* handle */
 
     if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_14) {
-        spdm_response->chunk_seq_no = spdm_request->chunk_seq_no;
-
-        chunk_response = (uint8_t*) (spdm_response + 1);
-        chunk_response_size = *response_size - sizeof(spdm_chunk_send_ack_response_t);
+        spdm_response->chunk_seq_no = (uint16_t) chunk_seq_no;
     } else {
         spdm_response_14 = response;
-        spdm_response_14->chunk_seq_no = spdm_request->chunk_seq_no;
-
-        chunk_response = (uint8_t*) (spdm_response_14 + 1);
-        chunk_response_size = *response_size - sizeof(spdm_chunk_send_ack_response_14_t);
+        spdm_response_14->chunk_seq_no = chunk_seq_no;
     }
+
+    chunk_response = (uint8_t*) spdm_response + response_header_size;
+    chunk_response_size = *response_size - response_header_size;
 
     if (LIBSPDM_STATUS_IS_ERROR(status)) {
         /* Set the EARLY_ERROR_DETECTED bit here, because one of the CHUNK_SEND requests failed.
