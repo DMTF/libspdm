@@ -185,8 +185,8 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
     size_t dhe_key_size;
     size_t kem_encap_key_size;
     size_t kem_cipher_text_size;
-    size_t req_key_exchage_size;
-    size_t rsp_key_exchage_size;
+    size_t req_key_exchange_size;
+    size_t rsp_key_exchange_size;
     uint32_t measurement_summary_hash_size;
     uint32_t signature_size;
     uint32_t hmac_size;
@@ -344,13 +344,13 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
             spdm_context->connection_info.algorithm.kem_alg);
         kem_cipher_text_size = libspdm_get_kem_cipher_text_size(
             spdm_context->connection_info.algorithm.kem_alg);
-        req_key_exchage_size = kem_encap_key_size;
-        rsp_key_exchage_size = kem_cipher_text_size;
+        req_key_exchange_size = kem_encap_key_size;
+        rsp_key_exchange_size = kem_cipher_text_size;
     } else {
         dhe_key_size = libspdm_get_dhe_pub_key_size(
             spdm_context->connection_info.algorithm.dhe_named_group);
-        req_key_exchage_size = dhe_key_size;
-        rsp_key_exchage_size = dhe_key_size;
+        req_key_exchange_size = dhe_key_size;
+        rsp_key_exchange_size = dhe_key_size;
     }
     measurement_summary_hash_size = libspdm_get_measurement_summary_hash_size(
         spdm_context, false, spdm_request->header.param1);
@@ -361,7 +361,7 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
                                                SPDM_ERROR_CODE_INVALID_REQUEST,
                                                0, response_size, response);
     }
-    if (request_size < sizeof(spdm_key_exchange_request_t) + req_key_exchage_size +
+    if (request_size < sizeof(spdm_key_exchange_request_t) + req_key_exchange_size +
         sizeof(uint16_t)) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
@@ -369,19 +369,19 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
     }
     opaque_data_length = libspdm_read_uint16((const uint8_t *)request +
                                              sizeof(spdm_key_exchange_request_t) +
-                                             req_key_exchage_size);
-    if (request_size < sizeof(spdm_key_exchange_request_t) + req_key_exchage_size +
+                                             req_key_exchange_size);
+    if (request_size < sizeof(spdm_key_exchange_request_t) + req_key_exchange_size +
         sizeof(uint16_t) + opaque_data_length) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_INVALID_REQUEST, 0,
                                                response_size, response);
     }
-    request_size = sizeof(spdm_key_exchange_request_t) + req_key_exchage_size +
+    request_size = sizeof(spdm_key_exchange_request_t) + req_key_exchange_size +
                    sizeof(uint16_t) + opaque_data_length;
 
     if (opaque_data_length != 0) {
         cptr = (const uint8_t *)request + sizeof(spdm_key_exchange_request_t) +
-               req_key_exchage_size + sizeof(uint16_t);
+               req_key_exchange_size + sizeof(uint16_t);
         result = libspdm_process_general_opaque_data_check(spdm_context, opaque_data_length, cptr);
         if (!result) {
             return libspdm_generate_error_response(spdm_context,
@@ -410,7 +410,7 @@ libspdm_return_t libspdm_get_response_key_exchange(libspdm_context_t *spdm_conte
         hmac_size = 0;
     }
 
-    total_size = sizeof(spdm_key_exchange_response_t) + rsp_key_exchage_size +
+    total_size = sizeof(spdm_key_exchange_response_t) + rsp_key_exchange_size +
                  measurement_summary_hash_size + sizeof(uint16_t) +
                  opaque_key_exchange_rsp_size + signature_size + hmac_size;
 

@@ -315,8 +315,8 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
     size_t dhe_key_size;
     size_t kem_encap_key_size;
     size_t kem_cipher_text_size;
-    size_t req_key_exchage_size;
-    size_t rsp_key_exchage_size;
+    size_t req_key_exchange_size;
+    size_t rsp_key_exchange_size;
     uint32_t measurement_summary_hash_size;
     uint32_t signature_size;
     uint32_t hmac_size;
@@ -463,8 +463,8 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "RequesterKey (0x%zx):\n", kem_encap_key_size));
         LIBSPDM_INTERNAL_DUMP_HEX(ptr, kem_encap_key_size);
         ptr += kem_encap_key_size;
-        req_key_exchage_size = kem_encap_key_size;
-        rsp_key_exchage_size = kem_cipher_text_size;
+        req_key_exchange_size = kem_encap_key_size;
+        rsp_key_exchange_size = kem_cipher_text_size;
     } else {
         dhe_key_size = libspdm_get_dhe_pub_key_size(
             spdm_context->connection_info.algorithm.dhe_named_group);
@@ -489,15 +489,15 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
         LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "RequesterKey (0x%zx):\n", dhe_key_size));
         LIBSPDM_INTERNAL_DUMP_HEX(ptr, dhe_key_size);
         ptr += dhe_key_size;
-        req_key_exchage_size = dhe_key_size;
-        rsp_key_exchage_size = dhe_key_size;
+        req_key_exchange_size = dhe_key_size;
+        rsp_key_exchange_size = dhe_key_size;
     }
 
     if (requester_opaque_data != NULL) {
         LIBSPDM_ASSERT(requester_opaque_data_size <= SPDM_MAX_OPAQUE_DATA_SIZE);
 
         LIBSPDM_ASSERT (spdm_request_size >= sizeof(spdm_key_exchange_request_t) +
-                        req_key_exchage_size +
+                        req_key_exchange_size +
                         sizeof(uint16_t) + requester_opaque_data_size);
 
         libspdm_write_uint16(ptr, (uint16_t)requester_opaque_data_size);
@@ -505,14 +505,14 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
 
         libspdm_copy_mem(ptr,
                          (spdm_request_size - (sizeof(spdm_key_exchange_request_t) +
-                                               req_key_exchage_size)),
+                                               req_key_exchange_size)),
                          requester_opaque_data, requester_opaque_data_size);
         opaque_key_exchange_req_size = requester_opaque_data_size;
     } else {
         opaque_key_exchange_req_size =
             libspdm_get_opaque_data_supported_version_data_size(spdm_context);
         LIBSPDM_ASSERT (spdm_request_size >= sizeof(spdm_key_exchange_request_t) +
-                        req_key_exchage_size +
+                        req_key_exchange_size +
                         sizeof(uint16_t) + opaque_key_exchange_req_size);
 
         libspdm_write_uint16(ptr, (uint16_t)opaque_key_exchange_req_size);
@@ -671,7 +671,7 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
     }
 
     if (spdm_response_size <
-        sizeof(spdm_key_exchange_response_t) + rsp_key_exchage_size +
+        sizeof(spdm_key_exchange_response_t) + rsp_key_exchange_size +
         measurement_summary_hash_size + sizeof(uint16_t) + signature_size + hmac_size) {
         status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
         goto receive_done;
@@ -685,11 +685,11 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
                          spdm_response->random_data, SPDM_RANDOM_DATA_SIZE);
     }
 
-    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ResponderKey (0x%zx):\n", rsp_key_exchage_size));
-    LIBSPDM_INTERNAL_DUMP_HEX(spdm_response->exchange_data, rsp_key_exchage_size);
+    LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "ResponderKey (0x%zx):\n", rsp_key_exchange_size));
+    LIBSPDM_INTERNAL_DUMP_HEX(spdm_response->exchange_data, rsp_key_exchange_size);
 
     ptr = spdm_response->exchange_data;
-    ptr += rsp_key_exchage_size;
+    ptr += rsp_key_exchange_size;
 
     measurement_summary_hash = ptr;
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "measurement_summary_hash (0x%x) - ",
@@ -706,7 +706,7 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
     }
     ptr += sizeof(uint16_t);
     if (spdm_response_size <
-        sizeof(spdm_key_exchange_response_t) + rsp_key_exchage_size +
+        sizeof(spdm_key_exchange_response_t) + rsp_key_exchange_size +
         measurement_summary_hash_size + sizeof(uint16_t) +
         opaque_length + signature_size + hmac_size) {
         status = LIBSPDM_STATUS_INVALID_MSG_SIZE;
@@ -738,7 +738,7 @@ static libspdm_return_t libspdm_try_send_receive_key_exchange(
     ptr += opaque_length;
 
     spdm_response_size = sizeof(spdm_key_exchange_response_t) +
-                         rsp_key_exchage_size + measurement_summary_hash_size +
+                         rsp_key_exchange_size + measurement_summary_hash_size +
                          sizeof(uint16_t) + opaque_length + signature_size + hmac_size;
 
     rsp_session_id = spdm_response->rsp_session_id;
