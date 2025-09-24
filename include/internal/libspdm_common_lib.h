@@ -1676,7 +1676,7 @@ bool libspdm_calculate_th_hash_for_exchange(
  * @retval RETURN_SUCCESS  current TH hmac is calculated.
  */
 bool libspdm_calculate_th_hmac_for_exchange_rsp(
-    libspdm_context_t *spdm_context, void *spdm_session_info,
+    libspdm_context_t *spdm_context, void *spdm_session_info, bool is_requester,
     size_t *th_hmac_buffer_size, void *th_hmac_buffer);
 #endif
 
