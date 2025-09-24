@@ -94,7 +94,7 @@ bool libspdm_verify_key_exchange_rsp_hmac(libspdm_context_t *spdm_context,
     }
 #else
     result = libspdm_calculate_th_hmac_for_exchange_rsp(
-        spdm_context, session_info, &hash_size, calc_hmac_data);
+        spdm_context, session_info, true, &hash_size, calc_hmac_data);
     if (!result) {
         return false;
     }

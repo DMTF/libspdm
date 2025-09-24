@@ -58,7 +58,7 @@ static bool libspdm_generate_psk_exchange_rsp_hmac(libspdm_context_t *spdm_conte
     }
 #else
     result = libspdm_calculate_th_hmac_for_exchange_rsp(
-        spdm_context, session_info, &hash_size, hmac_data);
+        spdm_context, session_info, false, &hash_size, hmac_data);
     if (!result) {
         return false;
     }
