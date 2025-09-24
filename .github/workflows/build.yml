@@ -32,6 +32,7 @@ jobs:
         os:
           - ubuntu-latest
           - windows-latest
+          - macos-latest
         crypto:
           - mbedtls
           - openssl
@@ -59,6 +60,16 @@ jobs:
             toolchain: VS2019
           - os: ubuntu-latest
             arch: ia32
+          - os: macos-latest
+            arch: ia32
+          - os: macos-latest
+            toolchain: GCC
+          - os: macos-latest
+            toolchain: VS2019
+          - os: macos-latest
+            toolchain: ARM_GNU
+          - os: macos-latest
+            toolchain: LIBFUZZER
           - os: windows-latest
             toolchain: GCC
             arch: ia32
@@ -113,7 +124,7 @@ jobs:
         with:
           arch: x86
       - name:  Toolchain Setup - Clang
-        if:  matrix.toolchain == 'CLANG' || matrix.toolchain == 'LIBFUZZER' && matrix.os == 'ubuntu-latest'
+        if:  (matrix.toolchain == 'CLANG' || matrix.toolchain == 'LIBFUZZER') && matrix.os == 'ubuntu-latest'
         run: |
           sudo apt-get update
           sudo apt-get install llvm
@@ -151,6 +162,16 @@ jobs:
           make copy_sample_key
           make copy_seed
           make -j`nproc`
+      - name: Build - Darwin
+        if: matrix.os == 'macos-latest'
+        run: |
+          mkdir -p build
+          cd build
+          cmake --version
+          cmake -E env CFLAGS="${{ matrix.configurations }} -DLIBSPDM_DEBUG_LIBSPDM_ASSERT_CONFIG=3" cmake -DARCH=${{ matrix.arch }} -DTOOLCHAIN=${{ matrix.toolchain }} -DTARGET=${{ matrix.target }} -DCRYPTO=${{ matrix.crypto }} ..
+          make copy_sample_key
+          make copy_seed
+          make # process killed with multicore
       - name: Build - Windows
         if: matrix.os == 'windows-latest' && matrix.toolchain != 'GCC'
         run: |
@@ -179,6 +200,16 @@ jobs:
           cmake -DARCH=x64 -DTOOLCHAIN=GCC -DTARGET=Debug -DCRYPTO=${{matrix.crypto}} -DGCOV=ON ..
           make copy_sample_key
           make -j`nproc`
+      - name: Build - Darwin - GCONV=ON
+        if: matrix.os == 'macos-latest'
+        run: |
+          mkdir -p build
+          cd build
+          cmake --version
+          cmake -DARCH=x64 -DTOOLCHAIN=CLANG -DTARGET=Debug -DCRYPTO=${{matrix.crypto}} -DGCOV=ON ..
+          make copy_sample_key
+          make copy_seed
+          make # process killed with multicore
       - name: Test Requester
         if: matrix.toolchain != 'LIBFUZZER' && matrix.toolchain != 'ARM_GNU' && matrix.configurations != '-DDISABLE_TESTS=1'
         run: |
