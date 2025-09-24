@@ -140,6 +140,12 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     if(STACK_USAGE STREQUAL "ON")
         message("STACK_USAGE = ON")
     endif()
+elseif (CMAKE_SYSTEM_NAME MATCHES "Darwin")
+    if (TOOLCHAIN STREQUAL "CLANG")
+        message("TOOLCHAIN = CLANG")
+    else()
+        message(FATAL_ERROR "Unknown TOOLCHAIN")
+    endif()
 elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
     if(TOOLCHAIN STREQUAL "GCC")
         message("TOOLCHAIN = GCC")
@@ -706,7 +712,19 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
         add_compile_options(-m32)
         set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -m32" )
     endif()
+elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+    if (TOOLCHAIN STREQUAL "CLANG")
+        set(CMAKE_C_COMPILER clang)
+        add_compile_options(-g -Og -fshort-wchar -fno-strict-aliasing -Wall  -Wno-array-bounds -ffunction-sections -fdata-sections -fno-common -Wno-address -fpie -fno-asynchronous-unwind-tables)
 
+        set(MBEDTLS_FLAGS "")
+        set(OPENSSL_FLAGS -include base.h -Wno-error=maybe-uninitialized -Wno-error=format -Wno-format -Wno-error=unused-but-set-variable)
+        set(CMOCKA_FLAGS -std=gnu99 -Wpedantic -Wall -Wshadow -Wmissing-prototypes -Wcast-align -Werror=address -Wstrict-prototypes -Werror=strict-prototypes -Wwrite-strings -Werror=write-strings -Werror-implicit-function-declaration -Wpointer-arith -Werror=pointer-arith -Wdeclaration-after-statement -Werror=declaration-after-statement -Wreturn-type -Werror=return-type -Wuninitialized -Werror=uninitialized -Werror=strict-overflow -Wstrict-overflow=2 -Wno-format-zero-length -Wmissing-field-initializers -Wformat-security -Werror=format-security -fno-common -Wformat -fno-common -fstack-protector-strong)
+
+        set(CMAKE_LINKER clang)
+        set(CMAKE_EXE_LINKER_FLAGS "-Wno-error")
+        set(CMAKE_C_LINK_EXECUTABLE "<CMAKE_LINKER> <LINK_FLAGS> <OBJECTS> -o <TARGET> <LINK_LIBRARIES>")
+    endif()
 elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
     if(TOOLCHAIN STREQUAL "GCC")
         set(CMAKE_C_COMPILER gcc)
@@ -905,7 +923,7 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 add_custom_target(copy_sample_key)
 
 execute_process(COMMAND uname OUTPUT_VARIABLE uname)
-if(CMAKE_SYSTEM_NAME MATCHES "Linux" OR uname MATCHES "^MINGW")
+if(CMAKE_SYSTEM_NAME MATCHES "Linux" OR uname MATCHES "^MINGW" OR CMAKE_SYSTEM_NAME MATCHES "Darwin")
     add_custom_command(TARGET copy_sample_key
                     PRE_BUILD
                     COMMAND cp -r -f ${LIBSPDM_DIR}/unit_test/sample_key/* ${EXECUTABLE_OUTPUT_PATH})
@@ -927,7 +945,7 @@ endif()
 
 add_custom_target(copy_seed)
 
-if(CMAKE_SYSTEM_NAME MATCHES "Linux" OR uname MATCHES "^MINGW")
+if(CMAKE_SYSTEM_NAME MATCHES "Linux" OR uname MATCHES "^MINGW" OR CMAKE_SYSTEM_NAME MATCHES "Darwin")
     add_custom_command(TARGET copy_seed
                     PRE_BUILD
                     COMMAND cp -r -f ${LIBSPDM_DIR}/unit_test/fuzzing/seeds ${EXECUTABLE_OUTPUT_PATH}

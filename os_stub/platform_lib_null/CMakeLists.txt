@@ -11,7 +11,7 @@ target_include_directories(platform_lib_null
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     target_sources(platform_lib_null
         PRIVATE
-            time_linux.c
+            time_unix.c
             watchdog.c
     )
 elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
@@ -20,6 +20,11 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
             time_win.c
             watchdog.c
     )
+elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+    target_sources(platform_lib_null
+        PRIVATE
+            time_unix.c
+            watchdog.c
+    )
 
 endif()
-

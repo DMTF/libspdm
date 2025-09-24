@@ -11,13 +11,19 @@ target_include_directories(platform_lib
 if(CMAKE_SYSTEM_NAME MATCHES "Linux" AND (NOT TOOLCHAIN STREQUAL "ARM_DS2022") AND (NOT TOOLCHAIN STREQUAL "RISCV_XPACK")  AND (NOT TOOLCHAIN STREQUAL "ARM_GNU_BARE_METAL"))
     target_sources(platform_lib
         PRIVATE
-        time_linux.c
+        time_unix.c
         watchdog.c
     )
 elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
     target_sources(platform_lib
         PRIVATE
         time_win.c
+        watchdog.c
+    )
+elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+    target_sources(platform_lib
+        PRIVATE
+        time_unix.c
         watchdog.c
     )
 else()
