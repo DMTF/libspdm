@@ -8,103 +8,6 @@
 
  #if (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && (LIBSPDM_EVENT_RECIPIENT_SUPPORT)
 
-static bool validate_dmtf_event_type(uint16_t event_type_id, uint16_t event_detail_len)
-{
-    switch (event_type_id) {
-    case SPDM_DMTF_EVENT_TYPE_EVENT_LOST:
-        return (event_detail_len == SPDM_DMTF_EVENT_TYPE_EVENT_LOST_SIZE);
-    case SPDM_DMTF_EVENT_TYPE_MEASUREMENT_CHANGED:
-        return (event_detail_len == SPDM_DMTF_EVENT_TYPE_MEASUREMENT_CHANGED_SIZE);
-    case SPDM_DMTF_EVENT_TYPE_MEASUREMENT_PRE_UPDATE:
-        return (event_detail_len == SPDM_DMTF_EVENT_TYPE_MEASUREMENT_PRE_UPDATE_SIZE);
-    case SPDM_DMTF_EVENT_TYPE_CERTIFICATE_CHANGED:
-        return (event_detail_len == SPDM_DMTF_EVENT_TYPE_CERTIFICATE_CHANGED_SIZE);
-    default:
-        return false;
-    }
-}
-
-static bool parse_and_send_event(libspdm_context_t *context, uint32_t session_id,
-                                 void *event_data, void **next_event_data)
-{
-    libspdm_return_t status;
-    uint8_t *ptr;
-    uint32_t event_instance_id;
-    uint8_t svh_id;
-    uint8_t svh_vendor_id_len;
-    void *svh_vendor_id;
-    uint16_t event_type_id;
-    uint16_t event_detail_len;
-
-    LIBSPDM_ASSERT(context->process_event != NULL);
-
-    ptr = event_data;
-    event_instance_id = libspdm_read_uint32(ptr);
-
-    ptr += sizeof(uint32_t);
-    ptr += sizeof(uint32_t);
-    svh_id = *ptr;
-    ptr++;
-    svh_vendor_id_len = *ptr;
-    ptr++;
-
-    if (svh_vendor_id_len == 0) {
-        svh_vendor_id = NULL;
-    } else {
-        svh_vendor_id = ptr;
-    }
-    ptr += svh_vendor_id_len;
-
-    event_type_id = libspdm_read_uint16(ptr);
-    ptr += sizeof(uint16_t);
-    event_detail_len = libspdm_read_uint16(ptr);
-    ptr += sizeof(uint16_t);
-
-    status = context->process_event(context, session_id, event_instance_id, svh_id,
-                                    svh_vendor_id_len, svh_vendor_id, event_type_id,
-                                    event_detail_len, ptr);
-
-    if (next_event_data != NULL) {
-        ptr += event_detail_len;
-        *next_event_data = ptr;
-    }
-
-    return (status == LIBSPDM_STATUS_SUCCESS);
-}
-
-static void *find_event_instance_id(void *events_list_start, uint32_t event_count,
-                                    uint32_t target_event_instance_id)
-{
-    uint32_t index;
-    uint8_t *ptr;
-
-    ptr = events_list_start;
-
-    for (index = 0; index < event_count; index++) {
-        uint32_t event_instance_id;
-
-        event_instance_id = libspdm_read_uint32(ptr);
-
-        if (event_instance_id == target_event_instance_id) {
-            return ptr;
-        } else {
-            uint8_t vendor_id_len;
-            uint16_t event_detail_len;
-
-            ptr += sizeof(uint32_t) +  sizeof(uint32_t) + sizeof(uint8_t);
-            vendor_id_len = *ptr;
-            ptr += sizeof(uint8_t);
-            ptr += vendor_id_len;
-            ptr += sizeof(uint16_t);
-            event_detail_len = libspdm_read_uint16(ptr);
-            ptr += sizeof(uint16_t);
-            ptr += event_detail_len;
-        }
-    }
-
-    return NULL;
-}
-
 static bool check_for_space(const uint8_t *ptr, const uint8_t *end_ptr, size_t increment)
 {
     LIBSPDM_ASSERT(ptr <= end_ptr);
@@ -244,7 +147,7 @@ libspdm_return_t libspdm_get_encap_response_event_ack(void *spdm_context,
         ptr += sizeof(uint16_t);
 
         if (svh_id == SPDM_REGISTRY_ID_DMTF) {
-            if (!validate_dmtf_event_type(event_type_id, event_detail_len)) {
+            if (!libspdm_validate_dmtf_event_type(event_type_id, event_detail_len)) {
                 return libspdm_generate_encap_error_response(
                     context, SPDM_ERROR_CODE_INVALID_REQUEST, 0, response_size, response);
             }
@@ -278,8 +181,8 @@ libspdm_return_t libspdm_get_encap_response_event_ack(void *spdm_context,
         }
 
         for (index = 0; index < spdm_request->event_count; index++) {
-            if (find_event_instance_id(event_data, spdm_request->event_count,
-                                       event_instance_id_min + (uint32_t)index) == NULL) {
+            if (libspdm_find_event_instance_id(event_data, spdm_request->event_count,
+                                               event_instance_id_min + (uint32_t)index) == NULL) {
                 return libspdm_generate_encap_error_response(
                     context, SPDM_ERROR_CODE_INVALID_REQUEST, 0, response_size, response);
             }
@@ -291,21 +194,23 @@ libspdm_return_t libspdm_get_encap_response_event_ack(void *spdm_context,
 
         for (index = 0; index < spdm_request->event_count; index++) {
             if (events_list_is_sequential) {
-                if (!parse_and_send_event(context, session_id, next_event_data, &next_event_data)) {
+                if (!libspdm_parse_and_send_event(
+                        context, session_id, next_event_data, &next_event_data)) {
                     return libspdm_generate_encap_error_response(
                         context, SPDM_ERROR_CODE_INVALID_REQUEST, 0, response_size, response);
                 }
             } else {
                 void *event_data;
 
-                event_data = find_event_instance_id(next_event_data, spdm_request->event_count,
-                                                    event_instance_id_min + (uint32_t)index);
+                event_data = libspdm_find_event_instance_id(
+                    next_event_data, spdm_request->event_count,
+                    event_instance_id_min + (uint32_t)index);
                 if (event_data == NULL) {
                     return libspdm_generate_encap_error_response(
                         context, SPDM_ERROR_CODE_INVALID_REQUEST, 0, response_size, response);
                 }
 
-                if (!parse_and_send_event(context, session_id, event_data, NULL)) {
+                if (!libspdm_parse_and_send_event(context, session_id, event_data, NULL)) {
                     return libspdm_generate_encap_error_response(
                         context, SPDM_ERROR_CODE_INVALID_REQUEST, 0, response_size, response);
                 }
