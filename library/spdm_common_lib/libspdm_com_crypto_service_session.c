@@ -122,7 +122,7 @@ bool libspdm_calculate_th_hash_for_exchange(
 }
 
 bool libspdm_calculate_th_hmac_for_exchange_rsp(
-    libspdm_context_t *spdm_context, void *spdm_session_info, bool is_requester,
+    libspdm_context_t *spdm_context, void *spdm_session_info,
     size_t *th_hmac_buffer_size, void *th_hmac_buffer)
 {
     libspdm_session_info_t *session_info;
