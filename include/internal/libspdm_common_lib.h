@@ -1969,10 +1969,50 @@ uint32_t libspdm_mask_base_asym_algo(libspdm_context_t *spdm_context, uint32_t b
  *
  * @param  id             Registry or standards body identifier (SPDM_REGISTRY_ID_*).
  *                        Its size is two bytes due to the vendor-defined messages.
- * @param  vendor_id_len  Length, in bytes, of the VendorID field. *
+ * @param  vendor_id_len  Length, in bytes, of the VendorID field.
  * @retval true  The ID and VendorIDLen are legal.
  * @retval false The ID and VendorIDLen are illegal.
  */
 bool libspdm_validate_svh_vendor_id_len(uint16_t id, uint8_t vendor_id_len);
+
+#if LIBSPDM_EVENT_RECIPIENT_SUPPORT
+/**
+ * Check if the combination of DMTF EventTypeId and EventDetailLen is legal in a SEND_EVENT message.
+ *
+ * @param  event_type_id     Value of the DMTF EventTypeId.
+ * @param  event_detail_len  Size, in bytes, of EventDetail.
+ *
+ * @retval true  The EventTypeId and EventDetailLen are legal.
+ * @retval false The EventTypeId and EventDetailLen are illegal.
+ */
+bool libspdm_validate_dmtf_event_type(uint16_t event_type_id, uint16_t event_detail_len);
+
+/**
+ * Given a list of events, finds the event identified by the target EventInstanceID.
+ *
+ * @param  events_list_start         Pointer to list of events.
+ * @param  event_count               Number of events in the list.
+ * @param  target_event_instance_id  EventInstanceID to be found.
+ *
+ * @retval  NULL     Could not find the EventInstanceID.
+ * @retval  non-NULL Pointer to the event corresponding to the target EventInstanceID
+ */
+void *libspdm_find_event_instance_id(void *events_list_start, uint32_t event_count,
+                                     uint32_t target_event_instance_id);
+/**
+ * Parses and sends an event to the Integrator. This function shall not be called if the Integrator
+ * has not registered an event handler via libspdm_register_event_callback.
+ *
+ * @param  context          A pointer to the SPDM context.
+ * @param  session_id       Secure session identifier.
+ * @param  event_data       A pointer to the event do be parsed and sent to Integrator.
+ * @param  next_event_data  On output, returns a pointer to the next event in event_data.
+ *
+ * @retval  true   The event was successfully parsed and sent to the Integrator.
+ * @retval  false  Unable to parse the event or the Integrator returned an error for the event.
+ */
+bool libspdm_parse_and_send_event(libspdm_context_t *context, uint32_t session_id,
+                                  void *event_data, void **next_event_data);
+#endif /* LIBSPDM_EVENT_RECIPIENT_SUPPORT */
 
 #endif /* SPDM_COMMON_LIB_INTERNAL_H */
