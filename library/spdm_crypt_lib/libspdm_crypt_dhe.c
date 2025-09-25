@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -55,6 +55,63 @@ uint32_t libspdm_get_dhe_pub_key_size(uint16_t dhe_named_group)
     case SPDM_ALGORITHMS_DHE_NAMED_GROUP_SM2_P256:
 #if LIBSPDM_SM2_KEY_EXCHANGE_P256_SUPPORT
         return 32 * 2;
+#else
+        return 0;
+#endif
+    default:
+        return 0;
+    }
+}
+
+/**
+ * This function returns the SPDM DHE shared secret size.
+ *
+ * @param  dhe_named_group                SPDM dhe_named_group
+ *
+ * @return SPDM DHE shared secret size.
+ **/
+uint32_t libspdm_get_dhe_shared_secret_size(uint16_t dhe_named_group)
+{
+    switch (dhe_named_group) {
+    case SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_2048:
+#if LIBSPDM_FFDHE_2048_SUPPORT
+        return 256;
+#else
+        return 0;
+#endif
+    case SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_3072:
+#if LIBSPDM_FFDHE_3072_SUPPORT
+        return 384;
+#else
+        return 0;
+#endif
+    case SPDM_ALGORITHMS_DHE_NAMED_GROUP_FFDHE_4096:
+#if LIBSPDM_FFDHE_4096_SUPPORT
+        return 512;
+#else
+        return 0;
+#endif
+    case SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_256_R1:
+#if LIBSPDM_ECDHE_P256_SUPPORT
+        return 32;
+#else
+        return 0;
+#endif
+    case SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_384_R1:
+#if LIBSPDM_ECDHE_P384_SUPPORT
+        return 48;
+#else
+        return 0;
+#endif
+    case SPDM_ALGORITHMS_DHE_NAMED_GROUP_SECP_521_R1:
+#if LIBSPDM_ECDHE_P521_SUPPORT
+        return 66;
+#else
+        return 0;
+#endif
+    case SPDM_ALGORITHMS_DHE_NAMED_GROUP_SM2_P256:
+#if LIBSPDM_SM2_KEY_EXCHANGE_P256_SUPPORT
+        return 32;
 #else
         return 0;
 #endif
