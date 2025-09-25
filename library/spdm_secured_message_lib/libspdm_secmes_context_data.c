@@ -133,7 +133,7 @@ void libspdm_secured_message_set_algorithms(void *spdm_secured_message_context,
         secured_message_context->shared_key_size = libspdm_get_kem_shared_secret_size(
             secured_message_context->kem_alg);
     } else {
-        secured_message_context->shared_key_size = libspdm_get_dhe_pub_key_size(
+        secured_message_context->shared_key_size = libspdm_get_dhe_shared_secret_size(
             secured_message_context->dhe_named_group);
     }
     secured_message_context->aead_key_size = libspdm_get_aead_key_size(

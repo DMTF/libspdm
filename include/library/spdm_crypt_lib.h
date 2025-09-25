@@ -783,6 +783,15 @@ bool libspdm_req_asym_sign_hash(
 uint32_t libspdm_get_dhe_pub_key_size(uint16_t dhe_named_group);
 
 /**
+ * This function returns the SPDM DHE shared secret size.
+ *
+ * @param  dhe_named_group                SPDM dhe_named_group
+ *
+ * @return SPDM DHE shared secret size.
+ **/
+uint32_t libspdm_get_dhe_shared_secret_size(uint16_t dhe_named_group);
+
+/**
  * Allocates and Initializes one Diffie-Hellman Ephemeral (DHE) context for subsequent use,
  * based upon negotiated DHE algorithm.
  *
