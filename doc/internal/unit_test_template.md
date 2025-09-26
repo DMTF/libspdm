@@ -60,7 +60,7 @@ static libspdm_return_t receive_message(
  * Test 1: describe the test case.
  * Expected behavior: describe the expected behavior of the unit under test.
  **/
-static req_message_name_case1(void **state)
+static void req_message_name_case1(void **state)
 {
 }
 
@@ -106,7 +106,7 @@ int libspdm_req_encap_message_name_test(void)
  * Test 1: describe the test case.
  * Expected behavior: describe the expected behavior of the unit under test.
  **/
-static rsp_message_name_case1(void **state)
+static void rsp_message_name_case1(void **state)
 {
 }
 
