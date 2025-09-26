@@ -32,4 +32,4 @@ cd build
 cmake -DARCH=x64 -DTOOLCHAIN=LIBFUZZER -DTARGET=Release -DCRYPTO=mbedtls -DGCOV=ON ..
 make copy_sample_key
 make
-cp -r ./bin/* $OUT
+cp -r -v ./bin/* $OUT

@@ -13,11 +13,11 @@ jobs:
     steps:
       - name: Build Fuzzers
         id: build
-        uses: google/oss-fuzz/infra/cifuzz/actions/build_fuzzers@master
+        uses: Li-Aaron/oss-fuzz/infra/cifuzz/actions/build_fuzzers@test-ci-fuzz
         with:
           oss-fuzz-project-name: 'libspdm'
       - name: Run Fuzzers
-        uses: google/oss-fuzz/infra/cifuzz/actions/run_fuzzers@master
+        uses: Li-Aaron/oss-fuzz/infra/cifuzz/actions/run_fuzzers@test-ci-fuzz
         with:
           oss-fuzz-project-name: 'libspdm'
           fuzz-seconds: 600

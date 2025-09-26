@@ -261,6 +261,8 @@ libspdm_return_t libspdm_process_encap_response_challenge_auth(
         spdm_context, false, signature, signature_size);
     if (!result) {
         return LIBSPDM_STATUS_VERIF_FAIL;
+    } else {
+        LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "aaaaaa\n"));
     }
 
     libspdm_set_connection_state(spdm_context,
