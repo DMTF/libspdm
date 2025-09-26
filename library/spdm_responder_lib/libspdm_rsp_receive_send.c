@@ -435,6 +435,7 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
     libspdm_chunk_info_t *get_info;
     spdm_chunk_response_response_t *chunk_rsp;
     uint8_t *chunk_ptr;
+    size_t chunk_send_ack_response_header_size;
     #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
 
     context = spdm_context;
@@ -608,6 +609,14 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
         }
     }
 
+    #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
+    if (libspdm_get_connection_version(context) < SPDM_MESSAGE_VERSION_14) {
+        chunk_send_ack_response_header_size = sizeof(spdm_chunk_send_ack_response_t);
+    } else {
+        chunk_send_ack_response_header_size = sizeof(spdm_chunk_send_ack_response_14_t);
+    }
+    #endif /* LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP */
+
     if (status == LIBSPDM_STATUS_SUCCESS) {
         LIBSPDM_ASSERT (my_response_size <= context->local_context.capability.max_spdm_msg_size);
         /* large SPDM message is the SPDM message whose size is greater than the DataTransferSize of the receiving
@@ -665,21 +674,12 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
              * in the scratch buffer, used to respond to the next CHUNK_GET request. */
             if (((spdm_message_header_t *)my_response)
                 ->request_response_code == SPDM_CHUNK_SEND_ACK) {
-                if (libspdm_get_connection_version(context) < SPDM_MESSAGE_VERSION_14) {
-                    libspdm_copy_mem(large_buffer, large_buffer_size,
-                                     my_response + sizeof(spdm_chunk_send_ack_response_t),
-                                     my_response_size - sizeof(spdm_chunk_send_ack_response_t));
-                    get_info->large_message = large_buffer;
-                    get_info->large_message_size =
-                        my_response_size - sizeof(spdm_chunk_send_ack_response_t);
-                } else {
-                    libspdm_copy_mem(large_buffer, large_buffer_size,
-                                     my_response + sizeof(spdm_chunk_send_ack_response_14_t),
-                                     my_response_size - sizeof(spdm_chunk_send_ack_response_14_t));
-                    get_info->large_message = large_buffer;
-                    get_info->large_message_size =
-                        my_response_size - sizeof(spdm_chunk_send_ack_response_14_t);
-                }
+                libspdm_copy_mem(large_buffer, large_buffer_size,
+                                 my_response + chunk_send_ack_response_header_size,
+                                 my_response_size - chunk_send_ack_response_header_size);
+                get_info->large_message = large_buffer;
+                get_info->large_message_size =
+                    my_response_size - chunk_send_ack_response_header_size;
             } else {
                 libspdm_copy_mem(large_buffer, large_buffer_size, my_response, my_response_size);
 
@@ -749,18 +749,10 @@ libspdm_return_t libspdm_build_response(void *spdm_context, const uint32_t *sess
     #if LIBSPDM_ENABLE_CAPABILITY_CHUNK_CAP
     switch (request_response_code) {
     case SPDM_CHUNK_SEND_ACK:
-        if (libspdm_get_connection_version(context) < SPDM_MESSAGE_VERSION_14) {
-            if (my_response_size > sizeof(spdm_chunk_send_ack_response_t)) {
-                request_response_code =
-                    ((spdm_message_header_t *)(my_response + sizeof(spdm_chunk_send_ack_response_t)))
-                    ->request_response_code;
-            }
-        } else {
-            if (my_response_size > sizeof(spdm_chunk_send_ack_response_14_t)) {
-                request_response_code =
-                    ((spdm_message_header_t *)(my_response + sizeof(spdm_chunk_send_ack_response_14_t)))
-                    ->request_response_code;
-            }
+        if (my_response_size > chunk_send_ack_response_header_size) {
+            request_response_code =
+                ((spdm_message_header_t *)(my_response + chunk_send_ack_response_header_size))
+                ->request_response_code;
         }
         break;
     case SPDM_CHUNK_RESPONSE:
