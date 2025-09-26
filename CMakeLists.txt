@@ -882,7 +882,7 @@ execute_process(COMMAND uname OUTPUT_VARIABLE uname)
 if(CMAKE_SYSTEM_NAME MATCHES "Linux" OR uname MATCHES "^MINGW")
     add_custom_command(TARGET copy_sample_key
                     PRE_BUILD
-                    COMMAND cp -r -f ${LIBSPDM_DIR}/unit_test/sample_key/* ${EXECUTABLE_OUTPUT_PATH})
+                    COMMAND cp -r -v -f ${LIBSPDM_DIR}/unit_test/sample_key/* ${EXECUTABLE_OUTPUT_PATH})
 elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
     string(REPLACE "/" "\\" SRC ${LIBSPDM_DIR}/unit_test/sample_key/*)
     if(CMAKE_GENERATOR MATCHES "^Visual Studio")
