@@ -657,6 +657,12 @@ libspdm_return_t libspdm_process_encap_response_event_ack(
 #endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
 #endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP */
 
+#if LIBSPDM_EVENT_RECIPIENT_SUPPORT
+libspdm_return_t libspdm_get_response_send_event(
+    libspdm_context_t *spdm_context, size_t request_size, const void *request,
+    size_t *response_size, void *response);
+#endif /* LIBSPDM_EVENT_RECIPIENT_SUPPORT */
+
 /**
  * Return the GET_SPDM_RESPONSE function via request code.
  *

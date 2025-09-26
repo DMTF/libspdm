@@ -104,6 +104,11 @@ int libspdm_responder_subscribe_event_types_ack_test_main(void);
 int libspdm_responder_subscribe_event_types_ack_error_test_main(void);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
 
+#if LIBSPDM_EVENT_RECIPIENT_SUPPORT
+int libspdm_rsp_event_ack_test(void);
+int libspdm_rsp_event_ack_error_test(void);
+#endif /* LIBSPDM_EVENT_RECIPIENT_SUPPORT */
+
 #if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
 int libspdm_responder_vendor_cmds_test_main(void);
 int libspdm_responder_vendor_cmds_error_test_main(void);
@@ -299,6 +304,15 @@ int main(void)
         return_value = 1;
     }
     #endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
+
+    #if LIBSPDM_EVENT_RECIPIENT_SUPPORT
+    if (libspdm_rsp_event_ack_test() != 0) {
+        return_value = 1;
+    }
+    if (libspdm_rsp_event_ack_error_test() != 0) {
+        return_value = 1;
+    }
+    #endif /* LIBSPDM_EVENT_RECIPIENT_SUPPORT */
 
     #if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
     if (libspdm_responder_vendor_cmds_test_main() != 0) {
