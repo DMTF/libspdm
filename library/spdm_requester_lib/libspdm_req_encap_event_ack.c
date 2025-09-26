@@ -8,13 +8,6 @@
 
  #if (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && (LIBSPDM_EVENT_RECIPIENT_SUPPORT)
 
-static bool check_for_space(const uint8_t *ptr, const uint8_t *end_ptr, size_t increment)
-{
-    LIBSPDM_ASSERT(ptr <= end_ptr);
-
-    return ((uintptr_t)(end_ptr - ptr) >= increment);
-}
-
 libspdm_return_t libspdm_get_encap_response_event_ack(void *spdm_context,
                                                       size_t request_size,
                                                       void *request,
@@ -74,7 +67,7 @@ libspdm_return_t libspdm_get_encap_response_event_ack(void *spdm_context,
     libspdm_reset_message_buffer_via_request_code(context, NULL,
                                                   spdm_request->header.request_response_code);
 
-    if (!check_for_space((uint8_t *)request, end_ptr, sizeof(spdm_send_event_request_t))) {
+    if (!libspdm_check_for_space((uint8_t *)request, end_ptr, sizeof(spdm_send_event_request_t))) {
         return libspdm_generate_encap_error_response(
             context, SPDM_ERROR_CODE_INVALID_REQUEST, 0, response_size, response);
     }
@@ -100,9 +93,9 @@ libspdm_return_t libspdm_get_encap_response_event_ack(void *spdm_context,
         uint16_t event_type_id;
         uint16_t event_detail_len;
 
-        if (!check_for_space(ptr, end_ptr,
-                             sizeof(uint32_t) + sizeof(uint32_t) + sizeof(uint8_t) +
-                             sizeof(uint8_t))) {
+        if (!libspdm_check_for_space(ptr, end_ptr,
+                                     sizeof(uint32_t) + sizeof(uint32_t) + sizeof(uint8_t) +
+                                     sizeof(uint8_t))) {
             return libspdm_generate_encap_error_response(
                 context, SPDM_ERROR_CODE_INVALID_REQUEST, 0, response_size, response);
         }
@@ -133,8 +126,8 @@ libspdm_return_t libspdm_get_encap_response_event_ack(void *spdm_context,
                 context, SPDM_ERROR_CODE_INVALID_REQUEST, 0, response_size, response);
         }
 
-        if (!check_for_space(ptr, end_ptr,
-                             (size_t)svh_vendor_id_len + sizeof(uint16_t) + sizeof(uint16_t))) {
+        if (!libspdm_check_for_space(
+                ptr, end_ptr, (size_t)svh_vendor_id_len + sizeof(uint16_t) + sizeof(uint16_t))) {
             return libspdm_generate_encap_error_response(
                 context, SPDM_ERROR_CODE_INVALID_REQUEST, 0, response_size, response);
         }
@@ -153,7 +146,7 @@ libspdm_return_t libspdm_get_encap_response_event_ack(void *spdm_context,
             }
         }
 
-        if (!check_for_space(ptr, end_ptr, (size_t)event_detail_len)) {
+        if (!libspdm_check_for_space(ptr, end_ptr, (size_t)event_detail_len)) {
             return libspdm_generate_encap_error_response(
                 context, SPDM_ERROR_CODE_INVALID_REQUEST, 0, response_size, response);
         }

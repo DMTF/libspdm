@@ -515,3 +515,10 @@ bool libspdm_validate_svh_vendor_id_len(uint16_t id, uint8_t vendor_id_len)
         return false;
     }
 }
+
+bool libspdm_check_for_space(const uint8_t *ptr, const uint8_t *end_ptr, size_t increment)
+{
+    LIBSPDM_ASSERT(ptr <= end_ptr);
+
+    return ((uintptr_t)(end_ptr - ptr) >= increment);
+}
