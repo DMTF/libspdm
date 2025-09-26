@@ -27,6 +27,7 @@ target_sources(spdm_responder_lib
         libspdm_rsp_end_session.c
         libspdm_rsp_endpoint_info.c
         libspdm_rsp_error.c
+        libspdm_rsp_event_ack.c
         libspdm_rsp_finish.c
         libspdm_rsp_handle_response_state.c
         libspdm_rsp_heartbeat.c
