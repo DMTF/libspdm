@@ -1005,10 +1005,10 @@ typedef libspdm_return_t (*libspdm_process_event_func)(void *spdm_context,
                                                        uint32_t event_instance_id,
                                                        uint8_t svh_id,
                                                        uint8_t svh_vendor_id_len,
-                                                       void *svh_vendor_id,
+                                                       const void *svh_vendor_id,
                                                        uint16_t event_type_id,
                                                        uint16_t event_detail_len,
-                                                       void *event_detail);
+                                                       const void *event_detail);
 
 /**
  * Register callback to process SPDM events.

@@ -1997,8 +1997,8 @@ bool libspdm_validate_dmtf_event_type(uint16_t event_type_id, uint16_t event_det
  * @retval  NULL     Could not find the EventInstanceID.
  * @retval  non-NULL Pointer to the event corresponding to the target EventInstanceID
  */
-void *libspdm_find_event_instance_id(void *events_list_start, uint32_t event_count,
-                                     uint32_t target_event_instance_id);
+const void *libspdm_find_event_instance_id(const void *events_list_start, uint32_t event_count,
+                                           uint32_t target_event_instance_id);
 /**
  * Parses and sends an event to the Integrator. This function shall not be called if the Integrator
  * has not registered an event handler via libspdm_register_event_callback.
@@ -2012,7 +2012,7 @@ void *libspdm_find_event_instance_id(void *events_list_start, uint32_t event_cou
  * @retval  false  Unable to parse the event or the Integrator returned an error for the event.
  */
 bool libspdm_parse_and_send_event(libspdm_context_t *context, uint32_t session_id,
-                                  void *event_data, void **next_event_data);
+                                  const void *event_data, const void **next_event_data);
 #endif /* LIBSPDM_EVENT_RECIPIENT_SUPPORT */
 
 /**

@@ -183,7 +183,7 @@ libspdm_return_t libspdm_get_encap_response_event_ack(void *spdm_context,
     }
 
     if (context->process_event != NULL) {
-        void *next_event_data = spdm_request + 1;
+        const void *next_event_data = spdm_request + 1;
 
         for (index = 0; index < spdm_request->event_count; index++) {
             if (events_list_is_sequential) {
@@ -193,7 +193,7 @@ libspdm_return_t libspdm_get_encap_response_event_ack(void *spdm_context,
                         context, SPDM_ERROR_CODE_INVALID_REQUEST, 0, response_size, response);
                 }
             } else {
-                void *event_data;
+                const void *event_data;
 
                 event_data = libspdm_find_event_instance_id(
                     next_event_data, spdm_request->event_count,

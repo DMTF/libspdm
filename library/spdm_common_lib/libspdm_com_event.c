@@ -25,14 +25,14 @@ bool libspdm_validate_dmtf_event_type(uint16_t event_type_id, uint16_t event_det
 }
 
 bool libspdm_parse_and_send_event(libspdm_context_t *context, uint32_t session_id,
-                                  void *event_data, void **next_event_data)
+                                  const void *event_data, const void **next_event_data)
 {
     libspdm_return_t status;
-    uint8_t *ptr;
+    const uint8_t *ptr;
     uint32_t event_instance_id;
     uint8_t svh_id;
     uint8_t svh_vendor_id_len;
-    void *svh_vendor_id;
+    const void *svh_vendor_id;
     uint16_t event_type_id;
     uint16_t event_detail_len;
 
@@ -72,11 +72,11 @@ bool libspdm_parse_and_send_event(libspdm_context_t *context, uint32_t session_i
     return (status == LIBSPDM_STATUS_SUCCESS);
 }
 
-void *libspdm_find_event_instance_id(void *events_list_start, uint32_t event_count,
-                                     uint32_t target_event_instance_id)
+const void *libspdm_find_event_instance_id(const void *events_list_start, uint32_t event_count,
+                                           uint32_t target_event_instance_id)
 {
     uint32_t index;
-    uint8_t *ptr;
+    const uint8_t *ptr;
 
     ptr = events_list_start;
 
