@@ -32,10 +32,10 @@ static libspdm_return_t process_event(void *spdm_context,
                                       uint32_t event_instance_id,
                                       uint8_t svh_id,
                                       uint8_t svh_vendor_id_len,
-                                      void *svh_vendor_id,
+                                      const void *svh_vendor_id,
                                       uint16_t event_type_id,
                                       uint16_t event_detail_len,
-                                      void *event_detail)
+                                      const void *event_detail)
 {
     printf("Event Received\n");
     printf("Event Instance ID = [0x%x]\n", event_instance_id);
