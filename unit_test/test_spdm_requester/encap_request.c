@@ -1084,6 +1084,7 @@ static void req_encap_request_case8(void **State)
 }
 #endif /* (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_CERT_CAP) */
 
+#if ((LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP))
 static void req_encap_request_case9(void **State)
 {
     libspdm_return_t status;
@@ -1142,6 +1143,7 @@ static void req_encap_request_case9(void **State)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
     free(data);
 }
+#endif /* ((LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)) */
 
 /**
  * Test 10: GET_ENCAPSULATED_REQUEST request message is encapsulated in ENCAPSULATED_REQUEST response message.
