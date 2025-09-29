@@ -47,7 +47,9 @@ libspdm_get_encap_response_func_via_request_code(uint8_t request_response_code)
         #endif /* LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP */
         #endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
 
+        #if ((LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP))
         { SPDM_KEY_UPDATE, libspdm_get_encap_response_key_update },
+        #endif /* ((LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP)) */
 
         #if LIBSPDM_EVENT_RECIPIENT_SUPPORT
         { SPDM_SEND_EVENT, libspdm_get_encap_response_event_ack },
