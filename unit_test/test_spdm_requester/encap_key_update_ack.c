@@ -7,7 +7,8 @@
 #include "internal/libspdm_requester_lib.h"
 #include "internal/libspdm_secured_message_lib.h"
 
-#if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
+#if (LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP) && \
+    ((LIBSPDM_ENABLE_CAPABILITY_KEY_EX_CAP) || (LIBSPDM_ENABLE_CAPABILITY_PSK_CAP))
 
 spdm_key_update_request_t m_spdm_key_update_request1 = {
     {SPDM_MESSAGE_VERSION_11, SPDM_KEY_UPDATE,
@@ -1123,4 +1124,4 @@ int libspdm_req_encap_key_update_ack_test(void)
                                   libspdm_unit_test_group_teardown);
 }
 
-#endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP*/
+#endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP && (..) */
