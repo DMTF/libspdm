@@ -119,11 +119,16 @@ bool libspdm_read_input_file(const char *file_name, void **file_data,
 {
     FILE *fp_in;
     size_t temp_result;
+    char ci_file_name[UINT8_MAX];
 
     if ((fp_in = fopen(file_name, "rb")) == NULL) {
-        printf("Unable to open file %s\n", file_name);
-        *file_data = NULL;
-        return false;
+        /* CI environment working directory is parent folder */
+        snprintf(ci_file_name, sizeof(ci_file_name), "build-out/%s", file_name);
+        if ((fp_in = fopen(ci_file_name, "rb")) == NULL) {
+            printf("Unable to open file %s\n", file_name);
+            *file_data = NULL;
+            return false;
+        }
     }
 
     fseek(fp_in, 0, SEEK_END);
