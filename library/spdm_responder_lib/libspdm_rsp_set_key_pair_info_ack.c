@@ -281,9 +281,7 @@ libspdm_return_t libspdm_get_response_set_key_pair_info_ack(libspdm_context_t *s
             spdm_context, false, 0,
             SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_SET_KEY_PAIR_RESET_CAP);
     } else {
-        need_reset = libspdm_is_capabilities_flag_supported(
-            spdm_context, false, 0,
-            SPDM_GET_CAPABILITIES_RESPONSE_FLAGS_CERT_INSTALL_RESET_CAP);
+        need_reset = false;
     }
     result = libspdm_write_key_pair_info(
         spdm_context,
