@@ -551,7 +551,7 @@ void libspdm_test_requester_encap_endpoint_info_case5(void **state)
     assert_true(result);
 }
 
-int libspdm_requester_encap_endpoint_info_test_main(void)
+int libspdm_req_encap_endpoint_info_test(void)
 {
     const struct CMUnitTest spdm_requester_endpoint_info_tests[] = {
         /* Successful response to get endpoint_info with signature */

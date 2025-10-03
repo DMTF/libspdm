@@ -563,7 +563,7 @@ void test_libspdm_requester_encap_challenge_auth_case8(void **state)
     free(data);
 }
 
-int libspdm_requester_encap_challenge_auth_test_main(void)
+int libspdm_req_encap_challenge_auth_test(void)
 {
     const struct CMUnitTest spdm_requester_challenge_auth_tests[] = {
         /* Success Case*/

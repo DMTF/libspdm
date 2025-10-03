@@ -110,7 +110,7 @@ static void test_supported_event_types_case1(void **state)
     LIBSPDM_DEBUG((LIBSPDM_DEBUG_INFO, "\n"));
 }
 
-int libspdm_requester_encap_supported_event_types_test_main(void)
+int libspdm_req_encap_supported_event_types_test(void)
 {
     const struct CMUnitTest spdm_requester_supported_event_types_tests[] = {
         cmocka_unit_test(test_supported_event_types_case1),

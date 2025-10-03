@@ -450,7 +450,7 @@ static void test_libspdm_requester_encap_event_ack_case4(void **state)
     assert_int_equal(m_event_counter, 4);
 }
 
-int libspdm_requester_encap_event_ack_test_main(void)
+int libspdm_req_encap_event_ack_test(void)
 {
     const struct CMUnitTest spdm_requester_event_ack_tests[] = {
         cmocka_unit_test(test_libspdm_requester_encap_event_ack_case1),

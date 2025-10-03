@@ -406,7 +406,7 @@ void test_spdm_requester_encap_get_digests_case6(void **state)
     }
 }
 
-int libspdm_requester_encap_digests_test_main(void)
+int libspdm_req_encap_digests_test(void)
 {
     const struct CMUnitTest spdm_requester_digests_tests[] = {
         /* Success Case*/
