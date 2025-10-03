@@ -1830,7 +1830,7 @@ void libspdm_test_requester_heartbeat_case13(void **state)
     free(data);
 }
 
-int libspdm_requester_heartbeat_test_main(void)
+int libspdm_req_heartbeat_test(void)
 {
     const struct CMUnitTest spdm_requester_heartbeat_tests[] = {
         /* SendRequest failed*/

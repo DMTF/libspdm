@@ -289,7 +289,7 @@ void libspdm_test_requester_set_key_pair_info_case4(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_RESET_REQUIRED_PEER);
 }
 
-int libspdm_requester_set_key_pair_info_test_main(void)
+int libspdm_req_set_key_pair_info_test(void)
 {
     const struct CMUnitTest spdm_requester_set_key_pair_info_tests[] = {
         /* Successful response to set key pair info, key_pair_id is 1*/

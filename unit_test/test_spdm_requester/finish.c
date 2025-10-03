@@ -4021,7 +4021,7 @@ void libspdm_test_requester_finish_case25(void **state)
     free(data);
 }
 
-int libspdm_requester_finish_test_main(void)
+int libspdm_req_finish_test(void)
 {
     const struct CMUnitTest spdm_requester_finish_tests[] = {
         /* SendRequest failed*/

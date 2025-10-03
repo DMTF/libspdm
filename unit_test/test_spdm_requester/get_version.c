@@ -787,7 +787,7 @@ static void libspdm_test_requester_get_version_case16(void **state)
  * }
  */
 
-int libspdm_requester_get_version_test_main(void)
+int libspdm_req_get_version_test(void)
 {
     const struct CMUnitTest spdm_requester_get_version_tests[] = {
         /* cmocka_unit_test(libspdm_test_requester_get_version_case1), */

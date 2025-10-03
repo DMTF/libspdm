@@ -1272,7 +1272,7 @@ static void libspdm_test_requester_get_endpoint_info_case7(void **state)
     free(data);
 }
 
-int libspdm_requester_get_endpoint_info_test_main(void)
+int libspdm_req_get_endpoint_info_test(void)
 {
     const struct CMUnitTest spdm_requester_get_endpoint_info_tests[] = {
         cmocka_unit_test(libspdm_test_requester_get_endpoint_info_case1),

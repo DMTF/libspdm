@@ -5074,7 +5074,7 @@ void libspdm_test_requester_psk_exchange_case27(void **state)
     free(data);
 }
 
-int libspdm_requester_psk_exchange_test_main(void)
+int libspdm_req_psk_exchange_test(void)
 {
     const struct CMUnitTest spdm_requester_psk_exchange_tests[] = {
         /* SendRequest failed*/

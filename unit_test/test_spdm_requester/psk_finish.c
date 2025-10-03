@@ -2637,7 +2637,7 @@ void libspdm_test_requester_psk_finish_case17(void **state)
     free(data);
 }
 
-int libspdm_requester_psk_finish_test_main(void)
+int libspdm_req_psk_finish_test(void)
 {
     const struct CMUnitTest spdm_requester_psk_finish_tests[] = {
         /* SendRequest failed*/

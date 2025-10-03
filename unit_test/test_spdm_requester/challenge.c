@@ -3947,7 +3947,7 @@ void libspdm_test_requester_challenge_case28(void **state)
     free(data);
 }
 
-int libspdm_requester_challenge_test_main(void)
+int libspdm_req_challenge_test(void)
 {
     const struct CMUnitTest spdm_requester_challenge_tests[] = {
         /* SendRequest failed*/

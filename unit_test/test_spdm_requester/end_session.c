@@ -1753,7 +1753,7 @@ void libspdm_test_requester_end_session_case12(void **state)
     free(data);
 }
 
-int libspdm_requester_end_session_test_main(void)
+int libspdm_req_end_session_test(void)
 {
     const struct CMUnitTest spdm_requester_end_session_tests[] = {
         /* SendRequest failed*/

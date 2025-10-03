@@ -287,7 +287,7 @@ static void libspdm_test_requester_vendor_cmds_case2(void **state)
 }
 
 
-int libspdm_requester_vendor_cmds_test_main(void)
+int libspdm_req_vendor_defined_request_test(void)
 {
     const struct CMUnitTest spdm_requester_vendor_cmds_tests[] = {
         cmocka_unit_test(libspdm_test_requester_vendor_cmds_case1),

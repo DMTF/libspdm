@@ -598,7 +598,7 @@ void libspdm_test_requester_set_certificate_case9(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 }
 
-int libspdm_requester_set_certificate_test_main(void)
+int libspdm_req_set_certificate_test(void)
 {
     const struct CMUnitTest spdm_requester_set_certificate_tests[] = {
         /* SendRequest failed*/

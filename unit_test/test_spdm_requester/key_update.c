@@ -5658,7 +5658,7 @@ void libspdm_test_requester_key_update_case35(void **state)
     assert_int_equal(spdm_context->session_info->session_id, INVALID_SESSION_ID);
 }
 
-int libspdm_requester_key_update_test_main(void)
+int libspdm_req_key_update_test(void)
 {
     const struct CMUnitTest spdm_requester_key_update_tests[] = {
         /* SendRequest failed*/

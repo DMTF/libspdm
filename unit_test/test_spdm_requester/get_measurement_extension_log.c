@@ -1067,7 +1067,7 @@ static void libspdm_test_requester_get_measurement_extension_log_case9(void **st
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
-int libspdm_requester_get_measurement_extension_log_test_main(void)
+int libspdm_req_get_measurement_extension_log_test(void)
 {
     const struct CMUnitTest spdm_requester_get_measurement_extension_log_tests[] = {
         /* SendRequest failed*/

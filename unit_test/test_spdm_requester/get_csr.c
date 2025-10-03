@@ -584,7 +584,7 @@ void libspdm_test_requester_get_csr_case7(void **state)
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX */
 }
 
-int libspdm_requester_get_csr_test_main(void)
+int libspdm_req_get_csr_test(void)
 {
     const struct CMUnitTest spdm_requester_get_csr_tests[] = {
         /* SendRequest failed*/
