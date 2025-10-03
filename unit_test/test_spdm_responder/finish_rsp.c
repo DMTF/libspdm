@@ -3967,7 +3967,7 @@ void libspdm_test_responder_finish_case30(void **state)
 
 int libspdm_rsp_finish_test(void)
 {
-    const struct CMUnitTest spdm_responder_finish_tests[] = {
+    const struct CMUnitTest test_cases[] = {
         /* Success Case*/
         cmocka_unit_test(libspdm_test_responder_finish_case1),
         /* Can be populated with new test.*/
@@ -4035,7 +4035,7 @@ int libspdm_rsp_finish_test(void)
 
     libspdm_setup_test_context(&test_context);
 
-    return cmocka_run_group_tests(spdm_responder_finish_tests,
+    return cmocka_run_group_tests(test_cases,
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }

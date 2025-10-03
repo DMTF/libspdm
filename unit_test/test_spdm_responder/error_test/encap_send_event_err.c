@@ -117,7 +117,7 @@ static void test_responder_encap_send_event_err_case2(void **state)
 
 int libspdm_rsp_encap_send_event_error_test(void)
 {
-    const struct CMUnitTest spdm_responder_key_update_tests[] = {
+    const struct CMUnitTest test_cases[] = {
         cmocka_unit_test(test_responder_encap_send_event_err_case1),
         cmocka_unit_test(test_responder_encap_send_event_err_case2),
     };
@@ -129,7 +129,7 @@ int libspdm_rsp_encap_send_event_error_test(void)
 
     libspdm_setup_test_context(&test_context);
 
-    return cmocka_run_group_tests(spdm_responder_key_update_tests,
+    return cmocka_run_group_tests(test_cases,
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }

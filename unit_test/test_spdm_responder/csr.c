@@ -1981,7 +1981,7 @@ void libspdm_test_responder_csr_case16(void **state)
 
 int libspdm_rsp_csr_test(void)
 {
-    const struct CMUnitTest spdm_responder_csr_tests[] = {
+    const struct CMUnitTest test_cases[] = {
         /* Success Case for csr response with device_cert mode */
         cmocka_unit_test(libspdm_test_responder_csr_case1),
         /* Bad request size*/
@@ -2025,7 +2025,7 @@ int libspdm_rsp_csr_test(void)
     /*ensure that cached.csr exists in test_csr at the beginning*/
     libspdm_clear_cached_csr();
 
-    return cmocka_run_group_tests(spdm_responder_csr_tests,
+    return cmocka_run_group_tests(test_cases,
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }

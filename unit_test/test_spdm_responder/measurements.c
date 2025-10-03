@@ -2735,7 +2735,7 @@ int libspdm_rsp_measurements_test(void)
     m_libspdm_get_measurements_request11.slot_id_param = SPDM_MAX_SLOT_COUNT - 1;
     m_libspdm_get_measurements_request12.slot_id_param = SPDM_MAX_SLOT_COUNT + 1;
 
-    const struct CMUnitTest spdm_responder_measurements_tests[] = {
+    const struct CMUnitTest test_cases[] = {
         /* Success Case to get measurement number without signature*/
         cmocka_unit_test(libspdm_test_responder_measurements_case1),
         /* Can be populated with new test.*/
@@ -2817,7 +2817,7 @@ int libspdm_rsp_measurements_test(void)
 
     libspdm_setup_test_context(&test_context);
 
-    return cmocka_run_group_tests(spdm_responder_measurements_tests,
+    return cmocka_run_group_tests(test_cases,
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }

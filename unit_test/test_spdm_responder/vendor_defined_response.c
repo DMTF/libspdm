@@ -245,7 +245,7 @@ static void libspdm_test_responder_vendor_cmds_case2(void **state)
 
 int libspdm_rsp_vendor_defined_response_test(void)
 {
-    const struct CMUnitTest spdm_responder_vendor_cmds_tests[] = {
+    const struct CMUnitTest test_cases[] = {
         cmocka_unit_test(libspdm_test_responder_vendor_cmds_case1),
         cmocka_unit_test(libspdm_test_responder_vendor_cmds_case2),
     };
@@ -257,7 +257,7 @@ int libspdm_rsp_vendor_defined_response_test(void)
 
     libspdm_setup_test_context(&test_context);
 
-    return cmocka_run_group_tests(spdm_responder_vendor_cmds_tests,
+    return cmocka_run_group_tests(test_cases,
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }

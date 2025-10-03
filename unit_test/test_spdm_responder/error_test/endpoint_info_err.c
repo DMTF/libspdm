@@ -995,7 +995,7 @@ void libspdm_test_responder_endpoint_info_err_case14(void **state)
 
 int libspdm_rsp_endpoint_info_error_test(void)
 {
-    const struct CMUnitTest spdm_responder_endpoint_info_tests[] = {
+    const struct CMUnitTest test_cases[] = {
         cmocka_unit_test(libspdm_test_responder_endpoint_info_err_case1),
         cmocka_unit_test(libspdm_test_responder_endpoint_info_err_case2),
         cmocka_unit_test(libspdm_test_responder_endpoint_info_err_case3),
@@ -1021,7 +1021,7 @@ int libspdm_rsp_endpoint_info_error_test(void)
 
     libspdm_setup_test_context(&test_context);
 
-    return cmocka_run_group_tests(spdm_responder_endpoint_info_tests,
+    return cmocka_run_group_tests(test_cases,
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }
