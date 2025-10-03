@@ -1393,7 +1393,7 @@ void libspdm_test_requester_encap_request_case15(void **State)
     free(data);
 }
 
-int libspdm_requester_encap_request_test_main(void)
+int libspdm_req_encap_request_test(void)
 {
     const struct CMUnitTest spdm_requester_encap_request_tests[] = {
         /* SendRequest failed*/

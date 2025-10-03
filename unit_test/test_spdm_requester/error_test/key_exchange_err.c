@@ -6312,7 +6312,7 @@ static void libspdm_test_requester_key_exchange_err_case31(void **state)
     free(data);
 }
 
-int libspdm_requester_key_exchange_error_test_main(void)
+int libspdm_req_key_exchange_error_test(void)
 {
     const struct CMUnitTest spdm_requester_key_exchange_tests[] = {
         /* SendRequest failed*/

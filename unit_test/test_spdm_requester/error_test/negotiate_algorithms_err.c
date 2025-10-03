@@ -3112,7 +3112,7 @@ static void libspdm_test_requester_negotiate_algorithms_error_case43(void** stat
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
-int libspdm_requester_negotiate_algorithms_error_test_main(void)
+int libspdm_req_negotiate_algorithms_error_test(void)
 {
     const struct CMUnitTest spdm_requester_negotiate_algorithms_tests[] = {
         cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_error_case1),

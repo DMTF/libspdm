@@ -2502,7 +2502,7 @@ static void libspdm_test_requester_get_endpoint_info_err_case20(void **state)
 #endif
 }
 
-int libspdm_requester_get_endpoint_info_error_test_main(void)
+int libspdm_req_get_endpoint_info_error_test(void)
 {
     const struct CMUnitTest spdm_requester_get_endpoint_info_tests[] = {
         cmocka_unit_test(libspdm_test_requester_get_endpoint_info_err_case1),

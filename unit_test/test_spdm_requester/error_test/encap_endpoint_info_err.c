@@ -685,7 +685,7 @@ void libspdm_test_requester_encap_endpoint_info_err_case10(void **state)
 #endif
 }
 
-int libspdm_requester_encap_endpoint_info_error_test_main(void)
+int libspdm_req_encap_endpoint_info_error_test(void)
 {
     const struct CMUnitTest spdm_requester_endpoint_info_tests[] = {
         /* Connection version is lower than 1.3 */
