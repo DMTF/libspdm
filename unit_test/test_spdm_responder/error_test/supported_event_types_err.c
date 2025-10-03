@@ -94,7 +94,7 @@ static void libspdm_test_responder_supported_event_types_err_case1(void **state)
     assert_int_equal(spdm_response->header.param2, SPDM_GET_SUPPORTED_EVENT_TYPES);
 }
 
-int libspdm_responder_supported_event_types_error_test_main(void)
+int libspdm_rsp_supported_event_types_error_test(void)
 {
     libspdm_test_context_t test_context = {
         LIBSPDM_TEST_CONTEXT_VERSION,

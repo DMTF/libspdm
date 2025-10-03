@@ -571,7 +571,7 @@ void libspdm_test_responder_encap_get_endpoint_info_err_case5(void **state)
 }
 
 
-int libspdm_responder_encap_get_endpoint_info_error_test_main(void)
+int libspdm_rsp_encap_get_endpoint_info_error_test(void)
 {
     const struct CMUnitTest spdm_responder_encap_get_endpoint_info_tests[] = {
         /* Get an error response */
