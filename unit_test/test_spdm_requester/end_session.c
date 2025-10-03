@@ -1753,7 +1753,7 @@ void libspdm_test_requester_end_session_case12(void **state)
 
 int libspdm_req_end_session_test(void)
 {
-    const struct CMUnitTest spdm_requester_end_session_tests[] = {
+    const struct CMUnitTest test_cases[] = {
         /* SendRequest failed*/
         cmocka_unit_test(libspdm_test_requester_end_session_case1),
         /* Successful response*/
@@ -1789,7 +1789,7 @@ int libspdm_req_end_session_test(void)
 
     libspdm_setup_test_context(&test_context);
 
-    return cmocka_run_group_tests(spdm_requester_end_session_tests,
+    return cmocka_run_group_tests(test_cases,
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }

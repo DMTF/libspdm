@@ -289,7 +289,7 @@ void libspdm_test_requester_set_key_pair_info_case4(void **state)
 
 int libspdm_req_set_key_pair_info_test(void)
 {
-    const struct CMUnitTest spdm_requester_set_key_pair_info_tests[] = {
+    const struct CMUnitTest test_cases[] = {
         /* Successful response to set key pair info, key_pair_id is 1*/
         cmocka_unit_test(libspdm_test_requester_set_key_pair_info_case1),
         /* The response version is incorrect */
@@ -309,7 +309,7 @@ int libspdm_req_set_key_pair_info_test(void)
 
     libspdm_setup_test_context(&test_context);
 
-    return cmocka_run_group_tests(spdm_requester_set_key_pair_info_tests,
+    return cmocka_run_group_tests(test_cases,
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }

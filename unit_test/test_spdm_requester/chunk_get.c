@@ -1216,7 +1216,7 @@ void libspdm_test_requester_chunk_get_case8(void** state)
 int libspdm_req_chunk_get_test(void)
 {
     /* Test the CHUNK_GET handlers in various requester handlers */
-    const struct CMUnitTest spdm_requester_chunk_get_tests[] = {
+    const struct CMUnitTest test_cases[] = {
 #if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
         /* Request a certificate in portions */
         cmocka_unit_test(libspdm_test_requester_chunk_get_case1),
@@ -1259,7 +1259,7 @@ int libspdm_req_chunk_get_test(void)
 
     libspdm_setup_test_context(&test_context);
 
-    return cmocka_run_group_tests(spdm_requester_chunk_get_tests,
+    return cmocka_run_group_tests(test_cases,
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }

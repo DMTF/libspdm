@@ -565,7 +565,7 @@ void test_libspdm_requester_encap_challenge_auth_case8(void **state)
 
 int libspdm_req_encap_challenge_auth_test(void)
 {
-    const struct CMUnitTest spdm_requester_challenge_auth_tests[] = {
+    const struct CMUnitTest test_cases[] = {
         /* Success Case*/
         cmocka_unit_test(test_libspdm_requester_encap_challenge_auth_case1),
         /* Can be populated with new test.*/
@@ -589,7 +589,7 @@ int libspdm_req_encap_challenge_auth_test(void)
 
     libspdm_setup_test_context(&test_context);
 
-    return cmocka_run_group_tests(spdm_requester_challenge_auth_tests,
+    return cmocka_run_group_tests(test_cases,
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }

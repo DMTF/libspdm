@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2021-2022 DMTF. All rights reserved.
+ *  Copyright 2021-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 #include "spdm_unit_test.h"
@@ -1080,7 +1080,7 @@ void test_libspdm_requester_encap_key_update_case14(void **state)
 
 int libspdm_req_encap_key_update_ack_test(void)
 {
-    const struct CMUnitTest spdm_requester_key_update_tests[] = {
+    const struct CMUnitTest test_cases[] = {
         /* Success Case -- UpdateKey*/
         cmocka_unit_test(test_libspdm_requester_encap_key_update_case1),
         /* Bad request size*/
@@ -1118,7 +1118,7 @@ int libspdm_req_encap_key_update_ack_test(void)
 
     libspdm_setup_test_context(&test_context);
 
-    return cmocka_run_group_tests(spdm_requester_key_update_tests,
+    return cmocka_run_group_tests(test_cases,
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }

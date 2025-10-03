@@ -1395,7 +1395,7 @@ void libspdm_test_requester_encap_request_case15(void **State)
 
 int libspdm_req_encap_request_test(void)
 {
-    const struct CMUnitTest spdm_requester_encap_request_tests[] = {
+    const struct CMUnitTest test_cases[] = {
         /* SendRequest failed*/
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_ENABLE_CAPABILITY_CERT_CAP)
         cmocka_unit_test(libspdm_test_requester_encap_request_case1),
@@ -1437,7 +1437,7 @@ int libspdm_req_encap_request_test(void)
 
     libspdm_setup_test_context(&test_context);
 
-    return cmocka_run_group_tests(spdm_requester_encap_request_tests,
+    return cmocka_run_group_tests(test_cases,
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }

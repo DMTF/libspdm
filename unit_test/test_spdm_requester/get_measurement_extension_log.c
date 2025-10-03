@@ -1067,7 +1067,7 @@ static void libspdm_test_requester_get_measurement_extension_log_case9(void **st
 
 int libspdm_req_get_measurement_extension_log_test(void)
 {
-    const struct CMUnitTest spdm_requester_get_measurement_extension_log_tests[] = {
+    const struct CMUnitTest test_cases[] = {
         /* SendRequest failed*/
         cmocka_unit_test(libspdm_test_requester_get_measurement_extension_log_case1),
         /* Successful response, the MEL size remains unchanged*/
@@ -1098,7 +1098,7 @@ int libspdm_req_get_measurement_extension_log_test(void)
 
     libspdm_setup_test_context(&test_context);
 
-    return cmocka_run_group_tests(spdm_requester_get_measurement_extension_log_tests,
+    return cmocka_run_group_tests(test_cases,
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }

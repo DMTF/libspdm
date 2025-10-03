@@ -5074,7 +5074,7 @@ void libspdm_test_requester_psk_exchange_case27(void **state)
 
 int libspdm_req_psk_exchange_test(void)
 {
-    const struct CMUnitTest spdm_requester_psk_exchange_tests[] = {
+    const struct CMUnitTest test_cases[] = {
         /* SendRequest failed*/
         cmocka_unit_test(libspdm_test_requester_psk_exchange_case1),
         /* Successful response*/
@@ -5138,7 +5138,7 @@ int libspdm_req_psk_exchange_test(void)
 
     libspdm_setup_test_context(&test_context);
 
-    return cmocka_run_group_tests(spdm_requester_psk_exchange_tests,
+    return cmocka_run_group_tests(test_cases,
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }

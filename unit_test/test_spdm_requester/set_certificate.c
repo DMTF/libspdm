@@ -598,7 +598,7 @@ void libspdm_test_requester_set_certificate_case9(void **state)
 
 int libspdm_req_set_certificate_test(void)
 {
-    const struct CMUnitTest spdm_requester_set_certificate_tests[] = {
+    const struct CMUnitTest test_cases[] = {
         /* SendRequest failed*/
         cmocka_unit_test(libspdm_test_requester_set_certificate_case1),
         /* Successful response to set certificate*/
@@ -624,7 +624,7 @@ int libspdm_req_set_certificate_test(void)
 
     libspdm_setup_test_context(&test_context);
 
-    return cmocka_run_group_tests(spdm_requester_set_certificate_tests,
+    return cmocka_run_group_tests(test_cases,
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }

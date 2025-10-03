@@ -254,7 +254,7 @@ int libspdm_req_subscribe_event_types_test(void)
         receive_message,
     };
 
-    const struct CMUnitTest spdm_requester_get_event_types_tests[] = {
+    const struct CMUnitTest test_cases[] = {
         cmocka_unit_test(libspdm_test_requester_subscribe_event_types_case1),
         cmocka_unit_test(libspdm_test_requester_subscribe_event_types_case2),
         cmocka_unit_test(libspdm_test_requester_subscribe_event_types_case3)
@@ -262,7 +262,7 @@ int libspdm_req_subscribe_event_types_test(void)
 
     libspdm_setup_test_context(&test_context);
 
-    return cmocka_run_group_tests(spdm_requester_get_event_types_tests,
+    return cmocka_run_group_tests(test_cases,
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }
