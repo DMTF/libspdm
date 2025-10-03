@@ -584,7 +584,7 @@ void libspdm_test_requester_get_csr_case7(void **state)
 
 int libspdm_req_get_csr_test(void)
 {
-    const struct CMUnitTest spdm_requester_get_csr_tests[] = {
+    const struct CMUnitTest test_cases[] = {
         /* SendRequest failed*/
         cmocka_unit_test(libspdm_test_requester_get_csr_case1),
         /* Successful response to get csr*/
@@ -612,7 +612,7 @@ int libspdm_req_get_csr_test(void)
     /*ensure that cached.csr exists in test_csr at the beginning*/
     libspdm_clear_cached_csr();
 
-    return cmocka_run_group_tests(spdm_requester_get_csr_tests,
+    return cmocka_run_group_tests(test_cases,
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }

@@ -452,7 +452,7 @@ static void test_libspdm_requester_encap_event_ack_case4(void **state)
 
 int libspdm_req_encap_event_ack_test(void)
 {
-    const struct CMUnitTest spdm_requester_event_ack_tests[] = {
+    const struct CMUnitTest test_cases[] = {
         cmocka_unit_test(test_libspdm_requester_encap_event_ack_case1),
         cmocka_unit_test(test_libspdm_requester_encap_event_ack_case2),
         cmocka_unit_test(test_libspdm_requester_encap_event_ack_case3),
@@ -466,7 +466,7 @@ int libspdm_req_encap_event_ack_test(void)
 
     libspdm_setup_test_context(&test_context);
 
-    return cmocka_run_group_tests(spdm_requester_event_ack_tests,
+    return cmocka_run_group_tests(test_cases,
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }

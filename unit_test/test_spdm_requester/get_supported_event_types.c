@@ -1,6 +1,6 @@
 /**
  *  Copyright Notice:
- *  Copyright 2024 DMTF. All rights reserved.
+ *  Copyright 2024-2025 DMTF. All rights reserved.
  *  License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
  **/
 
@@ -183,7 +183,7 @@ static void libspdm_test_requester_get_event_types_case1(void **state)
 
 int libspdm_req_get_supported_event_types_test(void)
 {
-    const struct CMUnitTest spdm_requester_get_event_types_tests[] = {
+    const struct CMUnitTest test_cases[] = {
         cmocka_unit_test(libspdm_test_requester_get_event_types_case1)
     };
 
@@ -196,7 +196,7 @@ int libspdm_req_get_supported_event_types_test(void)
 
     libspdm_setup_test_context(&test_context);
 
-    return cmocka_run_group_tests(spdm_requester_get_event_types_tests,
+    return cmocka_run_group_tests(test_cases,
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }

@@ -664,7 +664,7 @@ void libspdm_test_requester_chunk_send_case15(void** state)
 int libspdm_req_chunk_send_test(void)
 {
     /* Test the CHUNK_SEND handlers in various requester handlers */
-    const struct CMUnitTest spdm_requester_chunk_send_tests[] = {
+    const struct CMUnitTest test_cases[] = {
         /* Request Algorithms successfully sent in chunks. */
         cmocka_unit_test(libspdm_test_requester_chunk_send_case1),
         /* Chunk Request fail send */
@@ -708,7 +708,7 @@ int libspdm_req_chunk_send_test(void)
 
     libspdm_setup_test_context(&test_context);
 
-    return cmocka_run_group_tests(spdm_requester_chunk_send_tests,
+    return cmocka_run_group_tests(test_cases,
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }
