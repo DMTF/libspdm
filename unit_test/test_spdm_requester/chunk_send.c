@@ -68,9 +68,8 @@ void libspdm_requester_chunk_send_test_case15_build_algorithms_response(
     spdm_response->ext_hash_sel_count = 0;
 }
 
-libspdm_return_t libspdm_requester_chunk_send_test_send_message(
-    void* spdm_context, size_t request_size, const void* request,
-    uint64_t timeout)
+static libspdm_return_t send_message(
+    void *spdm_context, size_t request_size, const void *request, uint64_t timeout)
 {
     libspdm_test_context_t* spdm_test_context;
     const spdm_chunk_send_request_t* chunk_send;
@@ -149,12 +148,10 @@ libspdm_return_t libspdm_requester_chunk_send_test_send_message(
     return LIBSPDM_STATUS_SEND_FAIL;
 }
 
-libspdm_return_t libspdm_requester_chunk_send_test_receive_message(
-    void *context, size_t *response_size,
-    void **response, uint64_t timeout)
+static libspdm_return_t receive_message(
+    void *spdm_context, size_t *response_size, void **response, uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
-    libspdm_context_t *spdm_context;
     spdm_chunk_send_ack_response_t *chunk_send_ack_rsp;
     spdm_chunk_send_ack_response_14_t *chunk_send_ack_rsp_14;
     spdm_error_response_t *error_response;
@@ -163,7 +160,6 @@ libspdm_return_t libspdm_requester_chunk_send_test_receive_message(
     size_t chunk_size;
 
     spdm_test_context = libspdm_get_test_context();
-    spdm_context = context;
 
     if ((spdm_test_context->case_id == 1) || (spdm_test_context->case_id == 10) ||
         (spdm_test_context->case_id == 11)) {
@@ -706,8 +702,8 @@ int libspdm_req_chunk_send_test(void)
     libspdm_test_context_t test_context = {
         LIBSPDM_TEST_CONTEXT_VERSION,
         true,
-        libspdm_requester_chunk_send_test_send_message,
-        libspdm_requester_chunk_send_test_receive_message,
+        send_message,
+        receive_message,
     };
 
     libspdm_setup_test_context(&test_context);
