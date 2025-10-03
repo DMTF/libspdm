@@ -130,7 +130,7 @@ static void test_responder_encap_send_event_case2(void **state)
     assert_false(need_continue);
 }
 
-int libspdm_responder_encap_send_event_test_main(void)
+int libspdm_rsp_encap_send_event_test(void)
 {
     const struct CMUnitTest spdm_responder_key_update_tests[] = {
         cmocka_unit_test(test_responder_encap_send_event_case1),

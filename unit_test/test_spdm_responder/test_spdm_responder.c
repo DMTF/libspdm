@@ -69,21 +69,21 @@ int libspdm_rsp_end_session_ack_test(void);
 #if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
 #if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
-int spdm_responder_encap_get_digests_test_main(void);
-int spdm_responder_encap_get_certificate_test_main(void);
+int spdm_rsp_encap_get_digests_test(void);
+int spdm_rsp_encap_get_certificate_test(void);
 #endif /* LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT */
 #if LIBSPDM_SEND_CHALLENGE_SUPPORT
-int libspdm_responder_encap_challenge_auth_test_main(void);
+int libspdm_rsp_encap_challenge_test(void);
 #endif /* LIBSPDM_SEND_CHALLENGE_SUPPORT */
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
-int libspdm_responder_encapsulated_response_test_main(void);
-int libspdm_responder_encap_key_update_test_main(void);
+int libspdm_rsp_encapsulated_response_test(void);
+int libspdm_rsp_encap_key_update_test(void);
 #if LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT
-int libspdm_responder_encap_get_endpoint_info_test_main(void);
+int libspdm_rsp_encap_get_endpoint_info_test(void);
 int libspdm_responder_encap_get_endpoint_info_error_test_main(void);
 #endif /* LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT */
 #if LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP
-int libspdm_responder_encap_send_event_test_main(void);
+int libspdm_rsp_encap_send_event_test(void);
 int libspdm_responder_encap_send_event_error_test_main(void);
 #endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
 #endif /* LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP*/
@@ -227,27 +227,27 @@ int main(void)
     #if LIBSPDM_ENABLE_CAPABILITY_ENCAP_CAP
     #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     #if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
-    if (spdm_responder_encap_get_digests_test_main() != 0) {
+    if (spdm_rsp_encap_get_digests_test() != 0) {
         return_value = 1;
     }
-    if (spdm_responder_encap_get_certificate_test_main() != 0) {
+    if (spdm_rsp_encap_get_certificate_test() != 0) {
         return_value = 1;
     }
     #endif /* LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT */
     #if LIBSPDM_SEND_CHALLENGE_SUPPORT
-    if (libspdm_responder_encap_challenge_auth_test_main() != 0) {
+    if (libspdm_rsp_encap_challenge_test() != 0) {
         return_value = 1;
     }
     #endif /* LIBSPDM_SEND_CHALLENGE_SUPPORT */
     #endif /* LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP */
-    if (libspdm_responder_encapsulated_response_test_main() != 0) {
+    if (libspdm_rsp_encapsulated_response_test() != 0) {
         return_value = 1;
     }
-    if (libspdm_responder_encap_key_update_test_main() != 0) {
+    if (libspdm_rsp_encap_key_update_test() != 0) {
         return_value = 1;
     }
     #if (LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT) && (LIBSPDM_ENABLE_CAPABILITY_ENDPOINT_INFO_CAP)
-    if (libspdm_responder_encap_get_endpoint_info_test_main() != 0) {
+    if (libspdm_rsp_encap_get_endpoint_info_test() != 0) {
         return_value = 1;
     }
     if (libspdm_responder_encap_get_endpoint_info_error_test_main() != 0) {
@@ -255,7 +255,7 @@ int main(void)
     }
     #endif /* LIBSPDM_SEND_GET_ENDPOINT_INFO_SUPPORT */
     #if LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP
-    if (libspdm_responder_encap_send_event_test_main() != 0) {
+    if (libspdm_rsp_encap_send_event_test() != 0) {
         return_value = 1;
     }
     if (libspdm_responder_encap_send_event_error_test_main() != 0) {

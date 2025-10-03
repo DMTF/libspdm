@@ -244,7 +244,7 @@ void libspdm_test_responder_encap_key_update_case5(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
-int libspdm_responder_encap_key_update_test_main(void)
+int libspdm_rsp_encap_key_update_test(void)
 {
     const struct CMUnitTest spdm_responder_key_update_tests[] = {
         /* Successful response*/

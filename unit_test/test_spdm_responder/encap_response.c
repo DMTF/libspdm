@@ -1204,7 +1204,7 @@ void libspdm_test_get_response_encapsulated_response_ack_case9(void **State)
                      m_libspdm_m_deliver_encapsulated_response_request_t2.header.param1);
 }
 
-int libspdm_responder_encapsulated_response_test_main(void)
+int libspdm_rsp_encapsulated_response_test(void)
 {
     const struct CMUnitTest spdm_responder_encapsulated_response_tests[] = {
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)

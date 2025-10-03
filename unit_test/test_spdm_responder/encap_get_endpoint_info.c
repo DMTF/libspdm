@@ -503,7 +503,7 @@ void libspdm_test_responder_encap_get_endpoint_info_case4(void **state)
 #endif
 }
 
-int libspdm_responder_encap_get_endpoint_info_test_main(void)
+int libspdm_rsp_encap_get_endpoint_info_test(void)
 {
     const struct CMUnitTest spdm_responder_encap_get_endpoint_info_tests[] = {
         /* Success requeset endpoint info with signature */
