@@ -23,7 +23,7 @@ target_sources(test_spdm_requester
         get_digests.c
         get_certificate.c
         challenge.c
-        get_event_types.c
+        get_supported_event_types.c
         subscribe_event_types.c
         get_measurements.c
         get_measurement_extension_log.c
@@ -47,7 +47,7 @@ target_sources(test_spdm_requester
         get_csr.c
         chunk_get.c
         chunk_send.c
-        vendor_request.c
+        vendor_defined_request.c
         get_key_pair_info.c
         set_key_pair_info.c
         get_endpoint_info.c
