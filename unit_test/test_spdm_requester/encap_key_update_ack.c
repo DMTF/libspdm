@@ -1078,7 +1078,7 @@ void test_libspdm_requester_encap_key_update_case14(void **state)
                      0);
 }
 
-int libspdm_requester_encap_key_update_test_main(void)
+int libspdm_req_encap_key_update_ack_test(void)
 {
     const struct CMUnitTest spdm_requester_key_update_tests[] = {
         /* Success Case -- UpdateKey*/

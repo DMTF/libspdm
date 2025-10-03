@@ -157,7 +157,7 @@ static void test_subscribe_event_types_ack_case2(void **state)
     assert_true(!g_event_all_subscribe && !g_event_all_unsubscribe);
 }
 
-int libspdm_requester_encap_subscribe_event_types_ack_test_main(void)
+int libspdm_req_encap_subscribe_event_types_ack_test(void)
 {
     const struct CMUnitTest spdm_requester_subscribe_event_types_ack_tests[] = {
         cmocka_unit_test(test_subscribe_event_types_ack_case1),

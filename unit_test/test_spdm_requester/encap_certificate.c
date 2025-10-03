@@ -526,7 +526,7 @@ void libspdm_test_requester_encap_certificate_case7(void **state)
     free(data);
 }
 
-int libspdm_requester_encap_certificate_test_main(void)
+int libspdm_req_encap_certificate_test(void)
 {
     const struct CMUnitTest spdm_requester_encap_certificate_tests[] = {
         /* Success Case*/
