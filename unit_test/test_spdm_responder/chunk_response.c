@@ -1518,7 +1518,7 @@ void libspdm_test_responder_chunk_get_rsp_case18(void** state)
 }
 
 
-int libspdm_responder_chunk_get_rsp_test_main(void)
+int libspdm_rsp_chunk_response_test(void)
 {
     const struct CMUnitTest spdm_responder_chunk_get_tests[] = {
         /* Responder has no response flag chunk cap */

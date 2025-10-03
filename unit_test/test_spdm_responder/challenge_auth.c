@@ -1217,7 +1217,7 @@ void libspdm_test_responder_challenge_auth_case19(void **state)
     free(data1);
 }
 
-int libspdm_responder_challenge_auth_test_main(void)
+int libspdm_rsp_challenge_auth_test(void)
 {
     const struct CMUnitTest spdm_responder_challenge_auth_tests[] = {
         /* Success Case*/

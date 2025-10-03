@@ -639,7 +639,7 @@ void libspdm_test_responder_digests_case11(void **state)
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
-int libspdm_responder_digests_test_main(void)
+int libspdm_rsp_digests_test(void)
 {
     const struct CMUnitTest spdm_responder_digests_tests[] = {
         /* Success Case*/

@@ -1720,7 +1720,7 @@ void libspdm_test_responder_psk_exchange_case17(void **state)
     free(data1);
 }
 
-int libspdm_responder_psk_exchange_test_main(void)
+int libspdm_rsp_psk_exchange_rsp_test(void)
 {
     const struct CMUnitTest spdm_responder_psk_exchange_tests[] = {
         /* Success Case*/

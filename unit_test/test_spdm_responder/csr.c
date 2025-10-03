@@ -1979,7 +1979,7 @@ void libspdm_test_responder_csr_case16(void **state)
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX */
 }
 
-int libspdm_responder_csr_test_main(void)
+int libspdm_rsp_csr_test(void)
 {
     const struct CMUnitTest spdm_responder_csr_tests[] = {
         /* Success Case for csr response with device_cert mode */

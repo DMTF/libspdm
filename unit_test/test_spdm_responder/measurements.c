@@ -2730,7 +2730,7 @@ void libspdm_test_responder_measurements_case36(void **state)
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
-int libspdm_responder_measurements_test_main(void)
+int libspdm_rsp_measurements_test(void)
 {
     m_libspdm_get_measurements_request11.slot_id_param = SPDM_MAX_SLOT_COUNT - 1;
     m_libspdm_get_measurements_request12.slot_id_param = SPDM_MAX_SLOT_COUNT + 1;

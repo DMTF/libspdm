@@ -676,7 +676,7 @@ void libspdm_test_responder_set_key_pair_info_ack_case4(void **state)
     free(set_key_pair_info_request);
 }
 
-int libspdm_responder_set_key_pair_info_ack_test_main(void)
+int libspdm_rsp_set_key_pair_info_ack_test(void)
 {
     const struct CMUnitTest spdm_responder_set_key_pair_info_ack_tests[] = {
         /* Success Case to set key pair info*/

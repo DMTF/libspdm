@@ -355,7 +355,7 @@ void libspdm_test_responder_measurement_extension_log_case5(void **state)
                         response_size - sizeof(spdm_measurement_extension_log_response_t));
 }
 
-int libspdm_responder_measurement_extension_log_test_main(void)
+int libspdm_rsp_measurement_extension_log_test(void)
 {
     const struct CMUnitTest spdm_responder_measurement_extension_log_tests[] = {
         /* Success Case*/

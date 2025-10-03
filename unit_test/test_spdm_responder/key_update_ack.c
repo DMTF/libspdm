@@ -2156,7 +2156,7 @@ void libspdm_test_responder_key_update_case27(void **state)
                         m_rsp_secret_buffer, secured_message_context->hash_size);
 }
 
-int libspdm_responder_key_update_test_main(void)
+int libspdm_rsp_key_update_ack_test(void)
 {
     const struct CMUnitTest spdm_responder_key_update_tests[] = {
         /* Success Case -- UpdateKey*/

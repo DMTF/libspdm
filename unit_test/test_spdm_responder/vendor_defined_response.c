@@ -243,7 +243,7 @@ static void libspdm_test_responder_vendor_cmds_case2(void **state)
 }
 
 
-int libspdm_responder_vendor_cmds_test_main(void)
+int libspdm_rsp_vendor_defined_response_test(void)
 {
     const struct CMUnitTest spdm_responder_vendor_cmds_tests[] = {
         cmocka_unit_test(libspdm_test_responder_vendor_cmds_case1),

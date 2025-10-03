@@ -1274,7 +1274,7 @@ void libspdm_test_responder_capabilities_case28(void **state)
                      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MULTI_KEY_CAP_ONLY);
 }
 
-int libspdm_responder_capabilities_test_main(void)
+int libspdm_rsp_capabilities_test(void)
 {
     const struct CMUnitTest spdm_responder_capabilities_tests[] = {
         /* Success Case*/

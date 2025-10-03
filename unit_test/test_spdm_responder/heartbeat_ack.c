@@ -625,7 +625,7 @@ void libspdm_test_responder_heartbeat_case8(void **state)
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
-int libspdm_responder_heartbeat_test_main(void)
+int libspdm_rsp_heartbeat_ack_test(void)
 {
     const struct CMUnitTest spdm_responder_heartbeat_tests[] = {
         /* Success Case*/

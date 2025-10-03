@@ -1687,7 +1687,7 @@ void libspdm_test_responder_psk_finish_case15(void **state)
     free(data1);
 }
 
-int libspdm_responder_psk_finish_test_main(void)
+int libspdm_rsp_psk_finish_rsp_test(void)
 {
     const struct CMUnitTest spdm_responder_psk_finish_tests[] = {
         /* Success Case*/
