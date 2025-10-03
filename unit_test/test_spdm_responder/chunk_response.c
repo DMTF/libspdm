@@ -1520,7 +1520,7 @@ void libspdm_test_responder_chunk_get_rsp_case18(void** state)
 
 int libspdm_rsp_chunk_response_test(void)
 {
-    const struct CMUnitTest spdm_responder_chunk_get_tests[] = {
+    const struct CMUnitTest test_cases[] = {
         /* Responder has no response flag chunk cap */
         cmocka_unit_test(libspdm_test_responder_chunk_get_rsp_case1),
         /* Responder has response state != NORMAL */
@@ -1566,7 +1566,7 @@ int libspdm_rsp_chunk_response_test(void)
 
     libspdm_setup_test_context(&test_context);
 
-    return cmocka_run_group_tests(spdm_responder_chunk_get_tests,
+    return cmocka_run_group_tests(test_cases,
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }

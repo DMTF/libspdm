@@ -636,7 +636,7 @@ void libspdm_test_responder_end_session_case8(void **state)
 
 int libspdm_rsp_end_session_ack_test(void)
 {
-    const struct CMUnitTest spdm_responder_end_session_tests[] = {
+    const struct CMUnitTest test_cases[] = {
         /* Success Case*/
         cmocka_unit_test(libspdm_test_responder_end_session_case1),
         /* Bad request size*/
@@ -664,7 +664,7 @@ int libspdm_rsp_end_session_ack_test(void)
 
     libspdm_setup_test_context(&test_context);
 
-    return cmocka_run_group_tests(spdm_responder_end_session_tests,
+    return cmocka_run_group_tests(test_cases,
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }

@@ -573,7 +573,7 @@ void libspdm_test_responder_encap_get_endpoint_info_err_case5(void **state)
 
 int libspdm_rsp_encap_get_endpoint_info_error_test(void)
 {
-    const struct CMUnitTest spdm_responder_encap_get_endpoint_info_tests[] = {
+    const struct CMUnitTest test_cases[] = {
         /* Get an error response */
         cmocka_unit_test(libspdm_test_responder_encap_get_endpoint_info_err_case1),
         /* Get an incorrect response */
@@ -593,7 +593,7 @@ int libspdm_rsp_encap_get_endpoint_info_error_test(void)
 
     libspdm_setup_test_context(&test_context);
 
-    return cmocka_run_group_tests(spdm_responder_encap_get_endpoint_info_tests,
+    return cmocka_run_group_tests(test_cases,
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }

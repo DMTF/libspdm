@@ -2025,7 +2025,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case22(void** state)
 
 int libspdm_rsp_chunk_send_ack_test(void)
 {
-    const struct CMUnitTest spdm_responder_chunk_send_ack_tests[] = {
+    const struct CMUnitTest test_cases[] = {
         /* Responder sent multiple chunks and processed correctly */
         cmocka_unit_test(libspdm_test_responder_chunk_send_ack_rsp_case0),
         /* Responder has no response flag chunk cap */
@@ -2084,7 +2084,7 @@ int libspdm_rsp_chunk_send_ack_test(void)
 
     libspdm_setup_test_context(&test_context);
 
-    return cmocka_run_group_tests(spdm_responder_chunk_send_ack_tests,
+    return cmocka_run_group_tests(test_cases,
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }

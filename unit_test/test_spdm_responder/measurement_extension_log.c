@@ -357,7 +357,7 @@ void libspdm_test_responder_measurement_extension_log_case5(void **state)
 
 int libspdm_rsp_measurement_extension_log_test(void)
 {
-    const struct CMUnitTest spdm_responder_measurement_extension_log_tests[] = {
+    const struct CMUnitTest test_cases[] = {
         /* Success Case*/
         cmocka_unit_test(libspdm_test_responder_measurement_extension_log_case1),
         /* Success Case, request.length < total MEL len*/
@@ -377,7 +377,7 @@ int libspdm_rsp_measurement_extension_log_test(void)
 
     libspdm_setup_test_context(&test_context);
 
-    return cmocka_run_group_tests(spdm_responder_measurement_extension_log_tests,
+    return cmocka_run_group_tests(test_cases,
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }

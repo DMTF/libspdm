@@ -1206,7 +1206,7 @@ void libspdm_test_get_response_encapsulated_response_ack_case9(void **State)
 
 int libspdm_rsp_encapsulated_response_test(void)
 {
-    const struct CMUnitTest spdm_responder_encapsulated_response_tests[] = {
+    const struct CMUnitTest test_cases[] = {
 #if (LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP) && (LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT)
         /*Success Case request_op_code_sequence: SPDM_GET_DIGESTS*/
         cmocka_unit_test(libspdm_test_get_response_encapsulated_request_case1),
@@ -1261,7 +1261,7 @@ int libspdm_rsp_encapsulated_response_test(void)
 
     libspdm_setup_test_context(&test_context);
 
-    return cmocka_run_group_tests(spdm_responder_encapsulated_response_tests,
+    return cmocka_run_group_tests(test_cases,
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }

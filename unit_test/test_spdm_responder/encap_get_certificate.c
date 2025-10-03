@@ -593,7 +593,7 @@ void test_spdm_responder_encap_get_certificate_case5(void **state)
 
 int spdm_rsp_encap_get_certificate_test(void)
 {
-    const struct CMUnitTest spdm_responder_certificate_tests[] = {
+    const struct CMUnitTest test_cases[] = {
         /* Success Case*/
         cmocka_unit_test(test_spdm_responder_encap_get_certificate_case1),
         /* Bad request size ,remaining length is 0*/
@@ -616,7 +616,7 @@ int spdm_rsp_encap_get_certificate_test(void)
 
     libspdm_setup_test_context(&test_context);
 
-    return cmocka_run_group_tests(spdm_responder_certificate_tests,
+    return cmocka_run_group_tests(test_cases,
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }

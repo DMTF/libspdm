@@ -475,7 +475,7 @@ void test_spdm_responder_encap_get_digests_case7(void **state)
 
 int spdm_rsp_encap_get_digests_test(void)
 {
-    const struct CMUnitTest spdm_responder_digests_tests[] = {
+    const struct CMUnitTest test_cases[] = {
         /* Success Case*/
         cmocka_unit_test(test_spdm_responder_encap_get_digests_case1),
         /* Error response: SPDM_ERROR*/
@@ -499,7 +499,7 @@ int spdm_rsp_encap_get_digests_test(void)
 
     libspdm_setup_test_context(&test_context);
 
-    return cmocka_run_group_tests(spdm_responder_digests_tests,
+    return cmocka_run_group_tests(test_cases,
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }

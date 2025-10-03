@@ -498,7 +498,7 @@ void libspdm_test_responder_receive_send_rsp_case4(void** state)
 
 int libspdm_rsp_receive_send_test(void)
 {
-    const struct CMUnitTest spdm_responder_receive_send_tests[] = {
+    const struct CMUnitTest test_cases[] = {
         /* response message size is larger than requester data_transfer_size */
         cmocka_unit_test(libspdm_test_responder_receive_send_rsp_case1),
         /* response message size is larger than responder sending transmit buffer size */
@@ -522,7 +522,7 @@ int libspdm_rsp_receive_send_test(void)
 
     libspdm_setup_test_context(&test_context);
 
-    return cmocka_run_group_tests(spdm_responder_receive_send_tests,
+    return cmocka_run_group_tests(test_cases,
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }

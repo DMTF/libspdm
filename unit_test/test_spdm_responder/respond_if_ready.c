@@ -1372,7 +1372,7 @@ void libspdm_test_responder_respond_if_ready_case14(void **state) {
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
 int libspdm_rsp_respond_if_ready_test(void) {
-    const struct CMUnitTest spdm_responder_respond_if_ready_tests[] = {
+    const struct CMUnitTest test_cases[] = {
         /* Success Case*/
     #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP
         cmocka_unit_test(libspdm_test_responder_respond_if_ready_case1),
@@ -1415,7 +1415,7 @@ int libspdm_rsp_respond_if_ready_test(void) {
 
     libspdm_setup_test_context (&test_context);
 
-    return cmocka_run_group_tests(spdm_responder_respond_if_ready_tests,
+    return cmocka_run_group_tests(test_cases,
                                   libspdm_unit_test_group_setup,
                                   libspdm_unit_test_group_teardown);
 }
