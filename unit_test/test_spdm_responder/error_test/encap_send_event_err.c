@@ -115,7 +115,7 @@ static void test_responder_encap_send_event_err_case2(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
-int libspdm_responder_encap_send_event_error_test_main(void)
+int libspdm_rsp_encap_send_event_error_test(void)
 {
     const struct CMUnitTest spdm_responder_key_update_tests[] = {
         cmocka_unit_test(test_responder_encap_send_event_err_case1),

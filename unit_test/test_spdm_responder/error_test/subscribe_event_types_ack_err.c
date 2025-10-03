@@ -139,7 +139,7 @@ static void libspdm_test_responder_subscribe_event_types_ack_err_case2(void **st
     assert_int_equal(spdm_response->header.param2, SPDM_SUBSCRIBE_EVENT_TYPES);
 }
 
-int libspdm_responder_subscribe_event_types_ack_error_test_main(void)
+int libspdm_rsp_subscribe_event_types_ack_error_test(void)
 {
     libspdm_test_context_t m_test_context = {
         LIBSPDM_TEST_CONTEXT_VERSION,
