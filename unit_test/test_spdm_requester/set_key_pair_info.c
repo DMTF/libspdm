@@ -10,9 +10,8 @@
 
 #if LIBSPDM_ENABLE_CAPABILITY_SET_KEY_PAIR_INFO_CAP
 
-libspdm_return_t libspdm_requester_set_key_pair_info_test_send_message(
-    void *spdm_context, size_t request_size, const void *request,
-    uint64_t timeout)
+static libspdm_return_t send_message(
+    void *spdm_context, size_t request_size, const void *request, uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
 
@@ -28,9 +27,8 @@ libspdm_return_t libspdm_requester_set_key_pair_info_test_send_message(
     }
 }
 
-libspdm_return_t libspdm_requester_set_key_pair_info_test_receive_message(
-    void *spdm_context, size_t *response_size,
-    void **response, uint64_t timeout)
+static libspdm_return_t receive_message(
+    void *spdm_context, size_t *response_size, void **response, uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
 
@@ -305,8 +303,8 @@ int libspdm_req_set_key_pair_info_test(void)
     libspdm_test_context_t test_context = {
         LIBSPDM_TEST_CONTEXT_VERSION,
         true,
-        libspdm_requester_set_key_pair_info_test_send_message,
-        libspdm_requester_set_key_pair_info_test_receive_message,
+        send_message,
+        receive_message,
     };
 
     libspdm_setup_test_context(&test_context);

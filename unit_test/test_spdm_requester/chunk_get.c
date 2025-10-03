@@ -325,9 +325,8 @@ void libspdm_requester_chunk_get_test_case8_build_digest_response(
     spdm_response->header.param2 |= (0xFF << 0);
 }
 
-libspdm_return_t libspdm_requester_chunk_get_test_send_message(
-    void* spdm_context, size_t request_size, const void* request,
-    uint64_t timeout)
+static libspdm_return_t send_message(
+    void *spdm_context, size_t request_size, const void *request, uint64_t timeout)
 {
     libspdm_test_context_t* spdm_test_context;
     size_t header_size = sizeof(libspdm_test_message_header_t);
@@ -369,9 +368,8 @@ libspdm_return_t libspdm_requester_chunk_get_test_send_message(
     }
 }
 
-libspdm_return_t libspdm_requester_chunk_get_test_receive_message(
-    void* spdm_context, size_t* response_size,
-    void** response, uint64_t timeout)
+static libspdm_return_t receive_message(
+    void *spdm_context, size_t *response_size, void **response, uint64_t timeout)
 {
     libspdm_test_context_t* spdm_test_context;
     uint8_t chunk_handle = CHUNK_GET_UNIT_TEST_CHUNK_HANDLE;
@@ -1255,8 +1253,8 @@ int libspdm_req_chunk_get_test(void)
     libspdm_test_context_t test_context = {
         LIBSPDM_TEST_CONTEXT_VERSION,
         true,
-        libspdm_requester_chunk_get_test_send_message,
-        libspdm_requester_chunk_get_test_receive_message,
+        send_message,
+        receive_message,
     };
 
     libspdm_setup_test_context(&test_context);

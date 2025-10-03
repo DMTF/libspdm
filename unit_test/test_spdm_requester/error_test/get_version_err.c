@@ -20,8 +20,7 @@ static size_t m_libspdm_local_buffer_size;
 static uint8_t m_libspdm_local_buffer[LIBSPDM_MAX_MESSAGE_VCA_BUFFER_SIZE];
 
 static libspdm_return_t send_message(
-    void *spdm_context, size_t request_size, const void *request,
-    uint64_t timeout)
+    void *spdm_context, size_t request_size, const void *request, uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
 
@@ -76,8 +75,7 @@ static libspdm_return_t send_message(
 }
 
 static libspdm_return_t receive_message(
-    void *spdm_context, size_t *response_size,
-    void **response, uint64_t timeout)
+    void *spdm_context, size_t *response_size, void **response, uint64_t timeout)
 {
     libspdm_test_context_t *spdm_test_context;
 
