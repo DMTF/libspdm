@@ -665,7 +665,7 @@ void libspdm_test_requester_chunk_send_case15(void** state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 }
 
-int libspdm_requester_chunk_send_test_main(void)
+int libspdm_req_chunk_send_test(void)
 {
     /* Test the CHUNK_SEND handlers in various requester handlers */
     const struct CMUnitTest spdm_requester_chunk_send_tests[] = {

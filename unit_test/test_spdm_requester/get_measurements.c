@@ -6433,7 +6433,7 @@ static void libspdm_test_requester_get_measurements_case41(void **state)
     free(data);
 }
 
-int libspdm_requester_get_measurements_test_main(void)
+int libspdm_req_get_measurements_test(void)
 {
     const struct CMUnitTest spdm_requester_get_measurements_tests[] = {
         cmocka_unit_test(libspdm_test_requester_get_measurements_case1),

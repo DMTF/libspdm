@@ -578,7 +578,7 @@ void libspdm_test_requester_get_key_pair_info_case3(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_FIELD);
 }
 
-int libspdm_requester_get_key_pair_info_test_main(void)
+int libspdm_req_get_key_pair_info_test(void)
 {
     const struct CMUnitTest spdm_requester_get_key_pair_info_tests[] = {
         /* Successful response to get key pair info, key_pair_id is 1*/

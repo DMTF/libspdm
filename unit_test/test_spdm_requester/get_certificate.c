@@ -4601,7 +4601,7 @@ void libspdm_test_requester_get_certificate_case31(void **state)
     }
 }
 
-int libspdm_requester_get_certificate_test_main(void)
+int libspdm_req_get_certificate_test(void)
 {
     const struct CMUnitTest spdm_requester_get_certificate_tests[] = {
         /* SendRequest failed*/

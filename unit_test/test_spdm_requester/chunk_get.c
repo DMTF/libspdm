@@ -1215,7 +1215,7 @@ void libspdm_test_requester_chunk_get_case8(void** state)
 #endif
 
 
-int libspdm_requester_chunk_get_test_main(void)
+int libspdm_req_chunk_get_test(void)
 {
     /* Test the CHUNK_GET handlers in various requester handlers */
     const struct CMUnitTest spdm_requester_chunk_get_tests[] = {

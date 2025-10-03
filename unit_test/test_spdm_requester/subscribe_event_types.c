@@ -245,7 +245,7 @@ static void libspdm_test_requester_subscribe_event_types_case3(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 }
 
-int libspdm_requester_subscribe_event_types_test_main(void)
+int libspdm_req_subscribe_event_types_test(void)
 {
     libspdm_test_context_t test_context = {
         LIBSPDM_TEST_CONTEXT_VERSION,

@@ -1539,7 +1539,7 @@ static void libspdm_test_requester_get_capabilities_case36(void **state)
                      LIBSPDM_DEFAULT_CAPABILITY_RESPONSE_FLAG_VERSION_13);
 }
 
-int libspdm_requester_get_capabilities_test_main(void)
+int libspdm_req_get_capabilities_test(void)
 {
     const struct CMUnitTest m_spdm_requester_get_capabilities_tests[] = {
         /* cmocka_unit_test(libspdm_test_requester_get_capabilities_case1), */

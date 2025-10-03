@@ -181,7 +181,7 @@ static void libspdm_test_requester_get_event_types_case1(void **state)
     assert_int_equal(event_group_count, 1);
 }
 
-int libspdm_requester_get_event_types_test_main(void)
+int libspdm_req_get_supported_event_types_test(void)
 {
     const struct CMUnitTest spdm_requester_get_event_types_tests[] = {
         cmocka_unit_test(libspdm_test_requester_get_event_types_case1)
