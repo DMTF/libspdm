@@ -12,7 +12,7 @@ a) [ARM Development Studio 2022](https://developer.arm.com/downloads/-/arm-devel
   - Launch MSYS2 -> MSYS2 MINGW64.
   - Install cmake and make, with `pacman -S mingw-w64-x86_64-cmake` and `pacman -S make`.
   - Setup build environment
-      ```
+      ```bash
       export PATH=$PATH:/c/ArmStudio/sw/ARMCompiler6.18/bin
       export CC=/c/ArmStudio/sw/ARMCompiler6.18/bin/armclang.exe
       export ARM_PRODUCT_DEF=/c/ArmStudio/sw/mappings/gold.elmap
@@ -30,7 +30,7 @@ a) [ARM Development Studio 2022](https://developer.arm.com/downloads/-/arm-devel
 a) [ARM Development Studio 2022](https://developer.arm.com/downloads/-/arm-development-studio-downloads) for ARM/AARCH64.
   - Follow the [Arm Development Studio Getting Started Guide](https://developer.arm.com/documentation/101469/2022-1/Installing-and-configuring-Arm-Development-Studio/Installing-on-Linux) to install Linux version.
   - Setup build environment
-      ```
+      ```bash
       echo 'export PATH=$PATH:/opt/arm/developmentstudio-2022.1/sw/ARMCompiler6.18/bin' | sudo tee -a ~/.bashrc
       echo 'export ARM_PRODUCT_DEF=/opt/arm/developmentstudio-2022.1/sw/mappings/gold.elmap' | sudo tee -a ~/.bashrc
       echo 'export ARMLMD_LICENSE_FILE=<license file>' | sudo tee -a ~/.bashrc
@@ -41,7 +41,7 @@ a) [ARM Development Studio 2022](https://developer.arm.com/downloads/-/arm-devel
 b) [ARM GNU](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads).
   - Download 11.2-2022.02: GNU/Linux target (arm-none-linux-gnueabihf, aarch64-none-linux-gnu), and unzip it.
   - Add <tool_path>/bin to the $PATH environment. For example:
-      ```
+      ```bash
       echo 'export PATH=~/gcc-arm-11.2-2022.02-x86_64-arm-none-linux-gnueabihf/bin:$PATH' | sudo tee -a ~/.bashrc
       echo 'export PATH=~/gcc-arm-11.2-2022.02-x86_64-aarch64-none-linux-gnu/bin:$PATH' | sudo tee -a ~/.bashrc
       source ~/.bashrc
@@ -50,7 +50,7 @@ b) [ARM GNU](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads).
 c) [ARM GNU bare metal](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads).
   - Download 11.2-2022.02: GNU/Linux target (arm-none-eabi, aarch64-none-elf), and unzip it.
   - Add <tool_path>/bin to the $PATH environment. For example:
-      ```
+      ```bash
       echo 'export PATH=~/gcc-arm-11.2-2022.02-x86_64-arm-none-eabi/bin:$PATH' | sudo tee -a ~/.bashrc
       echo 'export PATH=~/gcc-arm-11.2-2022.02-x86_64-aarch64-none-elf/bin:$PATH' | sudo tee -a ~/.bashrc
       source ~/.bashrc
@@ -67,7 +67,7 @@ e) [AARCH64 GCC](https://packages.ubuntu.com/bionic/gcc-aarch64-linux-gnu) for A
 a) [RISCV XPACK](https://github.com/xpack-dev-tools/riscv-none-elf-gcc-xpack/releases/).
   - Download xPack GNU RISC-V Embedded GCC v12.2.0-1(xpack-riscv-none-elf-gcc-12.1.0-2-linux-x64.tar.gz), and unzip it.
   - Add <tool_path>/bin to the $PATH environment. For example:
-      ```
+      ```bash
       echo 'export PATH=~/xpack-riscv-none-elf-gcc-12.2.0-1/bin:$PATH' | sudo tee -a ~/.bashrc
       source ~/.bashrc
       ```
@@ -75,19 +75,19 @@ a) [RISCV XPACK](https://github.com/xpack-dev-tools/riscv-none-elf-gcc-xpack/rel
 
 b) [RISCV GNU](https://github.com/riscv-collab/riscv-gnu-toolchain)
   - Download the compiler
-      ```
+      ```bash
       sudo apt-get install autoconf automake autotools-dev curl python3 libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev
       git clone --recursive https://github.com/riscv/riscv-gnu-toolchain
       ```
   - Compile for riscv64
-      ```
+      ```bash
       cd riscv-gnu-toolchain
       ./configure --prefix=/opt/riscv
       sudo make linux
       sudo ln -s /opt/riscv/bin/* /usr/bin
       ```
   - Compile for riscv32
-      ```
+      ```bash
       cd riscv-gnu-toolchain
       ./configure --prefix=/opt/riscv32 --with-arch=rv32gc --with-abi=ilp32d
       sudo make linux
@@ -103,7 +103,7 @@ d) [RISCV NONE](https://archlinux.org/packages/extra/x86_64/riscv64-elf-gcc/)
     distro.
 
   - On Arch it can be installed with
-      ```
+      ```bash
       sudo pacman -Syu riscv32-elf-binutils riscv32-elf-newlib riscv64-elf-binutils riscv64-elf-gcc riscv64-elf-newlib
       ```
 
@@ -111,7 +111,7 @@ d) [RISCV NONE](https://archlinux.org/packages/extra/x86_64/riscv64-elf-gcc/)
 
 a) [ARC GNU](https://github.com/foss-for-synopsys-dwc-arc-processors).
   - Download ARC GNU.
-      ```
+      ```bash
       sudo apt-get install -y texinfo byacc flex libncurses5-dev zlib1g-dev libexpat1-dev texlive build-essential git wget gawk bison xz-utils make python3 rsync locales
       mkdir arc_gnu
       cd arc_gnu
@@ -125,7 +125,7 @@ a) [ARC GNU](https://github.com/foss-for-synopsys-dwc-arc-processors).
       git clone https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux
       ```
   - Build tool chain.
-      ```
+      ```bash
       cd toolchain
       ./build-all.sh --no-elf32 --cpu hs38 --install-dir $INSTALL_ROOT
       # This command will build toolchain for arc HS Linux development, for other arc cores refer to https://github.com/foss-for-synopsys-dwc-arc-processors/toolchain/blob/arc-releases/README.md
@@ -143,7 +143,7 @@ a) [NIOS2 GNU](https://www.intel.com/content/www/us/en/docs/programmable/683689/
 ### Windows Builds for ARM/AARCH64
 
    For ARM DS2022 build (arm or aarch64) on Windows, Launch `MSYS2 -> MSYS2 MINGW64` command prompt.
-   ```
+   ```bash
    cd libspdm
    mkdir build
    cd build
@@ -154,11 +154,11 @@ a) [NIOS2 GNU](https://www.intel.com/content/www/us/en/docs/programmable/683689/
 
    Example CMake commands:
 
-   ```
+   ```bash
    cmake -G"MSYS Makefiles" -DARCH=arm -DTOOLCHAIN=ARM_DS2022 -DTARGET=Debug -DCRYPTO=mbedtls ..
    ```
 
-   ```
+   ```bash
    cmake -G"MSYS Makefiles" -DARCH=aarch64 -DTOOLCHAIN=ARM_DS2022 -DTARGET=Release -DCRYPTO=mbedtls ..
    ```
 
@@ -169,7 +169,7 @@ a) [NIOS2 GNU](https://www.intel.com/content/www/us/en/docs/programmable/683689/
 #### Linux Builds with ARM DS2022
 
    For ARM DS2022 build (arm or aarch64) on Linux,
-   ```
+   ```bash
    cd libspdm
    mkdir build
    cd build
@@ -180,11 +180,11 @@ a) [NIOS2 GNU](https://www.intel.com/content/www/us/en/docs/programmable/683689/
 
    Example CMake commands:
 
-   ```
+   ```bash
    cmake -DARCH=arm -DTOOLCHAIN=ARM_DS2022 -DTARGET=Debug -DCRYPTO=mbedtls ..
    ```
 
-   ```
+   ```bash
    cmake -DARCH=aarch64 -DTOOLCHAIN=ARM_DS2022 -DTARGET=Release -DCRYPTO=mbedtls ..
    ```
 
@@ -193,7 +193,7 @@ a) [NIOS2 GNU](https://www.intel.com/content/www/us/en/docs/programmable/683689/
 #### Linux Builds with ARM_GNU Toolchain
 
    For ARM_GNU toolchain GNU/Linux target (arm-none-linux-gnueabihf, aarch64-none-linux-gnu) build on Linux,
-   ```
+   ```bash
    cd libspdm
    mkdir build
    cd build
@@ -204,11 +204,11 @@ a) [NIOS2 GNU](https://www.intel.com/content/www/us/en/docs/programmable/683689/
 
    Example CMake commands:
 
-   ```
+   ```bash
    cmake -DARCH=arm -DTOOLCHAIN=ARM_GNU -DTARGET=Debug -DCRYPTO=mbedtls ..
    ```
 
-   ```
+   ```bash
    cmake -DARCH=aarch64 -DTOOLCHAIN=ARM_GNU -DTARGET=Release -DCRYPTO=mbedtls ..
    ```
 
@@ -217,7 +217,7 @@ a) [NIOS2 GNU](https://www.intel.com/content/www/us/en/docs/programmable/683689/
 #### Linux Builds with ARM_GNU_BARE_METAL Toolchain
 
    For ARM_GNU_BARE_METAL toolchain GNU/Linux target (arm-none-eabi, aarch64-none-elf) build on Linux,
-   ```
+   ```bash
    cd libspdm
    mkdir build
    cd build
@@ -236,13 +236,13 @@ a) [NIOS2 GNU](https://www.intel.com/content/www/us/en/docs/programmable/683689/
 
    Example CMake commands:
 
-   ```
+   ```bash
    cmake -DARCH=arm -DMARCH=armv7e-m -DTOOLCHAIN=ARM_GNU_BARE_METAL -DTARGET=Debug -DCRYPTO=mbedtls ..
    ```
-   ```
+   ```bash
    cmake -DARCH=arm -DMARCH=armv4t -DTOOLCHAIN=ARM_GNU_BARE_METAL -DTARGET=Debug -DCRYPTO=mbedtls -DISABLE_LTO=1 ..
    ```
-   ```
+   ```bash
    cmake -DARCH=aarch64 -DTOOLCHAIN=ARM_GNU_BARE_METAL -DTARGET=Release -DCRYPTO=mbedtls ..
    ```
 
@@ -252,7 +252,7 @@ a) [NIOS2 GNU](https://www.intel.com/content/www/us/en/docs/programmable/683689/
 
    For RISCV_XPACK toolchain GNU/Linux target (riscv-none-elf-gcc-12.1.0-2-linux-x64) build on Linux,
    (The riscv64 arch is not supported now.)
-   ```
+   ```bash
    cd libspdm
    mkdir build
    cd build
@@ -262,10 +262,10 @@ a) [NIOS2 GNU](https://www.intel.com/content/www/us/en/docs/programmable/683689/
    ```
 
    Example CMake commands:
-   ```
+   ```bash
    cmake -DARCH=riscv32 -DTOOLCHAIN=RISCV_XPACK -DTARGET=Debug -DCRYPTO=mbedtls ..
    ```
-   ```
+   ```bash
    cmake -DARCH=riscv32 -DTOOLCHAIN=RISCV_XPACK -DTARGET=Release -DCRYPTO=mbedtls ..
    ```
    Note: `make -j` can be used to accelerate the build.
@@ -276,7 +276,7 @@ If the toolchain is set to NONE then it will use the native toolchain of the
 build environment. This is useful inside build environments such as Buildroot
 or OpenEmbedded.
 
-```shell
+```bash
 cd libspdm
 mkdir build
 cd build
@@ -295,12 +295,12 @@ All three libraries are required for an application that uses libspdm, but the i
 Will install pc file and all required headers and shared libraries (except for spdm_device_secret_lib_sample which the integrator has to implement), so application developers can use 'pkg-config --libs libspdm' and 'pkg-config --cflags libspdm' to link with libspdm
 
 To build with shared library support:
-```
+```bash
 cmake -DARCH=x64 -DTOOLCHAIN=GCC -DTARGET=Release -DCRYPTO=mbedtls -DBUILD_LINUX_SHARED_LIB=ON ..
 ```
 
 To compile and link with libspdm:
-```
+```bash
 gcc `pkg-config --cflags libspdm` -c libspdm_app.c -o libspdm_app.o
 gcc libspdm_app.o `pkg-config --libs libspdm` libspdm_app
 ```
@@ -309,7 +309,7 @@ gcc libspdm_app.o `pkg-config --libs libspdm` libspdm_app
 
 Unit tests can be disable by adding -DDISABLE_TESTS=1 to CMake.
 
-```shell
+```
 -DDISABLE_TESTS=1
 ```
 
@@ -320,6 +320,6 @@ environment. The Integrator must provide a C library and runtime, such as Newlib
 
 To build libspdm with Mbed TLS for RISC-V 32-bit run the following
 
-```
+```bash
 cmake -DARCH=riscv32 -DTOOLCHAIN=RISCV_NONE -DTARGET=Debug -DCRYPTO=mbedtls -DDISABLE_TESTS=1 ..
 ```
