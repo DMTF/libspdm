@@ -2023,7 +2023,7 @@ void libspdm_test_responder_chunk_send_ack_rsp_case22(void** state)
     assert_int_equal(algorithms_response->header.param1, 4);
 }
 
-int libspdm_responder_chunk_send_ack_test_main(void)
+int libspdm_rsp_chunk_send_ack_test(void)
 {
     const struct CMUnitTest spdm_responder_chunk_send_ack_tests[] = {
         /* Responder sent multiple chunks and processed correctly */

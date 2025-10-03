@@ -1374,7 +1374,7 @@ void libspdm_test_responder_certificate_case19(void **state)
     free(data);
 }
 
-int libspdm_responder_certificate_test_main(void)
+int libspdm_rsp_certificate_test(void)
 {
     const struct CMUnitTest spdm_responder_certificate_tests[] = {
         /* Success Case*/

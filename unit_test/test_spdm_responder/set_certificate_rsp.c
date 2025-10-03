@@ -1113,7 +1113,7 @@ void libspdm_test_responder_set_certificate_rsp_case13(void **state)
     free(m_libspdm_set_certificate_request);
 }
 
-int libspdm_responder_set_certificate_rsp_test_main(void)
+int libspdm_rsp_set_certificate_rsp_test(void)
 {
     const struct CMUnitTest spdm_responder_set_certificate_tests[] = {
         /* Success Case for set_certificate to slot_id:0 with device_cert mode*/

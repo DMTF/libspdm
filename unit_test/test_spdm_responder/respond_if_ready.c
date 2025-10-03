@@ -1371,7 +1371,7 @@ void libspdm_test_responder_respond_if_ready_case14(void **state) {
 }
 #endif /* LIBSPDM_ENABLE_CAPABILITY_CERT_CAP*/
 
-int libspdm_responder_respond_if_ready_test_main(void) {
+int libspdm_rsp_respond_if_ready_test(void) {
     const struct CMUnitTest spdm_responder_respond_if_ready_tests[] = {
         /* Success Case*/
     #if LIBSPDM_ENABLE_CAPABILITY_CERT_CAP

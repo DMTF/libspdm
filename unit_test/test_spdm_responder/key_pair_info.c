@@ -196,7 +196,7 @@ void libspdm_test_responder_key_pair_info_case4(void **state)
     assert_int_equal(spdm_response->header.param2, SPDM_GET_KEY_PAIR_INFO);
 }
 
-int libspdm_responder_key_pair_info_test_main(void)
+int libspdm_rsp_key_pair_info_test(void)
 {
     const struct CMUnitTest spdm_responder_key_pair_info_tests[] = {
         /* Success Case to get key pair info*/

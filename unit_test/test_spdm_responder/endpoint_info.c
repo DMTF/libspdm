@@ -592,7 +592,7 @@ void libspdm_test_responder_endpoint_info_case5(void **state)
     assert_true(result);
 }
 
-int libspdm_responder_endpoint_info_test_main(void)
+int libspdm_rsp_endpoint_info_test(void)
 {
     const struct CMUnitTest spdm_responder_endpoint_info_tests[] = {
         cmocka_unit_test(libspdm_test_responder_endpoint_info_case1),

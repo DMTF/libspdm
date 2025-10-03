@@ -634,7 +634,7 @@ void libspdm_test_responder_end_session_case8(void **state)
     free(data1);
 }
 
-int libspdm_responder_end_session_test_main(void)
+int libspdm_rsp_end_session_ack_test(void)
 {
     const struct CMUnitTest spdm_responder_end_session_tests[] = {
         /* Success Case*/

@@ -496,7 +496,7 @@ void libspdm_test_responder_receive_send_rsp_case4(void** state)
 #endif /* LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP */
 }
 
-int libspdm_responder_receive_send_test_main(void)
+int libspdm_rsp_receive_send_test(void)
 {
     const struct CMUnitTest spdm_responder_receive_send_tests[] = {
         /* response message size is larger than requester data_transfer_size */

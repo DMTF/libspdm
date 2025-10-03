@@ -2193,7 +2193,7 @@ void libspdm_test_responder_key_exchange_case24(void **state)
     free(data1);
 }
 
-int libspdm_responder_key_exchange_test_main(void)
+int libspdm_rsp_key_exchange_rsp_test(void)
 {
     const struct CMUnitTest spdm_responder_key_exchange_tests[] = {
         /* Success Case*/

@@ -2931,7 +2931,7 @@ void libspdm_test_responder_algorithms_case32(void **state)
     assert_int_equal(spdm_context->connection_info.algorithm.measurement_spec, 0);
 }
 
-int libspdm_responder_algorithms_test_main(void)
+int libspdm_rsp_algorithms_test(void)
 {
     const struct CMUnitTest spdm_responder_algorithms_tests[] = {
         /* Success Case*/

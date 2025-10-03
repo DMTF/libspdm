@@ -150,7 +150,7 @@ static void libspdm_test_responder_subscribe_event_types_ack_case2(void **state)
     assert_true(!g_event_all_subscribe && !g_event_all_unsubscribe);
 }
 
-int libspdm_responder_subscribe_event_types_ack_test_main(void)
+int libspdm_rsp_subscribe_event_types_ack_test(void)
 {
     libspdm_test_context_t test_context = {
         LIBSPDM_TEST_CONTEXT_VERSION,

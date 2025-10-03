@@ -256,7 +256,7 @@ void libspdm_test_responder_version_case8(void **state)
 #endif
 }
 
-int libspdm_responder_version_test_main(void)
+int libspdm_rsp_version_test(void)
 {
     const struct CMUnitTest spdm_responder_version_tests[] = {
         cmocka_unit_test(libspdm_test_responder_version_case1),
