@@ -473,7 +473,7 @@ void test_spdm_responder_encap_get_digests_case7(void **state)
     }
 }
 
-int spdm_responder_encap_get_digests_test_main(void)
+int spdm_rsp_encap_get_digests_test(void)
 {
     const struct CMUnitTest spdm_responder_digests_tests[] = {
         /* Success Case*/

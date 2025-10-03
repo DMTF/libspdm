@@ -471,7 +471,7 @@ void libspdm_test_responder_encap_challenge_case6(void **state)
     free(data);
 }
 
-int libspdm_responder_encap_challenge_auth_test_main(void)
+int libspdm_rsp_encap_challenge_test(void)
 {
     const struct CMUnitTest spdm_responder_challenge_tests[] = {
         cmocka_unit_test(libspdm_test_responder_encap_challenge_case1),

@@ -591,7 +591,7 @@ void test_spdm_responder_encap_get_certificate_case5(void **state)
     m_libspdm_local_certificate_chain_size = 0;
 }
 
-int spdm_responder_encap_get_certificate_test_main(void)
+int spdm_rsp_encap_get_certificate_test(void)
 {
     const struct CMUnitTest spdm_responder_certificate_tests[] = {
         /* Success Case*/
