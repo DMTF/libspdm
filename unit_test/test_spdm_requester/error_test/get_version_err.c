@@ -844,7 +844,7 @@ static void libspdm_test_requester_get_version_err_case18(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_INVALID_MSG_SIZE);
 }
 
-int libspdm_requester_get_version_error_test_main(void)
+int libspdm_req_get_version_error_test(void)
 {
     const struct CMUnitTest spdm_requester_get_version_tests[] = {
         cmocka_unit_test(libspdm_test_requester_get_version_err_case1),

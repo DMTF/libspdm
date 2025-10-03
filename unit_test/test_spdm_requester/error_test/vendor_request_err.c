@@ -510,7 +510,7 @@ static void libspdm_test_requester_vendor_cmds_err_case4(void **state)
     printf("case 4 %d\n", response_data[0]);
 }
 
-int libspdm_requester_vendor_cmds_error_test_main(void)
+int libspdm_req_vendor_defined_request_error_test(void)
 {
     const struct CMUnitTest spdm_requester_vendor_cmds_tests[] = {
         cmocka_unit_test(libspdm_test_requester_vendor_cmds_err_case1),

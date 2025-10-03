@@ -1594,7 +1594,7 @@ static void libspdm_test_requester_get_digests_err_case25(void **state)
 {
 }
 
-int libspdm_requester_get_digests_error_test_main(void)
+int libspdm_req_get_digests_error_test(void)
 {
     const struct CMUnitTest spdm_requester_get_digests_tests[] = {
         cmocka_unit_test(libspdm_test_requester_get_digests_err_case1),

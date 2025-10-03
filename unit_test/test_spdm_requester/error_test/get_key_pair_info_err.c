@@ -90,7 +90,7 @@ libspdm_test_context_t m_libspdm_requester_get_key_pair_info_error_test_context 
     libspdm_requester_get_key_pair_info_error_test_receive_message,
 };
 
-int libspdm_requester_get_key_pair_info_error_test_main(void)
+int libspdm_req_get_key_pair_info_error_test(void)
 {
     const struct CMUnitTest spdm_requester_get_key_pair_info_error_tests[] = {
         /* SendRequest failed*/
