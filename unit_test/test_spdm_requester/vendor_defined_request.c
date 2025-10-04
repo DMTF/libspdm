@@ -182,7 +182,7 @@ static libspdm_return_t receive_message(
  * Test 1: Sending a vendor defined request
  * Expected behavior: client returns a status of LIBSPDM_STATUS_SUCCESS and expected response
  **/
-static void libspdm_test_requester_vendor_cmds_case1(void **state)
+static void req_vendor_defined_request_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -233,7 +233,7 @@ static void libspdm_test_requester_vendor_cmds_case1(void **state)
  * Test 2: Sending a vendor defined request with LargeReq supported
  * Expected behavior: client returns a status of LIBSPDM_STATUS_SUCCESS and expected response
  **/
-static void libspdm_test_requester_vendor_cmds_case2(void **state)
+static void req_vendor_defined_request_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -288,8 +288,8 @@ static void libspdm_test_requester_vendor_cmds_case2(void **state)
 int libspdm_req_vendor_defined_request_test(void)
 {
     const struct CMUnitTest test_cases[] = {
-        cmocka_unit_test(libspdm_test_requester_vendor_cmds_case1),
-        cmocka_unit_test(libspdm_test_requester_vendor_cmds_case2),
+        cmocka_unit_test(req_vendor_defined_request_case1),
+        cmocka_unit_test(req_vendor_defined_request_case2),
     };
 
     libspdm_test_context_t test_context = {

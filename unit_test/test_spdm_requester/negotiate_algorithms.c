@@ -1419,11 +1419,11 @@ static libspdm_return_t receive_message(
     }
 }
 
-static void libspdm_test_requester_negotiate_algorithms_case1(void **state)
+static void req_negotiate_algorithms_case1(void **state)
 {
 }
 
-static void libspdm_test_requester_negotiate_algorithms_case2(void **state)
+static void req_negotiate_algorithms_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1477,7 +1477,7 @@ static void libspdm_test_requester_negotiate_algorithms_case2(void **state)
  * | Not set  | 0                          | 0                           | LIBSPDM_STATUS_SUCCESS            |
  *  ----------------------------------------------------------------------------------------------------------
  **/
-static void libspdm_test_requester_negotiate_algorithms_case3(void **state)
+static void req_negotiate_algorithms_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1562,15 +1562,15 @@ static void libspdm_test_requester_negotiate_algorithms_case3(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
 }
 
-static void libspdm_test_requester_negotiate_algorithms_case4(void **state)
+static void req_negotiate_algorithms_case4(void **state)
 {
 }
 
-static void libspdm_test_requester_negotiate_algorithms_case5(void **state)
+static void req_negotiate_algorithms_case5(void **state)
 {
 }
 
-static void libspdm_test_requester_negotiate_algorithms_case6(void **state)
+static void req_negotiate_algorithms_case6(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1601,72 +1601,72 @@ static void libspdm_test_requester_negotiate_algorithms_case6(void **state)
 #endif
 }
 
-static void libspdm_test_requester_negotiate_algorithms_case7(void **state)
+static void req_negotiate_algorithms_case7(void **state)
 {
 }
 
-static void libspdm_test_requester_negotiate_algorithms_case8(void **state)
+static void req_negotiate_algorithms_case8(void **state)
 {
 }
 
-static void libspdm_test_requester_negotiate_algorithms_case9(void **state)
+static void req_negotiate_algorithms_case9(void **state)
 {
 }
 
-static void libspdm_test_requester_negotiate_algorithms_case10(void **state)
+static void req_negotiate_algorithms_case10(void **state)
 {
 }
 
-static void libspdm_test_requester_negotiate_algorithms_case11(void **state)
+static void req_negotiate_algorithms_case11(void **state)
 {
 }
 
-static void libspdm_test_requester_negotiate_algorithms_case12(void **state)
+static void req_negotiate_algorithms_case12(void **state)
 {
 }
 
-static void libspdm_test_requester_negotiate_algorithms_case13(void **state)
+static void req_negotiate_algorithms_case13(void **state)
 {
 
 }
 
-static void libspdm_test_requester_negotiate_algorithms_case14(void **state)
+static void req_negotiate_algorithms_case14(void **state)
 {
 }
 
-static void libspdm_test_requester_negotiate_algorithms_case15(void **state)
+static void req_negotiate_algorithms_case15(void **state)
 {
 }
 
-static void libspdm_test_requester_negotiate_algorithms_case16(void **state)
+static void req_negotiate_algorithms_case16(void **state)
 {
 }
 
-static void libspdm_test_requester_negotiate_algorithms_case17(void **state)
+static void req_negotiate_algorithms_case17(void **state)
 {
 }
 
-static void libspdm_test_requester_negotiate_algorithms_case18(void **state)
+static void req_negotiate_algorithms_case18(void **state)
 {
 }
 
-static void libspdm_test_requester_negotiate_algorithms_case19(void **state)
+static void req_negotiate_algorithms_case19(void **state)
 {
 }
 
-static void libspdm_test_requester_negotiate_algorithms_case20(void **state)
+static void req_negotiate_algorithms_case20(void **state)
 {
 }
 
-static void libspdm_test_requester_negotiate_algorithms_case21(void **state)
+static void req_negotiate_algorithms_case21(void **state)
 {
 }
 
-static void libspdm_test_requester_negotiate_algorithms_case22(void **state)
+static void req_negotiate_algorithms_case22(void **state)
 {
 }
 
-static void libspdm_test_requester_negotiate_algorithms_case23(void **state)
+static void req_negotiate_algorithms_case23(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1720,39 +1720,39 @@ static void libspdm_test_requester_negotiate_algorithms_case23(void **state)
 #endif
 }
 
-static void libspdm_test_requester_negotiate_algorithms_case24(void **state)
+static void req_negotiate_algorithms_case24(void **state)
 {
 }
 
-static void libspdm_test_requester_negotiate_algorithms_case25(void **state)
+static void req_negotiate_algorithms_case25(void **state)
 {
 }
 
-static void libspdm_test_requester_negotiate_algorithms_case26(void **state)
+static void req_negotiate_algorithms_case26(void **state)
 {
 }
 
-static void libspdm_test_requester_negotiate_algorithms_case27(void **state)
+static void req_negotiate_algorithms_case27(void **state)
 {
 }
 
-static void libspdm_test_requester_negotiate_algorithms_case28(void **state)
+static void req_negotiate_algorithms_case28(void **state)
 {
 }
 
-static void libspdm_test_requester_negotiate_algorithms_case29(void **state)
+static void req_negotiate_algorithms_case29(void **state)
 {
 }
 
-static void libspdm_test_requester_negotiate_algorithms_case30(void **state)
+static void req_negotiate_algorithms_case30(void **state)
 {
 }
 
-static void libspdm_test_requester_negotiate_algorithms_case31(void **state)
+static void req_negotiate_algorithms_case31(void **state)
 {
 }
 
-static void libspdm_test_requester_negotiate_algorithms_case32(void **state) {
+static void req_negotiate_algorithms_case32(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -1825,7 +1825,7 @@ static void libspdm_test_requester_negotiate_algorithms_case32(void **state) {
 #endif
 }
 
-static void libspdm_test_requester_negotiate_algorithms_case33(void **state) {
+static void req_negotiate_algorithms_case33(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1897,7 +1897,7 @@ static void libspdm_test_requester_negotiate_algorithms_case33(void **state) {
 }
 
 
-static void libspdm_test_requester_negotiate_algorithms_case34(void **state)
+static void req_negotiate_algorithms_case34(void **state)
 {
 }
 
@@ -1933,7 +1933,7 @@ static void libspdm_test_requester_negotiate_algorithms_case34(void **state)
  * | 10b           | 1                        | true               |
  *  ----------------------------------------------------------------
  **/
-static void libspdm_test_requester_negotiate_algorithms_case35(void **state)
+static void req_negotiate_algorithms_case35(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -2064,7 +2064,7 @@ static void libspdm_test_requester_negotiate_algorithms_case35(void **state)
  * | Not set  | 0                          | 0                           | LIBSPDM_STATUS_SUCCESS            |
  *  ----------------------------------------------------------------------------------------------------------
  **/
-static void libspdm_test_requester_negotiate_algorithms_case36(void **state)
+static void req_negotiate_algorithms_case36(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -2179,42 +2179,42 @@ static void libspdm_test_requester_negotiate_algorithms_case36(void **state)
 int libspdm_req_negotiate_algorithms_test(void)
 {
     const struct CMUnitTest test_cases[] = {
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case1),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case2),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case3),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case4),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case5),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case6),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case7),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case8),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case9),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case10),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case11),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case12),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case13),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case14),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case15),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case16),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case17),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case18),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case19),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case20),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case21),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case22),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case23),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case24),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case25),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case26),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case27),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case28),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case29),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case30),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case31),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case32),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case33),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case34),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case35),
-        cmocka_unit_test(libspdm_test_requester_negotiate_algorithms_case36),
+        cmocka_unit_test(req_negotiate_algorithms_case1),
+        cmocka_unit_test(req_negotiate_algorithms_case2),
+        cmocka_unit_test(req_negotiate_algorithms_case3),
+        cmocka_unit_test(req_negotiate_algorithms_case4),
+        cmocka_unit_test(req_negotiate_algorithms_case5),
+        cmocka_unit_test(req_negotiate_algorithms_case6),
+        cmocka_unit_test(req_negotiate_algorithms_case7),
+        cmocka_unit_test(req_negotiate_algorithms_case8),
+        cmocka_unit_test(req_negotiate_algorithms_case9),
+        cmocka_unit_test(req_negotiate_algorithms_case10),
+        cmocka_unit_test(req_negotiate_algorithms_case11),
+        cmocka_unit_test(req_negotiate_algorithms_case12),
+        cmocka_unit_test(req_negotiate_algorithms_case13),
+        cmocka_unit_test(req_negotiate_algorithms_case14),
+        cmocka_unit_test(req_negotiate_algorithms_case15),
+        cmocka_unit_test(req_negotiate_algorithms_case16),
+        cmocka_unit_test(req_negotiate_algorithms_case17),
+        cmocka_unit_test(req_negotiate_algorithms_case18),
+        cmocka_unit_test(req_negotiate_algorithms_case19),
+        cmocka_unit_test(req_negotiate_algorithms_case20),
+        cmocka_unit_test(req_negotiate_algorithms_case21),
+        cmocka_unit_test(req_negotiate_algorithms_case22),
+        cmocka_unit_test(req_negotiate_algorithms_case23),
+        cmocka_unit_test(req_negotiate_algorithms_case24),
+        cmocka_unit_test(req_negotiate_algorithms_case25),
+        cmocka_unit_test(req_negotiate_algorithms_case26),
+        cmocka_unit_test(req_negotiate_algorithms_case27),
+        cmocka_unit_test(req_negotiate_algorithms_case28),
+        cmocka_unit_test(req_negotiate_algorithms_case29),
+        cmocka_unit_test(req_negotiate_algorithms_case30),
+        cmocka_unit_test(req_negotiate_algorithms_case31),
+        cmocka_unit_test(req_negotiate_algorithms_case32),
+        cmocka_unit_test(req_negotiate_algorithms_case33),
+        cmocka_unit_test(req_negotiate_algorithms_case34),
+        cmocka_unit_test(req_negotiate_algorithms_case35),
+        cmocka_unit_test(req_negotiate_algorithms_case36),
     };
 
     libspdm_test_context_t test_context = {

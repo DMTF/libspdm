@@ -533,7 +533,7 @@ static libspdm_return_t receive_message(
  **/
 
 /*
- * static void libspdm_test_requester_get_version_case1(void **state)
+ * static void req_get_version_case1(void **state)
  * {
  * }
  */
@@ -542,7 +542,7 @@ static libspdm_return_t receive_message(
  * Test 2: receiving a correct VERSION message with available version 1.0 and 1.1.
  * Expected behavior: client returns a status of LIBSPDM_STATUS_SUCCESS.
  **/
-static void libspdm_test_requester_get_version_case2(void **state)
+static void req_get_version_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -561,7 +561,7 @@ static void libspdm_test_requester_get_version_case2(void **state)
  **/
 
 /*
- * static void libspdm_test_requester_get_version_case3(void **state)
+ * static void req_get_version_case3(void **state)
  * {
  * }
  */
@@ -571,7 +571,7 @@ static void libspdm_test_requester_get_version_case2(void **state)
  **/
 
 /*
- * static void libspdm_test_requester_get_version_case4(void **state)
+ * static void req_get_version_case4(void **state)
  * {
  * }
  */
@@ -581,7 +581,7 @@ static void libspdm_test_requester_get_version_case2(void **state)
  **/
 
 /*
- * static void libspdm_test_requester_get_version_case5(void **state)
+ * static void req_get_version_case5(void **state)
  * {
  * }
  */
@@ -591,7 +591,7 @@ static void libspdm_test_requester_get_version_case2(void **state)
  * a correct VERSION message with available version 1.0 and 1.1.
  * Expected behavior: client returns a status of LIBSPDM_STATUS_SUCCESS.
  **/
-static void libspdm_test_requester_get_version_case6(void **state)
+static void req_get_version_case6(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -611,7 +611,7 @@ static void libspdm_test_requester_get_version_case6(void **state)
  **/
 
 /*
- * static void libspdm_test_requester_get_version_case7(void **state)
+ * static void req_get_version_case7(void **state)
  * {
  * }
  */
@@ -621,7 +621,7 @@ static void libspdm_test_requester_get_version_case6(void **state)
  **/
 
 /*
- * static void libspdm_test_requester_get_version_case8(void **state)
+ * static void req_get_version_case8(void **state)
  * {
  * }
  */
@@ -631,7 +631,7 @@ static void libspdm_test_requester_get_version_case6(void **state)
  **/
 
 /*
- * static void libspdm_test_requester_get_version_case9(void **state)
+ * static void req_get_version_case9(void **state)
  * {
  * }
  */
@@ -643,7 +643,7 @@ static void libspdm_test_requester_get_version_case6(void **state)
  * Expected behavior: client returns a status of LIBSPDM_STATUS_SUCCESS, but truncate the message
  * to consider only the two first versions, as indicated in the message.
  **/
-static void libspdm_test_requester_get_version_case10(void **state)
+static void req_get_version_case10(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -662,7 +662,7 @@ static void libspdm_test_requester_get_version_case10(void **state)
  **/
 
 /*
- * static void libspdm_test_requester_get_version_case11(void **state)
+ * static void req_get_version_case11(void **state)
  * {
  * }
  */
@@ -672,7 +672,7 @@ static void libspdm_test_requester_get_version_case10(void **state)
  **/
 
 /*
- * static void libspdm_test_requester_get_version_case12(void **state)
+ * static void req_get_version_case12(void **state)
  * {
  * }
  */
@@ -682,7 +682,7 @@ static void libspdm_test_requester_get_version_case10(void **state)
  **/
 
 /*
- * static void libspdm_test_requester_get_version_case13(void **state)
+ * static void req_get_version_case13(void **state)
  * {
  * }
  */
@@ -692,7 +692,7 @@ static void libspdm_test_requester_get_version_case10(void **state)
  **/
 
 /*
- * static void libspdm_test_requester_get_version_case14(void **state)
+ * static void req_get_version_case14(void **state)
  * {
  * }
  */
@@ -703,7 +703,7 @@ static void libspdm_test_requester_get_version_case10(void **state)
  * Responder list:4.2, 5.2, 1.2, 1.1, 1.0
  * Expected behavior: client returns a status of LIBSPDM_STATUS_SUCCESS and right negotiated version 1.1.
  **/
-static void libspdm_test_requester_get_version_case15(void **state)
+static void req_get_version_case15(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -730,7 +730,7 @@ static void libspdm_test_requester_get_version_case15(void **state)
  * should be first reset, and then buffer A receives only the exchanged GET_VERSION
  * and VERSION messages.
  **/
-static void libspdm_test_requester_get_version_case16(void **state)
+static void req_get_version_case16(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -770,7 +770,7 @@ static void libspdm_test_requester_get_version_case16(void **state)
  **/
 
 /*
- * static void libspdm_test_requester_get_version_case17(void **state)
+ * static void req_get_version_case17(void **state)
  * {
  * }
  */
@@ -780,7 +780,7 @@ static void libspdm_test_requester_get_version_case16(void **state)
  **/
 
 /*
- * static void libspdm_test_requester_get_version_case18(void **state)
+ * static void req_get_version_case18(void **state)
  * {
  * }
  */
@@ -788,24 +788,24 @@ static void libspdm_test_requester_get_version_case16(void **state)
 int libspdm_req_get_version_test(void)
 {
     const struct CMUnitTest test_cases[] = {
-        /* cmocka_unit_test(libspdm_test_requester_get_version_case1), */
-        cmocka_unit_test(libspdm_test_requester_get_version_case2),
-        /* cmocka_unit_test(libspdm_test_requester_get_version_case3),
-         * cmocka_unit_test(libspdm_test_requester_get_version_case4),
-         * cmocka_unit_test(libspdm_test_requester_get_version_case5), */
-        cmocka_unit_test(libspdm_test_requester_get_version_case6),
-        /* cmocka_unit_test(libspdm_test_requester_get_version_case7),
-         * cmocka_unit_test(libspdm_test_requester_get_version_case8),
-         * cmocka_unit_test(libspdm_test_requester_get_version_case9), */
-        cmocka_unit_test(libspdm_test_requester_get_version_case10),
-        /* cmocka_unit_test(libspdm_test_requester_get_version_case11),
-         * cmocka_unit_test(libspdm_test_requester_get_version_case12),
-         * cmocka_unit_test(libspdm_test_requester_get_version_case13),
-         * cmocka_unit_test(libspdm_test_requester_get_version_case14), */
-        cmocka_unit_test(libspdm_test_requester_get_version_case15),
-        cmocka_unit_test(libspdm_test_requester_get_version_case16),
-        /* cmocka_unit_test(libspdm_test_requester_get_version_case17),
-         * cmocka_unit_test(libspdm_test_requester_get_version_case18), */
+        /* cmocka_unit_test(req_get_version_case1), */
+        cmocka_unit_test(req_get_version_case2),
+        /* cmocka_unit_test(req_get_version_case3),
+         * cmocka_unit_test(req_get_version_case4),
+         * cmocka_unit_test(req_get_version_case5), */
+        cmocka_unit_test(req_get_version_case6),
+        /* cmocka_unit_test(req_get_version_case7),
+         * cmocka_unit_test(req_get_version_case8),
+         * cmocka_unit_test(req_get_version_case9), */
+        cmocka_unit_test(req_get_version_case10),
+        /* cmocka_unit_test(req_get_version_case11),
+         * cmocka_unit_test(req_get_version_case12),
+         * cmocka_unit_test(req_get_version_case13),
+         * cmocka_unit_test(req_get_version_case14), */
+        cmocka_unit_test(req_get_version_case15),
+        cmocka_unit_test(req_get_version_case16),
+        /* cmocka_unit_test(req_get_version_case17),
+         * cmocka_unit_test(req_get_version_case18), */
     };
 
     libspdm_test_context_t test_context = {

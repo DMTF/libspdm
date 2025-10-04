@@ -32,7 +32,7 @@ static uint8_t m_local_certificate_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
  * Test 1: receives a valid GET_DIGESTS request message from Requester
  * Expected Behavior: produces a valid DIGESTS response message
  **/
-void test_spdm_requester_encap_get_digests_case1(void **state)
+static void req_encap_digests_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -88,7 +88,7 @@ void test_spdm_requester_encap_get_digests_case1(void **state)
  * Test 2:
  * Expected Behavior:
  **/
-void test_spdm_requester_encap_get_digests_case2(void **state)
+static void req_encap_digests_case2(void **state)
 {
 }
 
@@ -96,7 +96,7 @@ void test_spdm_requester_encap_get_digests_case2(void **state)
  * Test 3: receives a valid GET_DIGESTS request message from Requester, but the request message cannot be appended to the internal cache since the internal cache is full
  * Expected Behavior: produces an ERROR response message with error code = Unspecified
  **/
-void test_spdm_requester_encap_get_digests_case3(void **state)
+static void req_encap_digests_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -154,7 +154,7 @@ void test_spdm_requester_encap_get_digests_case3(void **state)
  * Test 4: receives a valid GET_DIGESTS request message from Requester, but the response message cannot be appended to the internal cache since the internal cache is full
  * Expected Behavior: produces an ERROR response message with error code = Unspecified
  **/
-void test_spdm_requester_encap_get_digests_case4(void **state)
+static void req_encap_digests_case4(void **state)
 {
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -212,7 +212,7 @@ void test_spdm_requester_encap_get_digests_case4(void **state)
  * Set multi_key_conn_req to check if it responds correctly
  * Expected Behavior: produces a valid DIGESTS response message
  **/
-void test_spdm_requester_encap_get_digests_case5(void **state)
+static void req_encap_digests_case5(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -307,7 +307,7 @@ void test_spdm_requester_encap_get_digests_case5(void **state)
  * Check KeyPairID CertificateInfo and KeyUsageMask
  * Expected Behavior: produces a valid DIGESTS response message
  **/
-void test_spdm_requester_encap_get_digests_case6(void **state)
+static void req_encap_digests_case6(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -410,17 +410,17 @@ int libspdm_req_encap_digests_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         /* Success Case*/
-        cmocka_unit_test(test_spdm_requester_encap_get_digests_case1),
+        cmocka_unit_test(req_encap_digests_case1),
         /* Can be populated with new test.*/
-        cmocka_unit_test(test_spdm_requester_encap_get_digests_case2),
+        cmocka_unit_test(req_encap_digests_case2),
         /* Internal cache full (request message)*/
-        cmocka_unit_test(test_spdm_requester_encap_get_digests_case3),
+        cmocka_unit_test(req_encap_digests_case3),
         /* Internal cache full (response message)*/
-        cmocka_unit_test(test_spdm_requester_encap_get_digests_case4),
+        cmocka_unit_test(req_encap_digests_case4),
         /* Set multi_key_conn_req to check if it responds correctly */
-        cmocka_unit_test(test_spdm_requester_encap_get_digests_case5),
+        cmocka_unit_test(req_encap_digests_case5),
         /* Check KeyPairID CertificateInfo and KeyUsageMask*/
-        cmocka_unit_test(test_spdm_requester_encap_get_digests_case6),
+        cmocka_unit_test(req_encap_digests_case6),
     };
 
     libspdm_test_context_t test_context = {

@@ -167,7 +167,7 @@ static void libspdm_compute_secret_update(spdm_version_number_t spdm_version,
  * Expected behavior: the encap requester accepts the request, produces a valid
  * KEY_UPDATE_ACK response message, and the request data key is updated.
  **/
-void test_libspdm_requester_encap_key_update_case1(void **state)
+static void req_encap_key_update_ack_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -238,7 +238,7 @@ void test_libspdm_requester_encap_key_update_case1(void **state)
  * produces an ERROR message indicating the InvalidRequest. No keys
  * are updated.
  **/
-void test_libspdm_requester_encap_key_update_case2(void **state)
+static void req_encap_key_update_ack_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -295,7 +295,7 @@ void test_libspdm_requester_encap_key_update_case2(void **state)
                         m_rsp_secret_buffer, secured_message_context->hash_size);
 }
 
-void test_libspdm_requester_encap_key_update_case3(void **state)
+static void req_encap_key_update_ack_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -387,7 +387,7 @@ void test_libspdm_requester_encap_key_update_case3(void **state)
  * produces an ERROR message indicating the UnsupportedRequest. No keys are
  * updated.
  **/
-void test_libspdm_requester_encap_key_update_case4(void **state)
+static void req_encap_key_update_ack_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -457,7 +457,7 @@ void test_libspdm_requester_encap_key_update_case4(void **state)
  * Expected behavior: the encap requester refuses the KEY_UPDATE message and produces
  * an ERROR message indicating the UnsupportedRequest. No keys are updated.
  **/
-void test_libspdm_requester_encap_key_update_case5(void **state)
+static void req_encap_key_update_ack_case5(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -524,7 +524,7 @@ void test_libspdm_requester_encap_key_update_case5(void **state)
  * Expected behavior: the encap requester refuses the KEY_UPDATE message and produces
  * an ERROR message indicating the UnsupportedRequest. No keys are updated.
  **/
-void test_libspdm_requester_encap_key_update_case6(void **state)
+static void req_encap_key_update_ack_case6(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -569,7 +569,7 @@ void test_libspdm_requester_encap_key_update_case6(void **state)
  * produces an ERROR message indicating the InvalidRequest. No keys
  * are updated.
  **/
-void test_libspdm_requester_encap_key_update_case7(void **state)
+static void req_encap_key_update_ack_case7(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -635,7 +635,7 @@ void test_libspdm_requester_encap_key_update_case7(void **state)
  * produces an ERROR message indicating the InvalidRequest. No keys are
  * updated.
  **/
-void test_libspdm_requester_encap_key_update_case8(void **state)
+static void req_encap_key_update_ack_case8(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -693,7 +693,7 @@ void test_libspdm_requester_encap_key_update_case8(void **state)
  * produces an ERROR message indicating the InvalidRequest. No keys
  * are updated.
  **/
-void test_libspdm_requester_encap_key_update_case9(void **state)
+static void req_encap_key_update_ack_case9(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -751,7 +751,7 @@ void test_libspdm_requester_encap_key_update_case9(void **state)
 }
 
 /* UpdateKey + UpdateKey: failed*/
-void test_libspdm_requester_encap_key_update_case10(void **state)
+static void req_encap_key_update_ack_case10(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -813,7 +813,7 @@ void test_libspdm_requester_encap_key_update_case10(void **state)
 }
 
 /* VerifyNewKey + UpdateKey: success*/
-void test_libspdm_requester_encap_key_update_case11(void **state)
+static void req_encap_key_update_ack_case11(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -883,7 +883,7 @@ void test_libspdm_requester_encap_key_update_case11(void **state)
 }
 
 /* VerifyNewKey + VerifyNewKey: failed*/
-void test_libspdm_requester_encap_key_update_case12(void **state)
+static void req_encap_key_update_ack_case12(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -948,7 +948,7 @@ void test_libspdm_requester_encap_key_update_case12(void **state)
 
 
 /* other command + UpdateKey: success*/
-void test_libspdm_requester_encap_key_update_case13(void **state)
+static void req_encap_key_update_ack_case13(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1017,7 +1017,7 @@ void test_libspdm_requester_encap_key_update_case13(void **state)
 
 
 /* other command + VerifyNewKey: failed*/
-void test_libspdm_requester_encap_key_update_case14(void **state)
+static void req_encap_key_update_ack_case14(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1082,33 +1082,33 @@ int libspdm_req_encap_key_update_ack_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         /* Success Case -- UpdateKey*/
-        cmocka_unit_test(test_libspdm_requester_encap_key_update_case1),
+        cmocka_unit_test(req_encap_key_update_ack_case1),
         /* Bad request size*/
-        cmocka_unit_test(test_libspdm_requester_encap_key_update_case2),
+        cmocka_unit_test(req_encap_key_update_ack_case2),
         /* Buffer reset*/
-        cmocka_unit_test(test_libspdm_requester_encap_key_update_case3),
+        cmocka_unit_test(req_encap_key_update_ack_case3),
         /* Unsupported KEY_UPD capabilities*/
-        cmocka_unit_test(test_libspdm_requester_encap_key_update_case4),
+        cmocka_unit_test(req_encap_key_update_ack_case4),
         /* Uninitialized session*/
-        cmocka_unit_test(test_libspdm_requester_encap_key_update_case5),
+        cmocka_unit_test(req_encap_key_update_ack_case5),
         /* ruquster RETURN_UNSUPPORTED*/
-        cmocka_unit_test(test_libspdm_requester_encap_key_update_case6),
+        cmocka_unit_test(req_encap_key_update_ack_case6),
         /* Bad request size*/
-        cmocka_unit_test(test_libspdm_requester_encap_key_update_case7),
+        cmocka_unit_test(req_encap_key_update_ack_case7),
         /* Uninitialized key update*/
-        cmocka_unit_test(test_libspdm_requester_encap_key_update_case8),
+        cmocka_unit_test(req_encap_key_update_ack_case8),
         /* Invalid operation*/
-        cmocka_unit_test(test_libspdm_requester_encap_key_update_case9),
+        cmocka_unit_test(req_encap_key_update_ack_case9),
         /* UpdateKey + UpdateKey: failed*/
-        cmocka_unit_test(test_libspdm_requester_encap_key_update_case10),
+        cmocka_unit_test(req_encap_key_update_ack_case10),
         /* VerifyNewKey + UpdateKey: success*/
-        cmocka_unit_test(test_libspdm_requester_encap_key_update_case11),
+        cmocka_unit_test(req_encap_key_update_ack_case11),
         /* VerifyNewKey + VerifyNewKey: failed*/
-        cmocka_unit_test(test_libspdm_requester_encap_key_update_case12),
+        cmocka_unit_test(req_encap_key_update_ack_case12),
         /* other command + UpdateKey: success*/
-        cmocka_unit_test(test_libspdm_requester_encap_key_update_case13),
+        cmocka_unit_test(req_encap_key_update_ack_case13),
         /* other command + VerifyNewKey: failed*/
-        cmocka_unit_test(test_libspdm_requester_encap_key_update_case14),
+        cmocka_unit_test(req_encap_key_update_ack_case14),
     };
 
     libspdm_test_context_t test_context = {

@@ -43,7 +43,7 @@ size_t m_spdm_get_certificate_request4_size =
  * certificate chain Expected Behavior: generate a correctly formed Certificate
  * message, including its portion_length and remainder_length fields
  **/
-void libspdm_test_requester_encap_certificate_case1(void **state)
+static void req_encap_certificate_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -101,7 +101,7 @@ void libspdm_test_requester_encap_certificate_case1(void **state)
  * Test 2:
  * Expected Behavior:
  **/
-void libspdm_test_requester_encap_certificate_case2(void **state)
+static void req_encap_certificate_case2(void **state)
 {
 }
 
@@ -110,7 +110,7 @@ void libspdm_test_requester_encap_certificate_case2(void **state)
  * keeping offset 0 Expected Behavior: generate correctly formed Certificate
  * messages, including its portion_length and remainder_length fields
  **/
-void libspdm_test_requester_encap_certificate_case3(void **state)
+static void req_encap_certificate_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -188,7 +188,7 @@ void libspdm_test_requester_encap_certificate_case3(void **state)
  * keeping length 0 Expected Behavior: generate correctly formed Certificate
  * messages, including its portion_length and remainder_length fields
  **/
-void libspdm_test_requester_encap_certificate_case4(void **state)
+static void req_encap_certificate_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -279,7 +279,7 @@ void libspdm_test_requester_encap_certificate_case4(void **state)
  * formed Certificate messages, including its portion_length and remainder_length
  * fields
  **/
-void libspdm_test_requester_encap_certificate_case5(void **state)
+static void req_encap_certificate_case5(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -383,7 +383,7 @@ void libspdm_test_requester_encap_certificate_case5(void **state)
  * Expected Behavior: generate correctly formed Certificate messages, including
  * its portion_length and remainder_length fields
  **/
-void libspdm_test_requester_encap_certificate_case6(void **state)
+static void req_encap_certificate_case6(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -471,7 +471,7 @@ void libspdm_test_requester_encap_certificate_case6(void **state)
  * GET_CERTIFICATE request shall be ignored by the Responder
  * Expected Behavior: generate a correctly formed Certificate message, including its portion_length and remainder_length fields
  **/
-void libspdm_test_requester_encap_certificate_case7(void **state)
+static void req_encap_certificate_case7(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -530,17 +530,18 @@ int libspdm_req_encap_certificate_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         /* Success Case*/
-        cmocka_unit_test(libspdm_test_requester_encap_certificate_case1),
+        cmocka_unit_test(req_encap_certificate_case1),
         /* Can be populated with new test.*/
-        cmocka_unit_test(libspdm_test_requester_encap_certificate_case2),
+        cmocka_unit_test(req_encap_certificate_case2),
+        cmocka_unit_test(req_encap_certificate_case3),
         /* Tests varying offset*/
-        cmocka_unit_test(libspdm_test_requester_encap_certificate_case4),
+        cmocka_unit_test(req_encap_certificate_case4),
         /* Tests large certificate chains*/
-        cmocka_unit_test(libspdm_test_requester_encap_certificate_case5),
+        cmocka_unit_test(req_encap_certificate_case5),
         /* Requests byte by byte*/
-        cmocka_unit_test(libspdm_test_requester_encap_certificate_case6),
+        cmocka_unit_test(req_encap_certificate_case6),
         /* check request attributes and response attributes*/
-        cmocka_unit_test(libspdm_test_requester_encap_certificate_case7),
+        cmocka_unit_test(req_encap_certificate_case7),
     };
 
     libspdm_test_context_t test_context = {

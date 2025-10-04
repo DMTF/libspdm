@@ -111,7 +111,7 @@ static void set_standard_state(libspdm_context_t *spdm_context)
 }
 
 /* Send exactly one event. */
-static void test_libspdm_requester_encap_event_ack_case1(void **state)
+static void req_encap_event_ack_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -173,7 +173,7 @@ static void test_libspdm_requester_encap_event_ack_case1(void **state)
 }
 
 /* Send two events with in-order event instance IDs. */
-static void test_libspdm_requester_encap_event_ack_case2(void **state)
+static void req_encap_event_ack_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -255,7 +255,7 @@ static void test_libspdm_requester_encap_event_ack_case2(void **state)
 }
 
 /* Send two events with out-of-order event instance IDs. */
-static void test_libspdm_requester_encap_event_ack_case3(void **state)
+static void req_encap_event_ack_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -337,7 +337,7 @@ static void test_libspdm_requester_encap_event_ack_case3(void **state)
 }
 
 /* Send four events with in-order event instance IDs. */
-static void test_libspdm_requester_encap_event_ack_case4(void **state)
+static void req_encap_event_ack_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -453,10 +453,10 @@ static void test_libspdm_requester_encap_event_ack_case4(void **state)
 int libspdm_req_encap_event_ack_test(void)
 {
     const struct CMUnitTest test_cases[] = {
-        cmocka_unit_test(test_libspdm_requester_encap_event_ack_case1),
-        cmocka_unit_test(test_libspdm_requester_encap_event_ack_case2),
-        cmocka_unit_test(test_libspdm_requester_encap_event_ack_case3),
-        cmocka_unit_test(test_libspdm_requester_encap_event_ack_case4)
+        cmocka_unit_test(req_encap_event_ack_case1),
+        cmocka_unit_test(req_encap_event_ack_case2),
+        cmocka_unit_test(req_encap_event_ack_case3),
+        cmocka_unit_test(req_encap_event_ack_case4)
     };
 
     libspdm_test_context_t test_context = {

@@ -148,7 +148,7 @@ static libspdm_return_t receive_message(
  * Test 1: Successful response to get key pair info
  * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code
  **/
-void libspdm_test_requester_get_key_pair_info_case1(void **state)
+static void req_get_key_pair_info_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -200,7 +200,7 @@ void libspdm_test_requester_get_key_pair_info_case1(void **state)
 /**
  * Test 2: The collection of multiple sub-cases.
  **/
-void libspdm_test_requester_get_key_pair_info_case3(void **state)
+void req_get_key_pair_info_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -580,7 +580,8 @@ int libspdm_req_get_key_pair_info_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         /* Successful response to get key pair info, key_pair_id is 1*/
-        cmocka_unit_test(libspdm_test_requester_get_key_pair_info_case1),
+        cmocka_unit_test(req_get_key_pair_info_case1),
+        /* cmocka_unit_test(req_get_key_pair_info_case2) */
     };
 
     libspdm_test_context_t test_context = {

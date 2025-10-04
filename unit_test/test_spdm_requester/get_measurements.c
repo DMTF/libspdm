@@ -3291,7 +3291,7 @@ static libspdm_return_t receive_message(
  * Test 1: message could not be sent
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code, with an empty transcript.message_m
  **/
-static void libspdm_test_requester_get_measurements_case1(void **state)
+static void req_get_measurements_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -3369,7 +3369,7 @@ static void libspdm_test_requester_get_measurements_case1(void **state)
  * Test 2: Successful response to get a measurement with signature
  * Expected Behavior: get a RETURN_SUCCESS return code, with an empty transcript.message_m
  **/
-static void libspdm_test_requester_get_measurements_case2(void **state)
+static void req_get_measurements_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -3451,7 +3451,7 @@ static void libspdm_test_requester_get_measurements_case2(void **state)
  * Test 3: Exercise the libspdm_get_measurement_ex function.
  * Expected Behavior: Requester uses requester_nonce_in and returns responder_nonce.
  **/
-static void libspdm_test_requester_get_measurements_case3(void **state)
+static void req_get_measurements_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -3547,7 +3547,7 @@ static void libspdm_test_requester_get_measurements_case3(void **state)
  * Test 4: Error case, always get an error response with code SPDM_ERROR_CODE_INVALID_REQUEST
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code, with an empty transcript.message_m
  **/
-static void libspdm_test_requester_get_measurements_case4(void **state)
+static void req_get_measurements_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -3625,7 +3625,7 @@ static void libspdm_test_requester_get_measurements_case4(void **state)
  * Test 5: Error case, always get an error response with code SPDM_ERROR_CODE_BUSY
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code, with an empty transcript.message_m
  **/
-static void libspdm_test_requester_get_measurements_case5(void **state)
+static void req_get_measurements_case5(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -3703,7 +3703,7 @@ static void libspdm_test_requester_get_measurements_case5(void **state)
  * Test 6: Successfully get one measurement block (signed), after getting SPDM_ERROR_CODE_BUSY on first attempt
  * Expected Behavior: get a RETURN_SUCCESS return code, with an empty transcript.message_m
  **/
-static void libspdm_test_requester_get_measurements_case6(void **state)
+static void req_get_measurements_case6(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -3782,7 +3782,7 @@ static void libspdm_test_requester_get_measurements_case6(void **state)
  * Test 7: Error case, get an error response with code SPDM_ERROR_CODE_REQUEST_RESYNCH
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code, with an empty transcript.message_m
  **/
-static void libspdm_test_requester_get_measurements_case7(void **state)
+static void req_get_measurements_case7(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -3862,7 +3862,7 @@ static void libspdm_test_requester_get_measurements_case7(void **state)
  * Test 8: Error case, always get an error response with code SPDM_ERROR_CODE_RESPONSE_NOT_READY
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code, with an empty transcript.message_m
  **/
-static void libspdm_test_requester_get_measurements_case8(void **state)
+static void req_get_measurements_case8(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -3937,7 +3937,7 @@ static void libspdm_test_requester_get_measurements_case8(void **state)
  * Test 9: Successfully get one measurement block (signed), after getting SPDM_ERROR_CODE_RESPONSE_NOT_READY on first attempt
  * Expected Behavior: get a RETURN_SUCCESS return code, with an empty transcript.message_m
  **/
-static void libspdm_test_requester_get_measurements_case9(void **state)
+static void req_get_measurements_case9(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -4013,7 +4013,7 @@ static void libspdm_test_requester_get_measurements_case9(void **state)
  * Test 10: Successful response to get total number of measurements, without signature
  * Expected Behavior: get a RETURN_SUCCESS return code, correct number_of_blocks, correct transcript.message_m.buffer_size
  **/
-static void libspdm_test_requester_get_measurements_case10(void **state)
+static void req_get_measurements_case10(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -4091,7 +4091,7 @@ static void libspdm_test_requester_get_measurements_case10(void **state)
  * Test 11: Successful response to get a measurement block, without signature
  * Expected Behavior: get a RETURN_SUCCESS return code, correct transcript.message_m.buffer_size
  **/
-static void libspdm_test_requester_get_measurements_case11(void **state)
+static void req_get_measurements_case11(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -4174,7 +4174,7 @@ static void libspdm_test_requester_get_measurements_case11(void **state)
  * Test 12: Error case, signature is invalid (all bytes are 0)
  * Expected Behavior: get a RETURN_SECURITY_VIOLATION return code
  **/
-static void libspdm_test_requester_get_measurements_case12(void **state)
+static void req_get_measurements_case12(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -4253,7 +4253,7 @@ static void libspdm_test_requester_get_measurements_case12(void **state)
  * Test 13: Error case, signature is invalid (random)
  * Expected Behavior: get a RETURN_SECURITY_VIOLATION return code
  **/
-static void libspdm_test_requester_get_measurements_case13(void **state)
+static void req_get_measurements_case13(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -4332,7 +4332,7 @@ static void libspdm_test_requester_get_measurements_case13(void **state)
  * Test 14: Error case, request a signed response, but response is malformed (signature absent)
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code
  **/
-static void libspdm_test_requester_get_measurements_case14(void **state)
+static void req_get_measurements_case14(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -4411,7 +4411,7 @@ static void libspdm_test_requester_get_measurements_case14(void **state)
  * Test 15: Error case, response with wrong response code
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code
  **/
-static void libspdm_test_requester_get_measurements_case15(void **state)
+static void req_get_measurements_case15(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -4490,7 +4490,7 @@ static void libspdm_test_requester_get_measurements_case15(void **state)
  * Test 16: SlotID verificaton, the response's SlotID should match the request
  * Expected Behavior: get a RETURN_SUCCESS return code if the fields match, RETURN_DEVICE_ERROR otherwise. Either way, transcript.message_m should be empty
  **/
-static void libspdm_test_requester_get_measurements_case16(void **state)
+static void req_get_measurements_case16(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -4585,7 +4585,7 @@ static void libspdm_test_requester_get_measurements_case16(void **state)
  * Test 17: Error case, response to get total number of measurements, but response number_of_blocks and/or measurement_record_length are non 0
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code
  **/
-static void libspdm_test_requester_get_measurements_case17(void **state)
+static void req_get_measurements_case17(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -4666,7 +4666,7 @@ static void libspdm_test_requester_get_measurements_case17(void **state)
  * Test 18:
  * Expected Behavior:
  **/
-static void libspdm_test_requester_get_measurements_case18(void **state)
+static void req_get_measurements_case18(void **state)
 {
 }
 
@@ -4674,7 +4674,7 @@ static void libspdm_test_requester_get_measurements_case18(void **state)
  * Test 19: Error case, measurement_specification field in response has 2 bits set (bit 0 is one of them)
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code,
  **/
-static void libspdm_test_requester_get_measurements_case19(void **state)
+static void req_get_measurements_case19(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -4752,7 +4752,7 @@ static void libspdm_test_requester_get_measurements_case19(void **state)
  * Test 20: Error case, measurement_specification field in response has 2 bits set (bit 0 is not one of them)
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code,
  **/
-static void libspdm_test_requester_get_measurements_case20(void **state)
+static void req_get_measurements_case20(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -4830,7 +4830,7 @@ static void libspdm_test_requester_get_measurements_case20(void **state)
  * Test 21: Error case, measurement_specification field in response does not "match the selected measurement specification in the ALGORITHMS message"
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code,
  **/
-static void libspdm_test_requester_get_measurements_case21(void **state)
+static void req_get_measurements_case21(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -4908,7 +4908,7 @@ static void libspdm_test_requester_get_measurements_case21(void **state)
  * Test 22: request a large number of unsigned measurements before requesting a signature
  * Expected Behavior: RETURN_SUCCESS return code and correct transcript.message_m.buffer_size while transcript.message_m has room; RETURN_DEVICE_ERROR otherwise
  **/
-static void libspdm_test_requester_get_measurements_case22(void **state)
+static void req_get_measurements_case22(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -5010,7 +5010,7 @@ static void libspdm_test_requester_get_measurements_case22(void **state)
  * Test 23: Successful response to get a measurement block, without signature. response contains opaque data
  * Expected Behavior: get a RETURN_SUCCESS return code, correct transcript.message_m.buffer_size
  **/
-static void libspdm_test_requester_get_measurements_case23(void **state)
+static void req_get_measurements_case23(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -5095,7 +5095,7 @@ static void libspdm_test_requester_get_measurements_case23(void **state)
  * Test 24: Error case, response contains opaque data larger than the maximum allowed
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code, correct transcript.message_m.buffer_size
  **/
-static void libspdm_test_requester_get_measurements_case24(void **state)
+static void req_get_measurements_case24(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -5174,7 +5174,7 @@ static void libspdm_test_requester_get_measurements_case24(void **state)
  * Test 25: Successful response to get a measurement block, with signature. response contains opaque data
  * Expected Behavior: get a RETURN_SUCCESS return code, empty transcript.message_m.buffer_size
  **/
-static void libspdm_test_requester_get_measurements_case25(void **state)
+static void req_get_measurements_case25(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -5253,7 +5253,7 @@ static void libspdm_test_requester_get_measurements_case25(void **state)
  * Test 26: Error case, request with signature, but response opaque data is S bytes shorter than informed
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code, correct transcript.message_m.buffer_size
  **/
-static void libspdm_test_requester_get_measurements_case26(void **state)
+static void req_get_measurements_case26(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -5333,7 +5333,7 @@ static void libspdm_test_requester_get_measurements_case26(void **state)
  * Test 27: Error case, request with signature, but response opaque data is (S+1) bytes shorter than informed
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code, correct transcript.message_m.buffer_size
  **/
-static void libspdm_test_requester_get_measurements_case27(void **state)
+static void req_get_measurements_case27(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -5413,7 +5413,7 @@ static void libspdm_test_requester_get_measurements_case27(void **state)
  * Test 28: Error case, request with signature, but response opaque data is 1 byte longer than informed
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code, correct transcript.message_m.buffer_size
  **/
-static void libspdm_test_requester_get_measurements_case28(void **state)
+static void req_get_measurements_case28(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -5496,7 +5496,7 @@ static void libspdm_test_requester_get_measurements_case28(void **state)
  * Test 29: request measurement without signature, but response opaque data is 1 byte longer than informed
  * Expected Behavior: extra byte should just be ignored. Get a RETURN_SUCCESS return code, correct transcript.message_m.buffer_size
  **/
-static void libspdm_test_requester_get_measurements_case29(void **state)
+static void req_get_measurements_case29(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -5582,7 +5582,7 @@ static void libspdm_test_requester_get_measurements_case29(void **state)
  * Test 30:
  * Expected Behavior:
  **/
-static void libspdm_test_requester_get_measurements_case30(void **state)
+static void req_get_measurements_case30(void **state)
 {
 }
 
@@ -5590,7 +5590,7 @@ static void libspdm_test_requester_get_measurements_case30(void **state)
  * Test 31:
  * Expected Behavior:
  **/
-static void libspdm_test_requester_get_measurements_case31(void **state)
+static void req_get_measurements_case31(void **state)
 {
 }
 
@@ -5598,7 +5598,7 @@ static void libspdm_test_requester_get_measurements_case31(void **state)
  * Test 32: Successful response to get all measurement blocks, without signature
  * Expected Behavior: get a RETURN_SUCCESS return code, correct transcript.message_m.buffer_size
  **/
-static void libspdm_test_requester_get_measurements_case32(void **state)
+static void req_get_measurements_case32(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -5686,7 +5686,7 @@ static void libspdm_test_requester_get_measurements_case32(void **state)
  * Busy (0x03), ResponseNotReady (0x42), and RequestResync (0x43).
  * Expected behavior: client returns a status of RETURN_DEVICE_ERROR.
  **/
-static void libspdm_test_requester_get_measurements_case33(void **state) {
+static void req_get_measurements_case33(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -5773,7 +5773,7 @@ static void libspdm_test_requester_get_measurements_case33(void **state) {
  * Test 34: Successful response to get a session based measurement with signature
  * Expected Behavior: get a RETURN_SUCCESS return code, with an empty session_transcript.message_m
  **/
-static void libspdm_test_requester_get_measurements_case34(void **state)
+static void req_get_measurements_case34(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -5877,7 +5877,7 @@ static void libspdm_test_requester_get_measurements_case34(void **state)
  *
  * Note that this test is only exercised when LIBSPDM_RECORD_TRANSCRIPT_DATA_SUPPORT is enabled.
  **/
-static void libspdm_test_requester_get_measurements_case35(void **state)
+static void req_get_measurements_case35(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -5964,7 +5964,7 @@ static void libspdm_test_requester_get_measurements_case35(void **state)
     free(data);
 }
 
-static void libspdm_test_requester_get_measurements_case36(void **state)
+static void req_get_measurements_case36(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -6038,7 +6038,7 @@ static void libspdm_test_requester_get_measurements_case36(void **state)
     free(data);
 }
 
-static void libspdm_test_requester_get_measurements_case37(void **state)
+static void req_get_measurements_case37(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -6112,7 +6112,7 @@ static void libspdm_test_requester_get_measurements_case37(void **state)
     free(data);
 }
 
-static void libspdm_test_requester_get_measurements_case38(void **state)
+static void req_get_measurements_case38(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -6168,7 +6168,7 @@ static void libspdm_test_requester_get_measurements_case38(void **state)
  * Test 39: Exercise the libspdm_get_measurement_ex function.
  * Expected Behavior: client returns a status of RETURN_SUCCESS.
  **/
-static void libspdm_test_requester_get_measurements_case39(void **state)
+static void req_get_measurements_case39(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -6266,7 +6266,7 @@ static void libspdm_test_requester_get_measurements_case39(void **state)
  * Test 40: Successful case , correct measuerments context field , without signature
  * Expected Behavior: client returns a status of RETURN_SUCCESS.
  **/
-static void libspdm_test_requester_get_measurements_case40(void **state)
+static void req_get_measurements_case40(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -6353,7 +6353,7 @@ static void libspdm_test_requester_get_measurements_case40(void **state)
  * Test 41: Error case , Measurement context fields are inconsistent , without signature
  * Expected Behavior: get a LIBSPDM_STATUS_INVALID_MSG_FIELD return code
  **/
-static void libspdm_test_requester_get_measurements_case41(void **state)
+static void req_get_measurements_case41(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -6434,47 +6434,47 @@ static void libspdm_test_requester_get_measurements_case41(void **state)
 int libspdm_req_get_measurements_test(void)
 {
     const struct CMUnitTest test_cases[] = {
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case1),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case2),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case3),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case4),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case5),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case6),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case7),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case8),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case9),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case10),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case11),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case12),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case13),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case14),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case15),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case16),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case17),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case18),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case19),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case20),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case21),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case22),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case23),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case24),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case25),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case26),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case27),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case28),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case29),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case30),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case31),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case32),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case33),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case34),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case35),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case36),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case37),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case38),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case39),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case40),
-        cmocka_unit_test(libspdm_test_requester_get_measurements_case41),
+        cmocka_unit_test(req_get_measurements_case1),
+        cmocka_unit_test(req_get_measurements_case2),
+        cmocka_unit_test(req_get_measurements_case3),
+        cmocka_unit_test(req_get_measurements_case4),
+        cmocka_unit_test(req_get_measurements_case5),
+        cmocka_unit_test(req_get_measurements_case6),
+        cmocka_unit_test(req_get_measurements_case7),
+        cmocka_unit_test(req_get_measurements_case8),
+        cmocka_unit_test(req_get_measurements_case9),
+        cmocka_unit_test(req_get_measurements_case10),
+        cmocka_unit_test(req_get_measurements_case11),
+        cmocka_unit_test(req_get_measurements_case12),
+        cmocka_unit_test(req_get_measurements_case13),
+        cmocka_unit_test(req_get_measurements_case14),
+        cmocka_unit_test(req_get_measurements_case15),
+        cmocka_unit_test(req_get_measurements_case16),
+        cmocka_unit_test(req_get_measurements_case17),
+        cmocka_unit_test(req_get_measurements_case18),
+        cmocka_unit_test(req_get_measurements_case19),
+        cmocka_unit_test(req_get_measurements_case20),
+        cmocka_unit_test(req_get_measurements_case21),
+        cmocka_unit_test(req_get_measurements_case22),
+        cmocka_unit_test(req_get_measurements_case23),
+        cmocka_unit_test(req_get_measurements_case24),
+        cmocka_unit_test(req_get_measurements_case25),
+        cmocka_unit_test(req_get_measurements_case26),
+        cmocka_unit_test(req_get_measurements_case27),
+        cmocka_unit_test(req_get_measurements_case28),
+        cmocka_unit_test(req_get_measurements_case29),
+        cmocka_unit_test(req_get_measurements_case30),
+        cmocka_unit_test(req_get_measurements_case31),
+        cmocka_unit_test(req_get_measurements_case32),
+        cmocka_unit_test(req_get_measurements_case33),
+        cmocka_unit_test(req_get_measurements_case34),
+        cmocka_unit_test(req_get_measurements_case35),
+        cmocka_unit_test(req_get_measurements_case36),
+        cmocka_unit_test(req_get_measurements_case37),
+        cmocka_unit_test(req_get_measurements_case38),
+        cmocka_unit_test(req_get_measurements_case39),
+        cmocka_unit_test(req_get_measurements_case40),
+        cmocka_unit_test(req_get_measurements_case41),
     };
 
     libspdm_test_context_t test_context = {

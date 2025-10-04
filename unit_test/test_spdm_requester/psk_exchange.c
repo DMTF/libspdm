@@ -3107,7 +3107,7 @@ static libspdm_return_t receive_message(
     }
 }
 
-void libspdm_test_requester_psk_exchange_case1(void **state)
+static void req_psk_exchange_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -3167,7 +3167,7 @@ void libspdm_test_requester_psk_exchange_case1(void **state)
     free(data);
 }
 
-void libspdm_test_requester_psk_exchange_case2(void **state)
+static void req_psk_exchange_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -3234,7 +3234,7 @@ void libspdm_test_requester_psk_exchange_case2(void **state)
     free(data);
 }
 
-void libspdm_test_requester_psk_exchange_case3(void **state)
+static void req_psk_exchange_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -3293,7 +3293,7 @@ void libspdm_test_requester_psk_exchange_case3(void **state)
     free(data);
 }
 
-void libspdm_test_requester_psk_exchange_case4(void **state)
+static void req_psk_exchange_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -3352,7 +3352,7 @@ void libspdm_test_requester_psk_exchange_case4(void **state)
     free(data);
 }
 
-void libspdm_test_requester_psk_exchange_case5(void **state)
+static void req_psk_exchange_case5(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -3411,7 +3411,7 @@ void libspdm_test_requester_psk_exchange_case5(void **state)
     free(data);
 }
 
-void libspdm_test_requester_psk_exchange_case6(void **state)
+static void req_psk_exchange_case6(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -3476,7 +3476,7 @@ void libspdm_test_requester_psk_exchange_case6(void **state)
     free(data);
 }
 
-void libspdm_test_requester_psk_exchange_case7(void **state)
+static void req_psk_exchange_case7(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -3537,7 +3537,7 @@ void libspdm_test_requester_psk_exchange_case7(void **state)
     free(data);
 }
 
-void libspdm_test_requester_psk_exchange_case8(void **state)
+static void req_psk_exchange_case8(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -3596,7 +3596,7 @@ void libspdm_test_requester_psk_exchange_case8(void **state)
     free(data);
 }
 
-void libspdm_test_requester_psk_exchange_case9(void **state)
+static void req_psk_exchange_case9(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -3666,7 +3666,7 @@ void libspdm_test_requester_psk_exchange_case9(void **state)
     free(data);
 }
 
-void libspdm_test_requester_psk_exchange_case10(void **state) {
+static void req_psk_exchange_case10(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -3735,7 +3735,7 @@ void libspdm_test_requester_psk_exchange_case10(void **state) {
     free(data);
 }
 
-void libspdm_test_requester_psk_exchange_case11(void **state)
+static void req_psk_exchange_case11(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -3803,7 +3803,7 @@ void libspdm_test_requester_psk_exchange_case11(void **state)
         SPDM_PSK_EXCHANGE_REQUEST_NO_MEASUREMENT_SUMMARY_HASH, 0, &session_id,
         &heartbeat_period, measurement_hash);
     assert_int_equal(status, LIBSPDM_STATUS_SUCCESS);
-    assert_int_equal(session_id, 0xFFFFFFFF);
+    assert_int_equal(session_id, 0xfffcfffc);
     assert_int_equal(
         libspdm_secured_message_get_session_state(
             spdm_context->session_info[0].secured_message_context),
@@ -3819,7 +3819,7 @@ void libspdm_test_requester_psk_exchange_case11(void **state)
     free(data);
 }
 
-void libspdm_test_requester_psk_exchange_case12(void **state)
+static void req_psk_exchange_case12(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -3894,7 +3894,7 @@ void libspdm_test_requester_psk_exchange_case12(void **state)
     free(data);
 }
 
-void libspdm_test_requester_psk_exchange_case13(void **state)
+static void req_psk_exchange_case13(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -3965,7 +3965,7 @@ void libspdm_test_requester_psk_exchange_case13(void **state)
     free(data);
 }
 
-void libspdm_test_requester_psk_exchange_case14(void **state)
+static void req_psk_exchange_case14(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -4049,7 +4049,7 @@ void libspdm_test_requester_psk_exchange_case14(void **state)
     free(data);
 }
 
-void libspdm_test_requester_psk_exchange_case15(void **state)
+static void req_psk_exchange_case15(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -4133,7 +4133,7 @@ void libspdm_test_requester_psk_exchange_case15(void **state)
     free(data);
 }
 
-void libspdm_test_requester_psk_exchange_case16(void **state)
+static void req_psk_exchange_case16(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -4218,7 +4218,7 @@ void libspdm_test_requester_psk_exchange_case16(void **state)
     free(data);
 }
 
-void libspdm_test_requester_psk_exchange_case17(void **state)
+static void req_psk_exchange_case17(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -4294,7 +4294,7 @@ void libspdm_test_requester_psk_exchange_case17(void **state)
     free(data);
 }
 
-void libspdm_test_requester_psk_exchange_case18(void **state)
+static void req_psk_exchange_case18(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -4370,7 +4370,7 @@ void libspdm_test_requester_psk_exchange_case18(void **state)
     free(data);
 }
 
-void libspdm_test_requester_psk_exchange_case19(void **state)
+static void req_psk_exchange_case19(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -4446,7 +4446,7 @@ void libspdm_test_requester_psk_exchange_case19(void **state)
     free(data);
 }
 
-void libspdm_test_requester_psk_exchange_case20(void **state)
+static void req_psk_exchange_case20(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -4523,7 +4523,7 @@ void libspdm_test_requester_psk_exchange_case20(void **state)
     free(data);
 }
 
-void libspdm_test_requester_psk_exchange_case21(void **state)
+static void req_psk_exchange_case21(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -4617,7 +4617,7 @@ void libspdm_test_requester_psk_exchange_case21(void **state)
     free(data);
 }
 
-void libspdm_test_requester_psk_exchange_case22(void **state)
+static void req_psk_exchange_case22(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -4713,7 +4713,7 @@ void libspdm_test_requester_psk_exchange_case22(void **state)
     free(data);
 }
 
-void libspdm_test_requester_psk_exchange_case23(void **state)
+static void req_psk_exchange_case23(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -4780,7 +4780,7 @@ void libspdm_test_requester_psk_exchange_case23(void **state)
     free(data);
 }
 
-void libspdm_test_requester_psk_exchange_case24(void **state)
+static void req_psk_exchange_case24(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -4852,7 +4852,7 @@ void libspdm_test_requester_psk_exchange_case24(void **state)
     free(data);
 }
 
-void libspdm_test_requester_psk_exchange_case25(void **state)
+static void req_psk_exchange_case25(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -4924,7 +4924,7 @@ void libspdm_test_requester_psk_exchange_case25(void **state)
     free(data);
 }
 
-void libspdm_test_requester_psk_exchange_case26(void **state)
+static void req_psk_exchange_case26(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -4996,7 +4996,7 @@ void libspdm_test_requester_psk_exchange_case26(void **state)
     free(data);
 }
 
-void libspdm_test_requester_psk_exchange_case27(void **state)
+static void req_psk_exchange_case27(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -5076,57 +5076,58 @@ int libspdm_req_psk_exchange_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         /* SendRequest failed*/
-        cmocka_unit_test(libspdm_test_requester_psk_exchange_case1),
+        cmocka_unit_test(req_psk_exchange_case1),
         /* Successful response*/
-        cmocka_unit_test(libspdm_test_requester_psk_exchange_case2),
+        cmocka_unit_test(req_psk_exchange_case2),
         /* connection_state check failed*/
-        cmocka_unit_test(libspdm_test_requester_psk_exchange_case3),
+        cmocka_unit_test(req_psk_exchange_case3),
         /* Error response: SPDM_ERROR_CODE_INVALID_REQUEST*/
-        cmocka_unit_test(libspdm_test_requester_psk_exchange_case4),
+        cmocka_unit_test(req_psk_exchange_case4),
         /* Always SPDM_ERROR_CODE_BUSY*/
-        cmocka_unit_test(libspdm_test_requester_psk_exchange_case5),
+        cmocka_unit_test(req_psk_exchange_case5),
         /* SPDM_ERROR_CODE_BUSY + Successful response*/
-        cmocka_unit_test(libspdm_test_requester_psk_exchange_case6),
+        cmocka_unit_test(req_psk_exchange_case6),
         /* Error response: SPDM_ERROR_CODE_REQUEST_RESYNCH*/
-        cmocka_unit_test(libspdm_test_requester_psk_exchange_case7),
+        cmocka_unit_test(req_psk_exchange_case7),
         /* Always SPDM_ERROR_CODE_RESPONSE_NOT_READY*/
-        cmocka_unit_test(libspdm_test_requester_psk_exchange_case8),
+        cmocka_unit_test(req_psk_exchange_case8),
         /* SPDM_ERROR_CODE_RESPONSE_NOT_READY + Successful response*/
-        cmocka_unit_test(libspdm_test_requester_psk_exchange_case9),
+        cmocka_unit_test(req_psk_exchange_case9),
         /* Unexpected errors*/
-        cmocka_unit_test(libspdm_test_requester_psk_exchange_case10),
+        cmocka_unit_test(req_psk_exchange_case10),
+        cmocka_unit_test(req_psk_exchange_case11),
         /* Buffer verification*/
-        cmocka_unit_test(libspdm_test_requester_psk_exchange_case12),
+        cmocka_unit_test(req_psk_exchange_case12),
         /* Successful response V1.2*/
-        cmocka_unit_test(libspdm_test_requester_psk_exchange_case13),
+        cmocka_unit_test(req_psk_exchange_case13),
         /* Measurement hash 1, returns a measurement hash*/
-        cmocka_unit_test(libspdm_test_requester_psk_exchange_case14),
+        cmocka_unit_test(req_psk_exchange_case14),
         /* Measurement hash 1, returns a 0x00 array (no TCB components)*/
-        cmocka_unit_test(libspdm_test_requester_psk_exchange_case15),
+        cmocka_unit_test(req_psk_exchange_case15),
         /* Measurement hash FF, returns a measurement_hash*/
-        cmocka_unit_test(libspdm_test_requester_psk_exchange_case16),
+        cmocka_unit_test(req_psk_exchange_case16),
         /* Measurement hash 1, returns no measurement_hash*/
-        cmocka_unit_test(libspdm_test_requester_psk_exchange_case17),
+        cmocka_unit_test(req_psk_exchange_case17),
         /* Measurement hash FF, returns no measurement_hash*/
-        cmocka_unit_test(libspdm_test_requester_psk_exchange_case18),
+        cmocka_unit_test(req_psk_exchange_case18),
         /* Measurement hash not requested, returns a measurement_hash*/
-        cmocka_unit_test(libspdm_test_requester_psk_exchange_case19),
+        cmocka_unit_test(req_psk_exchange_case19),
         /* Heartbeat not supported, heartbeat period different from 0 sent*/
-        cmocka_unit_test(libspdm_test_requester_psk_exchange_case20),
+        cmocka_unit_test(req_psk_exchange_case20),
         /* Heartbeat supported, heartbeat period different from 0 sent*/
-        cmocka_unit_test(libspdm_test_requester_psk_exchange_case21),
+        cmocka_unit_test(req_psk_exchange_case21),
         /* Heartbeat supported, heartbeat period 0 sent NOTE: This should disable heartbeat*/
-        cmocka_unit_test(libspdm_test_requester_psk_exchange_case22),
+        cmocka_unit_test(req_psk_exchange_case22),
         /* Wrong ResponderVerifyData*/
-        cmocka_unit_test(libspdm_test_requester_psk_exchange_case23),
+        cmocka_unit_test(req_psk_exchange_case23),
         /* No ResponderContext*/
-        cmocka_unit_test(libspdm_test_requester_psk_exchange_case24),
+        cmocka_unit_test(req_psk_exchange_case24),
         /* No OpaqueData*/
-        cmocka_unit_test(libspdm_test_requester_psk_exchange_case25),
+        cmocka_unit_test(req_psk_exchange_case25),
         /* No ResponderContext and OpaqueData*/
-        cmocka_unit_test(libspdm_test_requester_psk_exchange_case26),
+        cmocka_unit_test(req_psk_exchange_case26),
         /* OpaqueData only supports OpaqueDataFmt1, Success Case */
-        cmocka_unit_test(libspdm_test_requester_psk_exchange_case27),
+        cmocka_unit_test(req_psk_exchange_case27),
     };
 
     libspdm_test_context_t test_context = {

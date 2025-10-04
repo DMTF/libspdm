@@ -71,7 +71,7 @@ size_t m_libspdm_get_endpoint_info_request4_size =
  *                    correct response message size and fields
  *                    correct signature verification
  **/
-void libspdm_test_requester_encap_endpoint_info_case1(void **state)
+static void req_encap_endpoint_info_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -183,7 +183,7 @@ void libspdm_test_requester_encap_endpoint_info_case1(void **state)
  *                    correct response message size and fields
  *                    correct signature verification
  **/
-void libspdm_test_requester_encap_endpoint_info_case2(void **state)
+static void req_encap_endpoint_info_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -294,7 +294,7 @@ void libspdm_test_requester_encap_endpoint_info_case2(void **state)
  *                    correct response message size and fields
  *                    correct signature verification
  **/
-void libspdm_test_requester_encap_endpoint_info_case3(void **state)
+static void req_encap_endpoint_info_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -386,7 +386,7 @@ void libspdm_test_requester_encap_endpoint_info_case3(void **state)
  * Expected Behavior: get a RETURN_SUCCESS return code,
  *                    correct response message size and fields
  **/
-void libspdm_test_requester_encap_endpoint_info_case4(void **state)
+static void req_encap_endpoint_info_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -437,7 +437,7 @@ void libspdm_test_requester_encap_endpoint_info_case4(void **state)
  *                    correct response message size and fields
  *                    correct signature verification
  **/
-void libspdm_test_requester_encap_endpoint_info_case5(void **state)
+static void req_encap_endpoint_info_case5(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -555,15 +555,15 @@ int libspdm_req_encap_endpoint_info_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         /* Successful response to get endpoint_info with signature */
-        cmocka_unit_test(libspdm_test_requester_encap_endpoint_info_case1),
+        cmocka_unit_test(req_encap_endpoint_info_case1),
         /* Successful response to get endpoint_info with signature, slot_id == 0x1 */
-        cmocka_unit_test(libspdm_test_requester_encap_endpoint_info_case2),
+        cmocka_unit_test(req_encap_endpoint_info_case2),
         /* Successful response to get endpoint_info with signature, slot_id == 0xF */
-        cmocka_unit_test(libspdm_test_requester_encap_endpoint_info_case3),
+        cmocka_unit_test(req_encap_endpoint_info_case3),
         /* Successful response to get endpoint_info without signature */
-        cmocka_unit_test(libspdm_test_requester_encap_endpoint_info_case4),
+        cmocka_unit_test(req_encap_endpoint_info_case4),
         /* Successful response to get session-based endpoint_info with signature */
-        cmocka_unit_test(libspdm_test_requester_encap_endpoint_info_case5),
+        cmocka_unit_test(req_encap_endpoint_info_case5),
     };
 
     libspdm_test_context_t test_context = {

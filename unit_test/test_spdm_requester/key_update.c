@@ -3590,7 +3590,7 @@ static libspdm_return_t receive_message(
  * returns a device error.
  * Expected behavior: client returns a Status of RETURN_DEVICE_ERROR.
  **/
-void libspdm_test_requester_key_update_case1(void **state)
+static void req_key_update_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -3629,7 +3629,7 @@ void libspdm_test_requester_key_update_case1(void **state)
  * Expected behavior: client returns a Status of RETURN_SUCCESS, the
  * request data key is updated, but not the response data key.
  **/
-void libspdm_test_requester_key_update_case2(void **state)
+static void req_key_update_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -3685,7 +3685,7 @@ void libspdm_test_requester_key_update_case2(void **state)
  * GET_CAPABILITIES and NEGOTIATE_ALGORITHMS had not been exchanged.
  * Expected behavior: client returns a Status of RETURN_UNSUPPORTED.
  **/
-void libspdm_test_requester_key_update_case3(void **state)
+static void req_key_update_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -3728,7 +3728,7 @@ void libspdm_test_requester_key_update_case3(void **state)
  * Expected behavior: client returns a Status of RETURN_DEVICE_ERROR, and
  * no keys should be updated.
  **/
-void libspdm_test_requester_key_update_case4(void **state)
+static void req_key_update_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -3779,7 +3779,7 @@ void libspdm_test_requester_key_update_case4(void **state)
  * Expected behavior: client returns a Status of RETURN_NO_RESPONSE, and
  * no keys should be updated.
  **/
-void libspdm_test_requester_key_update_case5(void **state)
+static void req_key_update_case5(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -3832,7 +3832,7 @@ void libspdm_test_requester_key_update_case5(void **state)
  * Expected behavior: client returns a Status of RETURN_SUCCESS, the
  * request data key is updated, but not the response data key.
  **/
-void libspdm_test_requester_key_update_case6(void **state)
+static void req_key_update_case6(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -3891,7 +3891,7 @@ void libspdm_test_requester_key_update_case6(void **state)
  * Expected behavior: client returns a Status of RETURN_DEVICE_ERROR, and the
  * communication is reset to expect a new GET_VERSION message.
  **/
-void libspdm_test_requester_key_update_case7(void **state)
+static void req_key_update_case7(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -3933,7 +3933,7 @@ void libspdm_test_requester_key_update_case7(void **state)
  * Expected behavior: client returns a Status of RETURN_DEVICE_ERROR, and
  * no keys should be updated.
  **/
-void libspdm_test_requester_key_update_case8(void **state)
+static void req_key_update_case8(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -3986,7 +3986,7 @@ void libspdm_test_requester_key_update_case8(void **state)
  * Expected behavior: client returns a Status of RETURN_SUCCESS, the
  * request data key is updated, but not the response data key.
  **/
-void libspdm_test_requester_key_update_case9(void **state)
+static void req_key_update_case9(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -4049,7 +4049,7 @@ void libspdm_test_requester_key_update_case9(void **state)
  * Expected behavior: client returns a status of RETURN_DEVICE_ERROR, and
  * no keys should be updated.
  **/
-void libspdm_test_requester_key_update_case10(void **state)
+static void req_key_update_case10(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -4116,7 +4116,7 @@ void libspdm_test_requester_key_update_case10(void **state)
     }
 }
 
-void libspdm_test_requester_key_update_case11(void **state)
+static void req_key_update_case11(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -4193,7 +4193,7 @@ void libspdm_test_requester_key_update_case11(void **state)
  * Expected behavior: client returns a Status of RETURN_UNSUPPORTED,
  * and no keys are updated.
  **/
-void libspdm_test_requester_key_update_case12(void **state)
+static void req_key_update_case12(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -4250,7 +4250,7 @@ void libspdm_test_requester_key_update_case12(void **state)
  * Expected behavior: client returns a Status of RETURN_DEVICE_ERROR,
  * no keys are updated.
  **/
-void libspdm_test_requester_key_update_case13(void **state)
+static void req_key_update_case13(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -4302,7 +4302,7 @@ void libspdm_test_requester_key_update_case13(void **state)
  * Expected behavior: client returns a Status of RETURN_UNSUPPORTED,
  * and no keys are updated.
  **/
-void libspdm_test_requester_key_update_case14(void **state)
+static void req_key_update_case14(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -4359,7 +4359,7 @@ void libspdm_test_requester_key_update_case14(void **state)
  * Expected behavior: client returns a Status of RETURN_DEVICE_ERROR, and
  * no keys should be updated.
  **/
-void libspdm_test_requester_key_update_case15(void **state)
+static void req_key_update_case15(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -4411,7 +4411,7 @@ void libspdm_test_requester_key_update_case15(void **state)
  * Expected behavior: client returns a Status of RETURN_DEVICE_ERROR, and
  * no keys should be updated.
  **/
-void libspdm_test_requester_key_update_case16(void **state)
+static void req_key_update_case16(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -4462,7 +4462,7 @@ void libspdm_test_requester_key_update_case16(void **state)
  * Expected behavior: client returns a Status of RETURN_DEVICE_ERROR, the
  * request data key is not rollbacked.
  **/
-void libspdm_test_requester_key_update_case17(void **state)
+static void req_key_update_case17(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -4518,7 +4518,7 @@ void libspdm_test_requester_key_update_case17(void **state)
  * Expected behavior: client returns a Status of RETURN_NO_RESPONSE, the
  * request data key is not rollbacked.
  **/
-void libspdm_test_requester_key_update_case18(void **state)
+static void req_key_update_case18(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -4577,7 +4577,7 @@ void libspdm_test_requester_key_update_case18(void **state)
  * Expected behavior: client returns a Status of RETURN_SUCCESS, the
  * request data key is not rollbacked.
  **/
-void libspdm_test_requester_key_update_case19(void **state)
+static void req_key_update_case19(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -4636,7 +4636,7 @@ void libspdm_test_requester_key_update_case19(void **state)
  * Expected behavior: client returns a Status of RETURN_DEVICE_ERROR, and the
  * communication is reset to expect a new GET_VERSION message.
  **/
-void libspdm_test_requester_key_update_case20(void **state)
+static void req_key_update_case20(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -4678,7 +4678,7 @@ void libspdm_test_requester_key_update_case20(void **state)
  * Expected behavior: client returns a Status of RETURN_DEVICE_ERROR, the
  * request data key is not rollbacked.
  **/
-void libspdm_test_requester_key_update_case21(void **state)
+static void req_key_update_case21(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -4736,7 +4736,7 @@ void libspdm_test_requester_key_update_case21(void **state)
  * Expected behavior: client returns a Status of RETURN_SUCCESS, the
  * request data key is not rollbacked.
  **/
-void libspdm_test_requester_key_update_case22(void **state)
+static void req_key_update_case22(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -4800,7 +4800,7 @@ void libspdm_test_requester_key_update_case22(void **state)
  * Expected behavior: client returns a status of RETURN_DEVICE_ERROR, the
  * request data key is not rollbacked.
  **/
-void libspdm_test_requester_key_update_case23(void **state)
+static void req_key_update_case23(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -4879,7 +4879,7 @@ void libspdm_test_requester_key_update_case23(void **state)
  * Expected behavior: client returns a Status of RETURN_DEVICE_ERROR, the
  * request data key is not rollbacked.
  **/
-void libspdm_test_requester_key_update_case24(void **state)
+static void req_key_update_case24(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -4937,7 +4937,7 @@ void libspdm_test_requester_key_update_case24(void **state)
  * Expected behavior: client returns a Status of RETURN_DEVICE_ERROR, the
  * request data key is not rollbacked.
  **/
-void libspdm_test_requester_key_update_case25(void **state)
+static void req_key_update_case25(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -4995,7 +4995,7 @@ void libspdm_test_requester_key_update_case25(void **state)
  * Expected behavior: client returns a Status of RETURN_DEVICE_ERROR, the
  * request data key is not rollbacked.
  **/
-void libspdm_test_requester_key_update_case26(void **state)
+static void req_key_update_case26(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -5052,7 +5052,7 @@ void libspdm_test_requester_key_update_case26(void **state)
  * Expected behavior: client returns a Status of RETURN_SUCCESS, and
  * the request data key and response data key are updated.
  **/
-void libspdm_test_requester_key_update_case27(void **state)
+static void req_key_update_case27(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -5114,7 +5114,7 @@ void libspdm_test_requester_key_update_case27(void **state)
  * Expected behavior: client returns a Status of RETURN_DEVICE_ERROR, and
  * no keys should be updated.
  **/
-void libspdm_test_requester_key_update_case28(void **state)
+static void req_key_update_case28(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -5181,7 +5181,7 @@ void libspdm_test_requester_key_update_case28(void **state)
  * Expected behavior: client returns a Status of RETURN_NO_RESPONSE, and
  * no keys should be updated.
  **/
-void libspdm_test_requester_key_update_case29(void **state)
+static void req_key_update_case29(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -5249,7 +5249,7 @@ void libspdm_test_requester_key_update_case29(void **state)
  * Expected behavior: client returns a Status of RETURN_SUCCESS, and
  * the request data key and response data key are updated.
  **/
-void libspdm_test_requester_key_update_case30(void **state)
+static void req_key_update_case30(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -5328,7 +5328,7 @@ void libspdm_test_requester_key_update_case30(void **state)
  * Expected behavior: client returns a Status of RETURN_DEVICE_ERROR, and the
  * communication is reset to expect a new GET_VERSION message.
  **/
-void libspdm_test_requester_key_update_case31(void **state)
+static void req_key_update_case31(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -5385,7 +5385,7 @@ void libspdm_test_requester_key_update_case31(void **state)
  * Expected behavior: client returns a Status of RETURN_DEVICE_ERROR, and
  * no keys should be updated.
  **/
-void libspdm_test_requester_key_update_case32(void **state)
+static void req_key_update_case32(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -5453,7 +5453,7 @@ void libspdm_test_requester_key_update_case32(void **state)
  * Expected behavior: client returns a Status of RETURN_SUCCESS, and
  * the request data key and response data key are updated.
  **/
-void libspdm_test_requester_key_update_case33(void **state)
+static void req_key_update_case33(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -5536,7 +5536,7 @@ void libspdm_test_requester_key_update_case33(void **state)
  * Expected behavior: client returns a status of RETURN_DEVICE_ERROR, and
  * no keys should be updated.
  **/
-void libspdm_test_requester_key_update_case34(void **state)
+static void req_key_update_case34(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -5622,7 +5622,7 @@ void libspdm_test_requester_key_update_case34(void **state)
  * Test 35: the requester is setup correctly, but receives an ERROR with SPDM_ERROR_CODE_DECRYPT_ERROR.
  * Expected behavior: client returns a Status of INVALID_SESSION_ID  and free the session ID.
  **/
-void libspdm_test_requester_key_update_case35(void **state)
+static void req_key_update_case35(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -5660,74 +5660,74 @@ int libspdm_req_key_update_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         /* SendRequest failed*/
-        cmocka_unit_test(libspdm_test_requester_key_update_case1),
+        cmocka_unit_test(req_key_update_case1),
         /* update single key
          * Successful response*/
-        cmocka_unit_test(libspdm_test_requester_key_update_case2),
+        cmocka_unit_test(req_key_update_case2),
         /* connection_state check failed*/
-        cmocka_unit_test(libspdm_test_requester_key_update_case3),
+        cmocka_unit_test(req_key_update_case3),
         /* Error response: SPDM_ERROR_CODE_INVALID_REQUEST*/
-        cmocka_unit_test(libspdm_test_requester_key_update_case4),
+        cmocka_unit_test(req_key_update_case4),
         /* Always SPDM_ERROR_CODE_BUSY*/
-        cmocka_unit_test(libspdm_test_requester_key_update_case5),
+        cmocka_unit_test(req_key_update_case5),
         /* SPDM_ERROR_CODE_BUSY + Successful response*/
-        cmocka_unit_test(libspdm_test_requester_key_update_case6),
+        cmocka_unit_test(req_key_update_case6),
         /* Error response: SPDM_ERROR_CODE_REQUEST_RESYNCH*/
-        cmocka_unit_test(libspdm_test_requester_key_update_case7),
+        cmocka_unit_test(req_key_update_case7),
         /* Always SPDM_ERROR_CODE_RESPONSE_NOT_READY*/
-        cmocka_unit_test(libspdm_test_requester_key_update_case8),
+        cmocka_unit_test(req_key_update_case8),
         /* SPDM_ERROR_CODE_RESPONSE_NOT_READY + Successful response*/
-        cmocka_unit_test(libspdm_test_requester_key_update_case9),
+        cmocka_unit_test(req_key_update_case9),
         /* Unexpected errors*/
-        cmocka_unit_test(libspdm_test_requester_key_update_case10),
+        cmocka_unit_test(req_key_update_case10),
         /* Buffer reset*/
-        cmocka_unit_test(libspdm_test_requester_key_update_case11),
+        cmocka_unit_test(req_key_update_case11),
         /* No correct setup*/
-        cmocka_unit_test(libspdm_test_requester_key_update_case12),
-        cmocka_unit_test(libspdm_test_requester_key_update_case13),
-        cmocka_unit_test(libspdm_test_requester_key_update_case14),
+        cmocka_unit_test(req_key_update_case12),
+        cmocka_unit_test(req_key_update_case13),
+        cmocka_unit_test(req_key_update_case14),
         /* Wrong parameters*/
-        cmocka_unit_test(libspdm_test_requester_key_update_case15),
-        cmocka_unit_test(libspdm_test_requester_key_update_case16),
+        cmocka_unit_test(req_key_update_case15),
+        cmocka_unit_test(req_key_update_case16),
         /* verify key
          * Error response: SPDM_ERROR_CODE_INVALID_REQUEST*/
-        cmocka_unit_test(libspdm_test_requester_key_update_case17),
+        cmocka_unit_test(req_key_update_case17),
         /* Always SPDM_ERROR_CODE_BUSY*/
-        cmocka_unit_test(libspdm_test_requester_key_update_case18),
+        cmocka_unit_test(req_key_update_case18),
         /* SPDM_ERROR_CODE_BUSY + Successful response*/
-        cmocka_unit_test(libspdm_test_requester_key_update_case19),
+        cmocka_unit_test(req_key_update_case19),
         /* Error response: SPDM_ERROR_CODE_REQUEST_RESYNCH*/
-        cmocka_unit_test(libspdm_test_requester_key_update_case20),
+        cmocka_unit_test(req_key_update_case20),
         /* Always SPDM_ERROR_CODE_RESPONSE_NOT_READY*/
-        cmocka_unit_test(libspdm_test_requester_key_update_case21),
+        cmocka_unit_test(req_key_update_case21),
         /* SPDM_ERROR_CODE_RESPONSE_NOT_READY + Successful response*/
-        cmocka_unit_test(libspdm_test_requester_key_update_case22),
+        cmocka_unit_test(req_key_update_case22),
         /* Unexpected errors*/
-        cmocka_unit_test(libspdm_test_requester_key_update_case23),
+        cmocka_unit_test(req_key_update_case23),
         /* No correct setup*/
-        cmocka_unit_test(libspdm_test_requester_key_update_case24),
+        cmocka_unit_test(req_key_update_case24),
         /* Wrong parameters*/
-        cmocka_unit_test(libspdm_test_requester_key_update_case25),
-        cmocka_unit_test(libspdm_test_requester_key_update_case26),
+        cmocka_unit_test(req_key_update_case25),
+        cmocka_unit_test(req_key_update_case26),
         /* update all keys
          * Successful response*/
-        cmocka_unit_test(libspdm_test_requester_key_update_case27),
+        cmocka_unit_test(req_key_update_case27),
         /* Error response: SPDM_ERROR_CODE_INVALID_REQUEST*/
-        cmocka_unit_test(libspdm_test_requester_key_update_case28),
+        cmocka_unit_test(req_key_update_case28),
         /* Always SPDM_ERROR_CODE_BUSY*/
-        cmocka_unit_test(libspdm_test_requester_key_update_case29),
+        cmocka_unit_test(req_key_update_case29),
         /* SPDM_ERROR_CODE_BUSY + Successful response*/
-        cmocka_unit_test(libspdm_test_requester_key_update_case30),
+        cmocka_unit_test(req_key_update_case30),
         /* Error response: SPDM_ERROR_CODE_REQUEST_RESYNCH*/
-        cmocka_unit_test(libspdm_test_requester_key_update_case31),
+        cmocka_unit_test(req_key_update_case31),
         /* Always SPDM_ERROR_CODE_RESPONSE_NOT_READY*/
-        cmocka_unit_test(libspdm_test_requester_key_update_case32),
+        cmocka_unit_test(req_key_update_case32),
         /* SPDM_ERROR_CODE_RESPONSE_NOT_READY + Successful response*/
-        cmocka_unit_test(libspdm_test_requester_key_update_case33),
+        cmocka_unit_test(req_key_update_case33),
         /* Unexpected errors*/
-        cmocka_unit_test(libspdm_test_requester_key_update_case34),
+        cmocka_unit_test(req_key_update_case34),
         /* Error response: SPDM_ERROR_CODE_DECRYPT_ERROR*/
-        cmocka_unit_test(libspdm_test_requester_key_update_case35),
+        cmocka_unit_test(req_key_update_case35),
     };
 
     libspdm_test_context_t test_context = {

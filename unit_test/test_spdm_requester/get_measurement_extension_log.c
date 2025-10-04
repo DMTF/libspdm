@@ -670,7 +670,7 @@ static libspdm_return_t receive_message(
  * Test 1: message could not be sent
  * Expected Behavior: get a LIBSPDM_STATUS_SEND_FAIL, with no MEL messages received
  **/
-static void libspdm_test_requester_get_measurement_extension_log_case1(void **state)
+static void req_get_measurement_extension_log_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -713,7 +713,7 @@ static void libspdm_test_requester_get_measurement_extension_log_case1(void **st
  * Test 2: Normal case, request a MEL, the MEL size remains unchanged
  * Expected Behavior: receives a valid MEL
  **/
-static void libspdm_test_requester_get_measurement_extension_log_case2(void **state)
+static void req_get_measurement_extension_log_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -757,7 +757,7 @@ static void libspdm_test_requester_get_measurement_extension_log_case2(void **st
  * The original MEL number is 3, the new MEL number is 4.
  * Expected Behavior: receives a valid MEL, and the MEL size is same with the before MEL size.
  **/
-static void libspdm_test_requester_get_measurement_extension_log_case3(void **state)
+static void req_get_measurement_extension_log_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -802,7 +802,7 @@ static void libspdm_test_requester_get_measurement_extension_log_case3(void **st
  * The original MEL number is 100, the new MEL number is 105.
  * Expected Behavior: receives a valid MEL, and the MEL size is same with the before MEL size.
  **/
-static void libspdm_test_requester_get_measurement_extension_log_case4(void **state)
+static void req_get_measurement_extension_log_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -846,7 +846,7 @@ static void libspdm_test_requester_get_measurement_extension_log_case4(void **st
  * The original MEL number is 100, the new MEL number is 200.
  * Expected Behavior: receives a valid MEL, and the MEL size is same with the before MEL size.
  **/
-static void libspdm_test_requester_get_measurement_extension_log_case5(void **state)
+static void req_get_measurement_extension_log_case5(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -889,7 +889,7 @@ static void libspdm_test_requester_get_measurement_extension_log_case5(void **st
  * Test 6: Normal case, request a LIBSPDM_MAX_MEASUREMENT_EXTENSION_LOG_SIZE MEL
  * Expected Behavior: receives a valid MEL
  **/
-static void libspdm_test_requester_get_measurement_extension_log_case6(void **state)
+static void req_get_measurement_extension_log_case6(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -937,7 +937,7 @@ static void libspdm_test_requester_get_measurement_extension_log_case6(void **st
  * Test 7: The total amount of messages actually sent by the responder is less than the negotiated total mel len.
  * Expected Behavior: returns with status LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
-static void libspdm_test_requester_get_measurement_extension_log_case7(void **state)
+static void req_get_measurement_extension_log_case7(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -981,7 +981,7 @@ static void libspdm_test_requester_get_measurement_extension_log_case7(void **st
  * Test 8: Portion_length is greater than the LIBSPDM_MAX_MEL_BLOCK_LEN
  * Expected Behavior: returns with status LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
-static void libspdm_test_requester_get_measurement_extension_log_case8(void **state)
+static void req_get_measurement_extension_log_case8(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1025,7 +1025,7 @@ static void libspdm_test_requester_get_measurement_extension_log_case8(void **st
  * Test 9: The total MEL length is larger than SPDM_MAX_MEASUREMENT_EXTENSION_LOG_SIZE
  * Expected Behavior: returns with status LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
-static void libspdm_test_requester_get_measurement_extension_log_case9(void **state)
+static void req_get_measurement_extension_log_case9(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1069,23 +1069,23 @@ int libspdm_req_get_measurement_extension_log_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         /* SendRequest failed*/
-        cmocka_unit_test(libspdm_test_requester_get_measurement_extension_log_case1),
+        cmocka_unit_test(req_get_measurement_extension_log_case1),
         /* Successful response, the MEL size remains unchanged*/
-        cmocka_unit_test(libspdm_test_requester_get_measurement_extension_log_case2),
+        cmocka_unit_test(req_get_measurement_extension_log_case2),
         /* Successful response, the MEL size become more bigger when get MEL. MEL number change from 3 to 4*/
-        cmocka_unit_test(libspdm_test_requester_get_measurement_extension_log_case3),
+        cmocka_unit_test(req_get_measurement_extension_log_case3),
         /* Successful response, the MEL size become more bigger when get MEL. MEL number change from 100 to 105*/
-        cmocka_unit_test(libspdm_test_requester_get_measurement_extension_log_case4),
+        cmocka_unit_test(req_get_measurement_extension_log_case4),
         /* Successful response, the MEL size become more bigger when get MEL. MEL number change from 100 to 200*/
-        cmocka_unit_test(libspdm_test_requester_get_measurement_extension_log_case5),
+        cmocka_unit_test(req_get_measurement_extension_log_case5),
         /* Successful response , LIBSPDM_MAX_MEASUREMENT_EXTENSION_LOG_SIZE*/
-        cmocka_unit_test(libspdm_test_requester_get_measurement_extension_log_case6),
+        cmocka_unit_test(req_get_measurement_extension_log_case6),
         /* Failed response , The total amount of messages actually sent by the responder is less than the negotiated total mel len*/
-        cmocka_unit_test(libspdm_test_requester_get_measurement_extension_log_case7),
+        cmocka_unit_test(req_get_measurement_extension_log_case7),
         /* Failed response , Portion_length is greater than the LIBSPDM_MAX_MEL_BLOCK_LEN*/
-        cmocka_unit_test(libspdm_test_requester_get_measurement_extension_log_case8),
+        cmocka_unit_test(req_get_measurement_extension_log_case8),
         /* Failed response , The total MEL length is larger than SPDM_MAX_MEASUREMENT_EXTENSION_LOG_SIZE*/
-        cmocka_unit_test(libspdm_test_requester_get_measurement_extension_log_case9),
+        cmocka_unit_test(req_get_measurement_extension_log_case9),
 
     };
 
