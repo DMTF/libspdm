@@ -14,7 +14,7 @@
  * Test 1: Successful response to set key pair info with key pair id 4
  * Expected Behavior: get a RETURN_SUCCESS return code, and correct response message size and fields
  **/
-void libspdm_test_responder_set_key_pair_info_ack_case1(void **state)
+static void rsp_set_key_pair_info_ack_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -129,7 +129,7 @@ void libspdm_test_responder_set_key_pair_info_ack_case1(void **state)
  * Test 2: Successful response to set key pair info with key pair id 4: need reset
  * Expected Behavior: get a RETURN_SUCCESS return code, and correct response message size and fields
  **/
-void libspdm_test_responder_set_key_pair_info_ack_case2(void **state)
+static void rsp_set_key_pair_info_ack_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -287,7 +287,7 @@ void libspdm_test_responder_set_key_pair_info_ack_case2(void **state)
 /**
  * Test 2: The collection of multiple sub-cases.
  **/
-void libspdm_test_responder_set_key_pair_info_ack_case3(void **state)
+static void rsp_set_key_pair_info_ack_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -507,7 +507,7 @@ void libspdm_test_responder_set_key_pair_info_ack_case3(void **state)
  * Test 4: Successful response to set key pair info with key pair id 4: need reset, spdm 1.4
  * Expected Behavior: get a RETURN_SUCCESS return code, and correct response message size and fields
  **/
-void libspdm_test_responder_set_key_pair_info_ack_case4(void **state)
+static void rsp_set_key_pair_info_ack_case4(void **state)
 {
     /* reference case 2 */
     libspdm_return_t status;
@@ -680,13 +680,13 @@ int libspdm_rsp_set_key_pair_info_ack_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         /* Success Case to set key pair info*/
-        cmocka_unit_test(libspdm_test_responder_set_key_pair_info_ack_case1),
+        cmocka_unit_test(rsp_set_key_pair_info_ack_case1),
         /* Success Case to set key pair info with reset*/
-        cmocka_unit_test(libspdm_test_responder_set_key_pair_info_ack_case2),
+        cmocka_unit_test(rsp_set_key_pair_info_ack_case2),
         /* The collection of multiple sub-cases.*/
-        cmocka_unit_test(libspdm_test_responder_set_key_pair_info_ack_case3),
+        cmocka_unit_test(rsp_set_key_pair_info_ack_case3),
         /* Success Case to set key pair info with reset, spdm 1.4*/
-        cmocka_unit_test(libspdm_test_responder_set_key_pair_info_ack_case4),
+        cmocka_unit_test(rsp_set_key_pair_info_ack_case4),
     };
 
     libspdm_test_context_t test_context = {

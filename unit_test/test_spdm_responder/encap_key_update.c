@@ -45,7 +45,7 @@ static void libspdm_set_standard_key_update_test_state(libspdm_context_t *spdm_c
  * only the request data key.
  * Expected behavior: client returns a Status of RETURN_SUCCESS,Communication needs to continue.
  **/
-void libspdm_test_responder_encap_key_update_case1(void **state)
+static void rsp_encap_key_update_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -90,7 +90,7 @@ void libspdm_test_responder_encap_key_update_case1(void **state)
  * only the request data key.
  * Expected behavior: client returns a Status of RETURN_SUCCESS,Communication needs to continue.
  **/
-void libspdm_test_responder_encap_key_update_case2(void **state)
+static void rsp_encap_key_update_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -134,7 +134,7 @@ void libspdm_test_responder_encap_key_update_case2(void **state)
  * only the request data key. last_spdm_request_session_id_valid invalid
  * Expected behavior: client returns a Status of RETURN_UNSUPPORTED,No further communication is required.
  **/
-void libspdm_test_responder_encap_key_update_case3(void **state)
+static void rsp_encap_key_update_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -170,7 +170,7 @@ void libspdm_test_responder_encap_key_update_case3(void **state)
  * Expected behavior: client returns a Status of RETURN_SECURITY_VIOLATION, and
  * no keys should be updated.
  **/
-void libspdm_test_responder_encap_key_update_case4(void **state)
+static void rsp_encap_key_update_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -206,7 +206,7 @@ void libspdm_test_responder_encap_key_update_case4(void **state)
  * Test 5: spdm_response message is correct but does not match last_encap_request_header error message
  * Expected behavior: client returns a Status of RETURN_DEVICE_ERROR
  **/
-void libspdm_test_responder_encap_key_update_case5(void **state)
+static void rsp_encap_key_update_case5(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -248,15 +248,15 @@ int libspdm_rsp_encap_key_update_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         /* Successful response*/
-        cmocka_unit_test(libspdm_test_responder_encap_key_update_case1),
+        cmocka_unit_test(rsp_encap_key_update_case1),
         /* Successful response,No further communication is required.*/
-        cmocka_unit_test(libspdm_test_responder_encap_key_update_case2),
+        cmocka_unit_test(rsp_encap_key_update_case2),
         /* last_spdm_request_session_id_valid : false */
-        cmocka_unit_test(libspdm_test_responder_encap_key_update_case3),
+        cmocka_unit_test(rsp_encap_key_update_case3),
         /* Error response: RETURN_SECURITY_VIOLATION */
-        cmocka_unit_test(libspdm_test_responder_encap_key_update_case4),
+        cmocka_unit_test(rsp_encap_key_update_case4),
         /* Error response: RETURN_DEVICE_ERROR */
-        cmocka_unit_test(libspdm_test_responder_encap_key_update_case5),
+        cmocka_unit_test(rsp_encap_key_update_case5),
     };
 
     libspdm_test_context_t test_context = {

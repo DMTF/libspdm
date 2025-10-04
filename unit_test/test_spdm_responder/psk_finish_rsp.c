@@ -60,7 +60,7 @@ static void libspdm_secured_message_set_request_finished_key(
  * Expected behavior: the responder accepts the request and produces a valid
  * PSK_FINISH_RSP response message.
  **/
-void libspdm_test_responder_psk_finish_case1(void **state)
+static void rsp_psk_finish_rsp_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -165,7 +165,7 @@ void libspdm_test_responder_psk_finish_case1(void **state)
  * Expected behavior: the responder refuses the PSK_FINISH message and
  * produces an ERROR message indicating the InvalidRequest.
  **/
-void libspdm_test_responder_psk_finish_case2(void **state)
+static void rsp_psk_finish_rsp_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -270,7 +270,7 @@ void libspdm_test_responder_psk_finish_case2(void **state)
  * Expected behavior: the responder accepts the request, but produces an
  * ERROR message indicating the Busy state.
  **/
-void libspdm_test_responder_psk_finish_case3(void **state)
+static void rsp_psk_finish_rsp_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -381,7 +381,7 @@ void libspdm_test_responder_psk_finish_case3(void **state)
  * Expected behavior: the responder accepts the request, but produces an
  * ERROR message indicating the NeedResynch state.
  **/
-void libspdm_test_responder_psk_finish_case4(void **state)
+static void rsp_psk_finish_rsp_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -494,7 +494,7 @@ void libspdm_test_responder_psk_finish_case4(void **state)
  * Expected behavior: the responder accepts the request, but produces an
  * ERROR message indicating the ResponseNotReady state.
  **/
-void libspdm_test_responder_psk_finish_case5(void **state)
+static void rsp_psk_finish_rsp_case5(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -615,7 +615,7 @@ void libspdm_test_responder_psk_finish_case5(void **state)
  * Expected behavior: the responder rejects the request, and produces an
  * ERROR message indicating the UnexpectedRequest.
  **/
-void libspdm_test_responder_psk_finish_case6(void **state)
+static void rsp_psk_finish_rsp_case6(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -719,7 +719,7 @@ void libspdm_test_responder_psk_finish_case6(void **state)
     free(data1);
 }
 
-void libspdm_test_responder_psk_finish_case7(void **state)
+static void rsp_psk_finish_rsp_case7(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -847,7 +847,7 @@ void libspdm_test_responder_psk_finish_case7(void **state)
  * Expected behavior: the responder refuses the PSK_FINISH message and
  * produces an ERROR message indicating the UnsupportedRequest.
  **/
-void libspdm_test_responder_psk_finish_case8(void **state)
+static void rsp_psk_finish_rsp_case8(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -957,7 +957,7 @@ void libspdm_test_responder_psk_finish_case8(void **state)
  * Expected behavior: the responder refuses the PSK_FINISH message and
  * produces an ERROR message indicating the InvalidRequest.
  **/
-void libspdm_test_responder_psk_finish_case9(void **state)
+static void rsp_psk_finish_rsp_case9(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1066,7 +1066,7 @@ void libspdm_test_responder_psk_finish_case9(void **state)
  * Expected behavior: the responder refuses the PSK_FINISH message and
  * produces an ERROR message indicating the DecryptError.
  **/
-void libspdm_test_responder_psk_finish_case10(void **state)
+static void rsp_psk_finish_rsp_case10(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1164,7 +1164,7 @@ void libspdm_test_responder_psk_finish_case10(void **state)
  * Expected behavior: the responder refuses the PSK_FINISH message and
  * produces an ERROR message indicating the DecryptError.
  **/
-void libspdm_test_responder_psk_finish_case11(void **state)
+static void rsp_psk_finish_rsp_case11(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1268,7 +1268,7 @@ void libspdm_test_responder_psk_finish_case11(void **state)
  * Expected behavior: the responder refuses the PSK_FINISH message and
  * produces an ERROR message indicating the InvalidRequest.
  **/
-void libspdm_test_responder_psk_finish_case12(void **state)
+static void rsp_psk_finish_rsp_case12(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1379,7 +1379,7 @@ void libspdm_test_responder_psk_finish_case12(void **state)
  * Expected behavior: the responder refuses the PSK_FINISH message and
  * produces an ERROR message indicating the InvalidRequest.
  **/
-void libspdm_test_responder_psk_finish_case13(void **state)
+static void rsp_psk_finish_rsp_case13(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1488,7 +1488,7 @@ void libspdm_test_responder_psk_finish_case13(void **state)
  * Expected behavior: the responder accepts the request and produces a valid PSK_FINISH
  * response message, and buffer F receives the exchanged PSK_FINISH and PSK_FINISH_RSP messages.
  **/
-void libspdm_test_responder_psk_finish_case14(void **state)
+static void rsp_psk_finish_rsp_case14(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1591,7 +1591,7 @@ void libspdm_test_responder_psk_finish_case14(void **state)
  * Expected behavior: the responder accepts the request and produces a valid PSK_FINISH
  * response message.
  **/
-void libspdm_test_responder_psk_finish_case15(void **state)
+static void rsp_psk_finish_rsp_case15(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1691,35 +1691,35 @@ int libspdm_rsp_psk_finish_rsp_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         /* Success Case*/
-        cmocka_unit_test(libspdm_test_responder_psk_finish_case1),
+        cmocka_unit_test(rsp_psk_finish_rsp_case1),
         /* Bad request size*/
-        cmocka_unit_test(libspdm_test_responder_psk_finish_case2),
+        cmocka_unit_test(rsp_psk_finish_rsp_case2),
         /* response_state: SPDM_RESPONSE_STATE_BUSY*/
-        cmocka_unit_test(libspdm_test_responder_psk_finish_case3),
+        cmocka_unit_test(rsp_psk_finish_rsp_case3),
         /* response_state: SPDM_RESPONSE_STATE_NEED_RESYNC*/
-        cmocka_unit_test(libspdm_test_responder_psk_finish_case4),
+        cmocka_unit_test(rsp_psk_finish_rsp_case4),
         #if LIBSPDM_RESPOND_IF_READY_SUPPORT
         /* response_state: SPDM_RESPONSE_STATE_NOT_READY*/
-        cmocka_unit_test(libspdm_test_responder_psk_finish_case5),
+        cmocka_unit_test(rsp_psk_finish_rsp_case5),
         #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
         /* connection_state Check*/
-        cmocka_unit_test(libspdm_test_responder_psk_finish_case6),
+        cmocka_unit_test(rsp_psk_finish_rsp_case6),
         /* Buffer reset*/
-        cmocka_unit_test(libspdm_test_responder_psk_finish_case7),
+        cmocka_unit_test(rsp_psk_finish_rsp_case7),
         /* Unsupported PSK capabilities*/
-        cmocka_unit_test(libspdm_test_responder_psk_finish_case8),
+        cmocka_unit_test(rsp_psk_finish_rsp_case8),
         /* Uninitialized session*/
-        cmocka_unit_test(libspdm_test_responder_psk_finish_case9),
+        cmocka_unit_test(rsp_psk_finish_rsp_case9),
         /* Incorrect MAC*/
-        cmocka_unit_test(libspdm_test_responder_psk_finish_case10),
-        cmocka_unit_test(libspdm_test_responder_psk_finish_case11),
+        cmocka_unit_test(rsp_psk_finish_rsp_case10),
+        cmocka_unit_test(rsp_psk_finish_rsp_case11),
         /* Incorrect MAC size*/
-        cmocka_unit_test(libspdm_test_responder_psk_finish_case12),
-        cmocka_unit_test(libspdm_test_responder_psk_finish_case13),
+        cmocka_unit_test(rsp_psk_finish_rsp_case12),
+        cmocka_unit_test(rsp_psk_finish_rsp_case13),
         /* Buffer verification*/
-        cmocka_unit_test(libspdm_test_responder_psk_finish_case14),
+        cmocka_unit_test(rsp_psk_finish_rsp_case14),
         /* SPDM 1.4 with OpaqueData */
-        cmocka_unit_test(libspdm_test_responder_psk_finish_case15),
+        cmocka_unit_test(rsp_psk_finish_rsp_case15),
     };
 
     libspdm_test_context_t test_context = {

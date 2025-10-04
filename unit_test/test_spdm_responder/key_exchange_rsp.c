@@ -91,7 +91,7 @@ size_t m_libspdm_key_exchange_request10_size = sizeof(m_libspdm_key_exchange_req
 extern bool g_event_all_subscribe;
 extern bool g_event_all_unsubscribe;
 
-void libspdm_test_responder_key_exchange_case1(void **state)
+static void rsp_key_exchange_rsp_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -175,7 +175,7 @@ void libspdm_test_responder_key_exchange_case1(void **state)
     free(data1);
 }
 
-void libspdm_test_responder_key_exchange_case2(void **state)
+static void rsp_key_exchange_rsp_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -258,7 +258,7 @@ void libspdm_test_responder_key_exchange_case2(void **state)
     free(data1);
 }
 
-void libspdm_test_responder_key_exchange_case3(void **state)
+static void rsp_key_exchange_rsp_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -343,7 +343,7 @@ void libspdm_test_responder_key_exchange_case3(void **state)
     free(data1);
 }
 
-void libspdm_test_responder_key_exchange_case4(void **state)
+static void rsp_key_exchange_rsp_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -430,7 +430,7 @@ void libspdm_test_responder_key_exchange_case4(void **state)
 }
 
 #if LIBSPDM_RESPOND_IF_READY_SUPPORT
-void libspdm_test_responder_key_exchange_case5(void **state)
+static void rsp_key_exchange_rsp_case5(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -523,7 +523,7 @@ void libspdm_test_responder_key_exchange_case5(void **state)
 }
 #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
 
-void libspdm_test_responder_key_exchange_case6(void **state)
+static void rsp_key_exchange_rsp_case6(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -607,7 +607,7 @@ void libspdm_test_responder_key_exchange_case6(void **state)
     free(data1);
 }
 
-void libspdm_test_responder_key_exchange_case7(void **state)
+static void rsp_key_exchange_rsp_case7(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -710,7 +710,7 @@ void libspdm_test_responder_key_exchange_case7(void **state)
     free(data1);
 }
 
-void libspdm_test_responder_key_exchange_case8(void **state)
+static void rsp_key_exchange_rsp_case8(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -827,7 +827,7 @@ void libspdm_test_responder_key_exchange_case8(void **state)
     free(data1);
 }
 
-void libspdm_test_responder_key_exchange_case9(void **state)
+static void rsp_key_exchange_rsp_case9(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -949,7 +949,7 @@ void libspdm_test_responder_key_exchange_case9(void **state)
     free(data1);
 }
 
-void libspdm_test_responder_key_exchange_case10(void **state)
+static void rsp_key_exchange_rsp_case10(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1039,7 +1039,7 @@ void libspdm_test_responder_key_exchange_case10(void **state)
     free(data1);
 }
 
-void libspdm_test_responder_key_exchange_case11(void **state)
+static void rsp_key_exchange_rsp_case11(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1133,7 +1133,7 @@ void libspdm_test_responder_key_exchange_case11(void **state)
     free(data1);
 }
 
-void libspdm_test_responder_key_exchange_case14(void **state)
+static void rsp_key_exchange_rsp_case14(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1231,7 +1231,7 @@ void libspdm_test_responder_key_exchange_case14(void **state)
     free(data2);
 }
 
-void libspdm_test_responder_key_exchange_case15(void **state)
+static void rsp_key_exchange_rsp_case15(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1334,7 +1334,7 @@ void libspdm_test_responder_key_exchange_case15(void **state)
     free(data1);
 }
 
-void libspdm_test_responder_key_exchange_case16(void **state)
+static void rsp_key_exchange_rsp_case16(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1432,7 +1432,7 @@ void libspdm_test_responder_key_exchange_case16(void **state)
     free(data1);
 }
 
-void libspdm_test_responder_key_exchange_case17(void **state)
+static void rsp_key_exchange_rsp_case17(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1524,7 +1524,7 @@ void libspdm_test_responder_key_exchange_case17(void **state)
  * Test 18: SlotID in KEY_EXCHANGE request message is 9, but it should be 0xFF or between 0 and 7 inclusive.
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_INVALID_REQUEST.
  **/
-void libspdm_test_responder_key_exchange_case18(void **state)
+static void rsp_key_exchange_rsp_case18(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1609,7 +1609,7 @@ void libspdm_test_responder_key_exchange_case18(void **state)
     free(data1);
 }
 
-void libspdm_test_responder_key_exchange_case19(void **state)
+static void rsp_key_exchange_rsp_case19(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1740,7 +1740,7 @@ void libspdm_test_responder_key_exchange_case19(void **state)
     free(data1);
 }
 
-void libspdm_test_responder_key_exchange_case20(void **state)
+static void rsp_key_exchange_rsp_case20(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1842,7 +1842,7 @@ void libspdm_test_responder_key_exchange_case20(void **state)
  * Test 21: The key usage bit mask is not set, the SlotID fields in KEY_EXCHANGE and KEY_EXCHANGE_RSP shall not specify this certificate slot
  * Expected Behavior: get a SPDM_ERROR_CODE_INVALID_REQUEST return code
  **/
-void libspdm_test_responder_key_exchange_case21(void **state)
+static void rsp_key_exchange_rsp_case21(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1940,7 +1940,7 @@ void libspdm_test_responder_key_exchange_case21(void **state)
  * Test 21: The Requester subscribes to all events supported by the Responder.
  * Expected Behavior: Responder successfully subscribes the Requester to all events.
  **/
-static void libspdm_test_responder_key_exchange_case22(void **state)
+static void rsp_key_exchange_rsp_case22(void **state)
 {
 #if LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP
     libspdm_return_t status;
@@ -2030,7 +2030,7 @@ static void libspdm_test_responder_key_exchange_case22(void **state)
 #endif /* LIBSPDM_ENABLE_CAPABILITY_EVENT_CAP */
 }
 
-void libspdm_test_responder_key_exchange_case23(void **state)
+static void rsp_key_exchange_rsp_case23(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -2112,7 +2112,7 @@ void libspdm_test_responder_key_exchange_case23(void **state)
 }
 
 
-void libspdm_test_responder_key_exchange_case24(void **state)
+static void rsp_key_exchange_rsp_case24(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -2197,49 +2197,49 @@ int libspdm_rsp_key_exchange_rsp_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         /* Success Case*/
-        cmocka_unit_test(libspdm_test_responder_key_exchange_case1),
+        cmocka_unit_test(rsp_key_exchange_rsp_case1),
         /* Bad request size*/
-        cmocka_unit_test(libspdm_test_responder_key_exchange_case2),
+        cmocka_unit_test(rsp_key_exchange_rsp_case2),
         /* response_state: SPDM_RESPONSE_STATE_BUSY*/
-        cmocka_unit_test(libspdm_test_responder_key_exchange_case3),
+        cmocka_unit_test(rsp_key_exchange_rsp_case3),
         /* response_state: SPDM_RESPONSE_STATE_NEED_RESYNC*/
-        cmocka_unit_test(libspdm_test_responder_key_exchange_case4),
+        cmocka_unit_test(rsp_key_exchange_rsp_case4),
         #if LIBSPDM_RESPOND_IF_READY_SUPPORT
         /* response_state: SPDM_RESPONSE_STATE_NOT_READY*/
-        cmocka_unit_test(libspdm_test_responder_key_exchange_case5),
+        cmocka_unit_test(rsp_key_exchange_rsp_case5),
         #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
         /* connection_state Check*/
-        cmocka_unit_test(libspdm_test_responder_key_exchange_case6),
+        cmocka_unit_test(rsp_key_exchange_rsp_case6),
         /* Buffer reset*/
-        cmocka_unit_test(libspdm_test_responder_key_exchange_case7),
+        cmocka_unit_test(rsp_key_exchange_rsp_case7),
         /* TCB measurement hash requested */
-        cmocka_unit_test(libspdm_test_responder_key_exchange_case8),
+        cmocka_unit_test(rsp_key_exchange_rsp_case8),
         /* All measurement hash requested */
-        cmocka_unit_test(libspdm_test_responder_key_exchange_case9),
+        cmocka_unit_test(rsp_key_exchange_rsp_case9),
         /* Reserved value in Measurement summary. Error + Invalid */
-        cmocka_unit_test(libspdm_test_responder_key_exchange_case10),
+        cmocka_unit_test(rsp_key_exchange_rsp_case10),
         /* TCB measurement hash requested, measurement flag not set */
-        cmocka_unit_test(libspdm_test_responder_key_exchange_case11),
+        cmocka_unit_test(rsp_key_exchange_rsp_case11),
         /* Request previously provisioned public key, slot 0xFF */
-        cmocka_unit_test(libspdm_test_responder_key_exchange_case14),
+        cmocka_unit_test(rsp_key_exchange_rsp_case14),
         /* HANDSHAKE_IN_THE_CLEAR set for requester and responder */
-        cmocka_unit_test(libspdm_test_responder_key_exchange_case15),
+        cmocka_unit_test(rsp_key_exchange_rsp_case15),
         /* Buffer verification*/
-        cmocka_unit_test(libspdm_test_responder_key_exchange_case16),
+        cmocka_unit_test(rsp_key_exchange_rsp_case16),
         /* Successful response V1.2*/
-        cmocka_unit_test(libspdm_test_responder_key_exchange_case17),
+        cmocka_unit_test(rsp_key_exchange_rsp_case17),
         /* Invalid SlotID in KEY_EXCHANGE request message*/
-        cmocka_unit_test(libspdm_test_responder_key_exchange_case18),
+        cmocka_unit_test(rsp_key_exchange_rsp_case18),
         /* Only OpaqueDataFmt1 is supported, Bytes not aligned*/
-        cmocka_unit_test(libspdm_test_responder_key_exchange_case19),
+        cmocka_unit_test(rsp_key_exchange_rsp_case19),
         /* OpaqueData only supports OpaqueDataFmt1, Success Case */
-        cmocka_unit_test(libspdm_test_responder_key_exchange_case20),
+        cmocka_unit_test(rsp_key_exchange_rsp_case20),
         /* The key usage bit mask is not set, failed Case*/
-        cmocka_unit_test(libspdm_test_responder_key_exchange_case21),
-        cmocka_unit_test(libspdm_test_responder_key_exchange_case22),
+        cmocka_unit_test(rsp_key_exchange_rsp_case21),
+        cmocka_unit_test(rsp_key_exchange_rsp_case22),
         /* The Responder requires mutual authentication, but the Requester does not support it */
-        cmocka_unit_test(libspdm_test_responder_key_exchange_case23),
-        cmocka_unit_test(libspdm_test_responder_key_exchange_case24),
+        cmocka_unit_test(rsp_key_exchange_rsp_case23),
+        cmocka_unit_test(rsp_key_exchange_rsp_case24),
     };
 
     libspdm_test_context_t test_context = {

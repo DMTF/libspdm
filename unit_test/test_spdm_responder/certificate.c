@@ -47,7 +47,7 @@ size_t m_libspdm_get_certificate_request5_size = sizeof(m_libspdm_get_certificat
  * Test 1: request the first LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN bytes of the certificate chain
  * Expected Behavior: generate a correctly formed Certificate message, including its portion_length and remainder_length fields
  **/
-void libspdm_test_responder_certificate_case1(void **state)
+static void rsp_certificate_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -107,7 +107,7 @@ void libspdm_test_responder_certificate_case1(void **state)
  * Test 2:
  * Expected Behavior:
  **/
-void libspdm_test_responder_certificate_case2(void **state)
+static void rsp_certificate_case2(void **state)
 {
 }
 
@@ -115,7 +115,7 @@ void libspdm_test_responder_certificate_case2(void **state)
  * Test 3: Force response_state = LIBSPDM_RESPONSE_STATE_BUSY when asked GET_CERTIFICATE
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_BUSY
  **/
-void libspdm_test_responder_certificate_case3(void **state)
+static void rsp_certificate_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -165,7 +165,7 @@ void libspdm_test_responder_certificate_case3(void **state)
  * Test 4: Force response_state = LIBSPDM_RESPONSE_STATE_NEED_RESYNC when asked GET_CERTIFICATE
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_REQUEST_RESYNCH
  **/
-void libspdm_test_responder_certificate_case4(void **state)
+static void rsp_certificate_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -217,7 +217,7 @@ void libspdm_test_responder_certificate_case4(void **state)
  * Test 5: Force response_state = LIBSPDM_RESPONSE_STATE_NOT_READY when asked GET_CERTIFICATE
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_RESPONSE_NOT_READY and correct error_data
  **/
-void libspdm_test_responder_certificate_case5(void **state)
+static void rsp_certificate_case5(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -273,7 +273,7 @@ void libspdm_test_responder_certificate_case5(void **state)
  * Test 6: simulate wrong connection_state when asked GET_CERTIFICATE (missing SPDM_GET_DIGESTS_RECEIVE_FLAG and SPDM_GET_CAPABILITIES_RECEIVE_FLAG)
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_UNEXPECTED_REQUEST
  **/
-void libspdm_test_responder_certificate_case6(void **state)
+static void rsp_certificate_case6(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -323,7 +323,7 @@ void libspdm_test_responder_certificate_case6(void **state)
  * Test 7: request length at the boundary of maximum integer values, while keeping offset 0
  * Expected Behavior: generate correctly formed Certificate messages, including its portion_length and remainder_length fields
  **/
-void libspdm_test_responder_certificate_case7(void **state)
+static void rsp_certificate_case7(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -398,7 +398,7 @@ void libspdm_test_responder_certificate_case7(void **state)
  * Test 8: request offset at the boundary of maximum integer values, while keeping length 0
  * Expected Behavior: generate correctly formed Certificate messages, including its portion_length and remainder_length fields
  **/
-void libspdm_test_responder_certificate_case8(void **state)
+static void rsp_certificate_case8(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -494,7 +494,7 @@ void libspdm_test_responder_certificate_case8(void **state)
  * Test 9: request offset and length at the boundary of maximum integer values
  * Expected Behavior: generate correctly formed Certificate messages, including its portion_length and remainder_length fields
  **/
-void libspdm_test_responder_certificate_case9(void **state)
+static void rsp_certificate_case9(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -625,7 +625,7 @@ void libspdm_test_responder_certificate_case9(void **state)
  * Test 10: request LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN bytes of long certificate chains, with the largest valid offset
  * Expected Behavior: generate correctly formed Certificate messages, including its portion_length and remainder_length fields
  **/
-void libspdm_test_responder_certificate_case10(void **state)
+static void rsp_certificate_case10(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -741,7 +741,7 @@ void libspdm_test_responder_certificate_case10(void **state)
  * Test 11: request LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN bytes of a short certificate chain (fits in 1 message)
  * Expected Behavior: generate correctly formed Certificate messages, including its portion_length and remainder_length fields
  **/
-void libspdm_test_responder_certificate_case11(void **state)
+static void rsp_certificate_case11(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -856,7 +856,7 @@ void libspdm_test_responder_certificate_case11(void **state)
  * Test 12: request a whole certificate chain byte by byte
  * Expected Behavior: generate correctly formed Certificate messages, including its portion_length and remainder_length fields
  **/
-void libspdm_test_responder_certificate_case12(void **state)
+static void rsp_certificate_case12(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -961,7 +961,7 @@ void libspdm_test_responder_certificate_case12(void **state)
  * CERTIFICATE response message, and buffer B receives the exchanged
  * GET_CERTIFICATE and CERTIFICATE messages.
  **/
-void libspdm_test_responder_certificate_case13(void **state)
+static void rsp_certificate_case13(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1028,7 +1028,7 @@ void libspdm_test_responder_certificate_case13(void **state)
  * Test 14: request the first LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN bytes of the certificate chain in a session
  * Expected Behavior: generate a correctly formed Certificate message, including its portion_length and remainder_length fields
  **/
-void libspdm_test_responder_certificate_case14(void **state)
+static void rsp_certificate_case14(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1101,7 +1101,7 @@ void libspdm_test_responder_certificate_case14(void **state)
  * Test 15: Produce a CERTIFICATE response that is meant to be chunked.
  *          LIBSPDM_MAX_CERT_CHAIN_BLOCK_LEN is ignored when chunking is enabled.
  **/
-void libspdm_test_responder_certificate_case15(void **state)
+static void rsp_certificate_case15(void **state)
 {
     libspdm_return_t status;
     bool ret;
@@ -1179,7 +1179,7 @@ void libspdm_test_responder_certificate_case15(void **state)
  * Expected Behavior: portion length should be 0 and remainder length should be the size of the
  *                    certificate chain.
  **/
-void libspdm_test_responder_certificate_case16(void **state)
+static void rsp_certificate_case16(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1226,7 +1226,7 @@ void libspdm_test_responder_certificate_case16(void **state)
  * Test 17: SlotID in GET_CERTIFICATE request message is 9, but it should be between 0 and 7 inclusive.
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_INVALID_REQUEST.
  **/
-void libspdm_test_responder_certificate_case17(void **state)
+static void rsp_certificate_case17(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1275,7 +1275,7 @@ void libspdm_test_responder_certificate_case17(void **state)
  * GET_CERTIFICATE request shall be ignored by the Responder
  * Expected Behavior: generate a correctly formed Certificate message, including its portion_length and remainder_length fields
  **/
-void libspdm_test_responder_certificate_case18(void **state)
+static void rsp_certificate_case18(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1329,7 +1329,7 @@ void libspdm_test_responder_certificate_case18(void **state)
  * Test 19: Attempt to retrieve a certificate chain from a slot that needs to be reset.
  * Expected Behavior: Responder responds with ResetRequired.
  **/
-void libspdm_test_responder_certificate_case19(void **state)
+static void rsp_certificate_case19(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1378,43 +1378,43 @@ int libspdm_rsp_certificate_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         /* Success Case*/
-        cmocka_unit_test(libspdm_test_responder_certificate_case1),
+        cmocka_unit_test(rsp_certificate_case1),
         /* Can be populated with new test.*/
-        cmocka_unit_test(libspdm_test_responder_certificate_case2),
+        cmocka_unit_test(rsp_certificate_case2),
         /* response_state: LIBSPDM_RESPONSE_STATE_BUSY*/
-        cmocka_unit_test(libspdm_test_responder_certificate_case3),
+        cmocka_unit_test(rsp_certificate_case3),
         /* response_state: LIBSPDM_RESPONSE_STATE_NEED_RESYNC*/
-        cmocka_unit_test(libspdm_test_responder_certificate_case4),
+        cmocka_unit_test(rsp_certificate_case4),
         #if LIBSPDM_RESPOND_IF_READY_SUPPORT
         /* response_state: LIBSPDM_RESPONSE_STATE_NOT_READY*/
-        cmocka_unit_test(libspdm_test_responder_certificate_case5),
+        cmocka_unit_test(rsp_certificate_case5),
         #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
         /* connection_state Check*/
-        cmocka_unit_test(libspdm_test_responder_certificate_case6),
+        cmocka_unit_test(rsp_certificate_case6),
         /* Tests varying length*/
-        cmocka_unit_test(libspdm_test_responder_certificate_case7),
+        cmocka_unit_test(rsp_certificate_case7),
         /* Tests varying offset*/
-        cmocka_unit_test(libspdm_test_responder_certificate_case8),
+        cmocka_unit_test(rsp_certificate_case8),
         /* Tests varying length and offset*/
-        cmocka_unit_test(libspdm_test_responder_certificate_case9),
+        cmocka_unit_test(rsp_certificate_case9),
         /* Tests large certificate chains*/
-        cmocka_unit_test(libspdm_test_responder_certificate_case10),
+        cmocka_unit_test(rsp_certificate_case10),
         /* Certificate fits in one single message*/
-        cmocka_unit_test(libspdm_test_responder_certificate_case11),
+        cmocka_unit_test(rsp_certificate_case11),
         /* Requests byte by byte*/
-        cmocka_unit_test(libspdm_test_responder_certificate_case12),
+        cmocka_unit_test(rsp_certificate_case12),
         /* Buffer verification*/
-        cmocka_unit_test(libspdm_test_responder_certificate_case13),
+        cmocka_unit_test(rsp_certificate_case13),
         /* Success Case in a session*/
-        cmocka_unit_test(libspdm_test_responder_certificate_case14),
+        cmocka_unit_test(rsp_certificate_case14),
         /* Produce a CERTIFICATE response that is meant to be chunked. */
-        cmocka_unit_test(libspdm_test_responder_certificate_case15),
-        cmocka_unit_test(libspdm_test_responder_certificate_case16),
+        cmocka_unit_test(rsp_certificate_case15),
+        cmocka_unit_test(rsp_certificate_case16),
         /* Bad SlotID in request message */
-        cmocka_unit_test(libspdm_test_responder_certificate_case17),
+        cmocka_unit_test(rsp_certificate_case17),
         /* check request attributes and response attributes*/
-        cmocka_unit_test(libspdm_test_responder_certificate_case18),
-        cmocka_unit_test(libspdm_test_responder_certificate_case19),
+        cmocka_unit_test(rsp_certificate_case18),
+        cmocka_unit_test(rsp_certificate_case19),
     };
 
     libspdm_test_context_t test_context = {

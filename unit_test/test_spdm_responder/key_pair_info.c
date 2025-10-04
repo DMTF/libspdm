@@ -20,7 +20,7 @@ size_t m_libspdm_get_key_pair_info_request1_size = sizeof(m_libspdm_get_key_pair
  * Test 1: Successful response to get key pair info with key pair id 4
  * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, and correct response message size and fields
  **/
-void libspdm_test_responder_key_pair_info_case1(void **state)
+static void rsp_key_pair_info_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -71,7 +71,7 @@ void libspdm_test_responder_key_pair_info_case1(void **state)
  * KeyPairID is set to 0.
  * Expected Behavior:  Generate error response message
  **/
-void libspdm_test_responder_key_pair_info_case2(void **state)
+static void rsp_key_pair_info_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -115,7 +115,7 @@ void libspdm_test_responder_key_pair_info_case2(void **state)
  * Test 3: The key_pair_id is greater than the total key pairs
  * Expected Behavior:  Generate error response message
  **/
-void libspdm_test_responder_key_pair_info_case3(void **state)
+static void rsp_key_pair_info_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -157,7 +157,7 @@ void libspdm_test_responder_key_pair_info_case3(void **state)
  * Test 4: not set KEY_PAIR_INFO
  * Expected Behavior:  Generate error response message
  **/
-void libspdm_test_responder_key_pair_info_case4(void **state)
+static void rsp_key_pair_info_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -200,13 +200,13 @@ int libspdm_rsp_key_pair_info_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         /* Success Case to get key pair info*/
-        cmocka_unit_test(libspdm_test_responder_key_pair_info_case1),
+        cmocka_unit_test(rsp_key_pair_info_case1),
         /* The KeyPairID is at least 1 , KeyPairID is set to 0.*/
-        cmocka_unit_test(libspdm_test_responder_key_pair_info_case2),
+        cmocka_unit_test(rsp_key_pair_info_case2),
         /* KeyPairID > total_key_pairs*/
-        cmocka_unit_test(libspdm_test_responder_key_pair_info_case3),
+        cmocka_unit_test(rsp_key_pair_info_case3),
         /* capability not set KEY_PAIR_INFO*/
-        cmocka_unit_test(libspdm_test_responder_key_pair_info_case4),
+        cmocka_unit_test(rsp_key_pair_info_case4),
     };
 
     libspdm_test_context_t test_context = {

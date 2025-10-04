@@ -21,7 +21,7 @@ spdm_heartbeat_request_t m_libspdm_heartbeat_request2 = {
 size_t m_libspdm_heartbeat_request2_size = LIBSPDM_MAX_SPDM_MSG_SIZE;
 
 
-void libspdm_test_responder_heartbeat_case1(void **state)
+static void rsp_heartbeat_ack_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -83,7 +83,7 @@ void libspdm_test_responder_heartbeat_case1(void **state)
     free(data1);
 }
 
-void libspdm_test_responder_heartbeat_case2(void **state)
+static void rsp_heartbeat_ack_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -158,7 +158,7 @@ void libspdm_test_responder_heartbeat_case2(void **state)
     free(data1);
 }
 
-void libspdm_test_responder_heartbeat_case3(void **state)
+static void rsp_heartbeat_ack_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -235,7 +235,7 @@ void libspdm_test_responder_heartbeat_case3(void **state)
     free(data1);
 }
 
-void libspdm_test_responder_heartbeat_case4(void **state)
+static void rsp_heartbeat_ack_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -314,7 +314,7 @@ void libspdm_test_responder_heartbeat_case4(void **state)
 }
 
 #if LIBSPDM_RESPOND_IF_READY_SUPPORT
-void libspdm_test_responder_heartbeat_case5(void **state)
+static void rsp_heartbeat_ack_case5(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -399,7 +399,7 @@ void libspdm_test_responder_heartbeat_case5(void **state)
 }
 #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
 
-void libspdm_test_responder_heartbeat_case6(void **state)
+static void rsp_heartbeat_ack_case6(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -475,7 +475,7 @@ void libspdm_test_responder_heartbeat_case6(void **state)
     free(data1);
 }
 
-void libspdm_test_responder_heartbeat_case7(void **state)
+static void rsp_heartbeat_ack_case7(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -571,7 +571,7 @@ void libspdm_test_responder_heartbeat_case7(void **state)
  *         HEARTBEAT request anyways.
  * Expected behavior: Responder returns UnexpectedRequest ERROR message.
  **/
-void libspdm_test_responder_heartbeat_case8(void **state)
+static void rsp_heartbeat_ack_case8(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -629,22 +629,22 @@ int libspdm_rsp_heartbeat_ack_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         /* Success Case*/
-        cmocka_unit_test(libspdm_test_responder_heartbeat_case1),
+        cmocka_unit_test(rsp_heartbeat_ack_case1),
         /* Bad request size*/
-        cmocka_unit_test(libspdm_test_responder_heartbeat_case2),
+        cmocka_unit_test(rsp_heartbeat_ack_case2),
         /* response_state: SPDM_RESPONSE_STATE_BUSY*/
-        cmocka_unit_test(libspdm_test_responder_heartbeat_case3),
+        cmocka_unit_test(rsp_heartbeat_ack_case3),
         /* response_state: SPDM_RESPONSE_STATE_NEED_RESYNC*/
-        cmocka_unit_test(libspdm_test_responder_heartbeat_case4),
+        cmocka_unit_test(rsp_heartbeat_ack_case4),
         #if LIBSPDM_RESPOND_IF_READY_SUPPORT
         /* response_state: SPDM_RESPONSE_STATE_NOT_READY*/
-        cmocka_unit_test(libspdm_test_responder_heartbeat_case5),
+        cmocka_unit_test(rsp_heartbeat_ack_case5),
         #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
         /* connection_state Check*/
-        cmocka_unit_test(libspdm_test_responder_heartbeat_case6),
+        cmocka_unit_test(rsp_heartbeat_ack_case6),
         /* Buffer reset*/
-        cmocka_unit_test(libspdm_test_responder_heartbeat_case7),
-        cmocka_unit_test(libspdm_test_responder_heartbeat_case8),
+        cmocka_unit_test(rsp_heartbeat_ack_case7),
+        cmocka_unit_test(rsp_heartbeat_ack_case8),
     };
 
     libspdm_test_context_t test_context = {

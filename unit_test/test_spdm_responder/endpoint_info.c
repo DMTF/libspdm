@@ -72,7 +72,7 @@ size_t m_libspdm_get_endpoint_info_request4_size =
  *                    correct response message size and fields
  *                    correct signature verification
  **/
-void libspdm_test_responder_endpoint_info_case1(void **state)
+static void rsp_endpoint_info_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -190,7 +190,7 @@ void libspdm_test_responder_endpoint_info_case1(void **state)
  *                    correct response message size and fields
  *                    correct signature verification
  **/
-void libspdm_test_responder_endpoint_info_case2(void **state)
+static void rsp_endpoint_info_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -288,7 +288,7 @@ void libspdm_test_responder_endpoint_info_case2(void **state)
  *                    correct response message size and fields
  *                    correct signature verification
  **/
-void libspdm_test_responder_endpoint_info_case3(void **state)
+static void rsp_endpoint_info_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -408,7 +408,7 @@ void libspdm_test_responder_endpoint_info_case3(void **state)
  * Expected Behavior: get a RETURN_SUCCESS return code,
  *                    correct response message size and fields
  **/
-void libspdm_test_responder_endpoint_info_case4(void **state)
+static void rsp_endpoint_info_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -470,7 +470,7 @@ void libspdm_test_responder_endpoint_info_case4(void **state)
  *                    correct response message size and fields
  *                    correct signature verification
  **/
-void libspdm_test_responder_endpoint_info_case5(void **state)
+static void rsp_endpoint_info_case5(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -595,11 +595,11 @@ void libspdm_test_responder_endpoint_info_case5(void **state)
 int libspdm_rsp_endpoint_info_test(void)
 {
     const struct CMUnitTest test_cases[] = {
-        cmocka_unit_test(libspdm_test_responder_endpoint_info_case1),
-        cmocka_unit_test(libspdm_test_responder_endpoint_info_case2),
-        cmocka_unit_test(libspdm_test_responder_endpoint_info_case3),
-        cmocka_unit_test(libspdm_test_responder_endpoint_info_case4),
-        cmocka_unit_test(libspdm_test_responder_endpoint_info_case5),
+        cmocka_unit_test(rsp_endpoint_info_case1),
+        cmocka_unit_test(rsp_endpoint_info_case2),
+        cmocka_unit_test(rsp_endpoint_info_case3),
+        cmocka_unit_test(rsp_endpoint_info_case4),
+        cmocka_unit_test(rsp_endpoint_info_case5),
     };
 
     libspdm_test_context_t test_context = {
