@@ -125,7 +125,7 @@ static libspdm_return_t receive_message(
  * Test 1: Successful response to set key pair info
  * Expected Behavior: get a RETURN_SUCCESS return code
  **/
-void libspdm_test_requester_set_key_pair_info_case1(void **state)
+static void req_set_key_pair_info_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -172,7 +172,7 @@ void libspdm_test_requester_set_key_pair_info_case1(void **state)
  * Test 2: Fail case, The response version is incorrect .
  * Expected Behavior: returns a status of LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
-void libspdm_test_requester_set_key_pair_info_case2(void **state)
+static void req_set_key_pair_info_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -211,7 +211,7 @@ void libspdm_test_requester_set_key_pair_info_case2(void **state)
  * Test 3: Fail case, The response code is incorrect
  * Expected Behavior: returns a status of LIBSPDM_STATUS_INVALID_MSG_FIELD.
  **/
-void libspdm_test_requester_set_key_pair_info_case3(void **state)
+static void req_set_key_pair_info_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -250,7 +250,7 @@ void libspdm_test_requester_set_key_pair_info_case3(void **state)
  * Test 4: Successful reset required error code
  * Expected Behavior: get a RESET_REQURED_PEER return code
  **/
-void libspdm_test_requester_set_key_pair_info_case4(void **state)
+static void req_set_key_pair_info_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -291,13 +291,13 @@ int libspdm_req_set_key_pair_info_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         /* Successful response to set key pair info, key_pair_id is 1*/
-        cmocka_unit_test(libspdm_test_requester_set_key_pair_info_case1),
+        cmocka_unit_test(req_set_key_pair_info_case1),
         /* The response version is incorrect */
-        cmocka_unit_test(libspdm_test_requester_set_key_pair_info_case2),
+        cmocka_unit_test(req_set_key_pair_info_case2),
         /* The response code is incorrect */
-        cmocka_unit_test(libspdm_test_requester_set_key_pair_info_case3),
+        cmocka_unit_test(req_set_key_pair_info_case3),
         /* Successful response with reset required error code */
-        cmocka_unit_test(libspdm_test_requester_set_key_pair_info_case4),
+        cmocka_unit_test(req_set_key_pair_info_case4),
     };
 
     libspdm_test_context_t test_context = {

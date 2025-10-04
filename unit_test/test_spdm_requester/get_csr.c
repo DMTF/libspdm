@@ -310,7 +310,7 @@ static libspdm_return_t receive_message(
  * Test 1: message could not be sent
  * Expected Behavior: get a RETURN_DEVICE_ERROR return code
  **/
-void libspdm_test_requester_get_csr_case1(void **state)
+static void req_get_csr_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -345,7 +345,7 @@ void libspdm_test_requester_get_csr_case1(void **state)
  * Test 2: Successful response to get csr
  * Expected Behavior: get a RETURN_SUCCESS return code
  **/
-void libspdm_test_requester_get_csr_case2(void **state)
+static void req_get_csr_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -380,7 +380,7 @@ void libspdm_test_requester_get_csr_case2(void **state)
  * with a reset required
  * Expected Behavior: get a RETURN_SUCCESS return code
  **/
-void libspdm_test_requester_get_csr_case3(void **state)
+static void req_get_csr_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -424,7 +424,7 @@ void libspdm_test_requester_get_csr_case3(void **state)
  * Test 4: Send correct req_info and opaque_data
  * Expected Behavior: get a RETURN_SUCCESS return code and determine if req_info and opaque_data are correct
  **/
-void libspdm_test_requester_get_csr_case4(void **state)
+static void req_get_csr_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -466,7 +466,7 @@ void libspdm_test_requester_get_csr_case4(void **state)
  * with a reset required
  * Expected Behavior: get a LIBSPDM_STATUS_RESET_REQUIRED_PEER return code and available csr_tracking_tag
  **/
-void libspdm_test_requester_get_csr_case5(void **state)
+static void req_get_csr_case5(void **state)
 {
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -505,7 +505,7 @@ void libspdm_test_requester_get_csr_case5(void **state)
  * Expected Behavior: libspdm returns LIBSPDM_STATUS_ERROR_PEER since Responder should
  *                    not produce that error message unless CERT_INSTALL_RESET_CAP is 1.
  **/
-void libspdm_test_requester_get_csr_case6(void **state)
+static void req_get_csr_case6(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -545,7 +545,7 @@ void libspdm_test_requester_get_csr_case6(void **state)
  * Test 7: Illegal combination of MULTI_KEY_CONN_RSP = true and CSRCertModel = 0.
  * Expected Behavior: returns LIBSPDM_STATUS_INVALID_PARAMETER.
  **/
-void libspdm_test_requester_get_csr_case7(void **state)
+static void req_get_csr_case7(void **state)
 {
 #if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX
     libspdm_return_t status;
@@ -586,18 +586,18 @@ int libspdm_req_get_csr_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         /* SendRequest failed*/
-        cmocka_unit_test(libspdm_test_requester_get_csr_case1),
+        cmocka_unit_test(req_get_csr_case1),
         /* Successful response to get csr*/
-        cmocka_unit_test(libspdm_test_requester_get_csr_case2),
+        cmocka_unit_test(req_get_csr_case2),
         /* Successful response to get csr with a reset required */
-        cmocka_unit_test(libspdm_test_requester_get_csr_case3),
+        cmocka_unit_test(req_get_csr_case3),
         /* Send req_info and opaque_data Successful response to get csr */
-        cmocka_unit_test(libspdm_test_requester_get_csr_case4),
+        cmocka_unit_test(req_get_csr_case4),
         /* Successful response to libspdm_get_csr_ex with a reset required */
-        cmocka_unit_test(libspdm_test_requester_get_csr_case5),
+        cmocka_unit_test(req_get_csr_case5),
         /* Illegal ResetRequired error response. */
-        cmocka_unit_test(libspdm_test_requester_get_csr_case6),
-        cmocka_unit_test(libspdm_test_requester_get_csr_case7),
+        cmocka_unit_test(req_get_csr_case6),
+        cmocka_unit_test(req_get_csr_case7),
     };
 
     libspdm_test_context_t test_context = {

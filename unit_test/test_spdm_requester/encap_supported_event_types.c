@@ -60,7 +60,7 @@ static void set_standard_state(libspdm_context_t *spdm_context)
         LIBSPDM_SESSION_STATE_ESTABLISHED);
 }
 
-static void test_supported_event_types_case1(void **state)
+static void req_encap_supported_event_types_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -113,7 +113,7 @@ static void test_supported_event_types_case1(void **state)
 int libspdm_req_encap_supported_event_types_test(void)
 {
     const struct CMUnitTest test_cases[] = {
-        cmocka_unit_test(test_supported_event_types_case1),
+        cmocka_unit_test(req_encap_supported_event_types_case1),
     };
 
     libspdm_test_context_t test_context = {

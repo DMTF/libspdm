@@ -642,7 +642,7 @@ static libspdm_return_t receive_message(
 
 }
 #if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
-void libspdm_test_requester_chunk_get_case1(void** state)
+static void req_chunk_get_case1(void** state)
 {
     libspdm_return_t status;
     libspdm_test_context_t* spdm_test_context;
@@ -716,7 +716,7 @@ void libspdm_test_requester_chunk_get_case1(void** state)
 }
 #endif
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
-void libspdm_test_requester_chunk_get_case2(void** state)
+static void req_chunk_get_case2(void** state)
 {
     /* Copied from Get Measurements Test Case 0x20 */
     libspdm_return_t status;
@@ -805,7 +805,7 @@ void libspdm_test_requester_chunk_get_case2(void** state)
 }
 #endif
 #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
-void libspdm_test_requester_chunk_get_case3(void** state)
+static void req_chunk_get_case3(void** state)
 {
     /* Copied from Challenge Test Case 2*/
     libspdm_return_t status;
@@ -881,7 +881,7 @@ void libspdm_test_requester_chunk_get_case3(void** state)
 }
 #endif
 #if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
-void libspdm_test_requester_chunk_get_case4(void** state)
+static void req_chunk_get_case4(void** state)
 {
     /* Copied from Get Digests Test Case 2*/
     libspdm_return_t status;
@@ -968,7 +968,7 @@ void libspdm_test_requester_chunk_get_case4(void** state)
 #endif
 
 #if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
-static void libspdm_test_requester_chunk_get_case5(void **state)
+static void req_chunk_get_case5(void **state)
 {
     /* Copied from Vendor Request case 1*/
     libspdm_return_t status;
@@ -1019,7 +1019,7 @@ static void libspdm_test_requester_chunk_get_case5(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_RECEIVE_FAIL);
 }
 
-static void libspdm_test_requester_chunk_get_case6(void **state)
+static void req_chunk_get_case6(void **state)
 {
     /* Copied from Chunk Get Request case 5*/
     libspdm_return_t status;
@@ -1071,7 +1071,7 @@ static void libspdm_test_requester_chunk_get_case6(void **state)
     assert_int_equal(status, LIBSPDM_STATUS_RECEIVE_FAIL);
 }
 
-static void libspdm_test_requester_chunk_get_case7(void **state)
+static void req_chunk_get_case7(void **state)
 {
     /* Copied from Chunk Get Request case 5*/
     libspdm_return_t status;
@@ -1126,7 +1126,7 @@ static void libspdm_test_requester_chunk_get_case7(void **state)
 #endif /* LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES */
 
 #if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
-void libspdm_test_requester_chunk_get_case8(void** state)
+static void req_chunk_get_case8(void** state)
 {
     /* Copied from Chunk Send Test Case 4, use spdm 1.4*/
     libspdm_return_t status;
@@ -1219,34 +1219,34 @@ int libspdm_req_chunk_get_test(void)
     const struct CMUnitTest test_cases[] = {
 #if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
         /* Request a certificate in portions */
-        cmocka_unit_test(libspdm_test_requester_chunk_get_case1),
+        cmocka_unit_test(req_chunk_get_case1),
 #endif
 #if LIBSPDM_ENABLE_CAPABILITY_MEAS_CAP
         /* Request all measurements */
-        cmocka_unit_test(libspdm_test_requester_chunk_get_case2),
+        cmocka_unit_test(req_chunk_get_case2),
 #endif
 #if LIBSPDM_ENABLE_CAPABILITY_CHAL_CAP
         /* Request Challenge */
-        cmocka_unit_test(libspdm_test_requester_chunk_get_case3),
+        cmocka_unit_test(req_chunk_get_case3),
 #endif
 #if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
         /* Request Digests */
-        cmocka_unit_test(libspdm_test_requester_chunk_get_case4),
+        cmocka_unit_test(req_chunk_get_case4),
 #endif
 #if LIBSPDM_ENABLE_VENDOR_DEFINED_MESSAGES
         /* Request Vendor Specific Response and chunk data size
          * exceed max_chunk_data_transfer_size
          */
-        cmocka_unit_test(libspdm_test_requester_chunk_get_case5),
+        cmocka_unit_test(req_chunk_get_case5),
         /* Request Vendor Specific Response and chunk seq no wrapped */
-        cmocka_unit_test(libspdm_test_requester_chunk_get_case6),
+        cmocka_unit_test(req_chunk_get_case6),
         /* Request Vendor Specific Response
          * and recieve error code RequestResync */
-        cmocka_unit_test(libspdm_test_requester_chunk_get_case7),
+        cmocka_unit_test(req_chunk_get_case7),
 #endif
 #if LIBSPDM_SEND_GET_CERTIFICATE_SUPPORT
         /* Request Digests with spdm 1.4 */
-        cmocka_unit_test(libspdm_test_requester_chunk_get_case8),
+        cmocka_unit_test(req_chunk_get_case8),
 #endif
     };
 

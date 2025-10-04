@@ -671,7 +671,7 @@ static libspdm_return_t receive_message(
     }
 }
 
-void libspdm_test_requester_end_session_case1(void **state)
+static void req_end_session_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -736,7 +736,7 @@ void libspdm_test_requester_end_session_case1(void **state)
     free(data);
 }
 
-void libspdm_test_requester_end_session_case2(void **state)
+static void req_end_session_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -828,7 +828,7 @@ void libspdm_test_requester_end_session_case2(void **state)
     free(data);
 }
 
-void libspdm_test_requester_end_session_case3(void **state)
+static void req_end_session_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -916,7 +916,7 @@ void libspdm_test_requester_end_session_case3(void **state)
     free(data);
 }
 
-void libspdm_test_requester_end_session_case4(void **state)
+static void req_end_session_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1004,7 +1004,7 @@ void libspdm_test_requester_end_session_case4(void **state)
     free(data);
 }
 
-void libspdm_test_requester_end_session_case5(void **state)
+static void req_end_session_case5(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1092,7 +1092,7 @@ void libspdm_test_requester_end_session_case5(void **state)
     free(data);
 }
 
-void libspdm_test_requester_end_session_case6(void **state)
+static void req_end_session_case6(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1185,7 +1185,7 @@ void libspdm_test_requester_end_session_case6(void **state)
     free(data);
 }
 
-void libspdm_test_requester_end_session_case7(void **state)
+static void req_end_session_case7(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1275,7 +1275,7 @@ void libspdm_test_requester_end_session_case7(void **state)
     free(data);
 }
 
-void libspdm_test_requester_end_session_case8(void **state)
+static void req_end_session_case8(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1363,7 +1363,7 @@ void libspdm_test_requester_end_session_case8(void **state)
     free(data);
 }
 
-void libspdm_test_requester_end_session_case9(void **state)
+static void req_end_session_case9(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1456,7 +1456,7 @@ void libspdm_test_requester_end_session_case9(void **state)
     free(data);
 }
 
-void libspdm_test_requester_end_session_case10(void **state) {
+static void req_end_session_case10(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1546,7 +1546,7 @@ void libspdm_test_requester_end_session_case10(void **state) {
     free(data);
 }
 
-void libspdm_test_requester_end_session_case11(void **state)
+static void req_end_session_case11(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1661,7 +1661,7 @@ void libspdm_test_requester_end_session_case11(void **state)
  * Test 12: the requester is setup correctly, but receives an ERROR with SPDM_ERROR_CODE_DECRYPT_ERROR.
  * Expected behavior: client returns a Status of INVALID_SESSION_ID  and free the session ID.
  **/
-void libspdm_test_requester_end_session_case12(void **state)
+static void req_end_session_case12(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1755,29 +1755,29 @@ int libspdm_req_end_session_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         /* SendRequest failed*/
-        cmocka_unit_test(libspdm_test_requester_end_session_case1),
+        cmocka_unit_test(req_end_session_case1),
         /* Successful response*/
-        cmocka_unit_test(libspdm_test_requester_end_session_case2),
+        cmocka_unit_test(req_end_session_case2),
         /* connection_state check failed*/
-        cmocka_unit_test(libspdm_test_requester_end_session_case3),
+        cmocka_unit_test(req_end_session_case3),
         /* Error response: SPDM_ERROR_CODE_INVALID_REQUEST*/
-        cmocka_unit_test(libspdm_test_requester_end_session_case4),
+        cmocka_unit_test(req_end_session_case4),
         /* Always SPDM_ERROR_CODE_BUSY*/
-        cmocka_unit_test(libspdm_test_requester_end_session_case5),
+        cmocka_unit_test(req_end_session_case5),
         /* SPDM_ERROR_CODE_BUSY + Successful response*/
-        cmocka_unit_test(libspdm_test_requester_end_session_case6),
+        cmocka_unit_test(req_end_session_case6),
         /* Error response: SPDM_ERROR_CODE_REQUEST_RESYNCH*/
-        cmocka_unit_test(libspdm_test_requester_end_session_case7),
+        cmocka_unit_test(req_end_session_case7),
         /* Always SPDM_ERROR_CODE_RESPONSE_NOT_READY*/
-        cmocka_unit_test(libspdm_test_requester_end_session_case8),
+        cmocka_unit_test(req_end_session_case8),
         /* SPDM_ERROR_CODE_RESPONSE_NOT_READY + Successful response*/
-        cmocka_unit_test(libspdm_test_requester_end_session_case9),
+        cmocka_unit_test(req_end_session_case9),
         /* Unexpected errors*/
-        cmocka_unit_test(libspdm_test_requester_end_session_case10),
+        cmocka_unit_test(req_end_session_case10),
         /* Buffer reset*/
-        cmocka_unit_test(libspdm_test_requester_end_session_case11),
+        cmocka_unit_test(req_end_session_case11),
         /* Error response: SPDM_ERROR_CODE_DECRYPT_ERROR*/
-        cmocka_unit_test(libspdm_test_requester_end_session_case12),
+        cmocka_unit_test(req_end_session_case12),
     };
 
     libspdm_test_context_t test_context = {

@@ -158,7 +158,7 @@ static libspdm_return_t receive_message(
  * Test 1: Successful response to get supported event types.
  * Expected Behavior: Returns LIBSPDM_STATUS_SUCCESS with the expected values.
  **/
-static void libspdm_test_requester_get_event_types_case1(void **state)
+static void req_get_supported_event_types_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -184,7 +184,7 @@ static void libspdm_test_requester_get_event_types_case1(void **state)
 int libspdm_req_get_supported_event_types_test(void)
 {
     const struct CMUnitTest test_cases[] = {
-        cmocka_unit_test(libspdm_test_requester_get_event_types_case1)
+        cmocka_unit_test(req_get_supported_event_types_case1)
     };
 
     libspdm_test_context_t test_context = {
