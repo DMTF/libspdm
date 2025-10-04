@@ -312,7 +312,7 @@ bool libspdm_check_csr_basic_constraints(uint8_t *csr, uint16_t csr_len, bool is
  * Test 1: receives a valid GET_CSR request message from Requester
  * Expected Behavior: produces a valid CSR response message with device_cert mode
  **/
-void libspdm_test_responder_csr_case1(void **state)
+static void rsp_csr_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -395,7 +395,7 @@ void libspdm_test_responder_csr_case1(void **state)
  * Test 2: Wrong GET_CSR message size (larger than expected)
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_INVALID_REQUEST
  **/
-void libspdm_test_responder_csr_case2(void **state)
+static void rsp_csr_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -456,7 +456,7 @@ void libspdm_test_responder_csr_case2(void **state)
  * Test 3: receives a valid GET_CSR request message from Requester with non-null right req_info
  * Expected Behavior: produces a valid CSR response message
  **/
-void libspdm_test_responder_csr_case3(void **state)
+static void rsp_csr_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -532,7 +532,7 @@ void libspdm_test_responder_csr_case3(void **state)
  * Test 4: receives a valid GET_CSR request message from Requester with non-null opaque_data
  * Expected Behavior: produces a valid CSR response message
  **/
-void libspdm_test_responder_csr_case4(void **state)
+static void rsp_csr_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -595,7 +595,7 @@ void libspdm_test_responder_csr_case4(void **state)
  * Test 5: receives a valid GET_CSR request message from Requester with non-null wrong req_info
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_INVALID_REQUEST
  **/
-void libspdm_test_responder_csr_case5(void **state)
+static void rsp_csr_case5(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -662,7 +662,7 @@ void libspdm_test_responder_csr_case5(void **state)
  * Expected Behavior: the first get_csr: responder return need reset;
  *                    the second get_csr after device reset: get the cached valid csr;
  **/
-void libspdm_test_responder_csr_case6(void **state)
+static void rsp_csr_case6(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -778,7 +778,7 @@ void libspdm_test_responder_csr_case6(void **state)
  * Test 7: receives a valid GET_CSR request message from Requester with non-null right req_info and opaque_data
  * Expected Behavior: produces a valid CSR response message
  **/
-void libspdm_test_responder_csr_case7(void **state)
+static void rsp_csr_case7(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -858,7 +858,7 @@ void libspdm_test_responder_csr_case7(void **state)
  * Test 8: receives a invalid GET_CSR request message from Requester With chaotic req_info and opaque_data
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_INVALID_REQUEST
  **/
-void libspdm_test_responder_csr_case8(void **state)
+static void rsp_csr_case8(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -926,7 +926,7 @@ void libspdm_test_responder_csr_case8(void **state)
  * the OpaqueDataFmt1 bit is selected in OtherParamsSelection of ALGORITHMS ,
  * Expected Behavior: produces a valid CSR response message
  **/
-void libspdm_test_responder_csr_case9(void **state)
+static void rsp_csr_case9(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1041,7 +1041,7 @@ void libspdm_test_responder_csr_case9(void **state)
  * the OpaqueDataFmt1 bit is selected in OtherParamsSelection of ALGORITHMS
  * Expected Behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_INVALID_REQUEST
  **/
-void libspdm_test_responder_csr_case10(void **state)
+static void rsp_csr_case10(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1158,7 +1158,7 @@ void libspdm_test_responder_csr_case10(void **state)
  * Test 11: receives a valid GET_CSR request message from Requester
  * Expected Behavior: produces a valid CSR response message with alias_cert mode
  **/
-void libspdm_test_responder_csr_case11(void **state)
+static void rsp_csr_case11(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1233,7 +1233,7 @@ void libspdm_test_responder_csr_case11(void **state)
  * Expected Behavior: the first get_csr: responder return need reset;
  *                    the second get_csr without device reset: responder return need reset;
  **/
-void libspdm_test_responder_csr_case12(void **state)
+static void rsp_csr_case12(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1350,7 +1350,7 @@ void libspdm_test_responder_csr_case12(void **state)
  * Expected Behavior: the first get_csr with csr_tracking_tag 0: responder return need reset and available csr_tracking_tag;
  *                    After reset, the second get_csr with returned available csr_tracking_tag: after device reset: get the cached valid csr;
  **/
-void libspdm_test_responder_csr_case13(void **state)
+static void rsp_csr_case13(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1486,7 +1486,7 @@ void libspdm_test_responder_csr_case13(void **state)
  *                    After reset, then send get_csr with csr_tracking_tag 0 six times: responder return need reset and available csr_tracking_tag;
  *                    Then send get_csr with csr_tracking_tag 0: responder return busy error;
  **/
-void libspdm_test_responder_csr_case14(void **state)
+static void rsp_csr_case14(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1655,7 +1655,7 @@ void libspdm_test_responder_csr_case14(void **state)
  *                    After reset, then send get_csr with unmatched csr_tracking_tag：responder return unexpected error;
  *                    After reset, then send get_csr with csr_tracking_tag 0, and overwrite is set：responder return need reset and available csr_tracking_tag;
  **/
-void libspdm_test_responder_csr_case15(void **state)
+static void rsp_csr_case15(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1905,7 +1905,7 @@ void libspdm_test_responder_csr_case15(void **state)
  * Test 16: Illegal combination of MULTI_KEY_CONN_RSP = true and CSRCertModel = 0.
  * Expected Behavior: produces SPDM_ERROR_CODE_INVALID_REQUEST message.
  **/
-void libspdm_test_responder_csr_case16(void **state)
+static void rsp_csr_case16(void **state)
 {
 #if LIBSPDM_ENABLE_CAPABILITY_CSR_CAP_EX
     libspdm_return_t status;
@@ -1983,36 +1983,36 @@ int libspdm_rsp_csr_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         /* Success Case for csr response with device_cert mode */
-        cmocka_unit_test(libspdm_test_responder_csr_case1),
+        cmocka_unit_test(rsp_csr_case1),
         /* Bad request size*/
-        cmocka_unit_test(libspdm_test_responder_csr_case2),
+        cmocka_unit_test(rsp_csr_case2),
         /* Success Case for csr response with non-null right req_info */
-        cmocka_unit_test(libspdm_test_responder_csr_case3),
+        cmocka_unit_test(rsp_csr_case3),
         /* Success Case for csr response with non-null opaque_data */
-        cmocka_unit_test(libspdm_test_responder_csr_case4),
+        cmocka_unit_test(rsp_csr_case4),
         /* Failed Case for csr response with non-null wrong req_info */
-        cmocka_unit_test(libspdm_test_responder_csr_case5),
+        cmocka_unit_test(rsp_csr_case5),
         /* Responder need reset to gen csr, the second send after device reset*/
-        cmocka_unit_test(libspdm_test_responder_csr_case6),
+        cmocka_unit_test(rsp_csr_case6),
         /* Success Case for csr response with non-null right req_info and opaque_data */
-        cmocka_unit_test(libspdm_test_responder_csr_case7),
+        cmocka_unit_test(rsp_csr_case7),
         /* Failed Case for csr response  With chaotic req_info and opaque_data */
-        cmocka_unit_test(libspdm_test_responder_csr_case8),
+        cmocka_unit_test(rsp_csr_case8),
         /* the OpaqueDataFmt1 bit is selected in OtherParamsSelection of ALGORITHMS*/
-        cmocka_unit_test(libspdm_test_responder_csr_case9),
+        cmocka_unit_test(rsp_csr_case9),
         /* Failed Case  OpaqueDataFmt1, When AlignPadding is not zero*/
-        cmocka_unit_test(libspdm_test_responder_csr_case10),
+        cmocka_unit_test(rsp_csr_case10),
         /* Success Case for csr response with alias_cert mode */
-        cmocka_unit_test(libspdm_test_responder_csr_case11),
+        cmocka_unit_test(rsp_csr_case11),
         /* Responder need reset to gen csr, the second send without device reset*/
-        cmocka_unit_test(libspdm_test_responder_csr_case12),
+        cmocka_unit_test(rsp_csr_case12),
         /* Success Case: Responder need reset to gen csr for SPDM1.3, the second send with matched csr_tracking_tag after device reset*/
-        cmocka_unit_test(libspdm_test_responder_csr_case13),
+        cmocka_unit_test(rsp_csr_case13),
         /* Failed Case: Responder need reset to gen csr for SPDM1.3, test for busy error*/
-        cmocka_unit_test(libspdm_test_responder_csr_case14),
+        cmocka_unit_test(rsp_csr_case14),
         /* Failed Case: Responder need reset to gen csr for SPDM1.3, test for unmatched csr_tracking_tag and overwrite*/
-        cmocka_unit_test(libspdm_test_responder_csr_case15),
-        cmocka_unit_test(libspdm_test_responder_csr_case16),
+        cmocka_unit_test(rsp_csr_case15),
+        cmocka_unit_test(rsp_csr_case16),
     };
 
     libspdm_test_context_t test_context = {

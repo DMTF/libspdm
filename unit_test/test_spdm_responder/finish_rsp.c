@@ -86,7 +86,7 @@ void libspdm_secured_message_set_request_finished_key(
  * Expected behavior: the responder accepts the request and produces a valid
  * FINISH_RSP response message.
  **/
-void libspdm_test_responder_finish_case1(void **state)
+void rsp_finish_rsp_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -197,7 +197,7 @@ void libspdm_test_responder_finish_case1(void **state)
  * Test 2:
  * Expected behavior:
  **/
-void libspdm_test_responder_finish_case2(void **state)
+void rsp_finish_rsp_case2(void **state)
 {
 }
 
@@ -207,7 +207,7 @@ void libspdm_test_responder_finish_case2(void **state)
  * Expected behavior: the responder accepts the request, but produces an
  * ERROR message indicating the Busy state.
  **/
-void libspdm_test_responder_finish_case3(void **state)
+void rsp_finish_rsp_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -324,7 +324,7 @@ void libspdm_test_responder_finish_case3(void **state)
  * Expected behavior: the responder accepts the request, but produces an
  * ERROR message indicating the NeedResynch state.
  **/
-void libspdm_test_responder_finish_case4(void **state)
+void rsp_finish_rsp_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -443,7 +443,7 @@ void libspdm_test_responder_finish_case4(void **state)
  * Expected behavior: the responder accepts the request, but produces an
  * ERROR message indicating the ResponseNotReady state.
  **/
-void libspdm_test_responder_finish_case5(void **state)
+void rsp_finish_rsp_case5(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -570,7 +570,7 @@ void libspdm_test_responder_finish_case5(void **state)
  * Expected behavior: the responder rejects the request, and produces an
  * ERROR message indicating the UnexpectedRequest.
  **/
-void libspdm_test_responder_finish_case6(void **state)
+void rsp_finish_rsp_case6(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -680,7 +680,7 @@ void libspdm_test_responder_finish_case6(void **state)
     free(data1);
 }
 
-void libspdm_test_responder_finish_case7(void **state)
+void rsp_finish_rsp_case7(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -816,7 +816,7 @@ void libspdm_test_responder_finish_case7(void **state)
  * Expected behavior: the responder accepts the request and produces a valid
  * FINISH_RSP response message.
  **/
-void libspdm_test_responder_finish_case8(void **state)
+void rsp_finish_rsp_case8(void **state)
 {
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     libspdm_return_t status;
@@ -981,7 +981,7 @@ void libspdm_test_responder_finish_case8(void **state)
  * Expected behavior: the responder refuses the FINISH message and produces
  * an ERROR message indicating the UnsupportedRequest.
  **/
-void libspdm_test_responder_finish_case9(void **state)
+void rsp_finish_rsp_case9(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1098,7 +1098,7 @@ void libspdm_test_responder_finish_case9(void **state)
  * Expected behavior: the responder refuses the FINISH message and produces
  * an ERROR message indicating the UnsupportedRequest.
  **/
-void libspdm_test_responder_finish_case10(void **state)
+void rsp_finish_rsp_case10(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1213,7 +1213,7 @@ void libspdm_test_responder_finish_case10(void **state)
  * Expected behavior: the responder refuses the FINISH message and produces
  * an ERROR message indicating the DecryptError.
  **/
-void libspdm_test_responder_finish_case11(void **state)
+void rsp_finish_rsp_case11(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1309,7 +1309,7 @@ void libspdm_test_responder_finish_case11(void **state)
  * Expected behavior: the responder refuses the FINISH message and produces
  * an ERROR message indicating the DecryptError.
  **/
-void libspdm_test_responder_finish_case12(void **state)
+void rsp_finish_rsp_case12(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1409,7 +1409,7 @@ void libspdm_test_responder_finish_case12(void **state)
  * Test 13:
  * Expected behavior:
  **/
-void libspdm_test_responder_finish_case13(void **state)
+void rsp_finish_rsp_case13(void **state)
 {
 }
 
@@ -1419,7 +1419,7 @@ void libspdm_test_responder_finish_case13(void **state)
  * Expected behavior: the responder refuses the FINISH message and produces
  * an ERROR message indicating the InvalidRequest.
  **/
-void libspdm_test_responder_finish_case14(void **state)
+void rsp_finish_rsp_case14(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1535,7 +1535,7 @@ void libspdm_test_responder_finish_case14(void **state)
  * Expected behavior: the responder refuses the FINISH message and produces
  * an ERROR message indicating the DecryptError.
  **/
-void libspdm_test_responder_finish_case15(void **state)
+void rsp_finish_rsp_case15(void **state)
 {
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     libspdm_return_t status;
@@ -1691,7 +1691,7 @@ void libspdm_test_responder_finish_case15(void **state)
  * Expected behavior: the responder refuses the FINISH message and produces
  * an ERROR message indicating the DecryptError.
  **/
-void libspdm_test_responder_finish_case16(void **state)
+void rsp_finish_rsp_case16(void **state)
 {
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     libspdm_return_t status;
@@ -1846,7 +1846,7 @@ void libspdm_test_responder_finish_case16(void **state)
  * Expected behavior: the responder accepts the request and produces a valid FINISH
  * response message, and buffer F receives the exchanged FINISH and FINISH_RSP messages.
  **/
-void libspdm_test_responder_finish_case17(void **state)
+void rsp_finish_rsp_case17(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1956,7 +1956,7 @@ void libspdm_test_responder_finish_case17(void **state)
  * Expected behavior: the responder accepts the request and produces a valid
  * FINISH_RSP response message.
  **/
-void libspdm_test_responder_finish_case18(void **state)
+void rsp_finish_rsp_case18(void **state)
 {
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     libspdm_return_t status;
@@ -2101,7 +2101,7 @@ void libspdm_test_responder_finish_case18(void **state)
  * SlotID in FINISH request message is 10, but it shall be 0xFF or between 0 and 7 inclusive.
  * Expected behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_INVALID_REQUEST.
  **/
-void libspdm_test_responder_finish_case19(void **state)
+void rsp_finish_rsp_case19(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -2267,7 +2267,7 @@ void libspdm_test_responder_finish_case19(void **state)
  * SlotID in FINISH request message is 3, but it shall match the value 0 in final ENCAPSULATED_RESPONSE_ACK.EncapsulatedRequest.
  * Expected behavior: generate an ERROR_RESPONSE with code SPDM_ERROR_CODE_INVALID_REQUEST.
  **/
-void libspdm_test_responder_finish_case20(void **state)
+void rsp_finish_rsp_case20(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -2435,7 +2435,7 @@ void libspdm_test_responder_finish_case20(void **state)
  * Expected behavior: the responder accepts the request and produces a valid
  * FINISH_RSP response message.
  **/
-void libspdm_test_responder_finish_case21(void **state)
+void rsp_finish_rsp_case21(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -2550,7 +2550,7 @@ void libspdm_test_responder_finish_case21(void **state)
  * Expected behavior: the responder accepts the request and produces a valid
  * FINISH_RSP response message.
  **/
-void libspdm_test_responder_finish_case22(void **state)
+void rsp_finish_rsp_case22(void **state)
 {
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     libspdm_return_t status;
@@ -2715,7 +2715,7 @@ void libspdm_test_responder_finish_case22(void **state)
  * Big-Endian Sign. Little-Endian Verify.
  * Expecting signature to fail.
  **/
-void libspdm_test_responder_finish_case23(void** state)
+void rsp_finish_rsp_case23(void** state)
 {
     libspdm_return_t status;
     libspdm_test_context_t* spdm_test_context;
@@ -2880,7 +2880,7 @@ void libspdm_test_responder_finish_case23(void** state)
  * Big-Endian Sign. Big-Endian Verify.
  * Expecting signature to PASS.
  **/
-void libspdm_test_responder_finish_case24(void** state)
+void rsp_finish_rsp_case24(void** state)
 {
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     libspdm_return_t status;
@@ -3047,7 +3047,7 @@ void libspdm_test_responder_finish_case24(void** state)
  * Big Endian Sign. Big or Little Endian Verify.
  * Expecting signature to PASS.
  **/
-void libspdm_test_responder_finish_case25(void** state)
+void rsp_finish_rsp_case25(void** state)
 {
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     libspdm_return_t status;
@@ -3212,7 +3212,7 @@ void libspdm_test_responder_finish_case25(void** state)
  * Sign as Little Endian, Verify as Little.
  * Expecting signature to PASS.
  **/
-void libspdm_test_responder_finish_case26(void** state)
+void rsp_finish_rsp_case26(void** state)
 {
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     libspdm_return_t status;
@@ -3383,7 +3383,7 @@ void libspdm_test_responder_finish_case26(void** state)
  * Sign as Little Endian, Verify as Big.
  * Expecting signature to FAIL.
  **/
-void libspdm_test_responder_finish_case27(void** state)
+void rsp_finish_rsp_case27(void** state)
 {
     libspdm_return_t status;
     libspdm_test_context_t* spdm_test_context;
@@ -3552,7 +3552,7 @@ void libspdm_test_responder_finish_case27(void** state)
  * Sign as Little Endian, Verify as Big Or Little.
  * Expecting signature to PASS.
  **/
-void libspdm_test_responder_finish_case28(void** state)
+void rsp_finish_rsp_case28(void** state)
 {
 #if LIBSPDM_ENABLE_CAPABILITY_MUT_AUTH_CAP
     libspdm_return_t status;
@@ -3724,7 +3724,7 @@ void libspdm_test_responder_finish_case28(void** state)
  * Expected behavior: the responder accepts the request and produces a valid
  * FINISH_RSP response message, and The ResponderVerifyData field is absent.
  **/
-void libspdm_test_responder_finish_case29(void **state)
+void rsp_finish_rsp_case29(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -3844,7 +3844,7 @@ void libspdm_test_responder_finish_case29(void **state)
  * Expected behavior: the responder accepts the request and produces a valid
  * FINISH_RSP response message.
  **/
-void libspdm_test_responder_finish_case30(void **state)
+void rsp_finish_rsp_case30(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -3969,63 +3969,63 @@ int libspdm_rsp_finish_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         /* Success Case*/
-        cmocka_unit_test(libspdm_test_responder_finish_case1),
+        cmocka_unit_test(rsp_finish_rsp_case1),
         /* Can be populated with new test.*/
-        cmocka_unit_test(libspdm_test_responder_finish_case2),
+        cmocka_unit_test(rsp_finish_rsp_case2),
         /* response_state: SPDM_RESPONSE_STATE_BUSY*/
-        cmocka_unit_test(libspdm_test_responder_finish_case3),
+        cmocka_unit_test(rsp_finish_rsp_case3),
         /* response_state: SPDM_RESPONSE_STATE_NEED_RESYNC*/
-        cmocka_unit_test(libspdm_test_responder_finish_case4),
+        cmocka_unit_test(rsp_finish_rsp_case4),
         #if LIBSPDM_RESPOND_IF_READY_SUPPORT
         /* response_state: LIBSPDM_RESPONSE_STATE_NOT_READY*/
-        cmocka_unit_test(libspdm_test_responder_finish_case5),
+        cmocka_unit_test(rsp_finish_rsp_case5),
         #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
         /* connection_state Check*/
-        cmocka_unit_test(libspdm_test_responder_finish_case6),
+        cmocka_unit_test(rsp_finish_rsp_case6),
         /* Buffer reset*/
-        cmocka_unit_test(libspdm_test_responder_finish_case7),
+        cmocka_unit_test(rsp_finish_rsp_case7),
         /* Success Case*/
-        cmocka_unit_test(libspdm_test_responder_finish_case8),
+        cmocka_unit_test(rsp_finish_rsp_case8),
         /* Unsupported KEY_EX capabilities*/
-        cmocka_unit_test(libspdm_test_responder_finish_case9),
+        cmocka_unit_test(rsp_finish_rsp_case9),
         /* Uninitialized session*/
-        cmocka_unit_test(libspdm_test_responder_finish_case10),
+        cmocka_unit_test(rsp_finish_rsp_case10),
         /* Incorrect MAC*/
-        cmocka_unit_test(libspdm_test_responder_finish_case11),
-        cmocka_unit_test(libspdm_test_responder_finish_case12),
+        cmocka_unit_test(rsp_finish_rsp_case11),
+        cmocka_unit_test(rsp_finish_rsp_case12),
         /* Can be populated with new test.*/
-        cmocka_unit_test(libspdm_test_responder_finish_case13),
-        cmocka_unit_test(libspdm_test_responder_finish_case14),
+        cmocka_unit_test(rsp_finish_rsp_case13),
+        cmocka_unit_test(rsp_finish_rsp_case14),
         /* Incorrect signature*/
-        cmocka_unit_test(libspdm_test_responder_finish_case15),
-        cmocka_unit_test(libspdm_test_responder_finish_case16),
+        cmocka_unit_test(rsp_finish_rsp_case15),
+        cmocka_unit_test(rsp_finish_rsp_case16),
         /* Buffer verification*/
-        cmocka_unit_test(libspdm_test_responder_finish_case17),
+        cmocka_unit_test(rsp_finish_rsp_case17),
         /* Success Case, enable mutual authentication and use slot_id 0xFF */
-        cmocka_unit_test(libspdm_test_responder_finish_case18),
+        cmocka_unit_test(rsp_finish_rsp_case18),
         /* Invalid SlotID in FINISH request message when mutual authentication */
-        cmocka_unit_test_setup(libspdm_test_responder_finish_case19, libspdm_unit_test_group_setup),
-        cmocka_unit_test_setup(libspdm_test_responder_finish_case20, libspdm_unit_test_group_setup),
+        cmocka_unit_test_setup(rsp_finish_rsp_case19, libspdm_unit_test_group_setup),
+        cmocka_unit_test_setup(rsp_finish_rsp_case20, libspdm_unit_test_group_setup),
         /* If FINISH.Param1 != 0x01, then FINISH.Param2 is reserved, shall be ignored when read */
-        cmocka_unit_test_setup(libspdm_test_responder_finish_case21, libspdm_unit_test_group_setup),
+        cmocka_unit_test_setup(rsp_finish_rsp_case21, libspdm_unit_test_group_setup),
         /* If KEY_EXCHANGE_RSP.MutAuthRequested equals neither 0x02 nor 0x04, FINISH.Param2 no need match ENCAPSULATED_RESPONSE_ACK.EncapsulatedRequest */
-        cmocka_unit_test_setup(libspdm_test_responder_finish_case22, libspdm_unit_test_group_setup),
+        cmocka_unit_test_setup(rsp_finish_rsp_case22, libspdm_unit_test_group_setup),
         /* Big Endian Sign - Little Endian Verify */
-        cmocka_unit_test_setup(libspdm_test_responder_finish_case23, libspdm_unit_test_group_setup),
+        cmocka_unit_test_setup(rsp_finish_rsp_case23, libspdm_unit_test_group_setup),
         /* Big Endian Sign - Big Endian Verify */
-        cmocka_unit_test_setup(libspdm_test_responder_finish_case24, libspdm_unit_test_group_setup),
+        cmocka_unit_test_setup(rsp_finish_rsp_case24, libspdm_unit_test_group_setup),
         /* Big Endian Sign - Big or Little Endian Verify */
-        cmocka_unit_test_setup(libspdm_test_responder_finish_case25, libspdm_unit_test_group_setup),
+        cmocka_unit_test_setup(rsp_finish_rsp_case25, libspdm_unit_test_group_setup),
         /* Little Endian Sign - Little Endian Verify*/
-        cmocka_unit_test_setup(libspdm_test_responder_finish_case26, libspdm_unit_test_group_setup),
+        cmocka_unit_test_setup(rsp_finish_rsp_case26, libspdm_unit_test_group_setup),
         /* Little Endian Sign - Big Endian Verify */
-        cmocka_unit_test_setup(libspdm_test_responder_finish_case27, libspdm_unit_test_group_setup),
+        cmocka_unit_test_setup(rsp_finish_rsp_case27, libspdm_unit_test_group_setup),
         /* Little Endian Sign - Big or Little Endian Verify */
-        cmocka_unit_test_setup(libspdm_test_responder_finish_case28, libspdm_unit_test_group_setup),
+        cmocka_unit_test_setup(rsp_finish_rsp_case28, libspdm_unit_test_group_setup),
         /* The requester and responder have not set HANDSHAKE_IN_THE_CLEAR*/
-        cmocka_unit_test(libspdm_test_responder_finish_case29),
+        cmocka_unit_test(rsp_finish_rsp_case29),
         /* SPDM 1.4 with OpaqueData */
-        cmocka_unit_test(libspdm_test_responder_finish_case30),
+        cmocka_unit_test(rsp_finish_rsp_case30),
     };
 
     libspdm_test_context_t test_context = {

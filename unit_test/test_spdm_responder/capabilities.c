@@ -487,7 +487,7 @@ spdm_get_capabilities_request_t m_libspdm_get_capabilities_request28 = {
 };
 size_t m_libspdm_get_capabilities_request28_size = sizeof(m_libspdm_get_capabilities_request28);
 
-void libspdm_test_responder_capabilities_case1(void **state)
+static void rsp_capabilities_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -523,7 +523,7 @@ void libspdm_test_responder_capabilities_case1(void **state)
 #endif
 }
 
-void libspdm_test_responder_capabilities_case2(void **state)
+static void rsp_capabilities_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -558,7 +558,7 @@ void libspdm_test_responder_capabilities_case2(void **state)
 #endif
 }
 
-void libspdm_test_responder_capabilities_case3(void **state)
+static void rsp_capabilities_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -591,7 +591,7 @@ void libspdm_test_responder_capabilities_case3(void **state)
                      LIBSPDM_RESPONSE_STATE_BUSY);
 }
 
-void libspdm_test_responder_capabilities_case4(void **state)
+static void rsp_capabilities_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -625,7 +625,7 @@ void libspdm_test_responder_capabilities_case4(void **state)
                      LIBSPDM_RESPONSE_STATE_NEED_RESYNC);
 }
 
-void libspdm_test_responder_capabilities_case6(void **state)
+static void rsp_capabilities_case6(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -661,7 +661,7 @@ void libspdm_test_responder_capabilities_case6(void **state)
  * Test 7: Requester sets a CTExponent value that is larger than LIBSPDM_MAX_CT_EXPONENT.
  * Expected behavior: returns with error code SPDM_ERROR_CODE_INVALID_REQUEST.
  **/
-void libspdm_test_responder_capabilities_case7(void **state)
+static void rsp_capabilities_case7(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -690,7 +690,7 @@ void libspdm_test_responder_capabilities_case7(void **state)
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
-void libspdm_test_responder_capabilities_case8(void **state)
+static void rsp_capabilities_case8(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -720,7 +720,7 @@ void libspdm_test_responder_capabilities_case8(void **state)
                      SPDM_CAPABILITIES);
 }
 
-void libspdm_test_responder_capabilities_case9(void **state)
+static void rsp_capabilities_case9(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -750,19 +750,19 @@ void libspdm_test_responder_capabilities_case9(void **state)
                      SPDM_CAPABILITIES);
 }
 
-void libspdm_test_responder_capabilities_case10(void **state)
+static void rsp_capabilities_case10(void **state)
 {
 }
 
-void libspdm_test_responder_capabilities_case11(void **state)
+static void rsp_capabilities_case11(void **state)
 {
 }
 
-void libspdm_test_responder_capabilities_case12(void **state)
+static void rsp_capabilities_case12(void **state)
 {
 }
 
-void libspdm_test_responder_capabilities_case13(void **state)
+static void rsp_capabilities_case13(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -793,7 +793,7 @@ void libspdm_test_responder_capabilities_case13(void **state)
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
-void libspdm_test_responder_capabilities_case14(void **state)
+static void rsp_capabilities_case14(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -824,7 +824,7 @@ void libspdm_test_responder_capabilities_case14(void **state)
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
-void libspdm_test_responder_capabilities_case15(void **state)
+static void rsp_capabilities_case15(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -855,7 +855,7 @@ void libspdm_test_responder_capabilities_case15(void **state)
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
-void libspdm_test_responder_capabilities_case16(void **state)
+static void rsp_capabilities_case16(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -886,7 +886,7 @@ void libspdm_test_responder_capabilities_case16(void **state)
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
-void libspdm_test_responder_capabilities_case17(void **state)
+static void rsp_capabilities_case17(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -917,7 +917,7 @@ void libspdm_test_responder_capabilities_case17(void **state)
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
-void libspdm_test_responder_capabilities_case18(void **state)
+static void rsp_capabilities_case18(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -950,7 +950,7 @@ void libspdm_test_responder_capabilities_case18(void **state)
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
-void libspdm_test_responder_capabilities_case19(void **state)
+static void rsp_capabilities_case19(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -981,7 +981,7 @@ void libspdm_test_responder_capabilities_case19(void **state)
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
-void libspdm_test_responder_capabilities_case20(void **state)
+static void rsp_capabilities_case20(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1012,11 +1012,11 @@ void libspdm_test_responder_capabilities_case20(void **state)
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
-void libspdm_test_responder_capabilities_case21(void **state)
+static void rsp_capabilities_case21(void **state)
 {
 }
 
-void libspdm_test_responder_capabilities_case22(void **state)
+static void rsp_capabilities_case22(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1046,7 +1046,7 @@ void libspdm_test_responder_capabilities_case22(void **state)
                      SPDM_CAPABILITIES);
 }
 
-void libspdm_test_responder_capabilities_case23(void **state)
+static void rsp_capabilities_case23(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1090,7 +1090,7 @@ void libspdm_test_responder_capabilities_case23(void **state)
                         response, response_size);
 }
 
-void libspdm_test_responder_capabilities_case24(void **state)
+static void rsp_capabilities_case24(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1123,7 +1123,7 @@ void libspdm_test_responder_capabilities_case24(void **state)
     assert_int_equal(spdm_response->max_spdm_msg_size, LIBSPDM_MAX_SPDM_MSG_SIZE);
 }
 
-void libspdm_test_responder_capabilities_case25(void **state)
+static void rsp_capabilities_case25(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1154,7 +1154,7 @@ void libspdm_test_responder_capabilities_case25(void **state)
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
-void libspdm_test_responder_capabilities_case26(void **state)
+static void rsp_capabilities_case26(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1185,7 +1185,7 @@ void libspdm_test_responder_capabilities_case26(void **state)
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
-void libspdm_test_responder_capabilities_case27(void **state)
+static void rsp_capabilities_case27(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1218,7 +1218,7 @@ void libspdm_test_responder_capabilities_case27(void **state)
                      SPDM_GET_CAPABILITIES_REQUEST_FLAGS_MULTI_KEY_CAP_ONLY);
 }
 
-void libspdm_test_responder_capabilities_case28(void **state)
+static void rsp_capabilities_case28(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1278,59 +1278,59 @@ int libspdm_rsp_capabilities_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         /* Success Case*/
-        cmocka_unit_test(libspdm_test_responder_capabilities_case1),
+        cmocka_unit_test(rsp_capabilities_case1),
         /* Success case where request size is larger than actual message. */
-        cmocka_unit_test(libspdm_test_responder_capabilities_case2),
+        cmocka_unit_test(rsp_capabilities_case2),
         /* response_state: LIBSPDM_RESPONSE_STATE_BUSY*/
-        cmocka_unit_test(libspdm_test_responder_capabilities_case3),
+        cmocka_unit_test(rsp_capabilities_case3),
         /* response_state: LIBSPDM_RESPONSE_STATE_NEED_RESYNC*/
-        cmocka_unit_test(libspdm_test_responder_capabilities_case4),
+        cmocka_unit_test(rsp_capabilities_case4),
         /* connection_state Check*/
-        cmocka_unit_test(libspdm_test_responder_capabilities_case6),
+        cmocka_unit_test(rsp_capabilities_case6),
         /* Invalid requester capabilities flag (random flag)*/
-        cmocka_unit_test(libspdm_test_responder_capabilities_case7),
+        cmocka_unit_test(rsp_capabilities_case7),
         /* V1.1 Success case, all possible flags set*/
-        cmocka_unit_test(libspdm_test_responder_capabilities_case8),
+        cmocka_unit_test(rsp_capabilities_case8),
         /* Requester capabilities flag bit 0 is set. reserved value should ne ignored*/
-        cmocka_unit_test(libspdm_test_responder_capabilities_case9),
+        cmocka_unit_test(rsp_capabilities_case9),
         /* Can be populated with new test. */
-        cmocka_unit_test(libspdm_test_responder_capabilities_case10),
+        cmocka_unit_test(rsp_capabilities_case10),
         /* Can be populated with new test. */
-        cmocka_unit_test(libspdm_test_responder_capabilities_case11),
+        cmocka_unit_test(rsp_capabilities_case11),
         /* Can be populated with new test. */
-        cmocka_unit_test(libspdm_test_responder_capabilities_case12),
+        cmocka_unit_test(rsp_capabilities_case12),
         /* pub_key_id_cap and cert_cap set (flags are mutually exclusive)*/
-        cmocka_unit_test(libspdm_test_responder_capabilities_case13),
+        cmocka_unit_test(rsp_capabilities_case13),
         /* encrypt_cap set and key_ex_cap and psk_cap cleared (encrypt_cap demands key_ex_cap or psk_cap to be set)*/
-        cmocka_unit_test(libspdm_test_responder_capabilities_case14),
+        cmocka_unit_test(rsp_capabilities_case14),
         /* mac_cap set and key_ex_cap and psk_cap cleared (mac_cap demands key_ex_cap or psk_cap to be set)*/
-        cmocka_unit_test(libspdm_test_responder_capabilities_case15),
+        cmocka_unit_test(rsp_capabilities_case15),
         /* key_ex_cap set and encrypt_cap and mac_cap cleared (key_ex_cap demands encrypt_cap or mac_cap to be set)*/
-        cmocka_unit_test(libspdm_test_responder_capabilities_case16),
+        cmocka_unit_test(rsp_capabilities_case16),
         /* psk_cap set and encrypt_cap and mac_cap cleared (psk_cap demands encrypt_cap or mac_cap to be set)*/
-        cmocka_unit_test(libspdm_test_responder_capabilities_case17),
+        cmocka_unit_test(rsp_capabilities_case17),
         /* encap_cap cleared and MUT_AUTH set (MUT_AUTH demands encap_cap to be set)*/
-        cmocka_unit_test(libspdm_test_responder_capabilities_case18),
+        cmocka_unit_test(rsp_capabilities_case18),
         /* cert_cap set and pub_key_id_cap set (pub_key_id_cap demands cert_cap to be cleared)*/
-        cmocka_unit_test(libspdm_test_responder_capabilities_case19),
+        cmocka_unit_test(rsp_capabilities_case19),
         /* key_ex_cap cleared and handshake_in_the_clear_cap set (handshake_in_the_clear_cap demands key_ex_cap to be set)*/
-        cmocka_unit_test(libspdm_test_responder_capabilities_case20),
+        cmocka_unit_test(rsp_capabilities_case20),
         /* Open test case */
-        cmocka_unit_test(libspdm_test_responder_capabilities_case21),
+        cmocka_unit_test(rsp_capabilities_case21),
         /* cert_cap cleared and pub_key_id_cap set (pub_key_id_cap demands cert_cap to be cleared)*/
-        cmocka_unit_test(libspdm_test_responder_capabilities_case22),
+        cmocka_unit_test(rsp_capabilities_case22),
         /* Buffer verification*/
-        cmocka_unit_test(libspdm_test_responder_capabilities_case23),
+        cmocka_unit_test(rsp_capabilities_case23),
         /* V1.2 Success case, all possible flags set*/
-        cmocka_unit_test(libspdm_test_responder_capabilities_case24),
+        cmocka_unit_test(rsp_capabilities_case24),
         /* CHUNK_CAP == 0 and data_transfer_size != max_spdm_msg_size should result in error. */
-        cmocka_unit_test(libspdm_test_responder_capabilities_case25),
+        cmocka_unit_test(rsp_capabilities_case25),
         /* MaxSPDMmsgSize is less than DataTransferSize, then should result in error. */
-        cmocka_unit_test(libspdm_test_responder_capabilities_case26),
+        cmocka_unit_test(rsp_capabilities_case26),
         /* Success Case , capability supports MULTI_KEY_CAP */
-        cmocka_unit_test(libspdm_test_responder_capabilities_case27),
+        cmocka_unit_test(rsp_capabilities_case27),
         /* Success Case, GET_CAPABILITIES with param1[0] set and CHUNK_CAP enabled */
-        cmocka_unit_test(libspdm_test_responder_capabilities_case28),
+        cmocka_unit_test(rsp_capabilities_case28),
     };
 
     libspdm_test_context_t test_context = {

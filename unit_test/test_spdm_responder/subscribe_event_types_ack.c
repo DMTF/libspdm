@@ -60,7 +60,7 @@ static void set_standard_state(libspdm_context_t *spdm_context)
  * Test 1: Successful response to subscribe event types that clears all events.
  * Expected Behavior: Returns LIBSPDM_STATUS_SUCCESS with the expected values.
  **/
-static void libspdm_test_responder_subscribe_event_types_ack_case1(void **state)
+static void rsp_subscribe_event_types_ack_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -103,7 +103,7 @@ static void libspdm_test_responder_subscribe_event_types_ack_case1(void **state)
  * Test 2: Successful response to subscribe event types that subscribes to two events.
  * Expected Behavior: Returns LIBSPDM_STATUS_SUCCESS with the expected values.
  **/
-static void libspdm_test_responder_subscribe_event_types_ack_case2(void **state)
+static void rsp_subscribe_event_types_ack_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -158,8 +158,8 @@ int libspdm_rsp_subscribe_event_types_ack_test(void)
     };
 
     const struct CMUnitTest test_cases[] = {
-        cmocka_unit_test(libspdm_test_responder_subscribe_event_types_ack_case1),
-        cmocka_unit_test(libspdm_test_responder_subscribe_event_types_ack_case2)
+        cmocka_unit_test(rsp_subscribe_event_types_ack_case1),
+        cmocka_unit_test(rsp_subscribe_event_types_ack_case2)
     };
 
     libspdm_setup_test_context(&test_context);

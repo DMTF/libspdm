@@ -47,7 +47,7 @@ size_t m_libspdm_get_version_request4_size = sizeof(m_libspdm_get_version_reques
  * Expected behavior: the responder accepts the request, produces a valid VERSION
  * response message, and then resets the connection state.
  **/
-void libspdm_test_responder_version_case1(void **state)
+static void rsp_version_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -82,7 +82,7 @@ void libspdm_test_responder_version_case1(void **state)
  * Test 2:
  * Expected behavior:
  **/
-void libspdm_test_responder_version_case2(void **state)
+static void rsp_version_case2(void **state)
 {
 }
 
@@ -92,7 +92,7 @@ void libspdm_test_responder_version_case2(void **state)
  * Expected behavior: the responder accepts the request, but produces an ERROR message
  * indicating the Buse state.
  **/
-void libspdm_test_responder_version_case3(void **state)
+static void rsp_version_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -128,7 +128,7 @@ void libspdm_test_responder_version_case3(void **state)
  * Expected behavior: the requester resets the communication upon receiving the GET_VERSION
  * message, fulfilling the resynchronization. A valid VERSION message is produced.
  **/
-void libspdm_test_responder_version_case4(void **state)
+static void rsp_version_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -165,7 +165,7 @@ void libspdm_test_responder_version_case4(void **state)
  * Expected behavior: the responder refuses the GET_VERSION message, produces an
  * ERROR message indicating the VersionMismatch, and will not reset the connection state.
  **/
-void libspdm_test_responder_version_case6(void **state)
+static void rsp_version_case6(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -199,7 +199,7 @@ void libspdm_test_responder_version_case6(void **state)
 /**
  * Test 7: can be populated with new test.
  **/
-void libspdm_test_responder_version_case7(void **state)
+static void rsp_version_case7(void **state)
 {
 }
 
@@ -210,7 +210,7 @@ void libspdm_test_responder_version_case7(void **state)
  * response message, buffers A, B and C should be first reset, and then buffer A
  * receives only the exchanged GET_VERSION and VERSION messages.
  **/
-void libspdm_test_responder_version_case8(void **state)
+static void rsp_version_case8(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -259,19 +259,19 @@ void libspdm_test_responder_version_case8(void **state)
 int libspdm_rsp_version_test(void)
 {
     const struct CMUnitTest test_cases[] = {
-        cmocka_unit_test(libspdm_test_responder_version_case1),
+        cmocka_unit_test(rsp_version_case1),
         /* Invalid request*/
-        cmocka_unit_test(libspdm_test_responder_version_case2),
+        cmocka_unit_test(rsp_version_case2),
         /* response_state: SPDM_RESPONSE_STATE_BUSY*/
-        cmocka_unit_test(libspdm_test_responder_version_case3),
+        cmocka_unit_test(rsp_version_case3),
         /* response_state: SPDM_RESPONSE_STATE_NEED_RESYNC*/
-        cmocka_unit_test(libspdm_test_responder_version_case4),
+        cmocka_unit_test(rsp_version_case4),
         /* Invalid request*/
-        cmocka_unit_test(libspdm_test_responder_version_case6),
+        cmocka_unit_test(rsp_version_case6),
         /* Invalid request*/
-        cmocka_unit_test(libspdm_test_responder_version_case7),
+        cmocka_unit_test(rsp_version_case7),
         /* Buffer verification*/
-        cmocka_unit_test(libspdm_test_responder_version_case8),
+        cmocka_unit_test(rsp_version_case8),
     };
 
     libspdm_test_context_t test_context = {

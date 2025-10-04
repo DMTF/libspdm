@@ -17,7 +17,7 @@
  * Expected Behavior: Returns ERROR response message
  * with SPDM_ERROR_CODE_UNEXPECTED_REQUEST error code.
  **/
-void libspdm_test_responder_chunk_get_rsp_case1(void** state)
+static void rsp_chunk_response_case1(void** state)
 {
     libspdm_return_t status;
     libspdm_test_context_t* spdm_test_context;
@@ -68,7 +68,7 @@ void libspdm_test_responder_chunk_get_rsp_case1(void** state)
  * Test 2: Responder receives a CHUNK_GET request with bad response state.
  * Expected Behavior: Returns ERROR response message with an error code.
  **/
-void libspdm_test_responder_chunk_get_rsp_case2(void** state)
+static void rsp_chunk_response_case2(void** state)
 {
     libspdm_return_t status;
     libspdm_test_context_t* spdm_test_context;
@@ -128,7 +128,7 @@ void libspdm_test_responder_chunk_get_rsp_case2(void** state)
  * Expected Behavior: Returns ERROR response message
  * with SPDM_ERROR_CODE_UNEXPECTED_REQUEST error code.
  **/
-void libspdm_test_responder_chunk_get_rsp_case3(void** state)
+static void rsp_chunk_response_case3(void** state)
 {
     libspdm_return_t status;
     libspdm_test_context_t* spdm_test_context;
@@ -186,7 +186,7 @@ void libspdm_test_responder_chunk_get_rsp_case3(void** state)
  * Expected Behavior: Returns ERROR response message
  * with SPDM_ERROR_CODE_INVALID_REQUEST error code.
  **/
-void libspdm_test_responder_chunk_get_rsp_case4(void** state)
+static void rsp_chunk_response_case4(void** state)
 {
     libspdm_return_t status;
     libspdm_test_context_t* spdm_test_context;
@@ -243,7 +243,7 @@ void libspdm_test_responder_chunk_get_rsp_case4(void** state)
  * Expected Behavior: Returns ERROR response message
  * with SPDM_ERROR_CODE_VERSION_MISMATCH error code.
  **/
-void libspdm_test_responder_chunk_get_rsp_case5(void** state)
+static void rsp_chunk_response_case5(void** state)
 {
     libspdm_return_t status;
     libspdm_test_context_t* spdm_test_context;
@@ -297,7 +297,7 @@ void libspdm_test_responder_chunk_get_rsp_case5(void** state)
 /**
  * Test 6: Responder has no chunk saved to get.
  **/
-void libspdm_test_responder_chunk_get_rsp_case6(void** state)
+static void rsp_chunk_response_case6(void** state)
 {
     libspdm_return_t status;
     libspdm_test_context_t* spdm_test_context;
@@ -354,7 +354,7 @@ void libspdm_test_responder_chunk_get_rsp_case6(void** state)
 /**
  * Test 7: Responder has handle that does not match request.
  **/
-void libspdm_test_responder_chunk_get_rsp_case7(void** state)
+static void rsp_chunk_response_case7(void** state)
 {
     libspdm_return_t status;
     libspdm_test_context_t* spdm_test_context;
@@ -427,7 +427,7 @@ void libspdm_test_responder_chunk_get_rsp_case7(void** state)
 /**
  * Test 8: Responder has earlier sequence number than request .
  **/
-void libspdm_test_responder_chunk_get_rsp_case8(void** state)
+static void rsp_chunk_response_case8(void** state)
 {
     libspdm_return_t status;
     libspdm_test_context_t* spdm_test_context;
@@ -499,7 +499,7 @@ void libspdm_test_responder_chunk_get_rsp_case8(void** state)
 /**
  * Test 9: Responder has later sequence number than request.
  **/
-void libspdm_test_responder_chunk_get_rsp_case9(void** state)
+static void rsp_chunk_response_case9(void** state)
 {
     libspdm_return_t status;
     libspdm_test_context_t* spdm_test_context;
@@ -572,7 +572,7 @@ void libspdm_test_responder_chunk_get_rsp_case9(void** state)
 /**
  * Test 10: Successful request of first chunk.
  **/
-void libspdm_test_responder_chunk_get_rsp_case10(void** state)
+static void rsp_chunk_response_case10(void** state)
 {
     libspdm_return_t status;
     libspdm_test_context_t* spdm_test_context;
@@ -678,7 +678,7 @@ void libspdm_test_responder_chunk_get_rsp_case10(void** state)
 /**
  * Test 11: Successful request of middle chunk.
  **/
-void libspdm_test_responder_chunk_get_rsp_case11(void** state)
+static void rsp_chunk_response_case11(void** state)
 {
     libspdm_return_t status;
     libspdm_test_context_t* spdm_test_context;
@@ -782,7 +782,7 @@ void libspdm_test_responder_chunk_get_rsp_case11(void** state)
 /**
  * Test 12: Successful request of last chunk where size is exactly max chunk size
  **/
-void libspdm_test_responder_chunk_get_rsp_case12(void** state)
+static void rsp_chunk_response_case12(void** state)
 {
     libspdm_return_t status;
     libspdm_test_context_t* spdm_test_context;
@@ -886,7 +886,7 @@ void libspdm_test_responder_chunk_get_rsp_case12(void** state)
 /**
  * Test 13: Successful request of last chunk where size is exactly 1.
  **/
-void libspdm_test_responder_chunk_get_rsp_case13(void** state)
+static void rsp_chunk_response_case13(void** state)
 {
     libspdm_return_t status;
     libspdm_test_context_t* spdm_test_context;
@@ -1000,7 +1000,7 @@ void libspdm_test_responder_chunk_get_rsp_case13(void** state)
 /**
  * Test 14: Responder has response exceed chunk seq no
  **/
-void libspdm_test_responder_chunk_get_rsp_case14(void** state)
+static void rsp_chunk_response_case14(void** state)
 {
     libspdm_return_t status;
     libspdm_test_context_t* spdm_test_context;
@@ -1093,7 +1093,7 @@ void libspdm_test_responder_chunk_get_rsp_case14(void** state)
 /**
  * Test 15: Successful request of first chunk, spdm 1.4.
  **/
-void libspdm_test_responder_chunk_get_rsp_case15(void** state)
+static void rsp_chunk_response_case15(void** state)
 {
     libspdm_return_t status;
     libspdm_test_context_t* spdm_test_context;
@@ -1199,7 +1199,7 @@ void libspdm_test_responder_chunk_get_rsp_case15(void** state)
 /**
  * Test 16: Successful request of middle chunk, spdm 1.4.
  **/
-void libspdm_test_responder_chunk_get_rsp_case16(void** state)
+static void rsp_chunk_response_case16(void** state)
 {
     libspdm_return_t status;
     libspdm_test_context_t* spdm_test_context;
@@ -1303,7 +1303,7 @@ void libspdm_test_responder_chunk_get_rsp_case16(void** state)
 /**
  * Test 17: Successful request of last chunk where size is exactly max chunk size
  **/
-void libspdm_test_responder_chunk_get_rsp_case17(void** state)
+static void rsp_chunk_response_case17(void** state)
 {
     libspdm_return_t status;
     libspdm_test_context_t* spdm_test_context;
@@ -1407,7 +1407,7 @@ void libspdm_test_responder_chunk_get_rsp_case17(void** state)
 /**
  * Test 18: Successful request of last chunk where size is exactly 1.
  **/
-void libspdm_test_responder_chunk_get_rsp_case18(void** state)
+static void rsp_chunk_response_case18(void** state)
 {
     libspdm_return_t status;
     libspdm_test_context_t* spdm_test_context;
@@ -1522,41 +1522,41 @@ int libspdm_rsp_chunk_response_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         /* Responder has no response flag chunk cap */
-        cmocka_unit_test(libspdm_test_responder_chunk_get_rsp_case1),
+        cmocka_unit_test(rsp_chunk_response_case1),
         /* Responder has response state != NORMAL */
-        cmocka_unit_test(libspdm_test_responder_chunk_get_rsp_case2),
+        cmocka_unit_test(rsp_chunk_response_case2),
         /* Responder has connection state <= NOT_START */
-        cmocka_unit_test(libspdm_test_responder_chunk_get_rsp_case3),
+        cmocka_unit_test(rsp_chunk_response_case3),
         /* Request has wrong size */
-        cmocka_unit_test(libspdm_test_responder_chunk_get_rsp_case4),
+        cmocka_unit_test(rsp_chunk_response_case4),
         /* Request has wrong SPDM version */
-        cmocka_unit_test(libspdm_test_responder_chunk_get_rsp_case5),
+        cmocka_unit_test(rsp_chunk_response_case5),
         /* Responder has no chunk saved to get */
-        cmocka_unit_test(libspdm_test_responder_chunk_get_rsp_case6),
+        cmocka_unit_test(rsp_chunk_response_case6),
         /* Responder has handle that does not match request */
-        cmocka_unit_test(libspdm_test_responder_chunk_get_rsp_case7),
+        cmocka_unit_test(rsp_chunk_response_case7),
         /* Responder has earlier sequence number than request */
-        cmocka_unit_test(libspdm_test_responder_chunk_get_rsp_case8),
+        cmocka_unit_test(rsp_chunk_response_case8),
         /* Responder has later sequence number than request*/
-        cmocka_unit_test(libspdm_test_responder_chunk_get_rsp_case9),
+        cmocka_unit_test(rsp_chunk_response_case9),
         /* Successful request of first chunk */
-        cmocka_unit_test(libspdm_test_responder_chunk_get_rsp_case10),
+        cmocka_unit_test(rsp_chunk_response_case10),
         /* Successful request of middle chunk */
-        cmocka_unit_test(libspdm_test_responder_chunk_get_rsp_case11),
+        cmocka_unit_test(rsp_chunk_response_case11),
         /* Successful request of last chunk, where size is exactly max chunk size */
-        cmocka_unit_test(libspdm_test_responder_chunk_get_rsp_case12),
+        cmocka_unit_test(rsp_chunk_response_case12),
         /* Successful request of last chunk where chunk size is exactly 1 byte */
-        cmocka_unit_test(libspdm_test_responder_chunk_get_rsp_case13),
+        cmocka_unit_test(rsp_chunk_response_case13),
         /* Responder has response exceed chunk seq no */
-        cmocka_unit_test(libspdm_test_responder_chunk_get_rsp_case14),
+        cmocka_unit_test(rsp_chunk_response_case14),
         /* Successful request of first chunk, spdm 1.4*/
-        cmocka_unit_test(libspdm_test_responder_chunk_get_rsp_case15),
+        cmocka_unit_test(rsp_chunk_response_case15),
         /* Successful request of middle chunk, spdm 1.4 */
-        cmocka_unit_test(libspdm_test_responder_chunk_get_rsp_case16),
+        cmocka_unit_test(rsp_chunk_response_case16),
         /* Successful request of last chunk, where size is exactly max chunk size, spdm 1.4 */
-        cmocka_unit_test(libspdm_test_responder_chunk_get_rsp_case17),
+        cmocka_unit_test(rsp_chunk_response_case17),
         /* Successful request of last chunk where chunk size is exactly 1 byte, spdm 1.4 */
-        cmocka_unit_test(libspdm_test_responder_chunk_get_rsp_case18),
+        cmocka_unit_test(rsp_chunk_response_case18),
     };
 
     libspdm_test_context_t test_context = {

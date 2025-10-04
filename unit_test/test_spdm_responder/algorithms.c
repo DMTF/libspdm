@@ -958,7 +958,7 @@ spdm_negotiate_algorithms_request_t m_libspdm_negotiate_algorithms_request30 = {
 size_t m_libspdm_negotiate_algorithms_request30_size =
     sizeof(m_libspdm_negotiate_algorithms_request30);
 
-void libspdm_test_responder_algorithms_case1(void **state)
+static void rsp_algorithms_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -989,7 +989,7 @@ void libspdm_test_responder_algorithms_case1(void **state)
                      SPDM_ALGORITHMS);
 }
 
-void libspdm_test_responder_algorithms_case2(void **state)
+static void rsp_algorithms_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1023,7 +1023,7 @@ void libspdm_test_responder_algorithms_case2(void **state)
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
-void libspdm_test_responder_algorithms_case3(void **state)
+static void rsp_algorithms_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1059,7 +1059,7 @@ void libspdm_test_responder_algorithms_case3(void **state)
                      LIBSPDM_RESPONSE_STATE_BUSY);
 }
 
-void libspdm_test_responder_algorithms_case4(void **state)
+static void rsp_algorithms_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1096,7 +1096,7 @@ void libspdm_test_responder_algorithms_case4(void **state)
                      LIBSPDM_RESPONSE_STATE_NEED_RESYNC);
 }
 
-void libspdm_test_responder_algorithms_case6(void **state)
+static void rsp_algorithms_case6(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -1131,7 +1131,7 @@ void libspdm_test_responder_algorithms_case6(void **state)
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
-void libspdm_test_responder_algorithms_case7(void **state) {
+static void rsp_algorithms_case7(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1198,7 +1198,7 @@ void libspdm_test_responder_algorithms_case7(void **state) {
                       spdm_context->local_context.algorithm.key_schedule);
 }
 
-void libspdm_test_responder_algorithms_case8(void **state) {
+static void rsp_algorithms_case8(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1258,7 +1258,7 @@ void libspdm_test_responder_algorithms_case8(void **state) {
     assert_int_equal (spdm_response->header.param2, 0);
 }
 
-void libspdm_test_responder_algorithms_case9(void **state) {
+static void rsp_algorithms_case9(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1318,7 +1318,7 @@ void libspdm_test_responder_algorithms_case9(void **state) {
     assert_int_equal (spdm_response->header.param2, 0);
 }
 
-void libspdm_test_responder_algorithms_case10(void **state) {
+static void rsp_algorithms_case10(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1378,7 +1378,7 @@ void libspdm_test_responder_algorithms_case10(void **state) {
     assert_int_equal (spdm_response->header.param2, 0);
 }
 
-void libspdm_test_responder_algorithms_case11(void **state) {
+static void rsp_algorithms_case11(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1438,7 +1438,7 @@ void libspdm_test_responder_algorithms_case11(void **state) {
     assert_int_equal (spdm_response->header.param2, 0);
 }
 
-void libspdm_test_responder_algorithms_case12(void **state) {
+static void rsp_algorithms_case12(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1498,7 +1498,7 @@ void libspdm_test_responder_algorithms_case12(void **state) {
     assert_int_equal (spdm_response->header.param2, 0);
 }
 
-void libspdm_test_responder_algorithms_case13(void **state) {
+static void rsp_algorithms_case13(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1558,7 +1558,7 @@ void libspdm_test_responder_algorithms_case13(void **state) {
     assert_int_equal (spdm_response->header.param2, 0);
 }
 
-void libspdm_test_responder_algorithms_case14(void **state) {
+static void rsp_algorithms_case14(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1592,7 +1592,7 @@ void libspdm_test_responder_algorithms_case14(void **state) {
     assert_int_equal (spdm_response->header.param2, 0);
 }
 
-void libspdm_test_responder_algorithms_case15(void **state) {
+static void rsp_algorithms_case15(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1649,7 +1649,7 @@ void libspdm_test_responder_algorithms_case15(void **state) {
     assert_int_equal (spdm_response->header.param2, 0);
 }
 
-void libspdm_test_responder_algorithms_case16(void **state) {
+static void rsp_algorithms_case16(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1706,7 +1706,7 @@ void libspdm_test_responder_algorithms_case16(void **state) {
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
-void libspdm_test_responder_algorithms_case17(void **state) {
+static void rsp_algorithms_case17(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1763,7 +1763,7 @@ void libspdm_test_responder_algorithms_case17(void **state) {
     assert_int_equal(spdm_response->header.param2, 0);
 }
 
-void libspdm_test_responder_algorithms_case18(void **state) {
+static void rsp_algorithms_case18(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1820,7 +1820,7 @@ void libspdm_test_responder_algorithms_case18(void **state) {
     assert_int_equal (spdm_response->header.param2, 0);
 }
 
-void libspdm_test_responder_algorithms_case19(void **state) {
+static void rsp_algorithms_case19(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1878,7 +1878,7 @@ void libspdm_test_responder_algorithms_case19(void **state) {
 }
 
 /* When both of requester and responder support multiple algorithms, then defaults to choose the strongest available algorithm*/
-void libspdm_test_responder_algorithms_case20(void **state) {
+static void rsp_algorithms_case20(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
     libspdm_context_t  *spdm_context;
@@ -1965,7 +1965,7 @@ void libspdm_test_responder_algorithms_case20(void **state) {
                       spdm_context->connection_info.algorithm.key_schedule);
 }
 
-void libspdm_test_responder_algorithms_case21(void **state) {
+static void rsp_algorithms_case21(void **state) {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
     libspdm_context_t *spdm_context;
@@ -2051,7 +2051,7 @@ void libspdm_test_responder_algorithms_case21(void **state) {
                         m_libspdm_negotiate_algorithm_request3_size, response, response_size);
 }
 
-void libspdm_test_responder_algorithms_case22(void **state)
+static void rsp_algorithms_case22(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -2122,7 +2122,7 @@ void libspdm_test_responder_algorithms_case22(void **state)
                       spdm_context->local_context.algorithm.key_schedule);
 }
 
-void libspdm_test_responder_algorithms_case23(void **state)
+static void rsp_algorithms_case23(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -2243,7 +2243,7 @@ void libspdm_test_responder_algorithms_case23(void **state)
                      SPDM_ALGORITHMS_OPAQUE_DATA_FORMAT_1);
 }
 
-void libspdm_test_responder_algorithms_case24(void **state)
+static void rsp_algorithms_case24(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -2309,7 +2309,7 @@ void libspdm_test_responder_algorithms_case24(void **state)
     assert_int_equal(spdm_response->measurement_specification_sel, 0);
 }
 
-void libspdm_test_responder_algorithms_case25(void **state)
+static void rsp_algorithms_case25(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -2372,7 +2372,7 @@ void libspdm_test_responder_algorithms_case25(void **state)
     assert_int_equal (spdm_response->header.param2, 0);
 }
 
-void libspdm_test_responder_algorithms_case26(void **state)
+static void rsp_algorithms_case26(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -2435,7 +2435,7 @@ void libspdm_test_responder_algorithms_case26(void **state)
     assert_int_equal (spdm_response->header.param2, 0);
 }
 
-void libspdm_test_responder_algorithms_case27(void **state)
+static void rsp_algorithms_case27(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -2498,7 +2498,7 @@ void libspdm_test_responder_algorithms_case27(void **state)
     assert_int_equal (spdm_response->header.param2, 0);
 }
 
-void libspdm_test_responder_algorithms_case28(void **state)
+static void rsp_algorithms_case28(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -2561,7 +2561,7 @@ void libspdm_test_responder_algorithms_case28(void **state)
     assert_int_equal (spdm_response->header.param2, 0);
 }
 
-void libspdm_test_responder_algorithms_case29(void **state)
+static void rsp_algorithms_case29(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t    *spdm_test_context;
@@ -2634,7 +2634,7 @@ void libspdm_test_responder_algorithms_case29(void **state)
  * | 10b           | 1                        | true               |
  *  ----------------------------------------------------------------
  **/
-void libspdm_test_responder_algorithms_case30(void **state)
+static void rsp_algorithms_case30(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -2794,7 +2794,7 @@ void libspdm_test_responder_algorithms_case30(void **state)
  * Test 31: NEGOTIATE_ALGORITHMS message received with MEL correct
  * Expected Behavior: get a RETURN_SUCCESS return code
  **/
-void libspdm_test_responder_algorithms_case31(void **state)
+static void rsp_algorithms_case31(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -2862,7 +2862,7 @@ void libspdm_test_responder_algorithms_case31(void **state)
  * Test 32: NEGOTIATE_ALGORITHMS message received with MEAS correct
  * Expected Behavior: get a RETURN_SUCCESS return code
  **/
-void libspdm_test_responder_algorithms_case32(void **state)
+static void rsp_algorithms_case32(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -2935,67 +2935,67 @@ int libspdm_rsp_algorithms_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         /* Success Case*/
-        cmocka_unit_test(libspdm_test_responder_algorithms_case1),
+        cmocka_unit_test(rsp_algorithms_case1),
         /* Bad request size*/
-        cmocka_unit_test(libspdm_test_responder_algorithms_case2),
+        cmocka_unit_test(rsp_algorithms_case2),
         /* response_state: LIBSPDM_RESPONSE_STATE_BUSY*/
-        cmocka_unit_test(libspdm_test_responder_algorithms_case3),
+        cmocka_unit_test(rsp_algorithms_case3),
         /* response_state: LIBSPDM_RESPONSE_STATE_NEED_RESYNC*/
-        cmocka_unit_test(libspdm_test_responder_algorithms_case4),
+        cmocka_unit_test(rsp_algorithms_case4),
         /* connection_state Check*/
-        cmocka_unit_test(libspdm_test_responder_algorithms_case6),
+        cmocka_unit_test(rsp_algorithms_case6),
         /* Success case V1.1*/
-        cmocka_unit_test(libspdm_test_responder_algorithms_case7),
+        cmocka_unit_test(rsp_algorithms_case7),
         /* No match for base_asym_algo*/
-        cmocka_unit_test(libspdm_test_responder_algorithms_case8),
+        cmocka_unit_test(rsp_algorithms_case8),
         /* No match for base_hash_algo*/
-        cmocka_unit_test(libspdm_test_responder_algorithms_case9),
+        cmocka_unit_test(rsp_algorithms_case9),
         /* No match for dhe_named_group*/
-        cmocka_unit_test(libspdm_test_responder_algorithms_case10),
+        cmocka_unit_test(rsp_algorithms_case10),
         /* No match for aead_cipher_suite*/
-        cmocka_unit_test(libspdm_test_responder_algorithms_case11),
+        cmocka_unit_test(rsp_algorithms_case11),
         /* No match for req_base_asym_alg*/
-        cmocka_unit_test(libspdm_test_responder_algorithms_case12),
+        cmocka_unit_test(rsp_algorithms_case12),
         /* No match for key_schedule*/
-        cmocka_unit_test(libspdm_test_responder_algorithms_case13),
+        cmocka_unit_test(rsp_algorithms_case13),
         /* Spdm length greater than 64 bytes for V1.0*/
-        cmocka_unit_test(libspdm_test_responder_algorithms_case14),
+        cmocka_unit_test(rsp_algorithms_case14),
         /* Spdm length greater than 128 bytes for V1.1*/
-        cmocka_unit_test(libspdm_test_responder_algorithms_case15),
+        cmocka_unit_test(rsp_algorithms_case15),
         /* Multiple repeated Alg structs for V1.1*/
-        cmocka_unit_test(libspdm_test_responder_algorithms_case16),
+        cmocka_unit_test(rsp_algorithms_case16),
         /* param1 is smaller than the number of Alg structs for V1.1*/
-        cmocka_unit_test(libspdm_test_responder_algorithms_case17),
+        cmocka_unit_test(rsp_algorithms_case17),
         /* param1 is bigger than the number of  Alg structs for V1.1*/
-        cmocka_unit_test(libspdm_test_responder_algorithms_case18),
+        cmocka_unit_test(rsp_algorithms_case18),
         /* Invalid  Alg structs + valid Alg Structs for V1.1*/
-        cmocka_unit_test(libspdm_test_responder_algorithms_case19),
+        cmocka_unit_test(rsp_algorithms_case19),
         /* When support multiple algorithms, then defaults to choose the strongest available algorithm*/
-        cmocka_unit_test(libspdm_test_responder_algorithms_case20),
+        cmocka_unit_test(rsp_algorithms_case20),
         /* Buffer verification*/
-        cmocka_unit_test(libspdm_test_responder_algorithms_case21),
+        cmocka_unit_test(rsp_algorithms_case21),
         /* Success case V1.2*/
-        cmocka_unit_test(libspdm_test_responder_algorithms_case22),
+        cmocka_unit_test(rsp_algorithms_case22),
         /* Version 1.2 Check other_params_support */
-        cmocka_unit_test(libspdm_test_responder_algorithms_case23),
+        cmocka_unit_test(rsp_algorithms_case23),
         /* No support for MEASUREMENT from requester*/
-        cmocka_unit_test(libspdm_test_responder_algorithms_case24),
+        cmocka_unit_test(rsp_algorithms_case24),
         /* Invalid (Redundant) alg_type value*/
-        cmocka_unit_test(libspdm_test_responder_algorithms_case25),
+        cmocka_unit_test(rsp_algorithms_case25),
         /* Invalid (Decreasing) alg_type value*/
-        cmocka_unit_test(libspdm_test_responder_algorithms_case26),
+        cmocka_unit_test(rsp_algorithms_case26),
         /* Invalid (smaller than DHE) alg_type value*/
-        cmocka_unit_test(libspdm_test_responder_algorithms_case27),
+        cmocka_unit_test(rsp_algorithms_case27),
         /* Invalid (bigger than KEY_SCHEDULE) alg_type value*/
-        cmocka_unit_test(libspdm_test_responder_algorithms_case28),
+        cmocka_unit_test(rsp_algorithms_case28),
         /* Invalid AlgStruct, contains an AlgSupported=0 (Non-supported)*/
-        cmocka_unit_test(libspdm_test_responder_algorithms_case29),
+        cmocka_unit_test(rsp_algorithms_case29),
         /* MULTI_KEY_CONN_REQ and MULTI_KEY_CONN_RSP value validation*/
-        cmocka_unit_test(libspdm_test_responder_algorithms_case30),
+        cmocka_unit_test(rsp_algorithms_case30),
         /* Success Case , set MELspecificationSel*/
-        cmocka_unit_test(libspdm_test_responder_algorithms_case31),
+        cmocka_unit_test(rsp_algorithms_case31),
         /* Success Case , set MeasurementSpecification*/
-        cmocka_unit_test(libspdm_test_responder_algorithms_case32),
+        cmocka_unit_test(rsp_algorithms_case32),
     };
 
     m_libspdm_negotiate_algorithms_request1.base_asym_algo = m_libspdm_use_asym_algo;

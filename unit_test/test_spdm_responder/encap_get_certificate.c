@@ -26,7 +26,7 @@ size_t m_spdm_get_certificate_response2_size = sizeof(m_spdm_get_certificate_res
  * Test 1: Normal case, request a certificate chain
  * Expected Behavior: receives a valid certificate chain with the correct number of Certificate messages
  **/
-void test_spdm_responder_encap_get_certificate_case1(void **state)
+static void rsp_encap_get_certificate_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -124,7 +124,7 @@ void test_spdm_responder_encap_get_certificate_case1(void **state)
  * Test 2: force responder to send an ERROR message with code SPDM_ERROR_CODE_INVALID_REQUEST
  * Expected Behavior: get a RETURN_DEVICE_ERROR, with no CERTIFICATE messages received (checked in transcript.message_b buffer)
  **/
-void test_spdm_responder_encap_get_certificate_case2(void **state)
+static void rsp_encap_get_certificate_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -186,7 +186,7 @@ void test_spdm_responder_encap_get_certificate_case2(void **state)
  * total_responder_cert_chain_buffer_length.
  * Expected Behavior:returns a status of RETURN_DEVICE_ERROR.
  **/
-void test_spdm_responder_encap_get_certificate_case3(void **state)
+static void rsp_encap_get_certificate_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -285,7 +285,7 @@ void test_spdm_responder_encap_get_certificate_case3(void **state)
  * Test 4: Fail case, request a certificate chain, responder return portion_length > spdm_request.length.
  * Expected Behavior:returns a status of RETURN_DEVICE_ERROR.
  **/
-void test_spdm_responder_encap_get_certificate_case4(void **state)
+static void rsp_encap_get_certificate_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -384,7 +384,7 @@ void test_spdm_responder_encap_get_certificate_case4(void **state)
  * Expected Behavior: CertModel is GenericCert model and slot 0 , returns a status of RETURN_DEVICE_ERROR.
  * Expected Behavior: CertModel Value of 0 and certificate chain is valid, returns a status of RETURN_DEVICE_ERROR.
  **/
-void test_spdm_responder_encap_get_certificate_case5(void **state)
+static void rsp_encap_get_certificate_case5(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -595,18 +595,18 @@ int spdm_rsp_encap_get_certificate_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         /* Success Case*/
-        cmocka_unit_test(test_spdm_responder_encap_get_certificate_case1),
+        cmocka_unit_test(rsp_encap_get_certificate_case1),
         /* Bad request size ,remaining length is 0*/
-        cmocka_unit_test(test_spdm_responder_encap_get_certificate_case2),
+        cmocka_unit_test(rsp_encap_get_certificate_case2),
         /* Error response: SPDM_ERROR_CODE_INVALID_REQUEST*/
-        cmocka_unit_test(test_spdm_responder_encap_get_certificate_case2),
+        cmocka_unit_test(rsp_encap_get_certificate_case2),
         /* Fail response: spdm_request.offset + spdm_response.portion_length + spdm_response.remainder_length !=
          * total_responder_cert_chain_buffer_length.*/
-        cmocka_unit_test(test_spdm_responder_encap_get_certificate_case3),
+        cmocka_unit_test(rsp_encap_get_certificate_case3),
         /* Fail response: responder return portion_length > spdm_request.length*/
-        cmocka_unit_test(test_spdm_responder_encap_get_certificate_case4),
+        cmocka_unit_test(rsp_encap_get_certificate_case4),
         /* check request attributes and response attributes*/
-        cmocka_unit_test(test_spdm_responder_encap_get_certificate_case5),
+        cmocka_unit_test(rsp_encap_get_certificate_case5),
     };
 
     libspdm_test_context_t test_context = {

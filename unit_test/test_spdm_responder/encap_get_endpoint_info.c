@@ -33,7 +33,7 @@ libspdm_return_t get_endpoint_info_callback (
  * Expected Behavior: get a RETURN_SUCCESS return code, correct endpoint_info
  *                    and an empty transcript.message_encap_e
  **/
-void libspdm_test_responder_encap_get_endpoint_info_case1(void **state)
+static void rsp_encap_get_endpoint_info_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -206,7 +206,7 @@ void libspdm_test_responder_encap_get_endpoint_info_case1(void **state)
  * Expected Behavior: get a RETURN_SUCCESS return code, correct endpoint_info
  *                    and an empty transcript.message_encap_e
  **/
-void libspdm_test_responder_encap_get_endpoint_info_case2(void **state)
+static void rsp_encap_get_endpoint_info_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -299,7 +299,7 @@ void libspdm_test_responder_encap_get_endpoint_info_case2(void **state)
  * Test 3: Normal case, request a endpoint info without signature
  * Expected Behavior: get a RETURN_SUCCESS return code, correct endpoint_info
  **/
-void libspdm_test_responder_encap_get_endpoint_info_case3(void **state)
+static void rsp_encap_get_endpoint_info_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -363,7 +363,7 @@ void libspdm_test_responder_encap_get_endpoint_info_case3(void **state)
  * Expected Behavior: get a RETURN_SUCCESS return code, correct endpoint_info
  *                    and an empty session_transcript.message_encap_e
  **/
-void libspdm_test_responder_encap_get_endpoint_info_case4(void **state)
+static void rsp_encap_get_endpoint_info_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -507,13 +507,13 @@ int libspdm_rsp_encap_get_endpoint_info_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         /* Success requeset endpoint info with signature */
-        cmocka_unit_test(libspdm_test_responder_encap_get_endpoint_info_case1),
+        cmocka_unit_test(rsp_encap_get_endpoint_info_case1),
         /* Success requeset endpoint info with signature, req_slot_id = 0xFF */
-        cmocka_unit_test(libspdm_test_responder_encap_get_endpoint_info_case2),
+        cmocka_unit_test(rsp_encap_get_endpoint_info_case2),
         /* Success requeset endpoint info without signature */
-        cmocka_unit_test(libspdm_test_responder_encap_get_endpoint_info_case3),
+        cmocka_unit_test(rsp_encap_get_endpoint_info_case3),
         /* Success requeset endpoint info with signature in a session */
-        cmocka_unit_test(libspdm_test_responder_encap_get_endpoint_info_case4),
+        cmocka_unit_test(rsp_encap_get_endpoint_info_case4),
     };
 
     libspdm_test_context_t test_context = {

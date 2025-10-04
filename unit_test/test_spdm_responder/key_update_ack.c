@@ -173,7 +173,7 @@ static void libspdm_compute_secret_update(spdm_version_number_t spdm_version,
  * Expected behavior: the responder accepts the request, produces a valid
  * KEY_UPDATE_ACK response message, and the request data key is updated.
  **/
-void libspdm_test_responder_key_update_case1(void **state)
+static void rsp_key_update_ack_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t            *spdm_test_context;
@@ -243,7 +243,7 @@ void libspdm_test_responder_key_update_case1(void **state)
  * produces an ERROR message indicating the InvalidRequest. No keys
  * are updated.
  **/
-void libspdm_test_responder_key_update_case2(void **state)
+static void rsp_key_update_ack_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t            *spdm_test_context;
@@ -306,7 +306,7 @@ void libspdm_test_responder_key_update_case2(void **state)
  * Expected behavior: the responder accepts the request, but produces an
  * ERROR message indicating the Busy state. No keys are updated.
  **/
-void libspdm_test_responder_key_update_case3(void **state)
+static void rsp_key_update_ack_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t            *spdm_test_context;
@@ -373,7 +373,7 @@ void libspdm_test_responder_key_update_case3(void **state)
  * Expected behavior: the responder accepts the request, but produces an
  * ERROR message indicating the NeedResynch state. No keys are updated.
  **/
-void libspdm_test_responder_key_update_case4(void **state)
+static void rsp_key_update_ack_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t            *spdm_test_context;
@@ -443,7 +443,7 @@ void libspdm_test_responder_key_update_case4(void **state)
  * ERROR message indicating the ResponseNotReady state. No keys are
  * updated.
  **/
-void libspdm_test_responder_key_update_case5(void **state)
+static void rsp_key_update_ack_case5(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t            *spdm_test_context;
@@ -520,7 +520,7 @@ void libspdm_test_responder_key_update_case5(void **state)
  * Expected behavior: the responder rejects the request, and produces an
  * ERROR message indicating the UnexpectedRequest. No keys are updated.
  **/
-void libspdm_test_responder_key_update_case6(void **state)
+static void rsp_key_update_ack_case6(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t            *spdm_test_context;
@@ -581,7 +581,7 @@ void libspdm_test_responder_key_update_case6(void **state)
                         m_rsp_secret_buffer, secured_message_context->hash_size);
 }
 
-void libspdm_test_responder_key_update_case7(void **state)
+static void rsp_key_update_ack_case7(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t            *spdm_test_context;
@@ -672,7 +672,7 @@ void libspdm_test_responder_key_update_case7(void **state)
  * produces an ERROR message indicating the UnsupportedRequest. No keys are
  * updated.
  **/
-void libspdm_test_responder_key_update_case8(void **state)
+static void rsp_key_update_ack_case8(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t            *spdm_test_context;
@@ -742,7 +742,7 @@ void libspdm_test_responder_key_update_case8(void **state)
  * Expected behavior: the responder refuses the KEY_UPDATE message and produces
  * an ERROR message indicating the UnsupportedRequest. No keys are updated.
  **/
-void libspdm_test_responder_key_update_case9(void **state)
+static void rsp_key_update_ack_case9(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t            *spdm_test_context;
@@ -811,7 +811,7 @@ void libspdm_test_responder_key_update_case9(void **state)
  * KEY_UPDATE_ACK response message, and both the request data key and the
  * response data key are updated.
  **/
-void libspdm_test_responder_key_update_case10(void **state)
+static void rsp_key_update_ack_case10(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t            *spdm_test_context;
@@ -885,7 +885,7 @@ void libspdm_test_responder_key_update_case10(void **state)
  * produces an ERROR message indicating the InvalidRequest. No keys
  * are updated.
  **/
-void libspdm_test_responder_key_update_case11(void **state)
+static void rsp_key_update_ack_case11(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t            *spdm_test_context;
@@ -949,7 +949,7 @@ void libspdm_test_responder_key_update_case11(void **state)
  * Expected behavior: the responder accepts the request, produces a valid
  * KEY_UPDATE_ACK response message, and the request data key is updated.
  **/
-void libspdm_test_responder_key_update_case12(void **state)
+static void rsp_key_update_ack_case12(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t            *spdm_test_context;
@@ -1036,7 +1036,7 @@ void libspdm_test_responder_key_update_case12(void **state)
  * produces an ERROR message indicating the InvalidRequest. The request
  * data key is not rolled back to before the UpdateKey.
  **/
-void libspdm_test_responder_key_update_case13(void **state)
+static void rsp_key_update_ack_case13(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t            *spdm_test_context;
@@ -1122,7 +1122,7 @@ void libspdm_test_responder_key_update_case13(void **state)
  * KEY_UPDATE_ACK response message, and both the request data key and the
  * response data key are updated.
  **/
-void libspdm_test_responder_key_update_case14(void **state)
+static void rsp_key_update_ack_case14(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t            *spdm_test_context;
@@ -1225,7 +1225,7 @@ void libspdm_test_responder_key_update_case14(void **state)
  * request data key nor the response data key are rolled back to before
  * the UpdateAllKeys.
  **/
-void libspdm_test_responder_key_update_case15(void **state)
+static void rsp_key_update_ack_case15(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t            *spdm_test_context;
@@ -1327,7 +1327,7 @@ void libspdm_test_responder_key_update_case15(void **state)
  * produces an ERROR message indicating the InvalidRequest. No keys are
  * updated.
  **/
-void libspdm_test_responder_key_update_case16(void **state)
+static void rsp_key_update_ack_case16(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t            *spdm_test_context;
@@ -1392,7 +1392,7 @@ void libspdm_test_responder_key_update_case16(void **state)
  * produces an ERROR message indicating the InvalidRequest. No keys are
  * updated.
  **/
-void libspdm_test_responder_key_update_case17(void **state)
+static void rsp_key_update_ack_case17(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t            *spdm_test_context;
@@ -1469,7 +1469,7 @@ void libspdm_test_responder_key_update_case17(void **state)
  * produces an ERROR message indicating the InvalidRequest. No keys are
  * updated.
  **/
-void libspdm_test_responder_key_update_case18(void **state)
+static void rsp_key_update_ack_case18(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t            *spdm_test_context;
@@ -1562,7 +1562,7 @@ void libspdm_test_responder_key_update_case18(void **state)
  * produces an ERROR message indicating the InvalidRequest. No keys are
  * updated.
  **/
-void libspdm_test_responder_key_update_case19(void **state)
+static void rsp_key_update_ack_case19(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t            *spdm_test_context;
@@ -1618,7 +1618,7 @@ void libspdm_test_responder_key_update_case19(void **state)
  * produces an ERROR message indicating the InvalidRequest. No keys are
  * updated.
  **/
-void libspdm_test_responder_key_update_case20(void **state)
+static void rsp_key_update_ack_case20(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t            *spdm_test_context;
@@ -1673,7 +1673,7 @@ void libspdm_test_responder_key_update_case20(void **state)
  * Expected behavior: the responder accepts the request, produces a valid
  * KEY_UPDATE_ACK response message, and the request data key is updated.
  **/
-void libspdm_test_responder_key_update_case21(void **state)
+static void rsp_key_update_ack_case21(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t            *spdm_test_context;
@@ -1747,7 +1747,7 @@ void libspdm_test_responder_key_update_case21(void **state)
  * Expected behavior: the responder accepts the request, produces a valid
  * KEY_UPDATE_ACK response message, and the request data key is updated.
  **/
-void libspdm_test_responder_key_update_case22(void **state)
+static void rsp_key_update_ack_case22(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t            *spdm_test_context;
@@ -1825,7 +1825,7 @@ void libspdm_test_responder_key_update_case22(void **state)
  * produces an ERROR message indicating the InvalidRequest. No keys are
  * updated.
  **/
-void libspdm_test_responder_key_update_case23(void **state)
+static void rsp_key_update_ack_case23(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t            *spdm_test_context;
@@ -1882,7 +1882,7 @@ void libspdm_test_responder_key_update_case23(void **state)
  * Expected behavior: the responder accepts the request, produces a valid
  * KEY_UPDATE_ACK response message, and the request data key is updated.
  **/
-void libspdm_test_responder_key_update_case24(void **state)
+static void rsp_key_update_ack_case24(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t            *spdm_test_context;
@@ -1954,7 +1954,7 @@ void libspdm_test_responder_key_update_case24(void **state)
  * Expected behavior: the responder accepts the request, produces a valid
  * KEY_UPDATE_ACK response message, and the request data key is updated.
  **/
-void libspdm_test_responder_key_update_case25(void **state)
+static void rsp_key_update_ack_case25(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t            *spdm_test_context;
@@ -2030,7 +2030,7 @@ void libspdm_test_responder_key_update_case25(void **state)
  * produces an ERROR message indicating the InvalidRequest. No keys are
  * updated.
  **/
-void libspdm_test_responder_key_update_case26(void **state)
+static void rsp_key_update_ack_case26(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t            *spdm_test_context;
@@ -2099,7 +2099,7 @@ void libspdm_test_responder_key_update_case26(void **state)
  * produces an ERROR message indicating the InvalidRequest. No keys
  * are updated.
  **/
-void libspdm_test_responder_key_update_case27(void **state)
+static void rsp_key_update_ack_case27(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t            *spdm_test_context;
@@ -2160,61 +2160,61 @@ int libspdm_rsp_key_update_ack_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         /* Success Case -- UpdateKey*/
-        cmocka_unit_test(libspdm_test_responder_key_update_case1),
+        cmocka_unit_test(rsp_key_update_ack_case1),
         /* Bad request size*/
-        cmocka_unit_test(libspdm_test_responder_key_update_case2),
+        cmocka_unit_test(rsp_key_update_ack_case2),
         /* response_state: SPDM_RESPONSE_STATE_BUSY*/
-        cmocka_unit_test(libspdm_test_responder_key_update_case3),
+        cmocka_unit_test(rsp_key_update_ack_case3),
         /* response_state: SPDM_RESPONSE_STATE_NEED_RESYNC*/
-        cmocka_unit_test(libspdm_test_responder_key_update_case4),
+        cmocka_unit_test(rsp_key_update_ack_case4),
         #if LIBSPDM_RESPOND_IF_READY_SUPPORT
         /* response_state: SPDM_RESPONSE_STATE_NOT_READY*/
-        cmocka_unit_test(libspdm_test_responder_key_update_case5),
+        cmocka_unit_test(rsp_key_update_ack_case5),
         #endif /* LIBSPDM_RESPOND_IF_READY_SUPPORT */
         /* connection_state Check*/
-        cmocka_unit_test(libspdm_test_responder_key_update_case6),
+        cmocka_unit_test(rsp_key_update_ack_case6),
         /* Buffer reset*/
-        cmocka_unit_test(libspdm_test_responder_key_update_case7),
+        cmocka_unit_test(rsp_key_update_ack_case7),
         /* Unsupported KEY_UPD capabilities*/
-        cmocka_unit_test(libspdm_test_responder_key_update_case8),
+        cmocka_unit_test(rsp_key_update_ack_case8),
         /* Uninitialized session*/
-        cmocka_unit_test(libspdm_test_responder_key_update_case9),
+        cmocka_unit_test(rsp_key_update_ack_case9),
         /* Success Case -- UpdateAllKeys*/
-        cmocka_unit_test(libspdm_test_responder_key_update_case10),
+        cmocka_unit_test(rsp_key_update_ack_case10),
         /* Bad request size*/
-        cmocka_unit_test(libspdm_test_responder_key_update_case11),
+        cmocka_unit_test(rsp_key_update_ack_case11),
         /* UpdateKey + VerifyNewKey: Success*/
-        cmocka_unit_test(libspdm_test_responder_key_update_case12),
+        cmocka_unit_test(rsp_key_update_ack_case12),
         /* Bad request size*/
-        cmocka_unit_test(libspdm_test_responder_key_update_case13),
+        cmocka_unit_test(rsp_key_update_ack_case13),
         /* UpdateALLKeys + VerifyNewKey: Success*/
-        cmocka_unit_test(libspdm_test_responder_key_update_case14),
+        cmocka_unit_test(rsp_key_update_ack_case14),
         /* Bad request size*/
-        cmocka_unit_test(libspdm_test_responder_key_update_case15),
+        cmocka_unit_test(rsp_key_update_ack_case15),
         /* Uninitialized key update*/
-        cmocka_unit_test(libspdm_test_responder_key_update_case16),
+        cmocka_unit_test(rsp_key_update_ack_case16),
         /* UpdateKey + UpdateKey: failed*/
-        cmocka_unit_test(libspdm_test_responder_key_update_case17),
+        cmocka_unit_test(rsp_key_update_ack_case17),
         /* UpdateKey + UpdateAllKeys: failed*/
-        cmocka_unit_test(libspdm_test_responder_key_update_case18),
+        cmocka_unit_test(rsp_key_update_ack_case18),
         /* UpdateALLKeys + UpdateKey: failed*/
-        cmocka_unit_test(libspdm_test_responder_key_update_case19),
+        cmocka_unit_test(rsp_key_update_ack_case19),
         /* UpdateALLKeys + UpdateALLKeys: failed*/
-        cmocka_unit_test(libspdm_test_responder_key_update_case20),
+        cmocka_unit_test(rsp_key_update_ack_case20),
         /* VerifyNewKey + UpdateKey: success*/
-        cmocka_unit_test(libspdm_test_responder_key_update_case21),
+        cmocka_unit_test(rsp_key_update_ack_case21),
         /* VerifyNewKey + UpdateAllKeys: success*/
-        cmocka_unit_test(libspdm_test_responder_key_update_case22),
+        cmocka_unit_test(rsp_key_update_ack_case22),
         /* VerifyNewKey + VerifyNewKey: failed*/
-        cmocka_unit_test(libspdm_test_responder_key_update_case23),
+        cmocka_unit_test(rsp_key_update_ack_case23),
         /* other command + UpdateKey: success*/
-        cmocka_unit_test(libspdm_test_responder_key_update_case24),
+        cmocka_unit_test(rsp_key_update_ack_case24),
         /* other command + UpdateAllKeys: success*/
-        cmocka_unit_test(libspdm_test_responder_key_update_case25),
+        cmocka_unit_test(rsp_key_update_ack_case25),
         /* other command + VerifyNewKey: failed*/
-        cmocka_unit_test(libspdm_test_responder_key_update_case26),
+        cmocka_unit_test(rsp_key_update_ack_case26),
         /* Invalid operation,other key_update operation: failed*/
-        cmocka_unit_test(libspdm_test_responder_key_update_case27),
+        cmocka_unit_test(rsp_key_update_ack_case27),
     };
 
     libspdm_test_context_t test_context = {

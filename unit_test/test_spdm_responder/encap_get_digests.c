@@ -17,7 +17,7 @@ static uint8_t m_libspdm_local_certificate_chain[LIBSPDM_MAX_CERT_CHAIN_SIZE];
  * Test 1: Response message received successfully
  * Expected Behavior: requester returns the status RETURN_SUCCESS and a DIGESTS message is received
  **/
-void test_spdm_responder_encap_get_digests_case1(void **state)
+static void rsp_encap_get_digests_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -71,7 +71,7 @@ void test_spdm_responder_encap_get_digests_case1(void **state)
  * Test 2: Error response message with error code busy
  * Expected Behavior: requester returns the status RETURN_DEVICE_ERROR, with no DIGESTS message received
  **/
-void test_spdm_responder_encap_get_digests_case2(void **state)
+static void rsp_encap_get_digests_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -112,7 +112,7 @@ void test_spdm_responder_encap_get_digests_case2(void **state)
  * Test 3: Error response message with error code busy response seize incorrect
  * Expected Behavior:  Expected Behavior: requester returns the status RETURN_DEVICE_ERROR, with no DIGESTS message received
  **/
-void test_spdm_responder_encap_get_digests_case3(void **state)
+static void rsp_encap_get_digests_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -151,7 +151,7 @@ void test_spdm_responder_encap_get_digests_case3(void **state)
  * Test 4: The code of the request_response_code  summary in the response message is different
  * Expected Behavior: requester returns the status RETURN_DEVICE_ERROR, with no DIGESTS message received
  **/
-void test_spdm_responder_encap_get_digests_case4(void **state)
+static void rsp_encap_get_digests_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -202,7 +202,7 @@ void test_spdm_responder_encap_get_digests_case4(void **state)
  * CERTIFICATE response messages
  * Expected Behavior: requester returns the status RETURN_DEVICE_ERROR, with no DIGESTS message received
  **/
-void test_spdm_responder_encap_get_digests_case5(void **state)
+static void rsp_encap_get_digests_case5(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -239,7 +239,7 @@ void test_spdm_responder_encap_get_digests_case5(void **state)
  * Test 6: a response message is successfully sent , Set multi_key_conn_req to check if it responds correctly
  * Expected Behavior: requester returns the status RETURN_SUCCESS
  **/
-void test_spdm_responder_encap_get_digests_case6(void **state)
+static void rsp_encap_get_digests_case6(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -341,7 +341,7 @@ void test_spdm_responder_encap_get_digests_case6(void **state)
  * Check KeyPairID CertificateInfo and KeyUsageMask
  * Expected Behavior: requester returns the status RETURN_SUCCESS
  **/
-void test_spdm_responder_encap_get_digests_case7(void **state)
+static void rsp_encap_get_digests_case7(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -477,19 +477,19 @@ int spdm_rsp_encap_get_digests_test(void)
 {
     const struct CMUnitTest test_cases[] = {
         /* Success Case*/
-        cmocka_unit_test(test_spdm_responder_encap_get_digests_case1),
+        cmocka_unit_test(rsp_encap_get_digests_case1),
         /* Error response: SPDM_ERROR*/
-        cmocka_unit_test(test_spdm_responder_encap_get_digests_case2),
+        cmocka_unit_test(rsp_encap_get_digests_case2),
         /* Error response: RETURN_DEVICE_ERROR*/
-        cmocka_unit_test(test_spdm_responder_encap_get_digests_case3),
+        cmocka_unit_test(rsp_encap_get_digests_case3),
         /* request_response_code wrong in response*/
-        cmocka_unit_test(test_spdm_responder_encap_get_digests_case4),
+        cmocka_unit_test(rsp_encap_get_digests_case4),
         /* capability flags check failed*/
-        cmocka_unit_test(test_spdm_responder_encap_get_digests_case5),
+        cmocka_unit_test(rsp_encap_get_digests_case5),
         /* Set multi_key_conn_req to check if it responds correctly */
-        cmocka_unit_test(test_spdm_responder_encap_get_digests_case6),
+        cmocka_unit_test(rsp_encap_get_digests_case6),
         /* Check KeyPairID CertificateInfo and KeyUsageMask*/
-        cmocka_unit_test(test_spdm_responder_encap_get_digests_case7),
+        cmocka_unit_test(rsp_encap_get_digests_case7),
     };
 
     libspdm_test_context_t test_context = {

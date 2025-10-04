@@ -12,7 +12,7 @@
 
 static uint8_t m_requester_context[SPDM_REQ_CONTEXT_SIZE];
 
-void libspdm_test_responder_encap_challenge_case1(void **state)
+static void rsp_encap_challenge_case1(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -101,7 +101,7 @@ void libspdm_test_responder_encap_challenge_case1(void **state)
     free(data);
 }
 
-void libspdm_test_responder_encap_challenge_case2(void **state)
+static void rsp_encap_challenge_case2(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -169,7 +169,7 @@ void libspdm_test_responder_encap_challenge_case2(void **state)
 }
 
 
-void libspdm_test_responder_encap_challenge_case3(void **state)
+static void rsp_encap_challenge_case3(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -236,7 +236,7 @@ void libspdm_test_responder_encap_challenge_case3(void **state)
     free(data);
 }
 
-void libspdm_test_responder_encap_challenge_case4(void **state)
+static void rsp_encap_challenge_case4(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -303,7 +303,7 @@ void libspdm_test_responder_encap_challenge_case4(void **state)
     free(data);
 }
 
-void libspdm_test_responder_encap_challenge_case5(void **state)
+static void rsp_encap_challenge_case5(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -375,7 +375,7 @@ void libspdm_test_responder_encap_challenge_case5(void **state)
  * Test 6: Successful case , With the correct challenge context field
  * Expected Behavior: client returns a status of RETURN_SUCCESS.
  **/
-void libspdm_test_responder_encap_challenge_case6(void **state)
+static void rsp_encap_challenge_case6(void **state)
 {
     libspdm_return_t status;
     libspdm_test_context_t *spdm_test_context;
@@ -474,17 +474,17 @@ void libspdm_test_responder_encap_challenge_case6(void **state)
 int libspdm_rsp_encap_challenge_test(void)
 {
     const struct CMUnitTest test_cases[] = {
-        cmocka_unit_test(libspdm_test_responder_encap_challenge_case1),
+        cmocka_unit_test(rsp_encap_challenge_case1),
         /* Error response: SPDM_ERROR*/
-        cmocka_unit_test(libspdm_test_responder_encap_challenge_case2),
+        cmocka_unit_test(rsp_encap_challenge_case2),
         /* Error request_response_code  : SPDM_CERTIFICATE */
-        cmocka_unit_test(libspdm_test_responder_encap_challenge_case3),
+        cmocka_unit_test(rsp_encap_challenge_case3),
         /* Error spdm_response_size */
-        cmocka_unit_test(libspdm_test_responder_encap_challenge_case4),
+        cmocka_unit_test(rsp_encap_challenge_case4),
         /* Success Case, use provisioned public key (slot 0xFF) */
-        cmocka_unit_test(libspdm_test_responder_encap_challenge_case5),
+        cmocka_unit_test(rsp_encap_challenge_case5),
         /* Success Case, V1.3 With the correct challenge context field */
-        cmocka_unit_test(libspdm_test_responder_encap_challenge_case6),
+        cmocka_unit_test(rsp_encap_challenge_case6),
     };
 
     libspdm_test_context_t test_context = {
