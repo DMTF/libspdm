@@ -37,7 +37,7 @@ libspdm_return_t libspdm_get_response_send_event(libspdm_context_t *spdm_context
     if (libspdm_get_connection_version(spdm_context) < SPDM_MESSAGE_VERSION_13) {
         return libspdm_generate_error_response(spdm_context,
                                                SPDM_ERROR_CODE_UNSUPPORTED_REQUEST,
-                                               SPDM_KEY_UPDATE,
+                                               SPDM_SEND_EVENT,
                                                response_size, response);
     }
 
