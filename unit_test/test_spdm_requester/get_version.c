@@ -726,7 +726,7 @@ static void req_get_version_case15(void **state)
 /**
  * Test 16: receiving a correct VERSION message with available version 1.0 and 1.1.
  * Buffers A, B and C already have arbitrary data.
- * Expected behavior: client returns a status of RETURN_SUCCESS, buffers A, B and C
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_SUCCESS, buffers A, B and C
  * should be first reset, and then buffer A receives only the exchanged GET_VERSION
  * and VERSION messages.
  **/

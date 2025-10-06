@@ -30,7 +30,7 @@ libspdm_return_t get_endpoint_info_callback (
 
 /**
  * Test 1: Normal case, request a endpoint info with signature
- * Expected Behavior: get a RETURN_SUCCESS return code, correct endpoint_info
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, correct endpoint_info
  *                    and an empty transcript.message_encap_e
  **/
 static void rsp_encap_get_endpoint_info_case1(void **state)
@@ -203,7 +203,7 @@ static void rsp_encap_get_endpoint_info_case1(void **state)
 
 /**
  * Test 2: Normal case, request a endpoint info with signature, req_slot_id = 0xFF
- * Expected Behavior: get a RETURN_SUCCESS return code, correct endpoint_info
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, correct endpoint_info
  *                    and an empty transcript.message_encap_e
  **/
 static void rsp_encap_get_endpoint_info_case2(void **state)
@@ -297,7 +297,7 @@ static void rsp_encap_get_endpoint_info_case2(void **state)
 
 /**
  * Test 3: Normal case, request a endpoint info without signature
- * Expected Behavior: get a RETURN_SUCCESS return code, correct endpoint_info
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, correct endpoint_info
  **/
 static void rsp_encap_get_endpoint_info_case3(void **state)
 {
@@ -360,7 +360,7 @@ static void rsp_encap_get_endpoint_info_case3(void **state)
 
 /**
  * Test 4: Normal case, request a endpoint info with signature within session
- * Expected Behavior: get a RETURN_SUCCESS return code, correct endpoint_info
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, correct endpoint_info
  *                    and an empty session_transcript.message_encap_e
  **/
 static void rsp_encap_get_endpoint_info_case4(void **state)

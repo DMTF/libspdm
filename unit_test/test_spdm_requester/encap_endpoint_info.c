@@ -66,7 +66,7 @@ size_t m_libspdm_get_endpoint_info_request4_size =
 
 /**
  * Test 1: Successful response to get endpoint_info with signature
- * Expected Behavior: get a RETURN_SUCCESS return code,
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code,
  *                    correct transcript.message_encap_e size,
  *                    correct response message size and fields
  *                    correct signature verification
@@ -178,7 +178,7 @@ static void req_encap_endpoint_info_case1(void **state)
 
 /**
  * Test 2: Successful response to get endpoint_info with signature, slot_id == 0x1
- * Expected Behavior: get a RETURN_SUCCESS return code,
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code,
  *                    correct transcript.message_encap_e size,
  *                    correct response message size and fields
  *                    correct signature verification
@@ -289,7 +289,7 @@ static void req_encap_endpoint_info_case2(void **state)
 
 /**
  * Test 3: Successful response to get endpoint_info with signature, slot_id == 0xF
- * Expected Behavior: get a RETURN_SUCCESS return code,
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code,
  *                    correct transcript.message_encap_e size,
  *                    correct response message size and fields
  *                    correct signature verification
@@ -383,7 +383,7 @@ static void req_encap_endpoint_info_case3(void **state)
 
 /**
  * Test 4: Successful response to get endpoint_info without signature
- * Expected Behavior: get a RETURN_SUCCESS return code,
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code,
  *                    correct response message size and fields
  **/
 static void req_encap_endpoint_info_case4(void **state)
@@ -432,7 +432,7 @@ static void req_encap_endpoint_info_case4(void **state)
 
 /**
  * Test 5: Successful response to get session-based endpoint_info with signature
- * Expected Behavior: get a RETURN_SUCCESS return code,
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code,
  *                    correct transcript.message_encap_e size,
  *                    correct response message size and fields
  *                    correct signature verification

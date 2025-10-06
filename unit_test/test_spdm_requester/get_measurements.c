@@ -3367,7 +3367,7 @@ static void req_get_measurements_case1(void **state)
 
 /**
  * Test 2: Successful response to get a measurement with signature
- * Expected Behavior: get a RETURN_SUCCESS return code, with an empty transcript.message_m
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, with an empty transcript.message_m
  **/
 static void req_get_measurements_case2(void **state)
 {
@@ -3701,7 +3701,7 @@ static void req_get_measurements_case5(void **state)
 
 /**
  * Test 6: Successfully get one measurement block (signed), after getting SPDM_ERROR_CODE_BUSY on first attempt
- * Expected Behavior: get a RETURN_SUCCESS return code, with an empty transcript.message_m
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, with an empty transcript.message_m
  **/
 static void req_get_measurements_case6(void **state)
 {
@@ -3935,7 +3935,7 @@ static void req_get_measurements_case8(void **state)
 
 /**
  * Test 9: Successfully get one measurement block (signed), after getting SPDM_ERROR_CODE_RESPONSE_NOT_READY on first attempt
- * Expected Behavior: get a RETURN_SUCCESS return code, with an empty transcript.message_m
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, with an empty transcript.message_m
  **/
 static void req_get_measurements_case9(void **state)
 {
@@ -4011,7 +4011,7 @@ static void req_get_measurements_case9(void **state)
 
 /**
  * Test 10: Successful response to get total number of measurements, without signature
- * Expected Behavior: get a RETURN_SUCCESS return code, correct number_of_blocks, correct transcript.message_m.buffer_size
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, correct number_of_blocks, correct transcript.message_m.buffer_size
  **/
 static void req_get_measurements_case10(void **state)
 {
@@ -4089,7 +4089,7 @@ static void req_get_measurements_case10(void **state)
 
 /**
  * Test 11: Successful response to get a measurement block, without signature
- * Expected Behavior: get a RETURN_SUCCESS return code, correct transcript.message_m.buffer_size
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, correct transcript.message_m.buffer_size
  **/
 static void req_get_measurements_case11(void **state)
 {
@@ -4488,7 +4488,7 @@ static void req_get_measurements_case15(void **state)
 
 /**
  * Test 16: SlotID verificaton, the response's SlotID should match the request
- * Expected Behavior: get a RETURN_SUCCESS return code if the fields match, RETURN_DEVICE_ERROR otherwise. Either way, transcript.message_m should be empty
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code if the fields match, RETURN_DEVICE_ERROR otherwise. Either way, transcript.message_m should be empty
  **/
 static void req_get_measurements_case16(void **state)
 {
@@ -4906,7 +4906,7 @@ static void req_get_measurements_case21(void **state)
 
 /**
  * Test 22: request a large number of unsigned measurements before requesting a signature
- * Expected Behavior: RETURN_SUCCESS return code and correct transcript.message_m.buffer_size while transcript.message_m has room; RETURN_DEVICE_ERROR otherwise
+ * Expected Behavior: LIBSPDM_STATUS_SUCCESS return code and correct transcript.message_m.buffer_size while transcript.message_m has room; RETURN_DEVICE_ERROR otherwise
  **/
 static void req_get_measurements_case22(void **state)
 {
@@ -5008,7 +5008,7 @@ static void req_get_measurements_case22(void **state)
 
 /**
  * Test 23: Successful response to get a measurement block, without signature. response contains opaque data
- * Expected Behavior: get a RETURN_SUCCESS return code, correct transcript.message_m.buffer_size
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, correct transcript.message_m.buffer_size
  **/
 static void req_get_measurements_case23(void **state)
 {
@@ -5172,7 +5172,7 @@ static void req_get_measurements_case24(void **state)
 
 /**
  * Test 25: Successful response to get a measurement block, with signature. response contains opaque data
- * Expected Behavior: get a RETURN_SUCCESS return code, empty transcript.message_m.buffer_size
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, empty transcript.message_m.buffer_size
  **/
 static void req_get_measurements_case25(void **state)
 {
@@ -5494,7 +5494,7 @@ static void req_get_measurements_case28(void **state)
 
 /**
  * Test 29: request measurement without signature, but response opaque data is 1 byte longer than informed
- * Expected Behavior: extra byte should just be ignored. Get a RETURN_SUCCESS return code, correct transcript.message_m.buffer_size
+ * Expected Behavior: extra byte should just be ignored. Get a LIBSPDM_STATUS_SUCCESS return code, correct transcript.message_m.buffer_size
  **/
 static void req_get_measurements_case29(void **state)
 {
@@ -5596,7 +5596,7 @@ static void req_get_measurements_case31(void **state)
 
 /**
  * Test 32: Successful response to get all measurement blocks, without signature
- * Expected Behavior: get a RETURN_SUCCESS return code, correct transcript.message_m.buffer_size
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, correct transcript.message_m.buffer_size
  **/
 static void req_get_measurements_case32(void **state)
 {
@@ -5771,7 +5771,7 @@ static void req_get_measurements_case33(void **state) {
 
 /**
  * Test 34: Successful response to get a session based measurement with signature
- * Expected Behavior: get a RETURN_SUCCESS return code, with an empty session_transcript.message_m
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, with an empty session_transcript.message_m
  **/
 static void req_get_measurements_case34(void **state)
 {
@@ -6166,7 +6166,7 @@ static void req_get_measurements_case38(void **state)
 
 /**
  * Test 39: Exercise the libspdm_get_measurement_ex function.
- * Expected Behavior: client returns a status of RETURN_SUCCESS.
+ * Expected Behavior: client returns a status of LIBSPDM_STATUS_SUCCESS.
  **/
 static void req_get_measurements_case39(void **state)
 {
@@ -6264,7 +6264,7 @@ static void req_get_measurements_case39(void **state)
 
 /**
  * Test 40: Successful case , correct measuerments context field , without signature
- * Expected Behavior: client returns a status of RETURN_SUCCESS.
+ * Expected Behavior: client returns a status of LIBSPDM_STATUS_SUCCESS.
  **/
 static void req_get_measurements_case40(void **state)
 {

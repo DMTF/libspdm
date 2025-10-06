@@ -1033,7 +1033,7 @@ static void req_psk_finish_case1(void **state)
 
 /**
  * Test 2: receiving a correct PSK_FINISH_RSP message.
- * Expected behavior: client returns a Status of RETURN_SUCCESS and
+ * Expected behavior: client returns a Status of LIBSPDM_STATUS_SUCCESS and
  * session is established.
  **/
 static void req_psk_finish_case2(void **state)
@@ -1428,7 +1428,7 @@ static void req_psk_finish_case5(void **state)
  * Test 6: the requester is setup correctly, but, on the first try, receiving
  * a Busy ERROR message, and, on retry, receiving a correct PSK_FINISH_RSP
  * message.
- * Expected behavior: client returns a Status of RETURN_SUCCESS and session
+ * Expected behavior: client returns a Status of LIBSPDM_STATUS_SUCCESS and session
  * is established.
  **/
 static void req_psk_finish_case6(void **state)
@@ -1729,7 +1729,7 @@ static void req_psk_finish_case8(void **state)
  * Test 9: the requester is setup correctly, but, on the first try, receiving
  * a ResponseNotReady ERROR message, and, on retry, receiving a correct
  * PSK_FINISH_RSP message.
- * Expected behavior: client returns a Status of RETURN_SUCCESS and session
+ * Expected behavior: client returns a Status of LIBSPDM_STATUS_SUCCESS and session
  * is established.
  **/
 static void req_psk_finish_case9(void **state)
@@ -2447,7 +2447,7 @@ static void req_psk_finish_case15(void **state)
 
 /**
  * Test 16: a request message is successfully sent and a response message is successfully received.
- * Expected Behavior: requester returns the status RETURN_SUCCESS and a PSK_FINISH_RSP message is
+ * Expected Behavior: requester returns the status LIBSPDM_STATUS_SUCCESS and a PSK_FINISH_RSP message is
  * received, buffer F appends the exchanged PSK_FINISH and PSK_FINISH_RSP messages.
  **/
 static void req_psk_finish_case16(void **state)
@@ -2550,7 +2550,7 @@ static void req_psk_finish_case16(void **state)
 
 /**
  * Test 17: SPDM version 1.4, with OpaqueData
- * Expected Behavior: requester returns the status RETURN_SUCCESS and a PSK_FINISH_RSP message is
+ * Expected Behavior: requester returns the status LIBSPDM_STATUS_SUCCESS and a PSK_FINISH_RSP message is
  * received.
  **/
 static void req_psk_finish_case17(void **state)

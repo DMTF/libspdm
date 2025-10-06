@@ -1653,7 +1653,7 @@ static void req_finish_case1(void **state)
 /**
  * Test 2: receiving a correct FINISH_RSP message with only MAC (no
  * mutual authentication) and 'handshake in the clear'.
- * Expected behavior: client returns a Status of RETURN_SUCCESS and
+ * Expected behavior: client returns a Status of LIBSPDM_STATUS_SUCCESS and
  * session is established.
  **/
 static void req_finish_case2(void **state)
@@ -2049,7 +2049,7 @@ static void req_finish_case5(void **state)
  * Test 6: the requester is setup correctly (see Test 2), but, on the first try,
  * receiving a Busy ERROR message, and on retry, receiving a correct FINISH_RSP
  * message with only MAC (no mutual authentication).
- * Expected behavior: client returns a Status of RETURN_SUCCESS.
+ * Expected behavior: client returns a Status of LIBSPDM_STATUS_SUCCESS.
  **/
 static void req_finish_case6(void **state)
 {
@@ -2346,7 +2346,7 @@ static void req_finish_case8(void **state)
  * Test 9: the requester is setup correctly (see Test 2), but, on the first try,
  * receiving a ResponseNotReady ERROR message, and on retry, receiving a correct
  * FINISH_RSP message with only MAC (no mutual authentication).
- * Expected behavior: client returns a Status of RETURN_SUCCESS.
+ * Expected behavior: client returns a Status of LIBSPDM_STATUS_SUCCESS.
  **/
 static void req_finish_case9(void **state)
 {
@@ -3055,7 +3055,7 @@ static void req_finish_case15(void **state)
 /**
  * Test 16: receiving a correct FINISH_RSP message with a correct MAC,
  * mutual authentication and 'handshake in the clear'.
- * Expected behavior: client returns a Status of RETURN_SUCCESS and
+ * Expected behavior: client returns a Status of LIBSPDM_STATUS_SUCCESS and
  * session is established.
  **/
 static void req_finish_case16(void **state)
@@ -3597,7 +3597,7 @@ static void req_finish_case21(void **state)
 /**
  * Test 22: a FINISH request message is successfully sent and a FINISH_RSP response message is
  * successfully received.
- * Expected Behavior: requester returns the status RETURN_SUCCESS and a FINISH_RSP message is
+ * Expected Behavior: requester returns the status LIBSPDM_STATUS_SUCCESS and a FINISH_RSP message is
  * received, buffer F appends the exchanged FINISH and FINISH_RSP
  **/
 static void req_finish_case22(void **state)
@@ -3714,7 +3714,7 @@ static void req_finish_case22(void **state)
 
 /**
  * Test 23: receiving a correct FINISH_RSP message using slot_id 0xFF
- * Expected behavior: client returns a Status of RETURN_SUCCESS and
+ * Expected behavior: client returns a Status of LIBSPDM_STATUS_SUCCESS and
  * session is established.
  **/
 static void req_finish_case23(void **state)
@@ -3802,7 +3802,7 @@ static void req_finish_case23(void **state)
 
 /**
  * Test 24: Set HANDSHAKE_IN_THE_CLEAR_CAP to 0 , The ResponderVerifyData field is absent.
- * Expected behavior: client returns a Status of RETURN_SUCCESS and
+ * Expected behavior: client returns a Status of LIBSPDM_STATUS_SUCCESS and
  * session is established.
  **/
 static void req_finish_case24(void **state)
@@ -3911,7 +3911,7 @@ static void req_finish_case24(void **state)
 
 /**
  * Test 25: SPDM version 1.4, with OpaqueData
- * Expected behavior: client returns a Status of RETURN_SUCCESS and
+ * Expected behavior: client returns a Status of LIBSPDM_STATUS_SUCCESS and
  * session is established.
  **/
 static void req_finish_case25(void **state)

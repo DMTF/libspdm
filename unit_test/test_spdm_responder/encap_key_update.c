@@ -43,7 +43,7 @@ static void libspdm_set_standard_key_update_test_state(libspdm_context_t *spdm_c
 /**
  * Test 1: receiving a correct UPDATE_KEY_ACK message for updating
  * only the request data key.
- * Expected behavior: client returns a Status of RETURN_SUCCESS,Communication needs to continue.
+ * Expected behavior: client returns a Status of LIBSPDM_STATUS_SUCCESS,Communication needs to continue.
  **/
 static void rsp_encap_key_update_case1(void **state)
 {
@@ -88,7 +88,7 @@ static void rsp_encap_key_update_case1(void **state)
 /**
  * Test 2: receiving a correct UPDATE_KEY_ACK message for updating
  * only the request data key.
- * Expected behavior: client returns a Status of RETURN_SUCCESS,Communication needs to continue.
+ * Expected behavior: client returns a Status of LIBSPDM_STATUS_SUCCESS,Communication needs to continue.
  **/
 static void rsp_encap_key_update_case2(void **state)
 {

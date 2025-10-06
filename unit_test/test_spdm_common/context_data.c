@@ -101,13 +101,10 @@ size_t libspdm_get_multi_element_opaque_data_supported_version_data_size(
  *
  * @param  data_out_size[in]                 size in bytes of the data_out.
  *                                           On input, it means the size in bytes of data_out buffer.
- *                                           On output, it means the size in bytes of copied data_out buffer if RETURN_SUCCESS is returned,
+ *                                           On output, it means the size in bytes of copied data_out buffer if LIBSPDM_STATUS_SUCCESS is returned,
  *                                           and means the size in bytes of desired data_out buffer if RETURN_BUFFER_TOO_SMALL is returned.
  * @param  data_out[in]                      A pointer to the destination buffer to store the opaque data supported version.
  * @param  element_num[in]                   in this test function, the element number < 9 is right. because element id is changed with element_index
- *
- * @retval RETURN_SUCCESS               The opaque data supported version is built successfully.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
 libspdm_return_t
 libspdm_build_multi_element_opaque_data_supported_version_test(libspdm_context_t *spdm_context,
@@ -264,13 +261,10 @@ size_t libspdm_get_multi_element_opaque_data_version_selection_data_size(
  *
  * @param  data_out_size[in]                 size in bytes of the data_out.
  *                                           On input, it means the size in bytes of data_out buffer.
- *                                           On output, it means the size in bytes of copied data_out buffer if RETURN_SUCCESS is returned,
+ *                                           On output, it means the size in bytes of copied data_out buffer if LIBSPDM_STATUS_SUCCESS is returned,
  *                                           and means the size in bytes of desired data_out buffer if RETURN_BUFFER_TOO_SMALL is returned.
  * @param  data_out[in]                      A pointer to the destination buffer to store the opaque data selection version.
  * @param  element_num[in]                   in this test function, the element number < 9 is right. because element id is changed with element_index
- *
- * @retval RETURN_SUCCESS               The opaque data selection version is built successfully.
- * @retval RETURN_BUFFER_TOO_SMALL      The buffer is too small to hold the data.
  **/
 libspdm_return_t
 libspdm_build_opaque_data_version_selection_data_test(const libspdm_context_t *spdm_context,
@@ -895,7 +889,7 @@ void libspdm_test_verify_peer_cert_chain_buffer_case8(void **state)
  * Test 9: test set data for root cert.
  *
  * case                                              Expected Behavior
- * there is null root cert;                          return RETURN_SUCCESS, and the root cert is set successfully.
+ * there is null root cert;                          return LIBSPDM_STATUS_SUCCESS, and the root cert is set successfully.
  * there is full root cert;                          return RETURN_OUT_OF_RESOURCES.
  **/
 static void libspdm_test_set_data_case9(void **state)

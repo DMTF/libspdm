@@ -12,7 +12,7 @@
 
 /**
  * Test 1: Successful response to set key pair info with key pair id 4
- * Expected Behavior: get a RETURN_SUCCESS return code, and correct response message size and fields
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, and correct response message size and fields
  **/
 static void rsp_set_key_pair_info_ack_case1(void **state)
 {
@@ -127,7 +127,7 @@ static void rsp_set_key_pair_info_ack_case1(void **state)
 
 /**
  * Test 2: Successful response to set key pair info with key pair id 4: need reset
- * Expected Behavior: get a RETURN_SUCCESS return code, and correct response message size and fields
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, and correct response message size and fields
  **/
 static void rsp_set_key_pair_info_ack_case2(void **state)
 {
@@ -505,7 +505,7 @@ static void rsp_set_key_pair_info_ack_case3(void **state)
 
 /**
  * Test 4: Successful response to set key pair info with key pair id 4: need reset, spdm 1.4
- * Expected Behavior: get a RETURN_SUCCESS return code, and correct response message size and fields
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, and correct response message size and fields
  **/
 static void rsp_set_key_pair_info_ack_case4(void **state)
 {

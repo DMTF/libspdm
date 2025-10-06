@@ -123,7 +123,7 @@ static libspdm_return_t receive_message(
 
 /**
  * Test 1: Successful response to set key pair info
- * Expected Behavior: get a RETURN_SUCCESS return code
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code
  **/
 static void req_set_key_pair_info_case1(void **state)
 {

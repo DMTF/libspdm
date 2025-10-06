@@ -2065,7 +2065,7 @@ static void req_challenge_case1(void **state)
  * (param1=0) and do not request measurements (param2=0).
  * The received CHALLENGE_AUTH message correctly responds to the challenge, with
  * no opaque data and a signature on the sent nonce.
- * Expected behavior: client returns a status of RETURN_SUCCESS.
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_SUCCESS.
  **/
 static void req_challenge_case2(void **state)
 {
@@ -2369,7 +2369,7 @@ static void req_challenge_case5(void **state)
  * Test 6: the requester is setup correctly (see Test 2), but, on the first try,
  * receiving a Busy ERROR message, and on retry, receiving a correct CHALLENGE_AUTH
  * message to the challenge, with no opaque data and a signature on the sent nonce.
- * Expected behavior: client returns a status of RETURN_SUCCESS.
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_SUCCESS.
  **/
 static void req_challenge_case6(void **state)
 {
@@ -2590,7 +2590,7 @@ static void req_challenge_case8(void **state)
  * receiving a ResponseNotReady ERROR message, and on retry, receiving a correct
  * CHALLENGE_AUTH message to the challenge, with no opaque data and a signature
  * on the sent nonce.
- * Expected behavior: client returns a status of RETURN_SUCCESS.
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_SUCCESS.
  **/
 static void req_challenge_case9(void **state)
 {
@@ -2992,7 +2992,7 @@ static void req_challenge_case15(void **state) {
  * (param1=0) and do not request measurements (param2=0).
  * The received CHALLENGE_AUTH message correctly responds to the challenge, opaque
  * data with bytes from the string "libspdm", and a signature on the sent nonce.
- * Expected behavior: client returns a status of RETURN_SUCCESS.
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_SUCCESS.
  **/
 static void req_challenge_case16(void **state) {
     libspdm_return_t status;
@@ -3139,7 +3139,7 @@ static void req_challenge_case17(void **state) {
  * (param1=0) and request TCB measurements (param2=1).
  * The received CHALLENGE_AUTH message correctly responds to the challenge, with
  * no opaque data and a signature on the sent nonce.
- * Expected behavior: client returns a status of RETURN_SUCCESS.
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_SUCCESS.
  **/
 static void req_challenge_case18(void **state) {
     libspdm_return_t status;
@@ -3209,7 +3209,7 @@ static void req_challenge_case18(void **state) {
  * (param1=0) and request TCB measurements (param2=1).
  * The received CHALLENGE_AUTH message correctly responds to the challenge, with
  * no opaque data and a signature on the sent nonce.
- * Expected behavior: client returns a status of RETURN_SUCCESS.
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_SUCCESS.
  **/
 static void req_challenge_case19(void **state) {
     libspdm_return_t status;
@@ -3422,7 +3422,7 @@ static void req_challenge_case21(void **state) {
 /**
  * Test 22: a request message is successfully sent and a response message is successfully received.
  * Buffer C already has arbitrary data.
- * Expected Behavior: requester returns the status RETURN_SUCCESS and a CHALLENGE_AUTH message is
+ * Expected Behavior: requester returns the status LIBSPDM_STATUS_SUCCESS and a CHALLENGE_AUTH message is
  * received, buffer C appends the exchanged CHALLENGE and CHALLENGE_AUTH messages.
  **/
 static void req_challenge_case22(void **state)
@@ -3515,7 +3515,7 @@ static void req_challenge_case22(void **state)
  * (param1=0) and do not request measurements (param2=0).
  * The received CHALLENGE_AUTH message correctly responds to the challenge, with
  * no opaque data and a signature on the sent nonce.
- * Expected behavior: client returns a status of RETURN_SUCCESS.
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_SUCCESS.
  **/
 static void req_challenge_case23(void **state)
 {
@@ -3617,7 +3617,7 @@ static void req_challenge_case23(void **state)
 
 /**
  * Test 24: Challenge using provisioned public key (slot_id 0xFF)
- * Expected behavior: client returns a status of RETURN_SUCCESS.
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_SUCCESS.
  **/
 static void req_challenge_case24(void **state)
 {
@@ -3728,7 +3728,7 @@ static void req_challenge_case25(void **state) {
  * - it has flags indicating that the previous messages were sent
  * The received CHALLENGE_AUTH message correctly responds to the challenge, opaque
  * data with bytes from the string "libspdm", and a signature on the sent nonce.
- * Expected behavior: client returns a status of RETURN_SUCCESS.
+ * Expected behavior: client returns a status of LIBSPDM_STATUS_SUCCESS.
  **/
 static void req_challenge_case26(void **state) {
     libspdm_return_t status;
@@ -3797,7 +3797,7 @@ static void req_challenge_case26(void **state) {
 
 /**
  * Test 27: Successful case , With the correct challenge context field
- * Expected Behavior: client returns a status of RETURN_SUCCESS.
+ * Expected Behavior: client returns a status of LIBSPDM_STATUS_SUCCESS.
  **/
 static void req_challenge_case27(void **state)
 {

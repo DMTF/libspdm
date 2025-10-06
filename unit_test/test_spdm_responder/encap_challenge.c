@@ -373,7 +373,7 @@ static void rsp_encap_challenge_case5(void **state)
 
 /**
  * Test 6: Successful case , With the correct challenge context field
- * Expected Behavior: client returns a status of RETURN_SUCCESS.
+ * Expected Behavior: client returns a status of LIBSPDM_STATUS_SUCCESS.
  **/
 static void rsp_encap_challenge_case6(void **state)
 {

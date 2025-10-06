@@ -641,7 +641,7 @@ static libspdm_return_t receive_message(
 
 /**
  * Test 1: Successful response to get a endpoint info with signature
- * Expected Behavior: get a RETURN_SUCCESS return code, with an empty transcript.message_e
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, with an empty transcript.message_e
  **/
 static void req_get_endpoint_info_case1(void **state)
 {
@@ -738,7 +738,7 @@ static void req_get_endpoint_info_case1(void **state)
 /**
  * Test 2: Successful response to get a endpoint info with signature,
  *         after getting SPDM_ERROR_CODE_BUSY on first attempt
- * Expected Behavior: get a RETURN_SUCCESS return code, with an empty transcript.message_e
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, with an empty transcript.message_e
  **/
 static void req_get_endpoint_info_case2(void **state)
 {
@@ -836,7 +836,7 @@ static void req_get_endpoint_info_case2(void **state)
 /**
  * Test 3: Successful response to get a endpoint info with signature,
  *         after getting SPDM_ERROR_CODE_RESPONSE_NOT_READY on first attempt
- * Expected Behavior: get a RETURN_SUCCESS return code, with an empty transcript.message_e
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, with an empty transcript.message_e
  **/
 static void req_get_endpoint_info_case3(void **state)
 {
@@ -937,7 +937,7 @@ static void req_get_endpoint_info_case3(void **state)
 
 /**
  * Test 4: Successful response to get a endpoint info with signature with slot_id = 1
- * Expected Behavior: get a RETURN_SUCCESS return code, with an empty transcript.message_e
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, with an empty transcript.message_e
  **/
 static void req_get_endpoint_info_case4(void **state)
 {
@@ -1034,7 +1034,7 @@ static void req_get_endpoint_info_case4(void **state)
 /**
  * Test 5: Successful response to get a endpoint info with signature
  *         Using provisioned public key (slot_id = 0xF)
- * Expected Behavior: get a RETURN_SUCCESS return code, with an empty transcript.message_e
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, with an empty transcript.message_e
  **/
 static void req_get_endpoint_info_case5(void **state)
 {
@@ -1109,7 +1109,7 @@ static void req_get_endpoint_info_case5(void **state)
 
 /**
  * Test 6: Successful response to get a endpoint info without signature
- * Expected Behavior: get a RETURN_SUCCESS return code
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code
  **/
 static void req_get_endpoint_info_case6(void **state)
 {
@@ -1148,7 +1148,7 @@ static void req_get_endpoint_info_case6(void **state)
 
 /**
  * Test 7: Successful response to get a session based endpoint info with signature
- * Expected Behavior: get a RETURN_SUCCESS return code, with an empty session_transcript.message_e
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, with an empty session_transcript.message_e
  **/
 static void req_get_endpoint_info_case7(void **state)
 {

@@ -119,7 +119,7 @@ extern size_t libspdm_secret_lib_meas_opaque_data_size;
 
 /**
  * Test 1: Successful response to get a number of measurements without signature
- * Expected Behavior: get a RETURN_SUCCESS return code, correct transcript.message_m size, and correct response message size and fields
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, correct transcript.message_m size, and correct response message size and fields
  **/
 static void rsp_measurements_case1(void **state)
 {
@@ -409,7 +409,7 @@ static void rsp_measurements_case6(void **state)
 
 /**
  * Test 7: Successful response to get a number of measurements with signature
- * Expected Behavior: get a RETURN_SUCCESS return code, empty transcript.message_m, and correct response message size and fields
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, empty transcript.message_m, and correct response message size and fields
  **/
 static void rsp_measurements_case7(void **state)
 {
@@ -528,7 +528,7 @@ static void rsp_measurements_case7(void **state)
 
 /**
  * Test 8: Successful response to get one measurement with signature
- * Expected Behavior: get a RETURN_SUCCESS return code, empty transcript.message_m, and correct response message size and fields
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, empty transcript.message_m, and correct response message size and fields
  **/
 static void rsp_measurements_case8(void **state)
 {
@@ -584,7 +584,7 @@ static void rsp_measurements_case8(void **state)
 
 /**
  * Test 9: Error case, Bad request size (sizeof(spdm_message_header_t)x) to get measurement number with signature
- * Expected Behavior: get a RETURN_SUCCESS return code, empty transcript.message_m size, and Error message as response
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, empty transcript.message_m size, and Error message as response
  **/
 static void rsp_measurements_case9(void **state)
 {
@@ -636,7 +636,7 @@ static void rsp_measurements_case9(void **state)
 
 /**
  * Test 10: Successful response to get one measurement without signature
- * Expected Behavior: get a RETURN_SUCCESS return code, correct transcript.message_m size, and correct response message size and fields
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, correct transcript.message_m size, and correct response message size and fields
  **/
 static void rsp_measurements_case10(void **state)
 {
@@ -696,7 +696,7 @@ static void rsp_measurements_case10(void **state)
 
 /**
  * Test 11: Successful response to get all measurements with signature
- * Expected Behavior: get a RETURN_SUCCESS return code, empty transcript.message_m, and correct response message size and fields
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, empty transcript.message_m, and correct response message size and fields
  **/
 static void rsp_measurements_case11(void **state)
 {
@@ -765,7 +765,7 @@ static void rsp_measurements_case11(void **state)
 
 /**
  * Test 12: Successful response to get all measurements without signature
- * Expected Behavior: get a RETURN_SUCCESS return code, correct transcript.message_m size, and correct response message size and fields
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, correct transcript.message_m size, and correct response message size and fields
  **/
 static void rsp_measurements_case12(void **state)
 {
@@ -855,7 +855,7 @@ static void rsp_measurements_case13(void **state)
 
 /**
  * Test 14: Error case, signature was required, but there is no nonce and/or slotID
- * Expected Behavior: get a RETURN_SUCCESS return code, empty transcript.message_m size, and Error message as response
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, empty transcript.message_m size, and Error message as response
  **/
 static void rsp_measurements_case14(void **state)
 {
@@ -924,7 +924,7 @@ static void rsp_measurements_case14(void **state)
 
 /**
  * Test 15: Error case, meas_cap = 01b, but signature was requested (request message includes nonce and slotID)
- * Expected Behavior: get a RETURN_SUCCESS return code, empty transcript.message_m size, and Error message as response
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, empty transcript.message_m size, and Error message as response
  **/
 static void rsp_measurements_case15(void **state)
 {
@@ -978,7 +978,7 @@ static void rsp_measurements_case15(void **state)
 
 /**
  * Test 16: Error case, meas_cap = 01b, but signature was requested (request message does not include nonce and slotID)
- * Expected Behavior: get a RETURN_SUCCESS return code, empty transcript.message_m size, and Error message as response
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, empty transcript.message_m size, and Error message as response
  **/
 static void rsp_measurements_case16(void **state)
 {
@@ -1030,7 +1030,7 @@ static void rsp_measurements_case16(void **state)
 
 /**
  * Test 17: Error case, meas_cap = 00
- * Expected Behavior: get a RETURN_SUCCESS return code, empty transcript.message_m size, and Error message as response
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, empty transcript.message_m size, and Error message as response
  **/
 static void rsp_measurements_case17(void **state)
 {
@@ -1084,7 +1084,7 @@ static void rsp_measurements_case17(void **state)
 
 /**
  * Test 18: Successful response to get one measurement with signature, SlotId different from default
- * Expected Behavior: get a RETURN_SUCCESS return code, empty transcript.message_m, and correct response message size and fields
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, empty transcript.message_m, and correct response message size and fields
  **/
 static void rsp_measurements_case18(void **state)
 {
@@ -1155,7 +1155,7 @@ static void rsp_measurements_case18(void **state)
 
 /**
  * Test 19: Error case, invalid SlotId parameter (SlotId >= SPDM_MAX_SLOT_COUNT)
- * Expected Behavior: get a RETURN_SUCCESS return code, empty transcript.message_m size, and Error message as response
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, empty transcript.message_m size, and Error message as response
  **/
 static void rsp_measurements_case19(void **state)
 {
@@ -1208,7 +1208,7 @@ static void rsp_measurements_case19(void **state)
 
 /**
  * Test 21: Error case, request a measurement index not found
- * Expected Behavior: get a RETURN_SUCCESS return code, empty transcript.message_m size, and Error message as response
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, empty transcript.message_m size, and Error message as response
  **/
 static void rsp_measurements_case21(void **state)
 {
@@ -1259,7 +1259,7 @@ static void rsp_measurements_case21(void **state)
 
 /**
  * Test 22: request a large number of measurements before requesting a signed response
- * Expected Behavior: while transcript.message_m is not full, get a RETURN_SUCCESS return code, empty transcript.message_m, and correct response message size and fields
+ * Expected Behavior: while transcript.message_m is not full, get a LIBSPDM_STATUS_SUCCESS return code, empty transcript.message_m, and correct response message size and fields
  *                    if transcript.message_m has no more room, an error response is expected
  **/
 static void rsp_measurements_case22(void **state)
@@ -1343,7 +1343,7 @@ static void rsp_measurements_case22(void **state)
 
 /**
  * Test 23: Successful response to get a session based measurement with signature
- * Expected Behavior: get a RETURN_SUCCESS return code, with an empty session_transcript.message_m
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, with an empty session_transcript.message_m
  **/
 static void rsp_measurements_case23(void **state)
 {
@@ -1744,7 +1744,7 @@ static void rsp_measurements_case27(void **state)
 
 /**
  * Test 28: Successful response to get all measurements with signature using slot_id 0xFF
- * Expected Behavior: get a RETURN_SUCCESS return code, empty transcript.message_m, and correct response message size and fields
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, empty transcript.message_m, and correct response message size and fields
  **/
 static void rsp_measurements_case28(void **state)
 {
@@ -2584,7 +2584,7 @@ static void rsp_measurements_case34(void** state)
 
 /**
  * Test 35: Successful response V1.3 to get a number of measurements without signature
- * Expected Behavior: get a RETURN_SUCCESS return code, correct context field
+ * Expected Behavior: get a LIBSPDM_STATUS_SUCCESS return code, correct context field
  **/
 static void rsp_measurements_case35(void **state)
 {

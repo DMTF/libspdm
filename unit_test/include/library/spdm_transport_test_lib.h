@@ -63,9 +63,6 @@ typedef struct {
  * @param  transport_message             A pointer to a destination buffer to store the transport message.
  *                                      On input, it shall be msg_buf_ptr from sender buffer.
  *                                      On output, it will point to acquired sender buffer.
- *
- * @retval RETURN_SUCCESS               The message is encoded successfully.
- * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
  **/
 libspdm_return_t libspdm_transport_test_encode_message(
     void *spdm_context, const uint32_t *session_id, bool is_app_message,
@@ -97,10 +94,6 @@ libspdm_return_t libspdm_transport_test_encode_message(
  *                                      On input, it shall point to the scratch buffer in spdm_context.
  *                                      On output, for normal message, it will point to the original receiver buffer.
  *                                      On output, for secured message, it will point to the scratch buffer in spdm_context.
- *
- * @retval RETURN_SUCCESS               The message is decoded successfully.
- * @retval RETURN_INVALID_PARAMETER     The message is NULL or the message_size is zero.
- * @retval RETURN_UNSUPPORTED           The transport_message is unsupported.
  **/
 libspdm_return_t libspdm_transport_test_decode_message(
     void *spdm_context, uint32_t **session_id,

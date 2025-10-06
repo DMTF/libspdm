@@ -3782,7 +3782,7 @@ static void req_get_certificate_case22(void **state)
 /**
  * Test 23: request messages are successfully sent and response messages are successfully
  * received. Buffer B already has arbitrary data.
- * Expected Behavior: requester returns the status RETURN_SUCCESS and CERTIFICATE messages are
+ * Expected Behavior: requester returns the status LIBSPDM_STATUS_SUCCESS and CERTIFICATE messages are
  * received, buffer B appends the exchanged GET_CERTIFICATE and CERTIFICATE messages.
  **/
 static void req_get_certificate_case23(void **state)
